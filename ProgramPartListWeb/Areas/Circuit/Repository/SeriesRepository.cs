@@ -33,7 +33,7 @@ namespace ProgramPartListWeb.Data
                             "GROUP BY Series_ID), 0)  THEN 1 " +
                             "ELSE 0 END AS Planstatus " +
                              "FROM PartList_Series_tbl s ORDER BY Series_ID DESC"; 
-            return await SqlDataAccess.GetData<SeriesviewModel>(strquery);
+            return await SqlDataAccess.GetData<SeriesviewModel>(strquery, null, "serieslist");
         }
         public async Task<List<PrepareviewModel>> GetComponentsList(int intseries)
         {
@@ -45,7 +45,7 @@ namespace ProgramPartListWeb.Data
         {
             string strquery = "WarehousePrepared";
             var parameters = new { seriesID = intseries };
-            return await SqlDataAccess.GetData<WarehousePreparedModel>(strquery, parameters);
+            return await SqlDataAccess.GetData<WarehousePreparedModel>(strquery, parameters, "PreparedWarehouse");
         }
 
 
@@ -54,13 +54,13 @@ namespace ProgramPartListWeb.Data
         {
             string strquery = "ComponentsSummary";
             var parameters = new { Series_no = strval};
-            return await SqlDataAccess.GetData<SummaryComponentModel>(strquery, parameters);
+            return await SqlDataAccess.GetData<SummaryComponentModel>(strquery, parameters, "GetComponentsSummary");
         }
         public async Task<List<PartlistModel>> Getpartlist(string series)
         {
             string strquery = "PartlistData";
             var parameters = new { Series_no = series };
-            return await SqlDataAccess.GetData<PartlistModel>(strquery, parameters);
+            return await SqlDataAccess.GetData<PartlistModel>(strquery, parameters, "PartlistData");
         }
         //public async Task<List<SeriesviewModel>> GetSeriesDataTable(int pagenum, int pagesize, int filter)
         //{
@@ -181,7 +181,7 @@ namespace ProgramPartListWeb.Data
                               "@Shift, @Remarks, @SetupNavi, " +
                               "@VisualManage, @Status, @MachineSerial, " +
                               "@Modelno, @SetGroup)";
-            return await SqlDataAccess.UpdateInsertQuery(strquery, parameters); 
+            return await SqlDataAccess.UpdateInsertQuery(strquery, parameters, "serieslist"); 
         }
 
         public async Task<bool> UpdateSeriesData(object parameters)
@@ -405,7 +405,7 @@ namespace ProgramPartListWeb.Data
         public async Task<List<SupplierModel>> GetSupplierData()
         {
             string strquery = "SupplierData";
-            return await SqlDataAccess.GetData<SupplierModel>(strquery);
+            return await SqlDataAccess.GetData<SupplierModel>(strquery, null, "Suppliers");
         }
 
         public async Task<bool> AddEditSuppliers(SupplierModel sup)

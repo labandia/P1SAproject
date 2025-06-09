@@ -4,6 +4,7 @@ using Dapper;
 using Microsoft.Office.Interop.Excel;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -35,6 +36,9 @@ namespace Attendance_Monitoring.Repositories
         public async Task<List<CRmodel>> GetCRMonitoringData(string dDate, string shifts, int depid)
         {
             string strquery = "CRMonitor";
+            Debug.WriteLine(dDate);
+            Debug.WriteLine(shifts);
+            Debug.WriteLine(depid);
             var parameters = new { TimeIn = dDate, Shifts = shifts, Depid = depid };
             return await SqlDataAccess.GetData<CRmodel>(strquery, parameters);
         }

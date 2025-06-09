@@ -38,7 +38,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
         {
             try
             {
-                var data = await CacheHelper.GetOrSetAsync("serieslist", () => _series2.GetSeriesData(), 15);
+                var data = await _series2.GetSeriesData();
                 if (data == null || !data.Any())
                 {
                     return JsonNotFound("No Plan Schedule data found");
@@ -200,7 +200,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
         {
             try
             {
-                var data = await CacheHelper.GetOrSetAsync("ManagePlan", () => _series.GetSeriesData(), 10);
+                var data = await _series.GetSeriesData();
                 if (data == null || !data.Any())
                     return JsonNotFound("No  Plan Schedule data found");
 
@@ -339,7 +339,6 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
                     result = false;
                 }
 
-                CacheHelper.Remove("ManagePlan");
 
                 var formdata = GlobalUtilities.GetMessageResponse(result, 2);
                 return Json(formdata, JsonRequestBehavior.AllowGet);
@@ -638,7 +637,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
         {
             try
             {
-                var res = await CacheHelper.GetOrSetAsync("Suppliers", () =>  _series2.GetSupplierData(), 15);
+                var res = await _series2.GetSupplierData();
                 if (res == null || !res.Any())
                     return JsonNotFound("No Supplier data found");
 

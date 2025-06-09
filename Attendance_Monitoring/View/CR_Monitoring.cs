@@ -14,7 +14,7 @@ namespace Attendance_Monitoring.View
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly AdminController _admin;
-        private static IEnumerable<CRmodel> critemlist;
+        private static List<CRmodel> critemlist;
         private static IEnumerable<Employee> emplist;
         private readonly Timeprocess time;
         private Timer timer;
@@ -48,8 +48,7 @@ namespace Attendance_Monitoring.View
             var dateToday = DateTime.Now.ToString("yyyy-MM-dd");
             string shift = time.TimeIncheck(DateTime.Now);
 
-            IEnumerable<CRmodel> cra = await _admin.GetCRMonitorlist(dateToday, shift, sec);
-            critemlist = cra.ToList();
+            critemlist = await _admin.GetCRMonitorlist(dateToday, shift, sec);
 
             CRtable.DataSource = critemlist;
             DisplayTotal.Text = "Total Attendence: " + CRtable.RowCount;

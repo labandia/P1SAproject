@@ -1,0 +1,358 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D1BF48EB-26F1-417E-A0A0-3962679BD710}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Attendance_Monitoring</RootNamespace>
+    <AssemblyName>Attendance_Monitoring</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
+    <PublishUrl>\\sdp01034s\SYSTEM EXECUTABLE\P1SA-PC_System\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Unc</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>true</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <MinimumRequiredVersion>1.0.0.0</MinimumRequiredVersion>
+    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
+    <WebPage>publish.htm</WebPage>
+    <ApplicationRevision>64</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <CreateDesktopShortcut>true</CreateDesktopShortcut>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>32037EA1751446CD3E98D206AA737CA6679F61A8</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>Attendance_Monitoring_1_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>attendance %281%29.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Dapper.2.1.35\lib\net461\Dapper.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus, Version=4.5.3.3, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>packages\EPPlus.4.5.3.3\lib\net40\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus.Interfaces, Version=8.0.0.0, Culture=neutral, PublicKeyToken=a694d7f3b0907a61, processorArchitecture=MSIL">
+      <HintPath>packages\EPPlus.Interfaces.8.0.0\lib\net462\EPPlus.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=9.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.9.0.2\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=9.0.0.2, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.DependencyInjection.9.0.2\lib\net462\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=9.0.0.2, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.DependencyInjection.Abstractions.9.0.2\lib\net462\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IO.RecyclableMemoryStream, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.IO.RecyclableMemoryStream.3.0.1\lib\netstandard2.0\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Office.Interop.Excel.15.0.4795.1001\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.ComponentModel.Annotations.5.0.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.ConfigurationManager, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Configuration.ConfigurationManager.8.0.0\lib\net462\System.Configuration.ConfigurationManager.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security" />
+    <Reference Include="System.Security.Cryptography.Xml, Version=8.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Security.Cryptography.Xml.8.0.2\lib\net462\System.Security.Cryptography.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controller\AdminController.cs" />
+    <Compile Include="Global\Timeprocess.cs" />
+    <Compile Include="Models\Attendance.cs" />
+    <Compile Include="Models\CRmodel.cs" />
+    <Compile Include="Models\Employee.cs" />
+    <Compile Include="Repositories\AttendanceRepository.cs" />
+    <Compile Include="Repositories\CRMonitoringRespository.cs" />
+    <Compile Include="Repositories\EmployeeRespository.cs" />
+    <Compile Include="Interfaces\IAttendance.cs" />
+    <Compile Include="Interfaces\ICRmonitor.cs" />
+    <Compile Include="Interfaces\IEmployee.cs" />
+    <Compile Include="Usercontrols\AttendancePage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Usercontrols\AttendancePage.Designer.cs">
+      <DependentUpon>AttendancePage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Usercontrols\AttendanceSelection.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Usercontrols\AttendanceSelection.Designer.cs">
+      <DependentUpon>AttendanceSelection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Usercontrols\CRMonitoringPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Usercontrols\CRMonitoringPage.Designer.cs">
+      <DependentUpon>CRMonitoringPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Usercontrols\CRSelection.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Usercontrols\CRSelection.Designer.cs">
+      <DependentUpon>CRSelection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Usercontrols\EmployeeManagement.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Usercontrols\EmployeeManagement.Designer.cs">
+      <DependentUpon>EmployeeManagement.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utilities\AesEncryption.cs" />
+    <Compile Include="Utilities\SqlDataAccess.cs" />
+    <Compile Include="View\Add_Employee.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Add_Employee.Designer.cs">
+      <DependentUpon>Add_Employee.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Attendance.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Attendance.Designer.cs">
+      <DependentUpon>Attendance.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\CRMainpage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\CRMainpage.Designer.cs">
+      <DependentUpon>CRMainpage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\CRSummary.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\CRSummary.Designer.cs">
+      <DependentUpon>CRSummary.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\CR_Monitoring.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\CR_Monitoring.Designer.cs">
+      <DependentUpon>CR_Monitoring.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\EditEmployee.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\EditEmployee.Designer.cs">
+      <DependentUpon>EditEmployee.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\EmployeeManage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\EmployeeManage.Designer.cs">
+      <DependentUpon>EmployeeManage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\MainLayout.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\MainLayout.Designer.cs">
+      <DependentUpon>MainLayout.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Mainpage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Mainpage.Designer.cs">
+      <DependentUpon>Mainpage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="View\Selection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Selection.Designer.cs">
+      <DependentUpon>Selection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Summary.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Summary.Designer.cs">
+      <DependentUpon>Summary.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UploadsData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UploadsData.Designer.cs">
+      <DependentUpon>UploadsData.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="Usercontrols\AttendancePage.resx">
+      <DependentUpon>AttendancePage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Usercontrols\AttendanceSelection.resx">
+      <DependentUpon>AttendanceSelection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Usercontrols\CRMonitoringPage.resx">
+      <DependentUpon>CRMonitoringPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Usercontrols\CRSelection.resx">
+      <DependentUpon>CRSelection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Usercontrols\EmployeeManagement.resx">
+      <DependentUpon>EmployeeManagement.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Add_Employee.resx">
+      <DependentUpon>Add_Employee.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Attendance.resx">
+      <DependentUpon>Attendance.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\CRMainpage.resx">
+      <DependentUpon>CRMainpage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\CRSummary.resx">
+      <DependentUpon>CRSummary.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\CR_Monitoring.resx">
+      <DependentUpon>CR_Monitoring.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\EditEmployee.resx">
+      <DependentUpon>EditEmployee.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\EmployeeManage.resx">
+      <DependentUpon>EmployeeManage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\MainLayout.resx">
+      <DependentUpon>MainLayout.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Mainpage.resx">
+      <DependentUpon>Mainpage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Selection.resx">
+      <DependentUpon>Selection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Summary.resx">
+      <DependentUpon>Summary.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UploadsData.resx">
+      <DependentUpon>UploadsData.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
+    <None Include="packages.config" />
+    <None Include="Properties\app.manifest" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="attendance %281%29.ico" />
+    <Content Include="attendance.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

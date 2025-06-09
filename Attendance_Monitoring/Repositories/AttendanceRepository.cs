@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.AxHost;
 
+
 namespace Attendance_Monitoring.Repositories
 {
     public class AttendanceRepository : IAttendance

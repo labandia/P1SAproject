@@ -16,6 +16,8 @@ namespace ProductConfirm.Modules
     {
         public ProductRepositoryV2 _prod;
         private readonly IProductRepositoryV2 _prod2;
+        private static List<ProductModel> _model;
+
 
         public DataGridView mastergrid { get { return Masterlistable; } }
         //public DataGridView equipmentgrid { get { return Equipmentable; } }
@@ -93,7 +95,8 @@ namespace ProductConfirm.Modules
         private async void searchbox_TextChanged(object sender, EventArgs e)
         {
             Dataconnect db = new Dataconnect();
-
+            
+            
 
 
             string strsql = "SELECT " +

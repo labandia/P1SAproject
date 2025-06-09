@@ -19,7 +19,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                             "INNER JOIN Employee_tbl e ON e.Employee_ID = s.Employee_ID " +
                             "WHERE ScheduleDate >= DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1) " +
                             "AND ScheduleDate < DATEADD(MONTH, 1, DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1))";
-            return await SqlDataAccess.GetData<PatrolSchedule>(strsql);
+            return await SqlDataAccess.GetData<PatrolSchedule>(strsql, null, "PlanSchedule");
         }
 
 
@@ -35,7 +35,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                 strsql = "UPDATE Patrol_Inspectors SET Employee_ID =@Employee_ID,  DateQualified = @DateQualified, OJTRegistration =@OJTRegistration, Remarks =@Remarks " +
                          "WHERE InspectID =@InspectID";
             }   
-            return await SqlDataAccess.UpdateInsertQuery(strsql, paramaters);
+            return await SqlDataAccess.UpdateInsertQuery(strsql, paramaters, "Inspectors");
         }
 
         public async Task<bool> AddRegistration(object paramaters, string json)
@@ -114,7 +114,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             string strsql = "UPDATE Patrol_Inspectors SET Approval =@Approval " +
                         "WHERE InspectID =@InspectID";
             var parameter = new { InspectID = inspectID, Approval = status };
-            return await SqlDataAccess.UpdateInsertQuery(strsql, parameter);
+            return await SqlDataAccess.UpdateInsertQuery(strsql, parameter, "Inspectors");
         }
 
 
@@ -127,15 +127,15 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             return await SqlDataAccess.GetData<CalendarSched>(strsql, new { Employee_ID = Employee_ID });
         }
 
-        public async Task<List<Employee>> GetEmployee() => await SqlDataAccess.GetData<Employee>("EmployeeDataList");
+        public async Task<List<Employee>> GetEmployee() => await SqlDataAccess.GetData<Employee>("EmployeeDataList", null, "Employee");
         public async Task<int> GetEmployeeByDepartment(string employee) => await SqlDataAccess.GetCountDataSync("EmployeeDepartment", new { Employee_ID = employee });
 
-        public async Task<List<InspectorModel>> GetInpectorsData() => await SqlDataAccess.GetData<InspectorModel>("Getinpectors");
+        public async Task<List<InspectorModel>> GetInpectorsData() => await SqlDataAccess.GetData<InspectorModel>("Getinpectors", null, "Inspectors");
         public async Task<List<FindingModel>> GetPatrolFindings(string reg) => await SqlDataAccess.GetData<FindingModel>("GetFindings", new { Regno = reg });
 
         public async Task<List<ProccessModel>> GetProcessData(int depid) => await SqlDataAccess.GetData<ProccessModel>("SELECT ProcessID, ProcessName, DepartmentID FROM Patrol_Process WHERE DepartmentID =@DepartmentID", new { DepartmentID = depid });
         
-        public async Task<List<PatrolRegistionModel>> GetRegistrationData() => await SqlDataAccess.GetData<PatrolRegistionModel>("GetPatrolRegistration");
+        public async Task<List<PatrolRegistionModel>> GetRegistrationData() => await SqlDataAccess.GetData<PatrolRegistionModel>("GetPatrolRegistration", null, "Registration");
 
         
 

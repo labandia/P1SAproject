@@ -47,8 +47,6 @@ namespace Attendance_Monitoring.Models
             set => lateTime = value;
         }
     }
-
-
     public class SummaryAttendanceModel
     {
         private string date_today;
@@ -120,4 +118,7 @@ namespace Attendance_Monitoring.Models
         }
 
     }
+
+   
+
 }

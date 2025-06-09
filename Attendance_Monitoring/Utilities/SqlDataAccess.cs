@@ -10,6 +10,7 @@ using Dapper;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
 
+
 namespace Attendance_Monitoring.Utilities
 {
     public static class SqlDataAccess

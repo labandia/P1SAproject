@@ -1,0 +1,285 @@
+﻿
+@{
+    ViewBag.Title = "IssuanceParts";
+    Layout = "~/Areas/Press/Views/Shared/_PartsLocator.cshtml";
+}
+
+<div class="MasterlistWrap">
+    <div class="MasterlistWrap__header">
+        <h1>Issuance</h1>
+
+
+    </div>
+
+    <div class="MainTable">
+        <table>
+            <thead>
+                <tr>
+                    <th>Date </th>
+                    <th>Time </th>
+                    <th>FA Shop Order </th>
+                    <th>FA Plan Quantity </th>
+                    <th>Part number </th>
+                    <th>Model </th>
+                    <th>Rack number </th>
+                    <th>Level </th>
+                    <th>Box number</th>
+                    <th>Post location</th>
+                    <th>Received by:</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="IssuanceData">
+            </tbody>
+        </table>
+    </div>
+
+    <div class="Lackloading">
+        <div class="loading-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>-</th>
+                        <th>-</th>
+                        <th>-</th>
+                        <th>-</th>
+                        <th>-</th>
+                        <th>-</th>
+                        <th>-</th>
+                        <th>-</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                        <td><div class="skeleton" style="width: 60%;"></div></td>
+                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                        <td><div class="skeleton" style="width: 60%;"></div></td>
+                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                    </tr>
+                    <tr>
+                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                        <td><div class="skeleton" style="width: 60%;"></div></td>
+                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                        <td><div class="skeleton" style="width: 60%;"></div></td>
+                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                    </tr>
+                    <tr>
+                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                        <td><div class="skeleton" style="width: 60%;"></div></td>
+                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                        <td><div class="skeleton" style="width: 60%;"></div></td>
+                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="MasterlistWrap_footer">
+        <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
+
+        <div id="IssuanceContainer" class="paginationPartlocal"></div>
+    </div>
+
+
+</div>
+
+@*################ ISSUANCE  OUT PROCESS ############################### *@
+<div class="modal fade modal-m" id="issuancemodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <form method="post" class="mt-4" id="issuanceforms" autocomplete="off">
+                    <label>Qty. Issued: </label>
+                    <input type="hidden" name="IssuanceID" id="IssuanceID" />
+                    <input type="text" name="IssuedQuan" id="IssuedQuan" placeholder="Enter Qty Issued" onkeypress="return restrictChars(event)" required />
+                    <label>Issued  by: </label>
+                    <input type="text" name="IssuedBy" id="IssuedBy" placeholder="Enter name of the Issued" required />
+
+                    <div class="d-flex align-items-center gap-2 justify-content-end">
+                        <button type="button" class="btncancel" data-bs-dismiss="modal"><i class='bx bx-x'></i> Cancel</button>
+                        <button type="submit" class="btnTransac"> Save <i class='bx bx-save'></i></button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script src="~/Scripts/Utilities.js"></script>
+<script src="~/Scripts/jquery-3.7.1.min.js"></script>
+<script type="text/javascript">
+    const issueform = document.getElementById("issuanceforms");
+
+     // Pull the masterlist Data
+    const GetHistoryData = async() => {
+        $('.Lackloading').show();
+        $('.MainTable').hide();
+        let res = await FetchAuthenticate('@Url.Action("GetIssuanceHistoryData", "PartsLocator")', {});
+        SummarylistData = [];
+
+        if (res && res.Success) {
+            SummarylistData = res.Data;
+
+            let seriesfilterdata = SummarylistData.filter(res => res.Stats == 0);
+            IssuancePagination(seriesfilterdata, 'IssuanceData', 'IssuanceContainer', 7, 5);
+            $('.Lackloading').hide();
+            $('.MainTable').show();
+        }
+    }
+
+
+    issueform.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        let formdata = new FormData(issueform);
+        let res = await postData('@Url.Action("Issuanceprocess", "PartsLocator")', formdata);
+     
+        if (res.StatusCode === 200) {
+            issueform.reset();
+            GetHistoryData();
+            $("#issuancemodal").modal("hide");
+        }
+    });
+
+    GetHistoryData()
+    function IssuancePagination(dataArray, tableBodyId, paginationId, recordsPerPage = 7, visibleButtons = 5) {
+        let currentPage = 1;
+        let filteredData = [...dataArray]; // Make a copy for filtering
+
+        const updatePaginationInfo = () => {
+            const totalRecords = filteredData.length;
+            const totalPages = Math.ceil(totalRecords / recordsPerPage);
+
+            $("#totalpageID").text(totalPages);
+            $("#DatalengthID").text(totalRecords);
+
+            return totalPages;
+        };
+
+        const renderTable = (page) => {
+            const totalPages = updatePaginationInfo();
+            const startIndex = (page - 1) * recordsPerPage;
+            const endIndex = Math.min(startIndex + recordsPerPage, filteredData.length);
+            const tableBody = document.getElementById(tableBodyId);
+            tableBody.innerHTML = '';
+
+            for (let i = startIndex; i < endIndex; i++) {
+                const rowData = filteredData[i];
+
+                const rowHtml = `
+                             <tr class='row_${i} rowClick' >
+                                 <td data-cell="Date">${rowData.DateInput ?? "N/A"}</td>
+                                 <td data-cell="Date">${rowData.TimeReceived ?? "N/A"}</td>
+                                 <td data-cell="Shop Order">${rowData.FA_Shoporder ?? "N/A"}</td>
+                                 <td data-cell="Part number">${rowData.FA_Plan ?? 0}</td>
+                                 <td data-cell="Model">${rowData.Partnum ?? "N/A"}</td>
+                                 <td data-cell="Rack number">${rowData.Model ?? "N/A"}</td>
+                                 <td data-cell="Level">${rowData.Racknum ?? 0}</td>
+                                 <td data-cell="Box number">${rowData.levelnum ?? 0}</td>
+                                 <td data-cell="Post location">${rowData.boxnum ?? 0}</td>
+                                 <td data-cell="Quantity">${rowData.postnum ?? "N/A"}</td>
+                                 <td data-cell="InputBy">${rowData.Received ?? "N/A"}</td>
+                                 <td data-cell="Action">
+                                   <button style='padding: .5em 1.3em;' type='button' class='editButton text-primary bg-white' id='editButton_${rowData.IssuanceID}' >
+                                          <i class="fa-solid fa-pen-to-square"></i>
+                                   </button>
+                                 </td>
+                             </tr>
+                         `;
+
+                tableBody.innerHTML += rowHtml;
+            }
+
+            $("#pagecountID").text(currentPage);
+        };
+
+        const renderPagination = () => {
+            const totalPages = updatePaginationInfo();
+            const paginationContainer = document.getElementById(paginationId);
+            paginationContainer.innerHTML = '';
+
+            let startPage = Math.max(1, currentPage - Math.floor(visibleButtons / 2));
+            let endPage = Math.min(totalPages, startPage + visibleButtons - 1);
+
+            if (endPage > totalPages) {
+                endPage = totalPages;
+                startPage = Math.max(1, endPage - visibleButtons + 1);
+            }
+
+            if (totalPages <= visibleButtons) {
+                startPage = 1;
+                endPage = totalPages;
+            }
+
+            // Previous button
+            paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
+                                              <i class="fa-solid fa-backward"></i>
+                                       </button>`;
+
+            for (let i = startPage; i <= endPage; i++) {
+                paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+            }
+
+            // Next button
+            paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
+                                             <i class="fa-solid fa-forward"></i>
+                                       </button>`;
+        };
+
+        const changePage = (page) => {
+            if (page >= 1 && page <= updatePaginationInfo()) {
+                currentPage = page;
+                renderTable(currentPage);
+                renderPagination();
+            }
+        };
+
+        // 🔍 Search functionality
+        const searchTable = () => {
+            const query = $('#searchbox').val().toLowerCase();
+
+            filteredData = dataArray.filter(item =>
+                item.Partnum.toLowerCase().includes(query) ||
+                item.Model.toLowerCase().includes(query)
+            );
+
+            currentPage = 1;
+            renderTable(currentPage);
+            renderPagination();
+        };
+
+        // Add event listener for search input
+        $('#searchbox').on('input', searchTable);
+
+        // Handle click event for edit button
+        $(document).on('click', '.editButton', function (e) {
+            e.stopPropagation();
+            const buttonId = $(this).attr('id');
+            const rowIndex = buttonId.split('_')[1];
+            $("#IssuanceID").val(rowIndex);
+            $("#issuancemodal").modal("show");
+
+        });
+
+        // Initialize table and pagination
+        window.changePage = changePage;
+        renderTable(currentPage);
+        renderPagination();
+    }
+</script>

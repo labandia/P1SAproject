@@ -1,0 +1,370 @@
+﻿
+@{
+    ViewBag.Title = "PatrolSchedule";
+    Layout = "~/Areas/PC/Views/Shared/_PatrolLayout.cshtml";
+}
+
+<div class="row">
+
+    <div class="col-8">
+        <div class="Calendar_container">
+            <div id="calendar"></div>
+        </div>
+    </div>
+
+    <div class="col-4">
+        <div class="Sched_container">
+            <div class="Sched_header">
+                <span>Auditors :</span>
+            </div>
+            <select id="DepartmentID" class="form-control">
+                <option value="0">All</option>
+                <option value="1">Molding</option>
+                <option value="2">Press</option>
+                <option value="3">Rotor</option>
+                <option value="4">Winding</option>
+                <option value="5">Circuit</option>
+            </select>
+            <input type="text" placeholder="Search name ... " class="form-control" />
+
+            <div class="Sched_list" id="Sched_list_container"></div>
+        </div>
+    </div>
+</div>
+
+
+@*=========================== ADD NEW SCHEDULE LIST ==================================*@
+<div class="modal fade modal-l" id="AddScheduleModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <div class="custom_modal_header">
+                    <h5>SET SCHEDULE</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+
+                <form method="post" enctype="multipart/form-data" class="addformcontainer" id="addnewform" autocomplete="off">
+                    <div class="row">
+                        <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
+                            <input type="hidden" name="ScheduleID" id="ScheduleID" />
+                            <input type="hidden" name="ScheduleDate" id="ScheduleDate" />
+                            <input type="hidden" name="IsActive" id="IsActive" />
+
+                        </div>
+                        <div class="form_group col-12 col-sm-12  mb-2">
+                            <label>Process Set </label> <br />
+                            <select class="form-control" id="ProcessID" name="ProcessID">
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end mt-4">
+                        <button id="btnSave"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@*=========================== CANCEL SCHEDULE LIST ==================================*@
+<div class="modal fade modal-l" id="EditScheduleModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <div class="custom_modal_header">
+                    <h5>CHANGE PROCESS</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+
+                <form method="post" enctype="multipart/form-data" class="addformcontainer" id="editnewform" autocomplete="off">
+                    <div class="row">
+                        <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
+                            <input type="hidden" name="EditScheduleID" id="EditScheduleID" />
+                            <input type="hidden" name="EditScheduleDate" id="EditScheduleDate" />
+                            <input type="hidden" name="EditIsActive" id="EditIsActive" />
+                        </div>
+                        <div class="form_group col-12 col-sm-12  mb-2">
+                            <label>Process Set </label> <br />
+                            <select class="form-control" id="EditProcessID" name="EditProcessID">
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end mt-4 gap-4">
+                        <button id="btnSave" class="deletebtn"><i class="fa-regular fa-floppy-disk"></i> Remove</button>
+                        <button id="btnSave"><i class="fa-regular fa-floppy-disk"></i> Save change</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="~/Scripts/fullcalendar@6.1.17/index.global.min.js"></script>
+<script src="~/Scripts/jquery-3.7.1.min.js"></script>
+<script src="~/Scripts/Utilities.js"></script>
+<script type="text/javascript">
+    let employVal;
+    let DepartID;
+    const addform = document.getElementById("addnewform");
+    const editform = document.getElementById("editnewform");
+    const removebtn = document.querySelector('.deletebtn');
+
+   const PopulateComboxInspector = async () => {
+        const SetData = $("#Sched_list_container");
+        SetData.empty();
+
+       let res = await FetchAuthenticate('@Url.Action("GetInpectsByApproval", "Patrol")', {});
+       console.log(res);
+        if (res && res.Success) {
+            $.each(res.Data, function (index, res) {
+                const getdata = `
+                    <div class="SchedCard d-flex align-items-center gap-3"
+                        id="SchedCard_${res.Employee_ID}"
+                        data-dept="${res.Department_ID}"
+                        data-emp="${res.Employee_ID}"
+                        data-name="${res.FullName}">
+                        <i class="fa-regular fa-circle-user"></i>
+                        <span>${res.FullName}</span>
+                    </div>`;
+                SetData.append(getdata);
+            });
+
+            // Attach click event once
+            $(document).off('click', '.SchedCard').on('click', '.SchedCard', function (e) {
+                e.stopPropagation();
+
+                $('.SchedCard').removeClass('active'); // remove previous selection
+                $(this).addClass('active'); // mark current one
+
+                DepartID = $(this).data('dept');
+                employVal = $(this).data('emp');
+                const fullName = $(this).data('name');
+
+                console.log("Selected Employee: ", fullName);
+                console.log("Department ID: ", DepartID);
+
+                // Optionally, when page loads, show all first
+                fetchAndRenderEvents(employVal);
+            });
+        }
+    };
+
+
+    const fetchAndRenderEvents =  async(employeeId) =>{
+        let res = await FetchAuthenticate('@Url.Action("GetCalendarEvents", "Patrol")', { Employee_ID : employeeId });
+
+        if (res && res.Success) {
+
+            if (window.calendar) {
+                window.calendar.removeAllEvents();
+
+                if (res.Data && res.Data.length > 0) {
+                    window.calendar.addEventSource(res.Data);
+                }
+
+                window.calendar.refetchEvents();
+            }
+        } else {
+            if (window.calendar) {
+                window.calendar.removeAllEvents();
+                window.calendar.refetchEvents();
+            }
+        }
+    }
+
+
+
+    const PopulateComboxProccess = async (ID, mode) => {
+        let res = await FetchAuthenticate('@Url.Action("GetProcesslist", "Patrol")', { depid: ID });
+
+        if (res && res.Success) {
+            if (mode === 0) {
+                let select = $("#ProcessID");
+                select.empty();
+
+                $.each(res.Data, function (index, rowData) {
+                    select.append('<option value="' + rowData.ProcessID + '">' + rowData.ProcessName + '</option>');
+                });
+            } else {
+                let select = $("#EditProcessID");
+                select.empty();
+
+                $.each(res.Data, function (index, rowData) {
+                    select.append('<option value="' + rowData.ProcessID + '">' + rowData.ProcessName + '</option>');
+                });
+            }
+        }
+    }
+
+
+
+    addform.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        let formData = new FormData(e.target);
+        formData.append('Employee_ID', employVal);
+        formData.append('ModeID', 0);
+        //var data = Object.fromEntries(formData);
+        //console.log(data);
+        let res = await postData('@Url.Action("SetActiveDateSchedule", "Patrol")', formData);
+        console.log(res);
+
+    });
+
+    editform.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        let formData = new FormData(e.target);
+        formData.append('Employee_ID', employVal);
+        formData.append('ModeID', 1);
+        //var data = Object.fromEntries(formData);
+        let res = await postData('@Url.Action("SetActiveDateSchedule", "Patrol")', formData);
+        console.log(res);
+
+    });
+
+    removebtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        let formData = new FormData();
+        formData.append('ScheduleID', $("#EditScheduleID").val());
+        var data = Object.fromEntries(formData);
+        //let res = await postData('@Url.Action("SetActiveDateSchedule", "Patrol")', formData);
+    });
+
+    //document.addEventListener('DOMContentLoaded', function () {
+    //    const today = new Date();
+    //    const year = today.getFullYear();
+    //    const month = String(today.getMonth() + 1).padStart(2, '0');
+    //    const day = String(today.getDate()).padStart(2, '0');
+    //    const formattedDate = `${year}-${month}-${day}`;
+
+    //    var calendarEl = document.getElementById('calendar');
+    //    var calendar = new FullCalendar.Calendar(calendarEl, {
+    //        initialView: 'dayGridMonth',
+    //        aspectRatio: 1.8,
+
+    //        dayCellDidMount: function (info) {
+    //            // Format info.date to local date string
+    //            const cellDate = info.date.getFullYear() + '-' +
+    //                String(info.date.getMonth() + 1).padStart(2, '0') + '-' +
+    //                String(info.date.getDate()).padStart(2, '0');
+
+    //            if (cellDate === formattedDate) {
+    //                info.el.style.backgroundColor = '#3664F4';
+    //                info.el.style.color = 'white';
+    //            }
+    //        },
+
+    //        dateClick: function (info) {
+    //            const selected = $('.SchedCard.active');
+    //            if (!selected.length) {
+    //                alert("Please select an inspector first.");
+    //                return;
+    //            }
+
+    //            DepartID = selected.data('dept');
+    //            employVal = selected.data('emp');
+
+    //            console.log("Date Clicked: " + info.dateStr);
+    //            console.log("Department : " + DepartID);
+    //            console.log("Employee ID: " + employVal);
+
+    //            PopulateComboxProccess(DepartID); // your custom function
+    //            $("#DateID").val(info.dateStr);
+    //            $("#AddScheduleModal").modal('show');
+    //        }
+    //    });
+
+    //    calendar.render();
+
+    //});
+
+    // Initialize Calendar (example with FullCalendar)
+    document.addEventListener('DOMContentLoaded', function () {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        const formattedDate = `${year}-${month}-${day}`;
+
+        const calendarEl = document.getElementById('calendar');
+
+        window.calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            selectable: false,
+            height: 'auto',
+            headerToolbar: {
+                left: 'prev next',
+                center: 'title',
+                right: 'dayGridMonth,listWeek'
+            },
+            events: [], // Start empty
+
+            dayCellDidMount: function (info) {
+                // Format info.date to local date string
+                const cellDate = info.date.getFullYear() + '-' +
+                    String(info.date.getMonth() + 1).padStart(2, '0') + '-' +
+                    String(info.date.getDate()).padStart(2, '0');
+
+                if (cellDate === formattedDate) {
+                    info.el.style.backgroundColor = '#ffa';
+                    //info.el.style.color = 'white';
+                }
+            },
+
+            dateClick: function (info) {
+                //console.log(info.dateStr);
+                //console.log("Department ID : " + DepartID);
+                $("#ScheduleID").val("0");
+                $("#ScheduleDate").val(info.dateStr);
+                $("#IsActive").val("0");
+
+
+                PopulateComboxProccess(DepartID, 0);
+                $("#AddScheduleModal").modal('show');
+                //alert("HERE" );
+            },
+
+            eventClick: function (info) {
+                //console.log("Department ID : " + DepartID);
+                const eventObj = info.event;
+                //console.log("Event Click " + eventObj);
+                // Example: Log the details
+                //console.log("Event Clicked:");
+                //console.log("ID:", eventObj.id);
+                //console.log("Title:", eventObj.title);
+                //console.log("Start:", eventObj.startStr);
+                //console.log("Active:", eventObj.extendedProps.Active);
+                //console.log("Pro:", eventObj.extendedProps.ProcID);
+                //console.log("All Day:", eventObj.allDay);
+                $("#EditScheduleID").val(eventObj.id);
+                $("#EditScheduleDate").val(eventObj.startStr);
+                $("#EditIsActive").val("1");
+
+                PopulateComboxProccess(DepartID, 1);
+                // Optional: Do something with it, like showing a modal or message
+                //alert(`Selected Schedule\n\nTitle: ${eventObj.title}\nDate: ${eventObj.startStr}`);
+                $("#EditScheduleModal").modal('show');
+            }
+        });
+
+        calendar.render();
+    });
+
+    PopulateComboxInspector();
+</script>

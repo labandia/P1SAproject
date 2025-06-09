@@ -1,0 +1,177 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <link href="~/Content/css/loginlayout.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Home</title>
+</head>
+<body>
+    <div class="loginwrapper">
+        <div class="logincontainer activeforms">
+            <form id="logincredentials">
+                <h3>Parts Locator Aluminum Frame</h3>
+                <div class="group">
+                    <label>Username : </label>
+                    <input type="text" name="username" id="username" placeholder="Enter Username" required />
+                </div>
+                <div class="group">
+                    <label>Password : </label>
+                    <input type="password" name="password" id="password" placeholder="Enter Password" required />
+                </div>
+
+                <button type="submit" id="loginbtn">Login</button>
+            </form>
+            <p class="selectreg">Dont have an account? <span id="changereg">Click here...</span></p>
+        </div>
+
+
+        <div class="Registrationcontainer">
+            <form id="Registerform" autocomplete="off">
+                <h2>Register Users</h2>
+                <div class="group">
+                    <label>Username: </label>
+                    <input type="text" name="usertext" id="usertext" placeholder="Username" required />
+                </div>
+                <div class="group">
+                    <label>Password: </label>
+                    <input type="password" name="passtext" id="passtext" placeholder="Password" required />
+                </div>
+
+                <div class="group">
+                    <label>First name: </label>
+                    <input type="text" name="fname" id="fname" placeholder="Enter Firstname" required />
+                </div>
+
+                <div class="group">
+                    <label>Last name: </label>
+                    <input type="text" name="lname" id="lname" placeholder="Enter lastname" required />
+                </div>
+
+                <button type="submit" id="Regisbtn">Registered</button>
+            </form>
+
+            <p class="selectreg">Already have an account? <span id="changelogin">Click here...</span></p>
+        </div>
+
+
+    </div>
+</body>
+</html>
+
+
+
+<script src="~/Scripts/Utilities.js"></script>
+<script src="~/Scripts/sweetalert2.min.js"></script>
+<script src="~/Scripts/jquery-3.7.1.min.js"></script>
+<script type="text/javascript">
+  const logform = document.getElementById('logincredentials');
+  const regform = document.getElementById('Registerform');
+  const changeforms = document.getElementById('changereg');
+  const changelogs = document.getElementById('changelogin');
+
+
+  changeforms.addEventListener('click', function (e) {
+      e.preventDefault();
+
+      document.querySelector('.logincontainer').classList.remove('activeforms');
+      document.querySelector('.Registrationcontainer').classList.add('activeforms');
+  });
+
+  changelogs.addEventListener('click', function (e) {
+      e.preventDefault();
+
+      document.querySelector('.Registrationcontainer').classList.remove('activeforms');
+      document.querySelector('.logincontainer').classList.add('activeforms');
+  });
+
+  logform.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const savebtn = document.querySelector("#loginbtn");
+      savebtn.innerHTML = " <div class='buttonloading'></div>";
+
+      let formData = new FormData(logform);
+      const data = Object.fromEntries(formData);
+
+
+      $.ajax({
+          url: '/User/Authenticate', // The URL to the Web API endpoint
+          type: 'POST',
+          dataType: 'json',
+          data: data,
+          success: function (res) {
+            
+              setTimeout(() => {
+                  if (res.StatusCode == 200) {
+                      Swal.fire({
+                          title: "Success",
+                          text: res.Message,
+                          icon: "success",
+                          showConfirmButton: false,
+                          timer: 1500
+                      }).then(() => {
+                          savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-regular fa-floppy-disk'></i>  Login</span>"
+                          localStorage.setItem('accessToken', res.Data.access_token);
+                          localStorage.setItem('refreshToken', res.Data.refresh_token);
+                          //localStorage.setItem('tempID', res.Data.userID);
+                          window.location.href = "/Press/PartsLocator/StorageLocation";
+                      });
+                  } else {
+                      Swal.fire({
+                          icon: "error",
+                          text: res.Message,
+                          timer: 1500,
+                          showConfirmButton: false
+                      });
+
+                      savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-regular fa-floppy-disk'></i>  login</span>"
+                  };
+              }, 500);
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+              alert('An error occurred while processing the request.');
+              console.error(textStatus, errorThrown);
+          }
+      });
+
+  });
+  regform.addEventListener('submit', function (e) {
+      e.preventDefault();
+          const savebtn = document.querySelector("#Regisbtn");
+          savebtn.innerHTML = " <div class='buttonloading'></div>";
+
+          let formData = new FormData(Registerform);
+          const data = Object.fromEntries(formData);
+          $.ajax({
+              url: '@Url.Action("RegisterUsers", "User")',
+              type: 'POST',
+              dataType: 'json',
+              data: data,
+              success: function (res) {
+                  Swal.fire({
+                      title: "Success",
+                      text: res.Message,
+                      icon: "success",
+                      showConfirmButton: false,
+                      timer: 1500
+                  }).then(() => {
+                      savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-regular fa-floppy-disk'></i>  Registered</span>"
+                      document.querySelector('.Registrationcontainer').classList.remove('activeforms');
+                      document.querySelector('.logincontainer').classList.add('activeforms');
+                  });
+
+                  savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-regular fa-floppy-disk'></i>  Registered</span>"
+              },
+              error: function (jqXHR, textStatus, errorThrown) {
+                  alert('An error occurred while processing the request.');
+                  console.error(textStatus, errorThrown);
+              }
+          });
+  });
+</script>

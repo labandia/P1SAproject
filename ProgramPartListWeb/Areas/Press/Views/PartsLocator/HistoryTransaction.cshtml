@@ -1,0 +1,264 @@
+﻿
+@{
+    ViewBag.Title = "HistoryTransaction";
+    Layout = "~/Areas/Press/Views/Shared/_PartsLocator.cshtml";
+}
+
+<div class="Transaction">
+    <div class="Transaction_header">
+        <h1>Issure History Data</h1>
+
+
+        <div class="Transaction_action">
+            <div class="TransactionAction">
+                <input type="text" placeholder="Search here ... " id="searchbox" />
+                <div class="line"></div>
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+            </div>
+        </div>
+
+    <div class="MainTable">
+        <table>
+            <thead>
+                <tr>
+                    <th>Date </th>
+                    <th>Time </th>
+                    <th>FA Shop Order </th>
+                    <th>FA Plan Quantity </th>
+                    <th>Part number </th>
+                    <th>Model </th>
+                    <th>Rack number </th>
+                    <th>Level </th>
+                    <th>Box number</th>
+                    <th>Post location</th>
+                    <th>Received by:</th>
+                    <th>Date Issuance</th>
+                    <th>Time Issuance</th>
+                    <th>Qty. Issued</th>
+                    <th>Issued  by</th>
+                </tr>
+            </thead>
+            <tbody id="TransactionTable">
+             
+
+            </tbody>
+        </table>
+
+
+    </div>
+
+    <div class="Lackloading">
+        <div class="loading-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>-</th>
+                        <th>-</th>
+                        <th>-</th>
+                        <th>-</th>
+                        <th>-</th>
+                        <th>-</th>
+                        <th>-</th>
+                        <th>-</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                        <td><div class="skeleton" style="width: 60%;"></div></td>
+                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                        <td><div class="skeleton" style="width: 60%;"></div></td>
+                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                    </tr>
+                    <tr>
+                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                        <td><div class="skeleton" style="width: 60%;"></div></td>
+                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                        <td><div class="skeleton" style="width: 60%;"></div></td>
+                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                    </tr>
+                    <tr>
+                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                        <td><div class="skeleton" style="width: 60%;"></div></td>
+                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                        <td><div class="skeleton" style="width: 60%;"></div></td>
+                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+    <div class="Transaction_footer">
+        <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
+
+        <div id="HistoryContainer" class="paginationPartlocal"></div>
+    </div>
+</div>
+
+
+
+
+<script src="~/Scripts/Utilities.js"></script>
+<script src="~/Scripts/jquery-3.7.1.min.js"></script>
+<script type="text/javascript">
+    let SummarylistData = [];
+    let start = 0;
+
+    const searchinput = document.getElementById("searchbox");
+    const changetransac = document.getElementById("filtertransact");
+
+     // Pull the masterlist Data
+    const GetHistoryData = async() => {
+        $('.Lackloading').show();
+        $('.MainTable').hide();
+        let res = await FetchAuthenticate('@Url.Action("GetIssuanceHistoryData", "PartsLocator")', {});
+        SummarylistData = [];
+        if (res && res.Success) {
+            SummarylistData = res.Data;
+            HistoryPagination(res.Data, 'TransactionTable', 'HistoryContainer', 7, 5);
+            $('.Lackloading').hide();
+            $('.MainTable').show();
+        } else {
+            $('.MainTable').show();
+        }
+      
+    }
+
+   
+    function TableDisplay(array) {
+        var SetData = $("#TransactionTable");
+        $("#TransactionTable").empty();
+
+        $.each(array, function (index, rowData) {
+            var getdata = `<tr class='row_${index} rowClick' id='editButton_${index}'>
+                       <td data-cell="Date">${rowData.DateInput}</td>
+                       <td data-cell="Date">${rowData.TimeInput}</td>
+                       <td data-cell="Shop Order">${rowData.ShopOrder}</td>
+                       <td data-cell="Part number">${rowData.Partnum}</td>
+                       <td data-cell="Model">${rowData.Model}</td>
+                       <td data-cell="Rack number">${rowData.Racksnum}</td>
+                       <td data-cell="Level">${rowData.Levelnum}</td>
+                       <td data-cell="Box number">${rowData.Boxnum}</td>
+                       <td data-cell="Post location">${rowData.Postnum}</td>
+                       <td data-cell="Quantity">${rowData.InputQuan}</td>
+                       <td data-cell="InputBy">${rowData.InputBy}</td>
+                   </tr>`;
+
+            SetData.append(getdata);
+        });
+
+        $('.Lackloading').hide();
+        $('.MainTable').show();
+    }
+    function HistoryPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 7, visibleButtons = 5) {
+
+        let currentPage = 1;
+        const totalRecords = dataArray.length;
+        const totalPages = Math.ceil(totalRecords / recordsPerPage);
+
+        $("#totalpageID").text(totalPages);
+        $("#DatalengthID").text(totalRecords);
+
+        const renderTable = (page) => {
+            const startIndex = (page - 1) * recordsPerPage;
+            const endIndex = Math.min(startIndex + recordsPerPage, totalRecords);
+            var tableBody = document.getElementById(tableBodyId);
+            tableBody.innerHTML = '';
+            let usercontrols = '';
+    
+            for (let i = startIndex; i < endIndex; i++) {
+                const rowData = dataArray[i];
+                let getdata = '';
+
+                 getdata = `<tr class='row_${i} rowClick' id='editButton_${i}'>
+                             <td data-cell="Date">${rowData.DateInput ?? "N/A"}</td>
+                             <td data-cell="Date">${rowData.TimeReceived ?? "N/A"}</td>
+                             <td data-cell="Shop Order">${rowData.FA_Shoporder ?? "N/A"}</td>
+                             <td data-cell="Part number">${rowData.FA_Plan ?? 0}</td>
+                             <td data-cell="Model">${rowData.Partnum ?? "N/A"}</td>
+                             <td data-cell="Rack number">${rowData.Model ?? "N/A"}</td>
+                             <td data-cell="Level">${rowData.Racknum ?? 0}</td>
+                             <td data-cell="Box number">${rowData.levelnum ?? 0}</td>
+                             <td data-cell="Post location">${rowData.boxnum ?? 0}</td>
+                             <td data-cell="Quantity">${rowData.postnum ?? "N/A"}</td>
+                             <td data-cell="InputBy">${rowData.Received ?? "N/A"}</td>
+                             <td data-cell="InputBy">${rowData.DateIssuance ?? "N/A"}</td>
+                             <td data-cell="InputBy">${rowData.TimeIssuance ?? "N/A"}</td>
+                             <td data-cell="InputBy">${rowData.IssuedQuan ?? 0}</td>
+                             <td data-cell="InputBy">${rowData.IssuedBy ?? "N/A"}</td>
+                         </tr>`;
+
+
+                tableBody.innerHTML += getdata;
+            }
+
+
+            // Handle click event for the delete button
+            $(document).on('click', '.editButton', function (e) {
+                e.stopPropagation(); // Prevent triggering the row click event
+                var buttonId = $(this).attr('id');
+                var rowIndex = buttonId.split('_')[1];
+            });
+        };
+
+        const renderPagination = () => {
+            const paginationContainer = document.getElementById(paginationId);
+            paginationContainer.innerHTML = '';
+            $("#pagecountID").text(currentPage);
+            // Calculate visible button range
+            let startPage = Math.max(1, currentPage - Math.floor(visibleButtons / 2));
+            let endPage = Math.min(totalPages, startPage + visibleButtons - 1);
+
+            if (endPage > totalPages) {
+                endPage = totalPages;
+                startPage = Math.max(1, endPage - visibleButtons + 1);
+            }
+
+            if (totalPages <= visibleButtons) {
+                startPage = 1;
+                endPage = totalPages;
+            }
+
+            // Always render "Previous" button
+            paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})"><i class="fa-solid fa-backward"></i>></button>`;
+
+            // Render pagination number buttons
+            for (let i = startPage; i <= endPage; i++) {
+                paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}"  onclick="changePage(${i})">${i}</button>`;
+            }
+
+            // Always render "Next" button
+            paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})"><i class="fa-solid fa-forward"></i></button>`;
+        };
+
+        const changePage = (page) => {
+            if (page >= 1 && page <= totalPages) {
+                currentPage = page;
+                renderTable(currentPage);
+                renderPagination();
+            }
+        };
+
+        window.changePage = changePage;
+
+        renderTable(currentPage);
+        renderPagination();
+    }
+
+    GetHistoryData();
+</script>

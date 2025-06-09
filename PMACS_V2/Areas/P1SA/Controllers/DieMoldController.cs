@@ -1,0 +1,78 @@
+﻿using PMACS_V2.Areas.P1SA.Interface;
+using PMACS_V2.Areas.P1SA.Models;
+using PMACS_V2.Controllers;
+using PMACS_V2.Utilities;
+using ProgramPartListWeb.Helper;
+using ProgramPartListWeb.Utilities;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Mvc;
+
+namespace PMACS_V2.Areas.P1SA.Controllers
+{
+    [CompressResponse]
+    public class DieMoldController : ExtendController
+    {
+        private readonly IDieMold _die;
+        public DieMoldController(IDieMold die) => _die = die;
+
+        // ===========================================================
+        // ==================== MOLD DIE DATA  =======================
+        // ===========================================================
+        public async Task<ActionResult> GetMoldDieSummaryList()
+        {
+            try
+            {
+                var data = await CacheHelper.GetOrSetAsync("DieSummary", () => _die.GetMoldDieSummary(), 10);
+                if (data == null || !data.Any())
+                    return JsonNotFound("No DieSummary  data not found");
+
+                return JsonSuccess(data);
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message);
+            }
+        }
+
+
+        public async Task<ActionResult> GetMoldDieMonthInputList(int Months, int Year)
+        {
+            try
+            {          
+                //var data = await CacheHelper.GetOrSetAsync("DieMonth", () => _die.GetMoldDieMonthInput(month, year), 10);
+                var data = await _die.GetMoldDieMonthInput(Months, Year);
+
+                if (data == null || !data.Any())
+                    return JsonNotFound("No DieMonth input data found");
+
+                return JsonSuccess(data);
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message);
+            }
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> AddUpdateMoldDieMonitor(MoldInputModel add)
+        {
+            bool update = await _die.AddUpdateMoldie(add);
+            var formdata = GlobalUtilities.GetMessageResponse(update, 1);
+            return Json(formdata, JsonRequestBehavior.AllowGet);
+        }
+
+
+
+        // GET: P1SA/DieMold
+        public ActionResult DieMoldLife()
+        {
+            return View();
+        }
+    }
+}

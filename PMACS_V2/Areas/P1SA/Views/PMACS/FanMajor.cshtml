@@ -1,0 +1,1536 @@
+﻿
+@{
+    ViewBag.Title = "FanMajor";
+    Layout = "~/Areas/P1SA/Views/Shared/_Layout.cshtml";
+}
+
+<header class="Capheader d-flex align-items-center justify-content-between">
+    <h3>Fan Major Equipment</h3>
+    <div class="header2__actionf d-flex align-items-center gap-2">
+        <button type="button" id="addbtn" class="primary_button_color"><i class="fa fa-plus" aria-hidden="true"></i> Add Machine </button>
+        <button type="button" id="GridView" data-tooltip="Grid view"><i class="fa-solid fa-grip"></i>  </button>
+        <button type="button" id="ListView" data-tooltip="Table view"><i class="fa-solid fa-table"></i> </button>
+    </div>
+   
+</header>
+
+
+<div class="tabs mt-4">
+    <div class="tabs__header d-flex align-items-center gap-2">
+        <div class="active">Molding</div>
+        <div>Press</div>
+        <div>Rotor</div>
+        <div>Winding</div>
+        <div>Circuit</div>
+    </div>
+
+    <div class="tabs__body">
+        <div class="active" style="width: 100%;">
+            <section class="fanhead__stats d-flex justify-content-between align-items-center mb-4">
+                <div class="d-flex align-items-center gap-3">
+                    <span>
+                        <i class="fa fa-square" id="workope" aria-hidden="true"></i>
+                        <span>Working:</span>
+                        <span id="working_mold">0</span>
+                    </span>
+
+                    <span>
+                        <i class="fa fa-square" id="notworkope" aria-hidden="true"></i>
+                        <span>Shutdown:</span>
+                        <span id="notworking_mold">0</span>
+                    </span>
+                </div>
+
+                <div class="fanhead__action">
+
+                    <div class="select-container">
+                        <select id="machcode__mold" name="machcode__mold">
+                            <option value="None">All</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <section class="program">
+                <div class="column-4" id="displaymachine_molding"></div>
+            </section>
+
+            <button id="molding_btn">Load More</button>
+        </div>
+        <div style="width: 100%;">
+            <section class="fanhead__stats d-flex justify-content-between align-items-center mb-4">
+                <div class="fanhead__stats flex__align">
+                    <span>
+                        <i class="fa fa-square" id="workope" aria-hidden="true"></i>
+                        <span>Working:</span>
+                        <span id="working_press">0</span>
+                    </span>
+
+                    <span>
+                        <i class="fa fa-square" id="notworkope" aria-hidden="true"></i>
+                        <span>Shutdown:</span>
+                        <span id="notworking_press">0</span>
+                    </span>
+                </div>
+
+                <div class="fanhead__action">
+                    <div class="select-container">
+                        <select id="machcode__press" name="machcode__press">
+                            <option value="None">All</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <section class="program">
+                <div class="column-4" id="displaymachine_press"></div>
+            </section>
+
+            <button id="press_btn">Load More</button>
+        </div>
+        <div style="width: 100%;">
+            <section class="fanhead__stats d-flex justify-content-between align-items-center mb-4">
+                <div class="fanhead__stats flex__align">
+                    <span>
+                        <i class="fa fa-square" id="workope" aria-hidden="true"></i>
+                        <span>Working:</span>
+                        <span id="working_rotor">0</span>
+                    </span>
+
+                    <span>
+                        <i class="fa fa-square" id="notworkope" aria-hidden="true"></i>
+                        <span>Shutdown:</span>
+                        <span id="notworking_rotor">0</span>
+                    </span>
+                </div>
+                <div class="fanhead__action">
+
+                    <div class="select-container">
+                        <select id="machcode__rotor" name="machcode__rotor">
+                            <option value="None">All</option>
+                        </select>
+                    </div>
+                </div>
+
+            </section>
+
+            <section class="program">
+                <div class="column-4" id="displaymachine_rotor"></div>
+            </section>
+            <button id="rotor_btn">Load More</button>
+        </div>
+        <div style="width: 100%;">
+            <section class="fanhead__stats d-flex justify-content-between align-items-center mb-4">
+                <div class="fanhead__stats flex__align">
+                    <span>
+                        <i class="fa fa-square" id="workope" aria-hidden="true"></i>
+                        <span>Working:</span>
+                        <span id="working_wind">0</span>
+                    </span>
+
+                    <span>
+                        <i class="fa fa-square" id="notworkope" aria-hidden="true"></i>
+                        <span>Shutdown:</span>
+                        <span id="notworking_wind">0</span>
+                    </span>
+                </div>
+
+
+                <div class="fanhead__action">
+
+                    <div class="select-container">
+                        <select id="machcode__winding" name="machcode__winding">
+                            <option value="None">All</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <section class="program">
+                <div class="column-4" id="displaymachine_winding"></div>
+            </section>
+            <button id="winding_btn">Load More</button>
+        </div>
+        <div style="width: 100%;">
+            <section class="fanhead__stats d-flex justify-content-between align-items-center mb-4">
+                <div class="fanhead__stats flex__align">
+                    <span>
+                        <i class="fa fa-square" id="workope" aria-hidden="true"></i>
+                        <span>Working:</span>
+                        <span id="working_circuit">0</span>
+                    </span>
+
+                    <span>
+                        <i class="fa fa-square" id="notworkope" aria-hidden="true"></i>
+                        <span>Shutdown:</span>
+                        <span id="notworking_circuit">0</span>
+                    </span>
+                </div>
+
+
+
+                <div class="fanhead__action">
+
+                    <div class="select-container">
+                        <select id="machcode__circuit" name="machcode__circuit">
+                            <option value="None">All</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <section class="program">
+                <div class="column-4" id="displaymachine_circuit"></div>
+            </section>
+            <button id="circuit_btn">Load More</button>
+        </div>
+    </div>
+</div>
+
+
+
+<!--########################## ADD NEW MACHINE   #############################-->
+<div class="modal fade modal-xl" id="addedmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+
+                <div class="custom_modal_header">
+                    <div class="custom_modal__icon">
+                        <div class="custom_icon_container">
+                            <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                        </div>
+                        <div class="custom_modal_title">
+                            <span>Add new Machine</span>
+                            <p>Fill all the required input</p>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+
+                <form id="addmachine" enctype="multipart/form-data">
+                    <div class="addmachinewrap">
+                        <div class="addmachinewrap__col">
+                            <div class="model__fields">
+                                <div class="detail__inputfield">
+                                    <label for="">Select Section :  </label>
+                                    <select id="selectedSection" class="selectedSection" required>
+                                        <option value="0">--Select--</option>
+                                        <option value="2">Molding</option>
+                                        <option value="1">Press</option>
+                                        <option value="3">Rotor</option>
+                                        <option value="4">Winding</option>
+                                        <option value="5">Circuit</option>
+                                    </select>
+                                </div>
+                                <div class="detail__inputfield">
+                                    <label for="">Select Fan Major Equipment:</label>
+                                    <select name="addmachcode" id="addmachcode">
+                                    </select>
+                                </div>
+
+
+                            </div>
+                            <div class="model__fields">
+                                <div class="detail__inputfield">
+                                    <label for="">Equiment name:</label>
+                                    <input type="text" placeholder="Input model part number" name="Equip" id="Equip" autocomplete="off" required>
+                                </div>
+
+
+                                <div class="detail__inputfield">
+                                    <label for="">Date Acquired:</label>
+                                    <input type="date" id="Dateacq" name="Dateacq" autocomplete="off" required>
+                                </div>
+
+                            </div>
+
+                            <div class="model__fields">
+                                <div class="detail__inputfield">
+                                    <label for="">Machine Model :</label>
+                                    <input type="text" placeholder="Input turns" name="Model" id="Model" autocomplete="off">
+                                </div>
+                                <div class="detail__inputfield">
+                                    <label for="">Present Location :</label>
+                                    <input type="text" placeholder="Input turns" name="local" id="local" autocomplete="off">
+                                </div>
+                            </div>
+
+
+                            <div class="model__fields">
+                                <div class="detail__inputfield">
+                                    <label for="">Serial :</label>
+                                    <input type="text" placeholder="Input turns" name="Serial" id="Serial" autocomplete="off">
+                                </div>
+                                <div class="detail__inputfield">
+                                    <label for="">Shifts :</label>
+                                    <select id="Shifts" name="Shifts">
+                                        <option value="0">2 shifts (DS/NS)</option>
+                                        <option value="1">1 Shifts (DS)</option>
+                                        <option value="2">1 Shifts (NS)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="model__fields">
+                                <div class="detail__inputfield">
+                                    <label for="">Manufacturer :</label>
+                                    <input type="text" placeholder="Input turns" name="Manu" id="Manu" autocomplete="off">
+                                </div>
+                                <div class="detail__inputfield">
+                                    <label for="">Fix Asset :</label>
+                                    <input type="text" placeholder="Input turns" name="Assets" id="Turns2" autocomplete="off">
+                                </div>
+                            </div>
+
+                            <div class="model__fields" id="formold">
+                                <div class="detail__inputfield">
+                                    <label for="">Tons :</label>
+                                    <input type="text" placeholder="Input turns" name="tons" id="tons" autocomplete="off">
+                                </div>
+
+                            </div>
+
+                            <div class="mt-3 addmachinewrap__radio">
+
+                                <div class="addwrap">
+                                    <input type="radio" name="status" id="status" value="Operational" checked /><span class="tablemain__ope">Operational</span>
+                                    <input type="radio" name="status" id="status" value="Not Operational" /><span class="tablemain__notope">Not Operational</span>
+                                </div>
+                            </div>
+
+                            <div class="addcomments">
+                                <label>Reasons: </label>
+                                <textarea id="addreason" name="addreason" rows="1" cols="50"></textarea>
+                            </div>
+
+
+                        </div>
+                        <div class="addmachinewrap__col">
+                            <div class="Addmach__uploadcontain">
+                                <img id="preview" src="~/Content/Images/noimage.png" alt="">
+
+                                <div class="Addmach__uploadaction">
+                                    <button class="btn btn-default" type="button" id="btnUpload" onclick='$("#imageUpload").click()'><i class='fa fa-upload '></i></button>
+                                    <div>
+                                        <p>Upload machine Photo</p>
+                                        <small>Click the Button to Upload the Image</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <input style="display: none" name="postedFile" type="file" class="form-control" id="imageUpload" accept="image/*" />
+                        </div>
+                    </div>
+
+
+
+                    <div class="Addmach__footer">
+
+                        <button type="Submit" class="btn btn-success">
+                            <i class="fa fa-plus" aria-hidden="true"></i>  Add
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<!--########################## EDIT MACHINE modal-fullscreen   #############################-->
+<div class="modal fade modal-xl" id="Editmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog  modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <div class="custom_modal_header">
+                    <div class="custom_modal__icon">
+                        <div class="custom_icon_container">
+                            <i class="fa fa-info-circle" aria-hidden="true"></i>
+                        </div>
+                        <div class="custom_modal_title">
+                            <span id="machine_name">Machine Information</span>
+                            <p>Machine Information</p>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+
+
+                <form id="editmachineforms" enctype="multipart/form-data">
+                    <div class="addmachinewrap">
+                        <div class="addmachinewrap__col">
+
+                            <div class="model__fields">
+                                <div class="detail__inputfield">
+                                    <label for="">Equiment name:</label>
+                                    <input class="mode" type="text" placeholder="Input equipment" name="EditEquip" id="EditEquip">
+                                </div>
+
+
+                                <div class="detail__inputfield">
+                                    <label for="">Date Acquired:</label>
+                                    <input class="mode" type="date" id="EditDateacq" name="EditDateacq">
+                                </div>
+
+                            </div>
+
+                            <div class="model__fields">
+                                <div class="detail__inputfield">
+                                    <label for="">Machine Model :</label>
+                                    <input class="mode" type="text" placeholder="Input Model " name="EditModel" id="EditModel">
+                                </div>
+                                <div class="detail__inputfield">
+                                    <label for="">Present Location :</label>
+                                    <input class="mode" type="text" placeholder="Input Location" name="Editlocal" id="Editlocal">
+                                </div>
+                            </div>
+
+
+                            <div class="model__fields">
+                                <div class="detail__inputfield">
+                                    <label for="">Serial :</label>
+                                    <input class="mode" type="text" placeholder="Input Serial" name="EditSerial" id="EditSerial">
+                                </div>
+                                <div class="detail__inputfield">
+                                    <label for="">Shifts :</label>
+                                    <select id="EditShifts" name="EditShifts" class="mode" disabled>
+                                        <option value="0">2 shifts (DS/NS)</option>
+                                        <option value="1">1 Shifts (DS)</option>
+                                        <option value="2">1 Shifts (NS)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="model__fields">
+                                <div class="detail__inputfield">
+                                    <label for="">Manufacturer :</label>
+                                    <input class="mode" type="text" placeholder="Input Manufacturer" name="EditManu" id="EditManu">
+                                </div>
+                                <div class="detail__inputfield">
+                                    <label for="">Fix Asset :</label>
+                                    <input class="mode" type="text" placeholder="Input Fix assets" name="EditAssets" id="EditAssets">
+                                </div>
+                            </div>
+
+                            <div class="model__fields" id="editformold">
+                                <div class="detail__inputfield">
+                                    <label for="">Tons :</label>
+                                    <input class="mode" type="text" placeholder="Input turns" name="edittons" id="edittons">
+                                </div>
+
+
+
+                            </div>
+
+
+                            <div class="mt-3 addmachinewrap__radio ">
+                                <label style="font-weight: 500;">Status :  </label>
+                                <input class="mode" type="radio" name="Editstatus" id="EditstatusOperational" value="Operational" />
+                                <span class="tablemain__ope ope">Operational</span>
+                                <input class="mode" type="radio" name="Editstatus" id="EditstatusOperational" value="Not Operational" />
+                                <span class="tablemain__notope notope">Not Operational</span>
+                                <input type="hidden" name="EditID" id="EditID">
+
+                            </div>
+
+
+
+
+
+                            <div class="addcomments">
+                                <label>Reasons: </label>
+                                <textarea class="mode" id="reason" name="reason" rows="1" cols="50"></textarea>
+                            </div>
+
+                        </div>
+                        <div class="addmachinewrap__col">
+                            <div class="Addmach__uploadcontain">
+                                <img id="Editpreview" src="~/Content/Images/noimage.png" alt="">
+
+                                <div class="Addmach__uploadaction" id="edituploadforms">
+                                    <button class="btn btn-default" type="button" id="btnUpload" onclick='$("#EditimageUpload").click()'><i class='fa fa-upload '></i></button>
+                                    <div>
+                                        <p>Upload machine Photo</p>
+                                        <small>Click the Button to Upload the Image</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <input style="display: none" name="postedFile" type="file" class="form-control" id="EditimageUpload" accept="image/*" />
+                        </div>
+                    </div>
+
+
+
+                    <div class="Addmach__footer">
+                        <button type="button" id="deletebtn"><i class="fa-regular fa-trash-can"></i> Delete Machine</button>
+                        <button id="fanEnableEdit"> Enable the Edit</button>
+                        <button type="submit" id="fansaveEdit">
+                            <span><i class="fa-regular fa-floppy-disk"></i>  Save Details</span>
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="~/Scripts/jquery-3.7.0.js"></script>
+<script src="~/Scripts/Utilities.js"></script>
+<script src="~/Scripts/Global.js"></script>
+<script type="text/javascript">
+    let loadData = [];
+    let EquipData = [];
+    let tempwork;
+    let tempnotwork;
+    let EditID = 0;
+    var EmployeeID;
+    let currentTabIndex = getCurrentTabIndex();
+
+    //TO BY FORMS
+    const addnew = document.querySelector("#addmachine");
+    const editmach = document.querySelector("#editmachineforms");
+
+    //TO SET THE DATE TODAY AND PREVIOUS
+    var today = new Date().toISOString().split('T')[0];
+    document.getElementById("Dateacq").setAttribute('max', today);
+
+    $('.mode').prop('disabled', true);
+    let loadtable = $("#SummarybodyID");
+
+    let machineData1 = $("#displaymachine_molding");
+    let machineData2 = $("#displaymachine_press");
+    let machineData3 = $("#displaymachine_rotor");
+    let machineData4 = $("#displaymachine_winding");
+    let machineData6 = $("#displaymachine_all");
+    let machineData5 = $("#displaymachine_circuit");
+
+    // START AND LIMIT VARIABLE
+    var m_offset = 0, p_offset = 0, r_offset = 0, w_offset = 0, c_offset = 0;
+    var m_limit = 8, p_limit = 8, r_limit = 8, w_limit = 8, c_limit = 8;
+
+
+    const FanMajorlist = async () => {
+        let formdata = new FormData();
+        formdata.append('offset', m_offset);
+        formdata.append('limit', m_limit);
+        formdata.append('sectionID', 2);
+        formdata.append('mach', '');
+        let res = await fetchData('@Url.Action("GetFanmajorMachine", "FanMajor")', formdata);
+
+        if (res && res.Success) {
+            loadData = res.Data;
+
+            if (loadData[0].Section_ID == 1 || loadData[0].Section_ID == 2) {
+                $("#formold").show();
+                $("#editformold").show();
+            } else {
+                $("#formold").hide();
+                $("#editformold").hide();
+            }
+
+            appendData(machineData1, res.Data);
+            displayEquipment(2);
+            CountMachine(2, "", loadData);
+        }
+    }
+
+
+    const appendData = (machineData, data) => {
+        machineData.empty();
+        $.each(data, function (index, rowData) {
+            var reasons = "";
+
+            if (rowData.status !== 'Operational') {
+                reasons = "<div class='program__icon flex__align'>" +
+                    "<small style='color: hsl(0, 97%, 40%);'>" + rowData.Reasons + "</small>" +
+                    "</div>"
+            }
+
+
+            var imageHtml = rowData.ImageBase64 ?
+                "<img class='lazy' ondragstart='return false;' src='data:image/jpeg;base64," + rowData.ImageBase64 + "'  />" :
+                "<img class='lazy' ondragstart='return false;' src='/Content/Images/noimage.png'  />";
+
+            var getdata = "<div class='program__card' id='row" + index + "'>" +
+                imageHtml +
+                "<input type='hidden' name='sampleID' id='sampleID' value='" + rowData.ID + "'>" +
+                "<div class='program__btn " + (rowData.status === "Operational" ? "ope" : "notope") + "' >" + rowData.status + "</div>" +
+                "<div class='program__content'>" +
+                "<h2 class='fw-semi-bold'>" + rowData.Model + "</h2>" +
+                "<div class='program__icon flex__align'>" +
+                "<i class='fa-regular fa-calendar-check'></i>" +
+                "<small>" + rowData.DateAdd + "</small>" +
+                "</div>" +
+                "<div class='program__icon flex__align'>" +
+                "<i class='fa fa-cube' aria-hidden='true'></i>" +
+                "<small>" + rowData.Serial + "</small>" +
+                "</div>" +
+                "<div class='program__icon flex__align'>" +
+                "<i class='fa-regular fa-map'></i>" +
+                "<small>" + rowData.Manufact + "</small>" +
+                "</div>" +
+                reasons +
+                "<div class='program__action flex__align'>" +
+                "<button class='row_" + index + "  editButton' id='editButton_" + rowData.ID + "'> <i class='fa fa-info-circle' aria-hidden='true'></i>  Machine details</button>" +
+                "</div>" +
+                "</div>" +
+                "</div>";
+            machineData.append(getdata);
+        });
+    }
+    const displayEquipment = async (ID) => {
+
+        var dropdata1 = $("#machcode__press");
+        var dropdata2 = $("#machcode__mold");
+        var dropdata3 = $("#machcode__rotor");
+        var dropdata4 = $("#machcode__winding");
+        var dropdata5 = $("#machcode__circuit");
+
+        let res = await fetchData('@Url.Action("GetEquipmenList", "FanMajor")', { sectionID: ID });
+        if (res && res.Success) {
+                    switch (ID) {
+                        case 2:
+                            $("#machcode__mold").empty();
+                            dropdata2.append("<option value='None'>All</option>");
+
+
+                            $.each(res.Data, function (index, row) {
+                                var changedrop = "<option value='" + row.Machine_code + "'>" + row.Equipment + "</option>"
+                                dropdata2.append(changedrop);
+                            });
+                            break;
+                        case 1:
+                            $("#machcode__press").empty();
+                            dropdata1.append("<option value='None'>All</option>");
+
+                            $.each(res.Data, function (index, row) {
+                                var changedrop = "<option value='" + row.Machine_code + "'>" + row.Equipment + "</option>"
+                                dropdata1.append(changedrop);
+                            });
+                            break;
+                        case 3:
+                            $("#machcode__rotor").empty();
+                            dropdata3.append("<option value='None'>All</option>");
+
+                            $.each(res.Data, function (index, row) {
+                                var changedrop = "<option value='" + row.Machine_code + "'>" + row.Equipment + "</option>"
+                                dropdata3.append(changedrop);
+                            });
+                            break;
+                        case 4:
+                            $("#machcode__winding").empty();
+                            dropdata4.append("<option value='None'>All</option>");
+
+                            $.each(res.Data, function (index, row) {
+                                var changedrop = "<option value='" + row.Machine_code + "'>" + row.Equipment + "</option>"
+                                dropdata4.append(changedrop);
+                            });
+                            break;
+                        case 5:
+                            $("#machcode__circuit").empty();
+                            dropdata5.append("<option value='None'>All</option>");
+
+                            $.each(res.Data, function (index, row) {
+                                var changedrop = "<option value='" + row.Machine_code + "'>" + row.Equipment + "</option>"
+                                dropdata5.append(changedrop);
+                            });
+                            break;
+                    }
+        }
+
+
+    }
+    const CountMachine = async (secId, mach, data) => {
+        let res = await fetchData('@Url.Action("GetMachineCount", "FanMajor")', { sectionID: secId, machcode: mach });
+        if (res && res.Success) {
+            let load = res.Data;
+            switch (secId) {
+                case 1:
+                    $("#working_press").text(load[0].work);
+                    $("#notworking_press").text(load[0].notwork);
+                    break;
+                case 2:
+                    $("#working_mold").text(load[0].work);
+                    $("#notworking_mold").text(load[0].notwork);
+                    break;
+                case 3:
+                    $("#working_rotor").text(load[0].work);
+                    $("#notworking_rotor").text(load[0].notwork);
+                    break;
+                case 4:
+                    $("#working_wind").text(load[0].work);
+                    $("#notworking_wind").text(load[0].notwork);
+                    break;
+                case 5:
+                    $("#working_circuit").text(load[0].work);
+                    $("#notworking_circuit").text(load[0].notwork);
+                    break;
+            }
+        }        
+    }
+
+
+    const displaycamefromtheedit = (data) => {
+        let index = loadData.findIndex(item => item.ID === data.ID);
+
+        //let objToUpdate = loadData.find(item => item.ID === data.ID);
+
+
+        loadData[index].Asset = data.Asset;
+        loadData[index].Date_acquired = data.Date_acquired;
+        loadData[index].Dateadd = data.Dateadd;
+        loadData[index].Equipment = data.Equipment;
+        loadData[index].Filepath = data.Filepath;
+        loadData[index].ID = data.ID;
+        loadData[index].IsDelete = data.IsDelete;
+        loadData[index].MACH_CODE = data.MACH_CODE;
+        loadData[index].Machname = data.Machname;
+        loadData[index].Manufact = data.Manufact;
+        loadData[index].Model = data.Model;
+        loadData[index].Reasons = data.Reasons;
+        loadData[index].Section_ID = data.Section_ID;
+        loadData[index].Serial = data.Serial;
+        loadData[index].Status = data.Status;
+        loadData[index].Tongs = data.Tongs;
+        loadData[index].location = data.location;
+
+        switch (parseInt(data.Section_ID)) {
+            case 2:
+                appendData(machineData1, loadData);
+
+                break;
+            case 1:
+                appendData(machineData2, loadData);
+
+                break;
+            case 3:
+                appendData(machineData3, loadData);
+
+                break;
+            case 4:
+                appendData(machineData4, loadData);
+
+
+                break;
+            case 5:
+                appendData(machineData5, loadData);
+
+                break;
+        }
+
+    }
+
+    // ################################################################################################## //
+
+
+
+
+
+    //##################################################################################################### //
+    const MachineFilterData = async (formdata, sectionID, mach, mode) => {
+        loadData = [];
+        let res = await fetchData('@Url.Action("GetFanmajorMachine", "FanMajor")', formdata);
+        if (res && res.Success) {
+            loadData = res.Data;
+
+            if (loadData[0].Section_ID == 1 || loadData[0].Section_ID == 2) {
+                $("#formold").show();
+                $("#editformold").show();
+            } else {
+                $("#formold").hide();
+                $("#editformold").hide();
+            }
+
+            switch (sectionID) {
+                case 2:
+                    appendData(machineData1, loadData);
+                    break;
+                case 1:
+                    appendData(machineData2, loadData);
+                    break;
+                case 3:
+                    appendData(machineData3, loadData);
+                    break;
+                case 4:
+                    appendData(machineData4, loadData);
+                    break;
+                case 5:
+                    appendData(machineData5, loadData);
+                    break;
+            }
+
+            if (mode === 0) {
+                displayEquipment(sectionID);
+            }
+
+            CountMachine(sectionID, "", loadData);
+        }
+    }
+
+
+
+    function MachineLoadmoreData(data, sectionID) {
+        loadData = [];
+        makeAjaxRequest(apiBaseUrl + 'Machine', data, 0)
+            .then(res => {
+                let load = res.machine;
+                loadData = load;
+
+                if (parseInt(load[0].SecID) == 1 || parseInt(load[0].SecID) == 2) {
+                    $("#formold").show();
+                    $("#editformold").show();
+                } else {
+                    $("#formold").hide();
+                    $("#editformold").hide();
+                }
+
+                switch (sectionID) {
+                    case 2:
+                        appendData(machineData1, load);
+                        if (load.length < m_limit) {
+                            $('#molding_btn').hide(); // Hide button if no more records
+                        }
+                        break;
+                    case 1:
+                        appendData(machineData2, load);
+                        if (load.length < p_limit) {
+                            $('#press_btn').hide(); // Hide button if no more records
+                        }
+                        break;
+                    case 3:
+
+                        appendData(machineData3, load);
+                        if (load.length < r_limit) {
+                            $('#rotor_btn').hide(); // Hide button if no more records
+                        }
+                        break;
+                    case 4:
+                        appendData(machineData4, load);
+                        if (load.length < w_limit) {
+                            $('#winding_btn').hide(); // Hide button if no more records
+                        }
+                        break;
+                    case 5:
+                        appendData(machineData5, load);
+                        if (load.length < c_limit) {
+                            $('#circuit_btn').hide(); // Hide button if no more records
+                        }
+                        break;
+                }
+
+            })
+            .catch(error => {
+                console.error('Error occurred:', error);
+                // Handle the error
+            });
+    }
+    function MachineLoadFilterData(data, sectionID, mach) {
+        loadData = [];
+        makeAjaxRequest(apiBaseUrl + 'Machine', data, 0)
+            .then(res => {
+                let load = res.machine;
+                loadData = load;
+                if (parseInt(load[0].SecID) == 1 || parseInt(load[0].SecID) == 2) {
+                    $("#formold").show();
+                    $("#editformold").show();
+                } else {
+                    $("#formold").hide();
+                    $("#editformold").hide();
+                }
+
+                switch (sectionID) {
+                    case 2:
+                        appendData(machineData1, load);
+                        CountMachine(2, mach);
+                        break;
+                    case 1:
+                        appendData(machineData2, load);
+                        CountMachine(1, mach);
+                        break;
+                    case 3:
+                        appendData(machineData3, load);
+                        CountMachine(3, mach);
+                        break;
+                    case 4:
+                        appendData(machineData4, load);
+                        CountMachine(4, mach);
+
+                        break;
+                    case 5:
+                        appendData(machineData5, load);
+                        CountMachine(5, mach);
+                        break;
+                }
+
+            })
+            .catch(error => {
+                console.error('Error occurred:', error);
+                // Handle the error
+            });
+    }
+
+
+    //################################### FITLER DATA BASE ON DROPDOWN MENU ##################################
+    $('#machcode__mold').change(function () {
+        $("#molding_btn").show();
+        p_limit = 8;
+        let formdata = new FormData();
+        formdata.append('offset', m_offset);
+        formdata.append('limit', p_limit);
+        formdata.append('sectionID', 2);
+        formdata.append('mach', this.value);
+        const data = Object.fromEntries(formdata);
+        MachineFilterData(formdata, 2, data.mach, 1);
+    });
+    $('#machcode__press').change(function () {
+        $("#press_btn").show();
+        p_limit = 8;
+        let formdata = new FormData();
+        formdata.append('offset', p_offset);
+        formdata.append('limit', p_limit);
+        formdata.append('sectionID', 1);
+        formdata.append('mach', this.value);
+
+        const data = Object.fromEntries(formdata);
+        MachineFilterData(formdata, 1, data.mach, 1);
+    });
+    $('#machcode__rotor').change(function () {
+        $("#rotor_btn").show();
+        r_limit = 8;
+        let formdata = new FormData();
+        formdata.append('offset', r_offset);
+        formdata.append('limit', r_limit);
+        formdata.append('sectionID', 3);
+        formdata.append('mach', this.value);
+        const data = Object.fromEntries(formdata);
+        MachineFilterData(formdata, 3, data.mach, 1);
+    });
+    $('#machcode__winding').change(function () {
+        $("#winding_btn").show();
+        w_limit = 8;
+        let formdata = new FormData();
+        formdata.append('offset', w_offset);
+        formdata.append('limit', w_limit);
+        formdata.append('sectionID', 4);
+        formdata.append('mach', this.value);
+        const data = Object.fromEntries(formdata);
+        MachineFilterData(formdata, 4, data.mach, 1);
+    });
+    $('#machcode__circuit').change(function () {
+        $("#circuit_btn").show();
+        c_limit = 8;
+        let formdata = new FormData();
+        formdata.append('offset', c_offset);
+        formdata.append('limit', c_limit);
+        formdata.append('sectionID', 5);
+        formdata.append('mach', this.value);
+        const data = Object.fromEntries(formdata);
+        MachineFilterData(formdata, 5, data.mach, 1);
+    });
+
+    // ##############################  LOAD MORE BUTTONS ############################################# //
+    $("#molding_btn").click(function () {
+        m_limit += 5;
+        let select;
+        select = $("#machcode__mold").val();
+
+        const savebtn = this;
+        savebtn.innerHTML = " <div class='Submitloading'></div>"
+
+        setTimeout(() => {
+            if (select == 'None') {
+                let data = {
+                    offset: m_offset,
+                    limit: m_limit,
+                    sectionID: 2,
+                    mach: ''
+                }
+                MachineLoadmoreData(data, 2);
+            } else {
+                let data = {
+                    offset: m_offset,
+                    limit: m_limit,
+                    sectionID: 2,
+                    mach: $("#machcode__mold").val()
+                }
+                MachineLoadmoreData(data, 2);
+            }
+            savebtn.innerHTML = "Load more"
+        }, 1000)
+
+
+
+
+    });
+    $("#press_btn").click(function () {
+        p_limit += 5;
+        let select;
+        select = $("#machcode__press").val();
+
+
+        const savebtn = this;
+        savebtn.innerHTML = " <div class='Submitloading'></div>"
+
+
+        setTimeout(() => {
+            if (select == 'None') {
+                let data = {
+                    offset: p_offset,
+                    limit: p_limit,
+                    sectionID: 1,
+                    mach: ''
+                }
+
+                MachineLoadmoreData(data, 1);
+            } else {
+                let data = {
+                    offset: p_offset,
+                    limit: p_limit,
+                    sectionID: 1,
+                    mach: $("#machcode__press").val()
+                }
+
+                MachineLoadmoreData(data, 1);
+            }
+            savebtn.innerHTML = "Load more"
+        }, 1000)
+
+
+    });
+    $("#rotor_btn").click(function () {
+        r_limit += 5;
+        let select;
+        select = $("#machcode__rotor").val();
+
+        const savebtn = this;
+        savebtn.innerHTML = " <div class='Submitloading'></div>"
+
+        setTimeout(() => {
+            if (select == "None") {
+                let data = {
+                    offset: r_offset,
+                    limit: r_limit,
+                    sectionID: 3,
+                    mach: ""
+                }
+
+                MachineLoadmoreData(data, 3);
+            } else {
+                let data = {
+                    offset: r_offset,
+                    limit: r_limit,
+                    sectionID: 3,
+                    mach: $("#machcode__rotor").val()
+                }
+
+                MachineLoadmoreData(data, 3);
+            }
+            savebtn.innerHTML = "Load more"
+        }, 1000);
+
+
+    });
+    $("#winding_btn").click(function () {
+        w_limit += 5;
+
+        let select;
+        select = $("#machcode__winding").val();
+
+        const savebtn = this;
+        savebtn.innerHTML = " <div class='Submitloading'></div>"
+
+        setTimeout(() => {
+            if (select == "None") {
+                let data = {
+                    offset: w_offset,
+                    limit: w_limit,
+                    sectionID: 4,
+                    mach: ""
+                }
+
+                MachineLoadmoreData(data, 4);
+            } else {
+                let data = {
+                    offset: w_offset,
+                    limit: w_limit,
+                    sectionID: 4,
+                    mach: $("#machcode__winding").val()
+                }
+
+                MachineLoadmoreData(data, 4);
+            }
+            savebtn.innerHTML = "Load more"
+        }, 1000)
+    });
+    $("#circuit_btn").click(function () {
+        c_limit += 5;
+
+        let select;
+        select = $("#machcode__circuit").val();
+
+        const savebtn = this;
+        savebtn.innerHTML = " <div class='Submitloading'></div>"
+
+        setTimeout(() => {
+            if (select == "None") {
+                let data = {
+                    offset: c_offset,
+                    limit: c_limit,
+                    sectionID: 5,
+                    mach: ""
+                }
+
+                MachineLoadmoreData(data, 5);
+            } else {
+                let data = {
+                    offset: c_offset,
+                    limit: c_limit,
+                    sectionID: 5,
+                    mach: $("#machcode__circuit").val()
+                }
+
+                MachineLoadmoreData(data, 5);
+            }
+            savebtn.innerHTML = "Load more"
+        }, 1000);
+
+
+    });
+
+
+
+    // BUTTONS CONTROLS
+    $(document).ready(function () {
+        // SWITCH DETAILS TO EDIT MODE
+        $("#fanEnableEdit").click(function (e) {
+            e.preventDefault();
+            $('.mode').prop('disabled', false);
+            $("#fanEnableEdit").css("display", "none");
+            $("#fansaveEdit").css("display", "grid");
+            $("#edituploadforms").show();
+        });
+
+        $("#addbtn").on('click', () => {
+            $("#addedmodal").modal("show");
+        });
+
+        //SHOW DATA TO THE EDIT MODAL FORMS
+        $(document).on('click', '.editButton', function () {
+            $('.mode').prop('disabled', true);
+            $("#fanEnableEdit").css("display", "grid");
+            $("#fansaveEdit").css("display", "none");
+
+            const now = new Date();
+            //const formattedDate = now.toISOString().split('T')[0];
+            var buttonId = $(this).attr('id');
+            var rowIndex = buttonId.split('_')[1]; // Extract the index from the button ID
+            let result = searchArray(loadData, "ID", rowIndex);
+
+            let setDate;
+            // Get the current active tab index
+            currentTabIndex = getCurrentTabIndex();
+            setDate = changeformattedDate(result.DateAcquire);
+
+
+            $('#machine_name').text(result.Machname);
+            $('#EditID').val(result.ID);
+            $('#EditEquip').val(result.Machname);
+            $('#EditDateacq').val(setDate);
+            $('#EditModel').val(result.Model);
+            $('#Editlocal').val(result.location);
+            $('#EditSerial').val(result.Serial);
+            $('#EditShifts').val(result.Shifts);
+            $('#EditManu').val(result.Manufact);
+            $('#EditAssets').val(result.Asset);
+            $('#edittons').val(result.tongs);
+            $('#reason').val(result.Reasons)
+
+            // Get all radio buttons with the name 'choice'
+            const radioButtons = document.querySelectorAll('[name="Editstatus"]');
+
+            // CHECK IF THE value is the same value
+            radioButtons.forEach(radio => {
+                if (radio.value === result.status) {
+
+                    radio.checked = true;
+                }
+            });
+
+            // Get the date input element
+            //const dateInput = document.getElementById('EditDateacq');
+
+            // Set the value of the date input to the formatted date
+            //dateInput.value = formattedDate;
+
+            const imgsrc = document.getElementById('Editpreview');
+            if (result.Filepath) {
+                imgsrc.src = "data:image/jpeg;base64," + result.Filepath;
+            } else {
+                imgsrc.src = "/Content/Images/noimage.png";
+            }
+
+
+
+            // SHOW A MODAL
+            $("#edituploadforms").hide();
+            $("#Editmodal").modal("show");
+        });
+
+        // DELETE MACHINE BUTTONS
+        $("#deletebtn").on('click', () => {
+            Swal.fire({
+                title: "Delete Machine",
+                text: "Are you sure do you want to delete this machine?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#a3a3a3",
+                confirmButtonText: "Yes"
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: apiBaseUrl + "Deletemachine", // The URL to the Web API endpoint
+                        type: 'POST',
+                        data: { id: parseInt($("#EditID").val()) },
+
+                        success: function (res) {
+                            // Handle the success response
+                            if (res.code == 200) {
+                                setTimeout(() => {
+                                    Swal.fire({
+                                        title: "Success",
+                                        text: res.message,
+                                        icon: "success",
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    }).then(() => {
+                                        window.location.href = "/machine/Fanmajor";
+                                        $("#Editmodal").modal("hide");
+                                    });
+
+                                }, 500)
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            // Handle the error response
+                            alert('An error occurred while Editing and upload images.');
+                            console.error(textStatus, errorThrown);
+                        }
+                    });
+                }
+            });
+        });
+    });
+
+    function changeformattedDate(datestr) {
+        // Check if the date is in the yyyy-mm-dd format
+        if (datestr.includes('-')) {
+            // If the date is already in yyyy-mm-dd format, return it as is
+            formattedDate = datestr;
+        } else if (datestr.includes('/')) {
+            // If the date is in dd/MM/yyyy format, convert it
+            let parts = datestr.split('/');
+            let day = parts[0];
+            let month = parts[1];
+            let year = parts[2];
+            formattedDate = `${year}-${month}-${day}`;
+        } else {
+            // Handle unexpected formats or throw an error
+            throw new Error("Invalid date format. Expected formats are dd/MM/yyyy or yyyy-mm-dd.");
+        }
+
+        return formattedDate;
+    }
+
+
+    //ADD NEW MACHINE DATA
+    addnew.addEventListener('submit', event => {
+        event.preventDefault();
+        // Create a FormData object from the form element
+        var formData = new FormData(event.target);
+        //var selectedOption = $("input:radio[name=status]:checked").val()
+        // Append the image file to the FormData object
+        var fileInput = document.querySelector('#imageUpload');
+        if (fileInput.files.length > 0) {
+            var file = fileInput.files[0];
+            formData.append('image', file);
+        }
+        // Append additional form fields
+        formData.append('EmployeeID', EmployeeID);
+        formData.append('SectionID', parseInt($("#selectedSection").val()));
+
+        //const data = Object.fromEntries(formData);
+
+        $.ajax({
+            url: apiBaseUrl + "Addnewmachine", // The URL to the Web API endpoint
+            type: 'POST',
+            data: formData,
+            processData: false, // Do not process data
+            contentType: false, // Do not set contentType
+            success: function (res) {
+                // Handle the success response
+                // Handle the success response
+
+                if (res.code == 200) {
+                    Swal.fire({
+                        title: "Success",
+                        text: res.message,
+                        icon: "success",
+                        timer: 1500,
+                        showConfirmButton: false
+                    }).then(() => {
+                        $("#addedmodal").modal("hide");
+                        // UpdateMachineData();
+                        window.location.href = "/machine/Fanmajor";
+                    });
+
+                }
+
+
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                // Handle the error response
+                console.error(textStatus, errorThrown);
+            }
+        });
+
+    });
+
+    //EDIT MACHINE DATA
+    editmach.addEventListener('submit', event => {
+        event.preventDefault();
+        let isDel;
+        const radioButtons = document.querySelectorAll('[name="Editstatus"]');
+
+        radioButtons.forEach(radio => {
+            if (radio.checked) {
+                if (radio.value !== 'Operational') {
+                    isDel = 0;
+
+                } else {
+                    isDel = 1;
+
+                }
+            }
+        });
+
+        // Create a FormData object from the form element
+        let formData = new FormData(event.target);
+        var selectedOption = $("input:radio[name=Editstatus]:checked").val()
+        // Append the image file to the FormData object
+        var fileInput = document.querySelector('#EditimageUpload');
+
+        if (fileInput.files.length > 0) {
+            var file = fileInput.files[0];
+            formData.append('image2', file);
+        }
+
+        // Append additional form fields
+        formData.append('Status', selectedOption);
+        formData.append('EmployeeID', EmployeeID);
+        formData.append('Isdelete', isDel);
+        const data = Object.fromEntries(formData);
+
+
+        // Send the form data via AJAX
+        $.ajax({
+            url: apiBaseUrl + "Editmachine", // The URL to the Web API endpoint
+            type: 'POST',
+            data: formData,
+            processData: false, // Do not process data
+            contentType: false, // Do not set contentType
+            success: function (res) {
+
+                // Handle the success response
+                let newloadData = res.cd[0];
+                const savebtn = document.querySelector("#fansaveEdit");
+                savebtn.innerHTML = " <div class='loaderddd'></div>"
+                if (res.code == 200) {
+
+                    setTimeout(() => {
+                        Swal.fire({
+                            title: "Success",
+                            text: res.message,
+                            icon: "success",
+                            showConfirmButton: false,
+                            timer: 2000
+                        }).then(() => {
+
+                            savebtn.innerHTML = "<span><i class='fa-regular fa-floppy-disk'></i> Save Details</span>"
+                            $("#fansaveEdit").css("display", "none");
+                            $("#fanEnableEdit").css("display", "block");
+                            $('.mode').prop('disabled', true);
+                            displaycamefromtheedit(newloadData);
+                            //UpdateMachineData();
+                            //window.location.href = "/machine/Fanmajor";
+                            $("#Editmodal").modal("hide");
+                        });
+
+                    }, 500)
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                // Handle the error response
+                alert('An error occurred while Editing and upload images.');
+                console.error(textStatus, errorThrown);
+            }
+        });
+    });
+
+    $("#selectedSection").change(function () {
+
+        var combobox = $("#addmachcode");
+
+        makeAjaxRequest(apiBaseUrl + 'selectionadd', { sectionID: this.value }, 0)
+            .then(res => {
+                combobox.empty();
+                $.each(res.equip, function (index, row) {
+                    var changedrop = "<option value='" + row.Machine_code + "'>" + row.Equipment + "</option>"
+                    combobox.append(changedrop);
+                });
+            })
+            .catch(error => {
+                console.error('Error occurred:', error);
+                // Handle the error
+            });
+    });
+
+
+
+
+
+    function searchArray(array, key, value) {
+        var founditem = null;
+        array.forEach(function (item) {
+            if (item[key] === parseInt(value)) {
+                founditem = item;
+            }
+        });
+        return founditem;
+    }
+
+
+    // Get the Current Tabs When Click to edit
+    function getCurrentTabIndex() {
+        let tabs = document.querySelector(".tabs");
+        let tabHeadernodes = tabs.querySelectorAll(".tabs__header > div");
+        for (let i = 0; i < tabHeadernodes.length; i++) {
+            if (tabHeadernodes[i].classList.contains("active")) {
+                return i;
+            }
+        }
+        return -1; // Return -1 if no active tab is found
+    }
+
+
+    // FOR PREVIEW A IMAGE FILE
+    function previewImage(event) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            var preview = document.getElementById('preview');
+            preview.src = reader.result;
+        }
+        reader.readAsDataURL(event.target.files[0]);
+    }
+
+
+    //  CLICKS THE UPLOAD FILE IMAGE
+    document.getElementById('imageUpload').addEventListener('change', previewImage);
+
+
+    // PREVIEW FOR EDIT IMAGE
+    function EditpreviewImage(event) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            var preview = document.getElementById('Editpreview');
+            preview.src = reader.result;
+        }
+        reader.readAsDataURL(event.target.files[0]);
+    }
+    //  CLICKS THE UPLOAD FILE IMAGE
+    document.getElementById('EditimageUpload').addEventListener('change', EditpreviewImage);
+
+    // ########################################  TABS CONTROLS ########################################## //
+
+    let tabs = document.querySelector(".tabs");
+    let tabheader = tabs.querySelector(".tabs__header");
+    let tabBody = tabs.querySelector(".tabs__body");
+    let tabIndicator = tabs.querySelector(".tabs__indicator");
+    let tabHeadernodes = tabs.querySelectorAll(".tabs__header > div");
+    let tabBodynodes = tabs.querySelectorAll(".tabs__body > div");
+
+    for (let i = 0; i < tabHeadernodes.length; i++) {
+        tabHeadernodes[i].addEventListener("click", function () {
+            tabheader.querySelector(".active").classList.remove("active");
+            tabHeadernodes[i].classList.add("active");
+            tabBody.querySelector(".active").classList.remove("active");
+            tabBodynodes[i].classList.add("active");
+
+            // RESET THE ALL
+            $('#molding_btn').show();
+            $('#press_btn').show();
+            $('#rotor_btn').show();
+            $('#winding_btn').show();
+            $('#circuit_btn').show();
+
+
+            m_limit = 8, p_limit = 8, r_limit = 8, w_limit = 8, c_limit = 8;
+            let sectionID;
+            let formdata = new FormData();
+            formdata.append('offset', m_offset);
+            formdata.append('limit', m_limit);
+            formdata.append('mach', '');
+
+            switch (i) {
+                case 0:
+                    sectionID = 2;
+                    formdata.append('sectionID', 2);
+                    break;
+                case 1:
+                    sectionID = 1;
+                    formdata.append('sectionID', 1);
+                    break;
+                case 2:
+                    sectionID = 3;
+                    formdata.append('sectionID', 3);
+                    break;
+                case 3:
+                    sectionID = 4;
+                    formdata.append('sectionID', 4);
+                    break;
+                case 4:
+                    sectionID = 5;
+                    formdata.append('sectionID', 5);
+                    break;
+            }
+
+            MachineFilterData(formdata, sectionID, "", 0);
+        });
+    }
+
+
+
+    FanMajorlist();
+</script>
+
+

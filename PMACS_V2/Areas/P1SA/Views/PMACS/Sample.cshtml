@@ -1,0 +1,20 @@
+﻿
+@{
+    ViewBag.Title = "Sample";
+    Layout = "~/Areas/P1SA/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Sample</h2>
+<div id="calendar"></div>
+
+<script src="~/Scripts/fullcalendar/index.global.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth'
+        });
+        calendar.render();
+    });
+
+</script>

@@ -1,0 +1,257 @@
+﻿
+@{
+    ViewBag.Title = "Settings";
+    Layout = "~/Areas/PC/Views/Shared/_PatrolLayout.cshtml";
+}
+
+
+@*<div class="row">
+    <div class="col-4">
+        <h2>Schedule Patrols</h2>
+    </div>
+    <div class="col-8">
+        <div id="calendar"></div>
+    </div>
+</div>
+
+<button id="exportBtn">Export Excel</button>
+
+
+<script src="~/Scripts/fullcalendar@6.1.17/index.global.min.js"></script>
+<script src="~/Scripts/fullcalendar@6.1.17/interaction/index.global.js"></script>
+<script src="~/Scripts/fullcalendar@6.1.17/timegrid/index.global.js"></script>
+<script src="~/Scripts/jquery-3.7.1.min.js"></script>
+<script src="~/Scripts/Utilities.js"></script>
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives', // Free dev use
+            initialView: 'resourceTimeGridWeek',
+            slotMinTime: "06:00:00",
+            slotMaxTime: "18:00:00",
+            height: "auto",
+
+            resources: [
+                { id: '1', title: 'John Doe' },
+                { id: '2', title: 'Jane Smith' },
+                { id: '3', title: 'Alice Johnson' }
+            ],
+
+            events: [
+                {
+                    id: '1',
+                    resourceId: '1',
+                    title: 'Meeting',
+                    start: '2025-04-22T09:00:00',
+                    end: '2025-04-22T10:00:00'
+                },
+                {
+                    id: '2',
+                    resourceId: '2',
+                    title: 'Shift',
+                    start: '2025-04-22T11:00:00',
+                    end: '2025-04-22T13:00:00'
+                }
+            ]
+        });
+
+        calendar.render();
+    });
+</script>*@
+
+
+
+
+
+
+
+
+
+
+
+<button id="sendEmailBtn">Send Email</button>
+
+
+<div class="row">
+        @*<div class="col-4">
+            <h2>Schedule Patrols</h2>
+        </div>*@
+        <div class="col-12">
+            <div id="calendar"></div>
+        </div>
+    </div>
+
+    <button id="exportBtn">Export Excel</button>
+
+
+    <script src="~/Scripts/fullcalendar@6.1.17/index.global.min.js"></script>
+    <script src="~/Scripts/jquery-3.7.1.min.js"></script>
+    <script src="~/Scripts/Utilities.js"></script>
+    <script type="text/javascript">
+        //const exportbtn = document.getElementById("exportBtn");
+
+
+
+        //exportbtn.addEventListener('click', (e) => {
+        //    e.preventDefault();
+
+        //    fetch('/Patrol/ExportToPdf', {
+        //        method: 'POST'
+        //    }).then(response => {
+
+        //    }).catch(error => {
+        //         alert("Error: " + error.message);
+        //    });
+        //});
+
+        //document.addEventListener('DOMContentLoaded', function () {
+        //    const today = new Date();
+        //    const year = today.getFullYear();
+        //    const month = String(today.getMonth() + 1).padStart(2, '0');
+        //    const day = String(today.getDate()).padStart(2, '0');
+        //    const formattedDate = `${year}-${month}-${day}`;
+
+        //    var calendarEl = document.getElementById('calendar');
+        //    var calendar = new FullCalendar.Calendar(calendarEl, {
+        //        initialView: 'dayGridMonth',
+        //        aspectRatio: 1.8,
+
+        //        dayCellDidMount: function (info) {
+        //            // Format info.date to local date string
+        //            const cellDate = info.date.getFullYear() + '-' +
+        //                String(info.date.getMonth() + 1).padStart(2, '0') + '-' +
+        //                String(info.date.getDate()).padStart(2, '0');
+
+        //            if (cellDate === formattedDate) {
+        //                info.el.style.backgroundColor = '#3664F4';
+        //                //info.el.style.color = 'white';
+        //            }
+        //        },
+
+        //        dateClick: function (info) {
+        //            alert("You clicked on: " + info.dateStr);
+        //        }
+        //    });
+
+        //    calendar.render();
+        //});
+
+
+
+
+        //document.addEventListener('DOMContentLoaded', function () {
+        //    var calendarEl = document.getElementById('calendar');
+        //    var calendar = new FullCalendar.Calendar(calendarEl, {
+        //        initialView: 'resourceTimelineWeek'
+        //    });
+        //    calendar.render();
+        //});
+
+
+
+        document.getElementById("sendEmailBtn").addEventListener("click", function () {
+            fetch("/PC/Patrol/SendEmail", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            to: "jaye.labandia@sanyodenki.com",
+                            subject: "Test Email from JS",
+                            body: "This email was triggered from JavaScript via MVC."
+                        })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            alert(data.message);
+                        })
+                        .catch(error => {
+                            alert("Error: " + error);
+                        });
+                });
+
+
+
+
+
+
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const calendarEl = document.getElementById('calendar');
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'timeGridWeek',
+                initialDate: '2023-08-09',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                events: [
+                    {
+                        title: 'Presentation - Sanjay',
+                        start: '2023-08-09T11:40:00',
+                        end: '2023-08-09T12:35:00',
+                        className: 'bg-work'
+                    },
+                    {
+                        title: 'CRM Session - Saimon',
+                        start: '2023-08-09T12:00:00',
+                        end: '2023-08-09T01:00:00',
+                        className: 'bg-study'
+                    },
+                    {
+                        title: 'Client work - Masum',
+                        start: '2023-08-08T12:24:00',
+                        end: '2023-08-08T02:00:00',
+                        className: 'bg-work'
+                    },
+                    {
+                        title: 'Dribbble Shot - Keyes',
+                        start: '2023-08-08T04:00:00',
+                        end: '2023-08-08T05:50:00',
+                        className: 'bg-personal'
+                    },
+                    {
+                        title: 'Learning - Rahan',
+                        start: '2023-08-11T11:40:00',
+                        end: '2023-08-11T12:35:00',
+                        className: 'bg-study'
+                    },
+                    {
+                        title: 'Event Ofspace - Royal',
+                        start: '2023-08-10T03:50:00',
+                        end: '2023-08-10T05:45:00',
+                        className: 'bg-personal'
+                    },
+                    {
+                        title: 'CRM Meeting - Mojumder',
+                        start: '2023-08-10T01:50:00',
+                        end: '2023-08-10T02:45:00',
+                        className: 'bg-work'
+                    },
+                    {
+                        title: 'Event Ofspace - Wash',
+                        start: '2023-08-11T03:20:00',
+                        end: '2023-08-11T04:30:00',
+                        className: 'bg-personal'
+                    },
+                    {
+                        title: 'Discussions - Ahsan',
+                        start: '2023-08-12T01:00:00',
+                        end: '2023-08-12T02:20:00',
+                        className: 'bg-study'
+                    },
+                    {
+                        title: 'Event Ofspace - Mayad',
+                        start: '2023-08-12T05:20:00',
+                        end: '2023-08-12T06:40:00',
+                        className: 'bg-work'
+                    }
+                ]
+            });
+
+            calendar.render();
+        });
+    </script>

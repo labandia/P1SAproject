@@ -1,0 +1,72 @@
+﻿@model PMACS_V2.Areas.P1SA.Models.CapacityPartialViewModel
+@{
+    var mode = ViewData["Filter"] as string;
+}
+
+@*<h3>@Model.filter</h3>*@
+
+@foreach (var item in Model.data)
+{
+    <tr>
+        <td>@mode</td>
+        <td contenteditable='true'>@item.AvailMachine</td>
+        <td contenteditable='true'>@item.CycleTime</td>
+        <td>@item.Capday</td>
+        <td>@item.Capmonth</td>
+        <td>@item.Forecast</td>
+        <td>@item.Totalhours</td>
+        <td>@item.RequiredMan</td>
+    </tr>
+}
+
+
+
+<script src="~/Scripts/jquery-3.7.0.js"></script>
+<script src="~/Scripts/Utilities.js"></script>
+<script src="~/Scripts/Global.js"></script>
+<script type="text/javascript">
+
+
+
+
+
+    // Enable the Edit mode of the Text
+    document.addEventListener('DOMContentLoaded', function () {
+        const table = document.querySelector('tbody#SummarybodyID');
+
+        table.addEventListener('keydown', function (event) {
+            const target = event.target;
+
+            if (target.hasAttribute('contenteditable')) {
+                // Remove editing class from all cells
+
+
+                // Allow only numbers, dot, Enter, Backspace, Delete, Arrow keys, and Tab
+                if (!event.key.match(/[0-9.]/) && event.key !== 'Enter' && event.key !== 'Backspace' && event.key !== 'Delete' &&
+                    event.key !== 'ArrowLeft' && event.key !== 'ArrowRight' && event.key !== 'Tab') {
+                    event.preventDefault();
+                }
+
+                // Prevent more than one dot
+                if (event.key === '.' && target.textContent.includes('.')) {
+                    event.preventDefault();
+                }
+
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    const newValue = target.textContent;
+                    const column = target.cellIndex;
+                    const row = target.parentElement.rowIndex;
+                    //updateDirectTableSummary(newValue, column);
+                    target.blur();
+
+
+
+
+                }
+            }
+        });
+
+    });
+
+</script>

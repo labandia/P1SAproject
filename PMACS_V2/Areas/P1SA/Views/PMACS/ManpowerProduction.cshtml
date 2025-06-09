@@ -1,0 +1,437 @@
+﻿
+@{
+    ViewBag.Title = "ManpowerProduction";
+    Layout = "~/Areas/P1SA/Views/Shared/_Layout.cshtml";
+}
+
+<section class="wrapper2">
+    <header class="header2">
+        <div class="header2__statustitle d-flex align-items-center justify-content-between">
+            <div class="header2__total d-flex align-items-center gap-5">
+                <div class="header__head">
+                    <div class="header__count">
+                        <p>Total SPD:</p>
+                        <h1 id="SPD_id">0</h1>
+                    </div>
+
+                </div>
+
+                <div class="header__head">
+                    <div class="header__count">
+                        <p>Total Sub/Con:</p>
+                        <h1 id="subcon_id">0</h1>
+                    </div>
+                </div>
+
+                <div class="header__head">
+                    <div class="header__count">
+                        <p>Total Manpower:</p>
+                        <h1 id="manpower_id">0</h1>
+                    </div>
+                </div>
+
+            </div>
+
+            <div>
+                <span>Last Update April 24, 2025</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="prod_wrapper">
+        <div class="prod__column mb-4">
+            <div class="Production__card">
+                
+                <table class="ManpowerTable">
+                    <thead>
+                        <tr>
+                            <th>Section</th>
+                            <th>Actual</th>
+                            <th>Required(Capacity per process)</th>
+                            <th>Lacking</th>
+                        </tr>
+                    </thead>
+                    <tbody id="DisplaysectionID">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="prod__column">
+            <section class="tablemain">
+                <table>
+                    <thead>
+                        <tr style="background: hsl(209, 97%, 13%) !important; color: #fff; ">
+                            <th class='textleft' style="padding: 0 1.5em;">Process</th>
+                            <th>SDP</th>
+                            <th>Subcon</th>
+                            <th>Remarks</th>
+                            <th id="headertable">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ManpowerID">
+                    </tbody>
+                </table>
+            </section>
+        </div>
+
+    </div>
+
+</section>
+
+<!--########################## EDIT DATA #############################-->
+<div class="modal fade modal-m" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <div class="custom_modal_header">
+                    <div class="custom_modal__icon" style="align-items: center;">
+                        <div class="custom_icon_container">
+                            <i class='fa-regular fa-pen-to-square '></i>
+                        </div>
+                        <div class="custom_modal_title">
+                            <span id="exampleModalLabel">Edit Data</span>
+                        </div>
+                    </div>
+
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+
+                <form id="EditPisa" style="margin-top: 1em;">
+                </form>
+            </div>
+
+
+
+
+        </div>
+    </div>
+</div>
+
+<!--########################## EDIT DATA #############################-->
+<div class="modal fade modal-m" id="requiredmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <div class="custom_modal_header">
+                    <div class="custom_modal__icon" style="align-items: center;">
+                        <div class="custom_icon_container">
+                            <i class='fa-regular fa-pen-to-square '></i>
+                        </div>
+                        <div class="custom_modal_title">
+                            <span>Required</span>
+                        </div>
+                    </div>
+
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+
+                <form id="requiredform" style="margin-top: 1em; padding: 0 1em;">
+                    <label id="modelsec">Molding</label>
+                    <input type="hidden" name="sectionID" id="sectionID" />
+                    <input type="text" name="requiredQty" id="requiredQty" onkeypress="return restrictChars(event)" maxlength="5" />
+                    <div class='footer d-flex justify-content-end pt-4 pb-2 gap-2'>
+                        <button type='submit' id='saveEditsum'><i class='fa-regular fa-floppy-disk'></i>  Save</button>
+                    </div>
+                </form>
+            </div>
+
+
+
+
+        </div>
+    </div>
+</div>
+
+<!--########################## EDIT DESCRIPTION NAME #############################-->
+<div class="modal fade modal-m" id="descripmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <form id="descform" style="margin-top: 1em;">
+                    <input id="editdesc" name="editdesc" type="text" placeholder="adadsa" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-3.7.0.js"></script>
+<script src="~/Scripts/Utilities.js"></script>
+<script src="~/Scripts/Global.js"></script>
+<script type="text/javascript">
+     const currentYear = new Date().getFullYear();
+     const Month = new Date().toLocaleString('en-US', { month: 'long' });
+
+     let load_table = $("#ManpowerID");
+
+     const desform = document.getElementById("descform");
+     const tabs = document.querySelectorAll('.tab_btn');
+     const content = document.querySelectorAll('.content');
+
+     const editmanpower = document.getElementById("EditPisa");
+     const editrequired = document.getElementById("requiredform");
+
+     var loadData = [];
+     var totalarrayload = [];
+     let checkrole = 0;
+
+     const GetManpowerData = async() =>{
+         let res = await fetchData('@Url.Action("GetManpowerData", "PMACS")', {});
+         if (res && res.Success) {
+             let load = res.Data;
+             loadData = load;
+             //GET THE TOTAL MANPOWER
+             const totalSDP = load.reduce((sum, el) => sum + el.SDP, 0);
+             const totalSubCon = load.reduce((sum, el) => sum + el.SubCon, 0);
+             const totalManpower = load.reduce((sum, el) => sum + el.SDP + el.SubCon, 0);
+             $("#SPD_id").text(totalSDP);
+             $("#subcon_id").text(totalSubCon);
+             $("#manpower_id").text(totalManpower);
+
+             //displaytheTotalBySection(load);
+             displaytableData(load);
+         }
+     }
+     const Totalmanpower = async () => {
+         let buttons = '';
+         const monthNames = [
+             "January", "February", "March", "April", "May", "June",
+             "July", "August", "September", "October", "November", "December"
+         ];
+
+         let res = await fetchData('@Url.Action("GetTotalmanpower", "PMACS")', { months: monthNames[new Date().getMonth()] });
+         if (res && res.Success) {
+             let load = res.Data;
+             totalarrayload = load;
+             var totalData = $("#DisplaysectionID");
+             totalData.empty();
+             $.each(load, function (index, rowData) {
+                 const negativecolor = parseFloat(rowData.Lacking);
+                 const color = negativecolor < 0 ? 'red' : 'black';
+
+                 var getdata = "<tr class= 'row_" + index + "  '>" +
+                     "<td style='font-weight: 600;'>" + rowData.SectionName + "</td>" +
+                     "<td style='text-align: center;'>" + rowData.Actual + "</td>" +
+                     "<td style='text-align: center;'>" + rowData.Required + "</td>" +
+                     "<td style='text-align: center;   color: " + color + "; font-weight: 600;'>" + rowData.Lacking + "</td>" +
+                     "</tr>";
+                 totalData.append(getdata);
+             });
+         }
+     }
+
+     //$("#descbtn").click(function () {
+     //    $("#editdesc").val($("#changedesc").text());
+     //    $("#descripmodal").modal("show");
+     //});
+
+     // Add an event listener for the 'keypress' event
+     desform.addEventListener('keypress', async (e) => {
+         // Check if the Enter key was pressed
+         if (e.key === 'Enter') {
+             // Prevent the default action (form submission)
+             e.preventDefault();
+             // Find the form element from the target element
+             var formElement = e.target.closest('form');
+
+             if (formElement) {
+                 //var formData = new FormData(formElement);
+                 //let res = await postData(apiBaseUrl + "EditDescription", formData);
+
+                 //if (res.StatusCode === 200) {
+                 //    $("#changedesc").text(data.editdesc);
+                 //    $("#descripmodal").modal("hide");
+                 //}
+             } else {
+                 console.error('Form element not found');
+             }
+
+         }
+     });
+
+
+     //function Displayinfo() {
+     //    makeAjaxRequest(apiBaseUrl + 'Displaydesc', '', 0)
+     //        .then(res => {
+     //            $("#changedesc").text(res.decripname[0].DisplayName);
+     //        })
+     //        .catch(error => {
+     //            console.error('Error occurred:', error);
+     //        });
+     //}
+
+
+     // LOADS THE DATA FIRST
+     const userDataRole = () => {
+         let index = localStorage.getItem('users');
+         var parsedObject = JSON.parse(index);
+         checkrole = parsedObject.Roles_ID;
+         EmployeeID = parsedObject.EmployeeID;
+         if (parsedObject.Roles_ID == 2) {
+             $("#descbtn").hide();
+             $("#addbtn").hide();
+             $("#fansaveEdit").hide();
+             $("#fanEnableEdit").hide();
+             $(".Addmach__uploadaction").hide();
+         }
+     }
+
+
+
+     function displaytheTotalBySection(array) {
+         const summedData = array.reduce((acc, item) => {
+             // Compute the total count of every section
+             if (!acc[item.Section_ID]) {
+                 acc[item.Section_ID] = {
+                     Section_ID: item.Section_ID,
+                     Section_name: item.Section_name,
+                     SDP: item.SDP,
+                     SubCon: item.SubCon,
+                     Manbreak: item.SDP + item.SubCon
+                 };
+             } else {
+                 acc[item.Section_ID].SDP += item.SDP;
+                 acc[item.Section_ID].SubCon += item.SubCon;
+                 acc[item.Section_ID].Manbreak += item.SDP + item.SubCon;
+             }
+             return acc;
+         }, {});
+
+         const resultArray = Object.values(summedData);
+         var SetData = $("#DisplaysectionID");
+         SetData.empty();
+         $.each(resultArray, function (index, rowData) {
+             var getdata = "<div class='Production__section " + index + "'> " +
+                 "<span>" + rowData.Section_name + "</span>" +
+                 "<p>" + rowData.Manbreak + "</p>" +
+                 "</div>";
+             SetData.append(getdata);
+         });
+     }
+     function displaytableData(array) {
+         var SetData = $("#ManpowerID");
+         let buttons = '';
+
+
+         SetData.empty();
+         $.each(array, function (index, rowData) {
+             if (checkrole !== 2) {
+                 $("#headertable").show();
+                 buttons = "<td><div class='table__action'> " +
+                     "<button type='button' class= 'row_" + index + " editButton' id='editButton_" + rowData.Manpower_ID + "'><i class='fa-regular fa-pen-to-square action_btn'></i> </button>" +
+                     "</div></td>";
+             } else {
+                 $("#headertable").hide();
+
+             }
+
+
+             var getdata = "<tr class= 'row_" + index + "'>" +
+                 "<td class='textleft' style='font-weight: 600;'> " + rowData.Process + "</td>" +
+                 "<td>" + rowData.SDP + "</td>" +
+                 "<td>" + rowData.SubCon + "</td>" +
+                 "<td>" + rowData.Remarks + "</td>" +
+                 buttons +
+                 "</tr>";
+             SetData.append(getdata);
+         });
+     }
+
+     editmanpower.addEventListener('submit', async (e) => {
+         e.preventDefault();
+         var formData = new FormData(e.target);
+         let res = await postData('@Url.Action("EditManpower", "PMACS")', formData);
+         console.log(res);
+         if (res.StatusCode === 200) {
+             $("#exampleModal").modal("hide");
+             Swal.fire({
+                 title: "Success",
+                 text: res.Message,
+                 icon: "success",
+                 showConfirmButton: false,
+                 timer: 1000
+             }).then(() => {
+                 InitializationData();
+             });
+         }
+
+     });
+     editrequired.addEventListener('submit', async(e) => {
+         e.preventDefault();
+         var formData = new FormData(e.target);
+         let res = await postData('@Url.Action("EditRequiredManpower", "PMACS")', formData);
+         //const data = Object.fromEntries(formData);
+
+         if (res.StatusCode === 200) {
+             $("#requiredmodal").modal("hide");
+             InitializationData();
+         }
+     });
+
+     $(document).on('click', '.editButton', function () {
+         var SetData = $('#EditPisa');
+         var buttonId = $(this).attr('id');
+         var rowIndex = buttonId.split('_')[1];
+         let data = searchByID(loadData, "Manpower_ID", rowIndex);
+
+         $("#exampleModalLabel").text(data.Process);
+
+         SetData.empty();
+         var rows = "<label style='font-weight: 600; color: #222; margin-bottom: .5em;'>SDP :</label> <br />"
+             + "<input type='hidden' value='" + data.Manpower_ID + "' name='Manpower_ID' class='form-control' id='SumID' />"
+             + "<input type='text' value='" + data.SDP + "' name='SDP'   id='SDP' autocomplete='off' onkeypress='return restrictChars(event)' maxlength='5' /><br />"
+             + "<label style='font-weight: 600; color: #222; margin-bottom: .5em;'>SubCon :</label> <br />"
+             + "<input type='text' value='" + data.SubCon + "' name='Sub/Con'   id='SubCon' autocomplete='off'  maxlength='5' onkeypress='return restrictChars(event)' /><br />"
+             + "<label style='font-weight: 600; color: #222; margin-bottom: .5em; '>Remarks :</label> <br />"
+             + "<input type='text' value='" + data.Remarks + "' name='Remarks'   id='Remarks' autocomplete='off' />"
+             + "<div class='footer d-flex justify-content-end pt-4 pb-2 gap-2'>"
+             + "<button type='submit'  id='saveEditsum'><i class='fa-regular fa-floppy-disk'></i>  Save</button>"
+             + "</div>";
+
+         SetData.append(rows);
+         $("#exampleModal").modal("show");
+
+     });
+     $(document).on('click', '.editTotalman', function () {
+         var buttonId = $(this).attr('id');
+         var rowIndex = buttonId.split('_')[1];
+         //alert(rowIndex);
+         let data = searchByID(totalarrayload, "Section_ID", rowIndex);
+         $("#sectionID").val(rowIndex);
+         $("#modelsec").text(data.Section_name);
+         $("#requiredQty").val(data.Required);
+         $("#requiredmodal").modal("show");
+     });
+
+     function searchByID(array, key, value) {
+         var founditem = null;
+         array.forEach(function (item) {
+             if (item[key] === parseInt(value)) {
+                 founditem = item;
+             }
+         });
+         return founditem;
+     }
+
+
+
+
+     const InitializationData = () => {
+         //userDataRole();
+         $("#currentdatetime").text(Month + "  " + currentYear)
+         GetManpowerData();
+         Totalmanpower();
+         //Displayinfo();
+     }
+
+     InitializationData();
+</script>

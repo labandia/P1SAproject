@@ -1,0 +1,1115 @@
+﻿
+@{
+    ViewBag.Title = "Press";
+    var capid = Request.QueryString["capid"];
+    Layout = "~/Areas/P1SA/Views/Shared/_Layout.cshtml";
+}
+
+<section class="wrapper">
+
+    @*################## HEADER ###################################  *@
+    <header class="capacity d-flex justify-content-between mb-3">
+        <div class="capacity__title d-flex align-items-center gap-3">
+            <a class="d-flex align-items-center justify-content-center" href="/P1SA/PMACS/Selection"><i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+            <h2 class="capacity__text">@ViewData["processname"]</h2>
+        </div>
+        <div class="capacity__action">
+            <button type="button" class="primary_button_color" id="addbtn" data-toggle="modal" data-target="#addmodal"><i class="fa fa-plus" aria-hidden="true"></i> Add  base model </button>
+        </div>
+    </header>
+    @*################## HEADER ###################################  *@
+
+    <section class="content">
+
+        <div class="Summarywrapper">
+            <h6>Summary Details</h6>
+            @* ######################    Display the Summary Data ###############################*@
+            <table class="Summaryheader">
+                <thead>
+                    <tr>
+                        <th id="ChangeHeader">Process</th>
+                        <th id="Displaymachine">Machine no#</th>
+                        <th>Cycle time</th>
+                        <th>Capacity/day</th>
+                        <th>Capacity/Month</th>
+                        <th>Forecast Motorbase</th>
+                        <th>Manhour</th>
+                        <th>Manpower</th>
+                    </tr>
+                </thead>
+                <tbody id="SummarybodyID">
+                    @*<tr class="Loadercontainer">
+                            <td colspan="8">
+                                <div class="loader2" id="loadingSpinner"></div>
+                            </td>
+                        </tr>*@
+                </tbody>
+
+            </table>
+
+
+            @* ##################################################################################*@
+
+
+
+            <div class="capacity__half">
+                @* ########################   Display the Data Table  ###############################*@
+                <div class="capacity_col">
+                    <div class="cap_header">
+                        <div class="row">
+                            <div class="masterlistInput">
+                                <input type="text" placeholder="Search here ... " id="searchbox" />
+                                <div class="line"></div>
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </div>
+
+
+
+                        </div>
+
+                    </div>
+
+                    <div class="tablewrap">
+                        <table class="CapacityTable captable">
+                            <thead>
+                                <tr>
+                                    <th class="sortable">Based Model</th>
+                                    <th>Demand Quantity</th>
+                                    <th>Required Man-hour</th>
+                                    <th class="sortable">Required Manpower</th>
+                                    <th id="headertable">Delete</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="dataSearching">
+                            </tbody>
+                        </table>
+
+
+                        <div id="tableloads" class=" tableloads">
+                            <div class='loader2'></div>
+                        </div>
+
+                        <div id="empty-state" class="empty">
+                            <img src="~/Content/Images/empty.png" />
+                            <p>No data Found.</p>
+                        </div>
+
+
+                    </div>
+
+                    @*<div id="pagination-container">
+                        </div>
+
+                        <p style="margin-top: 1.5em; margin-left: 1.5em;">Total Result: <strong id="count"></strong></p>*@
+
+
+
+                    <div class="PaginationfooterContainer d-flex align-items-center">
+                        <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
+
+                        <div id="PaginationContainer" class="paginationPartlocal"></div>
+                    </div>
+
+
+                </div>
+                @* ##################################################################################*@
+
+
+
+
+
+                @*######################### FORM  FOR THE PROCESS SUMMARY ###########################*@
+                <form class="capacity_col capforms" id="EditCapacity" autocomplete="off">
+                    <div class="d-flex align-items-center gap-3">
+                        <h5 style="margin: 0;">Process Details</h5><i class="fa fa-info-circle"></i>
+                    </div>
+                    <hr />
+
+                    <div class="Cap__group">
+                        <small>Avg. Output per machine :</small>
+                        <input type="hidden" name="Proc_CycleTime" id="Proc_CycleTime" class="cycle" />
+                        <input type="hidden" id="Proc_Cap_Per_Machine" name="Proc_Cap_Per_Machine" value="0" />
+                        <input class="mode num" type="text" id="Cap_Per_Machine_text" name="Cap_Per_Machine_text" value="0" disabled />
+                    </div>
+
+
+                    <div class="Cap__group">
+                        <small>Operation Day (hours):</small>
+                        <input class="mode num" type="text" id="Proc_Days" name="Proc_Days" value="0" onkeypress="return restrictChars(event)" />
+                    </div>
+
+
+                    <div class="Cap__group">
+                        <small>Workdays per month :</small>
+                        <input class="mode num" type="text" id="Proc_Months" name="Proc_Months" value="0" onkeypress="return restrictChars(event)" />
+                    </div>
+
+                    <div class="Cap__group">
+                        <small>Operation Rate:</small>
+                        <input class="mode num" type="text" id="Proc_OperationTime" name="Proc_OperationTime" value="0" onkeypress="return restrictChars(event)" />
+                    </div>
+
+                    <hr />
+
+                    <button class="Modal__save" type="submit" id="saveEditProcess">
+                        <span><i class="fa-regular fa-floppy-disk"></i> Save Details</span>
+                    </button>
+                </form>
+                @*####################################################################################*@
+            </div>
+        </div>
+    </section>
+
+</section>
+
+<!--########################## SHOW DETAILS   #############################-->
+<div class="modal fade modal-lg" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="custom_modal_header">
+                    <div class="custom_modal__icon2">
+                        <div class="custom_icon_container">
+                            <i class="fa-regular fa-rectangle-list"></i>
+                        </div>
+                        <div class="custom_modal_title">
+                            <span>Capacity Details</span>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal" aria-label="Close">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <form id="editDetails">
+                    @if (@capid == "10")
+                    {
+                        <div class="model__fields">
+                            <div class="detail__inputfield">
+                                <input type="hidden" name="Detail_Capinfo_ID" id="Detail_Capinfo_ID">
+                                <label for="">Product type:  </label>
+                                <input class="mode" type="text" name="Detail_Product_type" id="Detail_Product_type" disabled>
+                            </div>
+
+                            <div class="detail__inputfield">
+                                <label for="">SPM :</label>
+                                <input class="editmode" type="text" name="Detail_SPM" id="Detail_SPM" disabled>
+                            </div>
+
+                        </div>
+
+                        <div class="model__fields">
+                            <div class="detail__inputfield">
+                                <label for="">Model :</label>
+                                <input class="mode" type="text" name="Detail_Model_name" id="Detail_Model_name" disabled>
+                            </div>
+
+                            <div class="detail__inputfield">
+                                <label for="">Row :</label>
+                                <input class="editmode" type="text" name="Detail_Row" id="Detail_Row" disabled>
+                            </div>
+
+
+                        </div>
+
+                        <div class="model__fields">
+
+                            <div class="detail__inputfield">
+                                <label for="">Capacity per Day :</label>
+                                <input class="mode" type="text" name="Detail_Capday" id="Detail_Capday" disabled>
+                            </div>
+
+                            <div class="detail__inputfield">
+                                <label for="">Lam :</label>
+                                <input class="editmode" type="text" name="Detail_Lam" id="Detail_Lam" disabled>
+                            </div>
+                        </div>
+
+                        <div class="model__fields">
+                            <div class="model__fields">
+                                <div class="detail__inputfield">
+                                    <label for="">Capacity per Month :</label>
+                                    <input class="mode" type="text" name="Detail_Capmonth" id="Detail_Capmonth" disabled>
+                                </div>
+                            </div>
+                            <div class="detail__inputfield">
+                                <label for="">Operation Time :</label>
+                                <input class="editmode" type="text" name="Detail_Operation_time" id="Detail_Operation_time" disabled>
+                            </div>
+                        </div>
+
+                        <div class="model__fields">
+                            <div class="detail__inputfield">
+                                <label for="">Hours :</label>
+                                <input class="mode" type="text" name="Detail_Manhour" id="Detail_Manhour" disabled>
+                            </div>
+
+                        </div>
+
+                        <div class="model__fields">
+                            <div class="detail__inputfield">
+                                <label for="">Manpower :</label>
+                                <input class="mode" type="text" name="Detail_Require" id="Detail_Require" disabled>
+                            </div>
+                        </div>
+
+                    }
+                    else if (@capid == "11")
+                    {
+                        <div class="model__fields">
+                            <div class="detail__inputfield">
+                                <input type="hidden" name="Detail_Capinfo_ID" id="Detail_Capinfo_ID">
+                                <label for="">Product type:  </label>
+                                <input class="mode" type="text" name="Detail_Product_type" id="Detail_Product_type" disabled>
+                            </div>
+
+                            <div class="detail__inputfield">
+                                <label for="">Cycle Time :</label>
+                                <input class="editmode" type="text" name="Detail_CycleTime" id="Detail_CycleTime" disabled>
+                            </div>
+
+                        </div>
+
+                        <div class="model__fields">
+                            <div class="detail__inputfield">
+                                <label for="">Model :</label>
+                                <input class="mode" type="text" name="Detail_Model_name" id="Detail_Model_name" disabled>
+                            </div>
+
+                            <div class="detail__inputfield">
+                                <label for="">Operation Time :</label>
+                                <input class="editmode" type="text" name="Detail_Operation_time" id="Detail_Operation_time" disabled>
+                            </div>
+
+
+                        </div>
+
+                        <div class="model__fields">
+                            <div class="detail__inputfield">
+                                <label for="">Capacity per Day :</label>
+                                <input class="mode" type="text" name="Detail_Capday" id="Detail_Capday" disabled>
+                            </div>
+                        </div>
+
+                        <div class="model__fields">
+                            <div class="detail__inputfield">
+                                <label for="">Capacity per Month :</label>
+                                <input class="mode" type="text" name="Detail_Capmonth" id="Detail_Capmonth" disabled>
+                            </div>
+                        </div>
+
+                        <div class="model__fields">
+                            <div class="detail__inputfield">
+                                <label for="">Hours :</label>
+                                <input class="mode" type="text" name="Detail_Manhour" id="Detail_Manhour" disabled>
+                            </div>
+
+                        </div>
+
+                        <div class="model__fields">
+                            <div class="detail__inputfield">
+                                <label for="">Manpower :</label>
+                                <input class="mode" type="text" name="Detail_Require" id="Detail_Require" disabled>
+                            </div>
+                        </div>
+
+                    }
+                    else
+                    {
+                        <div class="model__fields">
+                            <div class="detail__inputfield">
+                                <input type="hidden" name="Detail_Capinfo_ID" id="Detail_Capinfo_ID">
+                                <label for="">Model :</label>
+                                <input class="mode" type="text" name="Detail_Model_name" id="Detail_Model_name" disabled>
+                            </div>
+                            <div class="detail__inputfield">
+                                <label for="">Part number:</label>
+                                <input class="editmode" type="text" name="Detail_Partnum" id="Detail_Partnum" disabled>
+                            </div>
+                        </div>
+
+                        <div class="model__fields">
+                            <div class="detail__inputfield">
+                                <label for="">Product type:  </label>
+                                <input class="mode" type="text" name="Detail_Product_type" id="Detail_Product_type" disabled>
+                            </div>
+
+                            <div class="detail__inputfield">
+                                <label for="">Total Cycle Time :</label>
+                                <input class="editmode" type="text" name="Detail_TotalCycle" id="Detail_TotalCycle" disabled>
+                            </div>
+
+                        </div>
+
+                        <div class="model__fields">
+                            <div class="detail__inputfield">
+                                <label for="">Capacity per Day :</label>
+                                <input class="mode" type="text" name="Detail_Capday" id="Detail_Capday" disabled>
+                            </div>
+
+
+
+                            <div class="detail__inputfield">
+                                <label for="">Bucket Quantity :</label>
+                                <input class="editmode" type="text" name="Detail_Bucket" id="Detail_Bucket" disabled>
+                            </div>
+
+                        </div>
+
+                        <div class="model__fields">
+
+                            <div class="detail__inputfield">
+                                <label for="">Capacity per Month :</label>
+                                <input class="mode" type="text" name="Detail_Capmonth" id="Detail_Capmonth" disabled>
+                            </div>
+
+                            <div class="detail__inputfield">
+                                <label for="">Cycle Time cnc(secs) :</label>
+                                <input class="editmode" type="text" name="Detail_Cycle_cnc" id="Detail_Cycle_cnc" disabled>
+                            </div>
+                        </div>
+
+                        <div class="model__fields">
+                            <div class="detail__inputfield">
+                                <label for="">Manpower :</label>
+                                <input class="mode" type="text" name="Detail_Require" id="Detail_Require" disabled>
+                            </div>
+
+                            <div class="detail__inputfield">
+                                <label for="">Appearance Inspection :</label>
+                                <input class="editmode" type="text" name="Detail_Apearance_inspect" id="Detail_Apearance_inspect" disabled>
+                            </div>
+
+                        </div>
+
+                        <div class="model__fields">
+                            <div class="detail__inputfield">
+                                <label for="">Hours :</label>
+                                <input class="mode" type="text" name="Detail_Manhour" id="Detail_Manhour" disabled>
+                            </div>
+
+
+
+                            <div class="detail__inputfield">
+                                <label for="">Cycle Time Tap(secs) :</label>
+                                <input class="editmode" type="text" name="Detail_CycleTap" id="Detail_CycleTap" disabled>
+                            </div>
+
+                        </div>
+
+                        <div class="model__fields">
+                            <div class="detail__inputfield">
+                                <label for="">Total CT:</label>
+                                <input class="mode" type="text" name="Detail_TotalCycle" id="Detail_TotalCycle" disabled>
+                            </div>
+
+
+
+                            <div class="detail__inputfield">
+                                <label for="">Cycle Time Drilling(secs) :</label>
+                                <input class="editmode" type="text" name="Detail_Cycle_drill" id="Detail_Cycle_drill" disabled>
+                            </div>
+                        </div>
+
+                        <div class="model__fields">
+                            <div class="detail__inputfield">
+                                <label for="">Washing Cycle Time/Bucket:</label>
+                                <input class="editmode" type="text" name="Detail_Wash_cycle" id="Detail_Wash_cycle" disabled>
+                            </div>
+
+                            <div class="detail__inputfield">
+                                <label for="">Pre-wash :</label>
+                                <input class="editmode" type="text" name="Detail_Pre_wash" id="Detail_Pre_wash" disabled>
+                            </div>
+
+
+                        </div>
+
+                        <div class="model__fields">
+                            <div class="detail__inputfield">
+                                <label for="">Laser Marking:</label>
+                                <input class="editmode" type="text" name="Detail_Laser" id="Detail_Laser" disabled>
+                            </div>
+
+
+                            <div class="detail__inputfield">
+                                <label for="">Operation Time :</label>
+                                <input class="editmode" type="text" name="Detail_Operation_time" id="Detail_Operation_time" disabled>
+                            </div>
+
+                        </div>
+
+
+
+                    }
+
+                    <div style="padding: .5em 1em" id="hideruler">
+                        <hr style="margin: 0;" />
+                    </div>
+                    <div class="edits_footer" id="editsdisplay">
+                        <button id="Editdetailsbtn"><i class="fa-regular fa-pen-to-square"></i>   Enable the Edit</button>
+                        <button type="submit" id="Editsavebtn">
+                            <span><i class="fa-regular fa-floppy-disk"></i>  Save Details</span>
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<!--########################## ADD DATA #############################-->
+<div class="modal fade modal-lg" id="addmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+
+                <div class="custom_modal_header">
+                    <div class="custom_modal__icon">
+                        <div class="custom_icon_container">
+                            <i class="fa-regular fa-pen-to-square"></i>
+                        </div>
+                        <div class="custom_modal_title">
+                            <span>Add base model</span>
+                            <p id="procname">Fill all the required input</p>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+
+                <form id="addnewmodel" autocomplete='off'>
+                    <div class="model__fields">
+                        <div class="detail__inputfield">
+                            <label for="">Model Based :</label>
+                            <select id="forecast" name="forecast">
+                            </select>
+                        </div>
+                        <div class="detail__inputfield">
+                            <label for="">Product type:</label>
+                            <input type="text" placeholder="Enter Product type" name="Product_type" id="Product_type" autocomplete="off">
+                        </div>
+                    </div>
+
+                    @if (@capid == "10")
+                    {
+
+                        <div class="model__fields">
+                            <div class="detail__inputfield">
+                                <label for="">SPM :</label>
+                                <input type="text" maxlength='5' placeholder="Enter SPM" name="SPM" id="SPM" autocomplete="off" onkeypress="return restrictChars(event)">
+                            </div>
+                            <div class="detail__inputfield">
+                                <label for="">Row :</label>
+                                <input type="text" maxlength='5' placeholder="Enter Row" name="Row" id="Row" autocomplete="off" onkeypress="return restrictChars(event)">
+                            </div>
+                        </div>
+                        <div class="model__fields">
+                            <div class="detail__inputfield">
+                                <label for="">Lam :</label>
+                                <input type="text" maxlength='5' placeholder="Input Lam" name="Lam" id="Lam" autocomplete="off" onkeypress="return restrictChars(event)">
+                            </div>
+                            <div class="detail__inputfield">
+                                <label for="">Operation Time :</label>
+                                <input class="num" maxlength='5' type="text" placeholder="Enter Operation Time" name="Operation_time" id="Operation_time" autocomplete="off" onkeypress="return restrictChars(event)">
+                            </div>
+                        </div>
+                    }
+                    else if (@capid == "11")
+                    {
+                        <div class="model__fields">
+                            <div class="detail__inputfield">
+                                <label for="">CycleTime :</label>
+                                <input type="text" maxlength='5' placeholder="Input CycleTime" name="CycleTime" id="CycleTime" autocomplete="off" onkeypress="return restrictChars(event)">
+                            </div>
+                            <div class="detail__inputfield">
+                                <label for="">Operation Time :</label>
+                                <input class="num" maxlength='5' type="text" placeholder="Enter Operation Time" name="Operation_time" id="Operation_time" autocomplete="off" onkeypress="return restrictChars(event)">
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="model__fields">
+                            <div class="detail__inputfield">
+                                <label for="">Part number :</label>
+                                <input type="text"  placeholder="Enter Part number" name="Partnum" id="Partnum" autocomplete="off">
+                            </div>
+                            <div class="detail__inputfield">
+                                <label for="">Total Cycle Time :</label>
+                                <input type="text" maxlength='5' placeholder="Enter Total Cycle time" name="TotalCycle" id="TotalCycle" autocomplete="off" onkeypress="return restrictChars(event)">
+                            </div>
+                        </div>
+                        <div class="model__fields">
+                            <div class="detail__inputfield">
+                                <label for="">Bucket Quantity :</label>
+                                <input type="text" maxlength='5' placeholder="Input Bucket Qty" name="Bucket" id="Bucket" autocomplete="off" onkeypress="return restrictChars(event)">
+                            </div>
+                            <div class="detail__inputfield">
+                                <label for="">Cycle Time cnc(secs) :</label>
+                                <input class="num" maxlength='5' type="text" placeholder="Enter Cycle Time cnc" name="Cycle_cnc" id="Cycle_cnc" autocomplete="off" onkeypress="return restrictChars(event)">
+                            </div>
+                        </div>
+
+                        <div class="model__fields">
+                            <div class="detail__inputfield">
+                                <label for="">Appearance Inspection :</label>
+                                <input type="text" maxlength='5' placeholder="Enter Apearance inspect" name="Apearance_inspect" id="Apearance_inspect" autocomplete="off" onkeypress="return restrictChars(event)">
+                            </div>
+                            <div class="detail__inputfield">
+                                <label for="">Cycle Time Tap(secs) :</label>
+                                <input type="text" maxlength='5' placeholder="Enter Cycle time Tap" name="CycleTap" id="CycleTap" autocomplete="off" onkeypress="return restrictChars(event)">
+                            </div>
+                        </div>
+                        <div class="model__fields">
+                            <div class="detail__inputfield">
+                                <label for="">Cycle Time Drilling(secs) :</label>
+                                <input type="text" maxlength='5' placeholder="Input Cycle drill" name="Cycle_drill" id="Cycle_drill" autocomplete="off" onkeypress="return restrictChars(event)">
+                            </div>
+                            <div class="detail__inputfield">
+                                <label for="">Washing Cycle Time/Bucket:</label>
+                                <input class="num" maxlength='5' type="text" placeholder="Enter Washing Cycle " name="Wash_cycle" id="Wash_cycle" autocomplete="off" onkeypress="return restrictChars(event)">
+                            </div>
+                        </div>
+
+
+                        <div class="model__fields">
+                            <div class="detail__inputfield">
+                                <label for="">Pre-wash :</label>
+                                <input type="text" maxlength='5' placeholder="Enter Pre wash" name="Pre_wash" id="Pre_wash" autocomplete="off" onkeypress="return restrictChars(event)">
+                            </div>
+                            <div class="detail__inputfield">
+                                <label for="">Laser Marking:</label>
+                                <input type="text" maxlength='5' placeholder="Enter Laser marking" name="Laser" id="Laser" autocomplete="off" onkeypress="return restrictChars(event)">
+                            </div>
+                        </div>
+                        <div class="model__fields">
+                            <div class="detail__inputfield">
+                                <label for="">Operation Time :</label>
+                                <input type="text" maxlength='5' placeholder="Input Operation time" name="Operation_time" id="Operation_time" autocomplete="off" onkeypress="return restrictChars(event)">
+                            </div>
+                          
+                        </div>
+
+                    }
+
+                    <div class="modal-footer flex__space">
+                        <strong id="newmodel">No Modelbase available </strong>
+                        <button type="submit" class="saveEditsum"><i class="fa fa-plus-circle"></i> Save</button>
+                    </div>
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/Scripts/jquery-3.7.0.js"></script>
+<script src="~/Scripts/Utilities.js"></script>
+<script src="~/Scripts/Global.js"></script>
+<script type="text/javascript">
+     // CAPACITY PROCESSS type
+    let cap_groupID = parseInt(@capid);
+
+    // Users Role
+    let roleint = 1;
+
+    // Get the current year date
+    const currentYear = new Date().getFullYear();
+    const Month = new Date().toLocaleString('en-US', { month: 'long' });
+
+    // Forms For the edit and Add data
+    const processform = document.querySelector('#EditCapacity');
+    const detailsform = document.querySelector('#editDetails');
+    const addmodelform = document.querySelector('#addnewmodel');
+    // Buttons use
+    const showaddmodal = document.getElementById("addbtn");
+    const showeditmode = document.getElementById("Editdetailsbtn");
+
+    var processcode = "";
+    var summarycheck = 0;
+    var EmployeeID;
+    var machinecount;
+    var indexvalue = 0;
+
+    // Stores all data
+    let SummaryData = [];
+    let TableData = [];
+    let ModelsData = [];
+    let SummaryTableData = [];
+
+
+    let Summaryload_table = $("#SummarybodyID");
+
+    $("#Editsavebtn").css("display", "none");
+
+    const GetCapacitySummary = async() => {
+        loadingSummary();
+        let res = await fetchData('@Url.Action("GetCapacitySummaryList", "Capacity")', { month: Month, capid: cap_groupID });
+        if (res && res.Success) {
+            SummaryData = res.Data;
+
+            processcode = SummaryData[0].ProcessCode;
+            //machinecount = SummaryData[0].mach;
+            //$("#Proc_AvailMachine").val(SummaryData[0].AvailMachine);
+            $("#Cap_Per_Machine_text").val(SummaryData[0].Cap_Per_Machine);
+            $("#Proc_Months").val(SummaryData[0].Months);
+            $("#Proc_OperationTime").val(SummaryData[0].OperationTime);
+            $("#Proc_Days").val(SummaryData[0].Days);
+            $("#Proc_Cap_Per_Machine").val(RoundNumber(SummaryData[0].Cap_Per_Machine));
+            $("#Proc_CycleTime").val(SummaryData[0].CycleTime);
+
+            displaySummaryTable(SummaryData, 0);
+         }
+    }
+    const GetPressData = async () => {
+       let res = await fetchData('@Url.Action("GetPressModelData", "Capacity")', { CapID: cap_groupID, Month: Month });
+        if (res && res.Success) {
+            TableData = res.Data;
+            $("#tableloads").hide();
+            $('#empty-state').hide();
+            displayPagination(TableData, 'dataSearching', 'PaginationContainer', 20, 5);
+       }
+    }
+
+
+    async function displaySummaryTable(data, filter) {
+         let totalmachoine = 0;
+         let totalfore = 0;
+         let totalcapday = 0;
+         let totalcap = 0;
+         let totalHour = 0;
+         let totalMan = 0;
+         //const renderhtml = await postPartialData('@Url.Action("CapacitySummaryHeader", "Capacity")', JSON.stringify({
+            // data: data,
+           //  filter: filter
+         //}));
+
+        switch (filter) {
+            //SELECTING MODELBASE
+             case 1:
+                 $("#ChangeHeader").text("Model Base");
+                 $("#Displaymachine").hide();
+                 Summaryload_table.empty();
+                 $.each(data, function (index, rowData) {
+
+                     var getdata = "<tr class= 'row_" + index + "  '>" +
+                         "<td style='width: 10%; color: #1c65a8; font-weight: 500;'>" + rowData.Model_name + "</td>" +
+                         "<td>" + rowData.CycleTime + "</td>" +
+                         "<td>" + rowData.Capday + "</td>" +
+                         "<td>" + rowData.Capmonth + "</td>" +
+                         "<td>" + rowData.foredata + "</td>" +
+                         "<td>" + RoundNumber(rowData.manhour) + "</td>" +
+                         "<td>" + RoundNumber(rowData.Require) + "</td>" +
+                         "</tr>";
+                     Summaryload_table.append(getdata);
+                 });
+
+                 $("#Select_Partnum").val(data[0].Partnum);
+                 $("#Select_Capinfo_ID").val(data[0].Capinfo_ID)
+                 $("#Select_DieQty").val(data[0].DieQty);
+                 $("#Select_Actual_cav").val(data[0].Actual_Cav);
+                 $("#Select_CycleTime").val(data[0].CycleTime);
+                 $("#Select_Operation_time").val(data[0].Days);
+
+                 break;
+             default:
+                 //DISPLAY FOR THE FIRST LOADING PAGE
+                 //CHANGE  AND REMOVE THE COLUMN HEADER NAME
+                 $("#ChangeHeader").text("Process");
+                 $("#Displaymachine").show();
+
+
+                 //DISPLAY SUMMARY DATA
+                 Summaryload_table.empty();
+                 $("#permachID").val(RoundNumber(data[0].Cap_Per_Machine));
+                 $.each(data, function (index, rowData) {
+                    var getdata = "<tr class= 'row_" + index + "  '>" +
+                        "<td style='width: 10%;  font-weight: 500; color: #222;'>" + rowData.ProcessName + "</td>" +
+                        "<td contenteditable='true'>" + rowData.AvailMachine + "</td>" +
+                        "<td contenteditable='true'>" + RoundNumberOne(rowData.CycleTime) + "</td>" +
+                        "<td>" + getFormatComma(rowData.Capday) + "</td>" +
+                        "<td>" + getFormatComma(rowData.Capmonth) + "</td>" +
+                        "<td>" + getFormatComma(rowData.Forecast) + "</td>" +
+                        "<td>" + RoundNumber(rowData.Totalhours) + "</td>" +
+                        "<td>" + RoundNumber(rowData.RequiredMan) + "</td>" +
+                        "</tr>";
+                    Summaryload_table.append(getdata);
+                 });
+                 break;
+         }
+    }
+    function displayPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 20, visibleButtons = 5) {
+        let currentPage = 1;
+        let filteredData = [...dataArray];
+
+        const updatePaginationInfo = () => {
+            const totalRecords = filteredData.length;
+            const totalPages = Math.ceil(totalRecords / recordsPerPage);
+
+            $("#totalpageID").text(totalPages);
+            $("#DatalengthID").text(totalRecords);
+
+            return totalPages;
+        };
+
+        const renderTable = (page) => {
+            const totalPages = updatePaginationInfo();
+            const startIndex = (page - 1) * recordsPerPage;
+            const endIndex = Math.min(startIndex + recordsPerPage, filteredData.length);
+            const tableBody = document.getElementById(tableBodyId);
+            tableBody.innerHTML = '';
+
+            for (let i = startIndex; i < endIndex; i++) {
+                let buttons;
+                const rowData = filteredData[i];
+                if (roleint !== 2) {
+                    $("#headertable").show();
+                    buttons = "<button type='button' class='btn actionicon text-danger deleteButton' id='deleteButton_" + rowData.Capinfo_ID + "' >" +
+                        "<i class='fa-regular fa-trash-can'></i>" +
+                        "</button>";
+                } else {
+                    $("#headertable").hide();
+                }
+
+
+                const rowHtml = ` <tr class='row_${i} rowClick' id='editButton_${rowData.Capinfo_ID}'>
+                                     <td data-cell="Model_name">${rowData.Model_name}</td>
+                                     <td data-cell="foredata">${rowData.foredata}</td>
+                                     <td data-cell="manhour">${RoundNumberOne(rowData.manhour)}</td>
+                                     <td data-cell="Require">${RoundNumberOne(rowData.Require)}</td>
+                                     <td data-cell="Action">${buttons}</td>
+                                 </tr>`;
+
+                tableBody.innerHTML += rowHtml;
+            }
+
+            $("#pagecountID").text(currentPage);
+        };
+
+        const renderPagination = () => {
+                const totalPages = updatePaginationInfo();
+                const paginationContainer = document.getElementById(paginationId);
+                paginationContainer.innerHTML = '';
+
+                let startPage = Math.max(1, currentPage - Math.floor(visibleButtons / 2));
+                let endPage = Math.min(totalPages, startPage + visibleButtons - 1);
+
+                if (endPage > totalPages) {
+                    endPage = totalPages;
+                    startPage = Math.max(1, endPage - visibleButtons + 1);
+                }
+
+                if (totalPages <= visibleButtons) {
+                    startPage = 1;
+                    endPage = totalPages;
+                }
+
+                // Previous button
+                paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
+                                               <i class="fa-solid fa-backward"></i>
+                                           </button>`;
+
+                for (let i = startPage; i <= endPage; i++) {
+                    paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+                }
+
+                // Next button
+                paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
+                                              <i class="fa-solid fa-forward"></i>
+                                           </button>`;
+            };
+
+        const changePage = (page) => {
+            if (page >= 1 && page <= updatePaginationInfo()) {
+                currentPage = page;
+                renderTable(currentPage);
+                renderPagination();
+            }
+        };
+
+        // 🔍 Search functionality
+        const searchTable = () => {
+            const query = $('#searchbox').val().toLowerCase();
+
+            filteredData = dataArray.filter(item =>
+                item.Model_name.toLowerCase().includes(query)
+            );
+
+            currentPage = 1;
+            renderTable(currentPage);
+            renderPagination();
+        };
+
+        // Add event listener for search input
+        $('#searchbox').on('input', searchTable);
+
+        // Handle click event for edit button
+        $(document).on('click', '.rowClick', function (e) {
+            e.stopPropagation();
+            const buttonId = $(this).attr('id');
+            const rowIndex = buttonId.split('_')[1];
+            const result = TableData.find(p => p.Capinfo_ID == rowIndex);
+
+            if (result) {
+                $("#Detail_Capinfo_ID").val(result.Capinfo_ID);
+                $("#Detail_CycleTime").val(result.CycleTime);
+                $("#Detail_Model_name").val(result.Model_name);
+                $("#Detail_Manhour").val(RoundNumberOne(result.manhour));
+                $("#Detail_Operation_time").val(result.Operation_time);
+                $("#Detail_Require").val(RoundNumberOne(result.Require));
+                $("#Detail_Capday").val(result.Capday);
+                $("#Detail_Capmonth").val(result.Capmonth);
+                $("#Detail_Product_type").val(result.Product_type);
+
+                if (cap_groupID == 10) {
+                    $("#Detail_Lam").val(result.Lam);
+                    $("#Detail_SPM").val(result.SPM);
+                    $("#Detail_Row").val(result.Row);
+                } else {
+                    $("#Detail_Apearance_inspect").val(result.Apearance_inspect);
+                    $("#Detail_Bucket").val(result.Bucket);
+                    $("#Detail_CTLam").val(result.CTLam);
+                    $("#Detail_CycleTap").val(result.CycleTap);
+                    $("#Detail_Cycle_cnc").val(result.Cycle_cnc);
+                    $("#Detail_Cycle_drill").val(result.Cycle_drill);
+                    $("#Detail_Laser").val(result.Laser);
+                    $("#Detail_Partnum").val(result.Partnum);
+                    $("#Detail_Pre_wash").val(result.Pre_wash);
+                    $("#Detail_Wash_cycle").val(result.Wash_cycle);
+                    $("#Detail_TotalCycle").val(result.TotalCycle);
+                }
+
+                $("#detailsModal").modal("show");
+            }
+        });
+
+
+
+        // Initialize table and pagination
+        window.changePage = changePage;
+        renderTable(currentPage);
+        renderPagination();
+    }
+
+     // UPDATES THE DETAILS DATA
+    detailsform.addEventListener('submit', async (e) => {
+         e.preventDefault();
+
+         let formData = new FormData(e.target);
+         formData.append('ProcessCode', processcode);
+         formData.append('Capgroup_ID', cap_groupID);
+         const data = Object.fromEntries(formData);
+         let res = await postData('@Url.Action("EditPressByDetails", "PostCapacity")', formData);
+         EditResult(res, data);
+    });
+
+    function EditResult(res, data) {
+        if (res.StatusCode == 200) {
+            Swal.fire({
+                title: "Edit Successful",
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1500
+            }).then(() => {
+                let newmanhour = 0;
+                let newmanpower = 0;
+
+                switch (cap_groupID) {
+                    case 10:
+                        newmanhour = parseInt(TableData[indexvalue].foredata) * CalculateCyctimeStator(data.SPM, data.Row, data.Lam)  / 60 / 60;
+                        newmanpower = parseInt(TableData[indexvalue].foredata) * CalculateCyctimeStator(data.SPM, data.Row, data.Lam) / 60 / 60 / 24 / parseFloat(data.Detail_Operation_time);
+                        TableData[indexvalue].SPM = parseInt(data.SPM);
+                        TableData[indexvalue].Row = parseFloat(data.Row);
+                        TableData[indexvalue].Lam = parseFloat(data.Lam);
+                        break;
+                    case 11:
+                        newmanhour = parseInt(TableData[indexvalue].foredata) * parseFloat(data.CycleTime) / 60 / 60;
+                        newmanpower = parseInt(TableData[indexvalue].foredata) * parseFloat(data.CycleTime) / 60 / 60 / 24 / parseFloat(data.Detail_Operation_time);
+                        TableData[indexvalue].CycleTime = parseFloat(data.CycleTime);
+                        break;
+                    default:
+                        newmanhour = parseInt(TableData[indexvalue].foredata) * CalculateCyctimeAluminumFrame(data.TotalCycle, data.Bucket, data.Cycle_cnc, data.Appearance_inspect) / 60 / 60;
+                        newmanpower = parseInt(TableData[indexvalue].foredata) * CalculateCyctimeAluminumFrame(data.TotalCycle, data.Bucket, data.Cycle_cnc, data.Appearance_inspect) / 60 / 60 / 24 / parseFloat(data.Detail_Operation_time);
+                        TableData[indexvalue].TotalCycle = parseInt(data.TotalCycle);
+                        TableData[indexvalue].Bucket = parseFloat(data.Bucket);
+                        TableData[indexvalue].Cycle_cnc = parseFloat(data.Cycle_cnc);
+                        TableData[indexvalue].Appearance_inspect = parseFloat(data.Appearance_inspect);
+                        break;
+                }
+                //Updates the Summary table
+                TableData[indexvalue].manhour = parseFloat(newmanhour);
+                TableData[indexvalue].Manpower = parseFloat(newmanpower);
+                TableData[indexvalue].Require = parseFloat(newmanpower);
+
+                GetCapacitySummary();
+                displayTableData(TableData);
+                $('.editmode').prop('disabled', true);
+                $("#Editdetailsbtn").css("display", "flex");
+                $("#Editdetailsbtn").css("align-items", "center");
+                $("#Editdetailsbtn").css("justify-content", "center");
+                $("#Editdetailsbtn").css("gap", ".4em");
+                $("#Editsavebtn").css("display", "none");
+
+                $("#detailsModal").modal("hide");
+
+                function CalculateCyctimeStator(SPM, Row, Lam) {
+                    // Avoid division by zero
+                    if (!SPM || !Row) {
+                        return 0.00;
+                    }
+                    const result = 60 / SPM / Row * Lam;
+                    return Math.round(result * 10) / 10; // Round to 1 decimal place
+                }
+
+                function CalculateCyctimeAluminumFrame(TotalCycle, Bucket, Cycle_cnc, Appearance_inspect) {
+                    // Check if Bucket is zero or falsy to avoid division by zero
+                    if (!Bucket) {
+                        return 0.0;
+                    }
+
+                    // Ensure decimal division and precision
+                    const cycleTime = TotalCycle * 1.0 / Bucket;
+                    const total = cycleTime + Cycle_cnc + Appearance_inspect;
+
+                    // Round to 4 decimal places
+                    return Math.round(total * 10000) / 10000;
+                }
+
+            });
+        } else {
+            Swal.fire({
+                icon: "error",
+                text: res.Message,
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }
+    }
+
+    // ########################################################################
+    function loadingSummary() {
+        Summaryload_table.empty();
+        var loadData = "<tr class='Loadercontainer'>  " +
+            "<td colspan = '8' > " +
+            "<div class='loader2' id='loadingSpinner'></div> " +
+            "</td>" +
+            "</tr > ";
+        Summaryload_table.append(loadData);
+    }
+
+    $(document).ready(function () {
+        //ENABLE THE INPUT CONTROLS
+        showeditmode.addEventListener('click', event => {
+            event.preventDefault();
+            $(".editmode").prop('disabled', false);
+            $("#Editdetailsbtn").css("display", "none");
+            $("#Editsavebtn").css("display", "grid");
+        });
+        //OPEN A MODAL FOR THE ADD MODELBASE
+        showaddmodal.addEventListener('click', async(e) => {
+            e.preventDefault();
+
+            $("#forecast").empty();
+            let Monthcalendar = $("#calendar").val();
+            let res = await fetchData('@Url.Action("GetModelbaseComboBoxDoesntExistList", "Capacity")', { CapID: cap_groupID });
+
+            if (res.StatusCode === 200) {
+                let modeldata = res.Data;
+                if (modeldata.length > 0) {
+                    $.each(modeldata, function (index, row) {
+                        $("#forecast").append("<option value='" + row + "'>" + row + "</option>");
+                    });
+                    $(".saveEditsum").prop('disabled', false);
+                    $("#newmodel").css("opacity", "0");
+                } else {
+                    $("#newmodel").css("opacity", "1");
+                    $(".saveEditsum").prop('disabled', true);
+                }
+            }
+
+            $("#addmodal").modal("show");
+        });
+        //ADD ANOTHER MODELBASE
+        addmodelform.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            let formData = new FormData(e.target);
+            formData.append('ProcessCode', processcode);
+            formData.append('Capgroup_ID', cap_groupID);
+            const data = Object.fromEntries(formData);
+            let res = await postData('@Url.Action("AddPressModelBase", "PostCapacity")', formData);
+            
+            if (res.code == 200) {
+                   Swal.fire({
+                       title: "Add success",
+                       text: res.message,
+                       icon: "success",
+                       showConfirmButton: false,
+                       timer: 1500
+                   }).then(() => {
+                       addmodelform.reset();
+                       $("#addmodal").modal("hide");
+                   });
+            } else {
+                  Swal.fire({
+                      icon: "error",
+                      title: "Oops...",
+                      text: "Something went wrong!",
+                      showConfirmButton: false
+                  });
+            }
+        });
+        //FILTER THE DATA
+        processform.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            let formData = new FormData(e.target);
+            formData.append('ProcessCode', processcode);
+            formData.append('Capgroup_ID', cap_groupID);
+            let res = await postData('@Url.Action("UpdateProcessCap", "PostCapacity")', formData);
+            if (res.StatusCode === 200) {
+                const savebtn = document.querySelector("#saveEditProcess");
+                savebtn.innerHTML = " <div class='Submitloading'></div>"
+                Swal.fire({
+                    title: "Edit Successful",
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
+                    savebtn.innerHTML = "<span><i class='fa-regular fa-floppy-disk'></i>  Save Details</span>"
+                    GetCapacitySummary();
+                });
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    text: res.Message,
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            }
+        });
+    });
+
+    // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+    const InitializeData = () => {
+        $("#EditCapacity").show();
+        // GET THE USERS DATA
+        //userDataRole();
+        // GET SUMMARY DATA FOR ALL
+        GetCapacitySummary();
+        // GET THE TABLE DATA
+        GetPressData();
+
+    }
+
+    // ##############  LOADS THE DATA WHEN THE PAGE IS LOADED ##############
+    InitializeData();
+</script>

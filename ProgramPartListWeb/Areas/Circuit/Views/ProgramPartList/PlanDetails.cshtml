@@ -1,0 +1,362 @@
+﻿
+@{
+    ViewBag.Title = "PlanDetails";
+    Layout = "~/Areas/Circuit/Views/Shared/_LayoutPartlist.cshtml";
+}
+
+
+<div class="row">
+    <div class="col-lg-2 col-sm-12">
+        <div class="d-flex align-items-center gap-3">
+            <a class="Backbtn flex__center" href="/Circuit/ProgramPartList/ManagePlanSchedule"><i class="fa-solid fa-arrow-left"></i></a>
+            <span>Back</span>
+        </div>
+
+        <div class="SeriesInfo">
+            <div class="">
+                <h5 class="header_title mb-2"><span id="seriesIDText"></span></h5>
+                <span>Status:  </span> <span id="statusid">--N/A--</span>
+            </div>
+            <hr />
+            <strong>Machine Serial no. : </strong>
+            <p id="Machno">N/A</p>
+            <strong>Model/Machine no. : </strong>
+            <p id="Model">N/A</p>
+            <strong>Line No. : </strong>
+            <p id="Line">N/A</p>
+            <strong>Shifts Schedule : </strong>
+            <p id="Schedule">N/A</p>
+            <strong>Time Status Target Time :</strong>
+            <p id="TimeTarget">N/A</p>
+            <strong>Set up Group :</strong>
+            <p id="SetGroup">N/A</p>
+            <strong>P-tool In charge : </strong>
+            <p id="Incharge">N/A</p>
+            <strong>Set up visual Management :</strong>
+            <p id="Setup">N/A</p>
+            <strong>Remarks : </strong>
+            <p id="Remarks">N/A</p>
+        </div>
+
+    </div>
+
+    <div class="col-lg-10 col-sm-12">
+        <div class="d-flex align-items-center justify-content-between mb-2 mt-4">
+            <small id="totalcount">Partlist component Count : <span id="Countnum">0</span></small>
+
+            <button type="button" id="addComp">Additional Components</button>
+        </div>
+
+
+        <table class="SeriesTable">
+            <thead>
+                <tr>
+                    <th>SetNo</th>
+                    <th>Ambassador</th>
+                    <th>Partname</th>
+                    <th>Location</th>
+                    <th>Feeder Type</th>
+                    <th>Machine no.</th>
+                    <th>Prep Qty</th>
+                    <th>Edit</th>
+                </tr>
+            </thead>
+            <tbody id="partlistTable">
+            </tbody>
+        </table>
+
+        <div class="Emptytablewrapper" id="empyid">
+            <img src="~/Content/Images/no-data.png" />
+            <span>No Partlist components</span>
+            <p>Click below to the import the data</p>
+            <form id="excelForm">
+                <input type="hidden" name="SeriesID" id="SeriesID" />
+                <input type="file" id="excelFile" name="filetoupload" accept=".xlsx, .xls, .csv" style="display: none;" />
+                <button id="uploadBtn"><i class='bx bx-import'></i>  Import</button>
+            </form>
+
+        </div>
+
+        <div id="partlistTableContainer" class="pagination"></div>
+    </div>
+</div>
+
+
+<div class="modal fade modal-m" id="additionalComponentsModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <form method="post" class="mt-4" id="requestforms" autocomplete="off">
+                    <div class="d-flex justify-content-between">
+                        <label>Additonal Components: </label>
+
+                    </div>
+
+                    <div class="d-flex align-items-center">
+                        <select name="MachNum" id="MachNum">
+                            <option value="1">Machine 1</option>
+                            <option value="2">Machine 2</option>
+                            <option value="3">Machine 3</option>
+                        </select>
+                        <input type="hidden" name="SeriesID" id="SeriesID" />
+                        <input type="file" id="anotherexcelFile" name="anotherfiletoupload" accept=".xlsx, .xls, .csv" style="display: none;" />
+                        <button id="adduploadbtn"><i class='bx bx-import'></i>  Import</button>
+
+                    </div>
+
+
+                    <div class="d-flex align-items-center justify-content-between">
+
+                        <div class="d-flex align-items-center gap-2 ">
+                            <button type="button" class="btncancel" data-bs-dismiss="modal"><i class='bx bx-x'></i> Cancel</button>
+                            <button type="submit" class="btnTransac" id="Quanbtn"> Save <i class='bx bx-save'></i></button>
+                        </div>
+                    </div>
+
+
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<script src="~/Scripts/Utilities.js"></script>
+<script src="~/Scripts/sweetalert2.min.js"></script>
+<script src="~/Scripts/jquery-3.7.1.min.js"></script>
+<script type="text/javascript">
+    const nodataform = document.querySelectorAll('Emptytablewrapper');
+    const excelform = document.getElementById('excelForm');
+    const newadd = document.getElementById('addComp');
+
+    const uploadbtn = document.getElementById('uploadBtn');
+    const excelsave = document.getElementById('excelFile');
+
+     // LOADS THE SERIES DETAILS
+    const LoadDetails = async () => {
+        var params = "@ViewBag.SeriesNo";
+        let res = await FetchAuthenticate('@Url.Action("GetSeriesDetails", "ProgramPartList")', { seriesID: params });
+
+        if (res && res.Success) {
+            let data = res.Data;
+            let stats = data.Ongoing == 1 ? "Online" : "Offline";
+            $("#SeriesID").val(data.Series_ID);
+            $("#seriesIDText").text(data.Series_no)
+            $("#Machno").text(data.MachineSerial ?? "N/A");
+            $("#Model").text(data.Modelno ?? "N/A");
+            $("#Line").text(data.Line ?? "N/A");
+            //$("#Schedule").val(data.FeederType ?? "N/A");
+            $("#TimeTarget").text(data.Timetarget ?? "N/A");
+            $("#SetGroup").text(data.SetGroup ?? "N/A");
+            $("#Incharge").text(data.CreatedBy ?? "N/A");
+            $("#Setup").text(data.SetGroup ?? "N/A");
+            $("#Remarks").text(data.Remarks ?? "N/A");
+            $("#statusid").addClass(stats);
+            $("#statusid").text(stats);
+        }
+
+    }
+    const LoadComponentsPartlist = async () => {
+        var params = "@ViewBag.SeriesNo";
+
+        let res = await FetchAuthenticate('@Url.Action("GetparlistData", "ProgramPartList")', { intval: params });
+        $('#empyid').hide();
+        if (res && res.Success) {
+            let partdata = res.Data;
+            $('#empyid').hide();
+            $("#partlistTable").empty();
+            PartlistPagination(partdata, 'partlistTable', 'partlistTableContainer', 11, 5);
+            $("#Countnum").text(partdata.length);
+        } else {
+            $('#empyid').show();
+        }
+
+    }
+
+    function uploadExcel() {
+        var formData = new FormData();
+        var fileInput = $('#excelFile')[0].files[0];
+
+        if (!fileInput) {
+            alert("Please select an Excel file.");
+            return;
+        }
+
+        formData.append("file", fileInput);
+
+        $.ajax({
+            url: '@Url.Action("ImportPartList", "ProgramPartList")',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                Swal.fire({
+                    title: "Add success",
+                    text: response.message,
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
+                    console.log(response.message);
+                });
+
+            },
+            error: function (xhr) {
+                let message = "Error uploading file.";
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    message = xhr.responseJSON.message;
+                }
+                console.log("ERROR HERE");
+                alert(message);
+            }
+        });
+
+
+    }
+
+    newadd.addEventListener('click',  (e) => {
+        e.preventDefault();
+        $("#additionalComponentsModel").modal('show');
+    });
+
+    uploadbtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        $('#excelFile').click();
+    });
+    excelsave.addEventListener('change', async (e) => {
+        var formData = new FormData(excelform);
+        formData.append("file", this);
+        const data = Object.fromEntries(formData);
+
+        let res = await postData('@Url.Action("LateUploadData", "ProgramPartList")', formData);
+
+        if (res.StatusCode == 200) {
+            Swal.fire({
+                title: "Success",
+                text: res.Message,
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1500
+            }).then(() => {
+                LoadComponentsPartlist();
+            });
+        }
+    });
+
+
+
+    function PartlistPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 10, visibleButtons = 5) {
+        let currentPage = 1;
+        const totalRecords = dataArray.length;
+        const totalPages = Math.ceil(totalRecords / recordsPerPage);
+
+        const renderTable = (page) => {
+            const startIndex = (page - 1) * recordsPerPage;
+            const endIndex = Math.min(startIndex + recordsPerPage, totalRecords);
+            var tableBody = document.getElementById(tableBodyId);
+            tableBody.innerHTML = '';
+
+            for (let i = startIndex; i < endIndex; i++) {
+                const rowData = dataArray[i];
+                let getdata = '';
+                let usercontrols = `<td data-cell="Details">
+                                        <button type='button' class='editButton text-primary bg-white' id='editButton_${rowData.SetNo}' >
+                                          <i class="fa-regular fa-pen-to-square"></i>
+                                        </button>
+                                    </td>`;
+
+                getdata = `
+                  <tr>
+                     <td data-cell='SetNo'>${rowData.SetNo}</td>
+                     <td data-cell='Abassador Part no.'>${rowData.AbassadorPartnum}</td>
+                     <td data-cell='Partname/Supplier'>${rowData.Partname}</td>
+                     <td data-cell='Warehouse Location'>${rowData.Locations}</td>
+                     <td data-cell='Feeder Type'>${rowData.FeederType}</td>
+                     <td data-cell='Feeder Type'>${rowData.Machno}</td>
+                     <td data-cell='Prepared Quantity'>${rowData.Prepared_Quantity} </td>
+                     ${usercontrols}
+                  </tr>`;
+
+
+                tableBody.innerHTML += getdata;
+            }
+        };
+
+        const renderPagination = () => {
+            const paginationContainer = document.getElementById(paginationId);
+            paginationContainer.innerHTML = '';
+
+            // Calculate visible button range
+            let startPage = Math.max(1, currentPage - Math.floor(visibleButtons / 2));
+            let endPage = Math.min(totalPages, startPage + visibleButtons - 1);
+
+            if (endPage > totalPages) {
+                endPage = totalPages;
+                startPage = Math.max(1, endPage - visibleButtons + 1);
+            }
+
+            if (totalPages <= visibleButtons) {
+                startPage = 1;
+                endPage = totalPages;
+            }
+
+            // Always render "Previous" button
+            paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})"><i class="fa-solid fa-backward"></i></button>`;
+
+            // Render pagination number buttons
+            for (let i = startPage; i <= endPage; i++) {
+                paginationContainer.innerHTML += `<button  onclick="changePage(${i})">${i}</button>`;
+            }
+
+            // Always render "Next" button
+            paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})"><i class="fa-solid fa-forward"></i></button>`;
+        };
+
+        const changePage = (page) => {
+            if (page >= 1 && page <= totalPages) {
+                currentPage = page;
+                renderTable(currentPage);
+                renderPagination();
+            }
+        };
+
+        $(document).on('click', '.editButton', function (e) {
+            e.stopPropagation();
+            const buttonId = $(this).attr('id');
+            const rowIndex = buttonId.split('_')[1];
+
+            console.log(rowIndex);
+
+            //const result = supplyarray.find(p => p.SupID == rowIndex);
+
+            //if (result) {
+            //    $(".SupID").val(result.SupID);
+            //    $(".AbassadorPartnum").val(result.AbassadorPartnum);
+            //    $(".Partname").val(result.Partname);
+            //    $(".Supplier").val(result.Supplier);
+            //    $(".Code").val(result.Code);
+            //    $("#editRequestmodal").modal("show");
+            //}
+        });
+
+        window.changePage = changePage;
+
+        renderTable(currentPage);
+        renderPagination();
+    }
+
+
+
+    $(document).ready(function () {
+        LoadDetails();
+        LoadComponentsPartlist();
+    });
+</script>

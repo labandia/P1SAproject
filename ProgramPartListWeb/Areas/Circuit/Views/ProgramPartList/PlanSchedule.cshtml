@@ -1,0 +1,225 @@
+﻿
+@{
+    ViewBag.Title = "PlanSchedule";
+    Layout = "~/Areas/Circuit/Views/Shared/_LayoutPartlist.cshtml";
+}
+
+<header>
+    <h4 class="mb-3">Ongoing Plan Schedule</h4>
+
+
+    <div class="d-flex align-items-center justify-content-between gap-4">
+        <div class="SearchInputbox">
+            <input type="text" name="searchbox" id="searchbox" placeholder="Search here... " />
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+
+        @*<select id="lineselect">
+            <option value="1">Line 1</option>
+            <option value="2">Line 2</option>
+            <option value="3">Line 3</option>
+            <option value="4">Line 4</option>
+            <option value="5">Line 5</option>
+            <option value="6">Line 6</option>
+            <option value="7">Line 7</option>
+            <option value="8">Line 8</option>
+            <option value="9">Line 9</option>
+            <option value="10">Line 10</option>
+            <option value="11">Line 11</option>
+            <option value="12">Line 12</option>
+        </select>*@
+
+    <div class="d-flex align-items-center gap-3">
+        <select id="filterselect">
+            <option value="2">All</option>
+            <option value="1">Completed</option>
+            <option value="0">Not Completed</option>
+        </select>
+
+        <select id="monthFilter">
+            <option value="1">January</option>
+            <option value="2">February</option>
+            <option value="3">March</option>
+            <option value="4">April</option>
+            <option value="5">May</option>
+            <option value="6">June</option>
+            <option value="7">July</option>
+            <option value="8">August</option>
+            <option value="9">September</option>
+            <option value="10">October</option>
+            <option value="11">November</option>
+            <option value="12">December</option>
+        </select>
+    </div>
+    </div>
+
+</header>
+
+
+<div class="showData">
+    <div id="card-container">
+    </div>
+
+    <div id="loadcontainer">
+        <div class="loader"></div>
+        <strong>Loading data please wait... </strong>
+    </div>
+</div>
+
+<div class="NoSeriesData">
+    <p id="ErrorMessage"></p>
+</div>
+
+
+
+<script src="~/Scripts/Cryptojs.min.js"></script>
+<script src="~/Scripts/Utilities.js"></script>
+<script src="~/Scripts/sweetalert2.min.js"></script>
+<script src="~/Scripts/jquery-3.7.1.min.js"></script>
+<script type="text/javascript">
+    //const linechange = document.getElementById("lineselect");
+
+    const logstring = ""
+
+    function encodeBase64(input) {
+        return btoa(input); // Convert string to Base64
+    }
+
+
+   const SeriesDataTable = async () => {
+    $(".showData").show();
+    $(".NoSeriesData").hide();
+    $("#loadcontainer").show();
+
+    let res = await fetchData('@Url.Action("GetScheduleSeries", "ProgramPartList")', {});
+    var SetData = $("#card-container");
+    $("#card-container").empty();
+    $("#loadcontainer").hide();
+
+    let filterValue = $("#filterselect").val();      // Planstatus filter (e.g., completed or not)
+    let selectedMonth = $("#monthFilter").val();     // Month filter (1-12)
+
+    if (res && res.Success) {
+        let hasValidData = false;
+
+        $.each(res.Data, function (index, resItem) {
+            if (resItem.Ongoing == 1) {
+
+                // Convert resItem.DateCreated to JavaScript Date object
+                let itemDate = new Date(resItem.DateCreated);
+                let itemMonth = itemDate.getMonth() + 1; // getMonth() returns 0-11
+
+                // Month filter
+                if (selectedMonth && parseInt(selectedMonth) !== itemMonth) return;
+
+                // Plan status filter
+                if (filterValue == "1" && resItem.Planstatus != 1) return;
+                if (filterValue == "0" && resItem.Planstatus != 0) return;
+
+                hasValidData = true;
+
+                var getdata = `<div class="card" id='cardid_${resItem.Series_ID}'>
+                    <div class="card__header" style='background-color: ${resItem.Planstatus === 1 ? "#159947" : "#da423c"};'>
+                        <div>
+                            <h3>${resItem.Series_no}</h3>
+                            <span>${resItem.SetGroup}</span>
+                        </div>
+                        <div class='program__icon flex__align'>
+                            <i class="fa-solid fa-calendar-day"></i>
+                            <small>${resItem.DateCreated}</small>
+                        </div>
+                    </div>
+                    <div class="card__body">
+                        <div class='card__details'>
+                            <small><span style="font-weight: 600;">Serial #:</span><br> ${resItem.MachineSerial}</small>
+                        </div>
+                        <div class='card__details'>
+                            <small><span style="font-weight: 600;">Line :</span> ${resItem.Line}</small>
+                        </div>
+                        <div class='card__details'>
+                            <small><span style="font-weight: 600;">Model no :</span><br> ${resItem.Modelno}</small>
+                        </div>
+                        <div class='card__details'>
+                            <small><span style="font-weight: 600;">Total partlist :</span><br> ${resItem.TotalCount}</small>
+                        </div>
+                    </div>
+                    <div class="card__footer">
+                        <div class="card__smallinfo">
+                            <small>
+                                <i class="fa-regular fa-circle-user"></i>
+                                <span>${resItem.CreatedBy}</span>
+                            </small>
+                        </div>
+                    </div>
+                </div>`;
+                SetData.append(getdata);
+            }
+        });
+
+        if (!hasValidData) {
+            $(".showData").hide();
+            $("#ErrorMessage").text("No Data is Set for Plan Schedule");
+            $(".NoSeriesData").show();
+        }
+
+        $(document).off('click', '.card').on('click', '.card', function (e) {
+            e.stopPropagation();
+            var buttonId = $(this).attr('id');
+            var rowIndex = buttonId.split('_')[1];
+            var encodedSeries = encodeBase64(rowIndex);
+            window.location.href = "/Circuit/ProgramPartList/PlanScheduleDetails?series=" + encodedSeries;
+        });
+    } else {
+        $(".showData").hide();
+        $("#ErrorMessage").text(res.Message);
+        $(".NoSeriesData").show();
+    }
+};
+
+
+    $(document).ready(function () {
+        //refreshToken();
+        let currentMonth = new Date().getMonth() + 1; // JavaScript months are 0-based
+        $("#monthFilter").val(currentMonth);  
+        SeriesDataTable();
+
+        // Filter when selection changes
+        $("#monthFilter, #filterselect").on("change", function () {
+            SeriesDataTable();
+        });
+    });
+
+    // Refresh data when line is changed
+    //linechange.addEventListener('change', () => {
+
+    //});
+
+
+
+
+    $("#searchbox").on("keyup", function () {
+        let value = $(this).val().toLowerCase();
+        $("#card-container .card").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        });
+    });
+
+
+    function processSeriesName(seriesName) {
+        // Split the string by underscore
+        let parts = seriesName.split('_').slice(0, 3);
+
+        // Remove leading zeros from the last part
+        parts[2] = parts[2].replace(/^0+/, '');
+
+        // Join the parts back together with underscores
+        let strjoin = parts.join('_');
+
+        // Replace underscores with hyphens
+        let result = strjoin.replace(/_/g, '-');
+
+        return result;
+    }
+
+
+</script>

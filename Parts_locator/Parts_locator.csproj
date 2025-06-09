@@ -1,0 +1,497 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{DD1D25EF-4381-469F-AEEA-401D069642DD}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Parts_locator</RootNamespace>
+    <AssemblyName>Parts_locator</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>\\SDP04003C\PC_system\DesktopApp\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Unc</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>true</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <InstallUrl>\\SDP04003C\PC_system\DesktopApp\</InstallUrl>
+    <MinimumRequiredVersion>1.0.0.0</MinimumRequiredVersion>
+    <ApplicationRevision>19</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <CreateDesktopShortcut>true</CreateDesktopShortcut>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>DEF9A56858E0F6906BDDD5F6503F83D6DCE8A601</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>Parts_locator_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ClosedXML, Version=0.102.3.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
+      <HintPath>..\packages\ClosedXML.0.102.3\lib\netstandard2.0\ClosedXML.dll</HintPath>
+    </Reference>
+    <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.2.1.66\lib\net461\Dapper.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.16.0.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.16.0\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelNumberFormat, Version=1.1.0.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelNumberFormat.1.1.0\lib\net20\ExcelNumberFormat.dll</HintPath>
+    </Reference>
+    <Reference Include="Irony, Version=1.0.11.0, Culture=neutral, PublicKeyToken=ca48ace7223ead47, processorArchitecture=MSIL">
+      <HintPath>..\packages\Irony.NetCore.1.0.11\lib\net461\Irony.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=9.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.9.0.1\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Office.Interop.Excel.15.0.4795.1001\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="SixLabors.Fonts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d998eea7b14cab13, processorArchitecture=MSIL">
+      <HintPath>..\packages\SixLabors.Fonts.1.0.0\lib\netstandard2.0\SixLabors.Fonts.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.ConfigurationManager, Version=9.0.0.3, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Configuration.ConfigurationManager.9.0.3\lib\net462\System.Configuration.ConfigurationManager.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.IO, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.4.3.0\lib\net462\System.IO.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO.Packaging, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Packaging.9.0.0\lib\net462\System.IO.Packaging.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http, Version=4.1.1.3, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Http.4.3.4\lib\net46\System.Net.Http.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.4.3.0\lib\net462\System.Runtime.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.6.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.7.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net463\System.Security.Cryptography.Algorithms.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Text.RegularExpressions, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.RegularExpressions.4.3.1\lib\net463\System.Text.RegularExpressions.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="XLParser, Version=1.5.2.0, Culture=neutral, PublicKeyToken=63397e1e46bb91b4, processorArchitecture=MSIL">
+      <HintPath>..\packages\XLParser.1.5.2\lib\net461\XLParser.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DataAccess\DatabaseHelper.cs" />
+    <Compile Include="DataAccess\SQLMainlayoutRespository.cs" />
+    <Compile Include="Helpers\Globalfunction.cs" />
+    <Compile Include="Interface\IMoldImpeller.cs" />
+    <Compile Include="Interface\IRawMats.cs" />
+    <Compile Include="Models\BushProducts.cs" />
+    <Compile Include="Interface\IProductRepository.cs" />
+    <Compile Include="Models\MoldImpeller.cs" />
+    <Compile Include="Models\Moldingtransaction.cs" />
+    <Compile Include="Models\ProductRepository.cs" />
+    <Compile Include="Models\ProductsBackup.cs" />
+    <Compile Include="Models\Products.cs" />
+    <Compile Include="Models\ProductsMolding.cs" />
+    <Compile Include="Models\RawMatModel.cs" />
+    <Compile Include="Models\RotorProducts.cs" />
+    <Compile Include="Models\Transaction.cs" />
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\GlobalDb.cs" />
+    <Compile Include="Models\Transaction_Bush.cs" />
+    <Compile Include="Models\Transaction_Rotor.cs" />
+    <Compile Include="Models\UsersModel.cs" />
+    <Compile Include="Presentors\MainlayoutPresentor.cs" />
+    <Compile Include="Presentors\ProductPresentor.cs" />
+    <Compile Include="Repository\MoldImpellerRepository.cs" />
+    <Compile Include="Repository\RawMatsRepository.cs" />
+    <Compile Include="Utilities\AesEncryption.cs" />
+    <Compile Include="Utilities\CacheHelper.cs" />
+    <Compile Include="Utilities\CustomLogger.cs" />
+    <Compile Include="Utilities\SqlDataAccess.cs" />
+    <Compile Include="View\Moldingbush\BushOpentransaction.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Moldingbush\BushOpentransaction.Designer.cs">
+      <DependentUpon>BushOpentransaction.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Moldingbush\EditMasterlist.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Moldingbush\EditMasterlist.Designer.cs">
+      <DependentUpon>EditMasterlist.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Moldingbush\Modules\BushMasterlist.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\Moldingbush\Modules\BushMasterlist.Designer.cs">
+      <DependentUpon>BushMasterlist.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Moldingbush\Modules\BushSummary_in.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\Moldingbush\Modules\BushSummary_in.Designer.cs">
+      <DependentUpon>BushSummary_in.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Moldingbush\Modules\BushSummary_out.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\Moldingbush\Modules\BushSummary_out.Designer.cs">
+      <DependentUpon>BushSummary_out.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Moldingbush\MoldShoporder_IN_dialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Moldingbush\MoldShoporder_IN_dialog.Designer.cs">
+      <DependentUpon>MoldShoporder_IN_dialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Moldingbush\RawMaterialOpentraction.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Moldingbush\RawMaterialOpentraction.Designer.cs">
+      <DependentUpon>RawMaterialOpentraction.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Moldingbush\RawShoporderIn_dialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Moldingbush\RawShoporderIn_dialog.Designer.cs">
+      <DependentUpon>RawShoporderIn_dialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Moldingbush\ShaftShoporder_IN_dialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Moldingbush\ShaftShoporder_IN_dialog.Designer.cs">
+      <DependentUpon>ShaftShoporder_IN_dialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Rotor\IMainlayoutView.cs" />
+    <Compile Include="View\Rotor\Mainlayout.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Rotor\Mainlayout.Designer.cs">
+      <DependentUpon>Mainlayout.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Moldingbush\BushPartDetails.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Moldingbush\BushPartDetails.Designer.cs">
+      <DependentUpon>BushPartDetails.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Rotor\Opentransaction_In.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Rotor\Opentransaction_In.Designer.cs">
+      <DependentUpon>Opentransaction_In.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Rotor\Opentransaction_out.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Rotor\Opentransaction_out.Designer.cs">
+      <DependentUpon>Opentransaction_out.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Rotor\ProductDetails.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Rotor\ProductDetails.Designer.cs">
+      <DependentUpon>ProductDetails.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Moldingbush\RawMaterialProductDetails.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Moldingbush\RawMaterialProductDetails.Designer.cs">
+      <DependentUpon>RawMaterialProductDetails.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Rotor\ProductVIew.cs" />
+    <Compile Include="View\Rotor\Shoporder_IN.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Rotor\Shoporder_IN.Designer.cs">
+      <DependentUpon>Shoporder_IN.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Rotor\ShopOrder_out.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Rotor\ShopOrder_out.Designer.cs">
+      <DependentUpon>ShopOrder_out.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Rotor\StorageLocation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Rotor\StorageLocation.Designer.cs">
+      <DependentUpon>StorageLocation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Rotor\Modules\Locationpage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\Rotor\Modules\Locationpage.Designer.cs">
+      <DependentUpon>Locationpage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Rotor\Modules\Masterlist.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\Rotor\Modules\Masterlist.Designer.cs">
+      <DependentUpon>Masterlist.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Rotor\Modules\Summary_in.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\Rotor\Modules\Summary_in.Designer.cs">
+      <DependentUpon>Summary_in.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Rotor\Modules\summary_out.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\Rotor\Modules\summary_out.Designer.cs">
+      <DependentUpon>summary_out.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Startup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Startup.Designer.cs">
+      <DependentUpon>Startup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Moldingbush\BushMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Moldingbush\BushMain.Designer.cs">
+      <DependentUpon>BushMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Moldingbush\Modules\Bushlocation.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\Moldingbush\Modules\Bushlocation.Designer.cs">
+      <DependentUpon>Bushlocation.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Moldingbush\BushOpentransaction.resx">
+      <DependentUpon>BushOpentransaction.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Moldingbush\EditMasterlist.resx">
+      <DependentUpon>EditMasterlist.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Moldingbush\Modules\BushMasterlist.resx">
+      <DependentUpon>BushMasterlist.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Moldingbush\Modules\BushSummary_in.resx">
+      <DependentUpon>BushSummary_in.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Moldingbush\Modules\BushSummary_out.resx">
+      <DependentUpon>BushSummary_out.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Moldingbush\MoldShoporder_IN_dialog.resx">
+      <DependentUpon>MoldShoporder_IN_dialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Moldingbush\RawMaterialOpentraction.resx">
+      <DependentUpon>RawMaterialOpentraction.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Moldingbush\RawShoporderIn_dialog.resx">
+      <DependentUpon>RawShoporderIn_dialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Moldingbush\ShaftShoporder_IN_dialog.resx">
+      <DependentUpon>ShaftShoporder_IN_dialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Rotor\Mainlayout.resx">
+      <DependentUpon>Mainlayout.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Moldingbush\BushPartDetails.resx">
+      <DependentUpon>BushPartDetails.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Rotor\Opentransaction_In.resx">
+      <DependentUpon>Opentransaction_In.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Rotor\Opentransaction_out.resx">
+      <DependentUpon>Opentransaction_out.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Rotor\ProductDetails.resx">
+      <DependentUpon>ProductDetails.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Moldingbush\RawMaterialProductDetails.resx">
+      <DependentUpon>RawMaterialProductDetails.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Rotor\Shoporder_IN.resx">
+      <DependentUpon>Shoporder_IN.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Rotor\ShopOrder_out.resx">
+      <DependentUpon>ShopOrder_out.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Rotor\StorageLocation.resx">
+      <DependentUpon>StorageLocation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Rotor\Modules\Locationpage.resx">
+      <DependentUpon>Locationpage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Rotor\Modules\Masterlist.resx">
+      <DependentUpon>Masterlist.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Rotor\Modules\Summary_in.resx">
+      <DependentUpon>Summary_in.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Rotor\Modules\summary_out.resx">
+      <DependentUpon>summary_out.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="Startup.resx">
+      <DependentUpon>Startup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Moldingbush\BushMain.resx">
+      <DependentUpon>BushMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Moldingbush\Modules\Bushlocation.resx">
+      <DependentUpon>Bushlocation.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Parts_locator_TemporaryKey.pfx" />
+    <None Include="Properties\app.manifest" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <None Include="Resources\Poppins-Bold.ttf" />
+    <None Include="Resources\Poppins-Light.ttf" />
+    <None Include="Resources\Poppins-Medium.ttf" />
+    <None Include="Resources\Poppins-Regular.ttf" />
+    <None Include="Resources\Poppins-SemiBold.ttf" />
+    <None Include="Resources\Poppins-Thin.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="View\MoldFrame\" />
+    <Folder Include="View\Press\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

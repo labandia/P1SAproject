@@ -1,0 +1,54 @@
+﻿/*=============== VARIABLES CSS ===============*/
+:root {
+    --header-height: 3rem;
+    --dark-color: #070D1F;
+    --dark-color-alt: #282B3A;
+    --first-color: #3664F4;
+    --clr-neon-primary: #5a41ff;
+    --clr-secondary: hsl(211, 17%, 74%);
+    --clr-light: rgb(255, 255, 255);
+    --clr-bg: hsl(210, 29%, 9%);
+    --btn-primary: hsl(147, 99%, 30%);
+    --title-color: hsl(355, 4%, 15%);
+    /*========== Font and typography ==========*/
+    /*.5rem = 8px | 1rem = 16px ...*/
+    --body-font: 'Poppins', sans-serif;
+    --biggest-font-size: 1.5rem;
+    --h1-font-size: 1.5rem;
+    --h2-font-size: 1.25rem;
+    --h3-font-size: 1rem;
+    --normal-font-size: .938rem;
+    --small-font-size: .813rem;
+    --smaller-font-size: .75rem;
+    /*========== Font weight ==========*/
+    --font-medium: 500;
+    --font-semi-bold: 600;
+    /*========== Margins Bottom ==========*/
+    /*.5rem = 8px | 1rem = 16px ...*/
+    --mb-0-25: .25rem;
+    --mb-0-5: .5rem;
+    --mb-1: 1rem;
+    --mb-1-5: 1.5rem;
+    --mb-2: 2rem;
+    --mb-2-5: 2.5rem;
+    /*========== z index ==========*/
+    --z-tooltip: 10;
+    --z-fixed: 100;
+}
+
+
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+
+body {
+    display: grid;
+    min-height: 100vh;
+    /*min-height: 100dvh;*/
+    background-color: #f5f5f5;
+    color: var(--dark-color);
+    grid-template-columns: auto 1fr;
+}

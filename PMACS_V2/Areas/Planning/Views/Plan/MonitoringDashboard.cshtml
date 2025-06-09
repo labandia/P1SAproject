@@ -1,0 +1,2409 @@
+﻿
+@{
+    Layout = "~/Areas/Planning/Views/Shared/_PlanningLayout.cshtml";
+}
+
+
+<header class="headerplan">
+    <div class="headerplan__container d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-2">
+            <div class="headerplan__boxicon">
+                <i class="fa-solid fa-chart-column"></i>
+            </div>
+            <h5 class="m-0">8 Weeks progress Monitoring</h5>
+            <a href="/Planning/Plan/LiveViewMonitoring" class="livebtn">
+                <i class="fa-regular fa-eye"></i> Live view
+            </a>
+        </div>
+
+        <div class="headerplan__actions">
+            @* FOR THE DASHBOARD SUMMARY *@
+            <div id="dashaction">
+                <input type="date" id="summarystartdate" />
+                <i class="fa-solid fa-right-left" style="margin: 0 .6em;"></i>
+                <input type="date" id="summaryendDate" />
+            </div>
+
+            @* FOR THE SUMMARY OF PARTNUMBERS *@
+            <div id="date-container">
+                <div class="d-flex align-items-center gap-3">
+                    <input type="date" id="partstartdate" />
+                    <i class="fa-solid fa-right-left"></i>
+                    <input type="date" id="partendDate" />
+                </div>
+            </div>
+
+            @* FOR THE M1 DATA MANAGEMENT *@
+            <div id="Maction">
+                <div class="d-flex align-items-center gap-3">
+                    <form id="upload_form" enctype="multipart/form-data" method="post">
+                        <input type="file" name="file1" id="file1" onchange="uploadFile()" hidden><br>
+                        <progress id="progressBar" value="0" max="100" style="width:300px;" hidden></progress>
+                        <button type="button" class="uploadbtnV2" id="customButtonV2" style="margin-top: -22px;">
+                            <i class="fa-solid fa-file-arrow-up"></i> Upload File
+                        </button>
+                      
+                    </form>
+
+
+
+   
+                    <form method="post" enctype="multipart/form-data" id="ImportExcel" style="display: none;">
+                        <div class="upload-container2" id="upload-container">
+                            <input type="file" id="uploadedFile" name="uploadedFile" accept=".xlsx, .xls" hidden />
+                        </div>
+                        <button type="button" class="uploadbtn" id="customButton">
+                            <i class="fa-solid fa-file-arrow-up"></i> Upload File
+                        </button>
+                        <progress id="progress-bar" value="0" max="100" style="width: 100%; display: none;"></progress>
+                    </form>
+                    <a href="@Url.Action("DownloadFile", "Plan", new { fileName = "UploadTemplate.xlsx" })">
+                        <i class="fa-solid fa-download"></i> Download Template
+                    </a>
+                </div>
+            </div>
+
+            @* FOR THE END MONTH RESULT *@
+            <div id="EndResults">
+                <button class="Endresultbtn" id="Endresultbtn">
+                    <i class="fa-solid fa-file-arrow-up"></i> Add new input
+                </button>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<section class="LackSummary">
+    <div class="tab_box">
+        @*FOR THE DASHBOAD SUMMARY TAB *@
+        <div class="tab_btn active">Monitoring Dashboard</div>
+        @*FOR THE SUMMARY OF PARTNUMBERS TAB *@
+        <div class="tab_btn">Summary of Lacking Qty</div>
+        @*FOR THE M1 DATAMANAGEMENT TAB *@
+        <div class="tab_btn">Mat'l Prob Sum (over 8wks)  </div>
+        @*END MONTH DATA TAB *@
+        <div class="tab_btn">End Monthly, Current Status</div>
+        <div class="line"></div>
+    </div>
+    <div class="content_box">
+        @*FOR THE DASHBOAD SUMMARY DISPLAY*@
+        <div class="content active">
+            <div class="Monthsummarydisplay">
+                @* ---------------- LACKING PARTS QUANTITY -------------------------*@
+                <h6 class="mt-3">Lacking parts qty</h6>
+                <table id="Lacktable">
+                </table>
+                <div class="Lackloading">
+                    <div class="loading-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>-</th>
+                                    <th>-</th>
+                                    <th>-</th>
+                                    <th>-</th>
+                                    <th>-</th>
+                                    <th>-</th>
+                                    <th>-</th>
+                                    <th>-</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                    <td><div class="skeleton" style="width: 60%;"></div></td>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                    <td><div class="skeleton" style="width: 60%;"></div></td>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                </tr>
+                                <tr>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                    <td><div class="skeleton" style="width: 60%;"></div></td>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                    <td><div class="skeleton" style="width: 60%;"></div></td>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                </tr>
+                                <tr>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                    <td><div class="skeleton" style="width: 60%;"></div></td>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                    <td><div class="skeleton" style="width: 60%;"></div></td>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                @* -----------------------------------------------------------------*@
+
+                @* ---------------- ADDITIONAL LACKING PARTS QUANTITY --------------*@
+                <h6 class="mt-3">Additional  Lacking parts qty</h6>
+                <table id="dashtable">
+                </table>
+                @* -----------------------------------------------------------------*@
+                <div class="Dashloading">
+                    <div class="loading-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>-</th>
+                                    <th>-</th>
+                                    <th>-</th>
+                                    <th>-</th>
+                                    <th>-</th>
+                                    <th>-</th>
+                                    <th>-</th>
+                                    <th>-</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                    <td><div class="skeleton" style="width: 60%;"></div></td>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                    <td><div class="skeleton" style="width: 60%;"></div></td>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                </tr>
+                                <tr>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                    <td><div class="skeleton" style="width: 60%;"></div></td>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                    <td><div class="skeleton" style="width: 60%;"></div></td>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                </tr>
+                                <tr>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                    <td><div class="skeleton" style="width: 60%;"></div></td>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                    <td><div class="skeleton" style="width: 60%;"></div></td>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                @* ---------------- DAILY TOTAL ORDER NUMBERS ----------------------*@
+                <h6 class="mt-3">Daily Total  order numbers</h6>
+                <table id="OrderTable">
+                </table>
+                <div class="OrderLoading">
+                    <div class="loading-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>-</th>
+                                    <th>-</th>
+                                    <th>-</th>
+                                    <th>-</th>
+                                    <th>-</th>
+                                    <th>-</th>
+                                    <th>-</th>
+                                    <th>-</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                    <td><div class="skeleton" style="width: 60%;"></div></td>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                    <td><div class="skeleton" style="width: 60%;"></div></td>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                </tr>
+                                <tr>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                    <td><div class="skeleton" style="width: 60%;"></div></td>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                    <td><div class="skeleton" style="width: 60%;"></div></td>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                </tr>
+                                <tr>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                    <td><div class="skeleton" style="width: 60%;"></div></td>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                    <td><div class="skeleton" style="width: 60%;"></div></td>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                @* -----------------------------------------------------------------*@
+            </div>
+
+            <div class="NoSummaryDisplay">
+                <div>
+                    <p>No Data Display for the month of March </p>
+                </div>
+            </div>
+
+        </div>
+        @*FOR THE SUMMARY OF PARTNUMBERS DISPLAY*@
+        <div class="content">
+            <div class="PartnumberSummaryDisplay">
+                <h6 class="mt-1">Part number Summary</h6>
+                <div class="table table-responsive SummaryPartlist">
+                    <table class="table-striped">
+                        <thead class="thead-dark">
+                            <tr id="headersummary">
+                            </tr>
+                        </thead>
+                        <tbody id="BodySummary">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="Partloading">
+                    <div class="loading-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>-</th>
+                                    <th>-</th>
+                                    <th>-</th>
+                                    <th>-</th>
+                                    <th>-</th>
+                                    <th>-</th>
+                                    <th>-</th>
+                                    <th>-</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                    <td><div class="skeleton" style="width: 60%;"></div></td>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                    <td><div class="skeleton" style="width: 60%;"></div></td>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                </tr>
+                                <tr>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                    <td><div class="skeleton" style="width: 60%;"></div></td>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                    <td><div class="skeleton" style="width: 60%;"></div></td>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                </tr>
+                                <tr>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                    <td><div class="skeleton" style="width: 60%;"></div></td>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                    <td><div class="skeleton" style="width: 60%;"></div></td>
+                                    <td><div class="skeleton" style="width: 80%;"></div></td>
+                                    <td><div class="skeleton" style="width: 90%;"></div></td>
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="NoPartnumDisplay">
+                <div>
+                    <p>No Data Display for the month of March </p>
+                </div>
+            </div>
+
+        </div>
+        @*FOR THE M1 DATAMANAGEMENT DISPLAY*@
+    <div class="content">
+        <h6 style="color: #010202; font-weight: 600;">Uploaded Data file</h6>
+
+
+
+
+
+        <div class="MainTable">
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Date Upload</th>
+                        <th scope="col">DOI to M1</th>
+                        <th scope="col">Created date</th>
+                        <th scope="col">Branch</th>
+                        <th scope="col">MD Based on Sales Request</th>
+                        <th scope="col">SDP_Order No</th>
+                        <th scope="col">SDP_Sales Part No</th>
+                        <th scope="col">Sales Requested Ship date</th>
+                        <th scope="col">Previous Update</th>
+                        <th scope="col">PC1 Proposed Ship Date</th>
+                        <th scope="col">M1 LATEST UPDATE</th>
+                        <th scope="col">PC1 Latest Proposed Ship Date</th>
+                        <th scope="col">Adjust due date (GOOSS update)</th>
+                        <th scope="col">Reply status</th>
+                        <th scope="col">MD DATE</th>
+                        <th scope="col">PART NO.</th>
+                        <th scope="col">PART NAME</th>
+                        <th scope="col">Usage</th>
+                        <th scope="col">Need qty</th>
+                        <th scope="col">Judgement</th>
+                    </tr>
+                </thead>
+                <tbody id="dataSearching">
+                </tbody>
+            </table>
+        </div>
+        <div class="PaginationfooterContainer d-flex align-items-center justify-content-between pt-2 pb-4">
+            <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
+
+            <div id="PaginationContainer" class="paginationPartlocal"></div>
+        </div>
+        <div class="M1loading">
+            <div class="loading-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>-</th>
+                            <th>-</th>
+                            <th>-</th>
+                            <th>-</th>
+                            <th>-</th>
+                            <th>-</th>
+                            <th>-</th>
+                            <th>-</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><div class="skeleton" style="width: 80%;"></div></td>
+                            <td><div class="skeleton" style="width: 90%;"></div></td>
+                            <td><div class="skeleton" style="width: 60%;"></div></td>
+                            <td><div class="skeleton" style="width: 80%;"></div></td>
+                            <td><div class="skeleton" style="width: 90%;"></div></td>
+                            <td><div class="skeleton" style="width: 60%;"></div></td>
+                            <td><div class="skeleton" style="width: 80%;"></div></td>
+                            <td><div class="skeleton" style="width: 90%;"></div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="skeleton" style="width: 80%;"></div></td>
+                            <td><div class="skeleton" style="width: 90%;"></div></td>
+                            <td><div class="skeleton" style="width: 60%;"></div></td>
+                            <td><div class="skeleton" style="width: 80%;"></div></td>
+                            <td><div class="skeleton" style="width: 90%;"></div></td>
+                            <td><div class="skeleton" style="width: 60%;"></div></td>
+                            <td><div class="skeleton" style="width: 80%;"></div></td>
+                            <td><div class="skeleton" style="width: 90%;"></div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="skeleton" style="width: 80%;"></div></td>
+                            <td><div class="skeleton" style="width: 90%;"></div></td>
+                            <td><div class="skeleton" style="width: 60%;"></div></td>
+                            <td><div class="skeleton" style="width: 80%;"></div></td>
+                            <td><div class="skeleton" style="width: 90%;"></div></td>
+                            <td><div class="skeleton" style="width: 60%;"></div></td>
+                            <td><div class="skeleton" style="width: 80%;"></div></td>
+                            <td><div class="skeleton" style="width: 90%;"></div></td>
+                        </tr>
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div class="NoM1Display">
+            <div>
+                <p>No Data Display for the M1 Result</p>
+            </div>
+        </div>
+    </div>
+        @*END MONTH DATA DISPLAY*@
+        <div class="content">
+            <h6 style="color: #010202; font-weight: 600;">End month current status</h6>
+            <div class="EndMonthSummary table-responsive">
+                <table class="table-striped">
+
+                    <tr class="header-row">
+                        <th rowspan="2" style="color: #fff;">Month</th>
+                        <th style="background: #145bc5;" colspan="3">End Month Status</th>
+                        <th style="background: #10864b;" colspan="4">Current Status, as of <span id="datetoday">12/14</span></th>
+                    </tr>
+                    <tr class="header-row">
+                        <th scope="col">Total Orders</th>
+                        <th scope="col">Remaining</th>
+                        <th scope="col">Improvements rate</th>
+                        <th scope="col">Total Orders</th>
+                        <th scope="col">Remaining</th>
+                        <th scope="col">Improvements rate</th>
+                        <th scope="col">Edit</th>
+                    </tr>
+                    <tbody id="EndtableData">
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="EndMonthLoading">
+                <div class="loading-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>-</th>
+                                <th>-</th>
+                                <th>-</th>
+                                <th>-</th>
+                                <th>-</th>
+                                <th>-</th>
+                                <th>-</th>
+                                <th>-</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><div class="skeleton" style="width: 80%;"></div></td>
+                                <td><div class="skeleton" style="width: 90%;"></div></td>
+                                <td><div class="skeleton" style="width: 60%;"></div></td>
+                                <td><div class="skeleton" style="width: 80%;"></div></td>
+                                <td><div class="skeleton" style="width: 90%;"></div></td>
+                                <td><div class="skeleton" style="width: 60%;"></div></td>
+                                <td><div class="skeleton" style="width: 80%;"></div></td>
+                                <td><div class="skeleton" style="width: 90%;"></div></td>
+                            </tr>
+                            <tr>
+                                <td><div class="skeleton" style="width: 80%;"></div></td>
+                                <td><div class="skeleton" style="width: 90%;"></div></td>
+                                <td><div class="skeleton" style="width: 60%;"></div></td>
+                                <td><div class="skeleton" style="width: 80%;"></div></td>
+                                <td><div class="skeleton" style="width: 90%;"></div></td>
+                                <td><div class="skeleton" style="width: 60%;"></div></td>
+                                <td><div class="skeleton" style="width: 80%;"></div></td>
+                                <td><div class="skeleton" style="width: 90%;"></div></td>
+                            </tr>
+                            <tr>
+                                <td><div class="skeleton" style="width: 80%;"></div></td>
+                                <td><div class="skeleton" style="width: 90%;"></div></td>
+                                <td><div class="skeleton" style="width: 60%;"></div></td>
+                                <td><div class="skeleton" style="width: 80%;"></div></td>
+                                <td><div class="skeleton" style="width: 90%;"></div></td>
+                                <td><div class="skeleton" style="width: 60%;"></div></td>
+                                <td><div class="skeleton" style="width: 80%;"></div></td>
+                                <td><div class="skeleton" style="width: 90%;"></div></td>
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <h6 class="mt-3" style="color: #010202; font-weight: 600;">Sales Request</h6>
+            <table id="RequestTable">
+            </table>
+
+            <div class="SalesLoading">
+                <div class="loading-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>-</th>
+                                <th>-</th>
+                                <th>-</th>
+                                <th>-</th>
+                                <th>-</th>
+                                <th>-</th>
+                                <th>-</th>
+                                <th>-</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><div class="skeleton" style="width: 80%;"></div></td>
+                                <td><div class="skeleton" style="width: 90%;"></div></td>
+                                <td><div class="skeleton" style="width: 60%;"></div></td>
+                                <td><div class="skeleton" style="width: 80%;"></div></td>
+                                <td><div class="skeleton" style="width: 90%;"></div></td>
+                                <td><div class="skeleton" style="width: 60%;"></div></td>
+                                <td><div class="skeleton" style="width: 80%;"></div></td>
+                                <td><div class="skeleton" style="width: 90%;"></div></td>
+                            </tr>
+                            <tr>
+                                <td><div class="skeleton" style="width: 80%;"></div></td>
+                                <td><div class="skeleton" style="width: 90%;"></div></td>
+                                <td><div class="skeleton" style="width: 60%;"></div></td>
+                                <td><div class="skeleton" style="width: 80%;"></div></td>
+                                <td><div class="skeleton" style="width: 90%;"></div></td>
+                                <td><div class="skeleton" style="width: 60%;"></div></td>
+                                <td><div class="skeleton" style="width: 80%;"></div></td>
+                                <td><div class="skeleton" style="width: 90%;"></div></td>
+                            </tr>
+                            <tr>
+                                <td><div class="skeleton" style="width: 80%;"></div></td>
+                                <td><div class="skeleton" style="width: 90%;"></div></td>
+                                <td><div class="skeleton" style="width: 60%;"></div></td>
+                                <td><div class="skeleton" style="width: 80%;"></div></td>
+                                <td><div class="skeleton" style="width: 90%;"></div></td>
+                                <td><div class="skeleton" style="width: 60%;"></div></td>
+                                <td><div class="skeleton" style="width: 80%;"></div></td>
+                                <td><div class="skeleton" style="width: 90%;"></div></td>
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<!--########################## ADDTIONAL INPUT END RESULT #############################-->
+<div class="modal fade modal-m" id="Resultmodal" tabindex="-1" role="dialog" >
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <div class="custom_modal_header">
+                    <div class="custom_modal__icon">
+                        <div class="custom_icon_container">
+                            <i class="fa-regular fa-pen-to-square"></i>
+                        </div>
+                        <div class="custom_modal_title">
+                            <span style="font-weight: 600;">Input new Data</span>
+                            <p>Fill all the required input</p>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal" >
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+
+                <form id="EndResultform" autocomplete='off'>
+                    <p style="font-weight: 600;">End Month Status</p>
+                    <hr />
+                    <label>Total Orders: </label>
+                    <input type='text' class="form-control" name='EndTotalOrders' id='EndTotalOrders' />
+                    <label>Remaining:</label>
+                    <input type='text' class="form-control" name='EndRemainOrders' id='EndRemainOrders' />
+                    <p style="font-weight: 600;">Current Month Status</p>
+                    <hr />
+                    <label>Total Orders: </label>
+                    <input type='text' class="form-control" name='CurrentTotalOrders' id='CurrentTotalOrders' />
+                    <label>Remaining:</label>
+                    <input type='text' class="form-control" name='CurrentRemains' id='CurrentRemains' />
+                    <div class='footer d-flex justify-content-end pt-4 pb-2 gap-2'>
+                        <button type='submit' class='btn btn-primary' id='saveEditsum'> <i class='fa-regular fa-pen-to-square action_btn'></i> Save</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!--########################## ADDTIONAL INPUT END RESULT #############################-->
+<div class="modal fade modal-m" id="EditResultmodal" tabindex="-1" role="dialog" >
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <div class="custom_modal_header">
+                    <div class="custom_modal__icon">
+                        <div class="custom_icon_container">
+                            <i class="fa-regular fa-pen-to-square"></i>
+                        </div>
+                        <div class="custom_modal_title">
+                            <span style="font-weight: 600;">Edit end month Data</span>
+                            <p>Fill all the required input</p>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal" >
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+
+                <form class="EditEndMonthform" id="EditEndMonthform" autocomplete='off'>
+                    <p>End Month Status</p>
+                    <hr />
+                    <label>Total Orders: </label>
+                    <input type='hidden' name='RecordID' id='RecordID' />
+                    <input type='text' name='EndTotalOrdersEdit' id='EndTotalOrdersEdit' />
+                    <label>Remaining:</label>
+                    <input type='text' name='EndRemainOrdersEdit' id='EndRemainOrdersEdit' />
+                    <p class="m-0">Current Month Status</p>
+                    <hr />
+                    <label>Total Orders: </label>
+                    <input type='text' name='CurrentTotalOrdersEdit' id='CurrentTotalOrdersEdit' />
+                    <label>Remaining:</label>
+                    <input type='text' name='CurrentRemainsEdit' id='CurrentRemainsEdit' hidden />
+                    <input type='text' name='DisplayCurrentRemainsEdit' id='DisplayCurrentRemainsEdit' disabled />
+                    <div class='footer d-flex justify-content-end pt-4 pb-2 gap-2'>
+                        <button type='submit' id='saveEditsum'> <i class='fa-regular fa-pen-to-square action_btn'></i> Save</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!--####################################################################-->
+<div class="modal fade modal-m" id="PartnumberSelect" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <table class=" table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Partnumber</th>
+                        <th>Partname</th>
+                        <th>Total Quantity</th>
+                    </tr>
+                </thead>
+                <tbody id="selectpartnumbody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!--#####################  SHOP ORDER SELECTED DETAILS ###########################-->
+<div class="modal fade modal-xl" id="ShopOrderSelect" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <table class=" table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>No #</th>
+                        <th>Branch</th>
+                        <th>SDP_Order No.</th>
+                        <th>SDP_Sales Part no.</th>
+                        <th>SDP_Sales</th>
+                        <th>Sales Requested Ship date</th>
+                        <th>PC1 Latest Proposed Ship Date</th>
+                    </tr>
+                </thead>
+                <tbody id="selectshopOrder">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!--####################################################################-->
+<div class="modal fade modal-m" id="DateColumnmodel" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <table class=" table-striped">
+                <thead class="thead-dark">
+                    <tr id="partnumheader">
+                    </tr>
+                </thead>
+                <tbody id="partnumbody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal fade modal-m" id="loadingmodal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="uploadcontent">
+                @*<div class="uploadicon">
+                    <i class="fa-solid fa-download"></i>
+                </div>*@
+                <div class="UploadContainer">
+                    <span class="Uploadloader"></span>
+                </div>
+
+
+                @*<span>Uploading Data ...</span>*@
+                <p id="status"></p>
+
+                <progress id="rowProgressBar" value="0" max="100" style="width: 300px;"></progress>
+                <span id="rowProgressPercent">0%</span>
+                <div id="excelRowDisplay" style="margin-top:10px; font-family: monospace;"></div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<script src="~/Scripts/Utilities.js"></script>
+<script src="~/Scripts/Global.js"></script>
+<script src="~/Scripts/jquery-3.7.1.min.js"></script>
+<script type="text/javascript">
+    let firstDate;
+    let LastDate;
+    let EndResultarray = [];
+    let IsDatasuccess = 0;
+    const tabs = document.querySelectorAll('.tab_btn');
+    const all_content = document.querySelectorAll('.content');
+    const partinputstart = document.getElementById('partstartdate');
+    const partinputend = document.getElementById('partendDate');
+    const dashboardstart = document.getElementById('summarystartdate');
+    const dashboardend = document.getElementById('summaryendDate');
+
+    const openmodal = document.getElementById('Endresultbtn');
+
+    // FORM INPUT
+    const addResultform = document.getElementById('EndResultform');
+    const editResultform = document.getElementById('EditEndMonthform');
+
+    // UPLOAD BUTTON
+    const uploadbtn = document.getElementById('customButton');
+
+    const uploadbtnV2 = document.getElementById('customButtonV2');
+
+    const now = new Date();
+
+
+
+
+    const LoadfirstAndLastDate = async() => {
+        let res = await fetchData('@Url.Action("GetFirstAndLastDateList", "Plan")', {});
+        if (res.StatusCode === 200) {
+            $('#summarystartdate').val(res.Data[0].FirstDate);
+            $('#summaryendDate').val(res.Data[0].LastDate);
+
+            $('#partstartdate').val(res.Data[0].FirstDate);
+            $('#partendDate').val(res.Data[0].LastDate);
+
+            $('#summarystartdate').val(res.Data[0].FirstDate);
+            $('#summaryendDate').val(res.Data[0].LastDate);
+        }
+    }
+
+    //############ DISPLAY OF UPLOAD DATAS ############################
+    const LoadplanningData = async () =>{
+        $(".M1loading").show();
+        let SeriesData = [];
+
+        let res = await fetchData('@Url.Action("GetPlanningData", "Plan")', {});
+
+        if (res.StatusCode == 200) {
+            let data = res.Data;
+            console.log(data);
+            displayPagination(data, 'dataSearching', 'PaginationContainer', 50, 5);
+
+            $(".M1loading").hide();
+            $(".NoM1Display").hide();
+        } else {
+            $(".M1loading").hide();
+            $(".NoM1Display").show();
+        }
+
+    }
+    const LoadpartnumDetails = async (strDate, impId) =>{
+        let SeriesData = [];
+
+        let res = await fetchData('@Url.Action("GetPlanningData", "Plan")', { strdate: strDate, impID: impId });
+        if (res.StatusCode === 200) {
+            let data = res.Data;
+            var SetData = $("#selectpartnumbody");
+            $("#selectpartnumbody").empty();
+            $.each(data, function (index, rowData) {
+                var getdata = "<tr  class= 'row_" + index + "  rowClick' id='editButton_" + rowData.RecordID + "'>" +
+                    "<td >" + rowData.Partnumber + "</td>" +
+                    "<td >" + rowData.Partname + "</td>" +
+                    "<td >" + rowData.Usage + "</td>" +
+                    "</tr>";
+                SetData.append(getdata);
+            });
+
+            $('#PartnumberSelect').modal('show');
+        }
+    }
+    const LoadLackpartnumDetails = async (strDate, impId) =>{
+     let SeriesData = [];
+     let res = await fetchData('@Url.Action("GetLackSelectedPartnumDetails", "Plan")', { strdate: strDate, impID: impId });
+     if (res.StatusCode === 200) {
+            let data = res.Data;
+            var SetData = $("#selectpartnumbody");
+            $("#selectpartnumbody").empty();
+            $.each(data, function (index, rowData) {
+
+                var getdata = "<tr class= 'row_" + index + "  rowClick' id='editButton_" + rowData.RecordID + "'>" +
+                    "<td >" + rowData.Partnumber + "</td>" +
+                    "<td >" + rowData.Partname + "</td>" +
+                    "<td >" + rowData.Totalpart + "</td>" +
+                    "</tr>";
+                SetData.append(getdata);
+            });
+
+            $('#PartnumberSelect').modal('show');
+      }
+
+    }
+    const LoadShopOrderDetails = async (strDate, impId) => {
+     let SeriesData = [];
+     let res = await fetchData('@Url.Action("GetSelectedShopOrderDetails", "Plan")', { strdate: strDate, impID: impId });
+     if (res.StatusCode === 200) {
+            let data = res.Data;
+            var SetData = $("#selectshopOrder");
+            $("#selectshopOrder").empty();
+            $.each(data, function (index, rowData) {
+                let count = index + 1;
+                var getdata = "<tr class= 'row_" + index + "  rowClick' id='editButton_" + rowData.RecordID + "'>" +
+                    "<td >" + count + "</td>" +
+                    "<td >" + rowData.Branch + "</td>" +
+                    "<td >" + rowData.SDP_Shoporder + "</td>" +
+                    "<td >" + rowData.SDP_Sales_Partnum + "</td>" +
+                    "<td >" + rowData.SDP_Sales_Number + "</td>" +
+                    "<td >" + rowData.Sales_Request_Date + "</td>" +
+                    "<td >" + rowData.Sales_Request_Date + "</td>" +
+                    "</tr>";
+                SetData.append(getdata);
+            });
+            $('#ShopOrderSelect').modal('show');
+        }
+    }
+    const LoadRequestDetails = async (columnint, rowInt) => {
+        let SeriesData = [];
+        const cleaned = columnint.replace(/\s*\/\s*/, " ");
+        const parts = cleaned.split(" ");
+        const [month, year] = parts.map(Number);
+
+        if (columnint !== "Total") {
+             let res = await fetchData('@Url.Action("GetRequestedResultDetails", "Plan")', { monthcol: month, monthrow: rowInt, intyear: year });
+            if (res.StatusCode === 200) {
+                let data = res.Data;
+                var SetData = $("#selectshopOrder");
+                $("#selectshopOrder").empty();
+                $.each(data, function (index, rowData) {
+                    let count = index + 1;
+                    var getdata = "<tr style='padding: .8em 1em' class= 'row_" + index + "  rowClick' id='editButton_" + rowData.RecordID + "'>" +
+                        "<td >" + count + "</td>" +
+                        "<td >" + rowData.Branch + "</td>" +
+                        "<td >" + rowData.SDP_Shoporder + "</td>" +
+                        "<td >" + rowData.SDP_Sales_Partnum + "</td>" +
+                        "<td >" + rowData.SDP_Sales_Number + "</td>" +
+                        "<td >" + rowData.Sales_Request_Date + "</td>" +
+                        "<td >" + rowData.Sales_Request_Date + "</td>" +
+                        "</tr>";
+                    SetData.append(getdata);
+                });
+                $('#ShopOrderSelect').modal('show');
+            }
+        }
+
+        
+    }
+    //############ DISPLAY OF SUMMARY OF PARTNUMBERS ##################
+    // TAB 1
+    //M1_Lacking_Summary
+    async function LoadLackingSummary(first, last) {
+     $('.Lackloading').show();
+     let res = await fetchData('@Url.Action("GetlackingResults", "Plan")', { stardate: first, endDate: last });
+
+     if (res.StatusCode === 200) {
+         $('.Lackloading').hide();
+         let columndates = res.Header;
+         let getData = res.Data;
+
+         var filteredHeaders = columndates.filter(header => header !== 'Imports');
+
+         //Extract values into a 2D array
+         var arraresult = getData.map(row => {
+             return Object.keys(row)
+                 .filter(key => key !== 'Imports') // Exclude the "Imports" column
+                 .map(key => row[key]); // Extract values
+         });
+
+         checkNodata(1);
+         LackDashoardDisplay(filteredHeaders, arraresult);
+         const tableHeader = document.getElementById("headersummary");
+         tableHeader.innerHTML = "";
+     } else {
+         checkNodata(0);
+     }
+
+
+    }
+    //M1_Lacking_table
+    async function LoadAdditionalSummary(first, last) {
+        $(".Dashloading").show();
+        let res = await fetchData('@Url.Action("GetAdditionalResult", "Plan")', { stardate: first, endDate: last });
+        if (res.StatusCode === 200) {
+            $(".Dashloading").hide();
+            IsDatasuccess = 1;
+            let columndates = res.Header;
+            let getData = res.Data;
+
+            var filteredHeaders = columndates.filter(header => header !== 'Imports');
+
+            //Extract values into a 2D array
+            var arraresult = getData.map(row => {
+                return Object.keys(row)
+                    .filter(key => key !== 'Imports') // Exclude the "Imports" column
+                    .map(key => row[key]); // Extract values
+            });
+
+
+            MonitorDashoardDisplay(filteredHeaders, arraresult);
+            const tableHeader = document.getElementById("headersummary");
+            tableHeader.innerHTML = "";
+            checkNodata(1);
+        } else {
+            IsDatasuccess = 0;
+            checkNodata(0);
+        }
+
+    }
+    // M1_DailyOrder_Summary table
+    async function LoadShopOrderSummary(first, last) {
+         $(".OrderLoading").show();
+         let res = await fetchData('@Url.Action("GetShopOrderResult", "Plan")', { stardate: first, endDate: last });
+
+         if (res.StatusCode === 200) {
+             $(".OrderLoading").hide();
+             IsDatasuccess = 1;
+             let columndates = res.Header;
+             let getData = res.Data;
+
+             var filteredHeaders = columndates.filter(header => header !== 'Imports');
+
+             //Extract values into a 2D array
+             var arraresult = getData.map(row => {
+                 return Object.keys(row)
+                     .filter(key => key !== 'Imports') // Exclude the "Imports" column
+                     .map(key => row[key]); // Extract values
+             });
+
+             OrderShopDisplay(filteredHeaders, arraresult);
+             const tableHeader = document.getElementById("headersummary");
+             tableHeader.innerHTML = "";
+             checkNodata(1);
+         } else {
+             IsDatasuccess = 0;
+             checkNodata(IsDatasuccess);
+         }
+
+     }
+
+    // TAB 2
+    async function LoadSummarypartnum(first, last) {
+        $(".Partloading").show();
+        let res = await fetchData('@Url.Action("GetSummaryPartnum", "Plan")', { stardate: first, endDate: last });
+
+        if (res.StatusCode === 200) {
+            $(".Partloading").hide();
+            $(".PartnumberSummaryDisplay").show();
+            $(".NoPartnumDisplay").hide();
+
+            let dateArray = res.Header;
+            const tableHeader = document.getElementById("headersummary");
+            tableHeader.innerHTML = "";
+            // Populate the header row
+            dateArray.forEach(headerText => {
+                const th = document.createElement("th");
+                th.textContent = headerText;
+                tableHeader.appendChild(th);
+            });
+
+            let getData = res.Data;
+            var SetData = $("#BodySummary");
+            SetData.empty();
+
+            $.each(getData, function (index, rowData) {
+                var trData = "<tr class='row_" + index + " rowClick' id = 'editButton_" + index + "'>";
+
+                $.each(dateArray, function (colindex, colname) {
+                    var cellvalue = rowData[colname] == null ? "-" : rowData[colname];
+                    trData += "<td>" + cellvalue + "</td>";
+                });
+
+                trData += "</tr>";
+                SetData.append(trData);
+            });
+        } else {
+            $(".PartnumberSummaryDisplay").hide();
+            $(".NoPartnumDisplay").show();
+        }
+
+    }
+
+
+    // TAB 3
+    //M1_RequestSales_table
+    async function LoadrequestSummary(first, last) {
+        $(".SalesLoading").show();
+
+        let res = await fetchData('@Url.Action("GetRequestResults", "Plan")', { stardate: first, endDate: last });
+
+        if (res.StatusCode === 200) {
+            $(".SalesLoading").hide();
+            let columndates = res.Header;
+            let getData = res.Data;
+
+            //var filteredHeaders = columndates.filter(header => header !== 'MonthUpload');
+
+            //// Extract values into a 2D array and reorder rows
+            var arraresult = getData.map(row => {
+                // Extract values from the object into an array
+                let rowValues = Object.keys(row).map(key => row[key]);
+
+                // Find the index of the first numeric value
+                const numericCellIndex = rowValues.findIndex(cell => !isNaN(parseFloat(cell)) && isFinite(cell));
+
+                // Move the numeric value to the first position if found
+                if (numericCellIndex > 0) {
+                    const numericCell = rowValues.splice(numericCellIndex, 1)[0]; // Remove the numeric value
+                    rowValues.unshift(numericCell); // Add it to the beginning of the row
+                }
+
+                return rowValues; // Return the reordered row
+            });
+
+
+
+            RequestSalesDisplay(columndates, arraresult);
+            //const tableHeader = document.getElementById("headersummary");
+            //tableHeader.innerHTML = "";
+        }
+
+
+    }
+    //M1_Monthly_Table
+    async function LoadEndMonthResult() {
+        $(".EndMonthLoading").show();
+        let SeriesData = [];
+
+        let res = await fetchData('@Url.Action("GetEndCurrentdata", "Plan")', {});
+
+        if (res.StatusCode === 200) {
+            $(".EndMonthSummary").show();
+            $(".EndMonthLoading").hide();
+            let data = res.Data;
+            EndResultarray = data;
+
+            var SetData = $("#EndtableData");
+            $("#EndtableData").empty();
+
+            let totalEndOrders = 0;
+            let totalEndRemain = 0;
+            let totalCurrentOrders = 0;
+            let totalCurrentRemains = 0;
+
+            let totalEndImprovements = 0;
+            let totalCurrentImprovements = 0;
+            let rowCount = data.length;
+
+
+            $.each(data, function (index, rowData) {
+                var getdata = "<tr   class= 'row_" + index + "  rowClick2' id='editButton_" + rowData.RecordID + "'>" +
+                    "<td style='color: #222; font-weight: 600;' >" + rowData.DateMonth + "</td>" +
+                    "<td style='text-align: center;' >" + rowData.EndTotalOrders + "</td>" +
+                    "<td style='text-align: center;'>" + rowData.EndRemainOrders + "</td>" +
+                    "<td style='color: hsl(209, 80%, 50%); font-weight: 600; text-align: center;'>" + rowData.EndImprovements + " %</td>" +
+                    "<td style='text-align: center;'>" + rowData.CurrentTotalOrders + "</td>" +
+                    "<td style='text-align: center;'>" + rowData.CurrentRemains + "</td>" +
+                    "<td style='color: hsl(209, 80%, 50%); font-weight: 600; text-align: center;'>" + rowData.CurrentImprovements + " %</td>" +
+                    "<td>" +
+                    "<div class='table__action'> " +
+                    "<button type='button' class='row_" + index + " editButton' id='editButton_" + rowData.RecordID + "'><i class='fa-regular fa-pen-to-square action_btn'></i> </button> " +
+                    "</div> " +
+                    "</td > " +
+                    "</tr>";
+                SetData.append(getdata);
+
+                // Calculate the totals
+                totalEndOrders += rowData.EndTotalOrders;
+                totalEndRemain += rowData.EndRemainOrders;
+                totalCurrentOrders += rowData.CurrentTotalOrders;
+                totalCurrentRemains += rowData.CurrentRemains;
+
+
+                // Calculate the improvements percentages
+                totalEndImprovements += parseFloat(rowData.EndImprovements);
+                totalCurrentImprovements += parseFloat(rowData.CurrentImprovements);
+            });
+
+            // Calculate average improvements percentage
+            let averageEndImprovements = (totalEndImprovements / rowCount).toFixed(2);
+            let averageCurrentImprovements = (totalCurrentImprovements / rowCount).toFixed(2);
+
+
+            // Append the totals to the table
+            var totalsRow = `
+                <tr style="font-weight: bold; background: hsl(0, 1%, 78%) !important; padding: 1em 0; color: #222;" >
+                    <td>Total</td>
+                     <td style='text-align: center;'>${totalEndOrders}</td>
+                     <td style='text-align: center;'>${totalEndRemain}</td>
+                     <td style='text-align: center;'>${averageEndImprovements} %</td>
+                     <td style='text-align: center;'>${totalCurrentOrders}</td>
+                     <td style='text-align: center;'>${totalCurrentRemains}</td>
+                     <td style='text-align: center;'>${averageCurrentImprovements} %</td>
+                    <td style='text-align: center;'>-</td>
+                </tr>
+            `;
+            SetData.append(totalsRow);
+
+
+
+            // Handle click event for the delete button
+            $(document).on('click', '.editButton', function (e) {
+                e.stopPropagation(); // Prevent triggering the row click event
+                var buttonId = $(this).attr('id');
+                var rowIndex = buttonId.split('_')[1];
+
+                var result = EndResultarray.find(p => p.RecordID == rowIndex);
+
+                $("#RecordID").val(result.RecordID);
+                $("#EndTotalOrdersEdit").val(result.EndTotalOrders);
+                $("#EndRemainOrdersEdit").val(result.EndRemainOrders);
+                $("#CurrentTotalOrdersEdit").val(result.CurrentTotalOrders);
+                $("#CurrentRemainsEdit").val(result.CurrentRemains);
+                $("#DisplayCurrentRemainsEdit").val(result.CurrentRemains);
+
+                $("#EditResultmodal").modal("show");
+            });
+        }
+
+ }
+    //############ DISPLAY END RESULT ##################
+
+
+
+
+
+    // FILTER BY DASHBOARD
+    dashboardstart.addEventListener('change', function () {
+        // Get the input date value
+        var startDate = $("#summarystartdate").val();
+        var endDate = $("#summaryendDate").val();
+        // Change format of the date input
+        var newStart = startDate.replaceAll("-", "/");
+        var newEnd = endDate.replaceAll("-", "/");
+
+        if ((Date.parse(startDate) >= Date.parse(endDate))) {
+            $('#summarystartdate').val(getfirstDay('-'));
+            alert("End date should be greater than Start date");
+        } else {
+            $('#dashtable').empty();
+            $('#Lacktable').empty();
+            $('#OrderTable').empty();
+
+            LoadAdditionalSummary(newStart, newEnd);
+            LoadLackingSummary(newStart, newEnd);
+            LoadShopOrderSummary(newStart, newEnd);
+        }
+
+    });
+    dashboardend.addEventListener('change', function () {
+        var startDate = $("#summarystartdate").val();
+        var endDate = $("#summaryendDate").val();
+
+        var newStart = startDate.replaceAll("-", "/");
+        var newEnd = endDate.replaceAll("-", "/");
+
+        if ((Date.parse(startDate) > Date.parse(endDate))) {
+            $('#summaryendDate').val(getLastDay('-'));
+            alert("End date should be lower  than Start date");
+        } else {
+            $('#dashtable').empty();
+            $('#Lacktable').empty();
+            $('#OrderTable').empty();
+
+            LoadAdditionalSummary(newStart, newEnd);
+            LoadLackingSummary(newStart, newEnd);
+            LoadShopOrderSummary(newStart, newEnd);
+        }
+    });
+
+    // FILTER BY SUMMARY PARTNUM
+    partinputstart.addEventListener('change', function () {
+        // Get the input date value
+        var startDate = $("#partstartdate").val();
+        var endDate = $("#partendDate").val();
+        // Change format of the date input
+        var newStart = startDate.replaceAll("-", "/");
+        var newEnd = endDate.replaceAll("-", "/");
+
+        if ((Date.parse(startDate) >= Date.parse(endDate))) {
+            $('#partstartdate').val(getfirstDay('-'));
+            alert("End date should be greater than Start date");
+        } else {
+            LoadSummarypartnum(newStart, newEnd);
+        }
+
+    });
+    partinputend.addEventListener('change', function () {
+        var startDate = $("#partstartdate").val();
+        var endDate = $("#partendDate").val();
+
+        var newStart = startDate.replaceAll("-", "/");
+        var newEnd = endDate.replaceAll("-", "/");
+
+        if ((Date.parse(startDate) > Date.parse(endDate))) {
+            $('#partendDate').val(getLastDay('-'));
+            alert("End date should be lower  than Start date");
+        } else {
+            LoadSummarypartnum(newStart, newEnd);
+        }
+    });
+
+    // ADD NEW DATA
+    addResultform.addEventListener('submit', async function (e) {
+         e.preventDefault();
+            var data2 = {
+                Current_Remains: $('#CurrentRemains').val(),
+                Current_TotalOrders: $('#CurrentTotalOrders').val(),
+                EndRemain_Orders: $('#EndRemainOrders').val(),
+                EndTotal_Orders: $('#EndTotalOrders').val()
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("AdditionalEndMonthResult", "Plan")', // Replace with your actual controller name
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(data2),
+                dataType: 'json',
+                success: function (response) {
+                    alert('Data submitted successfully!');
+                    $("#Resultmodal").modal("hide");
+                    LoadEndMonthResult();
+                },
+                error: function (error) {
+                   // console.error('Error:', error);
+                    alert('Something went wrong!');
+                }
+            });
+    });
+
+    // EDIT END MONTH
+    editResultform.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        let formData = new FormData(e.target);
+        let res = await postData('@Url.Action("EditEndMonthResult", "Plan")', formData);
+        if (res.status === true) {
+            Swal.fire({
+                title: "Success",
+                text: "Update data successfully!",
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1500
+            }).then(() => {
+                LoadEndMonthResult();
+                $("#EditResultmodal").modal("hide");
+            });
+  
+        }
+    });
+
+    // BUTTON ACTION
+    openmodal.addEventListener('click', function (e) {
+        e.preventDefault();
+        $("#Resultmodal").modal("show");
+    });
+
+    uploadbtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.getElementById('uploadedFile').click();
+    });
+
+    uploadbtnV2.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.getElementById('file1').click();
+    });
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const uploadContainer = document.getElementById('upload-container');
+        const fileInput = document.getElementById('uploadedFile');
+
+        uploadContainer.addEventListener('click', () => fileInput.click());
+
+        uploadContainer.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            uploadContainer.classList.add('dragover');
+        });
+
+        uploadContainer.addEventListener('dragleave', () => {
+            uploadContainer.classList.remove('dragover');
+        });
+
+        uploadContainer.addEventListener('drop', (event) => {
+            event.preventDefault();
+            uploadContainer.classList.remove('dragover');
+            handleFiles(event.dataTransfer.files);
+        });
+
+        fileInput.addEventListener('change', (event) => {
+            handleFiles(event.target.files);
+        });
+
+        function handleFiles(files) {
+            if (files.length === 0) return;
+
+            const file = files[0];
+            if (!file.name.endsWith('.xlsx') && !file.name.endsWith('.xls')) {
+                alert('Please upload a valid Excel file.');
+                return;
+            }
+
+            $("#loadingmodal").modal("show");
+
+            const formData = new FormData();
+            formData.append('uploadedFile', file);
+
+            fileInput.value = ""; // allow re-selection of the same file
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/Plan/UploadFiledetails', true);
+
+            xhr.upload.addEventListener('progress', function (e) {
+                if (e.lengthComputable) {
+                    const percentComplete = (e.loaded / e.total) * 100;
+                    console.log(`Upload progress: ${percentComplete}%`);
+                }
+            });
+
+            xhr.addEventListener('load', function () {
+                //$("#loadingmodal").modal("hide");
+
+                try {
+                    const res = JSON.parse(xhr.responseText);
+                    if (res.status) {
+                        Swal.fire({
+                            title: "Success",
+                            text: "UPLOAD COMPLETE",
+                            icon: "success",
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => {
+                            initialLoad();
+                            LoadplanningData();
+                        });
+                    } else {
+                        Swal.fire({
+                            title: "Upload Failed",
+                            text: res.Message || "Unknown error occurred.",
+                            icon: "error"
+                        });
+                    }
+                } catch (error) {
+                    console.error("Invalid response:", xhr.responseText);
+                    Swal.fire({
+                        title: "Error",
+                        text: "Server returned an invalid response. Please contact support.",
+                        icon: "error"
+                    });
+                }
+            });
+
+            xhr.addEventListener('error', function () {
+                $("#loadingmodal").modal("hide");
+                Swal.fire({
+                    title: "Upload Error",
+                    text: "An error occurred during the upload. Please try again.",
+                    icon: "error"
+                });
+            });
+
+            xhr.send(formData);
+        }
+    });
+
+
+    //  FIRST INITIALIZATION PROCESS OR START OF THE PAGE
+    $(document).ready(function () {
+
+        $(".Maction").hide();
+        $(".date-container").hide();
+        $("#EndResults").hide();
+        $("#dashaction").show();
+
+        initialLoad();
+
+        const date = new Date();
+        const formattedDate = date.toLocaleDateString('en-US', {
+            month: '2-digit',
+            day: '2-digit'
+        });
+
+        $('#datetoday').text(formattedDate);
+    });
+
+
+
+    const initialLoad = async () => {
+        await LoadfirstAndLastDate(); // Wait for async to finish
+
+        // If you want to get values from inputs again
+        firstDate = $('#summarystartdate').val();
+        LastDate = $('#summaryendDate').val();
+        LoadAdditionalSummary(firstDate, LastDate);
+        LoadLackingSummary(firstDate, LastDate);
+        LoadShopOrderSummary(firstDate, LastDate);
+        LoadrequestSummary(firstDate, LastDate);
+    }
+
+    // Trigger Button actions
+    // Control tabs
+    tabs.forEach((tab, index) => {
+        tab.addEventListener('click', (e) => {
+            tabs.forEach(tab => { tab.classList.remove('active') });
+            tab.classList.add('active');
+
+            var line = document.querySelector('.line');
+            line.style.width = e.target.offsetWidth + "px";
+            line.style.left = e.target.offsetLeft + "px";
+
+            all_content.forEach(content => { content.classList.remove('active') });
+            all_content[index].classList.add('active');
+
+
+            switch (index) {
+                case 0:
+                    //$(".Monthsummarydisplay").hide();
+                    //$(".NoSummaryDisplay").show();
+
+                    $('#dashtable').empty();
+                    $('#Lacktable').empty();
+                    $('#OrderTable').empty();
+                    $('#summarystartdate').val(firstDate);
+                    $('#summaryendDate').val(LastDate);
+                    LoadAdditionalSummary($('#summarystartdate').val(), $('#summaryendDate').val());
+                    LoadLackingSummary($('#summarystartdate').val(), $('#summaryendDate').val());
+                    LoadShopOrderSummary($('#summarystartdate').val(), $('#summaryendDate').val());
+                    $("#Maction").hide();
+                    $("#date-container").hide();
+                    $("#EndResults").hide();
+                    $("#dashaction").show();
+                    break;
+                case 1:
+                    $(".PartnumberSummaryDisplay").show();
+                    $(".NoPartnumDisplay").hide();
+                    $('#partstartdate').val(firstDate);
+                    $('#partendDate').val(LastDate);
+
+                    LoadSummarypartnum(firstDate, LastDate);
+
+
+                    $("#BodySummary").empty();
+                    $("#Maction").hide();
+                    $("#dashaction").hide();
+                    $("#EndResults").hide();
+                    $("#date-container").show();
+                    break;
+                case 2:
+                    $("#dataSearching").empty();
+                    LoadplanningData();
+                    $("#dashaction").hide();
+                    $("#date-container").hide();
+                    $("#EndResults").hide();
+                    $("#Maction").show();
+                    break;
+                case 3:
+                    $('#RequestTable').empty();
+                    LoadEndMonthResult();
+                    LoadrequestSummary(firstDate, LastDate);
+
+                    $(".EndMonthSummary").hide();
+                    $("#dashaction").hide();
+                    $("#date-container").hide();
+                    $("#Maction").hide();
+                    $("#EndResults").show();
+                    break;
+            }
+        });
+    });
+
+
+
+    function MonitorDashoardDisplay(headers, tabledata) {
+
+
+        const table = document.getElementById("dashtable");
+
+        // Clear existing table content
+        table.innerHTML = "";
+
+        // Create the header row
+        const thead = document.createElement("thead");
+        const headerRow = document.createElement("tr");
+
+        headers.forEach(header => {
+            const th = document.createElement("th");
+            th.textContent = header;
+            headerRow.appendChild(th);
+        });
+
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+        const tbody = document.createElement("tbody");
+        const columnSums = new Array(headers.length).fill(0); // Initialize column sums
+
+        tabledata.forEach((row, index1) => {
+            const tr = document.createElement("tr");
+            let rowindex = index1;
+            row.forEach((cell, index) => {
+                const td = document.createElement("td" );
+
+                // Check if cell is null
+                if (cell === 0) {
+                    td.textContent = 0; // Empty cell
+                } else {
+                    td.textContent = cell.toLocaleString(); // Format number with commas
+                }
+
+                const hiddenSpan = document.createElement("span");
+                hiddenSpan.textContent = rowindex + 1;
+                hiddenSpan.style.display = "none"; // Keep second part hidden
+                td.appendChild(hiddenSpan);
+
+                columnSums[index] += parseInt(cell) || 0;
+
+                // Add conditional formatting
+                if (index === row.findIndex(val => val !== 0)) {
+                    td.classList.add("highlight-pink");
+                }
+
+                tr.appendChild(td);
+            });
+
+
+
+            tbody.appendChild(tr);
+        });
+
+        table.appendChild(tbody);
+
+        // Create footer row for totals
+        const tfoot = document.createElement("tfoot");
+        const footerRow = document.createElement("tr");
+        columnSums.forEach(sum => {
+            const td = document.createElement("td");
+            td.textContent = sum;
+            footerRow.appendChild(td);
+        });
+        tfoot.appendChild(footerRow);
+        table.appendChild(tfoot);
+
+        // Highlight the last row of each column if the value is not 0
+        //const lastRowIndex = tbody.rows.length - 1;
+        //for (let colIndex = 0; colIndex < headers.length; colIndex++) {
+        //    const cell = tbody.rows[lastRowIndex].cells[colIndex];
+        //    if (parseInt(cell.textContent) !== 0) {
+        //        cell.style.backgroundColor = "#FFD700"; // Highlight with gold color
+        //    }
+        //}
+
+        // Add click event listener for the entire table
+        table.addEventListener("click", event => {
+            const target = event.target;
+
+            if (target.tagName === "TD") {
+                const row = target.closest("tr");
+                if (row) {
+                    const rowIndex = Array.from(row.parentNode.children).indexOf(row);
+                    const colIndex = Array.from(target.parentNode.children).indexOf(target);
+                    const cellValue = target.textContent || null;
+
+                    let headerValue = headers[colIndex] || "Unknown Header";
+                    let hiddenValue;
+                    let dateselect;
+                    let newselectdate;
+
+
+
+
+                    const hiddenSpan = target.querySelector("span");
+                    if (hiddenSpan) hiddenValue = hiddenSpan.textContent;
+
+
+                    const date = new Date();
+                    const year = date.getFullYear();
+                    dateselect = year + '-' + headerValue;
+                    newselectdate = dateselect.replaceAll("/", "-");
+
+                    if (parseInt(cellValue) !== 0) {
+                        LoadpartnumDetails(newselectdate, hiddenValue);
+                    }
+                }
+            }
+        });
+    }
+    function LackDashoardDisplay(headers, tabledata) {
+        const table = document.getElementById("Lacktable");
+        table.innerHTML = ""; // Clear previous content
+
+        // Create the header row
+        const thead = document.createElement("thead");
+        const headerRow = document.createElement("tr");
+        headers.forEach(header => {
+            const th = document.createElement("th");
+            th.textContent = header;
+            headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+        const tbody = document.createElement("tbody");
+        const columnSums = new Array(headers.length).fill(0);
+
+        tabledata.forEach((row, index1) => {
+            const tr = document.createElement("tr");
+            let rowindex = index1;
+            const uniqueValues = new Set()
+
+            row.forEach((cell, index) => {
+                const td = document.createElement("td");
+                // Check if cell is null
+                if (cell === 0) {
+                    td.textContent = 0; // Empty cell
+                } else {
+                    td.textContent = cell.toLocaleString(); // Format number with commas
+                }
+
+                const hiddenSpan = document.createElement("span");
+                hiddenSpan.textContent = rowindex + 1;
+                hiddenSpan.style.display = "none"; // Keep second part hidden
+                td.appendChild(hiddenSpan);
+
+                columnSums[index] += parseInt(cell) || 0;
+
+                // Add conditional formatting
+                if (index === row.findIndex(val => val !== 0)) {
+                    td.classList.add("highlight-pink");
+                }
+
+
+
+                //// Handle '97640:1' format by splitting the string
+                //if (typeof cell === "string" && cell.includes(":")) {
+                //    const [part1, part2] = cell.split(":");
+
+                //    // Display only part number and hide quantity in a hidden span
+                //    td.textContent = part1;  // Set part number as visible content
+                //    const hiddenSpan = document.createElement("span");
+                //    hiddenSpan.textContent = part2;  // Set quantity as hidden content
+                //    hiddenSpan.style.display = "none"; // Hide the quantity
+                //    td.appendChild(hiddenSpan);  // Append the hidden span
+
+                //    // Ensure only the first occurrence in the row is highlighted
+                //    //if (!uniqueValues.has(part1) && part1 !== "") {
+                //    //    td.classList.add("highlight-pink");
+                //    //    uniqueValues.add(part1); // Mark this value as highlighted
+                //    //}
+
+
+                //    // Apply formatting
+                //    if (part1 === "") {
+                //        td.textContent = 0;
+
+                //    }
+
+
+
+                //} else {
+                //    td.textContent = cell;
+
+                //}
+
+                tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+
+        // Create footer row for totals
+        const tfoot = document.createElement("tfoot");
+        const footerRow = document.createElement("tr");
+        columnSums.forEach(sum => {
+            const td = document.createElement("td");
+            td.textContent = getFormatComma(sum);
+            footerRow.appendChild(td);
+        });
+        tfoot.appendChild(footerRow);
+        table.appendChild(tfoot);
+
+        // Add click event listener for the entire table
+        table.addEventListener("click", event => {
+            const target = event.target;
+
+            // Check if the clicked element is a <td> (cell)
+            if (target.tagName === "TD") {
+                const row = target.closest("tr"); // Find the closest row (tr)
+
+                if (row) {
+                    const rowIndex = Array.from(row.parentNode.children).indexOf(row);  // Get the row index
+                    const colIndex = Array.from(target.parentNode.children).indexOf(target); // Get the column index
+                    let headerValue;
+                    let hiddenValue;
+                    let dateselect;
+                    let newselectdate;
+                    // Get the value of the clicked cell (visible part number)
+                    const cellValue = target.textContent || null;
+
+                    // Get the column header text based on the column index
+                    headerValue = headers[colIndex] || "Unknown Header";
+
+                    //console.log(`Column Header: ${headerValue}`);
+                    //console.log(`Cell clicked. Row ${rowIndex + 1}, Column ${colIndex + 1}: ${cellValue}`);
+
+                    // Retrieve the hidden span value
+                    const hiddenSpan = target.querySelector("span");  // Find the hidden <span> within the cell
+
+                    if (hiddenSpan) {
+                        hiddenValue = hiddenSpan.textContent;  // Get the value from the hidden span
+                        //console.log(`Hidden span value: ${hiddenValue}`);
+                    }
+                    //const date = new Date(); // Current date
+                    //const year = date.getFullYear();
+                    //dateselect = year + '-' + headerValue
+                    //newselectdate = dateselect.replaceAll("/", "-");
+                    //console.log(newselectdate);
+                    //startDate.replaceAll("-", "/");
+
+                    newselectdate = headerValue.replaceAll("/", "-");
+                    //console.log(cellValue);
+                    //if (parseInt(cellValue) !== 0) {
+                    //    LoadLackpartnumDetails(newselectdate, hiddenValue);
+                    //}
+
+                    if (!cellValue.startsWith("0")) {
+                        LoadLackpartnumDetails(newselectdate, hiddenValue);
+                    }
+
+                }
+            }
+        });
+    }
+    function OrderShopDisplay(headers, tabledata) {
+        const table = document.getElementById("OrderTable");
+
+        // Create the header row
+        const thead = document.createElement("thead");
+        const headerRow = document.createElement("tr");
+        headers.forEach(header => {
+            const th = document.createElement("th");
+            th.textContent = header;
+            headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+        const tbody = document.createElement("tbody");
+        const columnSums = new Array(headers.length).fill(0);
+
+        tabledata.forEach((row, index1) => {
+            const tr = document.createElement("tr");
+            let rowindex = index1;
+            row.forEach((cell, index) => {
+                const td = document.createElement("td");
+
+                // Check if cell is null
+                if (cell === 0) {
+                    td.textContent = 0; // Empty cell
+                } else {
+                    td.textContent = cell.toLocaleString(); // Format number with commas
+                }
+
+                const hiddenSpan = document.createElement("span");
+                hiddenSpan.textContent = rowindex + 1;
+                hiddenSpan.style.display = "none"; // Keep second part hidden
+                td.appendChild(hiddenSpan);
+
+                columnSums[index] += parseInt(cell) || 0;
+
+                // Add conditional formatting
+                if (index === row.findIndex(val => val !== 0)) {
+                    td.classList.add("highlight-pink");
+                }
+
+                tr.appendChild(td);
+            });
+
+
+
+            tbody.appendChild(tr);
+        });
+        //tabledata.forEach(row => {
+        //    const tr = document.createElement("tr");
+        //    row.forEach((cell, index) => {
+        //        const td = document.createElement("td");
+
+        //        // Handle '97640:1' format by splitting the string
+        //        if (typeof cell === "string" && cell.includes(":")) {
+        //            const [part1, part2] = cell.split(":");
+
+        //            // Display only part number and hide quantity in a hidden span
+        //            td.textContent = part1;  // Set part number as visible content
+        //            const hiddenSpan = document.createElement("span");
+        //            hiddenSpan.textContent = part2;  // Set quantity as hidden content
+        //            hiddenSpan.style.display = "none"; // Hide the quantity
+        //            td.appendChild(hiddenSpan);  // Append the hidden span
+
+        //            // Apply formatting
+        //            if (part1 === "") {
+        //                td.textContent = 0;
+        //            }
+        //            //if (index === row.findIndex(val => val !== 0)) {
+        //            //    td.classList.add("highlight-pink");
+        //            //}
+        //        }
+
+        //        tr.appendChild(td);
+        //    });
+        //    tbody.appendChild(tr);
+        //});
+        table.appendChild(tbody);
+
+        // Create footer row for totals
+        const tfoot = document.createElement("tfoot");
+        const footerRow = document.createElement("tr");
+        columnSums.forEach(sum => {
+            const td = document.createElement("td");
+            td.textContent = sum;
+            footerRow.appendChild(td);
+        });
+        tfoot.appendChild(footerRow);
+        table.appendChild(tfoot);
+
+
+        // Add click event listener for the entire table
+        table.addEventListener("click", event => {
+            const target = event.target;
+
+            // Check if the clicked element is a <td> (cell)
+            if (target.tagName === "TD") {
+                const row = target.closest("tr"); // Find the closest row (tr)
+
+                if (row) {
+                    const rowIndex = Array.from(row.parentNode.children).indexOf(row);  // Get the row index
+                    const colIndex = Array.from(target.parentNode.children).indexOf(target); // Get the column index
+                    let headerValue;
+                    let hiddenValue;
+                    let dateselect;
+                    let newselectdate;
+                    // Get the value of the clicked cell (visible part number)
+                    const cellValue = target.textContent || null;
+
+                    // Get the column header text based on the column index
+                    headerValue = headers[colIndex] || "Unknown Header";
+
+                    //console.log(`Column Header: ${headerValue}`);
+                    //console.log(`Cell clicked. Row ${rowIndex + 1}, Column ${colIndex + 1}: ${cellValue}`);
+
+                    // Retrieve the hidden span value
+                    const hiddenSpan = target.querySelector("span");  // Find the hidden <span> within the cell
+
+                    if (hiddenSpan) {
+                        hiddenValue = hiddenSpan.textContent;  // Get the value from the hidden span
+                        //console.log(`Hidden span value: ${hiddenValue}`);
+                    }
+                    //const date = new Date(); // Current date
+                    //const year = date.getFullYear();
+                    //dateselect = year + '-' + headerValue
+                    //newselectdate = dateselect.replaceAll("/", "-");
+                    //console.log(newselectdate);
+                    //startDate.replaceAll("-", "/");
+                    newselectdate = headerValue.replaceAll("/", "-");
+                    //if (parseInt(cellValue) !== 0) {
+                    //    LoadShopOrderDetails(newselectdate, hiddenValue);
+                    //}
+                    if (!cellValue.startsWith("0")) {
+                        LoadShopOrderDetails(newselectdate, hiddenValue);
+                    }
+                }
+            }
+        });
+    }
+    function RequestSalesDisplay(headers, tabledata) {
+        const table = document.getElementById("RequestTable");
+        let strmonth;
+        let strRow;
+      
+        // Add a "Total" column to headers
+        const updatedHeaders = [...headers, "Total"];
+
+        // Create the header row
+        const thead = document.createElement("thead");
+        const headerRow = document.createElement("tr");
+        const currentYear = new Date().getFullYear();
+
+        updatedHeaders.forEach(header => {
+            const th = document.createElement("th");
+            th.textContent = header;
+
+            const match = header.match(/\d{4}/);
+            if (match) {
+                const headerYear = parseInt(match[0]);
+                if (headerYear !== currentYear) {
+                    th.classList.add("not-current-year");
+                }
+            }
+
+            headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+        const tbody = document.createElement("tbody");
+
+        tabledata.forEach(row => {
+            const tr = document.createElement("tr");
+            let rowTotal = 0;
+
+            // Check if any cell value in the row is a number and move it to the first position
+
+
+            row.forEach((cell, index) => {
+                const td = document.createElement("td");
+                // Handle '97640:1' format by splitting the string
+                if (index === 0) {
+                    //const [part1, part2] = cell.split(":");
+                    //const cellValue = parseFloat(part2) || 0;
+                    const monthName = getRowMonths(cell);
+                    strmonth = monthName;
+                    //console.log("Months" + monthName);
+                    td.textContent = monthName;
+                }
+                else if (typeof cell === "string" && cell.includes(":")) {
+                    const [part1, part2] = cell.split(":");
+                    const cellValue = parseFloat(part1) || 0;
+
+                    td.textContent = part1;
+                    rowTotal += cellValue;
+
+                    const hiddenSpan = document.createElement("span");
+                    hiddenSpan.textContent = parseInt(part2);  // Set quantity as hidden content
+                    hiddenSpan.style.display = "none"; // Hide the quantity
+                    td.appendChild(hiddenSpan);  // Append the hidden span
+
+                    // Apply formatting
+                    if (part1 === "") {
+                        td.textContent = 0;
+                    }
+                    //if (index === row.findIndex(val => val !== 0)) {
+                    //    td.classList.add("highlight-pink");
+                    //}
+                } else {
+                    const cellValue = parseFloat(cell) || 0;
+                    td.textContent = cell;
+                    rowTotal += cellValue;
+                }
+
+                tr.appendChild(td);
+            });
+            // Add the "Total" column
+            const totalTd = document.createElement("td");
+            totalTd.textContent = rowTotal;
+            totalTd.classList.add("row-total");
+            tr.appendChild(totalTd);
+            strRow = rowTotal;
+            tbody.appendChild(tr);
+
+            // START TO UPDATE THE MONTHLY TABLES
+            //console.log("MontThs" + rowTotal);
+            //console.log("Months :" + strmonth + ", Rows :  " + strRow);
+        });
+        table.appendChild(tbody);
+
+
+
+
+
+        // Add click event listener for the entire table
+        table.addEventListener("click", event => {
+            const target = event.target;
+
+            // Check if the clicked element is a <td> (cell)
+            if (target.tagName === "TD") {
+                const row = target.closest("tr"); // Find the closest row (tr)
+
+                if (row) {
+                    const rowIndex = Array.from(row.parentNode.children).indexOf(row);  // Get the row index
+                    const colIndex = Array.from(target.parentNode.children).indexOf(target); // Get the column index
+                    let headerValue;
+                    let hiddenValue;
+                    let dateselect;
+                    let newselectdate;
+                    // Get the value of the clicked cell (visible part number)
+                    const cellValue = target.textContent || null;
+
+                    // Get the column header text based on the column index
+                    headerValue = headers[colIndex] || "Total";
+
+                    const column1Value = row.cells[0].textContent; // Get text content of the first <td>
+                    //console.log(`Column 1 Value: ${column1Value}`);
+                   // console.log("ALL HEADERS");
+                    //console.log(cellValue);
+                    //console.log(`Column Header: ${headerValue}`);
+                    //console.log(`Cell clicked. Row ${rowIndex + 1}, Column ${colIndex + 1}: ${cellValue}`);
+
+                    // Retrieve the hidden span value
+                    const hiddenSpan = target.querySelector("span");  // Find the hidden <span> within the cell
+
+                    if (hiddenSpan) {
+                        hiddenValue = hiddenSpan.textContent;  // Get the value from the hidden span
+                       //console.log(`Hidden span value: ${hiddenValue}`);
+                    }
+                    //const date = new Date(); // Current date
+                    //const year = date.getFullYear();
+                    //dateselect = year + '-' + headerValue
+                    //newselectdate = dateselect.replaceAll("/", "-");
+                    //console.log(column1Value);
+
+                    if (parseInt(cellValue) !== 0) {
+                        LoadRequestDetails(headerValue, getMonthInteger(column1Value));
+                    }
+
+                }
+            }
+        });
+    }
+
+    function displayPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 50, visibleButtons = 5) {
+        let currentPage = 1;
+        let filteredData = [...dataArray]; // Make a copy for filtering
+
+        const updatePaginationInfo = () => {
+            const totalRecords = filteredData.length;
+            const totalPages = Math.ceil(totalRecords / recordsPerPage);
+
+            $("#totalpageID").text(totalPages);
+            $("#DatalengthID").text(totalRecords);
+
+            return totalPages;
+        };
+
+        const renderTable = (page) => {
+            const totalPages = updatePaginationInfo();
+            const startIndex = (page - 1) * recordsPerPage;
+            const endIndex = Math.min(startIndex + recordsPerPage, filteredData.length);
+            const tableBody = document.getElementById(tableBodyId);
+            tableBody.innerHTML = '';
+
+            for (let i = startIndex; i < endIndex; i++) {
+                let buttons;
+                const rowData = filteredData[i];
+
+
+                const rowHtml = ` <tr class='row_${i} rowClick' id='editButton_${rowData.RecordID}'>
+                                    <td data-cell="DateUpload">${rowData.DateUpload}</td>
+                                    <td data-cell="DOI_Date">${rowData.DOI_Date}</td>
+                                    <td data-cell="Date_Created">${rowData.Date_Created}</td>
+                                    <td data-cell="Branch">${rowData.Branch}</td>
+                                    <td data-cell="MD_Request">${rowData.MD_Request}</td>
+                                    <td data-cell="SDP_Shoporder">${rowData.SDP_Shoporder}</td>
+
+                                    <td data-cell="SDP_Sales_Partnum">${rowData.SDP_Sales_Partnum}</td>
+                                    <td data-cell="Sales_Request_Date">${rowData.Sales_Request_Date}</td>
+                                    <td data-cell="Previous_Update">${rowData.Previous_Update}</td>
+                                    <td data-cell="PC_Proposed_Date">${rowData.PC_Proposed_Date}</td>
+                                    <td data-cell="M1_Latest_Update">${rowData.M1_Latest_Update}</td>
+                                    <td data-cell="PC_Latest_Proposed_Date">${rowData.PC_Latest_Proposed_Date}</td>
+
+                                    <td data-cell="PC_Proposed_Date">${rowData.PC_Proposed_Date}</td>
+                                    <td data-cell="Status">${rowData.Status}</td>
+                                    <td data-cell="MD_Request">${rowData.MD_Request}</td>
+                                    <td data-cell="Partnumber">${rowData.Partnumber}</td>
+                                    <td data-cell="Partname">${rowData.Partname}</td>
+                                    <td data-cell="Usage">${rowData.Usage}</td>
+
+                                    <td data-cell="Usage">${rowData.Usage}</td>
+                                    <td data-cell="Judgement">${rowData.Judgement}</td>
+                                </tr>`;
+
+                tableBody.innerHTML += rowHtml;
+
+
+
+
+            }
+
+            $("#pagecountID").text(currentPage);
+        };
+
+        const renderPagination = () => {
+            const totalPages = updatePaginationInfo();
+            const paginationContainer = document.getElementById(paginationId);
+            paginationContainer.innerHTML = '';
+
+            let startPage = Math.max(1, currentPage - Math.floor(visibleButtons / 2));
+            let endPage = Math.min(totalPages, startPage + visibleButtons - 1);
+
+            if (endPage > totalPages) {
+                endPage = totalPages;
+                startPage = Math.max(1, endPage - visibleButtons + 1);
+            }
+
+            if (totalPages <= visibleButtons) {
+                startPage = 1;
+                endPage = totalPages;
+            }
+
+            // Previous button
+            paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
+                                          <i class="fa-solid fa-backward"></i>
+                                      </button>`;
+
+            for (let i = startPage; i <= endPage; i++) {
+                paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+            }
+
+            // Next button
+            paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
+                                         <i class="fa-solid fa-forward"></i>
+                                      </button>`;
+        };
+
+        const changePage = (page) => {
+            if (page >= 1 && page <= updatePaginationInfo()) {
+                currentPage = page;
+                renderTable(currentPage);
+                renderPagination();
+            }
+        };
+
+        // 🔍 Search functionality
+        const searchTable = () => {
+            const query = $('#searchbox').val().toLowerCase();
+
+            filteredData = dataArray.filter(item =>
+                item.PartNo.toLowerCase().includes(query)
+            );
+
+            currentPage = 1;
+            renderTable(currentPage);
+            renderPagination();
+        };
+
+        // Add event listener for search input
+        $('#searchbox').on('input', searchTable);
+
+        // Handle click event for edit button
+        $(document).on('click', '.rowClick', function (e) {
+            e.stopPropagation();
+            const buttonId = $(this).attr('id');
+            const rowIndex = buttonId.split('_')[1];
+            const result = TableData.find(p => p.RecordID == rowIndex);
+            console.log(result);
+            //if (result) {
+            //    $("#Detail_Capinfo_ID").val(result.Capinfo_ID);
+            //    $("#Detail_Dieqty").val(result.DieQty);
+            //    $("#Detail_Actual_cav").val(result.Actual_Cav);
+            //    $("#Detail_CycleTime").val(result.CycleTime);
+            //    $("#Detail_Partnum").val(result.Partnum);
+            //    $("#Detail_Model_name").val(result.Model_name);
+            //    $("#Detail_Manhour").val(RoundNumberOne(result.manhour));
+            //    $("#Detail_Operation_time").val(result.Operation_time);
+            //    $("#Detail_Require").val(RoundNumberOne(result.Require));
+            //    $("#Detail_Capday").val(result.Capday);
+            //    $("#Detail_Capmonth").val(result.Capmonth);
+
+            //    $("#detailsModal").modal("show");
+            //}
+        });
+
+        // UPDATES THE DETAILS DATA
+        @* detailsform.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            let formData = new FormData(e.target);
+            formData.append('ProcessCode', processcode);
+            formData.append('Capgroup_ID', cap_groupID);
+            const data = Object.fromEntries(formData);
+            let res = await postData('@Url.Action("EditMoldingByDetails", "PostCapacity")', formData);
+            EditResult(res, data);
+        });*@
+
+            // Initialize table and pagination
+            window.changePage = changePage;
+        renderTable(currentPage);
+        renderPagination();
+    }
+
+    function getfirstDay(change) {
+        // Get the current date
+        var currentDate = new Date();
+        var firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        var firstformat = firstDay.getFullYear() + change +
+            ('0' + (firstDay.getMonth() + 1)).slice(-2) + change +
+            ('0' + firstDay.getDate()).slice(-2);
+
+        return firstformat;
+    }
+    function getLastDay(change) {
+        // Get the current date
+        var currentDate = new Date();
+        var lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+        var lastformattedDate = lastDay.getFullYear() + change +
+            ('0' + (lastDay.getMonth() + 1)).slice(-2) + change +
+            ('0' + lastDay.getDate()).slice(-2);
+
+        return lastformattedDate;
+
+    }
+
+    function checkNodata(check) {
+        if (check == 0) {
+            $(".Monthsummarydisplay").hide();
+            $(".NoSummaryDisplay").show();
+        } else {
+            $(".Monthsummarydisplay").show();
+            $(".NoSummaryDisplay").hide();
+        }
+    }
+
+
+
+
+    let uploadedRows = [];
+    let currentRowIndex = 0;
+
+    function _(el) {
+        return document.getElementById(el);
+    }
+
+    function uploadFile() {
+        var file = _("file1").files[0];
+
+        if (!file) {
+            return; // Cancel the upload
+        }
+        $("#loadingmodal").modal("show");
+
+        // alert(file.name+" | "+file.size+" | "+file.type);
+        var formdata = new FormData();
+        formdata.append("file1", file);
+        var ajax = new XMLHttpRequest();
+        ajax.upload.addEventListener("progress", progressHandler, false);
+        ajax.addEventListener("load", completeHandler, false);
+        ajax.addEventListener("error", errorHandler, false);
+        ajax.addEventListener("abort", abortHandler, false);
+        ajax.open("POST", "/Plan/SampleUpload");
+        //use file_upload_parser.php from above url
+        ajax.send(formdata);
+    }
+
+    function progressHandler(event) {
+        var percent = (event.loaded / event.total) * 100;
+        _("progressBar").value = Math.round(percent);
+        _("status").innerHTML = " Uploadng Data... please wait";
+    }
+
+    function completeHandler(event) {
+        var result = JSON.parse(event.target.responseText);
+        _("progressBar").value = 0;
+
+        // ✅ Reset file input so same file can be selected again
+        _("file1").value = "";
+
+        if (result.status && result.rows && result.rows.length > 0) {
+            _("status").innerHTML = "Uploading Data... please wait'";
+            uploadedRows = result.rows;
+            currentRowIndex = 0;
+            autoDisplayRows();
+        } else {
+            _("status").innerHTML = "Upload failed: " + (result.TextMessage || result.Message);
+        }
+    }
+
+    function autoDisplayRows() {
+        if (currentRowIndex < uploadedRows.length) {
+            const row = uploadedRows[currentRowIndex];
+            const display = document.getElementById("excelRowDisplay");
+
+            //const rowDiv = document.createElement("div");
+            display.innerHTML = `Date Upload:${formatMSDate(JSON.stringify(row.DateUpload))}, SDP_Order No:${JSON.stringify(row.SDPOrderNo)},
+                                 Sales Ship Date : ${formatMSDate(JSON.stringify(row.SalesRequestedShipDate))}}`;
+            //display.appendChild(rowDiv);
+
+            // Update progress
+            const percent = Math.round(((currentRowIndex + 1) / uploadedRows.length) * 100);
+            document.getElementById("rowProgressBar").value = percent;
+            document.getElementById("rowProgressPercent").textContent = `${percent}%`;
+
+            currentRowIndex++;
+
+            setTimeout(autoDisplayRows, 500); // Delay 2 seconds before next row
+        } else {
+            //_("status").innerHTML = "All rows displayed.";
+            _("status").innerHTML = 100 + "% Upload Complete";
+            setTimeout(() => {
+                $("#loadingmodal").modal("hide");
+            }, 1000);
+            initialLoad();
+            document.getElementById("rowProgressPercent").textContent = `0%`;
+        }
+    }
+
+    function errorHandler(event) {
+        _("status").innerHTML = "Upload Failed";
+    }
+
+    function abortHandler(event) {
+        _("status").innerHTML = "Upload Aborted";
+    }
+
+    function displayRows(rows) {
+        var container = document.getElementById("excelRows");
+        container.innerHTML = "";
+
+        rows.forEach((row, index) => {
+            container.innerHTML = "";
+            container.innerHTML = `${JSON.stringify(row)}`;
+            //const div = document.createElement("div");
+            //div.innerHTML = `Row ${index + 1}: ${JSON.stringify(row)}`;
+            //container.appendChild(div);
+        });
+    }
+
+    function formatMSDate(msDate) {
+        const timestamp = parseInt(msDate.match(/\d+/)[0], 10);
+        const date = new Date(timestamp);
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        const yyyy = date.getFullYear();
+        return `${mm}/${dd}/${yyyy}`;
+    }
+</script>

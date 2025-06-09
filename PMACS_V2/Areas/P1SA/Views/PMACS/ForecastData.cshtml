@@ -1,0 +1,553 @@
+﻿
+@{
+    ViewBag.Title = "ForecastData";
+    Layout = "~/Areas/P1SA/Views/Shared/_Layout.cshtml";
+}
+
+
+
+
+<section class="content">
+
+    <div class="selectiontabs">
+
+        <div class="ForecastHeader d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-3">
+                <a href="/P1SA/PMACS/Selection"><i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+                <h3 class="header__title">Forecast Data</h3>
+            </div>
+
+            <div class="selectiontabs__header">
+                <div class="active">Total by month</div>
+                <div>Data table</div>
+            </div>
+        </div>
+
+       
+        <div class="selectiontabs__body">
+            <div class="active" style="width: 100%;">
+                <div class="Chartwrapper">
+                    <canvas id="myChart"></canvas>
+                </div>
+            </div>
+            <div style="width: 100%;">
+                <div class="forestheader">
+                    <div class="forestheader__input">
+                        <div class="customs_input">
+                            <input type="text" id="myInput" placeholder="Search Model base  ...." />
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </div>
+                    </div>
+
+                    <div class="forestheader__importaction">
+                        <button id="Excelbtn" class="primary_button_color"><i class="fa-solid fa-file-import"></i>  Update forecast</button>
+                    </div>
+                </div>
+                <table class="foresdata">
+                    <thead>
+                        <tr>
+                            <th class="sortable textleft">Model Base</th>
+                            <th>Jan</th>
+                            <th>Feb</th>
+                            <th>Mar</th>
+                            <th>Apr</th>
+                            <th>May</th>
+                            <th>Jun</th>
+                            <th>Jul</th>
+                            <th>Aug</th>
+                            <th>Sept</th>
+                            <th>Oct</th>
+                            <th>Nov</th>
+                            <th>Dec</th>
+                        </tr>
+                    </thead>
+                    <tbody id="forecastdata">
+                    </tbody>
+
+                </table>
+
+                @*=============== Empty state Display ===================*@
+                <div id="empty-state">
+                    <p>No data available.</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+<button class="navbottom" onclick="topFunction()">
+    <i class="fa-solid fa-chevron-up"></i>
+</button>
+
+
+
+<!--########################## UPLOAD DATA #############################-->
+<div class="modal fade modal-lg " id="uploadmodal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog"
+     data-bs-backdrop="static"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="custom_modal_header">
+                    <div class="custom_modal__icon">
+                        <div class="custom_icon_container">
+                            <i class="fa-solid fa-file-import"></i>
+                        </div>
+                        <div class="custom_modal_title">
+                            <span>Update  forecast Data</span>
+                            <p id="procname">Upload Excel File Only</p>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+
+                <div class="custom_modal_body">
+                    <div class="modal__date">
+
+                        <select id="calendar" name="calendar" class="mb-3">
+                            <option value="month">All</option>
+                            <option value="January">January</option>
+                            <option value="February">February</option>
+                            <option value="March">March</option>
+                            <option value="April">April</option>
+                            <option value="May">May</option>
+                            <option value="June">June</option>
+                            <option value="July">July</option>
+                            <option value="August">August</option>
+                            <option value="September">September</option>
+                            <option value="October">October</option>
+                            <option value="November">November</option>
+                            <option value="December">December</option>
+                        </select>
+                    </div>
+
+                    <form method="post" enctype="multipart/form-data" id="ImportExcel">
+                        <div class="upload-container" id="upload-container">
+                            <p>Drag and drop an Excel file here</p>
+                            <input type="file" id="file-input" name="file-input" accept=".xlsx, .xls" hidden>
+                        </div>
+                        <progress id="progress-bar" value="0" max="100" style="width: 100%; display: none;"></progress>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<script src="~/Scripts/chart.js"></script>
+<script src="~/Scripts/jquery-3.7.0.js"></script>
+<script src="~/Scripts/Utilities.js"></script>
+<script src="~/Scripts/Global.js"></script>
+<script type="text/javascript">
+    const totalSumData = [];
+
+    const GetForecastData = async() => {
+        // Create a new Date object
+        var currentDate = new Date();
+        let jan = 0.0;
+        let feb = 0.0;
+        let mar = 0.0;
+        let apr = 0.0;
+        let may = 0.0;
+        let jun = 0.0;
+        let jul = 0.0;
+        let aug = 0.0;
+        let sep = 0.0;
+        let oct = 0.0;
+        let nov = 0.0;
+        let dec = 0.0;
+
+
+        // Get the current year
+        var currentYear = currentDate.getFullYear();
+        var SetData = $("#forecastdata");
+
+        let res = await fetchData('@Url.Action("GetForecastModelList", "Capacity")', { year: currentYear });
+        if (res && res.Success) {
+            $.each(res.Data, function (index, rowData) {
+                var getdata = "<tr class= 'row_" + index + "'>" +
+                    "<td class='textleft' style='font-weight: 600;'>" + rowData.Model_name + "</td>" +
+                    "<td>" + rowData.January + "</td>" +
+                    "<td>" + rowData.February + "</td>" +
+                    "<td>" + rowData.March + "</td>" +
+                    "<td>" + rowData.April + "</td>" +
+                    "<td>" + rowData.May + "</td>" +
+                    "<td>" + rowData.June + "</td>" +
+                    "<td>" + rowData.July + "</td>" +
+                    "<td>" + rowData.August + "</td>" +
+                    "<td>" + rowData.September + "</td>" +
+                    "<td>" + rowData.October + "</td>" +
+                    "<td>" + rowData.November + "</td>" +
+                    "<td>" + rowData.December + "</td>" +
+
+                    "</tr>";
+                SetData.append(getdata);
+
+
+                jan += parseFloat(rowData.January);
+                feb += parseFloat(rowData.February);
+                mar += parseFloat(rowData.March);
+                apr += parseFloat(rowData.April);
+                may += parseFloat(rowData.May);
+                jun += parseFloat(rowData.June);
+                jul += parseFloat(rowData.July);
+                aug += parseFloat(rowData.August);
+                sep += parseFloat(rowData.September);
+                oct += parseFloat(rowData.October);
+                nov += parseFloat(rowData.November);
+                dec += parseFloat(rowData.December);
+            });
+            totalSumData.push(jan)
+            totalSumData.push(feb)
+            totalSumData.push(jan)
+            totalSumData.push(mar)
+            totalSumData.push(apr)
+            totalSumData.push(may)
+            totalSumData.push(jun)
+            totalSumData.push(jul)
+            totalSumData.push(aug)
+            totalSumData.push(sep)
+            totalSumData.push(oct)
+            totalSumData.push(nov)
+            totalSumData.push(dec)
+
+            $("#jan").text(getFormatComma(jan));
+            $("#feb").text(getFormatComma(feb));
+            $("#mar").text(getFormatComma(mar));
+            $("#apr").text(getFormatComma(apr));
+            $("#may").text(getFormatComma(may));
+            $("#jun").text(getFormatComma(jun));
+            $("#jul").text(getFormatComma(jul));
+            $("#aug").text(getFormatComma(aug));
+            $("#sep").text(getFormatComma(sep));
+            $("#oct").text(getFormatComma(oct));
+            $("#nov").text(getFormatComma(nov));
+            $("#dec").text(getFormatComma(dec));
+
+        }
+
+    }
+    const GetForecastForChart = async () => {
+        let res = await fetchData('@Url.Action("GetForecastChartList", "Capacity")', {})
+        if (res && res.Success) {
+            const result = Object.values(res.Data[0]).map(value => Math.round(value));
+            DisplayChartData(result);
+        }
+    }
+
+    function DisplayChartData(data) {
+        // DISPLAY THE CHART TOTAL
+        const ctx = document.getElementById('myChart');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                datasets: [{
+                    label: 'Total forecast Data ',
+                    data: data,
+                    backgroundColor: [
+                        'rgba(25, 131, 230, 0.3)',
+                        'rgba(25, 131, 230, 0.3)',
+                        'rgba(25, 131, 230, 0.3)',
+                        'rgba(25, 131, 230, 0.3)',
+                        'rgba(25, 131, 230, 0.3)',
+                        'rgba(25, 131, 230, 0.3)',
+                        'rgba(25, 131, 230, 0.3)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            font: {
+                                family: 'Poppins', // Change the font family
+                                size: 12,        // Change the font size
+                                weight: 'bold'   // Change the font weight
+                            },
+                            color: '#222' // Change the font color
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                family: 'Poppins', // Change the font family
+                                size: 14,        // Change the font size
+                                weight: 'medium'   // Change the font weight
+                            },
+                            color: '#222' // Change the font color
+                        }
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        font: {
+                            family: 'Poppins', // Change the font family
+                            size: 14,        // Change the font size
+                            weight: 'bold'   // Change the font weight
+                        },
+                        color: '#FF5733' // Change the font color
+                    }
+                }
+
+            }
+        });
+    }
+
+
+    // TABS CONTROLS
+    let tabs = document.querySelector(".selectiontabs");
+    let tabheader = tabs.querySelector(".selectiontabs__header");
+    let tabBody = tabs.querySelector(".selectiontabs__body");
+    let tabIndicator = tabs.querySelector(".tabs__indicator");
+    let tabHeadernodes = tabs.querySelectorAll(".selectiontabs__header > div");
+    let tabBodynodes = tabs.querySelectorAll(".selectiontabs__body > div");
+
+    for (let i = 0; i < tabHeadernodes.length; i++) {
+        tabHeadernodes[i].addEventListener("click", function () {
+            tabheader.querySelector(".active").classList.remove("active");
+            tabHeadernodes[i].classList.add("active");
+            tabBody.querySelector(".active").classList.remove("active");
+            tabBodynodes[i].classList.add("active");
+
+            if (i === 1) {
+                $(".navbottom").show();
+            } else {
+                $(".navbottom").hide();
+            }
+        });
+    }
+
+    // SEARCH DATA USING KEYUP EVENT
+    $("#myInput").on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+        var hasMatch = false;
+
+        $("#forecastdata tr").each(function () {
+            var modelBase = $(this).find("td:first").text().toLowerCase();
+            if (modelBase.indexOf(value) > -1) {
+                $(this).show();
+                hasMatch = true;
+            } else {
+                $(this).hide();
+            }
+        });
+
+        // Show or hide the empty state based on matches
+        if (hasMatch) {
+            $("#empty-state").hide();
+        } else {
+            $("#empty-state").show();
+        }
+
+        // Show all rows if the search input is empty
+        if (value === "") {
+            $("#forecastdata tr").show();
+            $("#empty-state").hide();
+        }
+    });
+
+    function ValidationForm() {
+        if ($("#calendar").val() == 'month') {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    $("#Excelbtn").click(function () {
+        $("#uploadmodal").modal("show");
+    });
+
+    //-------------------  UPLOAD EXCEL FILE ------------------------------
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const uploadContainer = document.getElementById('upload-container');
+        const fileInput = document.getElementById('file-input');
+
+        uploadContainer.addEventListener('click', () => fileInput.click());
+
+        uploadContainer.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            uploadContainer.classList.add('dragover');
+        });
+
+        uploadContainer.addEventListener('dragleave', () => {
+            uploadContainer.classList.remove('dragover');
+        });
+
+        uploadContainer.addEventListener('drop', (event) => {
+            event.preventDefault();
+            uploadContainer.classList.remove('dragover');
+            handleFiles(event.dataTransfer.files);
+        });
+
+        fileInput.addEventListener('change', (event) => {
+            handleFiles(event.target.files);
+        });
+
+        function handleFiles(files) {
+            if (files.length === 0) return;
+            const file = files[0];
+            if (!file.name.endsWith('.xlsx') && !file.name.endsWith('.xls')) {
+                alert('Please upload a valid Excel file.');
+                return;
+            }
+            const formData = new FormData();
+            formData.append('excelfile', file);
+            formData.append('calendar', $("#calendar").val());
+            //const data = Object.fromEntries(formData);
+            //console.log(data);
+            // You can now send the formData to the server using fetch or XMLHttpRequest
+            // Example using fetch:
+            // fetch('/your-upload-endpoint', {
+            //     method: 'POST',
+            //     body: formData
+            // }).then(response => response.json())
+            //   .then(data => console.log(data))
+            //   .catch(error => console.error('Error:', error));
+            let check = ValidationForm();
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/Capacity/ImportForecastData', true);
+
+            xhr.upload.addEventListener('progress', function (e) {
+                if (e.lengthComputable) {
+                    const percentComplete = (e.loaded / e.total) * 100;
+                    const progressBar = document.getElementById('progress-bar');
+                    progressBar.style.display = 'block';
+                    progressBar.value = percentComplete;
+                }
+            });
+
+            xhr.addEventListener('load', function () {
+                const progressBar = document.getElementById('progress-bar');
+                progressBar.style.display = 'none';
+                if (xhr.status === 200) {
+                    const res = JSON.parse(xhr.responseText);
+                    if (res.isSuccess) {
+                        $("#uploadmodal").modal("hide");
+                        Swal.fire({
+                            text: res.message,
+                            icon: "success",
+                            confirmButtonColor: "#0d97c9",
+                            timer: 2000
+                        }).then(() => {
+                            window.location.href = "/Capacity/ForecastData";
+                        });
+                    } else {
+                        alert("Upload a file first");
+                    }
+                } else {
+                    alert('Upload failed!');
+                }
+            });
+
+            xhr.addEventListener('error', function () {
+                alert('An error occurred while uploading the file.');
+            });
+
+
+            xhr.send(formData);
+
+
+        }
+
+
+
+
+        function handleFiles3(files) {
+            if (files.length === 0) return;
+            const file = files[0];
+            if (!file.name.endsWith('.xlsx') && !file.name.endsWith('.xls')) {
+                alert('Please upload a valid Excel file.');
+                return;
+            }
+            const formData = new FormData();
+            formData.append('excelfile', file);
+            formData.append('calendar', $("#calendar").val());
+            //const data = Object.fromEntries(formData);
+            //console.log(data);
+            // You can now send the formData to the server using fetch or XMLHttpRequest
+            // Example using fetch:
+            // fetch('/your-upload-endpoint', {
+            //     method: 'POST',
+            //     body: formData
+            // }).then(response => response.json())
+            //   .then(data => console.log(data))
+            //   .catch(error => console.error('Error:', error));
+            let check = ValidationForm();
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', apiBaseUrl + 'Importupdatedforecast', true);
+
+            xhr.upload.addEventListener('progress', function (e) {
+                if (e.lengthComputable) {
+                    const percentComplete = (e.loaded / e.total) * 100;
+                    const progressBar = document.getElementById('progress-bar');
+                    progressBar.style.display = 'block';
+                    progressBar.value = percentComplete;
+                }
+            });
+
+            xhr.addEventListener('load', function () {
+                const progressBar = document.getElementById('progress-bar');
+                progressBar.style.display = 'none';
+                if (xhr.status === 200) {
+                    const res = JSON.parse(xhr.responseText);
+                    if (res.isSuccess) {
+                        $("#uploadmodal").modal("hide");
+                        Swal.fire({
+                            text: res.message,
+                            icon: "success",
+                            confirmButtonColor: "#0d97c9",
+                            timer: 2000
+                        }).then(() => {
+                            window.location.href = "/Capacity/ForecastData";
+                        });
+                    } else {
+                        alert("Upload a file first");
+                    }
+                } else {
+                    alert('Upload failed!');
+                }
+            });
+
+            xhr.addEventListener('error', function () {
+                alert('An error occurred while uploading the file.');
+            });
+
+
+            xhr.send(formData);
+
+
+        }
+    });
+    function topFunction() {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    }
+
+
+
+    const initializeData = () => {
+        $(".navbottom").hide();
+        GetForecastData();
+        GetForecastForChart();
+    }
+
+
+    initializeData();
+</script>

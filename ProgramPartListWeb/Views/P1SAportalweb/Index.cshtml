@@ -1,0 +1,309 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>P1SA Web portal</title>
+    <link href="~/Content/Site.css" rel="stylesheet" />
+    <link href="~/Content/css/Main.css" rel="stylesheet" />
+    <script src="~/Content/font-awesome/js/all.min.js"></script>
+</head>
+<body>
+    @*<button type="button" id="SendEmailID">DADAsdadasdasdasdas</button>*@
+
+    <header>
+        <div class="CustomContainer">
+            <div class="HeadTitle">
+                <span>Production 1 Sub Assembly Web Portal</span>
+                <div class="HeadTitle__action">
+                    <a href="/P1SAportalweb/GuideInstallsdsad"><span>How to set as Desktop</span>   <i class="fa-regular fa-bookmark"></i></a>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <section style="margin: 2em 0 5em;">
+        <div class="CustomContainer">
+            <div class="Maincontainer">
+                <aside class="sidebar">
+                    <div class="filter-group">
+                        <h4>Filter projects</h4>
+                        <small>Categories section</small>
+                        <hr />
+                        <label><input type="checkbox" id="allCheckbox" name="schedule" value="0" checked> All</label>
+                        <label><input type="checkbox" class="childCheckbox" name="schedule" value="1" checked> Molding</label>
+                        <label><input type="checkbox" class="childCheckbox" name="schedule" value="2" checked> Press</label>
+                        <label><input type="checkbox" class="childCheckbox" name="schedule" value="3" checked> Rotor</label>
+                        <label><input type="checkbox" class="childCheckbox" name="schedule" value="4" checked> Winding</label>
+                        <label><input type="checkbox" class="childCheckbox" name="schedule" value="5" checked> Circuit</label>
+                        <label><input type="checkbox" class="childCheckbox" name="schedule" value="6" checked> Others</label>
+
+                    </div>
+                </aside>
+
+                <main class="Webs">
+
+                    <section class="Webs_header">
+                        <h2>Select a system project</h2>
+                        <div class="Webs_search">
+                            <input type="text" placeholder="Search here ...">
+                            <div class="line"></div>
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </div>
+                    </section>
+
+                    <div class="Web_contain" id="Web_contain">
+
+                    </div>
+                </main>
+
+
+            </div>
+        </div>
+    </section>
+
+
+    @*<footer>
+            <span>adasdasd</span>
+        </footer>*@
+
+</body>
+</html>
+
+
+<script src="~/Scripts/Utilities.js"></script>
+<script src="~/Scripts/sweetalert2.min.js"></script>
+<script src="~/Scripts/jquery-3.7.1.min.js"></script>
+<!--<script type="text/javascript">
+
+    const container = document.getElementById('Web_contain');
+    const checkboxes = document.querySelectorAll('input[name="schedule"]');
+    const searchInput = document.querySelector('.Webs_search input');-->
+@*const email = document.getElementById("SendEmailID");
+
+
+    email.addEventListener('click', function (e) {
+        e.preventDefault();
+
+           $.ajax({
+               url: '@Url.Action("SampleEmail", "P1SAportalweb")',
+               type: 'POST',
+               dataType: 'json',
+               data: {},
+               processData: false, // Prevents jQuery from converting the FormData object into a query string
+               contentType: false, // Ensures that the Content-Type header is set correctly for FormData
+               success: function (res) {
+                   console.log(res);
+               },
+               error: function (jqXHR, textStatus, errorThrown) {
+                   alert('An error occurred while processing the request.');
+                   console.error(textStatus, errorThrown);
+               }
+           });
+    });*@
+
+
+
+<!--const loadProjectList = async (projectList = [], searchText = "") => {
+        var SetData = $("#Web_contain");
+        SetData.empty();
+
+        let res = await fetchData('@Url.Action("GetProjectList", "P1SAportalweb")', {});
+        if (res && res.Success) {
+            let filteredData = res.Data;
+
+            // Filter by category
+            if (projectList.length > 0 && !projectList.includes(0)) {
+                filteredData = filteredData.filter(project => projectList.includes(project.DepartmentID));
+            }
+
+            // Filter by search
+            if (searchText) {
+                const lowerSearch = searchText.toLowerCase();
+                filteredData = filteredData.filter(project =>
+                    project.Project_Name.toLowerCase().includes(lowerSearch)
+                );
+            }
+
+            if (filteredData.length === 0) {
+                SetData.html("<p>No projects found.</p>");
+                return;
+            }
+
+            $.each(filteredData, function (index, res) {
+                var imageUrl = `/P1SAportalweb/Get?fileName=${res.SystemImage || 'No_Data.png'}`;
+
+                const card = `
+                     <div class="Web__card">
+                         <div class="Web__back"></div>
+                         <img src='${imageUrl}' alt="" />
+                         <div class="Web__details">
+                             <h1 class="fs-700">${res.Project_Name}</h1>
+                         </div>
+                         <span class="fs-850 fw-bold"> v${res.Version} </span>
+                          <a href="${res.Links}"><i class="fa-regular fa-eye"></i> Select</a>
+                     </div>`;
+                SetData.append(card);
+            });
+
+
+        } else {
+            SetData.html("<p>Failed to load projects.</p>");
+        }
+    }
+
+
+
+    //loadProjectList();
+
+    // Helper to get selected Department
+    const getSelectedCategories = () => {
+        return $('input[name="schedule"]:checked')
+            .map(function () { return parseInt($(this).val()); })
+            .get();
+    };
+
+    // Event listeners
+    $('input[name="schedule"]').on('change', function () {
+        const categories = getSelectedCategories();
+        const searchText = $('.Webs_search input').val();
+        loadProjectList(categories, searchText);
+    });
+
+    $('.Webs_search input').on('input', function () {
+        const categories = getSelectedCategories();
+        const searchText = $(this).val();
+        loadProjectList(categories, searchText);
+    });
+
+    // Checkbox logic
+    $(document).ready(function () {
+        const $all = $('#allCheckbox');
+        const $children = $('.childCheckbox');
+
+        const handleCheckboxFilter = () => {
+            const categories = getSelectedCategories();
+            const searchText = $('.Webs_search input').val();
+            loadProjectList(categories, searchText);
+        };
+
+        $all.on('change', function () {
+            if (this.checked) {
+                $children.prop('checked', true);
+            }
+            handleCheckboxFilter();
+        });
+
+        $children.on('change', function () {
+            if (!this.checked) {
+                $all.prop('checked', false);
+            } else if ($children.filter(':checked').length === $children.length) {
+                $all.prop('checked', true);
+            }
+            handleCheckboxFilter();
+        });
+
+        $('.Webs_search input').on('input', function () {
+            handleCheckboxFilter();
+        });
+
+        // Initial load
+        handleCheckboxFilter();
+    });
+
+</script>-->
+
+
+<script type="text/javascript">
+    const container = document.getElementById('Web_contain');
+
+    const getSelectedCategories = () => {
+        return $('input[name="schedule"]:checked')
+            .map(function () { return parseInt($(this).val()); })
+            .get();
+    };
+
+    const loadProjectList = async (projectList = [], searchText = "") => {
+        var SetData = $("#Web_contain");
+        SetData.empty();
+
+        let res = await fetchData('@Url.Action("GetProjectList", "P1SAportalweb")', {});
+        if (res && res.Success) {
+            let filteredData = res.Data;
+
+            if (projectList.length > 0 && !projectList.includes(0)) {
+                filteredData = filteredData.filter(project => projectList.includes(project.DepartmentID));
+            }
+
+            if (searchText) {
+                const lowerSearch = searchText.toLowerCase();
+                filteredData = filteredData.filter(project =>
+                    project.Project_Name.toLowerCase().includes(lowerSearch)
+                );
+            }
+
+            if (filteredData.length === 0) {
+                SetData.html("<p>No projects found.</p>");
+                return;
+            }
+
+            $.each(filteredData, function (index, res) {
+                var imageUrl = `/P1SAportalweb/Get?fileName=${res.SystemImage || 'No_Data.png'}`;
+
+                const card = `
+                   <div class="Web__card">
+                       <div class="Web__back"></div>
+                       <img src='${imageUrl}' alt="" />
+                       <div class="Web__details">
+                           <h1 class="fs-700">${res.Project_Name}</h1>
+                       </div>
+                       <span class="fs-850 fw-bold"> v${res.Version} </span>
+                        <a href="${res.Links}"><i class="fa-regular fa-eye"></i> Select</a>
+                   </div>`;
+                   SetData.append(card);
+                });
+        } else {
+            SetData.html("<p>Failed to load projects.</p>");
+        }
+    };
+
+    // Checkbox logic
+    $(document).ready(function () {
+        const $all = $('#allCheckbox');
+        const $children = $('.childCheckbox');
+
+        const handleCheckboxFilter = () => {
+            const categories = getSelectedCategories();
+            const searchText = $('.Webs_search input').val();
+            loadProjectList(categories, searchText);
+        };
+
+        $all.on('change', function () {
+            if (this.checked) {
+                $children.prop('checked', true);
+            }
+            handleCheckboxFilter();
+        });
+
+        $children.on('change', function () {
+            if (!this.checked) {
+                $all.prop('checked', false);
+            } else if ($children.filter(':checked').length === $children.length) {
+                $all.prop('checked', true);
+            }
+            handleCheckboxFilter();
+        });
+
+        $('.Webs_search input').on('input', function () {
+            handleCheckboxFilter();
+        });
+
+        // Initial load
+        handleCheckboxFilter();
+    });
+</script>

@@ -1,0 +1,334 @@
+﻿
+@{
+     ViewBag.Title = "Production Manpower And Capacity System";
+     Layout = "";
+}
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/x-icon" href="~/Content/Images/pmacs.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <script src="~/Content/lib/font-awesome/js/all.min.js"></script>
+    <link href="~/Content/Site.css" rel="stylesheet" />
+    <link href="~/Content/login.css" rel="stylesheet" />
+    <link href="~/Content/sweetalert2.min.css" rel="stylesheet" />
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<section class="main">
+    <div class="main__container">
+        <!----------- login background design -------->
+        <div class="main__contain ">
+            <h1 style="line-height: 1.6;">
+                <span class="bold">P</span>roduction 
+                <span class="bold">M</span>anpower 
+                <span class="bold">A</span>nd  
+                <span class="bold">C</span>apacity   
+                <span class="bold">S</span>ystem</h1>
+        </div>
+        <div class="main__contain">
+            <img src="~/Content/Images/forgotpass.png" width="300" height="300" />
+        </div>
+
+        <div class="formbox">
+            <div class="form signform">
+                <form method="post" id="loginsubmit" class="logindesign" autocomplete="off">
+                    <div class="logindesign__contain">
+                        <h2  style="font-weight: 600; margin-top: 1em; font-size: 1.5rem;"> Welcome, User</h2>
+                        <p>Enter your credentials</p>
+
+                        <div class="logindesign__label">
+                            <label style="font-weight: 600;">Full Name:</label>
+                            <span class="text-danger" id="erroruser"></span>
+                        </div>
+                        <div class="search-box">
+                            <input type="text" name="username" id="username">
+                            <div class="namesdisplay"></div>
+                        </div>
+                        <div class="logindesign__label">
+                            <label style="font-weight: 600;">Password : </label>
+                            <span class="text-danger" id="errorpass"></span>
+                        </div>
+                        <input type="password" name="password" id="password">
+
+
+                        <div id="error-msg" style="color: red;"></div>
+                        <div class="formbox__action">
+                            <button type="button" id="viewbtn"><i class="fa-regular fa-eye"></i> View Only</button>
+                            <button class="submitbtn" id="submitbtn" type="submit"><i class="fa-solid fa-right-to-bracket"></i> Login</button>
+                        </div>
+
+                        <div Class="footer">
+                            <small>Forgot password ? <a href="#" class="signin">Click here</a></small>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+
+            <div Class="form forgetform">
+                <form id="forgetform" Class="forgetdesign">
+                    <button class="forgetbtn"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+
+                    <h2 style="font-weight: 600; margin-top: 1em; font-size: 1.5rem;"> Forgot Password ?</h2>
+                    <small style="margin-bottom: 1em; line-height: 1.6;">Enter your employee ID and we'll help you reset your password </small>
+                    <br />
+                    <Label style="font-weight: 600; margin-top: 1em;">Email Address:</Label>
+                    <input style="text-align:center;" type="text" placeholder="Enter your Email here ..." id="EmpID" name="EmpID" required>
+
+
+
+                    <button type="submit" class="newpassbtn" id="newpassbtn" disabled>Submit</button>
+
+                </form>
+            </div>
+        </div>
+
+
+    </div>
+    <footer Class="main__credits">
+        <span>© 2024 Jaye Labandia (Process Control) All rights reserved.</span>
+
+    </footer>
+    <span class="version">PMACS ver.</span>
+</section>
+
+
+
+<script src="~/Scripts/Utilities.js"></script>
+<script src="~/Scripts/jquery-3.7.1.js"></script>
+<script src="~/Scripts/sweetalert2.min.js"></script>
+<script type="text/javascript">
+    let loadData = [];
+
+
+    let logbtn = document.querySelector(".signin");
+    let forbtn = document.querySelector(".forgetbtn");
+    let mainbody = document.querySelector(".main");
+    const form = document.getElementById('loginsubmit');
+    const resultBox = document.querySelector(".namesdisplay");
+    const inputbox = document.getElementById("username");
+
+    const inputfield = document.getElementById("password");
+
+
+
+
+
+    const initialization = async () => {
+        $("#username").val("");
+        $("#password").val("");
+        //LoadUpdates();
+
+        //if ($("#Employee_ID").val() !== "") {
+        //    resultBox.style.display = 'none';
+        //}
+        let res = await fetchData('@Url.Action("GetFullnameList", "PMACS")', {});
+        if (res && res.Success) {
+            loadData = res.Data;
+            loadData = loadData.map(function (item) {
+                return item.Fullname;
+            });
+        } else {
+            $("#dataSearching").empty();
+            $('#empty-state').show();
+        }
+    }
+
+    function LoadUpdates() {
+        window.onload = function () {
+            // New system version
+            const newVersion = version; // Change this value when there's a new system update
+
+            // Get the stored version from localStorage
+            const storedVersion = localStorage.getItem('systemVersion');
+
+            // Check if the version has changed
+            if (storedVersion !== newVersion) {
+                // Show notification if the version has changed
+                const notification = document.getElementById('notification');
+                notification.style.display = 'flex';
+
+                // Update the stored version to the new one
+                localStorage.setItem('systemVersion', newVersion);
+            }
+
+            // Close notification when the close button is clicked
+            const closeBtn = document.getElementById('close-btn');
+            closeBtn.addEventListener('click', function () {
+                const notification = document.getElementById('notification');
+                notification.style.display = 'none';
+            });
+        };
+
+    }
+
+
+    // INPUT SEARCH EMPLOYEE NAME WHEN TYPE
+    $("#username").keyup(function () {
+        let result = [];
+        let input = this.value;
+
+        if (input.length > 0) {
+            result = loadData.filter((keyword) => {
+                return keyword.toLowerCase().includes(input.toLowerCase());
+            });
+            if (result.length > 0) {
+                resultBox.style.display = 'block';
+                display(result);
+            } else {
+                resultBox.style.display = 'none';
+            }
+        } else {
+            resultBox.style.display = 'none';
+        }
+    });
+
+
+    function display(result) {
+
+        const content = result.map((list) => {
+            return "<li onclick=selectinput(this) >" + list + "</li>";
+        });
+
+        resultBox.innerHTML = "<ul>" + content.join('') + "</ul>";
+    }
+
+    function selectinput(list) {
+        $("#username").val(list.innerHTML);
+        resultBox.innerHTML = '';
+        resultBox.style.display = 'none';
+    }
+
+
+     logbtn.onclick = function () {
+         mainbody.classList.add('slide');
+     }
+
+     forbtn.onclick = function () {
+         mainbody.classList.remove('slide');
+    }
+
+
+    // Add an event listener for the 'keypress' event
+
+    inputfield.addEventListener('keydown', function (e) {
+        // Check if the Enter key was pressed
+
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            // Prevent the default action (form submission)
+            var formData = new FormData(form);
+            loginfunc(formData);
+        }
+    });
+
+
+
+
+    $("#viewbtn").click(function () {
+        let useronly = {
+            AccountID: 999,
+            EmployeeID: "Guest",
+            Fullname: "Guest",
+            active: 1,
+            Roles_ID: 2
+        }
+
+        localStorage.setItem('users', JSON.stringify(useronly));
+        window.location.href = "/P1SA/PMACS/ManpowerProduction";
+    });
+
+
+
+
+    $("#loginsubmit").submit(function (e) {
+        e.preventDefault();
+        var formData = new FormData(e.target);
+        loginfunc(formData);
+    });
+
+    $("#forgetform").submit(function (e) {
+        e.preventDefault();
+        var formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+        const savebtn = document.querySelector("#newpassbtn");
+        savebtn.innerHTML = " <div class='Submitloading'></div>"
+    });
+
+    const loginfunc = async (formData) => {
+        const savebtn = document.querySelector("#submitbtn");
+        savebtn.innerHTML = " <div class='buttonloading'></div>";
+
+
+         var errorMsg = document.getElementById('error-msg');
+             //let data = Object.fromEntries(formData);
+
+             // Check the inputs validation
+             if (validateform()) {
+                 let res = await postData('/User/Authenticate', formData);
+                 setTimeout(() => {
+                     if (res.StatusCode === 200) {
+                         Swal.fire({
+                             title: "Success",
+                             text: res.Message,
+                             icon: "success",
+                             showConfirmButton: false,
+                             timer: 1500
+                         }).then(() => {
+                             savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-solid fa-right-to-bracket'></i>  Login</span>"
+                             localStorage.removeItem('activeLinkIndex');
+                             localStorage.setItem('users', JSON.stringify(res.Data.payload));
+                             localStorage.setItem('accessToken', res.Data.access_token);
+                             localStorage.setItem('refreshToken', res.Data.refresh_token);
+
+                             //let roles = res.Data.userRole;
+                             window.location.href = "/P1SA/PMACS/ManpowerProduction";
+                             //if (roles === 1 || roles === 3) {
+
+                             //} else if(roles == 0){
+                             //    window.location.href = "/User/Userspanel";
+                             //}
+                         });
+                     }
+                     else {
+                         Swal.fire({
+                             icon: "error",
+                             text: res.Message,
+                             timer: 1500,
+                             showConfirmButton: false
+                         });
+                     }
+                 }, 500);
+             }
+    };
+    function validateform() {
+        // for the input fields
+        const user = document.getElementById("username").value;
+        const pass = document.getElementById("password").value;
+
+        // for the error message
+        const erroruser = document.getElementById("erroruser");
+        const errorpass = document.getElementById("errorpass");
+
+        let isValid = true;
+
+        erroruser.textContent = "";
+        errorpass.textContent = "";
+
+        if (user === "") {
+            erroruser.textContent = "Please enter your Fullname"
+            isValid = false;
+        } else if (pass === "") {
+            errorpass.textContent = "Please enter your password"
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+
+
+    initialization();
+</script>
+

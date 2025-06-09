@@ -1,0 +1,504 @@
+﻿
+@{
+    ViewBag.Title = "DieMoldLife";
+    Layout = "~/Areas/P1SA/Views/Shared/_Layout.cshtml";
+}
+
+
+<section>
+    <div class="header d-flex align-items-center justify-content-between mb-4">
+        <h4>Mold Die Life Monitoring</h4>
+        <select id="monthSelect"></select>
+
+        <div class="searchinputContainer">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" placeholder="Search here ... " id="searchbox" />
+            <div class="line"></div>
+        </div>
+    </div>
+    <div class="DieMainTable">
+        <table>
+            <thead>
+                <tr>
+                    <th>Part No </th>
+                    <th>Part Description </th>
+                    <th>Dimension/ Quality </th>
+                    <th>No. of Cavity</th>
+                    <th>Die Serial</th>
+                    <th id="MonthHeader">Jan-16</th>
+                    <th>TotalQty</th>
+                </tr>
+            </thead>
+            <tbody id="DieMoldMasterlist">
+            </tbody>
+        </table>
+
+        <div class="PaginationfooterContainer d-flex align-items-center justify-content-between pt-2 pb-4">
+            <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
+
+            <div id="PaginationContainer" class="paginationPartlocal"></div>
+        </div>
+    </div>
+
+
+    <div class="header d-flex align-items-center justify-content-between mb-4">
+        <h4>Mold Die Life Summary</h4>
+        <div class="searchinputContainer">
+            <input type="text" placeholder="Search here ... " id="Summarysearchbox" />
+            <div class="line"></div>
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+    </div>
+    <div class="DieMainTable">
+        <table>
+            <thead>
+                <tr>
+                    <th>Part No </th>
+                    <th>Part Description </th>
+                    <th>Dimension/ Quality </th>
+                    <th>Die Number</th>
+                    <th>Die Serial</th>
+                    <th>No. of Cavity</th>
+                    <th>Die life</th>
+                    <th>2011-2015</th>
+                    <th>Total Shot Count Onward</th>
+                    <th>Average shot per month</th>
+                </tr>
+            </thead>
+            <tbody id="SummarylistData">
+            </tbody>
+        </table>
+        <div class="PaginationfooterContainer d-flex align-items-center justify-content-between pt-2 pb-4">
+            <span>Showing  <span id="spagecountID">-</span> to <span id="stotalpageID">-</span> of  <span id="sDatalengthID">-</span> Entries</span>
+
+            <div id="SummaryPaginationContainer" class="paginationPartlocal"></div>
+        </div>
+    </div>
+
+</section>
+
+<!--########################## INPUT DATA #############################-->
+<div class="modal fade modal-m" id="InputMoldieModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="custom_modal_header">
+                    <div class="custom_modal__icon d-flex align-items-center ">
+                        <div class="custom_icon_container">
+                            <i class="fa-regular fa-rectangle-list"></i>
+                        </div>
+                        <div class="custom_modal_title">
+                            <span>Capacity Details</span>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="InputMoldie">
+                    <div class="model__fields">
+                        <label for="">Input Die Quantity</label>
+                        <input type="hidden" name="PartNo" id="PartNo">
+                        <input type="hidden" name="No" id="No">
+                        <input class="form-control" type="text" name="MoldInput" id="MoldInput" onkeypress="return restrictChars(event)">
+                    </div>
+
+                  
+                    <div style="padding: .5em 1em" id="hideruler">
+                        <hr style="margin: 0;" />
+                    </div>
+                    <div class="edits_footer" id="editsdisplay">
+                        <button type="submit" class="primary_button_color">
+                            <span><i class="fa-regular fa-floppy-disk"></i>  Save Details</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-3.7.0.js"></script>
+<script src="~/Scripts/Utilities.js"></script>
+<script src="~/Scripts/Global.js"></script>
+<script type="text/javascript">
+    let TableData = [];
+    let SummaryData = [];
+
+
+    // Date Dropdown Selection
+    const months = [
+        "January", "February", "March", "April",
+        "May", "June", "July", "August",
+        "September", "October", "November", "December"
+    ];
+
+    const select = document.getElementById("monthSelect");
+    const updateMold = document.getElementById("InputMoldie");
+    const currentMonth = new Date().getMonth();
+    const currentYear = new Date().getFullYear();
+
+
+
+
+    months.forEach((month, index) => {
+        const option = document.createElement("option");
+        option.value = index + 1; // 1 to 12
+        option.text = month;
+        if (index === currentMonth) {
+            option.selected = true;
+        }
+        select.appendChild(option);
+    });
+
+    select.addEventListener('change', (e) => {
+        e.preventDefault();
+        let month = e.target.value;
+        $("#MonthHeader").text(months[month - 1]);
+        GetMoldDieMonth(month, currentYear);
+    })
+
+    updateMold.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        let formData = new FormData(e.target);
+        formData.append('DateAction', select.value);
+        //const data = Object.fromEntries(formData);
+        //console.log(data);
+        let res = await postData('@Url.Action("AddUpdateMoldDieMonitor", "DieMold")', formData);
+        if (res.StatusCode === 200) {
+            GetMoldDieMonth(select.value, currentYear);
+            $("#InputMoldieModal").modal("hide");
+        }
+    });
+
+    const GetMoldDieSummary = async() => {
+        let res = await fetchData('@Url.Action("GetMoldDieSummaryList", "DieMold")', {});
+        if (res && res.Success) {
+            SummaryData = res.Data;
+            displaySummaryPagination(SummaryData, 'SummarylistData', 'SummaryPaginationContainer', 10, 5);
+        }
+    }
+
+
+    const GetMoldDieMonth = async (month, year) => {
+        let formData = new FormData();
+        // Where value of month is around 1 - 12
+        formData.append('Months', month);
+        formData.append('Year', year);
+
+        $("#MonthHeader").text(months[month - 1]);
+
+        const data = Object.fromEntries(formData);
+        let res = await fetchData('@Url.Action("GetMoldDieMonthInputList", "DieMold")', data);
+        if (res && res.Success) {
+            TableData = res.Data;
+            displayPagination(TableData, 'DieMoldMasterlist', 'PaginationContainer', 50, 5);
+        }
+    }
+
+
+    function displaySummaryPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 10, visibleButtons = 5) {
+      let currentPage = 1;
+      let filteredData = [...dataArray]; // Make a copy for filtering
+
+      const updatePaginationInfo = () => {
+          const totalRecords = filteredData.length;
+          const totalPages = Math.ceil(totalRecords / recordsPerPage);
+
+          $("#stotalpageID").text(totalPages);
+          $("#sDatalengthID").text(totalRecords);
+
+          return totalPages;
+      };
+
+      const renderTable = (page) => {
+          const totalPages = updatePaginationInfo();
+          const startIndex = (page - 1) * recordsPerPage;
+          const endIndex = Math.min(startIndex + recordsPerPage, filteredData.length);
+          const tableBody = document.getElementById(tableBodyId);
+          tableBody.innerHTML = '';
+
+          for (let i = startIndex; i < endIndex; i++) {
+              let buttons;
+              const rowData = filteredData[i];
+
+
+              const rowHtml = ` <tr class='row_${i} rowClick' id='editButton_${rowData.RecordID}'>
+                                   <td data-cell="PartNo">${rowData.PartNo}</td>
+                                   <td data-cell="Description">${rowData.Description}</td>
+                                   <td data-cell="DimensionQuality">${rowData.DimensionQuality}</td>
+                                   <td data-cell="Cavity">${rowData.DieNumber}</td>
+                                   <td data-cell="DieSerial">${rowData.DieSerial}</td>
+                                   <td data-cell="TotalDie">${rowData.Cavity}</td>
+                                   <td data-cell="TotalDie">${rowData.DieLife}</td>
+                                   <td data-cell="TotalDie">${rowData.PreviousCount}</td>
+                                   <td data-cell="TotalDie">${rowData.ShotOnwards}</td>
+                                   <td data-cell="TotalDie">${rowData.ShotAverage}</td>
+                               </tr>`;
+
+              tableBody.innerHTML += rowHtml;
+          }
+
+          $("#spagecountID").text(currentPage);
+      };
+
+      const renderPagination = () => {
+          const totalPages = updatePaginationInfo();
+          const paginationContainer = document.getElementById(paginationId);
+          paginationContainer.innerHTML = '';
+
+          let startPage = Math.max(1, currentPage - Math.floor(visibleButtons / 2));
+          let endPage = Math.min(totalPages, startPage + visibleButtons - 1);
+
+          if (endPage > totalPages) {
+              endPage = totalPages;
+              startPage = Math.max(1, endPage - visibleButtons + 1);
+          }
+
+          if (totalPages <= visibleButtons) {
+              startPage = 1;
+              endPage = totalPages;
+          }
+
+          // Previous button
+          paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
+                                         <i class="fa-solid fa-backward"></i>
+                                     </button>`;
+
+          for (let i = startPage; i <= endPage; i++) {
+              paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+          }
+
+          // Next button
+          paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
+                                        <i class="fa-solid fa-forward"></i>
+                                     </button>`;
+      };
+
+      const changePage = (page) => {
+          if (page >= 1 && page <= updatePaginationInfo()) {
+              currentPage = page;
+              renderTable(currentPage);
+              renderPagination();
+          }
+      };
+
+      // 🔍 Search functionality
+      const searchTable = () => {
+          const query = $('#Summarysearchbox').val().toLowerCase();
+
+          filteredData = dataArray.filter(item =>
+              item.PartNo.toLowerCase().includes(query)
+          );
+
+          currentPage = 1;
+          renderTable(currentPage);
+          renderPagination();
+      };
+
+      // Add event listener for search input
+      $('#Summarysearchbox').on('input', searchTable);
+
+      // Handle click event for edit button
+      $(document).on('click', '.rowClick', function (e) {
+          e.stopPropagation();
+          const buttonId = $(this).attr('id');
+          const rowIndex = buttonId.split('_')[1];
+          const result = TableData.find(p => p.RecordID == rowIndex);
+          console.log(result);
+          //if (result) {
+          //    $("#Detail_Capinfo_ID").val(result.Capinfo_ID);
+          //    $("#Detail_Dieqty").val(result.DieQty);
+          //    $("#Detail_Actual_cav").val(result.Actual_Cav);
+          //    $("#Detail_CycleTime").val(result.CycleTime);
+          //    $("#Detail_Partnum").val(result.Partnum);
+          //    $("#Detail_Model_name").val(result.Model_name);
+          //    $("#Detail_Manhour").val(RoundNumberOne(result.manhour));
+          //    $("#Detail_Operation_time").val(result.Operation_time);
+          //    $("#Detail_Require").val(RoundNumberOne(result.Require));
+          //    $("#Detail_Capday").val(result.Capday);
+          //    $("#Detail_Capmonth").val(result.Capmonth);
+
+          //    $("#detailsModal").modal("show");
+          //}
+      });
+
+       // UPDATES THE DETAILS DATA
+       @*detailsform.addEventListener('submit', async (e) => {
+           e.preventDefault();
+
+           let formData = new FormData(e.target);
+           formData.append('ProcessCode', processcode);
+           formData.append('Capgroup_ID', cap_groupID);
+           const data = Object.fromEntries(formData);
+           let res = await postData('@Url.Action("EditMoldingByDetails", "PostCapacity")', formData);
+           EditResult(res, data);
+      });*@
+
+      // Initialize table and pagination
+      window.changePage = changePage;
+      renderTable(currentPage);
+      renderPagination();
+  }
+    function displayPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 50, visibleButtons = 5) {
+         let currentPage = 1;
+         let filteredData = [...dataArray]; // Make a copy for filtering
+
+         const updatePaginationInfo = () => {
+             const totalRecords = filteredData.length;
+             const totalPages = Math.ceil(totalRecords / recordsPerPage);
+
+             $("#totalpageID").text(totalPages);
+             $("#DatalengthID").text(totalRecords);
+
+             return totalPages;
+         };
+
+         const renderTable = (page) => {
+             const totalPages = updatePaginationInfo();
+             const startIndex = (page - 1) * recordsPerPage;
+             const endIndex = Math.min(startIndex + recordsPerPage, filteredData.length);
+             const tableBody = document.getElementById(tableBodyId);
+             tableBody.innerHTML = '';
+
+             // Step 1: Group by "No"
+             const groupMap = new Map();
+             for (let i = startIndex; i < endIndex; i++) {
+                 const row = filteredData[i];
+                 if (!groupMap.has(row.No)) groupMap.set(row.No, []);
+                 groupMap.get(row.No).push(row);
+             }
+
+             // Step 2: Render rows with merged "No"
+             groupMap.forEach((groupRows, noValue) => {
+                 const newTotalValue = groupRows[0].TotalNo;
+
+
+                 groupRows.forEach((rowData, idx) => {
+                     let rowHtml = "<tr class='rowClick' id='editButton_" + rowData.RecordID + "'>";
+
+                     // Only add <td> with rowspan on first row of group
+                     //if (idx === 0) {
+                     //    rowHtml += `<td rowspan="${groupRows.length}" data-cell="No">${noValue}</td>`;
+                     //}
+
+                     rowHtml += `<td data-cell="PartNo" style="font-weight: 600">${rowData.PartNo}</td>
+                                <td data-cell="Description">${rowData.Description}</td>
+                                <td data-cell="DimensionQuality">${rowData.DimensionQuality}</td>
+                                <td data-cell="Cavity">${rowData.Cavity}</td>
+                                <td data-cell="DieSerial">${rowData.DieSerial}</td>
+                                <td data-cell="TotalDie" >${rowData.TotalDie}</td>`;
+
+                     if (idx === 0) {
+                         rowHtml += `<td rowspan="${groupRows.length}" data-cell="NewTotal" style="color: hsl(209, 80%, 50%); font-weight: 600; ">${newTotalValue}</td>`;
+                     }
+                      rowHtml += "</tr>";
+                     tableBody.innerHTML += rowHtml;
+                 });
+             });
+
+             $("#pagecountID").text(currentPage);
+         };
+
+         const renderPagination = () => {
+             const totalPages = updatePaginationInfo();
+             const paginationContainer = document.getElementById(paginationId);
+             paginationContainer.innerHTML = '';
+
+             let startPage = Math.max(1, currentPage - Math.floor(visibleButtons / 2));
+             let endPage = Math.min(totalPages, startPage + visibleButtons - 1);
+
+             if (endPage > totalPages) {
+                 endPage = totalPages;
+                 startPage = Math.max(1, endPage - visibleButtons + 1);
+             }
+
+             if (totalPages <= visibleButtons) {
+                 startPage = 1;
+                 endPage = totalPages;
+             }
+
+             // Previous button
+             paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
+                                            <i class="fa-solid fa-backward"></i>
+                                        </button>`;
+
+             for (let i = startPage; i <= endPage; i++) {
+                 paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+             }
+
+             // Next button
+             paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
+                                           <i class="fa-solid fa-forward"></i>
+                                        </button>`;
+         };
+
+         const changePage = (page) => {
+             if (page >= 1 && page <= updatePaginationInfo()) {
+                 currentPage = page;
+                 renderTable(currentPage);
+                 renderPagination();
+             }
+         };
+
+         // 🔍 Search functionality
+         const searchTable = () => {
+             const query = $('#searchbox').val().toLowerCase();
+
+             filteredData = dataArray.filter(item =>
+                 item.PartNo.toLowerCase().includes(query)
+             );
+
+             currentPage = 1;
+             renderTable(currentPage);
+             renderPagination();
+         };
+
+         // Add event listener for search input
+         $('#searchbox').on('input', searchTable);
+
+         // Handle click event for edit button
+         $(document).on('click', '.rowClick', function (e) {
+             e.stopPropagation();
+             const buttonId = $(this).attr('id');
+             const rowIndex = buttonId.split('_')[1];
+             const result = TableData.find(p => p.RecordID == rowIndex);
+             if (result) {
+                 $("#PartNo").val(result.PartNo);
+                 $("#No").val(result.No);
+                 $("#MoldInput").val(result.TotalDie);
+                 $("#InputMoldieModal").modal("show");
+             }
+         });
+
+          // UPDATES THE DETAILS DATA
+          @*detailsform.addEventListener('submit', async (e) => {
+              e.preventDefault();
+
+              let formData = new FormData(e.target);
+              formData.append('ProcessCode', processcode);
+              formData.append('Capgroup_ID', cap_groupID);
+              const data = Object.fromEntries(formData);
+              let res = await postData('@Url.Action("EditMoldingByDetails", "PostCapacity")', formData);
+              EditResult(res, data);
+         });*@
+
+         // Initialize table and pagination
+         window.changePage = changePage;
+         renderTable(currentPage);
+         renderPagination();
+    }
+
+
+    function Initialize() {
+        let setMonth = parseInt(currentMonth) + 1;
+
+        GetMoldDieSummary();
+        GetMoldDieMonth(setMonth, currentYear);
+    }
+
+    Initialize();
+</script>

@@ -1,0 +1,174 @@
+﻿
+@{
+    ViewBag.Title = "Selection";
+    Layout = "~/Areas/P1SA/Views/Shared/_Layout.cshtml";
+}
+
+<section class="wrapper2">
+    <header class="Capheader d-flex align-items-center justify-content-between">
+        <h3>Capacity per process</h3>
+        <div class="header2__action">
+            @*<span id="datemonth" style="margin-right: 20px;"></span>*@
+            <button id="Excelbtn" class="primary_button_color">Forecastdata</button>
+            <button type="button" id="GridView" data-tooltip="Grid view"><i class="fa-solid fa-grip"></i>  </button>
+            <button type="button" id="ListView" data-tooltip="Table view"><i class="fa-solid fa-table"></i> </button>
+        </div>
+    </header>
+
+
+    <section class="content">
+        <div class="selectcontain" id="selectionID"> </div>
+        <div class="listselectcontain" id="listselectionID">
+            <table class="mt-4">
+                <thead>
+                    <tr>
+                        <th style="text-align: left;">Process:  </th>
+                        <th>Total Manpower</th>
+                        <th>Total Machine:</th>
+                        <th>Capacity per Day</th>
+                        <th>Capacity per Month</th>
+                    </tr>
+                </thead>
+
+                <tbody id="dataSearching">
+                </tbody>
+            </table>
+        </div>
+    </section>
+</section>
+
+
+<script src="~/Scripts/jquery-3.7.0.js"></script>
+<script src="~/Scripts/Utilities.js"></script>
+<script src="~/Scripts/Global.js"></script>
+<script type="text/javascript">
+    const forest = document.getElementById("Excelbtn");
+    const setDate = new Date().toLocaleString('default', { month: 'long' });
+    const gridbtn = document.getElementById("GridView");
+    const listbtn = document.getElementById("ListView");
+    let loadSelect = [];
+    //localStorage.setItem('users', JSON.stringify(res.Data.payload));
+
+    const GetData = async () => {
+         $("#selectionID").show();
+         $("#listselectionID").hide();
+         //$("#datemonth").text(setDate);
+         let res = await fetchData('@Url.Action("GetGroupCapacityList", "Capacity")', {});
+         if (res && res.Success) {
+             loadSelect = res.Data;
+             GridViewDisplay(loadSelect);
+         }
+     }
+
+    gridbtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        $("#selectionID").show();
+        $("#listselectionID").hide();
+
+        // Loads the data for the Grid View
+        GridViewDisplay(loadSelect);
+    });
+
+    listbtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        $("#selectionID").hide();
+        $("#listselectionID").show();
+
+        // Loads the data for the list View
+        ListViewDisplay(loadSelect);
+    });
+
+    forest.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = "/P1SA/PMACS/ForecastData";
+    });
+
+
+    const GridViewDisplay = (data) => {
+        var SetData = $("#selectionID");
+
+        $.each(data, function (index, rowData) {
+            var getdata = " <div  class='selectioncard' id='row_" + index + "'>" +
+                "<div class='selectioncard__header flex__space'>" +
+                "<div class='selectioncard__name'><span>" + rowData.Cap_name + "</span></div>" +
+                "<div class='selectioncard__Cycle'>" +
+                "<i class='fa fa-users' aria-hidden='true'></i>" +
+                "<span> " + rowData.TotalMan + "</span>" +
+                "</div>" +
+                "</div>" +
+                "<hr />" +
+                "<div class='selectioncard__footer'>" +
+                "<div class='selectioncard__col'><small>Machine</small><span>" + rowData.Total_machine + "</span></div>" +
+                "<div class='selectioncard__col'><small>Capacity/day</small><span>" + rowData.Capday + "</span></div>" +
+                "<div class='selectioncard__col'><small>Capacity/Month</small><span>" + rowData.Capmonth + "</span></div>" +
+                "</div>" +
+                "</div>"
+            SetData.append(getdata);
+        });
+
+        $(document).on('click', '.selectioncard', function (e) {
+            e.preventDefault();
+            var buttonId = $(this).attr('id');
+            var rowIndex = buttonId.split('_')[1];
+            let secID = parseInt(rowIndex) + 1;
+            RedirectCapacity(secID);
+        });
+    }
+    const ListViewDisplay = (data) => {
+        var SetData = $("#dataSearching");
+
+        $.each(data, function (index, rowData) {
+            var getdata = "<tr class='tablecard' id='row_" + index + "'>" +
+                "<td style='text-align: left; font-weight: 600'>" + rowData.Cap_name + "</td>" +
+                "<td>" + rowData.TotalMan + "</td>" +
+                "<td>" + rowData.Total_machine + "</td>" +
+                "<td>" + rowData.Capday + "</td>" +
+                "<td>" + rowData.Capmonth + "</td>" +
+                "</tr>";
+            SetData.append(getdata);
+        });
+
+        $(document).on('click', '.tablecard', function (e) {
+            e.preventDefault();
+            var buttonId = $(this).attr('id');
+            var rowIndex = buttonId.split('_')[1];
+            let secID = parseInt(rowIndex) + 1;
+            RedirectCapacity(secID);
+        });
+    }
+    const RedirectCapacity = (select) => {
+        switch (select) {
+            case 1:
+            case 2:
+            case 3:
+                window.location.href = "/P1SA/Capacity/Winding?capid=" + select;
+                break;
+            case 4:
+            case 5:
+            case 6:
+                window.location.href = "/P1SA/Capacity/Rotor?capid=" + select;
+                break;
+            case 7:
+            case 8:
+            case 9:
+                window.location.href = "/P1SA/Capacity/Molding?capid=" + select;
+                break;
+            case 10:
+            case 11:
+            case 12:
+                window.location.href = "/P1SA/Capacity/Press?capid=" + select;
+                break;
+            default:
+                window.location.href = "/P1SA/Capacity/Circuit?capid=" + select;
+                break;
+        }
+    }
+
+    //Shows for the Current View
+    const CurrentSaveView = () => {
+
+    }
+
+    GetData();
+    CurrentSaveView();
+</script>

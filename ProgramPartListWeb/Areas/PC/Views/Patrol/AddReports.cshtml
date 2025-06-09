@@ -1,0 +1,272 @@
+﻿
+@{
+    ViewBag.Title = "AddReports";
+    Layout = "~/Areas/PC/Views/Shared/_PatrolLayout.cshtml";
+}
+
+
+<form method="post" enctype="multipart/form-data" class=" formcontainer  " id="addnewform" autocomplete="off">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex align-items-center gap-4">
+                <a href="/PC/Patrol/PatrolReport"><i class="fa-solid fa-arrow-left"></i></a>
+                <h5 class="mb-0 fw-bold">Registration No. Informaton</h5>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-12 col-sm-12 col-lg-6">
+                    <label >Registration No.  </label> <br />
+                    <input type="text" placeholder="Type Registration No." name="RegNo" id="RegNo" required/>
+                </div>
+                <div class="col-12 col-sm-12 col-lg-6">
+                    <label  >Select Inspectors  </label>
+                    <div class="select-container">
+                        <select id="Employee_ID" name="Employee_ID">
+                            <option>-- Select Inspector --</option>
+                        </select>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+            <h5 class="mb-4 mt-4 fw-bold">Inspection Criterion / Findings</h5>
+            <hr />
+            <div class="row">
+                <div class="col-12 col-sm-12 col-lg-6">
+                    <label>1. Work Practice / Standard / Safety</label> <br />
+                    <input type="hidden" value="1" id="Find1" name="Find1" />
+                    <textarea placeholder="Type text here..." name="Inpects1" id="Inpects1" rows="3" cols="40" required></textarea>
+                </div>
+
+                <div class="col-12 col-sm-12 col-lg-6">
+                    <label>Countermeasures</label> <br />
+                    <textarea placeholder="Type text here..." name="counter1" id="counter1" rows="3" cols="40"></textarea>
+                </div>
+            </div>
+
+
+
+
+            <div class="row">
+                <div class="col-12 col-sm-12 col-lg-6">
+                    <label>2. Identification and status of the product or materials.</label> <br />
+                    <input type="hidden" value="2" id="Find2" name="Find2" required />
+                    <textarea placeholder="Type text here..." name="Inpects2" id="Inpects2" rows="3" cols="40"></textarea>
+                </div>
+
+                <div class="col-12 col-sm-12 col-lg-6 ">
+                    <label>Countermeasures</label> <br />
+                    <textarea placeholder="Type text here..." name="counter2" id="counter2" rows="3" cols="40"></textarea>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 col-sm-12 col-lg-6 ">
+                    <label>3. Condition and status of documents / records.</label> <br />
+                    <input type="hidden" value="3" id="Find3" name="Find3" required/>
+                    <textarea placeholder="Type text here..." name="Inpects3" id="Inpects3" rows="3" cols="40"></textarea>
+                </div>
+
+                <div class="col-12 col-sm-12 col-lg-6 ">
+                    <label>Countermeasures</label> <br />
+                    <textarea placeholder="Type text here..." name="counter3" id="counter3" rows="3" cols="40"></textarea>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 col-sm-12 col-lg-6 ">
+                    <label>4. Record of ‘start-up process check’ and monthly inspection</label> <br />
+                    <input type="hidden" value="4" id="Find4" name="Find4" required />
+                    <textarea placeholder="Type text here..." name="Inpects4" id="Inpects4" rows="3" cols="40"></textarea>
+                </div>
+
+                <div class="col-12 col-sm-12 col-lg-6 ">
+                    <label>Countermeasures</label> <br />
+                    <textarea placeholder="Type text here..." name="counter4" id="counter4" rows="3" cols="40"></textarea>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-12 col-sm-12 col-lg-6 ">
+                    <label>5. Calibration of equipment and jigs used for measurement or inspection.</label> <br />
+                    <input type="hidden" value="5" id="Find5" name="Find5" required/>
+                    <textarea placeholder="Type text here..." name="Inpects5" id="Inpects5" rows="3" cols="40"></textarea>
+                </div>
+
+                <div class="col-12 col-sm-12 col-lg-6 ">
+                    <label>Countermeasures</label> <br />
+                    <textarea placeholder="Type text here..." name="counter5" id="counter5" rows="3" cols="40"></textarea>
+                </div>
+            </div>
+
+
+
+            <div class="row">
+                <div class="col-12 col-sm-12 col-lg-6 ">
+                    <label>6. Countermeasure and implementation of previous quality and safety</label> <br />
+                    <input type="hidden" value="6" id="Find5" name="Find6" required/>
+                    <textarea placeholder="Type text here..." name="Inpects6" id="Inpects6" rows="3" cols="40"></textarea>
+                </div>
+
+                <div class="col-12 col-sm-12 col-lg-6 ">
+                    <label>Countermeasures</label> <br />
+                    <textarea placeholder="Type text here..." name="counter6" id="counter6" rows="3" cols="40"></textarea>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 col-sm-12 col-lg-6 ">
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>Managers </label> <br />
+                        <input type="text" placeholder="type person in charge" name="Manager" id="Manager" />
+                    </div>
+
+
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>Managers (Comments): </label> <br />
+                        <textarea placeholder="Type text here..." name="Manager_Comments" id="Manager_Comments" rows="9" cols="40"></textarea>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-12 col-lg-6">
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>Date Conducted </label> <br />
+                        <input type="date" name="DateConduct" id="DateConduct" />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>Person In Charge </label> <br />
+                        <input type="text" placeholder="type person in charge" name="PIC" id="PIC" />
+                    </div>
+
+
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>PIC (Comments): </label> <br />
+                        <textarea placeholder="Type text here..." name="PIC_Comments" id="PIC_Comments" rows="5" cols="40"></textarea>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="d-flex align-items-center justify-content-between">
+        <span id="errorvalid" class="text-danger">* Registration No is already inserted</span>
+        <span id="labelguide" style="color: rgb(100, 9, 9);">* Please Fill up all the required Fields</span>
+        <button id="btnSave"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+    </div>
+</form>
+
+
+
+<script src="~/Scripts/Utilities.js"></script>
+<script src="~/Scripts/sweetalert2.min.js"></script>
+<script src="~/Scripts/jquery-3.7.1.min.js"></script>
+<script type="text/javascript">
+    let regisTable = [];
+
+    const addform = document.getElementById("addnewform");
+
+
+    const RegistrationTable = async() => {
+        let res = await FetchAuthenticate('@Url.Action("GetRegistrationNo", "Patrol")', {});
+        if (res && res.Success) {
+            regisTable = res.Data;
+        }
+    }
+
+    const PopulateComboxInspector = async () => {
+        Resetforms();
+        let res = await FetchAuthenticate('@Url.Action("GetInspectorsByAdd", "Patrol")', {});
+        if (res && res.Success) {
+            let select = $("#Employee_ID");
+            select.empty();
+
+            $.each(res.Data, function (index, rowData) {
+                select.append('<option value="' + rowData.Employee_ID + '">' + rowData.FullName + '</option>');
+            });
+        }
+    }
+
+    // RESETS FORM
+    const Resetforms = () => {
+        //Resets the Form
+        $("#RegNo").css("border", "1px solid #A5A1AA");
+        $("#errorvalid").hide();
+        $("#labelguide").show();
+    };
+
+    // CHECKS IF THE REGISTRATION NUMBER EXIST
+    const formValidation = (regno) => {
+        const checkexist = regisTable.find(n => n.RegNo === regno);
+        return checkexist;
+    };
+
+    const findingsJson = (e) => {
+        let formData = new FormData(e);
+        const data = Object.fromEntries(formData);
+
+        const findings = [];
+
+        for (let i = 1; i <= 6; i++) {
+            findings.push({
+                RegNo: data.RegNo,
+                FindID: data[`Find${i}`],
+                FindDescription: data[`Inpects${i}`],
+                Countermeasure: data[`counter${i}`]
+            });
+        }
+
+        return JSON.stringify(findings);
+    };
+
+
+    addform.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const savebtn = document.querySelector("#btnSave");
+        savebtn.innerHTML = " <div class='buttonloading'></div>";
+
+        let strfind = findingsJson(e.target);
+        let finalformData = new FormData(e.target);
+        finalformData.append('FindJson', strfind);
+
+        const finaldata = Object.fromEntries(finalformData);
+
+        if (formValidation(finaldata.RegNo)) {
+            $("#errorvalid").show();
+            $("#labelguide").hide();
+            $("#RegNo").css("border", "1px solid red");
+            return;
+        } 
+
+        let res = await postData('@Url.Action("AddRegistration", "Patrol")', finalformData);
+        console.log(res);
+        if (res.StatusCode === 201) {
+            Swal.fire({
+                title: "Success",
+                text: res.Message,
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1500
+            }).then(() => {
+                setTimeout(() => {
+                    window.location.href = "/PC/Patrol/PatrolReport";
+                }, 3000);
+            });
+        }
+
+        //Resets the Form
+        Resetforms();
+    });
+
+
+    PopulateComboxInspector();
+    RegistrationTable();
+</script>

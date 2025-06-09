@@ -1,0 +1,932 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>LiveViewMonitoring</title>
+    <link href="~/Content/lib/font-awesome/css/all.css" rel="stylesheet" />
+    <link href="~/Content/live.css" rel="stylesheet" />
+</head>
+<body>
+    <header class="heads">
+        <div class="heads_container">
+            <a href="/Planning/Plan/MonitoringDashboard"><i class="fa-solid fa-arrow-left"></i> <span>  Back to Main menu</span> </a>
+            <div class="heads_action">
+                <input type="date" id="summarystartdate">
+                <i class="fa-solid fa-right-left" style="margin: 0 .6em 0 .6em; "></i>
+                <input type="date" id="summaryendDate">
+            </div>
+        </div>
+    </header>
+    <div class="trapezoid"><span>8 Weeks progress Monitoring Live View</span></div>
+
+
+    <div class="filters">
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab(0)"></div>
+            <div class="tab" onclick="switchTab(1)"></div>
+            <div class="tab" onclick="switchTab(2)"></div>
+        </div>
+
+        <!-- Toggle Switch for Auto Switch -->
+        <div class="switch-container">
+            <span class="switch-label">Set autoplay:</span>
+            <label class="switch">
+                <input type="checkbox" id="toggleAutoSwitch" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+
+
+    <div class="tab-contents">
+        <div class="tab-content active">
+            <div class="SlideContent">
+                <!-- Daily Total  order numbers -->
+                <div class="Analysis">
+                    <div class="Analysis_header">
+                        <div class="Analysis_boxicon">
+                            <i class="fa-solid fa-chart-column"></i>
+                        </div>
+                        <span>Daily Total  order numbers</span>
+                    </div>
+                    <div class="table-container">
+                        <table id="OrderTable">
+                        </table>
+                    </div>
+
+                    <div class="Ordersloading">
+                        <div class="loading-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>-</th>
+                                        <th>-</th>
+                                        <th>-</th>
+                                        <th>-</th>
+                                        <th>-</th>
+                                        <th>-</th>
+                                        <th>-</th>
+                                        <th>-</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                                        <td><div class="skeleton" style="width: 60%;"></div></td>
+                                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                                        <td><div class="skeleton" style="width: 60%;"></div></td>
+                                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                                    </tr>
+                                    <tr>
+                                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                                        <td><div class="skeleton" style="width: 60%;"></div></td>
+                                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                                        <td><div class="skeleton" style="width: 60%;"></div></td>
+                                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                                    </tr>
+                                    <tr>
+                                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                                        <td><div class="skeleton" style="width: 60%;"></div></td>
+                                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                                        <td><div class="skeleton" style="width: 60%;"></div></td>
+                                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                                    </tr>
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+        <div class="tab-content">
+            <div class="SecondContainer">
+                <!-- Sales Request -->
+                <div class="Analysis">
+                    <div class="Analysis_header">
+                        <div class="Analysis_boxicon">
+                            <i class="fa-solid fa-chart-column"></i>
+                        </div>
+                        <span>Sales Request</span>
+                    </div>
+                    <table id="RequestTable">
+                    </table>
+
+
+                    <div class="Salesloading">
+                        <div class="loading-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>-</th>
+                                        <th>-</th>
+                                        <th>-</th>
+                                        <th>-</th>
+                                        <th>-</th>
+                                        <th>-</th>
+                                        <th>-</th>
+                                        <th>-</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                                        <td><div class="skeleton" style="width: 60%;"></div></td>
+                                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                                        <td><div class="skeleton" style="width: 60%;"></div></td>
+                                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                                    </tr>
+                                    <tr>
+                                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                                        <td><div class="skeleton" style="width: 60%;"></div></td>
+                                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                                        <td><div class="skeleton" style="width: 60%;"></div></td>
+                                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                                    </tr>
+                                    <tr>
+                                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                                        <td><div class="skeleton" style="width: 60%;"></div></td>
+                                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                                        <td><div class="skeleton" style="width: 60%;"></div></td>
+                                        <td><div class="skeleton" style="width: 80%;"></div></td>
+                                        <td><div class="skeleton" style="width: 90%;"></div></td>
+                                    </tr>
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <!-- Total Pending Orders-->
+                <div class="Chartwrapper">
+                    <div class="Chartcontain">
+                        <div class="Chartcontain_header">
+                            <div class="Chartcontain_boxicon">
+                                <i class="fa-solid fa-chart-column"></i>
+                            </div>
+                            <span>Total Pending Orders</span>
+                        </div>
+                        <canvas id="myChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-content">
+            <h3 style="color: #010202;">End Montly Status</h3>
+            <div class="EndMonthTable table-responsive">
+                <table class="table-striped">
+
+                    <!-- Header Rows -->
+                    <tr class="header-row">
+                        <th rowspan="2" style="color: #fff;">Month</th>
+                        <th style="background: #145bc5;" colspan="3">End Month Status</th>
+                        <th style="background: #10864b;" colspan="3">Current Status, as of <span id="datetoday">12/14</span></th>
+                    </tr>
+                    <tr class="header-row">
+
+                        <th scope="col">Total Orders</th>
+                        <th scope="col">Remaining</th>
+                        <th scope="col">Improvements rate</th>
+                        <th scope="col">Total Orders</th>
+                        <th scope="col">Remaining</th>
+                        <th scope="col">Improvements rate</th>
+
+                    </tr>
+
+
+
+                    <tbody id="EndtableData">
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+</html>
+
+<script src="~/Scripts/chart.js"></script>
+<script src="~/Scripts/Utilities.js"></script>
+<script src="~/Scripts/jquery-3.7.1.min.js"></script>
+<script type="text/javascript">
+    let firstDate;
+    let LastDate;
+    let myChartInstance = null;
+    let currentIndex = 0;
+    let interval;
+    const tabs = document.querySelectorAll(".tab");
+    const contents = document.querySelectorAll(".tab-content");
+    const toggleSwitch = document.getElementById("toggleAutoSwitch");
+
+    function switchTab(index) {
+        tabs.forEach(tab => tab.classList.remove("active"));
+        contents.forEach(content => content.classList.remove("active"));
+
+        tabs[index].classList.add("active");
+        contents[index].classList.add("active");
+        currentIndex = index;
+
+        var startDate = $("#summarystartdate").val();
+        var endDate = $("#summaryendDate").val();
+
+        var newStart = startDate.replaceAll("-", "/");
+        var newEnd = endDate.replaceAll("-", "/");
+
+        if (currentIndex == 0) {
+            $('#OrderTable').empty();
+            LoadShopOrderSummary(newStart, newEnd);
+        } else if (currentIndex == 1) {
+            $('#RequestTable').empty();
+            LoadrequestSummary(newStart, newEnd);
+            LoadBranchSummary();
+        } else {
+            LoadEndMonthResult();
+        }
+    }
+
+    function autoSwitch() {
+        currentIndex = (currentIndex + 1) % tabs.length;
+        switchTab(currentIndex);
+    }
+
+    function startAutoSwitch() {
+        interval = setInterval(autoSwitch, 15000); // Change tab every 1 mins
+    }
+
+    function stopAutoSwitch() {
+        clearInterval(interval);
+    }
+
+    // Toggle auto-switch on/off
+    toggleSwitch.addEventListener("change", function () {
+        if (this.checked) {
+            startAutoSwitch();
+        } else {
+            stopAutoSwitch();
+        }
+    });
+
+    // Start auto switch initially
+    startAutoSwitch();
+
+
+    const LoadfirstAndLastDate = async() => {
+        let res = await fetchData('@Url.Action("GetFirstAndLastDateList", "Plan")', {});
+        if (res.StatusCode === 200) {
+            $('#summarystartdate').val(res.Data[0].FirstDate);
+            $('#summaryendDate').val(res.Data[0].LastDate);
+        }
+    }
+
+
+    //  FIRST INITIALIZATION PROCESS OR START OF THE PAGE
+    $(document).ready(function () {
+        (async () => {
+            await LoadfirstAndLastDate(); // Wait for async to finish
+
+            // If you want to get values from inputs again
+            firstDate = $('#summarystartdate').val();
+            LastDate = $('#summaryendDate').val();
+
+            LoadShopOrderSummary(firstDate, LastDate);
+            LoadrequestSummary(firstDate, LastDate);
+        })();
+
+
+
+        //$('#summarystartdate').val(getfirstDay('-'));
+        //$('#summaryendDate').val(getLastDay('-'));
+
+        //LoadShopOrderSummary(getfirstDay('-'), getLastDay('-'));
+        //LoadrequestSummary(getfirstDay('-'), getLastDay('-'));
+        LoadBranchSummary();
+        const date = new Date();
+        const formattedDate = date.toLocaleDateString('en-US', {
+            month: '2-digit',
+            day: '2-digit'
+        });
+
+        $('#datetoday').text(formattedDate);
+    });
+
+
+
+    async function LoadShopOrderSummary(first, last) {
+        $(".Salesloading").show();
+          try {
+              const result = await $.ajax({
+                  url: '@Url.Action("GetShopOrderResult", "Plan")',
+                  method: 'GET',
+                  data: { stardate: first, endDate: last}
+              });
+
+
+
+              if (result.Data !== null) {
+                  $(".Salesloading").hide();
+                  let columndates = result.Header;
+                  let getData = result.Data;
+
+                  var filteredHeaders = columndates.filter(header => header !== 'Imports');
+
+                  //Extract values into a 2D array
+                  var arraresult = getData.map(row => {
+                      return Object.keys(row)
+                          .filter(key => key !== 'Imports') // Exclude the "Imports" column
+                          .map(key => row[key]); // Extract values
+                  });
+
+                  OrderShopDisplay(filteredHeaders, arraresult);
+
+              }
+
+
+          } catch (error) {
+              console.error("Exception:", error);
+          }
+      }
+    async function LoadrequestSummary(first, last) {
+        $(".Ordersloading").show();
+
+        let res = await fetchData('@Url.Action("GetRequestResults", "Plan")', { stardate: first, endDate: last });
+
+        if (res.Data !== null) {
+            $(".Ordersloading").hide();
+            let columndates = res.Header;
+            let getData = res.Data;
+
+            //var filteredHeaders = columndates.filter(header => header !== 'MonthUpload');
+
+            //// Extract values into a 2D array and reorder rows
+            var arraresult = getData.map(row => {
+                // Extract values from the object into an array
+                let rowValues = Object.keys(row).map(key => row[key]);
+
+                // Find the index of the first numeric value
+                const numericCellIndex = rowValues.findIndex(cell => !isNaN(parseFloat(cell)) && isFinite(cell));
+
+                // Move the numeric value to the first position if found
+                if (numericCellIndex > 0) {
+                    const numericCell = rowValues.splice(numericCellIndex, 1)[0]; // Remove the numeric value
+                    rowValues.unshift(numericCell); // Add it to the beginning of the row
+                }
+
+                return rowValues; // Return the reordered row
+            });
+
+            RequestSalesDisplay(columndates, arraresult);
+            //const tableHeader = document.getElementById("headersummary");
+            //tableHeader.innerHTML = "";
+
+        }
+    }
+
+    async function LoadEndMonthResult() {
+        let SeriesData = [];
+
+        try {
+            const result = await $.ajax({
+                url: '@Url.Action("GetEndCurrentdata", "Plan")',
+                method: 'GET'
+            });
+
+            let data = result.Data;
+            EndResultarray = data;
+
+
+            var SetData = $("#EndtableData");
+            $("#EndtableData").empty();
+
+            let totalEndOrders = 0;
+            let totalEndRemain = 0;
+            let totalCurrentOrders = 0;
+            let totalCurrentRemains = 0;
+
+            let totalEndImprovements = 0;
+            let totalCurrentImprovements = 0;
+            let rowCount = data.length;
+
+
+            $.each(data, function (index, rowData) {
+                var getdata = "<tr style='padding: .8em 1em' class= 'row_" + index + "  rowClick' id='editButton_" + rowData.RecordID + "'>" +
+                    "<td style='color: #222; font-weight: 600;' >" + rowData.DateMonth + "</td>" +
+                    "<td style='text-align: center;' >" + rowData.EndTotalOrders + "</td>" +
+                    "<td style='text-align: center;'>" + rowData.EndRemainOrders + "</td>" +
+                    "<td style='color: hsl(209, 80%, 50%); font-weight: 600; text-align: center;'>" + rowData.EndImprovements + " %</td>" +
+                    "<td style='text-align: center;'>" + rowData.CurrentTotalOrders + "</td>" +
+                    "<td style='text-align: center;'>" + rowData.CurrentRemains + "</td>" +
+                    "<td style='color: hsl(209, 80%, 50%); font-weight: 600; text-align: center;'>" + rowData.CurrentImprovements + " %</td>" +
+                    "</tr>";
+                SetData.append(getdata);
+
+                // Calculate the totals
+                totalEndOrders += rowData.EndTotalOrders;
+                totalEndRemain += rowData.EndRemainOrders;
+                totalCurrentOrders += rowData.CurrentTotalOrders;
+                totalCurrentRemains += rowData.CurrentRemains;
+
+
+                // Calculate the improvements percentages
+                totalEndImprovements += parseFloat(rowData.EndImprovements);
+                totalCurrentImprovements += parseFloat(rowData.CurrentImprovements);
+            });
+
+            // Calculate average improvements percentage
+            let averageEndImprovements = (totalEndImprovements / rowCount).toFixed(2);
+            let averageCurrentImprovements = (totalCurrentImprovements / rowCount).toFixed(2);
+
+
+            // Append the totals to the table
+            var totalsRow = `
+              <tr style="font-weight: bold; background: hsl(0, 1%, 78%) !important; padding: 1em 0; color: #222;">
+                  <td>Total</td>
+                  <td style='text-align: center;'>${totalEndOrders}</td>
+                  <td style='text-align: center;'>${totalEndRemain}</td>
+                  <td style='text-align: center;'>${averageEndImprovements} %</td>
+                  <td style='text-align: center;'>${totalCurrentOrders}</td>
+                  <td style='text-align: center;'>${totalCurrentRemains}</td>
+                  <td style='text-align: center;'>${averageCurrentImprovements} %</td>
+
+              </tr>
+          `;
+            SetData.append(totalsRow);
+
+
+
+            // Handle click event for the delete button
+            $(document).on('click', '.editButton', function (e) {
+                e.stopPropagation(); // Prevent triggering the row click event
+                var buttonId = $(this).attr('id');
+                var rowIndex = buttonId.split('_')[1];
+
+                var result = EndResultarray.find(p => p.RecordID == rowIndex);
+
+                $("#RecordID").val(result.RecordID);
+                $("#EndTotalOrdersEdit").val(result.EndTotalOrders);
+                $("#EndRemainOrdersEdit").val(result.EndRemainOrders);
+                $("#CurrentTotalOrdersEdit").val(result.CurrentTotalOrders);
+                $("#CurrentRemainsEdit").val(result.CurrentRemains);
+
+                $("#EditResultmodal").modal("show");
+            });
+
+
+
+
+            //console.log(result);
+        } catch (error) {
+            console.error("Error loading products:", error);
+        }
+        }
+    async function LoadBranchSummary() {
+        let SeriesData = [];
+
+        try {
+            const result = await $.ajax({
+                url: '@Url.Action("GetBranchData", "Plan")',
+                method: 'GET'
+            });
+
+
+            console.log(result);
+
+            const labels = result.Data.map(item => item.Branch);
+            const data = result.Data.map(item => item.Branchcount);
+            DisplayChartData(labels, data);
+
+
+        } catch (error) {
+            console.error("Error loading products:", error);
+        }
+    }
+
+
+
+    function OrderShopDisplay(headers, tabledata) {
+        const table = document.getElementById("OrderTable");
+
+        // Create the header row
+        const thead = document.createElement("thead");
+        const headerRow = document.createElement("tr");
+        headers.forEach(header => {
+            const th = document.createElement("th");
+            const [month, day] = header.split("/");
+
+            th.textContent = `${month}/${day}`;  // removes the year
+            headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+        const tbody = document.createElement("tbody");
+        const columnSums = new Array(headers.length).fill(0);
+
+        tabledata.forEach((row, index1) => {
+            const tr = document.createElement("tr");
+            let rowindex = index1;
+            row.forEach((cell, index) => {
+                const td = document.createElement("td");
+
+                // Check if cell is null
+                if (cell === 0) {
+                    td.textContent = 0; // Empty cell
+                } else {
+                    td.textContent = cell.toLocaleString(); // Format number with commas
+                }
+
+                const hiddenSpan = document.createElement("span");
+                hiddenSpan.textContent = rowindex + 1;
+                hiddenSpan.style.display = "none"; // Keep second part hidden
+                td.appendChild(hiddenSpan);
+
+                columnSums[index] += parseInt(cell) || 0;
+
+                // Add conditional formatting
+                if (index === row.findIndex(val => val !== 0)) {
+                    td.classList.add("highlight-pink");
+                }
+
+                tr.appendChild(td);
+            });
+
+
+
+            tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+
+        // Create footer row for totals
+        const tfoot = document.createElement("tfoot");
+        const footerRow = document.createElement("tr");
+        columnSums.forEach(sum => {
+            const td = document.createElement("td");
+            td.textContent = sum;
+            footerRow.appendChild(td);
+        });
+        tfoot.appendChild(footerRow);
+        table.appendChild(tfoot);
+
+
+
+        // Add click event listener for the entire table
+        table.addEventListener("click", event => {
+            const target = event.target;
+
+            // Check if the clicked element is a <td> (cell)
+            if (target.tagName === "TD") {
+                const row = target.closest("tr"); // Find the closest row (tr)
+
+                if (row) {
+                    const rowIndex = Array.from(row.parentNode.children).indexOf(row);  // Get the row index
+                    const colIndex = Array.from(target.parentNode.children).indexOf(target); // Get the column index
+                    let headerValue;
+                    let hiddenValue;
+                    let dateselect;
+                    let newselectdate;
+                    // Get the value of the clicked cell (visible part number)
+                    const cellValue = target.textContent || null;
+
+                    // Get the column header text based on the column index
+                    headerValue = headers[colIndex] || "Unknown Header";
+
+                    //console.log(`Column Header: ${headerValue}`);
+                    //console.log(`Cell clicked. Row ${rowIndex + 1}, Column ${colIndex + 1}: ${cellValue}`);
+
+                    // Retrieve the hidden span value
+                    const hiddenSpan = target.querySelector("span");  // Find the hidden <span> within the cell
+
+                    if (hiddenSpan) {
+                        hiddenValue = hiddenSpan.textContent;  // Get the value from the hidden span
+                        //console.log(`Hidden span value: ${hiddenValue}`);
+                    }
+                    const date = new Date(); // Current date
+                    const year = date.getFullYear();
+                    dateselect = year + '-' + headerValue
+                    newselectdate = dateselect.replaceAll("/", "-");
+                    //console.log(newselectdate);
+                    //startDate.replaceAll("-", "/");
+
+                    //if (parseInt(cellValue) !== 0) {
+                    //    LoadShopOrderDetails(newselectdate, hiddenValue);
+                    //}
+
+                }
+            }
+        });
+    }
+    function RequestSalesDisplay(headers, tabledata) {
+        const table = document.getElementById("RequestTable");
+
+        // Add a "Total" column to headers
+        const updatedHeaders = [...headers, "Total"];
+
+        // Create the header row
+        const thead = document.createElement("thead");
+        const headerRow = document.createElement("tr");
+        updatedHeaders.forEach(header => {
+            const th = document.createElement("th");
+            //th.textContent = getMonthString(header);
+            th.textContent = header;
+            headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+        const tbody = document.createElement("tbody");
+
+        tabledata.forEach(row => {
+            const tr = document.createElement("tr");
+            let rowTotal = 0;
+
+            // Check if any cell value in the row is a number and move it to the first position
+
+
+            row.forEach((cell, index) => {
+                const td = document.createElement("td");
+                // Handle '97640:1' format by splitting the string
+                if (index === 0) {
+                    //const [part1, part2] = cell.split(":");
+                    //const cellValue = parseFloat(part2) || 0;
+                    const monthName = getRowMonths(cell);
+                    td.textContent = monthName;
+                }
+                else if (typeof cell === "string" && cell.includes(":")) {
+                    const [part1, part2] = cell.split(":");
+                    const cellValue = parseFloat(part1) || 0;
+
+                    td.textContent = part1;
+                    rowTotal += cellValue;
+
+                    const hiddenSpan = document.createElement("span");
+                    hiddenSpan.textContent = parseInt(part2);  // Set quantity as hidden content
+                    hiddenSpan.style.display = "none"; // Hide the quantity
+                    td.appendChild(hiddenSpan);  // Append the hidden span
+
+                    // Apply formatting
+                    if (part1 === "") {
+                        td.textContent = 0;
+                    }
+                    //if (index === row.findIndex(val => val !== 0)) {
+                    //    td.classList.add("highlight-pink");
+                    //}
+                } else {
+                    const cellValue = parseFloat(cell) || 0;
+                    td.textContent = cell;
+                    rowTotal += cellValue;
+                }
+
+                tr.appendChild(td);
+            });
+            // Add the "Total" column
+            const totalTd = document.createElement("td");
+            totalTd.textContent = rowTotal;
+            totalTd.classList.add("row-total");
+            tr.appendChild(totalTd);
+
+            tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+
+        // Add click event listener for the entire table
+        table.addEventListener("click", event => {
+            const target = event.target;
+
+            // Check if the clicked element is a <td> (cell)
+            if (target.tagName === "TD") {
+                const row = target.closest("tr"); // Find the closest row (tr)
+
+                if (row) {
+                    const rowIndex = Array.from(row.parentNode.children).indexOf(row);  // Get the row index
+                    const colIndex = Array.from(target.parentNode.children).indexOf(target); // Get the column index
+                    let headerValue;
+                    let hiddenValue;
+                    let dateselect;
+                    let newselectdate;
+                    // Get the value of the clicked cell (visible part number)
+                    const cellValue = target.textContent || null;
+
+                    // Get the column header text based on the column index
+                    headerValue = headers[colIndex] || "Unknown Header";
+
+                    const column1Value = row.cells[0].textContent; // Get text content of the first <td>
+                    //console.log(`Column 1 Value: ${column1Value}`);
+                    // console.log("ALL HEADERS");
+                    //console.log(cellValue);
+                    //console.log(`Column Header: ${headerValue}`);
+                    //console.log(`Cell clicked. Row ${rowIndex + 1}, Column ${colIndex + 1}: ${cellValue}`);
+
+                    // Retrieve the hidden span value
+                    const hiddenSpan = target.querySelector("span");  // Find the hidden <span> within the cell
+
+                    if (hiddenSpan) {
+                        hiddenValue = hiddenSpan.textContent;  // Get the value from the hidden span
+                        //console.log(`Hidden span value: ${hiddenValue}`);
+                    }
+                    //const date = new Date(); // Current date
+                    //const year = date.getFullYear();
+                    //dateselect = year + '-' + headerValue
+                    //newselectdate = dateselect.replaceAll("/", "-");
+
+
+                    //if (parseInt(cellValue) !== 0) {
+                    //    LoadRequestDetails(headerValue, getMonthInteger(column1Value));
+                    //}
+
+                }
+            }
+        });
+    }
+
+
+    function getfirstDay(change) {
+            // Get the current date
+            var currentDate = new Date();
+            var firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+            var firstformat = firstDay.getFullYear() + change +
+                ('0' + (firstDay.getMonth() + 1)).slice(-2) + change +
+                ('0' + firstDay.getDate()).slice(-2);
+
+            return firstformat;
+        }
+    function getLastDay(change) {
+            // Get the current date
+            var currentDate = new Date();
+            var lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+            var lastformattedDate = lastDay.getFullYear() + change +
+                ('0' + (lastDay.getMonth() + 1)).slice(-2) + change +
+                ('0' + lastDay.getDate()).slice(-2);
+
+            return lastformattedDate;
+
+    }
+
+    function getRowMonths(month) {
+        let intmonth = parseInt(month);
+
+        if (intmonth === 1) {
+            return "January";
+        } else if (intmonth === 2) {
+            return "February";
+        } else if (intmonth === 3) {
+            return "March";
+        } else if (intmonth === 4) {
+            return "April";
+        } else if (intmonth === 5) {
+            return "May";
+        } else if (intmonth === 6) {
+            return "June";
+        } else if (intmonth === 7) {
+            return "July";
+        } else if (intmonth === 8) {
+            return "August";
+        } else if (intmonth === 9) {
+            return "September";
+        } else if (intmonth === 10) {
+            return "October";
+        }
+        else if (intmonth === 11) {
+            return "November";
+        } else {
+            return "December";
+        }
+    }
+    function getMonthString(month) {
+
+        if (month === "MonthUpload") {
+            return "MonthUpload";
+        } else if (month === "Total") {
+            return "Total";
+        } else if (month === "1") {
+            return "Jan";
+        } else if (month === "2") {
+            return "Feb";
+        } else if (month === "3") {
+            return "Mar";
+        } else if (month === "4") {
+            return "Apr";
+        } else if (month === "5") {
+            return "May";
+        } else if (month === "6") {
+            return "Jun";
+        } else if (month === "7") {
+            return "Jul";
+        } else if (month === "8") {
+            return "Aug";
+        } else if (month === "9") {
+            return "Sep";
+        } else if (month === "10") {
+            return "Oct";
+        }
+        else if (month === "11") {
+            return "Nov";
+        } else {
+            return "Dec";
+        }
+    }
+
+
+
+    function DisplayChartData(label, data) {
+        // DISPLAY THE CHART TOTAL
+
+        const ctx = document.getElementById('myChart');
+
+        // Destroy the previous chart instance if it exists
+        if (myChartInstance) {
+            myChartInstance.destroy();
+        }
+
+        // Generate bar colors based on data values
+        const barColors = data.map(value => {
+            if (value < 50) return 'rgba(255, 99, 132, 0.8)';     // Red
+            else if (value < 100) return 'rgba(255, 206, 86, 0.8)'; // Yellow
+            else return 'rgba(75, 192, 192, 0.8)';                  // Teal
+        });
+
+        myChartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: label,
+                datasets: [{
+                    label: '',
+                    data: data,
+                    backgroundColor: barColors,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            font: {
+                                family: 'Inter',
+                                size: 12,
+                                weight: 'bold'
+                            },
+                            color: '#222'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                family: 'Inter',
+                                size: 14,
+                                weight: 'medium'
+                            },
+                            color: '#222'
+                        }
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        font: {
+                            family: 'Poppins',
+                            size: 14,        // Change the font size
+                            weight: 'bold'   // Change the font weight
+                        },
+                        color: '#FF5733' // Change the font color
+                    }
+                }
+
+            }
+        });
+    }
+</script>

@@ -1,0 +1,232 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace PMACS_V2.Areas.P1SA.Models
+{
+
+    // Total Sum of Partnumber  Mold die
+    public class DieMoldTotalPartnum
+    {
+        public int RecordID { get; set; }
+        public int No { get; set; }
+        public string PartNo { get; set; }
+        public string Description { get; set; }
+        public string DimensionQuality { get; set; }
+        public int DieNumber { get; set; }
+        public string DieSerial { get; set; }
+        public string Cavity { get; set; }
+        public string DateAction { get; set; }
+        public int TotalDie { get; set; }
+        public int TotalQty { get; set; }
+        public int TotalNo { get; set; }
+    }
+
+
+
+    // FOR DISPLAY DATA
+    public class DieMoldMonth
+    {
+        private int _RecordID;
+        private int _No;
+        private string _PartNo;
+        private string _Description;
+        private string _DimensionQuality;
+        private int _DieNumber;
+        private string _DieSerial;
+        private int _Cavity;
+        private DateTime _DateAction;
+        private int _TotalDie;
+
+        public int RecordID
+        {
+            get => _RecordID;
+            set => _RecordID = value;
+        }
+
+        public string PartNo
+        {
+            get => _PartNo;
+            set => _PartNo = value;
+        }
+        public int No
+        {
+            get => _No;
+            set => _No = value;
+        }
+        public string Description
+        {
+            get => _Description;
+            set => _Description = value;
+        }
+        public string DimensionQuality
+        {
+            get => _DimensionQuality;
+            set => _DimensionQuality = value;
+        }
+        public int DieNumber
+        {
+            get => _DieNumber;
+            set => _DieNumber = value;
+        }
+        public string DieSerial
+        {
+            get => _DieSerial;
+            set => _DieSerial = value;
+        }
+        public int Cavity
+        {
+            get => _Cavity;
+            set => _Cavity = value;
+        }
+
+        public DateTime DateAction
+        {
+            get => _DateAction;
+            set => _DateAction = value;
+        }
+        public int TotalDie
+        {
+            get => _TotalDie;
+            set => _TotalDie = value;
+        }
+
+    }
+    public class DieMoldSummary
+    {
+        private int _No;
+        private string _PartNo;
+        private string _Description;
+        private string _DimensionQuality;
+        private int _DieNumber;
+        private string _DieSerial;
+        private int _Cavity;
+        private int _DieLife;
+        private int _PreviousCount;
+        private int _ShotOnwards;
+        private int _ShotAverage;
+
+        public string PartNo
+        {
+            get => _PartNo;
+            set => _PartNo = value;
+        }
+        public int No
+        {
+            get => _No;
+            set => _No = value;
+        }
+        public string Description
+        {
+            get => _Description;
+            set => _Description = value;
+        }
+        public string DimensionQuality
+        {
+            get => _DimensionQuality;
+            set => _DimensionQuality = value;
+        }
+        public int DieNumber
+        {
+            get => _DieNumber;
+            set => _DieNumber = value;
+        }
+        public string DieSerial
+        {
+            get => _DieSerial;
+            set => _DieSerial = value;
+        }
+        public int Cavity
+        {
+            get => _Cavity;
+            set => _Cavity = value;
+        }
+
+        public int DieLife
+        {
+            get => _DieLife;
+            set => _DieLife = value;
+        }
+        public int PreviousCount
+        {
+            get => _PreviousCount;
+            set => _PreviousCount = value;
+        }
+        public int ShotOnwards
+        {
+            get => _ShotOnwards;
+            set => _ShotOnwards = value;
+        }
+        public int ShotAverage
+        {
+            get => _ShotAverage;
+            set => _ShotAverage = value;
+        }
+    }
+
+    public class DieModel
+    {
+        private int _RecordID;
+        private string _PartNo;
+        private int _No;
+        private string _Description;
+        private string _DimensionQuality;
+        private int _DieNumber;
+        private string _DieSerial;
+        private int _Cavity;
+
+        public int RecordID
+        {
+            get => _RecordID;
+            set => _RecordID = value;
+        }
+        public string PartNo
+        {
+            get => _PartNo;
+            set => _PartNo = value;
+        }
+        public int No
+        {
+            get => _No;
+            set => _No = value;
+        }
+        public string Description
+        {
+            get => _Description;
+            set => _Description = value;
+        }
+        public string DimensionQuality
+        {
+            get => _DimensionQuality;
+            set => _DimensionQuality = value;
+        }
+        public int DieNumber
+        {
+            get => _DieNumber;
+            set => _DieNumber = value;
+        }
+        public string DieSerial
+        {
+            get => _DieSerial;
+            set => _DieSerial = value;
+        }
+        public int Cavity
+        {
+            get => _Cavity;
+            set => _Cavity = value;
+        }
+    }
+
+
+
+
+    // INPUT DATA
+    public class MoldInputModel
+    {
+        public int No { get; set; }
+        public string PartNo { get; set; }
+        public string MoldInput { get; set; }
+        public int DateAction { get; set; }
+    }
+}

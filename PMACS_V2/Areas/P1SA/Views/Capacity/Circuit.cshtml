@@ -1,0 +1,650 @@
+﻿
+@{
+    ViewBag.Title = "Circuit";
+    var capid = Request.QueryString["capid"];
+    Layout = "~/Areas/P1SA/Views/Shared/_Layout.cshtml";
+}
+
+<section class="wrapper">
+
+    @*################## HEADER ###################################  *@
+    <header class="capacity d-flex justify-content-between mb-3">
+        <div class="capacity__title d-flex align-items-center gap-3">
+            <a class="d-flex align-items-center justify-content-center" href="/P1SA/PMACS/Selection"><i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+            <h2 class="capacity__text">@ViewData["processname"]</h2>
+        </div>
+        <div class="capacity__action">
+            <button type="button" class="primary_button_color" id="addbtn" data-toggle="modal" data-target="#addmodal"><i class="fa fa-plus" aria-hidden="true"></i> Add  base model </button>
+        </div>
+    </header>
+    @*################## HEADER ###################################  *@
+
+    <section class="content">
+
+        <div class="Summarywrapper">
+            <h6>Summary Details</h6>
+            @* ######################    Display the Summary Data ###############################*@
+            <table class="Summaryheader">
+                <thead>
+                    <tr>
+                        <th id="ChangeHeader">Process</th>
+                        <th id="Displaymachine">Machine no#</th>
+                        <th>Cycle time</th>
+                        <th>Capacity/day</th>
+                        <th>Capacity/Month</th>
+                        <th>Forecast Motorbase</th>
+                        <th>Manhour</th>
+                        <th>Manpower</th>
+                    </tr>
+                </thead>
+                <tbody id="SummarybodyID">
+                    @*<tr class="Loadercontainer">
+                            <td colspan="8">
+                                <div class="loader2" id="loadingSpinner"></div>
+                            </td>
+                        </tr>*@
+                </tbody>
+
+            </table>
+
+
+            @* ##################################################################################*@
+
+
+
+            <div class="capacity__half">
+                @* ########################   Display the Data Table  ###############################*@
+                <div class="capacity_col">
+                    <div class="cap_header">
+                        <div class="row">
+                            <div class="masterlistInput">
+                                <input type="text" placeholder="Search here ... " id="searchbox" />
+                                <div class="line"></div>
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </div>
+
+
+
+                        </div>
+
+                    </div>
+
+                    <div class="tablewrap">
+                        <table class="CapacityTable captable">
+                            <thead>
+                                <tr>
+                                    <th class="sortable">Based Model</th>
+                                    <th>Demand Quantity</th>
+                                    <th>Required Man-hour</th>
+                                    <th class="sortable">Required Manpower</th>
+                                    <th id="headertable">Delete</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="dataSearching">
+                            </tbody>
+                        </table>
+
+
+                        <div id="tableloads" class=" tableloads">
+                            <div class='loader2'></div>
+                        </div>
+
+                        <div id="empty-state" class="empty">
+                            <img src="~/Content/Images/empty.png" />
+                            <p>No data Found.</p>
+                        </div>
+
+
+                    </div>
+
+                    @*<div id="pagination-container">
+                        </div>
+
+                        <p style="margin-top: 1.5em; margin-left: 1.5em;">Total Result: <strong id="count"></strong></p>*@
+
+
+                    <div class="PaginationfooterContainer d-flex align-items-center">
+                        <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
+
+                        <div id="PaginationContainer" class="paginationPartlocal"></div>
+                    </div>
+
+
+                </div>
+                @* ##################################################################################*@
+
+
+
+
+
+                @*######################### FORM  FOR THE PROCESS SUMMARY ###########################*@
+                <form class="capacity_col capforms" id="EditCapacity" autocomplete="off">
+                    <div class="d-flex align-items-center gap-3">
+                        <h5 style="margin: 0;">Process Details</h5><i class="fa fa-info-circle"></i>
+                    </div>
+                    <hr />
+
+                    <div class="Cap__group">
+                        <small>Avg. Output per machine :</small>
+                        <input type="hidden" name="Proc_CycleTime" id="Proc_CycleTime" class="cycle" />
+                        <input type="hidden" id="Proc_Cap_Per_Machine" name="Proc_Cap_Per_Machine" value="0" />
+                        <input class="mode num" type="text" id="Cap_Per_Machine_text" name="Cap_Per_Machine_text" value="0" disabled />
+                    </div>
+
+
+                    <div class="Cap__group">
+                        <small>Operation Day (hours):</small>
+                        <input class="mode num" type="text" id="Proc_Days" name="Proc_Days" value="0" onkeypress="return restrictChars(event)" />
+                    </div>
+
+
+                    <div class="Cap__group">
+                        <small>Workdays per month :</small>
+                        <input class="mode num" type="text" id="Proc_Months" name="Proc_Months" value="0" onkeypress="return restrictChars(event)" />
+                    </div>
+
+                    <div class="Cap__group">
+                        <small>Operation Rate:</small>
+                        <input class="mode num" type="text" id="Proc_OperationTime" name="Proc_OperationTime" value="0" onkeypress="return restrictChars(event)" />
+                    </div>
+
+                    <hr />
+
+                    <button class="Modal__save" type="submit" id="saveEditProcess">
+                        <span><i class="fa-regular fa-floppy-disk"></i> Save Details</span>
+                    </button>
+
+
+                </form>
+
+
+
+
+                @*####################################################################################*@
+
+
+            </div>
+        </div>
+    </section>
+
+</section>
+
+
+
+<!--########################## SHOW DETAILS   #############################-->
+<div class="modal fade modal-lg" id="detailsModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="custom_modal_header">
+                    <div class="custom_modal__icon2">
+                        <div class="custom_icon_container">
+                            <i class="fa-regular fa-rectangle-list"></i>
+                        </div>
+                        <div class="custom_modal_title">
+                            <span>Capacity Details</span>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="editDetails">
+                    <div class="model__fields">
+                        <div class="detail__inputfield">
+                            <label for="">Model :</label>
+                            <input class="mode" type="text" name="Detail_Model_name" id="Detail_Model_name" disabled>
+                            <input type="hidden" name="Detail_Capinfo_ID" id="Detail_Capinfo_ID">
+                        </div>
+
+                        <div class="detail__inputfield">
+                            <label for="">Cycle Time :</label>
+                            <input class="editmode" type="text" name="Detail_CycleTime" id="Detail_CycleTime" disabled>
+                        </div>
+
+                    </div>
+
+                    <div class="model__fields">
+                        <div class="detail__inputfield">
+                            <label for="">Business Type :</label>
+                            <input class="mode" type="text" name="Detail_Busy" id="Detail_Busy" disabled>
+                        </div>
+
+
+                        <div class="detail__inputfield">
+                            <label for="">PCBA :</label>
+                            <input class="editmode" type="text" name="Detail_PCBA" id="Detail_PCBA" disabled>
+                        </div>
+                    </div>
+
+
+                    <div class="model__fields">
+                        <div class="detail__inputfield">
+                            <label for="">Capacity per Day :</label>
+                            <input class="mode" type="text" name="Detail_Capday" id="Detail_Capday" disabled>
+                        </div>
+
+
+                        <div class="detail__inputfield">
+                            <label for="">PWB :</label>
+                            <input class="editmode" type="text" name="Detail_PWB" id="Detail_PWB" disabled>
+                        </div>
+
+                    </div>
+
+
+                    <div class="model__fields">
+                        <div class="detail__inputfield">
+                            <label for="">Capacity per Month :</label>
+                            <input class="mode" type="text" name="Detail_Capmonth" id="Detail_Capmonth" disabled>
+                        </div>
+
+                        <div class="detail__inputfield">
+                            <label for="">PWB type:</label>
+                            <input class="editmode" type="text" name="Detail_PWB_TYPE" id="Detail_PWB_TYPE" disabled>
+                        </div>
+                    </div>
+
+                    <div class="model__fields">
+                        <div class="detail__inputfield">
+                            <label for="">Hours :</label>
+                            <input class="mode" type="text" name="Detail_Manhour" id="Detail_Manhour" disabled>
+                        </div>
+
+                        <div class="detail__inputfield">
+                            <label for="">PWB BLOCKS:</label>
+                            <input class="editmode" type="text" name="Detail_PWB_BLOCKS" id="Detail_PWB_BLOCKS" disabled>
+                        </div>
+
+                    </div>
+
+                    <div class="model__fields">
+                        <div class="detail__inputfield">
+                            <label for="">Manpower :</label>
+                            <input class="mode" type="text" name="Detail_Require" id="Detail_Require" disabled>
+                        </div>
+                        <div class="detail__inputfield">
+                            <label for="">Operation Time :</label>
+                            <input class="editmode" type="text" name="Detail_Operation_time" id="Detail_Operation_time" disabled>
+                        </div>
+                    </div>
+
+
+
+
+                    <div style="padding: .5em 1em" id="hideruler">
+                        <hr style="margin: 0;" />
+                    </div>
+
+
+
+                    <div class="edits_footer" id="editsdisplay">
+                        <button id="Editdetailsbtn"><i class="fa-regular fa-pen-to-square"></i>   Enable the Edit</button>
+                        <button type="submit" id="Editsavebtn">
+                            <span><i class="fa-regular fa-floppy-disk"></i>  Save Details</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="~/Scripts/jquery-3.7.0.js"></script>
+<script src="~/Scripts/Utilities.js"></script>
+<script src="~/Scripts/Global.js"></script>
+<script type="text/javascript">
+     // CAPACITY PROCESSS type
+    let cap_groupID = parseInt(@capid);
+
+    // Users Role
+    let roleint = 1;
+
+    // Get the current year date
+     const currentYear = new Date().getFullYear();
+     const Month = new Date().toLocaleString('en-US', { month: 'long' });
+     // Forms For the edit and Add data
+     const processform = document.querySelector('#EditCapacity');
+     const detailsform = document.querySelector('#editDetails');
+     const addmodelform = document.querySelector('#addnewmodel');
+
+
+     // Buttons use
+     const showaddmodal = document.getElementById("addbtn");
+     const showeditmode = document.getElementById("Editdetailsbtn");
+     //const editenable = document.getElementById("fanEnableEdit");
+
+     var processcode = "";
+     var summarycheck = 0;
+     var EmployeeID;
+     var machinecount;
+     var indexvalue = 0;
+
+
+     // Stores all data
+     let SummaryData = [];
+     let TableData = [];
+     let ModelsData = [];
+     let SummaryTableData = [];
+
+     // Display the current month to comboBox
+     $("#calendar").val(Month);
+     $("#Editsavebtn").css("display", "none");
+
+
+     let Summaryload_table = $("#SummarybodyID");
+
+    const GetCapacitySummary = async() => {
+     loadingSummary();
+         let res = await fetchData('@Url.Action("GetCapacitySummaryList", "Capacity")', { month: Month, capid: cap_groupID });
+         if (res && res.Success) {
+            SummaryData = res.Data;
+
+            processcode = SummaryData[0].ProcessCode;
+            //machinecount = SummaryData[0].mach;
+            //$("#Proc_AvailMachine").val(SummaryData[0].AvailMachine);
+            $("#Cap_Per_Machine_text").val(SummaryData[0].Cap_Per_Machine);
+            $("#Proc_Months").val(SummaryData[0].Months);
+            $("#Proc_OperationTime").val(SummaryData[0].OperationTime);
+            $("#Proc_Days").val(SummaryData[0].Days);
+            $("#Proc_Cap_Per_Machine").val(RoundNumber(SummaryData[0].Cap_Per_Machine));
+            $("#Proc_CycleTime").val(SummaryData[0].CycleTime);
+
+            displaySummaryTable(SummaryData, 0);
+         }
+    }
+    const GetCircuitData = async () => {
+        //var SetData = $("#dataSearching");
+        //$("#dataSearching").empty();
+        //$("#tableloads").show();
+        let res = await fetchData('@Url.Action("GetCircuitModelData", "Capacity")', { CapID: cap_groupID, Month: Month });
+         if (res && res.Success) {
+             TableData = res.Data;
+             //$("#count").text(TableData.length);
+             $("#tableloads").hide();
+             $('#empty-state').hide();
+             //displayTableData(TableData);
+             displayPagination(TableData, 'dataSearching', 'PaginationContainer', 20, 5);
+        }
+     }
+
+    // ########################################################################
+    function loadingSummary() {
+        Summaryload_table.empty();
+        var loadData = "<tr class='Loadercontainer'>  " +
+            "<td colspan = '8' > " +
+            "<div class='loader2' id='loadingSpinner'></div> " +
+            "</td>" +
+            "</tr > ";
+        Summaryload_table.append(loadData);
+    }
+     async function displaySummaryTable(data, filter) {
+         let totalmachoine = 0;
+         let totalfore = 0;
+         let totalcapday = 0;
+         let totalcap = 0;
+         let totalHour = 0;
+         let totalMan = 0;
+         //const renderhtml = await postPartialData('@Url.Action("CapacitySummaryHeader", "Capacity")', JSON.stringify({
+            // data: data,
+           //  filter: filter
+         //}));
+
+         switch (filter) {
+             case 1:
+                 $("#ChangeHeader").text("Model Base");
+                 $("#Displaymachine").hide();
+
+
+                 Summaryload_table.empty();
+                 $.each(data, function (index, rowData) {
+
+                     var getdata = "<tr class= 'row_" + index + "  '>" +
+                         "<td style='width: 10%; color: #1c65a8; font-weight: 500;'>" + rowData.Model_name + "</td>" +
+                         "<td>" + rowData.CycleTime + "</td>" +
+                         "<td>" + rowData.Capday + "</td>" +
+                         "<td>" + rowData.Capmonth + "</td>" +
+                         "<td>" + rowData.foredata + "</td>" +
+                         "<td>" + RoundNumber(rowData.manhour) + "</td>" +
+                         "<td>" + RoundNumber(rowData.Require) + "</td>" +
+                         "</tr>";
+                     Summaryload_table.append(getdata);
+                 });
+
+                 $("#Select_Partnum").val(data[0].Partnum);
+                 $("#Select_Capinfo_ID").val(data[0].Capinfo_ID)
+                 $("#Select_DieQty").val(data[0].DieQty);
+                 $("#Select_Actual_cav").val(data[0].Actual_Cav);
+                 $("#Select_CycleTime").val(data[0].CycleTime);
+                 $("#Select_Operation_time").val(data[0].Days);
+                 //$("#OpeID").val(data[0].Operation_time);
+
+                 //formData.append('Detail_Capinfo_ID', $("#Select_DieQty").val());
+
+
+                 break;
+             default:
+                 //DISPLAY FOR THE FIRST LOADING PAGE
+                 //CHANGE  AND REMOVE THE COLUMN HEADER NAME
+                 $("#ChangeHeader").text("Process");
+                 $("#Displaymachine").show();
+
+
+                 //DISPLAY SUMMARY DATA
+                 Summaryload_table.empty();
+                 $("#permachID").val(RoundNumber(data[0].Cap_Per_Machine));
+                 if (roleint == 3) {
+                     //if (renderhtml) {
+                     //    document.getElementById('SummarybodyID').innerHTML = renderhtml;
+                     //}
+                     $.each(data, function (index, rowData) {
+                         var getdata = "<tr class= 'row_" + index + "  '>" +
+                             "<td style='width: 10%;  font-weight: 500; color: #222;'>" + rowData.ProcessName + "</td>" +
+                             "<td contenteditable='true'>" + rowData.AvailMachine + "</td>" +
+                             "<td contenteditable='true'>" + RoundNumberOne(rowData.CycleTime) + "</td>" +
+                             "<td>" + getFormatComma(rowData.Capday) + "</td>" +
+                             "<td>" + getFormatComma(rowData.Capmonth) + "</td>" +
+                             "<td>" + getFormatComma(rowData.Forecast) + "</td>" +
+                             "<td>" + RoundNumber(rowData.Totalhours) + "</td>" +
+                             "<td>" + RoundNumber(rowData.RequiredMan) + "</td>" +
+                             "</tr>";
+                         Summaryload_table.append(getdata);
+                     });
+                 } else {
+                     //if (renderhtml) {
+                     //    document.getElementById('SummarybodyID').innerHTML = renderhtml;
+                     //}
+
+
+                     $.each(data, function (index, rowData) {
+                         var getdata = "<tr class= 'row_" + index + "  '>" +
+                             "<td style='width: 10%;  font-weight: 500; color: #222;'>" + rowData.ProcessName + "</td>" +
+                             "<td contenteditable='true'>" + rowData.AvailMachine + "</td>" +
+                             "<td contenteditable='true'>" + RoundNumberOne(rowData.CycleTime) + "</td>" +
+                             "<td>" + getFormatComma(rowData.Capday) + "</td>" +
+                             "<td>" + getFormatComma(rowData.Capmonth) + "</td>" +
+                             "<td>" + getFormatComma(rowData.Forecast) + "</td>" +
+                             "<td>" + RoundNumber(rowData.Totalhours) + "</td>" +
+                             "<td>" + RoundNumber(rowData.RequiredMan) + "</td>" +
+                             "</tr>";
+                         Summaryload_table.append(getdata);
+                     });
+                 }
+
+
+
+                 break;
+         }
+    }
+     function displayPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 20, visibleButtons = 5) {
+            let currentPage = 1;
+            let filteredData = [...dataArray]; // Make a copy for filtering
+
+            const updatePaginationInfo = () => {
+                const totalRecords = filteredData.length;
+                const totalPages = Math.ceil(totalRecords / recordsPerPage);
+
+                $("#totalpageID").text(totalPages);
+                $("#DatalengthID").text(totalRecords);
+
+                return totalPages;
+            };
+
+            const renderTable = (page) => {
+                const totalPages = updatePaginationInfo();
+                const startIndex = (page - 1) * recordsPerPage;
+                const endIndex = Math.min(startIndex + recordsPerPage, filteredData.length);
+                const tableBody = document.getElementById(tableBodyId);
+                tableBody.innerHTML = '';
+
+                for (let i = startIndex; i < endIndex; i++) {
+                    let buttons;
+                    const rowData = filteredData[i];
+                    if (roleint !== 2) {
+                        $("#headertable").show();
+                        buttons = "<button type='button' class='btn actionicon text-danger deleteButton' id='deleteButton_" + rowData.Capinfo_ID + "' >" +
+                            "<i class='fa-regular fa-trash-can'></i>" +
+                            "</button>";
+                    } else {
+                        $("#headertable").hide();
+                    }
+
+
+                    const rowHtml = ` <tr class='row_${i} rowClick' id='editButton_${rowData.Capinfo_ID}'>
+                                         <td data-cell="Model_name">${rowData.Model_name}</td>
+                                         <td data-cell="foredata">${rowData.foredata}</td>
+                                         <td data-cell="manhour">${RoundNumberOne(rowData.manhour)}</td>
+                                         <td data-cell="Require">${RoundNumberOne(rowData.Require)}</td>
+                                         <td data-cell="Action">${buttons}</td>
+                                     </tr>`;
+
+                    tableBody.innerHTML += rowHtml;
+                }
+
+                $("#pagecountID").text(currentPage);
+            };
+
+            const renderPagination = () => {
+                const totalPages = updatePaginationInfo();
+                const paginationContainer = document.getElementById(paginationId);
+                paginationContainer.innerHTML = '';
+
+                let startPage = Math.max(1, currentPage - Math.floor(visibleButtons / 2));
+                let endPage = Math.min(totalPages, startPage + visibleButtons - 1);
+
+                if (endPage > totalPages) {
+                    endPage = totalPages;
+                    startPage = Math.max(1, endPage - visibleButtons + 1);
+                }
+
+                if (totalPages <= visibleButtons) {
+                    startPage = 1;
+                    endPage = totalPages;
+                }
+
+                // Previous button
+                paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
+                                               <i class="fa-solid fa-backward"></i>
+                                           </button>`;
+
+                for (let i = startPage; i <= endPage; i++) {
+                    paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+                }
+
+                // Next button
+                paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
+                                              <i class="fa-solid fa-forward"></i>
+                                           </button>`;
+            };
+
+            const changePage = (page) => {
+                if (page >= 1 && page <= updatePaginationInfo()) {
+                    currentPage = page;
+                    renderTable(currentPage);
+                    renderPagination();
+                }
+            };
+
+            // 🔍 Search functionality
+            const searchTable = () => {
+                const query = $('#searchbox').val().toLowerCase();
+
+                filteredData = dataArray.filter(item =>
+                    item.Model_name.toLowerCase().includes(query)
+                );
+
+                currentPage = 1;
+                renderTable(currentPage);
+                renderPagination();
+            };
+
+            // Add event listener for search input
+            $('#searchbox').on('input', searchTable);
+
+            // Handle click event for edit button
+            $(document).on('click', '.rowClick', function (e) {
+                e.stopPropagation();
+                const buttonId = $(this).attr('id');
+                const rowIndex = buttonId.split('_')[1];
+                const result = TableData.find(p => p.Capinfo_ID == rowIndex);
+                console.log(result);
+
+                if (result) {
+                    $("#Detail_Capinfo_ID").val(result.Capinfo_ID);
+                    $("#Detail_Dieqty").val(result.DieQty);
+                    $("#Detail_Actual_cav").val(result.Actual_Cav);
+                    $("#Detail_CycleTime").val(result.CycleTime);
+                    $("#Detail_Partnum").val(result.Partnum);
+                    $("#Detail_Model_name").val(result.Model_name);
+                    $("#Detail_Manhour").val(RoundNumberOne(result.manhour));
+                    $("#Detail_Operation_time").val(result.Operation_time);
+                    $("#Detail_Require").val(RoundNumberOne(result.Require));
+                    $("#Detail_Capday").val(result.Capday);
+                    $("#Detail_Capmonth").val(result.Capmonth);
+
+                    $("#detailsModal").modal("show");
+                }
+            });
+
+             // UPDATES THE DETAILS DATA
+             detailsform.addEventListener('submit', async (e) => {
+                 e.preventDefault();
+
+                 let formData = new FormData(e.target);
+                 formData.append('ProcessCode', processcode);
+                 formData.append('Capgroup_ID', cap_groupID);
+                 const data = Object.fromEntries(formData);
+                 let res = await postData('@Url.Action("EditMoldingByDetails", "PostCapacity")', formData);
+                 EditResult(res, data);
+            });
+
+            // Initialize table and pagination
+            window.changePage = changePage;
+            renderTable(currentPage);
+            renderPagination();
+        }
+
+
+
+    // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+    const InitializeData = () => {
+        $("#EditCapacity").show();
+        // GET THE USERS DATA
+        //userDataRole();
+        // GET SUMMARY DATA FOR ALL
+        GetCapacitySummary();
+        // GET THE TABLE DATA
+        GetCircuitData();
+
+    }
+
+    // ##############  LOADS THE DATA WHEN THE PAGE IS LOADED ##############
+    InitializeData();
+</script>

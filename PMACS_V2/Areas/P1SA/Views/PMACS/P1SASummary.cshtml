@@ -1,0 +1,362 @@
+﻿
+@{
+    ViewBag.Title = "P1SASummary";
+    Layout = "~/Areas/P1SA/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<section class="wrapper2 pb-4">
+    <header class="header2 d-flex align-items-center justify-content-between">
+        <h3 class="header2__title">P1SA Capacity Summary</h3>
+        <div class="header2__action">
+            <div class="tablemain__header__column">
+                <div class="Inputcontainer">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" placeholder="Search here ... " id="searchbox" />
+                    <div class="line"></div>
+                </div>
+            </div>
+           
+        </div>
+    </header>
+
+
+    <section class="content">
+        <section class="tablemain">
+            <div class="tablemain__header d-flex align-items-center justify-content-between mt-3 mb-1">
+                <div class="tablemain__header__column">
+                    <div class="flex__align" style="justify-content: flex-end">
+                        <div class="tablemain__details">
+                            <strong style="font-weight: 500">Forecast data ( <small id="dDate"></small> ) : </strong>
+                            <span style="color: var(--first-color)"><small id="totalfore"></small></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tablemain__header__column">
+                    <span>last Update April 2025</span>
+                </div>
+            </div>
+
+
+            <table>
+                <thead>
+                    <tr>
+                        <th style="text-align: left;">Process name:  </th>
+                        <th>Machine</th>
+                        <th style="text-align: center">Operational</th>
+                        <th style="text-align: center">Utilization</th>
+                        <th>Capacity per Machine</th>
+                        <th>Capacity per Day</th>
+                        <th>24 days</th>
+                        <th>28 days</th>
+                        <th id="headertable">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="dataSearching">
+                </tbody>
+            </table>
+
+
+
+
+            <div id="empty-state">
+                <img src="~/Content/Images/No_data.png" />
+            </div>
+        </section>
+
+        <!--=============== Empty state Display ===================-->
+
+        </section>
+
+
+
+
+    </section>
+ <!--########################## EDIT DATA #############################-->
+        <div class="modal fade modal-m" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+
+                    <div class="modal-body">
+                        <div class="custom_modal_header d-flex align-items-center">
+                            <div class="custom_modal__icon d-flex align-items-start gap-2">
+                                <div class="custom_icon_container">
+                                    <i class="fa-regular fa-pen-to-square"></i>
+                                </div>
+                                <div class="custom_modal_title">
+                                    <span>Edit Summary Data</span>
+                                    <p>Fill all the required input</p>
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn btn-light  close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+
+                        <form id="EditPisa" autocomplete='off'>
+                            <label style='font-weight: 600; color: #222; margin-bottom: .5em;'>Total Machine : </label>
+                            <input type='hidden' name='ProcessCode' id='ProcessCode' />
+                            <input type='text' name='ActualMachine' id='ActualMachine' onkeypress='return restrictChars(event)' /><br />
+                            <label style='font-weight: 600; color: #222; margin-bottom: .5em;'>Total Operational :</label> <br />
+                            <input type='text' name='AvailMachine' id='AvailMachine' onkeypress='return restrictChars(event)' /><br />
+                            <div class='footer d-flex justify-content-end pt-4 pb-2 gap-2'>
+                                <button type='submit' class='btn btn-primary' id='saveEditsum'>
+                                    <i class='fa-regular fa-pen-to-square action_btn'></i> Save
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+
+
+<script src="~/Scripts/jquery-3.7.0.js"></script>
+<script src="~/Scripts/Utilities.js"></script>
+<script src="~/Scripts/Global.js"></script>
+<script type="text/javascript">
+    // Get the current year date
+
+    const setDate = new Date().toLocaleString('default', { month: 'long' });
+    const Month = new Date().toLocaleString('en-US', { month: 'long' });
+    const currentYear = new Date().getFullYear();
+    const editform = document.getElementById('EditPisa');
+    const export_btn = document.querySelector('#exportbtn');
+    const monthselect = document.getElementById("monthselect");
+
+    //const inputsearch = document.getElementById("searchbox");
+
+    let capid;
+    let loadData = [];
+    let checkrole = 1;
+
+     // Display the current month to comboBox
+    $("#monthselect").val(setDate);
+    $("#dDate").text(setDate);
+    // ##############  LOADS THE DATA WHEN THE PAGE IS LOADED ##############
+
+
+
+    // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+    const InitializeData = () => {
+        // GET THE TABLE DATA
+        getTable();
+        // DISPLAY THE TOTAL FORECASE
+        getTotalForecastData();
+    }
+
+    const getTable = async() =>{
+        $("#dataSearching").empty();
+        let res = await fetchData('@Url.Action("GetPisaSummaryList", "Capacity")', {});
+        if (res && res.Success) {
+            let load = res.Data;
+            loadData = load;
+            $.each(load, function (index, row) {
+                        let buttons = '';
+                        let percentage;
+
+                        if (checkrole !== 2) {
+                            $("#headertable").show();
+                            buttons = "<td id='datatable' style='text-align: center;'>" +
+                                "<button type='submit' Class='btn actionicon text-success editButton' id='editButton_" + row.ProcessCode + "' >" +
+                                "<i class='fa-regular fa-pen-to-square action_btn'></i>" +
+                                "</button>" +
+                                "</td>";
+                        } else {
+                            $("#headertable").hide();
+                            $("datatable").hide();
+                        }
+
+                        if (row.Machine_Utilization > 100) {
+                            percentage = 100;
+                        } else {
+                            percentage = row.Machine_Utilization
+
+                        }
+
+
+                        var setdata = "<tr class= 'row_" + index + "  '  >" +
+                            "<td class='textleft' style='text-align: left;'>" +
+                            "<strong style='font-weight: 600;'>" + row.ProcessName + "</strong>" +
+                            "</td>" +
+                            "<td style='text-align: center;'>" + row.ActualMachine + "</td> " +
+                            "<td style='text-align: center;'>" + row.AvailMachine + "</td> " +
+                            "<td style='text-align: center;'>" +
+                            "<div class='progress-bar'>" +
+                            "<span data-width='" + percentage + "'></span>" +
+                            "</div>" +
+                            "<small style='color: #222; font-weight: 600;'>" + percentage + "%</small>" +
+                            "</td>" +
+                            "<td style='text-align: center;'>" + row.Cap_Per_Machine + "</td>" +
+                            "<td> " + row.PerDay + "</td>" +
+                            "<td> " + row.Minimum + "</td>" +
+                            "<td>" + row.Maximum + "</td>" +
+                            buttons +
+                            "</tr>;"
+
+
+                        $("#dataSearching").append(setdata);
+                    });
+            const spans = document.querySelectorAll('.progress-bar span');
+            spans.forEach((span) => {
+
+                        if (span.dataset.width >= 60 && span.dataset.width <= 100) {
+                            span.style.background = '#3ccf6d';
+                        }
+                        else if (span.dataset.width > 30 && span.dataset.width < 59) {
+                            span.style.background = '#ee9d41';
+                        }
+                        else {
+                            span.style.background = '#ee4141';
+                        }
+                        span.style.width = span.dataset.width + "%";
+                        //span.innerHTML = span.dataset.width;
+                    });
+            $("#empty-state").hide();
+        }
+    }
+
+
+    $(document).on('click', '.editButton', function () {
+        var buttonId = $(this).attr('id');
+        var rowIndex = buttonId.split('_')[1]; // Extract the index from the button ID
+        let result = loadData.filter(item => item.ProcessCode === rowIndex);
+        capid = result[0].Capgroup_ID;
+        $("#ProcessCode").val(result[0].ProcessCode);
+        $("#AvailMachine").val(result[0].AvailMachine);
+        $("#ActualMachine").val(result[0].ActualMachine);
+        $("#exampleModal").modal("show");
+
+    });
+
+    //monthselect.addEventListener('change', () => {
+    //    $("#dataSearching").empty();
+    //    $("#dDate").text(this.value);
+    //});
+    //inputsearch.addEventListener('keyup', (e) => {
+
+    //var value = $(this).val().toLowerCase();
+    //var hasMatch = false;
+
+    //    $("#dataSearching tr").each(function () {
+    //        var modelBase = $(this).find("td:first").text().toLowerCase();
+    //            if (modelBase.indexOf(value) > -1) {
+    //                $(this).show();
+    //                hasMatch = true;
+    //            } else {
+    //                $(this).hide();
+    //            }
+    //        });
+
+    //    // Show or hide the empty state based on matches
+    //    if (hasMatch) {
+    //        $("#empty-state").hide();
+    //    } else {
+    //        $("#empty-state").show();
+    //    }
+
+    //    // Show all rows if the search input is empty
+    //    if (value === "") {
+    //        $("#dataSearching tr").show();
+    //        $("#empty-state").hide();
+    //    }
+    //});
+
+    editform.addEventListener('submit', async (e)=> {
+         e.preventDefault();
+
+         let formData = new FormData(e.target);
+         let res = await postData('@Url.Action("P1saSummaryUpdated", "PostCapacity")', formData);
+         if (res.StatusCode == 200) {
+             Swal.fire({
+                 title: "Success",
+                 text: res.Message,
+                 icon: "success",
+                 confirmButtonColor: "#0d97c9",
+                 timer: 1500
+             }).then(() => {
+                 getTable();
+                 $("#exampleModal").modal("hide");
+             });
+
+         }
+     });
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchBox = document.getElementById("searchbox");
+        const tableBody = document.getElementById("dataSearching");
+
+        searchBox.addEventListener("input", function () {
+            const searchTerm = this.value.toLowerCase();
+
+            // Loop through all table rows
+            const rows = tableBody.querySelectorAll("tr");
+            rows.forEach(row => {
+                const rowText = row.textContent.toLowerCase();
+
+                // Show or hide row based on search term
+                if (rowText.includes(searchTerm)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+
+            // Handle empty state visibility
+            const visibleRows = [...rows].filter(r => r.style.display !== "none");
+            document.getElementById("empty-state").style.display = visibleRows.length === 0 ? "block" : "none";
+        });
+    });
+
+
+    const GetCapacitySummary = async() => {
+         let totalmachoine = 0;
+         let totalcapday = 0;
+         let totalcap = 0;
+         let totalMan = 0;
+         let SummaryData = [];
+
+        let res = await fetchData('@Url.Action("GetCapacitySummaryList", "Capacity")', { month: Month, capid: capid });
+         if (res.StatusCode === 200) {
+            SummaryData = res.Data;
+
+             $.each(SummaryData, function (index, rowData) {
+                 totalmachoine += rowData.mach
+                 totalcapday += rowData.Capday
+                 totalcap += rowData.Capmonth
+                 totalMan += rowData.Manpower
+             });
+
+
+             let formData = new FormData();
+             formData.append('Capgroup_ID', capid);
+             formData.append('Total_machine', totalmachoine);
+             formData.append('Capday', totalcapday);
+             formData.append('Capmonth', totalcap);
+             formData.append('TotalMan', totalMan);
+
+             let res = await postData('@Url.Action("UpdateGroupCapacity", "PostCapacity")', formData);
+             if (res.StatusCode === 200) {
+                 console.log("Update Complete");
+             }
+        }
+    }
+    const getTotalForecastData = async () => {
+        let res = await fetchData('@Url.Action("GetForecastTotalData", "Capacity")', { Month: Month });
+        if (res.StatusCode === 200) {
+            $("#totalfore").text(getFormatComma(res.Data));
+        }
+   }
+
+
+    InitializeData()
+</script>

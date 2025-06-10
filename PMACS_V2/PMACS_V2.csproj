@@ -410,6 +410,7 @@
     <Compile Include="Utilities\JwtHelper.cs" />
     <Compile Include="Utilities\PasswordHasher.cs" />
     <Compile Include="Utilities\SqlDataAccess.cs" />
+    <Compile Include="Utilities\UserAccess.cs" />
     <Compile Include="Utilities\Utilities.cs" />
   </ItemGroup>
   <ItemGroup>

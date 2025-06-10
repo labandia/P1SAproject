@@ -94,7 +94,9 @@
                  const savebtn = document.querySelector("#loginbtn");
                  savebtn.innerHTML = " <div class='buttonloading'></div>";
 
-                 let formData = new FormData(logform);
+                 let formData = new FormData(e.target);
+                 //formData.append('ProjectID', 8)
+
                  let res = await postData('/User/Authenticate', formData);
                  setTimeout(() => {
                      if (res.StatusCode === 200) {
@@ -131,8 +133,8 @@
                      savebtn.innerHTML = " <div class='buttonloading'></div>";
 
                      let formData = new FormData(e.target);
-                     //let res = await postData('/User/RegisterUsers', formData);
-                    //console.log(res);
+                     let res = await postData('/User/RegisterUsers', formData);
+                    console.log(res);
                      //if (res.StatusCode === 200) {
                      //    Swal.fire({
                      //        title: "Success",

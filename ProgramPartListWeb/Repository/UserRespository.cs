@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using ProgramPartListWeb.Interfaces;
-using System.Diagnostics;
-using Microsoft.Ajax.Utilities;
+using ProgramPartListWeb.Utilities;
 
 namespace ProgramPartListWeb.Data
 {
@@ -14,11 +13,11 @@ namespace ProgramPartListWeb.Data
       
         public async Task<List<AuthModel>> LoginCredentials(string user)
         {
-            string strquery = "SELECT User_ID, Username, Password, Role_ID, First_Name, Last_Name " +
-                              "FROM UserAccounts WHERE Username =@Username AND Status = 'Active'";
-            var parameters = new { Username = user };
-
-            return await SqlDataAccess.GetData<AuthModel>(strquery, parameters);
+            string strquery = @"SELECT ua.User_ID, ua.Username, ua.Password, ua.Role_ID, u.Fullname
+                                FROM UserAccounts ua
+                                INNER JOIN Users u ON u.User_ID = ua.User_ID
+                                WHERE ua.Username  =@Username AND IsActive = 1";
+            return await UsersAccess.UserGetData<AuthModel>(strquery, new { Username = user });
         }
 
         public async Task<List<AuthModelV2>> LoginCredentialsV2(string user, int proj)
@@ -35,7 +34,7 @@ namespace ProgramPartListWeb.Data
 
             var parameters = new { Username = user, Project_ID = proj };
 
-            return await SqlDataAccess.GetData<AuthModelV2>(strquery, parameters);
+            return await UsersAccess.UserGetData<AuthModelV2>(strquery, parameters);
         }
 
         public async Task<string> UsersFullname(int id)
@@ -45,11 +44,11 @@ namespace ProgramPartListWeb.Data
 
             var parameters = new { userid = id };
 
-            var data = await SqlDataAccess.GetData<AuthModel>(strquery, parameters);
+            var data = await UsersAccess.UserGetData<AuthModel>(strquery, parameters);
 
             var RowData = data.FirstOrDefault();
 
-            return RowData.First_Name + " " + RowData.Last_Name;
+            return RowData.Fullname;
         }
 
 
@@ -57,7 +56,7 @@ namespace ProgramPartListWeb.Data
         {
             string strquery = "INSERT UserAccounts(Username, Password, Role_ID, First_Name, " +
                               "Last_Name) VALUES (@Username, @Password, @Role_ID, @First_Name, @Last_Name)";
-            bool result = await SqlDataAccess.UpdateInsertQuery(strquery, parameters);
+            bool result = await UsersAccess.UpdateUserData(strquery, parameters);
             return result;
         }
 
@@ -66,7 +65,7 @@ namespace ProgramPartListWeb.Data
             string strquery = "SELECT ua.User_ID, ua.First_Name, ua.Last_Name, " +
                               "ua.Username, ua.Password, ua.Status " +
                               "FROM UserAccounts ua ";
-            return await SqlDataAccess.GetData<UsersModel>(strquery);
+            return await UsersAccess.UserGetData<UsersModel>(strquery);
         }
 
        
@@ -74,7 +73,7 @@ namespace ProgramPartListWeb.Data
         {
             string strquery = "SELECT Role_ID FROM UserAccounts WHERE User_ID =@User_ID";
             var parameters = new { User_ID = userId };
-            int  roleid = await SqlDataAccess.GetCountData(strquery, parameters);
+            int  roleid = await UsersAccess.GetUserCountData(strquery, parameters);
             return GlobalUtilities.UserRolesname(roleid);
         }
     }

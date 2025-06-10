@@ -13,7 +13,7 @@ using ProgramPartListWeb.Utilities;
 
 namespace ProgramPartListWeb.Helper
 {
-    public static class SqlDataAccess
+    public sealed class SqlDataAccess
     {
         // Auto Connection Based on the Domain URL
         public static string _connectionString()
@@ -36,7 +36,7 @@ namespace ProgramPartListWeb.Helper
             }
 
 
-            //LogConnectionChoice(host, machineName, connectionKey);
+            LogConnectionChoice(host, machineName, connectionKey);
 
             return AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings[connectionKey].ConnectionString);
         }
@@ -252,5 +252,9 @@ namespace ProgramPartListWeb.Helper
             }
         }
 
+
+
+
+       
     }
 }

@@ -34,7 +34,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 // GET ONLY ONE ROW DATA
                 var userRow = data.FirstOrDefault();
                 string strRole = GlobalUtilities.UserRolesname(userRow.Role_ID);
-                string fullname = userRow.First_Name + " " + userRow.Last_Name;
+                string fullname = userRow.Fullname;
                 // CHECKS THE PASSWORD IF IS CORRECT
                 if (PasswordHasher.VerifyPassword(userRow.Password, password))
                 {
@@ -68,7 +68,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 results.Data = null;
             }
 
-            return Json(results, JsonRequestBehavior.AllowGet);
+            return Json("", JsonRequestBehavior.AllowGet);
 
 
         }

@@ -23,8 +23,8 @@ namespace ProgramPartListWeb.Models
         public string Username { get; set; }
         public string Password { get; set; }
         public int Role_ID { get; set; }
-        public string First_Name { get; set; }
-        public string Last_Name { get; set; }
+        public string Fullname { get; set; }
+        //public string Last_Name { get; set; }
     }
 
     public class AuthModelV2

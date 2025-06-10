@@ -659,6 +659,7 @@
     <Compile Include="Utilities\ProblemDetailsActionResult.cs" />
     <Compile Include="Utilities\RoleAuthorizeAttribute.cs" />
     <Compile Include="Utilities\SqlDataAccess.cs" />
+    <Compile Include="Utilities\UsersAccess.cs" />
     <Compile Include="Utilities\Utilities.cs" />
     <Compile Include="Models\MessageResponse.cs" />
     <Compile Include="Areas\Circuit\Models\PrepareviewModel.cs" />

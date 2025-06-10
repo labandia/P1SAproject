@@ -289,6 +289,23 @@ namespace ProgramPartListWeb.Helper
             };
         }
 
-
+        public static string UserRolesname(int roleint)
+        {
+            switch (roleint)
+            {
+                case 1:
+                    return "SuperAdmin";
+                case 2:
+                    return "Admin";
+                case 3:
+                    return "Manager";
+                case 4:
+                    return "Supervisor";
+                case 5:
+                    return "Leader";
+                default:
+                    return "Users";
+            }
+        }
     }
 }

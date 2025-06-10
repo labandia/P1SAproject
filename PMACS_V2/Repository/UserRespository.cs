@@ -4,6 +4,8 @@ using PMACS_V2.Helper;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using PMACS_V2.Utilities;
+using System.Diagnostics;
 
 namespace PMACS_V2.Repository
 {
@@ -14,14 +16,14 @@ namespace PMACS_V2.Repository
             throw new NotImplementedException();
         }
 
-        public async  Task<List<Users>> LoginCredentials(string user)
+        public async  Task<List<AuthModel>> LoginCredentials(string user)
         {
-            string strquery = "SELECT Account_ID,Fullname,Password,Roles_ID " +
-                              "FROM Useraccount_tbl " +
-                              "WHERE Fullname =@Fullname";
-            var parameters = new { Fullname = user };
-
-            return await SqlDataAccess.GetData<Users>(strquery, parameters);
+            Debug.WriteLine("HERE");
+            string strquery = @"SELECT ua.User_ID, ua.Username, ua.Password, ua.Role_ID, u.Fullname
+                                FROM UserAccounts ua
+                                INNER JOIN Users u ON u.User_ID = ua.User_ID
+                                WHERE ua.Username  =@Username AND IsActive = 1";
+            return await UsersAccess.UserGetData<AuthModel>(strquery, new { Username = user });
         }
 
         public Task<bool> RegiserUserData(object parameters)

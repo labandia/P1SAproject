@@ -36,5 +36,13 @@ namespace PMACS_V2.Models
         }
     }
 
-
+    public class AuthModel
+    {
+        public int User_ID { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public int Role_ID { get; set; }
+        public string Fullname { get; set; }
+        //public string Last_Name { get; set; }
+    }
 }

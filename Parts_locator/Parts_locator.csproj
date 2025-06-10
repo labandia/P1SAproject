@@ -206,8 +206,6 @@
     <Compile Include="Models\Transaction_Bush.cs" />
     <Compile Include="Models\Transaction_Rotor.cs" />
     <Compile Include="Models\UsersModel.cs" />
-    <Compile Include="Presentors\MainlayoutPresentor.cs" />
-    <Compile Include="Presentors\ProductPresentor.cs" />
     <Compile Include="Repository\MoldImpellerRepository.cs" />
     <Compile Include="Repository\RawMatsRepository.cs" />
     <Compile Include="Utilities\AesEncryption.cs" />

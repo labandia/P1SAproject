@@ -23,11 +23,11 @@ namespace Parts_locator
 
         public bool validateform()
         {
-            string user = username.Text;
-            string pass = password.Text;
+            string user = String.IsNullOrEmpty(username.Text) ? ""  : username.Text;
+            string pass = String.IsNullOrEmpty(username.Text) ? "" : password.Text;
 
             //CHECKS THE INPUT IF IS EMPTY
-            if (String.IsNullOrEmpty(user))
+            if (user == "")
             {
                 user_error.Visible = true;
                 return false;
@@ -36,7 +36,7 @@ namespace Parts_locator
             {
                 user_error.Visible = false;
             }
-            if (String.IsNullOrEmpty(pass))
+            if (pass == "")
             {
                 pass_error.Visible = true;
                 return false;

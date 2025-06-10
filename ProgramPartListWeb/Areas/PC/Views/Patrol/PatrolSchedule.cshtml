@@ -25,7 +25,7 @@
                 <option value="4">Winding</option>
                 <option value="5">Circuit</option>
             </select>
-            <input type="text" placeholder="Search name ... " class="form-control" />
+            <input id="searchbox" type="text" placeholder="Search name ... " class="form-control" />
 
             <div class="Sched_list" id="Sched_list_container"></div>
         </div>
@@ -126,14 +126,35 @@
     const editform = document.getElementById("editnewform");
     const removebtn = document.querySelector('.deletebtn');
 
-   const PopulateComboxInspector = async () => {
+    const PopulateComboxInspector = async (searchText = "") => {
         const SetData = $("#Sched_list_container");
         SetData.empty();
 
+        let filterValue = $("#DepartmentID").val();
+
        let res = await FetchAuthenticate('@Url.Action("GetInpectsByApproval", "Patrol")', {});
-       console.log(res);
+       //console.log(res);
         if (res && res.Success) {
-            $.each(res.Data, function (index, res) {
+            let filteredData = res.Data;
+
+
+            if (parseInt(filterValue) !== 0) {
+                filteredData = filteredData.filter(res => res.Department_ID === parseInt(filterValue));
+            }
+
+            if (searchText) {
+                const lowerSearch = searchText.toLowerCase();
+                filteredData = filteredData.filter(res =>
+                    res.FullName.toLowerCase().includes(lowerSearch)
+                );
+            }
+
+            if (filteredData.length === 0) {
+                SetData.html("<p>No projects found.</p>");
+                return;
+            }
+
+            $.each(filteredData, function (index, res) {
                 const getdata = `
                     <div class="SchedCard d-flex align-items-center gap-3"
                         id="SchedCard_${res.Employee_ID}"
@@ -146,6 +167,8 @@
                 SetData.append(getdata);
             });
 
+            
+
             // Attach click event once
             $(document).off('click', '.SchedCard').on('click', '.SchedCard', function (e) {
                 e.stopPropagation();
@@ -157,11 +180,12 @@
                 employVal = $(this).data('emp');
                 const fullName = $(this).data('name');
 
-                console.log("Selected Employee: ", fullName);
-                console.log("Department ID: ", DepartID);
+                //console.log("Selected Employee: ", fullName);
+                //console.log("Department ID: ", DepartID);
 
                 // Optionally, when page loads, show all first
                 fetchAndRenderEvents(employVal);
+                PopulateComboxProccess(DepartID, 0);
             });
         }
     };
@@ -188,9 +212,6 @@
             }
         }
     }
-
-
-
     const PopulateComboxProccess = async (ID, mode) => {
         let res = await FetchAuthenticate('@Url.Action("GetProcesslist", "Patrol")', { depid: ID });
 
@@ -226,7 +247,6 @@
         console.log(res);
 
     });
-
     editform.addEventListener('submit', async (e) => {
         e.preventDefault();
         let formData = new FormData(e.target);
@@ -237,7 +257,6 @@
         console.log(res);
 
     });
-
     removebtn.addEventListener('click', async (e) => {
         e.preventDefault();
         let formData = new FormData();
@@ -366,5 +385,24 @@
         calendar.render();
     });
 
-    PopulateComboxInspector();
+
+    $(document).ready(function () {
+        let searchText = $("#searchbox").val();
+
+        PopulateComboxInspector(searchText);
+
+        // Filter when selection changes
+        $("#DepartmentID").on("change", function () {
+            PopulateComboxInspector(searchText);
+        });
+
+
+        // Filter when user types in a Input
+        $('#searchbox').on('input', function (e) {
+            PopulateComboxInspector(e.target.value);
+        });
+    });
+
+
+   
 </script>

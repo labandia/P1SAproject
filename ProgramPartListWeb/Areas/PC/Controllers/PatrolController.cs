@@ -22,10 +22,12 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
     {
         private readonly IInspector _ins;
 
-        public PatrolController(IInspector ins)
-        {
-            _ins = ins;
-        }
+        public PatrolController(IInspector ins) => _ins = ins;
+
+        //-----------------------------------------------------------------------------------------
+        //---------------------------- USERS DATA  ------------------------------------------------
+        //-----------------------------------------------------------------------------------------
+
         // GET: GetEmployeeLIST
         public async Task<ActionResult> GetEmployeelist()
         {
@@ -111,7 +113,6 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             return JsonSuccess(removeDuplicateData);
         }
 
-        // GET: GetRegistrationNo
 
         // GET: GetInpectsByApproval
         public async Task<ActionResult> GetInpectsByApproval()
@@ -188,12 +189,9 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             {
                 int inspectID = Convert.ToInt32(Request.Form["ID"]);
                 int Approval = Convert.ToInt32(Request.Form["stats"]);
-                Debug.WriteLine("Inspect : " + inspectID);
-                Debug.WriteLine("Approval : " + Approval);
           
                 bool result = await _ins.ApproveAndDisapproveInpectors(inspectID, Approval);
 
-                Debug.WriteLine("Status : " + result);
                 if (!result) return JsonError("Insert failed.", 500);
                 return JsonCreated(inspectID, "Change Status successfully");
             }

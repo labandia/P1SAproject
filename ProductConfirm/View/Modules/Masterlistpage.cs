@@ -8,6 +8,7 @@ using ProductConfirm.View.Modals;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ProductConfirm.Modules
@@ -23,18 +24,22 @@ namespace ProductConfirm.Modules
         //public DataGridView equipmentgrid { get { return Equipmentable; } }
 
 
+        public List<ProductModel> Products { get; private set; } = new List<ProductModel>();
+
         public Masterlistpage(IProductRepositoryV2 prod)
         {
             InitializeComponent();
             _prod2 = prod;
         }
 
-      
-        public async void DisplayMastelist()
+        public async Task DisplayNaster()
         {
-           var products = await _prod2.GetAllProducts();
-           Masterlistable.DataSource = products.ToList();
+            Products = await _prod2.GetAllProducts();
+            Masterlistable.DataSource = Products.ToList();
         }
+
+
+      
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -94,40 +99,15 @@ namespace ProductConfirm.Modules
 
         private async void searchbox_TextChanged(object sender, EventArgs e)
         {
-            Dataconnect db = new Dataconnect();
-            
-            
+            string searchText = searchbox.Text.Trim().ToLower();
 
-
-            string strsql = "SELECT " +
-                                "r.RotorProductID, r.RotorAssy, r.ProductType, " +
-                                "r.MachinePressureMinMax, r.RecommendedPressureSetting, " +
-                                "CASE WHEN p.CaulkingDentMin IS NOT NULL AND p.CaulkingDentMax IS NOT NULL " +
-                               "THEN CONCAT(CAST(p.CaulkingDentMin AS VARCHAR(10)), ' - ', CAST(p.CaulkingDentMax AS VARCHAR(10))) " +
-                               "ELSE '-' END AS CaulkingDentMinMax, " +
-                               "p.CaulkingDentMax as CaulkingDentTarget, " +
-                               "CASE WHEN p.ShaftLengthMin IS NOT NULL AND p.ShaftLengthMax IS NOT NULL " +
-                               "THEN CONCAT(CAST(p.ShaftLengthMin AS VARCHAR(10)), ' - ', CAST(p.ShaftLengthMax AS VARCHAR(10))) " +
-                               "ELSE '-' END AS ShaftLengthMinMax, " +
-
-                               "CASE WHEN p.SEA_Min IS NOT NULL AND p.SEA_Max IS NOT NULL " +
-                               "THEN CONCAT(CAST(p.SEA_Min AS VARCHAR(10)), ' - ', CAST(p.SEA_Max AS VARCHAR(10)))  " +
-                               "ELSE '-' END AS SEA_MinMax, " +
-
-                               "CASE WHEN p.ShaftPullingForce IS NOT NULL THEN " +
-                               "CONCAT(CAST(p.ShaftPullingForce AS VARCHAR(10)), ' Kgf or more ') " +
-                               "ELSE '-' END AS ShaftPullingForce, " +
-
-                              "CASE WHEN p.BushPullingForce IS NOT NULL THEN " +
-                                   "CONCAT(CAST(p.BushPullingForce AS VARCHAR(10)), ' Kgf or more ') " +
-                              "ELSE '-'  END AS BushPullingForce " +
-                              "FROM ProdCon_RotorProduct r " +
-                              "INNER JOIN  ProdCon_RotorProductInfo p " +
-                                "ON r.RotorProductID = p.RotorProductID " +
-                              "WHERE  r.RotorAssy LIKE '%" + searchbox.Text + "%' " +
-                              "ORDER BY p.RotorProductID ASC";
-
-            Masterlistable.DataSource = await db.GetData(strsql);
+            if (string.IsNullOrEmpty(searchText))
+            {
+                await DisplayNasterV2();
+                return;
+            }
+            var filterData = Products.Where(res => res.RotorAssy.ToLower().Contains(searchText)).ToList();
+            Masterlistable.DataSource = filterData;
         }
     }
 }

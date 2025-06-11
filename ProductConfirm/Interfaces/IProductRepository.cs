@@ -37,7 +37,6 @@ namespace ProductConfirm.Data
         Task<List<SummaryProductModel>> GetSummaryDataConfirmation();
         Task<List<ExportModel>> GetDataAndExportoExcel();
 
-       
     }
 
 

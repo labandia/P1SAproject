@@ -10,10 +10,7 @@ namespace ProductConfirm.DataAccess
 {
     public class ProductRepositoryV2 : IProductRepositoryV2
     {
-        public ProductRepositoryV2()
-        {
-        }
-
+  
         public Task<List<MasterlistModel>> GetMasterlist()
         {
             string strsql = "SELECT RotorProductID, RotorAssy, ProductType, MachinePressureMinMax, " + 

@@ -125,7 +125,10 @@ namespace ProductConfirm
             summarymenu.ForeColor = Color.FromArgb(170, 176, 192);
             _master.BringToFront();
 
-            _master.mastergrid.DataSource = await _prod2.GetAllProducts();
+            await _master.DisplayNaster();
+            var prod = _master.Products; 
+
+            _master.mastergrid.DataSource = prod;
             _master.mastergrid.Columns["RotorProductID"].Visible = false;
             _master.mastergrid.Columns["ModelType"].Visible = false;
 
@@ -147,16 +150,18 @@ namespace ProductConfirm
                 
             _summary.BringToFront();
             _summary.checkedCount = 0;
+
+            await _summary.DisplaySummary();
+            var prod = _summary.sumlist;
             //summary.summarygrid.DataSource = null;
            
 
-            _summary.summarygrid.DataSource = await _prod2.GetSummaryDataConfirmation();
+            _summary.summarygrid.DataSource = prod;
             _summary.Countresult.Text = "" + _summary.summarygrid.RowCount;
         }
 
         private async void Mainpage_Load(object sender, EventArgs e)
         {
-            Shopordersdata s = new Shopordersdata();
             accountname.Text = Fullname;
             _uiShoporder.BringToFront();
             _uiShoporder.ModelnameText.Text = "Model name:  -- N/A --";

@@ -6,6 +6,10 @@ using ProductConfirm.Data;
 using System.Data;
 using System.Diagnostics;
 using static System.Windows.Forms.AxHost;
+using ProductConfirm.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace ProductConfirm.Modules
 {
@@ -17,6 +21,8 @@ namespace ProductConfirm.Modules
 
         public DataGridView summarygrid { get { return Summarytable; } }
         public Label Countresult { get { return Countrecord; } }
+
+        public List<SummaryProductModel> sumlist { get; private set; } = new List<SummaryProductModel>();
 
         public Summary(IProductRepositoryV2 prod)
         {
@@ -127,8 +133,7 @@ namespace ProductConfirm.Modules
         {
             string filePath = "\\\\SDP010F6C\\Users\\USER\\Pictures\\Sample\\Files\\Records Final Output.xlsx";
             //string filePath = Path.Combine(Application.StartupPath, "Assets", "RecordsFinalOutput.xlsx");
-            ExportToExcel(filePath);
-           
+            ExportToExcel(filePath);      
         }
 
         private void Summarytable_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -206,10 +211,26 @@ namespace ProductConfirm.Modules
             Summarytable.DataSource = await Products.GetSummaryDataConfirmation(Searchtext.Text.Trim());
         }
 
-        private async void button4_Click(object sender, EventArgs e)
+        
+
+        public async Task DisplaySummary()
         {
-            Searchtext.Text = "";
-            Summarytable.DataSource = await Products.GetSummaryDataConfirmation("");
+            sumlist = await _prod.GetSummaryDataConfirmation();
+            Summarytable.DataSource = sumlist;
+        }
+
+        private async void searchInput(object sender, EventArgs e)
+        {
+            string filtertext = Searchtext.Text.Trim();
+
+            if (String.IsNullOrEmpty(filtertext))
+            {
+                await DisplaySummary();
+                return;
+            }
+
+            var filterData = sumlist.Where(res => res.Shoporder.ToLower().Contains(filtertext)).ToList();
+            Summarytable.DataSource = filterData;   
         }
     }
 }

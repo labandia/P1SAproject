@@ -24,6 +24,40 @@ namespace PMACS_V2.Areas.P1SA.Models
     }
 
 
+    public class DieMoldSetNotal
+    {
+        public int No { get; set; }
+        public int PreviousCount { get; set; }
+        public int DieLife { get; set; }
+    }
+
+
+
+    public class DieMoldSummaryProcess
+    {
+        public int No { get; set; }
+        public string PartNo { get; set; }
+        public int DieNumber { get; set; }
+        public string DieSerial { get; set; }
+        public int DieLife { get; set; }
+        public int PreviousCount { get; set; }
+        public int ShotOnwards { get; set; }
+        public int totalshoutCount { get; set; }
+        //public int ShotAverage { get; set; }
+        public int Status { get; set; } 
+        public string Remarks { get; set; } 
+    }
+
+
+
+    public class FinalMoldDieSummary
+    {
+        public string Category { get; set; }
+        public int MoldDie { get; set; }
+    }
+
+
+
 
     // FOR DISPLAY DATA
     public class DieMoldMonth

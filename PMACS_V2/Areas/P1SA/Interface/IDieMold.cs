@@ -11,11 +11,11 @@ namespace PMACS_V2.Areas.P1SA.Interface
     {
         // ===============================================
         Task<List<DieMoldTotalPartnum>> GetMoldTotalPartNoList(int month, int year);
-
+        Task<List<DieMoldSetNotal>> GetSummaryMoldData();
 
 
         // ===============================================
-        Task<List<DieMoldSummary>> GetMoldDieSummary();
+        Task<List<DieMoldSummaryProcess>> GetMoldDieSummary();
         Task<List<DieMoldTotalPartnum>> GetMoldDieMonthInput(int month, int year);
         // ===============================================
 

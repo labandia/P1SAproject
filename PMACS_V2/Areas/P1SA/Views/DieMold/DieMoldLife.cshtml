@@ -176,10 +176,11 @@
 
     const GetMoldDieSummary = async() => {
         let res = await fetchData('@Url.Action("GetMoldDieSummaryList", "DieMold")', {});
-        if (res && res.Success) {
-            SummaryData = res.Data;
-            displaySummaryPagination(SummaryData, 'SummarylistData', 'SummaryPaginationContainer', 10, 5);
-        }
+        console.log(res);
+        //if (res && res.Success) {
+        //    SummaryData = res.Data;
+        //    displaySummaryPagination(SummaryData, 'SummarylistData', 'SummaryPaginationContainer', 10, 5);
+        //}
     }
 
 

@@ -6,12 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
 using System.Windows.Forms;
 using Timer = System.Windows.Forms.Timer;
 
@@ -84,341 +81,358 @@ namespace Attendance_Monitoring.View
         //  ####################  PERFORMS THE TIME IN AND OUT  #################### //
         private async void EnterTime(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode != Keys.Enter) return;
-
-            // Process Employee ID
-            string empid = EmployID.Text.Replace("-", "");
-            string shift = tim.TimeIncheck(DateTime.Now);
-
-            // Filter employee once
-            var employee = emplist.FirstOrDefault(p => p.EmployeeID.Equals(empid, StringComparison.OrdinalIgnoreCase) &&
-                                                  p.Department_ID == sec);
-
-            if (employee == null)
+            try
             {
-                MessageBox.Show("Wrong ID number");
-                EmployID.Focus();
-                return;
-            }
+                if (e.KeyCode != Keys.Enter) return;
 
-            // Time In Process
-            if (selecttime.SelectedIndex == 0)
-            {
-                // Check if employee has already timed in
-                bool alreadyTimedIn = itemattends.Any(i =>
-                    i.Employee_ID.Equals(empid, StringComparison.OrdinalIgnoreCase) &&
-                    i.Date_today.Date == DateTime.Today);
+                // Process Employee ID
+                string empid = EmployID.Text.Replace("-", "");
+                string shift = tim.TimeIncheck(DateTime.Now);
 
-                if (alreadyTimedIn)
+                // Filter employee once
+                var employee = emplist.FirstOrDefault(p => p.EmployeeID.Equals(empid, StringComparison.OrdinalIgnoreCase) &&
+                                                      p.Department_ID == sec);
+
+                if (employee == null)
                 {
-                    MessageBox.Show("ALREADY TIME IN", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Wrong ID number");
+                    EmployID.Focus();
                     return;
                 }
 
-                // Perform Time In
-                bool result = await _admin.AttendanceTimeINandOut(empid, shift, tim.CalculateLateTime(), tb);
-
-                if (result)
+                // Time In Process
+                if (selecttime.SelectedIndex == 0)
                 {
-                    TextName.Text = employee.Fullname;
-                    Statustext.BackColor = Color.FromArgb(50, 181, 111);
-                    Statustext.Text = "Successfully Time In";
+                    // Check if employee has already timed in
+                    bool alreadyTimedIn = itemattends.Any(i =>
+                        i.Employee_ID.Equals(empid, StringComparison.OrdinalIgnoreCase) &&
+                        i.Date_today.Date == DateTime.Today);
 
-                    // Reuse Timer instead of creating a new one every time
-                    if (timer == null)
+                    if (alreadyTimedIn)
                     {
-                        timer = new Timer();
-                        timer.Interval = 1000;
-                        timer.Tick += Timer_Tick;
+                        MessageBox.Show("ALREADY TIME IN", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
                     }
 
-                    timer.Start();
-                    TimeAttendanceDisplay(selecttime.SelectedIndex);
-                }
-            }
-            // Time Out Process
-            else if (selecttime.SelectedIndex == 1)
-            {
-                string shiftname = tim.timeoutcheck(DateTime.Now);
+                    // Perform Time In
+                    bool result = await _admin.AttendanceTimeINandOut(empid, shift, tim.CalculateLateTime(), tb);
 
-                if (shiftname == "DAYSHIFT")
+                    if (result)
+                    {
+                        TextName.Text = employee.Fullname;
+                        Statustext.BackColor = Color.FromArgb(50, 181, 111);
+                        Statustext.Text = "Successfully Time In";
+
+                        // Reuse Timer instead of creating a new one every time
+                        if (timer == null)
+                        {
+                            timer = new Timer();
+                            timer.Interval = 1000;
+                            timer.Tick += Timer_Tick;
+                        }
+
+                        timer.Start();
+                        TimeAttendanceDisplay(selecttime.SelectedIndex);
+                    }
+                }
+                // Time Out Process
+                else if (selecttime.SelectedIndex == 1)
                 {
-                    TimeoutDay(empid, employee.Fullname);
+                    string shiftname = tim.timeoutcheck(DateTime.Now);
+
+                    if (shiftname == "DAYSHIFT")
+                    {
+                        TimeoutDay(empid, employee.Fullname);
+                    }
+                    else
+                    {
+                        TimeoutNight(empid, employee.Fullname);
+                    }
                 }
                 else
                 {
-                    TimeoutNight(empid, employee.Fullname);
+                    MessageBox.Show("SELECT TIME IN / OUT");
                 }
             }
-            else
+            catch (FormatException)
             {
                 MessageBox.Show("SELECT TIME IN / OUT");
             }
-
         }
 
 
         public async void TimeoutDay(string empid, string fullname)
         {
-            double reg, oTHours, gTotal;
-            // Use CultureInfo("en-US") for consistent formatting
-            CultureInfo culture = new CultureInfo("en-US");
-
-            string dtDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff", culture);
-            // Check if the user is already timed in
-            string timeincheck = "SELECT TOP 1 TimeIn FROM " + tb + " WHERE Employee_ID = '" + empid + "' AND CAST(Date_today AS DATE) = '" + dtDate + "' ";
-            DataTable summary = new DataTable();
-
-            summary = await SqlDataAccess.GetDataByDataTable(timeincheck);
-
-            if (summary.Rows.Count > 0)
+            try
             {
-                DataRow time = summary.Rows[0];
-                //string fullname = summary["FullName"]?.ToString() ?? string.Empty;
+                double reg, oTHours, gTotal;
+                // Use CultureInfo("en-US") for consistent formatting
+                CultureInfo culture = new CultureInfo("en-US");
 
-                // Check if the user is already timed In
-                string timecheckout = "SELECT TOP 1 TimeIn  FROM " + tb + " WHERE Employee_ID = '" + empid + "' AND CAST(Date_today AS DATE) = '" + dtDate + "' AND TimeOut IS NOT NULL";
+                string dtDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff", culture);
+                // Check if the user is already timed in
+                string timeincheck = "SELECT TOP 1 TimeIn FROM " + tb + " WHERE Employee_ID = '" + empid + "' AND CAST(Date_today AS DATE) = '" + dtDate + "' ";
+                DataTable summary = new DataTable();
 
-                bool result = await SqlDataAccess.Checkdata(timecheckout);
+                summary = await SqlDataAccess.GetDataByDataTable(timeincheck);
 
-
-                if (result == true)
+                if (summary.Rows.Count > 0)
                 {
-                    MessageBox.Show("Already timed out in the attendance", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
+                    DataRow time = summary.Rows[0];
+                    //string fullname = summary["FullName"]?.ToString() ?? string.Empty;
+
+                    // Check if the user is already timed In
+                    string timecheckout = "SELECT TOP 1 TimeIn  FROM " + tb + " WHERE Employee_ID = '" + empid + "' AND CAST(Date_today AS DATE) = '" + dtDate + "' AND TimeOut IS NOT NULL";
+
+                    bool result = await SqlDataAccess.Checkdata(timecheckout);
+
+
+                    if (result == true)
+                    {
+                        MessageBox.Show("Already timed out in the attendance", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                    else
+                    {
+                        DateTime timeIn = (DateTime)time["TimeIn"];
+
+
+                        // Time in from the database
+                        //TimeSpan timeInSpan = TimeSpan.Parse(time["TimeIn"].ToString("HH:mm:ss"), culture);
+                        TimeSpan timeInSpan = timeIn.TimeOfDay;
+
+                        // Get the Current Time from the PC settings
+                        string currentTime = DateTime.Now.ToString(@"HH\:mm\:ss", culture);
+
+
+
+                        TimeSpan earlyStart = TimeSpan.Parse("03:30:00", culture);
+                        TimeSpan lateStart = TimeSpan.Parse("06:30:00", culture);
+                        TimeSpan cutoffEarly = TimeSpan.Parse("06:00:00", culture);
+                        TimeSpan cutoffLate = TimeSpan.Parse("10:00:00", culture);
+                        TimeSpan dayEnd = TimeSpan.Parse("14:30:00", culture);
+                        TimeSpan defaultDayLength = TimeSpan.FromHours(7.67);
+
+
+                        // Currenttime >= 3:30 am  AND  Currenttime <  06:30:00
+                        if (timeInSpan >= earlyStart && timeInSpan < lateStart)
+                        {
+                            /// Currenttime >= 3:30 am  AND  Currenttime <  06:00:00
+                            if (timeInSpan >= earlyStart && timeInSpan < cutoffEarly)
+                            {
+
+                                reg = tim.CalculateWorkingHours("05:30:00", "14:30:00");
+                            }
+                            else
+                            {
+
+                                reg = tim.CalculateWorkingHours(timeIn.ToString(@"HH\:mm\:ss"), "14:30:00");
+                            }
+                            oTHours = tim.CalculateOTHours("14:30:00", currentTime);
+                        }
+                        else if (timeInSpan >= lateStart && timeInSpan < cutoffLate)
+                        {
+                            if (timeInSpan >= lateStart && timeInSpan < TimeSpan.Parse("20:00:00"))
+                            {
+
+                                reg = tim.CalculateWorkingHours("07:30:00", "16:30:00");
+                            }
+                            else
+                            {
+
+                                reg = tim.CalculateWorkingHours(timeIn.ToString(@"HH\:mm\:ss"), "16:30:00");
+                            }
+                            oTHours = tim.CalculateOTHours("16:30:00", currentTime);
+                        }
+                        else
+                        {
+                            reg = defaultDayLength.TotalHours;
+                            oTHours = 0;
+                        }
+
+                        gTotal = reg + oTHours;
+
+
+
+                        string updateQuery = " UPDATE " + tb + " SET TimeOut = @TimeOut, Regular = @Regular, Overtime = @Overtime, Gtotal = @Gtotal" +
+                                             " WHERE CAST(Date_today AS DATE) = @Date_today AND Employee_ID = @Employee_ID";
+
+                        var parameters = new
+                        {
+                            Employee_ID = empid,
+                            Date_today = dtDate,
+                            Regular = reg,
+                            TimeOut = dtDate,
+                            Gtotal = gTotal,
+                            Overtime = oTHours
+                        };
+
+                        bool success = await SqlDataAccess.UpdateInsertQuery(updateQuery, parameters);
+
+                        if (success)
+                        {
+                            TimeAttendanceDisplay(selecttime.SelectedIndex);
+                            TextName.Text = fullname;
+                            // Code to execute after the delay
+                            Statustext.BackColor = Color.FromArgb(50, 181, 111);
+                            Statustext.Text = "Successfully Time Out";
+                            //Statustext.Text = string.Empty;
+                            timer = new Timer();
+                            timer.Interval = 1000; // 2000 milliseconds = 2 seconds
+                            timer.Tick += TimerOut_Tick;
+                            timer.Start();
+
+
+                        }
+                        else
+                        {
+                            MessageBox.Show("ERROR CHECK THE CODE");
+                        }
+
+                    }
+
                 }
                 else
                 {
-                    DateTime timeIn = (DateTime)time["TimeIn"];
-
-
-                    // Time in from the database
-                    //TimeSpan timeInSpan = TimeSpan.Parse(time["TimeIn"].ToString("HH:mm:ss"), culture);
-                    TimeSpan timeInSpan = timeIn.TimeOfDay;
-
-                    // Get the Current Time from the PC settings
-                    string currentTime = DateTime.Now.ToString(@"HH\:mm\:ss", culture);
-
-
-
-                    TimeSpan earlyStart = TimeSpan.Parse("03:30:00", culture);
-                    TimeSpan lateStart = TimeSpan.Parse("06:30:00", culture);
-                    TimeSpan cutoffEarly = TimeSpan.Parse("06:00:00", culture);
-                    TimeSpan cutoffLate = TimeSpan.Parse("10:00:00", culture);
-                    TimeSpan dayEnd = TimeSpan.Parse("14:30:00", culture);
-                    TimeSpan defaultDayLength = TimeSpan.FromHours(7.67);
-
-
-                    // Currenttime >= 3:30 am  AND  Currenttime <  06:30:00
-                    if (timeInSpan >= earlyStart && timeInSpan < lateStart)
-                    {
-                        /// Currenttime >= 3:30 am  AND  Currenttime <  06:00:00
-                        if (timeInSpan >= earlyStart && timeInSpan < cutoffEarly)
-                        {
-
-                            reg = tim.CalculateWorkingHours("05:30:00", "14:30:00");
-                        }
-                        else
-                        {
-
-                            reg = tim.CalculateWorkingHours(timeIn.ToString(@"HH\:mm\:ss"), "14:30:00");
-                        }
-                        oTHours = tim.CalculateOTHours("14:30:00", currentTime);
-                    }
-                    else if (timeInSpan >= lateStart && timeInSpan < cutoffLate)
-                    {
-                        if (timeInSpan >= lateStart && timeInSpan < TimeSpan.Parse("20:00:00"))
-                        {
-
-                            reg = tim.CalculateWorkingHours("07:30:00", "16:30:00");
-                        }
-                        else
-                        {
-
-                            reg = tim.CalculateWorkingHours(timeIn.ToString(@"HH\:mm\:ss"), "16:30:00");
-                        }
-                        oTHours = tim.CalculateOTHours("16:30:00", currentTime);
-                    }
-                    else
-                    {
-                        reg = defaultDayLength.TotalHours;
-                        oTHours = 0;
-                    }
-
-                    gTotal = reg + oTHours;
-
-
-
-                    string updateQuery = " UPDATE " + tb + " SET TimeOut = @TimeOut, Regular = @Regular, Overtime = @Overtime, Gtotal = @Gtotal" +
-                                         " WHERE CAST(Date_today AS DATE) = @Date_today AND Employee_ID = @Employee_ID";
-
-                    var parameters = new
-                    {
-                        Employee_ID = empid,
-                        Date_today = dtDate,
-                        Regular = reg,
-                        TimeOut = dtDate,
-                        Gtotal = gTotal,
-                        Overtime = oTHours
-                    };
-
-                    bool success = await SqlDataAccess.UpdateInsertQuery(updateQuery, parameters);
-
-                    if (success)
-                    {
-                        TimeAttendanceDisplay(selecttime.SelectedIndex);
-                        TextName.Text = fullname;
-                        // Code to execute after the delay
-                        Statustext.BackColor = Color.FromArgb(50, 181, 111);
-                        Statustext.Text = "Successfully Time Out";
-                        //Statustext.Text = string.Empty;
-                        timer = new Timer();
-                        timer.Interval = 1000; // 2000 milliseconds = 2 seconds
-                        timer.Tick += TimerOut_Tick;
-                        timer.Start();
-
-
-                    }
-                    else
-                    {
-                        MessageBox.Show("ERROR CHECK THE CODE");
-                    }
-
+                    MessageBox.Show("Please time-in first before you time-out");
                 }
-
             }
-            else
+            catch (FormatException)
             {
-                MessageBox.Show("Please time-in first before you time-out");
+                MessageBox.Show("Error Input");
             }
-
         }
         public async void TimeoutNight(string empid, string fullname)
         {
-            double reg, oTHours, gTotal;
-
-            // Use CultureInfo("en-US") for consistent formatting
-            CultureInfo culture = new CultureInfo("en-US");
-
-
-            DateTime currentDate = DateTime.Now;
-            DateTime previousDate = currentDate.AddDays(-1);
-
-            string dtDate = previousDate.ToString("yyyy-MM-dd HH:mm:ss.ff", culture);
-
-            // Check if the user is already timed in
-            string timeincheck = "SELECT TOP 1 TimeIn FROM " + tb + " WHERE Employee_ID = '" + empid + "' AND CAST(Date_today AS DATE) = '" + dtDate + "' ";
-            DataTable summary = new DataTable();
-
-            summary = await SqlDataAccess.GetDataByDataTable(timeincheck);
-
-            if (summary.Rows.Count > 0)
+            try
             {
-                DataRow time = summary.Rows[0];
-                //string fullname = summary["FullName"]?.ToString() ?? string.Empty;
+                double reg, oTHours, gTotal;
 
-                // Check if the user is already timed out
-                string timecheckout = "SELECT TOP 1 TimeIn FROM " + tb + " WHERE Employee_ID = '" + empid + "' AND CAST(Date_today AS DATE) = '" + dtDate + "' AND TimeOut IS NOT NULL";
-                bool result = await SqlDataAccess.Checkdata(timecheckout);
+                // Use CultureInfo("en-US") for consistent formatting
+                CultureInfo culture = new CultureInfo("en-US");
 
-                if (result == true)
+                DateTime currentDate = DateTime.Now;
+                DateTime previousDate = currentDate.AddDays(-1);
+
+                string dtDate = previousDate.ToString("yyyy-MM-dd HH:mm:ss.ff", culture);
+
+                // Check if the user is already timed in
+                string timeincheck = "SELECT TOP 1 TimeIn FROM " + tb + " WHERE Employee_ID = '" + empid + "' AND CAST(Date_today AS DATE) = '" + dtDate + "' ";
+                DataTable summary = new DataTable();
+
+                summary = await SqlDataAccess.GetDataByDataTable(timeincheck);
+
+                if (summary.Rows.Count > 0)
                 {
-                    MessageBox.Show("Already timed out in the attendance", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    DataRow time = summary.Rows[0];
+                    //string fullname = summary["FullName"]?.ToString() ?? string.Empty;
+
+                    // Check if the user is already timed out
+                    string timecheckout = "SELECT TOP 1 TimeIn FROM " + tb + " WHERE Employee_ID = '" + empid + "' AND CAST(Date_today AS DATE) = '" + dtDate + "' AND TimeOut IS NOT NULL";
+                    bool result = await SqlDataAccess.Checkdata(timecheckout);
+
+                    if (result == true)
+                    {
+                        MessageBox.Show("Already timed out in the attendance", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    else
+                    {
+                        DateTime timeIn = (DateTime)time["TimeIn"];
+
+                        //string timeInStr = time["TimeIn"]?.ToString() ?? string.Empty;
+
+                        string currentTime = DateTime.Now.ToString(@"HH\:mm\:ss", culture);
+
+                        TimeSpan timeInSpan = timeIn.TimeOfDay;
+
+                        TimeSpan earlyStart = TimeSpan.Parse("15:30:00", culture);
+                        TimeSpan lateStart = TimeSpan.Parse("18:30:00", culture);
+                        TimeSpan cutoffEarly = TimeSpan.Parse("18:00:00", culture);
+                        TimeSpan cutoffLate = TimeSpan.Parse("22:00:00", culture);
+                        TimeSpan dayEnd = TimeSpan.Parse("02:30:00", culture);
+                        TimeSpan defaultDayLength = TimeSpan.FromHours(7.67);
+
+
+                        // Current time >= 15:30  AND  Current time < 18:30
+                        if (timeInSpan >= earlyStart && timeInSpan < lateStart)
+                        {
+
+                            if (timeInSpan >= earlyStart && timeInSpan < cutoffEarly)
+                            {
+                                reg = tim.CalculateWorkingHours("17:30:00", "02:30:00");
+                            }
+                            else
+                            {
+                                reg = tim.CalculateWorkingHours(timeIn.ToString(@"HH\:mm\:ss"), "02:30:00");
+                            }
+                            oTHours = tim.CalculateOTHours("02:30:00", currentTime);
+                        }
+                        else if (timeInSpan >= lateStart && timeInSpan < cutoffLate)
+                        {
+                            if (timeInSpan >= lateStart && timeInSpan < TimeSpan.Parse("20:00:00"))
+                            {
+                                reg = tim.CalculateWorkingHours("19:30:00", "04:30:00");
+                            }
+                            else
+                            {
+                                reg = tim.CalculateWorkingHours(timeIn.ToString(@"HH\:mm\:ss"), "04:30:00");
+                            }
+                            oTHours = tim.CalculateOTHours("04:30:00", currentTime);
+                        }
+                        else
+                        {
+                            reg = defaultDayLength.TotalHours;
+                            oTHours = 0;
+                        }
+
+                        gTotal = reg + oTHours;
+
+                        string updateQuery = " UPDATE " + tb + " SET TimeOut = @TimeOut, Regular = @Regular, Overtime = @Overtime, Gtotal = @Gtotal" +
+                                             " WHERE CAST(Date_today AS DATE) = @Date_today AND Employee_ID = @Employee_ID";
+
+                        var parameters = new
+                        {
+                            Employee_ID = empid,
+                            Date_today = dtDate,
+                            Regular = reg,
+                            TimeOut = dtDate,
+                            Gtotal = gTotal,
+                            Overtime = oTHours
+                        };
+
+
+                        bool success = await SqlDataAccess.UpdateInsertQuery(updateQuery, parameters);
+
+                        if (success)
+                        {
+                            TimeAttendanceDisplay(selecttime.SelectedIndex);
+                            TextName.Text = fullname;
+                            // Code to execute after the delay
+                            Statustext.BackColor = Color.FromArgb(50, 181, 111);
+                            Statustext.Text = "Successfully Time Out";
+                            //Statustext.Text = string.Empty;
+                            timer = new Timer();
+                            timer.Interval = 1000; // 2000 milliseconds = 2 seconds
+                            timer.Tick += TimerOut_Tick;
+                            timer.Start();
+
+
+                        }
+                        else
+                        {
+                            MessageBox.Show("ERROR CHECK THE CODE");
+                        }
+                    }
                 }
                 else
                 {
-                    DateTime timeIn = (DateTime)time["TimeIn"];
-
-                    //string timeInStr = time["TimeIn"]?.ToString() ?? string.Empty;
-
-                    string currentTime = DateTime.Now.ToString(@"HH\:mm\:ss", culture);
-
-                    TimeSpan timeInSpan = timeIn.TimeOfDay;
-
-                    TimeSpan earlyStart = TimeSpan.Parse("15:30:00", culture);
-                    TimeSpan lateStart = TimeSpan.Parse("18:30:00", culture);
-                    TimeSpan cutoffEarly = TimeSpan.Parse("18:00:00", culture);
-                    TimeSpan cutoffLate = TimeSpan.Parse("22:00:00", culture);
-                    TimeSpan dayEnd = TimeSpan.Parse("02:30:00", culture);
-                    TimeSpan defaultDayLength = TimeSpan.FromHours(7.67);
-
-
-                    // Current time >= 15:30  AND  Current time < 18:30
-                    if (timeInSpan >= earlyStart && timeInSpan < lateStart)
-                    {
-
-                        if (timeInSpan >= earlyStart && timeInSpan < cutoffEarly)
-                        {
-                            reg = tim.CalculateWorkingHours("17:30:00", "02:30:00");
-                        }
-                        else
-                        {
-                            reg = tim.CalculateWorkingHours(timeIn.ToString(@"HH\:mm\:ss"), "02:30:00");
-                        }
-                        oTHours = tim.CalculateOTHours("02:30:00", currentTime);
-                    }
-                    else if (timeInSpan >= lateStart && timeInSpan < cutoffLate)
-                    {
-                        if (timeInSpan >= lateStart && timeInSpan < TimeSpan.Parse("20:00:00"))
-                        {
-                            reg = tim.CalculateWorkingHours("19:30:00", "04:30:00");
-                        }
-                        else
-                        {
-                            reg = tim.CalculateWorkingHours(timeIn.ToString(@"HH\:mm\:ss"), "04:30:00");
-                        }
-                        oTHours = tim.CalculateOTHours("04:30:00", currentTime);
-                    }
-                    else
-                    {
-                        reg = defaultDayLength.TotalHours;
-                        oTHours = 0;
-                    }
-
-                    gTotal = reg + oTHours;
-
-                    string updateQuery = " UPDATE " + tb + " SET TimeOut = @TimeOut, Regular = @Regular, Overtime = @Overtime, Gtotal = @Gtotal" +
-                                         " WHERE CAST(Date_today AS DATE) = @Date_today AND Employee_ID = @Employee_ID";
-                   
-                    var parameters = new
-                    {
-                        Employee_ID = empid,
-                        Date_today = dtDate,
-                        Regular = reg,
-                        TimeOut = dtDate,
-                        Gtotal = gTotal,
-                        Overtime = oTHours
-                    };
-
-
-                    bool success = await SqlDataAccess.UpdateInsertQuery(updateQuery, parameters);
-
-                    if (success)
-                    {
-                        TimeAttendanceDisplay(selecttime.SelectedIndex);
-                        TextName.Text = fullname;
-                        // Code to execute after the delay
-                        Statustext.BackColor = Color.FromArgb(50, 181, 111);
-                        Statustext.Text = "Successfully Time Out";
-                        //Statustext.Text = string.Empty;
-                        timer = new Timer();
-                        timer.Interval = 1000; // 2000 milliseconds = 2 seconds
-                        timer.Tick += TimerOut_Tick;
-                        timer.Start();
-
-
-                    }
-                    else
-                    {
-                        MessageBox.Show("ERROR CHECK THE CODE");
-                    }
+                    MessageBox.Show("Please time-in first before you time-out");
                 }
             }
-            else
+            catch (FormatException)
             {
                 MessageBox.Show("Please time-in first before you time-out");
             }
-
         }
 
 
@@ -469,22 +483,43 @@ namespace Attendance_Monitoring.View
 
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
-            string filterText = textBox2.Text.ToLower();
-            // Filter the list using LINQ
-            var filteredList = itemattends.Where(p => p.Employee_ID.ToLower().Contains(filterText) ||
-                            p.Fullname.ToLower().Contains(filterText))
-                            .ToList();
+            try
+            {
+                string filterText = textBox2.Text.ToLower();
 
-            attendancetable.DataSource =  filteredList;
-            DisplayTotal.Text = "Total Records: " + attendancetable.RowCount;
+                // If the input Text is String only returns to Default Data
+                if (String.IsNullOrEmpty(filterText))
+                {
+                    TimeAttendanceDisplay(selecttime.SelectedIndex);
+                    return;
+                }
+                // Search by Filter
+                var filteredList = itemattends.Where(p => p.Employee_ID.ToLower().Contains(filterText) ||
+                                p.Fullname.ToLower().Contains(filterText))
+                                .ToList();
+
+                attendancetable.DataSource =  filteredList;
+                DisplayTotal.Text = "Total Records: " + attendancetable.RowCount;
+            }
+            catch (FormatException)
+            {
+                MessageBox.Show("Error Searching");
+            }
         }
 
         private async void Attendance_Load(object sender, EventArgs e)
         {
-            selecttime.DropDownStyle = ComboBoxStyle.DropDownList;  
-            Timeclock.Text = DateTime.Now.ToLongTimeString();
-            var emp = await _admin.GetAllEmployees();
-            emplist = emp;
+            try
+            {
+                selecttime.DropDownStyle = ComboBoxStyle.DropDownList;
+                Timeclock.Text = DateTime.Now.ToLongTimeString();
+                var emp = await _admin.GetAllEmployees();
+                emplist = emp;
+            }
+            catch (FormatException)
+            {
+                MessageBox.Show("Load Data Error");
+            }
         }
 
         private void timer1_Tick(object sender, EventArgs e)

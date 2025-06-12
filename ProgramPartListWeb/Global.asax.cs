@@ -40,7 +40,7 @@ namespace ProgramPartListWeb
             RegisterDependencyInjection(); // Register DI
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             GlobalConfiguration.Configuration.Formatters.JsonFormatter.SupportedMediaTypes
-    .Add(new MediaTypeHeaderValue("application/problem+json"));
+                .Add(new MediaTypeHeaderValue("application/problem+json"));
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }

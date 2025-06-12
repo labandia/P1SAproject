@@ -1,19 +1,7 @@
-﻿using Attendance_Monitoring.Controller;
-using Attendance_Monitoring.Global;
+﻿
 using Attendance_Monitoring.Models;
 using Attendance_Monitoring.Repositories;
-using Microsoft.Office.Interop.Excel;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Data.SqlClient;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Runtime.Remoting.Contexts;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Attendance_Monitoring.View
@@ -32,31 +20,34 @@ namespace Attendance_Monitoring.View
 
         private async void button1_Click(object sender, EventArgs e)
         {
-            string empid = EmpID.Text.Replace("-", "");
-            string tempid = TempID.Text.Replace("-", "");
-            int depid = comboBox1.SelectedIndex;
+            try {
+                string empid = EmpID.Text.Replace("-", "");
+                string tempid = TempID.Text.Replace("-", "");
+                int depid = comboBox1.SelectedIndex;
 
-            Employee emp = new Employee
-            {
-                EmployeeID = empid,
-                Fullname = Fullname.Text,
-                Process = Process.Text,
-                Affiliation = Afili.Text,
-                Department_ID = depid
-            };
+                var emp = new Employee
+                {
+                    EmployeeID = empid,
+                    Fullname = string.IsNullOrEmpty(Fullname.Text) ? "" : Fullname.Text,
+                    Process = string.IsNullOrEmpty(Process.Text) ? "" : Process.Text,
+                    Affiliation = string.IsNullOrEmpty(Afili.Text) ? "" : Afili.Text,
+                    Department_ID = depid
+                };
 
-            bool success = await _admin.UpdateEmployee(emp, tempid);
-
-            if (success)
+                if (await _admin.UpdateEmployee(emp, tempid))
+                {
+                    MessageBox.Show("Update successfully");
+                    Clear();
+                    _emp.Displayemployee();
+                    _emp.comboBox1.SelectedIndex = comboBox1.SelectedIndex;
+                    Visible = false;
+                }
+            }
+            catch(FormatException)
             {
                 MessageBox.Show("Update successfully");
-                Clear();
-                _emp.Displayemployee();
-                _emp.comboBox1.SelectedIndex = comboBox1.SelectedIndex;
-                Visible = false;
             }
-            
-
+           
         }
 
         public void Clear()

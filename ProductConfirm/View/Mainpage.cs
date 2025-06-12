@@ -131,11 +131,7 @@ namespace ProductConfirm
             _master.mastergrid.DataSource = prod;
             _master.mastergrid.Columns["RotorProductID"].Visible = false;
             _master.mastergrid.Columns["ModelType"].Visible = false;
-
-            if (roleId == 1)
-            {
-                _master.mastergrid.Columns["Edit"].Visible = false;
-            }
+            _master.mastergrid.Columns["Edit"].Visible = roleId == 1 ? false : true;
         }
 
         private async  void summarymenu_Click(object sender, EventArgs e)

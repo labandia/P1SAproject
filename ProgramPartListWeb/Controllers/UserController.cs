@@ -61,14 +61,14 @@ namespace ProgramPartListWeb.Controllers
                 else
                 {
                     results.StatusCode = 401;
-                    results.Message = "Invalid credentials / password is incorrect";
+                    results.Message = "Invalid credentials / Password is incorrect";
                     results.Data = null;
                 }
             }
             else
             {
                 results.StatusCode = 401;
-                results.Message = "Invalid credentials / username doesnt exist";
+                results.Message = "Invalid credentials / Username doesnt exist";
                 results.Data = null;
             }
 
@@ -167,7 +167,12 @@ namespace ProgramPartListWeb.Controllers
             Response.Cookies.Add(authCookie);
         }
 
-
+        [HttpGet]
+        public async Task<ActionResult> GetUsersFullname(int userID)
+        {
+            string Fullname = await _user.UsersFullname(userID);
+            return Json(new { Fullname }, JsonRequestBehavior.AllowGet);
+        }
 
         //IDLE USER WITHIN 60 SECONDs
         [HttpGet]

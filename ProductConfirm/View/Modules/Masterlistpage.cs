@@ -32,7 +32,7 @@ namespace ProductConfirm.Modules
             _prod2 = prod;
         }
 
-        public async Task DisplayNaster()
+        public async Task DisplayMaster()
         {
             Products = await _prod2.GetAllProducts();
             Masterlistable.DataSource = Products.ToList();
@@ -55,7 +55,7 @@ namespace ProductConfirm.Modules
                 // Check if the clicked column is the first image column
                 if (mastergrid.Columns[e.ColumnIndex] is DataGridViewImageColumn && e.ColumnIndex == 0)
                 {
-                    EditProducts p = new EditProducts(this);
+                    EditProducts p = new EditProducts(this, _prod2);
                     p.TextID.Text =  Masterlistable.Rows[e.RowIndex].Cells["RotorProductID"].Value.ToString();
                     p.PartText.Text = Masterlistable.Rows[e.RowIndex].Cells["RotorAssy"].Value.ToString();
                     p.ModelText.Text = Masterlistable.Rows[e.RowIndex].Cells["ProductType"].Value.ToString();
@@ -103,7 +103,7 @@ namespace ProductConfirm.Modules
 
             if (string.IsNullOrEmpty(searchText))
             {
-                await DisplayNasterV2();
+                await DisplayMaster();
                 return;
             }
             var filterData = Products.Where(res => res.RotorAssy.ToLower().Contains(searchText)).ToList();

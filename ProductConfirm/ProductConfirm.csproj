@@ -222,12 +222,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataAccess\ProductRepositoryV2.cs" />
+    <Compile Include="Repository\ProductRepositoryV2.cs" />
     <Compile Include="Repository\UserRespository.cs" />
     <Compile Include="Helper\ErrorLogs.cs" />
     <Compile Include="Helper\Globalfunction.cs" />
     <Compile Include="Interfaces\IProductRepository.cs" />
-    <Compile Include="DataAccess\ProductRepository.cs" />
     <Compile Include="Interfaces\IUsers.cs" />
     <Compile Include="Models\ProductModel.cs" />
     <Compile Include="Models\Products.cs" />
@@ -471,7 +470,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="dashboard-_1__1.ico" />
-    <Content Include="ILLink\ILLink.Descriptors.LibraryBuild.xml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

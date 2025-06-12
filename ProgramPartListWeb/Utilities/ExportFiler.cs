@@ -15,7 +15,7 @@ using Spire.Xls;
 
 namespace ProgramPartListWeb.Utilities
 {
-    public static class ExportFiler
+    public sealed class ExportFiler
     {
         public static string ExportExcelTemplate(string templatePath, string exportFolder, string newFilename)
         {

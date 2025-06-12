@@ -18,18 +18,8 @@ namespace ProductConfirm.DataAccess
                             "FROM ProdCon_RotorProduct";
             return SqlDataAccess.GetData<MasterlistModel>(strsql);
         }
-
-        public Task<List<ProductModel>> GetAllProducts()
-        {
-            string strsql = "ProdMasterlist";
-            return SqlDataAccess.GetData<ProductModel>(strsql);
-        }
-
-        public Task<List<ExportModel>> GetDataAndExportoExcel()
-        {
-            string strsql = "ProdMasterlist";
-            return SqlDataAccess.GetData<ExportModel>(strsql);
-        }
+        public Task<List<ProductModel>> GetAllProducts() => SqlDataAccess.GetData<ProductModel>("ProdMasterlist");
+        public Task<List<ExportModel>> GetDataAndExportoExcel() => SqlDataAccess.GetData<ExportModel>("ProdMasterlist");
 
         public Task<List<ProductToolsModel>> GetProductsTools(string shoporder, int ID)
         {
@@ -38,35 +28,15 @@ namespace ProductConfirm.DataAccess
             return SqlDataAccess.GetData<ProductToolsModel>(strsql, parameters);
         }
 
-        public Task<List<ShopOrderModel>> GetShoporderlist()
-        {
-            string strsql = "ShopOrderlist";
-            return SqlDataAccess.GetData<ShopOrderModel>(strsql);
-        }
-
-        public Task<List<SummaryProductModel>> GetSummaryDataConfirmation()
-        {
-            string strsql = "SummaryComfirmation";
-            return SqlDataAccess.GetData<SummaryProductModel>(strsql);
-        }
-
+        public Task<List<ShopOrderModel>> GetShoporderlist() => SqlDataAccess.GetData<ShopOrderModel>("ShopOrderlist");   
+        public Task<List<SummaryProductModel>> GetSummaryDataConfirmation() => SqlDataAccess.GetData<SummaryProductModel>("SummaryComfirmation");
+    
         // CRUD OPERATION PROCESS
         public async Task<bool> AddProducts(AddProductDetailsModel prod)
         {
-            bool issuccess = false;
+            bool isSuccess = await SqlDataAccess.UpdateInsertQuery("InsertProduct", prod);
             // INSERT THE PRODUCT MAIN 
-            var mainparams = new
-            {
-                RotorAssy = prod.RotorAssy,
-                ProductType = prod.ProductType,
-                MachinePressureMinMax = prod.MachinePressureMinMax,
-                RecommendedPressureSetting = prod.RecommendedPressureSetting
-            };
-            
-
-            issuccess = await SqlDataAccess.UpdateInsertQuery("InsertProduct", mainparams);
-
-            if (issuccess)
+            if (isSuccess)
             {
                 // GET THE LAST ID NUMBER OF THE TABLE
                 var sortedProducts = await GetMasterlist();
@@ -89,40 +59,21 @@ namespace ProductConfirm.DataAccess
                     MagnetHeightMin = prod.MagnetHeightMin,
                     MagnetHeightMax = prod.MagnetHeightMax
                 };
-
-
                 // INSERT THE PRODUCT DETAILS 
                 //prod.RotorProductID = rotorid;    
-                await SqlDataAccess.UpdateInsertQuery("InsertProductinfo", infoparams);
-                
+                await SqlDataAccess.UpdateInsertQuery("InsertProductinfo", infoparams);           
             }
-
-            return issuccess;
+            return isSuccess;
         }
         public async Task<bool> EditProducts(AddProductDetailsModel prod)
         {
-            bool result = false;
+       
             //EDIT THE MAIN MASTERLIST
-            var mainparams = new
-            {
-                RotorProductID = prod.RotorProductID,
-                RotorAssy = prod.RotorAssy,
-                ProductType = prod.ProductType,
-                MachinePressureMinMax = prod.MachinePressureMinMax,
-                RecommendedPressureSetting = prod.RecommendedPressureSetting
-            };
-
-
             string mainQuery = "UPDATE ProdCon_RotorProduct SET  RotorAssy =@RotorAssy,  " +
                      "ProductType =@ProductType, MachinePressureMinMax =@MachinePressureMinMax," +
                      "RecommendedPressureSetting =@RecommendedPressureSetting " +
                      "WHERE RotorProductID =@RotorProductID";
-
-
-
-            result = await SqlDataAccess.UpdateInsertQuery(mainQuery, mainparams);
-
-
+            bool result = await SqlDataAccess.UpdateInsertQuery(mainQuery, prod);
             if (result)
             {
                 var infoparams = new
@@ -151,7 +102,6 @@ namespace ProductConfirm.DataAccess
 
                 await SqlDataAccess.UpdateInsertQuery(updateQuery, prod);
             }
-
             return result;  
         }
 

@@ -18,27 +18,35 @@ namespace ProgramPartListWeb.Helper
         // Auto Connection Based on the Domain URL
         public static string _connectionString()
         {
-            string host = HttpContext.Current.Request.Url.Host.ToLower();
-            string machineName = Environment.MachineName.ToLower();
-            string connectionKey = "";
-
-            if (host.Contains("p1saportalweb.sdp.com"))
+            try
             {
-                connectionKey = "LiveDevelopment";
-            }
+                string host = HttpContext.Current.Request.Url.Host.ToLower();
+                string machineName = Environment.MachineName.ToLower();
+                string connectionKey = "";
 
-            if (host.Contains("localhost"))
+                if (host.Contains("p1saportalweb.sdp.com"))
+                {
+                    connectionKey = "LiveDevelopment";
+                }
+
+                if (host.Contains("localhost"))
+                {
+                    if (machineName == "desktop-fc0up1p") // Home PC name
+                        connectionKey = "HomeDevelopment";
+                    else
+                        connectionKey = "TestDevelopment";
+                }
+
+
+                LogConnectionChoice(host, machineName, connectionKey);
+
+                return AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings[connectionKey].ConnectionString);
+            }
+            catch (Exception ex)
             {
-                if (machineName == "desktop-fc0up1p") // Home PC name
-                    connectionKey = "HomeDevelopment";
-                else
-                    connectionKey = "TestDevelopment";
+                Debug.WriteLine(ex.Message);
+                return "";
             }
-
-
-            LogConnectionChoice(host, machineName, connectionKey);
-
-            return AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings[connectionKey].ConnectionString);
         }
 
 
@@ -50,12 +58,8 @@ namespace ProgramPartListWeb.Helper
             Debug.WriteLine(logEntry);
         }
 
-        public static SqlConnection GetSqlConnection(string connectionString)
-        {
-            return new SqlConnection(connectionString);
-        }
-
-
+        public static SqlConnection GetSqlConnection(string connectionString) => new SqlConnection(connectionString);
+      
         // ############ DYNAMIC FUNCTION LIST<T> GETDATA ########################
         public static async Task<List<T>> GetData<T>(string query, object parameters = null, string cacheKey = null, int cacheMinutes = 10)
         {
@@ -97,8 +101,9 @@ namespace ProgramPartListWeb.Helper
             }
             catch (SqlException ex)
             {
-                CustomLogger.LogError(ex);
-                return null;
+                //CustomLogger.LogError(ex);
+                Debug.WriteLine(ex.Message);
+                return new List<T>();
             }
         }
 
@@ -114,7 +119,8 @@ namespace ProgramPartListWeb.Helper
             }
             catch (Exception ex)
             {
-                CustomLogger.LogError(ex);
+                //CustomLogger.LogError(ex);
+                Debug.WriteLine(ex.Message);
                 return "";
             }
         }
@@ -131,7 +137,8 @@ namespace ProgramPartListWeb.Helper
             }
             catch (Exception ex)
             {
-                CustomLogger.LogError(ex);
+                //CustomLogger.LogError(ex);
+                Debug.WriteLine(ex.Message);
                 return 0;
             }  
         }
@@ -189,7 +196,7 @@ namespace ProgramPartListWeb.Helper
             }
             catch (Exception ex)
             {
-                CustomLogger.LogError(ex);
+                //CustomLogger.LogError(ex);
                 Debug.WriteLine($"Exception in UpdateInsertQuery: {ex.Message}");
                 return false;
             }
@@ -247,7 +254,8 @@ namespace ProgramPartListWeb.Helper
             }
             catch (Exception ex)
             {
-                CustomLogger.LogError(ex);
+                //CustomLogger.LogError(ex);
+                Debug.WriteLine(ex.Message);
                 return 0;
             }
         }

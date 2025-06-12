@@ -10,6 +10,7 @@ namespace Parts_locator.Data
     {
         public static int Pallet_number(string pname)
         {
+            // IMprove by list of array of string
             int result = 0;
 
             switch (pname)

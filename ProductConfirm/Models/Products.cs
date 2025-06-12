@@ -137,13 +137,11 @@ namespace ProductConfirm.Data
         public static async Task<DataTable> GetShoporderDetails(string shoporder, int ID)
         {
             Dataconnect db = new Dataconnect();
-            string strsql;
-            strsql = "SELECT i.Tool_name as Measurements, so.Status, so.ShopOrderID as ShopProdID " +
+            string strsql = "SELECT i.Tool_name as Measurements, so.Status, so.ShopOrderID as ShopProdID " +
                   "FROM ProdCon_item_tbl i " +
                   "LEFT JOIN ProdCon_ShopOrderData_tbl so ON i.Item_ID  = so.Item_ID " +
                   "AND  so.ShopOrderID = " + ID + "";
-            DataTable dt = await db.GetData(strsql);
-            return dt;
+            return await db.GetData(strsql);
         }
         public static async Task<DataTable> GetShoporderlist()
         {
@@ -162,19 +160,9 @@ namespace ProductConfirm.Data
         public static async Task<DataTable> GetSummaryDataConfirmation(string search)
         {
             Dataconnect db = new Dataconnect();
-            string strfilter;
+            string strfilter = String.IsNullOrWhiteSpace(search) ? "" : "WHERE s.Shoporder LIKE '%" + search + "%' ";
 
-            if (search == "")
-            {
-                strfilter = "";
-            }
-            else
-            {
-                strfilter = "WHERE s.Shoporder LIKE '%" + search + "%' ";
-            }
-
-            string strsql;
-            strsql = "SELECT  FORMAT(s.Date_input, 'MM/dd/yyyy') as Date_input, s.Shift, s.Line, s.Shoporder, p.MachinePressureMinMax as Max, " +
+            string strsql = "SELECT  FORMAT(s.Date_input, 'MM/dd/yyyy') as Date_input, s.Shift, s.Line, s.Shoporder, p.MachinePressureMinMax as Max, " +
                      "sp.SL_supply, sp.SL_lot, a.SL_first, a.SL_second, a.SL_third, a.SL_fourth, a.SL_fifth, " +
                      "sp.SE_supply, sp.SE_lot, a.SE_first, a.SE_second, a.SE_third, a.SE_fourth, a.SE_fifth, " +
                      "sp.CD_supply, sp.CD_lot, a.CD_first, a.CD_second, a.CD_third, a.CD_fourth, a.CD_fifth, a.CD_fifth as six, a.CD_fifth as seven, a.CD_fifth as eight, " +

@@ -21,20 +21,17 @@ namespace ProductConfirm.View.Modals
     public partial class EditProducts : Form
     {
         private readonly Masterlistpage _mas;
-        private readonly ProductRepository _prod;
+        private readonly IProductRepositoryV2 _prod2;
 
-        public EditProducts(Masterlistpage _m)
+        public EditProducts(Masterlistpage _m, IProductRepositoryV2 prod2)
         {
             InitializeComponent();
-            _prod = new ProductRepository();
             _mas = _m;
+            _prod2=prod2;
         }
 
         private async void Save_btn_Click(object sender, EventArgs e)
         {
-            ProductRepositoryV2 _prod = new ProductRepositoryV2();
-            Dataconnect db = new Dataconnect();
-
             int ID = Convert.ToInt32(TextID.Text.Trim());
             string minValue = string.IsNullOrWhiteSpace(MinText.Text) ? "0" : MinText.Text;
             string maxValue = string.IsNullOrWhiteSpace(MaxText.Text) ? "0" : MaxText.Text;
@@ -60,12 +57,12 @@ namespace ProductConfirm.View.Modals
             };
 
 
-            bool result = await _prod.EditProducts(insertobj); 
+            bool result = await _prod2.EditProducts(insertobj); 
 
             if (result)
             {
                 MessageBox.Show("Data Modify Successfully");
-                _mas.DisplayMastelist();
+                await _mas.DisplayMaster();
                 Visible = false;
             }
         }
@@ -121,7 +118,7 @@ namespace ProductConfirm.View.Modals
         private async void EditProducts_Load(object sender, EventArgs e)
         {
             int ID = Int32.Parse(TextID.Text);
-            System.Data.DataTable data = await _prod.GetOneProduct(ID);
+            System.Data.DataTable data = await _prod2.GetOneProduct(ID);
 
             if (data.Rows.Count > 0)
             {

@@ -12,12 +12,11 @@ using ProgramPartListWeb.Utilities;
 namespace ProgramPartListWeb.Controllers
 {
     [GlobalErrorException]
+    [CompressResponse]
     public class P1SAportalwebController : ExtendController
     {
    
         //############################  GET DATA  ###############################################//
-        [HttpGet]
-        [CompressResponse]
         public async Task<ActionResult> GetProjectList()
         {
             try
@@ -37,16 +36,14 @@ namespace ProgramPartListWeb.Controllers
             }
         }
 
-        [HttpPost]
         public ActionResult SampleEmail()
         {
-            EmailServices.SendEmailOutlook("jaye.labandia@sanyodenki.com", "Test", "Sample Body"); 
+            EmailService.SendEmailOutlook("jaye.labandia@sanyodenki.com", "Test", "Sample Body"); 
 
             return Json("GOOD", JsonRequestBehavior.AllowGet);
         }
 
         // IMAGE DISPLAY
-        [CompressResponse]
         public ActionResult Get(string fileName)
         {
             var filePath = Path.Combine(@"\\SDP010F6C\Users\USER\Pictures\Access\SystemApps", fileName ?? "No_Data.png");
@@ -61,11 +58,8 @@ namespace ProgramPartListWeb.Controllers
 
 
         // GET: P1SAportalweb
-        [CompressResponse]
         public ActionResult Index() =>   View();
-
-        // GET: P1SAportalweb
-        [CompressResponse]
+        // GET: GuideInstall
         public ActionResult GuideInstall() => View();
     }
 }

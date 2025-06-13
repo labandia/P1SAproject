@@ -174,22 +174,16 @@ namespace PMACS_V2.Areas.P1SA.Repository
                                  .FirstOrDefault();
                 int totalshot = item.PreviousCount + onwardcount;
 
-
                 item.ShotOnwards = onwardcount;
                 item.totalshoutCount = totalshot;
-
-
                 // Calculates the percentage of a Status
                 double total = (double)totalshot / item.DieLife;
                 int percentage = (int)(total * 100);
                 item.Status = percentage;
 
                 // Set the Remarks Status 
-                string remark = percentage >= 100 ? "End of Life" : "For Monitoring";
-                item.Remarks = remark;  
+                item.Remarks = percentage >= 100 ? "End of Life" : "For Monitoring";  
             }
-
-
 
             return DieSumlist;
         }

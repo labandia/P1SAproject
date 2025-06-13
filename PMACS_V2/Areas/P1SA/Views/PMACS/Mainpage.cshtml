@@ -42,14 +42,14 @@
                             <span class="text-danger" id="erroruser"></span>
                         </div>
                         <div class="search-box">
-                            <input type="text" name="username" id="username">
+                            <input type="text" name="username" id="username" autocomplete="off" placeholder="Enter fullname">
                             <div class="namesdisplay"></div>
                         </div>
                         <div class="logindesign__label">
                             <label style="font-weight: 600;">Password : </label>
                             <span class="text-danger" id="errorpass"></span>
                         </div>
-                        <input type="password" name="password" id="password">
+                        <input type="password" name="password" id="password" autocomplete="new-password" placeholder="Enter your password">
 
 
                         <div id="error-msg" style="color: red;"></div>
@@ -298,6 +298,8 @@
                              timer: 1500,
                              showConfirmButton: false
                          });
+
+                         savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-solid fa-right-to-bracket'></i>  Login</span>"
                      }
                  }, 500);
              }

@@ -1,55 +1,62 @@
-﻿@font-face {
-    font-family: 'poppins-regular';
-    src: url('/Content/fonts/Poppins-Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
+﻿    @font-face {
+        font-family: 'poppins-regular';
+        src: url('/Content/fonts/Poppins-Regular.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+    }
 
-@font-face {
-    font-family: 'poppins-light';
-    src: url('fonts/Poppins-Light.ttf') format('truetype');
-}
+    @font-face {
+        font-family: 'poppins-light';
+        src: url('fonts/Poppins-Light.ttf') format('truetype');
+    }
 
-@font-face {
-    font-family: 'poppins-medium';
-    src: url('fonts/Poppins-Medium.ttf') format('truetype');
-}
+    @font-face {
+        font-family: 'poppins-medium';
+        src: url('fonts/Poppins-Medium.ttf') format('truetype');
+    }
 
-@font-face {
-    font-family: 'poppins-bold';
-    src: url('fonts/Poppins-Bold.ttf') format('truetype');
-}
+    @font-face {
+        font-family: 'poppins-bold';
+        src: url('fonts/Poppins-Bold.ttf') format('truetype');
+    }
 
-/*========== GOOGLE FONTS ==========*/
-/*@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
-========== VARIABLES CSS ==========*/
-:root {
-    --header-height: 3.5rem;
-    --nav-width: 250px;
-    /*========== Colors ==========*/
-    --primary-color: #6923D0;
-    --primary-alt-color: #F4F0FA;
-    --first-color-light: #F4F0FA;
-    --title-color: #010202;
-    --text-color: #58555E;
-    --text-color-light: #A5A1AA;
-    --body-color: #F9F6FD;
-    --container-color: #FFFFFF;
-    /*========== Font and typography ==========*/
-    --body-font: 'poppins-regular', sans-serif;
-}
+    /*========== GOOGLE FONTS ==========*/
+    /*@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+    ========== VARIABLES CSS ==========*/
+    :root {
+        --header-height: 3.5rem;
+        --nav-width: 250px;
+        /*========== Colors ==========*/
+        --primary-color: hsl(264, 71%, 48%);
+        --primary-hover: hsl(264, 79%, 34%);
+        --primary-alt-color: #F4F0FA;
+        --first-color-light: #F4F0FA;
+        --title-color: #010202;
+        --text-color: #58555E;
+        --text-color-light: #A5A1AA;
+        --body-color: #F9F6FD;
+        --container-color: #FFFFFF;
+        /*========== Font and typography ==========*/
+        --body-font: 'poppins-regular', sans-serif;
+    }
+
+    body{
+        background: #f5f5f5 !important;
+    }
 
     body, h1, h2, h3, h4, div, p, strong, small, button, select {
         font-family: var(--body-font);
     }
 
-/*body {
-    display: flex;
-    align-items: center;
-    height: 100vh;
-    justify-content: center;
-    background: black;
-}*/
+    .primarybtn{
+        background: var(--primary-color) !important;
+    }
+    .primarybtn:hover{
+        background:  var(--primary-hover) !important;
+    }
+
+   
+
 
     main {
         margin-top: 4rem;
@@ -90,7 +97,73 @@
         background: #e5e5e6;
     }
 
-/*========== HEADER ==========*/
+    /*========== LOGIN DESIGN ====== */
+    .PatrolDesign {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+        background-image: radial-gradient(circle at 28% 93%, rgba(2, 2, 2,0.04) 0%, rgba(2, 2, 2,0.04) 50%,rgba(223, 223, 223,0.04) 50%, rgba(223, 223, 223,0.04) 100%),radial-gradient(circle at 13% 75%, rgba(185, 185, 185,0.04) 0%, rgba(185, 185, 185,0.04) 50%,rgba(25, 25, 25,0.04) 50%, rgba(25, 25, 25,0.04) 100%),radial-gradient(circle at 79% 39%, rgba(34, 34, 34,0.04) 0%, rgba(34, 34, 34,0.04) 50%,rgba(57, 57, 57,0.04) 50%, rgba(57, 57, 57,0.04) 100%),linear-gradient(56deg, rgb(39, 37, 178),rgb(169, 88, 194));
+    }
+    .PatrolDesign_wrapper{
+        width: 500px;
+        padding: 5em 4em 4em;
+        border-radius: 1em;
+        background: #fff;
+        text-align: center;
+    }
+
+    .PatrolDesign_wrapper h3{
+        font-size: 1.5rem;
+        margin-bottom: 1.5em;
+    }
+
+    .PatrolDesign_wrapper .buttoncenter{
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .PatrolDesign_wrapper button{
+        width: 250px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        justify-content: center;
+        padding: .8em 0;
+        margin: 1.5em 0 1em;
+        border-radius: 25px;
+        color: #fff;
+    }
+
+    .selectreg{
+        font-size: .9rem;
+    }
+
+    .PatrolDesign_input{
+        width: 100%;
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.2em;
+        gap: 10px;
+    }
+
+    .PatrolDesign_input input{
+         width: 100%;
+         padding: .7em 1em;
+         background: #f5f5f5;
+         border-radius: .5em;
+    }
+
+
+    /*========== HEADER ==========*/
     .header {
         position: fixed;
         top: 0;
@@ -336,11 +409,11 @@
     .Inputcontainer {
         position: relative;
         margin-left: 1em;
-        border-radius: .2em;
+        border-radius: .5em;
         font-size: var(--normal-font-size);
         /*    background: #e0e0e0;*/
         padding: 8px 1.5em 8px 1em;
-        border: 1px solid #707490;
+        border: 1px solid #8c8fa8;
     }
 
 
@@ -381,7 +454,7 @@
         gap: 10px;
         background: var(--primary-color);
         padding: .5em 1.5em;
-        border-radius: 4px;
+         border-radius: .5em;
         color: #fff;
         font-size: var(--normal-font-size);
         transition: .5s ease-in-out;
@@ -711,9 +784,10 @@
 
 
 
-#UserFullname {
-    font-weight: 600;
-}
+    #UserFullname {
+        font-weight: 600;
+        font-size: var(--small-font-size);
+    }
 
 
 

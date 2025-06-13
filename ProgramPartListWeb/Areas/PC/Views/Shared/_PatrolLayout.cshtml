@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - My ASP.NET Application</title>
     <script src="~/Content/font-awesome/js/all.min.js"></script>
-    <link href="~/Content/css/PatrolLayout.css" rel="stylesheet" />
+    @*<link href="~/Content/css/PatrolLayout.css" rel="stylesheet" />*@
+    <link href="~/Content/css/PatrolLayout.min.css" rel="stylesheet" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
     <link href="~/Content/Site.css" rel="stylesheet" />
     @Styles.Render("~/Content/css")
@@ -86,7 +87,7 @@
                     </div>
 
                     <div class="sidebar__items">
-                        <h3 class="sidebar__subtitle">Reports</h3>
+                        <h3 class="sidebar__subtitle">Others</h3>
 
                         @*<div class="nav__dropdown">
                                 <a href="#" class="nav__link">
@@ -106,10 +107,10 @@
 
                             </div>*@
 
-                        <a href="#" class="sidebar__link">
+                        @*<a href="#" class="sidebar__link">
                             <i class="fa-solid fa-table-columns sidebar__icon"></i>
                             <span class="sidebar__name">Reports</span>
-                        </a>
+                        </a>*@
                         <a href="/PC/Patrol/Settings" class="sidebar__link">
                             <i class="fa-solid fa-gear sidebar__icon"></i>
                             <span class="sidebar__name">Settings</span>

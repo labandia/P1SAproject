@@ -206,13 +206,6 @@ namespace ProductConfirm.Modules
             Countrecord.Text = "" + Summarytable.RowCount;
         }
 
-        private async void button3_Click(object sender, EventArgs e)
-        {
-            Summarytable.DataSource = await Products.GetSummaryDataConfirmation(Searchtext.Text.Trim());
-        }
-
-        
-
         public async Task DisplaySummary()
         {
             sumlist = await _prod.GetSummaryDataConfirmation();

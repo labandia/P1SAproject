@@ -1,0 +1,20 @@
+[
+  {
+    "outputFileName": "Content/css/Main.min.css",
+    "inputFiles": [
+      "Content/css/Main.css"
+    ]
+  },
+  {
+    "outputFileName": "Content/css/loginlayout.min.css",
+    "inputFiles": [
+      "Content/css/loginlayout.css"
+    ]
+  },
+  {
+    "outputFileName": "Content/css/PatrolLayout.min.css",
+    "inputFiles": [
+      "Content/css/PatrolLayout.css"
+    ]
+  }
+]

@@ -174,7 +174,7 @@
 
 .logindesign input, .forgetdesign input {
     width: 100%;
-    padding: 0.5em;
+    padding: .8em 1em;
     margin: 0.5em 0 1em;
     background-color: #e7e7e7;
     border: none;
@@ -230,7 +230,7 @@
         border: none;
         border-radius: 0.2em;
         font-size: var(--small-font-size);
-        padding: .5em 1em;
+        padding: 1em 1.5em;
     }
 
 

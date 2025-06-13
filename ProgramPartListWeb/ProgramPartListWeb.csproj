@@ -691,7 +691,13 @@
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Content\boxicons.min.css" />
+    <Content Include="Content\css\loginlayout.min.css">
+      <DependentUpon>loginlayout.css</DependentUpon>
+    </Content>
     <Content Include="Content\css\PatrolLayout.css" />
+    <Content Include="Content\css\PatrolLayout.min.css">
+      <DependentUpon>PatrolLayout.css</DependentUpon>
+    </Content>
     <Content Include="Content\css\Sidebar_one.css" />
     <Content Include="Content\font-awesome\css\all.css" />
     <Content Include="Content\font-awesome\css\all.min.css" />
@@ -806,6 +812,7 @@
     </Content>
     <Content Include="Areas\Circuit\Views\ProgramPartList\FeederType.cshtml" />
     <Content Include="Content\Uploads\PGFY-00031FORM_1.xlsx" />
+    <None Include="bundleconfig.json" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>

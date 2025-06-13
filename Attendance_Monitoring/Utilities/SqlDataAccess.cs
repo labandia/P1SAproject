@@ -13,7 +13,7 @@ using System.Diagnostics;
 
 namespace Attendance_Monitoring.Utilities
 {
-    public static class SqlDataAccess
+    public sealed class SqlDataAccess
     {
         private static readonly string _cons = ConfigurationManager.ConnectionStrings["live_connect"].ToString();
         private static readonly string _consV2 = AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings["LiveDevelopment"].ConnectionString);

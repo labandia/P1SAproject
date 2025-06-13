@@ -158,7 +158,7 @@
             this.closebtn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(10)))), ((int)(((byte)(107)))));
             this.closebtn.FlatAppearance.BorderSize = 0;
             this.closebtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(10)))), ((int)(((byte)(107)))));
-            this.closebtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(10)))), ((int)(((byte)(107)))));
+            this.closebtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DarkBlue;
             this.closebtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.closebtn.ForeColor = System.Drawing.SystemColors.ControlText;
             this.closebtn.Image = ((System.Drawing.Image)(resources.GetObject("closebtn.Image")));

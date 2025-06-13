@@ -118,30 +118,44 @@ namespace ProductConfirm.View.Modals
         private async void EditProducts_Load(object sender, EventArgs e)
         {
             int ID = Int32.Parse(TextID.Text);
-            System.Data.DataTable data = await _prod2.GetOneProduct(ID);
+            var data = await _prod2.GetOnlyOneProducts(ID);
 
-            if (data.Rows.Count > 0)
+            if (data != null)
             {
-                foreach (DataRow dr in data.Rows)
+                foreach(var item in data)
                 {
-                    Caulkmin.Text = dr["CaulkingDentMin"] != DBNull.Value ? Convert.ToDecimal(dr["CaulkingDentMin"]).ToString() : "0.00";
-                    Caulkmax.Text = dr["CaulkingDentMax"] != DBNull.Value ? Convert.ToDecimal(dr["CaulkingDentMax"]).ToString() : "0.00";
-                    Shaftmin.Text = dr["ShaftLengthMin"] != DBNull.Value ? Convert.ToDecimal(dr["ShaftLengthMin"]).ToString() : "0.00";
-                    Shaftmax.Text = dr["ShaftLengthMax"] != DBNull.Value ? Convert.ToDecimal(dr["ShaftLengthMax"]).ToString() : "0.00";
-                    SEAmin.Text = dr["SEA_Min"] != DBNull.Value ? Convert.ToDecimal(dr["SEA_Min"]).ToString() : "0.00";
-                    SEAmax.Text = dr["SEA_Max"] != DBNull.Value ? Convert.ToDecimal(dr["SEA_Max"]).ToString() : "0.00";
-                    ShaftPullmin.Text = dr["ShaftPullingForce"] != DBNull.Value ? Convert.ToDecimal(dr["ShaftPullingForce"]).ToString() : "0";
-                    ShaftPullmax.Text = dr["BushPullingForce"] != DBNull.Value ? Convert.ToDecimal(dr["BushPullingForce"]).ToString() : "0";
-                    Magnetmin.Text = dr["MagnetHeightMin"] != DBNull.Value ? Convert.ToDecimal(dr["MagnetHeightMin"]).ToString() : "0.00";
-                    Magnetmax.Text = dr["MagnetHeightMax"] != DBNull.Value ? Convert.ToDecimal(dr["MagnetHeightMax"]).ToString() : "0.00";
+                    Caulkmin.Text = item.CaulkingDentMin.ToString();
+                    Caulkmax.Text = item.CaulkingDentMax.ToString();
+                    Shaftmin.Text = item.ShaftLengthMin.ToString();
+                    Shaftmax.Text = item.ShaftLengthMax.ToString();
+                    SEAmin.Text = item.SEA_Min.ToString();
+                    SEAmax.Text = item.SEA_Max.ToString();
+                    ShaftPullmin.Text = item.ShaftPullingForce.ToString();
+                    ShaftPullmax.Text = item.BushPullingForce.ToString();
+                    Magnetmin.Text = item.MagnetHeightMin.ToString();
+                    Magnetmax.Text = item.MagnetHeightMax.ToString();
 
-                    Debug.WriteLine("Mode type " + dr["ModelType"]);
-                    if (Convert.ToInt32(dr["ModelType"]) == 1)
-                    {
-                        groupBox4.Visible = false;  
-                    }
 
+
+                    //Caulkmin.Text = String.IsNullOrEmpty(item.Ca)    dr["CaulkingDentMin"] != DBNull.Value ? Convert.ToDecimal(dr["CaulkingDentMin"]).ToString() : "0.00";
+                    //Caulkmax.Text = dr["CaulkingDentMax"] != DBNull.Value ? Convert.ToDecimal(dr["CaulkingDentMax"]).ToString() : "0.00";
+                    //Shaftmin.Text = dr["ShaftLengthMin"] != DBNull.Value ? Convert.ToDecimal(dr["ShaftLengthMin"]).ToString() : "0.00";
+                    //Shaftmax.Text = dr["ShaftLengthMax"] != DBNull.Value ? Convert.ToDecimal(dr["ShaftLengthMax"]).ToString() : "0.00";
+                    //SEAmin.Text = dr["SEA_Min"] != DBNull.Value ? Convert.ToDecimal(dr["SEA_Min"]).ToString() : "0.00";
+                    //SEAmax.Text = dr["SEA_Max"] != DBNull.Value ? Convert.ToDecimal(dr["SEA_Max"]).ToString() : "0.00";
+                    //ShaftPullmin.Text = dr["ShaftPullingForce"] != DBNull.Value ? Convert.ToDecimal(dr["ShaftPullingForce"]).ToString() : "0";
+                    //ShaftPullmax.Text = dr["BushPullingForce"] != DBNull.Value ? Convert.ToDecimal(dr["BushPullingForce"]).ToString() : "0";
+                    //Magnetmin.Text = dr["MagnetHeightMin"] != DBNull.Value ? Convert.ToDecimal(dr["MagnetHeightMin"]).ToString() : "0.00";
+                    //Magnetmax.Text = dr["MagnetHeightMax"] != DBNull.Value ? Convert.ToDecimal(dr["MagnetHeightMax"]).ToString() : "0.00";
+
+                    //Debug.WriteLine("Mode type " + dr["ModelType"]);
+                    //if (Convert.ToInt32(dr["ModelType"]) == 1)
+                    //{
+                    //    groupBox4.Visible = false;
+                    //}
                 }
+
+
             }
         }
 

@@ -94,6 +94,28 @@ namespace ProductConfirm.Models
         }
 
     }
+
+    public class ProductOneModel
+    {
+        public int RotorProductID { get; set; } = 0;
+        public string RotorAssy { get; set; } = string.Empty;
+        public string ProductType { get; set; } = string.Empty;
+        public string MachinePressureMinMax { get; set; } = string.Empty;
+        public double RecommendedPressureSetting { get; set; } = 0.0;
+        public int ModelType { get; set; } = 0;
+
+        public decimal CaulkingDentMin { get; set; } = decimal.Zero;
+        public decimal CaulkingDentMax { get; set; } = decimal.Zero;
+        public decimal ShaftLengthMin { get; set; } = decimal.Zero;
+        public decimal ShaftLengthMax { get; set; } = decimal.Zero;
+        public decimal SEA_Min { get; set; } = decimal.Zero;
+        public decimal SEA_Max { get; set; } = decimal.Zero;
+        public decimal MagnetHeightMin { get; set; } = decimal.Zero;
+        public decimal MagnetHeightMax { get; set; } = decimal.Zero;
+        public int ShaftPullingForce { get; set; } = 0;
+        public int BushPullingForce { get; set; } = 0;
+    }
+
     public class ShopOrderModel
     {
         private int _ShoporderID = 0;

@@ -72,6 +72,7 @@ namespace ProgramPartListWeb.Helper
             }
             catch (Exception ex)
             {
+                Debug.WriteLine($"{ex.Message}");
                 return "";
             }
         }
@@ -88,6 +89,7 @@ namespace ProgramPartListWeb.Helper
             }
             catch (Exception ex)
             {
+                Debug.WriteLine($"{ex.Message}");
                 return 0;
             }  
         }
@@ -200,6 +202,7 @@ namespace ProgramPartListWeb.Helper
             }
             catch (Exception ex)
             {
+                Debug.WriteLine($"{ex.Message}");
                 return 0;
             }
         }

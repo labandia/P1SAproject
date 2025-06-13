@@ -100,7 +100,7 @@ namespace ProductConfirm.Modals
             if (finalresult)
             {
                 MessageBox.Show("Insert Data Successfully");
-                mp.DisplayMastelist();
+                mp.DisplayMaster();
                 this.Visible = false;
             }
 

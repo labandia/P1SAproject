@@ -1,6 +1,8 @@
-﻿using ProductConfirm.Data;
+﻿using Microsoft.Office.Interop.Excel;
+using ProductConfirm.Data;
 using ProductConfirm.Models;
 using ProgramPartListWeb.Helper;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -105,6 +107,28 @@ namespace ProductConfirm.DataAccess
             return result;  
         }
 
-       
+        public  async Task<List<ProductOneModel>> GetOnlyOneProducts(int ID)
+        {        
+            try
+            {
+                string strsql = "SELECT " +
+                              "r.RotorProductID, r.RotorAssy, r.ProductType, " +
+                              "r.MachinePressureMinMax, r.RecommendedPressureSetting, " +
+                              "p.CaulkingDentMin, p.CaulkingDentMax, p.ShaftLengthMin, " +
+                              "p.ShaftLengthMax, p.SEA_Min, p.SEA_Max, p.ShaftPullingForce, " +
+                              "p.BushPullingForce, p.MagnetHeightMin, p.MagnetHeightMax, r.ModelType " +
+                           "FROM ProdCon_RotorProduct r " +
+                           "INNER JOIN  ProdCon_RotorProductInfo p " +
+                           "ON r.RotorProductID = p.RotorProductID " +
+                           "WHERE r.RotorProductID = @ID";
+
+                return await SqlDataAccess.GetData<ProductOneModel>(strsql, new { ID = ID});
+            }
+            catch (FormatException)
+            {
+                return new List<ProductOneModel>();
+            }
+            
+        }
     }
 }

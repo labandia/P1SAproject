@@ -26,6 +26,7 @@ namespace ProductConfirm.Data
     {
         // FOR THE MASTERLIST PRODUCT DATA
         Task<List<ProductModel>> GetAllProducts();
+        Task<List<ProductOneModel>> GetOnlyOneProducts(int ID);     
         Task<List<MasterlistModel>> GetMasterlist();
         // CRUD OPERATION MASTERLIST
         Task<bool> AddProducts(AddProductDetailsModel prod);

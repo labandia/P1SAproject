@@ -1,7 +1,6 @@
 ﻿
 using Microsoft.Extensions.DependencyInjection;
 using ProductConfirm.Data;
-using ProductConfirm.Helper;
 using ProductConfirm.Models;
 using ProductConfirm.Modules;
 using System;
@@ -23,7 +22,6 @@ namespace ProductConfirm
         private readonly Masterlistpage _master;
 
 
-        private static IEnumerable<SummaryProductModel> itemsums;
 
         public int userid {  get; set; }    
         public string Fullname { get; set; }
@@ -125,7 +123,7 @@ namespace ProductConfirm
             summarymenu.ForeColor = Color.FromArgb(170, 176, 192);
             _master.BringToFront();
 
-            await _master.DisplayNaster();
+            await _master.DisplayMaster();
             var prod = _master.Products; 
 
             _master.mastergrid.DataSource = prod;

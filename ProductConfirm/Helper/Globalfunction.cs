@@ -2,7 +2,7 @@
 
 namespace ProductConfirm.Helper
 {
-    internal class Globalfunction
+    sealed class Globalfunction
     {
         public string GetTheShiftSchedule() 
         {

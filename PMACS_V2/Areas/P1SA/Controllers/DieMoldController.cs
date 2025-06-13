@@ -31,9 +31,10 @@ namespace PMACS_V2.Areas.P1SA.Controllers
                 if (data == null || !data.Any())
                     return JsonNotFound("No DieSummary  data not found");
 
-                
+                // Get the Max no of the data
                 int maxNo = data.Any() ? data.Max(x => x.No) : 0;
 
+                // Get the Total Count base on remarks
                 int monitor = data.Count(x => x.Remarks == "For Monitoring");
                 int Endlife = data.Count(x => x.Remarks == "End of Life");
                 int Maxdie = maxNo - (monitor + Endlife);

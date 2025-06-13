@@ -1,19 +1,7 @@
-﻿using Microsoft.Office.Interop.Excel;
-using ProductConfirm.Data;
-using ProductConfirm.DataAccess;
-using ProductConfirm.Global;
+﻿using ProductConfirm.Data;
 using ProductConfirm.Models;
 using ProductConfirm.Modules;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Data.SqlClient;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ProductConfirm.View.Modals
@@ -79,42 +67,16 @@ namespace ProductConfirm.View.Modals
             double dbmagmin = Convert.ToDouble(Magnetmin.Text);
             double dbmagmax = Convert.ToDouble(Magnetmax.Text);
 
-
-            if (dbcaulkmin > dbcaulkmax)
-            {
-                // Display a error message
-                return true;
-            }
-            
-            if (dbshaftmin > dbshaftmax)
-            {
-                // Display a error message
-                return true;
-            }
-
-            if (dbseamin > dbseamax)
-            {
-                // Display a error message
-                return true;
-            }
-
-            if (dbmagmin > dbmagmax)
-            {
-                // Display a error message
-                return true;
-            }
-
-
+            if (dbcaulkmin > dbcaulkmax) return true;
+            if (dbshaftmin > dbshaftmax) return true;
+            if (dbseamin > dbseamax) return true;
+            if (dbmagmin > dbmagmax) return true;
+           
             return true;
         }
 
-
-
-        private void Cancel_btn_Click(object sender, EventArgs e)
-        {
-            Visible = false;    
-        }
-
+        private void Cancel_btn_Click(object sender, EventArgs e) => Visible = false;  
+    
         private async void EditProducts_Load(object sender, EventArgs e)
         {
             int ID = Int32.Parse(TextID.Text);
@@ -134,28 +96,7 @@ namespace ProductConfirm.View.Modals
                     ShaftPullmax.Text = item.BushPullingForce.ToString();
                     Magnetmin.Text = item.MagnetHeightMin.ToString();
                     Magnetmax.Text = item.MagnetHeightMax.ToString();
-
-
-
-                    //Caulkmin.Text = String.IsNullOrEmpty(item.Ca)    dr["CaulkingDentMin"] != DBNull.Value ? Convert.ToDecimal(dr["CaulkingDentMin"]).ToString() : "0.00";
-                    //Caulkmax.Text = dr["CaulkingDentMax"] != DBNull.Value ? Convert.ToDecimal(dr["CaulkingDentMax"]).ToString() : "0.00";
-                    //Shaftmin.Text = dr["ShaftLengthMin"] != DBNull.Value ? Convert.ToDecimal(dr["ShaftLengthMin"]).ToString() : "0.00";
-                    //Shaftmax.Text = dr["ShaftLengthMax"] != DBNull.Value ? Convert.ToDecimal(dr["ShaftLengthMax"]).ToString() : "0.00";
-                    //SEAmin.Text = dr["SEA_Min"] != DBNull.Value ? Convert.ToDecimal(dr["SEA_Min"]).ToString() : "0.00";
-                    //SEAmax.Text = dr["SEA_Max"] != DBNull.Value ? Convert.ToDecimal(dr["SEA_Max"]).ToString() : "0.00";
-                    //ShaftPullmin.Text = dr["ShaftPullingForce"] != DBNull.Value ? Convert.ToDecimal(dr["ShaftPullingForce"]).ToString() : "0";
-                    //ShaftPullmax.Text = dr["BushPullingForce"] != DBNull.Value ? Convert.ToDecimal(dr["BushPullingForce"]).ToString() : "0";
-                    //Magnetmin.Text = dr["MagnetHeightMin"] != DBNull.Value ? Convert.ToDecimal(dr["MagnetHeightMin"]).ToString() : "0.00";
-                    //Magnetmax.Text = dr["MagnetHeightMax"] != DBNull.Value ? Convert.ToDecimal(dr["MagnetHeightMax"]).ToString() : "0.00";
-
-                    //Debug.WriteLine("Mode type " + dr["ModelType"]);
-                    //if (Convert.ToInt32(dr["ModelType"]) == 1)
-                    //{
-                    //    groupBox4.Visible = false;
-                    //}
                 }
-
-
             }
         }
 

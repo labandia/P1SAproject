@@ -38,7 +38,7 @@ namespace Attendance_Monitoring.View
             }
             catch(FormatException)
             {
-                MessageBox.Show("Add employee Successfully");
+                MessageBox.Show("Error found at the Combobox.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         public bool ValidateData()
@@ -106,19 +106,13 @@ namespace Attendance_Monitoring.View
             }
             catch (FormatException)
             {
-                MessageBox.Show("Add employee Successfully");
+                MessageBox.Show("Error found at inserting new Employee", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void Cancebtn_Click(object sender, EventArgs e)
-        {
-            Visible = false;
-        }
-
-        private void Add_Employee_Load(object sender, EventArgs e)
-        {
-            PopulateComboBox();
-        }
+        private void Cancebtn_Click(object sender, EventArgs e) => Visible = false;
+        private void Add_Employee_Load(object sender, EventArgs e) => PopulateComboBox();
+        
 
         public void Clear()
         {

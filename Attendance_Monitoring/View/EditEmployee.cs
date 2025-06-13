@@ -45,7 +45,7 @@ namespace Attendance_Monitoring.View
             }
             catch(FormatException)
             {
-                MessageBox.Show("Update successfully");
+                MessageBox.Show("Error found by Updating Employee.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
            
         }

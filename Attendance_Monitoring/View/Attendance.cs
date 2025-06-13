@@ -43,33 +43,39 @@ namespace Attendance_Monitoring.View
         //  ####################  DISPLAY  THE TIME IN AND OUT  #################### //
         public async void TimeAttendanceDisplay(int selectime)
         {
-            string shift;
-            string timecheck;
-            string Timeout_date;     
-         
-
-            // TIME OUT NIGHT SHIFT DATE TIME
-            DateTime yesterday = DateTime.Today.AddDays(-1);
-            // Change format of the date and time
-            string yest = yesterday.ToString("yyyy-MM-dd HH:mm:ss.fff");
-
-            if(selectime == 0)
+            try
             {
-                shift = tim.TimeIncheck(DateTime.Now);
-                timecheck = tdate;
-            }
-            else
-            {
-                shift = tim.timeoutcheck(DateTime.Now);
-                Timeout_date = shift == "DAYSHIFT" ? tdate : yest;
-                timecheck = Timeout_date;
-            }
+                string shift;
+                string timecheck;
+                string Timeout_date;
 
-            itemattends = await _admin.GetAttendanceMonitor(tb, timecheck, shift, selectime);
-            //DataTable dt = await connect.GetData(query);
-            attendancetable.DataSource = itemattends;
-            DisplayTotal.Text = "Total Attendence: " + attendancetable.RowCount;
-            EmployID.Focus();
+
+                // TIME OUT NIGHT SHIFT DATE TIME
+                DateTime yesterday = DateTime.Today.AddDays(-1);
+                // Change format of the date and time
+                string yest = yesterday.ToString("yyyy-MM-dd HH:mm:ss.fff");
+
+                if (selectime == 0)
+                {
+                    shift = tim.TimeIncheck(DateTime.Now);
+                    timecheck = tdate;
+                }
+                else
+                {
+                    shift = tim.timeoutcheck(DateTime.Now);
+                    Timeout_date = shift == "DAYSHIFT" ? tdate : yest;
+                    timecheck = Timeout_date;
+                }
+
+                itemattends = await _admin.GetAttendanceMonitor(tb, timecheck, shift, selectime);
+                //DataTable dt = await connect.GetData(query);
+                attendancetable.DataSource = itemattends;
+                DisplayTotal.Text = "Total Attendence: " + attendancetable.RowCount;
+                EmployID.Focus();
+            }
+            catch(FormatException) {
+                MessageBox.Show("Error found at Retreiving Employee Data", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         //  ####################  SELECT TIME IN AND OUT DISPLAY  #################### //
@@ -156,7 +162,7 @@ namespace Attendance_Monitoring.View
             }
             catch (FormatException)
             {
-                MessageBox.Show("SELECT TIME IN / OUT");
+                MessageBox.Show("Error Encounter During Time IN / OUT.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -299,7 +305,7 @@ namespace Attendance_Monitoring.View
             }
             catch (FormatException)
             {
-                MessageBox.Show("Error Input");
+                MessageBox.Show("Error Encounter During Time OUT Dayshift.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         public async void TimeoutNight(string empid, string fullname)
@@ -431,7 +437,7 @@ namespace Attendance_Monitoring.View
             }
             catch (FormatException)
             {
-                MessageBox.Show("Please time-in first before you time-out");
+                MessageBox.Show("Error Encounter During Time OUT NIGHTSHIFT.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -483,28 +489,21 @@ namespace Attendance_Monitoring.View
 
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
-            try
-            {
-                string filterText = textBox2.Text.ToLower();
+            string filterText = textBox2.Text.ToLower();
 
-                // If the input Text is String only returns to Default Data
-                if (String.IsNullOrEmpty(filterText))
-                {
-                    TimeAttendanceDisplay(selecttime.SelectedIndex);
-                    return;
-                }
-                // Search by Filter
-                var filteredList = itemattends.Where(p => p.Employee_ID.ToLower().Contains(filterText) ||
-                                p.Fullname.ToLower().Contains(filterText))
-                                .ToList();
-
-                attendancetable.DataSource =  filteredList;
-                DisplayTotal.Text = "Total Records: " + attendancetable.RowCount;
-            }
-            catch (FormatException)
+            // If the input Text is String only returns to Default Data
+            if (String.IsNullOrEmpty(filterText))
             {
-                MessageBox.Show("Error Searching");
+                TimeAttendanceDisplay(selecttime.SelectedIndex);
+                return;
             }
+            // Search by Filter
+            var filteredList = itemattends.Where(p => p.Employee_ID.ToLower().Contains(filterText) ||
+                            p.Fullname.ToLower().Contains(filterText))
+                            .ToList();
+
+            attendancetable.DataSource =  filteredList;
+            DisplayTotal.Text = "Total Records: " + attendancetable.RowCount;
         }
 
         private async void Attendance_Load(object sender, EventArgs e)
@@ -518,7 +517,7 @@ namespace Attendance_Monitoring.View
             }
             catch (FormatException)
             {
-                MessageBox.Show("Load Data Error");
+                MessageBox.Show("Error from retrieve Employee Data", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

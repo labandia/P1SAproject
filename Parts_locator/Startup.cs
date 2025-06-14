@@ -1,4 +1,5 @@
-﻿using Parts_locator.View.Moldingbush;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Parts_locator.View.Moldingbush;
 using System;
 using System.Data;
 using System.Windows.Forms;
@@ -7,9 +8,12 @@ namespace Parts_locator
 {
     public partial class Startup : Form
     {
-        public Startup()
+        private readonly IServiceProvider _serviceProvider;
+
+        public Startup(IServiceProvider serviceProvider)
         {
             InitializeComponent();
+            _serviceProvider = serviceProvider;
         }
         private void Exitbtn_Click(object sender, EventArgs e)
         {
@@ -121,8 +125,16 @@ namespace Parts_locator
 
         public void SelectionMainpage(int proj)
         {
-            BushMain b = new BushMain();
-            b.Show();
+          
+            var mainpage = _serviceProvider.GetRequiredService<BushMain>();
+
+            // Assign properties
+            //mainpage.userid = data.Account_ID;
+            //mainpage.Fullname = data.Fullname;
+            //mainpage.roleId = data.role_type;
+
+            mainpage.Show();
+            this.Hide();
 
             //switch (proj)
             //{

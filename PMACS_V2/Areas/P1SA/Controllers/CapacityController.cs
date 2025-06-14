@@ -27,7 +27,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         {
             try
             {
-                var data = await CacheHelper.GetOrSetAsync("p1sasummary", () => _cap.GetP1SAsummary(), 10);
+                var data = await _cap.GetP1SAsummary();
                 if (data == null || !data.Any())
                     return JsonNotFound("No P1SA Summary data found");
 
@@ -56,7 +56,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         {
             try
             {
-                int data = await CacheHelper.GetOrSetAsync("ForecastTotal", () => _cap.GetForecastTotal(month), 15);
+                int data = await _cap.GetForecastTotal(month);
                 if (data == 0)
                     return JsonNotFound("No Total Forecast found");
 
@@ -144,7 +144,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         {
             try
             {
-                var data = await CacheHelper.GetOrSetAsync("Forecastmodels", () => _cap.GetForecast(year), 15);
+                var data = await _cap.GetForecast(year);
                 if (data == null || !data.Any())
                     return JsonNotFound("No ForecastModel data found");
 
@@ -159,7 +159,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         {
             try
             {
-                var data = await CacheHelper.GetOrSetAsync("ForecastChart", () =>  _cap.GetForecastChart(), 10);
+                var data = await _cap.GetForecastChart();
                 if (data == null || !data.Any())
                     return JsonNotFound("No Forecast Chart data found");
 

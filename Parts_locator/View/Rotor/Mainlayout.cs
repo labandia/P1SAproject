@@ -1,5 +1,7 @@
-﻿using Parts_locator.Data;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Parts_locator.Data;
 using Parts_locator.Models;
+using Parts_locator.View.Moldingbush;
 using System;
 using System.Data;
 using System.Drawing;
@@ -9,6 +11,7 @@ namespace Parts_locator
 {
     public partial class Mainlayout : Form
     {
+        private readonly IServiceProvider _serviceProvider;
         private RotorProducts _products;
         private Transaction_Rotor _rotor;
         private readonly Transaction t;
@@ -116,8 +119,9 @@ namespace Parts_locator
             // Check the result
             if (result == DialogResult.Yes)
             {
-                Startup s = new Startup();
-                s.Show();
+                var mainpage = _serviceProvider.GetRequiredService<Startup>();
+                mainpage.Show();
+                this.Hide();
                 Visible = false;
             }
             

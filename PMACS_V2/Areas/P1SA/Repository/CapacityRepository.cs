@@ -17,7 +17,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
         // ===========================================================
         // ==================== P1SA Summary =========================
         // ===========================================================
-        public async Task<List<PsummaryModel>> GetP1SAsummary() => await SqlDataAccess.GetData<PsummaryModel>("P1SAsummary");
+        public async Task<List<PsummaryModel>> GetP1SAsummary() => await SqlDataAccess.GetData<PsummaryModel>("P1SAsummary", null, "p1sasummary");
         public async Task<List<SelectionGroup>> GetGroupCapacity() => await SqlDataAccess.GetData<SelectionGroup>("Selectiongroup");
         public async Task<List<CapacitySummaryModel>> GetCapacitySummary(string month, int capid)
         {
@@ -174,7 +174,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
                             "Subquery.OperationTime, Subquery.Cap_Per_Machine";
             }
 
-            return await SqlDataAccess.GetData<CapacitySummaryModel>(strquery);
+            return await SqlDataAccess.GetData<CapacitySummaryModel>(strquery, null, "CapacitySummary");
         }
         public async Task<int> GetForecastTotal(string month)
         {
@@ -244,8 +244,8 @@ namespace PMACS_V2.Areas.P1SA.Repository
                                 "WHERE(f.Model_name = c.Model_name AND c.Capgroup_ID = 7) AND c.IsDelete = 1)";
             return await SqlDataAccess.GetlistStrings(strsqlquery);
         }
-        public async Task<List<ForecastModel>> GetForecast(string year) => await SqlDataAccess.GetData<ForecastModel>("ForecastData");
-        public async Task<List<ForecastModel>> GetForecastChart() => await SqlDataAccess.GetData<ForecastModel>("ForecastChart");
+        public async Task<List<ForecastModel>> GetForecast(string year) => await SqlDataAccess.GetData<ForecastModel>("ForecastData", null, "Forecastmodels");
+        public async Task<List<ForecastModel>> GetForecastChart() => await SqlDataAccess.GetData<ForecastModel>("ForecastChart", null, "ForecastChart");
         // ===========================================================
         // ==================== Capacity per Section =================
         // ===========================================================
@@ -598,7 +598,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
             string strsql = "UPDATE PMACS_ProdProcess SET AvailMachine =@AvailMachine, " +
                 "ActualMachine =@ActualMachine WHERE ProcessCode =@ProcessCode";
             var parameters = new { ProcessCode = cap.ProcessCode, AvailMachine = cap.AvailMachine, ActualMachine = cap.ActualMachine };
-            return await SqlDataAccess.UpdateInsertQuery(strsql, parameters);
+            return await SqlDataAccess.UpdateInsertQuery(strsql, parameters, "p1sasummary");
         }
 
         public async Task<bool> UpdateProcessform(ProcessformPostModel cap)

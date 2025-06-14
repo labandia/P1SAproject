@@ -1,14 +1,11 @@
-﻿using Parts_locator.DataAccess;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Parts_locator.Interface;
 using Parts_locator.Modals;
-using Parts_locator.Models;
 using Parts_locator.Repository;
 using Parts_locator.View.Moldingbush;
 using Parts_locator.View.Moldingbush.Maincontent;
 using Parts_locator.View.Moldingbush.Modules;
-using Parts_locator.View.Rotor;
 using System;
-using System.Drawing;
 using System.Drawing.Text;
 using System.Windows.Forms;
 
@@ -52,6 +49,7 @@ namespace Parts_locator
             services.AddSingleton<IRawMats, RawMatsRepository>();
 
             services.AddSingleton<BushMain>();
+            services.AddSingleton<Startup>();
             services.AddSingleton<RawMaterialProductDetails>();
             services.AddSingleton<Bushlocation>();
             services.AddSingleton<BushMasterlist>();

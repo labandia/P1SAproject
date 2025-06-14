@@ -15,13 +15,10 @@ namespace Parts_locator.Utilities
     public static class SqlDataAccess
     {
         private static readonly string _cons = ConfigurationManager.ConnectionStrings["live_connect"].ToString();
-        private static readonly string _consV2 = AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings["LiveDevelopment"].ConnectionString);
+        //private static readonly string _consV2 = AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings["LiveDevelopment"].ConnectionString);
         //private static readonly string _cons = ConfigurationManager.ConnectionStrings["Myconnect"].ToString();
-        public static SqlConnection GetConnection(string connectionString)
-        {
-            return new SqlConnection(connectionString);
-        }
-
+        public static SqlConnection GetConnection(string connectionString) =>  new SqlConnection(connectionString);
+    
         // ############ DYNAMIC FUNCTION LIST<T> GETDATA ########################
         public static async Task<List<T>> GetData<T>(string query, object parameters = null)
         {
@@ -49,9 +46,6 @@ namespace Parts_locator.Utilities
                 Console.WriteLine("SQL Exception: " + ex.Message);
                 return null;
             }
-
-
-            // return resultData;
         }
         // ############ SELECTS ONLY ONE ROW DATA  ##############################
         public static async Task<string> GetOneData(string query, object parameters)

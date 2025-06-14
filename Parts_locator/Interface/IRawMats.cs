@@ -6,8 +6,11 @@ namespace Parts_locator.Interface
 {
     internal interface IRawMats
     {
-        Task<List<RawMatModel>> GetRawMatsMasterList(int bush);
-        Task<List<RawMatModel>> GetRawMatsSummaryData(int act);
+        Task<List<RawMatModel>> GetRawMatProduct();
+        Task<List<RawMatModel>> GetRawMatProductByID(int act);
+
+        // SHOPORDER FUNCTIONS
+        Task<List<RawMatModel>> GetShopOrderlist();
 
         // MASTERLIST FUNCTIONS
         Task<bool> AddMasterlist(MoldImpeller masterlist);
@@ -15,5 +18,8 @@ namespace Parts_locator.Interface
         Task<bool> DeleteMasterlist(int ID);
         Task<bool> ImportMasterlist(MoldImpeller masterlist);
         Task<bool> InsertTransaction(MoldImpeller masterlist);
+
+        // UPDATE STORAGE
+        Task<bool> UpdateRawMatsQuantity(MoldImpeller masterlist);
     }
 }

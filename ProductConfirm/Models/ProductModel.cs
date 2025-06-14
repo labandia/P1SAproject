@@ -364,7 +364,7 @@ namespace ProductConfirm.Models
         private string _ConfirmBy = "";
         private string _Remarks = "";
 
-        public string DateInput
+        public string Date_input
         {
             get => _Date_input;
             set => _Date_input = value;
@@ -607,8 +607,6 @@ namespace ProductConfirm.Models
             get => _MH_third_min;
             set => _MH_third_min = value;
         }
-
-
         public string MH_fourth_min
         {
             get => _MH_fourth_min;

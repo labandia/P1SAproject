@@ -1,13 +1,9 @@
-﻿using ProgramPartListWeb.Data;
-using ProgramPartListWeb.Helper;
+﻿using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Interfaces;
 using ProgramPartListWeb.Models;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Net.PeerToPeer;
-using System.Security;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -97,7 +93,7 @@ namespace ProgramPartListWeb.Controllers
 
             var formdata = GlobalUtilities.GetMessageResponse(result, 0);
 
-            return Json("", JsonRequestBehavior.AllowGet);
+            return Json(formdata, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]

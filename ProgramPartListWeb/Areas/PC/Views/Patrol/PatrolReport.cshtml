@@ -6,29 +6,26 @@
 
 
 <header class="InspectHead">
-    <h2>Production Patrol Inspection Report</h2>
-    <div class="d-flex align-items-center gap-2">
-        <div class="Inputcontainer">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" placeholder="Search here ... " id="searchbox" />
-            <div class="line"></div>
+    <div class="Inputcontainer">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Search here ... " id="searchbox" />
+        <div class="line"></div>
 
-        </div>
-        <button id="Showadd" type="button"><i class="fa-solid fa-file-circle-plus"></i> Add New</button>
     </div>
+    <button id="Showadd" type="button"><i class="fa-solid fa-file-circle-plus"></i> Add New</button>
 </header>
 
 <div class="MainTable">
     <table>
         <thead>
             <tr>
-                <th style="text-align: left; padding-left: 1.5em;">Registration No. </th>
-                <th>Inspector </th>
-                <th>Department/Section </th>
-                <th>PIC </th>
-                <th>Date Conducted</th>
-                <th>File Attached</th>
-                <th>Delete</th>
+                <th style="text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-user-secret"></i>  <span style="margin-left: .5em;">Inspector</span> </th>
+                <th><i class="fa-solid fa-file-contract"></i> <span style="margin-left: .5em;">Registration No.</span></th>
+                <th><i class="fa-regular fa-building"></i> <span style="margin-left: .5em;">Section</span> </th>
+                <th><i class="fa-regular fa-user"></i> <span style="margin-left: .5em;">PIC</span></th>
+                <th><i class="fa-regular fa-calendar"></i> <span style="margin-left: .5em;">Date Conducted</span> </th>
+                <th> <i class="fa-regular fa-file-lines"></i> <span style="margin-left: .5em;">File Attached</span></th>
+                <th> <i class="fa-solid fa-bolt"></i> <span style="margin-left: .5em;">Delete</span> </th>
             </tr>
         </thead>
         <tbody id="MasterlistData">
@@ -101,8 +98,8 @@
 
                 const rowHtml = `
                  <tr class='row_${i} editButton' id='editButton_${rowData.RegNo}'>
-                     <td style='font-weight: 600; color: #222; text-align: left; padding-left: 1.5em;' data-cell="RegNo">${rowData.RegNo}</td>
-                     <td data-cell="Inspector">${rowData.FullName}</td>
+                     <td style='text-align: left; padding-left: 1.5em;' data-cell="Inspector">${rowData.FullName}</td>
+                     <td style='font-weight: 600; color: #222; text-align: center;' data-cell="RegNo">${rowData.RegNo}</td>
                      <td data-cell="SectionName">${rowData.SectionName}</td>
                      <td data-cell="PIC">${rowData.PIC}</td>
                      <td data-cell="DateConduct">${rowData.DateConduct}</td>

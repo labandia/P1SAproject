@@ -38,30 +38,16 @@ namespace ProductConfirm.Modals
 
         public bool ValidationForm()
         {
-            bool check = true;
-            string shop = SupplierText.Text;
-            string lot = ShaftText.Text;
+            string shop = SupplierText.Text?.Trim();
+            string lot = ShaftText.Text?.Trim();
 
-            if (string.IsNullOrEmpty(shop))
-            {
-                supply_error.Visible = true;
-                check = false;
-            }
-            else
-            {
-                supply_error.Visible = false;
-            }
+            bool isShopEmpty = string.IsNullOrEmpty(shop);
+            bool isLotEmpty = string.IsNullOrEmpty(lot);
 
-            if (string.IsNullOrEmpty(lot))
-            {
-                Shaft_error.Visible = true;
-                check = false;
-            }
-            else
-            {
-                Shaft_error.Visible = false;
-            }
-            return check;
+            supply_error.Visible = isShopEmpty;
+            Shaft_error.Visible = isLotEmpty;
+
+            return !(isShopEmpty || isLotEmpty);
         }
 
 

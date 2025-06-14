@@ -5,7 +5,7 @@
 }
 
 
-<form method="post" enctype="multipart/form-data" class=" formcontainer  " id="addnewform" autocomplete="off">
+<form method="post" enctype="multipart/form-data" class="formcontainer" id="addnewform" autocomplete="off">
     <div class="row">
         <div class="col-12">
             <div class="d-flex align-items-center gap-4">
@@ -247,7 +247,6 @@
         } 
 
         let res = await postData('@Url.Action("AddRegistration", "Patrol")', finalformData);
-        console.log(res);
         if (res.StatusCode === 201) {
             Swal.fire({
                 title: "Success",
@@ -262,7 +261,6 @@
             });
         }
 
-        //Resets the Form
         Resetforms();
     });
 

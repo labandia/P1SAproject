@@ -6,7 +6,7 @@ namespace ProgramPartListWeb.Interfaces
 {
     internal interface IAuthService
     {
-        Task<List<AuthModel>> LoginCredentials(string user);
+        Task<object> LoginCredentials(string user, string pass);
         Task<bool> UserRegistration(object parameters);
         Task<bool> ResetPassword(string email);
     }

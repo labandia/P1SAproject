@@ -66,36 +66,50 @@ namespace PMACS_V2.Helper
             return new SqlConnection(connectionString);
         }
         // ############ DYNAMIC FUNCTION LIST<T> GETDATA ########################
-        public static async Task<List<T>> GetData<T>(string query, object parameters = null)
+        public static async Task<List<T>> GetData<T>(string query, object parameters = null, string cacheKey = null, int cacheMinutes = 10)
         {
-            //var resultData = new List<T>();
             try
             {
-                using (IDbConnection con = GetSqlConnection(_connectionString()))
+                // Use provided cache key or default to no caching
+                if (!string.IsNullOrEmpty(cacheKey))
                 {
-                    // Checks if the string is one word
-                    if(Regex.IsMatch(query, @"^\w+$"))
+                    return await CacheHelper.GetOrSetAsync(cacheKey, async () =>
                     {
-                        // This code is a Procudure query
-                        return (await con.QueryAsync<T>(query, parameters, commandType: CommandType.StoredProcedure)).ToList();
-                    }
-                    else
+                        using (IDbConnection con = GetSqlConnection(_connectionString()))
+                        {
+                            if (Regex.IsMatch(query, @"^\w+$"))
+                            {
+                                return (await con.QueryAsync<T>(query, parameters, commandType: CommandType.StoredProcedure)).ToList();
+                            }
+                            else
+                            {
+                                return (await con.QueryAsync<T>(query, parameters)).ToList();
+                            }
+                        }
+                    }, cacheMinutes);
+                }
+                else
+                {
+                    // No caching
+                    using (IDbConnection con = GetSqlConnection(_connectionString()))
                     {
-                        // Ordinary Query string
-                        return (await con.QueryAsync<T>(query, parameters)).ToList();
+                        if (Regex.IsMatch(query, @"^\w+$"))
+                        {
+                            return (await con.QueryAsync<T>(query, parameters, commandType: CommandType.StoredProcedure)).ToList();
+                        }
+                        else
+                        {
+                            return (await con.QueryAsync<T>(query, parameters)).ToList();
+                        }
                     }
-                    //return resultData;
                 }
             }
             catch (SqlException ex)
             {
-                CustomLogger.LogError(ex);
-                Console.WriteLine("SQL Exception: " + ex.Message);
-                return null;
+                //CustomLogger.LogError(ex);
+                Debug.WriteLine(ex.Message);
+                return new List<T>();
             }
-            
-
-           // return resultData;
         }
         // ############ SELECTS ONLY ONE ROW DATA  ##############################
         public static async Task<string> GetOneData(string query, object parameters)
@@ -167,35 +181,34 @@ namespace PMACS_V2.Helper
            
         }
         // ############ INSERT AND UPDATE QUERY ########################
-        public static async Task<bool> UpdateInsertQuery(string strQuery, object parameters)
-        {   
+        public static async Task<bool> UpdateInsertQuery(string strQuery, object parameters, string cacheKeyToInvalidate = null)
+        {
             try
             {
                 using (IDbConnection con = new SqlConnection(_connectionString()))
                 {
                     int rowsAffected;
 
-                    if (Regex.IsMatch(strQuery, @"^\w+$"))
+                    bool isStoredProcedure = Regex.IsMatch(strQuery, @"^\w+$");
+                    CommandType commandType = isStoredProcedure ? CommandType.StoredProcedure : CommandType.Text;
+
+                    rowsAffected = await con.ExecuteAsync(strQuery, parameters, commandType: commandType);
+
+                    // If update was successful and a cache key is provided, remove it
+                    if (rowsAffected > 0 && !string.IsNullOrEmpty(cacheKeyToInvalidate))
                     {
-                        // This code is a Procudure query
-                        rowsAffected = await con.ExecuteAsync(strQuery, parameters, commandType: CommandType.StoredProcedure);
+                        CacheHelper.Remove(cacheKeyToInvalidate);
                     }
-                    else
-                    {
-                        rowsAffected = await con.ExecuteAsync(strQuery, parameters);
-                    }
+
                     return rowsAffected > 0;
                 }
-            }       
+            }
             catch (Exception ex)
             {
-                // Log other exceptions
-                CustomLogger.LogError(ex);
-                Debug.WriteLine($"Exception: {ex.Message}");
-          
+                //CustomLogger.LogError(ex);
+                Debug.WriteLine($"Exception in UpdateInsertQuery: {ex.Message}");
                 return false;
             }
-            
         }
         // ############ LIST OF STRINGS ########################
         public static async Task<List<string>> GetlistStrings(string query, object parameters = null)

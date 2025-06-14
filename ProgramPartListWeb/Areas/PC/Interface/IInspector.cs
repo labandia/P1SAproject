@@ -6,15 +6,20 @@ namespace ProgramPartListWeb.Areas.PC.Interface
 {
     public interface IInspector
     {
+        // Employee Information
+        Task<List<Employee>> GetEmployee();
+        Task<int> GetEmployeeByDepartment(string employee);
+
         // GET SCHEDULE TODAY LIST FOR DASHBOARD
         Task<List<PatrolSchedule>> GetScheduleDate();
 
 
-        // GET DATA FROM THE LIST
-        Task<List<Employee>> GetEmployee();
-        Task<int> GetEmployeeByDepartment(string employee);
+        // INSPECTOR DATA
         Task<List<InspectorModel>> GetInpectorsData();
+
+        // REGISTRATION DATA
         Task<List<PatrolRegistionModel>> GetRegistrationData();
+
         Task<List<FindingModel>> GetPatrolFindings(string reg);
         Task<List<CalendarSched>> GetCalendarData(string Employee_ID);
         Task<List<ProccessModel>> GetProcessData(int depid);

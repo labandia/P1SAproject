@@ -133,7 +133,11 @@ namespace ProgramPartListWeb.Areas.PC.Repository
         public async Task<List<InspectorModel>> GetInpectorsData() => await SqlDataAccess.GetData<InspectorModel>("Getinpectors", null, "Inspectors");
         public async Task<List<FindingModel>> GetPatrolFindings(string reg) => await SqlDataAccess.GetData<FindingModel>("GetFindings", new { Regno = reg });
 
-        public async Task<List<ProccessModel>> GetProcessData(int depid) => await SqlDataAccess.GetData<ProccessModel>("SELECT ProcessID, ProcessName, DepartmentID FROM Patrol_Process WHERE DepartmentID =@DepartmentID", new { DepartmentID = depid });
+        public async Task<List<ProccessModel>> GetProcessData(int depid)
+        {
+            string sql = "SELECT ProcessID, ProcessName, DepartmentID FROM Patrol_Process WHERE DepartmentID =@DepartmentID";
+            return await SqlDataAccess.GetData<ProccessModel>(sql, new { DepartmentID = depid });
+        }
         
         public async Task<List<PatrolRegistionModel>> GetRegistrationData() => await SqlDataAccess.GetData<PatrolRegistionModel>("GetPatrolRegistration", null, "Registration");
 

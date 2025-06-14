@@ -15,11 +15,8 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
     public class UsersController : Controller
     {
         private readonly IUserRepository _user;
-
-        public UsersController(IUserRepository user)
-        {
-            _user = user;
-        }
+        public UsersController(IUserRepository user) => _user = user;
+       
 
         [AllowAnonymous]
         [HttpPost]
@@ -80,13 +77,10 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             return Json(new { Fullname }, JsonRequestBehavior.AllowGet);
         }
 
-
-
         public void SetFormsAuthentication(int userID)
         {
             // Set Forms Authentication ticket
-            var authTicket = new FormsAuthenticationTicket(
-                1,
+            var authTicket = new FormsAuthenticationTicket(1,
                 GlobalUtilities.UserRolesname(userID), // This becomes Identity.Name
                 DateTime.Now,
                 DateTime.Now.AddMinutes(30),
@@ -104,7 +98,6 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         public async Task<ActionResult> RegisterUsers()
         {
             string hashpassword = PasswordHasher.Hashpassword(Request.Form["passtext"]);
-
             // Roles 2 : for User register
             var dataobj = new
             {
@@ -116,7 +109,6 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             };
 
             bool result = await _user.RegiserUserData(dataobj);
-
             var formdata = GlobalUtilities.GetMessageResponse(result, 0);
 
             return Json(formdata, JsonRequestBehavior.AllowGet);

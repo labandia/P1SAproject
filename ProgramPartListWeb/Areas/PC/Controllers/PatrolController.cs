@@ -21,7 +21,6 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
     public class PatrolController : ExtendController
     {
         private readonly IInspector _ins;
-
         public PatrolController(IInspector ins) => _ins = ins;
 
         //-----------------------------------------------------------------------------------------
@@ -306,6 +305,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         [HttpPost]
         public async Task<ActionResult> AddRegistration()
         {
+
             int departmentID = await _ins.GetEmployeeByDepartment(Request.Form["Employee_ID"]);
             string departmentName = GlobalUtilities.DepartmentName(departmentID);
 
@@ -333,13 +333,9 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             string templatePath = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Uploads/PGFY-00031FORM_1.xlsx");
             bool result = await _ins.AddRegistration(obj, findJson);
 
-            if (result)
-            {
-               
-                ExportFiler.SaveFileasPDF(obj, findJson, departmentName, newFileName, templatePath);
-            }
-
-            if (result == false) return JsonError("Problem update set active Date.", 500);
+            if (result) ExportFiler.SaveFileasPDF(obj, findJson, departmentName, newFileName, templatePath);
+          
+            if (result == false) return JsonError("Problem during saving Data.", 500);
             return JsonCreated(result, "Change Status successfully");
 
         }
@@ -386,8 +382,9 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 ExportFiler.SaveFileasPDF(obj, findJson, GlobalUtilities.DepartmentName(Department), newFileName, "");
             }
 
-            var formdata = GlobalUtilities.GetMessageResponse(result, 2);
-            return Json(formdata, JsonRequestBehavior.AllowGet);
+            if (result == false) return JsonError("Problem during saving Data.", 500);
+            return JsonCreated(result, "Updated successfully");
+
         }
         [HttpPost]
         public async Task<ActionResult> DeleteRegistration()

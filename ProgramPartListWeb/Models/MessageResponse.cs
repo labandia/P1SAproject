@@ -15,6 +15,14 @@ namespace ProgramPartListWeb.Models
         public string Message { get; set; }
     }
 
+    public class AuthResponse
+    {
+        public int StatusCode { get; set; }
+        public string Message { get; set; }
+        public object Data { get; set; }
+    }
+
+
     public class ProblemDetails
     {
         public string Type { get; set; } = "about:blank";

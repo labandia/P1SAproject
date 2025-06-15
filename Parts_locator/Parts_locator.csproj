@@ -187,8 +187,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataAccess\DatabaseHelper.cs" />
-    <Compile Include="DataAccess\SQLMainlayoutRespository.cs" />
+    <Compile Include="Utilities\DataAccess\SQLMainlayoutRespository.cs" />
     <Compile Include="Helpers\Globalfunction.cs" />
     <Compile Include="Interface\IRawMats.cs" />
     <Compile Include="Interface\IProductRepository.cs" />
@@ -208,7 +207,7 @@
     <Compile Include="Utilities\AesEncryption.cs" />
     <Compile Include="Utilities\CacheHelper.cs" />
     <Compile Include="Utilities\CustomLogger.cs" />
-    <Compile Include="Utilities\SqlDataAccess.cs" />
+    <Compile Include="Utilities\DataAccess\SqlDataAccess.cs" />
     <Compile Include="View\Moldingbush\BushOpentransaction.cs">
       <SubType>Form</SubType>
     </Compile>

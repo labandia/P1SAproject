@@ -4,22 +4,23 @@ using System.Threading.Tasks;
 
 namespace Parts_locator.Interface
 {
-    internal interface IRawMats
+    public interface IRawMats
     {
         Task<List<RawMatModel>> GetRawMatProduct();
+        Task<List<RawMatModel>> GetRawMatProductByType(int bush);
         Task<List<RawMatModel>> GetRawMatProductByID(int act);
 
         // SHOPORDER FUNCTIONS
-        Task<List<RawMatModel>> GetShopOrderlist();
+        Task<List<RawMatSummaryModel>> GetShopOrderlist(int act);
 
         // MASTERLIST FUNCTIONS
-        Task<bool> AddMasterlist(MoldImpeller masterlist);
-        Task<bool> EditMasterlist(MoldImpeller masterlist);
+        Task<bool> AddMasterlist(RawMatModel masterlist);
+        Task<bool> EditMasterlist(string partnum, int qty, int type);
         Task<bool> DeleteMasterlist(int ID);
-        Task<bool> ImportMasterlist(MoldImpeller masterlist);
-        Task<bool> InsertTransaction(MoldImpeller masterlist);
+        Task<bool> ImportMasterlist(RawMatModel masterlist);
+        Task<bool> InsertTransaction(RawMatModel masterlist);
 
         // UPDATE STORAGE
-        Task<bool> UpdateRawMatsQuantity(MoldImpeller masterlist);
+        Task<bool> UpdateRawMatsQuantity(RawMatInputModel raw);
     }
 }

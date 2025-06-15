@@ -93,7 +93,6 @@
             this.Name = "MoldShoporder_IN_dialog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "-";
-            this.Load += new System.EventHandler(this.MoldShoporder_IN_dialog_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

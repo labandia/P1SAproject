@@ -28,12 +28,12 @@ namespace Parts_locator.Modules
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Transaction t = new Transaction();
-            string startnow = dstart.Value.ToString("MM/dd/yyyy");
-            string endDate = dend.Value.ToString("MM/dd/yyyy");
+            //Transaction t = new Transaction();
+            //string startnow = dstart.Value.ToString("MM/dd/yyyy");
+            //string endDate = dend.Value.ToString("MM/dd/yyyy");
 
-            DataTable dt = t.GetMonitoringOUT(startnow, endDate);;
-            SummaryTableout.DataSource = dt;
+            //DataTable dt = t.GetMonitoringOUT(startnow, endDate);;
+            //SummaryTableout.DataSource = dt;
         }
 
         private void summary_out_Load(object sender, EventArgs e)

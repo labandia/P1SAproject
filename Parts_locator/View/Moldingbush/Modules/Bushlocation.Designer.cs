@@ -386,7 +386,6 @@
             this.Controls.Add(this.pictureBox2);
             this.Name = "Bushlocation";
             this.Size = new System.Drawing.Size(1351, 624);
-            this.Load += new System.EventHandler(this.Bushlocation_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();

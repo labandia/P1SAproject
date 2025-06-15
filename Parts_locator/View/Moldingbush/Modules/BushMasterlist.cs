@@ -1,56 +1,33 @@
-﻿using Parts_locator.Data;
+﻿using Parts_locator.Interface;
 using System;
-using System.Data;
-using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace Parts_locator.View.Moldingbush.Modules
 {
     public partial class BushMasterlist : UserControl
     {
+        private readonly IRawMats _raw;
         public DataGridView shafttable { get { return ShaftassyGridview; } }
-        public int selectint;
 
-
-        public BushMasterlist()
+        public BushMasterlist(IRawMats raw)
         {
             InitializeComponent();
+            _raw = raw;
         }
 
-
-        public void UpdateDisplayTable(int selected)
+        public async void UpdateDisplayTable()
         {
-            DataTable table = new DataTable();
-            selectint = tabControl1.SelectedIndex + 1;
-
-            switch (selectint)
-            {
-                case 1:
-                    table =  ProductsMolding.getModelingRowByType(1);
-                    ShaftassyGridview.DataSource = table;
-                    ShaftassyGridview.Columns["Edit"].DisplayIndex = 5;
-                    break;
-                case 2:
-                    table =  ProductsMolding.getModelingRowByType(2);
-                    InsertBushgrid.DataSource = table;
-                    InsertBushgrid.Columns["EditFrame"].DisplayIndex = 4;
-                    break;
-            }
+            int controlselect = tabControl1.SelectedIndex + 1;
+            var data = await _raw.GetRawMatProductByType(controlselect);
+            ShaftassyGridview.DataSource = data;
+            ShaftassyGridview.Columns["Edit"].DisplayIndex = controlselect == 1 ? 5 : 4;
         }
-
-
-        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
-        {    
-            selectint = tabControl1.SelectedIndex + 1;
-            UpdateDisplayTable(selectint);
-        }
-
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e) => UpdateDisplayTable();
         private void ShaftassyGridview_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             // Check if the click is on a header
             if (e.RowIndex < 0)
             {
-                // Do nothing or handle the header click as needed
                 return;
             }
 
@@ -65,25 +42,23 @@ namespace Parts_locator.View.Moldingbush.Modules
             if (e.ColumnIndex == 0)
             {
                 
-                EditMasterlist ml = new EditMasterlist(this);
+                EditMasterlist ml = new EditMasterlist(this, _raw);
 
                 ml.Partnum.Text = strpartnum;
                 ml.QuanText.Text =  intqty;
                 ml.TypeText.Text = strType;
                 ml.prodID = 1;
                 ml.RacksText.Text = racks;
-                ml.selectedindex = selectint;
+                ml.selectedindex = tabControl1.SelectedIndex + 1;
                 ml.ShowDialog();
             }
            
         }
-
         private void InsertBushgrid_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             // Check if the click is on a header
             if (e.RowIndex < 0)
             {
-                // Do nothing or handle the header click as needed
                 return;
             }
 
@@ -93,30 +68,17 @@ namespace Parts_locator.View.Moldingbush.Modules
             
             if (e.ColumnIndex == 0)
             {
-                EditMasterlist ml = new EditMasterlist(this);
+                EditMasterlist ml = new EditMasterlist(this, _raw);
 
                 ml.Partnum.Text = strpartnum;
                 ml.QuanText.Text =  intqty;
                 ml.prodID = 2;
                 ml.RacksText.Text = racks;
-                ml.selectedindex = selectint;
+                ml.selectedindex = tabControl1.SelectedIndex + 1;
                 ml.ShowDialog();
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            UpdateDisplayTable(1);
-        }
-
-        private void ShaftassyGridview_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void BushMasterlist_Load(object sender, EventArgs e)
-        {
-
-        }
+        
     }
 }

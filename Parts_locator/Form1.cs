@@ -6,14 +6,12 @@ using System.Data.OleDb;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
-using System.Xml;
 using Excel = Microsoft.Office.Interop.Excel;
 
 namespace Parts_locator
 {
     public partial class Form1 : Form
     {
-        Products p = new Products();
         public Form1()
         {
             InitializeComponent();

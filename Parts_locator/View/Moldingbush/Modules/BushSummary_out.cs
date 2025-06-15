@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Parts_locator.Interface;
+using System;
 using System.Data;
 using System.Globalization;
 using System.Linq;
@@ -10,34 +11,15 @@ namespace Parts_locator.View.Moldingbush.Modules
 {
     public partial class BushSummary_out : UserControl
     {
+        private readonly IRawMats _raw;
         public DataGridView shoptable { get { return ShoporderTableOut; } }
         public int selectdata = 0;
 
-        public BushSummary_out()
+        public BushSummary_out(IRawMats raw)
         {
             InitializeComponent();
+            _raw = raw;
         }
-
-        private void BushSummary_out_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label3_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label4_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label5_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void button2_Click(object sender, EventArgs e)
         {
             GlobalDb connect = new GlobalDb();
@@ -58,8 +40,6 @@ namespace Parts_locator.View.Moldingbush.Modules
             DataTable dt = connect.GetData(strsql);
             ExportExcel(dt);
         }
-
-
         public void ExportExcel(DataTable dt)
         {
             try

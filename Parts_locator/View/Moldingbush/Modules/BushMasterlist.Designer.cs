@@ -32,19 +32,26 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BushMasterlist));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle22 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle23 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle24 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BushMasterlist));
             this.label1 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Bushassy = new System.Windows.Forms.TabPage();
             this.ShaftassyGridview = new System.Windows.Forms.DataGridView();
+            this.PartNumbershaft = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.RotorBush = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ShaftPartnum = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Racks = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ShaftQuantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Edit = new System.Windows.Forms.DataGridViewImageColumn();
             this.InsertBush = new System.Windows.Forms.TabPage();
             this.InsertBushgrid = new System.Windows.Forms.DataGridView();
             this.PartNumberBush = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -53,13 +60,6 @@
             this.BushQuantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.EditFrame = new System.Windows.Forms.DataGridViewImageColumn();
             this.Bushtap = new System.Windows.Forms.TabPage();
-            this.PartNumbershaft = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.RotorBush = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ShaftPartnum = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Racks = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ShaftQuantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Edit = new System.Windows.Forms.DataGridViewImageColumn();
             this.tabControl1.SuspendLayout();
             this.Bushassy.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ShaftassyGridview)).BeginInit();
@@ -121,7 +121,7 @@
             this.ShaftassyGridview.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
             dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle14.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(189)))), ((int)(((byte)(189)))), ((int)(((byte)(189)))));
-            dataGridViewCellStyle14.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold);
+            dataGridViewCellStyle14.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle14.ForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle14.Padding = new System.Windows.Forms.Padding(15, 0, 0, 0);
             dataGridViewCellStyle14.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(189)))), ((int)(((byte)(189)))), ((int)(((byte)(189)))));
@@ -144,7 +144,7 @@
             this.ShaftassyGridview.RightToLeft = System.Windows.Forms.RightToLeft.No;
             dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle18.BackColor = System.Drawing.Color.DarkGray;
-            dataGridViewCellStyle18.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold);
+            dataGridViewCellStyle18.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle18.ForeColor = System.Drawing.Color.White;
             dataGridViewCellStyle18.SelectionBackColor = System.Drawing.Color.Silver;
             dataGridViewCellStyle18.SelectionForeColor = System.Drawing.Color.White;
@@ -162,7 +162,69 @@
             this.ShaftassyGridview.Size = new System.Drawing.Size(1246, 461);
             this.ShaftassyGridview.TabIndex = 25;
             this.ShaftassyGridview.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ShaftassyGridview_CellClick);
-            this.ShaftassyGridview.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ShaftassyGridview_CellContentClick);
+            // 
+            // PartNumbershaft
+            // 
+            this.PartNumbershaft.DataPropertyName = "PartNumber";
+            dataGridViewCellStyle15.BackColor = System.Drawing.Color.MediumPurple;
+            dataGridViewCellStyle15.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle15.Padding = new System.Windows.Forms.Padding(10);
+            this.PartNumbershaft.DefaultCellStyle = dataGridViewCellStyle15;
+            this.PartNumbershaft.FillWeight = 91.64914F;
+            this.PartNumbershaft.HeaderText = "PartNumber";
+            this.PartNumbershaft.MinimumWidth = 2;
+            this.PartNumbershaft.Name = "PartNumbershaft";
+            this.PartNumbershaft.ReadOnly = true;
+            // 
+            // RotorBush
+            // 
+            this.RotorBush.DataPropertyName = "RotorBush";
+            this.RotorBush.HeaderText = "Rotor Bush";
+            this.RotorBush.Name = "RotorBush";
+            this.RotorBush.ReadOnly = true;
+            // 
+            // ShaftPartnum
+            // 
+            this.ShaftPartnum.DataPropertyName = "ShaftPartnum";
+            this.ShaftPartnum.HeaderText = "Shaft Part Number";
+            this.ShaftPartnum.Name = "ShaftPartnum";
+            this.ShaftPartnum.ReadOnly = true;
+            // 
+            // Racks
+            // 
+            this.Racks.DataPropertyName = "Racks";
+            this.Racks.FillWeight = 93.81573F;
+            this.Racks.HeaderText = "Racks";
+            this.Racks.Name = "Racks";
+            this.Racks.ReadOnly = true;
+            // 
+            // ShaftQuantity
+            // 
+            this.ShaftQuantity.DataPropertyName = "Quantity";
+            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            this.ShaftQuantity.DefaultCellStyle = dataGridViewCellStyle16;
+            this.ShaftQuantity.FillWeight = 93.81573F;
+            this.ShaftQuantity.HeaderText = "Total Quantity";
+            this.ShaftQuantity.Name = "ShaftQuantity";
+            this.ShaftQuantity.ReadOnly = true;
+            this.ShaftQuantity.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
+            // Type
+            // 
+            this.Type.HeaderText = "Type";
+            this.Type.Name = "Type";
+            // 
+            // Edit
+            // 
+            this.Edit.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle17.NullValue = null;
+            this.Edit.DefaultCellStyle = dataGridViewCellStyle17;
+            this.Edit.HeaderText = "Edit";
+            this.Edit.Image = ((System.Drawing.Image)(resources.GetObject("Edit.Image")));
+            this.Edit.Name = "Edit";
+            this.Edit.ReadOnly = true;
+            this.Edit.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             // 
             // InsertBush
             // 
@@ -295,69 +357,6 @@
             this.Bushtap.Text = "Bush Tap";
             this.Bushtap.UseVisualStyleBackColor = true;
             // 
-            // PartNumbershaft
-            // 
-            this.PartNumbershaft.DataPropertyName = "PartNumber";
-            dataGridViewCellStyle15.BackColor = System.Drawing.Color.MediumPurple;
-            dataGridViewCellStyle15.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle15.Padding = new System.Windows.Forms.Padding(10);
-            this.PartNumbershaft.DefaultCellStyle = dataGridViewCellStyle15;
-            this.PartNumbershaft.FillWeight = 91.64914F;
-            this.PartNumbershaft.HeaderText = "PartNumber";
-            this.PartNumbershaft.MinimumWidth = 2;
-            this.PartNumbershaft.Name = "PartNumbershaft";
-            this.PartNumbershaft.ReadOnly = true;
-            // 
-            // RotorBush
-            // 
-            this.RotorBush.DataPropertyName = "RotorBush";
-            this.RotorBush.HeaderText = "Rotor Bush";
-            this.RotorBush.Name = "RotorBush";
-            this.RotorBush.ReadOnly = true;
-            // 
-            // ShaftPartnum
-            // 
-            this.ShaftPartnum.DataPropertyName = "ShaftPartnum";
-            this.ShaftPartnum.HeaderText = "Shaft Part Number";
-            this.ShaftPartnum.Name = "ShaftPartnum";
-            this.ShaftPartnum.ReadOnly = true;
-            // 
-            // Racks
-            // 
-            this.Racks.DataPropertyName = "Racks";
-            this.Racks.FillWeight = 93.81573F;
-            this.Racks.HeaderText = "Racks";
-            this.Racks.Name = "Racks";
-            this.Racks.ReadOnly = true;
-            // 
-            // ShaftQuantity
-            // 
-            this.ShaftQuantity.DataPropertyName = "Quantity";
-            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            this.ShaftQuantity.DefaultCellStyle = dataGridViewCellStyle16;
-            this.ShaftQuantity.FillWeight = 93.81573F;
-            this.ShaftQuantity.HeaderText = "Total Quantity";
-            this.ShaftQuantity.Name = "ShaftQuantity";
-            this.ShaftQuantity.ReadOnly = true;
-            this.ShaftQuantity.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            // 
-            // Type
-            // 
-            this.Type.HeaderText = "Type";
-            this.Type.Name = "Type";
-            // 
-            // Edit
-            // 
-            this.Edit.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle17.NullValue = null;
-            this.Edit.DefaultCellStyle = dataGridViewCellStyle17;
-            this.Edit.HeaderText = "Edit";
-            this.Edit.Image = ((System.Drawing.Image)(resources.GetObject("Edit.Image")));
-            this.Edit.Name = "Edit";
-            this.Edit.ReadOnly = true;
-            this.Edit.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            // 
             // BushMasterlist
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -366,7 +365,6 @@
             this.Controls.Add(this.label1);
             this.Name = "BushMasterlist";
             this.Size = new System.Drawing.Size(1366, 641);
-            this.Load += new System.EventHandler(this.BushMasterlist_Load);
             this.tabControl1.ResumeLayout(false);
             this.Bushassy.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.ShaftassyGridview)).EndInit();

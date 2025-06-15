@@ -30,46 +30,46 @@ namespace Parts_locator.Modules
         private void Partnumtext_KeyDown(object sender, KeyEventArgs e)
         {
             RotorProducts r = new RotorProducts();
-            r.Partnum = Partnumtext.Text;
+            //r.Partnum = Partnumtext.Text;
 
-            if (e.KeyCode == Keys.Enter)
-            {
-                e.SuppressKeyPress=true;
+            //if (e.KeyCode == Keys.Enter)
+            //{
+            //    e.SuppressKeyPress=true;
 
-                var table = r.SearchProductLocation();              
-                // RESET THE PALLET COLOR BUTTONS
-                Resetbuttoncolor();
+            //    var table = r.SearchProductLocation();              
+            //    // RESET THE PALLET COLOR BUTTONS
+            //    Resetbuttoncolor();
 
-                int rowIndex = 0;
+            //    int rowIndex = 0;
 
-                if (table.Rows.Count > 0)
-                {
-                    do
-                    {
-                        // Access the current row using the rowIndex
-                        DataRow row = table.Rows[rowIndex];
+            //    if (table.Rows.Count > 0)
+            //    {
+            //        do
+            //        {
+            //            // Access the current row using the rowIndex
+            //            DataRow row = table.Rows[rowIndex];
 
-                        // Print the values in the current row
-                        partnum = Partnumtext.Text;
-                        palletname = row["PalletName"].ToString();
-                        palletID = Convert.ToInt32(row["PalletID"]);
-                        directmode = 1;
+            //            // Print the values in the current row
+            //            partnum = Partnumtext.Text;
+            //            palletname = row["PalletName"].ToString();
+            //            palletID = Convert.ToInt32(row["PalletID"]);
+            //            directmode = 1;
 
-                        // SET THE COLOR BACKGROUND FROM THE LOCATED PALETTE
-                        ColortheButton(row["PalletName"].ToString());
+            //            // SET THE COLOR BACKGROUND FROM THE LOCATED PALETTE
+            //            ColortheButton(row["PalletName"].ToString());
 
-                        // ADD PLUS ONE TO SET TO THE NEXT ROW VALUE
-                        rowIndex++;
-                    }
-                    while (rowIndex < table.Rows.Count);
-                }
-                else
-                {
-                    MessageBox.Show(this.Partnumtext.Text + " is not exist in the database");
-                    Partnumtext.Focus();
-                    Partnumtext.Text = "";
-                }             
-            }
+            //            // ADD PLUS ONE TO SET TO THE NEXT ROW VALUE
+            //            rowIndex++;
+            //        }
+            //        while (rowIndex < table.Rows.Count);
+            //    }
+            //    else
+            //    {
+            //        MessageBox.Show(this.Partnumtext.Text + " is not exist in the database");
+            //        Partnumtext.Focus();
+            //        Partnumtext.Text = "";
+            //    }             
+            //}
         }
 
 

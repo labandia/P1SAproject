@@ -26,24 +26,24 @@ namespace Parts_locator.Modals
 
         private void savebtn_Click(object sender, EventArgs e)
         {
-            Transaction_Rotor t = new Transaction_Rotor();
-            t.Partnum = part;
-            t.ShopOrder = shopText.Text;
-            t.CurrentQuantity = currentquan;
-            t.newQuantity = quan;
-            t.Inputby = inputText.Text;
-            t.PalletID = palID;
-            t.Action = 0;
+            //Transaction_Rotor t = new Transaction_Rotor();
+            //t.Partnum = part;
+            //t.ShopOrder = shopText.Text;
+            //t.CurrentQuantity = currentquan;
+            //t.newQuantity = quan;
+            //t.Inputby = inputText.Text;
+            //t.PalletID = palID;
+            //t.Action = 0;
 
-            int changequan = currentquan + quan;
-            bool result = t.Shoporder_IN(local);
+            //int changequan = currentquan + quan;
+            //bool result = t.Shoporder_IN(local);
 
-            if (result)
-            {            
-                ProductDetails.instanceform.QuanDisplay.Text = Convert.ToString(changequan);
-                Visible = false;
-                this.Hide();
-            }
+            //if (result)
+            //{            
+            //    ProductDetails.instanceform.QuanDisplay.Text = Convert.ToString(changequan);
+            //    Visible = false;
+            //    this.Hide();
+            //}
         }
 
         private void Shoporder_IN_Load(object sender, EventArgs e)

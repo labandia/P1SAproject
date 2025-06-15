@@ -1,125 +1,78 @@
 ﻿using Parts_locator.Data;
+using Parts_locator.Interface;
 using Parts_locator.Modals;
 using System;
 using System.Data;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Parts_locator.View.Moldingbush.Maincontent
 {
     public partial class Bushlocation : UserControl
     {
+        private readonly IRawMats _raw;
         private int RawType;
 
-
-        public Bushlocation()
+        public Bushlocation(IRawMats raw)
         {
             InitializeComponent();
+            _raw = raw;
         }
 
-        private void Bushlocation_Load(object sender, EventArgs e)
-        {
-            //string imagePath = @"\\SDP010F6C\Users\USER\Pictures\Access\Moldframe\RA60-25-2.jpg"; // Specify the path to your image file
-            //pictureBox1.Image = Image.FromFile(imagePath);
-            //pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-        }
-
-        private void textBox1_KeyDown(object sender, KeyEventArgs e)
-        {
-
-        }
-
-        private void partText_KeyDown(object sender, KeyEventArgs e)
+        private async void partText_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
                 e.SuppressKeyPress=true;
-                string part = partText.Text.Trim();
+                //string strpath = @"\\SDP010F6C\Users\USER\Pictures\Access\Moldframe\";
+                string part = String.IsNullOrEmpty(partText.Text) ? "" : partText.Text.Trim();
+                var data = await _raw.GetRawMatProduct();
+                var partData = data.Where(res => res.PartNumber == part);
 
-                var table = ProductsMolding.SearchProductLocation(part);
-                ResetAllText();
-                if (table.Rows.Count > 0)
+                //var table = ProductsMolding.SearchProductLocation(part);
+                
+                if(partData == null && !partData.Any())
                 {
-                    DataRow row = table.Rows[0];
+                    MessageBox.Show($"No matching Part number : {partText.Text} found in the database.", "No Data", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                
+                ResetAllText();
+                foreach (var item in partData)
+                {
+                    ModelText.Text = item.ModelName;
+                    RawType = item.Type;
 
-                    ModelText.Text = row["ModelName"] != DBNull.Value ? (string)row["ModelName"] : "";
-                    RawType = Convert.ToInt32(row["Type"]);
 
-
-                    //IF THE MODELNAME IS CONSIST OF NULL  IT IS A TAPPING BUSH
-                    if (row["ModelName"] == DBNull.Value)
+                    if (item.ModelName == "")
                     {
-                        ShaftText.Text = row["ShaftPartnum"] != DBNull.Value ? (string)row["ShaftPartnum"] : "";
-                        RotorText.Text = row["RotorBush"] != DBNull.Value ? (string)row["RotorBush"] : "";
+                        ShaftText.Text = item.ShaftPartnum;
+                        RotorText.Text = item.RotorBush;
                     }
                     else
                     {
-                        BushText.Text =  (string)row["PartNumber"];
+                        BushText.Text =  item.PartNumber;
                     }
 
-                    string imagepath = row["Sample_img"] != DBNull.Value ? (string)row["Sample_img"] : "";
-
-
-
-                    if (imagepath != "")
-                    {
-                        imagepath = @"\\SDP010F6C\Users\USER\Pictures\Access\Moldframe\" + imagepath + ""; // Specify the path to your image file
-                        pictureBox1.Image = Image.FromFile(imagepath);
-                        pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-                    }
-                    else
-                    {
-                        pictureBox1.Image = null;
-                    }
-
-                    // Function to display the images
+                    //pictureBox1.Image = item.Sample_img != "" ? Image.FromFile(strpath + item.Sample_img) : null;
+                    //pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
                     DisplayImage(RawType, part);
 
+                    Rackspanel_one.Enabled = (item.Racks == 1);
+                    Rackspanel_one.BackColor = item.Racks == 1 ? Color.FromArgb(30, 144, 255) : Color.Transparent;
+                    Rack_one.Text = item.Racks == 1 ? "Rack 1" : "N/A";
 
 
-
-                    //ModelText.Text = row["ModelName"] != DBNull.Value ? (string)row["ShaftBushAssyPartnum"] : "";
-
-
-
-                    if (Convert.ToInt32(row["Racks"]) == 1)
-                    {
-                        Rackspanel_one.Enabled = true;
-                        Rackspanel_one.BackColor = Color.FromArgb(30, 144, 255);
-                        Rack_one.Text = "Rack 1";
-                    }
-                    else
-                    {
-                        Rackspanel_one.Enabled = false;
-                        Rackspanel_one.BackColor = Color.Transparent;
-                        Rack_one.Text = "N/A";
-                    }
-
-
-
-                    if (Convert.ToInt32(row["Racks"]) == 2)
-                    {
-                        Rackspanel_two.Enabled = true;
-                        Rackspanel_two.BackColor = Color.FromArgb(255, 113, 30);
-                        Rack_two.Text = "Rack 2";
-                    }
-                    else
-                    {     
-                        Rackspanel_two.Enabled = false;
-                        Rackspanel_two.BackColor = Color.Transparent;
-                        Rack_two.Text = "N/A";
-                    }
+                    Rackspanel_two.Enabled = (item.Racks == 2);
+                    Rackspanel_two.BackColor = item.Racks == 2 ? Color.FromArgb(255, 113, 30) : Color.Transparent;
+                    Rack_two.Text = item.Racks == 2 ? "Rack 2" : "N/A";
 
                     partText.Focus();
                 }
-                else
-                {
-                    MessageBox.Show($"No matching Part number : {partText.Text} found in the database.", "No Data", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+
             }
         }
-
-
         public void DisplayImage(int type, string part)
         {
             string filepath;
@@ -141,8 +94,6 @@ namespace Parts_locator.View.Moldingbush.Maincontent
             //pictureBox1.SizeMode = PictureBoxSizeMode.CenterImage;
           
         }
-
-
         public void  ResetAllText()
         {
             Rackspanel_one.BackColor = Color.Transparent;
@@ -153,11 +104,7 @@ namespace Parts_locator.View.Moldingbush.Maincontent
             BushText.Text = "N/A";
             Rack_one.Text = "RACKS 1";
             Rack_two.Text = "RACKS 2";
-            
-            //Rack_one.BackColor = Color.Transparent;
-            //Rack_two.BackColor = Color.Transparent;
         }
-
         private void partText_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Enter || e.KeyChar == (char)13 || e.KeyChar == (char)10)
@@ -167,32 +114,30 @@ namespace Parts_locator.View.Moldingbush.Maincontent
                 partText.Text = scannedCode;
             }
         }
-
         private void Rackspanel_one_Click(object sender, EventArgs e)
         { 
             if (RawType == 1)
             {
-                BushPartDetails b = new BushPartDetails(partText.Text);
+                BushPartDetails b = new BushPartDetails(partText.Text, _raw);
                 b.ShowDialog();
             }
             else
             {
-                RawMaterialProductDetails rw = new RawMaterialProductDetails(partText.Text);
+                RawMaterialProductDetails rw = new RawMaterialProductDetails(_raw, partText.Text);
                 rw.ShowDialog();
             }
            
         }
-
         private void Rackspanel_two_Click(object sender, EventArgs e)
         {         
             if (RawType == 1)
             {
-                BushPartDetails b = new BushPartDetails(partText.Text);
+                BushPartDetails b = new BushPartDetails(partText.Text, _raw);
                 b.ShowDialog();
             }
             else
             {
-                RawMaterialProductDetails rw = new RawMaterialProductDetails(partText.Text);
+                RawMaterialProductDetails rw = new RawMaterialProductDetails(_raw, partText.Text);
                 rw.ShowDialog();
             }
         }

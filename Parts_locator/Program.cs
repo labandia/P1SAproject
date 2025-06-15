@@ -51,7 +51,11 @@ namespace Parts_locator
             services.AddSingleton<BushMain>();
             services.AddSingleton<Startup>();
             services.AddSingleton<RawMaterialProductDetails>();
+            services.AddSingleton<MoldShoporder_IN_dialog>();
+            services.AddSingleton<BushOpentransaction>();
+            services.AddSingleton<RawMaterialOpentraction>();
             services.AddSingleton<Bushlocation>();
+            services.AddSingleton<Mainlayout>();
             services.AddSingleton<BushMasterlist>();
             services.AddSingleton<BushSummary_in>();
             services.AddSingleton<BushSummary_out>();

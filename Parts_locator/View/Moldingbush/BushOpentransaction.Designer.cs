@@ -119,7 +119,6 @@
             this.Name = "BushOpentransaction";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "-";
-            this.Load += new System.EventHandler(this.BushOpentransaction_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -10,7 +10,7 @@ namespace Parts_locator.DataAccess
 {
     internal class SQLMainlayoutRespository : IProductRepository
     {
-        public void AddProduct(Products product)
+        public void AddProduct()
         {
             throw new NotImplementedException();
         }
@@ -39,9 +39,6 @@ namespace Parts_locator.DataAccess
             return db.GetData(searchsql);
         }
 
-        public void UpdateProduct(Products product)
-        {
-            throw new NotImplementedException();
-        }
+      
     }
 }

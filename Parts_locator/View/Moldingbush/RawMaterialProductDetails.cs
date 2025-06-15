@@ -1,63 +1,48 @@
-﻿using Parts_locator.Data;
+﻿using Parts_locator.Interface;
 using Parts_locator.View.Moldingbush;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.ComTypes;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Parts_locator.Modals
 {
     public partial class RawMaterialProductDetails : Form
     {
+        private readonly IRawMats _raw;
         public static RawMaterialProductDetails instanceform;
 
         public string partnum { get; set; }
         public int racks { get; set; }
 
-        public RawMaterialProductDetails(string partnum)
+        public RawMaterialProductDetails(IRawMats raw, string partnum)
         {
             InitializeComponent();
             instanceform = this;
             this.partnum=partnum;
+            _raw = raw; 
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void button4_Click(object sender, EventArgs e) => Visible = false;
+        private void RawMaterialProductDetails_Load(object sender, EventArgs e) => DisplayDetails();
+        public async void DisplayDetails()
         {
-            Visible = false;
-        }
+            var data = await _raw.GetRawMatProduct();
+            var filterdata = data.Where(res => res.PartNumber == partnum);
 
-        private void RawMaterialProductDetails_Load(object sender, EventArgs e)
-        {
-            DisplayDetails();
-        }
-
-        public void DisplayDetails()
-        {
-            DataTable td = ProductsMolding.getMoldingRowList(partnum);
-            string partnumstr;
-
-            if (td.Rows.Count > 0)
+            if (filterdata != null && filterdata.Any())
             {
-                DataRow row = td.Rows[0];
-                partnumstr = row["PartNumber"].ToString();
-                string nospaces = partnumstr.Trim();
+                foreach (var item in filterdata)
+                {
+                    PartnumDisplay.Text = item.PartNumber;
+                    ModelDisplay.Text = item.ModelName;
+                    LocalDisplay.Text = "Racks " + item.Racks.ToString();
+                    QuanDisplay.Text = item.Quantity.ToString();
 
-
-                PartnumDisplay.Text = nospaces;
-                ModelDisplay.Text = row["ModelName"].ToString();
-                LocalDisplay.Text = "Racks " + row["Racks"].ToString();
-                QuanDisplay.Text = row["Quantity"].ToString();
-
-                //FOr Images
-               
-                DisplayImage(nospaces);
+                    //FOr Images
+                    DisplayImage(item.PartNumber);
+                }
             }
         }
 
@@ -74,42 +59,28 @@ namespace Parts_locator.Modals
         {
             if (e.KeyCode == Keys.Enter)
             {
+                bool res = PartnumDisplay.Text == Checktext.Text.Trim();
 
-                if (PartnumDisplay.Text == Checktext.Text.Trim())
-                {
-                    Defaultstats.SendToBack();
-                    Checkstats.BringToFront();
-                    Errorstats.SendToBack();
-                    Verifystatus.Text = "GOOD";
-                    // Verifystatus.BorderStyle = Color.FromArgb(1, 199, 36);
-                    panel6.BackColor = Color.FromArgb(203, 253, 216);
-                    button2.Enabled = true;
-                    button1.Enabled = true;
-
-                }
-                else
-                {
-                    Defaultstats.SendToBack();
-                    Checkstats.SendToBack();
-                    Errorstats.BringToFront();
-                    Verifystatus.Text = "NOT GOOD";
-                    // Verifystatus.BorderStyle = Color.FromArgb(1, 199, 36);
-                    panel6.BackColor = Color.FromArgb(254, 222, 222);
-                    button2.Enabled = false;
-                    button1.Enabled = false;
-                    Checktext.Text = "";
-                    Checktext.Focus();
-                }
+                Defaultstats.SendToBack();
+                Checkstats.BringToFront();
+                Errorstats.SendToBack();
+                Verifystatus.Text = res ? "GOOD" : "NOT GOOD";
+                // Verifystatus.BorderStyle = Color.FromArgb(1, 199, 36);
+                panel6.BackColor = res ? Color.FromArgb(203, 253, 216) : Color.FromArgb(254, 222, 222);
+                button2.Enabled = res;
+                button1.Enabled = res;
+                Checktext.Text = res ? "" : Checktext.Text;
+                Checktext.Focus();
             }
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            string partnumber = PartnumDisplay.Text;
+            string partnumber = PartnumDisplay.Text.Trim();
             int quantity = Convert.ToInt32(QuanDisplay.Text);
             int rackslayer = racks;
 
-            RawMaterialOpentraction b = new RawMaterialOpentraction(partnumber, quantity, rackslayer, 0);
+            RawMaterialOpentraction b = new RawMaterialOpentraction(_raw, partnumber, quantity, rackslayer, 0);
             b.ShowDialog();
            
         }
@@ -120,7 +91,7 @@ namespace Parts_locator.Modals
             int quantity = Convert.ToInt32(QuanDisplay.Text);
             int rackslayer = racks;
 
-            RawMaterialOpentraction b = new RawMaterialOpentraction(partnumber, quantity, rackslayer, 1);
+            RawMaterialOpentraction b = new RawMaterialOpentraction(_raw, partnumber, quantity, rackslayer, 1);
             b.ShowDialog();
       
         }

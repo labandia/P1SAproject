@@ -1,19 +1,14 @@
-﻿using Parts_locator.Modals;
+﻿using Parts_locator.Interface;
+using Parts_locator.Modals;
+using Parts_locator.Models;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Parts_locator.View.Moldingbush
 {
     public partial class ShaftShoporder_IN_dialog : Form
     {
+        private readonly IRawMats _raw;
         public string part;
         public int currentquan;
         public int newquan;
@@ -21,7 +16,7 @@ namespace Parts_locator.View.Moldingbush
         public int action;
 
 
-        public ShaftShoporder_IN_dialog(string part, int currentquan, int newquan, int rack, int act)
+        public ShaftShoporder_IN_dialog(IRawMats raw, string part, int currentquan, int newquan, int rack, int act)
         {
             InitializeComponent();
             this.part = part;
@@ -29,54 +24,27 @@ namespace Parts_locator.View.Moldingbush
             this.rack = rack;
             this.action = act;
             this.newquan = newquan;
+            _raw = raw; 
         }
 
-        private void savebtn_Click(object sender, EventArgs e)
+        private async void savebtn_Click(object sender, EventArgs e)
         {
-            GlobalDb db = new GlobalDb();
-            int total = 0;
+            int total = (action == 0) ? currentquan + newquan : currentquan - newquan;
 
-            if (action == 0)
+            var obj = new RawMatInputModel
             {
-                total = currentquan + newquan;
-            }
-            else
-            {
-                total =  currentquan - newquan;
-            }
-
-            //ProductDetails.instanceform.partnumtext.Text = "CHANGE SUCCESS";
-
-            //UPDATES THE STORAGE QUANTITY BY PALLETE
-            string updatestorage = " UPDATE Part_ProductBushLocation SET " +
-                                   " Quantity =@Quantity  " +
-                                   " WHERE PartNumber = @PartNumber";
-
-            SqlParameter[] updateparamaters =
-            {
-                   new SqlParameter("@Quantity", total),
-                   new SqlParameter("@PartNumber", part)
+                PartNumber = part,
+                Quantity = newquan,
+                Inputby = inputText.Text.Trim(),
+                Action = action
             };
 
-            //INSERT A NEW  SHOPORDER DATA
-            string shopinserquery = "INSERT INTO Part_transaction_BushMold_shoporder(PartNumber, Quantity, Inputby, Action) " +
-                                   "VALUES (@PartNumber, @Quantity, @Inputby, @Action)";
+            bool result = await _raw.UpdateRawMatsQuantity(obj);
 
-            SqlParameter[] parameters =
-            {
-                   new SqlParameter("@PartNumber", part),
-                   new SqlParameter("@Quantity",  newquan),
-                   new SqlParameter("@Inputby", inputText.Text),
-                   new SqlParameter("@Action", action)
-                };
-
-            bool updatesuccess = db.ExecuteCommandUpdate(updatestorage, updateparamaters);
-            bool transactsuccess = db.ExecuteCommandUpdate(shopinserquery, parameters);
-
-            if (updatesuccess && transactsuccess)
+            if (result)
             {
                 //MessageBox.Show("New shoporder Entered ");
-                RawMaterialProductDetails.instanceform.QuanDisplay.Text = Convert.ToString(total);
+                BushPartDetails.instanceform.RawQuantity.Text = Convert.ToString(total);
                 Visible = false;
                 this.Hide();
             }

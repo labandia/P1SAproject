@@ -26,30 +26,30 @@ namespace Parts_locator.Modals
 
         private void Addbtn_Click(object sender, EventArgs e)
         {
-            Transaction_Rotor t = new Transaction_Rotor();
-            t.PalletID = palID;
-            t.ShopOrder = RotorshopText.Text;
-            t.finalShopOrder = FAshopText.Text;
-            t.newQuantity = newquan;
-            t.CurrentQuantity = currentquan;
-            t.Inputby = InputText.Text;
-            t.Partnum = part; 
-            t.ModelBase = ModelText.Text;
-            t.PLanquan = Convert.ToInt32(PlanText.Text);
-            t.PlanStart = PlanstartText.Text;
-            t.Bush = BushText.Text; 
-            t.Stats = StatsText.Text;
-            t.Action = 1;
+            //Transaction_Rotor t = new Transaction_Rotor();
+            //t.PalletID = palID;
+            //t.ShopOrder = RotorshopText.Text;
+            //t.finalShopOrder = FAshopText.Text;
+            //t.newQuantity = newquan;
+            //t.CurrentQuantity = currentquan;
+            //t.Inputby = InputText.Text;
+            //t.Partnum = part; 
+            //t.ModelBase = ModelText.Text;
+            //t.PLanquan = Convert.ToInt32(PlanText.Text);
+            //t.PlanStart = PlanstartText.Text;
+            //t.Bush = BushText.Text; 
+            //t.Stats = StatsText.Text;
+            //t.Action = 1;
 
-            bool result = t.Shoporder_OUT();
-            int changequan = currentquan - newquan;
+            //bool result = t.Shoporder_OUT();
+            //int changequan = currentquan - newquan;
 
-            if (result)
-            {
-                ProductDetails.instanceform.QuanDisplay.Text = Convert.ToString(changequan);
-                Visible = false;
-                this.Hide();
-            }
+            //if (result)
+            //{
+            //    ProductDetails.instanceform.QuanDisplay.Text = Convert.ToString(changequan);
+            //    Visible = false;
+            //    this.Hide();
+            //}
             
         }
 

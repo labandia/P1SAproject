@@ -190,19 +190,12 @@
     <Compile Include="DataAccess\DatabaseHelper.cs" />
     <Compile Include="DataAccess\SQLMainlayoutRespository.cs" />
     <Compile Include="Helpers\Globalfunction.cs" />
-    <Compile Include="Interface\IMoldImpeller.cs" />
     <Compile Include="Interface\IRawMats.cs" />
-    <Compile Include="Models\BushProducts.cs" />
     <Compile Include="Interface\IProductRepository.cs" />
-    <Compile Include="Models\MoldImpeller.cs" />
-    <Compile Include="Models\Moldingtransaction.cs" />
     <Compile Include="Models\ProductRepository.cs" />
     <Compile Include="Models\ProductsBackup.cs" />
-    <Compile Include="Models\Products.cs" />
-    <Compile Include="Models\ProductsMolding.cs" />
     <Compile Include="Models\RawMatModel.cs" />
     <Compile Include="Models\RotorProducts.cs" />
-    <Compile Include="Models\Transaction.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -210,10 +203,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers\GlobalDb.cs" />
-    <Compile Include="Models\Transaction_Bush.cs" />
-    <Compile Include="Models\Transaction_Rotor.cs" />
     <Compile Include="Models\UsersModel.cs" />
-    <Compile Include="Repository\MoldImpellerRepository.cs" />
     <Compile Include="Repository\RawMatsRepository.cs" />
     <Compile Include="Utilities\AesEncryption.cs" />
     <Compile Include="Utilities\CacheHelper.cs" />
@@ -310,7 +300,6 @@
     <Compile Include="View\Moldingbush\RawMaterialProductDetails.Designer.cs">
       <DependentUpon>RawMaterialProductDetails.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\Rotor\ProductVIew.cs" />
     <Compile Include="View\Rotor\Shoporder_IN.cs">
       <SubType>Form</SubType>
     </Compile>

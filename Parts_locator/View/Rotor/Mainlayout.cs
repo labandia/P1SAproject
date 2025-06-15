@@ -16,14 +16,15 @@ namespace Parts_locator
         private Transaction_Rotor _rotor;
         private readonly Transaction t;
 
-        public Mainlayout()
+        public Mainlayout(IServiceProvider serviceProvider)
         {
             InitializeComponent();
+            _serviceProvider = serviceProvider;
             _products = new RotorProducts();
             t = new Transaction();  
             locationpage1.BringToFront();
-            locationpage1.totalcount.Text = _products.getProductList().Rows.Count.ToString();
-            locationpage1.totalsum.Text = _products.getTotalStorageAmount().ToString();
+            //locationpage1.totalcount.Text = _products.getProductList().Rows.Count.ToString();
+            //locationpage1.totalsum.Text = _products.getTotalStorageAmount().ToString();
         }
 
         //public void SetPresenter(MainlayoutPresentor presenter)
@@ -39,8 +40,8 @@ namespace Parts_locator
             Summaryout.BackColor = Color.FromArgb(25, 31, 40);
             Masterlist.BackColor = Color.FromArgb(25, 31, 40);
             Partslocator.BackColor = Color.FromArgb(54, 97, 235);
-            locationpage1.totalcount.Text = _products.getProductList().Rows.Count.ToString();
-            locationpage1.totalsum.Text = _products.getTotalStorageAmount().ToString();
+            //locationpage1.totalcount.Text = _products.getProductList().Rows.Count.ToString();
+            //locationpage1.totalsum.Text = _products.getTotalStorageAmount().ToString();
         }
 
         private void Summaryin_Click(object sender, EventArgs e)
@@ -58,8 +59,8 @@ namespace Parts_locator
             Summaryout.BackColor = Color.FromArgb(25, 31, 40);
             Masterlist.BackColor = Color.FromArgb(25, 31, 40);
             Partslocator.BackColor = Color.FromArgb(25, 31, 40);
-            summary_in1.summaryingrid.DataSource = _rotor.GetMonitoringIN(startnow, endDate);
-            summary_in1.resultcount.Text = "Total Result:" +  _rotor.GetMonitoringIN(startnow, endDate).Rows.Count.ToString();
+            //summary_in1.summaryingrid.DataSource = _rotor.GetMonitoringIN(startnow, endDate);
+            //summary_in1.resultcount.Text = "Total Result:" +  _rotor.GetMonitoringIN(startnow, endDate).Rows.Count.ToString();
         }
 
         private void Summaryout_Click(object sender, EventArgs e)
@@ -86,22 +87,22 @@ namespace Parts_locator
             Summaryout.BackColor = Color.FromArgb(25, 31, 40);
             Masterlist.BackColor = Color.FromArgb(54, 97, 235);
             Partslocator.BackColor = Color.FromArgb(25, 31, 40);
-            masterlist1.Mastergridview.DataSource = _products.getProductList();
-            masterlist1.ResultData.Text = "Total Result:" +  _products.getProductList().Rows.Count.ToString();
+            //masterlist1.Mastergridview.DataSource = _products.getProductList();
+            //masterlist1.ResultData.Text = "Total Result:" +  _products.getProductList().Rows.Count.ToString();
 
-            DataTable table = _products.getProductList();
-            int total = 0;
+            //DataTable table = _products.getProductList();
+            //int total = 0;
 
-            if (table.Rows.Count > 0)
-            {
-                foreach(DataRow row in table.Rows)
-                {
-                    total += Convert.ToInt32(row["Quantity"].ToString());
-                }
-            }
+            //if (table.Rows.Count > 0)
+            //{
+            //    foreach(DataRow row in table.Rows)
+            //    {
+            //        total += Convert.ToInt32(row["Quantity"].ToString());
+            //    }
+            //}
 
-            masterlist1.TotalQuan.Text = Convert.ToString(total);
-            masterlist1.TotalQuan.TextAlign = ContentAlignment.MiddleRight;
+            //masterlist1.TotalQuan.Text = Convert.ToString(total);
+            //masterlist1.TotalQuan.TextAlign = ContentAlignment.MiddleRight;
 
 
         }

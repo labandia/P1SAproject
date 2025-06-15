@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Parts_locator.Interface;
+using System;
 using System.Data;
 using System.Globalization;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
@@ -10,11 +10,13 @@ namespace Parts_locator.View.Moldingbush.Modules
 {
     public partial class BushSummary_in : UserControl
     {
+        private readonly IRawMats _raw;
         public DataGridView shoptable {  get { return MoldShopordertable; } }
 
-        public BushSummary_in()
+        public BushSummary_in(IRawMats raw)
         {
             InitializeComponent();
+            _raw = raw;
         }
 
         private void button2_Click(object sender, System.EventArgs e)
@@ -116,11 +118,6 @@ namespace Parts_locator.View.Moldingbush.Modules
             DataTable dt = connect.GetData(strsql);
 
             MoldShopordertable.DataSource = dt;
-        }
-
-        private void BushSummary_in_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }

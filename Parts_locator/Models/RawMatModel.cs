@@ -1,4 +1,7 @@
 ﻿
+using DocumentFormat.OpenXml.Vml;
+using System.Data.SqlClient;
+
 namespace Parts_locator.Models
 {
     public class RawMatModel
@@ -89,6 +92,36 @@ namespace Parts_locator.Models
         {
             get => _Inputby;
             set => _Inputby = value;
+        }
+    }
+
+
+    public class RawMatInputModel
+    {
+        private string _PartNumber;
+        private int _Quantity;
+        private string _Inputby;
+        private int _Action;
+
+        public string PartNumber
+        {
+            get => _PartNumber;
+            set => _PartNumber = value;
+        }
+        public int Quantity
+        {
+            get => _Quantity;
+            set => _Quantity = value;
+        }
+        public string Inputby
+        {
+            get => _Inputby;
+            set => _Inputby = value;
+        }
+        public int Action
+        {
+            get => _Action;
+            set => _Action = value;
         }
     }
 }

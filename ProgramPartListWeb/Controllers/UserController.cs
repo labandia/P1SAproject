@@ -202,37 +202,95 @@ namespace ProgramPartListWeb.Controllers
         }
 
 
+        [AllowAnonymous]
+        [HttpPost]
+        public ActionResult RefreshToken(string refreshToken)
+        {
+            string currentRole = Session["Role"]?.ToString();
+            string fullname = Session["Fullname"]?.ToString();
+            int userId = Convert.ToInt32(Session["UserID"]);
+
+            if (string.IsNullOrEmpty(currentRole) || string.IsNullOrEmpty(fullname))
+            {
+                return Json(new { StatusCode = 401, Message = "Unauthorized" }, JsonRequestBehavior.AllowGet);
+            }
+
+            var newAccessToken = JwtHelper.GenerateAccessToken(fullname, currentRole, userId);
+
+            // Optionally refresh cookie
+            var cookie = new HttpCookie("jwt", newAccessToken)
+            {
+                HttpOnly = true,
+                Secure = Request.IsSecureConnection,
+                Expires = DateTime.Now.AddDays(7)
+            };
+            Response.Cookies.Add(cookie);
+
+            return Json(new
+            {
+                StatusCode = 200,
+                Message = "Token refreshed successfully",
+                access_token = newAccessToken
+            }, JsonRequestBehavior.AllowGet);
+        }
 
 
         [HttpPost]
-        public async Task<ActionResult>RefreshToken(string refreshToken)
+        public ActionResult Logout()
         {
-            try
+            Session.Clear();
+
+            if (Request.Cookies["jwt"] != null)
             {
-                var Users = await _user.GetAllusers();
-                var principal = JwtHelper.ValidateToken(refreshToken, true);
-
-                if (principal == null)
+                var cookie = new HttpCookie("jwt")
                 {
-                    return Json(new { success = false, message = "Invalid or expired refresh token" }, JsonRequestBehavior.AllowGet);
-                }
-
-                var userId = int.Parse(principal.FindFirst("UserId").Value);
-                var user = Users.FirstOrDefault(u => u.User_ID == userId);
-
-                if (user == null)
-                {
-                    return Json(new { success = false, message = "User not found" }, JsonRequestBehavior.AllowGet);
-                }
-
-                var newAccessToken = JwtHelper.GenerateAccessToken(user.Username, Convert.ToString(user.Role_ID), user.User_ID);
-                return Json(new { success = true, accessToken = newAccessToken });
+                    Expires = DateTime.Now.AddDays(-1)
+                };
+                Response.Cookies.Add(cookie);
             }
-            catch (Exception ex)
+
+            if (Request.Cookies["refresh_token"] != null)
             {
-                return Json(new { success = false, message = "Failed to refresh token: " + ex.Message }, JsonRequestBehavior.AllowGet);
+                var refreshCookie = new HttpCookie("refresh_token")
+                {
+                    Expires = DateTime.Now.AddDays(-1)
+                };
+                Response.Cookies.Add(refreshCookie);
             }
+
+            return RedirectToAction("Login", "Account");
         }
+
+
+        //[HttpPost]
+        //public async Task<ActionResult>RefreshToken(string refreshToken)
+        //{
+        //    try
+        //    {
+        //        var Users = await _user.GetAllusers();
+        //        var principal = JwtHelper.ValidateToken(refreshToken, true);
+
+        //        if (principal == null)
+        //        {
+        //            return Json(new { success = false, message = "Invalid or expired refresh token" }, JsonRequestBehavior.AllowGet);
+        //        }
+
+        //        var userId = int.Parse(principal.FindFirst("UserId").Value);
+        //        var user = Users.FirstOrDefault(u => u.User_ID == userId);
+
+        //        if (user == null)
+        //        {
+        //            return Json(new { success = false, message = "User not found" }, JsonRequestBehavior.AllowGet);
+        //        }
+
+        //        var newAccessToken = JwtHelper.GenerateAccessToken(user.Username, Convert.ToString(user.Role_ID), user.User_ID);
+        //        return Json(new { success = true, accessToken = newAccessToken });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new { success = false, message = "Failed to refresh token: " + ex.Message }, JsonRequestBehavior.AllowGet);
+        //    }
+        //}
 
         public void SetFormsAuthentication(int userID)
         {
@@ -269,7 +327,7 @@ namespace ProgramPartListWeb.Controllers
 
 
         [HttpPost]
-        public ActionResult Logout()
+        public ActionResult LogoutV2()
         {
             Session.Clear();
             Session.Abandon();

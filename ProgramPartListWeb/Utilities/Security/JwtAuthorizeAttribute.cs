@@ -12,70 +12,73 @@ namespace ProgramPartListWeb.Helper
 {
     public class JwtAuthorizeAttribute : AuthorizeAttribute
     {
-        private readonly string[] _roles;
+        public string Role { get; set; } // optional role check
 
-        public JwtAuthorizeAttribute(params string[] roles)
-        {
-            _roles = roles;
-        }
 
-        protected override bool AuthorizeCore(HttpContextBase httpContext)
-        {
-            try
-            {
-                var authHeader = httpContext.Request.Headers["Authorization"];
-                if (string.IsNullOrWhiteSpace(authHeader) || !authHeader.StartsWith("Bearer "))
-                    return false;
+        //private readonly string[] _roles;
 
-                var token = authHeader.Substring("Bearer ".Length).Trim();
-                var principal = JwtHelper.ValidateToken(token);
+        //public JwtAuthorizeAttribute(params string[] roles)
+        //{
+        //    _roles = roles;
+        //}
 
-                httpContext.User = principal;
-                Thread.CurrentPrincipal = principal;
+        //protected override bool AuthorizeCore(HttpContextBase httpContext)
+        //{
+        //    try
+        //    {
+        //        var authHeader = httpContext.Request.Headers["Authorization"];
+        //        if (string.IsNullOrWhiteSpace(authHeader) || !authHeader.StartsWith("Bearer "))
+        //            return false;
 
-                if (_roles == null || _roles.Length == 0)
-                    return true;
+        //        var token = authHeader.Substring("Bearer ".Length).Trim();
+        //        var principal = JwtHelper.ValidateToken(token);
 
-                var identity = principal.Identity as ClaimsIdentity;
-                var userRoles = identity?.FindAll(ClaimTypes.Role).Select(r => r.Value);
+        //        httpContext.User = principal;
+        //        Thread.CurrentPrincipal = principal;
 
-                return userRoles != null && _roles.Any(role => userRoles.Contains(role));
-            }
-            catch
-            {
-                return false;
-            }
-        }
+        //        if (_roles == null || _roles.Length == 0)
+        //            return true;
 
-        protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
-        {
-            var request = filterContext.HttpContext.Request;
+        //        var identity = principal.Identity as ClaimsIdentity;
+        //        var userRoles = identity?.FindAll(ClaimTypes.Role).Select(r => r.Value);
 
-            // Detect if it's a Fetch/XHR request by checking the headers manually
-            bool isApiRequest = request.Headers["Authorization"] != null
-                                || request.AcceptTypes?.Any(t => t.Contains("application/json")) == true;
+        //        return userRoles != null && _roles.Any(role => userRoles.Contains(role));
+        //    }
+        //    catch
+        //    {
+        //        return false;
+        //    }
+        //}
 
-            if (isApiRequest)
-            {
-                filterContext.Result = new JsonResult
-                {
-                    Data = new
-                    {
-                        success = false,
-                        message = "Unauthorized: Access is denied due to invalid token or insufficient permissions."
-                    },
-                    JsonRequestBehavior = JsonRequestBehavior.AllowGet
-                };
+        //protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
+        //{
+        //    var request = filterContext.HttpContext.Request;
 
-                // Important: Set the actual HTTP status code to 401 for fetch to recognize it
-                filterContext.HttpContext.Response.StatusCode = 401;
-                filterContext.HttpContext.Response.SuppressFormsAuthenticationRedirect = true;
-            }
-            else
-            {
-                // Fallback for normal browser requests
-                filterContext.Result = new RedirectResult("~/Error/Unauthorized");
-            }
-        }
+        //    // Detect if it's a Fetch/XHR request by checking the headers manually
+        //    bool isApiRequest = request.Headers["Authorization"] != null
+        //                        || request.AcceptTypes?.Any(t => t.Contains("application/json")) == true;
+
+        //    if (isApiRequest)
+        //    {
+        //        filterContext.Result = new JsonResult
+        //        {
+        //            Data = new
+        //            {
+        //                success = false,
+        //                message = "Unauthorized: Access is denied due to invalid token or insufficient permissions."
+        //            },
+        //            JsonRequestBehavior = JsonRequestBehavior.AllowGet
+        //        };
+
+        //        // Important: Set the actual HTTP status code to 401 for fetch to recognize it
+        //        filterContext.HttpContext.Response.StatusCode = 401;
+        //        filterContext.HttpContext.Response.SuppressFormsAuthenticationRedirect = true;
+        //    }
+        //    else
+        //    {
+        //        // Fallback for normal browser requests
+        //        filterContext.Result = new RedirectResult("~/Error/Unauthorized");
+        //    }
+        //}
     }
 }

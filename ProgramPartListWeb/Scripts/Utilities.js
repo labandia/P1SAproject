@@ -98,25 +98,35 @@ window.postData = async (url, data) => {
 };
 async function refreshAccessToken() {
     const logout = localStorage.getItem('Logout');
-    const refreshToken = localStorage.getItem("refreshToken");
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (!refreshToken) return false;
 
     try {
         const response = await fetch("/User/RefreshToken", {
             method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: `refreshToken=${refreshToken}`
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ refreshToken: refreshToken })
         });
 
-        const data = await response.json();
-
-        if (data.success) {
+        const result = await response.json();
+        if (response.ok && result.access_token) {
             localStorage.setItem("accessToken", data.accessToken);
         } else {
             console.warn("Refresh token failed. Logging out...");
             window.location.href = logout;
         }
+
+        //const data = await response.json();
+
+        //if (data.success) {
+        //    localStorage.setItem("accessToken", data.accessToken);
+        //} else {
+        //    console.warn("Refresh token failed. Logging out...");
+        //    window.location.href = logout;
+        //}
     } catch (error) {
         console.error("Error refreshing token:", error);
+        return false;
         // logout();
     }
 }

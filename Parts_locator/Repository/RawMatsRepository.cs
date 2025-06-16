@@ -3,6 +3,7 @@ using Parts_locator.Models;
 using Parts_locator.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,13 +14,13 @@ namespace Parts_locator.Repository
         // =================== GET DATA ========================
         public async Task<List<RawMatModel>> GetRawMatProduct()
         {
-            string sql = "SELECT m.Type, b.PartNumber, m.ModelName, m.RotorBush, " +
-                                "m.ShaftPartnum, m.ShaftBushAssyPartnum, " +
-                                "b.Racks, b.Quantity, i.Sample_img " +
-                            "FROM Part_MoldingBushParts m " +
-                            "INNER JOIN Part_ProductBushLocation b " +
-                            "ON m.PartNumber = b.PartNumber " +
-                            "LEFT JOIN Parts_MoldingRawImage i ON i.PartNumber = m.PartNumber ";
+            string sql = @"SELECT m.Type, b.PartNumber, m.ModelName, m.RotorBush, 
+                                m.ShaftPartnum, m.ShaftBushAssyPartnum, 
+                                b.Racks, b.Quantity, i.Sample_img 
+                            FROM Part_MoldingBushParts m 
+                            INNER JOIN Part_ProductBushLocation b 
+                            ON m.PartNumber = b.PartNumber 
+                            LEFT JOIN Parts_MoldingRawImage i ON i.PartNumber = m.PartNumber ";
 
             return await SqlDataAccess.GetData<RawMatModel>(sql);
         }
@@ -32,9 +33,10 @@ namespace Parts_locator.Repository
         {
             try
             {
+                
                 var data = await GetRawMatProduct();
-                var bustype = data.Where(res => res.Type == bushtype).ToList();
-                return bustype;
+                var filterdata = data.Where(res => res.Type == bushtype).ToList();
+                return filterdata;
             }
             catch (FormatException)
             {
@@ -43,11 +45,12 @@ namespace Parts_locator.Repository
         }
         public async Task<List<RawMatSummaryModel>> GetShopOrderlist(int act)
         {
-            string strsql = "SELECT FORMAT(DateInput, 'MM/dd/yyyy') as DateInput, " +
-                           "FORMAT(DateInput, 'HH:mm:ss tt') as TimeInput,PartNumber, " +
-                           "Quantity,Inputby " +
-                           "FROM Part_transaction_BushMold_shoporder " +
-                           "WHERE Action = @Action";
+            string strsql = @"SELECT FORMAT(DateInput, 'MM/dd/yyyy') as DateInput, 
+                           FORMAT(DateInput, 'HH:mm:ss tt') as TimeInput,PartNumber, 
+                           Quantity,Inputby 
+                           FROM Part_transaction_BushMold_shoporder 
+                           WHERE Action = @Action
+                           ORDER BY TransactionID DESC";
             return await SqlDataAccess.GetData<RawMatSummaryModel>(strsql, new { Action = act });
         }
 

@@ -15,6 +15,10 @@ namespace PMACS_V2.Areas.P1SA.Repository
 {
     public class MoldDieRepository : IDieMold
     {
+        // ===========================================================
+        // ==================== MOLDING DIE MOLD  ======================
+        // ===========================================================
+
         // MOLD DIE INPUT DATA
         public async Task<List<DieMoldTotalPartnum>> GetMoldTotalPartNoList(int month, int year)
         {
@@ -86,7 +90,6 @@ namespace PMACS_V2.Areas.P1SA.Repository
             return totalpart;
         }
 
-
         // MOLD DIE SUMMARY DATA
         public async Task<List<DieMoldSetNotal>> GetSummaryMoldData()
         {
@@ -155,10 +158,6 @@ namespace PMACS_V2.Areas.P1SA.Repository
             return await SqlDataAccess.GetData<DieMoldSummaryProcess>(strquery, null);
         }
 
-
-
-
-
         public async Task<bool> AddUpdateMoldie(MoldInputModel mold)
         {
             string checkquery = "SELECT COUNT(PartNo) FROM DieMoldMonitor WHERE MONTH(DateAction) = @DateAction AND PartNo = @PartNo";
@@ -185,6 +184,26 @@ namespace PMACS_V2.Areas.P1SA.Repository
           
         }
 
-        
+
+
+        // ===========================================================
+        // ==================== PRESS DIE MOLD  ======================
+        // ===========================================================
+        public async  Task<List<PressDieRegistry>> GetPressRegistryList()
+        {
+            string strquery = @"SELECT ToolNo,Type,Model,Lines,Note,Status,Operational
+                                FROM DiePressRegistry ";
+            return await SqlDataAccess.GetData<PressDieRegistry>(strquery, null);
+        }
+
+        public async Task<List<PressDieMontoring>> GetPressMonitoring()
+        {
+            string strquery = @"SELECT FORMAT(DateInput, 'MM/dd/yyyy') as DateInput,
+                                    ToolNo,Upper,Lower,Upper_ActualHeight,
+	                                Upper_DrawingHeight,Lower_ActualHeight,
+	                                Lower_DrawingHeight,PressStamp
+                              FROM DiePressMonitoring";
+            return await SqlDataAccess.GetData<PressDieMontoring>(strquery, null);
+        }
     }
 }

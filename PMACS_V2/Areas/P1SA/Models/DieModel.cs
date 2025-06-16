@@ -22,17 +22,12 @@ namespace PMACS_V2.Areas.P1SA.Models
         public int TotalQty { get; set; }
         public int TotalNo { get; set; }
     }
-
-
     public class DieMoldSetNotal
     {
         public int No { get; set; }
         public int PreviousCount { get; set; }
         public int DieLife { get; set; }
     }
-
-
-
     public class DieMoldSummaryProcess
     {
         public int No { get; set; }
@@ -262,5 +257,34 @@ namespace PMACS_V2.Areas.P1SA.Models
         public string PartNo { get; set; }
         public string MoldInput { get; set; }
         public int DateAction { get; set; }
+    }
+
+
+
+
+
+    //############################# PRESS MOLD DIE =======================================
+    public class PressDieRegistry
+    {
+        public string ToolNo { get; set; }
+        public string Type { get; set; }
+        public string Model { get; set; }
+        public int Lines { get; set; }
+        public string Note { get; set; }
+        public string Status { get; set; }
+        public string Operational { get; set; }
+    }
+
+    public class PressDieMontoring
+    {
+        public string DateInput { get; set; }
+        public string ToolNo { get; set; }
+        public double Upper { get; set; }
+        public double Lower { get; set; }
+        public double Upper_ActualHeight { get; set; }
+        public double Upper_DrawingHeight { get; set; }
+        public double Lower_ActualHeight { get; set; }
+        public double Lower_DrawingHeight { get; set; }
+        public double PressStamp { get; set; }
     }
 }

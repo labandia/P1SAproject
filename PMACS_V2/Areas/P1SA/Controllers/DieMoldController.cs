@@ -111,13 +111,47 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             var formdata = GlobalUtilities.GetMessageResponse(update, 1);
             return Json(formdata, JsonRequestBehavior.AllowGet);
         }
+        // ===========================================================
+        // ==================== PRESS MOLD DIE DATA  ==================
+        // ===========================================================
+        public async Task<ActionResult> GetPressDieRegistryList()
+        {
+            try
+            {
+                var data = await _die.GetPressRegistryList();
 
+                if (data == null || !data.Any())
+                    return JsonNotFound("No DieMonth input data found");
+
+                return JsonSuccess(data);
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message);
+            }
+        }
+
+        public async Task<ActionResult> GetPressDieMonitoringList()
+        {
+            try
+            {
+                var data = await _die.GetPressMonitoring();
+
+                if (data == null || !data.Any())
+                    return JsonNotFound("No Monitoring data found");
+
+                return JsonSuccess(data);
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message);
+            }
+        }
 
 
         // GET: P1SA/DieMold
-        public ActionResult DieMoldLife()
-        {
-            return View();
-        }
+        public ActionResult DieMoldLife() =>  View();
+        public ActionResult DiePressLife() => View();
+
     }
 }

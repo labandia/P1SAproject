@@ -14,7 +14,7 @@ namespace Parts_locator.Utilities
 {
     public static class SqlDataAccess
     {
-        private static readonly string _cons = ConfigurationManager.ConnectionStrings["live_connect"].ToString();
+        private static readonly string _cons = ConfigurationManager.ConnectionStrings["LiveDevelopment"].ToString();
         //private static readonly string _consV2 = AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings["LiveDevelopment"].ConnectionString);
         //private static readonly string _cons = ConfigurationManager.ConnectionStrings["Myconnect"].ToString();
         public static SqlConnection GetConnection(string connectionString) =>  new SqlConnection(connectionString);

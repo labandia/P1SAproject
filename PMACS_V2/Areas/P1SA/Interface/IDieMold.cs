@@ -20,5 +20,11 @@ namespace PMACS_V2.Areas.P1SA.Interface
         // ===============================================
 
         Task<bool> AddUpdateMoldie(MoldInputModel mold);
+
+
+        // PRESS
+        // ===============================================
+        Task<List<PressDieRegistry>> GetPressRegistryList();
+        Task<List<PressDieMontoring>> GetPressMonitoring();
     }
 }

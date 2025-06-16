@@ -19,13 +19,18 @@
                     <input type="text" placeholder="Type Registration No." name="RegNo" id="RegNo" required/>
                 </div>
                 <div class="col-12 col-sm-12 col-lg-6">
-                    <label  >Select Inspectors  </label>
-                    <div class="select-container">
+                    <label>Select Inspectors  </label>
+                    @*<div class="select-container">
                         <select id="Employee_ID" name="Employee_ID">
                             <option>-- Select Inspector --</option>
                         </select>
-                    </div>
+                    </div>*@
 
+                    <div class="search-box">
+                        <input type="hidden"  name="Employee_ID" id="Employee_ID">
+                        <input type="text" placeholder="Type Name or ID no." name="EmployeeSearch" id="EmployeeSearch">
+                        <div class="namesdisplay"></div>
+                    </div>
                 </div>
             </div>
 
@@ -170,8 +175,10 @@
 <script src="~/Scripts/jquery-3.7.1.min.js"></script>
 <script type="text/javascript">
     let regisTable = [];
+    let loadData = [];
 
     const addform = document.getElementById("addnewform");
+    const resultBox = document.querySelector(".namesdisplay");
 
 
     const RegistrationTable = async() => {
@@ -185,12 +192,13 @@
         Resetforms();
         let res = await FetchAuthenticate('@Url.Action("GetInspectorsByAdd", "Patrol")', {});
         if (res && res.Success) {
-            let select = $("#Employee_ID");
-            select.empty();
+            loadData = res.Data;
+            //let select = $("#Employee_ID");
+            //select.empty();
 
-            $.each(res.Data, function (index, rowData) {
-                select.append('<option value="' + rowData.Employee_ID + '">' + rowData.FullName + '</option>');
-            });
+            //$.each(res.Data, function (index, rowData) {
+            //    select.append('<option value="' + rowData.Employee_ID + '">' + rowData.FullName + '</option>');
+            //});
         }
     }
 
@@ -226,6 +234,29 @@
         return JSON.stringify(findings);
     };
 
+    // INPUT SEARCH EMPLOYEE NAME WHEN TYPE
+    $("#EmployeeSearch").keyup(function () {
+        let result = [];
+        let input = this.value;
+
+        if (input.length > 0) {
+            result = loadData.filter((item) => {
+                return item.FullName.toLowerCase().includes(input.toLowerCase()) ||
+                    item.Employee_ID.toLowerCase().includes(input.toLowerCase());
+            });
+
+            if (result.length > 0) {
+                resultBox.style.display = 'block';
+                display(result); // assumes display() handles array of objects
+            } else {
+                resultBox.style.display = 'block';
+                resultBox.innerHTML = '<div style="padding: 5px; color: #999;">No search found</div>';
+            }
+        } else {
+            resultBox.style.display = 'none';
+            resultBox.innerHTML = ''; // clear the previous results or message
+        }
+    });
 
     addform.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -238,7 +269,6 @@
         finalformData.append('FindJson', strfind);
 
         const finaldata = Object.fromEntries(finalformData);
-
         if (formValidation(finaldata.RegNo)) {
             $("#errorvalid").show();
             $("#labelguide").hide();
@@ -264,6 +294,22 @@
         Resetforms();
     });
 
+    function display(result) {
+        const content = result.map((list) => {
+            return `<li onclick="selectinput(this)" data-id="${list.Employee_ID}">${list.FullName}</li>`;
+        });
+
+        resultBox.innerHTML = "<ul>" + content.join('') + "</ul>";
+    }
+
+    function selectinput(list) {
+        const employeeId = list.getAttribute("data-id");
+        employeeID = employeeId;
+        $("#Employee_ID").val(employeeId);
+        $("#EmployeeSearch").val(list.innerHTML);
+        resultBox.innerHTML = '';
+        resultBox.style.display = 'none';
+    }
 
     PopulateComboxInspector();
     RegistrationTable();

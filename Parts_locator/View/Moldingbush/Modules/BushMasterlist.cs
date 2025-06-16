@@ -18,19 +18,25 @@ namespace Parts_locator.View.Moldingbush.Modules
         public async void UpdateDisplayTable()
         {
             int controlselect = tabControl1.SelectedIndex + 1;
-            var data = await _raw.GetRawMatProductByType(controlselect);
-            ShaftassyGridview.DataSource = data;
-            ShaftassyGridview.Columns["Edit"].DisplayIndex = controlselect == 1 ? 5 : 4;
+
+            if(controlselect == 1)
+            {
+                ShaftassyGridview.DataSource = await _raw.GetRawMatProductByType(controlselect);
+                ShaftassyGridview.Columns["Edit"].DisplayIndex = controlselect == 1 ? 5 : 4;
+            }
+            else
+            {
+                InsertBushgrid.DataSource = await _raw.GetRawMatProductByType(controlselect);
+            }
+
+            
         }
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e) => UpdateDisplayTable();
         private void ShaftassyGridview_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             // Check if the click is on a header
-            if (e.RowIndex < 0)
-            {
-                return;
-            }
-
+            if (e.RowIndex < 0) return;
+            
             string strpartnum = ShaftassyGridview.Rows[e.RowIndex].Cells["PartNumbershaft"].Value.ToString();
             string intqty = ShaftassyGridview.Rows[e.RowIndex].Cells["ShaftQuantity"].Value.ToString();
             string strType = ShaftassyGridview.Rows[e.RowIndex].Cells[4].Value.ToString();
@@ -57,10 +63,7 @@ namespace Parts_locator.View.Moldingbush.Modules
         private void InsertBushgrid_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             // Check if the click is on a header
-            if (e.RowIndex < 0)
-            {
-                return;
-            }
+            if (e.RowIndex < 0) return;
 
             string strpartnum = InsertBushgrid.Rows[e.RowIndex].Cells["PartNumberBush"].Value.ToString();
             string intqty = InsertBushgrid.Rows[e.RowIndex].Cells["BushQuantity"].Value.ToString();

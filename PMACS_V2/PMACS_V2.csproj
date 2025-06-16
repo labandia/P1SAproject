@@ -546,6 +546,7 @@
     <Content Include="Content\fonts\Manrope.ttf" />
     <Content Include="Content\fonts\Roboto.ttf" />
     <Content Include="Content\fonts\OpenSans.ttf" />
+    <Content Include="Areas\P1SA\Views\DieMold\DiePressLife.cshtml" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\chart.js" />
     <Content Include="Scripts\chart.min.js" />

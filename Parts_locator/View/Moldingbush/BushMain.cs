@@ -74,7 +74,7 @@ namespace Parts_locator.View.Moldingbush
 
             _bush.BringToFront();
         }
-        private void Masterbtn_Click(object sender, EventArgs e)
+        private async void Masterbtn_Click(object sender, EventArgs e)
         {
             _master.BringToFront();
 
@@ -84,8 +84,9 @@ namespace Parts_locator.View.Moldingbush
             SumOut.BackColor = Color.Transparent;
             SumIN.BackColor = Color.Transparent;
 
+            _master.shafttable.AutoGenerateColumns = false;
             //bushMasterlist.shafttable.DataSource = null;
-            _master.shafttable.DataSource = _raw.GetRawMatProductByType(1);
+            _master.shafttable.DataSource = await _raw.GetRawMatProductByType(1);
             _master.shafttable.Columns["Edit"].DisplayIndex = 5;
         }
 

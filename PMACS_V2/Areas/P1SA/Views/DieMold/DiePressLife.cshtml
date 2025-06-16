@@ -1,13 +1,13 @@
 ﻿
 @{
-    ViewBag.Title = "DieMoldLife";
+    ViewBag.Title = "DiePressLife";
     Layout = "~/Areas/P1SA/Views/Shared/_Layout.cshtml";
 }
 
 
 <section>
     <div class="header d-flex align-items-center justify-content-between mb-4">
-        <h4>Mold Die Life Summary</h4>
+        <h4>Press Die Life Registry</h4>
         <div class="searchinputContainer">
             <input type="text" placeholder="Search here ... " id="Summarysearchbox" />
             <div class="line"></div>
@@ -19,76 +19,53 @@
         <table>
             <thead>
                 <tr>
-                    <th>Category</th>
-                    <th>No of die</th>
+                    <th>Die No.</th>
+                    <th>Type</th>
+                    <th>Model</th>
+                    <th>No. of Line</th>
+                    <th>Note</th>
+                    <th>Status</th>
                 </tr>
             </thead>
-            <tbody id="FinalSummaryData">
+            <tbody id="RegistrylistData">
             </tbody>
         </table>
+        <div class="PaginationfooterContainer d-flex align-items-center justify-content-between pt-2 pb-4">
+            <span>Showing  <span id="spagecountID">-</span> to <span id="stotalpageID">-</span> of  <span id="sDatalengthID">-</span> Entries</span>
+
+            <div id="RegistryPaginationContainer" class="paginationPartlocal"></div>
+        </div>
     </div>
 
+
+
+
+    <div class="header d-flex align-items-center justify-content-between mb-4">
+        <h4>Press Die Life Monitoring</h4>
+    </div>
     <div class="DieMainTable">
-            <table>
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Part No </th>
-                        <th>Die Number</th>
-                        <th>Die Serial</th>
-                        <th>Die life</th>
-                        <th>2011-2015</th>
-                        <th>Total Shot Count Onward</th>
-                        <th>Status</th>
-                        <th>Renarks</th>
-                    </tr>
-                </thead>
-                <tbody id="SummarylistData">
-                </tbody>
-            </table>
-            <div class="PaginationfooterContainer d-flex align-items-center justify-content-between pt-2 pb-4">
-                <span>Showing  <span id="spagecountID">-</span> to <span id="stotalpageID">-</span> of  <span id="sDatalengthID">-</span> Entries</span>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date Input</th>
+                    <th>Upper</th>
+                    <th>Lower</th>
+                    <th>Actual Height</th>
+                    <th>Drawing Height</th>
+                    <th>Actual Height</th>
+                    <th>Drawing Height</th>
+                </tr>
+            </thead>
+            <tbody id="DiePressMonitoringlist">
+            </tbody>
+        </table>
 
-                <div id="SummaryPaginationContainer" class="paginationPartlocal"></div>
-            </div>
+        <div class="PaginationfooterContainer d-flex align-items-center justify-content-between pt-2 pb-4">
+            <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
+
+            <div id="PaginationContainer" class="paginationPartlocal"></div>
         </div>
-
-
-
-
-        <div class="header d-flex align-items-center justify-content-between mb-4">
-            <h4>Mold Die Life Monitoring</h4>
-            <select id="monthSelect"></select>
-
-            <div class="searchinputContainer">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" placeholder="Search here ... " id="searchbox" />
-                <div class="line"></div>
-            </div>
-        </div>
-        <div class="DieMainTable">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Part No </th>
-                        @*<th>Part Description </th>*@
-                        <th>Dimension/ Quality </th>
-                        <th>No. of Cavity</th>
-                        <th>Die Serial</th>
-                        <th id="MonthHeader">Jan-16</th>
-                        <th>TotalQty</th>
-                    </tr>
-                </thead>
-                <tbody id="DieMoldMasterlist">
-                </tbody>
-            </table>
-
-            <div class="PaginationfooterContainer d-flex align-items-center justify-content-between pt-2 pb-4">
-                <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
-
-                <div id="PaginationContainer" class="paginationPartlocal"></div>
-            </div>
-        </div>
+    </div>
 </section>
 
 <!--########################## INPUT DATA #############################-->
@@ -96,7 +73,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-body">
-                
+
                 <form id="InputMoldie">
                     <div class="model__fields">
                         <label for="">Input Die Quantity</label>
@@ -105,8 +82,8 @@
                         <input class="form-control" type="text" name="MoldInput" id="MoldInput" onkeypress="return restrictChars(event)">
                     </div>
 
-                  
-               
+
+
                     <div class="edits_footer" id="editsdisplay">
                         <button type="submit" class="primary_button_color">
                             <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
@@ -130,11 +107,7 @@
 
 
     // Date Dropdown Selection
-    const months = [
-        "January", "February", "March", "April",
-        "May", "June", "July", "August",
-        "September", "October", "November", "December"
-    ];
+  
 
     const select = document.getElementById("monthSelect");
     const updateMold = document.getElementById("InputMoldie");
@@ -144,66 +117,41 @@
 
 
 
-    months.forEach((month, index) => {
-        const option = document.createElement("option");
-        option.value = index + 1; // 1 to 12
-        option.text = month;
-        if (index === currentMonth) {
-            option.selected = true;
-        }
-        select.appendChild(option);
-    });
+   
 
-    select.addEventListener('change', (e) => {
-        e.preventDefault();
-        let month = e.target.value;
-        $("#MonthHeader").text(months[month - 1]);
-        GetMoldDieMonth(month, currentYear);
-    })
-
-    updateMold.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        let formData = new FormData(e.target);
-        formData.append('DateAction', select.value);
-        //const data = Object.fromEntries(formData);
-        //console.log(data);
-        let res = await postData('@Url.Action("AddUpdateMoldDieMonitor", "DieMold")', formData);
-        if (res.StatusCode === 200) {
-            GetMoldDieMonth(select.value, currentYear);
-            $("#InputMoldieModal").modal("hide");
-        }
-    });
-
-    const GetMoldDieSummary = async() => {
-        let res = await fetchData('@Url.Action("GetMoldDieSummaryList", "DieMold")', {});
+    const GetPressRegistry = async() => {
+        let res = await fetchData('@Url.Action("GetPressDieRegistryList", "DieMold")', {});
         if (res && res.Success) {
-            SummaryData = res.Data.FinalSummary;
-            FinalSummaryData = res.Data.MoldDieSummary;
-            displaySummaryPagination(SummaryData, 'SummarylistData', 'SummaryPaginationContainer', 10, 5);
-            $.each(FinalSummaryData, function (index, row) {
-                var setdata = "<tr class= 'row_" + index + "  '  >" +
-                    "<td style='text-align: center;'>" + row.Category + "</td> " +
-                    "<td style='text-align: center;'>" + row.MoldDie + "</td> " +
-                    "</tr>;"
-                $("#FinalSummaryData").append(setdata);
-            });
+            SummaryData = res.Data;
+            console.log(SummaryData);
+            //SummaryData = res.Data.FinalSummary;
+            //FinalSummaryData = res.Data.MoldDieSummary;
+            displaySummaryPagination(SummaryData, 'RegistrylistData', 'RegistryPaginationContainer', 10, 5);
+            //$.each(FinalSummaryData, function (index, row) {
+            //    var setdata = "<tr class= 'row_" + index + "  '  >" +
+            //        "<td style='text-align: center;'>" + row.Category + "</td> " +
+            //        "<td style='text-align: center;'>" + row.MoldDie + "</td> " +
+            //        "</tr>;"
+            //    $("#FinalSummaryData").append(setdata);
+            //});
         }
     }
 
+    const GetPressMonitoring = async (month, year) => {
+        //let formData = new FormData();
+        //// Where value of month is around 1 - 12
+        //formData.append('Months', month);
+        //formData.append('Year', year);
 
-    const GetMoldDieMonth = async (month, year) => {
-        let formData = new FormData();
-        // Where value of month is around 1 - 12
-        formData.append('Months', month);
-        formData.append('Year', year);
+        //$("#MonthHeader").text(months[month - 1]);
 
-        $("#MonthHeader").text(months[month - 1]);
-
-        const data = Object.fromEntries(formData);
-        let res = await fetchData('@Url.Action("GetMoldDieMonthInputList", "DieMold")', data);
+        //const data = Object.fromEntries(formData);
+        let res = await fetchData('@Url.Action("GetPressDieMonitoringList", "DieMold")', {});
         if (res && res.Success) {
             TableData = res.Data;
-            displayPagination(TableData, 'DieMoldMasterlist', 'PaginationContainer', 50, 5);
+            displayPagination(TableData, 'DiePressMonitoringlist', 'PaginationContainer', 50, 5);
+        } else {
+            console.log("No Data found");
         }
     }
 
@@ -229,89 +177,23 @@
           const tableBody = document.getElementById(tableBodyId);
           tableBody.innerHTML = '';
 
-          // Step 1: Group by "No"
-          const groupMap = new Map();
           for (let i = startIndex; i < endIndex; i++) {
-              const row = filteredData[i];
-              if (!groupMap.has(row.No)) groupMap.set(row.No, []);
-              groupMap.get(row.No).push(row);
+              let buttons;
+              const rowData = filteredData[i];
+
+           
+
+              const rowHtml = ` <tr class='row_${i} rowClick' id='editButton_${i}'>
+                          <td data-cell="ToolNo">${rowData.ToolNo}</td>
+                          <td data-cell="Type">${rowData.Type}</td>
+                          <td data-cell="Model">${rowData.Model}</td>
+                          <td data-cell="Lines">${rowData.Lines}</td>
+                          <td data-cell="Note">${rowData.Note}</td>
+                          <td data-cell="Status">${rowData.Status}</td>
+                      </tr>`;
+
+              tableBody.innerHTML += rowHtml;
           }
-
-          // Step 2: Render rows with merged "No"
-          groupMap.forEach((groupRows, noValue) => {
-              const NoValue = groupRows[0].No;
-              const dienumValue = groupRows[0].DieNumber;
-              const dieSerialValue = groupRows[0].DieSerial;
-              const dielifeValue = groupRows[0].DieLife;
-
-              const PreviousValue = groupRows[0].PreviousCount;
-              const ShotOnValue = groupRows[0].ShotOnwards;
-              const TotalShotValue = groupRows[0].totalshoutCount;
-              const StatusValue = groupRows[0].Status;
-              const RemarkeValue = groupRows[0].Remarks;
-
-
-              groupRows.forEach((rowData, idx) => {
-                  let percentage = parseFloat(StatusValue) || 0;
-                  let rowHtml = "<tr class='rowClick' id='editButton'>";
-
-                  if (idx === 0) {
-                      rowHtml += `<td rowspan="${groupRows.length}" data-cell="No">${NoValue}</td>`;
-                  }
-
-                  rowHtml += `<td data-cell="PartNo" style="font-weight: 600">${rowData.PartNo}</td>`;
-
-                  if (idx === 0) {
-                      rowHtml += `<td rowspan="${groupRows.length}" data-cell="DieNumber">${dienumValue}</td>`;
-                      rowHtml += `<td rowspan="${groupRows.length}" data-cell="DieSerial">${dieSerialValue}</td>`;
-                      rowHtml += `<td rowspan="${groupRows.length}" data-cell="DieLife">${dielifeValue}</td>`;
-                      rowHtml += `<td rowspan="${groupRows.length}" data-cell="PreviousCount">${PreviousValue}</td>`;
-                      rowHtml += `<td rowspan="${groupRows.length}" data-cell="ShotOnwards">${ShotOnValue}</td>`;
-
-                    
-
-                      rowHtml += `<td rowspan="${groupRows.length}" data-cell="Status">
-                                    <div class='progress-bar'>                  
-                                        <span data-width='${percentage}'></span>
-                                    </div>
-                                    <small style='color: #222; font-weight: 600;'>${StatusValue}%</small>
-                                </td>`;
-
-
-                      let remarkColor = "";
-                      if (RemarkeValue === "For Monitoring") {
-                          remarkColor = "color: blue;";
-                      } else if (RemarkeValue === "End of Life") {
-                          remarkColor = "color: red;";
-                      }
-
-                      rowHtml += `<td rowspan="${groupRows.length}" data-cell="Remarks" style="${remarkColor}">${RemarkeValue}</td>`;
-                  }
-                  rowHtml += "</tr>";
-                  tableBody.innerHTML += rowHtml;
-              });
-
-
-             
-
-
-          });
-
-
-
-          const spans = document.querySelectorAll('.progress-bar span');
-          spans.forEach((span) => {
-              // For Monitoring 
-              if (span.dataset.width <= 100) {
-                  span.style.background = '#3ccf6d';
-              }
-              else {
-                  // End Of life
-                  span.style.background = '#ee4141';
-              }
-              span.style.width = span.dataset.width + "%";
-              //span.innerHTML = span.dataset.width;
-          });
 
           $("#spagecountID").text(currentPage);
       };
@@ -435,43 +317,22 @@
              const tableBody = document.getElementById(tableBodyId);
              tableBody.innerHTML = '';
 
-             // Step 1: Group by "No"
-             const groupMap = new Map();
              for (let i = startIndex; i < endIndex; i++) {
-                 const row = filteredData[i];
-                 if (!groupMap.has(row.No)) groupMap.set(row.No, []);
-                 groupMap.get(row.No).push(row);
+            
+                    const rowData = filteredData[i];
+                    const rowHtml = ` <tr class='row_${i} rowClick' id='editButton_${i}'>
+                        <td data-cell="DateInput">${rowData.DateInput}</td>
+                        <td data-cell="Upper">${rowData.Upper}</td>
+                        <td data-cell="Lower">${rowData.Lower}</td>
+                        <td data-cell="Lower_ActualHeight">${rowData.Lower_ActualHeight}</td>
+                        <td data-cell="Lower_DrawingHeight">${rowData.Lower_DrawingHeight}</td>
+                        <td data-cell="Upper_ActualHeight">${rowData.Upper_ActualHeight}</td>
+                        <td data-cell="Upper_DrawingHeight">${rowData.Upper_DrawingHeight}</td>
+                    </tr>`;
+
+                    tableBody.innerHTML += rowHtml;
              }
-
-             // Step 2: Render rows with merged "No"
-             groupMap.forEach((groupRows, noValue) => {
-                 const newTotalValue = groupRows[0].TotalNo;
-
-
-                 groupRows.forEach((rowData, idx) => {
-                     let rowHtml = "<tr class='rowClick' id='editButton_" + rowData.RecordID + "'>";
-
-                     // Only add <td> with rowspan on first row of group
-                     //if (idx === 0) {
-                     //    rowHtml += `<td rowspan="${groupRows.length}" data-cell="No">${noValue}</td>`;
-                     //}
-
-                     //<td data-cell="Description">${rowData.Description}</td>
-
-                     rowHtml += `<td data-cell="PartNo" style="font-weight: 600">${rowData.PartNo}</td>
-                                
-                                <td data-cell="DimensionQuality">${rowData.DimensionQuality}</td>
-                                <td data-cell="Cavity">${rowData.Cavity}</td>
-                                <td data-cell="DieSerial">${rowData.DieSerial}</td>
-                                <td data-cell="TotalDie" >${rowData.TotalDie}</td>`;
-
-                     if (idx === 0) {
-                         rowHtml += `<td rowspan="${groupRows.length}" data-cell="NewTotal" style="color: hsl(209, 80%, 50%); font-weight: 600; ">${newTotalValue}</td>`;
-                     }
-                      rowHtml += "</tr>";
-                     tableBody.innerHTML += rowHtml;
-                 });
-             });
+           
 
              $("#pagecountID").text(currentPage);
          };
@@ -569,8 +430,8 @@
     function Initialize() {
         let setMonth = parseInt(currentMonth) + 1;
 
-        GetMoldDieSummary();
-        GetMoldDieMonth(setMonth, currentYear);
+        GetPressRegistry();
+        GetPressMonitoring(setMonth, currentYear);
     }
 
     Initialize();

@@ -69,32 +69,33 @@
 
                  let formData = new FormData(logform);
                  let res = await postData('/User/Authenticate', formData);
-                 if (res.StatusCode === 200) {
-                     Swal.fire({
-                         title: "Success",
-                         text: res.Message,
-                         icon: "success",
-                         showConfirmButton: false,
-                         timer: 1500
-                     }).then(() => {
-                         savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-solid fa-right-to-bracket'></i>  Login</span>"
-                         localStorage.setItem('Logout', "/PC/Patrol/index");
-                         localStorage.setItem('Fullname', res.Data.fullname);
-                         localStorage.setItem('accessToken', res.Data.access_token);
-                         localStorage.setItem('refreshToken', res.Data.refresh_token);
-                         window.location.href = "/PC/Patrol/Dashboard";
-                     });
-                 } else {
-                     Swal.fire({
-                         title: "Login Failed",
-                         icon: "error",
-                         text: res.Message,
-                         timer: 1500,
-                         showConfirmButton: false
-                     });
+                 console.log(res);
+                 //if (res.StatusCode === 200) {
+                 //    Swal.fire({
+                 //        title: "Success",
+                 //        text: res.Message,
+                 //        icon: "success",
+                 //        showConfirmButton: false,
+                 //        timer: 1500
+                 //    }).then(() => {
+                 //        savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-solid fa-right-to-bracket'></i>  Login</span>"
+                 //        localStorage.setItem('Logout', "/PC/Patrol/index");
+                 //        localStorage.setItem('Fullname', res.Data.fullname);
+                 //        localStorage.setItem('accessToken', res.Data.access_token);
+                 //        localStorage.setItem('refreshToken', res.Data.refresh_token);
+                 //        window.location.href = "/PC/Patrol/Dashboard";
+                 //    });
+                 //} else {
+                 //    Swal.fire({
+                 //        title: "Login Failed",
+                 //        icon: "error",
+                 //        text: res.Message,
+                 //        timer: 1500,
+                 //        showConfirmButton: false
+                 //    });
 
-                     savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-solid fa-right-to-bracket'></i>  Login</span>"
-                 };
+                 //    savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-solid fa-right-to-bracket'></i>  Login</span>"
+                 //};
 
 
              });

@@ -381,7 +381,7 @@
     .MainTable table {
         width: 100%;
         border-collapse: collapse;
-        margin-top: 1.5em;
+        margin-top: 1em;
     }
 
     .MainTable table th {
@@ -399,7 +399,6 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-top: 1em;
     }
 
     .InspectHead h2 {
@@ -552,21 +551,21 @@
     font-weight: 600;
  }
 
-.formcontainer {
-    width: min(100%, 1200px);
-    margin: 0 auto;
-    background: var(--container-color);
-    padding: 2em;
-    border-radius: .5em;
-    margin-bottom: 3em;
-    margin-inline: auto;
-    /*    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;*/
-    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
-}
+    .formcontainer {
+        width: min(100%, 1200px);
+        margin: 0 auto;
+        background: var(--container-color);
+        padding: 2em;
+        border-radius: .5em;
+        margin-bottom: 3em;
+        margin-inline: auto;
+        /*    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;*/
+        box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    }
 
-.addformcontainer {
-    padding: .5em;
-}
+    .addformcontainer {
+        padding: .5em;
+    }
 
 
     .formcontainer h5, .addformcontainer h5 {
@@ -584,8 +583,8 @@
         width: 100%;
         margin: .5em 0 1em 0;
         border: 1px solid #A5A1AA;
-        padding: .6em;
-        font-size: var(--normal-font-size);
+        padding: .6em 1em;
+        font-size: var(--small-font-size);
         border-radius: .3em;
     }
 
@@ -599,6 +598,10 @@
 
     .formcontainer input:focus, .formcontainer textarea:focus, .addformcontainer input:focus, .addformcontainer textarea:focus {
          outline: 1px solid var(--primary-color);
+    }
+
+    #Errormessage{
+        color: darkred;
     }
 
     .Schedule {
@@ -774,35 +777,35 @@
 
 
 
-.namesdisplay ul li {
-    list-style: none;
-    border-radius: 3px;
-    padding: 15px;
-    cursor: pointer;
-    font-weight: 500;
-    color: #222;
-}
+    .namesdisplay ul li {
+        list-style: none;
+        border-radius: 3px;
+        padding: 15px;
+        cursor: pointer;
+        font-weight: 500;
+        color: #222;
+    }
 
     .namesdisplay ul li:hover {
         background-color: #e9f3ff;
     }
 
-.search-box {
-    position: relative;
-    background: #fff;
-}
+    .search-box {
+        position: relative;
+        background: #fff;
+    }
 
-.namesdisplay {
-    display: none;
-    width: 100%;
-    background: #fff;
-    position: absolute;
-    left: 0;
-    z-index: 99;
-    max-height: 200px;
-    overflow-y: scroll;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
-}
+    .namesdisplay {
+        display: none;
+        width: 100%;
+        background: #fff;
+        position: absolute;
+        left: 0;
+        z-index: 99;
+        max-height: 200px;
+        overflow-y: scroll;
+        box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    }
 
 
 .Schedule_listContent {

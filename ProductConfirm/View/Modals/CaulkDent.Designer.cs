@@ -66,38 +66,38 @@
             this.Shaft_error = new System.Windows.Forms.Label();
             this.supply_error = new System.Windows.Forms.Label();
             this.StatusID = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.textBox6 = new System.Windows.Forms.TextBox();
-            this.textBox7 = new System.Windows.Forms.TextBox();
-            this.textBox8 = new System.Windows.Forms.TextBox();
-            this.textBox9 = new System.Windows.Forms.TextBox();
-            this.textBox10 = new System.Windows.Forms.TextBox();
-            this.textBox11 = new System.Windows.Forms.TextBox();
-            this.textBox12 = new System.Windows.Forms.TextBox();
-            this.textBox13 = new System.Windows.Forms.TextBox();
-            this.textBox14 = new System.Windows.Forms.TextBox();
-            this.textBox15 = new System.Windows.Forms.TextBox();
-            this.textBox16 = new System.Windows.Forms.TextBox();
-            this.textBox17 = new System.Windows.Forms.TextBox();
-            this.textBox18 = new System.Windows.Forms.TextBox();
-            this.textBox19 = new System.Windows.Forms.TextBox();
-            this.textBox20 = new System.Windows.Forms.TextBox();
-            this.textBox21 = new System.Windows.Forms.TextBox();
-            this.textBox22 = new System.Windows.Forms.TextBox();
-            this.textBox23 = new System.Windows.Forms.TextBox();
-            this.textBox24 = new System.Windows.Forms.TextBox();
-            this.textBox25 = new System.Windows.Forms.TextBox();
-            this.textBox26 = new System.Windows.Forms.TextBox();
-            this.textBox27 = new System.Windows.Forms.TextBox();
-            this.textBox28 = new System.Windows.Forms.TextBox();
-            this.textBox29 = new System.Windows.Forms.TextBox();
-            this.textBox30 = new System.Windows.Forms.TextBox();
-            this.textBox31 = new System.Windows.Forms.TextBox();
-            this.textBox32 = new System.Windows.Forms.TextBox();
+            this.sixteen = new System.Windows.Forms.TextBox();
+            this.fiftheen = new System.Windows.Forms.TextBox();
+            this.foutheen = new System.Windows.Forms.TextBox();
+            this.thirteen = new System.Windows.Forms.TextBox();
+            this.twelve = new System.Windows.Forms.TextBox();
+            this.eleven = new System.Windows.Forms.TextBox();
+            this.ten = new System.Windows.Forms.TextBox();
+            this.nine = new System.Windows.Forms.TextBox();
+            this.twentyfour = new System.Windows.Forms.TextBox();
+            this.twentythree = new System.Windows.Forms.TextBox();
+            this.twentwo = new System.Windows.Forms.TextBox();
+            this.twentyone = new System.Windows.Forms.TextBox();
+            this.tweenty = new System.Windows.Forms.TextBox();
+            this.ninetheen = new System.Windows.Forms.TextBox();
+            this.eigtheen = new System.Windows.Forms.TextBox();
+            this.seventeen = new System.Windows.Forms.TextBox();
+            this.thirtytwo = new System.Windows.Forms.TextBox();
+            this.thirtyone = new System.Windows.Forms.TextBox();
+            this.thirty = new System.Windows.Forms.TextBox();
+            this.tweentynine = new System.Windows.Forms.TextBox();
+            this.tweentyeight = new System.Windows.Forms.TextBox();
+            this.tweentyseven = new System.Windows.Forms.TextBox();
+            this.tweentysix = new System.Windows.Forms.TextBox();
+            this.tweentyfive = new System.Windows.Forms.TextBox();
+            this.fourty = new System.Windows.Forms.TextBox();
+            this.thirtynine = new System.Windows.Forms.TextBox();
+            this.thirtyeight = new System.Windows.Forms.TextBox();
+            this.thirtyseven = new System.Windows.Forms.TextBox();
+            this.thirtysix = new System.Windows.Forms.TextBox();
+            this.thirtyfive = new System.Windows.Forms.TextBox();
+            this.thirtyfour = new System.Windows.Forms.TextBox();
+            this.thirtythree = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel5.SuspendLayout();
@@ -546,389 +546,389 @@
             this.StatusID.TabIndex = 73;
             this.StatusID.Visible = false;
             // 
-            // textBox1
+            // sixteen
             // 
-            this.textBox1.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox1.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBox1.Location = new System.Drawing.Point(1121, 279);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(93, 41);
-            this.textBox1.TabIndex = 81;
+            this.sixteen.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.sixteen.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.sixteen.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.sixteen.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.sixteen.Location = new System.Drawing.Point(1121, 279);
+            this.sixteen.Multiline = true;
+            this.sixteen.Name = "sixteen";
+            this.sixteen.Size = new System.Drawing.Size(93, 41);
+            this.sixteen.TabIndex = 81;
             // 
-            // textBox2
+            // fiftheen
             // 
-            this.textBox2.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox2.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBox2.Location = new System.Drawing.Point(975, 279);
-            this.textBox2.Multiline = true;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(93, 41);
-            this.textBox2.TabIndex = 80;
+            this.fiftheen.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.fiftheen.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.fiftheen.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fiftheen.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.fiftheen.Location = new System.Drawing.Point(975, 279);
+            this.fiftheen.Multiline = true;
+            this.fiftheen.Name = "fiftheen";
+            this.fiftheen.Size = new System.Drawing.Size(93, 41);
+            this.fiftheen.TabIndex = 80;
             // 
-            // textBox3
+            // foutheen
             // 
-            this.textBox3.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBox3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox3.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBox3.Location = new System.Drawing.Point(823, 279);
-            this.textBox3.Multiline = true;
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(93, 41);
-            this.textBox3.TabIndex = 79;
+            this.foutheen.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.foutheen.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.foutheen.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.foutheen.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.foutheen.Location = new System.Drawing.Point(823, 279);
+            this.foutheen.Multiline = true;
+            this.foutheen.Name = "foutheen";
+            this.foutheen.Size = new System.Drawing.Size(93, 41);
+            this.foutheen.TabIndex = 79;
             // 
-            // textBox4
+            // thirteen
             // 
-            this.textBox4.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBox4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox4.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBox4.Location = new System.Drawing.Point(671, 279);
-            this.textBox4.Multiline = true;
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(93, 41);
-            this.textBox4.TabIndex = 78;
+            this.thirteen.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.thirteen.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.thirteen.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.thirteen.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.thirteen.Location = new System.Drawing.Point(671, 279);
+            this.thirteen.Multiline = true;
+            this.thirteen.Name = "thirteen";
+            this.thirteen.Size = new System.Drawing.Size(93, 41);
+            this.thirteen.TabIndex = 78;
             // 
-            // textBox5
+            // twelve
             // 
-            this.textBox5.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBox5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox5.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBox5.Location = new System.Drawing.Point(529, 281);
-            this.textBox5.Multiline = true;
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(93, 41);
-            this.textBox5.TabIndex = 77;
+            this.twelve.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.twelve.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.twelve.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.twelve.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.twelve.Location = new System.Drawing.Point(529, 281);
+            this.twelve.Multiline = true;
+            this.twelve.Name = "twelve";
+            this.twelve.Size = new System.Drawing.Size(93, 41);
+            this.twelve.TabIndex = 77;
             // 
-            // textBox6
+            // eleven
             // 
-            this.textBox6.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBox6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox6.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBox6.Location = new System.Drawing.Point(383, 281);
-            this.textBox6.Multiline = true;
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(93, 41);
-            this.textBox6.TabIndex = 76;
+            this.eleven.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.eleven.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.eleven.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.eleven.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.eleven.Location = new System.Drawing.Point(383, 281);
+            this.eleven.Multiline = true;
+            this.eleven.Name = "eleven";
+            this.eleven.Size = new System.Drawing.Size(93, 41);
+            this.eleven.TabIndex = 76;
             // 
-            // textBox7
+            // ten
             // 
-            this.textBox7.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBox7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox7.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBox7.Location = new System.Drawing.Point(231, 281);
-            this.textBox7.Multiline = true;
-            this.textBox7.Name = "textBox7";
-            this.textBox7.Size = new System.Drawing.Size(93, 41);
-            this.textBox7.TabIndex = 75;
+            this.ten.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.ten.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ten.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ten.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.ten.Location = new System.Drawing.Point(231, 281);
+            this.ten.Multiline = true;
+            this.ten.Name = "ten";
+            this.ten.Size = new System.Drawing.Size(93, 41);
+            this.ten.TabIndex = 75;
             // 
-            // textBox8
+            // nine
             // 
-            this.textBox8.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBox8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox8.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBox8.Location = new System.Drawing.Point(76, 281);
-            this.textBox8.Multiline = true;
-            this.textBox8.Name = "textBox8";
-            this.textBox8.Size = new System.Drawing.Size(93, 41);
-            this.textBox8.TabIndex = 74;
+            this.nine.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.nine.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.nine.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.nine.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.nine.Location = new System.Drawing.Point(76, 281);
+            this.nine.Multiline = true;
+            this.nine.Name = "nine";
+            this.nine.Size = new System.Drawing.Size(93, 41);
+            this.nine.TabIndex = 74;
             // 
-            // textBox9
+            // twentyfour
             // 
-            this.textBox9.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBox9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox9.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBox9.Location = new System.Drawing.Point(1121, 347);
-            this.textBox9.Multiline = true;
-            this.textBox9.Name = "textBox9";
-            this.textBox9.Size = new System.Drawing.Size(93, 41);
-            this.textBox9.TabIndex = 97;
+            this.twentyfour.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.twentyfour.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.twentyfour.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.twentyfour.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.twentyfour.Location = new System.Drawing.Point(1121, 347);
+            this.twentyfour.Multiline = true;
+            this.twentyfour.Name = "twentyfour";
+            this.twentyfour.Size = new System.Drawing.Size(93, 41);
+            this.twentyfour.TabIndex = 97;
             // 
-            // textBox10
+            // twentythree
             // 
-            this.textBox10.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBox10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox10.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBox10.Location = new System.Drawing.Point(975, 347);
-            this.textBox10.Multiline = true;
-            this.textBox10.Name = "textBox10";
-            this.textBox10.Size = new System.Drawing.Size(93, 41);
-            this.textBox10.TabIndex = 96;
+            this.twentythree.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.twentythree.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.twentythree.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.twentythree.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.twentythree.Location = new System.Drawing.Point(975, 347);
+            this.twentythree.Multiline = true;
+            this.twentythree.Name = "twentythree";
+            this.twentythree.Size = new System.Drawing.Size(93, 41);
+            this.twentythree.TabIndex = 96;
             // 
-            // textBox11
+            // twentwo
             // 
-            this.textBox11.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBox11.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox11.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBox11.Location = new System.Drawing.Point(823, 347);
-            this.textBox11.Multiline = true;
-            this.textBox11.Name = "textBox11";
-            this.textBox11.Size = new System.Drawing.Size(93, 41);
-            this.textBox11.TabIndex = 95;
+            this.twentwo.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.twentwo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.twentwo.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.twentwo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.twentwo.Location = new System.Drawing.Point(823, 347);
+            this.twentwo.Multiline = true;
+            this.twentwo.Name = "twentwo";
+            this.twentwo.Size = new System.Drawing.Size(93, 41);
+            this.twentwo.TabIndex = 95;
             // 
-            // textBox12
+            // twentyone
             // 
-            this.textBox12.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBox12.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox12.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBox12.Location = new System.Drawing.Point(671, 347);
-            this.textBox12.Multiline = true;
-            this.textBox12.Name = "textBox12";
-            this.textBox12.Size = new System.Drawing.Size(93, 41);
-            this.textBox12.TabIndex = 94;
+            this.twentyone.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.twentyone.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.twentyone.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.twentyone.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.twentyone.Location = new System.Drawing.Point(671, 347);
+            this.twentyone.Multiline = true;
+            this.twentyone.Name = "twentyone";
+            this.twentyone.Size = new System.Drawing.Size(93, 41);
+            this.twentyone.TabIndex = 94;
             // 
-            // textBox13
+            // tweenty
             // 
-            this.textBox13.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBox13.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox13.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox13.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBox13.Location = new System.Drawing.Point(529, 349);
-            this.textBox13.Multiline = true;
-            this.textBox13.Name = "textBox13";
-            this.textBox13.Size = new System.Drawing.Size(93, 41);
-            this.textBox13.TabIndex = 93;
+            this.tweenty.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.tweenty.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tweenty.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tweenty.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.tweenty.Location = new System.Drawing.Point(529, 349);
+            this.tweenty.Multiline = true;
+            this.tweenty.Name = "tweenty";
+            this.tweenty.Size = new System.Drawing.Size(93, 41);
+            this.tweenty.TabIndex = 93;
             // 
-            // textBox14
+            // ninetheen
             // 
-            this.textBox14.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBox14.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox14.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox14.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBox14.Location = new System.Drawing.Point(383, 349);
-            this.textBox14.Multiline = true;
-            this.textBox14.Name = "textBox14";
-            this.textBox14.Size = new System.Drawing.Size(93, 41);
-            this.textBox14.TabIndex = 92;
+            this.ninetheen.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.ninetheen.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ninetheen.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ninetheen.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.ninetheen.Location = new System.Drawing.Point(383, 349);
+            this.ninetheen.Multiline = true;
+            this.ninetheen.Name = "ninetheen";
+            this.ninetheen.Size = new System.Drawing.Size(93, 41);
+            this.ninetheen.TabIndex = 92;
             // 
-            // textBox15
+            // eigtheen
             // 
-            this.textBox15.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBox15.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox15.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox15.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBox15.Location = new System.Drawing.Point(231, 349);
-            this.textBox15.Multiline = true;
-            this.textBox15.Name = "textBox15";
-            this.textBox15.Size = new System.Drawing.Size(93, 41);
-            this.textBox15.TabIndex = 91;
+            this.eigtheen.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.eigtheen.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.eigtheen.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.eigtheen.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.eigtheen.Location = new System.Drawing.Point(231, 349);
+            this.eigtheen.Multiline = true;
+            this.eigtheen.Name = "eigtheen";
+            this.eigtheen.Size = new System.Drawing.Size(93, 41);
+            this.eigtheen.TabIndex = 91;
             // 
-            // textBox16
+            // seventeen
             // 
-            this.textBox16.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBox16.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox16.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox16.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBox16.Location = new System.Drawing.Point(76, 349);
-            this.textBox16.Multiline = true;
-            this.textBox16.Name = "textBox16";
-            this.textBox16.Size = new System.Drawing.Size(93, 41);
-            this.textBox16.TabIndex = 90;
+            this.seventeen.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.seventeen.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.seventeen.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.seventeen.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.seventeen.Location = new System.Drawing.Point(76, 349);
+            this.seventeen.Multiline = true;
+            this.seventeen.Name = "seventeen";
+            this.seventeen.Size = new System.Drawing.Size(93, 41);
+            this.seventeen.TabIndex = 90;
             // 
-            // textBox17
+            // thirtytwo
             // 
-            this.textBox17.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBox17.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox17.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox17.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBox17.Location = new System.Drawing.Point(1121, 412);
-            this.textBox17.Multiline = true;
-            this.textBox17.Name = "textBox17";
-            this.textBox17.Size = new System.Drawing.Size(93, 41);
-            this.textBox17.TabIndex = 113;
+            this.thirtytwo.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.thirtytwo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.thirtytwo.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.thirtytwo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.thirtytwo.Location = new System.Drawing.Point(1121, 412);
+            this.thirtytwo.Multiline = true;
+            this.thirtytwo.Name = "thirtytwo";
+            this.thirtytwo.Size = new System.Drawing.Size(93, 41);
+            this.thirtytwo.TabIndex = 113;
             // 
-            // textBox18
+            // thirtyone
             // 
-            this.textBox18.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBox18.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox18.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox18.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBox18.Location = new System.Drawing.Point(975, 412);
-            this.textBox18.Multiline = true;
-            this.textBox18.Name = "textBox18";
-            this.textBox18.Size = new System.Drawing.Size(93, 41);
-            this.textBox18.TabIndex = 112;
+            this.thirtyone.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.thirtyone.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.thirtyone.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.thirtyone.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.thirtyone.Location = new System.Drawing.Point(975, 412);
+            this.thirtyone.Multiline = true;
+            this.thirtyone.Name = "thirtyone";
+            this.thirtyone.Size = new System.Drawing.Size(93, 41);
+            this.thirtyone.TabIndex = 112;
             // 
-            // textBox19
+            // thirty
             // 
-            this.textBox19.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBox19.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox19.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox19.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBox19.Location = new System.Drawing.Point(823, 412);
-            this.textBox19.Multiline = true;
-            this.textBox19.Name = "textBox19";
-            this.textBox19.Size = new System.Drawing.Size(93, 41);
-            this.textBox19.TabIndex = 111;
+            this.thirty.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.thirty.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.thirty.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.thirty.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.thirty.Location = new System.Drawing.Point(823, 412);
+            this.thirty.Multiline = true;
+            this.thirty.Name = "thirty";
+            this.thirty.Size = new System.Drawing.Size(93, 41);
+            this.thirty.TabIndex = 111;
             // 
-            // textBox20
+            // tweentynine
             // 
-            this.textBox20.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBox20.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox20.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox20.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBox20.Location = new System.Drawing.Point(671, 412);
-            this.textBox20.Multiline = true;
-            this.textBox20.Name = "textBox20";
-            this.textBox20.Size = new System.Drawing.Size(93, 41);
-            this.textBox20.TabIndex = 110;
+            this.tweentynine.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.tweentynine.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tweentynine.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tweentynine.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.tweentynine.Location = new System.Drawing.Point(671, 412);
+            this.tweentynine.Multiline = true;
+            this.tweentynine.Name = "tweentynine";
+            this.tweentynine.Size = new System.Drawing.Size(93, 41);
+            this.tweentynine.TabIndex = 110;
             // 
-            // textBox21
+            // tweentyeight
             // 
-            this.textBox21.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBox21.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox21.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox21.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBox21.Location = new System.Drawing.Point(529, 414);
-            this.textBox21.Multiline = true;
-            this.textBox21.Name = "textBox21";
-            this.textBox21.Size = new System.Drawing.Size(93, 41);
-            this.textBox21.TabIndex = 109;
+            this.tweentyeight.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.tweentyeight.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tweentyeight.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tweentyeight.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.tweentyeight.Location = new System.Drawing.Point(529, 414);
+            this.tweentyeight.Multiline = true;
+            this.tweentyeight.Name = "tweentyeight";
+            this.tweentyeight.Size = new System.Drawing.Size(93, 41);
+            this.tweentyeight.TabIndex = 109;
             // 
-            // textBox22
+            // tweentyseven
             // 
-            this.textBox22.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBox22.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox22.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox22.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBox22.Location = new System.Drawing.Point(383, 414);
-            this.textBox22.Multiline = true;
-            this.textBox22.Name = "textBox22";
-            this.textBox22.Size = new System.Drawing.Size(93, 41);
-            this.textBox22.TabIndex = 108;
+            this.tweentyseven.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.tweentyseven.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tweentyseven.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tweentyseven.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.tweentyseven.Location = new System.Drawing.Point(383, 414);
+            this.tweentyseven.Multiline = true;
+            this.tweentyseven.Name = "tweentyseven";
+            this.tweentyseven.Size = new System.Drawing.Size(93, 41);
+            this.tweentyseven.TabIndex = 108;
             // 
-            // textBox23
+            // tweentysix
             // 
-            this.textBox23.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBox23.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox23.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox23.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBox23.Location = new System.Drawing.Point(231, 414);
-            this.textBox23.Multiline = true;
-            this.textBox23.Name = "textBox23";
-            this.textBox23.Size = new System.Drawing.Size(93, 41);
-            this.textBox23.TabIndex = 107;
+            this.tweentysix.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.tweentysix.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tweentysix.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tweentysix.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.tweentysix.Location = new System.Drawing.Point(231, 414);
+            this.tweentysix.Multiline = true;
+            this.tweentysix.Name = "tweentysix";
+            this.tweentysix.Size = new System.Drawing.Size(93, 41);
+            this.tweentysix.TabIndex = 107;
             // 
-            // textBox24
+            // tweentyfive
             // 
-            this.textBox24.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBox24.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox24.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox24.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBox24.Location = new System.Drawing.Point(76, 414);
-            this.textBox24.Multiline = true;
-            this.textBox24.Name = "textBox24";
-            this.textBox24.Size = new System.Drawing.Size(93, 41);
-            this.textBox24.TabIndex = 106;
+            this.tweentyfive.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.tweentyfive.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tweentyfive.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tweentyfive.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.tweentyfive.Location = new System.Drawing.Point(76, 414);
+            this.tweentyfive.Multiline = true;
+            this.tweentyfive.Name = "tweentyfive";
+            this.tweentyfive.Size = new System.Drawing.Size(93, 41);
+            this.tweentyfive.TabIndex = 106;
             // 
-            // textBox25
+            // fourty
             // 
-            this.textBox25.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBox25.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox25.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox25.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBox25.Location = new System.Drawing.Point(1121, 477);
-            this.textBox25.Multiline = true;
-            this.textBox25.Name = "textBox25";
-            this.textBox25.Size = new System.Drawing.Size(93, 41);
-            this.textBox25.TabIndex = 129;
+            this.fourty.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.fourty.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.fourty.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fourty.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.fourty.Location = new System.Drawing.Point(1121, 477);
+            this.fourty.Multiline = true;
+            this.fourty.Name = "fourty";
+            this.fourty.Size = new System.Drawing.Size(93, 41);
+            this.fourty.TabIndex = 129;
             // 
-            // textBox26
+            // thirtynine
             // 
-            this.textBox26.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBox26.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox26.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox26.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBox26.Location = new System.Drawing.Point(975, 477);
-            this.textBox26.Multiline = true;
-            this.textBox26.Name = "textBox26";
-            this.textBox26.Size = new System.Drawing.Size(93, 41);
-            this.textBox26.TabIndex = 128;
+            this.thirtynine.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.thirtynine.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.thirtynine.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.thirtynine.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.thirtynine.Location = new System.Drawing.Point(975, 477);
+            this.thirtynine.Multiline = true;
+            this.thirtynine.Name = "thirtynine";
+            this.thirtynine.Size = new System.Drawing.Size(93, 41);
+            this.thirtynine.TabIndex = 128;
             // 
-            // textBox27
+            // thirtyeight
             // 
-            this.textBox27.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBox27.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox27.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox27.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBox27.Location = new System.Drawing.Point(823, 477);
-            this.textBox27.Multiline = true;
-            this.textBox27.Name = "textBox27";
-            this.textBox27.Size = new System.Drawing.Size(93, 41);
-            this.textBox27.TabIndex = 127;
+            this.thirtyeight.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.thirtyeight.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.thirtyeight.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.thirtyeight.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.thirtyeight.Location = new System.Drawing.Point(823, 477);
+            this.thirtyeight.Multiline = true;
+            this.thirtyeight.Name = "thirtyeight";
+            this.thirtyeight.Size = new System.Drawing.Size(93, 41);
+            this.thirtyeight.TabIndex = 127;
             // 
-            // textBox28
+            // thirtyseven
             // 
-            this.textBox28.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBox28.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox28.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox28.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBox28.Location = new System.Drawing.Point(671, 477);
-            this.textBox28.Multiline = true;
-            this.textBox28.Name = "textBox28";
-            this.textBox28.Size = new System.Drawing.Size(93, 41);
-            this.textBox28.TabIndex = 126;
+            this.thirtyseven.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.thirtyseven.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.thirtyseven.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.thirtyseven.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.thirtyseven.Location = new System.Drawing.Point(671, 477);
+            this.thirtyseven.Multiline = true;
+            this.thirtyseven.Name = "thirtyseven";
+            this.thirtyseven.Size = new System.Drawing.Size(93, 41);
+            this.thirtyseven.TabIndex = 126;
             // 
-            // textBox29
+            // thirtysix
             // 
-            this.textBox29.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBox29.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox29.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox29.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBox29.Location = new System.Drawing.Point(529, 479);
-            this.textBox29.Multiline = true;
-            this.textBox29.Name = "textBox29";
-            this.textBox29.Size = new System.Drawing.Size(93, 41);
-            this.textBox29.TabIndex = 125;
+            this.thirtysix.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.thirtysix.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.thirtysix.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.thirtysix.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.thirtysix.Location = new System.Drawing.Point(529, 479);
+            this.thirtysix.Multiline = true;
+            this.thirtysix.Name = "thirtysix";
+            this.thirtysix.Size = new System.Drawing.Size(93, 41);
+            this.thirtysix.TabIndex = 125;
             // 
-            // textBox30
+            // thirtyfive
             // 
-            this.textBox30.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBox30.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox30.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox30.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBox30.Location = new System.Drawing.Point(383, 479);
-            this.textBox30.Multiline = true;
-            this.textBox30.Name = "textBox30";
-            this.textBox30.Size = new System.Drawing.Size(93, 41);
-            this.textBox30.TabIndex = 124;
+            this.thirtyfive.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.thirtyfive.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.thirtyfive.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.thirtyfive.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.thirtyfive.Location = new System.Drawing.Point(383, 479);
+            this.thirtyfive.Multiline = true;
+            this.thirtyfive.Name = "thirtyfive";
+            this.thirtyfive.Size = new System.Drawing.Size(93, 41);
+            this.thirtyfive.TabIndex = 124;
             // 
-            // textBox31
+            // thirtyfour
             // 
-            this.textBox31.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBox31.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox31.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox31.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBox31.Location = new System.Drawing.Point(231, 479);
-            this.textBox31.Multiline = true;
-            this.textBox31.Name = "textBox31";
-            this.textBox31.Size = new System.Drawing.Size(93, 41);
-            this.textBox31.TabIndex = 123;
+            this.thirtyfour.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.thirtyfour.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.thirtyfour.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.thirtyfour.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.thirtyfour.Location = new System.Drawing.Point(231, 479);
+            this.thirtyfour.Multiline = true;
+            this.thirtyfour.Name = "thirtyfour";
+            this.thirtyfour.Size = new System.Drawing.Size(93, 41);
+            this.thirtyfour.TabIndex = 123;
             // 
-            // textBox32
+            // thirtythree
             // 
-            this.textBox32.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBox32.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox32.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox32.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBox32.Location = new System.Drawing.Point(76, 479);
-            this.textBox32.Multiline = true;
-            this.textBox32.Name = "textBox32";
-            this.textBox32.Size = new System.Drawing.Size(93, 41);
-            this.textBox32.TabIndex = 122;
+            this.thirtythree.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.thirtythree.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.thirtythree.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.thirtythree.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.thirtythree.Location = new System.Drawing.Point(76, 479);
+            this.thirtythree.Multiline = true;
+            this.thirtythree.Name = "thirtythree";
+            this.thirtythree.Size = new System.Drawing.Size(93, 41);
+            this.thirtythree.TabIndex = 122;
             // 
             // CaulkDent
             // 
@@ -937,38 +937,38 @@
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1276, 671);
             this.ControlBox = false;
-            this.Controls.Add(this.textBox25);
-            this.Controls.Add(this.textBox26);
-            this.Controls.Add(this.textBox27);
-            this.Controls.Add(this.textBox28);
-            this.Controls.Add(this.textBox29);
-            this.Controls.Add(this.textBox30);
-            this.Controls.Add(this.textBox31);
-            this.Controls.Add(this.textBox32);
-            this.Controls.Add(this.textBox17);
-            this.Controls.Add(this.textBox18);
-            this.Controls.Add(this.textBox19);
-            this.Controls.Add(this.textBox20);
-            this.Controls.Add(this.textBox21);
-            this.Controls.Add(this.textBox22);
-            this.Controls.Add(this.textBox23);
-            this.Controls.Add(this.textBox24);
-            this.Controls.Add(this.textBox9);
-            this.Controls.Add(this.textBox10);
-            this.Controls.Add(this.textBox11);
-            this.Controls.Add(this.textBox12);
-            this.Controls.Add(this.textBox13);
-            this.Controls.Add(this.textBox14);
-            this.Controls.Add(this.textBox15);
-            this.Controls.Add(this.textBox16);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.textBox3);
-            this.Controls.Add(this.textBox4);
-            this.Controls.Add(this.textBox5);
-            this.Controls.Add(this.textBox6);
-            this.Controls.Add(this.textBox7);
-            this.Controls.Add(this.textBox8);
+            this.Controls.Add(this.fourty);
+            this.Controls.Add(this.thirtynine);
+            this.Controls.Add(this.thirtyeight);
+            this.Controls.Add(this.thirtyseven);
+            this.Controls.Add(this.thirtysix);
+            this.Controls.Add(this.thirtyfive);
+            this.Controls.Add(this.thirtyfour);
+            this.Controls.Add(this.thirtythree);
+            this.Controls.Add(this.thirtytwo);
+            this.Controls.Add(this.thirtyone);
+            this.Controls.Add(this.thirty);
+            this.Controls.Add(this.tweentynine);
+            this.Controls.Add(this.tweentyeight);
+            this.Controls.Add(this.tweentyseven);
+            this.Controls.Add(this.tweentysix);
+            this.Controls.Add(this.tweentyfive);
+            this.Controls.Add(this.twentyfour);
+            this.Controls.Add(this.twentythree);
+            this.Controls.Add(this.twentwo);
+            this.Controls.Add(this.twentyone);
+            this.Controls.Add(this.tweenty);
+            this.Controls.Add(this.ninetheen);
+            this.Controls.Add(this.eigtheen);
+            this.Controls.Add(this.seventeen);
+            this.Controls.Add(this.sixteen);
+            this.Controls.Add(this.fiftheen);
+            this.Controls.Add(this.foutheen);
+            this.Controls.Add(this.thirteen);
+            this.Controls.Add(this.twelve);
+            this.Controls.Add(this.eleven);
+            this.Controls.Add(this.ten);
+            this.Controls.Add(this.nine);
             this.Controls.Add(this.StatusID);
             this.Controls.Add(this.Shaft_error);
             this.Controls.Add(this.supply_error);
@@ -1051,37 +1051,37 @@
         private System.Windows.Forms.Label Shaft_error;
         private System.Windows.Forms.Label supply_error;
         public System.Windows.Forms.TextBox StatusID;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.TextBox textBox6;
-        private System.Windows.Forms.TextBox textBox7;
-        private System.Windows.Forms.TextBox textBox8;
-        private System.Windows.Forms.TextBox textBox9;
-        private System.Windows.Forms.TextBox textBox10;
-        private System.Windows.Forms.TextBox textBox11;
-        private System.Windows.Forms.TextBox textBox12;
-        private System.Windows.Forms.TextBox textBox13;
-        private System.Windows.Forms.TextBox textBox14;
-        private System.Windows.Forms.TextBox textBox15;
-        private System.Windows.Forms.TextBox textBox16;
-        private System.Windows.Forms.TextBox textBox17;
-        private System.Windows.Forms.TextBox textBox18;
-        private System.Windows.Forms.TextBox textBox19;
-        private System.Windows.Forms.TextBox textBox20;
-        private System.Windows.Forms.TextBox textBox21;
-        private System.Windows.Forms.TextBox textBox22;
-        private System.Windows.Forms.TextBox textBox23;
-        private System.Windows.Forms.TextBox textBox24;
-        private System.Windows.Forms.TextBox textBox25;
-        private System.Windows.Forms.TextBox textBox26;
-        private System.Windows.Forms.TextBox textBox27;
-        private System.Windows.Forms.TextBox textBox28;
-        private System.Windows.Forms.TextBox textBox29;
-        private System.Windows.Forms.TextBox textBox30;
-        private System.Windows.Forms.TextBox textBox31;
-        private System.Windows.Forms.TextBox textBox32;
+        private System.Windows.Forms.TextBox sixteen;
+        private System.Windows.Forms.TextBox fiftheen;
+        private System.Windows.Forms.TextBox foutheen;
+        private System.Windows.Forms.TextBox thirteen;
+        private System.Windows.Forms.TextBox twelve;
+        private System.Windows.Forms.TextBox eleven;
+        private System.Windows.Forms.TextBox ten;
+        private System.Windows.Forms.TextBox nine;
+        private System.Windows.Forms.TextBox twentyfour;
+        private System.Windows.Forms.TextBox twentythree;
+        private System.Windows.Forms.TextBox twentwo;
+        private System.Windows.Forms.TextBox twentyone;
+        private System.Windows.Forms.TextBox tweenty;
+        private System.Windows.Forms.TextBox ninetheen;
+        private System.Windows.Forms.TextBox eigtheen;
+        private System.Windows.Forms.TextBox seventeen;
+        private System.Windows.Forms.TextBox thirtytwo;
+        private System.Windows.Forms.TextBox thirtyone;
+        private System.Windows.Forms.TextBox thirty;
+        private System.Windows.Forms.TextBox tweentynine;
+        private System.Windows.Forms.TextBox tweentyeight;
+        private System.Windows.Forms.TextBox tweentyseven;
+        private System.Windows.Forms.TextBox tweentysix;
+        private System.Windows.Forms.TextBox tweentyfive;
+        private System.Windows.Forms.TextBox fourty;
+        private System.Windows.Forms.TextBox thirtynine;
+        private System.Windows.Forms.TextBox thirtyeight;
+        private System.Windows.Forms.TextBox thirtyseven;
+        private System.Windows.Forms.TextBox thirtysix;
+        private System.Windows.Forms.TextBox thirtyfive;
+        private System.Windows.Forms.TextBox thirtyfour;
+        private System.Windows.Forms.TextBox thirtythree;
     }
 }

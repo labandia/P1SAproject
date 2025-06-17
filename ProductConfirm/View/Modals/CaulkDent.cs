@@ -57,12 +57,7 @@ namespace ProductConfirm.Modals
 
         private  async void button2_Click(object sender, EventArgs e)
         {
-            var cdList = new CaulkingDent
-            {
-               CD1 = string.IsNullOrWhiteSpace(firstText.Text) ? 0 : Convert.ToDouble(firstText.Text)
-            };
-
-
+            var cdList = GetCaulkingDentList();
             string jsonString = JsonConvert.SerializeObject(cdList, Formatting.Indented);
 
 
@@ -909,6 +904,62 @@ namespace ProductConfirm.Modals
                 seventhText.Enabled = false;
                 eightText.Enabled = false;
             }
+        }
+
+      
+
+        public List<CaulkingDent> GetCaulkingDentList()
+        {
+            List<CaulkingDent> item = new List<CaulkingDent>();
+
+            var cdList = new CaulkingDent
+            {
+                CD1 = string.IsNullOrWhiteSpace(firstText.Text) ? 0 : Convert.ToDouble(firstText.Text),
+                CD2 = string.IsNullOrWhiteSpace(SecondText.Text) ? 0 : Convert.ToDouble(SecondText.Text),
+                CD3 = string.IsNullOrWhiteSpace(thirdText.Text) ? 0 : Convert.ToDouble(thirdText.Text),
+                CD4 = string.IsNullOrWhiteSpace(fourthText.Text) ? 0 : Convert.ToDouble(fourthText.Text),
+                CD5 = string.IsNullOrWhiteSpace(FifthText.Text) ? 0 : Convert.ToDouble(FifthText.Text),
+                CD6 = string.IsNullOrWhiteSpace(sixText.Text) ? 0 : Convert.ToDouble(sixText.Text),
+                CD7 = string.IsNullOrWhiteSpace(seventhText.Text) ? 0 : Convert.ToDouble(seventhText.Text),
+                CD8 = string.IsNullOrWhiteSpace(eightText.Text) ? 0 : Convert.ToDouble(eightText.Text),
+                CD9 = string.IsNullOrWhiteSpace(nine.Text) ? 0 : Convert.ToDouble(nine.Text),
+                CD10 = string.IsNullOrWhiteSpace(ten.Text) ? 0 : Convert.ToDouble(ten.Text),
+                CD11 = string.IsNullOrWhiteSpace(eleven.Text) ? 0 : Convert.ToDouble(eleven.Text),
+                CD12 = string.IsNullOrWhiteSpace(twelve.Text) ? 0 : Convert.ToDouble(twelve.Text),
+                CD13 = string.IsNullOrWhiteSpace(thirteen.Text) ? 0 : Convert.ToDouble(thirteen.Text),
+                CD14 = string.IsNullOrWhiteSpace(foutheen.Text) ? 0 : Convert.ToDouble(foutheen.Text),
+                CD15 = string.IsNullOrWhiteSpace(fiftheen.Text) ? 0 : Convert.ToDouble(fiftheen.Text),
+                CD16 = string.IsNullOrWhiteSpace(sixteen.Text) ? 0 : Convert.ToDouble(sixteen.Text),
+                CD17 = string.IsNullOrWhiteSpace(seventeen.Text) ? 0 : Convert.ToDouble(seventeen.Text),
+                CD18 = string.IsNullOrWhiteSpace(eigtheen.Text) ? 0 : Convert.ToDouble(eigtheen.Text),
+                CD19 = string.IsNullOrWhiteSpace(ninetheen.Text) ? 0 : Convert.ToDouble(ninetheen.Text),
+                CD20 = string.IsNullOrWhiteSpace(tweenty.Text) ? 0 : Convert.ToDouble(tweenty.Text),
+                CD21 = string.IsNullOrWhiteSpace(twentyone.Text) ? 0 : Convert.ToDouble(twentyone.Text),
+                CD22 = string.IsNullOrWhiteSpace(twentwo.Text) ? 0 : Convert.ToDouble(twentwo.Text),
+                CD23 = string.IsNullOrWhiteSpace(twentythree.Text) ? 0 : Convert.ToDouble(twentythree.Text),
+                CD24 = string.IsNullOrWhiteSpace(twentyfour.Text) ? 0 : Convert.ToDouble(twentyfour.Text),
+                CD25 = string.IsNullOrWhiteSpace(tweentyfive.Text) ? 0 : Convert.ToDouble(tweentyfive.Text),
+                CD26 = string.IsNullOrWhiteSpace(tweentysix.Text) ? 0 : Convert.ToDouble(tweentysix.Text),
+                CD27 = string.IsNullOrWhiteSpace(tweentyseven.Text) ? 0 : Convert.ToDouble(tweentyseven.Text),
+                CD28 = string.IsNullOrWhiteSpace(tweentyeight.Text) ? 0 : Convert.ToDouble(tweentyeight.Text),
+                CD29 = string.IsNullOrWhiteSpace(tweentynine.Text) ? 0 : Convert.ToDouble(tweentynine.Text),
+                CD30 = string.IsNullOrWhiteSpace(thirty.Text) ? 0 : Convert.ToDouble(thirty.Text),
+                CD31 = string.IsNullOrWhiteSpace(thirtyone.Text) ? 0 : Convert.ToDouble(thirtyone.Text),
+                CD32 = string.IsNullOrWhiteSpace(thirtytwo.Text) ? 0 : Convert.ToDouble(thirtytwo.Text),
+                CD33 = string.IsNullOrWhiteSpace(thirtythree.Text) ? 0 : Convert.ToDouble(thirtythree.Text),
+                CD34 = string.IsNullOrWhiteSpace(thirtyfour.Text) ? 0 : Convert.ToDouble(thirtyfour.Text),
+                CD35 = string.IsNullOrWhiteSpace(thirtyfive.Text) ? 0 : Convert.ToDouble(thirtyfive.Text),
+                CD36 = string.IsNullOrWhiteSpace(thirtysix.Text) ? 0 : Convert.ToDouble(thirtysix.Text),
+                CD37 = string.IsNullOrWhiteSpace(thirtyseven.Text) ? 0 : Convert.ToDouble(thirtyseven.Text),
+                CD38 = string.IsNullOrWhiteSpace(thirtyeight.Text) ? 0 : Convert.ToDouble(thirtyeight.Text),
+                CD39 = string.IsNullOrWhiteSpace(thirtynine.Text) ? 0 : Convert.ToDouble(thirtynine.Text),
+                CD40 = string.IsNullOrWhiteSpace(fourty.Text) ? 0 : Convert.ToDouble(fourty.Text)
+            };
+
+
+            item.Add(cdList);
+
+            return item;
         }
     }
 }

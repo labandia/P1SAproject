@@ -31,13 +31,11 @@ namespace ProductConfirm.Models
             get => _RotorProductID;
             set => _RotorProductID = value;
         }
-
         public string RotorAssy
         {
             get => _RotorAssy;
             set => _RotorAssy = value;
         }
-
         public string ProductType
         {
             get => _ProductType;
@@ -115,7 +113,6 @@ namespace ProductConfirm.Models
         public int ShaftPullingForce { get; set; } = 0;
         public int BushPullingForce { get; set; } = 0;
     }
-
     public class ShopOrderModel
     {
         private int _ShoporderID = 0;
@@ -658,8 +655,6 @@ namespace ProductConfirm.Models
             set => _Remarks = value;
         }
     }
-
-
     public class CaulkingDent
     {
         public double CD1 { get; set; }
@@ -718,6 +713,24 @@ namespace ProductConfirm.Models
         public decimal CaulkingDentMax { get; set; } = decimal.Zero;
         public decimal ShaftLengthMin { get; set; } = decimal.Zero;
         public decimal ShaftLengthMax  { get; set; } = decimal.Zero;
+        public decimal SEA_Min { get; set; } = decimal.Zero;
+        public decimal SEA_Max { get; set; } = decimal.Zero;
+        public decimal MagnetHeightMin { get; set; } = decimal.Zero;
+        public decimal MagnetHeightMax { get; set; } = decimal.Zero;
+        public int ShaftPullingForce { get; set; } = 0;
+        public int BushPullingForce { get; set; } = 0;
+    }
+    public class AddCaulkingDentModel
+    {
+        public int RotorProductID { get; set; } = 0;
+        public string RotorAssy { get; set; } = "";
+        public string ProductType { get; set; } = "";
+        public string MachinePressureMinMax { get; set; } = "";
+        public decimal RecommendedPressureSetting { get; set; } = decimal.Zero;
+        public decimal CaulkingDentMin { get; set; } = decimal.Zero;
+        public decimal CaulkingDentMax { get; set; } = decimal.Zero;
+        public decimal ShaftLengthMin { get; set; } = decimal.Zero;
+        public decimal ShaftLengthMax { get; set; } = decimal.Zero;
         public decimal SEA_Min { get; set; } = decimal.Zero;
         public decimal SEA_Max { get; set; } = decimal.Zero;
         public decimal MagnetHeightMin { get; set; } = decimal.Zero;

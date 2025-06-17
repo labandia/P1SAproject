@@ -49,23 +49,23 @@ namespace ProgramPartListWeb.Controllers
                     Session["Role"] = strRole;
 
 
-                    // Store JWT in HTTP-only cookie (optional if client uses localStorage)
-                    var jwtCookie = new HttpCookie("jwt", accesstoken)
-                    {
-                        HttpOnly = true,
-                        Secure = Request.IsSecureConnection, // Automatically secure on HTTPS
-                        Expires = DateTime.Now.AddDays(7)
-                    };
-                    Response.Cookies.Add(jwtCookie);
+                    //// Store JWT in HTTP-only cookie (optional if client uses localStorage)
+                    //var jwtCookie = new HttpCookie("jwt", accesstoken)
+                    //{
+                    //    HttpOnly = true,
+                    //    Secure = Request.IsSecureConnection, // Automatically secure on HTTPS
+                    //    Expires = DateTime.Now.AddDays(7)
+                    //};
+                    //Response.Cookies.Add(jwtCookie);
 
-                    // Store refresh token in cookie if needed
-                    var refreshCookie = new HttpCookie("refresh_token", refreshToken)
-                    {
-                        HttpOnly = true,
-                        Secure = Request.IsSecureConnection,
-                        Expires = DateTime.Now.AddDays(30)
-                    };
-                    Response.Cookies.Add(refreshCookie);
+                    //// Store refresh token in cookie if needed
+                    //var refreshCookie = new HttpCookie("refresh_token", refreshToken)
+                    //{
+                    //    HttpOnly = true,
+                    //    Secure = Request.IsSecureConnection,
+                    //    Expires = DateTime.Now.AddDays(30)
+                    //};
+                    //Response.Cookies.Add(refreshCookie);
 
 
                     results.StatusCode = 200;

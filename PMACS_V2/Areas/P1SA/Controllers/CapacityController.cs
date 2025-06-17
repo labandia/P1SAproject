@@ -208,7 +208,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         {
             try
             {
-                var data = await CacheHelper.GetOrSetAsync("Winding", () => _cap.GetWindingModels(Month, CapID), 10);
+                var data = await _cap.GetWindingModels(Month, CapID);
                 if (data == null || !data.Any())
                     return JsonNotFound("No Winding Model data found");
 

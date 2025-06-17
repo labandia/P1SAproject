@@ -3,13 +3,10 @@ using PMACS_V2.Areas.P1SA.Models;
 using PMACS_V2.Controllers;
 using PMACS_V2.Utilities;
 using ProgramPartListWeb.Helper;
-using ProgramPartListWeb.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 
 namespace PMACS_V2.Areas.P1SA.Controllers
@@ -23,11 +20,11 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         // ===========================================================
         // ==================== MOLD DIE DATA  =======================
         // ===========================================================
-        public async Task<ActionResult> GetMoldDieSummaryList()
+        public async Task<ActionResult> GetMoldDieSummaryList(string ProcessID)
         {
             try
             {
-                var data = await _die.GetMoldDieSummary();
+                var data = await _die.GetMoldDieSummary(ProcessID);
                 if (data == null || !data.Any())
                     return JsonNotFound("No DieSummary  data not found");
 
@@ -83,14 +80,11 @@ namespace PMACS_V2.Areas.P1SA.Controllers
                 return JsonError(ex.Message);
             }
         }
-
-
-        public async Task<ActionResult> GetMoldDieMonthInputList(int Months, int Year)
+        public async Task<ActionResult> GetMoldDieMonthInputList(int Months, int Year, string ProcessID)
         {
             try
             {          
-                //var data = await CacheHelper.GetOrSetAsync("DieMonth", () => _die.GetMoldDieMonthInput(month, year), 10);
-                var data = await _die.GetMoldDieMonthInput(Months, Year);
+                var data = await _die.GetMoldDieMonthInput(Months, Year, ProcessID);
 
                 if (data == null || !data.Any())
                     return JsonNotFound("No DieMonth input data found");
@@ -130,7 +124,6 @@ namespace PMACS_V2.Areas.P1SA.Controllers
                 return JsonError(ex.Message);
             }
         }
-
         public async Task<ActionResult> GetPressDieMonitoringList()
         {
             try

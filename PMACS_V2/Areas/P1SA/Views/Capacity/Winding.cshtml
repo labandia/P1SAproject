@@ -58,43 +58,21 @@
                 <div class="capacity_col">
                     <div class="cap_header">
 
-                        <div class="row">
-                            <div class="col-3 d-flex">
-                                <i class="fa fa-cogs" aria-hidden="true"></i>
-                                <select id="Processid" name="Processid">
-                                    <option value="None" data-icon="fas fa-cogs">Process</option>
-                                </select>
-                            </div>
-                            <div class="col-3 d-flex">
-                                <i class="fa fa-cube" aria-hidden="true"></i>
-                                <select name="prodid" id="prodid">
-                                    <option value="None">product type</option>
-                                </select>
-                            </div>
-                            <div class="col-3 d-flex">
-                                <i class="fa fa-cube" aria-hidden="true"></i>
-                                <select name="ModelID" id="ModelID">
-                                    <option value="None">Model Base</option>
-                                </select>
-                            </div>
-                            <div class="col-3 d-flex">
-                                <i class="fa-regular fa-calendar-days"></i>
-                                <select id="calendar" name="calendar">
-                                    <option value="January">January</option>
-                                    <option value="February">February</option>
-                                    <option value="March">March</option>
-                                    <option value="April">April</option>
-                                    <option value="May">May</option>
-                                    <option value="June">June</option>
-                                    <option value="July">July</option>
-                                    <option value="August">August</option>
-                                    <option value="September">September</option>
-                                    <option value="October">October</option>
-                                    <option value="November">November</option>
-                                    <option value="December">December</option>
-                                </select>
+                        <div class="row align-items-center">
+                            <div class="col-6">
+                                <div class="masterlistInput">
+                                    <input type="text" placeholder="Search here ... " id="searchbox" />
+                                    <div class="line"></div>
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                </div>
                             </div>
 
+                            <div class="col-6">
+                                <i class="fa fa-cogs"></i>
+                                <select id="Processid" name="Processid">
+                                    <option Value="None" data-icon="fas fa-cogs">Process</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     @*DISPLAY THE TABLE DATA*@
@@ -104,7 +82,6 @@
                                 <tr>
                                     <th class="sortable">Based Model</th>
                                     <th>Demand Quantity</th>
-                                    <th>seconds</th>
                                     <th>Man-hour</th>
                                     <th class="sortable">Manpower</th>
                                     <th id="headertable">Action</th>
@@ -127,58 +104,35 @@
                         </div>
                     </div>
 
-                    <p style="margin-top: 1.5em; margin-left: 1.5em;">Total Result: <strong id="count"></strong></p>
+                    <div class="PaginationfooterContainer d-flex align-items-center justify-content-between">
+                        <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
+
+                        <div id="PaginationContainer" class="paginationPartlocal"></div>
+                    </div>
 
                 </div>
 
 
-                <!--############### DUMMY FORM LOADS ####################### -->
-                <div class="capacity_col capforms" id="firstdisplay">
-                    <div class="flex__align">
-                        <h5 style="margin: 0;">----------</h5>
-                    </div>
-                    <hr />
-
-                    <div class="Cap__group">
-                        <small>Avg. Output per machine  :</small>
-                        <input class="mode num" type="text" value="0" disabled />
-                    </div>
-
-                    <div class="Cap__group">
-                        <small>Operation Day (hours):</small>
-                        <input class="mode num" type="text" value="0" disabled />
-                    </div>
-
-
-                    <div class="Cap__group">
-                        <small>Workdays per month :</small>
-                        <input class="mode num" type="text" value="0" disabled />
-                    </div>
-
-                    <div class="Cap__group">
-                        <small>Operation Rate:</small>
-                        <input class="mode num" type="text" value="0" disabled />
-                    </div>
-                </div>
+               
 
                 <!--############### FORM  FOR THE PROCESS SUMMARY ####################### -->
                 <form class="capacity_col capforms" id="EditCapacity" autocomplete="off">
-                    <div class="flex__align">
+                    <div class="d-flex align-items-center gap-2">
                         <h5 style="margin: 0;">Process Details</h5><i class="fa fa-info-circle" aria-hidden="true"></i>
                     </div>
                     <hr />
                     <div class="Cap__group">
                         <small>Avg. Output per machine :</small>
                         <input type="hidden" name="Proc_CycleTime" id="Proc_CycleTime" class="cycle" />
-                        @*<input type="hidden" id="Proc_Machine" name="Proc_Machine" value="0" />*@
-                        <input style="background: #f5f5f5;" class="mode num" type="text" id="Proc_Machine" name="Proc_Machine" value="0" />
+                        <input type="hidden" id="Proc_Cap_Per_Machine" name="Proc_Cap_Per_Machine" value="0" />
+                        <input class="mode num" type="text" id="Cap_Per_Machine_text" name="Cap_Per_Machine_text" value="0" disabled />
                     </div>
 
 
 
                     <div class="Cap__group">
                         <small>Operation Day (hours):</small>
-                        <input class="mode num" type="text" id="Proc_Days" name="Proc_Days" value="0" onkeypress="return restrictChars(e)" />
+                        <input class="mode num" type="text" id="Proc_Days" name="Proc_Days" value="0" onkeypress="return restrictChars(event)" />
                     </div>
 
 
@@ -194,7 +148,7 @@
 
                     <hr />
 
-                    <button class="Modal__save2" type="submit" id="saveEditProcess2">
+                    <button class="Modal__save2" type="submit" id="saveEditProcess">
                         <span><i class="fa-regular fa-floppy-disk"></i> Save Details</span>
                     </button>
 
@@ -202,7 +156,7 @@
                 </form>
 
                 <!--############### FORM PRODUCT TYPE ####################### -->
-                <form class="capacity_col capforms" id="EditProduct" autocomplete="off">
+                @*<form class="capacity_col capforms" id="EditProduct" autocomplete="off">
                     <div class="flex__align">
                         <h5 style="margin: 0;">Product info</h5><i class="fa fa-info-circle" aria-hidden="true"></i>
                     </div>
@@ -234,7 +188,7 @@
                     </button>
 
 
-                </form>
+                </form>*@
 
                 <!--############### FORM MODELBASE TYPE ####################### -->
                 <form class="capacity_col capforms" id="EditModelbase" autocomplete="off">
@@ -618,7 +572,7 @@
     const addmodelform = document.querySelector('#addnewmodel');
 
     // Action select data
-    const prodform = document.getElementById('prodid');
+    //const prodform = document.getElementById('prodid');
     const processchange = document.getElementById('Processid');
 
     var processcode = "";
@@ -643,27 +597,47 @@
          let res = await fetchData('@Url.Action("GetCapacitySummaryList", "Capacity")', { month: Month, capid: cap_groupID });
          if (res && res.Success) {
             SummaryData = res.Data;
+             console.log(SummaryData);
 
-            processcode = SummaryData[0].ProcessCode;
-            //machinecount = SummaryData[0].mach;
-            //$("#Proc_AvailMachine").val(SummaryData[0].AvailMachine);
-            $("#Cap_Per_Machine_text").val(SummaryData[0].Cap_Per_Machine);
-            $("#Proc_Months").val(SummaryData[0].Months);
-            $("#Proc_OperationTime").val(SummaryData[0].OperationTime);
-            $("#Proc_Days").val(SummaryData[0].Days);
-            $("#Proc_Cap_Per_Machine").val(RoundNumber(SummaryData[0].Cap_Per_Machine));
-            $("#Proc_CycleTime").val(SummaryData[0].CycleTime);
+
+             //DISPLAY THE ALL THE PROCESS CAPACITY
+             let process = [...new Set(SummaryData.map(el => el.ProcessCode))].map(proc => {
+                 let Process = SummaryData.find(el => el.ProcessCode === proc).ProcessName;
+                 return {
+                     ProcessCode: proc,
+                     ProcessName: Process
+                 };
+             });
+
+
+             $.each(process, function (index, row) {
+                 $("#Processid").append("<option value='" + row.ProcessCode + "'>" + row.ProcessName + "</option>");
+                 $("#process").append("<option value='" + row.ProcessCode + "'>" + row.ProcessName + "</option>");
+             });
+
+
+
+            //processcode = SummaryData[0].ProcessCode;
+            ////machinecount = SummaryData[0].mach;
+            ////$("#Proc_AvailMachine").val(SummaryData[0].AvailMachine);
+            //$("#Cap_Per_Machine_text").val(SummaryData[0].Cap_Per_Machine);
+            //$("#Proc_Months").val(SummaryData[0].Months);
+            //$("#Proc_OperationTime").val(SummaryData[0].OperationTime);
+            //$("#Proc_Days").val(SummaryData[0].Days);
+            //$("#Proc_Cap_Per_Machine").val(RoundNumber(SummaryData[0].Cap_Per_Machine));
+            //$("#Proc_CycleTime").val(SummaryData[0].CycleTime);
 
             displaySummaryTable(SummaryData, 0);
          }
     }
     const GetWindingData = async () => {
-        //var SetData = $("#dataSearching");
-        //$("#dataSearching").empty();
-        //$("#tableloads").show();
-        let res = await fetchData('@Url.Action("GetMoldingModelData", "Capacity")', { CapID: cap_groupID, Month: Month });
+        var SetData = $("#dataSearching");
+        $("#dataSearching").empty();
+        $("#tableloads").show();
+        let res = await fetchData('@Url.Action("GetWindingModelData", "Capacity")', { CapID: cap_groupID, Month: Month });
          if (res && res.Success) {
              TableData = res.Data;
+             console.log(TableData);
              //$("#count").text(TableData.length);
              $("#tableloads").hide();
              $('#empty-state').hide();
@@ -676,11 +650,10 @@
 
 // ----------------------- Filter DATA -----------------------------------------
     processchange.addEventListener('change', (e)=> {
-        $("#prodid").val("None");
         loadingSummary();
+
         $("#dataSearching").empty();
         $("#tableloads").show();
-        editform.reset();
 
         summarycheck = 1;
 
@@ -694,106 +667,111 @@
         const selectedCode = e.target.value;
 
         if (selectedCode !== 'None') {
-            // Filter relevant data by selected Process Code
-            filterTable = TableData.filter(item => item.Process_code === selectedCode);
-            filterProduct = SummaryData.filter(item => item.Process_code === selectedCode);
+            //FOR TABLE DATA
+            filterTable = TableData.filter(item => item.ProcessCode === selectedCode);
+            //FOR SUMMARY DATA
+            filterProduct = SummaryData.filter(item => item.ProcessCode === selectedCode);
             summaryNewData = filterProduct;
 
             const summary = summaryNewData[0];
 
-            // Populate summary fields
-            processcode = summary.Process_code;
-            machinecount = summary.Machine;
 
-            $("#Proc_Months").val(summary.Months);
-            $("#Proc_OperationTime").val(summary.Ope);
-            $("#Proc_Days").val(summary.Days);
-            $("#Proc_Machine").val(RoundNumber(summary.Cap_Per_Machine));
-            $("#Proc_CycleTime").val(summary.TotalCyctime);
+            // Populate summary fields
+            processcode = summary.ProcessCode;
+            machinecount = summary.AvailMachine;
+
+            $("#Cap_Per_Machine_text").val(summaryNewData[0].Cap_Per_Machine);
+            $("#Proc_Months").val(summaryNewData[0].Months);
+            $("#Proc_OperationTime").val(summaryNewData[0].OperationTime);
+            $("#Proc_Days").val(summaryNewData[0].Days);
+            $("#Proc_Cap_Per_Machine").val(RoundNumber(summaryNewData[0].Cap_Per_Machine));
+            $("#Proc_CycleTime").val(summaryNewData[0].CycleTime);
 
             // Update dropdowns
-            model = ModelsData.filter(item => item.Process_code === selectedCode);
-            product = ProductFilter.filter(item => item.Process_code === selectedCode);
+            //model = ModelsData.filter(item => item.ProcessCode === selectedCode);
+            //product = ProductFilter.filter(item => item.ProcessCode === selectedCode);
             num = 1;
 
             // Update visibility
-            $('#EditCapacity').show();
-            $('#EditModelbase').hide();
-            $("#EditProduct").hide();
-            $("#firstdisplay").hide();
+            $("#EditCapacity").show();
+            $('#pagination-container').hide();
+            //$('#EditModelbase').hide();
+            //$("#EditProduct").hide();
+            //$("#firstdisplay").hide();
         } else {
             // No specific process code selected, show all
             filterTable = TableData;
             summaryNewData = SummaryData;
             model = ModelsData;
-            product = ProductFilter;
-
-            $('#EditCapacity').hide();
-            $('#EditModelbase').hide();
-            $("#EditProduct").hide();
-            $("#firstdisplay").show();
+            //product = ProductFilter;
+            num = 0;
+            $("#EditCapacity").hide();
+            $('#pagination-container').show();
         }
 
         // Final rendering
-        displayTableData(filterTable);
         displaySummaryTable(summaryNewData, num);
-        FilterDropdownUpdate(model, 1);
-        FilterDropdownUpdate(product, 0);
+        displayPagination(filterTable, 'dataSearching', 'PaginationContainer', 20, 5);
+
+        //displayTableData(filterTable);
+        //displaySummaryTable(summaryNewData, num);
+        //FilterDropdownUpdate(model, 1);
+        //FilterDropdownUpdate(product, 0);
 
     });
-    prodform.addEventListener('change', (e) => {
-        $("#ModelID").val("None");
-        loadingSummary();
-        $("#dataSearching").empty();
-        $("#tableloads").show();
+    //prodform.addEventListener('change', (e) => {
+    //    $("#ModelID").val("None");
+    //    loadingSummary();
+    //    $("#dataSearching").empty();
+    //    $("#tableloads").show();
 
-        summarycheck = 1;
+    //    summarycheck = 1;
 
-        let newData = [];
-        let prodnewData = [];
-        let summaryNewData = [];
-        let num = 0;
+    //    let newData = [];
+    //    let prodnewData = [];
+    //    let summaryNewData = [];
+    //    let num = 0;
 
-        const selectedProductType = e.target.value;
+    //    const selectedProductType = e.target.value;
 
-        if (selectedProductType !== 'None') {
-            // Filter table and product summary data by selected Product Type
-            newData = TableData.filter(item => item.Product_type === selectedProductType);
-            prodnewData = ProductData.filter(item => item.Product_type === selectedProductType);
-            summaryNewData = prodnewData;
-            console.log(prodnewData);
-            //const summary = summaryNewData[0];
-            //groupId = summary.Capgroup_ID;
-            //processcode = summary.Process_code;
+    //    if (selectedProductType !== 'None') {
+    //        // Filter table and product summary data by selected Product Type
+    //        newData = TableData.filter(item => item.Product_type === selectedProductType);
+    //        prodnewData = ProductData.filter(item => item.Product_type === selectedProductType);
+    //        summaryNewData = prodnewData;
+    //        console.log(prodnewData);
+    //        //const summary = summaryNewData[0];
+    //        //groupId = summary.Capgroup_ID;
+    //        //processcode = summary.Process_code;
 
-            num = 2;
+    //        num = 2;
 
-            // Show/hide appropriate sections
-            $('#EditCapacity').hide();
-            $('#EditModelbase').hide();
-            $("#EditProduct").show();
-            $("#firstdisplay").hide();
-        } else {
-            // Show all data if 'None' is selected
-            newData = TableData;
-            summaryNewData = SummaryData;
-            num = 0;
+    //        // Show/hide appropriate sections
+    //        $('#EditCapacity').hide();
+    //        $('#EditModelbase').hide();
+    //        $("#EditProduct").show();
+    //        $("#firstdisplay").hide();
+    //    } else {
+    //        // Show all data if 'None' is selected
+    //        newData = TableData;
+    //        summaryNewData = SummaryData;
+    //        num = 0;
 
-            $('#EditCapacity').hide();
-            $('#EditModelbase').hide();
-            $("#EditProduct").hide();
-            $("#firstdisplay").show();
-        }
+    //        $('#EditCapacity').hide();
+    //        $('#EditModelbase').hide();
+    //        $("#EditProduct").hide();
+    //        $("#firstdisplay").show();
+    //    }
 
-        // Delay update to allow loading spinner or other UI updates
-        setTimeout(() => {
-            displayTableData(newData);
-            displaySummaryTable(summaryNewData, num);
-        }, 800);
-    });
+    //    // Delay update to allow loading spinner or other UI updates
+    //    setTimeout(() => {
+    //        displayTableData(newData);
+    //        displaySummaryTable(summaryNewData, num);
+    //    }, 800);
+    //});
 
-  
-  
+
+
 // -----------------------------------------------------------------------------
 // ----------------------- POST DATA -------------------------------------------
     // EDIT PROCESS  DATA
@@ -801,7 +779,7 @@
         e.preventDefault();
         let formData = new FormData(event.target);
         formData.append('Process_code', processcode);
-        formData.append('Capgroup_ID', groupId);
+        formData.append('Capgroup_ID', Capgroup_ID);
         const data = Object.fromEntries(formData);
         console.log(data);
     });
@@ -892,7 +870,6 @@
         let totalcap = 0;
         let totalHour = 0;
         let totalMan = 0;
-
         switch (filter) {
             case 1:
                 //THIS CODE IS WHEN YOUR FILTER A IN A PROCESS
@@ -905,7 +882,7 @@
 
                 $.each(data, function (index, rowData) {
                     var getdata = "<tr class= 'row_" + index + "  '>" +
-                        "<td style='width: 10%;  font-weight: 500; color: #222;'>" + (rowData.Process_name ? rowData.Process_name : 'N/A') + "</td>" +
+                        "<td style='width: 10%;  font-weight: 500; color: #222;'>" + (rowData.ProcessName ? rowData.ProcessName : 'N/A') + "</td>" +
                         "<td contenteditable='true'>" + (rowData.Machine ? rowData.Machine : 0) + "</td>" +
                         "<td contenteditable='true'>" + RoundNumberOne((rowData.TotalCyctime ? rowData.TotalCyctime : 0)) + "</td>" +
                         "<td>" + getFormatComma((rowData.Capday ? rowData.Capday : 0)) + "</td>" +
@@ -916,92 +893,6 @@
                         "</tr>";
                     Summaryload_table.append(getdata);
                 });
-                break;
-            case 2:
-                //THIS CODE IS WHEN YOUR FILTER A IN A PRODUCT TYPE
-                console.log(data);
-                $("#ChangeHeader").text("Product Type");
-                $("#Displaymachine").hide();
-                $("#footer").hide();
-                Summaryload_table.empty();
-
-                $.each(data, function (index, rowData) {
-                    var getdata = "<tr class= 'row_" + index + "  '>" +
-                        "<td style='width: 10%;  font-weight: 500; color: #222;'>" + (rowData.Process_name ? rowData.Product_type : 'N/A') + "</td>" +
-                        "<td contenteditable='true'>" + (rowData.Machine ? rowData.Machine : 0) + "</td>" +
-                        "<td contenteditable='true'>" + RoundNumberOne((rowData.TotalCyctime ? rowData.TotalCyctime : 0)) + "</td>" +
-                        "<td>" + getFormatComma((rowData.Capday ? rowData.Capday : 0)) + "</td>" +
-                        "<td>" + getFormatComma((rowData.Capmonth ? rowData.Capmonth : 0)) + "</td>" +
-                        "<td>" + getFormatComma((rowData.Forecast ? rowData.Forecast : 0)) + "</td>" +
-                        "<td>" + RoundNumber((rowData.Totalhours ? rowData.Totalhours : 0)) + "</td>" +
-                        "<td>" + RoundNumber((rowData.RequiredMan ? rowData.RequiredMan : 0)) + "</td>" +
-                        "</tr>";
-                    Summaryload_table.append(getdata);
-
-                });
-
-                $("#MachID").val(data[0].Avail_Machine);
-                $("#JigID").val(data[0].jig);
-                $("#HeadID").val(data[0].Head_count);
-                $("#Model2").val("");
-                $("#CycleID").val(data[0].CycleTime);
-                $("#DayID").val(data[0].Operation_time);
-                $("#MonthID").val(data[0].Months);
-                $("#OpeID").val(data[0].Ope);
-                break;
-            case 3:
-                $("#ChangeHeader").text("Model Base");
-                $("#Displaymachine").hide();
-                $("#footer").hide();
-                Summaryload_table.empty();
-
-
-                $.each(data, function (index, rowData) {
-                    var getdata = "<tr class= 'row_" + index + "  '>" +
-                        "<td style='width: 10%;  font-weight: 500; color: #222;'>" + (rowData.Model_name ? rowData.Model_name : 'N/A') + "</td>" +
-                        "<td contenteditable='true'>" + RoundNumberOne((rowData.TotalCyctime ? rowData.TotalCyctime : 0)) + "</td>" +
-                        "<td>" + getFormatComma((rowData.Capday ? rowData.Capday : 0)) + "</td>" +
-                        "<td>" + getFormatComma((rowData.Capmonth ? rowData.Capmonth : 0)) + "</td>" +
-                        "<td>" + getFormatComma((rowData.Forecast ? rowData.Forecast : 0)) + "</td>" +
-                        "<td>" + RoundNumber((rowData.Totalhours ? rowData.Totalhours : 0)) + "</td>" +
-                        "<td>" + RoundNumber((rowData.RequiredMan ? rowData.RequiredMan : 0)) + "</td>" +
-                        "</tr>";
-                    Summaryload_table.append(getdata);
-
-                });
-
-                //$.each(data, function (index, rowData) {
-
-                //    var getdata = "<tr class= 'row_" + index + "  '>" +
-                //        "<td style='width: 10%;  font-weight: 500;'>" + rowData.Modelname + "</td>" +
-                //        "<td>" + rowData.Cyclepcs + "</td>" +
-                //        "<td>" + getFormatComma(rowData.Capday) + "</td>" +
-                //        "<td>" + getFormatComma(rowData.Capmonth) + "</td>" +
-                //        "<td>" + getFormatComma(rowData.Modelbase) + "</td>" +
-                //        "<td>" + RoundNumber(rowData.Manhour) + "</td>" +
-                //        "<td>" + RoundNumber(rowData.Require) + "</td>" +
-                //        "</tr>";
-                //    Summaryload_table.append(getdata);
-                //});
-
-                //$("#MachID").val(data[0].Machine);
-                //$("#JigID").val(data[0].Jig);
-                //$("#HeadID").val(data[0].HeadCount);
-                //$("#Model2").val(data[0].Modelname);
-                //$("#CycleID").val(data[0].CycleTime);
-                //$("#DayID").val(data[0].OpeTime);
-                //$("#MonthID").val(data[0].Month);
-                //$("#OpeID").val(data[0].Ope);
-
-                $("#MachID").val(data[0].Avail_Machine);
-                $("#JigID").val(data[0].jig);
-                $("#HeadID").val(data[0].Head_count);
-                $("#Model2").val("");
-                $("#CycleID").val(data[0].CycleTime);
-                $("#DayID").val(data[0].Operation_time);
-                $("#MonthID").val(data[0].Months);
-                $("#OpeID").val(data[0].Ope);
-
                 break;
             default:
                 //DISPLAY FOR THE FIRST LOADING PAGE
@@ -1016,7 +907,7 @@
                 $.each(data, function (index, rowData) {
 
                     var getdata = "<tr class= 'row_" + index + "  '>" +
-                        "<td style='font-weight: 500; color: #222;'>" + rowData.ProcessName + "</td>" +
+                        "<td style='width: 10%; color: #1c65a8; font-weight: 500;'>" + rowData.ProcessName + "</td>" +
                         "<td>" + rowData.AvailMachine + "</td>" +
                         "<td>" + RoundNumberOne(rowData.CycleTime) + "</td>" +
                         "<td>" + getFormatComma(rowData.Capday) + "</td>" +
@@ -1025,8 +916,6 @@
                         "<td>" + RoundNumber(rowData.Totalhours) + "</td>" +
                         "<td>" + RoundNumber(rowData.RequiredMan) + "</td>" +
                         "</tr>";
-
-                
 
                     Summaryload_table.append(getdata);
 
@@ -1050,128 +939,7 @@
                 break;
         }
     }
-    function displayTableData(data) {
-        let buttons = '';
-        var SetData = $("#dataSearching");
-
-        $("#tableloads").hide();
-        $('#empty-state').hide();
-        $("#dataSearching").empty();
-        $.each(data, function (index, rowData) {
-            if (roleint !== 2) {
-                $("#headertable").show();
-                buttons = "<button type='button' class='btn actionicon text-danger deleteButton' id='deleteButton_" + rowData.Capinfo_ID + "' >" +
-                    "<i class='fa-regular fa-trash-can'></i>" +
-                    "</button>";
-            } else {
-                $("#headertable").hide();
-            }
-
-
-            var getdata = "<tr class= 'row_" + index + "  rowClick' id='editButton_" + rowData.Capinfo_ID + "'>" +
-                "<td style='width: 50%;' class='textleft'> " +
-                "<p style='font-weight: 600; margin: 0; color: #222;'>" + rowData.Model_name + "</p>" +
-                "</td>" +
-                "<td style='color: #1a82e4; font-weight: 500;'>" + formattedNumber(rowData.foredata) + "</td>" +
-                "<td>" + formattedNumber(rowData.Seconds) + "</td>" +
-                "<td style='text-align: center'>" + RoundNumberOne(rowData.Manhour) + "</td>" +
-                "<td style='text-align: center'>" + RoundNumberOne(rowData.Require) + "</td>" +
-                "<td>" +
-                buttons +
-                "</td>" +
-                "</tr>";
-            SetData.append(getdata);
-        });
-
-        // Handle click event for the row (excluding delete button)
-        $(document).on('click', '.rowClick', function (e) {
-            // Check if the target is not the delete button
-            if (!$(e.target).closest('.deleteButton').length) {
-                var rowId = $(this).attr('id');
-                var rowIndex = rowId.split('_')[1];
-                // Handle row click logic here
-                ShowCapacityDetails(rowIndex);
-
-            }
-        });
-
-        // Handle click event for the delete button
-        $(document).on('click', '.deleteButton', function (e) {
-            e.stopPropagation(); // Prevent triggering the row click event
-            var buttonId = $(this).attr('id');
-            var rowIndex = buttonId.split('_')[1];
-            let Monthcalendar = $("#calendar").val();
-
-            let processData = TableData.filter(item => item.Capinfo_ID === parseInt(rowIndex));
-            processcode = processData[0].Process;
-
-
-            // Handle delete button click logic here
-            Swal.fire({
-                title: "Remove Model Base Data ?",
-                text: "Are you sure you want to remove this model base data",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, delete it!"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Send the form data via AJAX
-                    let data = {
-                        ID: rowIndex,
-                        capid: cap_groupID
-                    }
-
-                    $.ajax({
-                        url: "//" + "DeleteCapacity", // The URL to the Web API endpoint
-                        type: 'POST',
-                        data: data,
-                        success: function (res) {
-                            Swal.fire({
-                                title: "Deleted!",
-                                text: "Your file has been deleted.",
-                                icon: "success"
-                            });
-
-                            let data2 = {
-                                month: Monthcalendar, capid: cap_groupID, Months: currentYear
-                            }
-
-                            // FOR DATA TABLE
-                            let data = {
-                                month: Monthcalendar, capid: cap_groupID
-                            }
-
-                            SummaryData = [];
-                            TableData = [];
-
-                            // GET SUMMARY DATA FOR ALL
-                            getSummaryAll(data2, 0);
-                            // GET THE TABLE DATA
-                            getTable(data, 0);
-                            getForescastData();
-
-
-                            // UPDATES THE CURRENT STATUS OF SUMMARY
-                            //getlatestSummary(data2);
-                            getUpdateSummaryAll();
-                            //getUpdatedTable();
-
-                        },
-                        error: function (jqXHR, textStatus, errorThrown) {
-                            // Handle the error response
-
-                            console.error(textStatus, errorThrown);
-                        }
-                    });
-
-
-                }
-            });
-        });
-
-    }
+   
     function ShowCapacityDetails(capId) {
         let searchData;
         searchData = TableData.filter(item => item.Capinfo_ID === parseInt(capId));
@@ -1221,7 +989,152 @@
 
     }
 
+    function displayPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 20, visibleButtons = 5) {
+     let currentPage = 1;
+     let filteredData = [...dataArray]; // Make a copy for filtering
 
+     const updatePaginationInfo = () => {
+         const totalRecords = filteredData.length;
+         const totalPages = Math.ceil(totalRecords / recordsPerPage);
+
+         $("#totalpageID").text(totalPages);
+         $("#DatalengthID").text(totalRecords);
+
+         return totalPages;
+     };
+        processform
+     const renderTable = (page) => {
+         const totalPages = updatePaginationInfo();
+         const startIndex = (page - 1) * recordsPerPage;
+         const endIndex = Math.min(startIndex + recordsPerPage, filteredData.length);
+         const tableBody = document.getElementById(tableBodyId);
+         tableBody.innerHTML = '';
+
+         for (let i = startIndex; i < endIndex; i++) {
+             let buttons;
+             const rowData = filteredData[i];
+             if (roleint !== 2) {
+                 $("#headertable").show();
+                 buttons = "<button type='button' class='btn actionicon text-danger deleteButton' id='deleteButton_" + rowData.Capinfo_ID + "' >" +
+                     "<i class='fa-regular fa-trash-can'></i>" +
+                     "</button>";
+             } else {
+                 $("#headertable").hide();
+             }
+
+
+             const rowHtml = ` <tr class='row_${i} rowClick' id='editButton_${rowData.Capinfo_ID}'>
+                                  <td data-cell="Model_name">${rowData.Model_name}</td>
+                                  <td data-cell="foredata">${rowData.foredata}</td>
+                                  <td data-cell="manhour">${RoundNumberOne(rowData.manhour)}</td>
+                                  <td data-cell="Require">${RoundNumberOne(rowData.Require)}</td>
+                                  <td data-cell="Action">${buttons}</td>
+                              </tr>`;
+
+             tableBody.innerHTML += rowHtml;
+         }
+
+         $("#pagecountID").text(currentPage);
+     };
+     const renderPagination = () => {
+             const totalPages = updatePaginationInfo();
+             const paginationContainer = document.getElementById(paginationId);
+             paginationContainer.innerHTML = '';
+
+             let startPage = Math.max(1, currentPage - Math.floor(visibleButtons / 2));
+             let endPage = Math.min(totalPages, startPage + visibleButtons - 1);
+
+             if (endPage > totalPages) {
+                 endPage = totalPages;
+                 startPage = Math.max(1, endPage - visibleButtons + 1);
+             }
+
+             if (totalPages <= visibleButtons) {
+                 startPage = 1;
+                 endPage = totalPages;
+             }
+
+             // Previous button
+             paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
+                                            <i class="fa-solid fa-backward"></i>
+                                        </button>`;
+
+             for (let i = startPage; i <= endPage; i++) {
+                 paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+             }
+
+             // Next button
+             paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
+                                           <i class="fa-solid fa-forward"></i>
+                                        </button>`;
+         };
+
+         const changePage = (page) => {
+             if (page >= 1 && page <= updatePaginationInfo()) {
+                 currentPage = page;
+                 renderTable(currentPage);
+                 renderPagination();
+             }
+         };
+
+         // 🔍 Search functionality
+         const searchTable = () => {
+             const query = $('#searchbox').val().toLowerCase();
+
+             filteredData = dataArray.filter(item =>
+                 item.Model_name.toLowerCase().includes(query)
+             );
+
+             currentPage = 1;
+             renderTable(currentPage);
+             renderPagination();
+         };
+
+         // Add event listener for search input
+         $('#searchbox').on('input', searchTable);
+
+         // Handle click event for edit button
+         $(document).on('click', '.rowClick', function (e) {
+             e.stopPropagation();
+             //const buttonId = $(this).attr('id');
+             //const rowIndex = buttonId.split('_')[1];
+             //let searchData = TableData.filter(item => item.Capinfo_ID === parseInt(rowIndex));
+             //indexvalue = TableData.findIndex(item => item.Capinfo_ID === parseInt(rowIndex));
+             //processcode = searchData[0].ProcessCode;
+             //$("#Detail_Capinfo_ID").val(searchData[0].Capinfo_ID);
+             //$("#Detail_Impeller").val(searchData[0].Impeller);
+             //$("#Detail_Dream").val(searchData[0].Dream);
+             //$("#Detail_CycleTime").val(searchData[0].CycleTime);
+             //$("#Detail_Cover").val(searchData[0].Cover);
+             //$("#Detail_Model_name").val(searchData[0].Model_name);
+             //$("#Detail_Manhour").val(RoundNumberOne(searchData[0].manhour));
+             //$("#Detail_Operation_time").val(searchData[0].Operation_time);
+             //$("#Detail_Require").val(RoundNumberOne(searchData[0].Require));
+             //$("#Detail_Capday").val(searchData[0].Capday);
+             //$("#Detail_Capmonth").val(searchData[0].Capmonth);
+
+             $("#detailsModal").modal("show");
+         });
+
+          // UPDATES THE DETAILS DATA
+          detailsform.addEventListener('submit', async (e) => {
+              e.preventDefault();
+
+              @*let formData = new FormData(e.target);
+              formData.append('ProcessCode', processcode);
+              formData.append('Capgroup_ID', cap_groupID);
+              const data = Object.fromEntries(formData);
+              let res = await postData('@Url.Action("EditRotorModels", "PostCapacity")', formData);*@
+              //console.log(res);
+
+              //EditResult(res, data);
+         });
+
+         // Initialize table and pagination
+         window.changePage = changePage;
+         renderTable(currentPage);
+         renderPagination();
+     }
     // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
     const InitializeData = () => {
         $("#EditCapacity").show();
@@ -1231,7 +1144,7 @@
         // GET SUMMARY DATA FOR ALL
         GetCapacitySummary();
         // GET THE TABLE DATA
-        //GetWindingData();
+        GetWindingData();
     }
 
 

@@ -551,7 +551,6 @@ namespace PMACS_V2.Areas.P1SA.Models
         private double _Head_count;
         private int _Avail_Machine;
         private int _Months;
-        private double _Operation_time;
 
         public int Capinfo_ID
         {
@@ -597,12 +596,7 @@ namespace PMACS_V2.Areas.P1SA.Models
             get => _WindTurns;
             set => _WindTurns = value;
         }
-        public double Operation_time
-        {
-            get => _Operation_time;
-            set => _Operation_time = value;
-        }
-       
+     
         public int foredata
         {
             get => _foredata;

@@ -293,7 +293,7 @@
       const showeditmode = document.getElementById("Editdetailsbtn");
       //const editenable = document.getElementById("fanEnableEdit");
 
-       const processchange = document.getElementById('Processid');
+      const processchange = document.getElementById('Processid');
 
       var counter = 0;
       var EditId = 0;
@@ -316,9 +316,9 @@
 
       // Display the current month to comboBox
       $("#calendar").val(Month);
-      $("#Editsavebtn").css("display", "none");
+     
 
-
+    $("#Editsavebtn").css("display", "none");
     let Summaryload_table = $("#SummarybodyID");
 
     const GetCapacitySummary = async() => {
@@ -775,22 +775,23 @@
             $("#dataSearching").empty();
             $("#tableloads").show();
             summarycheck = 1;
-            let newData;
-            let prodnewData;
-            let summaryNewData;
+            let newData = [];
+            let prodnewData = [];
+            let summaryNewData = [];
             let num;
             let model;
-            const processData = event.target.value;
 
-            if (processData !== 'None') {
+            const selectedCode = event.target.value;
+
+            if (selectedCode !== 'None') {
                 //FOR TABLE DATA
-                newData = TableData.filter(item => item.ProcessCode === processData);
+                newData = TableData.filter(item => item.ProcessCode === selectedCode);
                 //FOR SUMMARY DATA
-                prodnewData = SummaryData.filter(item => item.ProcessCode === processData);
+                prodnewData = SummaryData.filter(item => item.ProcessCode === selectedCode);
                 summaryNewData = prodnewData;
 
                 //UPDATES  THE DROPDOWN MODEL
-                model = ModelsData.filter(item => item.ProcessCode === processData);
+                //model = ModelsData.filter(item => item.ProcessCode === processData);
                 num = 1;
 
                 //SET THE VALUE TO THE PROCESS FORM
@@ -920,8 +921,7 @@
 
     });
 
-    GetCapacitySummary();
-    GetRotorData();
+   
 
     function EditResult(res, data) {
 
@@ -967,4 +967,17 @@
         }
     }
 
+    // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+    const InitializeData = () => {
+        $("#EditCapacity").show();
+        // GET THE USERS DATA
+        //userDataRole();
+        // GET SUMMARY DATA FOR ALL
+        GetCapacitySummary();
+        // GET THE TABLE DATA
+        GetRotorData();
+    }
+
+    // ##############  LOADS THE DATA WHEN THE PAGE IS LOADED ##############
+    InitializeData();
 </script>

@@ -8,6 +8,15 @@
 <section>
     <div class="header d-flex align-items-center justify-content-between mb-4">
         <h4>Mold Die Life Summary</h4>
+
+        <select id="ProcessID">
+            <option value="M002">Mold  Frame</option>
+            <option value="M001">ACM</option>
+            <option value="M003">Mold Impeller</option>
+            <option value="M004">Slot Insulator </option>
+            <option value="M005">Stepping Motor</option>
+        </select>
+
         <div class="searchinputContainer">
             <input type="text" placeholder="Search here ... " id="Summarysearchbox" />
             <div class="line"></div>
@@ -128,6 +137,8 @@
     let SummaryData = [];
     let FinalSummaryData = [];
 
+    const processchange = document.getElementById("ProcessID");
+
 
     // Date Dropdown Selection
     const months = [
@@ -159,7 +170,14 @@
         let month = e.target.value;
         $("#MonthHeader").text(months[month - 1]);
         GetMoldDieMonth(month, currentYear);
-    })
+    });
+
+    processchange.addEventListener('change', (e) => {
+        e.preventDefault();
+        let setMonth = parseInt(currentMonth) + 1;
+        GetMoldDieSummary();
+        GetMoldDieMonth(setMonth, currentYear);
+    });
 
     updateMold.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -174,8 +192,10 @@
         }
     });
 
-    const GetMoldDieSummary = async() => {
-        let res = await fetchData('@Url.Action("GetMoldDieSummaryList", "DieMold")', {});
+    const GetMoldDieSummary = async () => {
+        $("#FinalSummaryData").empty();
+
+        let res = await fetchData('@Url.Action("GetMoldDieSummaryList", "DieMold")', { ProcessID : $("#ProcessID").val()});
         if (res && res.Success) {
             SummaryData = res.Data.FinalSummary;
             FinalSummaryData = res.Data.MoldDieSummary;
@@ -196,6 +216,7 @@
         // Where value of month is around 1 - 12
         formData.append('Months', month);
         formData.append('Year', year);
+        formData.append('ProcessID', $("#ProcessID").val());
 
         $("#MonthHeader").text(months[month - 1]);
 

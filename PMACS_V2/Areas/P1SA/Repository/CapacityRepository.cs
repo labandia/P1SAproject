@@ -17,7 +17,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
         // ===========================================================
         // ==================== P1SA Summary =========================
         // ===========================================================
-        public async Task<List<PsummaryModel>> GetP1SAsummary() => await SqlDataAccess.GetData<PsummaryModel>("P1SAsummary", null, "p1sasummary");
+        public async Task<List<PsummaryModel>> GetP1SAsummary() => await SqlDataAccess.GetData<PsummaryModel>("P1SAsummary", null);
         public async Task<List<SelectionGroup>> GetGroupCapacity() => await SqlDataAccess.GetData<SelectionGroup>("Selectiongroup");
         public async Task<List<CapacitySummaryModel>> GetCapacitySummary(string month, int capid)
         {
@@ -174,7 +174,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
                             "Subquery.OperationTime, Subquery.Cap_Per_Machine";
             }
 
-            return await SqlDataAccess.GetData<CapacitySummaryModel>(strquery, null, "CapacitySummary");
+            return await SqlDataAccess.GetData<CapacitySummaryModel>(strquery, null);
         }
         public async Task<int> GetForecastTotal(string month)
         {
@@ -244,8 +244,8 @@ namespace PMACS_V2.Areas.P1SA.Repository
                                 "WHERE(f.Model_name = c.Model_name AND c.Capgroup_ID = 7) AND c.IsDelete = 1)";
             return await SqlDataAccess.GetlistStrings(strsqlquery);
         }
-        public async Task<List<ForecastModel>> GetForecast(string year) => await SqlDataAccess.GetData<ForecastModel>("ForecastData", null, "Forecastmodels");
-        public async Task<List<ForecastModel>> GetForecastChart() => await SqlDataAccess.GetData<ForecastModel>("ForecastChart", null, "ForecastChart");
+        public async Task<List<ForecastModel>> GetForecast(string year) => await SqlDataAccess.GetData<ForecastModel>("ForecastData", null);
+        public async Task<List<ForecastModel>> GetForecastChart() => await SqlDataAccess.GetData<ForecastModel>("ForecastChart", null);
         // ===========================================================
         // ==================== Capacity per Section =================
         // ===========================================================
@@ -471,7 +471,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
         // Rotor Section
         public async Task<List<RotorModel>> GetRotorModels(string months, int capid)
         {
-            string month = months == "None" ? months : "";
+            //string month = months == "None" ? months : "";
 
             string strsql = "SELECT c.Capinfo_ID, COALESCE(c.Cover, '') as Cover, " +
                             "c.CycleTime, COALESCE(c.Impeller, '') as Impeller, " +
@@ -509,21 +509,22 @@ namespace PMACS_V2.Areas.P1SA.Repository
         public async Task<List<WindingModel>> GetWindingModels(string months, int capid)
         {
             string CycleTime = (capid == 1 || capid == 2) ? "(c.CycleTime / CASE WHEN c.Head_count = 0 THEN 1 ELSE c.Head_count END)" : "CASE WHEN c.CycleTime = 0 THEN 1 ELSE c.CycleTime END";
-            string month = months == "None" ? months : "";
+            //string month = months == "None" ? months : "";
 
-            string strsql = "SELECT  c.*, " + CycleTime + " as  Cyclepcs, " +
-                        "cp.Avail_Machine, cp.Months, cp.Ope, " +
-                        "COALESCE(f." + months + ", 0) as foredata, " +
-                        "COALESCE((f." + months + " * " + CycleTime + " / 60 / 60), 0.0)  as manhour, " +
-                        "COALESCE((f." + months + " * " + CycleTime + " / 60 / 60 / 24 / c.Operation_time), 0.0) as Require, " +
-                        "(cp.Days * 3600 / " + CycleTime + " *  cp.Ope)  as Capday, " +
-                        "(cp.Days * 3600 / " + CycleTime + "  *  cp.Ope)  * cp.Months as Capmonth " +
-                        "FROM CapGroup_tbl cg " +
-                        "INNER JOIN CWinding_tbl c ON c.Capgroup_ID = cg.Capgroup_ID " +
-                        "INNER JOIN Cap_process cp ON cp.Process_code = c.Process_code " +
-                        "LEFT JOIN Forecast_tbl f ON f.Model_name = c.Model_name " +
-                        "WHERE cg.Capgroup_ID = @Capgroup_ID AND c.IsDelete = 1 " +
-                        "ORDER BY c.Capinfo_ID";
+            string strsql = $@"SELECT c.Capinfo_ID, c.Product_type, c.Model_name,c.Winding_Assy,
+                        c.CycleTime, c.WireDia, c.WindTurns, c.jig, c.Head_count, cp.AvailMachine,
+                        COALESCE(f.{months}, 0) as foredata, c.Capgroup_ID, c.ProcessCode,
+                        COALESCE(NULLIF(f.{months} * {CycleTime} / 60 / 60, 0.0), 0.0)  as manhour,
+                        COALESCE(NULLIF(f.{months} * {CycleTime} / 60 / 60 / 24 / c.Operation_time * 1.9, 0.0), 0.0)  as Require,
+                        COALESCE(NULLIF(f.{months} * {CycleTime} / 60 / 60 / 24 / c.Operation_time * 1.9, 0.0), 0.0)  as Manpower, 
+                        (cp.Days * 3600 / {CycleTime} *  cp.OperationTime) as Capday,
+                        (cp.Days * 3600 / {CycleTime}  *  cp.OperationTime) * cp.Months as Capmonth
+                        FROM PMACS_Capacity_Winding c
+                        LEFT JOIN PMACS_Forecast f ON f.Model_name = c.Model_name
+                        INNER JOIN PMACS_ProdProcess cp ON cp.ProcessCode = c.ProcessCode
+                        WHERE c.Capgroup_ID = @Capgroup_ID  AND c.IsDelete = 1
+                        ORDER BY c.Capinfo_ID";
+
 
             return await SqlDataAccess.GetData<WindingModel>(strsql, new { Capgroup_ID = capid });
         }

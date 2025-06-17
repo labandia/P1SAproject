@@ -20,8 +20,10 @@ namespace PMACS_V2.Areas.P1SA.Repository
         // ===========================================================
 
         // MOLD DIE INPUT DATA
-        public async Task<List<DieMoldTotalPartnum>> GetMoldTotalPartNoList(int month, int year)
+        public async Task<List<DieMoldTotalPartnum>> GetMoldTotalPartNoList(int month, int year, string process)
         {
+            // filter by   WHERE p.ProcessID = 'M003' 
+
             string totalpartNoquery = @"WITH TotalDiePerPart AS (
                                         SELECT PartNo, SUM(TotalDie) AS TotalQty
                                         FROM DieMoldMonitor
@@ -55,15 +57,16 @@ namespace PMACS_V2.Areas.P1SA.Repository
 									INNER JOIN DieMoldDescription md ON md.PartDescriptionID = mp.PartDescriptionID
                                     LEFT JOIN SingleDS ds ON ds.PartNo = p.PartNo
                                     LEFT JOIN TotalDiePerPart td ON td.PartNo = p.PartNo
+                                    WHERE p.ProcessID = @ProcessID
                                     ORDER BY p.No ASC;";
 
-            var parameters = new { Month = month, Year = year };
+            var parameters = new { Month = month, Year = year, ProcessID = process };
 
             return await SqlDataAccess.GetData<DieMoldTotalPartnum>(totalpartNoquery, parameters);
         }
-        public async Task<List<DieMoldTotalPartnum>> GetMoldDieMonthInput(int month, int year)
+        public async Task<List<DieMoldTotalPartnum>> GetMoldDieMonthInput(int month, int year, string process = "M002")
         {
-            var totalpart = await GetMoldTotalPartNoList(month, year);
+            var totalpart = await GetMoldTotalPartNoList(month, year, process);
             // Step 1: Group by No and calculate total for each No
             var totalByNo = totalpart
                 .GroupBy(x => x.No)
@@ -98,8 +101,10 @@ namespace PMACS_V2.Areas.P1SA.Repository
                               GROUP BY No,  PreviousCount, DieLife";
             return await SqlDataAccess.GetData<DieMoldSetNotal>(strquery, null);
         }
-        public async Task<List<DieMoldSummaryProcess>> GetMoldDieSummary()
+        public async Task<List<DieMoldSummaryProcess>> GetMoldDieSummary(string process)
         {
+            // filter by   WHERE p.ProcessID = 'M003' 
+
             // Get the TotalQty of the Mold die Input
             string strquery = @" WITH TotalDiePerPart AS (
                                     SELECT PartNo, SUM(TotalDie) AS TotalQty
@@ -151,11 +156,9 @@ namespace PMACS_V2.Areas.P1SA.Repository
                                 LEFT JOIN SingleDS ds ON ds.PartNo = p.PartNo
                                 LEFT JOIN TotalDiePerPart td ON td.PartNo = p.PartNo
                                 LEFT JOIN TotalByNo tb ON tb.No = p.No
-                                ORDER BY p.No ASC"
-            ;
-
-
-            return await SqlDataAccess.GetData<DieMoldSummaryProcess>(strquery, null);
+                                WHERE p.ProcessID = @ProcessID
+                                ORDER BY p.No ASC";
+            return await SqlDataAccess.GetData<DieMoldSummaryProcess>(strquery, new { ProcessID = process });
         }
 
         public async Task<bool> AddUpdateMoldie(MoldInputModel mold)

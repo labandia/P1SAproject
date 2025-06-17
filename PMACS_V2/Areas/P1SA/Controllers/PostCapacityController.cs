@@ -15,10 +15,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
     {
         private readonly ICapacity _cap;
 
-        public PostCapacityController(ICapacity cap)
-        {
-            _cap = cap;
-        }
+        public PostCapacityController(ICapacity cap) => _cap = cap;
 
         [HttpPost]
         public async Task<ActionResult> P1saSummaryUpdated(PsummaryModel cap)
@@ -33,8 +30,6 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         }
 
        
-
-
         [HttpPost]
         public async Task<ActionResult> UpdateProcessCap()
         {

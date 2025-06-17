@@ -655,6 +655,7 @@
     <Compile Include="Utilities\ExportFiler.cs" />
     <Compile Include="Utilities\ErrorHandling\GlobalErrorHandling.cs" />
     <Compile Include="Utilities\ErrorHandling\GlobalExceptionFilter.cs" />
+    <Compile Include="Utilities\Security\JwtAuthenticationAttribute.cs" />
     <Compile Include="Utilities\Security\JwtAuthorizeAttribute.cs" />
     <Compile Include="Utilities\Security\JwtHelper.cs" />
     <Compile Include="Utilities\NotificationHub.cs" />

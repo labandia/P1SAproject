@@ -65,7 +65,7 @@ namespace Parts_locator
  
 
             ServiceProvider = services.BuildServiceProvider();
-            var mainForm = ServiceProvider.GetRequiredService<Startup>();
+            var mainForm = ServiceProvider.GetRequiredService<Mainlayout>();
             Application.Run(mainForm);
 
 

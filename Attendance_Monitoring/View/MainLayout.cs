@@ -1,12 +1,5 @@
 ﻿using Attendance_Monitoring.Usercontrols;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Attendance_Monitoring.View
@@ -32,17 +25,23 @@ namespace Attendance_Monitoring.View
 
         private void MainLayout_Load(object sender, EventArgs e)
         {
-            _attend.BringToFront();
+           
         }
 
-        private void AttendanceMenu_Click(object sender, EventArgs e)
+
+        private void Attendance_Click(object sender, EventArgs e)
         {
             _attend.BringToFront();
         }
 
-        private void CRmonitorMenu_Click(object sender, EventArgs e)
+        private void CRMonitor_Click(object sender, EventArgs e)
         {
             _cr.BringToFront();
+        }
+
+        private void EmployeeMenu_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -28,84 +28,135 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.CRmonitorMenu = new System.Windows.Forms.Button();
-            this.AttendanceMenu = new System.Windows.Forms.Button();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainLayout));
             this.panel1 = new System.Windows.Forms.Panel();
-            this.Employbtn = new System.Windows.Forms.Button();
-            this.panel2.SuspendLayout();
+            this.Logoutbtn = new System.Windows.Forms.Button();
+            this.EmployeeMenu = new System.Windows.Forms.Button();
+            this.CRMonitor = new System.Windows.Forms.Button();
+            this.Attendance = new System.Windows.Forms.Button();
+            this.sidepanel = new System.Windows.Forms.Panel();
+            this.panel1.SuspendLayout();
+            this.sidepanel.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // panel2
-            // 
-            this.panel2.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.panel2.Controls.Add(this.Employbtn);
-            this.panel2.Controls.Add(this.CRmonitorMenu);
-            this.panel2.Controls.Add(this.AttendanceMenu);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel2.Location = new System.Drawing.Point(0, 0);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(64, 644);
-            this.panel2.TabIndex = 0;
-            // 
-            // CRmonitorMenu
-            // 
-            this.CRmonitorMenu.Location = new System.Drawing.Point(3, 147);
-            this.CRmonitorMenu.Name = "CRmonitorMenu";
-            this.CRmonitorMenu.Size = new System.Drawing.Size(58, 23);
-            this.CRmonitorMenu.TabIndex = 1;
-            this.CRmonitorMenu.Text = "CR";
-            this.CRmonitorMenu.UseVisualStyleBackColor = true;
-            this.CRmonitorMenu.Click += new System.EventHandler(this.CRmonitorMenu_Click);
-            // 
-            // AttendanceMenu
-            // 
-            this.AttendanceMenu.Location = new System.Drawing.Point(0, 100);
-            this.AttendanceMenu.Name = "AttendanceMenu";
-            this.AttendanceMenu.Size = new System.Drawing.Size(64, 23);
-            this.AttendanceMenu.TabIndex = 0;
-            this.AttendanceMenu.Text = "Attend";
-            this.AttendanceMenu.UseVisualStyleBackColor = true;
-            this.AttendanceMenu.Click += new System.EventHandler(this.AttendanceMenu_Click);
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.sidepanel);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(64, 0);
+            this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1114, 644);
+            this.panel1.Size = new System.Drawing.Size(1351, 703);
             this.panel1.TabIndex = 1;
             // 
-            // Employbtn
+            // Logoutbtn
             // 
-            this.Employbtn.Location = new System.Drawing.Point(3, 194);
-            this.Employbtn.Name = "Employbtn";
-            this.Employbtn.Size = new System.Drawing.Size(58, 23);
-            this.Employbtn.TabIndex = 2;
-            this.Employbtn.Text = "Employee";
-            this.Employbtn.UseVisualStyleBackColor = true;
+            this.Logoutbtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(31)))), ((int)(((byte)(40)))));
+            this.Logoutbtn.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.Logoutbtn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(31)))), ((int)(((byte)(40)))));
+            this.Logoutbtn.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(31)))), ((int)(((byte)(40)))));
+            this.Logoutbtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(97)))), ((int)(((byte)(235)))));
+            this.Logoutbtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(97)))), ((int)(((byte)(235)))));
+            this.Logoutbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Logoutbtn.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Logoutbtn.ForeColor = System.Drawing.Color.White;
+            this.Logoutbtn.Image = ((System.Drawing.Image)(resources.GetObject("Logoutbtn.Image")));
+            this.Logoutbtn.Location = new System.Drawing.Point(11, 624);
+            this.Logoutbtn.Name = "Logoutbtn";
+            this.Logoutbtn.Size = new System.Drawing.Size(58, 48);
+            this.Logoutbtn.TabIndex = 8;
+            this.Logoutbtn.UseVisualStyleBackColor = false;
+            // 
+            // EmployeeMenu
+            // 
+            this.EmployeeMenu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(31)))), ((int)(((byte)(40)))));
+            this.EmployeeMenu.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.EmployeeMenu.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(31)))), ((int)(((byte)(40)))));
+            this.EmployeeMenu.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(31)))), ((int)(((byte)(40)))));
+            this.EmployeeMenu.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(97)))), ((int)(((byte)(235)))));
+            this.EmployeeMenu.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(97)))), ((int)(((byte)(235)))));
+            this.EmployeeMenu.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.EmployeeMenu.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.EmployeeMenu.ForeColor = System.Drawing.Color.White;
+            this.EmployeeMenu.Image = ((System.Drawing.Image)(resources.GetObject("EmployeeMenu.Image")));
+            this.EmployeeMenu.Location = new System.Drawing.Point(11, 317);
+            this.EmployeeMenu.Name = "EmployeeMenu";
+            this.EmployeeMenu.Size = new System.Drawing.Size(58, 48);
+            this.EmployeeMenu.TabIndex = 5;
+            this.EmployeeMenu.UseVisualStyleBackColor = false;
+            this.EmployeeMenu.Click += new System.EventHandler(this.EmployeeMenu_Click);
+            // 
+            // CRMonitor
+            // 
+            this.CRMonitor.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(31)))), ((int)(((byte)(40)))));
+            this.CRMonitor.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.CRMonitor.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(31)))), ((int)(((byte)(40)))));
+            this.CRMonitor.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(31)))), ((int)(((byte)(40)))));
+            this.CRMonitor.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(97)))), ((int)(((byte)(235)))));
+            this.CRMonitor.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(97)))), ((int)(((byte)(235)))));
+            this.CRMonitor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.CRMonitor.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CRMonitor.ForeColor = System.Drawing.Color.White;
+            this.CRMonitor.Image = ((System.Drawing.Image)(resources.GetObject("CRMonitor.Image")));
+            this.CRMonitor.Location = new System.Drawing.Point(11, 238);
+            this.CRMonitor.Name = "CRMonitor";
+            this.CRMonitor.Size = new System.Drawing.Size(58, 48);
+            this.CRMonitor.TabIndex = 4;
+            this.CRMonitor.UseVisualStyleBackColor = false;
+            this.CRMonitor.Click += new System.EventHandler(this.CRMonitor_Click);
+            // 
+            // Attendance
+            // 
+            this.Attendance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(97)))), ((int)(((byte)(235)))));
+            this.Attendance.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.Attendance.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(31)))), ((int)(((byte)(40)))));
+            this.Attendance.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(97)))), ((int)(((byte)(235)))));
+            this.Attendance.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(97)))), ((int)(((byte)(235)))));
+            this.Attendance.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Attendance.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Attendance.ForeColor = System.Drawing.Color.White;
+            this.Attendance.Image = ((System.Drawing.Image)(resources.GetObject("Attendance.Image")));
+            this.Attendance.Location = new System.Drawing.Point(11, 162);
+            this.Attendance.Name = "Attendance";
+            this.Attendance.Size = new System.Drawing.Size(58, 48);
+            this.Attendance.TabIndex = 3;
+            this.Attendance.UseVisualStyleBackColor = false;
+            this.Attendance.Click += new System.EventHandler(this.Attendance_Click);
+            // 
+            // sidepanel
+            // 
+            this.sidepanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(31)))), ((int)(((byte)(40)))));
+            this.sidepanel.Controls.Add(this.Logoutbtn);
+            this.sidepanel.Controls.Add(this.EmployeeMenu);
+            this.sidepanel.Controls.Add(this.CRMonitor);
+            this.sidepanel.Controls.Add(this.Attendance);
+            this.sidepanel.Dock = System.Windows.Forms.DockStyle.Left;
+            this.sidepanel.Location = new System.Drawing.Point(0, 0);
+            this.sidepanel.Name = "sidepanel";
+            this.sidepanel.Size = new System.Drawing.Size(81, 703);
+            this.sidepanel.TabIndex = 1;
             // 
             // MainLayout
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1178, 644);
+            this.ClientSize = new System.Drawing.Size(1351, 703);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.panel2);
             this.Name = "MainLayout";
             this.Text = "MainLayout";
             this.Load += new System.EventHandler(this.MainLayout_Load);
-            this.panel2.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
+            this.sidepanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Button CRmonitorMenu;
-        private System.Windows.Forms.Button AttendanceMenu;
         private System.Windows.Forms.Panel panel1;
         private Usercontrols.AttendancePage attendancePage1;
-        private System.Windows.Forms.Button Employbtn;
+        private System.Windows.Forms.Panel sidepanel;
+        private System.Windows.Forms.Button Logoutbtn;
+        private System.Windows.Forms.Button EmployeeMenu;
+        private System.Windows.Forms.Button CRMonitor;
+        private System.Windows.Forms.Button Attendance;
     }
 }

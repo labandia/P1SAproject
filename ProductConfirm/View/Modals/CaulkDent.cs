@@ -1,7 +1,10 @@
-﻿using ProductConfirm.Data;
+﻿using Newtonsoft.Json;
+using ProductConfirm.Data;
 using ProductConfirm.Global;
+using ProductConfirm.Models;
 using ProductConfirm.Modules;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
@@ -54,6 +57,15 @@ namespace ProductConfirm.Modals
 
         private  async void button2_Click(object sender, EventArgs e)
         {
+            var cdList = new CaulkingDent
+            {
+               CD1 = string.IsNullOrWhiteSpace(firstText.Text) ? 0 : Convert.ToDouble(firstText.Text)
+            };
+
+
+            string jsonString = JsonConvert.SerializeObject(cdList, Formatting.Indented);
+
+
             Dataconnect db = new Dataconnect();
             if (ValidationForm())
             {

@@ -195,7 +195,8 @@
     const GetMoldDieSummary = async () => {
         $("#FinalSummaryData").empty();
 
-        let res = await fetchData('@Url.Action("GetMoldDieSummaryList", "DieMold")', { ProcessID : $("#ProcessID").val()});
+        let res = await fetchData('@Url.Action("GetMoldDieSummaryList", "DieMold")', { ProcessID: $("#ProcessID").val() });
+        console.log(res);
         if (res && res.Success) {
             SummaryData = res.Data.FinalSummary;
             FinalSummaryData = res.Data.MoldDieSummary;

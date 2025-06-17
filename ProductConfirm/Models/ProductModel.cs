@@ -660,6 +660,52 @@ namespace ProductConfirm.Models
     }
 
 
+    public class CaulkingDent
+    {
+        public double CD1 { get; set; }
+        public double CD2 { get; set; }
+        public double CD3 { get; set; }
+        public double CD4 { get; set; }
+        public double CD5 { get; set; }
+        public double CD6 { get; set; }
+        public double CD7 { get; set; }
+        public double CD8 { get; set; }
+        public double CD9 { get; set; }
+        public double CD10 { get; set; }
+        public double CD11 { get; set; }
+        public double CD12 { get; set; }
+        public double CD13 { get; set; }
+        public double CD14 { get; set; }
+        public double CD15 { get; set; }
+        public double CD16 { get; set; }
+        public double CD17 { get; set; }
+        public double CD18 { get; set; }
+        public double CD19 { get; set; }
+        public double CD20 { get; set; }
+
+        public double CD21 { get; set; }
+        public double CD22 { get; set; }
+        public double CD23 { get; set; }
+        public double CD24 { get; set; }
+        public double CD25 { get; set; }
+        public double CD26 { get; set; }
+        public double CD27 { get; set; }
+        public double CD28 { get; set; }
+        public double CD29 { get; set; }
+        public double CD30 { get; set; }
+        public double CD31 { get; set; }
+        public double CD32 { get; set; }
+        public double CD33 { get; set; }
+        public double CD34 { get; set; }
+        public double CD35 { get; set; }
+        public double CD36 { get; set; }
+        public double CD37 { get; set; }
+        public double CD38 { get; set; }
+        public double CD39 { get; set; }
+        public double CD40 { get; set; }
+    }
+
+
     //FOR INSERTING DATA
     public class AddProductDetailsModel
     {

@@ -22,13 +22,17 @@
                     <input type="hidden" name="Filepath" id="Filepath" />
                 </div>
                 <div class="col">
-                    <label>Select Inspectors  </label>
-                    <div class="select-container">
+                    <label>Input Inspectors  </label>
+                    @*<div class="select-container">
                         <select id="Employee_ID" name="Employee_ID">
                             <option>-- Select Inspector --</option>
                         </select>
+                    </div>*@
+                    <div class="search-box">
+                        <input type="hidden" name="Employee_ID" id="Employee_ID">
+                        <input type="text" placeholder="Type Name or ID no." name="EmployeeSearch" id="EmployeeSearch">
+                        <div class="namesdisplay"></div>
                     </div>
-
                 </div>
             </div>
 
@@ -171,26 +175,28 @@
 <script src="~/Scripts/jquery-3.7.1.min.js"></script>
 <script type="text/javascript">
     let regisTable = [];
+    let loadData = [];
+
+    const resultBox = document.querySelector(".namesdisplay");
+
     const editform = document.getElementById("addnewform");
     let strRegno = $("#Regno").val();
 
     const PopulateComboxInspector = async (Employee_ID) => {
-        let res = await FetchAuthenticate('@Url.Action("GetQualifiedInspector", "Patrol")', {});
-         if (res.StatusCode === 200) {
-             let select = $("#Employee_ID");
-             select.empty();
+       let res = await FetchAuthenticate('@Url.Action("GetInspectorsByAdd", "Patrol")', {});
+        if (res && res.Success) {
+            loadData = res.Data;
+            //let select = $("#Employee_ID");
+            //select.empty();
 
-             $.each(res.Data, function (index, rowData) {
-                 select.append('<option value="' + rowData.Employee_ID + '">' + rowData.FullName + '</option>');
-             });
-
-             // Set selected option based on value
-             select.val(Employee_ID);
-         }
+            //$.each(res.Data, function (index, rowData) {
+            //    select.append('<option value="' + rowData.Employee_ID + '">' + rowData.FullName + '</option>');
+            //});
+        }
      }
     const ReportsDetails = async () => {
         let res = await FetchAuthenticate('@Url.Action("GetRegistrationNoByID", "Patrol")', { Regno: strRegno });
-
+        console.log(res);
         if (res && res.Success) {
             let RegisterData = res.Data.Register;
             let FindingData = res.Data.Finding;
@@ -204,6 +210,9 @@
             $("#Filepath").val(RegisterData[0].Filepath);
             $("#PIC_Comments").val(RegisterData[0].PIC_Comments);
             $("#DateConduct").val(strDate);
+
+            $("#Employee_ID").val(RegisterData[0].Employee_ID);
+            $("#EmployeeSearch").val(RegisterData[0].FullName);
 
             PopulateComboxInspector(RegisterData[0].Employee_ID);
 
@@ -290,7 +299,29 @@
           Resetforms();
       });
 
+    // INPUT SEARCH EMPLOYEE NAME WHEN TYPE
+    $("#EmployeeSearch").keyup(function () {
+        let result = [];
+        let input = this.value;
 
+        if (input.length > 0) {
+            result = loadData.filter((item) => {
+                return item.FullName.toLowerCase().includes(input.toLowerCase()) ||
+                    item.Employee_ID.toLowerCase().includes(input.toLowerCase());
+            });
+
+            if (result.length > 0) {
+                resultBox.style.display = 'block';
+                display(result); // assumes display() handles array of objects
+            } else {
+                resultBox.style.display = 'block';
+                resultBox.innerHTML = '<div style="padding: 5px; color: #999;">No search found</div>';
+            }
+        } else {
+            resultBox.style.display = 'none';
+            resultBox.innerHTML = ''; // clear the previous results or message
+        }
+    });
 
     function changeformatDate(change) {
         let parts = change.split("/"); // ["02", "18", "2024"]
@@ -313,6 +344,22 @@
         return formattedDate;
     }
 
+    function display(result) {
+        const content = result.map((list) => {
+            return `<li onclick="selectinput(this)" data-id="${list.Employee_ID}">${list.FullName}</li>`;
+        });
+
+        resultBox.innerHTML = "<ul>" + content.join('') + "</ul>";
+    }
+
+    function selectinput(list) {
+        const employeeId = list.getAttribute("data-id");
+        employeeID = employeeId;
+        $("#Employee_ID").val(employeeId);
+        $("#EmployeeSearch").val(list.innerHTML);
+        resultBox.innerHTML = '';
+        resultBox.style.display = 'none';
+    }
 
     ReportsDetails();
     RegistrationTable();

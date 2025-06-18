@@ -19,10 +19,8 @@ namespace Attendance_Monitoring.View
         private readonly IServiceProvider _serviceProvider;
         private readonly AdminController _admin;
         private static List<AttendanceModel> itemattends;
-        private static IEnumerable<Employee> emplist;
-        // call from other class 
-        Timeprocess tim = new Timeprocess();
-
+        private static List<Employee> emplist;
+ 
         private Timer timer;
 
         // Share variable to all
@@ -57,12 +55,12 @@ namespace Attendance_Monitoring.View
 
                 if (selectime == 0)
                 {
-                    shift = tim.TimeIncheck(DateTime.Now);
+                    shift = Timeprocess.TimeIncheck(DateTime.Now);
                     timecheck = tdate;
                 }
                 else
                 {
-                    shift = tim.timeoutcheck(DateTime.Now);
+                    shift = Timeprocess.timeoutcheck(DateTime.Now);
                     Timeout_date = shift == "DAYSHIFT" ? tdate : yest;
                     timecheck = Timeout_date;
                 }
@@ -93,7 +91,7 @@ namespace Attendance_Monitoring.View
 
                 // Process Employee ID
                 string empid = EmployID.Text.Replace("-", "");
-                string shift = tim.TimeIncheck(DateTime.Now);
+                string shift = Timeprocess.TimeIncheck(DateTime.Now);
 
                 // Filter employee once
                 var employee = emplist.FirstOrDefault(p => p.EmployeeID.Equals(empid, StringComparison.OrdinalIgnoreCase) &&
@@ -121,7 +119,7 @@ namespace Attendance_Monitoring.View
                     }
 
                     // Perform Time In
-                    bool result = await _admin.AttendanceTimeINandOut(empid, shift, tim.CalculateLateTime(), tb);
+                    bool result = await _admin.AttendanceTimeINandOut(empid, shift, Timeprocess.CalculateLateTime(), tb);
 
                     if (result)
                     {
@@ -144,7 +142,7 @@ namespace Attendance_Monitoring.View
                 // Time Out Process
                 else if (selecttime.SelectedIndex == 1)
                 {
-                    string shiftname = tim.timeoutcheck(DateTime.Now);
+                    string shiftname = Timeprocess.timeoutcheck(DateTime.Now);
 
                     if (shiftname == "DAYSHIFT")
                     {
@@ -227,28 +225,28 @@ namespace Attendance_Monitoring.View
                             if (timeInSpan >= earlyStart && timeInSpan < cutoffEarly)
                             {
 
-                                reg = tim.CalculateWorkingHours("05:30:00", "14:30:00");
+                                reg = Timeprocess.CalculateWorkingHours("05:30:00", "14:30:00");
                             }
                             else
                             {
 
-                                reg = tim.CalculateWorkingHours(timeIn.ToString(@"HH\:mm\:ss"), "14:30:00");
+                                reg = Timeprocess.CalculateWorkingHours(timeIn.ToString(@"HH\:mm\:ss"), "14:30:00");
                             }
-                            oTHours = tim.CalculateOTHours("14:30:00", currentTime);
+                            oTHours = Timeprocess.CalculateOTHours("14:30:00", currentTime);
                         }
                         else if (timeInSpan >= lateStart && timeInSpan < cutoffLate)
                         {
                             if (timeInSpan >= lateStart && timeInSpan < TimeSpan.Parse("20:00:00"))
                             {
 
-                                reg = tim.CalculateWorkingHours("07:30:00", "16:30:00");
+                                reg = Timeprocess.CalculateWorkingHours("07:30:00", "16:30:00");
                             }
                             else
                             {
 
-                                reg = tim.CalculateWorkingHours(timeIn.ToString(@"HH\:mm\:ss"), "16:30:00");
+                                reg = Timeprocess.CalculateWorkingHours(timeIn.ToString(@"HH\:mm\:ss"), "16:30:00");
                             }
-                            oTHours = tim.CalculateOTHours("16:30:00", currentTime);
+                            oTHours = Timeprocess.CalculateOTHours("16:30:00", currentTime);
                         }
                         else
                         {
@@ -365,25 +363,25 @@ namespace Attendance_Monitoring.View
 
                             if (timeInSpan >= earlyStart && timeInSpan < cutoffEarly)
                             {
-                                reg = tim.CalculateWorkingHours("17:30:00", "02:30:00");
+                                reg = Timeprocess.CalculateWorkingHours("17:30:00", "02:30:00");
                             }
                             else
                             {
-                                reg = tim.CalculateWorkingHours(timeIn.ToString(@"HH\:mm\:ss"), "02:30:00");
+                                reg = Timeprocess.CalculateWorkingHours(timeIn.ToString(@"HH\:mm\:ss"), "02:30:00");
                             }
-                            oTHours = tim.CalculateOTHours("02:30:00", currentTime);
+                            oTHours = Timeprocess.CalculateOTHours("02:30:00", currentTime);
                         }
                         else if (timeInSpan >= lateStart && timeInSpan < cutoffLate)
                         {
                             if (timeInSpan >= lateStart && timeInSpan < TimeSpan.Parse("20:00:00"))
                             {
-                                reg = tim.CalculateWorkingHours("19:30:00", "04:30:00");
+                                reg = Timeprocess.CalculateWorkingHours("19:30:00", "04:30:00");
                             }
                             else
                             {
-                                reg = tim.CalculateWorkingHours(timeIn.ToString(@"HH\:mm\:ss"), "04:30:00");
+                                reg = Timeprocess.CalculateWorkingHours(timeIn.ToString(@"HH\:mm\:ss"), "04:30:00");
                             }
-                            oTHours = tim.CalculateOTHours("04:30:00", currentTime);
+                            oTHours = Timeprocess.CalculateOTHours("04:30:00", currentTime);
                         }
                         else
                         {
@@ -512,8 +510,7 @@ namespace Attendance_Monitoring.View
             {
                 selecttime.DropDownStyle = ComboBoxStyle.DropDownList;
                 Timeclock.Text = DateTime.Now.ToLongTimeString();
-                var emp = await _admin.GetAllEmployees();
-                emplist = emp;
+                emplist = await _admin.GetAllEmployees(); 
             }
             catch (FormatException)
             {

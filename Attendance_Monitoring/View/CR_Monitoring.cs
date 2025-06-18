@@ -15,7 +15,7 @@ namespace Attendance_Monitoring.View
         private readonly IServiceProvider _serviceProvider;
         private readonly AdminController _admin;
         private static List<CRmodel> critemlist;
-        private static IEnumerable<Employee> emplist;
+        private static List<Employee> emplist;
         private readonly Timeprocess time;
         private Timer timer;
 
@@ -32,10 +32,8 @@ namespace Attendance_Monitoring.View
 
         private async void CR_Monitoring_Load(object sender, EventArgs e)
         {
-            IEnumerable<Employee> itemattends = new List<Employee>();
-
-            IEnumerable<Employee> emp = await _admin.GetAllEmployees();
-            emplist = emp.ToList();
+            // Use for checking Employee ID if exist
+            emplist = await _admin.GetAllEmployees();
 
             DisplayCRMonitor();
             EmployID.Focus();
@@ -46,7 +44,7 @@ namespace Attendance_Monitoring.View
         public async void DisplayCRMonitor()
         {
             var dateToday = DateTime.Now.ToString("yyyy-MM-dd");
-            string shift = time.TimeIncheck(DateTime.Now);
+            string shift = Timeprocess.TimeIncheck(DateTime.Now);
 
             critemlist = await _admin.GetCRMonitorlist(dateToday, shift, sec);
 
@@ -59,7 +57,7 @@ namespace Attendance_Monitoring.View
             if (e.KeyCode != Keys.Enter) return;
 
             string empid = EmployID.Text.Replace("-", "");
-            string shift = time.TimeIncheck(DateTime.Now);
+            string shift = Timeprocess.TimeIncheck(DateTime.Now);
 
             // Filter employee once
             var employee = emplist.FirstOrDefault(p => p.EmployeeID.Equals(empid, StringComparison.OrdinalIgnoreCase) &&

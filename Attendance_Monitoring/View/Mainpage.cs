@@ -92,9 +92,6 @@ namespace Attendance_Monitoring
         {
             double oTHours, reg;
 
-            Timeprocess tm = new Timeprocess();
-
-
 
 
             DateTime timeIn = DateTime.Parse("2024-09-13 05:28:31.093");
@@ -104,7 +101,7 @@ namespace Attendance_Monitoring
             //TimeSpan timeInSpan = TimeSpan.Parse(time["TimeIn"].ToString("HH:mm:ss"), culture);
             TimeSpan timeInSpan = timeIn.TimeOfDay;
 
-            reg = tm.CalculateWorkingHours(timeIn.ToString(@"HH\:mm\:ss"), "14:30:00");
+            reg = Timeprocess.CalculateWorkingHours(timeIn.ToString(@"HH\:mm\:ss"), "14:30:00");
 
 
             MessageBox.Show("DEBUG SHOWING TIEMINE: " + reg);
@@ -121,7 +118,7 @@ namespace Attendance_Monitoring
             string currentTime = currentDatetodatu.ToString(@"HH\:mm\:ss");
             
 
-            oTHours = tm.CalculateOTHours("14:30:00", currentTime);
+            oTHours = Timeprocess.CalculateOTHours("14:30:00", currentTime);
 
             MessageBox.Show("TIme: " + currentTime);
             MessageBox.Show("OVERTIME NO: " + oTHours);

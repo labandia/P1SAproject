@@ -5,14 +5,7 @@
 }
 
 <div class="row">
-
-    <div class="col-8">
-        <div class="Calendar_container">
-            <div id="calendar"></div>
-        </div>
-    </div>
-
-    <div class="col-4">
+    <div class="col-3">
         <div class="Sched_container">
             <div class="Sched_header">
                 <span>Auditors :</span>
@@ -28,6 +21,11 @@
             <input id="searchbox" type="text" placeholder="Search name ... " class="form-control" />
 
             <div class="Sched_list" id="Sched_list_container"></div>
+        </div>
+    </div>
+    <div class="col-9">
+        <div class="Calendar_container">
+            <div id="calendar"></div>
         </div>
     </div>
 </div>
@@ -245,6 +243,9 @@
         //console.log(data);
         let res = await postData('@Url.Action("SetActiveDateSchedule", "Patrol")', formData);
         console.log(res);
+        if (res && res.Success) {
+            $("#AddScheduleModal").modal("hide");
+        }
 
     });
     editform.addEventListener('submit', async (e) => {
@@ -320,7 +321,11 @@
         const month = String(today.getMonth() + 1).padStart(2, '0');
         const day = String(today.getDate()).padStart(2, '0');
         const formattedDate = `${year}-${month}-${day}`;
-
+        //headerToolbar: {
+        //    left: 'prev next',
+        //        center: 'title',
+        //            right: 'dayGridMonth,listWeek'
+        //},
         const calendarEl = document.getElementById('calendar');
 
         window.calendar = new FullCalendar.Calendar(calendarEl, {
@@ -328,9 +333,9 @@
             selectable: false,
             height: 'auto',
             headerToolbar: {
-                left: 'prev next',
-                center: 'title',
-                right: 'dayGridMonth,listWeek'
+                left: '',
+                center: '',
+                right: 'title'
             },
             events: [], // Start empty
 
@@ -341,7 +346,7 @@
                     String(info.date.getDate()).padStart(2, '0');
 
                 if (cellDate === formattedDate) {
-                    info.el.style.backgroundColor = '#ffa';
+                    info.el.style.backgroundColor = '#0eaa7b33';
                     //info.el.style.color = 'white';
                 }
             },

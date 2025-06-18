@@ -147,7 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controller\AdminController.cs" />
-    <Compile Include="Global\Timeprocess.cs" />
+    <Compile Include="Utilities\Timeprocess.cs" />
     <Compile Include="Models\Attendance.cs" />
     <Compile Include="Models\CRmodel.cs" />
     <Compile Include="Models\Employee.cs" />

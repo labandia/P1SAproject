@@ -232,7 +232,9 @@ namespace Attendance_Monitoring.View
             DisplayTotal.Text = "Total Results: " + CRtable.RowCount;
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        
+
+        private void button2_Click_1(object sender, EventArgs e)
         {
             dstart.Format = DateTimePickerFormat.Custom;
             dstart.CustomFormat = "yyyy-MM-dd";

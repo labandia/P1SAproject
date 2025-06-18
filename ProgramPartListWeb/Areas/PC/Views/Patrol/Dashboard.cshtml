@@ -91,15 +91,19 @@
         const formattedDate = `${year}-${month}-${day}`;
 
         const calendarEl = document.getElementById('calendar');
-
+        //headerToolbar: {
+        //    left: 'prev,next today',
+        //        center: 'title',
+        //            right: 'dayGridMonth,listWeek'
+        //},
         window.calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
             selectable: true,
             height: 'auto',
             headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,listWeek'
+                left: '',
+                center: '',
+                right: ''
             },
             events: [], // Start empty
 

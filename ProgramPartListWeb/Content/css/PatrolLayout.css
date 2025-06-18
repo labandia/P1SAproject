@@ -460,6 +460,20 @@
     }
 
 
+    .SchedCard{
+        cursor: pointer;
+        padding: .5em 1em;
+    }
+
+    .SchedCard:hover{
+       background: #A5A1AA;
+    }
+
+    .fc-daygrid-day-number{
+        color: #222;
+        font-weight: 600;
+    }
+
     .Inputcontainer {
         position: relative;
         border-radius: .5em;
@@ -522,17 +536,17 @@
         background: var(--primary-hover);
     }
 
-.Complete, .Incomplete {
-    font-weight: 600;
-    padding: .4em 1em;
-    border-radius: .2rem;
-    font-size: .8rem;
-}
+    .Complete, .Incomplete {
+        font-weight: 600;
+        padding: .4em 1em;
+        border-radius: .2rem;
+        font-size: .8rem;
+    }
 
-.Incomplete {
-    background-color: rgba(170, 24, 14, 0.2);
-    color: rgb(100, 9, 9);
-}
+    .Incomplete {
+        background-color: rgba(170, 24, 14, 0.2);
+        color: rgb(100, 9, 9);
+    }
 
 .Complete {
     background-color: rgba(14, 170, 123, 0.2);
@@ -605,7 +619,7 @@
     }
 
     .Schedule {
-        padding: 0 1em;
+        padding: 1em;
     }
 
     .ScheduleToday {
@@ -618,7 +632,6 @@
         display: grid;
         grid-template-columns: 65% 35%;
         grid-column-gap: 20px;
-        margin-top: 1em;
     }
 
     /*.Calendar {

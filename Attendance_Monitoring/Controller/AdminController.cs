@@ -20,8 +20,8 @@ namespace Attendance_Monitoring.Controller
         }
 
         // -------------  Employees Management Process --------------
-        public async Task<IEnumerable<Employee>> GetAllEmployees() => await _emp.GetEmployees();
-        public async Task<IEnumerable<Department>> GetDepartmentsList() => await _emp.GetDepartments();
+        public async Task<List<Employee>> GetAllEmployees() => await _emp.GetEmployees();
+        public async Task<List<Department>> GetDepartmentsList() => await _emp.GetDepartments();
         public async Task<bool>AddEmployee(Employee emp) => await _emp.AddEmployee(emp);
         public async Task<bool>UpdateEmployee(Employee emp, string temp) => await _emp.UpdateEmployee(emp, temp);
         public async Task<bool>DeleteEmployee(string emp) => await _emp.DeleteEmployee(emp);

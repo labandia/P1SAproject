@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,6 +10,7 @@ using System.Net.Mail;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace PracticeC_
 {
@@ -19,7 +21,7 @@ namespace PracticeC_
 
         static void Main(string[] args)
         {
-            ConvertstringtoBase64();
+            SamplejsonDeserialize();
             Console.ReadKey();
         }
 
@@ -280,9 +282,29 @@ namespace PracticeC_
         //    Console.WriteLine("Email sent successfully via Graph API.");
         //}
 
-        public void SamplejsonDeserialize()
+        public class CDItem
         {
+            public string Code { get; set; }
+            public int Value { get; set; }
+        }
 
+        public static void SamplejsonDeserialize()
+        {
+            var cdList = new List<CDItem>
+            {
+                new CDItem { Code = "CD1", Value = 1 },
+                new CDItem { Code = "CD2", Value = 1 },
+                new CDItem { Code = "CD3", Value = 1 },
+                new CDItem { Code = "CD4", Value = 1 },
+                new CDItem { Code = "CD5", Value = 1 },
+                new CDItem { Code = "CD6", Value = 1 },
+                new CDItem { Code = "CD7", Value = 1 },
+                new CDItem { Code = "CD8", Value = 1 },
+                new CDItem { Code = "CD9", Value = 1 }
+            };
+
+            string jsonString = JsonConvert.SerializeObject(cdList, Newtonsoft.Json.Formatting.Indented);
+            Console.WriteLine(jsonString);
         }
     }
 }

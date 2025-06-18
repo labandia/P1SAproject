@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Attendance_Monitoring.Global
 {
-    internal class Timeprocess
+    public sealed class Timeprocess
     {
         // CHECK OUT NIGHTSHIFT
-        private bool TimeoutNight(string tbName, string shift, string cTime, string dDate)
+        public static bool TimeoutNight(string tbName, string shift, string cTime, string dDate)
         {
             try
             {
@@ -133,7 +129,7 @@ namespace Attendance_Monitoring.Global
         }
 
         // CHECK OUT DAYSHIFT
-        private bool TimeoutDay(string tbName, string shift, string cTime, string dDate)
+        public static bool TimeoutDay(string tbName, string shift, string cTime, string dDate)
         {
             try
             {
@@ -253,7 +249,7 @@ namespace Attendance_Monitoring.Global
         }
 
         // CHECK TIME IN IF ALREADY EXIST IF NON DIRECTLY INSERT TO THE DATABASE
-        private bool CheckTimeIn(string tableName)
+        public static bool CheckTimeIn(string tableName)
         {
             try
             {
@@ -299,7 +295,7 @@ namespace Attendance_Monitoring.Global
         }
 
         // CHECK THE TIME IN OF DAYSHIFT
-        public string TimeIncheck(DateTime timetoCheck)
+        public static string TimeIncheck(DateTime timetoCheck)
         {
             DateTime dayshiftStart = DateTime.Today.Add(new TimeSpan(3, 0, 0));
             DateTime dayshiftEnd = DateTime.Today.Add(new TimeSpan(14, 30, 0));
@@ -325,7 +321,7 @@ namespace Attendance_Monitoring.Global
 
 
         // CALCULATE THE LATE TIME
-        public string CalculateLateTime()
+        public static string CalculateLateTime()
         {
             // Get the current time
             DateTime now = DateTime.Now;
@@ -361,7 +357,7 @@ namespace Attendance_Monitoring.Global
         }
 
         // CALCULATE THE OVERTIME HOURS
-        public double CalculateOTHours(string startTime, string endTime)
+        public static double CalculateOTHours(string startTime, string endTime)
         {
             DateTime otStartTime = DateTime.Parse(startTime);
             DateTime otEndTime = DateTime.Parse(endTime);
@@ -382,7 +378,7 @@ namespace Attendance_Monitoring.Global
         }
 
         // CALCULATE THE WORKING HOURS 7.67 is the default
-        public double CalculateWorkingHours(string startf, string stend)
+        public static double CalculateWorkingHours(string startf, string stend)
         {
             CultureInfo culture = new CultureInfo("en-US");
 
@@ -408,7 +404,7 @@ namespace Attendance_Monitoring.Global
 
 
         // CHECK THE TIME SHIFT SCHEDULE
-        public string timeoutcheck(DateTime timetoCheck)
+        public static string timeoutcheck(DateTime timetoCheck)
         {
             DateTime dayshiftStart = DateTime.Today.Add(new TimeSpan(9, 30, 0));
             DateTime dayshiftEnd = DateTime.Today.Add(new TimeSpan(20, 0, 0));

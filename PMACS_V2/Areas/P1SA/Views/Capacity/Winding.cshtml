@@ -594,10 +594,11 @@
 
     const GetCapacitySummary = async() => {
          loadingSummary();
+         $("#Processid").empty();
+         $("#process").empty();
          let res = await fetchData('@Url.Action("GetCapacitySummaryList", "Capacity")', { month: Month, capid: cap_groupID });
          if (res && res.Success) {
             SummaryData = res.Data;
-             console.log(SummaryData);
 
 
              //DISPLAY THE ALL THE PROCESS CAPACITY
@@ -637,7 +638,6 @@
         let res = await fetchData('@Url.Action("GetWindingModelData", "Capacity")', { CapID: cap_groupID, Month: Month });
          if (res && res.Success) {
              TableData = res.Data;
-             console.log(TableData);
              //$("#count").text(TableData.length);
              $("#tableloads").hide();
              $('#empty-state').hide();
@@ -775,13 +775,33 @@
 // -----------------------------------------------------------------------------
 // ----------------------- POST DATA -------------------------------------------
     // EDIT PROCESS  DATA
-    processform.addEventListener('submit', (e)=> {
+    processform.addEventListener('submit', async (e)=> {
         e.preventDefault();
-        let formData = new FormData(event.target);
+        let formData = new FormData(e.target);
         formData.append('Process_code', processcode);
-        formData.append('Capgroup_ID', Capgroup_ID);
-        const data = Object.fromEntries(formData);
-        console.log(data);
+        formData.append('Capgroup_ID', cap_groupID);
+        //const data = Object.fromEntries(formData);
+        let res = await postData('@Url.Action("UpdateProcessCap", "PostCapacity")', formData);
+        if (res.StatusCode === 200) {
+            const savebtn = document.querySelector("#saveEditProcess");
+            savebtn.innerHTML = " <div class='Submitloading'></div>"
+            Swal.fire({
+                title: "Edit Successful",
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1500
+            }).then(() => {
+                savebtn.innerHTML = "<span><i class='fa-regular fa-floppy-disk'></i>  Save Details</span>"
+                GetCapacitySummary();
+            });
+        } else {
+            Swal.fire({
+                icon: "error",
+                text: res.Message,
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }
     });
 // -----------------------------------------------------------------------------
 
@@ -939,7 +959,7 @@
                 break;
         }
     }
-   
+
     function ShowCapacityDetails(capId) {
         let searchData;
         searchData = TableData.filter(item => item.Capinfo_ID === parseInt(capId));

@@ -7,7 +7,6 @@
 
 <section>
     <div class="header d-flex align-items-center justify-content-between mb-4">
-        <h4>Mold Die Life Summary</h4>
 
         <select id="ProcessID">
             <option value="M002">Mold  Frame</option>
@@ -66,7 +65,6 @@
 
 
         <div class="header d-flex align-items-center justify-content-between mb-4">
-            <h4>Mold Die Life Monitoring</h4>
             <select id="monthSelect"></select>
 
             <div class="searchinputContainer">
@@ -105,17 +103,24 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-body">
-                
+                <div class="custom_modal_header">
+                    <h5>MOLD DIE INPUT</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
                 <form id="InputMoldie">
                     <div class="model__fields">
-                        <label for="">Input Die Quantity</label>
+                        <label for="">Input Quantity</label>
                         <input type="hidden" name="PartNo" id="PartNo">
                         <input type="hidden" name="No" id="No">
                         <input class="form-control" type="text" name="MoldInput" id="MoldInput" onkeypress="return restrictChars(event)">
                     </div>
 
-                  
-               
+
+
                     <div class="edits_footer" id="editsdisplay">
                         <button type="submit" class="primary_button_color">
                             <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
@@ -384,7 +389,7 @@
           const query = $('#Summarysearchbox').val().toLowerCase();
 
           filteredData = dataArray.filter(item =>
-              item.PartNo.toLowerCase().includes(query)
+              item.PartNo.toLowerCase().includes(query) || item.DieSerial.toLowerCase().includes(query)
           );
 
           currentPage = 1;
@@ -544,7 +549,7 @@
              const query = $('#searchbox').val().toLowerCase();
 
              filteredData = dataArray.filter(item =>
-                 item.PartNo.toLowerCase().includes(query)
+                 item.PartNo.toLowerCase().includes(query) || item.DieSerial.toLowerCase().includes(query)
              );
 
              currentPage = 1;

@@ -140,6 +140,22 @@ namespace PMACS_V2.Areas.P1SA.Controllers
                 return JsonError(ex.Message);
             }
         }
+        public async Task<ActionResult> GetPressDieSummaryList()
+        {
+            try
+            {
+                var data = await _die.GetPressSummary();
+
+                if (data == null || !data.Any())
+                    return JsonNotFound("No Monitoring data found");
+
+                return JsonSuccess(data);
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message);
+            }
+        }
 
 
         // GET: P1SA/DieMold

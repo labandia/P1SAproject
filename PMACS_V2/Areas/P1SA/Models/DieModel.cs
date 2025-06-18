@@ -287,4 +287,30 @@ namespace PMACS_V2.Areas.P1SA.Models
         public double Lower_DrawingHeight { get; set; }
         public double PressStamp { get; set; }
     }
+
+
+
+    public class PressDieSummary
+    {
+        public string Model { get; set; }
+        public string ToolNo { get; set; }
+        public string Type { get; set; }
+        public string DiePart { get; set; }
+        public double DieHeight { get; set; }
+        public double StdGrind { get; set; }
+        public int StampGrind { get; set; }
+        public int Line { get; set; }
+        public int Avg { get; set; }
+
+        public int Remaining { get; set; }
+        public string Status { get; set; }
+        public int TotalStampPress { get; set; }    
+    }
+
+    public class PressDieLowerUpper
+    {
+        public string ToolNo { get; set; }
+        public double UpperDieHeight { get; set; }
+        public double LowerDieHeight { get; set; }
+    }
 }

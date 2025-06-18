@@ -107,7 +107,7 @@
 
 
     // Date Dropdown Selection
-  
+
 
     const select = document.getElementById("monthSelect");
     const updateMold = document.getElementById("InputMoldie");
@@ -117,7 +117,7 @@
 
 
 
-   
+
 
     const GetPressRegistry = async() => {
         let res = await fetchData('@Url.Action("GetPressDieRegistryList", "DieMold")', {});
@@ -155,6 +155,18 @@
         }
     }
 
+    const GetPressSummary = async () => {
+      
+        let res = await fetchData('@Url.Action("GetPressDieSummaryList", "DieMold")', {});
+        console.log(res);
+        //if (res && res.Success) {
+        //    TableData = res.Data;
+        //    displayPagination(TableData, 'DiePressMonitoringlist', 'PaginationContainer', 50, 5);
+        //} else {
+        //    console.log("No Data found");
+        //}
+    }
+
 
     function displaySummaryPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 10, visibleButtons = 5) {
       let currentPage = 1;
@@ -181,7 +193,7 @@
               let buttons;
               const rowData = filteredData[i];
 
-           
+
 
               const rowHtml = ` <tr class='row_${i} rowClick' id='editButton_${i}'>
                           <td data-cell="ToolNo">${rowData.ToolNo}</td>
@@ -318,7 +330,7 @@
              tableBody.innerHTML = '';
 
              for (let i = startIndex; i < endIndex; i++) {
-            
+
                     const rowData = filteredData[i];
                     const rowHtml = ` <tr class='row_${i} rowClick' id='editButton_${i}'>
                         <td data-cell="DateInput">${rowData.DateInput}</td>
@@ -332,7 +344,7 @@
 
                     tableBody.innerHTML += rowHtml;
              }
-           
+
 
              $("#pagecountID").text(currentPage);
          };
@@ -432,6 +444,7 @@
 
         GetPressRegistry();
         GetPressMonitoring(setMonth, currentYear);
+        GetPressSummary();
     }
 
     Initialize();

@@ -160,6 +160,10 @@
         font-size: .9rem;
     }
 
+    .PatrolDesign_input i{
+        color: red;
+    }
+
     .PatrolDesign_input{
         width: 100%;
         display: flex;
@@ -548,22 +552,22 @@
         color: rgb(100, 9, 9);
     }
 
-.Complete {
-    background-color: rgba(14, 170, 123, 0.2);
-    color: rgb(9, 100, 73);
-}
+    .Complete {
+        background-color: rgba(14, 170, 123, 0.2);
+        color: rgb(9, 100, 73);
+    }
 
 
-.custom_modal_header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: .5em;
-}
+    .custom_modal_header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: .5em;
+    }
 
- .custom_modal_header h5 {
-    font-weight: 600;
- }
+     .custom_modal_header h5 {
+        font-weight: 600;
+     }
 
     .formcontainer {
         width: min(100%, 1200px);
@@ -919,4 +923,18 @@
     cursor: pointer;
 }
 
+    #submitbtn{
+        transition: all .5s ease-in-out;
+    }
 
+    .Copyrights{
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 1em 0;
+        text-align: center;
+        font-size: var(--small-font-size);
+        background-color: rgba(0, 0, 0, 0.15);
+        color:#fff;
+    }

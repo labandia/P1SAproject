@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.DynamicData;
+using System.Windows.Media.Media3D;
 
 namespace PMACS_V2.Areas.P1SA.Repository
 {
@@ -208,5 +209,107 @@ namespace PMACS_V2.Areas.P1SA.Repository
                               FROM DiePressMonitoring";
             return await SqlDataAccess.GetData<PressDieMontoring>(strquery, null);
         }
+
+        public async Task<List<PressDieSummary>> GetPressSummary()
+        {
+            var data = await PressDieSummaryList();
+            var diepart = await PressDieUpperLowerlist();
+            double minValue = 0.0;
+
+            if (data != null && data.Any())
+            {
+                foreach (var item in data)
+                {
+                    //int minValue = Math.Min(item, b);
+                    double? dieUpper = diepart.Where(d => d.ToolNo == item.ToolNo)
+                            .Select(d => d.UpperDieHeight).FirstOrDefault();
+                    double? lowerUpper = diepart.Where(d => d.ToolNo == item.ToolNo)
+                            .Select(d => d.LowerDieHeight).FirstOrDefault();
+
+                    if (dieUpper.HasValue && lowerUpper.HasValue)
+                    {
+                        minValue = Math.Min(dieUpper.Value, lowerUpper.Value);
+                        // Do something with minValue
+                    }
+
+                    //Debug.WriteLine($@"ToolNo : {item.ToolNo} = MIn : {minValue}");
+
+
+                   
+
+
+                    item.Status = minValue.ToString();  
+
+                }
+            }
+
+            return data;    
+        }
+
+        public async Task<List<PressDieLowerUpper>> PressDieUpperLowerlist()
+        {
+            string strquery = @"SELECT 
+                                ToolNo,
+                                MAX(CASE WHEN DiePart = 'Upper' THEN DieHeight END) AS UpperDieHeight,
+                                MAX(CASE WHEN DiePart = 'Lower' THEN DieHeight END) AS LowerDieHeight
+                            FROM DiePressSummary
+                            GROUP BY ToolNo
+                            ORDER BY ToolNo";
+            return await SqlDataAccess.GetData<PressDieLowerUpper>(strquery, null);
+        }
+        public async Task<List<PressDieSummary>> PressDieSummaryList()
+        {
+            string strquery = @"  WITH TotalPressStamp AS (
+                                            SELECT ToolNo, SUM(PressStamp) AS TotalStampPress
+                                            FROM DiePressMonitoring
+                                            GROUP BY ToolNo
+                                 )
+                                  SELECT  
+	                                s.ToolNo, 
+	                                r.Type, r.Model, 
+	                                s.DiePart, s.DieHeight, 
+	                                s.StdGrind, s.StampGrind, 
+	                                s.Line, s.Avg, 
+	                                (s.DieHeight / s.StdGrind * s.StampGrind * s.Line / s.Avg) as Remaining, 
+	                                td.TotalStampPress
+                                  FROM DiePressSummary s 
+                                  INNER JOIN  DiePressRegistry r ON r.ToolNo = s.ToolNo
+                                  LEFT JOIN TotalPressStamp td ON td.ToolNo = s.ToolNo";
+            return await SqlDataAccess.GetData<PressDieSummary>(strquery, null);
+        }
+
+        public string GetStatusMonitor(double minval)
+        {
+            string val = "";
+
+            switch (minval)
+            {
+                case 12:
+                    val = "Max Die Life";
+                    break;
+                case 9.8:
+                    val = "Max Die Life";
+                    break;
+                case 4.9:
+                    val = "Reach half die limit";
+                    break;
+                case 3:
+                    val = "For monitoring";
+                    break;
+                default:
+                    val = "End of Life";
+                    break;
+            }
+            // Status check
+            //Max Die Life - 12
+            //Max Die Life - 9.8
+            //Reach half die limit - 4.9
+            //For monitoring - 3 
+            //End of Life - 0
+
+            return val; 
+        }
+
+
     }
 }

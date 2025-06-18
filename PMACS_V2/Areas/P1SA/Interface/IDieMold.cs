@@ -24,6 +24,7 @@ namespace PMACS_V2.Areas.P1SA.Interface
 
         // PRESS
         // ===============================================
+        Task<List<PressDieSummary>> GetPressSummary();
         Task<List<PressDieRegistry>> GetPressRegistryList();
         Task<List<PressDieMontoring>> GetPressMonitoring();
     }

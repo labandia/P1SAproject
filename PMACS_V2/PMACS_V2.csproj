@@ -550,6 +550,7 @@
     <Content Include="Content\fonts\Nunito.ttf" />
     <Content Include="Content\fonts\SharpSans.otf" />
     <Content Include="Content\fonts\Figtree.ttf" />
+    <Content Include="Content\fonts\Quicksand.ttf" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\chart.js" />
     <Content Include="Scripts\chart.min.js" />

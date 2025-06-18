@@ -4,16 +4,13 @@
     Layout = "~/Areas/Circuit/Views/Shared/_LayoutPartlist.cshtml";
 }
 
-@*<button style="display: hidden;" id="opensupplier">Open Tabs</button>*@
 
 <div class="d-flex align-items-center justify-content-between">
-    <div>
-        <div class="d-flex align-items-start gap-3">
-            <a class="Backbtn flex__center" href="/Circuit/ProgramPartList/PlanSchedule"><i class="fa-solid fa-arrow-left"></i></a>
-            <div class="">
-                <h4 class="header_title m-0">Series no: <span id="seriesID"></span></h4>
-                <p>Total Components Part list: <span id="Countnum" style="font-weight: 600"></span></p>
-            </div>
+    <div class="d-flex align-items-start gap-3">
+        <a class="Backbtn"  href="/Circuit/ProgramPartList/PlanSchedule"><i class="fa-solid fa-arrow-left"></i></a>
+        <div class="">
+            <h4 class="header_title m-0"><span id="seriesID"></span></h4>
+            <p>Total Components Part list: <span id="Countnum" style="font-weight: 600"></span></p>
         </div>
     </div>
 
@@ -86,13 +83,13 @@
                 <thead>
                     <tr>
                         <th>SetNo</th>
-                        <th>Abassador Part no.</th>
-                        <th>Partname/Supplier</th>
+                        <th>Ambassador</th>
+                        <th>Supplier</th>
                         <th>Warehouse Location</th>
                         <th>Feeder Type</th>
                         <th>Supplier Code</th>
-                        <th>Prepared Quantity</th>
-                        <th>Warehouse used Quantity</th>
+                        <th>Prepared Qty</th>
+                        <th>Warehouse Qty</th>
                         <th>Return Qty</th>
                     </tr>
                 </thead>
@@ -112,12 +109,12 @@
                 <thead>
                     <tr>
                         <th>SetNo</th>
-                        <th>Abassador Part no.</th>
-                        <th>Partname/Supplier</th>
+                        <th>Ambassador</th>
+                        <th>Supplier</th>
                         <th>Warehouse Location</th>
                         <th>Feeder Type</th>
-                        <th>Machine no.</th>
-                        <th>Prepared Quantity</th>
+                        <th>Machine</th>
+                        <th>Prepared Qty</th>
                     </tr>
                 </thead>
                 <tbody id="partlistTable">
@@ -156,7 +153,7 @@
                     </button>
                 </div>
 
-                <div class=" mt-4">
+                <div class="barcodecontainer mt-4">
                     @*================ BARCODE SCANNER =======================*@
                     <div style="width: 100%" id="reader"></div>
                     @*========================================================*@
@@ -174,31 +171,31 @@
                     <div class="row">
                         <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
                             <label>Set no: </label>
-                            <input placeholder="Enter Series" disabled name="Series_add" id="SetText" />
+                            <input placeholder="Enter Set no" disabled name="Series_add" id="SetText" />
                         </div>
 
                         <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
                             <label>AbassadorPartnum : </label>
-                            <input placeholder="Enter Series" name="Line_add" id="PartText" />
+                            <input  name="Line_add" id="PartText" />
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
                             <label>Partname : </label>
-                            <input placeholder="Enter Series" name="Time_add" id="PartnameText" />
+                            <input  name="Time_add" id="PartnameText" />
                         </div>
 
                         <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
                             <label>Check point: </label>
-                            <input placeholder="Enter Series" name="Created_add" id="Checksum" />
+                            <input  name="Created_add" id="Checksum" />
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
                             <label>Warehouse : </label>
-                            <input placeholder="Enter Series" name="Remark_add" id="locationText" />
+                            <input  name="Remark_add" id="locationText" />
                         </div>
 
                         <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">

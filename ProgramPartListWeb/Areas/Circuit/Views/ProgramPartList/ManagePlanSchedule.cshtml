@@ -14,11 +14,7 @@
 
 
 <section class="Serieswrapper">
-    <div class="SeriesTitle d-flex align-items-center justify-content-between mb-3">
-        <h5 class="m-0">Components Partlist Data Management</h5>
-    </div>
-
-
+  
     <div class="SeriesFilter d-flex align-items-center justify-content-between mb-3">
         <div class="Searchbox d-flex align-items-center gap-2">
             <i class="fa-solid fa-magnifying-glass"></i>
@@ -555,7 +551,7 @@
 
                 const rowHtml = `
                            <tr class='row_${i} rowClick' id='series_${rowData.Series_ID}'>
-                           <td data-cell="Series no">${rowData.Series_no}</td>
+                           <td data-cell="Series no" style="font-weight: 600">${rowData.Series_no}</td>
                            <td data-cell="Machine">${rowData.MachineSerial}</td>
                            <td data-cell="Time Target">${rowData.SetGroup}</td>
                            <td data-cell="Wins">${rowData.Timetarget}</td>

@@ -53,6 +53,13 @@
         background:  var(--primary-hover) !important;
     }
 
+    .circlebtn {
+        width: 35px;
+        height: 35px;
+        background: var(--primary-color);
+        color: #fff;
+    }
+
     
     .loginwrapper {
         position: relative;
@@ -186,6 +193,7 @@
         justify-content: space-between;
         flex-wrap: nowrap;
         gap: 15px;
+        margin-bottom: 1em;
     }
     .Scaninputbox input{
         width: 100%;
@@ -220,7 +228,7 @@
         display: flex;
         align-items: center;
         gap: 10px;
-        background: var(--clr-neon-primary);
+        background: var(--primary-color);
         padding: .5em 2em;
         border-radius: 2px;
         color: #fff;
@@ -250,7 +258,7 @@
     .custom_modal__icon {
         display: flex;
         align-items: center;
-        gap: 1em;
+        gap: 10px;
     }
 
     .custom_modal__icon span {
@@ -274,7 +282,6 @@
         padding: 1em;
         background: #e3dfff;
         color: var(--clr-neon-primary);
-        margin-top: -12px;
     }
 
     .custom_icon_container i {
@@ -368,27 +375,27 @@
             background: #3e25db;
         }
 
-.Backbtn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: #f5f5f5;
-    color: #222;
-    font-size: 1.5rem;
-}
+    .Backbtn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #f5f5f5;
+        color: #222;
+        font-size: 1.5rem;
+    }
 
-.btnscan {
-    display: block;
-    width: 50px;
-    height: 40px;
-    color: #fff;
-    line-height: 42px;
-    border-radius: 5px;
-    background: var(--clr-neon-primary);
-}
+    .btnscan {
+        display: block;
+        width: 50px;
+        height: 40px;
+        color: #fff;
+        line-height: 42px;
+        border-radius: 5px;
+        background: var(--primary-color);
+    }
 
 .Scansearch {
     width: 100%;
@@ -431,35 +438,30 @@
 }
 
 
+    .barcodecontainer label{
+        font-weight: 600;
+    }
+
+    
 
 
-
-
-
-
-
-.tabs {
-    width: 100%;
-}
-
-
-
-.tabs__header > div {
-    position: relative;
-    background: #e2e2e2;
-    width: 250px;
-    line-height: 30px;
-    height: 30px;
-    text-align: center;
-    z-index: 2;
-    font-weight: 600;
-    color: #222;
-    cursor: pointer;
-    transition: all 300ms ease-in-out;
-    font-size: var(--small-font-size);
-}
-
-
+    .tabs {
+        width: 100%;
+    }
+    .tabs__header > div {
+        position: relative;
+        background: #e2e2e2;
+        width: 250px;
+        line-height: 30px;
+        height: 30px;
+        text-align: center;
+        z-index: 2;
+        font-weight: 600;
+        color: #222;
+        cursor: pointer;
+        transition: all 300ms ease-in-out;
+        font-size: var(--small-font-size);
+    }
     .tabs__header > div:hover {
         background-color: rgba(25, 131, 230, 0.2);
         color: var(--first-color-alt);
@@ -470,20 +472,20 @@
         color: var(--first-color-alt);
     }
 
-.tabs__indicator {
-    position: absolute;
-    width: 95px;
-    height: 40px;
-    border-radius: 10px;
-    background-color: #d9e5f9;
-    top: 0;
-    transition: all 300ms ease-in-out;
-}
+    .tabs__indicator {
+        position: absolute;
+        width: 95px;
+        height: 40px;
+        border-radius: 10px;
+        background-color: #d9e5f9;
+        top: 0;
+        transition: all 300ms ease-in-out;
+    }
 
-.tabs__body {
-    position: relative;
-    width: 100%;
-}
+    .tabs__body {
+        position: relative;
+        width: 100%;
+    }
 
     .tabs__body select {
         width: 200px;
@@ -1486,12 +1488,12 @@ footer {
 }
 
 
-.SeriesTable {
-    width: 100%;
-    font-size: var(--normal-font-size);
-    border-collapse: collapse;
-    border: 1px solid rgba(40, 43, 58, 0.3);
-}
+    .SeriesTable {
+        width: 100%;
+        font-size: var(--normal-font-size);
+        border-collapse: collapse;
+        border: 1px solid rgba(40, 43, 58, 0.3);
+    }
 
     .SeriesTable caption, td {
         border: none;
@@ -1515,7 +1517,7 @@ footer {
     .SeriesTable th {
         background:  hsl(210, 29%, 9%);
         color: #fff;
-        font-weight: 700;
+        font-weight: 400;
         padding: .8em 0;
         font-size: var(--small-font-size);
         text-align: center;
@@ -1711,13 +1713,14 @@ footer {
     background-color: #f3f3f3;
 }
 
-.MainTable table th {
-    background: hsl(210, 29%, 9%);
-    color: #fff;
-    cursor: pointer;
-    padding: 1em;
-    font-size: .8rem;
-}
+    .MainTable table th {
+        background: hsl(210, 29%, 9%);
+        color: #fff;
+        cursor: pointer;
+        padding: 1em;
+        font-size: .8rem;
+        font-weight: 400;
+    }
 
     .MainTable  table td {
         border-bottom: 1px solid #ccc;

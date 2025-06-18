@@ -6,6 +6,8 @@ namespace ProductConfirm.Models
 {
     public interface IUsers
     {
+        Task<List<AuthModel>> LoginCredentials(string user);
+
         //Get the username info
         Task<List<Users>> Getusernameinfo(string users);
         Task<bool> CheckusersExist(string username);

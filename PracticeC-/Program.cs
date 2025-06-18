@@ -279,5 +279,10 @@ namespace PracticeC_
 
         //    Console.WriteLine("Email sent successfully via Graph API.");
         //}
+
+        public void SamplejsonDeserialize()
+        {
+
+        }
     }
 }

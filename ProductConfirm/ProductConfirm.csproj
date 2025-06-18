@@ -195,6 +195,7 @@
       <HintPath>packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
@@ -237,9 +238,11 @@
     <Compile Include="Helper\Fontsload.cs" />
     <Compile Include="Models\Users.cs" />
     <Compile Include="Utilities\AesEncryption.cs" />
+    <Compile Include="Utilities\CacheHelper.cs" />
     <Compile Include="Utilities\CustomLogger.cs" />
     <Compile Include="Utilities\PasswordHasher.cs" />
     <Compile Include="Utilities\SqlDataAccess.cs" />
+    <Compile Include="Utilities\UsersAccess.cs" />
     <Compile Include="View\IProductView.cs" />
     <Compile Include="View\Loginpage.cs">
       <SubType>Form</SubType>

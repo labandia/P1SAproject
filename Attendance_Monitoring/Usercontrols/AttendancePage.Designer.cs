@@ -39,7 +39,6 @@
             this.DisplayTotal = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.panel5 = new System.Windows.Forms.Panel();
-            this.closebtn = new System.Windows.Forms.Button();
             this.selecttime = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.Summary_data = new System.Windows.Forms.Button();
@@ -138,7 +137,6 @@
             this.panel5.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel5.Controls.Add(this.closebtn);
             this.panel5.Controls.Add(this.selecttime);
             this.panel5.Controls.Add(this.label4);
             this.panel5.Location = new System.Drawing.Point(841, 3);
@@ -146,23 +144,6 @@
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(259, 94);
             this.panel5.TabIndex = 3;
-            // 
-            // closebtn
-            // 
-            this.closebtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.closebtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(9)))), ((int)(((byte)(13)))), ((int)(((byte)(37)))));
-            this.closebtn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.closebtn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(9)))), ((int)(((byte)(13)))), ((int)(((byte)(37)))));
-            this.closebtn.FlatAppearance.BorderSize = 4;
-            this.closebtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.closebtn.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.closebtn.Image = ((System.Drawing.Image)(resources.GetObject("closebtn.Image")));
-            this.closebtn.Location = new System.Drawing.Point(217, -18);
-            this.closebtn.Name = "closebtn";
-            this.closebtn.Size = new System.Drawing.Size(59, 58);
-            this.closebtn.TabIndex = 7;
-            this.closebtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.closebtn.UseVisualStyleBackColor = false;
             // 
             // selecttime
             // 
@@ -487,7 +468,6 @@
         private System.Windows.Forms.Label DisplayTotal;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Panel panel5;
-        private System.Windows.Forms.Button closebtn;
         private System.Windows.Forms.ComboBox selecttime;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button Summary_data;

@@ -29,24 +29,14 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainLayout));
-            this.panel1 = new System.Windows.Forms.Panel();
             this.Logoutbtn = new System.Windows.Forms.Button();
             this.EmployeeMenu = new System.Windows.Forms.Button();
             this.CRMonitor = new System.Windows.Forms.Button();
             this.Attendance = new System.Windows.Forms.Button();
             this.sidepanel = new System.Windows.Forms.Panel();
-            this.panel1.SuspendLayout();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.sidepanel.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.sidepanel);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1351, 703);
-            this.panel1.TabIndex = 1;
             // 
             // Logoutbtn
             // 
@@ -78,9 +68,9 @@
             this.EmployeeMenu.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.EmployeeMenu.ForeColor = System.Drawing.Color.White;
             this.EmployeeMenu.Image = ((System.Drawing.Image)(resources.GetObject("EmployeeMenu.Image")));
-            this.EmployeeMenu.Location = new System.Drawing.Point(11, 317);
+            this.EmployeeMenu.Location = new System.Drawing.Point(0, 284);
             this.EmployeeMenu.Name = "EmployeeMenu";
-            this.EmployeeMenu.Size = new System.Drawing.Size(58, 48);
+            this.EmployeeMenu.Size = new System.Drawing.Size(81, 60);
             this.EmployeeMenu.TabIndex = 5;
             this.EmployeeMenu.UseVisualStyleBackColor = false;
             this.EmployeeMenu.Click += new System.EventHandler(this.EmployeeMenu_Click);
@@ -97,9 +87,9 @@
             this.CRMonitor.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CRMonitor.ForeColor = System.Drawing.Color.White;
             this.CRMonitor.Image = ((System.Drawing.Image)(resources.GetObject("CRMonitor.Image")));
-            this.CRMonitor.Location = new System.Drawing.Point(11, 238);
+            this.CRMonitor.Location = new System.Drawing.Point(0, 216);
             this.CRMonitor.Name = "CRMonitor";
-            this.CRMonitor.Size = new System.Drawing.Size(58, 48);
+            this.CRMonitor.Size = new System.Drawing.Size(81, 60);
             this.CRMonitor.TabIndex = 4;
             this.CRMonitor.UseVisualStyleBackColor = false;
             this.CRMonitor.Click += new System.EventHandler(this.CRMonitor_Click);
@@ -115,12 +105,12 @@
             this.Attendance.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Attendance.ForeColor = System.Drawing.Color.White;
             this.Attendance.Image = ((System.Drawing.Image)(resources.GetObject("Attendance.Image")));
-            this.Attendance.Location = new System.Drawing.Point(11, 162);
+            this.Attendance.Location = new System.Drawing.Point(0, 150);
             this.Attendance.Name = "Attendance";
-            this.Attendance.Size = new System.Drawing.Size(58, 48);
+            this.Attendance.Size = new System.Drawing.Size(81, 60);
             this.Attendance.TabIndex = 3;
             this.Attendance.UseVisualStyleBackColor = false;
-            this.Attendance.Click += new System.EventHandler(this.Attendance_Click);
+            this.Attendance.Click += new System.EventHandler(this.Attendance_Click_1);
             // 
             // sidepanel
             // 
@@ -133,7 +123,15 @@
             this.sidepanel.Location = new System.Drawing.Point(0, 0);
             this.sidepanel.Name = "sidepanel";
             this.sidepanel.Size = new System.Drawing.Size(81, 703);
-            this.sidepanel.TabIndex = 1;
+            this.sidepanel.TabIndex = 2;
+            // 
+            // panel1
+            // 
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(81, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(1270, 703);
+            this.panel1.TabIndex = 3;
             // 
             // MainLayout
             // 
@@ -141,22 +139,22 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1351, 703);
             this.Controls.Add(this.panel1);
+            this.Controls.Add(this.sidepanel);
             this.Name = "MainLayout";
             this.Text = "MainLayout";
             this.Load += new System.EventHandler(this.MainLayout_Load);
-            this.panel1.ResumeLayout(false);
             this.sidepanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
-        private System.Windows.Forms.Panel panel1;
         private Usercontrols.AttendancePage attendancePage1;
-        private System.Windows.Forms.Panel sidepanel;
         private System.Windows.Forms.Button Logoutbtn;
         private System.Windows.Forms.Button EmployeeMenu;
         private System.Windows.Forms.Button CRMonitor;
         private System.Windows.Forms.Button Attendance;
+        private System.Windows.Forms.Panel sidepanel;
+        private System.Windows.Forms.Panel panel1;
     }
 }

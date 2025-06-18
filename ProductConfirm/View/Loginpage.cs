@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using ProductConfirm.Models;
 using ProductConfirm.View.Modals;
+using ProgramPartListWeb.Helper;
 using System;
 using System.Linq;
 using System.Windows.Forms;
@@ -28,27 +29,16 @@ namespace ProductConfirm
 
         public bool validateform()
         {
-            bool check = true;
-            string user = String.IsNullOrEmpty(username.Text) ? "" : username.Text;
-            string pass = String.IsNullOrEmpty(password.Text) ? "" : password.Text;
+            string user = username.Text?.Trim();
+            string pass = password.Text?.Trim();
 
-            if (user == "")
-            {
-                user_error.Visible = true;
-                check = false;
-            }
-            else if (pass == "")
-            {
-                pass_error.Visible = true;
-                check = false;
-            }
-            else
-            {
-                pass_error.Visible = false;
-                user_error.Visible = false;
-            }
+            bool IsuserEmpty = string.IsNullOrEmpty(user);
+            bool IspassEmpty = string.IsNullOrEmpty(pass);
 
-            return check;
+            user_error.Visible = IsuserEmpty;
+            pass_error.Visible = IspassEmpty;
+
+            return !(IsuserEmpty || IspassEmpty);
         }
 
         
@@ -68,38 +58,37 @@ namespace ProductConfirm
 
             if (validateform())
             {
-                // Get the data first 
-                var users  = await _user.Getusernameinfo(username.Text.Trim());
-                // Get only one Rows data
-                var data = users.FirstOrDefault();
+                var data  = await _user.LoginCredentials(username.Text.Trim());
 
-                if (users.Count() > 0)
+                if (data != null && data.Any())
                 {
+                    var userRow = data.FirstOrDefault();
 
-                    if (data.password == password.Text)
+                    // CHECKS THE PASSWORD IF IS CORRECT
+                    if (PasswordHasher.VerifyPassword(userRow.Password, password.Text.Trim()))
                     {
                         MessageBox.Show("Login success", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         var mainpage = _serviceProvider.GetRequiredService<Mainpage>();
 
                         // Assign properties
-                        mainpage.userid = data.Account_ID;
-                        mainpage.Fullname = data.Fullname;
-                        mainpage.roleId = data.role_type;
+                        mainpage.userid = userRow.User_ID;
+                        mainpage.Fullname = userRow.Fullname;
+                        mainpage.roleId = userRow.Role_ID;
 
                         mainpage.Show();
                         this.Hide();
-     
                     }
                     else
                     {
-                        MessageBox.Show("Incorrect Password", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Invalid credentials / Password is incorrect", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Username and password is Incorrect", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Username Doesnt Exist ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
+           
             }
         }
 

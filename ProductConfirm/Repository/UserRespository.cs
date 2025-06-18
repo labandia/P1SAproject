@@ -1,5 +1,7 @@
 ﻿
+using Microsoft.Office.Interop.Excel;
 using ProductConfirm.Models;
+using ProductConfirm.Utilities;
 using ProgramPartListWeb.Helper;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -8,6 +10,15 @@ namespace ProductConfirm.DataAccess
 {
     public class UserRespository : IUsers
     {
+        public async Task<List<AuthModel>> LoginCredentials(string user)
+        {
+            string strquery = @"SELECT ua.User_ID, ua.Username, ua.Password, ua.Role_ID, u.Fullname
+                                FROM UserAccounts ua
+                                INNER JOIN Users u ON u.User_ID = ua.User_ID
+                                WHERE ua.Username  =@Username AND IsActive = 1";
+            return await UsersAccess.UserGetData<AuthModel>(strquery, new { Username = user });
+        }
+
         public async Task<bool> CheckusersExist(string users)
         {
             string strquery = "Prod_userlogin";

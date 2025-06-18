@@ -39,11 +39,12 @@ namespace Attendance_Monitoring
             services.AddTransient<CRSelection>();
             services.AddTransient<CRMonitoringPage>();
             services.AddTransient<EmployeeManagement>();
+            services.AddSingleton<MainLayout>();
 
 
 
             ServiceProvider = services.BuildServiceProvider();
-            var mainForm = ServiceProvider.GetRequiredService<Selection>();
+            var mainForm = ServiceProvider.GetRequiredService<MainLayout>();
             Application.Run(mainForm);
         }
     }

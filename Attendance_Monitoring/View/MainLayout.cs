@@ -28,7 +28,10 @@ namespace Attendance_Monitoring.View
             Controls.Add(_emp);
         }
 
-        private void MainLayout_Load(object sender, EventArgs e) => _attend.BringToFront();
+        private void MainLayout_Load(object sender, EventArgs e)
+        {
+
+        }
         private void Attendance_Click_1(object sender, EventArgs e)
         {
             // CHANGE THE COLOR BACKGROUND OF THE MENU BUTTON

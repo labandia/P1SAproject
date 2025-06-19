@@ -12,8 +12,6 @@ namespace ProgramPartListWeb.Data
 {
     public class SeriesRepository : ISeriesRepository
     {
-        
-
         // ###################   PULL THE DATA SERIES  ##################################
         public async Task<List<SeriesviewModel>> GetSeriesData()
         {
@@ -37,15 +35,11 @@ namespace ProgramPartListWeb.Data
         }
         public async Task<List<PrepareviewModel>> GetComponentsList(int intseries)
         {
-            string strquery = "Getpartscomponents";
-            var parameters = new { seriesID = intseries };
-            return await SqlDataAccess.GetData<PrepareviewModel>(strquery, parameters);
+            return await SqlDataAccess.GetData<PrepareviewModel>("Getpartscomponents", new { seriesID = intseries });
         }
         public async Task<List<WarehousePreparedModel>> GetWarehousePreparedData(int intseries)
         {
-            string strquery = "WarehousePrepared";
-            var parameters = new { seriesID = intseries };
-            return await SqlDataAccess.GetData<WarehousePreparedModel>(strquery, parameters, "PreparedWarehouse");
+            return await SqlDataAccess.GetData<WarehousePreparedModel>("WarehousePrepared", new { seriesID = intseries }, "PreparedWarehouse");
         }
 
 
@@ -108,7 +102,6 @@ namespace ProgramPartListWeb.Data
 
         public async Task<bool> UpdatePartsSummary(int series, string part, int quan)
         {
-            bool result = false;
             string strcheck = "SELECT RecordID FROM PartList_ComponentStats_tbl " +
                               "WHERE Series_ID = @Series_ID AND AbassadorPartnum = @AbassadorPartnum ";
             var charparams = new { Series_ID = series, AbassadorPartnum = part };
@@ -119,7 +112,7 @@ namespace ProgramPartListWeb.Data
                 string strquery = "UPDATE PartList_ComponentStats_tbl SET Quantity =@Quantity " +
                    "WHERE Series_ID =@Series_ID AND AbassadorPartnum =@AbassadorPartnum";
                 var parameters = new { Series_ID = series, Quantity = quan, AbassadorPartnum = part };
-                 result = await SqlDataAccess.UpdateInsertQuery(strquery, parameters);
+                return await SqlDataAccess.UpdateInsertQuery(strquery, parameters);
             }
             else
             {
@@ -127,10 +120,9 @@ namespace ProgramPartListWeb.Data
                         " VALUES(@Quantity, @Series_ID, @AbassadorPartnum)";
 
                 var parameters = new { Series_ID = series, Quantity = quan, AbassadorPartnum = part };
-                result = await SqlDataAccess.UpdateInsertQuery(strquery, parameters);
+                return await SqlDataAccess.UpdateInsertQuery(strquery, parameters);
             }
        
-            return result;
         }
 
 

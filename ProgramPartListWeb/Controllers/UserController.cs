@@ -190,21 +190,16 @@ namespace ProgramPartListWeb.Controllers
         [HttpPost]
         public async Task<ActionResult> RegisterUsers()
         {
-            string hashpassword = PasswordHasher.Hashpassword(Request.Form["passtext"]);
-          
             // Roles 2 : for User register
             var dataobj = new
             {
                 Username = Request.Form["usertext"],
-                Password = hashpassword,
+                Password = PasswordHasher.Hashpassword(Request.Form["passtext"]),
                 Role_ID = 2,
                 First_Name = Request.Form["fname"],
                 Last_Name = Request.Form["lname"]
             };
-            //Debug.WriteLine(hashpassword);
-            bool result = await _user.RegiserUserData(dataobj);
-
-            var formdata = GlobalUtilities.GetMessageResponse(result, 0);
+            var formdata = GlobalUtilities.GetMessageResponse(await _user.RegiserUserData(dataobj), 0);
 
             return Json(formdata, JsonRequestBehavior.AllowGet);
         }

@@ -203,6 +203,54 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         //-----------------------------------------------------------------------------------------
         //---------------------------- INSPECTOR DATE SCHEDULE ------------------------------------
         //-----------------------------------------------------------------------------------------
+        // GET : GetCalendarEventsMonth
+        public async Task<ActionResult> GetCalendarEventsMonth()
+        {
+            try
+            {
+                var data = await _ins.GetScheduleDateByMonth() ?? new List<CalendarSched>();
+                //var res = CacheHelper.GetOrSet("Pressmasterlist", () => product, 15);
+                var events = data.Select(x =>
+                {
+                    // Parse the string first
+                    DateTime parsedDate;
+                    if (DateTime.TryParse(x.ScheduleDate, out parsedDate))
+                    {
+                        return new
+                        {
+                            id = x.ScheduleID,
+                            title = x.ProcessName,
+                            start = parsedDate.ToString("yyyy-MM-dd"), // convert to correct format
+                            allDay = true,
+                            Fullname = x.FullName,
+                            extendedProps = new
+                            {
+                                Fullname = x.FullName,
+                                Active = x.IsActive,
+                                ProcID = x.ProcessID,
+                            }
+                        };
+                    }
+                    else
+                    {
+                        return null; // or handle parsing error
+                    }
+                })
+                  .Where(x => x != null)
+                  .ToList();
+
+
+                if (events == null || !events.Any())
+                    return JsonNotFound("No CalendarEvents data found");
+
+                return JsonSuccess(events);
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message);
+            }
+        }
+
         // GET : GetCalendarEvents
         public async Task<ActionResult> GetCalendarEvents(string Employee_ID)
         {

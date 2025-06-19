@@ -95,6 +95,10 @@ img {
     margin-bottom: 1.5em;
 }
 
+.Webs_header h2{
+    font-weight: 600;
+}
+
 .Web_contain {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -231,10 +235,10 @@ img {
 
 
 .Web__card h1 {
-    font-size: 1.1rem;
+    font-size: 1rem;
     text-align: center;
-    filter-group color: #222;
-    font-weight: 700;
+    color: #222;
+    font-weight: 600;
 }
 
 .fw-bold{

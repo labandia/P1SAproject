@@ -55,8 +55,9 @@
     }
 
 .main__contain h1 {
-    font-size: 1.8rem !important;
+    font-size: 1.7rem !important;
     font-weight: 500;
+    letter-spacing: 2px;
 }
 
 .main__contain h1, .main__contain h2 {
@@ -91,47 +92,47 @@
     left: 50px;
 }
 
-.formbox .form {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: 0.5s;
-    background-color: #fff;
-}
+    .formbox .form {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.5s;
+        background-color: #fff;
+    }
 
     .formbox .form.forgetform {
         top: 100%;
         transition-delay: 0s;
     }
 
-.slide .formbox .form.forgetform {
-    top: 0;
-    transition-delay: 1s;
-}
+    .slide .formbox .form.forgetform {
+        top: 0;
+        transition-delay: 1s;
+    }
 
-.formbox .form.signform {
-    top: 0;
-    transition-delay: 1s;
-}
+    .formbox .form.signform {
+        top: 0;
+        transition-delay: 1s;
+    }
 
-.slide .formbox .form.signform {
-    top: -100%;
-    transition-delay: 0s;
-}
+    .slide .formbox .form.signform {
+        top: -100%;
+        transition-delay: 0s;
+    }
 
-.logindesign, .forgetdesign {
-    padding: 0 2.2em;
-    width: 100%;
-}
+    .logindesign, .forgetdesign {
+        padding: 0 2.2em;
+        width: 100%;
+    }
 
-.logindesign select{
-    outline: none;
-}
+    .logindesign select{
+        outline: none;
+    }
 
     .forgetdesign .newpassbtn {
         width: 100%;
@@ -145,10 +146,10 @@
         transition: .5s all ease;
     }
 
-        .forgetdesign .newpassbtn:hover {
-            background: #0f68bb;
-            color: #fff;
-        }
+    .forgetdesign .newpassbtn:hover {
+        background: #0f68bb;
+        color: #fff;
+    }
 
 
     .logindesign p {
@@ -156,15 +157,15 @@
     }
 
     .logindesign label, .forgetdesign label {
-        font-weight: 500;
-        font-size: var(--small-font-size)
+        font-weight: 600;
+        font-size: var(--small-font-size);
     }
 
-.logindesign__label {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+    .logindesign__label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
     .logindesign__label .text-danger {
         font-size: var(--small-font-size);
@@ -172,25 +173,30 @@
         font-weight: 500;
     }
 
-.logindesign input, .forgetdesign input {
-    width: 100%;
-    padding: .8em 1em;
-    margin: 0.5em 0 1em;
-    background-color: #e7e7e7;
-    border: none;
-    font-size: 1rem;
-    border-radius: 0.2em;
-    outline: none;
-}
+    .forgetdesign p{
+        margin-bottom: .5em;
+        font-size: var(--small-font-size);
+    }
 
-.logindesgn {
-    display: flex;
-    align-items: center;
-}
+    .logindesign input, .forgetdesign input {
+        width: 100%;
+        padding: .5em 1em;
+        margin: 0.5em 0 1em;
+        background-color: #e7e7e7;
+        border: none;
+        font-size: 1rem;
+        border-radius: 0.2em;
+        outline: none;
+    }
 
-.logindesign__contain {
-    padding: 0 1.5em;
-}
+    .logindesgn {
+        display: flex;
+        align-items: center;
+    }
+
+    .logindesign__contain {
+        padding: 0 1.5em;
+    }
 
     .logindesign__contain h2, .forgetdesign  h2{
         font-size: var(--h2-font-size);
@@ -209,11 +215,8 @@
         margin: 1.5em 0;
     }
 
-    .formbox__action button{
-    }
-
     .formbox__action #viewbtn{
-         display: flex;
+        display: flex;
         align-items: center;
         justify-content: center;
         gap: 10px;
@@ -234,15 +237,15 @@
     }
 
 
-.logindesign, .forgetdesign .submitbtn {
-    width: 100%;
-    margin: 1em 0 1.5em;
-    font-weight: 500;
-    border: none;
-    border-radius: 0.2em;
-    font-size: var(--small-font-size);
-    padding: .5em 1em;
-}
+    .logindesign, .forgetdesign .submitbtn {
+        width: 100%;
+        margin: 1em 0 1.5em;
+        font-weight: 500;
+        border: none;
+        border-radius: 0.2em;
+        font-size: var(--small-font-size);
+        padding: .5em 1em;
+    }
 
     .logindesign .submitbtn {
         /* background-image: radial-gradient(circle at 88% 18%, rgba(136, 136, 136,0.05) 0%, rgba(136, 136, 136,0.05) 50%,rgba(172, 172, 172,0.05) 50%, rgba(172, 172, 172,0.05) 100%),radial-gradient(circle at 34% 9%, rgba(149, 149, 149,0.05) 0%, rgba(149, 149, 149,0.05) 50%,rgba(55, 55, 55,0.05) 50%, rgba(55, 55, 55,0.05) 100%),radial-gradient(circle at 37% 56%, rgba(97, 97, 97,0.05) 0%, rgba(97, 97, 97,0.05) 50%,rgba(160, 160, 160,0.05) 50%, rgba(160, 160, 160,0.05) 100%),linear-gradient(69deg, rgb(10, 68, 151),rgb(72, 211, 165));
@@ -324,37 +327,38 @@
 
 
 
-.forgetbtn  {
-    display: flex;
-    place-content: center;
-    align-items: center;
-    background: var(--first-color);
-    width: 40px;
-    height: 40px;
-    color: #fff;
-    border-radius: 50%;
-    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
-    transition: .5s all;
-    margin-bottom: 1.5em;
-}
+    .forgetbtn  {
+        display: flex;
+        place-content: center;
+        align-items: center;
+        background: hsl(209, 80%, 50%);
+        width: 40px;
+        height: 40px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+        transition: .5s all;
+        margin-bottom: 1.5em;
+    }
+
+    .forgetbtn i{
+        color: #fff !important;
+    }
 
     .forgetbtn:hover {
         background: #0f68bb;
-        color: #fff;
     }
 
 
 
 
-#newpassbtn {
-    width: 100%;
-    display: flex;
-    place-content: center;
-    border-radius: .2em;
-    text-align: center;
-    transition: .5s all;
-    color: #fff;
-}
+    #newpassbtn {
+        width: 100%;
+        display: flex;
+        place-content: center;
+        border-radius: .2em;
+        text-align: center;
+        transition: .5s all;
+        color: #fff;
+    }
 
     #saveEdit:hover{
         background: #0d7e2f;

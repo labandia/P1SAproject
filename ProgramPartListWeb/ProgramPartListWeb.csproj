@@ -695,6 +695,9 @@
     <Content Include="Content\css\loginlayout.min.css">
       <DependentUpon>loginlayout.css</DependentUpon>
     </Content>
+    <Content Include="Content\css\Main.min.css">
+      <DependentUpon>Main.css</DependentUpon>
+    </Content>
     <Content Include="Content\css\PatrolLayout.css" />
     <Content Include="Content\css\PatrolLayout.min.css">
       <DependentUpon>PatrolLayout.css</DependentUpon>

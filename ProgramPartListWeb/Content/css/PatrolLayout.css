@@ -74,13 +74,13 @@
         border-radius: 1em 1em 0 0;
     }
 
-    table tbody tr:nth-of-type(odd) {
+/*    table tbody tr:nth-of-type(odd) {
          background-color: #f3f3f3;
     }
 
     table tbody tr:nth-of-type(even) {
          background-color: #fff;
-    }
+    }*/
 
     table th {
     /*         background: hsl(210, 29%, 9%);*/
@@ -92,6 +92,10 @@
          font-size: var(--small-font-size);
     }
 
+    table tbody{
+        background: #fff;
+    }
+
     table th i{
         font-size: .8rem;
         color: red;
@@ -101,6 +105,8 @@
         cursor: pointer;
         padding: 1em 1em;
         font-size: var(--small-font-size);
+         border-top: 1px solid #dcdce2;
+
     }
 
     table tbody tr:hover {
@@ -626,10 +632,40 @@
         padding: 1em;
     }
 
+    .Schedule_listContent {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #A5A1AA;
+        padding: .5em 0;
+    }
+
+    .Schedule_listContent:last-child{
+        border-bottom: none;
+    }
+
+    .Schedule_listContent h5{
+        font-weight: 600;
+        font-size: .9rem;
+    }
+
+    .Schedule_listContent p{
+        font-size: .9rem;
+    }
+
     .ScheduleToday {
         background: #fff;
         padding: 1.5em;
-        box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+        border-radius: .5em;
+        box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    }
+
+    .ScheduleToday h6{
+        font-weight: 500;
+        padding: .5em;
+        border-radius: .2em;
+        background: var(--primary-color);
+        color: #fff;
     }
 
     .Dashboard {
@@ -740,6 +776,11 @@
 
 
 
+.Schedule_listContainer {
+    margin-top: 1em;
+}
+
+
 
 .select-container {
     width: 100%;
@@ -825,11 +866,7 @@
     }
 
 
-.Schedule_listContent {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
+
 
 
 

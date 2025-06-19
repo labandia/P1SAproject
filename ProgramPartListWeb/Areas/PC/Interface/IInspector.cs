@@ -12,6 +12,7 @@ namespace ProgramPartListWeb.Areas.PC.Interface
 
         // GET SCHEDULE TODAY LIST FOR DASHBOARD
         Task<List<PatrolSchedule>> GetScheduleDate();
+        Task<List<CalendarSched>> GetScheduleDateByMonth();
 
 
         // INSPECTOR DATA

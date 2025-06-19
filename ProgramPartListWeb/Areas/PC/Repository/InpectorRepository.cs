@@ -13,14 +13,19 @@ namespace ProgramPartListWeb.Areas.PC.Repository
     {
         public async Task<List<PatrolSchedule>> GetScheduleDate()
         {
-            string strsql = "SELECT s.ScheduleID, s.ScheduleDate, p.ProcessName, s.Employee_ID, e.FullName " +
-                            "FROM Patrol_Schedule s   " +
-                            "INNER JOIN Patrol_Process p ON p.ProcessID = s.ProcessID  " +
-                            "INNER JOIN Employee_tbl e ON e.Employee_ID = s.Employee_ID " +
-                            "WHERE ScheduleDate >= DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1) " +
-                            "AND ScheduleDate < DATEADD(MONTH, 1, DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1))";
-            return await SqlDataAccess.GetData<PatrolSchedule>(strsql, null, "PlanSchedule");
+            string strsql = $@"SELECT 
+	                                s.ScheduleID, p.ProcessName, s.Employee_ID, e.FullName, d.SectionName,
+	                                FORMAT(s.ScheduleDate, 'MM/dd') as ScheduleDate 
+                                FROM Patrol_Schedule s   
+                                INNER JOIN Patrol_Process p ON p.ProcessID = s.ProcessID 
+                                INNER JOIN Employee_tbl e ON e.Employee_ID = s.Employee_ID
+                                INNER JOIN P1SADepartment_tbl d ON d.DepartmentID = e.Department_ID
+                               WHERE s.ScheduleDate >= DATEADD(DAY, 1 - DATEPART(WEEKDAY, GETDATE() + @@DATEFIRST - 1), CAST(GETDATE() AS DATE))
+                               AND s.ScheduleDate < DATEADD(DAY, 8 - DATEPART(WEEKDAY, GETDATE() + @@DATEFIRST - 1), CAST(GETDATE() AS DATE))";
+            return await SqlDataAccess.GetData<PatrolSchedule>(strsql, null);
         }
+
+       
 
 
         public async Task<bool> AddEditInpectors(object paramaters, int mode)
@@ -121,10 +126,26 @@ namespace ProgramPartListWeb.Areas.PC.Repository
 
         public async Task<List<CalendarSched>> GetCalendarData(string Employee_ID)
         {
-            string strsql = "SELECT s.ScheduleID, s.Employee_ID, p.ProcessID, p.ProcessName, s.ScheduleDate, s.IsActive " +
-                            "FROM Patrol_Schedule s " +
-                            "INNER JOIN Patrol_Process p ON s.ProcessID = p.ProcessID  WHERE (@Employee_ID IS NULL OR s.Employee_ID = @Employee_ID) AND s.IsActive = 1";
+            string strsql = $@"SELECT s.ScheduleID, s.Employee_ID, e.FullName,
+                                    p.ProcessID, p.ProcessName, s.ScheduleDate, s.IsActive  
+                            FROM Patrol_Schedule s 
+                            INNER JOIN Patrol_Process p ON s.ProcessID = p.ProcessID
+                            INNER JOIN Employee_tbl e ON e.Employee_ID = s.Employee_ID
+                            WHERE (@Employee_ID IS NULL OR s.Employee_ID = @Employee_ID) AND s.IsActive = 1";
             return await SqlDataAccess.GetData<CalendarSched>(strsql, new { Employee_ID = Employee_ID });
+        }
+
+        public async Task<List<CalendarSched>> GetScheduleDateByMonth()
+        {
+            string strsql = $@"SELECT s.ScheduleID, s.Employee_ID, e.FullName,
+                                     p.ProcessID, p.ProcessName, s.ScheduleDate, s.IsActive 
+                            FROM Patrol_Schedule s 
+                            INNER JOIN Patrol_Process p ON s.ProcessID = p.ProcessID  
+                            INNER JOIN Employee_tbl e ON e.Employee_ID = s.Employee_ID
+                            WHERE  ScheduleDate >= DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1)
+                            AND ScheduleDate < DATEADD(MONTH, 1, DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1)) 
+                            AND s.IsActive = 1";
+            return await SqlDataAccess.GetData<CalendarSched>(strsql, null);
         }
 
         public async Task<List<Employee>> GetEmployee() => await SqlDataAccess.GetData<Employee>("EmployeeDataList", null, "Employee");

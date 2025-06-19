@@ -48,9 +48,10 @@ namespace ProgramPartListWeb.Areas.PC.Models
     public class PatrolSchedule
     {
         private int _ScheduleID;
-        private DateTime _ScheduleDate;
+        private string _ScheduleDate;
         private string _ProcessName;
         private string _Employee_ID;
+        private string _SectionName;
         private string _FullName;
 
         public int ScheduleID
@@ -58,7 +59,7 @@ namespace ProgramPartListWeb.Areas.PC.Models
             get => _ScheduleID;
             set => _ScheduleID = value;
         }
-        public DateTime ScheduleDate
+        public string ScheduleDate
         {
             get => _ScheduleDate;
             set => _ScheduleDate = value;
@@ -73,6 +74,11 @@ namespace ProgramPartListWeb.Areas.PC.Models
         {
             get => _Employee_ID;
             set => _Employee_ID = value;
+        }
+        public string SectionName
+        {
+            get => _SectionName;
+            set => _SectionName = value;
         }
 
         public string FullName
@@ -250,6 +256,7 @@ namespace ProgramPartListWeb.Areas.PC.Models
     {
         public int ScheduleID { get; set; }
         public string Employee_ID { get; set; }
+        public string FullName { get; set; }
         public string ScheduleDate { get; set; }
         public int ProcessID { get; set; }
         public string ProcessName { get; set; }

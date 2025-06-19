@@ -133,7 +133,7 @@ async function refreshAccessToken() {
 window.logout = async () => {
     const logout = localStorage.getItem('Logout');
     try {
-        await fetch("/User/Logout", { method: "POST" });
+        //await fetch("/User/Logout", { method: "POST" });
         localStorage.clear();
         window.location.href = logout;
     } catch (error) {

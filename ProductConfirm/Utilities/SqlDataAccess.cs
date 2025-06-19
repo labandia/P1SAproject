@@ -14,12 +14,42 @@ namespace ProgramPartListWeb.Helper
 {
     public static class SqlDataAccess
     {
-        private static readonly string _connectionString = AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings["LiveDevelopment"].ConnectionString);
+        //private static readonly string _connectionString = AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings["LiveDevelopment"].ConnectionString);
+
+        public static string _connectionString()
+        {
+            try
+            {
+                string machineName = Environment.MachineName.ToLower();
+                string connectionKey = "";
+
+                if (machineName == "desktop-fc0up1p") //  Home production
+                    connectionKey = "HomeDevelopment";
+                else if (machineName == "sdp04003c") //  Test production
+                    connectionKey = "TestDevelopment";
+                else
+                    connectionKey = "LiveDevelopment";
+
+
+                LogConnectionChoice(machineName, connectionKey);
+
+                return AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings[connectionKey].ConnectionString);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return "";
+            }
+        }
+
+
+
+
 
         // CHECK CONNECTION 
-        private static void LogConnectionChoice(string host, string machineName, string connectionKey)
+        private static void LogConnectionChoice(string machineName, string connectionKey)
         {
-            string logEntry = $"{DateTime.Now:u} | Host: {host} | Machine: {machineName} | Connection: {connectionKey}";
+            string logEntry = $"{DateTime.Now:u} | Machine: {machineName} | Connection: {connectionKey}";
             Debug.WriteLine(logEntry);
         }
 
@@ -35,7 +65,7 @@ namespace ProgramPartListWeb.Helper
             //var resultData = new List<T>();
             try
             {
-                using (IDbConnection con = GetSqlConnection(_connectionString))
+                using (IDbConnection con = GetSqlConnection(_connectionString()))
                 {
                     // Checks if the string is one word
                     if(Regex.IsMatch(query, @"^\w+$"))
@@ -65,7 +95,7 @@ namespace ProgramPartListWeb.Helper
         {
             try
             {
-                using (IDbConnection con = GetSqlConnection(_connectionString))
+                using (IDbConnection con = GetSqlConnection(_connectionString()))
                 {
                     return  await con.QuerySingleOrDefaultAsync<string>(query, parameters);
                 }
@@ -81,7 +111,7 @@ namespace ProgramPartListWeb.Helper
         {
             try
             {
-                using (IDbConnection con = GetSqlConnection(_connectionString))
+                using (IDbConnection con = GetSqlConnection(_connectionString()))
                 {
                     int count = await con.ExecuteScalarAsync<int>(query, parameters, commandType: CommandType.StoredProcedure);
                     return count;
@@ -99,7 +129,7 @@ namespace ProgramPartListWeb.Helper
         {
             try
             {
-                using (IDbConnection con = GetSqlConnection(_connectionString))
+                using (IDbConnection con = GetSqlConnection(_connectionString()))
                 {
                     int count;
                     // Checks if the string is one word
@@ -126,7 +156,7 @@ namespace ProgramPartListWeb.Helper
         {   
             try
             {
-                using (IDbConnection con = new SqlConnection(_connectionString))
+                using (IDbConnection con = new SqlConnection(_connectionString()))
                 {
                     int rowsAffected;
 
@@ -157,7 +187,7 @@ namespace ProgramPartListWeb.Helper
 
             try
             {
-                using (IDbConnection con = GetSqlConnection(_connectionString))
+                using (IDbConnection con = GetSqlConnection(_connectionString()))
                 {
                     IEnumerable<string> dataList;
 
@@ -185,7 +215,7 @@ namespace ProgramPartListWeb.Helper
         {
             try
             {
-                using (IDbConnection con = GetSqlConnection(_connectionString))
+                using (IDbConnection con = GetSqlConnection(_connectionString()))
                 {
                     int count;
                     if (Regex.IsMatch(query, @"^\w+$"))

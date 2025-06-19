@@ -313,4 +313,20 @@ namespace PMACS_V2.Areas.P1SA.Models
         public double UpperDieHeight { get; set; }
         public double LowerDieHeight { get; set; }
     }
+
+
+
+
+
+    public class PressInputModel
+    {
+        public string ToolNo { get; set; }
+        public double Upper { get; set; }
+        public double Lower { get; set; }
+        public double Upper_ActualHeight { get; set; }
+        public double Upper_DrawingHeight { get; set; }
+        public double Lower_ActualHeight { get; set; }
+        public double Lower_DrawingHeight { get; set; }
+        public int PressStamp { get; set; }
+    }
 }

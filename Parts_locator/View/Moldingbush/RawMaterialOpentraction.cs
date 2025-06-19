@@ -44,5 +44,10 @@ namespace Parts_locator.View.Moldingbush
             Visible = false;
             this.Hide();
         }
+
+        private void Button1_Click(object sender, EventArgs e)
+        {
+            this.Close();   
+        }
     }
 }

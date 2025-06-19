@@ -232,14 +232,9 @@ namespace PMACS_V2.Areas.P1SA.Repository
                         // Do something with minValue
                     }
 
-                    //Debug.WriteLine($@"ToolNo : {item.ToolNo} = MIn : {minValue}");
+                    item.Status = GetStatusMonitor(minValue);
 
-
-                   
-
-
-                    item.Status = minValue.ToString();  
-
+                    //Debug.WriteLine($@"ToolNo : {item.ToolNo} = MIn : {item.Status}");
                 }
             }
 
@@ -280,36 +275,45 @@ namespace PMACS_V2.Areas.P1SA.Repository
 
         public string GetStatusMonitor(double minval)
         {
-            string val = "";
+            string val;
 
-            switch (minval)
+            if (minval == 12 || minval == 9.8)
             {
-                case 12:
-                    val = "Max Die Life";
-                    break;
-                case 9.8:
-                    val = "Max Die Life";
-                    break;
-                case 4.9:
-                    val = "Reach half die limit";
-                    break;
-                case 3:
-                    val = "For monitoring";
-                    break;
-                default:
-                    val = "End of Life";
-                    break;
+                val = "Max Die Life";
             }
-            // Status check
-            //Max Die Life - 12
-            //Max Die Life - 9.8
-            //Reach half die limit - 4.9
-            //For monitoring - 3 
-            //End of Life - 0
+            else if (minval == 4.9)
+            {
+                val = "Reach half die limit";
+            }
+            else if (minval == 3)
+            {
+                val = "For monitoring";
+            }
+            else if (minval > 9.8 && minval < 12)
+            {
+                val = "Max Die Life";
+            }
+            else if (minval > 4.9 && minval < 9.8)
+            {
+                val = "Max Die Life";
+            }
+            else if (minval > 3 && minval < 4.9)
+            {
+                val = "Reach half die limit";
+            }
+            else
+            {
+                val = "End of Life";
+            }
 
-            return val; 
+            return val;
         }
 
-
+        public async Task<bool> AddUpdatePressMonitoring(PressInputModel press)
+        {
+            string insertquery = @"INSERT INTO DiePressMonitoring(ToolNo, Upper, Upper_ActualHeight, Upper_DrawingHeight, Lower_ActualHeight, Lower_DrawingHeight, PressStamp)
+                                       VALUES(@ToolNo, @Upper, @Upper_ActualHeight, @Upper_DrawingHeight, @Lower_ActualHeight, @Lower_DrawingHeight, @PressStamp)";
+            return await SqlDataAccess.UpdateInsertQuery(insertquery, press);
+        }
     }
 }

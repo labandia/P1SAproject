@@ -158,6 +158,16 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         }
 
 
+        [HttpPost]
+        public async Task<ActionResult> AddUpdatePressDieMonitor(PressInputModel add)
+        {
+            //bool update = await _die.AddUpdatePressMonitoring(add);
+            //var formdata = GlobalUtilities.GetMessageResponse(update, 1);
+            return Json(add, JsonRequestBehavior.AllowGet);
+        }
+
+
+
         // GET: P1SA/DieMold
         public ActionResult DieMoldLife() =>  View();
         public ActionResult DiePressLife() => View();

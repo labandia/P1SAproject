@@ -7,7 +7,41 @@
 
 <section>
     <div class="header d-flex align-items-center justify-content-between mb-4">
+        <h4>Press Die Life Summary</h4>
+    </div>
+    <div class="DieMainTable">
+        <table>
+            <thead>
+                <tr>
+                    <th>Die(type)</th>
+                    <th>Tool No.</th>
+                    @*<th>Model</th>*@
+                    <th>Status</th>
+                    <th>Die Part</th>
+                    <th>Die Height (mm)</th>
+                    <th>Std. Grindingt</th>
+                    <th>Stamping / Grinding</th>
+                    <th>Line</th>
+                    <th>Ave. Lamtn</th>
+                    <th>No. of Press stamp</th>
+                    <th>Remaining product</th>
+                </tr>
+            </thead>
+            <tbody id="DiePressMonitoringlistV2">
+            </tbody>
+        </table>
+
+        <div class="PaginationfooterContainer d-flex align-items-center justify-content-between pt-2 pb-4">
+            <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
+
+            <div id="PaginationContainerv2" class="paginationPartlocal"></div>
+        </div>
+    </div>
+
+
+    <div class="header d-flex align-items-center justify-content-between mb-4">
         <h4>Press Die Life Registry</h4>
+        <button class="primary_button_color">Add Data</button>
         <div class="searchinputContainer">
             <input type="text" placeholder="Search here ... " id="Summarysearchbox" />
             <div class="line"></div>
@@ -37,11 +71,9 @@
         </div>
     </div>
 
-
-
-
     <div class="header d-flex align-items-center justify-content-between mb-4">
         <h4>Press Die Life Monitoring</h4>
+        <button class="primary_button_color" id="addmodal">Add Data</button>
     </div>
     <div class="DieMainTable">
         <table>
@@ -74,14 +106,43 @@
         <div class="modal-content">
             <div class="modal-body">
 
-                <form id="InputMoldie">
+                <form id="InputPress">
                     <div class="model__fields">
-                        <label for="">Input Die Quantity</label>
-                        <input type="hidden" name="PartNo" id="PartNo">
-                        <input type="hidden" name="No" id="No">
-                        <input class="form-control" type="text" name="MoldInput" id="MoldInput" onkeypress="return restrictChars(event)">
+                        <label for="">Upper</label>
+                        <input class="form-control" type="text" name="Upper" id="Upper" onkeypress="return restrictChars(event)">
                     </div>
 
+                    <div class="model__fields">
+                        <label for="">Lower</label>
+                        <input class="form-control" type="text" name="Lower" id="Lower" onkeypress="return restrictChars(event)">
+                    </div>
+                    <p>Upper</p>
+                    <hr />
+                    <div class="model__fields">
+                        <label for="">Actual Height</label>
+                        <input class="form-control" type="text" name="Upper_ActualHeight" id="Upper_ActualHeight" onkeypress="return restrictChars(event)">
+                    </div>
+
+                    <div class="model__fields">
+                        <label for="">Drawing Height</label>
+                        <input class="form-control" type="text" name="Upper_DrawingHeight" id="Upper_DrawingHeight" onkeypress="return restrictChars(event)">
+                    </div>
+                    <p>Lower</p>
+                    <hr />
+                    <div class="model__fields">
+                        <label for="">Actual Height</label>
+                        <input class="form-control" type="text" name="Lower_ActualHeight" id="Lower_ActualHeight" onkeypress="return restrictChars(event)">
+                    </div>
+
+                    <div class="model__fields">
+                        <label for="">Drawing Height</label>
+                        <input class="form-control" type="text" name="Lower_DrawingHeight" id="Lower_DrawingHeight" onkeypress="return restrictChars(event)">
+                    </div>
+
+                    <div class="model__fields">
+                        <label for="">No Press Stamp</label>
+                        <input class="form-control" type="text" name="PressStamp" id="PressStamp" onkeypress="return restrictChars(event)">
+                    </div>
 
 
                     <div class="edits_footer" id="editsdisplay">
@@ -102,28 +163,43 @@
 <script src="~/Scripts/Global.js"></script>
 <script type="text/javascript">
     let TableData = [];
+    let PressData = [];
     let SummaryData = [];
     let FinalSummaryData = [];
 
 
     // Date Dropdown Selection
-
+    const addmod = document.getElementById("addmodal");
 
     const select = document.getElementById("monthSelect");
-    const updateMold = document.getElementById("InputMoldie");
+    const updatePress = document.getElementById("InputPress");
     const currentMonth = new Date().getMonth();
     const currentYear = new Date().getFullYear();
 
 
+    addmod.addEventListener('click', async (e) => {
+        e.preventDefault();
+        $("#InputMoldieModal").modal("show");
+     });
 
-
-
+    updatePress.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        let formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+        //console.log(data);
+        let res = await postData('@Url.Action("AddUpdatePressDieMonitor", "DieMold")', formData);
+        console.log(res);
+        //if (res.StatusCode === 200) {
+        //    //GetMoldDieMonth(select.value, currentYear);
+        //    //$("#InputMoldieModal").modal("hide");
+        //}
+    });
 
     const GetPressRegistry = async() => {
         let res = await fetchData('@Url.Action("GetPressDieRegistryList", "DieMold")', {});
         if (res && res.Success) {
             SummaryData = res.Data;
-            console.log(SummaryData);
+            //console.log(SummaryData);
             //SummaryData = res.Data.FinalSummary;
             //FinalSummaryData = res.Data.MoldDieSummary;
             displaySummaryPagination(SummaryData, 'RegistrylistData', 'RegistryPaginationContainer', 10, 5);
@@ -156,15 +232,15 @@
     }
 
     const GetPressSummary = async () => {
-      
+
         let res = await fetchData('@Url.Action("GetPressDieSummaryList", "DieMold")', {});
-        console.log(res);
-        //if (res && res.Success) {
-        //    TableData = res.Data;
-        //    displayPagination(TableData, 'DiePressMonitoringlist', 'PaginationContainer', 50, 5);
-        //} else {
-        //    console.log("No Data found");
-        //}
+        if (res && res.Success) {
+            PressData = res.Data;
+            //console.log(PressData);
+            displaySummarPressPagination(PressData, 'DiePressMonitoringlistV2', 'PaginationContainerv2', 50, 5);
+        } else {
+            console.log("No Data found");
+        }
     }
 
 
@@ -307,7 +383,193 @@
       window.changePage = changePage;
       renderTable(currentPage);
       renderPagination();
-  }
+    }
+    function displaySummarPressPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 10, visibleButtons = 5) {
+        let currentPage = 1;
+        let filteredData = [...dataArray]; // Make a copy for filtering
+
+        const updatePaginationInfo = () => {
+            const totalRecords = filteredData.length;
+            const totalPages = Math.ceil(totalRecords / recordsPerPage);
+
+            $("#stotalpageID").text(totalPages);
+            $("#sDatalengthID").text(totalRecords);
+
+            return totalPages;
+        };
+
+        const renderTable = (page) => {
+            const totalPages = updatePaginationInfo();
+            const startIndex = (page - 1) * recordsPerPage;
+            const endIndex = Math.min(startIndex + recordsPerPage, filteredData.length);
+            const tableBody = document.getElementById(tableBodyId);
+            tableBody.innerHTML = '';
+
+
+            // Step 1: Group by "No"
+            const groupMap = new Map();
+            for (let i = startIndex; i < endIndex; i++) {
+                const row = filteredData[i];
+                if (!groupMap.has(row.ToolNo)) groupMap.set(row.ToolNo, []);
+                groupMap.get(row.ToolNo).push(row);
+            }
+
+
+
+
+            // Step 2: Render rows with merged "No"
+            groupMap.forEach((groupRows, noValue) => {
+                const DieValue = groupRows[0].Type;
+                //const ModelValue = groupRows[0].Model;
+                const ToolValue = groupRows[0].ToolNo;
+                const StatsValue = groupRows[0].Status;
+
+                const TotalStampValue = groupRows[0].TotalStampPress;
+                //const HeightValue = groupRows[0].DieHeight;
+                //const StdValue = groupRows[0].StdGrind;
+                //const StampValue = groupRows[0].StampGrind;
+
+                //const LineValue = groupRows[0].Line;
+
+                groupRows.forEach((rowData, idx) => {
+                    let rowHtml = "<tr class='rowClick' id='editButton'>";
+
+                    if (idx === 0) {
+                        rowHtml += `<td rowspan="${groupRows.length}" data-cell="Type">${DieValue}</td>`;
+                        rowHtml += `<td rowspan="${groupRows.length}" data-cell="ToolNo">${ToolValue}</td>`;
+                        //rowHtml += `<td rowspan="${groupRows.length}" data-cell="Model">${ModelValue}</td>`;
+                        rowHtml += `<td rowspan="${groupRows.length}" data-cell="Status">${StatsValue}</td>`;
+                    }
+
+
+                    rowHtml += `<td data-cell="DiePart" style="font-weight: 600">${rowData.DiePart}</td>`;
+                    rowHtml += `<td data-cell="DieHeight" style="font-weight: 600">${rowData.DieHeight}</td>`;
+                    rowHtml += `<td data-cell="StdGrind" style="font-weight: 600">${rowData.StdGrind}</td>`;
+                    rowHtml += `<td data-cell="StampGrind" style="font-weight: 600">${rowData.StampGrind}</td>`;
+                    rowHtml += `<td data-cell="Line" style="font-weight: 600">${rowData.Line}</td>`;
+                    rowHtml += `<td data-cell="Avg" style="font-weight: 600">${rowData.Avg}</td>`;
+
+                    if (idx === 0) {
+                        rowHtml += `<td rowspan="${groupRows.length}" data-cell="TotalStampValue">${TotalStampValue}</td>`;
+                    }
+
+                    rowHtml += `<td data-cell="Remaining" style="font-weight: 600">${rowData.Remaining}</td>`;
+
+                    //if (idx === 0) {
+                    //    rowHtml += `<td rowspan="${groupRows.length}" data-cell="DieNumber">${dienumValue}</td>`;
+                    //    rowHtml += `<td rowspan="${groupRows.length}" data-cell="DieSerial">${dieSerialValue}</td>`;
+                    //    rowHtml += `<td rowspan="${groupRows.length}" data-cell="DieLife">${dielifeValue}</td>`;
+                    //    rowHtml += `<td rowspan="${groupRows.length}" data-cell="PreviousCount">${PreviousValue}</td>`;
+                    //    rowHtml += `<td rowspan="${groupRows.length}" data-cell="ShotOnwards">${ShotOnValue}</td>`;
+                    //    rowHtml += `<td rowspan="${groupRows.length}" data-cell="Remarks" style="${remarkColor}">${RemarkeValue}</td>`;
+                    //}
+                    rowHtml += "</tr>";
+                    tableBody.innerHTML += rowHtml;
+                });
+            });
+
+
+            $("#spagecountID").text(currentPage);
+        };
+
+        const renderPagination = () => {
+            const totalPages = updatePaginationInfo();
+            const paginationContainer = document.getElementById(paginationId);
+            paginationContainer.innerHTML = '';
+
+            let startPage = Math.max(1, currentPage - Math.floor(visibleButtons / 2));
+            let endPage = Math.min(totalPages, startPage + visibleButtons - 1);
+
+            if (endPage > totalPages) {
+                endPage = totalPages;
+                startPage = Math.max(1, endPage - visibleButtons + 1);
+            }
+
+            if (totalPages <= visibleButtons) {
+                startPage = 1;
+                endPage = totalPages;
+            }
+
+            // Previous button
+            paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
+                                       <i class="fa-solid fa-backward"></i>
+                                   </button>`;
+
+            for (let i = startPage; i <= endPage; i++) {
+                paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+            }
+
+            // Next button
+            paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
+                                      <i class="fa-solid fa-forward"></i>
+                                   </button>`;
+        };
+
+        const changePage = (page) => {
+            if (page >= 1 && page <= updatePaginationInfo()) {
+                currentPage = page;
+                renderTable(currentPage);
+                renderPagination();
+            }
+        };
+
+        // 🔍 Search functionality
+        const searchTable = () => {
+            const query = $('#Summarysearchbox').val().toLowerCase();
+
+            filteredData = dataArray.filter(item =>
+                item.PartNo.toLowerCase().includes(query)
+            );
+
+            currentPage = 1;
+            renderTable(currentPage);
+            renderPagination();
+        };
+
+        // Add event listener for search input
+        $('#Summarysearchbox').on('input', searchTable);
+
+        // Handle click event for edit button
+        $(document).on('click', '.rowClick', function (e) {
+            e.stopPropagation();
+            const buttonId = $(this).attr('id');
+            const rowIndex = buttonId.split('_')[1];
+            const result = TableData.find(p => p.RecordID == rowIndex);
+            console.log(result);
+            //if (result) {
+            //    $("#Detail_Capinfo_ID").val(result.Capinfo_ID);
+            //    $("#Detail_Dieqty").val(result.DieQty);
+            //    $("#Detail_Actual_cav").val(result.Actual_Cav);
+            //    $("#Detail_CycleTime").val(result.CycleTime);
+            //    $("#Detail_Partnum").val(result.Partnum);
+            //    $("#Detail_Model_name").val(result.Model_name);
+            //    $("#Detail_Manhour").val(RoundNumberOne(result.manhour));
+            //    $("#Detail_Operation_time").val(result.Operation_time);
+            //    $("#Detail_Require").val(RoundNumberOne(result.Require));
+            //    $("#Detail_Capday").val(result.Capday);
+            //    $("#Detail_Capmonth").val(result.Capmonth);
+
+            //    $("#detailsModal").modal("show");
+            //}
+        });
+
+        // UPDATES THE DETAILS DATA
+        @* detailsform.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            let formData = new FormData(e.target);
+            formData.append('ProcessCode', processcode);
+            formData.append('Capgroup_ID', cap_groupID);
+            const data = Object.fromEntries(formData);
+            let res = await postData('@Url.Action("EditMoldingByDetails", "PostCapacity")', formData);
+            EditResult(res, data);
+        });* @
+
+            // Initialize table and pagination
+            window.changePage = changePage;
+        renderTable(currentPage);
+        renderPagination();
+    }
     function displayPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 50, visibleButtons = 5) {
          let currentPage = 1;
          let filteredData = [...dataArray]; // Make a copy for filtering
@@ -443,7 +705,7 @@
         let setMonth = parseInt(currentMonth) + 1;
 
         GetPressRegistry();
-        GetPressMonitoring(setMonth, currentYear);
+        //GetPressMonitoring(setMonth, currentYear);
         GetPressSummary();
     }
 

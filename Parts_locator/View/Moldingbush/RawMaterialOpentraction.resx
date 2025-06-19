@@ -120,20 +120,19 @@
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="Addbtn.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAJlJREFUSEvt
-        k0EKAjEMRXsFYWA8osxWmJO6UKR3KGmo7jSVLww1s2gkuz7oop/fR6BtGAz8KEQrM8/YftAyE8+cl0fO
-        L1l3ER73MjN1ShFFCGPdaxnqNiC8boVahroNIppaoZahbgPCy1aoZaj3k1I6tDItQ70P1+nrQRH4XDJE
-        fs9UPtUJopuIvh/tJ/uLwnxuRVo2GHgTwhsPsGMKRhbkowAAAABJRU5ErkJggg==
+        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAJpJREFUSEvt
+        k0EKwjAURHsFQahHFLdCT+pCkd4h/Pk03SmFLOw40qSSXd4uD2b+hyRd12hUYzIb3L3fcruYgUsEXhF4
+        uvvpl9vNsmUExlQ4LmflOFdEKryLISvHuSLM7MiFynGuiFR4E0NWjnPZhBAOXKYc57JQmyrHuSzUhSrH
+        uSxSUb1nOgPnVPT4+Ghf7i8m9ysXKddo1OcND7BjCl/7zpAAAAAASUVORK5CYII=
 </value>
   </data>
   <data name="Button1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAOdJREFUSEvt
-        lE0KwjAQhXsCXargSgQ9jLhzkc6kFhERt4KXVHFrLeJS0UPoS5lA0Cz6564fDCWZ5L3ptEnQ0PBftNa7
-        OI67MvyBmUcR81KGxYiINtj8Rlx8JhAfInc3a+bMU5nOjxHF5lRMUtdkEYYDiD4kdyKilqSK4TOpTdyC
-        VvQckzMiawvisJrN2rKsGqiyj29yE+F6KndRSnU089UaoEXH2qo34hC1LUqc/u8rm7iVm6cZf/2e5d/E
-        Jy4pewaelUxwitdGAJH4Dlqs1Bi5V7aGaCLTxdBEW5+4RUzKXRUNDTkJgg8zIpk15GWspwAAAABJRU5E
-        rkJggg==
+        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAN9JREFUSEvt
+        lLEKwjAQhvsEOqrgJII+jLh1SO/PNYiIuAq+pIqrWsRR0YdQIgnEEDC0deu3lObS/7scbZOkoeGvSCk3
+        Sqmuv24BMGJg7q9HwUQrBl4MnEMSAEMGbnpPDkz9+k90KAOFkRSuZJZlgxy4m9qBiFrfT0cSktQWbgHQ
+        cyRHOxYGdos0bfv7S0FEfSa6muB6OncRQnQkcLGCHNjX1r0Od0Z0cua/rSxxO9dXfe+9nuVPEgq3NSN5
+        VJJIKZd2LKEPTQkxZuD52UM08etRSKJ1KNxiJOV+FQ0N0bwBMyKZNcZ3CJsAAAAASUVORK5CYII=
 </value>
   </data>
 </root>

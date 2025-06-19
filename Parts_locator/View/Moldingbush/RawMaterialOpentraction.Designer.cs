@@ -81,6 +81,7 @@
             this.Button1.Text = "Cancel";
             this.Button1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.Button1.UseVisualStyleBackColor = true;
+            this.Button1.Click += new System.EventHandler(this.Button1_Click);
             // 
             // quan
             // 

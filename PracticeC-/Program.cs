@@ -21,7 +21,9 @@ namespace PracticeC_
 
         static void Main(string[] args)
         {
-            SamplejsonDeserialize();
+            //SamplejsonDeserialize();
+            string machineName = Environment.MachineName.ToLower();
+            Console.WriteLine($"Original: {machineName}");
             Console.ReadKey();
         }
 

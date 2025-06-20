@@ -14,7 +14,6 @@ using System.Web.Mvc;
 
 namespace PMACS_V2.Areas.P1SA.Controllers
 {
-    [GlobalErrorException]
     [CompressResponse]
     public class FanMajorController : ExtendController
     {
@@ -106,60 +105,61 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         [HttpPost]
         public async Task<ActionResult> AddNewmachineList()
         {
-           
-            try
+            var obj = new PostMachineModel
             {
-                // Check if there are any files in the request
-                byte[] getCurrentImage = new byte[] { };
+                MACH_CODE = Request.Form["addmachcode"],
+                Equipment =  Request.Form["Equip"],
+                Date_acquired = Request.Form["Dateacq"],
+                Model = Request.Form["Model"],
+                location = Request.Form["local"],
+                Serial = Request.Form["Serial"],
+                Manufact = Request.Form["Manu"],
+                Asset = Request.Form["Assets"],
+                status = Request.Form["Status"],
+                Reasons = Request.Form["addreason"],
+                Tongs = Request.Form["tons"],
+                Section_ID = Convert.ToInt32(Request.Form["SectionID"])
+            };
+            await Task.Delay(100);
+            return Json(obj, JsonRequestBehavior.AllowGet);
+            //try
+            //{
+            //    // Check if there are any files in the request
+            //    byte[] getCurrentImage = new byte[] { };
 
-                if (Request.Files.Count > 0)
-                {
-                    var postedFile = Request.Files[0];
-                    string ext = Path.GetExtension(postedFile.FileName);
-                    string filename = "Mach" + DateTime.Now.ToString("yyyyMMddhhmmssffff") + ext;
-                    string imagefile = filename;
+            //    if (Request.Files.Count > 0)
+            //    {
+            //        var postedFile = Request.Files[0];
+            //        string ext = Path.GetExtension(postedFile.FileName);
+            //        string filename = "Mach" + DateTime.Now.ToString("yyyyMMddhhmmssffff") + ext;
+            //        string imagefile = filename;
 
-                    // Save the file
-                    string filepathname = "";
-                    string filePath = Server.MapPath("~/Content/Images/" + filename);
-                    // postedFile.SaveAs(filePath);
-                    filepathname = filePath;
+            //        // Save the file
+            //        string filepathname = "";
+            //        string filePath = Server.MapPath("~/Content/Images/" + filename);
+            //        // postedFile.SaveAs(filePath);
+            //        filepathname = filePath;
 
-                    getCurrentImage = GlobalUtilities.ResizeAndConvertToBinary(postedFile, filePath);
+            //        getCurrentImage = GlobalUtilities.ResizeAndConvertToBinary(postedFile, filePath);
 
-                    // DELETE THE IMAGE AFTER IT SAVES TO THE DATABASE
-                    if (System.IO.File.Exists(filepathname))
-                    {
-                        System.IO.File.Delete(filepathname);
-                    }
-                }
+            //        // DELETE THE IMAGE AFTER IT SAVES TO THE DATABASE
+            //        if (System.IO.File.Exists(filepathname))
+            //        {
+            //            System.IO.File.Delete(filepathname);
+            //        }
+            //    }
 
-                var obj = new PostMachineModel
-                {
-                    MACH_CODE = Request.Form["addmachcode"],
-                    Equipment =  Request.Form["Equip"],
-                    Date_acquired = Request.Form["Dateacq"],
-                    Model = Request.Form["Model"],
-                    location = Request.Form["local"],
-                    Serial = Request.Form["Serial"],
-                    Manufact = Request.Form["Manu"],
-                    Asset = Request.Form["Assets"],
-                    status = Request.Form["Status"],
-                    Reasons = Request.Form["addreason"],
-                    Tongs = Request.Form["tons"],
-                    Section_ID = Convert.ToInt32(Request.Form["SectionID"])
-                };
-                await Task.Delay(100);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-            }
 
-            CacheHelper.Remove("Machine");
-            //bool resut = await _man.AddMachine(obj);
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.WriteLine(ex.Message);
+            //}
 
-            return Json("", JsonRequestBehavior.AllowGet);
+            ////CacheHelper.Remove("Machine");
+            ////bool resut = await _man.AddMachine(obj);
+
+            //return Json("", JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
         public async Task<ActionResult> EditmachineList()

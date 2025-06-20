@@ -684,7 +684,7 @@
                     $("#notworking_circuit").text(load[0].notwork);
                     break;
             }
-        }        
+        }
     }
 
 
@@ -1264,7 +1264,7 @@
 
 
     //ADD NEW MACHINE DATA
-    addnew.addEventListener('submit', event => {
+    addnew.addEventListener('submit', async(event) => {
         event.preventDefault();
         var formData = new FormData(event.target);
         //var selectedOption = $("input:radio[name=status]:checked").val()
@@ -1278,40 +1278,43 @@
         formData.append('EmployeeID', EmployeeID);
         formData.append('SectionID', parseInt($("#selectedSection").val()));
 
-        //const data = Object.fromEntries(formData);
+        const data = Object.fromEntries(formData);
+        console.log(data);
+        let res = await postData('@Url.Action("AddNewmachineList", "Patrol")', formData);
 
-        $.ajax({
-            url: apiBaseUrl + "Addnewmachine", // The URL to the Web API endpoint
-            type: 'POST',
-            data: formData,
-            processData: false, // Do not process data
-            contentType: false, // Do not set contentType
-            success: function (res) {
-                // Handle the success response
-                // Handle the success response
+        console.log(res);
+        //$.ajax({
+        //    url: apiBaseUrl + "AddNewmachineList", // The URL to the Web API endpoint
+        //    type: 'POST',
+        //    data: formData,
+        //    processData: false, // Do not process data
+        //    contentType: false, // Do not set contentType
+        //    success: function (res) {
+        //        // Handle the success response
+        //        // Handle the success response
 
-                if (res.code == 200) {
-                    Swal.fire({
-                        title: "Success",
-                        text: res.message,
-                        icon: "success",
-                        timer: 1500,
-                        showConfirmButton: false
-                    }).then(() => {
-                        $("#addedmodal").modal("hide");
-                        // UpdateMachineData();
-                        window.location.href = "/machine/Fanmajor";
-                    });
+        //        if (res.code == 200) {
+        //            Swal.fire({
+        //                title: "Success",
+        //                text: res.message,
+        //                icon: "success",
+        //                timer: 1500,
+        //                showConfirmButton: false
+        //            }).then(() => {
+        //                $("#addedmodal").modal("hide");
+        //                // UpdateMachineData();
+        //                window.location.href = "/machine/Fanmajor";
+        //            });
 
-                }
+        //        }
 
 
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                // Handle the error response
-                console.error(textStatus, errorThrown);
-            }
-        });
+        //    },
+        //    error: function (jqXHR, textStatus, errorThrown) {
+        //        // Handle the error response
+        //        console.error(textStatus, errorThrown);
+        //    }
+        //});
 
     });
 
@@ -1396,22 +1399,18 @@
         });
     });
 
-    $("#selectedSection").change(function () {
+    $("#selectedSection").change( async(e)=> {
 
         var combobox = $("#addmachcode");
+        let res = await fetchData('@Url.Action("GetEquipmenList", "FanMajor")', { sectionID: e.target.value });
 
-        makeAjaxRequest(apiBaseUrl + 'selectionadd', { sectionID: this.value }, 0)
-            .then(res => {
-                combobox.empty();
-                $.each(res.equip, function (index, row) {
-                    var changedrop = "<option value='" + row.Machine_code + "'>" + row.Equipment + "</option>"
-                    combobox.append(changedrop);
-                });
-            })
-            .catch(error => {
-                console.error('Error occurred:', error);
-                // Handle the error
-            });
+        if (res && res.Success) {
+           combobox.empty();
+           $.each(res.Data, function (index, row) {
+               var changedrop = "<option value='" + row.Machine_code + "'>" + row.Equipment + "</option>"
+               combobox.append(changedrop);
+           });
+        }
     });
 
 

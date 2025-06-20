@@ -186,7 +186,9 @@
             e.stopPropagation();
             const buttonId = $(this).attr('id');
             const rowIndex = buttonId.split('_')[1];
+        
 
+            let searchData = regisTable.filter(item => item.RegNo === rowIndex);
             Swal.fire({
                 title: "Remove this data?",
                 text: "You won't be able to revert this!",
@@ -199,9 +201,10 @@
                 if (result.isConfirmed) {
                     let formdata = new FormData();
                     formdata.append('Registration', rowIndex);
-                    let res = await postData('@Url.Action("DeleteRegistration", "Patrol")', formdata);
+                    formdata.append('Filepath', searchData[0].Filepath);
 
-                     if (res && res.Success) {
+                    let res = await postData('@Url.Action("DeleteRegistration", "Patrol")', formdata);
+                    if (res.StatusCode == 422) {
                          Swal.fire({
                              title: "Success",
                              text: res.Message,

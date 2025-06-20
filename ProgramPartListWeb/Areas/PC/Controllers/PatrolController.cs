@@ -381,7 +381,13 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             string templatePath = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Uploads/PGFY-00031FORM_1.xlsx");
             bool result = await _ins.AddRegistration(obj, findJson);
 
-            if (result) ExportFiler.SaveFileasPDF(obj, findJson, departmentName, newFileName, templatePath);
+            if (result)
+            {
+                CacheHelper.Remove("Registration");
+                ExportFiler.SaveFileasPDF(obj, findJson, departmentName, newFileName, templatePath);
+            }
+                
+                
           
             if (result == false) return JsonError("Problem during saving Data.", 500);
             return JsonCreated(result, "Change Status successfully");
@@ -416,18 +422,19 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
 
             string findJson = Request.Form["FindJson"];
-
+            string templatePath = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Uploads/PGFY-00031FORM_1.xlsx");
             bool result = await _ins.EditRegistration(obj, findJson);
 
             if (result)
             {
-                
+
                 if (System.IO.File.Exists(excelfilepath))
                 {
                     System.IO.File.Delete(excelfilepath);
                 }
 
-                ExportFiler.SaveFileasPDF(obj, findJson, GlobalUtilities.DepartmentName(Department), newFileName, "");
+                CacheHelper.Remove("Registration");
+                ExportFiler.SaveFileasPDF(obj, findJson, GlobalUtilities.DepartmentName(Department), newFileName, templatePath);
             }
 
             if (result == false) return JsonError("Problem during saving Data.", 500);
@@ -437,11 +444,23 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         [HttpPost]
         public async Task<ActionResult> DeleteRegistration()
         {
-            Debug.WriteLine("PSDsadasd : " + Request.Form["Registration"]);
-            //bool result = await _ins.DeleteRegistration(regNo);
-            //var formData = GlobalUtilities.GetMessageResponse(result, 3, "Delete successful");
-            await Task.Delay(100);
-            return Json("adasdsa", JsonRequestBehavior.AllowGet);    
+            string exportFolder = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\";
+            string excelfilepath = Path.Combine(exportFolder, Request.Form["Filepath"]);
+
+            //Debug.WriteLine("PSDsadasd : " + Request.Form["Registration"]);
+            bool result = await _ins.DeleteRegistration(Request.Form["Registration"]);
+
+            if(result)
+            {
+                if (System.IO.File.Exists(excelfilepath))
+                {
+                    System.IO.File.Delete(excelfilepath);
+                }
+                CacheHelper.Remove("Registration");
+            }
+
+            var formData = GlobalUtilities.GetMessageResponse(result, 3, "Delete successful");
+            return Json(formData, JsonRequestBehavior.AllowGet);    
         }
 
 

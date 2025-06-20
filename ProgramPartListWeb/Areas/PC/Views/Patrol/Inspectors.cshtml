@@ -51,7 +51,7 @@
                     <h5>Add Inspectors</h5>
 
                     <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
-                        <span >&times;</span>
+                        <span>&times;</span>
                     </button>
                 </div>
 
@@ -59,15 +59,16 @@
                 <form method="post" enctype="multipart/form-data" class="addformcontainer" id="addnewform" autocomplete="off">
                     <div class="row">
                         @*<div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
-                            <label>Employee ID </label> <br />
-                            <input type="text" placeholder="type Employee ID" name="Employee_ID" id="Employee_ID" required />
-                            <small class="text-danger" id="Noemployee"></small>
-                        </div>*@
+                                <label>Employee ID </label> <br />
+                                <input type="text" placeholder="type Employee ID" name="Employee_ID" id="Employee_ID" required />
+                                <small class="text-danger" id="Noemployee"></small>
+                            </div>*@
                         <div class="form_group col-12 col-sm-12 col-lg-12 mb-2">
                             <label>Employee Name  </label> <br />
                             @*<input type="text" placeholder="N/A" name="Fullname" id="Fullname" />*@
                             <div class="search-box">
-                                <input type="text" placeholder="Type Name or ID no." name="Employee_ID" id="Employee_ID">
+                                <input type="hidden" name="Employee_ID" id="Employee_ID">
+                                <input type="text" placeholder="Type Name or ID no." name="EmployeeSearch" id="EmployeeSearch">
                                 <div class="namesdisplay"></div>
                             </div>
                         </div>
@@ -79,9 +80,9 @@
 
                     <div class="form_group col-12 col-sm-12 ">
                         <label>Date Qualified </label> <br />
-                        <input type="date" placeholder="Select Date Qualified" name="DateQualified" id="DateQualified" required  />
+                        <input type="date" placeholder="Select Date Qualified" name="DateQualified" id="DateQualified" required />
                     </div>
-               
+
                     <div class="form_group col-12 col-sm-12">
                         <label>Remarks  </label> <br />
                         <textarea placeholder="Type any remarks" name="Remarks" id="Remarks" rows="3" cols="50" required></textarea>
@@ -101,6 +102,7 @@
 </div>
 @*=================================================================================*@
 @*=========================== EDIT INSPECTORS =====================================*@
+@*=================================================================================*@
 <div class="modal fade modal-l" id="EditInpectorModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -190,7 +192,7 @@
     //});
 
     // INPUT SEARCH EMPLOYEE NAME WHEN TYPE
-    $("#Employee_ID").keyup(function () {
+    $("#EmployeeSearch").keyup(function () {
         let result = [];
         let input = this.value;
 
@@ -222,7 +224,8 @@
     function selectinput(list) {
         const employeeId = list.getAttribute("data-id");
         employeeID = employeeId;
-        $("#Employee_ID").val(list.innerHTML);
+        $("#Employee_ID").val(employeeId);
+        $("#EmployeeSearch").val(list.innerHTML);
         resultBox.innerHTML = '';
         resultBox.style.display = 'none';
     }

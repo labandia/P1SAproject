@@ -186,17 +186,10 @@
        let res = await FetchAuthenticate('@Url.Action("GetInspectorsByAdd", "Patrol")', {});
         if (res && res.Success) {
             loadData = res.Data;
-            //let select = $("#Employee_ID");
-            //select.empty();
-
-            //$.each(res.Data, function (index, rowData) {
-            //    select.append('<option value="' + rowData.Employee_ID + '">' + rowData.FullName + '</option>');
-            //});
         }
      }
     const ReportsDetails = async () => {
         let res = await FetchAuthenticate('@Url.Action("GetRegistrationNoByID", "Patrol")', { Regno: strRegno });
-        console.log(res);
         if (res && res.Success) {
             let RegisterData = res.Data.Register;
             let FindingData = res.Data.Finding;
@@ -266,6 +259,10 @@
 
       editform.addEventListener('submit', async (e) => {
           e.preventDefault();
+          const savebtn = document.querySelector("#btnSave");
+          savebtn.innerHTML = " <div class='buttonloading'></div>";
+
+
           let strfind = findingsJson(e.target);
           let finalformData = new FormData(e.target);
           finalformData.append('FindJson', strfind);
@@ -282,8 +279,7 @@
 
 
           let res = await postData('@Url.Action("EditRegistration", "Patrol")', finalformData);
-
-          if (res.StatusCode === 200) {
+          if (res.StatusCode === 201 && res.Success) {
               Swal.fire({
                   title: "Success",
                   text: res.Message,
@@ -291,7 +287,9 @@
                   showConfirmButton: false,
                   timer: 1500
               }).then(() => {
-                  window.location.href = "/PC/Patrol/PatrolReport";
+                  setTimeout(() => {
+                      window.location.href = "/PC/Patrol/PatrolReport";
+                  }, 3000);
               });
           }
 

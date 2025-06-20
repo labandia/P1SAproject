@@ -193,12 +193,6 @@
         let res = await FetchAuthenticate('@Url.Action("GetInspectorsByAdd", "Patrol")', {});
         if (res && res.Success) {
             loadData = res.Data;
-            //let select = $("#Employee_ID");
-            //select.empty();
-
-            //$.each(res.Data, function (index, rowData) {
-            //    select.append('<option value="' + rowData.Employee_ID + '">' + rowData.FullName + '</option>');
-            //});
         }
     }
 

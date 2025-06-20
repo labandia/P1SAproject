@@ -97,7 +97,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                 string strsql2 = "DELETE FROM Patrol_Registration WHERE RegNo = @RegNo";
                 var parameter = new { RegNo = RegNo };
 
-                var task1 = SqlDataAccess.UpdateInsertQuery(strsql, parameter);
+                var task1 = SqlDataAccess.UpdateInsertQuery(strsql, parameter, "Registration");
                 var task2 = SqlDataAccess.UpdateInsertQuery(strsql2, parameter);
 
                 await Task.WhenAll(task1, task2);

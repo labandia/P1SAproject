@@ -29,8 +29,15 @@ namespace ProgramPartListWeb.Controllers
             var user = (await _user.LoginCredentials(username)).FirstOrDefault();
             var results = new DataMessageResponse<object> { };
 
+            if(user == null)
+            {
+                results.StatusCode = 401;
+                results.Message = "Invalid credentials / Username doesnt exist";
+                results.Data = null;
+                return Json(results, JsonRequestBehavior.AllowGet);             
+            }
 
-            if(user != null && PasswordHasher.VerifyPassword(user.Password, password))
+            if (user != null && PasswordHasher.VerifyPassword(user.Password, password))
             {
                 string role = GlobalUtilities.UserRolesname(user.Role_ID);
                 string fullname = user.Fullname;
@@ -45,7 +52,7 @@ namespace ProgramPartListWeb.Controllers
             else
             {
                 results.StatusCode = 401;
-                results.Message = "Invalid credentials";
+                results.Message = "Invalid credentials / Password is incorrect";
             }
 
 

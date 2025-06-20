@@ -2,9 +2,7 @@
 using Attendance_Monitoring.View;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 
 
 namespace Attendance_Monitoring

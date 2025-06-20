@@ -90,7 +90,7 @@ namespace Attendance_Monitoring.View
                 if (e.KeyCode != Keys.Enter) return;
 
                 // Process Employee ID
-                string empid = EmployID.Text.Replace("-", "");
+                string empid = EmployID.Text.Replace("-", "").Trim();
                 string shift = Timeprocess.TimeIncheck(DateTime.Now);
 
                 // Filter employee once
@@ -114,7 +114,7 @@ namespace Attendance_Monitoring.View
 
                     if (alreadyTimedIn)
                     {
-                        MessageBox.Show("ALREADY TIME IN", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("YOU ALREADY TIME IN", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
 
@@ -137,6 +137,11 @@ namespace Attendance_Monitoring.View
 
                         timer.Start();
                         TimeAttendanceDisplay(selecttime.SelectedIndex);
+                    }
+                    else
+                    {
+                        MessageBox.Show("YOU ALREADY TIME IN", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
                     }
                 }
                 // Time Out Process

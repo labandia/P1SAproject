@@ -83,7 +83,7 @@ namespace Attendance_Monitoring.View
                 {
                     var emp = new Employee
                     {
-                        EmployeeID = EmpID.Text.Replace("-", ""),
+                        EmployeeID = EmpID.Text.Replace("-", "").Trim(),
                         Fullname = string.IsNullOrEmpty(Fullname.Text) ? "" : Fullname.Text,
                         Process = string.IsNullOrEmpty(process.Text) ? "" : process.Text,
                         Affiliation = string.IsNullOrEmpty(Affili.Text) ? "" : Affili.Text,

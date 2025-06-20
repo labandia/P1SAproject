@@ -17,7 +17,7 @@ namespace ProgramPartListWeb.Data
                                 FROM UserAccounts ua
                                 INNER JOIN Users u ON u.User_ID = ua.User_ID
                                 WHERE ua.Username  =@Username AND IsActive = 1";
-            return await UsersAccess.UserGetData<AuthModel>(strquery, new { Username = user });
+            return await UsersAccess.UserGetData<AuthModel>(strquery, new { Username = user }, "Employees");
         }
 
         public async Task<List<AuthModelV2>> LoginCredentialsV2(string user, int proj)

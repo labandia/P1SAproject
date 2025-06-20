@@ -17,7 +17,19 @@ namespace Attendance_Monitoring.Repositories
     {
         public async Task<bool> AttendanceTimeIn(string EmployeeID, string shift, string late, string tb)
         {
-            string insertQuery = "INSERT INTO "+ tb +" (Employee_ID, Shifts, LateTime) VALUES (@EmpID, @Shifts, @LateTime)";
+            string checkQuery = $@"SELECT COUNT(*) 
+                                  FROM WHERE Employee_ID = @EmpID 
+                                  AND CAST(Date_today AS DATE) = CAST(GETDATE() AS DATE) 
+                                  AND Shifts = @Shifts";
+
+            var checkParams = new { EmpID = EmployeeID, Shifts = shift };
+            int count = await SqlDataAccess.GetCountData(checkQuery, checkParams);
+
+            if (count > 0)
+                return false; // Already timed in
+
+
+            string insertQuery = $@"INSERT INTO {tb} (Employee_ID, Shifts, LateTime) VALUES (@EmpID, @Shifts, @LateTime)";
             var parameters = new { EmpID = EmployeeID, Shifts = shift, LateTime = late };
 
             return await SqlDataAccess.UpdateInsertQuery(insertQuery, parameters);

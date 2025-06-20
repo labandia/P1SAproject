@@ -21,6 +21,16 @@ namespace PracticeC_
 
         static void Main(string[] args)
         {
+            TimeSpan interval = new TimeSpan(5, 6, 22);
+            Console.WriteLine(interval.ToString());
+
+            DateTime launchDate = new DateTime(2020, 3, 15, 9, 0, 0);
+            DateTime now = DateTime.Now;
+
+            TimeSpan ts = launchDate - now;
+
+            Console.WriteLine("TimeSpan: {0}", ts.ToString());
+
             //SamplejsonDeserialize();
             string machineName = Environment.MachineName.ToLower();
             Console.WriteLine($"Original: {machineName}");

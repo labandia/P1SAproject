@@ -1,16 +1,9 @@
 ﻿using Attendance_Monitoring.Controller;
-using Attendance_Monitoring.Global;
 using Attendance_Monitoring.Models;
-using Attendance_Monitoring.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
 using System.Drawing;
-using System.Globalization;
-using System.Linq;
 using System.Windows.Forms;
-using DataTable = System.Data.DataTable;
 using Timer = System.Windows.Forms.Timer;
 
 namespace Attendance_Monitoring.Usercontrols

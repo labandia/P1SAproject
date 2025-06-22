@@ -3,6 +3,7 @@ using ProgramPartListWeb.Interfaces;
 using ProgramPartListWeb.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -39,6 +40,8 @@ namespace ProgramPartListWeb.Controllers
 
             if (user != null && PasswordHasher.VerifyPassword(user.Password, password))
             {
+                Debug.WriteLine("HERE INSIDE");
+
                 string role = GlobalUtilities.UserRolesname(user.Role_ID);
                 string fullname = user.Fullname;
 

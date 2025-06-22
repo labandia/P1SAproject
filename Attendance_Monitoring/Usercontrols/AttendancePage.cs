@@ -3,6 +3,7 @@ using Attendance_Monitoring.Models;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Timer = System.Windows.Forms.Timer;
 
@@ -12,11 +13,11 @@ namespace Attendance_Monitoring.Usercontrols
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly AdminController _admin;
-        private static List<AttendanceModel> itemattends;
-        private static List<Employee> emplist;
+        //private static List<AttendanceModel> itemattends;
+        //private static List<Employee> emplist;
    
 
-        private Timer timer;
+        private readonly Timer timer;
 
         // Share variable to all
         //public int sec;
@@ -44,8 +45,8 @@ namespace Attendance_Monitoring.Usercontrols
 
         private async void EnterTime(object sender, KeyEventArgs e)
         {
-          
 
+            await Task.Delay(200);
         }
 
 

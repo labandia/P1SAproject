@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace ProgramPartListWeb.Areas.PC.Models
 {
@@ -18,7 +15,7 @@ namespace ProgramPartListWeb.Areas.PC.Models
         public string EmployeeID
         {
             get => employee_ID;
-            set => employee_ID = !string.IsNullOrWhiteSpace(value) ? value : throw new ArgumentException("Employee ID cannot be empty.");
+            set => employee_ID = value;
         }
 
         public string Fullname

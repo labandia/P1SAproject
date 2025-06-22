@@ -21,19 +21,19 @@ namespace PracticeC_
 
         static void Main(string[] args)
         {
-            TimeSpan interval = new TimeSpan(5, 6, 22);
-            Console.WriteLine(interval.ToString());
+            //TimeSpan interval = new TimeSpan(5, 6, 22);
+            //Console.WriteLine(interval.ToString());
 
-            DateTime launchDate = new DateTime(2020, 3, 15, 9, 0, 0);
-            DateTime now = DateTime.Now;
+            //DateTime launchDate = new DateTime(2020, 3, 15, 9, 0, 0);
+            //DateTime now = DateTime.Now;
 
-            TimeSpan ts = launchDate - now;
+            //TimeSpan ts = launchDate - now;
 
-            Console.WriteLine("TimeSpan: {0}", ts.ToString());
-
-            //SamplejsonDeserialize();
-            string machineName = Environment.MachineName.ToLower();
-            Console.WriteLine($"Original: {machineName}");
+            //Console.WriteLine("TimeSpan: {0}", ts.ToString());
+            //string machineName = Environment.MachineName.ToLower();
+            //Console.WriteLine($"Original: {machineName}");
+            ConvertstringtoBase64();
+       
             Console.ReadKey();
         }
 
@@ -60,8 +60,8 @@ namespace PracticeC_
             //string connectionString = "SoloCoding";
             //string connectionString = "server=DESKTOP-FC0UP1P;User ID=PCsystem;password=p1saprocess;database=P1sa";
             //string connectionString = "server=SDP0706ES;User ID=p1sa;password=p1sa1234a*;database=PMACS_TEST;Pooling=True;Min Pool Size=50;Max Pool Size=100;";
-            string connectionString = "server=172.29.3.139;User ID=p1sa;password=p1sa1234a*;database=PRODCONF;Pooling=True;Min Pool Size=50;Max Pool Size=100;";
-
+            //string connectionString = "server=172.29.3.139;User ID=p1sa;password=p1sa1234a*;database=PRODCONF;Pooling=True;Min Pool Size=50;Max Pool Size=100;";
+            string connectionString = "Data Source=DESKTOP-FC0UP1P;Initial Catalog=Attendance;Integrated Security=True;";
 
             //string connectionString = "server=172.29.3.139;User ID=p1sa;password=p1sa1234a*;database=PMACS_LIVE;Pooling=True;Min Pool Size=50;Max Pool Size=100;";
             //string connectionString = "server=SDP0706ES; User ID = p1sa; password=p1sa1234a*; database=PMACS_LIVE; Pooling=True; Min Pool Size=50; Max Pool Size=100;";

@@ -138,7 +138,7 @@
             this.button12.Size = new System.Drawing.Size(55, 46);
             this.button12.TabIndex = 8;
             this.button12.UseVisualStyleBackColor = true;
-            this.button12.Click += new System.EventHandler(this.button12_Click);
+            this.button12.Click += new System.EventHandler(this.ExitApp);
             // 
             // tableLayoutPanel2
             // 
@@ -411,7 +411,7 @@
             this.button10.Text = "CR Monitoring System";
             this.button10.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.button10.UseVisualStyleBackColor = true;
-            this.button10.Click += new System.EventHandler(this.button10_Click);
+            this.button10.Click += new System.EventHandler(this.CRpage);
             // 
             // Selection
             // 

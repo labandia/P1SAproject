@@ -5,12 +5,24 @@ using ProgramPartListWeb.Helper;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ProgramPartListWeb.Areas.PC.Repository
 {
     public class InpectorRepository : IInspector
     {
+        // -------------  Employees Or Users Data -------------------
+        public async Task<List<Employee>> GetEmployee() => await SqlDataAccess.GetData<Employee>("EmployeeDataList", null, "Employee");
+        public async Task<int> GetEmployeeByDepartment(string employee)
+        {
+            var data = await GetEmployee();
+            var employeedata = data.SingleOrDefault(e => e.EmployeeID == employee);
+            return (employeedata != null) ? employeedata.Department_ID : 0;
+        }
+
+
+        // -------------  DashBoard Schedule Inpectors --------------
         public async Task<List<PatrolSchedule>> GetScheduleDate()
         {
             string strsql = $@"SELECT 
@@ -25,9 +37,10 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             return await SqlDataAccess.GetData<PatrolSchedule>(strsql, null);
         }
 
-       
 
 
+        // -------------  Inspector Management ----------------------
+        public async Task<List<InspectorModel>> GetInpectorsData() => await SqlDataAccess.GetData<InspectorModel>("Getinpectors", null, "Inspectors");
         public async Task<bool> AddEditInpectors(object paramaters, int mode)
         {
             string strsql;
@@ -42,7 +55,17 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             }   
             return await SqlDataAccess.UpdateInsertQuery(strsql, paramaters, "Inspectors");
         }
+        public async Task<bool> ApproveAndDisapproveInpectors(int inspectID, int status)
+        {
+            string strsql = "UPDATE Patrol_Inspectors SET Approval =@Approval " +
+                        "WHERE InspectID =@InspectID";
+            var parameter = new { InspectID = inspectID, Approval = status };
+            return await SqlDataAccess.UpdateInsertQuery(strsql, parameter, "Inspectors");
+        }
 
+        // -------------  Registration Management ----------------------
+        public async Task<List<PatrolRegistionModel>> GetRegistrationData() => await SqlDataAccess.GetData<PatrolRegistionModel>("GetPatrolRegistration", null, "Registration");
+        public async Task<List<FindingModel>> GetPatrolFindings(string reg) => await SqlDataAccess.GetData<FindingModel>("GetFindings", new { Regno = reg });
         public async Task<bool> AddRegistration(object paramaters, string json)
         {
             // INSERT MAIN REGISTRATION PROCESS
@@ -114,16 +137,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
 
 
 
-        public async Task<bool> ApproveAndDisapproveInpectors(int inspectID, int status)
-        {
-            string strsql = "UPDATE Patrol_Inspectors SET Approval =@Approval " +
-                        "WHERE InspectID =@InspectID";
-            var parameter = new { InspectID = inspectID, Approval = status };
-            return await SqlDataAccess.UpdateInsertQuery(strsql, parameter, "Inspectors");
-        }
-
-
-
+        // -------------  Set Schedule Inpectors ------------------------
         public async Task<List<CalendarSched>> GetCalendarData(string Employee_ID)
         {
             string strsql = $@"SELECT s.ScheduleID, s.Employee_ID, e.FullName,
@@ -134,7 +148,6 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                             WHERE (@Employee_ID IS NULL OR s.Employee_ID = @Employee_ID) AND s.IsActive = 1";
             return await SqlDataAccess.GetData<CalendarSched>(strsql, new { Employee_ID = Employee_ID });
         }
-
         public async Task<List<CalendarSched>> GetScheduleDateByMonth()
         {
             string strsql = $@"SELECT s.ScheduleID, s.Employee_ID, e.FullName,
@@ -147,22 +160,11 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                             AND s.IsActive = 1";
             return await SqlDataAccess.GetData<CalendarSched>(strsql, null);
         }
-
-        public async Task<List<Employee>> GetEmployee() => await SqlDataAccess.GetData<Employee>("EmployeeDataList", null, "Employee");
-        public async Task<int> GetEmployeeByDepartment(string employee) => await SqlDataAccess.GetCountDataSync("EmployeeDepartment", new { Employee_ID = employee });
-
-        public async Task<List<InspectorModel>> GetInpectorsData() => await SqlDataAccess.GetData<InspectorModel>("Getinpectors", null, "Inspectors");
-        public async Task<List<FindingModel>> GetPatrolFindings(string reg) => await SqlDataAccess.GetData<FindingModel>("GetFindings", new { Regno = reg });
-
         public async Task<List<ProccessModel>> GetProcessData(int depid)
         {
             string sql = "SELECT ProcessID, ProcessName, DepartmentID FROM Patrol_Process WHERE DepartmentID =@DepartmentID";
             return await SqlDataAccess.GetData<ProccessModel>(sql, new { DepartmentID = depid });
         }
-        
-        public async Task<List<PatrolRegistionModel>> GetRegistrationData() => await SqlDataAccess.GetData<PatrolRegistionModel>("GetPatrolRegistration", null, "Registration");
-
-        
 
         public async Task<bool> SetScheduleCalendar(object paramaters, int mode)
         {
@@ -180,7 +182,6 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             return await SqlDataAccess.UpdateInsertQuery(strsql, paramaters);
        
         }
-
         public async Task<bool> RemoveScheduleCalendar()
         {
            string strsql = "UPDATE Patrol_Schedule SET   IsActive =@IsActive" +

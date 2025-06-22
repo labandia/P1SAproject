@@ -29,8 +29,8 @@ namespace Attendance_Monitoring.Controller
 
         // -------------  Attendance Management Process --------------
         public async Task<List<AttendanceModel>> GetAttendanceMonitor(string tblname, string datetoday, string shift, int selectime) => await _attend.GetAttendanceRecordsList(tblname, datetoday, shift, selectime);
-        public async Task<IEnumerable<SummaryAttendanceModel>> GetSummaryList(string tblname, string startdate, string endDate) => await _attend.GetAttendanceSummaryList(tblname, startdate, endDate);
-        public async Task<IEnumerable<SummaryAttendanceModel>> GetExportSummaryList(string strsql, string startdate, string endDate, string shifts, string search) => await _attend.GetSummaryDataList(strsql, startdate, endDate, shifts, search);
+        public async Task<List<SummaryAttendanceModel>> GetSummaryList(string tblname, string startdate, string endDate) => await _attend.GetAttendanceSummaryList(tblname, startdate, endDate);
+        public async Task<List<SummaryAttendanceModel>> GetExportSummaryList(string strsql, string startdate, string endDate, string shifts, string search) => await _attend.GetSummaryDataList(strsql, startdate, endDate, shifts, search);
         public async Task<bool> AttendanceTimeINandOut(string EmployeeID, string shift, string late, string tb) => await _attend.AttendanceTimeIn(EmployeeID, shift, late, tb);
         public async Task<bool> AttendanceOut(SummaryAttendanceModel attend, string tablename) => await _attend.AttendanceTimeOut(attend, tablename);
 

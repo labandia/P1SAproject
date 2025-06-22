@@ -198,12 +198,6 @@
     <Compile Include="Models\ProductsBackup.cs" />
     <Compile Include="Models\RawMatModel.cs" />
     <Compile Include="Models\RotorProducts.cs" />
-    <Compile Include="Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
     <Compile Include="Helpers\GlobalDb.cs" />
     <Compile Include="Models\UsersModel.cs" />
     <Compile Include="Repository\RawMatsRepository.cs" />
@@ -364,9 +358,6 @@
     <Compile Include="View\Moldingbush\Modules\Bushlocation.Designer.cs">
       <DependentUpon>Bushlocation.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="View\Moldingbush\BushOpentransaction.resx">
       <DependentUpon>BushOpentransaction.cs</DependentUpon>
     </EmbeddedResource>
@@ -473,10 +464,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="View\MoldFrame\" />
-    <Folder Include="View\Press\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
       <Visible>False</Visible>

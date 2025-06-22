@@ -76,6 +76,10 @@
 
                  let formData = new FormData(logform);
                  let res = await postData('/User/Authenticate', formData);
+
+
+                 console.log(res);
+
                  if (res.StatusCode === 200) {
                      Swal.fire({
                          title: "Success",
@@ -92,13 +96,7 @@
                          window.location.href = "/PC/Patrol/Dashboard";
                      });
                  } else {
-                     Swal.fire({
-                         title: "Login Failed",
-                         icon: "error",
-                         text: res.Message,
-                         timer: 1500,
-                         showConfirmButton: false
-                     });
+                    
 
                      savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-solid fa-right-to-bracket'></i>  Login</span>"
                  };

@@ -15,11 +15,11 @@ namespace Attendance_Monitoring.Utilities
 {
     public sealed class SqlDataAccess
     {
-        private static readonly string _cons = ConfigurationManager.ConnectionStrings["live_connect"].ToString();
-        private static readonly string _consV2 = AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings["LiveDevelopment"].ConnectionString);
-        //private static readonly string _cons = ConfigurationManager.ConnectionStrings["Myconnect"].ToString();
+        //private static readonly string _cons = ConfigurationManager.ConnectionStrings["live_connect"].ToString();
+        //private static readonly string _consV2 = AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings["LiveDevelopment"].ConnectionString);
+        private static readonly string _cons = ConfigurationManager.ConnectionStrings["Myconnect"].ToString();
 
-        public static string _connectionString()
+        public static string ConnectionString()
         {
             try
             {

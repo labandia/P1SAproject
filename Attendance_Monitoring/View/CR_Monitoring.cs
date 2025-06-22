@@ -16,17 +16,17 @@ namespace Attendance_Monitoring.View
         private readonly AdminController _admin;
         private static List<CRmodel> critemlist;
         private static List<Employee> emplist;
-        private readonly Timeprocess time;
-        private Timer timer;
+        private readonly Timer timer;
 
         public int sec;
 
         public CR_Monitoring(int section, IServiceProvider serviceProvider)
         {
             InitializeComponent();
-            _admin = new AdminController();
-            time = new Timeprocess();
             sec = section;
+
+            _admin = new AdminController();
+            timer = new Timer();
             _serviceProvider=serviceProvider;
         }
 
@@ -56,7 +56,7 @@ namespace Attendance_Monitoring.View
         {
             if (e.KeyCode != Keys.Enter) return;
 
-            string empid = EmployID.Text.Replace("-", "");
+            string empid = EmployID.Text.Replace("-", "").Trim();
             string shift = Timeprocess.TimeIncheck(DateTime.Now);
 
             // Filter employee once
@@ -101,7 +101,6 @@ namespace Attendance_Monitoring.View
                     TextName.Text = employee.Fullname;
                     if (timer == null)
                     {
-                        timer = new Timer();
                         timer.Interval = 1000;
                         timer.Tick += Timer_Tick;
                     }
@@ -135,7 +134,6 @@ namespace Attendance_Monitoring.View
                     // Reuse Timer instead of creating a new one every time
                     if (timer == null)
                     {
-                        timer = new Timer();
                         timer.Interval = 1000;
                         timer.Tick += Timer_Tick;
                     }
@@ -144,47 +142,24 @@ namespace Attendance_Monitoring.View
                     DisplayCRMonitor();
                 }
                  
-            }
-
-
-            
+            }    
         }
-
-        private void closebtn_Click(object sender, EventArgs e)
-        {
-            var mainpage = _serviceProvider.GetRequiredService<CRMainpage>();
-            // Show the main form
-            mainpage.Show();
-            // Hide the login form (optional)
-            this.Hide();
-            Visible = false;
-        }
-
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            // Stop the timer after it has ticked
             timer.Stop();
-
-            // Code to execute after timeout
-            //Statustext.BackColor = Color.FromArgb(26, 36, 59);
-            //Statustext.Text = "Checking status ...";
             EmployID.Text = "";
         }
-        private void TimerOut_Tick(object sender, EventArgs e)
+   
+
+        private void Summary_data_Click(object sender, EventArgs e)
         {
-            // Stop the timer after it has ticked
-            timer.Stop();
-
-            // Code to execute after timeout
-            //Statustext.BackColor = Color.FromArgb(26, 36, 59);
-            //Statustext.Text = "Checking status ...";
-            EmployID.Text = "";
-            TextName.Text = "";
-            EmployID.Focus();
+            CRSummary cr = new CRSummary(sec, _serviceProvider);
+            cr.Show();
+            Visible = false;
         }
 
-        private void textBox2_TextChanged(object sender, EventArgs e)
+        private void SearchInput(object sender, EventArgs e)
         {
             string filterText = textBox2.Text.ToLower();
             // Filter the list using LINQ
@@ -196,10 +171,11 @@ namespace Attendance_Monitoring.View
             DisplayTotal.Text = "Total Records: " + CRtable.RowCount;
         }
 
-        private void Summary_data_Click(object sender, EventArgs e)
+        private void Closebtn_Click(object sender, EventArgs e)
         {
-            CRSummary cr = new CRSummary(sec, _serviceProvider);
-            cr.Show();
+            var mainpage = _serviceProvider.GetRequiredService<CRMainpage>();
+            mainpage.Show();
+            this.Hide();
             Visible = false;
         }
     }

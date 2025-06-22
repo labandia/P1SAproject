@@ -123,7 +123,7 @@
             this.attendancetable.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.attendancetable.Size = new System.Drawing.Size(1094, 310);
             this.attendancetable.TabIndex = 0;
-            this.attendancetable.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.attendancetable_CellFormatting);
+            this.attendancetable.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.Attendancetable_CellFormatting);
             // 
             // Employee_ID
             // 
@@ -182,7 +182,7 @@
             this.Summary_data.Text = "Summary ";
             this.Summary_data.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.Summary_data.UseVisualStyleBackColor = true;
-            this.Summary_data.Click += new System.EventHandler(this.button1_Click);
+            this.Summary_data.Click += new System.EventHandler(this.SummaryRoute);
             // 
             // EmployID
             // 
@@ -213,9 +213,9 @@
             "Time out"});
             this.selecttime.Location = new System.Drawing.Point(0, 61);
             this.selecttime.Name = "selecttime";
-            this.selecttime.Size = new System.Drawing.Size(255, 33);
+            this.selecttime.Size = new System.Drawing.Size(201, 33);
             this.selecttime.TabIndex = 3;
-            this.selecttime.SelectedIndexChanged += new System.EventHandler(this.selecttime_SelectedIndexChanged);
+            this.selecttime.SelectedIndexChanged += new System.EventHandler(this.Selecttime_SelectedIndexChanged);
             // 
             // TextName
             // 
@@ -226,7 +226,7 @@
             this.TextName.Location = new System.Drawing.Point(0, 58);
             this.TextName.Margin = new System.Windows.Forms.Padding(10);
             this.TextName.Name = "TextName";
-            this.TextName.Size = new System.Drawing.Size(253, 36);
+            this.TextName.Size = new System.Drawing.Size(362, 36);
             this.TextName.TabIndex = 4;
             // 
             // Statustext
@@ -237,17 +237,17 @@
             this.Statustext.ForeColor = System.Drawing.Color.White;
             this.Statustext.Location = new System.Drawing.Point(0, 58);
             this.Statustext.Name = "Statustext";
-            this.Statustext.Size = new System.Drawing.Size(253, 36);
+            this.Statustext.Size = new System.Drawing.Size(198, 36);
             this.Statustext.TabIndex = 5;
             // 
             // textBox2
             // 
             this.textBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox2.Location = new System.Drawing.Point(40, 214);
+            this.textBox2.Location = new System.Drawing.Point(78, 214);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(266, 38);
             this.textBox2.TabIndex = 6;
-            this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
+            this.textBox2.TextChanged += new System.EventHandler(this.Searchinput);
             // 
             // closebtn
             // 
@@ -259,13 +259,13 @@
             this.closebtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.closebtn.ForeColor = System.Drawing.SystemColors.ControlText;
             this.closebtn.Image = ((System.Drawing.Image)(resources.GetObject("closebtn.Image")));
-            this.closebtn.Location = new System.Drawing.Point(213, -18);
+            this.closebtn.Location = new System.Drawing.Point(159, -18);
             this.closebtn.Name = "closebtn";
             this.closebtn.Size = new System.Drawing.Size(59, 58);
             this.closebtn.TabIndex = 7;
             this.closebtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.closebtn.UseVisualStyleBackColor = false;
-            this.closebtn.Click += new System.EventHandler(this.closebtn_Click);
+            this.closebtn.Click += new System.EventHandler(this.Closebtn_Click);
             // 
             // panel1
             // 
@@ -284,9 +284,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tableLayoutPanel1.ColumnCount = 4;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 35F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.tableLayoutPanel1.Controls.Add(this.panel2, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.panel3, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.panel4, 2, 0);
@@ -334,7 +334,7 @@
             this.panel3.Location = new System.Drawing.Point(283, 3);
             this.panel3.Margin = new System.Windows.Forms.Padding(10, 3, 10, 3);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(253, 94);
+            this.panel3.Size = new System.Drawing.Size(362, 94);
             this.panel3.TabIndex = 1;
             // 
             // label2
@@ -355,10 +355,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel4.Controls.Add(this.Statustext);
             this.panel4.Controls.Add(this.label3);
-            this.panel4.Location = new System.Drawing.Point(556, 3);
+            this.panel4.Location = new System.Drawing.Point(665, 3);
             this.panel4.Margin = new System.Windows.Forms.Padding(10, 3, 10, 3);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(253, 94);
+            this.panel4.Size = new System.Drawing.Size(198, 94);
             this.panel4.TabIndex = 2;
             // 
             // label3
@@ -381,10 +381,10 @@
             this.panel5.Controls.Add(this.closebtn);
             this.panel5.Controls.Add(this.selecttime);
             this.panel5.Controls.Add(this.label4);
-            this.panel5.Location = new System.Drawing.Point(829, 3);
+            this.panel5.Location = new System.Drawing.Point(883, 3);
             this.panel5.Margin = new System.Windows.Forms.Padding(10, 3, 10, 3);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(255, 94);
+            this.panel5.Size = new System.Drawing.Size(201, 94);
             this.panel5.TabIndex = 3;
             // 
             // label4
@@ -430,7 +430,7 @@
             this.label6.ForeColor = System.Drawing.Color.Transparent;
             this.label6.Image = ((System.Drawing.Image)(resources.GetObject("label6.Image")));
             this.label6.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label6.Location = new System.Drawing.Point(312, 214);
+            this.label6.Location = new System.Drawing.Point(44, 214);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(39, 39);
             this.label6.TabIndex = 15;
@@ -439,7 +439,7 @@
             // timer1
             // 
             this.timer1.Enabled = true;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
             // label5
             // 

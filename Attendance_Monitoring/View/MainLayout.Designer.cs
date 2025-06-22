@@ -149,7 +149,6 @@
         }
 
         #endregion
-        private Usercontrols.AttendancePage attendancePage1;
         private System.Windows.Forms.Button Logoutbtn;
         private System.Windows.Forms.Button EmployeeMenu;
         private System.Windows.Forms.Button CRMonitor;

@@ -1,6 +1,5 @@
 ﻿using ProductConfirm.Data;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using ProductConfirm.Modules;
 using System;
 using System.Windows.Forms;
@@ -37,17 +36,6 @@ namespace ProductConfirm
 
        
 
-        static IHostBuilder CreateHostBuilder()
-        {
-            return Host.CreateDefaultBuilder()
-                .ConfigureServices((context, services) => {
-                    services.AddSingleton<IUsers, UserRespository>();
-                    services.AddSingleton<IProductRepositoryV2, ProductRepositoryV2>();
-
-                    services.AddSingleton<Mainpage>();
-                    services.AddSingleton<Loginpage>();
-                    services.AddTransient<UIShoporder>();
-                });
-        }
+      
     }
 }

@@ -144,7 +144,7 @@
             this.closebtn.TabIndex = 7;
             this.closebtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.closebtn.UseVisualStyleBackColor = false;
-            this.closebtn.Click += new System.EventHandler(this.closebtn_Click);
+            this.closebtn.Click += new System.EventHandler(this.Closebtn_Click);
             // 
             // TextName
             // 
@@ -178,7 +178,7 @@
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(266, 38);
             this.textBox2.TabIndex = 19;
-            this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
+            this.textBox2.TextChanged += new System.EventHandler(this.SearchInput);
             // 
             // panel2
             // 

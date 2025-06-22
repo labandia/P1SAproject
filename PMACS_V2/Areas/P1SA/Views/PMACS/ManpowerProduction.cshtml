@@ -150,30 +150,15 @@
     </div>
 </div>
 
-<!--########################## EDIT DESCRIPTION NAME #############################-->
-<div class="modal fade modal-m" id="descripmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
 
-            <div class="modal-body">
-                <form id="descform" style="margin-top: 1em;">
-                    <input id="editdesc" name="editdesc" type="text" placeholder="adadsa" />
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 
-<script src="~/Scripts/jquery-3.7.0.js"></script>
-<script src="~/Scripts/Utilities.js"></script>
-<script src="~/Scripts/Global.js"></script>
+<script src="~/Scripts/chart.js"></script>
 <script type="text/javascript">
      const currentYear = new Date().getFullYear();
      const Month = new Date().toLocaleString('en-US', { month: 'long' });
 
      let load_table = $("#ManpowerID");
 
-     const desform = document.getElementById("descform");
      const tabs = document.querySelectorAll('.tab_btn');
      const content = document.querySelectorAll('.content');
 
@@ -210,11 +195,10 @@
 
          let res = await fetchData('@Url.Action("GetTotalmanpower", "PMACS")', { months: monthNames[new Date().getMonth()] });
          if (res && res.Success) {
-             let load = res.Data;
-             totalarrayload = load;
+             totalarrayload = res.Data;
              var totalData = $("#DisplaysectionID");
              totalData.empty();
-             $.each(load, function (index, rowData) {
+             $.each(totalarrayload, function (index, rowData) {
                  const negativecolor = parseFloat(rowData.Lacking);
                  const color = negativecolor < 0 ? 'red' : 'black';
 
@@ -228,46 +212,6 @@
              });
          }
      }
-
-     //$("#descbtn").click(function () {
-     //    $("#editdesc").val($("#changedesc").text());
-     //    $("#descripmodal").modal("show");
-     //});
-
-     // Add an event listener for the 'keypress' event
-     desform.addEventListener('keypress', async (e) => {
-         // Check if the Enter key was pressed
-         if (e.key === 'Enter') {
-             // Prevent the default action (form submission)
-             e.preventDefault();
-             // Find the form element from the target element
-             var formElement = e.target.closest('form');
-
-             if (formElement) {
-                 //var formData = new FormData(formElement);
-                 //let res = await postData(apiBaseUrl + "EditDescription", formData);
-
-                 //if (res.StatusCode === 200) {
-                 //    $("#changedesc").text(data.editdesc);
-                 //    $("#descripmodal").modal("hide");
-                 //}
-             } else {
-                 console.error('Form element not found');
-             }
-
-         }
-     });
-
-
-     //function Displayinfo() {
-     //    makeAjaxRequest(apiBaseUrl + 'Displaydesc', '', 0)
-     //        .then(res => {
-     //            $("#changedesc").text(res.decripname[0].DisplayName);
-     //        })
-     //        .catch(error => {
-     //            console.error('Error occurred:', error);
-     //        });
-     //}
 
 
      // LOADS THE DATA FIRST
@@ -350,7 +294,6 @@
          e.preventDefault();
          var formData = new FormData(e.target);
          let res = await postData('@Url.Action("EditManpower", "PMACS")', formData);
-         console.log(res);
          if (res.StatusCode === 200) {
              $("#exampleModal").modal("hide");
              Swal.fire({
@@ -404,7 +347,6 @@
      $(document).on('click', '.editTotalman', function () {
          var buttonId = $(this).attr('id');
          var rowIndex = buttonId.split('_')[1];
-         //alert(rowIndex);
          let data = searchByID(totalarrayload, "Section_ID", rowIndex);
          $("#sectionID").val(rowIndex);
          $("#modelsec").text(data.Section_name);

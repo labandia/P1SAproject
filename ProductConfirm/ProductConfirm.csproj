@@ -243,7 +243,6 @@
     <Compile Include="Utilities\PasswordHasher.cs" />
     <Compile Include="Utilities\SqlDataAccess.cs" />
     <Compile Include="Utilities\UsersAccess.cs" />
-    <Compile Include="View\IProductView.cs" />
     <Compile Include="View\Loginpage.cs">
       <SubType>Form</SubType>
     </Compile>

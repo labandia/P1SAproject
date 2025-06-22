@@ -8,7 +8,7 @@ namespace Attendance_Monitoring.Global
     public sealed class Timeprocess
     {
         // CHECK OUT NIGHTSHIFT
-        public static bool TimeoutNight(string tbName, string shift, string cTime, string dDate)
+        public static bool TimeoutNight(string tbName, string cTime, string dDate)
         {
             try
             {
@@ -129,7 +129,7 @@ namespace Attendance_Monitoring.Global
         }
 
         // CHECK OUT DAYSHIFT
-        public static bool TimeoutDay(string tbName, string shift, string cTime, string dDate)
+        public static bool TimeoutDay(string tbName, string cTime, string dDate)
         {
             try
             {
@@ -249,13 +249,13 @@ namespace Attendance_Monitoring.Global
         }
 
         // CHECK TIME IN IF ALREADY EXIST IF NON DIRECTLY INSERT TO THE DATABASE
-        public static bool CheckTimeIn(string tableName)
+        public static bool CheckTimeIn()
         {
             try
             {
                 bool timeChecked = false;
 
-                string shift = timeoutcheck(DateTime.Now);
+                string shift = Timeoutcheck(DateTime.Now);
                 string dtDate = DateTime.Now.ToString("MM-dd-yyyy");
                 string currentTime = DateTime.Now.ToString("HH:mm");
 
@@ -404,7 +404,7 @@ namespace Attendance_Monitoring.Global
 
 
         // CHECK THE TIME SHIFT SCHEDULE
-        public static string timeoutcheck(DateTime timetoCheck)
+        public static string Timeoutcheck(DateTime timetoCheck)
         {
             DateTime dayshiftStart = DateTime.Today.Add(new TimeSpan(9, 30, 0));
             DateTime dayshiftEnd = DateTime.Today.Add(new TimeSpan(20, 0, 0));

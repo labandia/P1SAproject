@@ -79,17 +79,14 @@ namespace Attendance_Monitoring.Repositories
         }
         public async Task<List<SummaryAttendanceModel>> GetAttendanceSummaryList(string tbl, string startDate, string endDate)
         {
-            string strquery = "SELECT FORMAT(pc.Date_today, 'MM/dd/yyyy') AS Date_today, " +
-                         "pc.Employee_ID, e.FullName, FORMAT(pc.TimeIn, 'HH:mm') as TimeIn, FORMAT(pc.TimeOut, 'HH:mm')  as TimeOut, pc.LateTime, pc.Regular, " +
-                         "pc.Overtime, pc.Gtotal, pc.Shifts " +
-                         "FROM "+ tbl +" pc " +
-                         "INNER JOIN dbo.Employee_tbl e " +
-                         "ON e.Employee_ID = pc.Employee_ID " +
-                         "WHERE   CAST(Date_today AS DATE) between @startDate AND @endDate";
-
-
-            var parameters = new { startDate = startDate, endDate = endDate };
-            return await SqlDataAccess.GetData<SummaryAttendanceModel>(strquery, parameters);
+            string strquery = $@"SELECT FORMAT(pc.Date_today, 'MM/dd/yyyy') AS Date_today, 
+                         pc.Employee_ID, e.FullName, FORMAT(pc.TimeIn, 'HH:mm') as TimeIn, FORMAT(pc.TimeOut, 'HH:mm')  as TimeOut, pc.LateTime, pc.Regular, 
+                         pc.Overtime, pc.Gtotal, pc.Shifts 
+                         FROM {tbl} pc 
+                         INNER JOIN Employee_tbl e 
+                         ON e.Employee_ID = pc.Employee_ID 
+                         WHERE   CAST(Date_today AS DATE) between @startDate AND @endDate";
+            return await SqlDataAccess.GetData<SummaryAttendanceModel>(strquery, new { startDate = startDate, endDate = endDate });
         }
         public async Task<List<SummaryAttendanceModel>> GetSummaryDataList(string strsql, string startDate, string endDate, string shifts, string search)
         {

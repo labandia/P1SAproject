@@ -21,7 +21,7 @@ namespace Attendance_Monitoring.View
         private static List<AttendanceModel> itemattends;
         private static List<Employee> emplist;
  
-        private Timer timer;
+        private readonly Timer timer;
 
         // Share variable to all
         public int sec;
@@ -34,6 +34,7 @@ namespace Attendance_Monitoring.View
             InitializeComponent();
             sec = section;
             tb = tablename;
+            timer = new Timer();
             _admin = new AdminController();
             _serviceProvider=serviceProvider;
         }
@@ -60,7 +61,7 @@ namespace Attendance_Monitoring.View
                 }
                 else
                 {
-                    shift = Timeprocess.timeoutcheck(DateTime.Now);
+                    shift = Timeprocess.Timeoutcheck(DateTime.Now);
                     Timeout_date = shift == "DAYSHIFT" ? tdate : yest;
                     timecheck = Timeout_date;
                 }
@@ -77,7 +78,7 @@ namespace Attendance_Monitoring.View
         }
 
         //  ####################  SELECT TIME IN AND OUT DISPLAY  #################### //
-        private void selecttime_SelectedIndexChanged(object sender, EventArgs e)
+        private void Selecttime_SelectedIndexChanged(object sender, EventArgs e)
         {
             TimeAttendanceDisplay(selecttime.SelectedIndex);
         }
@@ -99,7 +100,18 @@ namespace Attendance_Monitoring.View
 
                 if (employee == null)
                 {
-                    MessageBox.Show("Wrong ID number");
+                    Statustext.BackColor = Color.FromArgb(50, 181, 111);
+                    Statustext.Text = "Wrong ID number ";
+
+                    // Reuse Timer instead of creating a new one every time
+                    if (timer == null)
+                    {
+                        timer.Interval = 1000;
+                        timer.Tick += Timer_Tick;
+                    }
+
+                    timer.Start();
+
                     EmployID.Focus();
                     return;
                 }
@@ -130,7 +142,7 @@ namespace Attendance_Monitoring.View
                         // Reuse Timer instead of creating a new one every time
                         if (timer == null)
                         {
-                            timer = new Timer();
+                           
                             timer.Interval = 1000;
                             timer.Tick += Timer_Tick;
                         }
@@ -147,7 +159,7 @@ namespace Attendance_Monitoring.View
                 // Time Out Process
                 else if (selecttime.SelectedIndex == 1)
                 {
-                    string shiftname = Timeprocess.timeoutcheck(DateTime.Now);
+                    string shiftname = Timeprocess.Timeoutcheck(DateTime.Now);
 
                     if (shiftname == "DAYSHIFT")
                     {
@@ -180,7 +192,10 @@ namespace Attendance_Monitoring.View
 
                 string dtDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ff", culture);
                 // Check if the user is already timed in
-                string timeincheck = "SELECT TOP 1 TimeIn FROM " + tb + " WHERE Employee_ID = '" + empid + "' AND CAST(Date_today AS DATE) = '" + dtDate + "' ";
+                string timeincheck = $@"SELECT TOP 1 TimeIn 
+                                        FROM {tb} 
+                                        WHERE Employee_ID = {empid} 
+                                        AND CAST(Date_today AS DATE) = {dtDate}";
                 DataTable summary = new DataTable();
 
                 summary = await SqlDataAccess.GetDataByDataTable(timeincheck);
@@ -229,12 +244,10 @@ namespace Attendance_Monitoring.View
                             /// Currenttime >= 3:30 am  AND  Currenttime <  06:00:00
                             if (timeInSpan >= earlyStart && timeInSpan < cutoffEarly)
                             {
-
                                 reg = Timeprocess.CalculateWorkingHours("05:30:00", "14:30:00");
                             }
                             else
                             {
-
                                 reg = Timeprocess.CalculateWorkingHours(timeIn.ToString(@"HH\:mm\:ss"), "14:30:00");
                             }
                             oTHours = Timeprocess.CalculateOTHours("14:30:00", currentTime);
@@ -243,12 +256,10 @@ namespace Attendance_Monitoring.View
                         {
                             if (timeInSpan >= lateStart && timeInSpan < TimeSpan.Parse("20:00:00"))
                             {
-
                                 reg = Timeprocess.CalculateWorkingHours("07:30:00", "16:30:00");
                             }
                             else
                             {
-
                                 reg = Timeprocess.CalculateWorkingHours(timeIn.ToString(@"HH\:mm\:ss"), "16:30:00");
                             }
                             oTHours = Timeprocess.CalculateOTHours("16:30:00", currentTime);
@@ -286,16 +297,10 @@ namespace Attendance_Monitoring.View
                             Statustext.BackColor = Color.FromArgb(50, 181, 111);
                             Statustext.Text = "Successfully Time Out";
                             //Statustext.Text = string.Empty;
-                            timer = new Timer();
                             timer.Interval = 1000; // 2000 milliseconds = 2 seconds
                             timer.Tick += TimerOut_Tick;
                             timer.Start();
 
-
-                        }
-                        else
-                        {
-                            MessageBox.Show("ERROR CHECK THE CODE");
                         }
 
                     }
@@ -420,7 +425,6 @@ namespace Attendance_Monitoring.View
                             Statustext.BackColor = Color.FromArgb(50, 181, 111);
                             Statustext.Text = "Successfully Time Out";
                             //Statustext.Text = string.Empty;
-                            timer = new Timer();
                             timer.Interval = 1000; // 2000 milliseconds = 2 seconds
                             timer.Tick += TimerOut_Tick;
                             timer.Start();
@@ -445,22 +449,7 @@ namespace Attendance_Monitoring.View
         }
 
 
-        private void closebtn_Click(object sender, EventArgs e)
-        {
-            var mainpage = _serviceProvider.GetRequiredService<Mainpage>();
-            // Show the main form
-            mainpage.Show();
-            // Hide the login form (optional)
-            this.Hide();
-            Visible = false;
-
-        }
-        private void button1_Click(object sender, EventArgs e)
-        {
-            Summary sm = new Summary(sec, tb, _serviceProvider);
-            sm.Show();
-            Visible =false;
-        }
+       
 
 
         //  #################### CLOSE THE FORM AND GO BACK TO MENU PAGE  #################### //
@@ -490,25 +479,6 @@ namespace Attendance_Monitoring.View
 
        
 
-        private void textBox2_TextChanged(object sender, EventArgs e)
-        {
-            string filterText = textBox2.Text.ToLower();
-
-            // If the input Text is String only returns to Default Data
-            if (String.IsNullOrEmpty(filterText))
-            {
-                TimeAttendanceDisplay(selecttime.SelectedIndex);
-                return;
-            }
-            // Search by Filter
-            var filteredList = itemattends.Where(p => p.Employee_ID.ToLower().Contains(filterText) ||
-                            p.Fullname.ToLower().Contains(filterText))
-                            .ToList();
-
-            attendancetable.DataSource =  filteredList;
-            DisplayTotal.Text = "Total Records: " + attendancetable.RowCount;
-        }
-
         private async void Attendance_Load(object sender, EventArgs e)
         {
             try
@@ -523,13 +493,13 @@ namespace Attendance_Monitoring.View
             }
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
+        private void Timer1_Tick(object sender, EventArgs e)
         {
             Timeclock.Text = DateTime.Now.ToLongTimeString();
             timer1.Start();
         }
 
-        private void attendancetable_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        private void Attendancetable_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (attendancetable.Columns[e.ColumnIndex].Name == "LateTime") // Change "Status" to your column name
             {
@@ -547,6 +517,40 @@ namespace Attendance_Monitoring.View
                     }
                 }
             }
+        }
+
+        private void SummaryRoute(object sender, EventArgs e)
+        {
+            Summary sm = new Summary(sec, tb, _serviceProvider);
+            sm.Show();
+            Visible =false;
+        }
+
+        private void Closebtn_Click(object sender, EventArgs e)
+        {
+            var mainpage = _serviceProvider.GetRequiredService<Mainpage>();
+            mainpage.Show();
+            this.Hide();
+            Visible = false;
+        }
+
+        private void Searchinput(object sender, EventArgs e)
+        {
+            string filterText = textBox2.Text.ToLower();
+
+            // If the input Text is String only returns to Default Data
+            if (String.IsNullOrEmpty(filterText))
+            {
+                TimeAttendanceDisplay(selecttime.SelectedIndex);
+                return;
+            }
+            // Search by Filter
+            var filteredList = itemattends.Where(p => p.Employee_ID.ToLower().Contains(filterText) ||
+                            p.Fullname.ToLower().Contains(filterText))
+                            .ToList();
+
+            attendancetable.DataSource =  filteredList;
+            DisplayTotal.Text = "Total Records: " + attendancetable.RowCount;
         }
     }
 }

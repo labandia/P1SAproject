@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using ProductConfirm.Data;
+﻿using ProductConfirm.Data;
 using ProductConfirm.DataAccess;
 using ProductConfirm.Modals;
 using ProductConfirm.Models;
@@ -122,27 +121,14 @@ namespace ProductConfirm.Modules
                 string getshoporder = shopordergrid.Rows[e.RowIndex].Cells["Shoporder"].Value.ToString();
                 shoporderstr = getshoporder;
                 partnumshop = shopordergrid.Rows[e.RowIndex].Cells["RotorAssy"].Value.ToString();
-                button1.Enabled =  true;
-                if (confirm != "")
-                {
-                    Checkbtn.Visible = true;
-                    button1.Visible =  false;
-                    Disablebtn.Visible = false;                  
-                    prodConfirm = 1;
-                }
-                else
-                {
-                    button1.Visible =  true;
-                    Checkbtn.Visible = false;
-                    Disablebtn.Visible = false;
-                  
-                    prodConfirm = 0;
-                }
+                button1.Enabled = (confirm != "") ? false : true;
+                Checkbtn.Visible = (confirm != "") ? true : false;
+                prodConfirm = (confirm != "") ? 1 : 0;
 
+                
 
                 // DiSPLY THE PRODUCT MEASUREMENT
-                ProductRepositoryV2 _prod = new ProductRepositoryV2();
-                IEnumerable<ProductToolsModel> m = await _prod.GetProductsTools(getshoporder, shopID);
+                var m = await _prod.GetProductsTools(getshoporder, shopID);
 
 
                 //DataTable sample = await Shopordersdata.getShoporderDetails(getshoporder, shopID);
@@ -209,90 +195,80 @@ namespace ProductConfirm.Modules
 
         private void Measuretable_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex >= 0)
+            if (e.RowIndex >= 0) return;
+
+            string checktool = measuregrid.Rows[e.RowIndex].Cells[0].Value.ToString();
+            int measureID = (measuregrid.Rows[e.RowIndex].Cells[2].Value == null || string.IsNullOrEmpty(measuregrid.Rows[e.RowIndex].Cells[2].Value.ToString())) ? 0 : Convert.ToInt32(measuregrid.Rows[e.RowIndex].Cells[2].Value.ToString());
+
+            switch (checktool)
             {
-                string checktool = measuregrid.Rows[e.RowIndex].Cells[0].Value.ToString();
-                int measureID;
+                case "Caulking Dent ":
+                    CaulkDent cd = new CaulkDent(this);
+                    cd.ID = shopID;
+                    cd.RotorID = RotorID;
+                    cd.measureID = measureID;
+                    cd.itemID = 1;
+                    cd.partnum = partnumshop;
+                    cd.shopordersec = shoporderstr;
+                    cd.StatusID.Text = shopstats;
+                    cd.ShowDialog();
+                    break;
+                case "Shaft length":
+                    ShaftLength sl = new ShaftLength(this);
+                    sl.ID = shopID;
+                    sl.RotorID = RotorID;
+                    sl.measureID = measureID;
+                    sl.itemID = 2;
+                    sl.partnum = partnumshop;
+                    sl.shopordersec = shoporderstr;
+                    sl.StatusID.Text = shopstats;
+                    sl.ShowDialog();
+                    break;
+                case "Surface Edge Alignment":
+                    SurfaceEdge se = new SurfaceEdge(this);
+                    se.ID = shopID;
+                    se.RotorID = RotorID;
+                    se.measureID = measureID;
+                    se.itemID = 3;
+                    se.partnum = partnumshop;
+                    se.shopordersec = shoporderstr;
+                    se.StatusID.Text = shopstats;
+                    se.ShowDialog();
+                    break;
+                case "Shaft Pulling Force":
+                    ShaftPull sp = new ShaftPull(this);
+                    sp.ID = shopID;
+                    sp.RotorID = RotorID;
+                    sp.measureID = measureID;
+                    sp.itemID = 4;
+                    sp.partnum = partnumshop;
+                    sp.shopordersec = shoporderstr;
+                    sp.StatusID.Text = shopstats;
+                    sp.ShowDialog();
+                    break;
+                case "Bush Pulling Force":
+                    BushPull bp = new BushPull(this);
+                    bp.ID = shopID;
+                    bp.RotorID = RotorID;
+                    bp.measureID = measureID;
+                    bp.itemID = 5;
+                    bp.partnum = partnumshop;
+                    bp.shopordersec = shoporderstr;
+                    bp.StatusID.Text = shopstats;
+                    bp.ShowDialog();
+                    break;
+                case "Magnet Height ":
+                    MagnetHeight mh = new MagnetHeight(this);
+                    mh.ID = shopID;
+                    mh.RotorID = RotorID;
+                    mh.measureID = measureID;
+                    mh.itemID = 6;
+                    mh.partnum = partnumshop;
+                    mh.shopordersec = shoporderstr;
+                    mh.StatusID.Text = shopstats;
+                    mh.ShowDialog();
+                    break;
 
-                if (measuregrid.Rows[e.RowIndex].Cells[2].Value == null || string.IsNullOrEmpty(measuregrid.Rows[e.RowIndex].Cells[2].Value.ToString()))
-                {
-                    measureID = 0;
-                }
-                else
-                {
-                    measureID = Convert.ToInt32(measuregrid.Rows[e.RowIndex].Cells[2].Value.ToString());
-                }
-
-                switch (checktool)
-                {
-                    case "Caulking Dent ":
-                        CaulkDent cd = new CaulkDent(this);
-                        cd.ID = shopID;
-                        cd.RotorID = RotorID;
-                        cd.measureID = measureID;
-                        cd.itemID = 1;
-                        cd.partnum = partnumshop;
-                        cd.shopordersec = shoporderstr;
-                        cd.StatusID.Text = shopstats;
-                        cd.ShowDialog();
-                        break;
-                    case "Shaft length":
-                        ShaftLength sl = new ShaftLength(this);
-                        sl.ID = shopID;
-                        sl.RotorID = RotorID;
-                        sl.measureID = measureID;
-                        sl.itemID = 2;
-                        sl.partnum = partnumshop;
-                        sl.shopordersec = shoporderstr;
-                        sl.StatusID.Text = shopstats;
-                        sl.ShowDialog();
-                        break;
-                    case "Surface Edge Alignment":
-                        SurfaceEdge se = new SurfaceEdge(this);
-                        se.ID = shopID;
-                        se.RotorID = RotorID;
-                        se.measureID = measureID;
-                        se.itemID = 3;
-                        se.partnum = partnumshop;
-                        se.shopordersec = shoporderstr;
-                        se.StatusID.Text = shopstats;
-                        se.ShowDialog();
-                        break;
-                    case "Shaft Pulling Force":
-                        ShaftPull sp = new ShaftPull(this);
-                        sp.ID = shopID;
-                        sp.RotorID = RotorID;
-                        sp.measureID = measureID;
-                        sp.itemID = 4;
-                        sp.partnum = partnumshop;
-                        sp.shopordersec = shoporderstr;
-                        sp.StatusID.Text = shopstats;
-                        sp.ShowDialog();
-                        break;
-                    case "Bush Pulling Force":
-                        BushPull bp = new BushPull(this);
-                        bp.ID = shopID;
-                        bp.RotorID = RotorID;
-                        bp.measureID = measureID;
-                        bp.itemID = 5;
-                        bp.partnum = partnumshop;
-                        bp.shopordersec = shoporderstr;
-                        bp.StatusID.Text = shopstats;
-                        bp.ShowDialog();
-                        break;
-                    case "Magnet Height ":
-                        MagnetHeight mh = new MagnetHeight(this);
-                        mh.ID = shopID;
-                        mh.RotorID = RotorID;
-                        mh.measureID = measureID;
-                        mh.itemID = 6;
-                        mh.partnum = partnumshop;
-                        mh.shopordersec = shoporderstr;
-                        mh.StatusID.Text = shopstats;
-                        mh.ShowDialog();
-                        break;
-
-                }
             }
         }
 

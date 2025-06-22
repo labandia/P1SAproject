@@ -1,14 +1,10 @@
-﻿using Attendance_Monitoring.Controller;
-using Attendance_Monitoring.Models;
+﻿using Attendance_Monitoring.Models;
 using Attendance_Monitoring.Repositories;
-using Microsoft.Extensions.DependencyInjection;
 using OfficeOpenXml;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Data.SqlClient;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -45,6 +41,7 @@ namespace Attendance_Monitoring.View
         {
             IEnumerable<Employee> items = await _emp.GetEmployees();
             emplist = items.AsParallel().ToList();
+            Employeetable.AutoGenerateColumns = false;
             Employeetable.DataSource = emplist;
             DisplayTotal.Text = "Total Records: " + Employeetable.RowCount;
         }

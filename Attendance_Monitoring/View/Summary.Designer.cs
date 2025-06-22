@@ -106,7 +106,7 @@
             this.summarytable.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.summarytable.RowTemplate.Height = 30;
             this.summarytable.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.summarytable.Size = new System.Drawing.Size(1086, 349);
+            this.summarytable.Size = new System.Drawing.Size(1086, 294);
             this.summarytable.TabIndex = 0;
             // 
             // dend
@@ -356,9 +356,11 @@
             // 
             // Action
             // 
+            this.Action.DataPropertyName = "Action";
             this.Action.HeaderText = "Action";
             this.Action.Name = "Action";
             this.Action.ReadOnly = true;
+            this.Action.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             // 
             // Summary
             // 
@@ -393,8 +395,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.DataGridView summarytable;
         private System.Windows.Forms.DateTimePicker dend;
         private System.Windows.Forms.Button Filterbtn;
         private System.Windows.Forms.TextBox searchbox;
@@ -409,6 +409,7 @@
         private System.Windows.Forms.DateTimePicker dstart;
         private System.Windows.Forms.ComboBox shifts;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.DataGridView summarytable;
         private System.Windows.Forms.DataGridViewTextBoxColumn Date_today;
         private System.Windows.Forms.DataGridViewTextBoxColumn Employee_ID;
         private System.Windows.Forms.DataGridViewTextBoxColumn FullName;

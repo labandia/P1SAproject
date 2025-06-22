@@ -10,7 +10,7 @@
     <header class="capacity d-flex justify-content-between mb-3">
         <div class="capacity__title d-flex align-items-center gap-3">
             <a class="d-flex align-items-center justify-content-center" href="/P1SA/PMACS/Selection"><i class="fa fa-arrow-left" aria-hidden="true"></i></a>
-            <h2 class="capacity__text">@ViewData["processname"]</h2>
+            <h4 class="capacity__text">@ViewData["processname"]</h4>
         </div>
         <div class="capacity__action">
             <button type="button" class="primary_button_color" id="addbtn" data-toggle="modal" data-target="#addmodal"><i class="fa fa-plus" aria-hidden="true"></i> Add  base model </button>
@@ -21,17 +21,16 @@
     <section class="content">
         @*Display the SUmmary DATA*@
         <div class="Summarywrapper">
-            <h6>Summary Details</h6>
             @* ######################    Display the Summary Data ###############################*@
             <table class="Summaryheader">
                 <thead>
                     <tr>
-                        <th id="ChangeHeader">Type of Machine</th>
+                        <th style="width: 270px; text-align: left; padding-left: 1em;" id="ChangeHeader">Type of Machine</th>
                         <th id="Displaymachine">Machine no#</th>
                         <th>CycleTime</th>
                         <th>Capacity/day</th>
                         <th>Capacity/Month</th>
-                        <th>Forecast Motorbase</th>
+                        <th>Forecast</th>
                         <th>Manhour</th>
                         <th>Manpower</th>
                     </tr>
@@ -406,7 +405,7 @@
 
                 $.each(data, function (index, rowData) {
                     var getdata = "<tr class= 'row_" + index + "  '>" +
-                        "<td style='width: 10%;  font-weight: 500; color: #222;'>" + rowData.ProcessName + "</td>" +
+                        "<td style='font-weight: 500; color: #222;'>" + rowData.ProcessName + "</td>" +
                         "<td contenteditable='true'>" + rowData.AvailMachine + "</td>" +
                         "<td contenteditable='true'>" + RoundNumberOne(rowData.CycleTime) + "</td>" +
                         "<td>" + getFormatComma(rowData.Capday) + "</td>" +
@@ -433,7 +432,7 @@
                 $.each(data, function (index, rowData) {
 
                     var getdata = "<tr class= 'row_" + index + "  '>" +
-                        "<td style='width: 10%; color: #1c65a8; font-weight: 500;'>" + rowData.ProcessName + "</td>" +
+                        "<td style='color: #1c65a8; font-weight: 500;'>" + rowData.ProcessName + "</td>" +
                         "<td>" + rowData.AvailMachine + "</td>" +
                         "<td>" + RoundNumberOne(rowData.CycleTime) + "</td>" +
                         "<td>" + getFormatComma(rowData.Capday) + "</td>" +

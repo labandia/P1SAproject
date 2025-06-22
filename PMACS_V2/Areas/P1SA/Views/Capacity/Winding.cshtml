@@ -49,10 +49,6 @@
 
 
             @* ##################################################################################*@
-
-
-
-
             <div class="capacity__half">
                 @* ########################   Display the Data Table  ###############################*@
                 <div class="capacity_col">
@@ -599,8 +595,6 @@
          let res = await fetchData('@Url.Action("GetCapacitySummaryList", "Capacity")', { month: Month, capid: cap_groupID });
          if (res && res.Success) {
             SummaryData = res.Data;
-
-
              //DISPLAY THE ALL THE PROCESS CAPACITY
              let process = [...new Set(SummaryData.map(el => el.ProcessCode))].map(proc => {
                  let Process = SummaryData.find(el => el.ProcessCode === proc).ProcessName;
@@ -632,16 +626,13 @@
          }
     }
     const GetWindingData = async () => {
-        var SetData = $("#dataSearching");
         $("#dataSearching").empty();
         $("#tableloads").show();
         let res = await fetchData('@Url.Action("GetWindingModelData", "Capacity")', { CapID: cap_groupID, Month: Month });
          if (res && res.Success) {
              TableData = res.Data;
-             //$("#count").text(TableData.length);
              $("#tableloads").hide();
              $('#empty-state').hide();
-             //displayTableData(TableData);
              displayPagination(TableData, 'dataSearching', 'PaginationContainer', 20, 5);
         }
      }
@@ -1022,7 +1013,7 @@
 
          return totalPages;
      };
-        processform
+        
      const renderTable = (page) => {
          const totalPages = updatePaginationInfo();
          const startIndex = (page - 1) * recordsPerPage;

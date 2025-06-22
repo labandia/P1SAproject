@@ -4,12 +4,8 @@ using Attendance_Monitoring.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.Linq;
-using System.Reflection.Emit;
 using System.Windows.Forms;
-using static System.Windows.Forms.AxHost;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using Excel = Microsoft.Office.Interop.Excel;
 
 namespace Attendance_Monitoring.View
@@ -18,11 +14,8 @@ namespace Attendance_Monitoring.View
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly AdminController _admin;
-        private static IEnumerable<SummaryAttendanceModel> sumlist;
+        private static List<SummaryAttendanceModel> sumlist;
 
-        // call from other class 
-        //Dbconnection connect = new Dbconnection();
-        Timeprocess tim = new Timeprocess();
 
         // Share variable to all
         public int sec;
@@ -35,42 +28,43 @@ namespace Attendance_Monitoring.View
         public Summary(int section, string tablename, IServiceProvider serviceProvider)
         {
             InitializeComponent();
-            _admin = new AdminController();
             sec = section;
             tb = tablename;
+            _admin = new AdminController();
             _serviceProvider=serviceProvider;
         }
 
-
+        // ================= DISPLAY ATTENDANCE SUMMARY =========================
         public async void DisplaysummarytableBySection()
-        {   
-            string newDateString = dstart.Value.ToString("yyyy-MM-dd");
-            sumlist = Enumerable.Empty<SummaryAttendanceModel>();
-            IEnumerable<SummaryAttendanceModel> items = await _admin.GetSummaryList(tb, newDateString, newDateString);
-            sumlist = items.ToList();
-            summarytable.DataSource = sumlist;
-            label4.Text = "Total Results: " + summarytable.RowCount;
+        {
+            try
+            {
+                string newDateString = dstart.Value.ToString("yyyy-MM-dd");
+                sumlist = await _admin.GetSummaryList(tb, newDateString, newDateString);
+                summarytable.DataSource = sumlist;
 
+                //summarytable.Columns["Date_today"].DisplayIndex = 0;
+                //summarytable.Columns["Employee_ID"].DisplayIndex = 1;
+                //summarytable.Columns["FullName"].DisplayIndex = 2;
+                //summarytable.Columns["TimeIn"].DisplayIndex = 3;
+                //summarytable.Columns["TimeOut"].DisplayIndex = 4;
+                //summarytable.Columns["LateTime"].DisplayIndex = 5;
+                //summarytable.Columns["Regular"].DisplayIndex = 6;
 
-            // string newDateString = currentDate.ToString("yyyy-MM-dd");
+                //summarytable.Columns["Overtime"].DisplayIndex = 7;
+                //summarytable.Columns["Gtotal"].DisplayIndex = 8;
+                //summarytable.Columns["Shifts"].DisplayIndex = 9;
+                summarytable.Columns["Action"].DisplayIndex = 10;
 
-            //string sqlquery = "SELECT FORMAT(pc.Date_today, 'MM/dd/yyyy') AS Date_today, " +
-            //                  "pc.Employee_ID, e.FullName, FORMAT(pc.TimeIn, 'HH:mm') as TimeIn, FORMAT(pc.TimeOut, 'HH:mm')  as TimeOut, pc.LateTime, pc.Regular, " +
-            //                  "pc.Overtime, pc.Gtotal, pc.Shifts " +
-            //                   "FROM "+ tb +" pc " +
-            //                   "INNER JOIN dbo.Employee_tbl e " +
-            //                   "ON e.Employee_ID = pc.Employee_ID " +
-            //                   "WHERE   CAST(Date_today AS DATE) between '" + newDateString  + "' AND " +
-            //                   "'" + newDateString  + "'";
-
-
-
-            //DataTable dt = await connect.GetData(sqlquery);
-            // summarytable.DataSource = dt;
-            // label4.Text = "Total Results: " + summarytable.RowCount;
+                label4.Text = "Total Results: " + summarytable.RowCount;
+            }
+            catch (FormatException) {
+                MessageBox.Show("No Summary Data found", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
         }
 
-
+        // ================= EXPORT DATA =========================
         private async void exportbtn_Click(object sender, EventArgs e)
         {
             DateTime startd, enddate;
@@ -82,23 +76,16 @@ namespace Attendance_Monitoring.View
             string formattedStartDate = startd.ToString("yyyy-MM-dd");
             string formattedEndDate = enddate.ToString("yyyy-MM-dd");
 
-
             string sqlquery = GenerateSQLQuery(startd, enddate, searchbox.Text, shifts.Text);
+            var  explist = await _admin.GetExportSummaryList(sqlquery, formattedStartDate, formattedEndDate, shifts.Text, searchbox.Text);
 
-            //Debug.WriteLine(sqlquery);
-
-            // DataTable dt = await connect.GetData(sqlquery);
-            IEnumerable<SummaryAttendanceModel> explist = await _admin.GetExportSummaryList(sqlquery, formattedStartDate, formattedEndDate, shifts.Text, searchbox.Text);
-
-            if (explist.Any())
-            {
-                ExportToExcel(explist, sec);
-            }
-            else
+            if (explist == null)
             {
                 MessageBox.Show("No data found.");
+                return;
             }
-
+           
+            ExportToExcel(explist, sec);
         }
 
         private string GenerateSQLQuery(DateTime startd, DateTime enddate, string searchText, string shiftText)
@@ -130,7 +117,10 @@ namespace Attendance_Monitoring.View
             return query;
         }
 
-        private  async void button1_Click(object sender, EventArgs e)
+
+
+        // ================= FILTER DATA BASED ON DATE AND SHIFT =========================
+        private async void button1_Click(object sender, EventArgs e)
         {
             //sumlist = Enumerable.Empty<SummaryAttendanceModel>();
             DateTime startd, enddate;
@@ -145,53 +135,13 @@ namespace Attendance_Monitoring.View
    
 
             string sqlquery = GenerateSQLQuery(startd, enddate, searchbox.Text, shifts.Text);
-            IEnumerable<SummaryAttendanceModel> explist = await _admin.GetExportSummaryList(sqlquery, formattedStartDate, formattedEndDate, shifts.Text, searchbox.Text);
-            sumlist = explist.ToList();
+            sumlist = await _admin.GetExportSummaryList(sqlquery, formattedStartDate, formattedEndDate, shifts.Text, searchbox.Text);
             summarytable.DataSource = sumlist;
+            summarytable.Columns["Action"].DisplayIndex = 10;
             label4.Text = "Total Results: " + summarytable.RowCount;
-
-            //string sqlquery;
-            //DateTime startd = DateTime.Parse(dstart.Text);
-            //DateTime enddate = DateTime.Parse(dend.Text);
-
-
-            //if (shifts.SelectedIndex != -1)
-            //{          
-            //    string sdate = startd.ToString("yyyy-MM-dd");
-            //    string fdate = enddate.ToString("yyyy-MM-dd");
-
-            //    sqlquery = "SELECT FORMAT(pc.Date_today, 'MM/dd/yyyy') AS Date_today, " +
-            //                          "pc.Employee_ID, e.FullName, FORMAT(pc.TimeIn, 'HH:mm') as TimeIn,  FORMAT(pc.TimeOut, 'HH:mm')  as TimeOut, pc.Regular, " +
-            //                          "pc.Overtime, pc.Gtotal, pc.Shifts " +
-            //                          "FROM "+ tb +" pc " +
-            //                          "INNER JOIN Employee_tbl e " +
-            //                          "ON e.Employee_ID = pc.Employee_ID " +
-            //                          "WHERE CAST(Date_today AS DATE) between '" + sdate  + "' AND " +
-            //                          "'" + fdate  + "'  ORDER BY pc.RecordID DESC";
-
-            //}
-            //else
-            //{
-            //    string sdate = startd.ToString("yyyy-MM-dd");
-            //    string fdate = enddate.ToString("yyyy-MM-dd");
-
-            //    sqlquery = "SELECT FORMAT(pc.Date_today, 'MM/dd/yyyy') AS Date_today, " +
-            //                          "pc.Employee_ID, e.FullName, FORMAT(pc.TimeIn, 'HH:mm') as TimeIn,  FORMAT(pc.TimeOut, 'HH:mm')  as TimeOut, pc.Regular, " +
-            //                          "pc.Overtime, pc.Gtotal, pc.Shifts " +
-            //                          "FROM "+ tb +" pc " +
-            //                          "INNER JOIN Employee_tbl e " +
-            //                          "ON e.Employee_ID = pc.Employee_ID " +
-            //                          "WHERE CAST(Date_today AS DATE) between '" + sdate  + "' AND " +
-            //                          "'" + fdate  + "' AND pc.Shifts = '" + shiftsday + "'  ORDER BY pc.RecordID DESC ";
-
-            //}
-            //DataTable dt = await connect.GetData(sqlquery);
-            //summarytable.DataSource = dt;
-            //label4.Text = "Total Results: " + summarytable.RowCount;
         }
 
-       
-
+      
         private void button1_Click_1(object sender, EventArgs e)
         {
             Attendance at = new Attendance(sec, tb, _serviceProvider);
@@ -199,7 +149,7 @@ namespace Attendance_Monitoring.View
             Visible = false;
         }
 
-        private void ExportToExcel(IEnumerable<SummaryAttendanceModel> data, int section)
+        private void ExportToExcel(List<SummaryAttendanceModel> data, int section)
         {
             try
             {
@@ -266,62 +216,6 @@ namespace Attendance_Monitoring.View
             }
         }
 
-        //private void ExportToExcel(DataTable dataTable, int section)
-        //{
-        //    try
-        //    {
-        //        Excel.Application excelApp = new Excel.Application();
-        //        Excel.Workbook workbook = excelApp.Workbooks.Add(Type.Missing);
-        //        Excel.Worksheet worksheet = workbook.ActiveSheet;
-        //        worksheet.Name = "Exported Data";
-
-        //        int rowCount = dataTable.Rows.Count;
-        //        int colCount = dataTable.Columns.Count;
-
-
-        //        // Insert headers
-        //        for (int i = 1; i < colCount; i++)
-        //        {
-        //            worksheet.Cells[1, i + 1] = dataTable.Columns[i].ColumnName;
-        //        }
-
-        //        object[,] dataArray = new object[rowCount, colCount];
-        //        // Adding data rows
-        //        for (int i = 0; i < rowCount; i++)
-        //        {
-        //            for (int j = 0; j < colCount; j++)
-        //            {
-        //                // Precede the value with an apostrophe to treat it as text
-        //                dataArray[i, j] = section != 2 ? "'" + dataTable.Rows[i][j].ToString() : dataTable.Rows[i][j].ToString();
-        //            }
-        //        }
-
-        //        // Assign data in one go for better performance
-        //        Excel.Range dataRange = worksheet.Range[worksheet.Cells[2, 1], worksheet.Cells[rowCount + 1, colCount]];
-        //        dataRange.Value = dataArray;
-
-
-        //        SaveFileDialog saveFileDialog = new SaveFileDialog
-        //        {
-        //            Filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*",
-        //            FilterIndex = 1,
-        //            RestoreDirectory = true
-        //        };
-
-        //        if (saveFileDialog.ShowDialog() == DialogResult.OK)
-        //        {
-        //            workbook.SaveAs(saveFileDialog.FileName);
-        //            workbook.Close();
-        //            MessageBox.Show("Export Successful");
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show("Error: " + ex.Message);
-        //    }
-
-        //}
-
         private void button2_Click(object sender, EventArgs e)
         {
             dstart.Format = DateTimePickerFormat.Custom;
@@ -332,28 +226,20 @@ namespace Attendance_Monitoring.View
             dend.CustomFormat = "yyyy-MM-dd";
             dend.Value = DateTime.Now;
 
-
-
             DisplaysummarytableBySection();
         }
 
         private void Summary_Load(object sender, EventArgs e)
         {
-
             dstart.Value = DateTime.Now;
             dend.Value = DateTime.Now;
+            shifts.SelectedIndex = (Timeprocess.TimeIncheck(DateTime.Now) == "DAYSHIFT") ? 0 : 1;
             DisplaysummarytableBySection();
         }
 
         private void shifts_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(shifts.SelectedIndex == 0) {
-                shiftsday = "DAYSHIFT";
-            }
-            else
-            {
-                shiftsday = "NIGHTSHIFT";
-            }          
+            shiftsday = (shifts.SelectedIndex == 0) ? "DAYSHIFT" : "NIGHTSHIFT";             
         }
 
         private  void textBox1_TextChanged_1(object sender, EventArgs e)
@@ -366,62 +252,6 @@ namespace Attendance_Monitoring.View
 
             summarytable.DataSource =  filteredList;
             label4.Text = "Total Records: " + summarytable.RowCount;
-
-            //DateTime startd, enddate;
-            //if (!DateTime.TryParse(dstart.Text, out startd) || !DateTime.TryParse(dend.Text, out enddate))
-            //{
-            //    MessageBox.Show("Invalid date format.");
-            //    return;
-            //}
-
-
-            //var filteredList = sumlist
-            //                 .Where(p => DateTime.TryParse(p.Date_today, out DateTime dateToday) &&
-            //                             dateToday >= startd && dateToday <= enddate)
-            //                 .ToList();
-
-            //summarytable.DataSource =  filteredList;
-            //label4.Text = "Total Records: " + summarytable.RowCount;
-
-
-
-            //string sqlquery;
-            //DateTime startd = DateTime.Parse(dstart.Text);
-            //DateTime enddate = DateTime.Parse(dend.Text);
-
-
-            //if (string.IsNullOrEmpty(shifts.Text))
-            //{
-            //    string sdate = startd.ToString("yyyy-MM-dd");
-            //    string fdate = enddate.ToString("yyyy-MM-dd");
-
-            //    sqlquery = "SELECT FORMAT(pc.Date_today, 'MM/dd/yyyy') AS Date_today, " +
-            //                          "pc.Employee_ID, e.FullName, FORMAT(pc.TimeIn, 'hh:mm') as TimeIn,  FORMAT(pc.TimeOut, 'hh:mm')  as TimeOut, pc.LateTime, pc.Regular, " +
-            //                          "pc.Overtime, pc.Gtotal, pc.Shifts " +
-            //                          "FROM "+ tb +" pc " +
-            //                          "INNER JOIN Employee_tbl e " +
-            //                          "ON e.Employee_ID = pc.Employee_ID " +
-            //                          "WHERE CAST(Date_today AS DATE) between '" + sdate  + "' AND " +
-            //                          "'" + fdate  + "' AND (e.Employee_ID LIKE '%"+ searchbox.Text +"%' OR e.FullName LIKE '%"+ searchbox.Text +"%')  ORDER BY pc.RecordID DESC";
-
-            //}
-            //else
-            //{
-            //    string sdate = startd.ToString("yyyy-MM-dd");
-            //    string fdate = enddate.ToString("yyyy-MM-dd");
-
-            //    sqlquery = "SELECT FORMAT(pc.Date_today, 'MM/dd/yyyy') AS Date_today, " +
-            //                          "pc.Employee_ID, e.FullName, FORMAT(pc.TimeIn, 'hh:mm') as TimeIn,  FORMAT(pc.TimeOut, 'hh:mm')  as TimeOut, pc.LateTime, pc.Regular, " +
-            //                          "pc.Overtime, pc.Gtotal, pc.Shifts " +
-            //                          "FROM "+ tb +" pc " +
-            //                          "INNER JOIN Employee_tbl e " +
-            //                          "ON e.Employee_ID = pc.Employee_ID " +
-            //                          "WHERE CAST(Date_today AS DATE) between '" + sdate  + "' AND " +
-            //                          "'" + fdate  + "' AND pc.Shifts = '" + shiftsday + "' AND (e.Employee_ID LIKE '%"+ searchbox.Text +"%' OR e.FullName LIKE '%"+ searchbox.Text +"%')  ORDER BY pc.RecordID DESC ";
-
-            //}
-            //DataTable dt = await connect.GetData(sqlquery);
-            //summarytable.DataSource = dt;
         }
     }
 }

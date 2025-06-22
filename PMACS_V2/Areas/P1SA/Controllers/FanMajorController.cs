@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using PMACS_V2.Areas.P1SA.Interface;
+﻿using PMACS_V2.Areas.P1SA.Interface;
 using PMACS_V2.Areas.P1SA.Models;
 using PMACS_V2.Controllers;
 using PMACS_V2.Utilities;
 using ProgramPartListWeb.Helper;
-using ProgramPartListWeb.Utilities;
 using System;
 using System.Diagnostics;
 using System.IO;

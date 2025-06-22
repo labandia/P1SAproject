@@ -37,9 +37,15 @@ namespace ProgramPartListWeb.Utilities
             }
 
 
-            //LogConnectionChoice(host, machineName, connectionKey);
+            LogConnectionChoice(host, machineName, connectionKey);
 
             return AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings[connectionKey].ConnectionString);
+        }
+
+        private static void LogConnectionChoice(string host, string machineName, string connectionKey)
+        {
+            string logEntry = $"{DateTime.Now:u} | Host: {host} | Machine: {machineName} | Connection: {connectionKey}";
+            Debug.WriteLine(logEntry);
         }
 
         public static SqlConnection GetSqlConnection(string connectionString)

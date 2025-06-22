@@ -229,18 +229,32 @@
         4YUzoLX6YLGM4ZX5BTcxfmV+x1V8h00av5eUSlezYgoJ9MnJVAAAAABJRU5ErkJggg==
 </value>
   </data>
-  <data name="button2.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="BtnNext.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAGNJREFUSEtj
         GAWjAAYqgXgyhEl90A/E/6F4FkiA2mAaEMMsGNqWzAVimlrCCMTYLAGJUw2ADFsCxMiWLARiqlmCzRdU
         s4CmhoMATcOfpsmU5nmA5kUFCFQDMc0Ku1EwpAEDAwAsoTJ6HUk5XAAAAABJRU5ErkJggg==
 </value>
   </data>
-  <data name="button3.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="BtnPrev.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAGZJREFUSEtj
         GAWjABeYDMQFECb1wSwg/g/FLSABagJkw0F4GhBTBTACMU0NXwjEdDN8LhBTBeAyHCROFUBzC0CApkEE
         A9gsoVokwwDdLKFZXkAGyJa0gQRoAUCW0KywGwVDCjAwAADSozJijQd/JAAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="BtnFirst.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAGZJREFUSEtj
+        GAWjABeYDMQFECb1wSwg/g/FLSABagJkw0F4GhBTBTACMU0NXwjEdDN8LhBTBeAyHCROFUBzC0CApkEE
+        A9gsoVokwwDdLKFZXkAGyJa0gQRoAUCW0KywGwVDCjAwAADSozJijQd/JAAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="BtnLast.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAGNJREFUSEtj
+        GAWjAAYqgXgyhEl90A/E/6F4FkiA2mAaEMMsGNqWzAVimlrCCMTYLAGJUw2ADFsCxMiWLARiqlmCzRdU
+        s4CmhoMATcOfpsmU5nmA5kUFCFQDMc0Ku1EwpAEDAwAsoTJ6HUk5XAAAAABJRU5ErkJggg==
 </value>
   </data>
 </root>

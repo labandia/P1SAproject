@@ -22,8 +22,6 @@ namespace ProductConfirm.Modules
 
         public DataGridView mastergrid { get { return Masterlistable; } }
         //public DataGridView equipmentgrid { get { return Equipmentable; } }
-
-
         public List<ProductModel> Products { get; private set; } = new List<ProductModel>();
 
         public Masterlistpage(IProductRepositoryV2 prod)

@@ -2,6 +2,7 @@
 using System;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Printing;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -143,16 +144,19 @@ namespace ProductConfirm.Data
                   "AND  so.ShopOrderID = " + ID + "";
             return await db.GetData(strsql);
         }
-        public static async Task<DataTable> GetShoporderlist()
+        public static async Task<DataTable> GetShoporderlist(int CurrentPageIndex, int PageSize)
         {
             Dataconnect db = new Dataconnect();
-            string strsql = "SELECT s.ShoporderID, FORMAT(s.Date_input, 'MM/dd/yy') as Date_input,  FORMAT(s.Date_input, 'hh:mm:ss:tt') as Date_time,  s.Shoporder, " +
-                            "p.RotorAssy,p.ProductType, s.Shift, " +
-                            "s.Line, s.Inputby, p.MachinePressureMinMax, p.RotorProductID, " +
-                            "s.Remarks, s.ConfirmBy, s.Stats " +
-                            "FROM  ProdCon_ShopOrder_tbl s " +
-                            "INNER JOIN  ProdCon_RotorProduct p ON p.RotorProductID = s.RotorProductID " +
-                            "ORDER BY s.Date_input DESC";
+            string strsql = $@"SELECT s.ShoporderID, FORMAT(s.Date_input, 'MM/dd/yy') as Date_input,  FORMAT(s.Date_input, 'hh:mm:ss:tt') as Date_time, 
+                                    s.Shoporder, 
+	                                p.RotorAssy,p.ProductType, s.Shift, 
+	                                s.Line, s.Inputby, p.MachinePressureMinMax, p.RotorProductID, 
+	                                s.Remarks, s.ConfirmBy, s.Stats 
+	                           FROM  ProdCon_ShopOrder_tbl s 
+	                           INNER JOIN  ProdCon_RotorProduct p ON p.RotorProductID = s.RotorProductID 
+	                           ORDER BY s.Date_input DESC
+	                           OFFSET ({CurrentPageIndex} - 1) * {PageSize}	
+	                           ROWS   FETCH NEXT {PageSize} ROWS ONLY";
             return await db.GetData(strsql);
         }
 

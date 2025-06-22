@@ -33,7 +33,8 @@ namespace ProductConfirm.Data
         Task<bool> EditProducts(AddProductDetailsModel prod);
 
         // FOR THE MEASUREMENTS DATA
-        Task<List<ShopOrderModel>> GetShoporderlist();
+        Task<List<ShopOrderModel>> GetShoporderlist(int CurrentPageIndex, int PageSize);
+        Task<int> GetShoporderTotalList();
         Task<List<ProductToolsModel>> GetProductsTools(string shoporder, int ID);
         Task<List<SummaryProductModel>> GetSummaryDataConfirmation();
         Task<List<ExportModel>> GetDataAndExportoExcel();

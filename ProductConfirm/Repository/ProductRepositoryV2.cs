@@ -30,7 +30,10 @@ namespace ProductConfirm.DataAccess
             return SqlDataAccess.GetData<ProductToolsModel>(strsql, parameters);
         }
 
-        public Task<List<ShopOrderModel>> GetShoporderlist() => SqlDataAccess.GetData<ShopOrderModel>("ShopOrderlist");   
+        public Task<List<ShopOrderModel>> GetShoporderlist(int CurrentPageIndex, int pageSize)
+        {
+            return SqlDataAccess.GetData<ShopOrderModel>("ShopOrderlist", new { PageNumber = CurrentPageIndex, PageSize = pageSize });
+        }  
         public Task<List<SummaryProductModel>> GetSummaryDataConfirmation() => SqlDataAccess.GetData<SummaryProductModel>("SummaryComfirmation");
     
         // CRUD OPERATION PROCESS
@@ -129,6 +132,12 @@ namespace ProductConfirm.DataAccess
                 return new List<ProductOneModel>();
             }
             
+        }
+
+        public async Task<int> GetShoporderTotalList()
+        {
+            string strsql = "SELECT COUNT(*) FROM ProdCon_ShopOrder_tbl";
+            return await SqlDataAccess.GetCountData(strsql);
         }
     }
 }

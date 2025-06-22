@@ -1,21 +1,23 @@
 ﻿using ProductConfirm.Data;
-using ProductConfirm.DataAccess;
 using ProductConfirm.Modals;
 using ProductConfirm.Models;
 using ProductConfirm.View.Modals;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ProductConfirm.Modules
 {
     public partial class UIShoporder : UserControl
     {
-        int PageSize = 5;
+        private const int PageSize = 20;
+        private int CurrentPageIndex = 1;
+        private int TotalPages = 0;
+        private int TotalRows = 0;
+
 
         public static UIShoporder instanceform;
         public DataGridView shopordergrid { get { return Shoptables; } }
@@ -47,7 +49,9 @@ namespace ProductConfirm.Modules
         public int totalrowsconfirm;
         public int totalrowsdone;
 
-        
+
+        public List<ShopOrderModel> shop { get; private set; } = new List<ShopOrderModel>();
+
 
         private readonly IProductRepositoryV2 _prod;
 
@@ -68,9 +72,16 @@ namespace ProductConfirm.Modules
             add.ShowDialog();
         }
      
-        public async void displayshopordertable()
-        {    
-            Shoptables.DataSource = await Products.GetShoporderlist();
+        public async Task displayshopordertable()
+        {
+            int TotalrowCount = await _prod.GetShoporderTotalList();
+            TotalRows = TotalrowCount;
+            TotalPages = (int)Math.Ceiling((double)TotalRows / PageSize);
+            Countrecord.Text = TotalPages.ToString();
+
+            //Shoptables.DataSource = await Products.GetShoporderlist(CurrentPageIndex, PageSize);
+            shop = await _prod.GetShoporderlist(CurrentPageIndex, PageSize);
+            Shoptables.DataSource = shop;
         }
 
         public async void displaymeasurementTable(string shop, int ID)
@@ -290,6 +301,33 @@ namespace ProductConfirm.Modules
         private void Disablebtn_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void BtnNext_Click(object sender, EventArgs e)
+        {
+            if(CurrentPageIndex < TotalPages)
+            {
+                CurrentPageIndex++;
+                displayshopordertable();
+                lblCurrentPage.Text = CurrentPageIndex.ToString();
+            }
+        }
+
+        private void BtnPrev_Click(object sender, EventArgs e)
+        {
+            if (CurrentPageIndex > 1)
+            {
+                CurrentPageIndex--;
+                displayshopordertable();
+                lblCurrentPage.Text = CurrentPageIndex.ToString();
+            }
+        }
+
+        private void BtnFirst_Click(object sender, EventArgs e)
+        {
+            CurrentPageIndex = TotalPages;
+            displayshopordertable();
+            lblCurrentPage.Text = CurrentPageIndex.ToString();
         }
     }
 }

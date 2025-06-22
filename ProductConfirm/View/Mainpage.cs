@@ -85,6 +85,10 @@ namespace ProductConfirm
             _uiShoporder.Disablebtn.Visible = true;
 
             _uiShoporder.BringToFront();
+            await _uiShoporder.displayshopordertable();
+            var shoplist = _uiShoporder.shop;
+
+
             DataTable dt = (DataTable)_uiShoporder.measuregrid.DataSource;
 
             if (dt != null)
@@ -101,7 +105,7 @@ namespace ProductConfirm
             _uiShoporder.Changein.Text = "-- N/A --";
             _uiShoporder.remarks.Text = "-- N/A --";
 
-            _uiShoporder.shopordergrid.DataSource = await _prod2.GetShoporderlist();
+            _uiShoporder.shopordergrid.DataSource = shoplist;
 
             _uiShoporder.shopordergrid.Columns["Edit"].DisplayIndex = 14;
             _uiShoporder.shopordergrid.Columns["Shopstats"].Visible = false;
@@ -165,8 +169,11 @@ namespace ProductConfirm
             _uiShoporder.Changein.Text = "-- N/A --";
             _uiShoporder.remarks.Text = "-- N/A --";
 
+            await _uiShoporder.displayshopordertable();
+            var shoplist = _uiShoporder.shop;
+
             //uiShoporder1.shopordergrid.DataSource = null;
-            _uiShoporder.shopordergrid.DataSource = await _prod2.GetShoporderlist();
+            _uiShoporder.shopordergrid.DataSource = shoplist;
             _uiShoporder.shopordergrid.Columns["Edit"].DisplayIndex = 14;
             _uiShoporder.shopordergrid.Columns["Shopstats"].Visible = false;
             _uiShoporder.shopordergrid.Columns["ShoporderID"].Visible = false;

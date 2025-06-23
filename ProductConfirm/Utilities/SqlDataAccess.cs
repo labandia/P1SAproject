@@ -107,21 +107,31 @@ namespace ProgramPartListWeb.Helper
             }
         }
         // ############ GET THE TOTAL COUNT OF THE QUERY ########################
-        public static async Task<int> GetCountData(string query, object parameters = null)
+        public static async Task<int> GetCountData(string query, object parameters = null, CommandType commandType = CommandType.Text)
         {
             try
             {
                 using (IDbConnection con = GetSqlConnection(_connectionString()))
                 {
-                    int count = await con.ExecuteScalarAsync<int>(query, parameters, commandType: CommandType.StoredProcedure);
-                    return count;
+                    if (Regex.IsMatch(query, @"^\w+$"))
+                    {
+                        // This code is a Procudure query
+                        int count = await con.ExecuteScalarAsync<int>(query, parameters, commandType: CommandType.StoredProcedure);
+                        return count;
+                    }
+                    else
+                    {
+                        // Ordinary Query string
+                        int count = await con.ExecuteScalarAsync<int>(query, parameters, commandType: commandType);
+                        return count;
+                    }
                 }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"{ex.Message}");
                 return 0;
-            }  
+            }
         }
 
         // ############ CHECKS IF THE ROW DATA IS EXIST ########################

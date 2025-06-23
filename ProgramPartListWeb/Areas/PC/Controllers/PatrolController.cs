@@ -343,7 +343,8 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         [HttpPost]
         public async Task<ActionResult> RemoveDateSchedule()
         {
-            bool result = await _ins.RemoveScheduleCalendar();
+            int ID = Convert.ToInt32(Request.Form["ScheduleID"]);
+            bool result = await _ins.RemoveScheduleCalendar(ID);
             var formdata = GlobalUtilities.GetMessageResponse(result, 1);
             return Json(formdata, JsonRequestBehavior.AllowGet);
         }
@@ -366,7 +367,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
             var obj = new RegistrationModel
             {
-                RegNo = Request.Form["RegNo"],
+                RegNo = "P1SA-" + Request.Form["RegNo"],
                 DateConduct = Request.Form["DateConduct"],
                 Employee_ID = Request.Form["Employee_ID"],
                 PIC = Request.Form["PIC"],
@@ -375,7 +376,6 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 Manager = Request.Form["Manager"],
                 Manager_Comments = Request.Form["Manager_Comments"]
             };
-
 
             string findJson = Request.Form["FindJson"];
             string templatePath = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Uploads/PGFY-00031FORM_1.xlsx");
@@ -386,9 +386,9 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 CacheHelper.Remove("Registration");
                 ExportFiler.SaveFileasPDF(obj, findJson, departmentName, newFileName, templatePath);
             }
-                
-                
-          
+
+
+
             if (result == false) return JsonError("Problem during saving Data.", 500);
             return JsonCreated(result, "Change Status successfully");
 

@@ -14,20 +14,33 @@
             </div>
             <hr />
             <div class="row">
+                
+
                 <div class="col-12 col-sm-12 col-lg-6">
-                    <label >Registration No.  </label> <br />
-                    <input type="text" placeholder="Type Registration No." name="RegNo" id="RegNo" required/>
+                    <label>Registration No.  </label> <br />
+                    @*<input type="text" placeholder="Type Registration No." name="RegNo" id="RegNo" required />*@
+
+
+                    <div class="date-wrapper">
+                        <span class="prefix">P1SA-</span>
+                        <input name="RegNo" id="RegNo" class="styled-date" type="text" placeholder="YYMMDD" readonly required>
+
+                        <div class="calendar-icon-wrapper">
+                            <i class="fa-regular fa-calendar-days calendar-icon" ></i>
+                            <input type="date" class="real-date-input" id="hiddenDatePicker" onchange="formatAndDisplayDate(this.value)">
+                        </div>
+                    </div>
                 </div>
                 <div class="col-12 col-sm-12 col-lg-6">
                     <label>Input Inspectors  </label>
                     @*<div class="select-container">
-                        <select id="Employee_ID" name="Employee_ID">
-                            <option>-- Select Inspector --</option>
-                        </select>
-                    </div>*@
+                <select id="Employee_ID" name="Employee_ID">
+                    <option>-- Select Inspector --</option>
+                </select>
+            </div>*@
 
                     <div class="search-box">
-                        <input type="hidden"  name="Employee_ID" id="Employee_ID">
+                        <input type="hidden" name="Employee_ID" id="Employee_ID">
                         <input type="text" placeholder="Type Name or ID no." name="EmployeeSearch" id="EmployeeSearch">
                         <div class="namesdisplay"></div>
                     </div>
@@ -170,9 +183,6 @@
 
 
 
-<script src="~/Scripts/Utilities.js"></script>
-<script src="~/Scripts/sweetalert2.min.js"></script>
-<script src="~/Scripts/jquery-3.7.1.min.js"></script>
 <script type="text/javascript">
     let regisTable = [];
     let loadData = [];
@@ -180,6 +190,19 @@
     const addform = document.getElementById("addnewform");
     const resultBox = document.querySelector(".namesdisplay");
 
+    function triggerDatePicker() {
+        document.getElementById("hiddenDatePicker").click();
+    }
+
+    function formatAndDisplayDate(value) {
+        if (!value) return;
+        const date = new Date(value);
+        const yy = String(date.getFullYear()).slice(-2);
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        document.getElementById('RegNo').value = `${yy}${mm}${dd}`;
+    }
+   
 
     const RegistrationTable = async() => {
         let res = await FetchAuthenticate('@Url.Action("GetRegistrationNo", "Patrol")', {});
@@ -268,7 +291,7 @@
             $("#labelguide").hide();
             $("#RegNo").css("border", "1px solid red");
             return;
-        } 
+        }
 
         let res = await postData('@Url.Action("AddRegistration", "Patrol")', finalformData);
         if (res.StatusCode === 201) {

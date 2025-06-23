@@ -303,30 +303,30 @@ namespace ProductConfirm.Modules
 
         }
 
-        private void BtnNext_Click(object sender, EventArgs e)
+        private async void BtnNext_Click(object sender, EventArgs e)
         {
             if(CurrentPageIndex < TotalPages)
             {
                 CurrentPageIndex++;
-                displayshopordertable();
+                await displayshopordertable();
                 lblCurrentPage.Text = CurrentPageIndex.ToString();
             }
         }
 
-        private void BtnPrev_Click(object sender, EventArgs e)
+        private async void BtnPrev_Click(object sender, EventArgs e)
         {
             if (CurrentPageIndex > 1)
             {
                 CurrentPageIndex--;
-                displayshopordertable();
+                await displayshopordertable();
                 lblCurrentPage.Text = CurrentPageIndex.ToString();
             }
         }
 
-        private void BtnFirst_Click(object sender, EventArgs e)
+        private async void BtnFirst_Click(object sender, EventArgs e)
         {
             CurrentPageIndex = TotalPages;
-            displayshopordertable();
+            await displayshopordertable();
             lblCurrentPage.Text = CurrentPageIndex.ToString();
         }
     }

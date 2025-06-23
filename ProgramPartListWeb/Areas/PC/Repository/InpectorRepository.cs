@@ -68,7 +68,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
         public async Task<List<FindingModel>> GetPatrolFindings(string reg) => await SqlDataAccess.GetData<FindingModel>("GetFindings", new { Regno = reg });
         public async Task<bool> AddRegistration(object paramaters, string json)
         {
-            // INSERT MAIN REGISTRATION PROCESS
+            //INSERT MAIN REGISTRATION PROCESS
             bool result = await SqlDataAccess.UpdateInsertQuery("InsertRegistration", paramaters);
 
             // INSERT FINDING AND COUNTERMEASURE PROCESS
@@ -79,7 +79,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             {
                 var findparams = new
                 {
-                    RegNo = f.RegNo,
+                    RegNo = "P1SA-" + f.RegNo,
                     FindID = f.FindID,
                     FindDescription = f.FindDescription,
                     Countermeasure = f.Countermeasure
@@ -179,15 +179,14 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                 strsql = "UPDATE Patrol_Schedule SET   ProcessID =@ProcessID" +
                          "WHERE ScheduleID =@ScheduleID";
             }
-            return await SqlDataAccess.UpdateInsertQuery(strsql, paramaters);
-       
+            return await SqlDataAccess.UpdateInsertQuery(strsql, paramaters);   
         }
-        public async Task<bool> RemoveScheduleCalendar()
+        public async Task<bool> RemoveScheduleCalendar(int ID)
         {
-           string strsql = "UPDATE Patrol_Schedule SET   IsActive =@IsActive" +
+           string strsql = "UPDATE Patrol_Schedule SET   IsActive =@IsActive " +
                          "WHERE ScheduleID =@ScheduleID";
 
-            return await SqlDataAccess.UpdateInsertQuery(strsql, new { IsActive = 0 });
+            return await SqlDataAccess.UpdateInsertQuery(strsql, new { IsActive = 0, ScheduleID = ID });
         }
 
         

@@ -18,24 +18,23 @@ namespace ProgramPartListWeb.Areas.PC.Interface
         // INSPECTOR DATA
         Task<List<InspectorModel>> GetInpectorsData();
 
-        // REGISTRATION DATA
-        Task<List<PatrolRegistionModel>> GetRegistrationData();
-
-        Task<List<FindingModel>> GetPatrolFindings(string reg);
-        Task<List<CalendarSched>> GetCalendarData(string Employee_ID);
-        Task<List<ProccessModel>> GetProcessData(int depid);
-        // GET DATA FOR THE LIST TRAINERS AND SCHUDLE
-        Task<bool> SetScheduleCalendar(object paramaters, int mode);
-        Task<bool> RemoveScheduleCalendar();
-
-        // CRUD OPERATION
         Task<bool> AddEditInpectors(object paramaters, int mode);
         Task<bool> ApproveAndDisapproveInpectors(int inspectID, int status);
 
-
+        // REGISTRATION DATA
+        Task<List<PatrolRegistionModel>> GetRegistrationData();
+        Task<List<FindingModel>> GetPatrolFindings(string reg);
+        Task<List<CalendarSched>> GetCalendarData(string Employee_ID);
+        Task<List<ProccessModel>> GetProcessData(int depid);
 
         Task<bool> AddRegistration(object paramaters, string json);
         Task<bool> EditRegistration(object paramaters, string json);
         Task<bool> DeleteRegistration(string RegNo);
+
+        // GET DATA FOR THE LIST TRAINERS AND SCHUDLE
+        Task<bool> SetScheduleCalendar(object paramaters, int mode);
+        Task<bool> RemoveScheduleCalendar(int ID);
+
+      
     }
 }

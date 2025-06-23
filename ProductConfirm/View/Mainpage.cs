@@ -107,7 +107,7 @@ namespace ProductConfirm
 
             _uiShoporder.shopordergrid.DataSource = shoplist;
 
-            _uiShoporder.shopordergrid.Columns["Edit"].DisplayIndex = 14;
+            _uiShoporder.shopordergrid.Columns["Edit"].DisplayIndex = 12;
             _uiShoporder.shopordergrid.Columns["Shopstats"].Visible = false;
             _uiShoporder.shopordergrid.Columns["ShoporderID"].Visible = false;
             _uiShoporder.shopordergrid.Columns["RotorProductID"].Visible = false;
@@ -134,6 +134,7 @@ namespace ProductConfirm
             _master.mastergrid.Columns["RotorProductID"].Visible = false;
             _master.mastergrid.Columns["ModelType"].Visible = false;
             _master.mastergrid.Columns["Edit"].Visible = roleId == 1 ? false : true;
+            _master.mastergrid.Columns["Edit"].DisplayIndex = 12;
         }
 
         private async  void summarymenu_Click(object sender, EventArgs e)
@@ -160,7 +161,7 @@ namespace ProductConfirm
 
         private async void Mainpage_Load(object sender, EventArgs e)
         {
-            accountname.Text = Fullname;
+            accountname.Text = String.IsNullOrEmpty(Fullname) ? "" : Fullname;
             _uiShoporder.BringToFront();
             _uiShoporder.ModelnameText.Text = "Model name:  -- N/A --";
             _uiShoporder.Partnumtext.Text = "Part number :  -- N/A --";
@@ -174,7 +175,7 @@ namespace ProductConfirm
 
             //uiShoporder1.shopordergrid.DataSource = null;
             _uiShoporder.shopordergrid.DataSource = shoplist;
-            _uiShoporder.shopordergrid.Columns["Edit"].DisplayIndex = 14;
+            _uiShoporder.shopordergrid.Columns["Edit"].DisplayIndex = 12;
             _uiShoporder.shopordergrid.Columns["Shopstats"].Visible = false;
             _uiShoporder.shopordergrid.Columns["ShoporderID"].Visible = false;
             _uiShoporder.shopordergrid.Columns["MachinePressureMinMax"].Visible = false;

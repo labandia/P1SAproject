@@ -115,8 +115,6 @@
 
 
 <script src="~/Scripts/fullcalendar@6.1.17/index.global.min.js"></script>
-<script src="~/Scripts/jquery-3.7.1.min.js"></script>
-<script src="~/Scripts/Utilities.js"></script>
 <script type="text/javascript">
     let employVal;
     let DepartID;
@@ -242,9 +240,11 @@
         //var data = Object.fromEntries(formData);
         //console.log(data);
         let res = await postData('@Url.Action("SetActiveDateSchedule", "Patrol")', formData);
-        console.log(res);
         if (res && res.Success) {
             $("#AddScheduleModal").modal("hide");
+
+            // ✅ Refresh the calendar with updated events
+            await fetchAndRenderEvents(employVal);
         }
 
     });
@@ -263,7 +263,13 @@
         let formData = new FormData();
         formData.append('ScheduleID', $("#EditScheduleID").val());
         var data = Object.fromEntries(formData);
-        //let res = await postData('@Url.Action("SetActiveDateSchedule", "Patrol")', formData);
+        let res = await postData('@Url.Action("RemoveDateSchedule", "Patrol")', formData);
+        if (res.StatusCode === 200) {
+            $("#EditScheduleModal").modal("hide");
+
+            await fetchAndRenderEvents(employVal);
+        }
+
     });
 
     //document.addEventListener('DOMContentLoaded', function () {

@@ -101,10 +101,9 @@
 
     table td {
         cursor: pointer;
-        padding: 1em 1em;
+        padding: 1.5em 1em;
         font-size: var(--small-font-size);
-         border-top: 1px solid #dcdce2;
-
+        border-top: 1px solid #dcdce2;
     }
 
     table tbody tr:hover {

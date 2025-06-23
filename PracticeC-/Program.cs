@@ -61,7 +61,7 @@ namespace PracticeC_
             //string connectionString = "server=DESKTOP-FC0UP1P;User ID=PCsystem;password=p1saprocess;database=P1sa";
             //string connectionString = "server=SDP0706ES;User ID=p1sa;password=p1sa1234a*;database=PMACS_TEST;Pooling=True;Min Pool Size=50;Max Pool Size=100;";
             //string connectionString = "server=172.29.3.139;User ID=p1sa;password=p1sa1234a*;database=PRODCONF;Pooling=True;Min Pool Size=50;Max Pool Size=100;";
-            string connectionString = "Data Source=DESKTOP-FC0UP1P;Initial Catalog=Attendance;Integrated Security=True;";
+            string connectionString = "Data Source=DESKTOP-FC0UP1P;Initial Catalog=Prodcon;Persist Security Info=True;User ID=PCsystem;Password=p1saprocess;";
 
             //string connectionString = "server=172.29.3.139;User ID=p1sa;password=p1sa1234a*;database=PMACS_LIVE;Pooling=True;Min Pool Size=50;Max Pool Size=100;";
             //string connectionString = "server=SDP0706ES; User ID = p1sa; password=p1sa1234a*; database=PMACS_LIVE; Pooling=True; Min Pool Size=50; Max Pool Size=100;";

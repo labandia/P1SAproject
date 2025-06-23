@@ -16,7 +16,7 @@ namespace ProgramPartListWeb.Helper
     {
         //private static readonly string _connectionString = AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings["LiveDevelopment"].ConnectionString);
 
-        public static string _connectionString()
+        public static string connectionString()
         {
             try
             {
@@ -31,7 +31,7 @@ namespace ProgramPartListWeb.Helper
                     connectionKey = "LiveDevelopment";
 
 
-                LogConnectionChoice(machineName, connectionKey);
+                //LogConnectionChoice(machineName, connectionKey);
 
                 return AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings[connectionKey].ConnectionString);
             }
@@ -65,7 +65,7 @@ namespace ProgramPartListWeb.Helper
             //var resultData = new List<T>();
             try
             {
-                using (IDbConnection con = GetSqlConnection(_connectionString()))
+                using (IDbConnection con = GetSqlConnection(connectionString()))
                 {
                     // Checks if the string is one word
                     if(Regex.IsMatch(query, @"^\w+$"))
@@ -95,7 +95,7 @@ namespace ProgramPartListWeb.Helper
         {
             try
             {
-                using (IDbConnection con = GetSqlConnection(_connectionString()))
+                using (IDbConnection con = GetSqlConnection(connectionString()))
                 {
                     return  await con.QuerySingleOrDefaultAsync<string>(query, parameters);
                 }
@@ -111,7 +111,7 @@ namespace ProgramPartListWeb.Helper
         {
             try
             {
-                using (IDbConnection con = GetSqlConnection(_connectionString()))
+                using (IDbConnection con = GetSqlConnection(connectionString()))
                 {
                     if (Regex.IsMatch(query, @"^\w+$"))
                     {
@@ -139,7 +139,7 @@ namespace ProgramPartListWeb.Helper
         {
             try
             {
-                using (IDbConnection con = GetSqlConnection(_connectionString()))
+                using (IDbConnection con = GetSqlConnection(connectionString()))
                 {
                     int count;
                     // Checks if the string is one word
@@ -166,7 +166,7 @@ namespace ProgramPartListWeb.Helper
         {   
             try
             {
-                using (IDbConnection con = new SqlConnection(_connectionString()))
+                using (IDbConnection con = new SqlConnection(connectionString()))
                 {
                     int rowsAffected;
 
@@ -197,7 +197,7 @@ namespace ProgramPartListWeb.Helper
 
             try
             {
-                using (IDbConnection con = GetSqlConnection(_connectionString()))
+                using (IDbConnection con = GetSqlConnection(connectionString()))
                 {
                     IEnumerable<string> dataList;
 
@@ -225,7 +225,7 @@ namespace ProgramPartListWeb.Helper
         {
             try
             {
-                using (IDbConnection con = GetSqlConnection(_connectionString()))
+                using (IDbConnection con = GetSqlConnection(connectionString()))
                 {
                     int count;
                     if (Regex.IsMatch(query, @"^\w+$"))

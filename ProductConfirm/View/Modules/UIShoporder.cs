@@ -77,7 +77,8 @@ namespace ProductConfirm.Modules
             int TotalrowCount = await _prod.GetShoporderTotalList();
             TotalRows = TotalrowCount;
             TotalPages = (int)Math.Ceiling((double)TotalRows / PageSize);
-            Countrecord.Text = TotalPages.ToString();
+            lblTotalPages.Text = TotalPages.ToString();
+            lblCurrentPage.Text = CurrentPageIndex.ToString();  
 
             //Shoptables.DataSource = await Products.GetShoporderlist(CurrentPageIndex, PageSize);
             shop = await _prod.GetShoporderlist(CurrentPageIndex, PageSize);
@@ -324,6 +325,13 @@ namespace ProductConfirm.Modules
         }
 
         private async void BtnFirst_Click(object sender, EventArgs e)
+        {
+            CurrentPageIndex = 1;
+            await displayshopordertable();
+            lblCurrentPage.Text = CurrentPageIndex.ToString();
+        }
+
+        private async void BtnLast_Click(object sender, EventArgs e)
         {
             CurrentPageIndex = TotalPages;
             await displayshopordertable();

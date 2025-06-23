@@ -199,17 +199,17 @@
         text-align: center;
     }
 
-    table tbody tr:nth-of-type(even) {
+/*    table tbody tr:nth-of-type(even) {
         background-color: #f3f3f3;
     }
 
     table tbody tr:nth-of-type(odd) {
         background-color: #fff;
-    }
+    }*/
 
     table th {
-        background: hsl(210, 29%, 9%);
-        color: #fff;
+        background: #f3f3f3;
+        color: #222;
         font-weight: 400;
         cursor: pointer;
         padding: .7em 0;
@@ -277,6 +277,10 @@
         font-size: var(--normal-font-size);
         background: #e0e0e0;
         padding: 8px 1.5em 8px 1em;
+    }
+
+    #addmachine{
+        margin-top: 1em;
     }
 
 
@@ -578,13 +582,13 @@
 
 
 
-/* Initial hidden state for the dropdown */
-.dropdown-menu {
-    display: none;
-    opacity: 0;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    transform: translateY(-10px); /* Start with the dropdown slightly above */
-}
+    /* Initial hidden state for the dropdown */
+    .dropdown-menu {
+        display: none;
+        opacity: 0;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        transform: translateY(-10px); /* Start with the dropdown slightly above */
+    }
 
     /* Active state (when dropdown is visible) */
     .dropdown-menu.show {
@@ -595,14 +599,14 @@
 
 
 
-.Inputcontainer {
-    position: relative;
-    margin-left: 1em;
-    border-radius: .2em;
-    font-size: var(--normal-font-size);
-    background: #e0e0e0;
-    padding: 8px 1.5em 8px 1em;
-}
+    .Inputcontainer {
+        position: relative;
+        margin-left: 1em;
+        border-radius: .2em;
+        font-size: var(--normal-font-size);
+        background: #e0e0e0;
+        padding: 8px 1.5em 8px 1em;
+    }
 
 
     .Inputcontainer input {
@@ -677,7 +681,6 @@
     .tabs__body {
         position: relative;
         width: 100%;
-        padding: 10px;
     }
 
     .tabs__body select {
@@ -1116,31 +1119,31 @@
 }
 
 /* ###############  BUTTONS SAVE BUTTONS  ############### */
-.saveEditsum {
-    transition: .5s all;
-    color: #fff;
-    border-radius: .2em;
-    text-align: center;
-    background: #109b39;
-    padding: .5em 2em;
-}
+    .saveEditsum {
+        transition: .5s all;
+        color: #fff;
+        border-radius: .2em;
+        text-align: center;
+        background: #109b39;
+        padding: .5em 2em;
+    }
 
     .saveEditsum:hover {
         background: #0d7e2f;
     }
 
-#saveEdit, #saveEditProcess, #saveEditProduct, #saveEditModel {
-    width: 100%;
-    display: flex;
-    place-content: center;
-    border-radius: .2em;
-    text-align: center;
-    background: #109b39;
-    padding: 1em 0;
-    gap: 1em;
-    transition: .5s all;
-    color: #fff;
-}
+    #saveEdit, #saveEditProcess, #saveEditProduct, #saveEditModel {
+        width: 100%;
+        display: flex;
+        place-content: center;
+        border-radius: .2em;
+        text-align: center;
+        background: #109b39;
+        padding: 1em 0;
+        gap: 1em;
+        transition: .5s all;
+        color: #fff;
+    }
 
     #saveEdit:hover, #saveEditProcess:hover, #saveEditProduct:hover, #saveEditModel:hover, #Editsavebtn:hover {
         background: #0d7e2f;
@@ -1160,6 +1163,7 @@
 }
 
 .detail__inputfield label {
+    color: #222;
     font-size: var(--small-font-size);
 }
 
@@ -1172,6 +1176,18 @@
     height: 42px;
     padding: 0 15px;
     margin: .5em 0;
+    background: #f5f5f5;
+}
+
+.addwrap span{
+    margin: 0 1em;
+}
+
+
+.Addmach__footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1em
 }
 
 #addnewmodel select {
@@ -1500,30 +1516,7 @@
         overflow-x: auto; /* Enables horizontal scrolling */
     }
 
-    table {
-        width: 100%;
-        border-collapse: collapse !important;
-    }
-
-    thead th {
-        background-color: #222 !important;
-        color: white !important;
-        text-align: center;
-        padding: .7em 1em;
-        white-space: nowrap;
-    }
-
-    tbody td {
-        border: 1px solid #ddd;
-        padding: .8em 1em;
-        text-align: center;
-        white-space: nowrap;
-        font-size: .938rem;
-    }
-
-    tbody tr:nth-child(odd) {
-        background: #f5f5f5;
-    }
+   
 
     /* Optional: For better scrolling visibility */
     .table-container::-webkit-scrollbar {
@@ -1563,6 +1556,7 @@
         box-shadow: 10px 10px 50px rgba(221, 221, 221, 0.8666666667);
         background: #fff;
         border-radius: 10px 10px 0 0;
+        color: #222;
     }
 
         .program__card img {
@@ -1610,6 +1604,8 @@
         }
 
     .program__icon {
+        display: flex;
+        align-items: center;
         gap: 10px;
         font-size: 0.9rem;
         margin-top: 0.5em;
@@ -1918,6 +1914,7 @@
 
 
     .detail__inputfield select {
+        width: 100%;
         height: 42px;
         margin: 8px 0;
         padding: 0 15px;

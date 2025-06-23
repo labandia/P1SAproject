@@ -20,10 +20,10 @@
                     <th>Die Part</th>
                     <th>Die Height (mm)</th>
                     <th>Std. Grindingt</th>
-                    <th>Stamping / Grinding</th>
+                    @*<th>Stamping / Grinding</th>*@
                     <th>Line</th>
                     <th>Ave. Lamtn</th>
-                    <th>No. of Press stamp</th>
+                    <th>Press stamp#</th>
                     <th>Remaining product</th>
                 </tr>
             </thead>
@@ -57,7 +57,6 @@
                     <th>Type</th>
                     <th>Model</th>
                     <th>No. of Line</th>
-                    <th>Note</th>
                     <th>Status</th>
                 </tr>
             </thead>
@@ -276,7 +275,6 @@
                           <td data-cell="Type">${rowData.Type}</td>
                           <td data-cell="Model">${rowData.Model}</td>
                           <td data-cell="Lines">${rowData.Lines}</td>
-                          <td data-cell="Note">${rowData.Note}</td>
                           <td data-cell="Status">${rowData.Status}</td>
                       </tr>`;
 
@@ -445,7 +443,7 @@
                     rowHtml += `<td data-cell="DiePart" style="font-weight: 600">${rowData.DiePart}</td>`;
                     rowHtml += `<td data-cell="DieHeight" style="font-weight: 600">${rowData.DieHeight}</td>`;
                     rowHtml += `<td data-cell="StdGrind" style="font-weight: 600">${rowData.StdGrind}</td>`;
-                    rowHtml += `<td data-cell="StampGrind" style="font-weight: 600">${rowData.StampGrind}</td>`;
+                    //rowHtml += `<td data-cell="StampGrind" style="font-weight: 600">${rowData.StampGrind}</td>`;
                     rowHtml += `<td data-cell="Line" style="font-weight: 600">${rowData.Line}</td>`;
                     rowHtml += `<td data-cell="Avg" style="font-weight: 600">${rowData.Avg}</td>`;
 
@@ -529,28 +527,122 @@
         // Add event listener for search input
         $('#Summarysearchbox').on('input', searchTable);
 
+       
+         // Initialize table and pagination
+         window.changePage = changePage;
+         renderTable(currentPage);
+         renderPagination();
+    }
+    function displayPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 50, visibleButtons = 5) {
+        let currentPage = 1;
+        let filteredData = [...dataArray]; // Make a copy for filtering
+
+        const updatePaginationInfo = () => {
+            const totalRecords = filteredData.length;
+            const totalPages = Math.ceil(totalRecords / recordsPerPage);
+
+            $("#totalpageID").text(totalPages);
+            $("#DatalengthID").text(totalRecords);
+
+            return totalPages;
+        };
+
+        const renderTable = (page) => {
+            const totalPages = updatePaginationInfo();
+            const startIndex = (page - 1) * recordsPerPage;
+            const endIndex = Math.min(startIndex + recordsPerPage, filteredData.length);
+            const tableBody = document.getElementById(tableBodyId);
+            tableBody.innerHTML = '';
+
+            for (let i = startIndex; i < endIndex; i++) {
+
+                const rowData = filteredData[i];
+                const rowHtml = ` <tr class='row_${i} rowClick' id='editButton_${i}'>
+                    <td data-cell="DateInput">${rowData.DateInput}</td>
+                    <td data-cell="Upper">${rowData.Upper}</td>
+                    <td data-cell="Lower">${rowData.Lower}</td>
+                    <td data-cell="Lower_ActualHeight">${rowData.Lower_ActualHeight}</td>
+                    <td data-cell="Lower_DrawingHeight">${rowData.Lower_DrawingHeight}</td>
+                    <td data-cell="Upper_ActualHeight">${rowData.Upper_ActualHeight}</td>
+                    <td data-cell="Upper_DrawingHeight">${rowData.Upper_DrawingHeight}</td>
+                </tr>`;
+
+                tableBody.innerHTML += rowHtml;
+            }
+
+
+            $("#pagecountID").text(currentPage);
+        };
+
+        const renderPagination = () => {
+            const totalPages = updatePaginationInfo();
+            const paginationContainer = document.getElementById(paginationId);
+            paginationContainer.innerHTML = '';
+
+            let startPage = Math.max(1, currentPage - Math.floor(visibleButtons / 2));
+            let endPage = Math.min(totalPages, startPage + visibleButtons - 1);
+
+            if (endPage > totalPages) {
+                endPage = totalPages;
+                startPage = Math.max(1, endPage - visibleButtons + 1);
+            }
+
+            if (totalPages <= visibleButtons) {
+                startPage = 1;
+                endPage = totalPages;
+            }
+
+            // Previous button
+            paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
+                                        <i class="fa-solid fa-backward"></i>
+                                    </button>`;
+
+            for (let i = startPage; i <= endPage; i++) {
+                paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+            }
+
+            // Next button
+            paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
+                                       <i class="fa-solid fa-forward"></i>
+                                    </button>`;
+        };
+
+        const changePage = (page) => {
+            if (page >= 1 && page <= updatePaginationInfo()) {
+                currentPage = page;
+                renderTable(currentPage);
+                renderPagination();
+            }
+        };
+
+        // 🔍 Search functionality
+        const searchTable = () => {
+            const query = $('#searchbox').val().toLowerCase();
+
+            filteredData = dataArray.filter(item =>
+                item.PartNo.toLowerCase().includes(query)
+            );
+
+            currentPage = 1;
+            renderTable(currentPage);
+            renderPagination();
+        };
+
+        // Add event listener for search input
+        $('#searchbox').on('input', searchTable);
+
         // Handle click event for edit button
         $(document).on('click', '.rowClick', function (e) {
             e.stopPropagation();
             const buttonId = $(this).attr('id');
             const rowIndex = buttonId.split('_')[1];
             const result = TableData.find(p => p.RecordID == rowIndex);
-            console.log(result);
-            //if (result) {
-            //    $("#Detail_Capinfo_ID").val(result.Capinfo_ID);
-            //    $("#Detail_Dieqty").val(result.DieQty);
-            //    $("#Detail_Actual_cav").val(result.Actual_Cav);
-            //    $("#Detail_CycleTime").val(result.CycleTime);
-            //    $("#Detail_Partnum").val(result.Partnum);
-            //    $("#Detail_Model_name").val(result.Model_name);
-            //    $("#Detail_Manhour").val(RoundNumberOne(result.manhour));
-            //    $("#Detail_Operation_time").val(result.Operation_time);
-            //    $("#Detail_Require").val(RoundNumberOne(result.Require));
-            //    $("#Detail_Capday").val(result.Capday);
-            //    $("#Detail_Capmonth").val(result.Capmonth);
-
-            //    $("#detailsModal").modal("show");
-            //}
+            if (result) {
+                $("#PartNo").val(result.PartNo);
+                $("#No").val(result.No);
+                $("#MoldInput").val(result.TotalDie);
+                $("#InputMoldieModal").modal("show");
+            }
         });
 
         // UPDATES THE DETAILS DATA
@@ -563,149 +655,21 @@
             const data = Object.fromEntries(formData);
             let res = await postData('@Url.Action("EditMoldingByDetails", "PostCapacity")', formData);
             EditResult(res, data);
-        });* @
-
-            // Initialize table and pagination
-            window.changePage = changePage;
-        renderTable(currentPage);
-        renderPagination();
-    }
-    function displayPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 50, visibleButtons = 5) {
-         let currentPage = 1;
-         let filteredData = [...dataArray]; // Make a copy for filtering
-
-         const updatePaginationInfo = () => {
-             const totalRecords = filteredData.length;
-             const totalPages = Math.ceil(totalRecords / recordsPerPage);
-
-             $("#totalpageID").text(totalPages);
-             $("#DatalengthID").text(totalRecords);
-
-             return totalPages;
-         };
-
-         const renderTable = (page) => {
-             const totalPages = updatePaginationInfo();
-             const startIndex = (page - 1) * recordsPerPage;
-             const endIndex = Math.min(startIndex + recordsPerPage, filteredData.length);
-             const tableBody = document.getElementById(tableBodyId);
-             tableBody.innerHTML = '';
-
-             for (let i = startIndex; i < endIndex; i++) {
-
-                    const rowData = filteredData[i];
-                    const rowHtml = ` <tr class='row_${i} rowClick' id='editButton_${i}'>
-                        <td data-cell="DateInput">${rowData.DateInput}</td>
-                        <td data-cell="Upper">${rowData.Upper}</td>
-                        <td data-cell="Lower">${rowData.Lower}</td>
-                        <td data-cell="Lower_ActualHeight">${rowData.Lower_ActualHeight}</td>
-                        <td data-cell="Lower_DrawingHeight">${rowData.Lower_DrawingHeight}</td>
-                        <td data-cell="Upper_ActualHeight">${rowData.Upper_ActualHeight}</td>
-                        <td data-cell="Upper_DrawingHeight">${rowData.Upper_DrawingHeight}</td>
-                    </tr>`;
-
-                    tableBody.innerHTML += rowHtml;
-             }
-
-
-             $("#pagecountID").text(currentPage);
-         };
-
-         const renderPagination = () => {
-             const totalPages = updatePaginationInfo();
-             const paginationContainer = document.getElementById(paginationId);
-             paginationContainer.innerHTML = '';
-
-             let startPage = Math.max(1, currentPage - Math.floor(visibleButtons / 2));
-             let endPage = Math.min(totalPages, startPage + visibleButtons - 1);
-
-             if (endPage > totalPages) {
-                 endPage = totalPages;
-                 startPage = Math.max(1, endPage - visibleButtons + 1);
-             }
-
-             if (totalPages <= visibleButtons) {
-                 startPage = 1;
-                 endPage = totalPages;
-             }
-
-             // Previous button
-             paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
-                                            <i class="fa-solid fa-backward"></i>
-                                        </button>`;
-
-             for (let i = startPage; i <= endPage; i++) {
-                 paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
-             }
-
-             // Next button
-             paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
-                                           <i class="fa-solid fa-forward"></i>
-                                        </button>`;
-         };
-
-         const changePage = (page) => {
-             if (page >= 1 && page <= updatePaginationInfo()) {
-                 currentPage = page;
-                 renderTable(currentPage);
-                 renderPagination();
-             }
-         };
-
-         // 🔍 Search functionality
-         const searchTable = () => {
-             const query = $('#searchbox').val().toLowerCase();
-
-             filteredData = dataArray.filter(item =>
-                 item.PartNo.toLowerCase().includes(query)
-             );
-
-             currentPage = 1;
-             renderTable(currentPage);
-             renderPagination();
-         };
-
-         // Add event listener for search input
-         $('#searchbox').on('input', searchTable);
-
-         // Handle click event for edit button
-         $(document).on('click', '.rowClick', function (e) {
-             e.stopPropagation();
-             const buttonId = $(this).attr('id');
-             const rowIndex = buttonId.split('_')[1];
-             const result = TableData.find(p => p.RecordID == rowIndex);
-             if (result) {
-                 $("#PartNo").val(result.PartNo);
-                 $("#No").val(result.No);
-                 $("#MoldInput").val(result.TotalDie);
-                 $("#InputMoldieModal").modal("show");
-             }
-         });
-
-          // UPDATES THE DETAILS DATA
-          @*detailsform.addEventListener('submit', async (e) => {
-              e.preventDefault();
-
-              let formData = new FormData(e.target);
-              formData.append('ProcessCode', processcode);
-              formData.append('Capgroup_ID', cap_groupID);
-              const data = Object.fromEntries(formData);
-              let res = await postData('@Url.Action("EditMoldingByDetails", "PostCapacity")', formData);
-              EditResult(res, data);
-         });*@
-
-         // Initialize table and pagination
+        });*@
+                 // Initialize table and pagination
          window.changePage = changePage;
          renderTable(currentPage);
          renderPagination();
     }
 
 
+
+
     function Initialize() {
         let setMonth = parseInt(currentMonth) + 1;
 
         GetPressRegistry();
-        //GetPressMonitoring(setMonth, currentYear);
+        GetPressMonitoring(setMonth, currentYear);
         GetPressSummary();
     }
 

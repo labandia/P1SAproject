@@ -4,25 +4,25 @@
     Layout = "~/Areas/P1SA/Views/Shared/_Layout.cshtml";
 }
 
-<section class="wrapper2">
-    <header class="Capheader d-flex align-items-center justify-content-between">
-        <h3>Capacity per process</h3>
-        <div class="header2__action">
-            @*<span id="datemonth" style="margin-right: 20px;"></span>*@
-            <button id="Excelbtn" class="primary_button_color">Forecastdata</button>
-            <button type="button" id="GridView" data-tooltip="Grid view"><i class="fa-solid fa-grip"></i>  </button>
-            <button type="button" id="ListView" data-tooltip="Table view"><i class="fa-solid fa-table"></i> </button>
-        </div>
-    </header>
+<header class="MainHeader">
+    <h4>Capacity per process</h4>
+    <div class="header__action">
+        @*<span id="datemonth" style="margin-right: 20px;"></span>*@
+        <button id="Excelbtn" class="primary_button_color">Forecastdata</button>
+        <button type="button" id="GridView" data-tooltip="Grid view"><i class="fa-solid fa-grip"></i>  </button>
+        <button type="button" id="ListView" data-tooltip="Table view"><i class="fa-solid fa-table"></i> </button>
+    </div>
+</header>
 
 
-    <section class="content">
-        <div class="selectcontain" id="selectionID"> </div>
-        <div class="listselectcontain" id="listselectionID">
+<section class="content">
+    <div class="selectcontain" id="selectionID"> </div>
+    <div class="listselectcontain" id="listselectionID">
+        <div class="MainTable">
             <table class="mt-4">
                 <thead>
                     <tr>
-                        <th style="text-align: left;">Process:  </th>
+                        <th style="text-align: left; padding-left: 1em;">Process:  </th>
                         <th>Total Manpower</th>
                         <th>Total Machine:</th>
                         <th>Capacity per Day</th>
@@ -34,13 +34,11 @@
                 </tbody>
             </table>
         </div>
-    </section>
+    </div>
 </section>
 
 
-<script src="~/Scripts/jquery-3.7.0.js"></script>
-<script src="~/Scripts/Utilities.js"></script>
-<script src="~/Scripts/Global.js"></script>
+
 <script type="text/javascript">
     const forest = document.getElementById("Excelbtn");
     const setDate = new Date().toLocaleString('default', { month: 'long' });

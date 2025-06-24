@@ -41,23 +41,25 @@
     <div class="prod_wrapper">
         <div class="prod__column mb-4">
             <div class="Production__card">
+                <div class="MainTable">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Section</th>
+                                <th>Actual</th>
+                                <th>Required(Capacity per process)</th>
+                                <th>Lacking</th>
+                            </tr>
+                        </thead>
+                        <tbody id="DisplaysectionID">
+                        </tbody>
+                    </table>
+                </div>
                 
-                <table class="ManpowerTable">
-                    <thead>
-                        <tr>
-                            <th>Section</th>
-                            <th>Actual</th>
-                            <th>Required(Capacity per process)</th>
-                            <th>Lacking</th>
-                        </tr>
-                    </thead>
-                    <tbody id="DisplaysectionID">
-                    </tbody>
-                </table>
             </div>
         </div>
         <div class="prod__column">
-            <section class="tablemain">
+            <div class="MainTable">
                 <table>
                     <thead>
                         <tr style="background: hsl(209, 97%, 13%) !important; color: #fff; ">
@@ -71,7 +73,7 @@
                     <tbody id="ManpowerID">
                     </tbody>
                 </table>
-            </section>
+            </div>
         </div>
 
     </div>

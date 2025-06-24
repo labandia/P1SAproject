@@ -33,6 +33,40 @@
          background: var(--primary-alt-color);
     }
 
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+/*        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);*/
+    }
+
+    table th {
+        background: #f3f3f3;
+        color: #222;
+        padding: .7em 0;
+        font-size: .8rem;
+        text-align: center;
+    }
+
+
+    table td {
+        border-bottom: 1px solid #d4d3d3;
+        cursor: pointer;
+        padding: .7em 1em;
+    }
+    /*    table tbody tr:nth-of-type(even) {
+        background-color: #f3f3f3;
+    }
+
+    table tbody tr:nth-of-type(odd) {
+        background-color: #fff;
+    }*/
+
+
+    /*    table tbody tr:hover {
+        background: #e5e5e6;
+    }*/
+
 /*========== NAV ==========*/
     .sidebar {
         position: fixed;
@@ -138,6 +172,7 @@
         position: relative;
         border-radius: .25rem;
         margin-top: 1rem;
+        background: rgba(0, 0, 0, 0.7);
     }
 
     .sidebar__dropdown-content {
@@ -161,7 +196,7 @@
     }
 
     .sidebar__dropdown-item:hover {
-        color: #fff;
+        color: var(--primary-color);
     }
 
     .sidebar__dropdown-icon {
@@ -191,62 +226,18 @@
 
 
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-        font-size: 0.9em;
-        text-align: center;
-    }
-
-/*    table tbody tr:nth-of-type(even) {
-        background-color: #f3f3f3;
-    }
-
-    table tbody tr:nth-of-type(odd) {
-        background-color: #fff;
-    }*/
-
-    table th {
-        background: #f3f3f3;
-        color: #222;
-        font-weight: 400;
-        cursor: pointer;
-        padding: .7em 0;
-        font-size: .8rem;
-    }
-
-
-    table td {
-        border-bottom: 1px solid #ccc;
-        cursor: pointer;
-        padding: .7em 1em;
-    }
-
-    table tbody tr:hover {
-        background: #e5e5e6;
-    }
-
-
-    .MainTable table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 1em;
-    }
-
-    .InspectHead {
+    .MainHeader{
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-top: 1em;
     }
 
-    .InspectHead h2 {
-        margin: 0;
+    .MainHeader h4{
+        color: #222;
         font-weight: 600;
-        font-size: var(--h2-font-size);
     }
 
+    
 
     .MasterlistWrap_footer {
         display: flex;
@@ -417,6 +408,8 @@
 
     .custom_modal_header h5 {
         font-weight: 600;
+        color: #222;
+        margin: 0;
     }
 
     .formcontainer {
@@ -545,7 +538,6 @@
 
 
     .select-container {
-        width: 100%;
         position: relative;
         display: inline-block;
         margin: .5em 0;
@@ -554,7 +546,8 @@
 
     .select-container select {
         width: 100%;
-        padding: 10px 3em 10px 1em;
+        color: #222;
+        padding: .5em 3em .5em 1em;
         appearance: none;
         border: 1px solid #A5A1AA;
         border-radius: 4px;
@@ -749,27 +742,27 @@
 
 
 /*============================ DIE MOLD DIE  ===============================*/
-    .DieMainTable table {
+    .DieMainTable table, .MainTable table {
         width: 100%;
         table-layout: fixed;
-        border-collapse: collapse;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-        font-size: 0.9em;
+/*        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);*/
+        font-size: 0.9rem;
         text-align: center;
+        border: 1px solid #d4d3d3;
     }
 
-    .DieMainTable table tbody tr:nth-of-type(even) {
+/*    .DieMainTable table tbody tr:nth-of-type(even) {
         background-color: #f3f3f3;
     }
 
     .DieMainTable table tbody tr:nth-of-type(odd) {
         background-color: #fff;
-    }
+    }*/
 
-    .DieMainTable table th {
-        background: hsl(210, 29%, 9%);
-        color: #fff;
-        font-weight: 400;
+    .DieMainTable table th, .MainTable table th {
+        background: #d4d3d3;
+        color: #222;
+        font-weight: 600;
         cursor: pointer;
         padding: .7em 0;
         font-size: .8rem;
@@ -777,12 +770,12 @@
 
 
     .DieMainTable table td {
-        border-bottom: 1px solid #ccc;
+       border: 1px solid #d4d3d3;
         cursor: pointer;
         padding: .7em 1em;
     }
 
-    .DieMainTable table tbody tr:hover {
+    .DieMainTable table tbody tr:hover, .MainTable table tbody tr:hover {
         background: #e5e5e6;
     }
 
@@ -790,15 +783,16 @@
 
     .searchinputContainer {
         position: relative;
-        width: 300px;
         background: #fff;
         margin-left: 1em;
         border-radius: .2em;
         padding: 8px 1.5em 8px 1em;
+        border: 1px solid #d4d3d3;
     }
     .searchinputContainer input {
         border-radius: .2em;
         outline: none;
+        margin-left: 5px;
     }
     .searchinputContainer input:focus + .line{
         width: 100%;
@@ -814,7 +808,6 @@
         bottom: 0;
         left: 0;
     }
-
     .searchinputContainer i{
         position: absolute;
         right: 5%;
@@ -823,7 +816,65 @@
     }
 
 
+    .Mold_tabcontainer{
+        margin-top: .5em;
+    }
 
+    .Mold_tabs {
+        display: flex;
+        position: relative;
+        border-bottom: 1px solid #ddd;
+        margin-bottom: 1rem;
+    }
+
+    .Mold_tabs button {
+      width: 100px;
+      background: none;
+      border: none;
+      padding: 1rem;
+      cursor: pointer;
+      font-weight: 600;
+      color: #222;
+      font-size: var(--small-font-size);
+      transition: color 0.3s;
+      position: relative;
+      z-index: 1;
+    }
+
+    .Mold_tabs button.active {
+      color: var(--primary-color);
+    }
+
+    .Mold_slider {
+      position: absolute;
+      bottom: 0;
+      height: 2px;
+      width: 100px;
+      background: var(--primary-color);
+      transition: transform 0.3s ease;
+    }
+
+    .Mold_contentbox {
+      position: relative;
+      min-height: 100px;
+    }
+
+    .Mold_content {
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      position: absolute;
+    /*  width: 100%;*/
+      top: 0;
+      left: 0;
+      display: none;
+    }
+
+    .Mold_content.show {
+      opacity: 1;
+      transform: translateX(0);
+      display: block;
+    }
 
 
 
@@ -833,91 +884,91 @@
 
 
 /* ###############  SELECTION CARD CAPACITY PER PROCESS  ############### */
-.selectcontain {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(25%, 1fr));
-    gap: 30px;
-    margin: 2em 0 1.5em;
-}
+    .selectcontain {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(25%, 1fr));
+        gap: 30px;
+        margin: 2em 0 1.5em;
+    }
 
-.selectioncard {
-    background-color: #fff;
-    padding: 1.2em 1.5em;
-    border-radius: 5px;
-    border-top: 3px solid rgb(37, 129, 214);
-    cursor: pointer;
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
-    transition: .5s all;
-}
+    .selectioncard {
+        background-color: #fff;
+        padding: 1.2em 1.5em;
+        border-radius: 5px;
+        border-top: 3px solid rgb(37, 129, 214);
+        cursor: pointer;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+        transition: .5s all;
+    }
 
     .selectioncard:hover {
         transform: scale(1.05);
     }
 
 
-.selectioncard__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 5px;
-    padding: .7em 0 0;
-}
-
-.selectioncard__name {
-    font-size: 1.4rem;
-}
-
-.selectioncard__Cycle i {
-    padding: .2em;
-    color: #5c5c5c;
-    border-radius: .3em;
-    margin-right: 7px;
-}
-
-
-
-.selectioncard__Cycle {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.selectioncard__label span {
-    font-size: 1.3rem;
-}
-
-.selectioncard__Cycle small {
-    font-size: .8rem;
-    margin-left: 5px;
-}
-
-.selectioncard__header span {
-    font-weight: 600;
-}
-
-.selectioncard__footer {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 20px;
-    align-items: center;
-    margin-bottom: 1em;
-}
-
-.selectioncard__col {
-    display: flex;
-    flex-direction: column;
-}
-
-    .selectioncard__col small {
-        font-size: .67rem;
-        font-weight: 500;
-        color: #666464;
+    .selectioncard__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 5px;
+        padding: .7em 0 0;
     }
 
-    .selectioncard__col span {
+    .selectioncard__name {
+        font-size: 1.4rem;
+    }
+
+    .selectioncard__Cycle i {
+        padding: .2em;
+        color: #5c5c5c;
+        border-radius: .3em;
+        margin-right: 7px;
+    }
+
+
+
+    .selectioncard__Cycle {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .selectioncard__label span {
+        font-size: 1.3rem;
+    }
+
+    .selectioncard__Cycle small {
+        font-size: .8rem;
+        margin-left: 5px;
+    }
+
+    .selectioncard__header span {
         font-weight: 600;
-        margin-top: .2em;
     }
+
+    .selectioncard__footer {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 20px;
+        align-items: center;
+        margin-bottom: 1em;
+    }
+
+    .selectioncard__col {
+        display: flex;
+        flex-direction: column;
+    }
+
+        .selectioncard__col small {
+            font-size: .67rem;
+            font-weight: 500;
+            color: #666464;
+        }
+
+        .selectioncard__col span {
+            font-weight: 600;
+            margin-top: .2em;
+        }
 
 /* ###############  DEFAULT CAPACITY HEADER  ############### */
 
@@ -931,12 +982,12 @@
 
 
 /* ###############  CONTENT DESIGN  ############### */
-/* SUMMARY TABLE */
-.Summarywrapper {
-    font-weight: 600;
-    color: var(--text-color);
-    margin-bottom: 1em;
-}
+    /* SUMMARY TABLE */
+    .Summarywrapper {
+        font-weight: 600;
+        color: var(--text-color);
+        margin-bottom: 1em;
+    }
 
     .Summarywrapper h6 {
         font-weight: 800;
@@ -1158,7 +1209,6 @@
     display: grid;
     grid-template-columns: 50% 50%;
     gap: 1.5em;
-    padding: 0 2.5em 0 1em;
     margin-bottom: .5em;
 }
 
@@ -1435,6 +1485,40 @@
 
 .custom_modal_body {
     padding: 0 1em 1.5em;
+}
+
+.MoldieBodyModal {
+    padding: 0 .8em 1.5em;
+}
+
+.MoldieBodyModal select{
+    width: 100%;
+    padding:  .4em 1em;
+    margin-top: .5em;
+}
+
+.MoldieBodyModal label{
+    font-weight: 600;
+    font-size: var(--small-font-size);
+}
+
+.MoldieBodyModal legend{
+    font-size: .9rem;
+    color: #222;
+    font-weight: 600;
+}
+
+.MoldieBodyModal input{
+    width: 100%;
+    margin: .5em 0 1em 0;
+    border: 1px solid #A5A1AA;
+    padding: .6em 1em;
+    font-size: var(--small-font-size);
+    border-radius: .3em;
+}
+
+.MoldieBodyModal input{
+    outline: var(--primary-color) !important;
 }
 
 .upload-container {

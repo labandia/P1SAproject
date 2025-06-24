@@ -4,117 +4,102 @@
     Layout = "~/Areas/P1SA/Views/Shared/_Layout.cshtml";
 }
 
-
-
-<section class="wrapper2 pb-4">
-    <header class="header2 d-flex align-items-center justify-content-between">
-        <h3 class="header2__title">P1SA Capacity Summary</h3>
-        <div class="header2__action">
-            <div class="tablemain__header__column">
-                <div class="Inputcontainer">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" placeholder="Search here ... " id="searchbox" />
-                    <div class="line"></div>
-                </div>
-            </div>
-           
+<header class="MainHeader">
+    <h4>P1SA Capacity Summary</h4>
+    <div class="header__action">
+        <div class="searchinputContainer">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" placeholder="Search here ... " id="searchbox" />
+            <div class="line"></div>
         </div>
-    </header>
+    </div>
+</header>
 
 
-    <section class="content">
-        <section class="tablemain">
-            <div class="tablemain__header d-flex align-items-center justify-content-between mt-3 mb-1">
-                <div class="tablemain__header__column">
-                    <div class="flex__align" style="justify-content: flex-end">
-                        <div class="tablemain__details">
-                            <strong style="font-weight: 500">Forecast data ( <small id="dDate"></small> ) : </strong>
-                            <span style="color: var(--first-color)"><small id="totalfore"></small></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="tablemain__header__column">
-                    <span>last Update April 2025</span>
-                </div>
-            </div>
-
-
-            <table>
-                <thead>
-                    <tr>
-                        <th style="text-align: left;">Process name:  </th>
-                        <th>Machine</th>
-                        <th style="text-align: center">Operational</th>
-                        <th style="text-align: center">Utilization</th>
-                        <th>Capacity per Machine</th>
-                        <th>Capacity per Day</th>
-                        <th>24 days</th>
-                        <th>28 days</th>
-                        <th id="headertable">Action</th>
-                    </tr>
-                </thead>
-
-                <tbody id="dataSearching">
-                </tbody>
-            </table>
-
-
-
-
-            <div id="empty-state">
-                <img src="~/Content/Images/No_data.png" />
-            </div>
-        </section>
-
-        <!--=============== Empty state Display ===================-->
-
-        </section>
-
-
-
-
-    </section>
- <!--########################## EDIT DATA #############################-->
-        <div class="modal fade modal-m" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-
-                    <div class="modal-body">
-                        <div class="custom_modal_header d-flex align-items-center">
-                            <div class="custom_modal__icon d-flex align-items-start gap-2">
-                                <div class="custom_icon_container">
-                                    <i class="fa-regular fa-pen-to-square"></i>
-                                </div>
-                                <div class="custom_modal_title">
-                                    <span>Edit Summary Data</span>
-                                    <p>Fill all the required input</p>
-                                </div>
-                            </div>
-
-                            <button type="button" class="btn btn-light  close" data-bs-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-
-
-                        <form id="EditPisa" autocomplete='off'>
-                            <label style='font-weight: 600; color: #222; margin-bottom: .5em;'>Total Machine : </label>
-                            <input type='hidden' name='ProcessCode' id='ProcessCode' />
-                            <input type='text' name='ActualMachine' id='ActualMachine' onkeypress='return restrictChars(event)' /><br />
-                            <label style='font-weight: 600; color: #222; margin-bottom: .5em;'>Total Operational :</label> <br />
-                            <input type='text' name='AvailMachine' id='AvailMachine' onkeypress='return restrictChars(event)' /><br />
-                            <div class='footer d-flex justify-content-end pt-4 pb-2 gap-2'>
-                                <button type='submit' class='btn btn-primary' id='saveEditsum'>
-                                    <i class='fa-regular fa-pen-to-square action_btn'></i> Save
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-
+<section>
+    <div class="d-flex align-items-center justify-content-between mt-3 mb-1">
+        <div class="tablemain__header__column">
+            <div class="flex__align" style="justify-content: flex-end">
+                <div class="tablemain__details">
+                    <strong style="font-weight: 500">Forecast data ( <small id="dDate"></small> ) : </strong>
+                    <span style="color: var(--first-color)"><small id="totalfore"></small></span>
                 </div>
             </div>
         </div>
+
+        <div class="tablemain__header__column">
+            <span>last Update April 2025</span>
+        </div>
+    </div>
+    <div class="MainTable">
+        <table>
+            <thead>
+                <tr>
+                    <th style="text-align: left; padding-left: 1em;">Process name:  </th>
+                    <th>Machine</th>
+                    <th>Operational</th>
+                    <th>Utilization</th>
+                    <th>Capacity per Machine</th>
+                    <th>Capacity per Day</th>
+                    <th>24 days</th>
+                    <th>28 days</th>
+                    <th id="headertable">Action</th>
+                </tr>
+            </thead>
+
+            <tbody id="dataSearching">
+            </tbody>
+        </table>
+    </div>
+    <div id="empty-state">
+        <img src="~/Content/Images/No_data.png" />
+    </div>
+</section>
+
+
+
+
+
+<!--########################## EDIT DATA #############################-->
+<div class="modal fade modal-m" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <div class="custom_modal_header d-flex align-items-center">
+                    <div class="custom_modal__icon d-flex align-items-start gap-2">
+                        <div class="custom_icon_container">
+                            <i class="fa-regular fa-pen-to-square"></i>
+                        </div>
+                        <div class="custom_modal_title">
+                            <span>Edit Summary Data</span>
+                            <p>Fill all the required input</p>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+
+                <form id="EditPisa" autocomplete='off'>
+                    <label style='font-weight: 600; color: #222; margin-bottom: .5em;'>Total Machine : </label>
+                    <input type='hidden' name='ProcessCode' id='ProcessCode' />
+                    <input type='text' name='ActualMachine' id='ActualMachine' onkeypress='return restrictChars(event)' /><br />
+                    <label style='font-weight: 600; color: #222; margin-bottom: .5em;'>Total Operational :</label> <br />
+                    <input type='text' name='AvailMachine' id='AvailMachine' onkeypress='return restrictChars(event)' /><br />
+                    <div class='footer d-flex justify-content-end pt-4 pb-2 gap-2'>
+                        <button type='submit' class='btn btn-primary' id='saveEditsum'>
+                            <i class='fa-regular fa-pen-to-square action_btn'></i> Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
 
 
 

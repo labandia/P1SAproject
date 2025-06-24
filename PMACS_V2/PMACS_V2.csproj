@@ -432,6 +432,9 @@
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Content\css\PMACS_Layout.css" />
+    <Content Include="Content\css\PMACS_Layout.min.css">
+      <DependentUpon>PMACS_Layout.css</DependentUpon>
+    </Content>
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\fonts.css" />
@@ -551,6 +554,7 @@
     <Content Include="Content\fonts\SharpSans.otf" />
     <Content Include="Content\fonts\Figtree.ttf" />
     <Content Include="Content\fonts\Quicksand.ttf" />
+    <None Include="bundleconfig.json" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\chart.js" />
     <Content Include="Scripts\chart.min.js" />

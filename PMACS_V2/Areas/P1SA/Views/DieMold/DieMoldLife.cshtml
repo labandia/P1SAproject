@@ -4,99 +4,157 @@
     Layout = "~/Areas/P1SA/Views/Shared/_Layout.cshtml";
 }
 
-
 <section>
-    <div class="header d-flex align-items-center justify-content-between mb-4">
+    <header class="MainHeader">
+        <div class="MoldTitle">
+            <h4>Molding Mold Die Life </h4>
+            <small>Manage Mold die Monitoring</small>
+        </div>
+        <div class="Mold__actions">
+            @* MOLD SUMMARY *@
+            <div id="MoldSummary">
+                <div class="d-flex align-items-center">
+                    <div class="select-container">
+                        <select id="ProcessID">
+                            <option value="M002">Mold  Frame</option>
+                            <option value="M001">ACM</option>
+                            <option value="M003">Mold Impeller</option>
+                            <option value="M004">Slot Insulator </option>
+                            <option value="M005">Stepping Motor</option>
+                        </select>
+                    </div>
+                   
 
-        <select id="ProcessID">
-            <option value="M002">Mold  Frame</option>
-            <option value="M001">ACM</option>
-            <option value="M003">Mold Impeller</option>
-            <option value="M004">Slot Insulator </option>
-            <option value="M005">Stepping Motor</option>
-        </select>
+                    <div class="searchinputContainer">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" placeholder="Search here ... " id="Summarysearchbox" />
+                        <div class="line"></div>
+                    </div>
+                </div>
+            </div>
+            @* MOLD MOnitoring *@
+            <div id="MoldMonitor">
+                <div class="d-flex align-items-center">
+                    <div class="select-container">
+                        <select id="monthSelect"></select>
+                    </div>
 
-        <div class="searchinputContainer">
-            <input type="text" placeholder="Search here ... " id="Summarysearchbox" />
-            <div class="line"></div>
-            <i class="fa-solid fa-magnifying-glass"></i>
+                    <div class="searchinputContainer">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" placeholder="Search here ... " id="searchbox" />
+                        <div class="line"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+    <div class="Mold_tabcontainer">
+        <div class="Mold_tabs">
+            <button class="Mold_tab active" data-target="Summary">Summary</button>
+            <button class="Mold_tab" data-target="Monitoring">Monitoring</button>
+            <button class="Mold_tab" data-target="Tooling">Tooling</button>
+            <div class="Mold_slider"></div>
+        </div>
+
+        <div class="Mold_contentbox">
+            <div class="Mold_content show" id="Summary">
+                <div class="row">
+                    <div class="col-lg-9">
+                        <div class="DieMainTable">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Part No </th>
+                                        <th>Die Number</th>
+                                        <th>Die Serial</th>
+                                        <th>Die life</th>
+                                        <th>2011-2015</th>
+                                        <th>Total Shot Count Onward</th>
+                                        <th>Status</th>
+                                        <th>Renarks</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="SummarylistData">
+                                </tbody>
+                            </table>
+                            <div class="PaginationfooterContainer d-flex align-items-center justify-content-between pt-2 pb-4">
+                                <span>Showing  <span id="spagecountID">-</span> to <span id="stotalpageID">-</span> of  <span id="sDatalengthID">-</span> Entries</span>
+
+                                <div id="SummaryPaginationContainer" class="paginationPartlocal"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3">
+                        <div class="DieMainTable">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Category</th>
+                                        <th>No of die</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="FinalSummaryData">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="Mold_content" id="Monitoring"> 
+                <div class="DieMainTable">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Part No </th>
+                                @*<th>Part Description </th>*@
+                                <th>Dimension/ Quality </th>
+                                <th>No. of Cavity</th>
+                                <th>Die Serial</th>
+                                <th id="MonthHeader">Jan-16</th>
+                                <th>TotalQty</th>
+                            </tr>
+                        </thead>
+                        <tbody id="DieMoldMasterlist">
+                        </tbody>
+                    </table>
+
+                    <div class="PaginationfooterContainer d-flex align-items-center justify-content-between pt-2 pb-4">
+                        <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
+
+                        <div id="PaginationContainer" class="paginationPartlocal"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="Mold_content" id="Tooling">
+
+
+               
+
+            </div>
+
+
         </div>
     </div>
 
-    <div class="DieMainTable">
-        <table>
-            <thead>
-                <tr>
-                    <th>Category</th>
-                    <th>No of die</th>
-                </tr>
-            </thead>
-            <tbody id="FinalSummaryData">
-            </tbody>
-        </table>
-    </div>
-
-    <div class="DieMainTable">
-            <table>
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Part No </th>
-                        <th>Die Number</th>
-                        <th>Die Serial</th>
-                        <th>Die life</th>
-                        <th>2011-2015</th>
-                        <th>Total Shot Count Onward</th>
-                        <th>Status</th>
-                        <th>Renarks</th>
-                    </tr>
-                </thead>
-                <tbody id="SummarylistData">
-                </tbody>
-            </table>
-            <div class="PaginationfooterContainer d-flex align-items-center justify-content-between pt-2 pb-4">
-                <span>Showing  <span id="spagecountID">-</span> to <span id="stotalpageID">-</span> of  <span id="sDatalengthID">-</span> Entries</span>
-
-                <div id="SummaryPaginationContainer" class="paginationPartlocal"></div>
-            </div>
-        </div>
-
-
-
-
-        <div class="header d-flex align-items-center justify-content-between mb-4">
-            <select id="monthSelect"></select>
-
-            <div class="searchinputContainer">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" placeholder="Search here ... " id="searchbox" />
-                <div class="line"></div>
-            </div>
-        </div>
-        <div class="DieMainTable">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Part No </th>
-                        @*<th>Part Description </th>*@
-                        <th>Dimension/ Quality </th>
-                        <th>No. of Cavity</th>
-                        <th>Die Serial</th>
-                        <th id="MonthHeader">Jan-16</th>
-                        <th>TotalQty</th>
-                    </tr>
-                </thead>
-                <tbody id="DieMoldMasterlist">
-                </tbody>
-            </table>
-
-            <div class="PaginationfooterContainer d-flex align-items-center justify-content-between pt-2 pb-4">
-                <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
-
-                <div id="PaginationContainer" class="paginationPartlocal"></div>
-            </div>
-        </div>
 </section>
+
+
+
+
+
+
+
+
+
+
+
 
 <!--########################## INPUT DATA #############################-->
 <div class="modal fade modal-m" id="InputMoldieModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
@@ -134,15 +192,58 @@
     </div>
 </div>
 
-<script src="~/Scripts/jquery-3.7.0.js"></script>
-<script src="~/Scripts/Utilities.js"></script>
-<script src="~/Scripts/Global.js"></script>
+
 <script type="text/javascript">
     let TableData = [];
     let SummaryData = [];
     let FinalSummaryData = [];
 
     const processchange = document.getElementById("ProcessID");
+
+    // Tabs Content
+    const tabs = document.querySelectorAll(".Mold_tab");
+    const slider = document.querySelector(".Mold_slider");
+    const contents = document.querySelectorAll(".Mold_content");
+
+    tabs.forEach((tab, index) => {
+        tab.addEventListener("click", () => {
+            // Handle tab active class
+            document.querySelector(".Mold_tab.active").classList.remove("active");
+            tab.classList.add("active");
+
+            // Move slider
+            slider.style.transform = `translateX(${index * 100}%)`;
+
+            // Switch content
+            const target = tab.getAttribute("data-target");
+            contents.forEach((content) => {
+                content.classList.remove("show");
+            });
+
+            // Add show class with slight delay
+            setTimeout(() => {
+                document.getElementById(target).classList.add("show");
+            }, 50);
+
+
+            switch (index) {
+                case 0:
+                    $("#MoldSummary").show();
+                    $("#MoldMonitor").hide();
+                    break;
+                case 1:
+                    $("#MoldSummary").hide();
+                    $("#MoldMonitor").show();
+                    break;
+                default:
+                    $("#MoldSummary").hide();
+                    $("#MoldMonitor").hide();
+                    break;
+            }
+        });
+    });
+
+
 
 
     // Date Dropdown Selection
@@ -204,7 +305,7 @@
         if (res && res.Success) {
             SummaryData = res.Data.FinalSummary;
             FinalSummaryData = res.Data.MoldDieSummary;
-            displaySummaryPagination(SummaryData, 'SummarylistData', 'SummaryPaginationContainer', 10, 5);
+            displaySummaryPagination(SummaryData, 'SummarylistData', 'SummaryPaginationContainer', 50, 5);
             $.each(FinalSummaryData, function (index, row) {
                 var setdata = "<tr class= 'row_" + index + "  '  >" +
                     "<td style='text-align: center;'>" + row.Category + "</td> " +
@@ -282,10 +383,10 @@
                   let rowHtml = "<tr class='rowClick' id='editButton'>";
 
                   if (idx === 0) {
-                      rowHtml += `<td rowspan="${groupRows.length}" data-cell="No">${NoValue}</td>`;
+                      rowHtml += `<td rowspan="${groupRows.length}" data-cell="No" style="font-weight: 600; color: #222;">${NoValue}</td>`;
                   }
 
-                  rowHtml += `<td data-cell="PartNo" style="font-weight: 600">${rowData.PartNo}</td>`;
+                  rowHtml += `<td data-cell="PartNo" style="font-weight: 600; color: #222;">${rowData.PartNo}</td>`;
 
                   if (idx === 0) {
                       rowHtml += `<td rowspan="${groupRows.length}" data-cell="DieNumber">${dienumValue}</td>`;
@@ -484,7 +585,7 @@
 
                      //<td data-cell="Description">${rowData.Description}</td>
 
-                     rowHtml += `<td data-cell="PartNo" style="font-weight: 600">${rowData.PartNo}</td>
+                     rowHtml += `<td data-cell="PartNo" style="font-weight: 600; color: #222;">${rowData.PartNo}</td>
                                 
                                 <td data-cell="DimensionQuality">${rowData.DimensionQuality}</td>
                                 <td data-cell="Cavity">${rowData.Cavity}</td>
@@ -594,7 +695,8 @@
 
     function Initialize() {
         let setMonth = parseInt(currentMonth) + 1;
-
+        $("#MoldSummary").show();
+        $("#MoldMonitor").hide();
         GetMoldDieSummary();
         GetMoldDieMonth(setMonth, currentYear);
     }

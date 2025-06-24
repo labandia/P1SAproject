@@ -36,6 +36,8 @@ namespace Attendance_Monitoring.View
             sec = section;
             tb = tablename;
             timer = new Timer();
+            timer.Interval = 1000;
+            timer.Tick += Timer_Tick;
             _admin = new AdminController();
             _serviceProvider=serviceProvider;
         }
@@ -101,16 +103,10 @@ namespace Attendance_Monitoring.View
 
                 if (employee == null)
                 {
-                    Statustext.BackColor = Color.FromArgb(50, 181, 111);
+                    Statustext.BackColor = Color.FromArgb(198, 17, 17);
                     Statustext.Text = "Wrong ID number ";
 
                     // Reuse Timer instead of creating a new one every time
-                    if (timer == null)
-                    {
-                        timer.Interval = 1000;
-                        timer.Tick += Timer_Tick;
-                    }
-
                     timer.Start();
 
                     EmployID.Focus();
@@ -137,14 +133,7 @@ namespace Attendance_Monitoring.View
                         Statustext.BackColor = Color.FromArgb(50, 181, 111);
                         Statustext.Text = "Successfully Time In";
 
-                        // Reuse Timer instead of creating a new one every time
-                        if (timer == null)
-                        {
-                           
-                            timer.Interval = 1000;
-                            timer.Tick += Timer_Tick;
-                        }
-
+                     
                         timer.Start();
                         TimeAttendanceDisplay(selecttime.SelectedIndex);
                     }
@@ -192,8 +181,8 @@ namespace Attendance_Monitoring.View
                 // Check if the user is already timed in
                 string timeincheck = $@"SELECT TOP 1 TimeIn 
                                         FROM {tb} 
-                                        WHERE Employee_ID = {empid} 
-                                        AND CAST(Date_today AS DATE) = {dtDate}";
+                                        WHERE Employee_ID = '{empid}' 
+                                        AND CAST(Date_today AS DATE) = '{dtDate}'";
                 DataTable summary = new DataTable();
 
                 summary = await SqlDataAccess.GetDataByDataTable(timeincheck);
@@ -204,7 +193,7 @@ namespace Attendance_Monitoring.View
                     //string fullname = summary["FullName"]?.ToString() ?? string.Empty;
 
                     // Check if the user is already timed In
-                    string timecheckout = "SELECT TOP 1 TimeIn  FROM " + tb + " WHERE Employee_ID = '" + empid + "' AND CAST(Date_today AS DATE) = '" + dtDate + "' AND TimeOut IS NOT NULL";
+                    string timecheckout = "SELECT COUNT(1)  FROM " + tb + " WHERE Employee_ID = '" + empid + "' AND CAST(Date_today AS DATE) = '" + dtDate + "' AND TimeOut IS NOT NULL";
 
                     bool result = await SqlDataAccess.Checkdata(timecheckout);
 
@@ -340,7 +329,7 @@ namespace Attendance_Monitoring.View
                     //string fullname = summary["FullName"]?.ToString() ?? string.Empty;
 
                     // Check if the user is already timed out
-                    string timecheckout = "SELECT TOP 1 TimeIn FROM " + tb + " WHERE Employee_ID = '" + empid + "' AND CAST(Date_today AS DATE) = '" + dtDate + "' AND TimeOut IS NOT NULL";
+                    string timecheckout = "SELECT COUNT(1) FROM " + tb + " WHERE Employee_ID = '" + empid + "' AND CAST(Date_today AS DATE) = '" + dtDate + "' AND TimeOut IS NOT NULL";
                     bool result = await SqlDataAccess.Checkdata(timecheckout);
 
                     if (result == true)

@@ -14,7 +14,7 @@ namespace Attendance_Monitoring.Repositories
         Task<List<SummaryAttendanceModel>> GetSummaryDataList(string strsql, string startDate, string endDate, string shifts, string search);
         // CHECKS THE TIME IN AND OUT IF EXIST
         Task<List<AttendanceModel>> CheckAndGetsAttendance();
-        Task<bool> ChecksAttendance();
+        Task<bool> ChecksAttendance(string EmployeeID, string shift, string tb);
 
         // INSERT INTO THE DATABASE
         Task<bool> AttendanceTimeIn(string EmployeeID, string shift, string late, string tb);

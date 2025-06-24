@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -120,10 +121,7 @@ namespace Attendance_Monitoring.View
                 if (selecttime.SelectedIndex == 0)
                 {
                     // Check if employee has already timed in
-                    bool alreadyTimedIn = itemattends.Any(i =>
-                        i.Employee_ID.Equals(empid, StringComparison.OrdinalIgnoreCase) &&
-                        i.Date_today.Date == DateTime.Today);
-
+                    bool alreadyTimedIn = await _admin.CheckAttendanceTimeIN(empid, shift, tb);
                     if (alreadyTimedIn)
                     {
                         MessageBox.Show("YOU ALREADY TIME IN", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);

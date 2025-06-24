@@ -15,9 +15,9 @@ namespace Attendance_Monitoring.Utilities
 {
     public sealed class SqlDataAccess
     {
-        //private static readonly string _cons = ConfigurationManager.ConnectionStrings["live_connect"].ToString();
+        private static readonly string _cons = ConfigurationManager.ConnectionStrings["live_connect"].ToString();
         //private static readonly string _consV2 = AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings["LiveDevelopment"].ConnectionString);
-        private static readonly string _cons = ConfigurationManager.ConnectionStrings["Myconnect"].ToString();
+        //private static readonly string _cons = ConfigurationManager.ConnectionStrings["Myconnect"].ToString();
 
         public static string ConnectionString()
         {
@@ -111,7 +111,17 @@ namespace Attendance_Monitoring.Utilities
             {
                 using (IDbConnection con = GetConnection(_cons))
                 {
-                    int count = await con.ExecuteScalarAsync<int>(query, parameters, commandType: CommandType.StoredProcedure);
+                    int count = 0;
+
+                    if (Regex.IsMatch(query, @"^\w+$"))
+                    {
+                        // This code is a Procudure query
+                        count = await con.ExecuteScalarAsync<int>(query, parameters, commandType: CommandType.StoredProcedure);
+                    }
+                    else
+                    {
+                        count = await con.ExecuteScalarAsync<int>(query, parameters);
+                    }
                     return count;
                 }
             }

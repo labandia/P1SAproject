@@ -1,7 +1,10 @@
 ﻿using Attendance_Monitoring.Controller;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Linq;
+using System.Net;
 using System.Windows.Forms;
+
 
 namespace Attendance_Monitoring.View
 {
@@ -36,40 +39,40 @@ namespace Attendance_Monitoring.View
         {
             try
             {
-                //string hostName = Dns.GetHostName();
-                //string ipAddress = Dns.GetHostAddresses(hostName)
-                //                      .FirstOrDefault(ip => ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)?
-                //                      .ToString();
+                string hostName = Dns.GetHostName();
+                string ipAddress = Dns.GetHostAddresses(hostName)
+                                      .FirstOrDefault(ip => ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)?
+                                      .ToString();
 
 
-                //var emp = await _admin.GetCRaccess();
+                var emp = await _admin.GetCRaccess();
 
-                //var employee = emp.FirstOrDefault(p => p.IPaddress.Equals(ipAddress, StringComparison.OrdinalIgnoreCase));
+                var employee = emp.FirstOrDefault(p => p.IPaddress.Equals(ipAddress, StringComparison.OrdinalIgnoreCase));
 
-                //if (employee != null)
-                //{
-                //    if (employee.Active == 1)
-                //    {
-                //        Moldingbtn.Enabled = true;
-                //    }
-                //    else
-                //    {
-                //        Moldingbtn.Enabled = false;
-                //    }
+                if (employee != null)
+                {
+                    if (employee.Active == 1)
+                    {
+                        Moldingbtn.Enabled = true;
+                    }
+                    else
+                    {
+                        Moldingbtn.Enabled = false;
+                    }
 
-                //    if (employee.CRactive == 1)
-                //    {
-                //        button10.Enabled = true;
-                //    }
-                //    else
-                //    {
-                //        button10.Enabled = false;
-                //    }
-                //}
-                //else
-                //{
-                //    button10.Enabled = false;
-                //}
+                    if (employee.CRactive == 1)
+                    {
+                        button10.Enabled = true;
+                    }
+                    else
+                    {
+                        button10.Enabled = false;
+                    }
+                }
+                else
+                {
+                    button10.Enabled = false;
+                }
             }
             catch (FormatException)
             {

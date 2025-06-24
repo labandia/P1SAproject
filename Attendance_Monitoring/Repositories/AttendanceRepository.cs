@@ -1,14 +1,9 @@
 ﻿using Attendance_Monitoring.Models;
 using Attendance_Monitoring.Utilities;
 using Dapper;
-using Microsoft.Office.Interop.Excel;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using static System.Windows.Forms.AxHost;
 
 
 namespace Attendance_Monitoring.Repositories
@@ -17,18 +12,6 @@ namespace Attendance_Monitoring.Repositories
     {
         public async Task<bool> AttendanceTimeIn(string EmployeeID, string shift, string late, string tb)
         {
-            string checkQuery = $@"SELECT COUNT(*) 
-                                  FROM WHERE Employee_ID = @EmpID 
-                                  AND CAST(Date_today AS DATE) = CAST(GETDATE() AS DATE) 
-                                  AND Shifts = @Shifts";
-
-            var checkParams = new { EmpID = EmployeeID, Shifts = shift };
-            int count = await SqlDataAccess.GetCountData(checkQuery, checkParams);
-
-            if (count > 0)
-                return false; // Already timed in
-
-
             string insertQuery = $@"INSERT INTO {tb} (Employee_ID, Shifts, LateTime) VALUES (@EmpID, @Shifts, @LateTime)";
             var parameters = new { EmpID = EmployeeID, Shifts = shift, LateTime = late };
 
@@ -48,9 +31,17 @@ namespace Attendance_Monitoring.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<bool> ChecksAttendance()
+        public async Task<bool> ChecksAttendance(string EmployeeID, string shift, string tb)
         {
-            throw new NotImplementedException();
+            string checkQuery = $@"SELECT COUNT(*) 
+                                  FROM {tb} WHERE Employee_ID = @EmpID 
+                                  AND CAST(Date_today AS DATE) = CAST(GETDATE() AS DATE) 
+                                  AND Shifts = @Shifts";
+
+            var checkParams = new { EmpID = EmployeeID, Shifts = shift };
+            int count = await SqlDataAccess.GetCountData(checkQuery, checkParams);
+
+            return (count > 0);
         }
 
         public async Task<List<AttendanceModel>> GetAttendanceRecordsList(string tbl, string dDate, string shifts, int selectime)

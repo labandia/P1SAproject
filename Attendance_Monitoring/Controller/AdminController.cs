@@ -33,7 +33,7 @@ namespace Attendance_Monitoring.Controller
         public async Task<List<SummaryAttendanceModel>> GetExportSummaryList(string strsql, string startdate, string endDate, string shifts, string search) => await _attend.GetSummaryDataList(strsql, startdate, endDate, shifts, search);
         public async Task<bool> AttendanceTimeINandOut(string EmployeeID, string shift, string late, string tb) => await _attend.AttendanceTimeIn(EmployeeID, shift, late, tb);
         public async Task<bool> AttendanceOut(SummaryAttendanceModel attend, string tablename) => await _attend.AttendanceTimeOut(attend, tablename);
-
+        public async Task<bool> CheckAttendanceTimeIN(string EmployeeID, string shift, string tb) => await _attend.ChecksAttendance(EmployeeID, shift, tb);
         // -------------  CR Monitoring Process --------------
         public async Task<List<CRaccess>> GetCRaccess() => await _cr.GetCRAccess();
         public async Task<List<CRmodel>> GetCRMonitorlist(string dDate, string shifts, int depid) => await _cr.GetCRMonitoringData(dDate, shifts, depid);

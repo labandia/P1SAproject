@@ -272,7 +272,7 @@ namespace PMACS_V2.Areas.P1SA.Models
         public int Lines { get; set; }
         public string Note { get; set; }
         public string Status { get; set; }
-        public string Operational { get; set; }
+        public int Operational { get; set; }
     }
 
     public class PressDieMontoring

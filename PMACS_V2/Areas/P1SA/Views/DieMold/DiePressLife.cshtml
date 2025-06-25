@@ -5,6 +5,8 @@
 }
 
 
+
+
 <section>
     <header class="MainHeader">
         <div class="MoldTitle">
@@ -23,7 +25,7 @@
 
             <div id="MoldTooling">
                 <div class="d-flex align-items-center">
-                    <button class="primary_button_color">Add Data</button>
+                    <button class="primary_button_color" id="Registrymodal">Add Data</button>
                     <div class="searchinputContainer">
                         <i class="fa-solid fa-magnifying-glass"></i>
                         <input type="text" placeholder="Search here ... " id="Summarysearchbox" />
@@ -78,15 +80,23 @@
                 <div class="DieMainTable">
                     <table>
                         <thead>
+                            <tr class="header-row">
+                                <th rowspan="2">Date Input</th>
+                                <th rowspan="2">Tool No.</th>
+                                <th rowspan="2">Upper</th>
+                                <th rowspan="2">Lower</th>
+                                <th colspan="2" style="padding: .2em 0;">Upper Grind</th>
+                                <th colspan="2" style="padding: .2em 0;">Lower Grind</th>
+                                <th rowspan="2">Press stamp</th>
+                            </tr>
+
                             <tr>
-                                <th>Date Input</th>
-                                <th>Upper</th>
-                                <th>Lower</th>
                                 <th>Actual Height</th>
                                 <th>Drawing Height</th>
                                 <th>Actual Height</th>
                                 <th>Drawing Height</th>
                             </tr>
+
                         </thead>
                         <tbody id="DiePressMonitoringlist">
                         </tbody>
@@ -100,16 +110,26 @@
                 </div>
             </div>
 
+
             <div class="Mold_content" id="Tooling">
-                <div class="DieMainTable">
+                <div class=" d-flex align-items-center justify-content-end">
+                    <div class="Legends d-flex align-items-center gap-2 mb-2">
+                        <div class="circleprog" style="margin: 0; background: #04bd6c; "></div>
+                        <span>Operational </span>
+                        <div class="circleprog" style="margin: 0;"></div>
+                        <span>Not Operational </span>
+                    </div>
+                </div>
+                <div class="DieMainTable" id="DieWrapcolumn">
                     <table>
                         <thead>
                             <tr>
-                                <th>Die No.</th>
+                                <th style="text-align: left; padding-left: 1.5em;">Die No.</th>
                                 <th>Type</th>
                                 <th>Model</th>
                                 <th>No. of Line</th>
                                 <th>Status</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody id="RegistrylistData">
@@ -129,8 +149,6 @@
 
 
 </section>
-
-
 
 <!--########################## INPUT DATA #############################-->
 <div class="modal fade modal-m" id="InputMoldieModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
@@ -186,11 +204,11 @@
                             <div class="row">
                                 <div class="form_group col-6 col-sm-12 col-lg-6">
                                     <label for="">Actual Height</label>
-                                    <input  type="text" name="Lower_ActualHeight" id="Lower_ActualHeight" onkeypress="return restrictChars(event)">
+                                    <input type="text" name="Lower_ActualHeight" id="Lower_ActualHeight" onkeypress="return restrictChars(event)">
                                 </div>
                                 <div class="form_group col-6 col-sm-12 col-lg-6">
                                     <label for="">Drawing Height</label>
-                                    <input  type="text" name="Lower_DrawingHeight" id="Lower_DrawingHeight" onkeypress="return restrictChars(event)">
+                                    <input type="text" name="Lower_DrawingHeight" id="Lower_DrawingHeight" onkeypress="return restrictChars(event)">
                                 </div>
                             </div>
                         </fieldset>
@@ -198,7 +216,7 @@
                         <div class="row">
                             <div class="form-group col-12 col-lg-12">
                                 <label for="">No Press Stamp</label>
-                                <input  type="text" name="PressStamp" id="PressStamp" onkeypress="return restrictChars(event)">
+                                <input type="text" name="PressStamp" id="PressStamp" onkeypress="return restrictChars(event)">
                             </div>
                         </div>
 
@@ -211,7 +229,7 @@
                     </form>
                 </div>
 
-               
+
             </div>
 
 
@@ -219,9 +237,139 @@
     </div>
 </div>
 
-<script src="~/Scripts/jquery-3.7.0.js"></script>
-<script src="~/Scripts/Utilities.js"></script>
-<script src="~/Scripts/Global.js"></script>
+
+<!--########################## Adding Tooling Press DATA #############################-->
+<div class="modal fade modal-m" id="AddTooling" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="custom_modal_header">
+                    <div>
+                        <h5 id="ToolName"></h5>
+                        <small id="Ope"></small>
+                    </div>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <div class="MoldieBodyModal">
+                    <form id="AddToolPressforms" autocomplete="off">
+                        <div class="form_group col-12 col-sm-12">
+                            <label for="">Die No.</label>
+                            <input type="text" name="ToolNo" id="ToolNo" required>
+                        </div>
+
+                        <div class="form_group col-12 col-sm-12">
+                            <label for="">Type</label>
+                            <input type="text" name="Type" id="Type" required>
+                        </div>
+
+                        <div class="form_group col-12 col-sm-12">
+                            <label for="">Model</label>
+                            <input type="text" name="Model" id="Model" required>
+                        </div>
+
+                        <div class="form_group col-12 col-sm-12">
+                            <label for="">Line</label>
+                            <input type="text" name="Lines" id="Lines" onkeypress="return restrictChars(event)" required>
+                        </div>
+
+                        <div class="form_group col-12 col-sm-12">
+                            <label for="">Status</label>
+                            <textarea placeholder="Enter Status " name="Status" id="Status" rows="3" cols="50" required></textarea>
+                        </div>
+
+                        <div class="form_group col-12 col-sm-12">
+                            <input type="radio" name="Operational" value="1" required />
+                            <span>Operational</span>
+                            <input type="radio" name="Operational" value="0" required />
+                            <span>Not Operational</span>
+                        </div>
+
+
+                        <div class="edits_footer" id="editsdisplay">
+                            <button type="submit" class="primary_button_color">
+                                <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<!--########################## Edit Tooling Press DATA #############################-->
+<div class="modal fade modal-m" id="EdiTooling" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="custom_modal_header">
+                    <div>
+                        <h5 id="ToolName"></h5>
+                        <small id="Ope"></small>
+                    </div>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <div class="MoldieBodyModal">
+                    <form id="ToolPressforms" autocomplete="off">
+                        <div class="form_group col-12 col-sm-12">
+                            <label for="">Type</label>
+                            <input type="hidden" name="EditToolNo" id="EditToolNo">
+                            <input type="text" name="EditType" id="EditType">
+                        </div>
+
+                        <div class="form_group col-12 col-sm-12">
+                            <label for="">Model</label>
+                            <input type="text" name="EditModel" id="EditModel">
+                        </div>
+
+                        <div class="form_group col-12 col-sm-12">
+                            <label for="">Line</label>
+                            <input type="text" name="EditLine" id="EditLine">
+                        </div>
+
+                        <div class="form_group col-12 col-sm-12">
+                            <label for="">Status</label>
+                            <textarea placeholder="Type any remarks" name="EditStatus" id="EditStatus" rows="3" cols="50" required></textarea>
+                        </div>
+
+                        <div class="form_group col-12 col-sm-12">
+                            <input type="radio" name="EditOpe" value="1" />
+                            <span>Operational</span>
+                            <input type="radio" name="EditOpe" value="0" />
+                            <span>Not Operational</span>
+                        </div>
+
+
+                        <div class="edits_footer" id="editsdisplay">
+                            <button type="submit" class="primary_button_color">
+                                <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
 <script type="text/javascript">
     let TableData = [];
     let PressData = [];
@@ -229,8 +377,12 @@
     let FinalSummaryData = [];
 
 
+    const editRegistry = document.getElementById("ToolPressforms");
+
     // Date Dropdown Selection
     const addmod = document.getElementById("addmodal");
+
+    const addRegistry = document.getElementById("AddToolPressforms");
 
     const select = document.getElementById("monthSelect");
     const updatePress = document.getElementById("InputPress");
@@ -284,16 +436,65 @@
         });
     });
 
-
-
-
-
+    $("#Registrymodal").on('click', (e) => {
+        e.preventDefault();
+        $("#AddTooling").modal("show");
+    });
 
 
     addmod.addEventListener('click', async (e) => {
         e.preventDefault();
         $("#InputMoldieModal").modal("show");
-     });
+    });
+
+    addRegistry.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        let formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+        let res = await postData('@Url.Action("AddPressRegistry", "DieMold")', formData);
+        
+        if (res.StatusCode === 200) {
+            Swal.fire({
+                title: "Success",
+                text: res.Message,
+                icon: "success",
+                confirmButtonColor: "#0d97c9",
+                timer: 1500
+            }).then(() => {
+                GetPressRegistry();
+                $("#AddTooling").modal("hide");
+            });
+        } else {
+            Swal.fire({
+                icon: "error",
+                text: data.ToolNo + " is already Exist",
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }
+    });
+
+
+    editRegistry.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        let formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+        let res = await postData('@Url.Action("UpdatePressRegistry", "DieMold")', formData);
+
+        if (res.StatusCode === 200) {
+            Swal.fire({
+                title: "Success",
+                text: res.Message,
+                icon: "success",
+                confirmButtonColor: "#0d97c9",
+                timer: 1500
+            }).then(() => {
+                GetPressRegistry();
+                $("#EdiTooling").modal("hide");
+            });
+        }
+
+    });
 
     updatePress.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -319,8 +520,8 @@
                 $("#ToolNo").append("<option value='" + row + "'>" + row + "</option>");
             });
 
-            displaySummaryPagination(SummaryData, 'RegistrylistData', 'RegistryPaginationContainer', 10, 5);
-         
+            displaySummaryPagination(SummaryData, 'RegistrylistData', 'RegistryPaginationContainer', 50, 5);
+
         }
     }
 
@@ -380,14 +581,24 @@
               let buttons;
               const rowData = filteredData[i];
 
+              let colorcirle = rowData.Operational === 1 ? "#04bd6c" : "red";
 
-
-              const rowHtml = ` <tr class='row_${i} rowClick' id='editButton_${i}'>
-                          <td style='font-weight: 600; color: #222;' data-cell="ToolNo">${rowData.ToolNo}</td>
-                          <td data-cell="Type">${rowData.Type}</td>
-                          <td data-cell="Model">${rowData.Model}</td>
-                          <td data-cell="Lines">${rowData.Lines}</td>
-                          <td data-cell="Status">${rowData.Status}</td>
+              const rowHtml = `<tr class='row_${i}' >
+                                  <td style='font-weight: 600; color: #222; padding-left: 1.5em;' data-cell="ToolNo">
+                                        <div class='d-flex align-item-center justify-content-start gap-2'>
+                                            <div class="circleprog" style="background-color: ${colorcirle};"></div>
+                                            <span>${rowData.ToolNo}</span>
+                                        </div>
+                                  </td>
+                                  <td data-cell="Type">${rowData.Type}</td>
+                                  <td data-cell="Model">${rowData.Model}</td>
+                                  <td data-cell="Lines">${rowData.Lines}</td>
+                                  <td data-cell="Status">${rowData.Status}</td>
+                                  <td id='datatable' style='text-align: center;'>
+                                 <button type='button' class='btn actionicon text-success rowClick' id='editButton_${rowData.ToolNo}' >
+                                    <i class='fa-regular fa-pen-to-square action_btn'></i>
+                                 </button>
+                          </td>
                       </tr>`;
 
               tableBody.innerHTML += rowHtml;
@@ -442,7 +653,7 @@
           const query = $('#Summarysearchbox').val().toLowerCase();
 
           filteredData = dataArray.filter(item =>
-              item.PartNo.toLowerCase().includes(query)
+              item.ToolNo.toLowerCase().includes(query) || item.Type.toLowerCase().includes(query)
           );
 
           currentPage = 1;
@@ -458,23 +669,30 @@
           e.stopPropagation();
           const buttonId = $(this).attr('id');
           const rowIndex = buttonId.split('_')[1];
-          const result = TableData.find(p => p.RecordID == rowIndex);
-          console.log(result);
-          //if (result) {
-          //    $("#Detail_Capinfo_ID").val(result.Capinfo_ID);
-          //    $("#Detail_Dieqty").val(result.DieQty);
-          //    $("#Detail_Actual_cav").val(result.Actual_Cav);
-          //    $("#Detail_CycleTime").val(result.CycleTime);
-          //    $("#Detail_Partnum").val(result.Partnum);
-          //    $("#Detail_Model_name").val(result.Model_name);
-          //    $("#Detail_Manhour").val(RoundNumberOne(result.manhour));
-          //    $("#Detail_Operation_time").val(result.Operation_time);
-          //    $("#Detail_Require").val(RoundNumberOne(result.Require));
-          //    $("#Detail_Capday").val(result.Capday);
-          //    $("#Detail_Capmonth").val(result.Capmonth);
+          const result = SummaryData.find(p => p.ToolNo == rowIndex);
+          if (result) {
+              let Ope = result.Operational === 1 ? "Operational" : "No Operational";
 
-          //    $("#detailsModal").modal("show");
-          //}
+              $("#ToolName").text(result.ToolNo);
+              $("#EditToolNo").val(result.ToolNo);
+              $("#Ope").text(Ope);
+              $("#EditType").val(result.Type);
+              $("#EditModel").val(result.Model);
+              $("#EditLine").val(result.Lines);
+              $("#EditStatus").val(result.Status);
+
+              //// Get all radio buttons with the name 'choice'
+              let radioButtons = document.querySelectorAll('[name="EditOpe"]');
+              //// CHECK IF THE value is the same value
+              radioButtons.forEach(radio => {
+                  if (parseInt(radio.value) === result.Operational) {
+                      radio.checked = true;
+                  }
+              });
+
+
+              $("#EdiTooling").modal("show");
+          }
       });
 
        // UPDATES THE DETAILS DATA
@@ -548,6 +766,7 @@
                         rowHtml += `<td rowspan="${groupRows.length}" data-cell="Type" style="font-weight: 600; color: #222;">${DieValue}</td>`;
                         rowHtml += `<td rowspan="${groupRows.length}" data-cell="ToolNo" style="font-weight: 600; color: #222;">${ToolValue}</td>`;
                         //rowHtml += `<td rowspan="${groupRows.length}" data-cell="Model">${ModelValue}</td>`;
+                        //rowHtml += `<td rowspan="${groupRows.length}" data-cell="Status"><circle-progress  value="50" max="100"></circle-progress></td>`;
                         rowHtml += `<td rowspan="${groupRows.length}" data-cell="Status">${StatsValue}</td>`;
                     }
 
@@ -624,22 +843,22 @@
         };
 
         // 🔍 Search functionality
-        const searchTable = () => {
-            const query = $('#Summarysearchbox').val().toLowerCase();
+        //const searchTable = () => {
+        //    const query = $('#Summarysearchbox').val().toLowerCase();
 
-            filteredData = dataArray.filter(item =>
-                item.PartNo.toLowerCase().includes(query)
-            );
+        //    filteredData = dataArray.filter(item =>
+        //        item.PartNo.toLowerCase().includes(query)
+        //    );
 
-            currentPage = 1;
-            renderTable(currentPage);
-            renderPagination();
-        };
+        //    currentPage = 1;
+        //    renderTable(currentPage);
+        //    renderPagination();
+        //};
 
-        // Add event listener for search input
-        $('#Summarysearchbox').on('input', searchTable);
+        //// Add event listener for search input
+        //$('#Summarysearchbox').on('input', searchTable);
 
-       
+
          // Initialize table and pagination
          window.changePage = changePage;
          renderTable(currentPage);
@@ -671,12 +890,14 @@
                 const rowData = filteredData[i];
                 const rowHtml = ` <tr class='row_${i} rowClick' id='editButton_${i}'>
                     <td data-cell="DateInput">${rowData.DateInput}</td>
+                    <td data-cell="Upper" style="font-weight: 600; color: #222;">${rowData.ToolNo}</td>
                     <td data-cell="Upper">${rowData.Upper}</td>
                     <td data-cell="Lower">${rowData.Lower}</td>
                     <td data-cell="Lower_ActualHeight">${rowData.Lower_ActualHeight}</td>
                     <td data-cell="Lower_DrawingHeight">${rowData.Lower_DrawingHeight}</td>
                     <td data-cell="Upper_ActualHeight">${rowData.Upper_ActualHeight}</td>
                     <td data-cell="Upper_DrawingHeight">${rowData.Upper_DrawingHeight}</td>
+                    <td data-cell="PressStamp">${rowData.PressStamp}</td>
                 </tr>`;
 
                 tableBody.innerHTML += rowHtml;
@@ -741,21 +962,21 @@
         };
 
         // Add event listener for search input
-        $('#searchbox').on('input', searchTable);
+        //$('#searchbox').on('input', searchTable);
 
-        // Handle click event for edit button
-        $(document).on('click', '.rowClick', function (e) {
-            e.stopPropagation();
-            const buttonId = $(this).attr('id');
-            const rowIndex = buttonId.split('_')[1];
-            const result = TableData.find(p => p.RecordID == rowIndex);
-            if (result) {
-                $("#PartNo").val(result.PartNo);
-                $("#No").val(result.No);
-                $("#MoldInput").val(result.TotalDie);
-                $("#InputMoldieModal").modal("show");
-            }
-        });
+        //// Handle click event for edit button
+        //$(document).on('click', '.rowClick', function (e) {
+        //    e.stopPropagation();
+        //    const buttonId = $(this).attr('id');
+        //    const rowIndex = buttonId.split('_')[1];
+        //    const result = TableData.find(p => p.RecordID == rowIndex);
+        //    if (result) {
+        //        $("#PartNo").val(result.PartNo);
+        //        $("#No").val(result.No);
+        //        $("#MoldInput").val(result.TotalDie);
+        //        $("#InputMoldieModal").modal("show");
+        //    }
+        //});
 
         // UPDATES THE DETAILS DATA
         @* detailsform.addEventListener('submit', async (e) => {

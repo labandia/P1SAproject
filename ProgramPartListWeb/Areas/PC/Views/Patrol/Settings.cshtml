@@ -5,253 +5,115 @@
 }
 
 
-@*<div class="row">
-    <div class="col-4">
-        <h2>Schedule Patrols</h2>
-    </div>
-    <div class="col-8">
-        <div id="calendar"></div>
+<header>
+    <h4 class="header__title">Account Settings</h4>
+</header>
+
+
+
+<div class="user__info">
+    @*<img src="~/Content/Images/noimage.png" />*@
+    <div class="user__names">
+        <span id="fullnametext2"></span>
+        <p id="Roles2"></p>
     </div>
 </div>
 
-<button id="exportBtn">Export Excel</button>
+<hr />
 
+<h5 style="font-weight: 600;">Change password</h5>
 
-<script src="~/Scripts/fullcalendar@6.1.17/index.global.min.js"></script>
-<script src="~/Scripts/fullcalendar@6.1.17/interaction/index.global.js"></script>
-<script src="~/Scripts/fullcalendar@6.1.17/timegrid/index.global.js"></script>
-<script src="~/Scripts/jquery-3.7.1.min.js"></script>
-<script src="~/Scripts/Utilities.js"></script>
-<script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', function () {
-        var calendarEl = document.getElementById('calendar');
-
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives', // Free dev use
-            initialView: 'resourceTimeGridWeek',
-            slotMinTime: "06:00:00",
-            slotMaxTime: "18:00:00",
-            height: "auto",
-
-            resources: [
-                { id: '1', title: 'John Doe' },
-                { id: '2', title: 'Jane Smith' },
-                { id: '3', title: 'Alice Johnson' }
-            ],
-
-            events: [
-                {
-                    id: '1',
-                    resourceId: '1',
-                    title: 'Meeting',
-                    start: '2025-04-22T09:00:00',
-                    end: '2025-04-22T10:00:00'
-                },
-                {
-                    id: '2',
-                    resourceId: '2',
-                    title: 'Shift',
-                    start: '2025-04-22T11:00:00',
-                    end: '2025-04-22T13:00:00'
-                }
-            ]
-        });
-
-        calendar.render();
-    });
-</script>*@
-
-
-
-
-
-
-
-
-
-
-
-<button id="sendEmailBtn">Send Email</button>
-
-
-<div class="row">
-        @*<div class="col-4">
-            <h2>Schedule Patrols</h2>
-        </div>*@
-        <div class="col-12">
-            <div id="calendar"></div>
-        </div>
+<form class="ChangepassContainer" id="changeform">
+    <div class="change__group">
+        <label>Current Password :</label>
+        <i class="fa fa-check-circle" aria-hidden="true" id="currentcheck"></i>
+        <i class="fa fa-times-circle" aria-hidden="true" id="currentWrong"></i>
+        <input type="password" name="currentpassword" id="currentpassword" placeholder="Input your old password" autofocus autocomplete="off" />
+    </div>
+    <div class="change__group">
+        <label>New Password :</label>
+        <i class='bx bx-check' id="newcheck"></i>
+        <i class='bx bxs-x-circle' id="newwrong"></i>
+        <input type="password" name="newpassword" id="newpassword" placeholder="input new password" autocomplete="off" />
     </div>
 
-    <button id="exportBtn">Export Excel</button>
+    <div class="change__group">
+        <label>Confirm Password :</label>
+        <i class="fa fa-check-circle" aria-hidden="true" id="confirmcheck"></i>
+        <i class="fa fa-times-circle" aria-hidden="true" id="confirmwrong"></i>
+
+        <input type="password" name="confirmpassword" id="confirmpassword" placeholder="Verify the password" autocomplete="off" />
+    </div>
+
+    <button type="submit" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i>  Save changes</button>
+</form>
+
+<script src="~/Scripts/Utilities.js"></script>
+<script type="text/javascript">
+
+    const forms = document.getElementById('changeform');
+
+    forms.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        if (Validateform()) {
+
+        }
+    });
 
 
-    <script src="~/Scripts/fullcalendar@6.1.17/index.global.min.js"></script>
-    <script src="~/Scripts/jquery-3.7.1.min.js"></script>
-    <script src="~/Scripts/Utilities.js"></script>
-    <script type="text/javascript">
-        //const exportbtn = document.getElementById("exportBtn");
+    function Validateform() {
+        let samplepass = "1234";
+        const current = document.getElementById("currentpassword").value;
 
+        if (current === "") {
+            $("#currentWrong").show();
+            return;
+        } else {
+            $("#currentWrong").hide();
 
+            var checkcurrent = CheckforCurrentPassword(currentpassword, current);
 
-        //exportbtn.addEventListener('click', (e) => {
-        //    e.preventDefault();
+            if (checkcurrent) {
 
-        //    fetch('/Patrol/ExportToPdf', {
-        //        method: 'POST'
-        //    }).then(response => {
+                $("#currentWrong").show();
+                $("#currentcheck").hide();
+                check = false;
+            } else {
+                $("#currentcheck").show();
+                $("#currentWrong").hide();
+            }
+        }
 
-        //    }).catch(error => {
-        //         alert("Error: " + error.message);
-        //    });
-        //});
-
-        //document.addEventListener('DOMContentLoaded', function () {
-        //    const today = new Date();
-        //    const year = today.getFullYear();
-        //    const month = String(today.getMonth() + 1).padStart(2, '0');
-        //    const day = String(today.getDate()).padStart(2, '0');
-        //    const formattedDate = `${year}-${month}-${day}`;
-
-        //    var calendarEl = document.getElementById('calendar');
-        //    var calendar = new FullCalendar.Calendar(calendarEl, {
-        //        initialView: 'dayGridMonth',
-        //        aspectRatio: 1.8,
-
-        //        dayCellDidMount: function (info) {
-        //            // Format info.date to local date string
-        //            const cellDate = info.date.getFullYear() + '-' +
-        //                String(info.date.getMonth() + 1).padStart(2, '0') + '-' +
-        //                String(info.date.getDate()).padStart(2, '0');
-
-        //            if (cellDate === formattedDate) {
-        //                info.el.style.backgroundColor = '#3664F4';
-        //                //info.el.style.color = 'white';
-        //            }
-        //        },
-
-        //        dateClick: function (info) {
-        //            alert("You clicked on: " + info.dateStr);
-        //        }
-        //    });
-
-        //    calendar.render();
-        //});
-
-
-
-
-        //document.addEventListener('DOMContentLoaded', function () {
-        //    var calendarEl = document.getElementById('calendar');
-        //    var calendar = new FullCalendar.Calendar(calendarEl, {
-        //        initialView: 'resourceTimelineWeek'
-        //    });
-        //    calendar.render();
-        //});
+        
+    }
+    async function Getuserinfo() {
+        const accessToken = localStorage.getItem('accessToken');
+        const result = await FetchAuthenticate('/User/GetUserInformation', { accessToken });
+        console.log(result);
+        //if (result.success) {
+        //    console.log("Welcome", result.name, "Role:", result.role);
+        //} else {
+        //    console.error(result.message);
+        //}
+    }
 
 
 
-        document.getElementById("sendEmailBtn").addEventListener("click", function () {
-            fetch("/PC/Patrol/SendEmail", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            to: "jaye.labandia@sanyodenki.com",
-                            subject: "Test Email from JS",
-                            body: "This email was triggered from JavaScript via MVC."
-                        })
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            alert(data.message);
-                        })
-                        .catch(error => {
-                            alert("Error: " + error);
-                        });
-                });
+    function CheckforCurrentPassword(current, newpass) {
+
+    }
 
 
+    const initialized = () => {
+        Getuserinfo();
 
+        $("#currentcheck").hide();
+        $("#currentWrong").hide();
 
+        $("#confirmcheck").hide();
+        $("#confirmwrong").hide();
+    }
 
-
-
-
-        document.addEventListener('DOMContentLoaded', function () {
-            const calendarEl = document.getElementById('calendar');
-            const calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'timeGridWeek',
-                initialDate: '2023-08-09',
-                headerToolbar: {
-                    left: 'prev,next today',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                },
-                events: [
-                    {
-                        title: 'Presentation - Sanjay',
-                        start: '2023-08-09T11:40:00',
-                        end: '2023-08-09T12:35:00',
-                        className: 'bg-work'
-                    },
-                    {
-                        title: 'CRM Session - Saimon',
-                        start: '2023-08-09T12:00:00',
-                        end: '2023-08-09T01:00:00',
-                        className: 'bg-study'
-                    },
-                    {
-                        title: 'Client work - Masum',
-                        start: '2023-08-08T12:24:00',
-                        end: '2023-08-08T02:00:00',
-                        className: 'bg-work'
-                    },
-                    {
-                        title: 'Dribbble Shot - Keyes',
-                        start: '2023-08-08T04:00:00',
-                        end: '2023-08-08T05:50:00',
-                        className: 'bg-personal'
-                    },
-                    {
-                        title: 'Learning - Rahan',
-                        start: '2023-08-11T11:40:00',
-                        end: '2023-08-11T12:35:00',
-                        className: 'bg-study'
-                    },
-                    {
-                        title: 'Event Ofspace - Royal',
-                        start: '2023-08-10T03:50:00',
-                        end: '2023-08-10T05:45:00',
-                        className: 'bg-personal'
-                    },
-                    {
-                        title: 'CRM Meeting - Mojumder',
-                        start: '2023-08-10T01:50:00',
-                        end: '2023-08-10T02:45:00',
-                        className: 'bg-work'
-                    },
-                    {
-                        title: 'Event Ofspace - Wash',
-                        start: '2023-08-11T03:20:00',
-                        end: '2023-08-11T04:30:00',
-                        className: 'bg-personal'
-                    },
-                    {
-                        title: 'Discussions - Ahsan',
-                        start: '2023-08-12T01:00:00',
-                        end: '2023-08-12T02:20:00',
-                        className: 'bg-study'
-                    },
-                    {
-                        title: 'Event Ofspace - Mayad',
-                        start: '2023-08-12T05:20:00',
-                        end: '2023-08-12T06:40:00',
-                        className: 'bg-work'
-                    }
-                ]
-            });
-
-            calendar.render();
-        });
-    </script>
+    initialized();
+</script>

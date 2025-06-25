@@ -167,6 +167,31 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         }
 
 
+        [HttpPost]
+        public async Task<ActionResult> AddPressRegistry(PressDieRegistry obj)
+        {
+            bool update = await _die.AddPressRegistry(obj);
+            var formdata = GlobalUtilities.GetMessageResponse(update, 0);
+            return Json(formdata, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> UpdatePressRegistry()
+        {
+            var obj = new PressDieRegistry
+            {
+                ToolNo = Request.Form["EditToolNo"],
+                Type = Request.Form["EditType"],
+                Model = Request.Form["EditModel"],
+                Lines = Convert.ToInt32(Request.Form["EditLine"]),
+                Status = Request.Form["EditStatus"],    
+                Operational = Convert.ToInt32(Request.Form["EditOpe"])
+            };
+
+            bool update = await _die.EditPressRegistry(obj);
+            var formdata = GlobalUtilities.GetMessageResponse(update, 1);
+            return Json(formdata, JsonRequestBehavior.AllowGet);
+        }
 
         // GET: P1SA/DieMold
         public ActionResult DieMoldLife() =>  View();

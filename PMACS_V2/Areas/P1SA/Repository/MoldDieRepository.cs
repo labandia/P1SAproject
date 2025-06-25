@@ -196,7 +196,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
         public async  Task<List<PressDieRegistry>> GetPressRegistryList()
         {
             string strquery = @"SELECT ToolNo,Type,Model,Lines,Note,Status,Operational
-                                FROM DiePressRegistry ";
+                                FROM DiePressRegistry";
             return await SqlDataAccess.GetData<PressDieRegistry>(strquery, null);
         }
 
@@ -314,6 +314,31 @@ namespace PMACS_V2.Areas.P1SA.Repository
             string insertquery = @"INSERT INTO DiePressMonitoring(ToolNo, Upper, Upper_ActualHeight, Upper_DrawingHeight, Lower_ActualHeight, Lower_DrawingHeight, PressStamp)
                                        VALUES(@ToolNo, @Upper, @Upper_ActualHeight, @Upper_DrawingHeight, @Lower_ActualHeight, @Lower_DrawingHeight, @PressStamp)";
             return await SqlDataAccess.UpdateInsertQuery(insertquery, press);
+        }
+
+        public async Task<bool> EditPressRegistry(PressDieRegistry press)
+        {
+            string updatequery = $@"UPDATE DiePressRegistry SET Type =@Type, Model =@Model, Lines =@Lines, Status =@Status,  Operational =@Operational
+                                    WHERE ToolNo =@ToolNo";
+
+            return await SqlDataAccess.UpdateInsertQuery(updatequery, press);
+        }
+
+        public async Task<bool> AddPressRegistry(PressDieRegistry press)
+        {
+            var data = await GetPressRegistryList();
+            bool check = data.Any(res =>  res.ToolNo == press.ToolNo);
+
+            if (check)
+            {
+                Debug.WriteLine("Already Exist");
+                return false;
+            }
+
+            string insertquery = @"INSERT INTO DiePressRegistry(ToolNo, Type, Model, Lines, Status, Operational)
+                                       VALUES(@ToolNo, @Type, @Model, @Lines, @Status, @Operational)";
+            return await SqlDataAccess.UpdateInsertQuery(insertquery, press);
+
         }
     }
 }

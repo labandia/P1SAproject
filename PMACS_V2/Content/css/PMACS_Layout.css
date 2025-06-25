@@ -2026,3 +2026,40 @@
             opacity: 1;
         }
     }
+
+
+    .circle-progress-value {
+        stroke-width: 6px;
+        stroke:red;
+    }
+
+    .circle-progress-circle {
+        stroke-width: 6px;
+        stroke: red;
+    }
+
+    .circle-progress-text {
+        fill: red;
+    }
+
+    .circleprog{
+        width: 8px;
+        height: 8px;
+        background: red;
+        border-radius: 50%;
+        margin-top: .4em;
+    }
+
+
+    #DieWrapcolumn td:nth-child(3), #DieWrapcolumn th:nth-child(3),  #DieWrapcolumn td:nth-child(5), #DieWrapcolumn th:nth-child(5){
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 180px; /* Adjust this width as needed */
+    }
+
+    .Legends span{
+        font-size: .8rem;
+        font-weight: 600;
+        color:#222;
+    }

@@ -96,6 +96,35 @@ window.postData = async (url, data) => {
         return null;
     }
 };
+
+window.PullUserInformation = async () => {
+    const token = localStorage.getItem('accessToken');
+
+    const res = await fetch('/User/GetUserInformation', {
+        method: 'POST',
+        headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json'
+        }
+    });
+
+    if (res.status === 401) {
+        console.warn("Unauthorized");
+        return;
+    }
+
+    const result = await res.json();
+
+    if (result.success) {
+        return result;
+        console.log("User ID:", result.userId);
+        console.log("Name:", result.name);
+        console.log("Role:", result.role);
+    } else {
+        console.warn(result.message || "Unknown error");
+    }
+};
+
 async function refreshAccessToken() {
     const logout = localStorage.getItem('Logout');
     const refreshToken = localStorage.getItem('refreshToken');

@@ -50,13 +50,17 @@
     }
 
     .primarybtn{
+        transition: .5s ease-in-out;
         background: var(--primary-color) !important;
     }
     .primarybtn:hover{
         background:  var(--primary-hover) !important;
     }
 
-    
+    button{
+        padding: .5em 1em;
+
+    }
 
 
     main {
@@ -160,7 +164,12 @@
     }
 
     .selectreg{
+        transition: .5s ease-in-out;
         font-size: .9rem;
+        cursor: pointer;
+    }
+    .selectreg:hover{
+        color: var(--primary-color);
     }
 
     .PatrolDesign_input i{
@@ -1080,3 +1089,22 @@
       border: none !important;
       outline: none !important;
     }
+
+    .ChangepassContainer{
+        width: 450px;
+        margin-top: 1em;
+    }
+
+    .ChangepassContainer input{
+        width: 100%;
+        padding: .5em 1em;
+        background: #f5f5f5;
+        margin: .5em 0;
+    }
+
+    .ChangepassContainer button{
+        margin-top: 1em;
+        color: #fff;
+    }
+
+    

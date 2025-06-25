@@ -66,9 +66,9 @@
                             <table>
                                 <thead>
                                     <tr>
-                                        <th>No</th>
+                                        @*<th>No</th>*@
                                         <th>Part No </th>
-                                        <th>Die Number</th>
+                                        <th>Die #</th>
                                         <th>Die Serial</th>
                                         <th>Die life</th>
                                         <th>2011-2015</th>
@@ -382,9 +382,9 @@
                   let percentage = parseFloat(StatusValue) || 0;
                   let rowHtml = "<tr class='rowClick' id='editButton'>";
 
-                  if (idx === 0) {
-                      rowHtml += `<td rowspan="${groupRows.length}" data-cell="No" style="font-weight: 600; color: #222;">${NoValue}</td>`;
-                  }
+                  //if (idx === 0) {
+                  //    rowHtml += `<td rowspan="${groupRows.length}" data-cell="No" style="font-weight: 600; color: #222;">${NoValue}</td>`;
+                  //}
 
                   rowHtml += `<td data-cell="PartNo" style="font-weight: 600; color: #222;">${rowData.PartNo}</td>`;
 

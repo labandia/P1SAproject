@@ -18,7 +18,7 @@
 
 
 <div class="PatrolDesign">
-    <div class="PatrolDesign_wrapper">
+    <div class="PatrolDesign_wrapper" id="logshow">
         <form id="logincredentials">
             <h3>Production Patrol Inspection Report System</h3>
             <div class="PatrolDesign_input">
@@ -27,14 +27,37 @@
             </div>
             <div class="PatrolDesign_input">
                 <i class="fa-solid fa-unlock-keyhole"></i>
-                <input type="password" name="password" id="password"  placeholder="Enter Password" autocomplete="new-password" required />
+                <input type="password" name="password" id="password" placeholder="Enter Password" autocomplete="new-password" required />
             </div>
 
             <div class="buttoncenter">
                 <button type="submit" id="loginbtn" class="primarybtn"><i class="fa-solid fa-right-to-bracket"></i> Login</button>
             </div>
         </form>
-        <p class="selectreg">Forgot password ?</p>
+        <p class="selectreg" id="forgetbtn">Forgot password ?</p>
+    </div>
+
+    <div class="PatrolDesign_wrapper" id="forgeshow">
+        <form id="logincredentials">
+            <h3>Forgot Password</h3>
+            <div class="PatrolDesign_input">
+               <i class="fa-solid fa-id-card"></i>
+                <input type="text" name="username" id="username" placeholder="Enter Employee ID" autocomplete="off" required />
+            </div>
+            <div class="PatrolDesign_input">
+                <i class="fa-solid fa-user"></i>
+                <input type="text" name="username" id="username" placeholder="Enter Username" autocomplete="off" required />
+            </div>
+            <div class="PatrolDesign_input">
+                <i class="fa-solid fa-unlock-keyhole"></i>
+                <input type="password" name="password" id="password" placeholder="Enter Password" autocomplete="new-password" required />
+            </div>
+
+            <div class="buttoncenter">
+                <button type="submit" id="loginbtn" class="primarybtn"><i class="fa-solid fa-right-to-bracket"></i> Login</button>
+            </div>
+        </form>
+        <p class="selectreg" id="backbtn">Back To Login ?</p>
     </div>
 </div>
 
@@ -52,6 +75,8 @@
              //const regform = document.getElementById('Registerform');
              //const changeforms = document.getElementById('changereg');
              const changelogs = document.getElementById('changelogin');
+             const forgetlogs = document.getElementById('forgetbtn');
+             const backlog = document.getElementById('backbtn');
 
 
              //changeforms.addEventListener('click', function (e) {
@@ -78,7 +103,6 @@
                  let res = await postData('/User/Authenticate', formData);
 
 
-                 console.log(res);
 
                  if (res.StatusCode === 200) {
                      Swal.fire({
@@ -103,6 +127,26 @@
 
 
              });
+
+             forgetlogs.addEventListener('click', async (e) => {
+                 e.preventDefault();
+                 $('#logshow').hide();
+                 $('#forgeshow').show();
+             });
+
+             backlog.addEventListener('click', async (e) => {
+                 e.preventDefault();
+                 $('#logshow').show();
+                 $('#forgeshow').hide();
+             });
+
+
+             const Initialization = () => {
+                 $('#logshow').show();
+                 $('#forgeshow').hide();
+             }
+
+
              @*regform.addEventListener('submit', async (e) => {
                  e.preventDefault();
                      const savebtn = document.querySelector("#Regisbtn");
@@ -127,4 +171,5 @@
                          savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-regular fa-floppy-disk'></i>  Registered</span>"
                      }
              });*@
+             Initialization();
 </script>

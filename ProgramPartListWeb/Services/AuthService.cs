@@ -31,6 +31,7 @@ namespace ProgramPartListWeb.Services
             var data = await UsersAccess.UserGetData<AuthModel>(strquery, new { Username = user });
             var results = new DataMessageResponse<object> { };
 
+
             // CHECKS IF THE USERNAME EXIST
             if (data == null || !data.Any())
             {

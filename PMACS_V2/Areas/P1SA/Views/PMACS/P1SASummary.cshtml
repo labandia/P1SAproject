@@ -150,11 +150,11 @@
 
                         if (checkrole !== 2) {
                             $("#headertable").show();
-                            buttons = "<td id='datatable' style='text-align: center;'>" +
-                                "<button type='submit' Class='btn actionicon text-success editButton' id='editButton_" + row.ProcessCode + "' >" +
-                                "<i class='fa-regular fa-pen-to-square action_btn'></i>" +
-                                "</button>" +
-                                "</td>";
+                            buttons = `<td id='datatable' style='text-align: center;'>
+                                        <button type='submit' Class='btn actionicon text-success editButton' id='editButton_" + row.ProcessCode + "' >
+                                        <i class='fa-regular fa-pen-to-square action_btn'></i>
+                                        </button>
+                                        </td>`;
                         } else {
                             $("#headertable").hide();
                             $("datatable").hide();
@@ -170,7 +170,7 @@
 
                         var setdata = "<tr class= 'row_" + index + "  '  >" +
                             "<td class='textleft' style='text-align: left;'>" +
-                            "<strong style='font-weight: 600;'>" + row.ProcessName + "</strong>" +
+                            "<strong style='font-weight: 600; color: #222;'>" + row.ProcessName + "</strong>" +
                             "</td>" +
                             "<td style='text-align: center;'>" + row.ActualMachine + "</td> " +
                             "<td style='text-align: center;'>" + row.AvailMachine + "</td> " +

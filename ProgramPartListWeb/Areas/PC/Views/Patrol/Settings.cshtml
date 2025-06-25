@@ -28,13 +28,13 @@
         <label>Current Password :</label>
         <i class="fa fa-check-circle" aria-hidden="true" id="currentcheck"></i>
         <i class="fa fa-times-circle" aria-hidden="true" id="currentWrong"></i>
-        <input type="password" name="currentpassword" id="currentpassword" placeholder="Input your old password" autofocus autocomplete="off" />
+        <input type="password" name="currentpassword" id="currentpassword" placeholder="Input your old password" autofocus autocomplete="off" required />
     </div>
     <div class="change__group">
         <label>New Password :</label>
         <i class='bx bx-check' id="newcheck"></i>
         <i class='bx bxs-x-circle' id="newwrong"></i>
-        <input type="password" name="newpassword" id="newpassword" placeholder="input new password" autocomplete="off" />
+        <input type="password" name="newpassword" id="newpassword" placeholder="input new password" autocomplete="off" required />
     </div>
 
     <div class="change__group">
@@ -42,7 +42,7 @@
         <i class="fa fa-check-circle" aria-hidden="true" id="confirmcheck"></i>
         <i class="fa fa-times-circle" aria-hidden="true" id="confirmwrong"></i>
 
-        <input type="password" name="confirmpassword" id="confirmpassword" placeholder="Verify the password" autocomplete="off" />
+        <input type="password" name="confirmpassword" id="confirmpassword" placeholder="Verify the password" autocomplete="off" required />
     </div>
 
     <button type="submit" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i>  Save changes</button>
@@ -64,28 +64,34 @@
 
     function Validateform() {
         let samplepass = "1234";
-        const current = document.getElementById("currentpassword").value;
+        //const current = document.getElementById("currentpassword").value;
+        const newpass = document.getElementById("newpassword").value;
+        const matchpass = document.getElementById("confirmpassword").value;
 
-        if (current === "") {
-            $("#currentWrong").show();
-            return;
+
+        // CHECKS THE NEW PASSWORD AND CONFIRMPASSWORD IF DOES MATCH
+        if (newpass !== matchpass) {
+            $("#confirmwrong").show();
+            $("#confirmcheck").hide();
+            check = false;
         } else {
-            $("#currentWrong").hide();
-
-            var checkcurrent = CheckforCurrentPassword(currentpassword, current);
-
-            if (checkcurrent) {
-
-                $("#currentWrong").show();
-                $("#currentcheck").hide();
-                check = false;
-            } else {
-                $("#currentcheck").show();
-                $("#currentWrong").hide();
-            }
+            $("#confirmcheck").show();
+            $("#confirmwrong").hide();
         }
 
-        
+
+
+
+        //var checkcurrent = CheckforCurrentPassword(currentpassword, current);
+
+        //if (checkcurrent) {
+        //    $("#currentWrong").show();
+        //    $("#currentcheck").hide();
+        //    check = false;
+        //} else {
+        //    $("#currentcheck").show();
+        //    $("#currentWrong").hide();
+        //}       
     }
     async function Getuserinfo() {
         const accessToken = localStorage.getItem('accessToken');

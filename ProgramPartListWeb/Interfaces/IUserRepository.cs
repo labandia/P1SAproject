@@ -10,6 +10,9 @@ namespace ProgramPartListWeb.Interfaces
     public interface IUserRepository
     {
         Task<List<UsersModel>> GetAllusers();
+        Task<UsersModel> GetUserById(int userId);
+
+
 
         Task<List<AuthModel>> LoginCredentials(string user);
         Task<List<AuthModelV2>> LoginCredentialsV2(string user, int proj);

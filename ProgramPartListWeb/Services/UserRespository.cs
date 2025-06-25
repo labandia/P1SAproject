@@ -62,9 +62,12 @@ namespace ProgramPartListWeb.Data
 
         public async Task<List<UsersModel>> GetAllusers()
         {
-            string strquery = "SELECT ua.User_ID, ua.First_Name, ua.Last_Name, " +
-                              "ua.Username, ua.Password, ua.Status " +
-                              "FROM UserAccounts ua ";
+            string strquery = $@"SELECT ua.User_ID, ua.Username, 
+                                ua.Password, u.Fullname, ua.Role_ID
+                                FROM UserAccounts ua
+                                INNER JOIN Users u ON u.User_ID = ua.User_ID
+                                INNER JOIN ProjectList p ON p.Project_ID = ua.Project_ID
+                                WHERE IsActive = 1";
             return await UsersAccess.UserGetData<UsersModel>(strquery);
         }
 
@@ -75,6 +78,15 @@ namespace ProgramPartListWeb.Data
             var parameters = new { User_ID = userId };
             int  roleid = await UsersAccess.GetUserCountData(strquery, parameters);
             return GlobalUtilities.UserRolesname(roleid);
+        }
+
+
+        public async Task<UsersModel> GetUserById(int userId)
+        {
+            var data = await GetAllusers();
+            var filterData = data.SingleOrDefault(res => res.User_ID == userId);    
+
+            return filterData == null ? null : filterData;
         }
     }
 }

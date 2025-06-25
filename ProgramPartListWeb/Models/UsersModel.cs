@@ -9,13 +9,13 @@ namespace ProgramPartListWeb.Models
     {
         public int User_ID { get; set; }
         public string Username { get; set; }
-        public string Password { get; set; }    
+        public string Password { get; set; }
+        public string Fullname { get; set; }
         public int Role_ID { get; set; }
-        public string First_Name { get; set; }
-        public string Last_Name { get; set; }
-        public string Status { get; set; }
-        public int Project_ID { get; set; }
     }
+
+
+
 
     public class AuthModel
     {

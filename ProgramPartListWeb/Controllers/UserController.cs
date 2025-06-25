@@ -79,7 +79,15 @@ namespace ProgramPartListWeb.Controllers
             return Json(formdata, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public async Task<ActionResult> CheckMatchPassword(int ID, string password)
+        {
+            var datalist = await _user.GetUserById(ID);
 
+            bool result = PasswordHasher.VerifyPassword(datalist.Password, password);
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
 
 
 
@@ -114,8 +122,8 @@ namespace ProgramPartListWeb.Controllers
                 var name = principal.FindFirst(ClaimTypes.Name)?.Value;
                 var role = principal.FindFirst(ClaimTypes.Role)?.Value;
 
-                var datalist = await _emp.GetAllEmployee() ?? new List<EmployeeModel>();
-                var data = datalist.FirstOrDefault(p => p.Employee_ID == empID);
+                //var datalist = await _user.GetAllEmployee() ?? new List<EmployeeModel>();
+                //var data = datalist.FirstOrDefault(p => p.Employee_ID == empID);
 
                 return Json(new { success = true, userId, name, role }, JsonRequestBehavior.AllowGet);
             }
@@ -124,6 +132,9 @@ namespace ProgramPartListWeb.Controllers
                 return Json(new { success = false, message = ex.Message }, JsonRequestBehavior.AllowGet);
             }
         }
+
+
+
 
 
 

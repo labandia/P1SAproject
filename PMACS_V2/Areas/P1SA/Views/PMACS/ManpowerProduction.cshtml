@@ -4,58 +4,80 @@
     Layout = "~/Areas/P1SA/Views/Shared/_Layout.cshtml";
 }
 
-<section class="wrapper2">
-    <header class="header2">
-        <div class="header2__statustitle d-flex align-items-center justify-content-between">
-            <div class="header2__total d-flex align-items-center gap-5">
-                <div class="header__head">
-                    <div class="header__count">
-                        <p>Total SPD:</p>
-                        <h1 id="SPD_id">0</h1>
-                    </div>
 
-                </div>
+<header class="MainHeader">
+    <h4>Production Manpower</h4>
+    <div class="header__action">
+        <span style="color: #222;">Last Update April 24, 2025</span>
+    </div>
+</header>
 
-                <div class="header__head">
-                    <div class="header__count">
-                        <p>Total Sub/Con:</p>
-                        <h1 id="subcon_id">0</h1>
-                    </div>
-                </div>
-
-                <div class="header__head">
-                    <div class="header__count">
-                        <p>Total Manpower:</p>
-                        <h1 id="manpower_id">0</h1>
-                    </div>
-                </div>
-
-            </div>
-
-            <div>
-                <span>Last Update April 24, 2025</span>
-            </div>
+<section class="mt-4">
+    <div class="row">
+        <div class="col-8">
+            <canvas id="lackingChart" width="600" height="300"></canvas>
         </div>
-    </header>
+
+        <div class="col-4">
+            <canvas id="manpowerChart" width="200" height="200" style="width: 200px !important; height: 200px"></canvas>
+        </div>
+
+    </div>
+</section>
+
+
+<section class="mt-5">
+    <div class="MainTable">
+        <table>
+            <thead>
+                <tr>
+                    <th>Section</th>
+                    <th>Actual</th>
+                    <th>Required</th>
+                    <th>Lacking</th>
+                </tr>
+            </thead>
+            <tbody id="DisplaysectionID">
+            </tbody>
+        </table>
+    </div>
+</section>
+
+
+
+
+
+
+<section class="wrapper2">
+
 
     <div class="prod_wrapper">
         <div class="prod__column mb-4">
             <div class="Production__card">
-                <div class="MainTable">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Section</th>
-                                <th>Actual</th>
-                                <th>Required(Capacity per process)</th>
-                                <th>Lacking</th>
-                            </tr>
-                        </thead>
-                        <tbody id="DisplaysectionID">
-                        </tbody>
-                    </table>
-                </div>
-                
+                @*<div class="row">
+                        <div class="col-7">
+                            <canvas id="lackingChart" width="600" height="400"></canvas>
+                        </div>
+
+                        <div class="col-5">
+                            <div class="MainTable">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Section</th>
+                                            <th>Actual</th>
+                                            <th>Required</th>
+                                            <th>Lacking</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="DisplaysectionID">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>*@
+
             </div>
         </div>
         <div class="prod__column">
@@ -79,6 +101,10 @@
     </div>
 
 </section>
+
+
+
+
 
 <!--########################## EDIT DATA #############################-->
 <div class="modal fade modal-m" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
@@ -180,10 +206,10 @@
              const totalSDP = load.reduce((sum, el) => sum + el.SDP, 0);
              const totalSubCon = load.reduce((sum, el) => sum + el.SubCon, 0);
              const totalManpower = load.reduce((sum, el) => sum + el.SDP + el.SubCon, 0);
-             $("#SPD_id").text(totalSDP);
-             $("#subcon_id").text(totalSubCon);
-             $("#manpower_id").text(totalManpower);
 
+             let TotalData = [totalSDP, totalSubCon];
+
+             DoughnutDisplay("", TotalData);
              //displaytheTotalBySection(load);
              displaytableData(load);
          }
@@ -198,6 +224,13 @@
          let res = await fetchData('@Url.Action("GetTotalmanpower", "PMACS")', { months: monthNames[new Date().getMonth()] });
          if (res && res.Success) {
              totalarrayload = res.Data;
+
+             let labelData = totalarrayload.map(res => res.SectionName);
+             let lowData = totalarrayload.map(res => res.Lacking);
+
+   
+             ChartDisplay(labelData, lowData);
+
              var totalData = $("#DisplaysectionID");
              totalData.empty();
              $.each(totalarrayload, function (index, rowData) {
@@ -230,6 +263,164 @@
              $(".Addmach__uploadaction").hide();
          }
      }
+
+
+
+    function ChartDisplay(label, dataS) {
+        const ctx = document.getElementById('lackingChart').getContext('2d');
+
+        const data = {
+            labels: label,
+            datasets: [{
+                label: 'Lacking Manpower',
+                data: dataS,
+                backgroundColor: [
+                    '#ff4d4d', // red for negative (Molding)
+                    '#4d79ff',
+                    '#4d79ff',
+                    '#4d79ff',
+                    '#4d79ff',
+                    '#4d79ff'
+                ],
+                borderRadius: 5
+            }]
+        }
+
+
+        const config = {
+            type: 'bar',
+            data: data,
+            options: {
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        title: {
+                            display: false,
+                            text: '',
+                            font: {
+                                family: 'Poppins'  // 👈 Set font family for axis title
+                            }
+                        },
+                        ticks: {
+                            font: {
+                                family: 'Poppins'
+                            }
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            font: {
+                                family: 'Poppins'
+                            }
+                        }
+                    }
+                },
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        labels: {
+                            font: {
+                                family: 'Poppins'
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                return `Lacking: ${context.parsed.y}`;
+                            }
+                        },
+                        titleFont: {
+                            family: 'Poppins'
+                        },
+                        bodyFont: {
+                            family: 'Poppins'
+                        }
+                    }
+                }
+            }
+        };
+
+
+        const lackingChart = new Chart(ctx, config);
+
+    }
+    function DoughnutDisplay(label, total) {
+        const ctx = document.getElementById('manpowerChart').getContext('2d');
+
+        const data = {
+            labels: ['SPD', 'Sub/Con'],
+            datasets: [{
+                data: total,
+                backgroundColor: ['#4e73df', '#1cc88a'],
+                hoverOffset: 10
+            }]
+        };
+
+        const config = {
+            type: 'doughnut',
+            data: data,
+            options: {
+                responsive: true,
+                cutout: '70%',
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Total Manpower Distribution',
+                        align: 'center',
+                        font: {
+                            size: 14,
+                            family: 'Poppins'
+                        },
+                        padding: {
+                            top: 10,
+                            bottom: 20
+                        }
+                    },
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: {
+                                family: 'Poppins',
+                                size: 14
+                            },
+                            generateLabels: function (chart) {
+                                const data = chart.data;
+                                const dataset = data.datasets[0];
+                                return data.labels.map((label, i) => {
+                                    return {
+                                        text: `${label}: ${dataset.data[i]}`,
+                                        fillStyle: dataset.backgroundColor[i],
+                                        strokeStyle: dataset.backgroundColor[i],
+                                        index: i
+                                    };
+                                });
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                const label = context.label || '';
+                                const value = context.parsed || 0;
+                                return `${label}: ${value}`;
+                            }
+                        },
+                        titleFont: {
+                            family: 'Poppins'
+                        },
+                        bodyFont: {
+                            family: 'Poppins'
+                        }
+                    }
+                }
+            }
+        };
+
+        new Chart(ctx, config);
+    }
+
 
 
 

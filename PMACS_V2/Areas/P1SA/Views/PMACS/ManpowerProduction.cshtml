@@ -15,72 +15,45 @@
 <section class="mt-4">
     <div class="row">
         <div class="col-8">
-            <canvas id="lackingChart" width="600" height="300"></canvas>
+            <div class="chart_container" style="padding: 1.5em; background: #fff; border: 1px solid #d4d3d3; border-radius: .5em;">
+                <canvas id="lackingChart" width="600" height="300"></canvas>
+            </div>
         </div>
 
         <div class="col-4">
-            <canvas id="manpowerChart" width="200" height="200" style="width: 200px !important; height: 200px"></canvas>
-        </div>
-
-    </div>
-</section>
-
-
-<section class="mt-5">
-    <div class="MainTable">
-        <table>
-            <thead>
-                <tr>
-                    <th>Section</th>
-                    <th>Actual</th>
-                    <th>Required</th>
-                    <th>Lacking</th>
-                </tr>
-            </thead>
-            <tbody id="DisplaysectionID">
-            </tbody>
-        </table>
-    </div>
-</section>
-
-
-
-
-
-
-<section class="wrapper2">
-
-
-    <div class="prod_wrapper">
-        <div class="prod__column mb-4">
-            <div class="Production__card">
-                @*<div class="row">
-                        <div class="col-7">
-                            <canvas id="lackingChart" width="600" height="400"></canvas>
-                        </div>
-
-                        <div class="col-5">
-                            <div class="MainTable">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Section</th>
-                                            <th>Actual</th>
-                                            <th>Required</th>
-                                            <th>Lacking</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="DisplaysectionID">
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                    </div>*@
-
+            <div class="chart_container" style="padding: 1.5em; background: #fff; border: 1px solid #d4d3d3; border-radius: .5em;">
+                <canvas id="manpowerChart" width="200" height="200" style="width: 200px !important; height: 200px"></canvas>
             </div>
         </div>
-        <div class="prod__column">
+
+        </div>
+</section>
+
+<div class="tabs mt-4">
+    <div class="tabs__header d-flex align-items-center gap-2">
+        <div class="active">Lacking Manpower Data</div>
+        <div>Manpower/process</div>
+    </div>
+
+    <div class="tabs__body">
+        <div class="active" style="width: 100%;">
+            <div class="MainTable">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Section</th>
+                            <th>Actual</th>
+                            <th>Required</th>
+                            <th>Lacking</th>
+                        </tr>
+                    </thead>
+                    <tbody id="DisplaysectionID">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div style="width: 100%;">
             <div class="MainTable">
                 <table>
                     <thead>
@@ -97,91 +70,95 @@
                 </table>
             </div>
         </div>
-
     </div>
-
-</section>
-
+ </div>
 
 
 
 
-<!--########################## EDIT DATA #############################-->
-<div class="modal fade modal-m" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
 
-            <div class="modal-body">
-                <div class="custom_modal_header">
-                    <div class="custom_modal__icon" style="align-items: center;">
-                        <div class="custom_icon_container">
-                            <i class='fa-regular fa-pen-to-square '></i>
+
+
+
+
+
+
+    <!--########################## EDIT DATA #############################-->
+    <div class="modal fade modal-m" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+
+                <div class="modal-body">
+                    <div class="custom_modal_header">
+                        <div class="custom_modal__icon" style="align-items: center;">
+                            <div class="custom_icon_container">
+                                <i class='fa-regular fa-pen-to-square '></i>
+                            </div>
+                            <div class="custom_modal_title">
+                                <span id="exampleModalLabel">Edit Data</span>
+                            </div>
                         </div>
-                        <div class="custom_modal_title">
-                            <span id="exampleModalLabel">Edit Data</span>
-                        </div>
+
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
 
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+
+                    <form id="EditPisa" style="margin-top: 1em;">
+                    </form>
                 </div>
 
 
-                <form id="EditPisa" style="margin-top: 1em;">
-                </form>
+
+
             </div>
-
-
-
-
         </div>
     </div>
-</div>
 
-<!--########################## EDIT DATA #############################-->
-<div class="modal fade modal-m" id="requiredmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
+    <!--########################## EDIT DATA #############################-->
+    <div class="modal fade modal-m" id="requiredmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
 
-            <div class="modal-body">
-                <div class="custom_modal_header">
-                    <div class="custom_modal__icon" style="align-items: center;">
-                        <div class="custom_icon_container">
-                            <i class='fa-regular fa-pen-to-square '></i>
+                <div class="modal-body">
+                    <div class="custom_modal_header">
+                        <div class="custom_modal__icon" style="align-items: center;">
+                            <div class="custom_icon_container">
+                                <i class='fa-regular fa-pen-to-square '></i>
+                            </div>
+                            <div class="custom_modal_title">
+                                <span>Required</span>
+                            </div>
                         </div>
-                        <div class="custom_modal_title">
-                            <span>Required</span>
-                        </div>
+
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
 
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+
+                    <form id="requiredform" style="margin-top: 1em; padding: 0 1em;">
+                        <label id="modelsec">Molding</label>
+                        <input type="hidden" name="sectionID" id="sectionID" />
+                        <input type="text" name="requiredQty" id="requiredQty" onkeypress="return restrictChars(event)" maxlength="5" />
+                        <div class='footer d-flex justify-content-end pt-4 pb-2 gap-2'>
+                            <button type='submit' id='saveEditsum'><i class='fa-regular fa-floppy-disk'></i>  Save</button>
+                        </div>
+                    </form>
                 </div>
 
 
-                <form id="requiredform" style="margin-top: 1em; padding: 0 1em;">
-                    <label id="modelsec">Molding</label>
-                    <input type="hidden" name="sectionID" id="sectionID" />
-                    <input type="text" name="requiredQty" id="requiredQty" onkeypress="return restrictChars(event)" maxlength="5" />
-                    <div class='footer d-flex justify-content-end pt-4 pb-2 gap-2'>
-                        <button type='submit' id='saveEditsum'><i class='fa-regular fa-floppy-disk'></i>  Save</button>
-                    </div>
-                </form>
+
+
             </div>
-
-
-
-
         </div>
     </div>
-</div>
 
 
 
-<script src="~/Scripts/chart.js"></script>
-<script type="text/javascript">
+    <script src="~/Scripts/chart.js"></script>
+    <script type="text/javascript">
      const currentYear = new Date().getFullYear();
      const Month = new Date().toLocaleString('en-US', { month: 'long' });
 
@@ -228,7 +205,7 @@
              let labelData = totalarrayload.map(res => res.SectionName);
              let lowData = totalarrayload.map(res => res.Lacking);
 
-   
+
              ChartDisplay(labelData, lowData);
 
              var totalData = $("#DisplaysectionID");
@@ -563,5 +540,28 @@
          //Displayinfo();
      }
 
+        // ########################################  TABS CONTROLS ########################################## //
+
+        let tabs2 = document.querySelector(".tabs");
+        let tabheader = tabs2.querySelector(".tabs__header");
+        let tabBody = tabs2.querySelector(".tabs__body");
+        let tabIndicator = tabs2.querySelector(".tabs__indicator");
+        let tabHeadernodes = tabs2.querySelectorAll(".tabs__header > div");
+        let tabBodynodes = tabs2.querySelectorAll(".tabs__body > div");
+
+        for (let i = 0; i < tabHeadernodes.length; i++) {
+            tabHeadernodes[i].addEventListener("click", function () {
+                tabheader.querySelector(".active").classList.remove("active");
+                tabHeadernodes[i].classList.add("active");
+                tabBody.querySelector(".active").classList.remove("active");
+                tabBodynodes[i].classList.add("active");
+
+                
+            });
+        }
+
+
+
+
      InitializationData();
-</script>
+    </script>

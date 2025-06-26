@@ -251,6 +251,14 @@
         font-size: .9rem;
     }
 
+    .chart_container h1{
+        width: 100%;
+        background: red;
+        border-bottom: 1px solid #d4d3d3;
+        padding: 2em;
+        color: red;
+    }
+
     main {
         margin-top: 2em;
     }

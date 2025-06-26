@@ -269,19 +269,14 @@
     function ChartDisplay(label, dataS) {
         const ctx = document.getElementById('lackingChart').getContext('2d');
 
+        const backgroundColors = dataS.map(value => value < 0 ? '#ff4d4d' : '#4d79ff');
+
         const data = {
             labels: label,
             datasets: [{
                 label: 'Lacking Manpower',
                 data: dataS,
-                backgroundColor: [
-                    '#ff4d4d', // red for negative (Molding)
-                    '#4d79ff',
-                    '#4d79ff',
-                    '#4d79ff',
-                    '#4d79ff',
-                    '#4d79ff'
-                ],
+                backgroundColor: backgroundColors,
                 borderRadius: 5
             }]
         }

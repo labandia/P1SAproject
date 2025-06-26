@@ -268,7 +268,7 @@
 
              // Check the inputs validation
              if (validateform()) {
-                 let res = await postData('/User/Authenticate', formData);
+                 let res = await postData('/Auth/Authenticate', formData);
                  setTimeout(() => {
                      if (res.StatusCode === 200) {
                          Swal.fire({

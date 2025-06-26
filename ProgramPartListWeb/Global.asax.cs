@@ -118,6 +118,7 @@ namespace ProgramPartListWeb
             var container = new UnityContainer();
 
             // Register Repository Interface with Implementation
+            container.RegisterType<IAuthRepository, AuthRepository>();
             container.RegisterType<IUserRepository, UserRespository>();
             container.RegisterType<IEmployee, EmployeeRepository>();
             container.RegisterType<ISeriesRepository, SeriesRepository>();

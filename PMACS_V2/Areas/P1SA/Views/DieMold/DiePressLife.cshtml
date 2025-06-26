@@ -85,16 +85,16 @@
                                 <th rowspan="2">Tool No.</th>
                                 <th rowspan="2">Upper</th>
                                 <th rowspan="2">Lower</th>
-                                <th colspan="2" style="padding: .2em 0;">Upper Grind</th>
-                                <th colspan="2" style="padding: .2em 0;">Lower Grind</th>
+                                <th colspan="2" style="padding: .2em 0; border: 1px solid rgba(57, 61, 65, 0.5); ">Upper Grind</th>
+                                <th colspan="2" style="padding: .2em 0; border: 1px solid rgba(57, 61, 65, 0.5); ">Lower Grind</th>
                                 <th rowspan="2">Press stamp</th>
                             </tr>
 
                             <tr>
-                                <th>Actual Height</th>
-                                <th>Drawing Height</th>
-                                <th>Actual Height</th>
-                                <th>Drawing Height</th>
+                                <th style="border: 1px solid rgba(57, 61, 65, 0.5);">Actual Height</th>
+                                <th style="border: 1px solid rgba(57, 61, 65, 0.5);">Drawing Height</th>
+                                <th style="border: 1px solid rgba(57, 61, 65, 0.5);">Actual Height</th>
+                                <th style="border: 1px solid rgba(57, 61, 65, 0.5);">Drawing Height</th>
                             </tr>
 
                         </thead>
@@ -124,12 +124,12 @@
                     <table>
                         <thead>
                             <tr>
-                                <th style="text-align: left; padding-left: 1.5em;">Die No.</th>
-                                <th>Type</th>
-                                <th>Model</th>
-                                <th>No. of Line</th>
+                                <th style="width: 200px; text-align: left; padding-left: 1.5em; ">Die No.</th>
+                                <th style="width: 150px;">Type</th>
+                                <th style="width: 300px;">Model</th>
+                                <th style="width: 100px;"> No. of Line</th>
                                 <th>Status</th>
-                                <th>Action</th>
+                                <th style="width: 100px;">Action</th>
                             </tr>
                         </thead>
                         <tbody id="RegistrylistData">
@@ -244,10 +244,7 @@
         <div class="modal-content">
             <div class="modal-body">
                 <div class="custom_modal_header">
-                    <div>
-                        <h5 id="ToolName"></h5>
-                        <small id="Ope"></small>
-                    </div>
+                    <h5>Add Data</h5>
 
                     <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
                         <span>&times;</span>
@@ -258,22 +255,22 @@
                     <form id="AddToolPressforms" autocomplete="off">
                         <div class="form_group col-12 col-sm-12">
                             <label for="">Die No.</label>
-                            <input type="text" name="ToolNo" id="ToolNo" required>
+                            <input type="text" name="ToolNo" id="ToolNo" placeholder="Enter Die No." required>
                         </div>
 
                         <div class="form_group col-12 col-sm-12">
                             <label for="">Type</label>
-                            <input type="text" name="Type" id="Type" required>
+                            <input type="text" name="Type" id="Type" placeholder="Enter Type" required>
                         </div>
 
                         <div class="form_group col-12 col-sm-12">
                             <label for="">Model</label>
-                            <input type="text" name="Model" id="Model" required>
+                            <input type="text" name="Model" id="Model" placeholder="Enter Model" required>
                         </div>
 
                         <div class="form_group col-12 col-sm-12">
                             <label for="">Line</label>
-                            <input type="text" name="Lines" id="Lines" onkeypress="return restrictChars(event)" required>
+                            <input type="text" name="Lines" id="Lines" placeholder="Enter Line" onkeypress="return restrictChars(event)" required>
                         </div>
 
                         <div class="form_group col-12 col-sm-12">
@@ -281,12 +278,13 @@
                             <textarea placeholder="Enter Status " name="Status" id="Status" rows="3" cols="50" required></textarea>
                         </div>
 
-                        <div class="form_group col-12 col-sm-12">
+                        <div class="form_group col-12 col-sm-12 d-flex align-items-center gap-2">
                             <input type="radio" name="Operational" value="1" required />
-                            <span>Operational</span>
+                            <span style="color: #04bd6c;">Operational</span>
                             <input type="radio" name="Operational" value="0" required />
-                            <span>Not Operational</span>
+                            <span style="color: red;">Not Operational</span>
                         </div>
+
 
 
                         <div class="edits_footer" id="editsdisplay">
@@ -345,9 +343,9 @@
 
                         <div class="form_group col-12 col-sm-12">
                             <input type="radio" name="EditOpe" value="1" />
-                            <span>Operational</span>
+                            <span style="color: #04bd6c;">Operational</span>
                             <input type="radio" name="EditOpe" value="0" />
-                            <span>Not Operational</span>
+                            <span style="color: red;">Not Operational</span>
                         </div>
 
 
@@ -595,7 +593,7 @@
                                   <td data-cell="Lines">${rowData.Lines}</td>
                                   <td data-cell="Status">${rowData.Status}</td>
                                   <td id='datatable' style='text-align: center;'>
-                                 <button type='button' class='btn actionicon text-success rowClick' id='editButton_${rowData.ToolNo}' >
+                                 <button type='button' class='btn actionicon text-primary rowClick' id='editButton_${rowData.ToolNo}' >
                                     <i class='fa-regular fa-pen-to-square action_btn'></i>
                                  </button>
                           </td>

@@ -14,8 +14,6 @@ namespace ProgramPartListWeb.Interfaces
 
 
 
-        Task<List<AuthModel>> LoginCredentials(string user);
-        Task<List<AuthModelV2>> LoginCredentialsV2(string user, int proj);
         Task<string> UsersFullname(int id);
         Task<bool> RegiserUserData(object parameters);
         

@@ -483,10 +483,13 @@
     }
 
     .paginationPartlocal button {
-        width: 25px;
-        height: 25px;
         border-radius: .2em;
         transition: background all ease-in-out;
+    }
+
+    .paginationPartlocal button:disabled{
+        color: #222 ;
+        background: #f5f5f5;
     }
 
     .paginationPartlocal button.active {

@@ -18,58 +18,6 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         public UsersController(IUserRepository user) => _user = user;
        
 
-        [AllowAnonymous]
-        [HttpPost]
-        public async Task<ActionResult> Authenticate(string username, string password)
-        {
-            var data = await _user.LoginCredentials(username);
-            var results = new DataMessageResponse<object> { };
-
-            // CHECKS IF THE USERNAME EXIST
-            if (data.Count() > 0)
-            {
-                // GET ONLY ONE ROW DATA
-                var userRow = data.FirstOrDefault();
-                string strRole = GlobalUtilities.UserRolesname(userRow.Role_ID);
-                string fullname = userRow.Fullname;
-                // CHECKS THE PASSWORD IF IS CORRECT
-                if (PasswordHasher.VerifyPassword(userRow.Password, password))
-                {
-                    // Generate the token
-                    var token = JwtHelper.GenerateAccessToken(fullname, strRole, userRow.User_ID);
-
-                    var refreshToken = JwtHelper.GenerateRefreshToken(userRow.User_ID);
-
-                    SetFormsAuthentication(userRow.Role_ID);
-                    FormsAuthentication.SetAuthCookie(strRole, false);
-                    // Store user information in the session
-                    Session["UserID"] = userRow.User_ID;
-                    Session["Fullname"] = fullname;
-                    Session["Role"] = strRole;
-
-                    results.StatusCode = 200;
-                    results.Message = "Login Successfully";
-                    results.Data =  new { access_token = token, refresh_token = refreshToken };
-                }
-                else
-                {
-                    results.StatusCode = 401;
-                    results.Message = "Invalid credentials / password is incorrect";
-                    results.Data = null;
-                }
-            }
-            else
-            {
-                results.StatusCode = 401;
-                results.Message = "Invalid credentials / username doesnt exist";
-                results.Data = null;
-            }
-
-            return Json("", JsonRequestBehavior.AllowGet);
-
-
-        }
-
 
         [HttpGet]
         public async Task<ActionResult> GetUsersFullname(int userID) {

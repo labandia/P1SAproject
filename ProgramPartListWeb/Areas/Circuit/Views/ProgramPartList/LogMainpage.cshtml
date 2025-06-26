@@ -97,7 +97,7 @@
                  let formData = new FormData(e.target);
                  //formData.append('ProjectID', 8)
 
-                 let res = await postData('/User/Authenticate', formData);
+                 let res = await postData('/Auth/Authenticate', formData);
                  setTimeout(() => {
                      if (res.StatusCode === 200) {
                          Swal.fire({
@@ -133,7 +133,7 @@
                      savebtn.innerHTML = " <div class='buttonloading'></div>";
 
                      let formData = new FormData(e.target);
-                     let res = await postData('/User/RegisterUsers', formData);
+                     let res = await postData('/User/CreateUser', formData);
                     console.log(res);
                      //if (res.StatusCode === 200) {
                      //    Swal.fire({

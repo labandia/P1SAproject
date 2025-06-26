@@ -38,7 +38,7 @@
     </div>
 
     <div class="PatrolDesign_wrapper" id="forgeshow">
-        <form id="logincredentials">
+        @*<form id="Registrationform">
             <h3>Forgot Password</h3>
             <div class="PatrolDesign_input">
                <i class="fa-solid fa-id-card"></i>
@@ -54,9 +54,9 @@
             </div>
 
             <div class="buttoncenter">
-                <button type="submit" id="loginbtn" class="primarybtn"><i class="fa-solid fa-right-to-bracket"></i> Login</button>
+                <button type="submit"  class="primarybtn"><i class="fa-solid fa-right-to-bracket"></i> Login</button>
             </div>
-        </form>
+        </form>*@
         <p class="selectreg" id="backbtn">Back To Login ?</p>
     </div>
 </div>
@@ -99,11 +99,8 @@
                  const savebtn = document.querySelector("#loginbtn");
                  savebtn.innerHTML = " <div class='buttonloading'></div>";
 
-                 let formData = new FormData(logform);
-                 let res = await postData('/User/Authenticate', formData);
-
-
-
+                 let formData = new FormData(e.target);
+                 let res = await postData('/Auth/Authenticate', formData);
                  if (res.StatusCode === 200) {
                      Swal.fire({
                          title: "Success",
@@ -120,7 +117,12 @@
                          window.location.href = "/PC/Patrol/Dashboard";
                      });
                  } else {
-                    
+                     Swal.fire({
+                         icon: "error",
+                         text: res.Message,
+                         timer: 1500,
+                         showConfirmButton: false
+                     });
 
                      savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-solid fa-right-to-bracket'></i>  Login</span>"
                  };

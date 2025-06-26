@@ -28,13 +28,13 @@
         <label>Current Password :</label>
         <i class="fa fa-check-circle" aria-hidden="true" id="currentcheck"></i>
         <i class="fa fa-times-circle" aria-hidden="true" id="currentWrong"></i>
-        <input type="password" name="currentpassword" id="currentpassword" placeholder="Input your old password" autofocus autocomplete="off" required />
+        <input type="password" name="currentpassword" id="currentpassword" placeholder="Input your old password" autofocus autocomplete="off"  />
     </div>
     <div class="change__group">
         <label>New Password :</label>
         <i class='bx bx-check' id="newcheck"></i>
         <i class='bx bxs-x-circle' id="newwrong"></i>
-        <input type="password" name="newpassword" id="newpassword" placeholder="input new password" autocomplete="off" required />
+        <input type="password" name="newpassword" id="newpassword" placeholder="input new password" autocomplete="off"  />
     </div>
 
     <div class="change__group">
@@ -42,74 +42,97 @@
         <i class="fa fa-check-circle" aria-hidden="true" id="confirmcheck"></i>
         <i class="fa fa-times-circle" aria-hidden="true" id="confirmwrong"></i>
 
-        <input type="password" name="confirmpassword" id="confirmpassword" placeholder="Verify the password" autocomplete="off" required />
+        <input type="password" name="confirmpassword" id="confirmpassword" placeholder="Verify the password" autocomplete="off"  />
     </div>
+    <p id="errorMessage" style="color:red;"></p>
 
     <button type="submit" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i>  Save changes</button>
 </form>
 
 <script src="~/Scripts/Utilities.js"></script>
 <script type="text/javascript">
-
+    let nowpass;
+    let UserID;
     const forms = document.getElementById('changeform');
 
-    forms.addEventListener('submit', async (e) => {
+    forms.addEventListener('submit', async(e) => {
         e.preventDefault();
-
-        if (Validateform()) {
-
+        const newpass = document.getElementById("newpassword").value.trim();
+        if (await Validateform()) {
+            let formData = new FormData();
+            formData.append("userID", UserID);
+            formData.append("newpass", newpass);
+            let res = await postData('/Auth/ChangePasswordUser', formData);
+            if (res.StatusCode === 200) {
+                Swal.fire({
+                    title: "Success",
+                    text: res.Message,
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
+                    Swal.fire({
+                        title: "Sign out?",
+                        text: "Log out to check the new password",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "OK"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location = "/PC/Patrol/index";
+                        }
+                    });
+                });
+            } 
         }
     });
 
 
-    function Validateform() {
-        let samplepass = "1234";
-        //const current = document.getElementById("currentpassword").value;
-        const newpass = document.getElementById("newpassword").value;
-        const matchpass = document.getElementById("confirmpassword").value;
+    async function Validateform() {
+        const current = document.getElementById("currentpassword").value.trim();;
+        const newpass = document.getElementById("newpassword").value.trim();
+        const matchpass = document.getElementById("confirmpassword").value.trim();;
+        const err = document.getElementById("errorMessage"); // ✅ use vanilla
 
+        err.textContent = "";
 
-        // CHECKS THE NEW PASSWORD AND CONFIRMPASSWORD IF DOES MATCH
-        if (newpass !== matchpass) {
-            $("#confirmwrong").show();
-            $("#confirmcheck").hide();
-            check = false;
-        } else {
-            $("#confirmcheck").show();
-            $("#confirmwrong").hide();
+        if (!current || !newpass || !matchpass) {
+            err.textContent = "All fields are required.";
+            return false;
         }
 
+        if (newpass.length < 8 || !/[A-Z]/.test(newpass) || !/[a-z]/.test(newpass) || !/[0-9]/.test(newpass)) {
+            err.textContent = "New password must be at least 8 characters with uppercase, lowercase, and a number.";
+            return false;
+        }
 
+        if (newpass !== matchpass) {
+            err.textContent = "Passwords do not match.";
+            return false;
+        }
 
+        let formData = new FormData();
+        formData.append('datapass', nowpass);
+        formData.append('currentpass', current);
+        let res = await postData('/Auth/MatchPassword', formData);
 
-        //var checkcurrent = CheckforCurrentPassword(currentpassword, current);
+        if (res == false) {
+            err.textContent = "Current password is incorrect.";
+            return;
+        }
 
-        //if (checkcurrent) {
-        //    $("#currentWrong").show();
-        //    $("#currentcheck").hide();
-        //    check = false;
-        //} else {
-        //    $("#currentcheck").show();
-        //    $("#currentWrong").hide();
-        //}       
+        err.textContent = "";
+        return true;
+   
     }
     async function Getuserinfo() {
         const accessToken = localStorage.getItem('accessToken');
         const result = await FetchAuthenticate('/User/GetUserInformation', { accessToken });
-        console.log(result);
-        //if (result.success) {
-        //    console.log("Welcome", result.name, "Role:", result.role);
-        //} else {
-        //    console.error(result.message);
-        //}
+        nowpass = result.Password;
+        UserID = result.userId;
     }
-
-
-
-    function CheckforCurrentPassword(current, newpass) {
-
-    }
-
 
     const initialized = () => {
         Getuserinfo();

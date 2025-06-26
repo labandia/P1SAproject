@@ -623,30 +623,29 @@
     <Compile Include="Areas\Press\Controllers\PartsLocatorController.cs" />
     <Compile Include="Areas\Press\Interfaces\IAluminumProducts.cs" />
     <Compile Include="Areas\Press\PressAreaRegistration.cs" />
+    <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\ExtendController.cs" />
     <Compile Include="Controllers\P1SAportalwebController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Interfaces\IAuthRepository.cs" />
+    <Compile Include="Repository\AuthRepository.cs" />
     <Compile Include="Services\EmployeeHub.cs" />
-    <Compile Include="Interfaces\IAuthService.cs" />
     <Compile Include="Interfaces\IEmployee.cs" />
     <Compile Include="Areas\Circuit\Interface\ISeriesRepository.cs" />
     <Compile Include="Interfaces\IUserRepository.cs" />
-    <Compile Include="Interfaces\IUserService.cs" />
     <Compile Include="Models\EmployeeModel.cs" />
     <Compile Include="Models\ProjectsModel.cs" />
     <Compile Include="Models\UserRoleProvider.cs" />
-    <Compile Include="Services\AuthService.cs" />
     <Compile Include="Services\EmployeeRepository.cs" />
     <Compile Include="Areas\Circuit\Repository\PreparedRepository.cs" />
     <Compile Include="Areas\Press\Repository\PressRepository.cs" />
     <Compile Include="Areas\Circuit\Repository\SeriesRepository.cs" />
-    <Compile Include="Services\UserRespository.cs" />
+    <Compile Include="Repository\UserRespository.cs" />
     <Compile Include="Areas\Circuit\Repository\WarehouseRepository.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Services\UserService.cs" />
     <Compile Include="Utilities\Security\AesEncryption.cs" />
     <Compile Include="Utilities\Caching\CacheHelper.cs" />
     <Compile Include="Utilities\Compression\CompressResponseAttribute.cs" />

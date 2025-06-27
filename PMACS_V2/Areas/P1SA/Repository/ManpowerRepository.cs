@@ -44,14 +44,14 @@ namespace PMACS_V2.Areas.P1SA.Repository
         }
         public async Task<bool> EditRequireManpower(object parameters)
         {
-            string strquery = "UPDATE ProdManpower SET  SDP = @SDP, SubCon = @SubCon, Remarks = @Remarks  WHERE Manpower_ID = @Manpower_ID";
+            string strquery = "UPDATE PMACS_ProdManpower SET  SDP = @SDP, SubCon = @SubCon, Remarks = @Remarks  WHERE Manpower_ID = @Manpower_ID";
             return await SqlDataAccess.UpdateInsertQuery(strquery, parameters);
         }
 
         public async Task<List<UserAccount>> GetUserFullname()
         {
             string strquery = "SELECT Fullname FROM Useraccount_tbl";
-            return await SqlDataAccess.GetData<UserAccount>(strquery);
+            return await SqlDataAccess.GetData<UserAccount>(strquery, null, "username");
         }
 
         public async Task<List<UpdateStatusModel>> GetUpdatedData()

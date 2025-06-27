@@ -1,4 +1,5 @@
 ﻿using PMACS_V2.Areas.P1SA.Interface;
+using PMACS_V2.Areas.P1SA.Repository;
 using PMACS_V2.Controllers;
 using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Utilities;
@@ -17,9 +18,18 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         public PMACSController(IManpower man) => _man = man;
 
 
+        public async Task<ActionResult> GetUpdateLogs(int Module)
+        {
+            var data = await UpdateRepository.GetUserLogs(Module);
+            if (data == null || !data.Any())
+                return JsonNotFound("No Manpower data found");
+
+            return JsonSuccess(data);
+        }
+
         public async Task<ActionResult> GetFullnameList()
         {
-            var data = await CacheHelper.GetOrSetAsync("username", () =>  _man.GetUserFullname(), 15);
+            var data = await _man.GetUserFullname();
             if (data == null || !data.Any())
                 return JsonNotFound("No Manpower data found");
 
@@ -87,12 +97,12 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             };
 
             CacheHelper.Remove("manpower");
-
+            await UpdateRepository.UpdateUserLogs(1, 1, "Edit");
             var formdata = GlobalUtilities.GetMessageResponse(await _man.EditRequireManpower(obj), 0);
             return Json(formdata, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        public async Task<ActionResult> EdiEditRequiredManpower()
+        public async Task<ActionResult> EditRequiredManpower()
         {
             var obj = new
             {
@@ -105,6 +115,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             if (result)
             {
                 CacheHelper.Remove("requiredManpower");
+                await UpdateRepository.UpdateUserLogs(1, 1, "Edit");
             }
             return Json(formdata, JsonRequestBehavior.AllowGet);
         }

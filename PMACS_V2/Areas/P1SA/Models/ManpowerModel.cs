@@ -91,4 +91,14 @@ namespace PMACS_V2.Areas.P1SA.Models
         public DateTime LastUpdated { get; set; }   
         public string UpdatedBy { get; set; }
     }
+
+
+
+    public class UserLogs
+    {
+        public int ModuleID { get; set; }   
+        public string Fullname {  get; set; }   
+        public string Action { get; set; }
+        public string LastUpdated {  get; set; }   
+    }
 }

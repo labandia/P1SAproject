@@ -8,7 +8,7 @@
 <header class="MainHeader">
     <h4>Production Manpower</h4>
     <div class="header__action">
-        <span style="color: #222;">Last Update April 24, 2025</span>
+        <span id="Updatelog" style="color: #222;">last Update April 2025</span>
     </div>
 </header>
 
@@ -29,13 +29,13 @@
         </div>
 </section>
 
-<div class="tabs mt-4">
-    <div class="tabs__header d-flex align-items-center gap-2">
+<div class="Mantabs mt-4">
+    <div class="Mantabs__header">
         <div class="active">Lacking Manpower Data</div>
         <div>Manpower/process</div>
     </div>
 
-    <div class="tabs__body">
+    <div class="Mantabs__body">
         <div class="active" style="width: 100%;">
             <div class="MainTable">
                 <table>
@@ -90,7 +90,7 @@
 
                 <div class="modal-body">
                     <div class="custom_modal_header">
-                        <div class="custom_modal__icon" style="align-items: center;">
+                        <div class="custom_modal__icon" >
                             <div class="custom_icon_container">
                                 <i class='fa-regular fa-pen-to-square '></i>
                             </div>
@@ -246,7 +246,7 @@
     function ChartDisplay(label, dataS) {
         const ctx = document.getElementById('lackingChart').getContext('2d');
 
-        const backgroundColors = dataS.map(value => value < 0 ? '#ff4d4d' : '#4d79ff');
+        const backgroundColors = dataS.map(value => value < 0 ? '#ff4d4d' : '#1983e6');
 
         const data = {
             labels: label,
@@ -325,7 +325,7 @@
             labels: ['SPD', 'Sub/Con'],
             datasets: [{
                 data: total,
-                backgroundColor: ['#4e73df', '#1cc88a'],
+                backgroundColor: ['#1983e6', '#1cc88a'],
                 hoverOffset: 10
             }]
         };
@@ -529,10 +529,16 @@
          return founditem;
      }
 
-
+    const getLogsUpdated = async () => {
+        let res = await fetchData('@Url.Action("GetUpdateLogs", "PMACS")', { Module: 1 });
+        if (res && res.Success) {
+            $("#Updatelog").text("Last Updated : " + res.Data[0].LastUpdated);
+        }
+    }
 
 
      const InitializationData = () => {
+         getLogsUpdated();
          //userDataRole();
          $("#currentdatetime").text(Month + "  " + currentYear)
          GetManpowerData();
@@ -542,12 +548,12 @@
 
         // ########################################  TABS CONTROLS ########################################## //
 
-        let tabs2 = document.querySelector(".tabs");
-        let tabheader = tabs2.querySelector(".tabs__header");
-        let tabBody = tabs2.querySelector(".tabs__body");
-        let tabIndicator = tabs2.querySelector(".tabs__indicator");
-        let tabHeadernodes = tabs2.querySelectorAll(".tabs__header > div");
-        let tabBodynodes = tabs2.querySelectorAll(".tabs__body > div");
+        let tabs2 = document.querySelector(".Mantabs");
+        let tabheader = tabs2.querySelector(".Mantabs__header");
+        let tabBody = tabs2.querySelector(".Mantabs__body");
+        let tabIndicator = tabs2.querySelector(".Mantabs__indicator");
+        let tabHeadernodes = tabs2.querySelectorAll(".Mantabs__header > div");
+        let tabBodynodes = tabs2.querySelectorAll(".Mantabs__body > div");
 
         for (let i = 0; i < tabHeadernodes.length; i++) {
             tabHeadernodes[i].addEventListener("click", function () {

@@ -384,6 +384,7 @@
     <Compile Include="Areas\P1SA\Repository\MachineRepository.cs" />
     <Compile Include="Areas\P1SA\Repository\ManpowerRepository.cs" />
     <Compile Include="Areas\P1SA\Repository\MoldDieRepository.cs" />
+    <Compile Include="Areas\P1SA\Repository\UpdateRepository.cs" />
     <Compile Include="Areas\Planning\Controllers\PlanController.cs" />
     <Compile Include="Areas\Planning\Interface\IPlanning.cs" />
     <Compile Include="Areas\Planning\Model\PlanningModel.cs" />

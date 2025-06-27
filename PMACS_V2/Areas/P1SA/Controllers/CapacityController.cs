@@ -87,7 +87,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         {
             try
             {
-                var data = await CacheHelper.GetOrSetAsync("DisplayModelbase", () => _cap.GetModelBaseComboxList(CapID), 15);
+                var data = await _cap.GetModelBaseComboxList(CapID);
                 if (data == null || !data.Any())
                     return JsonNotFound("No Model Base Combobox found");
 

@@ -1,8 +1,5 @@
 ﻿using Attendance_Monitoring.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Attendance_Monitoring.Repositories
@@ -13,7 +10,6 @@ namespace Attendance_Monitoring.Repositories
         Task<List<SummaryAttendanceModel>> GetAttendanceSummaryList(string tbl, string startDate, string endDate);
         Task<List<SummaryAttendanceModel>> GetSummaryDataList(string strsql, string startDate, string endDate, string shifts, string search);
         // CHECKS THE TIME IN AND OUT IF EXIST
-        Task<List<AttendanceModel>> CheckAndGetsAttendance();
         Task<bool> ChecksAttendance(string EmployeeID, string shift, string tb);
 
         // INSERT INTO THE DATABASE

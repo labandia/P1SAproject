@@ -17,5 +17,6 @@ namespace PMACS_V2.Areas.P1SA.Interface
         //===============  EDIT MANPOWER ===================
         Task<bool> EditRequireManpower(object parameters);
         Task<bool> EditManpowerList(object parameters);
+
     }
 }

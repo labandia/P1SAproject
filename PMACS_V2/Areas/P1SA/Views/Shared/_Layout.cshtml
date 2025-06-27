@@ -62,7 +62,7 @@
 
 
 
-                        @*<div class="sidebar__dropdown">
+                        <div class="sidebar__dropdown">
                             <a href="#" class="sidebar__link">
                                 <i class="fa-regular fa-circle-user sidebar__icon"></i>
                                 <span class="sidebar__name">Moldie Die And Cavity</span>
@@ -74,7 +74,7 @@
                                     <a href="/P1SA/DieMold/DiePressLife" class="sidebar__dropdown-item">Press</a>
                                 </div>
                             </div>
-                        </div>*@
+                        </div>
                     </div>
 
                     <div class="sidebar__items">
@@ -105,245 +105,35 @@
 
 
 
-    <!--========== NAV ==========-->
-    @*<div class="nav" id="navbar">
-            <nav class="nav__container">
-                <div>
-                    <a href="#" class="nav__link nav__logo">
-                        <i class='bx bxs-disc nav__icon'></i>
-                        <span class="nav__logo-name">PMACS</span>
-                    </a>
-
-                    <div class="nav__list">
-                        <div class="nav__items">
-                            <h3 class="nav__subtitle">Main Menu</h3>
-
-                            <a href="/P1SA/PMACS/ManpowerProduction" class="nav__link active">
-                                <i class="fa fa-users nav__icon" ></i>
-                                <span class="nav__name">Manpower</span>
-                            </a>
-
-                            <a href="#" class="nav__link">
-                                <i class="fa-solid fa-gears nav__icon" ></i>
-                                <span class="nav__name">Fan Major</span>
-                            </a>
-
-                            <a href="/P1SA/PMACS/Selection" class="nav__link">
-                                <i class="fa fa-microchip nav__icon" ></i>
-                                <span class="nav__name">Capacity Process</span>
-                            </a>
-
-                            <a href="/P1SA/PMACS/P1SASummary" class="nav__link">
-                                <i class="fa fa-table nav__icon" ></i>
-                                <span class="nav__name">P1SA summary</span>
-                            </a>
-                        </div>
-
-                        <div class="nav__items">
-                            <h3 class="nav__subtitle">Settings</h3>
-
-
-
-                            <a href="#" class="nav__link">
-                                <i class='bx bx-compass nav__icon'></i>
-                                <span class="nav__name">Change Password</span>
-                            </a>
-                            <a href="#" class="nav__link">
-                                <i class='bx bx-bookmark nav__icon'></i>
-                                <span class="nav__name">Saved</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <a href="#" class="nav__link nav__logout">
-                    <i class='bx bx-log-out nav__icon'></i>
-                    <span class="nav__name">Log Out</span>
-                </a>
-            </nav>
-        </div>*@
-
-    <!--========== CONTENTS ==========-->
-    @*<main >
-            @RenderBody()
-        </main>*@
-
-    <!--<div class="mancontainer shrink">
-        <nav>
-            <div class="sidebar__top">
-                <span class="sidebar__btn">
-                    <i class="fa fa-chevron-left" aria-hidden="true"></i>
-                </span>
-                <div class="sidebartop__btn">
-                    <i class="fa fa-cubes" aria-hidden="true"></i>
-                </div>
-                <h3 class="hide">PMACS</h3>
-            </div>
-
-            <div class="sidebar__links">
-
-                <ul>
-
-                    <li class="tooltip_element" data-tooltip="0">
-                        <a href="/P1SA/PMACS/ManpowerProduction" onclick="setActiveLink(0, 'Manpower')" class="nav-link  " data-active="0">
-                            <div class="sidebar__icons">
-                                <i class="fa fa-users" aria-hidden="true"></i>
-                            </div>
-                            <span class="sidebar__linksname hide">
-                                Manpower
-                            </span>
-                        </a>
-                    </li>
-
-                    <li class="tooltip_element" data-tooltip="1">
-                        <a href="/P1SA/PMACS/FanMajor" onclick="setActiveLink(1, 'Fan Major Equipment')" class="nav-link navactive " data-active="1">
-                            <div class="sidebar__icons">
-                                <i class="fa-solid fa-gears" aria-hidden="true"></i>
-
-                            </div>
-                            <span class="sidebar__linksname hide">
-                                Fan Major Equipment
-                            </span>
-                        </a>
-                    </li>-->
-    @*<li class="tooltip_element" data-tooltip="1">
-            <a href="/machine/Fanmajor" onclick="setActiveLink(1, 'Fan Major Equipment')" class="nav-link active " data-active="1">
-                <div class="sidebar__icons">
-                    <i class="fa-solid fa-gears" aria-hidden="true"></i>
-                    <i class="fa-solid fa-gears" aria-hidden="true"></i>
-                </div>
-                <span class="sidebar__linksname hide">
-                    Capacity per week
-                </span>
-            </a>
-        </li>*@
-
-
-
-
-    <!--<li class="tooltip_element" data-tooltip="2">
-        <a href="/P1SA/PMACS/Selection" onclick="setActiveLink(2, 'Capacity per Process')" class="nav-link  " data-active="2">
-            <div class="sidebar__icons">
-                <i class="fa fa-microchip" aria-hidden="true"></i>
-
-            </div>
-            <span class="sidebar__linksname hide">
-                Capacity per Process
-            </span>
-        </a>
-    </li>
-
-
-    <li class="tooltip_element" data-tooltip="3">
-        <a href="/P1SA/PMACS/P1SASummary" onclick="setActiveLink(3, 'P1SA Summary')" class="nav-link " data-active="3">
-            <div class="sidebar__icons">
-                <i class="fa fa-table" aria-hidden="true"></i>
-
-            </div>
-            <span class="sidebar__linksname hide">
-                PISA summary
-            </span>
-        </a>
-    </li>-->
-    @*<li class="tooltip_element" id="Userhide" data-tooltip="4">
-            <a href="/User/ProfileUser" onclick="setActiveLink(4, 'Account Settings')" class="nav-link " data-active="4">
-                <div class="sidebar__icons">
-                    <i class="fa-regular fa-circle-user"></i>
-
-                </div>
-                <span class="sidebar__linksname hide">
-                    Account Settings
-                </span>
-            </a>
-        </li>*@
-    @*
-        <div class="tooltip">
-            <span class="show">Dashboard</span>
-            <span>fan major</span>
-            <span>Capacity</span>
-            <span>user setting</span>
-        </div>*@
-    <!--</ul>
-
-
-    </div>
-
-    <div class="sidebar__footer">-->
-    @*
-        <a href="#" class="sidebar__account">
-            <i class="bx bx-user"></i>
-        </a>*@
-    <!--<div class="sidebar__user">
-                    <div class="sidebar__userprofile">
-
-                        <div class="sidebard__userinfo">
-                            <h3 id="fullnametext">John Doe</h3>
-                            <h5 id="Roles">User Guest</h5>
-                        </div>
-                    </div>
-                    <a href="#" id="logbtn" class="sidebar__logout" title="logouttext">
-                        <i class="fa fa-sign-out" aria-hidden="true"></i>
-                    </a>
-                </div>
-            </div>
-        </nav>
-
-        <main>
-
-        </main>
-    </div>-->
-    @*<div id="notification" class="notification">
-            <div class="notification-container">
-                <div class="notification-header">
-                    <h2>System Update</h2>
-                </div>
-                <div class="notification-content">
-                    <div class="notification-version">
-                        <h3>New Features:</h3>
-                        <p>Version</p>
-                    </div>
-                    <ul id="features-list">
-                        <li>1. Improve performance</li>
-                        <li>2. Fix Molding Frame Capacity process</li>
-                        <li>3. Fix Balancing Capacity process</li>
-                    </ul>
-
-                    <div class="notification-footer">
-                        <button id="close-btn">Close</button>
-
-                    </div>
-                </div>
-            </div>
-        </div>*@
  
     <script type="text/javascript">
-        var sessionCheckInterval;
-        function startSessionCheck() {
-            clearInterval(sessionCheckInterval); // Clear previous interval
-            sessionCheckInterval = setInterval(checkSession, 3600000); // Restart session check every 60 seconds
-        }
+        //var sessionCheckInterval;
+        //function startSessionCheck() {
+        //    clearInterval(sessionCheckInterval); // Clear previous interval
+        //    sessionCheckInterval = setInterval(checkSession, 3600000); // Restart session check every 60 seconds
+        //}
 
 
-        function checkSession() {
-            $.ajax({
-                url: "/User/CheckSession",
-                method: "GET",
-                success: function (response) {
-                    if (!response.isAuthenticated) {
-                        //alert("Your session has expired. Redirecting to login page.");
-                        window.location.href = "/PC/Patrol/index";
-                    }
-                }
-            });
-        }
+        //function checkSession() {
+        //    $.ajax({
+        //        url: "/User/CheckSession",
+        //        method: "GET",
+        //        success: function (response) {
+        //            if (!response.isAuthenticated) {
+        //                //alert("Your session has expired. Redirecting to login page.");
+        //                window.location.href = "/PC/Patrol/index";
+        //            }
+        //        }
+        //    });
+        //}
 
         // Start interval on page load
-        startSessionCheck();
+        //startSessionCheck();
 
         // Reset interval on user activity
-        document.addEventListener("mousemove", startSessionCheck); // Mouse movement
-        document.addEventListener("keydown", startSessionCheck);   // Keyboard typing
-        document.addEventListener("click", startSessionCheck);     // Mouse clicks
+        //document.addEventListener("mousemove", startSessionCheck); // Mouse movement
+        //document.addEventListener("keydown", startSessionCheck);   // Keyboard typing
+        //document.addEventListener("click", startSessionCheck);     // Mouse clicks
 
 
         const logbtn = document.getElementById("logID");

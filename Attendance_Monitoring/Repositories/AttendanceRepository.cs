@@ -26,11 +26,7 @@ namespace Attendance_Monitoring.Repositories
             return await SqlDataAccess.UpdateInsertQuery(updateQuery, parameters);
         }
 
-        public Task<List<AttendanceModel>> CheckAndGetsAttendance()
-        {
-            throw new NotImplementedException();
-        }
-
+  
         public async Task<bool> ChecksAttendance(string EmployeeID, string shift, string tb)
         {
             string checkQuery = $@"SELECT COUNT(*) 

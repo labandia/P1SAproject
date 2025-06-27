@@ -12,17 +12,16 @@ namespace Attendance_Monitoring.Repositories
 {
     public class CRMonitoringRespository : ICRmonitor
     {
-        public async Task<bool> CRTimeBack(string EmployeeID, DateTime dTimeback, string duration, string datetoday)
-        {
-            string strquery = "UpdateCR";
-            var parameters = new { Employee_ID = EmployeeID, Timeout = dTimeback, Duration = duration, DateToday = datetoday};
-            return await SqlDataAccess.UpdateInsertQuery(strquery, parameters);
-        }
-
         public async Task<bool> CRTimeGo(string EmployeeID, string shift)
         {
             string strquery = "InputCR";
             var parameters = new { Employee_ID = EmployeeID, Shifts = shift };
+            return await SqlDataAccess.UpdateInsertQuery(strquery, parameters);
+        }
+        public async Task<bool> CRTimeBack(string EmployeeID, DateTime dTimeback, string duration, string datetoday)
+        {
+            string strquery = "UpdateCR";
+            var parameters = new { Employee_ID = EmployeeID, Timeout = dTimeback, Duration = duration, DateToday = datetoday };
             return await SqlDataAccess.UpdateInsertQuery(strquery, parameters);
         }
 
@@ -36,9 +35,6 @@ namespace Attendance_Monitoring.Repositories
         public async Task<List<CRmodel>> GetCRMonitoringData(string dDate, string shifts, int depid)
         {
             string strquery = "CRMonitor";
-            Debug.WriteLine(dDate);
-            Debug.WriteLine(shifts);
-            Debug.WriteLine(depid);
             var parameters = new { TimeIn = dDate, Shifts = shifts, Depid = depid };
             return await SqlDataAccess.GetData<CRmodel>(strquery, parameters);
         }
@@ -52,11 +48,6 @@ namespace Attendance_Monitoring.Repositories
 
         public async Task<List<ExportCRmodel>> GetCRMonitoringSummaryDatalist(string strsql, string startDate, string endDate, string shifts, string search)
         {
-            //MessageBox.Show(formattedStartDate);
-            //MessageBox.Show(formattedEndDate);
-            //MessageBox.Show(shifts.Text);
-            //MessageBox.Show(searchbox.Text);
-
 
             var parameters = new DynamicParameters();
             parameters.Add("startDate", startDate);

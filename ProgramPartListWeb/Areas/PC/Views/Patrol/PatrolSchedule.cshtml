@@ -177,7 +177,7 @@
                 const fullName = $(this).data('name');
 
                 //console.log("Selected Employee: ", fullName);
-                //console.log("Department ID: ", DepartID);
+                console.log("Employee ID: ", employVal);
 
                 // Optionally, when page loads, show all first
                 fetchAndRenderEvents(employVal);
@@ -363,10 +363,14 @@
                 $("#ScheduleID").val("0");
                 $("#ScheduleDate").val(info.dateStr);
                 $("#IsActive").val("0");
+                console.log(employVal);
 
-
-                PopulateComboxProccess(DepartID, 0);
-                $("#AddScheduleModal").modal('show');
+                if (employVal !== undefined) {
+                    PopulateComboxProccess(DepartID, 0);
+                    $("#AddScheduleModal").modal('show');
+                } else {
+                    Swal.fire("Select Auditor First");
+                }
                 //alert("HERE" );
             },
 

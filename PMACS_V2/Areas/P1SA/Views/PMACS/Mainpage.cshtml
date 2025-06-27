@@ -1,7 +1,7 @@
 ﻿
 @{
-     ViewBag.Title = "Production Manpower And Capacity System";
-     Layout = "";
+    ViewBag.Title = "Production Manpower And Capacity System";
+    Layout = "";
 }
 
 <head>
@@ -20,11 +20,12 @@
         <!----------- login background design -------->
         <div class="main__contain">
             <h1 style="line-height: 1.6;">
-                <span class="bold">P</span>roduction 
-                <span class="bold">M</span>anpower 
-                <span class="bold">A</span>nd  
-                <span class="bold">C</span>apacity   
-                <span class="bold">S</span>ystem</h1>
+                <span class="bold">P</span>roduction
+                <span class="bold">M</span>anpower
+                <span class="bold">A</span>nd
+                <span class="bold">C</span>apacity
+                <span class="bold">S</span>ystem
+            </h1>
         </div>
         <div class="main__contain">
             <img src="~/Content/Images/forgotpass.png" width="300" height="300" />
@@ -34,7 +35,7 @@
             <div class="form signform">
                 <form method="post" id="loginsubmit" class="logindesign" autocomplete="off">
                     <div class="logindesign__contain">
-                        <h2  style="font-weight: 600; margin-top: 1em; font-size: 1.5rem;"> Welcome, User</h2>
+                        <h2 style="font-weight: 600; margin-top: 1em; font-size: 1.5rem;"> Welcome, User</h2>
                         <p>Enter your credentials</p>
 
                         <div class="logindesign__label">
@@ -73,10 +74,10 @@
                     <h2 style="font-weight: 600; font-size: 1.5rem;"> Forgot Password ?</h2>
                     <p style="line-height: 1.6;">Enter your employee ID and we'll help you reset your password </p>
                     <Label>Employee ID:</Label>
-                    <input  type="text" placeholder="Enter your Email here ..." id="EmpID" name="EmpID" required>
+                    <input type="text" placeholder="Enter your Email here ..." id="EmpID" name="EmpID" required>
                     <br />
                     <Label>Email Address:</Label>
-                    <input type="text" placeholder="Enter your Email here ..." id="EmpID" name="EmpID" required>
+                    <input type="text" placeholder="Enter your Email here ..." id="Email" name="Email" required>
 
 
 
@@ -270,7 +271,7 @@
              if (validateform()) {
                  let res = await postData('/Auth/Authenticate', formData);
                  setTimeout(() => {
-                     if (res.StatusCode === 200) {
+                     if (res && res.StatusCode === 200) {
                          Swal.fire({
                              title: "Success",
                              text: res.Message,
@@ -296,7 +297,7 @@
                      else {
                          Swal.fire({
                              icon: "error",
-                             text: res.Message,
+                             text: res && res.Message ? res.Message : "Invalid Credentials / Username and Password is Incorrect",
                              timer: 1500,
                              showConfirmButton: false
                          });
@@ -321,12 +322,16 @@
         errorpass.textContent = "";
 
         if (user === "") {
-            erroruser.textContent = "Please enter your Fullname"
+            erroruser.textContent = "Please enter your Fullname";
             isValid = false;
         } else if (pass === "") {
-            errorpass.textContent = "Please enter your password"
+            errorpass.textContent = "Please enter your password";
             isValid = false;
         }
+
+        const savebtn = document.querySelector("#submitbtn");
+        savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-solid fa-right-to-bracket'></i>  Login</span>"
+
 
         return isValid;
     }

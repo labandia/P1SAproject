@@ -1,5 +1,6 @@
 ﻿using PMACS_V2.Areas.P1SA.Interface;
 using PMACS_V2.Areas.P1SA.Models;
+using PMACS_V2.Areas.P1SA.Repository;
 using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Utilities;
 using System;
@@ -19,13 +20,17 @@ namespace PMACS_V2.Areas.P1SA.Controllers
 
         [HttpPost]
         public async Task<ActionResult> P1saSummaryUpdated(PsummaryModel cap)
-        {   
+        {
             bool result = await _cap.EditP1SAsummary(cap);
 
-            if (result) CacheHelper.Remove("p1sasummary");
-           
+            if (result)
+            {
+                CacheHelper.Remove("p1sasummary");
+                await UpdateRepository.UpdateUserLogs(9, 1, "Edit");
+            }
 
             var formdata = GlobalUtilities.GetMessageResponse(result, 1);
+
             return Json(formdata, JsonRequestBehavior.AllowGet);
         }
 
@@ -83,6 +88,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
 
             CacheHelper.Remove("Molding");
 
+            await UpdateRepository.UpdateUserLogs(5, 1, "Add");
             var formdata = GlobalUtilities.GetMessageResponse(results.All(r => r), 1);
             return Json(formdata, JsonRequestBehavior.AllowGet);
         }
@@ -107,7 +113,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             bool[] results = await Task.WhenAll(update1, update2);
 
             CacheHelper.Remove("Molding");
-
+            await UpdateRepository.UpdateUserLogs(5, 1, "Edit");
             var formdata = GlobalUtilities.GetMessageResponse(results.All(r => r), 1);
             return Json(formdata, JsonRequestBehavior.AllowGet);
         }
@@ -135,7 +141,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             bool[] results = await Task.WhenAll(update1, update2);
 
             CacheHelper.Remove("Rotor");
-
+            await UpdateRepository.UpdateUserLogs(6, 1, "Edit");
             var formdata = GlobalUtilities.GetMessageResponse(results.All(r => r), 1);
             return Json(formdata, JsonRequestBehavior.AllowGet);
         }
@@ -180,7 +186,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             bool[] results = await Task.WhenAll(update1, update2);
 
             CacheHelper.Remove("Press");
-
+            await UpdateRepository.UpdateUserLogs(6, 1, "Add");
 
             var formdata = GlobalUtilities.GetMessageResponse(results.All(r => r), 1);
             return Json(formdata, JsonRequestBehavior.AllowGet);
@@ -223,7 +229,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             bool[] results = await Task.WhenAll(update1, update2);
 
             CacheHelper.Remove("Press");
-
+            await UpdateRepository.UpdateUserLogs(7, 1, "Add");
             var formdata = GlobalUtilities.GetMessageResponse(results.All(r => r), 1);
             return Json(formdata, JsonRequestBehavior.AllowGet);
         }

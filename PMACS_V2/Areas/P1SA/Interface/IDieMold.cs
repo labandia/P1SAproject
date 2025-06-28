@@ -9,6 +9,7 @@ namespace PMACS_V2.Areas.P1SA.Interface
 {
     public interface IDieMold
     {
+        // MOLDING
         // ===============================================
         Task<List<DieMoldTotalPartnum>> GetMoldTotalPartNoList(int month, int year, string process);
         Task<List<DieMoldSetNotal>> GetSummaryMoldData();
@@ -17,10 +18,11 @@ namespace PMACS_V2.Areas.P1SA.Interface
         // ===============================================
         Task<List<DieMoldSummaryProcess>> GetMoldDieSummary(string process);
         Task<List<DieMoldTotalPartnum>> GetMoldDieMonthInput(int month, int year, string process);
+        Task<List<DieMoldToolingModel>> GetMoldToolingData();
         // ===============================================
 
         Task<bool> AddUpdateMoldie(MoldInputModel mold);
-
+        Task<bool> AddMoldieTooling(DieMoldToolingModel mold);
 
         // PRESS
         // ===============================================

@@ -25,8 +25,7 @@
                 <canvas id="manpowerChart" width="200" height="200" style="width: 200px !important; height: 200px"></canvas>
             </div>
         </div>
-
-        </div>
+    </div>
 </section>
 
 <div class="Mantabs mt-4">
@@ -495,14 +494,14 @@
 
          SetData.empty();
          var rows = "<label style='font-weight: 600; color: #222; margin-bottom: .5em;'>SDP :</label> <br />"
-             + "<input type='hidden' value='" + data.Manpower_ID + "' name='Manpower_ID' class='form-control' id='SumID' />"
-             + "<input type='text' value='" + data.SDP + "' name='SDP'   id='SDP' autocomplete='off' onkeypress='return restrictChars(event)' maxlength='5' /><br />"
-             + "<label style='font-weight: 600; color: #222; margin-bottom: .5em;'>SubCon :</label> <br />"
-             + "<input type='text' value='" + data.SubCon + "' name='Sub/Con'   id='SubCon' autocomplete='off'  maxlength='5' onkeypress='return restrictChars(event)' /><br />"
-             + "<label style='font-weight: 600; color: #222; margin-bottom: .5em; '>Remarks :</label> <br />"
-             + "<input type='text' value='" + data.Remarks + "' name='Remarks'   id='Remarks' autocomplete='off' />"
-             + "<div class='footer d-flex justify-content-end pt-4 pb-2 gap-2'>"
-             + "<button type='submit'  id='saveEditsum'><i class='fa-regular fa-floppy-disk'></i>  Save</button>"
+                 + "<input type='hidden' value='" + data.Manpower_ID + "' name='Manpower_ID' class='form-control' id='SumID' />"
+                 + "<input type='text' value='" + data.SDP + "' name='SDP'   id='SDP' autocomplete='off' onkeypress='return restrictChars(event)' maxlength='5' /><br />"
+                 + "<label style='font-weight: 600; color: #222; margin-bottom: .5em;'>SubCon :</label> <br />"
+                 + "<input type='text' value='" + data.SubCon + "' name='Sub/Con'   id='SubCon' autocomplete='off'  maxlength='5' onkeypress='return restrictChars(event)' /><br />"
+                 + "<label style='font-weight: 600; color: #222; margin-bottom: .5em; '>Remarks :</label> <br />"
+                 + "<input type='text' value='" + data.Remarks + "' name='Remarks'   id='Remarks' autocomplete='off' />"
+                 + "<div class='footer d-flex justify-content-end pt-4 pb-2 gap-2'>"
+                 + "<button type='submit'  id='saveEditsum'><i class='fa-regular fa-floppy-disk'></i>  Save</button>"
              + "</div>";
 
          SetData.append(rows);
@@ -565,8 +564,6 @@
                 
             });
         }
-
-
 
 
      InitializationData();

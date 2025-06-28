@@ -1,16 +1,11 @@
-﻿using Microsoft.Office.Interop.Excel;
-using PMACS_V2.Areas.P1SA.Interface;
+﻿using PMACS_V2.Areas.P1SA.Interface;
 using PMACS_V2.Areas.P1SA.Models;
 using PMACS_V2.Helper;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.DynamicData;
-using System.Windows.Media.Media3D;
 
 namespace PMACS_V2.Areas.P1SA.Repository
 {
@@ -161,6 +156,19 @@ namespace PMACS_V2.Areas.P1SA.Repository
                                 ORDER BY p.No ASC";
             return await SqlDataAccess.GetData<DieMoldSummaryProcess>(strquery, new { ProcessID = process });
         }
+        public async Task<List<DieMoldToolingModel>> GetMoldToolingData()
+        {
+            string strquery = $@"SELECT t.RegNo, t.PartNo, p.DimensionQuality, 
+                                t.Item, t.DetailsModify, t.ShotRelease,
+                                FORMAT(t.DateArrived, 'MM/dd/yy') as DateArrived,
+                                FORMAT(t.DateRepair, 'MM/dd/yy') as DateRepair,
+                                t.Incharge, t.Remarks
+                                FROM DieMoldDieTooling t
+                                INNER JOIN DieMoldParts p ON t.PartNo = p.PartNo
+                                ORDER BY t.RecordID DESC";
+
+            return await SqlDataAccess.GetData<DieMoldToolingModel>(strquery, null, "MoldTooling");
+        }
 
         public async Task<bool> AddUpdateMoldie(MoldInputModel mold)
         {
@@ -188,7 +196,12 @@ namespace PMACS_V2.Areas.P1SA.Repository
           
         }
 
-
+        public async Task<bool> AddMoldieTooling(DieMoldToolingModel mold)
+        {
+            string insertquery = @"INSERT INTO DieMoldDieTooling(RegNo, PartNo, Item, DetailsModify, ShotRelease,DateArrived ,DateRepair,Incharge,Remarks)
+                                       VALUES(@RegNo, @PartNo, @Item, @DetailsModify, @ShotRelease, @DateArrived , @DateRepair, @Incharge, @Remarks)";
+            return await SqlDataAccess.UpdateInsertQuery(insertquery, mold);
+        }
 
         // ===========================================================
         // ==================== PRESS DIE MOLD  ======================
@@ -340,5 +353,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
             return await SqlDataAccess.UpdateInsertQuery(insertquery, press);
 
         }
+
+        
     }
 }

@@ -3,11 +3,14 @@ using PMACS_V2.Areas.P1SA.Models;
 using PMACS_V2.Controllers;
 using PMACS_V2.Utilities;
 using ProgramPartListWeb.Helper;
+using ProgramPartListWeb.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Windows.Media;
 
 namespace PMACS_V2.Areas.P1SA.Controllers
 {
@@ -96,12 +99,38 @@ namespace PMACS_V2.Areas.P1SA.Controllers
                 return JsonError(ex.Message);
             }
         }
+        public async Task<ActionResult> GetMoldDieToolingList()
+        {
+            try
+            {
+                var data = await _die.GetMoldToolingData();
+
+                if (data == null || !data.Any())
+                    return JsonNotFound("No Mold Die Tooling data found");
+
+                return JsonSuccess(data);
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message);
+            }
+        }
 
 
         [HttpPost]
         public async Task<ActionResult> AddUpdateMoldDieMonitor(MoldInputModel add)
         {
             bool update = await _die.AddUpdateMoldie(add);
+            var formdata = GlobalUtilities.GetMessageResponse(update, 1);
+            return Json(formdata, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> AddUpdateMoldDieTooling(DieMoldToolingModel add)
+        {
+            //var data = await _die.GetMoldToolingData();
+            bool update = await _die.AddMoldieTooling(add);
+            if(update) CacheHelper.Remove("MoldTooling");
             var formdata = GlobalUtilities.GetMessageResponse(update, 1);
             return Json(formdata, JsonRequestBehavior.AllowGet);
         }

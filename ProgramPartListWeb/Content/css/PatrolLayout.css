@@ -1058,40 +1058,47 @@
 
     .styled-date {
       border: none;
-      outline: none;
+      outline: none !important;
       width: 80px;
       background: transparent;
       border: none !important;
       margin-top: 1em !important;
       padding: 0 !important;
+      font-weight: 600;
     }
 
-    .calendar-icon-wrapper {
-      position: relative;
-      width: 24px;
-      height: 24px;
-      margin-left: 10px;
-    }
+.calendar-icon-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px; /* increased */
+    height: 50px; /* increased */
+    margin-left: 10px;
+    cursor: pointer;
+}
 
-    .calendar-icon {
-      position: absolute;
-      top: 2px;
-      right: 0;
-      font-size: 18px;
-      color: #555;
-      pointer-events: none; /* Prevent click interception */
-    }
+.calendar-icon {
+    font-size: 20px;
+    color: #555;
+    pointer-events: none; /* allow the input to receive clicks */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
 
-    .real-date-input {
-      position: absolute;
-      top: -10px;
-      right: 0;
-      width: 60px;
-      height: 30px;
-      cursor: pointer;
-      border: none !important;
-      outline: none !important;
-    }
+.real-date-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0; /* invisible but still clickable */
+    cursor: pointer;
+    z-index: 1;
+    outline: none;
+}
 
     .ChangepassContainer{
         width: 450px;

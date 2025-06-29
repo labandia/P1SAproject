@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+﻿//using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -32,7 +32,7 @@ namespace PracticeC_
             //Console.WriteLine("TimeSpan: {0}", ts.ToString());
             //string machineName = Environment.MachineName.ToLower();
             //Console.WriteLine($"Original: {machineName}");
-            ConvertstringtoBase64();
+            sendingEmail();
        
             Console.ReadKey();
         }
@@ -146,7 +146,7 @@ namespace PracticeC_
                 {
                     From = new MailAddress("labandiajaye@gmail.com"),
                     Subject = "Test Email",
-                    Body = "<h1>This is a test email.</h1>",
+                    Body = "<h1>This is a test email. sdsdsdsd</h1>",
                     IsBodyHtml = true
                 };
 
@@ -185,23 +185,23 @@ namespace PracticeC_
             }
         }
 
-        public static void samplehash()
-        {
-            byte[] salt = new byte[16];
-            using (var rng = new RNGCryptoServiceProvider())
-            {
-                rng.GetBytes(salt);
-            }
+        //public static void samplehash()
+        //{
+        //    byte[] salt = new byte[16];
+        //    using (var rng = new RNGCryptoServiceProvider())
+        //    {
+        //        rng.GetBytes(salt);
+        //    }
 
-            byte[] hash = KeyDerivation.Pbkdf2(
-                password: "sdp1234a*",
-                salt: salt,
-                prf: KeyDerivationPrf.HMACSHA256,
-                iterationCount: 10000,
-                numBytesRequested: 32);
+        //    byte[] hash = KeyDerivation.Pbkdf2(
+        //        password: "sdp1234a*",
+        //        salt: salt,
+        //        prf: KeyDerivationPrf.HMACSHA256,
+        //        iterationCount: 10000,
+        //        numBytesRequested: 32);
 
-            Console.WriteLine($"{Convert.ToBase64String(salt)}:{Convert.ToBase64String(hash)}");
-        }
+        //    Console.WriteLine($"{Convert.ToBase64String(salt)}:{Convert.ToBase64String(hash)}");
+        //}
 
 
         public async static void OutlooksendingEmail2()

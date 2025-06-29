@@ -1,7 +1,4 @@
-﻿using Dapper;
-using Microsoft.AspNet.SignalR;
-using Newtonsoft.Json;
-using PMACS_V2.Areas.P1SA.Interface;
+﻿using PMACS_V2.Areas.P1SA.Interface;
 using PMACS_V2.Areas.P1SA.Models;
 using PMACS_V2.Helper;
 using System;
@@ -21,7 +18,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
         public async Task<List<SelectionGroup>> GetGroupCapacity() => await SqlDataAccess.GetData<SelectionGroup>("Selectiongroup");
         public async Task<List<CapacitySummaryModel>> GetCapacitySummary(string month, int capid)
         {
-            string strquery = string.Empty;
+            string strquery;
 
             if (capid == 1 || capid == 2 || capid == 3)
             {
@@ -109,7 +106,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
             }
             else if (capid == 10 || capid == 11 || capid == 12)
             {
-                string CycleTime = "";
+                string CycleTime;
 
                 switch (capid)
                 {

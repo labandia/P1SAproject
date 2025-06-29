@@ -2,7 +2,6 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
 
 namespace Attendance_Monitoring.View
 {
@@ -12,12 +11,15 @@ namespace Attendance_Monitoring.View
         private readonly CRMonitoringPage _cr;
         private readonly EmployeeManagement _emp;
 
-        public MainLayout(AttendancePage attend, CRMonitoringPage cr, EmployeeManagement emp)
+        private readonly int _DepartmentID;
+
+        public MainLayout(int departID, AttendancePage attend, CRMonitoringPage cr, EmployeeManagement emp)
         {
             InitializeComponent();
             _attend = attend;
             _cr = cr;
             _emp = emp;
+            _DepartmentID = departID;
 
             _attend.Dock = DockStyle.Fill;
             _cr.Dock = DockStyle.Fill;
@@ -30,7 +32,17 @@ namespace Attendance_Monitoring.View
 
         private void MainLayout_Load(object sender, EventArgs e)
         {
-
+            // CHANGE THE COLOR BACKGROUND OF THE MENU BUTTON
+            Attendance.BackColor = Color.FromArgb(95, 34, 200);
+            Attendance.ForeColor = Color.FromArgb(255, 255, 255);
+            // CHANGE COLOR OF THE OTHER MENU BUTTON TO TRANSPARENT
+            CRMonitor.BackColor = Color.Transparent;
+            CRMonitor.ForeColor = Color.FromArgb(170, 176, 192);
+            EmployeeMenu.BackColor = Color.Transparent;
+            EmployeeMenu.ForeColor = Color.FromArgb(170, 176, 192);
+            _attend.DepartmentID = _DepartmentID;
+            _attend.InitializePage();  
+            _attend.BringToFront();
         }
         private void Attendance_Click_1(object sender, EventArgs e)
         {
@@ -42,7 +54,8 @@ namespace Attendance_Monitoring.View
             CRMonitor.ForeColor = Color.FromArgb(170, 176, 192);
             EmployeeMenu.BackColor = Color.Transparent;
             EmployeeMenu.ForeColor = Color.FromArgb(170, 176, 192);
-
+            _attend.DepartmentID = _DepartmentID;
+            _attend.InitializePage(); 
             _attend.BringToFront();
         }
         private void CRMonitor_Click(object sender, EventArgs e)
@@ -55,7 +68,8 @@ namespace Attendance_Monitoring.View
             Attendance.ForeColor = Color.FromArgb(170, 176, 192);
             EmployeeMenu.BackColor = Color.Transparent;
             EmployeeMenu.ForeColor = Color.FromArgb(170, 176, 192);
-
+            _cr.DepartmentID = _DepartmentID;
+            _cr.InitializePage();
             _cr.BringToFront();
         }
 
@@ -69,7 +83,8 @@ namespace Attendance_Monitoring.View
             Attendance.ForeColor = Color.FromArgb(170, 176, 192);
             CRMonitor.BackColor = Color.Transparent;
             CRMonitor.ForeColor = Color.FromArgb(170, 176, 192);
-
+            _emp.DepartID = _DepartmentID;
+            _emp.InitializePage();
             _emp.BringToFront();
         }
     }

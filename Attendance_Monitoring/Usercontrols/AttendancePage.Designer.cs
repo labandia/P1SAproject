@@ -443,7 +443,6 @@
             this.Controls.Add(this.panel1);
             this.Name = "AttendancePage";
             this.Size = new System.Drawing.Size(1194, 683);
-            this.Load += new System.EventHandler(this.AttendancePage_Load);
             this.panel5.ResumeLayout(false);
             this.panel5.PerformLayout();
             this.panel4.ResumeLayout(false);

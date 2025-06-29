@@ -178,16 +178,7 @@
   <metadata name="panel1.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
-  <data name="backbtn.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAOJJREFUSEvt
-        lT0KwkAQhRfsPYX3sLeRybJVKjtvZOdZvIKNCiIiiaWFvRAny1sJO4OYCel88BGy++1byK/7p1fuRMu6
-        KI5MY+RQeb9AnQwLdbbAwgV1MopsAnUymmwBdTKa/IFozceXGFdAnYwmJ9r5imjOPLX5LrFMiyYnoLgq
-        hBmfn/P5LlBlNDkBJeZRllMe2+VOAtqwNCFMuGybl7dAGZa4gfebXhtocgJKjPkSaXICyrg3edTHlD+E
-        Kz6O96L1AXUymmwBdTI8ectlA1fUycQfDtFJWfQr+68/nH9knHsDBFTPn53UB0kAAAAASUVORK5CYII=
-</value>
-  </data>
-  <data name="addbtn.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="Addbtn.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAS1JREFUSEvt
         k71KA0EcxK9XbCxMRAt9FQsLSWvpS1hYCz6Fiq1grwR8hryEEOJHodb3sf4mzIY7L94dZyOYHwzc/md2

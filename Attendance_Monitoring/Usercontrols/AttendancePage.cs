@@ -1,7 +1,5 @@
 ﻿using Attendance_Monitoring.Controller;
-using Attendance_Monitoring.Models;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -24,6 +22,9 @@ namespace Attendance_Monitoring.Usercontrols
         //public string tb;
         public string tdate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
 
+
+        public int DepartmentID { get; set; }
+
         public AttendancePage(IServiceProvider serviceProvider)
         {
             InitializeComponent();
@@ -36,16 +37,10 @@ namespace Attendance_Monitoring.Usercontrols
         
       
 
-        private  void AttendancePage_Load(object sender, EventArgs e)
-        {
-           // IEnumerable<Employee> emp = await _admin.GetAllEmployees();
-           // emplist = emp.ToList();
-        }
-
 
         private async void EnterTime(object sender, KeyEventArgs e)
         {
-
+            MessageBox.Show("Working Inside the usercontrol" + DepartmentID.ToString());
             await Task.Delay(200);
         }
 
@@ -74,7 +69,11 @@ namespace Attendance_Monitoring.Usercontrols
             EmployID.Focus();
         }
 
+        public void InitializePage()
+        {
+            MessageBox.Show("Running after set: " + DepartmentID);
+            // Now you can load employees, etc.
+        }
 
-       
     }
 }

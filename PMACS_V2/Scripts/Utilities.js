@@ -68,19 +68,29 @@ window.fetchData = async (url, fdata = {}) => {
             }
         });
 
+        if (!res.ok) {
+            // Try to extract error details from the response if possible
+            let errorMessage = `HTTP error ${res.status}`;
+            try {
+                const errorData = await res.json();
+                errorMessage = errorData?.message || errorMessage;
+            } catch {
+                // Fallback if the body isn't JSON
+            }
+
+            console.warn('Fetch failed:', errorMessage);
+            return { error: true, status: res.status, message: errorMessage };
+        }
+
         const result = await res.json();
-
-        //if (!res.ok) {
-        //    //console.warn(`Error ${res.status}: ${result.Message}`);
-        //    return result;
-        //}
-
         return result;
+
     } catch (error) {
         console.error('Fetch Error:', error);
-        return null; // Return null on failure
+        return { error: true, message: error.message };
     }
 };
+
 
 window.postData = async (url, data) => {
     try {

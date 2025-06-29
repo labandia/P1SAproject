@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Attendance_Monitoring.Repositories;
 using Attendance_Monitoring.Models;
 using Attendance_Monitoring.Usercontrols;
+using Attendance_Monitoring.View.V2;
 
 namespace Attendance_Monitoring
 {
@@ -38,11 +39,12 @@ namespace Attendance_Monitoring
             services.AddTransient<CRSelection>();
             services.AddTransient<EmployeeManagement>();
             services.AddSingleton<MainLayout>();
+            services.AddTransient<AttendanceMain>();
 
 
 
             ServiceProvider = services.BuildServiceProvider();
-            var mainForm = ServiceProvider.GetRequiredService<Selection>();
+            var mainForm = ServiceProvider.GetRequiredService<AttendanceMain>();
             Application.Run(mainForm);
         }
     }

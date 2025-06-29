@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EmployeeManagement));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.Delete = new System.Windows.Forms.DataGridViewImageColumn();
             this.Edit = new System.Windows.Forms.DataGridViewImageColumn();
@@ -39,7 +39,6 @@
             this.Process = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Fullname = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.EmployeeID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.DepartmentID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label1 = new System.Windows.Forms.Label();
             this.searchbox = new System.Windows.Forms.TextBox();
@@ -47,9 +46,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.backbtn = new System.Windows.Forms.Button();
-            this.addbtn = new System.Windows.Forms.Button();
-            this.Removebtn = new System.Windows.Forms.Button();
+            this.Addbtn = new System.Windows.Forms.Button();
             this.exportbtn = new System.Windows.Forms.Button();
             this.DisplayTotal = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.Employeetable)).BeginInit();
@@ -111,22 +108,6 @@
             this.EmployeeID.Name = "EmployeeID";
             this.EmployeeID.ReadOnly = true;
             // 
-            // comboBox1
-            // 
-            this.comboBox1.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "Molding",
-            "Press",
-            "Rotor",
-            "Winding",
-            "Circuit",
-            "Process Control"});
-            this.comboBox1.Location = new System.Drawing.Point(350, 211);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(166, 29);
-            this.comboBox1.TabIndex = 22;
-            // 
             // DepartmentID
             // 
             this.DepartmentID.DataPropertyName = "Department_ID";
@@ -159,8 +140,8 @@
             this.Employeetable.AllowUserToDeleteRows = false;
             this.Employeetable.AllowUserToResizeColumns = false;
             this.Employeetable.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.Employeetable.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.Employeetable.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
             this.Employeetable.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -168,14 +149,14 @@
             this.Employeetable.BackgroundColor = System.Drawing.Color.White;
             this.Employeetable.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.Employeetable.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.Silver;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Silver;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.Employeetable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.Silver;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.Silver;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.Employeetable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
             this.Employeetable.ColumnHeadersHeight = 35;
             this.Employeetable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.Employeetable.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -186,14 +167,14 @@
             this.Edit,
             this.Delete,
             this.DepartmentID});
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.Employeetable.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.Employeetable.DefaultCellStyle = dataGridViewCellStyle6;
             this.Employeetable.EnableHeadersVisualStyles = false;
             this.Employeetable.Location = new System.Drawing.Point(42, 267);
             this.Employeetable.Name = "Employeetable";
@@ -213,7 +194,7 @@
             this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button1.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold);
-            this.button1.Location = new System.Drawing.Point(741, 68);
+            this.button1.Location = new System.Drawing.Point(811, 68);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(143, 42);
             this.button1.TabIndex = 11;
@@ -236,64 +217,36 @@
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(9)))), ((int)(((byte)(13)))), ((int)(((byte)(37)))));
             this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.backbtn);
-            this.panel1.Controls.Add(this.addbtn);
-            this.panel1.Controls.Add(this.Removebtn);
+            this.panel1.Controls.Add(this.Addbtn);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1194, 158);
             this.panel1.TabIndex = 18;
             // 
-            // backbtn
+            // Addbtn
             // 
-            this.backbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.backbtn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.backbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.backbtn.Image = ((System.Drawing.Image)(resources.GetObject("backbtn.Image")));
-            this.backbtn.Location = new System.Drawing.Point(1087, 68);
-            this.backbtn.Name = "backbtn";
-            this.backbtn.Size = new System.Drawing.Size(52, 42);
-            this.backbtn.TabIndex = 6;
-            this.backbtn.UseVisualStyleBackColor = true;
-            // 
-            // addbtn
-            // 
-            this.addbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.addbtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(62)))), ((int)(((byte)(185)))));
-            this.addbtn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.addbtn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(62)))), ((int)(((byte)(185)))));
-            this.addbtn.FlatAppearance.BorderSize = 0;
-            this.addbtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
-            this.addbtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(50)))), ((int)(((byte)(141)))));
-            this.addbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.addbtn.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.addbtn.ForeColor = System.Drawing.Color.White;
-            this.addbtn.Image = ((System.Drawing.Image)(resources.GetObject("addbtn.Image")));
-            this.addbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.addbtn.Location = new System.Drawing.Point(900, 68);
-            this.addbtn.Name = "addbtn";
-            this.addbtn.Padding = new System.Windows.Forms.Padding(12, 0, 12, 0);
-            this.addbtn.Size = new System.Drawing.Size(165, 42);
-            this.addbtn.TabIndex = 3;
-            this.addbtn.Text = "Add Employee";
-            this.addbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.addbtn.UseVisualStyleBackColor = false;
-            // 
-            // Removebtn
-            // 
-            this.Removebtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.Removebtn.BackColor = System.Drawing.Color.White;
-            this.Removebtn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.Removebtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Removebtn.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold);
-            this.Removebtn.Location = new System.Drawing.Point(492, 64);
-            this.Removebtn.Name = "Removebtn";
-            this.Removebtn.Size = new System.Drawing.Size(173, 42);
-            this.Removebtn.TabIndex = 4;
-            this.Removebtn.Text = "Remove Employee";
-            this.Removebtn.UseVisualStyleBackColor = false;
-            this.Removebtn.Visible = false;
+            this.Addbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.Addbtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(62)))), ((int)(((byte)(185)))));
+            this.Addbtn.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.Addbtn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(62)))), ((int)(((byte)(185)))));
+            this.Addbtn.FlatAppearance.BorderSize = 0;
+            this.Addbtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.Addbtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(50)))), ((int)(((byte)(141)))));
+            this.Addbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Addbtn.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Addbtn.ForeColor = System.Drawing.Color.White;
+            this.Addbtn.Image = ((System.Drawing.Image)(resources.GetObject("Addbtn.Image")));
+            this.Addbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Addbtn.Location = new System.Drawing.Point(970, 68);
+            this.Addbtn.Name = "Addbtn";
+            this.Addbtn.Padding = new System.Windows.Forms.Padding(12, 0, 12, 0);
+            this.Addbtn.Size = new System.Drawing.Size(165, 42);
+            this.Addbtn.TabIndex = 3;
+            this.Addbtn.Text = "Add Employee";
+            this.Addbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Addbtn.UseVisualStyleBackColor = false;
+            this.Addbtn.Click += new System.EventHandler(this.Addbtn_Click);
             // 
             // exportbtn
             // 
@@ -330,7 +283,6 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.searchbox);
             this.Controls.Add(this.Employeetable);
@@ -356,7 +308,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Process;
         private System.Windows.Forms.DataGridViewTextBoxColumn Fullname;
         private System.Windows.Forms.DataGridViewTextBoxColumn EmployeeID;
-        public System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.DataGridViewTextBoxColumn DepartmentID;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox searchbox;
@@ -364,9 +315,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button backbtn;
-        private System.Windows.Forms.Button addbtn;
-        private System.Windows.Forms.Button Removebtn;
+        private System.Windows.Forms.Button Addbtn;
         private System.Windows.Forms.Button exportbtn;
         private System.Windows.Forms.Label DisplayTotal;
     }

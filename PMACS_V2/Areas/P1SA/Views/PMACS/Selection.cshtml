@@ -16,7 +16,11 @@
 
 
 <section class="content">
-    <div class="selectcontain" id="selectionID"> </div>
+    <div id="selectionID">
+        <div id="cardContainer" class="selectcontain" >
+
+        </div>
+    </div>
     <div class="listselectcontain" id="listselectionID">
         <div class="MainTable">
             <table class="mt-4">
@@ -40,77 +44,84 @@
 
 
 <script type="text/javascript">
-    const forest = document.getElementById("Excelbtn");
-    const setDate = new Date().toLocaleString('default', { month: 'long' });
-    const gridbtn = document.getElementById("GridView");
-    const listbtn = document.getElementById("ListView");
+    let DataTable = $("#cardContainer");
     let loadSelect = [];
-    //localStorage.setItem('users', JSON.stringify(res.Data.payload));
 
     const GetData = async () => {
+        
          $("#selectionID").show();
          $("#listselectionID").hide();
-         //$("#datemonth").text(setDate);
          let res = await fetchData('@Url.Action("GetGroupCapacityList", "Capacity")', {});
          if (res && res.Success) {
              loadSelect = res.Data;
-             GridViewDisplay(loadSelect);
+
+             if (localStorage.getItem("capacitylist") !== null) {
+                 ListViewDisplay(loadSelect);
+             } else {
+                 GridViewDisplay(loadSelect);
+             }   
          }
      }
 
-    gridbtn.addEventListener('click', (e) => {
+    $("#GridView").on('click', (e) => {
         e.preventDefault();
         $("#selectionID").show();
         $("#listselectionID").hide();
-
+        $("#cardContainer").empty();
+        localStorage.removeItem("capacitylist");
         // Loads the data for the Grid View
         GridViewDisplay(loadSelect);
     });
 
-    listbtn.addEventListener('click', (e) => {
+    $("#ListView").on('click', (e) => {
         e.preventDefault();
         $("#selectionID").hide();
         $("#listselectionID").show();
-
+        localStorage.setItem("capacitylist", true);
         // Loads the data for the list View
         ListViewDisplay(loadSelect);
     });
 
-    forest.addEventListener('click', (e) => {
+    $("#Excelbtn").on('click', (e) => {
         e.preventDefault();
         window.location.href = "/P1SA/PMACS/ForecastData";
     });
 
 
     const GridViewDisplay = (data) => {
-        var SetData = $("#selectionID");
+        loadingDisplay();
 
-        $.each(data, function (index, rowData) {
-            var getdata = " <div  class='selectioncard' id='row_" + index + "'>" +
-                "<div class='selectioncard__header flex__space'>" +
-                "<div class='selectioncard__name'><span>" + rowData.Cap_name + "</span></div>" +
-                "<div class='selectioncard__Cycle'>" +
-                "<i class='fa fa-users' aria-hidden='true'></i>" +
-                "<span> " + rowData.TotalMan + "</span>" +
-                "</div>" +
-                "</div>" +
-                "<hr />" +
-                "<div class='selectioncard__footer'>" +
-                "<div class='selectioncard__col'><small>Machine</small><span>" + rowData.Total_machine + "</span></div>" +
-                "<div class='selectioncard__col'><small>Capacity/day</small><span>" + rowData.Capday + "</span></div>" +
-                "<div class='selectioncard__col'><small>Capacity/Month</small><span>" + rowData.Capmonth + "</span></div>" +
-                "</div>" +
-                "</div>"
-            SetData.append(getdata);
-        });
+        setTimeout(() => {
+            DataTable.empty();
+            var SetData = $("#cardContainer");
 
-        $(document).on('click', '.selectioncard', function (e) {
-            e.preventDefault();
-            var buttonId = $(this).attr('id');
-            var rowIndex = buttonId.split('_')[1];
-            let secID = parseInt(rowIndex) + 1;
-            RedirectCapacity(secID);
-        });
+            $.each(data, function (index, rowData) {
+                var getdata = " <div  class='selectioncard' id='row_" + index + "'>" +
+                    "<div class='selectioncard__header flex__space'>" +
+                    "<div class='selectioncard__name'><span>" + rowData.Cap_name + "</span></div>" +
+                    "<div class='selectioncard__Cycle'>" +
+                    "<i class='fa fa-users' aria-hidden='true'></i>" +
+                    "<span> " + rowData.TotalMan + "</span>" +
+                    "</div>" +
+                    "</div>" +
+                    "<hr />" +
+                    "<div class='selectioncard__footer'>" +
+                    "<div class='selectioncard__col'><small>Machine</small><span>" + rowData.Total_machine + "</span></div>" +
+                    "<div class='selectioncard__col'><small>Capacity/day</small><span>" + rowData.Capday + "</span></div>" +
+                    "<div class='selectioncard__col'><small>Capacity/Month</small><span>" + rowData.Capmonth + "</span></div>" +
+                    "</div>" +
+                    "</div>"
+                SetData.append(getdata);
+            });
+
+            $(document).on('click', '.selectioncard', function (e) {
+                e.preventDefault();
+                var buttonId = $(this).attr('id');
+                var rowIndex = buttonId.split('_')[1];
+                let secID = parseInt(rowIndex) + 1;
+                RedirectCapacity(secID);
+            });
+        }, 1000);
     }
     const ListViewDisplay = (data) => {
         var SetData = $("#dataSearching");
@@ -164,9 +175,41 @@
 
     //Shows for the Current View
     const CurrentSaveView = () => {
-
+        if (localStorage.getItem("capacitylist") !== null) {
+            $("#selectionID").hide();
+            $("#listselectionID").show();
+        } else {
+            $("#selectionID").show();
+            $("#listselectionID").hide();
+        }
     }
 
-    GetData();
-    CurrentSaveView();
+    function loadingDisplay() {
+        DataTable.empty();
+        var loadData = `<div class='Loadercontainer'>
+                            <span class="loader"></span>
+                        </div>`;
+        DataTable.append(loadData);
+    }
+
+
+    const LoadPageData = async () => {
+        try {
+            const [getdata, viewdata] = await Promise.all([
+                GetData(),
+                CurrentSaveView()
+            ]);
+
+        } catch (error) {
+            console.error("Failed to load page data:", error);
+        } finally {
+            // Hide loading spinner whether success or failure
+            //$("#loadingSpinner").hide();
+        }
+    }
+
+    $(document).ready(() => {
+        LoadPageData();
+    });
+   
 </script>

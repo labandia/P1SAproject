@@ -78,8 +78,8 @@
                         </div>
                     </div>
 
-                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal" >
+                        <span >&times;</span>
                     </button>
                 </div>
 
@@ -87,9 +87,9 @@
                 <form id="EditPisa" autocomplete='off'>
                     <label style='font-weight: 600; color: #222; margin-bottom: .5em;'>Total Machine : </label>
                     <input type='hidden' name='ProcessCode' id='ProcessCode' />
-                    <input type='text' name='ActualMachine' id='ActualMachine' onkeypress='return restrictChars(event)' /><br />
+                    <input type='text' name='ActualMachine' id='ActualMachine' onkeypress='return restrictChars(e)' /><br />
                     <label style='font-weight: 600; color: #222; margin-bottom: .5em;'>Total Operational :</label> <br />
-                    <input type='text' name='AvailMachine' id='AvailMachine' onkeypress='return restrictChars(event)' /><br />
+                    <input type='text' name='AvailMachine' id='AvailMachine' onkeypress='return restrictChars(e)' /><br />
                     <div class='footer d-flex justify-content-end pt-4 pb-2 gap-2'>
                         <button type='submit' class='btn btn-primary' id='saveEditsum'>
                             <i class='fa-regular fa-pen-to-square action_btn'></i> Save
@@ -129,113 +129,112 @@
 
 
 
-    // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
-    const InitializeData = () => {
-        $("#empty-state").hide();
-        getLogsUpdated();
-        // GET THE TABLE DATA
-        getTable();
-        // DISPLAY THE TOTAL FORECASE
-        getTotalForecastData();
-    }
+    
 
     const getTable = async () => {
-        loadingDisplay();
-        let res = await fetchData('@Url.Action("GetPisaSummaryList", "Capacity")', {});
-        if (res && res.Success) {
-            loadData = res.Data;
-            setTimeout(() => {
-                DataTable.empty();
+        try {
+            loadingDisplay();
+            let res = await fetchData('@Url.Action("GetPisaSummaryList", "Capacity")', {});
+            if (res && res.Success) {
+                loadData = res.Data;
+                setTimeout(() => {
+                    DataTable.empty();
 
-                loadData.forEach((row, index) => {
-                    let buttons = '';
-                    let percentage;
+                    loadData.forEach((row, index) => {
+                        let buttons = '';
+                        let percentage;
 
-                    if (checkrole !== 2) {
-                        $("#headertable").show();
-                        buttons = `<td id='datatable' style='text-align: center;'>
-                      <button type='submit' Class='btn actionicon text-success editButton' id='editButton_${row.ProcessCode}' >
-                      <i class='fa-regular fa-pen-to-square action_btn'></i>
-                      </button>
-                  </td>`;
-                    } else {
-                        $("#headertable").hide();
-                        $("datatable").hide();
-                    }
+                        if (checkrole !== 2) {
+                            $("#headertable").show();
+                            buttons = `<td id='datatable' style='text-align: center;'>
+                                          <button type='submit' Class='btn actionicon text-success editButton' id='editButton_${row.ProcessCode}' >
+                                          <i class='fa-regular fa-pen-to-square action_btn'></i>
+                                          </button>
+                                      </td>`;
+                        } else {
+                            $("#headertable").hide();
+                            $("datatable").hide();
+                        }
 
-                    if (row.Machine_Utilization > 100) {
-                        percentage = 100;
-                    } else {
-                        percentage = row.Machine_Utilization
+                        if (row.Machine_Utilization > 100) {
+                            percentage = 100;
+                        } else {
+                            percentage = row.Machine_Utilization
 
-                    }
-
-
-                    var setdata = "<tr class= 'row_" + index + "  '  >" +
-                        "<td class='textleft' style='text-align: left;'>" +
-                        "<strong style='font-weight: 600; color: #222;'>" + row.ProcessName + "</strong>" +
-                        "</td>" +
-                        "<td style='text-align: center;'>" + row.ActualMachine + "</td> " +
-                        "<td style='text-align: center;'>" + row.AvailMachine + "</td> " +
-                        "<td style='text-align: center;'>" +
-                        "<div class='progress-bar'>" +
-                        "<span data-width='" + percentage + "'></span>" +
-                        "</div>" +
-                        "<small style='color: #222; font-weight: 600;'>" + percentage + "%</small>" +
-                        "</td>" +
-                        "<td style='text-align: center;'>" + row.Cap_Per_Machine + "</td>" +
-                        "<td> " + row.PerDay + "</td>" +
-                        "<td> " + row.Minimum + "</td>" +
-                        "<td>" + row.Maximum + "</td>" +
-                        buttons +
-                        "</tr>;"
+                        }
 
 
-                    $("#dataSearching").append(setdata);
-                });
+                        var setdata = "<tr class= 'row_" + index + "  '  >" +
+                            "<td class='textleft' style='text-align: left;'>" +
+                            "<strong style='font-weight: 600; color: #222;'>" + row.ProcessName + "</strong>" +
+                            "</td>" +
+                            "<td style='text-align: center;'>" + row.ActualMachine + "</td> " +
+                            "<td style='text-align: center;'>" + row.AvailMachine + "</td> " +
+                            "<td style='text-align: center;'>" +
+                            "<div class='progress-bar'>" +
+                            "<span data-width='" + percentage + "'></span>" +
+                            "</div>" +
+                            "<small style='color: #222; font-weight: 600;'>" + percentage + "%</small>" +
+                            "</td>" +
+                            "<td style='text-align: center;'>" + row.Cap_Per_Machine + "</td>" +
+                            "<td> " + row.PerDay + "</td>" +
+                            "<td> " + row.Minimum + "</td>" +
+                            "<td>" + row.Maximum + "</td>" +
+                            buttons +
+                            "</tr>;"
 
 
-                const spans = document.querySelectorAll('.progress-bar span');
-                spans.forEach((span) => {
+                        $("#dataSearching").append(setdata);
+                    });
 
-                    if (span.dataset.width >= 60 && span.dataset.width <= 100) {
-                        span.style.background = '#3ccf6d';
-                    }
-                    else if (span.dataset.width > 30 && span.dataset.width < 59) {
-                        span.style.background = '#ee9d41';
-                    }
-                    else {
-                        span.style.background = '#ee4141';
-                    }
-                    span.style.width = span.dataset.width + "%";
-                    //span.innerHTML = span.dataset.width;
-                });
-                $("#empty-state").hide();
-            }, 1000);
-        } else {
-            $("#empty-state").show();
+
+                    const spans = document.querySelectorAll('.progress-bar span');
+                    spans.forEach((span) => {
+
+                        if (span.dataset.width >= 60 && span.dataset.width <= 100) {
+                            span.style.background = '#3ccf6d';
+                        }
+                        else if (span.dataset.width > 30 && span.dataset.width < 59) {
+                            span.style.background = '#ee9d41';
+                        }
+                        else {
+                            span.style.background = '#ee4141';
+                        }
+                        span.style.width = span.dataset.width + "%";
+                        //span.innerHTML = span.dataset.width;
+                    });
+                    $("#empty-state").hide();
+
+
+                    $(document).on('click', '.editButton', function () {
+                        var buttonId = $(this).attr('id');
+                        var rowIndex = buttonId.split('_')[1]; // Extract the index from the button ID
+                        let result = loadData.filter(item => item.ProcessCode === rowIndex);
+                        capid = result[0].Capgroup_ID;
+                        $("#ProcessCode").val(result[0].ProcessCode);
+                        $("#AvailMachine").val(result[0].AvailMachine);
+                        $("#ActualMachine").val(result[0].ActualMachine);
+                        $("#exampleModal").modal("show");
+
+                    });
+                }, 1000);
+            } else {
+                $("#empty-state").show();
+            }
+        } catch (ex) {
+            console.log(ex.Message);
         }
     }
 
 
-    $(document).on('click', '.editButton', function () {
-        var buttonId = $(this).attr('id');
-        var rowIndex = buttonId.split('_')[1]; // Extract the index from the button ID
-        let result = loadData.filter(item => item.ProcessCode === rowIndex);
-        capid = result[0].Capgroup_ID;
-        $("#ProcessCode").val(result[0].ProcessCode);
-        $("#AvailMachine").val(result[0].AvailMachine);
-        $("#ActualMachine").val(result[0].ActualMachine);
-        $("#exampleModal").modal("show");
-
-    });
+    
 
 
     editform.addEventListener('submit', async (e)=> {
          e.preventDefault();
 
         let formData = new FormData(e.target);
-        const data = Object.fromEntries(formData);
+      
         let res = await postData('@Url.Action("P1saSummaryUpdated", "PostCapacity")', formData);
          if (res.StatusCode == 200) {
              Swal.fire({
@@ -322,11 +321,17 @@
 
 
     const getLogsUpdated = async () => {
-        let res = await fetchData('@Url.Action("GetUpdateLogs", "PMACS")', { Module: 9 });
-        if (res && res.Success) {
-            $("#Updatelog").text("Last Updated : " + res.Data[0].LastUpdated);
+        try {
+            let res = await fetchData('@Url.Action("GetUpdateLogs", "PMACS")', { Module: 9 });
+
+            if (res && res.Success) {
+                $("#Updatelog").text("Last Updated : " + res.Data[0].LastUpdated);
+            } 
+        } catch (e) {
+            console.error("Error fetch:", e.message);
         }
-    }
+    };
+
 
 
     function loadingDisplay() {
@@ -341,5 +346,29 @@
         DataTable.append(loadData);
     }
 
-    InitializeData()
+    // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+    const LoadPageData = async() => {
+        try {
+            $("#empty-state").hide();
+
+            const [maintable, forest, logs] = await Promise.all([
+                // GET THE TABLE DATA
+                getTable(),
+                // DISPLAY THE TOTAL FORECASE
+                getTotalForecastData(),
+                getLogsUpdated()
+            ]);
+            
+         
+        } catch (error) {
+            console.error("Failed to load page data:", error);
+        } finally {
+            // Hide loading spinner whether success or failure
+            //$("#loadingSpinner").hide();
+        }
+    }
+
+    $(document).ready(() => {
+        LoadPageData();
+    });
 </script>

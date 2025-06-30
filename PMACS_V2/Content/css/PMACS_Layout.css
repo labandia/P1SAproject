@@ -50,7 +50,7 @@
         width: 100%;
         border-collapse: collapse;
         background: #fff;
-/*        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);*/
+        /*box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);*/
     }
 
     table th {
@@ -59,9 +59,7 @@
         padding: .7em 0;
         font-size: .8rem;
         text-align: center;
- 
     }
-
 
     table td {
         border-bottom: 1px solid #d4d3d3;
@@ -135,7 +133,6 @@
 
     .sidebar__subtitle {
         font-size: var(--small-font-size);
-        /*    text-transform: uppercase;*/
         color: var(--text-color-light);
         font-weight: var(--font-medium)
     }
@@ -143,10 +140,6 @@
     .sidebar__link {
         display: grid;
         grid-template-columns: 35px 1fr;
-        /*        display: flex;
-            align-items: center;*/
-        /*    color: var(--text-color);*/
-  
         color: #A5A1AA;
     }
 
@@ -1335,103 +1328,96 @@
     }
 
 
-.model__fields {
-    display: grid;
-    grid-template-columns: 50% 50%;
-    gap: 1.5em;
-    margin-bottom: .5em;
-}
+    .model__fields {
+        display: grid;
+        grid-template-columns: 50% 50%;
+        gap: 1.5em;
+        margin-bottom: .5em;
+    }
 
-.detail__inputfield label {
-    color: #222;
-    font-size: var(--small-font-size);
-}
+    .detail__inputfield label {
+        color: #222;
+        font-size: var(--small-font-size);
+    }
 
-.details__input select {
-    width: 100%;
-}
+    .details__input select {
+    }
 
-.detail__inputfield input {
-    width: 100%;
-    height: 42px;
-    padding: 0 15px;
-    margin: .5em 0;
-    background: #f5f5f5;
-}
+    .detail__inputfield input {
+        height: 42px;
+    }
 
-.addwrap span{
-    margin: 0 1em;
-}
+    .addwrap span{
+        margin: 0 1em;
+    }
 
 
-.Addmach__footer {
-    display: flex;
-    justify-content: flex-end;
-    padding: 1em
-}
+    .Addmach__footer {
+        display: flex;
+        justify-content: flex-end;
+        padding: 1em
+    }
 
-#addnewmodel select {
-    width: 100%;
-}
+  
 
-#addnewmodel input {
-    background: #f5f5f5;
-    outline: none;
-}
+    #addnewmodel input {
+        background: #f5f5f5;
+        outline: none;
+    }
 
 
-.edits_footer {
-    display: flex;
-    align-items: center;
-    place-content: flex-end;
-    padding: 1em;
-}
+    .edits_footer {
+        display: flex;
+        align-items: center;
+        place-content: flex-end;
+        padding: 1em;
+    }
 
-#Editdetailsbtn {
-    background: var(--primary-color);
-    padding: .8em 1.5em;
-    color: #fff;
-    border-radius: .2em;
-    transition: .5s all ease;
-}
+    #Editdetailsbtn {
+        background: var(--primary-color);
+        padding: .8em 1.5em;
+        color: #fff;
+        border-radius: .2em;
+        transition: .5s all ease;
+    }
 
-#Editsavebtn {
-    padding: .8em 1.5em;
-    background: #109b39;
-    color: #fff;
-    transition: .5s all ease;
-    border-radius: .2em;
-}
+    #Editsavebtn {
+        padding: .8em 1.5em;
+        background: #109b39;
+        color: #fff;
+        transition: .5s all ease;
+        border-radius: .2em;
+    }
 
-#Editdetailsbtn:hover {
-    background: #0f68bb;
-}
+    #Editdetailsbtn:hover {
+        background: #0f68bb;
+    }
 
-#Editsavebtn:hover {
-    background: #979797;
-}
+    #Editsavebtn:hover {
+        background: #979797;
+    }
 
-.editmode:disabled {
-    background: #d1d1d1;
-    border: none;
-}
+    .editmode:disabled {
+        background: #d1d1d1;
+        border: none;
+    }
 
-.editmode {
-    background: #fff;
-    border: 1px solid rgba(100, 100, 111, 0.5);
-    color: #222;
-    font-weight: 500;
-    outline: none;
-}
+    .editmode {
+        background: #fff;
+        border: 1px solid rgba(100, 100, 111, 0.5);
+        color: #222;
+        font-weight: 500;
+        outline: none;
+    }
 
-#newmodel {
-    color: rgba(170, 24, 14, 0.8);
-    opacity: 0;
-}
+    #newmodel {
+        color: rgba(170, 24, 14, 0.8);
+        opacity: 0;
+    }
 
-.saveEditsum:disabled {
-    background: #919191;
-}
+    .saveEditsum:disabled {
+        background: #919191;
+    }
 
 
 
@@ -1476,11 +1462,11 @@
 
 
 
-.selectiontabs__body {
-    position: relative;
-    width: 100%;
-    background-color: #f5f5f5;
-}
+    .selectiontabs__body {
+        position: relative;
+        width: 100%;
+        background-color: #f5f5f5;
+    }
 
     .selectiontabs__body select {
         width: 200px;
@@ -2137,7 +2123,6 @@
 
 
     .detail__inputfield select {
-        width: 100%;
         height: 42px;
         margin: 8px 0;
         padding: 0 15px;
@@ -2189,7 +2174,10 @@
     }
 
 
-    #DieWrapcolumn td:nth-child(3), #DieWrapcolumn th:nth-child(3),  #DieWrapcolumn td:nth-child(5), #DieWrapcolumn th:nth-child(5){
+    #DieWrapcolumn td:nth-child(3), 
+    #DieWrapcolumn th:nth-child(3),  
+    #DieWrapcolumn td:nth-child(5), 
+    #DieWrapcolumn th:nth-child(5){
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;

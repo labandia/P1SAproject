@@ -536,14 +536,7 @@
     }
 
 
-     const InitializationData = () => {
-         getLogsUpdated();
-         //userDataRole();
-         $("#currentdatetime").text(Month + "  " + currentYear)
-         GetManpowerData();
-         Totalmanpower();
-         //Displayinfo();
-     }
+     
 
         // ########################################  TABS CONTROLS ########################################## //
 
@@ -566,5 +559,27 @@
         }
 
 
-     InitializationData();
-    </script>
+
+      // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+     const LoadPageData = async() => {
+         try {
+             $("#currentdatetime").text(Month + "  " + currentYear)
+
+             const [logs, manpower, total] = await Promise.all([
+                 getLogsUpdated(),
+                 GetManpowerData(),
+                 Totalmanpower()
+             ]);
+         
+         } catch (error) {
+             console.error("Failed to load page data:", error);
+         } finally {
+             // Hide loading spinner whether success or failure
+             //$("#loadingSpinner").hide();
+         }
+     }
+
+     $(document).ready(() => {
+         LoadPageData();
+     });
+</script>

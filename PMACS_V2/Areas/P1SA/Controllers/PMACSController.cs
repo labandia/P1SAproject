@@ -138,6 +138,5 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         // GET: P1SA/ForecastData
         public ActionResult ForecastData() => View();
         // GET: P1SA/FanMajor
-        public ActionResult Sample() => View();
     }
 }

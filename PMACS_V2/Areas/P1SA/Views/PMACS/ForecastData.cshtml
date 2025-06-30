@@ -539,12 +539,25 @@
 
 
 
-    const initializeData = () => {
-        $(".navbottom").hide();
-        GetForecastData();
-        GetForecastForChart();
+    // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+    const LoadPageData = async () => {
+        try {
+            $(".navbottom").hide();
+
+            const [logs, manpower, total] = await Promise.all([
+                GetForecastData(),
+                GetForecastForChart()
+            ]);
+
+        } catch (error) {
+            console.error("Failed to load page data:", error);
+        } finally {
+            // Hide loading spinner whether success or failure
+            //$("#loadingSpinner").hide();
+        }
     }
 
-
-    initializeData();
+    $(document).ready(() => {
+        LoadPageData();
+    });
 </script>

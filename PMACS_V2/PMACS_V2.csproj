@@ -536,7 +536,6 @@
     <Content Include="Areas\P1SA\Views\Capacity\Winding.cshtml" />
     <Content Include="Areas\P1SA\Views\PMACS\FanMajor.cshtml" />
     <Content Include="libman.json" />
-    <Content Include="Areas\P1SA\Views\PMACS\Sample.cshtml" />
     <Content Include="Areas\Attendance\Views\web.config" />
     <Content Include="Areas\Attendance\Views\Shared\_Sidebar.cshtml" />
     <Content Include="Areas\Attendance\Views\V2\TimeInandOut.cshtml" />

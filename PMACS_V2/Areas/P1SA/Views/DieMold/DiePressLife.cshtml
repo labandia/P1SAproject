@@ -4,9 +4,6 @@
     Layout = "~/Areas/P1SA/Views/Shared/_Layout.cshtml";
 }
 
-
-
-
 <section>
     <header class="MainHeader">
         <div class="MoldTitle">
@@ -22,9 +19,9 @@
             <div id="MoldMonitor">
                 <button class="primary_button_color" id="addmodal">Add Data</button>
             </div>
-
+            @* MOLD Tooling *@
             <div id="MoldTooling">
-                <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center gap-2">
                     <button class="primary_button_color" id="Registrymodal">Add Data</button>
                     <div class="searchinputContainer">
                         <i class="fa-solid fa-magnifying-glass"></i>
@@ -32,6 +29,10 @@
                         <div class="line"></div>
                     </div>
                 </div>
+            </div>
+            @* MOLD Die Control *@
+            <div id="MoldControl">
+                <button class="primary_button_color" id="addmodal">Add Data</button>
             </div>
         </div>
     </header>
@@ -41,6 +42,7 @@
             <button class="Mold_tab active" data-target="Summary">Summary</button>
             <button class="Mold_tab" data-target="Monitoring">Monitoring</button>
             <button class="Mold_tab" data-target="Tooling">Tooling</button>
+            <button class="Mold_tab" data-target="DieControl">DieControl</button>
             <div class="Mold_slider"></div>
         </div>
 
@@ -75,7 +77,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="Mold_content" id="Monitoring">
                 <div class="DieMainTable">
                     <table>
@@ -109,8 +110,6 @@
                     </div>
                 </div>
             </div>
-
-
             <div class="Mold_content" id="Tooling">
                 <div class=" d-flex align-items-center justify-content-end">
                     <div class="Legends d-flex align-items-center gap-2 mb-2">
@@ -142,8 +141,35 @@
                     </div>
                 </div>
             </div>
+            <div class="Mold_content" id="DieControl">
+                <div class="DieMainTable">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Product Type</th>
+                                <th>No Stamping</th>
+                                <th>Total</th>
+                                <th>Machine</th>
+                                <th>Die Condition</th>
+                                <th>Operator</th>
+                                <th>Die Height</th>
+                                <th>Leader Confirm</th>
+                                <th>Gear(ALPHA)</th>
+                                <th>Pitch(MXM)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="DiePressControlist">
+                        </tbody>
+                    </table>
 
+                    <div class="PaginationfooterContainer d-flex align-items-center justify-content-between pt-2 pb-4">
+                        <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
 
+                        <div id="PaginationControlContainer" class="paginationPartlocal"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -371,6 +397,7 @@
 <script type="text/javascript">
     let TableData = [];
     let PressData = [];
+    let ControlData = [];
     let SummaryData = [];
     let FinalSummaryData = [];
 
@@ -419,16 +446,25 @@
                     $("#MoldSummary").show();
                     $("#MoldMonitor").hide();
                     $("#MoldTooling").hide();
+                    $("#MoldControl").hide();
                     break;
                 case 1:
                     $("#MoldSummary").hide();
                     $("#MoldMonitor").show();
                     $("#MoldTooling").hide();
+                    $("#MoldControl").hide();
+                    break;
+                case 2:
+                    $("#MoldSummary").hide();
+                    $("#MoldMonitor").hide();
+                    $("#MoldTooling").show();
+                    $("#MoldControl").hide();
                     break;
                 default:
                     $("#MoldSummary").hide();
                     $("#MoldMonitor").hide();
-                    $("#MoldTooling").show();
+                    $("#MoldTooling").hide();
+                    $("#MoldControl").show();
                     break;
             }
         });
@@ -450,7 +486,7 @@
         let formData = new FormData(e.target);
         const data = Object.fromEntries(formData);
         let res = await postData('@Url.Action("AddPressRegistry", "DieMold")', formData);
-        
+
         if (res.StatusCode === 200) {
             Swal.fire({
                 title: "Success",
@@ -522,7 +558,6 @@
 
         }
     }
-
     const GetPressMonitoring = async (month, year) => {
         //let formData = new FormData();
         //// Where value of month is around 1 - 12
@@ -540,7 +575,6 @@
             console.log("No Data found");
         }
     }
-
     const GetPressSummary = async () => {
 
         let res = await fetchData('@Url.Action("GetPressDieSummaryList", "DieMold")', {});
@@ -551,6 +585,16 @@
         } else {
             console.log("No Data found");
         }
+    }
+    const GetPressControl = async () => {
+      let res = await fetchData('@Url.Action("GetPressDieControlList", "DieMold")', {});
+      if (res && res.Success) {
+          ControlData = res.Data;
+          console.log(ControlData);
+          displayControlPagination(ControlData, 'DiePressControlist', 'PaginationControlContainer', 50, 5);
+      } else {
+          console.log("No Data found");
+      }
     }
 
 
@@ -994,18 +1038,172 @@
     }
 
 
+    function displayControlPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 10, visibleButtons = 5) {
+        let currentPage = 1;
+        let filteredData = [...dataArray]; // Make a copy for filtering
+
+        const updatePaginationInfo = () => {
+            const totalRecords = filteredData.length;
+            const totalPages = Math.ceil(totalRecords / recordsPerPage);
+
+            $("#stotalpageID").text(totalPages);
+            $("#sDatalengthID").text(totalRecords);
+
+            return totalPages;
+        };
+
+        const renderTable = (page) => {
+            const totalPages = updatePaginationInfo();
+            const startIndex = (page - 1) * recordsPerPage;
+            const endIndex = Math.min(startIndex + recordsPerPage, filteredData.length);
+            const tableBody = document.getElementById(tableBodyId);
+            tableBody.innerHTML = '';
+
+            for (let i = startIndex; i < endIndex; i++) {
+                const rowData = filteredData[i];
 
 
-    function Initialize() {
-        let setMonth = parseInt(currentMonth) + 1;
-        $("#MoldSummary").show();
-        $("#MoldMonitor").hide();
-        $("#MoldTooling").hide();
+                const rowHtml = `<tr class='row_${i}' >
+                                  <td data-cell="Date">${rowData.DateInput}</td>
+                                  <td data-cell="Type">${rowData.Type}</td>
+                                  <td data-cell="Stamping">${rowData.Stamp}</td>
+                                  <td data-cell="Total">233</td>
+                                  <td data-cell="Machine">${rowData.Machine}</td>
+                                  <td data-cell="DieCondition">${rowData.DieCondition}</td>
+                                  <td data-cell="Operator">${rowData.Operator}</td>
+                                  <td data-cell="DieHeight">${rowData.DieHeight}</td>
+                                  <td data-cell="LeaderCom">${rowData.LeaderCom}</td>
+                                  <td data-cell="Gear">${rowData.Gear}</td>
+                                  <td data-cell="Pitch">${rowData.Pitch}</td>                
+                              </tr>`;
 
-        GetPressRegistry();
-        GetPressMonitoring(setMonth, currentYear);
-        GetPressSummary();
+                tableBody.innerHTML += rowHtml;
+            }
+
+            $("#spagecountID").text(currentPage);
+        };
+
+        const renderPagination = () => {
+            const totalPages = updatePaginationInfo();
+            const paginationContainer = document.getElementById(paginationId);
+            paginationContainer.innerHTML = '';
+
+            let startPage = Math.max(1, currentPage - Math.floor(visibleButtons / 2));
+            let endPage = Math.min(totalPages, startPage + visibleButtons - 1);
+
+            if (endPage > totalPages) {
+                endPage = totalPages;
+                startPage = Math.max(1, endPage - visibleButtons + 1);
+            }
+
+            if (totalPages <= visibleButtons) {
+                startPage = 1;
+                endPage = totalPages;
+            }
+
+            // Previous button
+            paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
+                                     <i class="fa-solid fa-backward"></i>
+                                 </button>`;
+
+            for (let i = startPage; i <= endPage; i++) {
+                paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+            }
+
+            // Next button
+            paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
+                                    <i class="fa-solid fa-forward"></i>
+                                 </button>`;
+        };
+
+        const changePage = (page) => {
+            if (page >= 1 && page <= updatePaginationInfo()) {
+                currentPage = page;
+                renderTable(currentPage);
+                renderPagination();
+            }
+        };
+
+        // 🔍 Search functionality
+        const searchTable = () => {
+            const query = $('#Summarysearchbox').val().toLowerCase();
+
+            filteredData = dataArray.filter(item =>
+                item.ToolNo.toLowerCase().includes(query) || item.Type.toLowerCase().includes(query)
+            );
+
+            currentPage = 1;
+            renderTable(currentPage);
+            renderPagination();
+        };
+
+        // Add event listener for search input
+        $('#Summarysearchbox').on('input', searchTable);
+
+        // Handle click event for edit button
+        $(document).on('click', '.rowClick', function (e) {
+            e.stopPropagation();
+            const buttonId = $(this).attr('id');
+            const rowIndex = buttonId.split('_')[1];
+            const result = SummaryData.find(p => p.ToolNo == rowIndex);
+            if (result) {
+                let Ope = result.Operational === 1 ? "Operational" : "No Operational";
+
+                $("#ToolName").text(result.ToolNo);
+                $("#EditToolNo").val(result.ToolNo);
+                $("#Ope").text(Ope);
+                $("#EditType").val(result.Type);
+                $("#EditModel").val(result.Model);
+                $("#EditLine").val(result.Lines);
+                $("#EditStatus").val(result.Status);
+
+                //// Get all radio buttons with the name 'choice'
+                let radioButtons = document.querySelectorAll('[name="EditOpe"]');
+                //// CHECK IF THE value is the same value
+                radioButtons.forEach(radio => {
+                    if (parseInt(radio.value) === result.Operational) {
+                        radio.checked = true;
+                    }
+                });
+
+
+                $("#EdiTooling").modal("show");
+            }
+        });
+
+        // UPDATES THE DETAILS DATA
+         
+
+            // Initialize table and pagination
+        window.changePage = changePage;
+        renderTable(currentPage);
+        renderPagination();
     }
 
-    Initialize();
+
+    const LoadPageData = async () => {
+        try {
+            let setMonth = parseInt(currentMonth) + 1;
+            $("#MoldSummary").show();
+            $("#MoldMonitor").hide();
+            $("#MoldTooling").hide();
+
+            const [regis, Monitor, Summary, Control] = await Promise.all([
+                GetPressRegistry(),
+                GetPressMonitoring(setMonth, currentYear),
+                GetPressSummary(),
+                GetPressControl()
+            ]);
+
+        } catch (error) {
+            console.error("Failed to load page data:", error);
+        } finally {
+            // Hide loading spinner whether success or failure
+            //$("#loadingSpinner").hide();
+        }
+    };
+
+    $(document).ready(() => {
+        LoadPageData();
+    });
 </script>

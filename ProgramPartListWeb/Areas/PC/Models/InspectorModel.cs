@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace ProgramPartListWeb.Areas.PC.Models
 {
 
@@ -84,7 +83,6 @@ namespace ProgramPartListWeb.Areas.PC.Models
             set => _FullName = value;
         }
     }
-
     public class RegistrationModel
     {
         public string RegNo {  get; set; }
@@ -96,8 +94,6 @@ namespace ProgramPartListWeb.Areas.PC.Models
         public string Manager { get; set; }
         public string Manager_Comments { get; set; }
     }
-
-
     public class InspectorModel
     {
         private int _InspectID;

@@ -212,7 +212,6 @@ namespace PMACS_V2.Areas.P1SA.Repository
                                 FROM DiePressRegistry";
             return await SqlDataAccess.GetData<PressDieRegistry>(strquery, null);
         }
-
         public async Task<List<PressDieMontoring>> GetPressMonitoring()
         {
             string strquery = @"SELECT FORMAT(DateInput, 'MM/dd/yyyy') as DateInput,
@@ -222,7 +221,6 @@ namespace PMACS_V2.Areas.P1SA.Repository
                               FROM DiePressMonitoring";
             return await SqlDataAccess.GetData<PressDieMontoring>(strquery, null);
         }
-
         public async Task<List<PressDieSummary>> GetPressSummary()
         {
             var data = await PressDieSummaryList();
@@ -285,7 +283,16 @@ namespace PMACS_V2.Areas.P1SA.Repository
                                   LEFT JOIN TotalPressStamp td ON td.ToolNo = s.ToolNo";
             return await SqlDataAccess.GetData<PressDieSummary>(strquery, null);
         }
-
+        public async Task<List<PressDieControlModel>> GetPressControl()
+        {
+            string strsql = $@"SELECT FORMAT(c.DateInput, 'MM/dd/yy') as DateInput,
+                                c.ToolNo, c.Brand, r.Type, c.Stamp, c.Machine, 
+	                            c.DieCondition, c.Operator, c.DieHeight, c.LeaderCom, 
+	                            c.Gear, c.Pitch, c.GearCom, c.ReasonDetach
+                            FROM DiePressControl c INNER JOIN DiePressRegistry r 
+                            ON c.ToolNo = r.ToolNo";
+            return await SqlDataAccess.GetData<PressDieControlModel>(strsql, null, "dieControl");
+        }
         public string GetStatusMonitor(double minval)
         {
             string val;
@@ -354,6 +361,6 @@ namespace PMACS_V2.Areas.P1SA.Repository
 
         }
 
-        
+      
     }
 }

@@ -134,15 +134,26 @@
         UserID = result.userId;
     }
 
-    const initialized = () => {
-        Getuserinfo();
 
-        $("#currentcheck").hide();
-        $("#currentWrong").hide();
+    // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+    const LoadPageData = async () => {
+        try {
+            $("#currentcheck").hide();
+            $("#currentWrong").hide();
 
-        $("#confirmcheck").hide();
-        $("#confirmwrong").hide();
+            $("#confirmcheck").hide();
+            $("#confirmwrong").hide();
+
+            Getuserinfo();
+        } catch (error) {
+            console.error("Failed to load page data:", error);
+        } finally {
+            // Hide loading spinner whether success or failure
+            //$("#loadingSpinner").hide();
+        }
     }
 
-    initialized();
+    $(document).ready(() => {
+        LoadPageData();
+    });
 </script>

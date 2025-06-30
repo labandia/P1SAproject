@@ -279,7 +279,7 @@
         e.preventDefault();
 
         const savebtn = document.querySelector("#btnSave");
-        savebtn.innerHTML = " <div class='buttonloading'></div>";
+        savebtn.innerHTML = " <div class='buttonloading'></div> Generating PDF Please wait...";
 
         let strfind = findingsJson(e.target);
         let finalformData = new FormData(e.target);

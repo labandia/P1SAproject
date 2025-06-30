@@ -7,18 +7,20 @@
 <div class="row">
     <div class="col-3">
         <div class="Sched_container">
-            <div class="Sched_header">
-                <span>Auditors :</span>
+           
+            <div class="d-flex align-items-center gap-2">
+
+                <select id="DepartmentID" class="form-control">
+                    <option value="0">All</option>
+                    <option value="1">Molding</option>
+                    <option value="2">Press</option>
+                    <option value="3">Rotor</option>
+                    <option value="4">Winding</option>
+                    <option value="5">Circuit</option>
+                </select>
+                <input id="searchbox" type="text" placeholder="Search name ... "  />
             </div>
-            <select id="DepartmentID" class="form-control">
-                <option value="0">All</option>
-                <option value="1">Molding</option>
-                <option value="2">Press</option>
-                <option value="3">Rotor</option>
-                <option value="4">Winding</option>
-                <option value="5">Circuit</option>
-            </select>
-            <input id="searchbox" type="text" placeholder="Search name ... " class="form-control" />
+
 
             <div class="Sched_list" id="Sched_list_container"></div>
         </div>
@@ -157,7 +159,7 @@
                         data-dept="${res.Department_ID}"
                         data-emp="${res.Employee_ID}"
                         data-name="${res.FullName}">
-                        <i class="fa-regular fa-circle-user"></i>
+                       <i class="fa-regular fa-user"></i>
                         <span>${res.FullName}</span>
                     </div>`;
                 SetData.append(getdata);

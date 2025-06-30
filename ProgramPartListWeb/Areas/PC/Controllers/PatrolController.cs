@@ -385,9 +385,6 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 CacheHelper.Remove("Registration");
                 ExportFiler.SaveFileasPDF(obj, findJson, departmentName, newFileName, templatePath);
             }
-
-
-
             if (result == false) return JsonError("Problem during saving Data.", 500);
             return JsonCreated(result, "Change Status successfully");
 
@@ -400,7 +397,6 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
             string exportFolder = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\";
             string excelfilepath = Path.Combine(exportFolder, Request.Form["Filepath"]);
-
 
             // Set File Name For the Database
             string newFileName = Request.Form["RegNo"] + "_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".xlsx";
@@ -427,11 +423,8 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             if (result)
             {
 
-                if (System.IO.File.Exists(excelfilepath))
-                {
-                    System.IO.File.Delete(excelfilepath);
-                }
-
+                if (System.IO.File.Exists(excelfilepath))  System.IO.File.Delete(excelfilepath);
+                
                 CacheHelper.Remove("Registration");
                 ExportFiler.SaveFileasPDF(obj, findJson, GlobalUtilities.DepartmentName(Department), newFileName, templatePath);
             }

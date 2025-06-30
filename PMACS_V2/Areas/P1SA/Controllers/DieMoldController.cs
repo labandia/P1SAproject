@@ -185,7 +185,22 @@ namespace PMACS_V2.Areas.P1SA.Controllers
                 return JsonError(ex.Message);
             }
         }
+        public async Task<ActionResult> GetPressDieControlList()
+        {
+            try
+            {
+                var data = await _die.GetPressControl();
 
+                if (data == null || !data.Any())
+                    return JsonNotFound("No Control data found");
+
+                return JsonSuccess(data);
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message);
+            }
+        }
 
         [HttpPost]
         public async Task<ActionResult> AddUpdatePressDieMonitor(PressInputModel add)

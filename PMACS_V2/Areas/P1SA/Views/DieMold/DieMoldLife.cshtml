@@ -13,7 +13,7 @@
         <div class="Mold__actions">
             @* MOLD SUMMARY *@
             <div id="MoldSummary">
-                <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center gap-3">
                     <div class="select-container">
                         <select id="ProcessID">
                             <option value="M002">Mold  Frame</option>
@@ -34,7 +34,7 @@
             </div>
             @* MOLD MOnitoring *@
             <div id="MoldMonitor">
-                <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center gap-2">
                     <div class="select-container">
                         <select id="monthSelect"></select>
                     </div>
@@ -48,7 +48,15 @@
             </div>
             @* MOLD TOOLING*@
             <div id="MoldTooling">
-                <button class="primary_button_color" id="Registrymodal">Add Data</button>
+                <div class="d-flex align-items-center gap-2">
+                   
+
+                    <div class="searchinputContainer">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" placeholder="Search here ... " id="RegisterSearch" />
+                        <div class="line"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
@@ -138,21 +146,19 @@
 
             <div class="Mold_content" id="Tooling">
                 <div class="Mold_ToolHeader">
-                    <div class="searchinputContainer">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" placeholder="Search here ... " id="RegisterSearch" />
-                        <div class="line"></div>
+                    <div class="d-flex align-items-end gap-2">
+                        <div class="Mold_ToolHeader__group">
+                            <label>Date arrived :</label><br />
+                            <input type="date" id="Datearrived" class="" />
+                        </div>
+                        <div class="Mold_ToolHeader__group">
+                            <label>Date Repair :</label><br />
+                            <input type="date" id="Daterepair" class="" />
+                        </div>
+                        <button type="button" class="btnclean" id="clearbtn"><i class="fa-solid fa-filter-circle-xmark"></i>  Clear</button>
                     </div>
 
-                    <div>
-                        <label>Date arrived :</label><br />
-                        <input type="date" id="Date" />
-                    </div>
-                    <div>
-                        <label>Date arrived :</label><br />
-                        <input type="date" id="Date" />
-                    </div>
-                    <button type="button" id="clearbtn">Clear</button>
+                    <button class="primary_button_color" id="Registrymodal"><i class="fa-solid fa-plus"></i> Add Data</button>
                 </div>
                 <div class="DieMainTable">
                     <table>
@@ -191,33 +197,35 @@
         <div class="modal-content">
             <div class="modal-body">
                 <div class="custom_modal_header">
-                    <h5>MOLD DIE INPUT</h5>
+                    <h5>Mold Die Input Data</h5>
 
                     <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
                         <span>&times;</span>
                     </button>
                 </div>
 
-                <form id="InputMoldie">
-                    <div class="model__fields">
-                        <label for="">Input Quantity</label>
-                        <input type="hidden" name="PartNo" id="PartNo">
-                        <input type="hidden" name="No" id="No">
-                        <input class="form-control" type="text" name="MoldInput" id="MoldInput" onkeypress="return restrictChars(event)">
-                    </div>
+                <div class="MoldieBodyModal">
+                    <form id="InputMoldie">
+                        <div class="form_group col-12 col-sm-12">
+                            <label for="">Input Quantity</label>
+                            <input type="hidden" name="PartNo" id="PartNo">
+                            <input type="hidden" name="No" id="No">
+                            <input type="text" name="MoldInput" id="MoldInput" onkeypress="return restrictChars(event)">
+                        </div>
+
+                        <div class="edits_footer" id="editsdisplay">
+                            <button type="submit" class="primary_button_color">
+                                <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                    
+             </div>
 
 
-
-                    <div class="edits_footer" id="editsdisplay">
-                        <button type="submit" class="primary_button_color">
-                            <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-
-        </div>
+         </div>
     </div>
 </div>
 <!--########################## Adding Tooling  DATA #############################-->
@@ -399,8 +407,6 @@
             });
         }
     });
-
-
     months.forEach((month, index) => {
         const option = document.createElement("option");
         option.value = index + 1; // 1 to 12
@@ -417,14 +423,12 @@
         $("#MonthHeader").text(months[month - 1]);
         GetMoldDieMonth(month, currentYear);
     });
-
     processchange.addEventListener('change', (e) => {
         e.preventDefault();
         let setMonth = parseInt(currentMonth) + 1;
         GetMoldDieSummary();
         GetMoldDieMonth(setMonth, currentYear);
     });
-
     updateMold.addEventListener('submit', async (e) => {
         e.preventDefault();
         let formData = new FormData(e.target);
@@ -437,7 +441,15 @@
             $("#InputMoldieModal").modal("hide");
         }
     });
-    
+
+    $("#Datearrived").on('change', (e) => {
+        $("#Daterepair").val("");
+    });
+
+    $("#Daterepair").on('change', (e) => {
+        $("#Datearrived").val("");
+    });
+
     const GetMoldDieSummary = async () => {
         $("#FinalSummaryData").empty();
 

@@ -4,24 +4,12 @@
     Layout = "~/Areas/Circuit/Views/Shared/_LayoutPartlist.cshtml";
 }
 
-@*<form id="fileUploadForm">
-        <input type="file" id="files" name="files" multiple />
-        <button type="button" onclick="uploadFiles()">Upload</button>
-    </form>
-
-    <div id="uploadResult"></div>*@
-
-
 
 <section class="Serieswrapper">
-  
     <div class="SeriesFilter d-flex align-items-center justify-content-between mb-3">
         <div class="Searchbox d-flex align-items-center gap-2">
             <i class="fa-solid fa-magnifying-glass"></i>
-
-            <input type="text"
-                   placeholder="Search by Series No"
-                   id="searchInput" />
+            <input type="text" placeholder="Search by Series No" id="searchInput" />
         </div>
 
         <div class="d-flex align-items-center gap-3 SeriesTitle">
@@ -401,7 +389,6 @@
         }
 
     });
-
     editseriresform.addEventListener('submit', async(e) => {
         e.preventDefault();
         let formData = new FormData(e.target);
@@ -469,15 +456,11 @@
         OngoinSeriesData();
     });
 
-    // Display the page at the begginning
-    $(document).ready(function () {
-        OngoinSeriesData();
-    });
+   
 
     function encodeBase64(input) {
         return btoa(input); // Convert string to Base64
     }
-
     function uploadFiles() {
         var formData = new FormData();
         var files = document.getElementById('files').files;
@@ -491,7 +474,6 @@
              console.log(pair[0] + ": " + pair[1].name);  // Log the name of the file
          }
     }
-
     function TablePagination(dataArray, tableBodyId, paginationId, recordsPerPage = 7, visibleButtons = 5) {
         let currentPage = 1;
         let filteredData = [...dataArray]; // Make a copy for filtering
@@ -691,5 +673,11 @@
             "</tr > ";
         SeriesTable.append(loadData);
     }
+
+
+    // Display the page at the begginning
+    $(document).ready(function () {
+        OngoinSeriesData();
+    });
 </script>
 

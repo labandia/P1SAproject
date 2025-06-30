@@ -379,6 +379,27 @@ namespace PMACS_V2.Areas.P1SA.Models
         public int TotalStampPress { get; set; }    
     }
 
+    public class PressDieControlModel
+    {
+        public string DateInput { get; set; }
+        public string ToolNo { get; set; }
+        public string Brand { get; set; }
+        public string Type { get; set; }
+        public int Stamp { get; set; }
+        public int Machine { get; set; }
+        public int DieCondition { get; set; }
+        public string Operator { get; set; }
+        public double DieHeight { get; set; }
+        public string LeaderCom { get; set; }
+
+        public string Gear { get; set; }
+        public string Pitch { get; set; }
+        public string GearCom { get; set; }
+        public string ReasonDetach { get; set; }
+    }
+
+
+
     public class PressDieLowerUpper
     {
         public string ToolNo { get; set; }

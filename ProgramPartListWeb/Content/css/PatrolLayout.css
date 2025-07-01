@@ -135,12 +135,13 @@
         padding: 5em 4em 4em;
         border-radius: 1em;
         background: #fff;
-        text-align: center;
+/*        text-align: center;*/
     }
 
     .PatrolDesign_wrapper h3{
         font-size: 1.5rem;
         margin-bottom: 1.5em;
+        text-align: center;
     }
 
     .PatrolDesign_wrapper .buttoncenter{
@@ -163,10 +164,18 @@
         color: #fff;
     }
 
+    .forgetbtn{
+        font-size: .8rem;
+        text-align: right;
+        margin: 0;
+        cursor: pointer;
+    }
+
     .selectreg{
         transition: .5s ease-in-out;
         font-size: .9rem;
         cursor: pointer;
+        text-align:center;
     }
     .selectreg:hover{
         color: var(--primary-color);
@@ -184,6 +193,9 @@
         gap: 10px;
     }
 
+    .PatrolDesign_input:last-child{
+         margin-bottom: 0;
+    }
     .PatrolDesign_input input{
          width: 100%;
          padding: .7em 1em;

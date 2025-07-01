@@ -12,14 +12,17 @@ namespace ProgramPartListWeb.Repository
 {
     public sealed class AuthRepository : IAuthRepository
     {
-       
-        public async Task<List<AuthModel>> GetByUsername(string username)
+
+        public async Task<List<AuthModel>> GetByUsername(string username, int proj)
         {
             string strquery = @"SELECT ua.User_ID, ua.Username, ua.Password, ua.Role_ID, u.Fullname
                                 FROM UserAccounts ua
                                 INNER JOIN Users u ON u.User_ID = ua.User_ID
-                                WHERE ua.Username  =@Username AND IsActive = 1";
-            return await UsersAccess.UserGetData<AuthModel>(strquery, new { Username = username });
+                                INNER JOIN ProjectList p ON p.Project_ID = ua.Project_ID
+                                WHERE ua.IsActive = 1 AND ua.Project_ID = @Project_ID
+                                AND (ua.Username = @Username OR  u.Employee_ID = @Username)";
+            int projInt = (username == "Admin" || username == "24050006") ?  1 : proj;         
+            return await UsersAccess.UserGetData<AuthModel>(strquery, new { Username = username, Project_ID  = projInt});
         }
 
         public string GetRefreshToken(int userId)

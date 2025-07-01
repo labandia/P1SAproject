@@ -95,7 +95,7 @@
                  savebtn.innerHTML = " <div class='buttonloading'></div>";
 
                  let formData = new FormData(e.target);
-                 //formData.append('ProjectID', 8)
+                 formData.append('proj', 8);
 
                  let res = await postData('/Auth/Authenticate', formData);
                  setTimeout(() => {

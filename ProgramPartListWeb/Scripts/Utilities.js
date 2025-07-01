@@ -85,12 +85,19 @@ window.postData = async (url, data) => {
     try {
         const response = await fetch(url, {
             method: 'POST',
-            body: data // Send FormData directly
+            body: data
         });
 
-        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
-        return await response.json();
+        const json = await response.json(); // Parse response regardless of HTTP status
+
+        if (!response.ok || json.Success === false) {
+            // Server returned JSON error
+            console.error("Server error:", json.Message || "Unknown error");
+            return json; // or return null or throw if needed
+        }
+
+        return json;
     } catch (error) {
         console.error("Error posting data:", error);
         return null;

@@ -18,7 +18,6 @@ namespace PMACS_V2.Repository
 
         public async  Task<List<AuthModel>> LoginCredentials(string user)
         {
-            Debug.WriteLine("HERE");
             string strquery = @"SELECT ua.User_ID, ua.Username, ua.Password, ua.Role_ID, u.Fullname
                                 FROM UserAccounts ua
                                 INNER JOIN Users u ON u.User_ID = ua.User_ID

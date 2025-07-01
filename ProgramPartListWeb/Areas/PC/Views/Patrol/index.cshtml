@@ -11,6 +11,7 @@
     <title>@ViewBag.Title</title>
     @*<link href="~/Content/css/loginlayout.css" rel="stylesheet" />*@
     <link href="~/Content/css/PatrolLayout.min.css" rel="stylesheet" />
+    <link rel="preload" href="~/Content/fonts/Poppins-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
     <link rel="icon" type="image/x-icon" href="~/Content/Images/ready-stock.ico">
     <script src="~/Content/font-awesome/js/all.min.js"></script>
 </head>
@@ -29,34 +30,43 @@
                 <i class="fa-solid fa-unlock-keyhole"></i>
                 <input type="password" name="password" id="password" placeholder="Enter Password" autocomplete="new-password" required />
             </div>
+            <p class="forgetbtn">Forgot Password ?</p>
 
             <div class="buttoncenter">
                 <button type="submit" id="loginbtn" class="primarybtn"><i class="fa-solid fa-right-to-bracket"></i> Login</button>
             </div>
         </form>
-        <p class="selectreg" id="forgetbtn">Forgot password ?</p>
+        <p class="selectreg" id="forgetbtn">Doesnt have an Account ?</p>
     </div>
 
     <div class="PatrolDesign_wrapper" id="forgeshow">
-        @*<form id="Registrationform">
-            <h3>Forgot Password</h3>
+        <form id="Registerform">
+            <h3>Register  Account</h3>
             <div class="PatrolDesign_input">
-               <i class="fa-solid fa-id-card"></i>
-                <input type="text" name="username" id="username" placeholder="Enter Employee ID" autocomplete="off" required />
+                <i class="fa-solid fa-id-card"></i>
+                <input type="text" name="Employee_ID" id="Employee_ID" placeholder="Enter Employee ID" autocomplete="off" required />
+            </div>
+            <div class="PatrolDesign_input">
+                <i class="fa-solid fa-id-card"></i>
+                <input type="text" name="FullName" id="FullName" placeholder="Enter Full Name" autocomplete="off" required />
             </div>
             <div class="PatrolDesign_input">
                 <i class="fa-solid fa-user"></i>
-                <input type="text" name="username" id="username" placeholder="Enter Username" autocomplete="off" required />
+                <input type="text" name="RegUsername" id="RegUsername" placeholder="Enter Username" autocomplete="off" required />
             </div>
             <div class="PatrolDesign_input">
                 <i class="fa-solid fa-unlock-keyhole"></i>
-                <input type="password" name="password" id="password" placeholder="Enter Password" autocomplete="new-password" required />
+                <input type="password" name="RegPassword" id="RegPassword" placeholder="Enter Password" autocomplete="off" required />
             </div>
 
-            <div class="buttoncenter">
-                <button type="submit"  class="primarybtn"><i class="fa-solid fa-right-to-bracket"></i> Login</button>
+            <div class="PatrolDesign_input">
+                <i class="fa-solid fa-unlock-keyhole"></i>
+                <input type="text" name="Email" id="Email" placeholder="Enter Email Address" autocomplete="off" />
             </div>
-        </form>*@
+            <div class="buttoncenter">
+                <button type="submit" class="primarybtn"><i class="fa-solid fa-right-to-bracket"></i> Login</button>
+            </div>
+        </form>
         <p class="selectreg" id="backbtn">Back To Login ?</p>
     </div>
 </div>
@@ -72,7 +82,7 @@
 <script src="~/Scripts/jquery-3.7.1.min.js"></script>
 <script type="text/javascript">
              const logform = document.getElementById('logincredentials');
-             //const regform = document.getElementById('Registerform');
+             const regform = document.getElementById('Registerform');
              //const changeforms = document.getElementById('changereg');
              const changelogs = document.getElementById('changelogin');
              const forgetlogs = document.getElementById('forgetbtn');
@@ -100,6 +110,8 @@
                  savebtn.innerHTML = " <div class='buttonloading'></div>";
 
                  let formData = new FormData(e.target);
+                 formData.append("proj", 9);
+
                  let res = await postData('/Auth/Authenticate', formData);
                  if (res.StatusCode === 200) {
                      Swal.fire({
@@ -128,7 +140,6 @@
                      savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-solid fa-right-to-bracket'></i>  Login</span>"
                  };
 
-
              });
 
              forgetlogs.addEventListener('click', async (e) => {
@@ -150,14 +161,15 @@
              }
 
 
-             @*regform.addEventListener('submit', async (e) => {
+             regform.addEventListener('submit', async (e) => {
                  e.preventDefault();
-                     const savebtn = document.querySelector("#Regisbtn");
-                     savebtn.innerHTML = " <div class='buttonloading'></div>";
+                     //const savebtn = document.querySelector("#Regisbtn");
+                     //savebtn.innerHTML = " <div class='buttonloading'></div>";
 
-                     let formData = new FormData(Registerform);
-                     let res = await postData('@Url.Action("RegisterUsers", "User")', formData);
-
+                     let formData = new FormData(e.target);
+                     formData.append('ProjectID', 9);
+                     const data = Object.fromEntries(formData);
+                     let res = await postData('/User/CreateNewUser', formData);
                      if (res.StatusCode === 200) {
                          Swal.fire({
                              title: "Success",
@@ -166,13 +178,22 @@
                              showConfirmButton: false,
                              timer: 1500
                          }).then(() => {
-                             savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-regular fa-floppy-disk'></i>  Registered</span>"
-                             document.querySelector('.Registrationcontainer').classList.remove('activeforms');
-                             document.querySelector('.logincontainer').classList.add('activeforms');
+                             $('#logshow').show();
+                             $('#forgeshow').hide();    
+                             //savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-regular fa-floppy-disk'></i>  Registered</span>"
+                             //document.querySelector('.Registrationcontainer').classList.remove('activeforms');
+                             //document.querySelector('.logincontainer').classList.add('activeforms');
                          });
 
-                         savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-regular fa-floppy-disk'></i>  Registered</span>"
+                         //savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-regular fa-floppy-disk'></i>  Registered</span>"
+                     } else {
+                         Swal.fire({
+                             icon: "error",
+                             text: res.Message,
+                             timer: 1500,
+                             showConfirmButton: false
+                         });
                      }
-             });*@
+             });
              Initialization();
 </script>

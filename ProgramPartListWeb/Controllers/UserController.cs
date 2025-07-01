@@ -12,7 +12,7 @@ using System.Web.Security;
 
 namespace ProgramPartListWeb.Controllers
 {
-    public class UserController : Controller
+    public class UserController : ExtendController
     {
         private readonly IUserRepository _user;
         private readonly IEmployee _emp;
@@ -41,6 +41,35 @@ namespace ProgramPartListWeb.Controllers
 
             return Json(formdata, JsonRequestBehavior.AllowGet);
         }
+
+
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<ActionResult> CreateNewUser()
+        {
+            try
+            {
+                var obj = new RegisterModel
+                {
+                    Project_ID = Convert.ToInt32(Request.Form["ProjectID"]),
+                    Username = Request.Form["RegUsername"],
+                    Password = PasswordHasher.Hashpassword(Request.Form["RegPassword"]),
+                    Role_ID = 2,
+                    FullName = Request.Form["FullName"],
+                    Employee_ID = Request.Form["Employee_ID"]
+                };
+                bool result = await _user.CreateNewAccount(obj);
+                if (!result) return JsonError("Username is already created", 500);
+                return JsonCreated(obj, "Add Inspector Successfully");
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message, 500);
+            }
+        }
+
+
+
 
         [HttpPost]
         public async Task<ActionResult> CheckMatchPassword(int ID, string password)

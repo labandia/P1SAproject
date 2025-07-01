@@ -8,9 +8,28 @@ namespace ProgramPartListWeb.Models
     public class UsersModel
     {
         public int User_ID { get; set; }
+        public string Employee_ID { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
         public string Fullname { get; set; }
+        public int Role_ID { get; set; }
+    }
+
+    public class Users
+    {
+        public int User_ID { get; set; }
+        public string Employee_ID { get; set; }
+        public string FullName { get; set; }
+        public string Email { get; set; }
+    }
+
+
+    public class UserAccounts
+    {
+        public int User_ID { get; set; }
+        public int Project_ID { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
         public int Role_ID { get; set; }
     }
 
@@ -39,5 +58,15 @@ namespace ProgramPartListWeb.Models
 
     }
 
-
+    public class RegisterModel
+    {
+        public int Project_ID { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public string Employee_ID { get; set; }
+        public string FullName { get; set; }
+        public string ProfileImage { get; set; }
+        public int Role_ID { get; set; }
+        public string Email { get; set; }
+    }
 }

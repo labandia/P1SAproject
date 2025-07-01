@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Linq;
 using ProgramPartListWeb.Helper;
+using System.Diagnostics;
 
 namespace ProgramPartListWeb.Controllers
 {
@@ -17,38 +18,27 @@ namespace ProgramPartListWeb.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult> Authenticate(string username, string password)
+        public async Task<ActionResult> Authenticate(string username, string password, int proj = 1)
         {
-            var user = (await _auth.GetByUsername(username)).FirstOrDefault();
+            Debug.WriteLine("Username : " + username);
+            var user = (await _auth.GetByUsername(username, proj)).FirstOrDefault();
             var results = new DataMessageResponse<object> { };
 
-            if (user == null)
-            {
-                results.StatusCode = 401;
-                results.Message = "Invalid credentials / Username doesnt exist";
-                results.Data = null;
-                return Json(results, JsonRequestBehavior.AllowGet);
-            }
-            if (user != null && PasswordHasher.VerifyPassword(user.Password, password))
-            {
+            // Check If the user Exist
+            if (user == null) return JsonError("Invalid credentials / Username doesnt exist", 400);
+            // Check If the Password is Correct
+            if (!PasswordHasher.VerifyPassword(user.Password, password)) return JsonError("Invalid credentials / Password is incorrect", 400);
+          
+            string role = _auth.GetuserRolename(user.Role_ID);
+            string fullname = user.Fullname;
 
-                string role = _auth.GetuserRolename(user.Role_ID);
-                string fullname = user.Fullname;
+            var accessToken = JwtHelper.GenerateAccessToken(fullname, role, user.User_ID);
+            var refreshToken = _auth.GetRefreshToken(user.User_ID);
 
-                var accessToken = JwtHelper.GenerateAccessToken(fullname, role, user.User_ID);
-                var refreshToken = _auth.GetRefreshToken(user.User_ID);
+            var data = new { access_token = accessToken, refresh_token = refreshToken, fullname, role };
 
-                results.StatusCode = 200;
-                results.Message = "Login successful";
-                results.Data = new { access_token = accessToken, refresh_token = refreshToken, fullname, role };
-            }
-            else
-            {
-                results.StatusCode = 401;
-                results.Message = "Invalid credentials / Password is incorrect";
-            }
+            return JsonSuccess(data, "Login successful");
 
-            return Json(results, JsonRequestBehavior.AllowGet);
         }
 
 

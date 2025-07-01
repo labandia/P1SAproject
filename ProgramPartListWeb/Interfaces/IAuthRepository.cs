@@ -8,7 +8,7 @@ namespace ProgramPartListWeb.Interfaces
 {
     public interface IAuthRepository
     {
-        Task<List<AuthModel>> GetByUsername(string username);
+        Task<List<AuthModel>> GetByUsername(string username, int proj);
         string GetRefreshToken(int userId);
         string GetuserRolename(int roleid);
         bool VerifyPassword(string enteredPassword, string storedHash);

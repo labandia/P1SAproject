@@ -48,9 +48,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
                     m.Tongs,
                     m.IsDelete,
                     m.Section_ID,
-                    ImageBase64 = (m.Filepath != null && m.Filepath.Length > 0)
-                                ? Convert.ToBase64String(m.Filepath)
-                                : string.Empty
+                    ImageBase64 = m.ImageBase64
                 }).ToList();
 
                 if (machineWithImages == null || !machineWithImages.Any())

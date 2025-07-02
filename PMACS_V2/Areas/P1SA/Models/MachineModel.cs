@@ -112,9 +112,16 @@ namespace PMACS_V2.Areas.P1SA.Models
         {
             get
             {
-                return (Filepath != null && Filepath.Length > 0)
-                    ? Convert.ToBase64String(Filepath)
-                    : null; // or return default placeholder base64
+                try
+                {
+                    return (Filepath != null && Filepath.Length > 0)
+                        ? Convert.ToBase64String(Filepath)
+                        : null;
+                }
+                catch
+                {
+                    return null;
+                }
             }
         }
     }

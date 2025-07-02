@@ -85,25 +85,25 @@ namespace ProgramPartListWeb.Controllers
 
         protected JsonResult JsonValidationError(string message = "Validation failed")
         {
-            Logger.Warn("Validation Error | Message={0}", message);
+            //Logger.Warn("Validation Error | Message={0}", message);
             return JsonError(message, 400);
         }
 
         protected JsonResult JsonNotFound(string message = "Resource not found")
         {
-            Logger.Warn("Not Found | Message={0}", message);
+            //Logger.Warn("Not Found | Message={0}", message);
             return JsonError(message, 404);
         }
 
         protected JsonResult JsonConflict(string message = "Conflict detected")
         {
-            Logger.Warn("Conflict | Message={0}", message);
+            //Logger.Warn("Conflict | Message={0}", message);
             return JsonError(message, 409);
         }
 
         protected JsonResult JsonCreated(object data = null, string message = "Created")
         {
-            Logger.Info("Resource Created | Message={0}{1}", message, data != null ? $" | Data: {Newtonsoft.Json.JsonConvert.SerializeObject(data)}" : "");
+            //Logger.Info("Resource Created | Message={0}{1}", message, data != null ? $" | Data: {Newtonsoft.Json.JsonConvert.SerializeObject(data)}" : "");
             return JsonSuccess(data, message, 201);
         }
 

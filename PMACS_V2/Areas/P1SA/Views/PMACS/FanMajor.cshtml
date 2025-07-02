@@ -376,13 +376,13 @@
 
                             <div class="model__fields">
                                 <div class="detail__inputfield">
-                                    <label for="">Equiment name:</label>
+                                    <label for="">Equiment name:</label><br />
                                     <input class="mode" type="text" placeholder="Input equipment" name="EditEquip" id="EditEquip">
                                 </div>
 
 
                                 <div class="detail__inputfield">
-                                    <label for="">Date Acquired:</label>
+                                    <label for="">Date Acquired:</label><br />
                                     <input class="mode" type="date" id="EditDateacq" name="EditDateacq">
                                 </div>
 
@@ -390,11 +390,11 @@
 
                             <div class="model__fields">
                                 <div class="detail__inputfield">
-                                    <label for="">Machine Model :</label>
+                                    <label for="">Machine Model :</label><br />
                                     <input class="mode" type="text" placeholder="Input Model " name="EditModel" id="EditModel">
                                 </div>
                                 <div class="detail__inputfield">
-                                    <label for="">Present Location :</label>
+                                    <label for="">Present Location :</label><br />
                                     <input class="mode" type="text" placeholder="Input Location" name="Editlocal" id="Editlocal">
                                 </div>
                             </div>
@@ -402,11 +402,11 @@
 
                             <div class="model__fields">
                                 <div class="detail__inputfield">
-                                    <label for="">Serial :</label>
+                                    <label for="">Serial :</label><br />
                                     <input class="mode" type="text" placeholder="Input Serial" name="EditSerial" id="EditSerial">
                                 </div>
                                 <div class="detail__inputfield">
-                                    <label for="">Shifts :</label>
+                                    <label for="">Shifts :</label><br />
                                     <select id="EditShifts" name="EditShifts" class="mode" disabled>
                                         <option value="0">2 shifts (DS/NS)</option>
                                         <option value="1">1 Shifts (DS)</option>
@@ -417,18 +417,18 @@
 
                             <div class="model__fields">
                                 <div class="detail__inputfield">
-                                    <label for="">Manufacturer :</label>
+                                    <label for="">Manufacturer :</label><br />
                                     <input class="mode" type="text" placeholder="Input Manufacturer" name="EditManu" id="EditManu">
                                 </div>
                                 <div class="detail__inputfield">
-                                    <label for="">Fix Asset :</label>
+                                    <label for="">Fix Asset :</label><br />
                                     <input class="mode" type="text" placeholder="Input Fix assets" name="EditAssets" id="EditAssets">
                                 </div>
                             </div>
 
                             <div class="model__fields" id="editformold">
                                 <div class="detail__inputfield">
-                                    <label for="">Tons :</label>
+                                    <label for="">Tons :</label><br />
                                     <input class="mode" type="text" placeholder="Input turns" name="edittons" id="edittons">
                                 </div>
 
@@ -533,7 +533,6 @@
         formdata.append('sectionID', 2);
         formdata.append('mach', '');
         let res = await fetchData('@Url.Action("GetFanmajorMachine", "FanMajor")', formdata);
-
         if (res && res.Success) {
             loadData = res.Data;
 
@@ -786,60 +785,58 @@
 
 
 
-    function MachineLoadmoreData(data, sectionID) {
+    async function MachineLoadmoreData(data, sectionID) {
         loadData = [];
-        makeAjaxRequest(apiBaseUrl + 'Machine', data, 0)
-            .then(res => {
-                let load = res.machine;
-                loadData = load;
 
-                if (parseInt(load[0].SecID) == 1 || parseInt(load[0].SecID) == 2) {
-                    $("#formold").show();
-                    $("#editformold").show();
-                } else {
-                    $("#formold").hide();
-                    $("#editformold").hide();
-                }
+       
+        let res = await fetchData('@Url.Action("GetFanmajorMachine", "FanMajor")', data);
+        if (res && res.Success) {
+            console.log(res.Data);
+        }
+        //let load = res.machine;
+        //loadData = load;
 
-                switch (sectionID) {
-                    case 2:
-                        appendData(machineData1, load);
-                        if (load.length < m_limit) {
-                            $('#molding_btn').hide(); // Hide button if no more records
-                        }
-                        break;
-                    case 1:
-                        appendData(machineData2, load);
-                        if (load.length < p_limit) {
-                            $('#press_btn').hide(); // Hide button if no more records
-                        }
-                        break;
-                    case 3:
+        //if (parseInt(load[0].SecID) == 1 || parseInt(load[0].SecID) == 2) {
+        //    $("#formold").show();
+        //    $("#editformold").show();
+        //} else {
+        //    $("#formold").hide();
+        //    $("#editformold").hide();
+        //}
 
-                        appendData(machineData3, load);
-                        if (load.length < r_limit) {
-                            $('#rotor_btn').hide(); // Hide button if no more records
-                        }
-                        break;
-                    case 4:
-                        appendData(machineData4, load);
-                        if (load.length < w_limit) {
-                            $('#winding_btn').hide(); // Hide button if no more records
-                        }
-                        break;
-                    case 5:
-                        appendData(machineData5, load);
-                        if (load.length < c_limit) {
-                            $('#circuit_btn').hide(); // Hide button if no more records
-                        }
-                        break;
-                }
+        //switch (sectionID) {
+        //    case 2:
+        //        appendData(machineData1, load);
+        //        if (load.length < m_limit) {
+        //            $('#molding_btn').hide(); // Hide button if no more records
+        //        }
+        //        break;
+        //    case 1:
+        //        appendData(machineData2, load);
+        //        if (load.length < p_limit) {
+        //            $('#press_btn').hide(); // Hide button if no more records
+        //        }
+        //        break;
+        //    case 3:
 
-            })
-            .catch(error => {
-                console.error('Error occurred:', error);
-                // Handle the error
-            });
+        //        appendData(machineData3, load);
+        //        if (load.length < r_limit) {
+        //            $('#rotor_btn').hide(); // Hide button if no more records
+        //        }
+        //        break;
+        //    case 4:
+        //        appendData(machineData4, load);
+        //        if (load.length < w_limit) {
+        //            $('#winding_btn').hide(); // Hide button if no more records
+        //        }
+        //        break;
+        //    case 5:
+        //        appendData(machineData5, load);
+        //        if (load.length < c_limit) {
+        //            $('#circuit_btn').hide(); // Hide button if no more records
+        //        }
+        //        break;
+        //}
     }
     function MachineLoadFilterData(data, sectionID, mach) {
         loadData = [];
@@ -956,21 +953,22 @@
 
         setTimeout(() => {
             if (select == 'None') {
-                let data = {
-                    offset: m_offset,
-                    limit: m_limit,
-                    sectionID: 2,
-                    mach: ''
-                }
-                MachineLoadmoreData(data, 2);
+                let formdata = new FormData();
+                formdata.append('offset', m_offset);
+                formdata.append('limit', m_limit);
+                formdata.append('sectionID', 2);
+                formdata.append('mach', '');
+
+
+                MachineLoadmoreData(formdata, 2);
             } else {
-                let data = {
-                    offset: m_offset,
-                    limit: m_limit,
-                    sectionID: 2,
-                    mach: $("#machcode__mold").val()
-                }
-                MachineLoadmoreData(data, 2);
+                let formdata = new FormData();
+                formdata.append('offset', m_offset);
+                formdata.append('limit', m_limit);
+                formdata.append('sectionID', 2);
+                formdata.append('mach', $("#machcode__mold").val());
+
+                MachineLoadmoreData(formdata, 2);
             }
             savebtn.innerHTML = "Load more"
         }, 1000)
@@ -979,140 +977,140 @@
 
 
     });
-    $("#press_btn").click(function () {
-        p_limit += 5;
-        let select;
-        select = $("#machcode__press").val();
+    //$("#press_btn").click(function () {
+    //    p_limit += 5;
+    //    let select;
+    //    select = $("#machcode__press").val();
 
 
-        const savebtn = this;
-        savebtn.innerHTML = " <div class='Submitloading'></div>"
+    //    const savebtn = this;
+    //    savebtn.innerHTML = " <div class='Submitloading'></div>"
 
 
-        setTimeout(() => {
-            if (select == 'None') {
-                let data = {
-                    offset: p_offset,
-                    limit: p_limit,
-                    sectionID: 1,
-                    mach: ''
-                }
+    //    setTimeout(() => {
+    //        if (select == 'None') {
+    //            let data = {
+    //                offset: p_offset,
+    //                limit: p_limit,
+    //                sectionID: 1,
+    //                mach: ''
+    //            }
 
-                MachineLoadmoreData(data, 1);
-            } else {
-                let data = {
-                    offset: p_offset,
-                    limit: p_limit,
-                    sectionID: 1,
-                    mach: $("#machcode__press").val()
-                }
+    //            MachineLoadmoreData(data, 1);
+    //        } else {
+    //            let data = {
+    //                offset: p_offset,
+    //                limit: p_limit,
+    //                sectionID: 1,
+    //                mach: $("#machcode__press").val()
+    //            }
 
-                MachineLoadmoreData(data, 1);
-            }
-            savebtn.innerHTML = "Load more"
-        }, 1000)
-
-
-    });
-    $("#rotor_btn").click(function () {
-        r_limit += 5;
-        let select;
-        select = $("#machcode__rotor").val();
-
-        const savebtn = this;
-        savebtn.innerHTML = " <div class='Submitloading'></div>"
-
-        setTimeout(() => {
-            if (select == "None") {
-                let data = {
-                    offset: r_offset,
-                    limit: r_limit,
-                    sectionID: 3,
-                    mach: ""
-                }
-
-                MachineLoadmoreData(data, 3);
-            } else {
-                let data = {
-                    offset: r_offset,
-                    limit: r_limit,
-                    sectionID: 3,
-                    mach: $("#machcode__rotor").val()
-                }
-
-                MachineLoadmoreData(data, 3);
-            }
-            savebtn.innerHTML = "Load more"
-        }, 1000);
+    //            MachineLoadmoreData(data, 1);
+    //        }
+    //        savebtn.innerHTML = "Load more"
+    //    }, 1000)
 
 
-    });
-    $("#winding_btn").click(function () {
-        w_limit += 5;
+    //});
+    //$("#rotor_btn").click(function () {
+    //    r_limit += 5;
+    //    let select;
+    //    select = $("#machcode__rotor").val();
 
-        let select;
-        select = $("#machcode__winding").val();
+    //    const savebtn = this;
+    //    savebtn.innerHTML = " <div class='Submitloading'></div>"
 
-        const savebtn = this;
-        savebtn.innerHTML = " <div class='Submitloading'></div>"
+    //    setTimeout(() => {
+    //        if (select == "None") {
+    //            let data = {
+    //                offset: r_offset,
+    //                limit: r_limit,
+    //                sectionID: 3,
+    //                mach: ""
+    //            }
 
-        setTimeout(() => {
-            if (select == "None") {
-                let data = {
-                    offset: w_offset,
-                    limit: w_limit,
-                    sectionID: 4,
-                    mach: ""
-                }
+    //            MachineLoadmoreData(data, 3);
+    //        } else {
+    //            let data = {
+    //                offset: r_offset,
+    //                limit: r_limit,
+    //                sectionID: 3,
+    //                mach: $("#machcode__rotor").val()
+    //            }
 
-                MachineLoadmoreData(data, 4);
-            } else {
-                let data = {
-                    offset: w_offset,
-                    limit: w_limit,
-                    sectionID: 4,
-                    mach: $("#machcode__winding").val()
-                }
-
-                MachineLoadmoreData(data, 4);
-            }
-            savebtn.innerHTML = "Load more"
-        }, 1000)
-    });
-    $("#circuit_btn").click(function () {
-        c_limit += 5;
-
-        let select;
-        select = $("#machcode__circuit").val();
-
-        const savebtn = this;
-        savebtn.innerHTML = " <div class='Submitloading'></div>"
-
-        setTimeout(() => {
-            if (select == "None") {
-                let data = {
-                    offset: c_offset,
-                    limit: c_limit,
-                    sectionID: 5,
-                    mach: ""
-                }
-
-                MachineLoadmoreData(data, 5);
-            } else {
-                let data = {
-                    offset: c_offset,
-                    limit: c_limit,
-                    sectionID: 5,
-                    mach: $("#machcode__circuit").val()
-                }
-
-                MachineLoadmoreData(data, 5);
-            }
-            savebtn.innerHTML = "Load more"
-        }, 1000);
+    //            MachineLoadmoreData(data, 3);
+    //        }
+    //        savebtn.innerHTML = "Load more"
+    //    }, 1000);
 
 
-    });
+    //});
+    //$("#winding_btn").click(function () {
+    //    w_limit += 5;
+
+    //    let select;
+    //    select = $("#machcode__winding").val();
+
+    //    const savebtn = this;
+    //    savebtn.innerHTML = " <div class='Submitloading'></div>"
+
+    //    setTimeout(() => {
+    //        if (select == "None") {
+    //            let data = {
+    //                offset: w_offset,
+    //                limit: w_limit,
+    //                sectionID: 4,
+    //                mach: ""
+    //            }
+
+    //            MachineLoadmoreData(data, 4);
+    //        } else {
+    //            let data = {
+    //                offset: w_offset,
+    //                limit: w_limit,
+    //                sectionID: 4,
+    //                mach: $("#machcode__winding").val()
+    //            }
+
+    //            MachineLoadmoreData(data, 4);
+    //        }
+    //        savebtn.innerHTML = "Load more"
+    //    }, 1000)
+    //});
+    //$("#circuit_btn").click(function () {
+    //    c_limit += 5;
+
+    //    let select;
+    //    select = $("#machcode__circuit").val();
+
+    //    const savebtn = this;
+    //    savebtn.innerHTML = " <div class='Submitloading'></div>"
+
+    //    setTimeout(() => {
+    //        if (select == "None") {
+    //            let data = {
+    //                offset: c_offset,
+    //                limit: c_limit,
+    //                sectionID: 5,
+    //                mach: ""
+    //            }
+
+    //            MachineLoadmoreData(data, 5);
+    //        } else {
+    //            let data = {
+    //                offset: c_offset,
+    //                limit: c_limit,
+    //                sectionID: 5,
+    //                mach: $("#machcode__circuit").val()
+    //            }
+
+    //            MachineLoadmoreData(data, 5);
+    //        }
+    //        savebtn.innerHTML = "Load more"
+    //    }, 1000);
+
+
+    //});
 
 
 
@@ -1142,17 +1140,17 @@
             var buttonId = $(this).attr('id');
             var rowIndex = buttonId.split('_')[1]; // Extract the index from the button ID
             let result = searchArray(loadData, "ID", rowIndex);
-
+            console.log(result)
             let setDate;
             // Get the current active tab index
             currentTabIndex = getCurrentTabIndex();
-            setDate = changeformattedDate(result.DateAcquire);
+            //setDate = changeformattedDate(result.DateAcquire);
 
 
             $('#machine_name').text(result.Machname);
             $('#EditID').val(result.ID);
             $('#EditEquip').val(result.Machname);
-            $('#EditDateacq').val(setDate);
+            //$('#EditDateacq').val(setDate);
             $('#EditModel').val(result.Model);
             $('#Editlocal').val(result.location);
             $('#EditSerial').val(result.Serial);

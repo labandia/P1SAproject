@@ -11,9 +11,19 @@
     <title>@ViewBag.Title</title>
     @*<link href="~/Content/css/loginlayout.css" rel="stylesheet" />*@
     <link href="~/Content/css/PatrolLayout.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
     <link rel="preload" href="~/Content/fonts/Poppins-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
     <link rel="icon" type="image/x-icon" href="~/Content/Images/ready-stock.ico">
+
+
+    <script src="~/Scripts/jquery-3.7.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/Utilities.js"></script>
+    <script src="~/Scripts/sweetalert2.min.js"></script>
+    <script src="~/Scripts/Popper.min.js"></script>
     <script src="~/Content/font-awesome/js/all.min.js"></script>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
 </head>
 
 
@@ -30,7 +40,7 @@
                 <i class="fa-solid fa-unlock-keyhole"></i>
                 <input type="password" name="password" id="password" placeholder="Enter Password" autocomplete="new-password" required />
             </div>
-            <p class="forgetbtn">Forgot Password ?</p>
+            <p class="forgetbtn" id="changebtn">Change Password ?</p>
 
             <div class="buttoncenter">
                 <button type="submit" id="loginbtn" class="primarybtn"><i class="fa-solid fa-right-to-bracket"></i> Login</button>
@@ -39,161 +49,271 @@
         <p class="selectreg" id="forgetbtn">Doesnt have an Account ?</p>
     </div>
 
-    <div class="PatrolDesign_wrapper" id="forgeshow">
-        <form id="Registerform">
-            <h3>Register  Account</h3>
-            <div class="PatrolDesign_input">
-                <i class="fa-solid fa-id-card"></i>
-                <input type="text" name="Employee_ID" id="Employee_ID" placeholder="Enter Employee ID" autocomplete="off" required />
-            </div>
-            <div class="PatrolDesign_input">
-                <i class="fa-solid fa-id-card"></i>
-                <input type="text" name="FullName" id="FullName" placeholder="Enter Full Name" autocomplete="off" required />
-            </div>
-            <div class="PatrolDesign_input">
-                <i class="fa-solid fa-user"></i>
-                <input type="text" name="RegUsername" id="RegUsername" placeholder="Enter Username" autocomplete="off" required />
-            </div>
-            <div class="PatrolDesign_input">
-                <i class="fa-solid fa-unlock-keyhole"></i>
-                <input type="password" name="RegPassword" id="RegPassword" placeholder="Enter Password" autocomplete="off" required />
+  
+</div>
+
+<footer class="Copyrights">
+    © 2025 P1SA-Process Control All rights reserved.
+</footer>
+
+
+
+@*=================================================================================*@
+@*=========================== ADD NEW INSPECTORS ==================================*@
+@*=================================================================================*@
+<div class="modal fade modal-l" id="AddProductModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <div class="custom_modal_header">
+                    <h5>Register  Account</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+
+                <form method="post" enctype="multipart/form-data" class="addformcontainer" id="addnewform" autocomplete="off">
+                    <div class="row">
+                        <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
+                            <label>Employee ID </label> <br />
+                            <input type="text" name="Employee_ID" id="Employee_ID" placeholder="Enter Employee ID" autocomplete="off" required />
+                        </div>
+                        <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
+                            <label>Full Name </label> <br />
+                            <input type="text" name="FullName" id="FullName" placeholder="Enter Full Name" autocomplete="off" required />
+                        </div>
+                    </div>
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Username </label>
+                        <input type="text" name="RegUsername" id="RegUsername" placeholder="Enter Username" autocomplete="off" required />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Password </label>
+                        <input type="password" name="RegPassword" id="RegPassword" placeholder="Enter Password" autocomplete="off" required />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Confirm Password </label>
+                        <input type="password" name="RegConfirmPassword" id="RegConfirmPassword"  autocomplete="off" required />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>Email Address </label> <br />
+                        <input type="text" name="Email" id="Email" placeholder="Enter Email Address" autocomplete="off" />
+                    </div>
+
+
+
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div>
+                            <small id="Errormessage">Fill up all the input fields</small>
+                        </div>
+                        <button type="submit" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                    </div>
+                </form>
             </div>
 
-            <div class="PatrolDesign_input">
-                <i class="fa-solid fa-unlock-keyhole"></i>
-                <input type="text" name="Email" id="Email" placeholder="Enter Email Address" autocomplete="off" />
-            </div>
-            <div class="buttoncenter">
-                <button type="submit" class="primarybtn"><i class="fa-solid fa-right-to-bracket"></i> Login</button>
-            </div>
-        </form>
-        <p class="selectreg" id="backbtn">Back To Login ?</p>
+        </div>
     </div>
 </div>
 
-  <footer class="Copyrights">
-      © 2025 P1SA-Process Control All rights reserved.
-  </footer>
+@*=================================================================================*@
+@*====================== CHANGE PASSWORD OR FORGET PASSWORD =======================*@
+@*=================================================================================*@
+<div class="modal fade modal-l" id="ChangepasswordModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <div class="custom_modal_header">
+                    <h5>Change Password</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
 
 
+                <form method="post" enctype="multipart/form-data" class="addformcontainer" id="changenewform" autocomplete="off">
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Employee ID </label> <br />
+                        <input type="text" name="CEmployee_ID" id="CEmployee_ID" placeholder="Enter Employee ID" autocomplete="off" required />
+                    </div>
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Username </label>
+                        <input type="text" name="CUsername" id="CUsername" placeholder="Enter Username" autocomplete="off" required />
+                    </div>
 
-<script src="~/Scripts/Utilities.js"></script>
-<script src="~/Scripts/sweetalert2.min.js"></script>
-<script src="~/Scripts/jquery-3.7.1.min.js"></script>
+                    <div class="form_group col-12 col-sm-12">
+                        <label>New Password </label>
+                        <input type="password" name="CNewPassword" id="CNewPassword" placeholder="Enter Password" autocomplete="off" required />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Confirm Password </label>
+                        <input type="password" name="CConfirm" id="CConfirm"  autocomplete="off" required />
+                    </div>
+
+                   
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div>
+                            <small id="ChangeErrormessage">Fill up all the input fields</small>
+                        </div>
+                        <button type="submit" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save Changes</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
 <script type="text/javascript">
-             const logform = document.getElementById('logincredentials');
-             const regform = document.getElementById('Registerform');
-             //const changeforms = document.getElementById('changereg');
-             const changelogs = document.getElementById('changelogin');
-             const forgetlogs = document.getElementById('forgetbtn');
-             const backlog = document.getElementById('backbtn');
+    const logform = document.getElementById('logincredentials');
+    const regform = document.getElementById('addnewform');
+    const changeform = document.getElementById('changenewform');
+
+    // Modal Forms button
+    const forgetlogs = document.getElementById('forgetbtn');
+    const changeOpen = document.getElementById('changebtn');
 
 
-             //changeforms.addEventListener('click', function (e) {
-             //    e.preventDefault();
 
-             //    document.querySelector('.logincontainer').classList.remove('activeforms');
-             //    document.querySelector('.Registrationcontainer').classList.add('activeforms');
-             //});
+    forgetlogs.addEventListener('click', async (e) => {
+        e.preventDefault();
+        $("#AddProductModal").modal('show');
+    });
 
-             //changelogs.addEventListener('click', function (e) {
-             //    e.preventDefault();
-
-             //    document.querySelector('.Registrationcontainer').classList.remove('activeforms');
-             //    document.querySelector('.logincontainer').classList.add('activeforms');
-             //});
-
-             logform.addEventListener('submit', async (e) => {
-                 e.preventDefault();
-
-                 const savebtn = document.querySelector("#loginbtn");
-                 savebtn.innerHTML = " <div class='buttonloading'></div>";
-
-                 let formData = new FormData(e.target);
-                 formData.append("proj", 9);
-
-                 let res = await postData('/Auth/Authenticate', formData);
-                 if (res.StatusCode === 200) {
-                     Swal.fire({
-                         title: "Success",
-                         text: res.Message,
-                         icon: "success",
-                         showConfirmButton: false,
-                         timer: 1500
-                     }).then(() => {
-                         savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-solid fa-right-to-bracket'></i>  Login</span>"
-                         localStorage.setItem('Logout', "/PC/Patrol/index");
-                         localStorage.setItem('Userinfo', JSON.stringify(res.Data));
-                         localStorage.setItem('Fullname', res.Data.fullname);
-                         localStorage.setItem('accessToken', res.Data.access_token);
-                         localStorage.setItem('refreshToken', res.Data.refresh_token);
-                         window.location.href = "/PC/Patrol/Dashboard";
-                     });
-                 } else {
-                     Swal.fire({
-                         icon: "error",
-                         text: res.Message,
-                         timer: 1500,
-                         showConfirmButton: false
-                     });
-
-                     savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-solid fa-right-to-bracket'></i>  Login</span>"
-                 };
-
-             });
-
-             forgetlogs.addEventListener('click', async (e) => {
-                 e.preventDefault();
-                 $('#logshow').hide();
-                 $('#forgeshow').show();
-             });
-
-             backlog.addEventListener('click', async (e) => {
-                 e.preventDefault();
-                 $('#logshow').show();
-                 $('#forgeshow').hide();
-             });
+    changeOpen.addEventListener('click', async (e) => {
+        e.preventDefault();
+        $("#ChangepasswordModal").modal('show');
+    });
 
 
-             const Initialization = () => {
-                 $('#logshow').show();
-                 $('#forgeshow').hide();
-             }
 
 
-             regform.addEventListener('submit', async (e) => {
-                 e.preventDefault();
-                     //const savebtn = document.querySelector("#Regisbtn");
-                     //savebtn.innerHTML = " <div class='buttonloading'></div>";
+    logform.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        console.clear();
+        const savebtn = document.querySelector("#loginbtn");
+        savebtn.innerHTML = " <div class='buttonloading'></div>";
 
-                     let formData = new FormData(e.target);
-                     formData.append('ProjectID', 9);
-                     const data = Object.fromEntries(formData);
-                     let res = await postData('/User/CreateNewUser', formData);
-                     if (res.StatusCode === 200) {
-                         Swal.fire({
-                             title: "Success",
-                             text: res.Message,
-                             icon: "success",
-                             showConfirmButton: false,
-                             timer: 1500
-                         }).then(() => {
-                             $('#logshow').show();
-                             $('#forgeshow').hide();    
-                             //savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-regular fa-floppy-disk'></i>  Registered</span>"
-                             //document.querySelector('.Registrationcontainer').classList.remove('activeforms');
-                             //document.querySelector('.logincontainer').classList.add('activeforms');
-                         });
+        let formData = new FormData(e.target);
+        formData.append("proj", 9);
 
-                         //savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-regular fa-floppy-disk'></i>  Registered</span>"
-                     } else {
-                         Swal.fire({
-                             icon: "error",
-                             text: res.Message,
-                             timer: 1500,
-                             showConfirmButton: false
-                         });
-                     }
-             });
-             Initialization();
+        let res = await postData('/Auth/Authenticate', formData);
+        if (res.StatusCode === 200) {
+            Swal.fire({
+                title: "Success",
+                text: res.Message,
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1500
+            }).then(() => {
+                savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-solid fa-right-to-bracket'></i>  Login</span>"
+                localStorage.setItem('Logout', "/PC/Patrol/index");
+                localStorage.setItem('Userinfo', JSON.stringify(res.Data));
+                localStorage.setItem('Fullname', res.Data.fullname);
+                localStorage.setItem('accessToken', res.Data.access_token);
+                localStorage.setItem('refreshToken', res.Data.refresh_token);
+                window.location.href = "/PC/Patrol/Dashboard";
+            });
+        } else {
+            Swal.fire({
+                icon: "error",
+                text: res.Message,
+                timer: 1500,
+                showConfirmButton: false
+            });
+
+            savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-solid fa-right-to-bracket'></i>  Login</span>"
+        };
+
+    });
+    regform.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        let formData = new FormData(e.target);
+        formData.append('ProjectID', 9);
+        if (RegisterValidationForm()) {
+            //const savebtn = document.querySelector("#Regisbtn");
+            //savebtn.innerHTML = " <div class='buttonloading'></div>";
+            let res = await postData('/User/CreateNewUser', formData);
+            if (res.StatusCode === 201) {
+                Swal.fire({
+                    title: "Success",
+                    text: res.Message,
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
+                    $("#AddProductModal").modal('hide');
+                    $('#logshow').show();
+                    regform.reset();
+                    //savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-regular fa-floppy-disk'></i>  Registered</span>"
+                    //document.querySelector('.Registrationcontainer').classList.remove('activeforms');
+                    //document.querySelector('.logincontainer').classList.add('activeforms');
+                });
+
+                //savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-regular fa-floppy-disk'></i>  Registered</span>"
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    text: res.Message,
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            }
+        }
+    });
+    changeform.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        let formData = new FormData(e.target);
+        if (ChangeValidationForm()) {
+
+        }
+    });
+
+    function RegisterValidationForm() {
+        let pass = $("#RegPassword").val();
+        let confirmpass = $("#RegConfirmPassword").val();
+
+        if (pass !== confirmpass) {
+            $("#Errormessage").text("Password does not Match");
+            return;
+        }
+    }
+
+    async function ChangeValidationForm() {
+        let newpass = $("#CNewPassword").val();
+        let confirmpass = $("#CConfirm").val();
+        let employeeID = $("#CEmployee_ID").val();
+        $("#ChangeErrormessage").show();
+
+        let res = await fetchData('/User/CheckEmployeeID', { empID: employeeID });
+        
+        if (res == false) {
+            $("#ChangeErrormessage").text("Employee ID is Incorrect");
+            return;
+        }
+
+        if (newpass !== confirmpass) {
+            $("#ChangeErrormessage").text("Password does not Match");
+            return;
+        }
+
+        $("#ChangeErrormessage").hide();
+    }
+
+    const Initialization = () => {
+        $('#logshow').show();
+    }
+
+    Initialization();
 </script>
+

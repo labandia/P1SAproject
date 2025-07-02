@@ -52,6 +52,7 @@
     .primarybtn{
         transition: .5s ease-in-out;
         background: var(--primary-color) !important;
+        color: #fff;
     }
     .primarybtn:hover{
         background:  var(--primary-hover) !important;
@@ -682,7 +683,7 @@
          outline: 1px solid var(--primary-color);
     }
 
-    #Errormessage{
+    #Errormessage, #ChangeErrormessage{
         color: darkred;
     }
 

@@ -29,9 +29,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         // GET: P1SA/GetFanmajorMachine
         public async Task<ActionResult> GetFanmajorMachine(int offset, int limit, int sectionID, string mach)
         {
-            try
-            {
-                var data = await _man.GetMachineData(offset, limit, sectionID, mach);
+             var data = await _man.GetMachineData(offset, limit, sectionID, mach);
                 var machineWithImages = data.Select(m => new
                 {
                     m.ID,
@@ -50,18 +48,16 @@ namespace PMACS_V2.Areas.P1SA.Controllers
                     m.Tongs,
                     m.IsDelete,
                     m.Section_ID,
-                    ImageBase64 = Convert.ToBase64String(m.Filepath)
+                    ImageBase64 = (m.Filepath != null && m.Filepath.Length > 0)
+                                ? Convert.ToBase64String(m.Filepath)
+                                : string.Empty
                 }).ToList();
 
                 if (machineWithImages == null || !machineWithImages.Any())
+                {
                     return JsonNotFound("No Fan Major Machine data found");
-
+                }
                 return JsonSuccess(machineWithImages);
-            }
-            catch (Exception ex)
-            {
-                return JsonError(ex.Message);
-            }
            
         }
         // GET: P1SA/GetEquipmenList/ID

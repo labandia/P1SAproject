@@ -7,6 +7,7 @@ using ProgramPartListWeb.Interfaces;
 using ProgramPartListWeb.Utilities;
 using System.Net.PeerToPeer;
 using System;
+using System.Diagnostics;
 
 namespace ProgramPartListWeb.Data
 {
@@ -28,10 +29,54 @@ namespace ProgramPartListWeb.Data
             throw new NotImplementedException();
         }
 
-        public Task<bool> CheckAccountsTable(string employ)
+        public async Task<bool> CheckAccountsTable(RegisterModel reg)
         {
-            throw new NotImplementedException();
+            string strUsers = "SELECT COUNT(*) FROM Users WHERE Employee_ID =@Employee_ID";
+            bool CheckUser = await SqlDataAccess.Checkdata(strUsers, new { Employee_ID = reg.Employee_ID });
+
+            // If the User doesnt exist in the Users Table
+            if (!CheckUser)
+            {
+                string insUser = "INSERT INTO Users(Employee_ID, FullName, Email) VALUES(@Employee_ID, @FullName, @Email)";
+                await SqlDataAccess.UpdateInsertQuery(insUser, reg);
+            }
+
+            int UserID = await GetUserID(reg.Employee_ID);
+
+            if (UserID != 0)
+            {
+                // Check if user Exist in the database
+                string strAccounts = $@"SELECT COUNT(*) 
+                                        FROM UserAccounts 
+                                        WHERE (User_ID = @User_ID AND Username = @Username) 
+                                        AND Project_ID = @Project_ID";
+                bool checkAccount = await SqlDataAccess.Checkdata(strAccounts, new { User_ID = UserID, Username = reg.Username, Project_ID = reg.Project_ID });
+                return checkAccount;
+            }
+            else
+            {
+                return false;
+            }
         }
+        public async Task<bool> CreateNewAccount(RegisterModel reg)
+        {
+            int UserID = await GetUserID(reg.Employee_ID);
+            if (UserID == 0) return false;
+
+            // if user account doesnt Exist
+            string insAccout = $@"INSERT INTO UserAccounts(User_ID, Project_ID, Username, Password, Role_ID) 
+                                    VALUES(@User_ID, @Project_ID, @Username, @Password, @Role_ID)";
+            return await SqlDataAccess.UpdateInsertQuery(insAccout, new
+            {
+                User_ID = UserID,
+                Project_ID = reg.Project_ID,
+                Username = reg.Username,
+                Password = reg.Password,
+                Role_ID = reg.Role_ID
+            });
+        }
+
+
 
 
         public async Task<string> UsersFullname(int id)
@@ -66,50 +111,7 @@ namespace ProgramPartListWeb.Data
             return filterData == null ? null : filterData;
         }
 
-        public async Task<bool> CreateNewAccount(RegisterModel reg)
-        {
-            string strUsers = "SELECT COUNT(*) FROM Users WHERE Employee_ID =@Employee_ID";
-            bool CheckUser = await SqlDataAccess.Checkdata(strUsers, new { Employee_ID = reg.Employee_ID });
-            bool result = false;
-
-            // If the User doesnt exist in the Users Table
-            if (!CheckUser)
-            {
-                string insUser = "INSERT INTO Users(Employee_ID, FullName, Email) VALUES(@Employee_ID, @FullName, @Email)";
-                await SqlDataAccess.UpdateInsertQuery(insUser, reg);
-            }
-
-            int UserID = await GetUserID(reg.Employee_ID);
-            if(UserID != 0)
-            {
-                // Check if user Exist in the database
-                string strAccounts = "SELECT COUNT(*) FROM UserAccounts WHERE User_ID =@User_ID AND Project_ID =@Project_ID";
-                bool checkAccount = await SqlDataAccess.Checkdata(strAccounts, new { User_ID = UserID, Project_ID = reg.Project_ID });
-
-                if (!checkAccount)
-                {
-                    // if user account doesnt Exist
-                    string insAccout = $@"INSERT INTO UserAccounts(User_ID, Project_ID, Username, Password, Role_ID) 
-                                    VALUES(@User_ID, @Project_ID, @Username, @Password, @Role_ID)";
-                    await SqlDataAccess.UpdateInsertQuery(insAccout, new
-                    {
-                        User_ID = UserID,
-                        Project_ID = reg.Project_ID,
-                        Username = reg.Username,
-                        Password = reg.Password,
-                        Role_ID = reg.Role_ID
-                    });
-                    result = true;
-                }
-            }
-            else
-            {
-                throw new Exception("User ID not found.");
-            }
-
-           
-            return result;
-        }
+        
 
         public Task<int> GetUserID(string Employee)
         {
@@ -117,6 +119,16 @@ namespace ProgramPartListWeb.Data
             return SqlDataAccess.GetCountDataSync(strsql, new { Employee_ID = Employee });
         }
 
-        
+        public async Task<List<UserEmployee>> GetUserEmployeeID()
+        {
+            string strsql = "SELECT Employee_ID, FullName, Email FROM Users";
+            return await SqlDataAccess.GetData<UserEmployee>(strsql, null);
+        }
+
+        public async Task<bool> CheckUserAccount(string employ, string username)
+        {
+            string strsql = "SELECT Employee_ID, FullName, Email FROM Users";
+            return await SqlDataAccess.Checkdata(strsql, null);
+        }
     }
 }

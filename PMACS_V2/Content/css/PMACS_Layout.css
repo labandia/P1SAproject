@@ -1345,6 +1345,10 @@
 
     .detail__inputfield input {
         height: 42px;
+        background: #f5f5f5;
+        color: #222;
+        padding: 0 1em;
+        font-weight: 600;
     }
 
     .addwrap span{

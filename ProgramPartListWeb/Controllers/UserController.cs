@@ -3,6 +3,7 @@ using ProgramPartListWeb.Interfaces;
 using ProgramPartListWeb.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -23,26 +24,6 @@ namespace ProgramPartListWeb.Controllers
             _emp = emp;
         }
 
-
-        [AllowAnonymous]
-        [HttpPost]
-        public async Task<ActionResult> CreateUser()
-        {
-            // Roles 2 : for User register
-            var dataobj = new
-            {
-                Username = Request.Form["usertext"],
-                Password = PasswordHasher.Hashpassword(Request.Form["passtext"]),
-                Role_ID = 2,
-                First_Name = Request.Form["fname"],
-                Last_Name = Request.Form["lname"]
-            };
-            var formdata = GlobalUtilities.GetMessageResponse(await _user.RegiserUserData(dataobj), 0);
-
-            return Json(formdata, JsonRequestBehavior.AllowGet);
-        }
-
-
         [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult> CreateNewUser()
@@ -58,8 +39,14 @@ namespace ProgramPartListWeb.Controllers
                     FullName = Request.Form["FullName"],
                     Employee_ID = Request.Form["Employee_ID"]
                 };
-                bool result = await _user.CreateNewAccount(obj);
-                if (!result) return JsonError("Username is already created", 500);
+
+                // Checks if the user Exist 
+                bool IsExist = await _user.CheckAccountsTable(obj);
+                if (IsExist) return JsonError("Username is already created", 500);
+           
+                // Insert in the Database
+                await _user.CreateNewAccount(obj);
+
                 return JsonCreated(obj, "Add Inspector Successfully");
             }
             catch (Exception ex)
@@ -68,9 +55,6 @@ namespace ProgramPartListWeb.Controllers
             }
         }
 
-
-
-
         [HttpPost]
         public async Task<ActionResult> CheckMatchPassword(int ID, string password)
         {     
@@ -78,10 +62,6 @@ namespace ProgramPartListWeb.Controllers
             bool result = PasswordHasher.VerifyPassword(datalist.Password, password);
             return Json(result, JsonRequestBehavior.AllowGet);
         }
-
-
-
-
         [HttpGet]
         public async Task<ActionResult> SearchEmployeeID(string empID)
         {
@@ -99,7 +79,13 @@ namespace ProgramPartListWeb.Controllers
             }
         }
 
-        
+        [HttpGet]
+        public async Task<ActionResult> CheckEmployeeID(string empID)
+        {
+            var data = await _user.GetUserEmployeeID();
+            var filterData = data.Where(res => res.Employee_ID == empID);
+            return Json(filterData.Any() ? true : false, JsonRequestBehavior.AllowGet);
+        }
 
         [HttpGet]
         public async Task<ActionResult> GetUserInformation(string accessToken)

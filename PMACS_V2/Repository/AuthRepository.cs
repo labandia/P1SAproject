@@ -15,7 +15,7 @@ namespace PMACS_V2.Repository
                                 FROM UserAccounts ua
                                 INNER JOIN Users u ON u.User_ID = ua.User_ID
                                 WHERE ua.Username  =@Username AND IsActive = 1";
-            return await UsersAccess.UserGetData<AuthModel>(strquery, new { Username = username }, "Loginuser");
+            return await UsersAccess.UserGetData<AuthModel>(strquery, new { Username = username });
         }
 
         public string GetRefreshToken(int userId)

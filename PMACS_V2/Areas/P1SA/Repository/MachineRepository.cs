@@ -46,16 +46,17 @@ namespace PMACS_V2.Areas.P1SA.Repository
         {
             string machfilter = "";
             if (!string.IsNullOrEmpty(mach)){
-                machfilter = " AND m.MACH_CODE = '" + mach + "'";
+                machfilter = $@" AND m.MACH_CODE = '{mach}'";
             }
 
-            string strsql = "SELECT m.ID, m.MACH_CODE as machcode, ma.Equipment, m.Machname, m.Model, m.Manufact, " +
-                    "m.Serial, m.location, m.Status, m.Filepath, m.Asset, " +
-                    "m.Reasons, m.Date_acquired, m.Tongs, m.Section_ID, " +
-                    "FORMAT(m.Dateadd, 'MM/dd/yyyy') as Dateadd " +
-                    "FROM Machine m INNER JOIN major ma on ma.Machine_code = m.MACH_CODE " +
-                    "WHERE m.Section_ID = " + sect + " " + machfilter + " ORDER BY m.ID DESC " +
-                    "OFFSET " + offset + " ROWS FETCH NEXT " + limit + " ROWS ONLY ";
+            string strsql = $@"SELECT m.ID, m.MACH_CODE as machcode, ma.Equipment, m.Machname, m.Model, m.Manufact, 
+                    m.Serial, m.location, m.Status, m.Filepath, m.Asset, 
+                    m.Reasons, m.Date_acquired, m.Tongs, m.Section_ID, 
+                    FORMAT(m.Dateadd, 'MM/dd/yyyy') as Dateadd 
+                    FROM Machine m INNER JOIN major ma on ma.Machine_code = m.MACH_CODE 
+                    WHERE m.Section_ID = {sect} {machfilter} ORDER BY m.ID DESC 
+                    OFFSET {offset} ROWS FETCH NEXT 10 ROWS ONLY ";
+            Debug.WriteLine(strsql);
             return await SqlDataAccess.GetData<MachineModel>(strsql);
         }
     }

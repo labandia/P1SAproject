@@ -8,8 +8,11 @@ namespace ProgramPartListWeb.Interfaces
     {
         Task<List<UsersModel>> GetAllusers();
         Task<bool> CheckUserTable(string employ);
-        Task<bool> CheckAccountsTable(string employ);
 
+        Task<bool> CheckUserAccount(string employ, string username);
+
+
+        Task<List<UserEmployee>> GetUserEmployeeID();
 
         Task<UsersModel> GetUserById(int userId);
 
@@ -18,6 +21,8 @@ namespace ProgramPartListWeb.Interfaces
         Task<string> UsersFullname(int id);
         Task<bool> RegiserUserData(object parameters);
 
+
+        Task<bool> CheckAccountsTable(RegisterModel reg);
         Task<bool> CreateNewAccount(RegisterModel reg);
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
+﻿
 namespace ProgramPartListWeb.Models
 {
     public class EmployeeModel
@@ -39,6 +35,15 @@ namespace ProgramPartListWeb.Models
             set => _Department_ID = value;
         }
 
-         
+
     }
+
+    public class UserEmployee
+    {
+        public string Employee_ID { get; set; }
+        public string FullName { get; set; }
+        public string Email { get; set; }   
+
+    }
+
 }

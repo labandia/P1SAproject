@@ -17,6 +17,7 @@ namespace PMACS_V2.Areas.P1SA.Models
         private string _Asset;
         private string _Equipment;
         private string _Reasons;
+        private string _Shifts;
         private string _Date_acquired;
         private string _Tongs;
         private int _IsDelete;
@@ -51,6 +52,12 @@ namespace PMACS_V2.Areas.P1SA.Models
         {
             get => _Serial;
             set => _Serial = value;
+        }
+
+        public string Shifts
+        {
+            get => _Shifts;
+            set => _Shifts = value;
         }
         public string location
         {

@@ -407,7 +407,7 @@
                                 </div>
                                 <div class="detail__inputfield">
                                     <label for="">Shifts :</label><br />
-                                    <select id="EditShifts" name="EditShifts" class="mode" disabled>
+                                    <select id="EditShifts" name="EditShifts" class="mode" >
                                         <option value="0">2 shifts (DS/NS)</option>
                                         <option value="1">1 Shifts (DS)</option>
                                         <option value="2">1 Shifts (NS)</option>
@@ -1134,16 +1134,17 @@
             var buttonId = $(this).attr('id');
             var rowIndex = buttonId.split('_')[1]; // Extract the index from the button ID
             let result = searchArray(loadData, "ID", rowIndex);
+            console.log(result);
             let setDate;
             // Get the current active tab index
             currentTabIndex = getCurrentTabIndex();
-            //setDate = changeformattedDate(result.DateAcquire);
+            setDate = changeformattedDate(result.Date_acquired);
 
 
             $('#machine_name').text(result.Machname);
             $('#EditID').val(result.ID);
             $('#EditEquip').val(result.Machname);
-            //$('#EditDateacq').val(setDate);
+            $('#EditDateacq').val(setDate);
             $('#EditModel').val(result.Model);
             $('#Editlocal').val(result.location);
             $('#EditSerial').val(result.Serial);
@@ -1151,7 +1152,7 @@
             $('#EditManu').val(result.Manufact);
             $('#EditAssets').val(result.Asset);
             $('#edittons').val(result.tongs);
-            $('#reason').val(result.Reasons)
+            $('#reason').val(result.Reasons);
 
             // Get all radio buttons with the name 'choice'
             const radioButtons = document.querySelectorAll('[name="Editstatus"]');
@@ -1159,7 +1160,6 @@
             // CHECK IF THE value is the same value
             radioButtons.forEach(radio => {
                 if (radio.value === result.status) {
-
                     radio.checked = true;
                 }
             });
@@ -1176,8 +1176,6 @@
             } else {
                 imgsrc.src = "/Content/Images/noimage.png";
             }
-
-
 
             // SHOW A MODAL
             $("#edituploadforms").hide();

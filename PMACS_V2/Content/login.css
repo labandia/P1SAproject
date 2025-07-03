@@ -401,8 +401,13 @@
 }
 
 
+
+
+/*------------------------ BUTTON LOADING ANIMATION ------------------- */
+
+
 .buttonloading {
-    width: 16px;
+    width: 30px;
     padding: 8px;
     aspect-ratio: 1;
     border-radius: 50%;
@@ -420,3 +425,4 @@
         transform: rotate(1turn)
     }
 }
+/*------------------------------------------------------------------------------- */

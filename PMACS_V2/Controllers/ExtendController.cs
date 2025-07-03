@@ -6,6 +6,19 @@ namespace PMACS_V2.Controllers
 {
     public class ExtendController : Controller
     {
+        protected JsonResult JsonPostSuccess(object data = null, string message = "Success", int statusCode = 200)
+        {
+            Response.StatusCode = statusCode;
+            return Json(new
+            {
+                Success = true,
+                StatusCode = statusCode,
+                Message = message,
+                Data = data
+            }, JsonRequestBehavior.DenyGet);
+        }
+
+
         protected JsonResult JsonSuccess(object data = null, string message = "Success", int statusCode = 200)
         {
             Response.StatusCode = statusCode;

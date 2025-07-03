@@ -1,4 +1,5 @@
-﻿//GLOBAL GET FUNCTIONS WITH TOKEN AUTHENTICATION 
+﻿
+//GLOBAL GET FUNCTIONS WITH TOKEN AUTHENTICATION 
 window.FetchAuthenticate = async (url, fdata) => {
     var token = localStorage.getItem('accessToken');
     // Convert parameters to a query string
@@ -54,7 +55,6 @@ window.FetchAuthenticate = async (url, fdata) => {
         // Optionally, handle the error (e.g., show a notification to the user)
     }
 }
-
 //GLOBAL GET FUNCTIONS WITHOUT TOKEN AUTHENTICATION 
 window.fetchData = async (url, fdata = {}) => {
     try {
@@ -81,21 +81,54 @@ window.fetchData = async (url, fdata = {}) => {
         return null; // Return null on failure
     }
 };
-
-
 window.postData = async (url, data) => {
     try {
         const response = await fetch(url, {
             method: 'POST',
-            body: data // Send FormData directly
+            body: data
         });
 
-        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
-        return await response.json();
+        const json = await response.json(); // Parse response regardless of HTTP status
+
+        if (!response.ok || json.Success === false) {
+            // Server returned JSON error
+            console.error("Server error:", json.Message || "Unknown error");
+            return json; // or return null or throw if needed
+        }
+
+        return json;
     } catch (error) {
         console.error("Error posting data:", error);
         return null;
+    }
+};
+
+window.PullUserInformation = async () => {
+    const token = localStorage.getItem('accessToken');
+
+    const res = await fetch('/User/GetUserInformation', {
+        method: 'POST',
+        headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json'
+        }
+    });
+
+    if (res.status === 401) {
+        console.warn("Unauthorized");
+        return;
+    }
+
+    const result = await res.json();
+
+    if (result.success) {
+        return result;
+        console.log("User ID:", result.userId);
+        console.log("Name:", result.name);
+        console.log("Role:", result.role);
+    } else {
+        console.warn(result.message || "Unknown error");
     }
 };
 

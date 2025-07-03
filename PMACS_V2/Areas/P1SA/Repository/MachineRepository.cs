@@ -10,9 +10,13 @@ namespace PMACS_V2.Areas.P1SA.Repository
 {
     public class MachineRepository : IMachine
     {
-        public Task<bool> AddMachine(PostMachineModel model)
+        public async Task<bool> AddMachine(PostMachineModel model)
         {
-            throw new NotImplementedException();
+            string strsql = $@"INSERT INTO machine(MACH_CODE, Machname, Model, Serial, Manufact, Date_acquired, Shifts, 
+                                                   Location, Status, Asset, IsDelete, Section_ID, Filepath, Dateadd, Reasons, Tongs)
+                               VALUES(@MACH_CODE, @Equipment, @Model, @Serial, @Manufact, @Date_acquired, @Shifts, 
+                                                   @Location, @Status, @Asset, @IsDelete, @Section_ID, @Filepath, @Dateadd, @Reasons, @Tongs)";
+            return await SqlDataAccess.UpdateInsertQuery(strsql, model);    
         }
 
         public Task<bool> DeleteMachine(int machID)
@@ -55,8 +59,9 @@ namespace PMACS_V2.Areas.P1SA.Repository
                     FORMAT(m.Dateadd, 'MM/dd/yyyy') as Dateadd 
                     FROM Machine m INNER JOIN major ma on ma.Machine_code = m.MACH_CODE 
                     WHERE m.Section_ID = {sect} {machfilter} ORDER BY m.ID DESC 
-                    OFFSET {offset} ROWS FETCH NEXT 10 ROWS ONLY ";
-            Debug.WriteLine(strsql);
+                    OFFSET {offset} ROWS FETCH NEXT {limit} ROWS ONLY ";
+
+            //Debug.WriteLine(strsql);
             return await SqlDataAccess.GetData<MachineModel>(strsql);
         }
     }

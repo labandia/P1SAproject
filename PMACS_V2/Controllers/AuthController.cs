@@ -7,49 +7,71 @@ using System.Web.Mvc;
 using PMACS_V2.Interface;
 using PMACS_V2.Models;
 using PMACS_V2.Helper;
+using System.Diagnostics;
+using ProgramPartListWeb.Helper;
+using System.Web.Security;
 
 namespace PMACS_V2.Controllers
 {
-    public class AuthController : ExtendController
+    public class AuthController : Controller
     {
-        private readonly IAuthRepository _auth;
-        public AuthController(IAuthRepository auth) => _auth = auth;
+        private readonly IUserRepository _user;
+
+        public AuthController(IUserRepository user) => _user = user;
 
         [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult> Authenticate(string username, string password)
         {
-            var user = (await _auth.GetByUsername(username)).FirstOrDefault();
+            Debug.WriteLine("Username : " + username);
+            var data = await _user.LoginCredentials(username);
             var results = new DataMessageResponse<object> { };
 
-            if (user == null)
+            // CHECKS IF THE USERNAME EXIST
+            if (data.Count() > 0)
             {
-                results.StatusCode = 401;
-                results.Message = "Invalid credentials / Username doesnt exist";
-                results.Data = null;
-                return Json(results, JsonRequestBehavior.AllowGet);
-            }
-            if (user != null && PasswordHasher.VerifyPassword(user.Password, password))
-            {
+                // GET ONLY ONE ROW DATA
+                var userRow = data.FirstOrDefault();
+                string strRole = GlobalUtilities.UserRolesname(userRow.Role_ID);
+                string fullname = userRow.Fullname;
+                // CHECKS THE PASSWORD IF IS CORRECT
+                if (PasswordHasher.VerifyPassword(userRow.Password, password))
+                {
+                    // Generate the token
+                    var token = JwtHelper.GenerateAccessToken(fullname, strRole, userRow.User_ID);
+                    var refreshToken = JwtHelper.GenerateRefreshToken(userRow.User_ID);
 
-                string role = _auth.GetuserRolename(user.Role_ID);
-                string fullname = user.Fullname;
+                    //SetFormsAuthentication(userRow.Role_ID);
+                    //FormsAuthentication.SetAuthCookie(strRole, false);
+                    // Store user information in the session
+                    Session["UserID"] = userRow.User_ID;
+                    Session["Fullname"] = fullname;
+                    Session["Role"] = strRole;
 
-                var accessToken = JwtHelper.GenerateAccessToken(fullname, role, user.User_ID);
-                var refreshToken = JwtHelper.GenerateRefreshToken(user.User_ID);
-
-                results.StatusCode = 200;
-                results.Message = "Login successful";
-                results.Data = new { access_token = accessToken, refresh_token = refreshToken, fullname, role };
+                    results.StatusCode = 200;
+                    results.Message = "Login Successfully";
+                    results.Data =  new { fullname = fullname, access_token = token, refresh_token = refreshToken };
+                }
+                else
+                {
+                    results.StatusCode = 401;
+                    results.Message = "Invalid credentials / password is incorrect";
+                    results.Data = null;
+                }
             }
             else
             {
                 results.StatusCode = 401;
-                results.Message = "Invalid credentials / Password is incorrect";
+                results.Message = "Invalid credentials / username doesnt exist";
+                results.Data = null;
             }
 
             return Json(results, JsonRequestBehavior.AllowGet);
+
+
         }
+
+
 
         [HttpPost]
         public ActionResult Logout()

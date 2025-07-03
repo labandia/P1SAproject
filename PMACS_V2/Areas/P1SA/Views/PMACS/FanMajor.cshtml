@@ -220,7 +220,7 @@
                         <div class="addmachinewrap__col">
                             <div class="model__fields">
                                 <div class="detail__inputfield">
-                                    <label for="">Select Section :  </label>
+                                    <label for="">Select Section :  </label><br />
                                     <select id="selectedSection" class="selectedSection" required>
                                         <option value="0">--Select--</option>
                                         <option value="2">Molding</option>
@@ -231,7 +231,7 @@
                                     </select>
                                 </div>
                                 <div class="detail__inputfield">
-                                    <label for="">Select Fan Major Equipment:</label>
+                                    <label for="">Select Fan Major Equipment:</label> <br />
                                     <select name="addmachcode" id="addmachcode">
                                     </select>
                                 </div>
@@ -270,7 +270,7 @@
                                     <input type="text" placeholder="Input turns" name="Serial" id="Serial" autocomplete="off">
                                 </div>
                                 <div class="detail__inputfield">
-                                    <label for="">Shifts :</label>
+                                    <label for="">Shifts :</label> <br />
                                     <select id="Shifts" name="Shifts">
                                         <option value="0">2 shifts (DS/NS)</option>
                                         <option value="1">1 Shifts (DS)</option>
@@ -292,7 +292,7 @@
 
                             <div class="model__fields" id="formold">
                                 <div class="detail__inputfield">
-                                    <label for="">Tons :</label>
+                                    <label for="">Tons :</label> <br />
                                     <input type="text" placeholder="Input turns" name="tons" id="tons" autocomplete="off">
                                 </div>
 
@@ -532,7 +532,7 @@
         formdata.append('limit', m_limit);
         formdata.append('sectionID', 2);
         formdata.append('mach', '');
-        let res = await fetchData('@Url.Action("GetFanmajorMachine", "FanMajor")', formdata);
+        let res = await fetchData('/FanMajor/GetFanmajorMachine', formdata);
         if (res && res.Success) {
             loadData = res.Data;
 
@@ -788,55 +788,55 @@
     async function MachineLoadmoreData(data, sectionID) {
         loadData = [];
 
-       
+
         let res = await fetchData('@Url.Action("GetFanmajorMachine", "FanMajor")', data);
         if (res && res.Success) {
-            console.log(res.Data);
+            let load = res.Data;
+            loadData = load;
+
+            if (parseInt(load[0].SecID) == 1 || parseInt(load[0].SecID) == 2) {
+                $("#formold").show();
+                $("#editformold").show();
+            } else {
+                $("#formold").hide();
+                $("#editformold").hide();
+            }
+
+            switch (sectionID) {
+                case 2:
+                    appendData(machineData1, load);
+                    if (load.length < m_limit) {
+                        $('#molding_btn').hide(); // Hide button if no more records
+                    }
+                    break;
+                case 1:
+                    appendData(machineData2, load);
+                    if (load.length < p_limit) {
+                        $('#press_btn').hide(); // Hide button if no more records
+                    }
+                    break;
+                case 3:
+
+                    appendData(machineData3, load);
+                    if (load.length < r_limit) {
+                        $('#rotor_btn').hide(); // Hide button if no more records
+                    }
+                    break;
+                case 4:
+                    appendData(machineData4, load);
+                    if (load.length < w_limit) {
+                        $('#winding_btn').hide(); // Hide button if no more records
+                    }
+                    break;
+                case 5:
+                    appendData(machineData5, load);
+                    if (load.length < c_limit) {
+                        $('#circuit_btn').hide(); // Hide button if no more records
+                    }
+                    break;
+            }
         }
-        //let load = res.machine;
-        //loadData = load;
-
-        //if (parseInt(load[0].SecID) == 1 || parseInt(load[0].SecID) == 2) {
-        //    $("#formold").show();
-        //    $("#editformold").show();
-        //} else {
-        //    $("#formold").hide();
-        //    $("#editformold").hide();
-        //}
-
-        //switch (sectionID) {
-        //    case 2:
-        //        appendData(machineData1, load);
-        //        if (load.length < m_limit) {
-        //            $('#molding_btn').hide(); // Hide button if no more records
-        //        }
-        //        break;
-        //    case 1:
-        //        appendData(machineData2, load);
-        //        if (load.length < p_limit) {
-        //            $('#press_btn').hide(); // Hide button if no more records
-        //        }
-        //        break;
-        //    case 3:
-
-        //        appendData(machineData3, load);
-        //        if (load.length < r_limit) {
-        //            $('#rotor_btn').hide(); // Hide button if no more records
-        //        }
-        //        break;
-        //    case 4:
-        //        appendData(machineData4, load);
-        //        if (load.length < w_limit) {
-        //            $('#winding_btn').hide(); // Hide button if no more records
-        //        }
-        //        break;
-        //    case 5:
-        //        appendData(machineData5, load);
-        //        if (load.length < c_limit) {
-        //            $('#circuit_btn').hide(); // Hide button if no more records
-        //        }
-        //        break;
-        //}
+        
     }
     function MachineLoadFilterData(data, sectionID, mach) {
         loadData = [];
@@ -966,7 +966,7 @@
                 formdata.append('offset', m_offset);
                 formdata.append('limit', m_limit);
                 formdata.append('sectionID', 2);
-                formdata.append('mach', $("#machcode__mold").val());
+                formdata.append('mach', select);
 
                 MachineLoadmoreData(formdata, 2);
             }
@@ -977,140 +977,134 @@
 
 
     });
-    //$("#press_btn").click(function () {
-    //    p_limit += 5;
-    //    let select;
-    //    select = $("#machcode__press").val();
+    $("#press_btn").click(function () {
+        p_limit += 5;
+        let select;
+        select = $("#machcode__press").val();
 
 
-    //    const savebtn = this;
-    //    savebtn.innerHTML = " <div class='Submitloading'></div>"
+        const savebtn = this;
+        savebtn.innerHTML = " <div class='Submitloading'></div>"
 
 
-    //    setTimeout(() => {
-    //        if (select == 'None') {
-    //            let data = {
-    //                offset: p_offset,
-    //                limit: p_limit,
-    //                sectionID: 1,
-    //                mach: ''
-    //            }
+        setTimeout(() => {
+            if (select == 'None') {
+                let formdata = new FormData();
+                formdata.append('offset', m_offset);
+                formdata.append('limit', m_limit);
+                formdata.append('sectionID', 1);
+                formdata.append('mach', '');
 
-    //            MachineLoadmoreData(data, 1);
-    //        } else {
-    //            let data = {
-    //                offset: p_offset,
-    //                limit: p_limit,
-    //                sectionID: 1,
-    //                mach: $("#machcode__press").val()
-    //            }
+                MachineLoadmoreData(formdata, 1);
+            } else {
+                let formdata = new FormData();
+                formdata.append('offset', m_offset);
+                formdata.append('limit', m_limit);
+                formdata.append('sectionID', 1);
+                formdata.append('mach', select);
 
-    //            MachineLoadmoreData(data, 1);
-    //        }
-    //        savebtn.innerHTML = "Load more"
-    //    }, 1000)
+                MachineLoadmoreData(formdata, 1);
+            }
+            savebtn.innerHTML = "Load more"
+        }, 1000)
 
 
-    //});
-    //$("#rotor_btn").click(function () {
-    //    r_limit += 5;
-    //    let select;
-    //    select = $("#machcode__rotor").val();
+    });
+    $("#rotor_btn").click(function () {
+        r_limit += 5;
+        let select;
+        select = $("#machcode__rotor").val();
 
-    //    const savebtn = this;
-    //    savebtn.innerHTML = " <div class='Submitloading'></div>"
+        const savebtn = this;
+        savebtn.innerHTML = " <div class='Submitloading'></div>"
 
-    //    setTimeout(() => {
-    //        if (select == "None") {
-    //            let data = {
-    //                offset: r_offset,
-    //                limit: r_limit,
-    //                sectionID: 3,
-    //                mach: ""
-    //            }
+        setTimeout(() => {
+            if (select == "None") {
+                let formdata = new FormData();
+                formdata.append('offset', m_offset);
+                formdata.append('limit', m_limit);
+                formdata.append('sectionID', 3);
+                formdata.append('mach', '');
 
-    //            MachineLoadmoreData(data, 3);
-    //        } else {
-    //            let data = {
-    //                offset: r_offset,
-    //                limit: r_limit,
-    //                sectionID: 3,
-    //                mach: $("#machcode__rotor").val()
-    //            }
+                MachineLoadmoreData(formdata, 3);
+            } else {
+                let formdata = new FormData();
+                formdata.append('offset', m_offset);
+                formdata.append('limit', m_limit);
+                formdata.append('sectionID', 3);
+                formdata.append('mach', select);
 
-    //            MachineLoadmoreData(data, 3);
-    //        }
-    //        savebtn.innerHTML = "Load more"
-    //    }, 1000);
+                MachineLoadmoreData(formdata, 3);
+            }
+            savebtn.innerHTML = "Load more"
+        }, 1000);
 
 
-    //});
-    //$("#winding_btn").click(function () {
-    //    w_limit += 5;
+    });
+    $("#winding_btn").click(function () {
+        w_limit += 5;
 
-    //    let select;
-    //    select = $("#machcode__winding").val();
+        let select;
+        select = $("#machcode__winding").val();
 
-    //    const savebtn = this;
-    //    savebtn.innerHTML = " <div class='Submitloading'></div>"
+        const savebtn = this;
+        savebtn.innerHTML = " <div class='Submitloading'></div>"
 
-    //    setTimeout(() => {
-    //        if (select == "None") {
-    //            let data = {
-    //                offset: w_offset,
-    //                limit: w_limit,
-    //                sectionID: 4,
-    //                mach: ""
-    //            }
+        setTimeout(() => {
+            if (select == "None") {
+                let formdata = new FormData();
+                formdata.append('offset', m_offset);
+                formdata.append('limit', m_limit);
+                formdata.append('sectionID', 4);
+                formdata.append('mach', '');
 
-    //            MachineLoadmoreData(data, 4);
-    //        } else {
-    //            let data = {
-    //                offset: w_offset,
-    //                limit: w_limit,
-    //                sectionID: 4,
-    //                mach: $("#machcode__winding").val()
-    //            }
+                MachineLoadmoreData(formdata, 4);
 
-    //            MachineLoadmoreData(data, 4);
-    //        }
-    //        savebtn.innerHTML = "Load more"
-    //    }, 1000)
-    //});
-    //$("#circuit_btn").click(function () {
-    //    c_limit += 5;
+            } else {
+                let formdata = new FormData();
+                formdata.append('offset', m_offset);
+                formdata.append('limit', m_limit);
+                formdata.append('sectionID', 4);
+                formdata.append('mach', select);
 
-    //    let select;
-    //    select = $("#machcode__circuit").val();
+                MachineLoadmoreData(formdata, 4);
+            }
+            savebtn.innerHTML = "Load more"
+        }, 1000)
+    });
+    $("#circuit_btn").click(function () {
+        c_limit += 5;
 
-    //    const savebtn = this;
-    //    savebtn.innerHTML = " <div class='Submitloading'></div>"
+        let select;
+        select = $("#machcode__circuit").val();
 
-    //    setTimeout(() => {
-    //        if (select == "None") {
-    //            let data = {
-    //                offset: c_offset,
-    //                limit: c_limit,
-    //                sectionID: 5,
-    //                mach: ""
-    //            }
+        const savebtn = this;
+        savebtn.innerHTML = " <div class='Submitloading'></div>"
 
-    //            MachineLoadmoreData(data, 5);
-    //        } else {
-    //            let data = {
-    //                offset: c_offset,
-    //                limit: c_limit,
-    //                sectionID: 5,
-    //                mach: $("#machcode__circuit").val()
-    //            }
+        setTimeout(() => {
+            if (select == "None") {
+                let formdata = new FormData();
+                formdata.append('offset', m_offset);
+                formdata.append('limit', m_limit);
+                formdata.append('sectionID', 5);
+                formdata.append('mach', '');
 
-    //            MachineLoadmoreData(data, 5);
-    //        }
-    //        savebtn.innerHTML = "Load more"
-    //    }, 1000);
+                MachineLoadmoreData(formdata, 5);
+
+            } else {
+                let formdata = new FormData();
+                formdata.append('offset', m_offset);
+                formdata.append('limit', m_limit);
+                formdata.append('sectionID', 5);
+                formdata.append('mach', select);
+
+                MachineLoadmoreData(formdata, 5);
+            }
+            savebtn.innerHTML = "Load more"
+        }, 1000);
 
 
-    //});
+    });
 
 
 
@@ -1140,7 +1134,6 @@
             var buttonId = $(this).attr('id');
             var rowIndex = buttonId.split('_')[1]; // Extract the index from the button ID
             let result = searchArray(loadData, "ID", rowIndex);
-            console.log(result)
             let setDate;
             // Get the current active tab index
             currentTabIndex = getCurrentTabIndex();
@@ -1178,8 +1171,8 @@
             //dateInput.value = formattedDate;
 
             const imgsrc = document.getElementById('Editpreview');
-            if (result.Filepath) {
-                imgsrc.src = "data:image/jpeg;base64," + result.Filepath;
+            if (result.ImageBase64) {
+                imgsrc.src = "data:image/jpeg;base64," + result.ImageBase64;
             } else {
                 imgsrc.src = "/Content/Images/noimage.png";
             }
@@ -1276,10 +1269,10 @@
         formData.append('SectionID', parseInt($("#selectedSection").val()));
 
         const data = Object.fromEntries(formData);
-        console.log(data);
-        let res = await postData('@Url.Action("AddNewmachineList", "Patrol")', formData);
-
+        let res = await postData('@Url.Action("AddNewmachineList", "FanMajor")', formData);
         console.log(res);
+
+        //console.log(res);
         //$.ajax({
         //    url: apiBaseUrl + "AddNewmachineList", // The URL to the Web API endpoint
         //    type: 'POST',

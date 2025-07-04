@@ -16,5 +16,11 @@
     "inputFiles": [
       "Content/css/PatrolLayout.css"
     ]
+  },
+  {
+    "outputFileName": "Content/css/Programpartlist.min.css",
+    "inputFiles": [
+      "Content/css/Programpartlist.css"
+    ]
   }
 ]

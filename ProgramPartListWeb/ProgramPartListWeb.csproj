@@ -701,6 +701,9 @@
     <Content Include="Content\css\PatrolLayout.min.css">
       <DependentUpon>PatrolLayout.css</DependentUpon>
     </Content>
+    <Content Include="Content\css\Programpartlist.min.css">
+      <DependentUpon>Programpartlist.css</DependentUpon>
+    </Content>
     <Content Include="Content\css\Sidebar_one.css" />
     <Content Include="Content\font-awesome\css\all.css" />
     <Content Include="Content\font-awesome\css\all.min.css" />

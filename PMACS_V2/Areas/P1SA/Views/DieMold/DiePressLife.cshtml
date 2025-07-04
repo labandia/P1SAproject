@@ -32,7 +32,7 @@
             </div>
             @* MOLD Die Control *@
             <div id="MoldControl">
-                <button class="primary_button_color" id="addmodal">Add Data</button>
+                <button class="primary_button_color" id="controlmodal">Add Data</button>
             </div>
         </div>
     </header>
@@ -406,7 +406,6 @@
 
     // Date Dropdown Selection
     const addmod = document.getElementById("addmodal");
-
     const addRegistry = document.getElementById("AddToolPressforms");
 
     const select = document.getElementById("monthSelect");
@@ -1191,8 +1190,8 @@
             const [regis, Monitor, Summary, Control] = await Promise.all([
                 GetPressRegistry(),
                 GetPressMonitoring(setMonth, currentYear),
-                GetPressSummary(),
-                GetPressControl()
+                GetPressSummary()
+                //GetPressControl()
             ]);
 
         } catch (error) {

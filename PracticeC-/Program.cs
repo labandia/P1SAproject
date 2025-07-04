@@ -29,11 +29,11 @@ namespace PracticeC_
             //DateTime now = DateTime.Now;
 
             //TimeSpan ts = launchDate - now;
-            samplehash();
+            ConvertstringtoBase64();
             //Console.WriteLine("TimeSpan: {0}", ts.ToString());
             //string machineName = Environment.MachineName.ToLower();
             //Console.WriteLine($"Original: {machineName}");
-            Console.WriteLine(VerifyPassword("ErcXN5O+LcsWG5/cMOMWOg==:cZs22bq4HkpRKxiubSnaRQ0U4NIhfn7xUHi3De8cXWw=", "sdp1234a*"));
+            //Console.WriteLine(VerifyPassword("ErcXN5O+LcsWG5/cMOMWOg==:cZs22bq4HkpRKxiubSnaRQ0U4NIhfn7xUHi3De8cXWw=", "sdp1234a*"));
 
             Console.ReadKey();
         }
@@ -67,13 +67,13 @@ namespace PracticeC_
             //string connectionString = "server=172.29.3.139;User ID=p1sa;password=p1sa1234a*;database=PMACS_LIVE;Pooling=True;Min Pool Size=50;Max Pool Size=100;";
             //string connectionString = "server=SDP0706ES; User ID = p1sa; password=p1sa1234a*; database=PMACS_LIVE; Pooling=True; Min Pool Size=50; Max Pool Size=100;";
             //string connectionString = "server=DESKTOP-FC0UP1P;User ID=PCsystem;password=p1saprocess;database=P1sa;Pooling=True;Min Pool Size=50;Max Pool Size=100;";
-            string base64ConnectionString = Convert.ToBase64String(Encoding.UTF8.GetBytes(connectionString));
+            //string base64ConnectionString = Convert.ToBase64String(Encoding.UTF8.GetBytes(connectionString));
 
             // Print the encoded connection string
-            Console.WriteLine($"Base64 Encoded Connection String: {base64ConnectionString}");
+            //Console.WriteLine($"Base64 Encoded Connection String: {base64ConnectionString}");
             // Print the encoded connection string
-            //string a = DecodeBase64ToString("c2VydmVyPTE3Mi4yOS4zLjEzOTtVc2VyIElEPXAxc2E7cGFzc3dvcmQ9cDFzYTEyMzRhKjtkYXRhYmFzZT1QUk9EQ09ORjtQb29saW5nPVRydWU7TWluIFBvb2wgU2l6ZT01MDtNYXggUG9vbCBTaXplPTEwMDs=");
-            //Console.WriteLine($"Base64 Decrypted {a}");
+            string a = DecodeBase64ToString("c2VydmVyPTE3Mi4yOS4zLjEzOTtVc2VyIElEPXAxc2E7cGFzc3dvcmQ9cDFzYTEyMzRhKjtkYXRhYmFzZT1QUk9EQ09ORjtQb29saW5nPVRydWU7TWluIFBvb2wgU2l6ZT01MDtNYXggUG9vbCBTaXplPTEwMDs=");
+            Console.WriteLine($"Base64 Decrypted {a}");
             Console.ReadKey();
         }
 

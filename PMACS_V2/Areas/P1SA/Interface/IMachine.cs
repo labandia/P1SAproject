@@ -8,12 +8,13 @@ namespace PMACS_V2.Areas.P1SA.Interface
     {
         //===============  GET FAN MAJOR MACHINE  DATA ===================
         Task<List<MachineModel>> GetMachineData(int offset, int limit, int sect, string mach);
+        Task<List<MachineModel>> GetMachineDataByID(int ID);
         Task<List<EquipmentList>> GetEquipmentData(int sectionID);
         Task<List<CountMachineModel>> GetCountMachine(int sectionID, string MachineCode);
 
         //===============  CRUD OPERATION MACHINE DATA ===================
         Task<bool> AddMachine(PostMachineModel model);
-        Task<bool> EditMachine(MachineModel model);
+        Task<bool> EditMachine(EditMachineModel model);
         Task<bool> DeleteMachine(int machID);
     }
 }

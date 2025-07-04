@@ -19,8 +19,8 @@
     <table>
         <thead>
             <tr>
-                <th style="text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-user-secret"></i>  <span style="margin-left: .5em;">Inspector</span> </th>
                 <th><i class="fa-solid fa-file-contract"></i> <span style="margin-left: .5em;">Registration No.</span></th>
+                <th style="text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-user-secret"></i>  <span style="margin-left: .5em;">Inspector</span> </th>
                 <th><i class="fa-regular fa-building"></i> <span style="margin-left: .5em;">Section</span> </th>
                 <th><i class="fa-regular fa-user"></i> <span style="margin-left: .5em;">PIC</span></th>
                 <th><i class="fa-regular fa-calendar"></i> <span style="margin-left: .5em;">Date Conducted</span> </th>
@@ -94,8 +94,8 @@
 
                 const rowHtml = `
                  <tr class='row_${i} editButton' id='editButton_${rowData.RegNo}'>
-                     <td style='font-weight: 600; text-align: left; padding-left: 1.5em;' data-cell="Inspector">${rowData.FullName}</td>
                      <td data-cell="RegNo">${rowData.RegNo}</td>
+                     <td style='font-weight: 600; text-align: left; padding-left: 1.5em;' data-cell="Inspector">${rowData.FullName}</td>
                      <td data-cell="SectionName">${rowData.SectionName}</td>
                      <td data-cell="PIC">${rowData.PIC}</td>
                      <td data-cell="DateConduct">${rowData.DateConduct}</td>

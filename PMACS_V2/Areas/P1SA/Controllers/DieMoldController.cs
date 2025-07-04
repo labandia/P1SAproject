@@ -207,6 +207,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         {
             //bool update = await _die.AddUpdatePressMonitoring(add);
             //var formdata = GlobalUtilities.GetMessageResponse(update, 1);
+            await Task.Delay(100);
             return Json(add, JsonRequestBehavior.AllowGet);
         }
 

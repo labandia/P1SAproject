@@ -84,7 +84,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                     FindDescription = f.FindDescription,
                     Countermeasure = f.Countermeasure
                 };
-                await SqlDataAccess.UpdateInsertQuery("InsertFindings", findparams);
+                await SqlDataAccess.UpdateInsertQuery("InsertFindings", findparams, "Registration");
             }
 
             return result;

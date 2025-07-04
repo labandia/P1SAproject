@@ -60,7 +60,8 @@ namespace PMACS_V2.Areas.P1SA.Models
 
         public int RecordID
         {
-            get => _RecordID;    
+            get => _RecordID;
+            set => _RecordID = value;   
         }
 
         public string RegNo

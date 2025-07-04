@@ -4,5 +4,17 @@
     "inputFiles": [
       "Content/css/PMACS_Layout.css"
     ]
+  },
+  {
+    "outputFileName": "Content/login.min.css",
+    "inputFiles": [
+      "Content/login.css"
+    ]
+  },
+  {
+    "outputFileName": "Content/Site.min.css",
+    "inputFiles": [
+      "Content/Site.css"
+    ]
   }
 ]

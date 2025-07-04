@@ -35,7 +35,6 @@
 <script type="text/javascript">
     let Sched = [];
 
-
     const CalendarData = async () => {
         var SetData = $("#Schedule_contain");
         let res = await FetchAuthenticate('@Url.Action("GetScheduleDateList", "Patrol")', {});
@@ -44,7 +43,7 @@
             $.each(Sched, function (index, res) {
                 const card = `
                      <div class="Schedule_listContent">
-                          <div >
+                          <div>
                              <h5 style='margin: 0;'>${res.FullName}</h5>
                              <small>${res.SectionName}</small>
                           </div>
@@ -60,7 +59,6 @@
             SetData.html("<p>No Patrol Schedule today.</p>");
         }
     }
-
     const NextCalendarData = async () => {
         var SetData = $("#Schedule_contain");
         let res = await FetchAuthenticate('@Url.Action("GetScheduleDateList", "Patrol")', {});
@@ -82,9 +80,6 @@
     }
 
 
-
-
-
     // Initialize Calendar (example with FullCalendar)
     document.addEventListener('DOMContentLoaded', function () {
         const today = new Date();
@@ -92,10 +87,6 @@
         const month = String(today.getMonth() + 1).padStart(2, '0');
         const day = String(today.getDate()).padStart(2, '0');
         const formattedDate = `${year}-${month}-${day}`;
-
-
-
-
 
 
         const calendarEl = document.getElementById('calendar');
@@ -167,7 +158,6 @@
                 info.el.setAttribute('title', `${info.event.extendedProps.fullName} `);
             }
         });
-
         calendar.render();
     });
 

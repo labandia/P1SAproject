@@ -282,4 +282,21 @@ namespace PMACS_V2.Areas.P1SA.Models
             set => _Section_ID = value;
         }
     }
+
+    public class EditMachineModel
+    {
+       public int ID { get; set; }
+       public string Machname { get; set; }
+       public string Date_acquired { get; set; }
+       public string Model { get; set; }
+       public string Location { get; set; }
+       public string Serial { get; set; }
+       public int Shifts { get; set; }
+       public string Manufact { get; set; }
+       public string Asset { get; set; }
+       public string Tongs { get; set; }
+       public string Status { get; set; }
+       public string Reasons { get; set; }
+       public byte[] Filepath { get; set; }  
+    }
 }

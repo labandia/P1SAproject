@@ -126,7 +126,11 @@ namespace PMACS_V2.Areas.P1SA.Controllers
 
         // ======================= RENDER THE PAGE  ==================
         // GET: P1SA/Mainpage
-        public ActionResult Mainpage() => View();
+        public ActionResult Mainpage()
+        {
+            ViewData["Version"] = "2.0.9";
+            return View();
+        }
         // GET: P1SA/ManpowerProduction
         public ActionResult ManpowerProduction() => View();
         // GET: P1SA/FanMajor

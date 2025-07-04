@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Http.Results;
 using System.Web.Mvc;
 
 namespace PMACS_V2.Areas.P1SA.Controllers
@@ -66,6 +67,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
                 };
 
         }
+
         // GET: P1SA/GetEquipmenList/ID
         public async Task<ActionResult> GetEquipmenList(int sectionID)
         {
@@ -170,7 +172,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
 
             return new JsonResult
             {
-                Data = new { Success = true, Data = "No Data" },
+                Data = new { Success = false, Data = "No Data" },
                 JsonRequestBehavior = JsonRequestBehavior.AllowGet,
                 MaxJsonLength = int.MaxValue
             };
@@ -200,28 +202,36 @@ namespace PMACS_V2.Areas.P1SA.Controllers
                     getCurrentImage = GlobalUtilities.ResizeAndConvertToBinary(postedFile, filePath);
 
                     // DELETE THE IMAGE AFTER IT SAVES TO THE DATABASE
-                    if (System.IO.File.Exists(filepathname))
-                    {
-                        System.IO.File.Delete(filepathname);
-                    }
+                    if (System.IO.File.Exists(filepathname)) System.IO.File.Delete(filepathname);
+
                 }
 
-                var obj = new PostMachineModel
+                int machineID = Convert.ToInt32(Request.Form["EditID"]);
+
+                var obj = new EditMachineModel
                 {
-                    MACH_CODE = Request.Form["addmachcode"],
-                    Equipment =  Request.Form["Equip"],
-                    Date_acquired = Request.Form["Dateacq"],
-                    Model = Request.Form["Model"],
-                    location = Request.Form["local"],
-                    Serial = Request.Form["Serial"],
-                    Manufact = Request.Form["Manu"],
-                    Asset = Request.Form["Assets"],
-                    status = Request.Form["Status"],
-                    Reasons = Request.Form["addreason"],
-                    Tongs = Request.Form["tons"],
-                    Section_ID = Convert.ToInt32(Request.Form["SectionID"])
+                    ID = machineID,
+                    Machname =  Request.Form["EditEquip"],
+                    Date_acquired = Request.Form["EditDateacq"],
+                    Model = Request.Form["EditModel"],
+                    Location = Request.Form["Editlocal"],
+                    Serial = Request.Form["EditSerial"],
+                    Manufact = Request.Form["EditManu"],
+                    Asset = Request.Form["EditAssets"],
+                    Status = Request.Form["Editstatus"],
+                    Reasons = Request.Form["reason"],
+                    Tongs = Request.Form["edittons"],
+                    Filepath = getCurrentImage,
                 };
-                await Task.Delay(100);
+
+                bool result = await _man.EditMachine(obj);
+
+                return new JsonResult
+                {
+                    Data = new { Success = true, Data = await _man.GetMachineDataByID(machineID) },
+                    JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                    MaxJsonLength = int.MaxValue
+                };
             }
             catch (Exception ex)
             {
@@ -229,9 +239,12 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             }
 
 
-            //bool resut = await _man.AddMachine(obj);
-
-            return Json("", JsonRequestBehavior.AllowGet);
+            return new JsonResult
+            {
+                Data = new { Success = false, Data = "No Data" },
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                MaxJsonLength = int.MaxValue
+            };
         }
         [HttpPost]
         public async Task<ActionResult> DeletemachineList(int machID)

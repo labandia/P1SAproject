@@ -101,12 +101,10 @@
     }
 
     button {
-        padding: .5em 1.5em;
-        border-radius: .2em;
-        transition: .5s ease-in-out;
         border: none;
         cursor: pointer;
         outline: none;
+        border-radius: .5em;
     }
     /*=============== BUTTON THAT HAS ICON ===============*/
     button:has(i){

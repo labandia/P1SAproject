@@ -10,7 +10,7 @@
         <div class="col-12">
             <div class="d-flex align-items-center gap-4">
                 <a href="/PC/Patrol/PatrolReport"><i class="fa-solid fa-arrow-left"></i></a>
-                <h5 class="mb-0 fw-bold">Registration No. Information</h5>
+                <h5 class="mb-0 fw-bold">Details Information</h5>
             </div>
             <hr />
             <div class="row">
@@ -328,6 +328,29 @@
         resultBox.style.display = 'none';
     }
 
-    PopulateComboxInspector();
-    RegistrationTable();
+  
+
+
+    // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+    const LoadPageData = async () => {
+        try {
+            $("#errorvalid").hide();
+            //$("#currentdatetime").text(Month + "  " + currentYear);
+
+            const [combo, regis] = await Promise.all([
+                PopulateComboxInspector(),
+                RegistrationTable()
+            ]);
+
+        } catch (error) {
+            console.error("Failed to load page data:", error);
+        } finally {
+            // Hide loading spinner whether success or failure
+            //$("#loadingSpinner").hide();
+        }
+    }
+
+    $(document).ready(() => {
+        LoadPageData();
+    });
 </script>

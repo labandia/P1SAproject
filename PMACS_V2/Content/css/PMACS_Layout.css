@@ -33,6 +33,11 @@
          background: var(--primary-alt-color);
     }
 
+    button{
+        padding: .5em 1.5em;
+        border-radius: .2em;
+    }
+
     .btnclean{
         border: 1px solid rgba(149, 157, 165);
         background: #fff;
@@ -1964,6 +1969,10 @@
         gap: 1em;
     }
 
+    #Editpreview{
+        width: 800px;
+    }
+
     .addmachinewrap__col .Addmach__uploadcontain img {
         position: absolute;
         display: block;
@@ -2268,7 +2277,22 @@
         width: 50%;
     }
 
+    .content{
+        margin-bottom: 2em;
+    }
 
+    .loadContain{
+        display: flex;
+        align-items:center;
+        justify-content: center;
+        padding: 1.5em 0;
+    }
+
+    #rotor_btn, #molding_btn, #winding_btn, #circuit_btn, #press_btn{
+        text-align:center;
+        background: var(--primary-alt-color);
+        color: #fff;
+    }
 
 /*------------------------ BUTTON LOADING ANIMATION ------------------- */
 
@@ -2293,3 +2317,7 @@
     }
 }
 /*------------------------------------------------------------------------------- */
+
+
+
+   

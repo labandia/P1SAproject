@@ -9,16 +9,16 @@
     <link rel="icon" type="image/x-icon" href="~/Content/Images/pmacs.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
-    <link href="~/Content/Site.css" rel="stylesheet" />
-    <link href="~/Content/login.css" rel="stylesheet" />
+    <link href="~/Content/Site.min.css" rel="stylesheet" />
+    <link href="~/Content/login.min.css" rel="stylesheet" />
     <link href="~/Content/sweetalert2.min.css" rel="stylesheet" />
 
-   <script src="~/Scripts/jquery-3.7.1.min.js"></script>
-   <script src="~/Scripts/bootstrap.min.js"></script>
-   <script src="~/Scripts/Utilities.js"></script>
-   <script src="~/Scripts/sweetalert2.min.js"></script>
-   <script src="~/Scripts/Popper.min.js"></script>
-   <script src="~/Content/lib/font-awesome/js/all.min.js"></script>
+    <script src="~/Scripts/jquery-3.7.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/Utilities.js"></script>
+    <script src="~/Scripts/sweetalert2.min.js"></script>
+    <script src="~/Scripts/Popper.min.js"></script>
+    <script src="~/Content/lib/font-awesome/js/all.min.js"></script>
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <section class="main">
@@ -39,7 +39,7 @@
 
         <div class="formbox">
             <div class="form signform">
-                <form method="post" id="loginsubmit" class="logindesign" >
+                <form method="post" id="loginsubmit" class="logindesign">
                     <div class="logindesign__contain">
                         <h2 style="font-weight: 600; margin-top: 1em; font-size: 1.5rem;"> Welcome, User</h2>
                         <p>Enter your credentials</p>
@@ -62,7 +62,7 @@
                         <div id="error-msg" style="color: red;"></div>
                         <div class="formbox__action">
                             <button type="button" id="viewbtn"><i class="fa-regular fa-eye"></i> View Only</button>
-                            <button class="submitbtn" id="submitbtn" type="submit"><i class="fa-solid fa-right-to-bracket"></i> Login</button>
+                            <button class="submitbtn" id="submitbtn" type="submit"><span class="textload"><i class="fa-solid fa-right-to-bracket"></i> Login</span></button>
                         </div>
 
                         <div Class="footer">
@@ -78,16 +78,16 @@
                     <button class="forgetbtn"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
 
                     <h2 style="font-weight: 600; font-size: 1.5rem;"> Forgot Password ?</h2>
-                    <p style="line-height: 1.6;">Enter your employee ID and we'll help you reset your password </p>
+                    <p style="line-height: 1.6; margin-bottom: 1em;">Enter your employee ID and we'll help you reset your password </p>
                     <Label>Employee ID:</Label>
-                    <input type="text" placeholder="Enter your Email here ..." id="EmpID" name="EmpID" required>
+                    <input type="text" placeholder="Enter your ID ..." id="EmpID" name="EmpID" required>
                     <br />
                     <Label>Email Address:</Label>
                     <input type="text" placeholder="Enter your Email here ..." id="Email" name="Email" required>
 
 
 
-                    <button type="submit" class="newpassbtn" id="newpassbtn" disabled>Submit</button>
+                    <button type="submit" class="newpassbtn" id="newpassbtn" >Submit</button>
 
                 </form>
             </div>
@@ -99,15 +99,37 @@
         <span>© 2024 P1SA - Process Control All rights reserved.</span>
 
     </footer>
-    <span class="version">PMACS ver.</span>
+    <span class="version">PMACS ver. @ViewData["Version"]</span>
 </section>
 
+<div id="notification" class="notification">
+    <div class="notification-container">
+        <div class="notification-header">
+            <h2>System Update</h2>
+        </div>
+        <div class="notification-content">
+            <div class="notification-version">
+                <h3>New Features:</h3>
+                <p>Version @ViewData["Version"]</p>
+            </div>
+            <ul id="features-list">
+                <li>1. Improve performance</li>
+                <li>2. Fix Molding Frame Capacity process</li>
+                <li>3. Fix Balancing Capacity process</li>
+            </ul>
 
+            <div class="notification-footer">
+                <button id="close-btn">Close</button>
+
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <script type="text/javascript">
     let loadData = [];
-
+    const version = "@ViewData["Version"]";
 
     let logbtn = document.querySelector(".signin");
     let forbtn = document.querySelector(".forgetbtn");
@@ -120,16 +142,7 @@
 
 
 
-
-
-    const initialization = async () => {
-        $("#username").val("");
-        $("#password").val("");
-        //LoadUpdates();
-
-        //if ($("#Employee_ID").val() !== "") {
-        //    resultBox.style.display = 'none';
-        //}
+    const LoadUsers = async () => {
         let res = await fetchData('@Url.Action("GetFullnameList", "PMACS")', {});
         if (res && res.Success) {
             loadData = res.Data;
@@ -141,6 +154,8 @@
             $('#empty-state').show();
         }
     }
+
+
 
     function LoadUpdates() {
         window.onload = function () {
@@ -264,17 +279,17 @@
     });
 
     const loginfunc = async (formData) => {
-        const savebtn = document.querySelector("#submitbtn");
-        savebtn.innerHTML = " <div class='buttonloading'></div>";
-
          var errorMsg = document.getElementById('error-msg');
              //let data = Object.fromEntries(formData);
 
              // Check the inputs validation
-             if (validateform()) {
+        if (validateform()) {
+                const savebtn = document.querySelector("#submitbtn");
+                savebtn.innerHTML = " <div class='buttonloading'></div>";
                  let res = await postData('/Auth/Authenticate', formData);
-                 setTimeout(() => {
-                     if (res && res.StatusCode === 200) {
+
+                 if (res && res.StatusCode === 200) {
+                     setTimeout(() => {
                          Swal.fire({
                              title: "Success",
                              text: res.Message,
@@ -282,7 +297,7 @@
                              showConfirmButton: false,
                              timer: 1500
                          }).then(() => {
-                             savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-solid fa-right-to-bracket'></i>  Login</span>"
+                             savebtn.innerHTML = "<span class='textload'><i class='fa-solid fa-right-to-bracket'></i> Login</span>"
                              localStorage.removeItem('activeLinkIndex');
                              localStorage.setItem('users', JSON.stringify(res.Data.payload));
                              localStorage.setItem('accessToken', res.Data.access_token);
@@ -296,8 +311,10 @@
                              //    window.location.href = "/User/Userspanel";
                              //}
                          });
-                     }
-                     else {
+                     }, 1000);          
+                 }
+                 else {
+                     setTimeout(() => {
                          Swal.fire({
                              icon: "error",
                              text: res && res.Message ? res.Message : "Invalid Credentials / Username and Password is Incorrect",
@@ -305,9 +322,9 @@
                              showConfirmButton: false
                          });
 
-                         savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-solid fa-right-to-bracket'></i>  Login</span>"
-                     }
-                 }, 500);
+                         savebtn.innerHTML = "<span class='textload'><i class='fa-solid fa-right-to-bracket'></i> Login</span>"
+                     }, 1000);
+                 }           
              }
     };
     function validateform() {
@@ -332,15 +349,33 @@
             isValid = false;
         }
 
-        const savebtn = document.querySelector("#submitbtn");
-        savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-solid fa-right-to-bracket'></i>  Login</span>"
-
-
         return isValid;
     }
 
 
+    // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+    const LoadPageData = async () => {
+        if ($("#Employee_ID").val() !== "") {
+            resultBox.style.display = 'none';
+        }
+        try {
+            $("#username").val("");
+            $("#password").val("");
+            const [updates, users] = await Promise.all([
+                LoadUpdates(),
+                LoadUsers()
+            ]);
 
-    initialization();
+        } catch (error) {
+            console.error("Failed to load page data:", error);
+        } finally {
+            // Hide loading spinner whether success or failure
+            //$("#loadingSpinner").hide();
+        }
+    }
+
+    $(document).ready(() => {
+        LoadPageData();
+    });
 </script>
 

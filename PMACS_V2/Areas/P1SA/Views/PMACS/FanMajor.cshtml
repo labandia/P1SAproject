@@ -56,12 +56,14 @@
             <section class="program">
                 <div class="column-4" id="displaymachine_molding"></div>
             </section>
-
-            <button id="molding_btn">Load More</button>
+            <div class="loadContain">
+                <button id="molding_btn">Load More</button>
+            </div>
+           
         </div>
         <div style="width: 100%;">
             <section class="fanhead__stats d-flex justify-content-between align-items-center mb-4">
-                <div class="fanhead__stats flex__align">
+                <div class="d-flex align-items-center gap-3">
                     <span>
                         <i class="fa fa-square" id="workope" aria-hidden="true"></i>
                         <span>Working:</span>
@@ -87,12 +89,14 @@
             <section class="program">
                 <div class="column-4" id="displaymachine_press"></div>
             </section>
-
-            <button id="press_btn">Load More</button>
+            <div class="loadContain">
+                <button id="press_btn">Load More</button>
+            </div>
+            
         </div>
         <div style="width: 100%;">
             <section class="fanhead__stats d-flex justify-content-between align-items-center mb-4">
-                <div class="fanhead__stats flex__align">
+                <div class="d-flex align-items-center gap-3">
                     <span>
                         <i class="fa fa-square" id="workope" aria-hidden="true"></i>
                         <span>Working:</span>
@@ -119,11 +123,13 @@
             <section class="program">
                 <div class="column-4" id="displaymachine_rotor"></div>
             </section>
-            <button id="rotor_btn">Load More</button>
+            <div class="loadContain">
+                <button id="rotor_btn">Load More</button>
+            </div>
         </div>
         <div style="width: 100%;">
             <section class="fanhead__stats d-flex justify-content-between align-items-center mb-4">
-                <div class="fanhead__stats flex__align">
+                <div class="d-flex align-items-center gap-3">
                     <span>
                         <i class="fa fa-square" id="workope" aria-hidden="true"></i>
                         <span>Working:</span>
@@ -151,11 +157,14 @@
             <section class="program">
                 <div class="column-4" id="displaymachine_winding"></div>
             </section>
-            <button id="winding_btn">Load More</button>
+            
+            <div class="loadContain">
+                <button id="winding_btn">Load More</button>
+            </div>
         </div>
         <div style="width: 100%;">
             <section class="fanhead__stats d-flex justify-content-between align-items-center mb-4">
-                <div class="fanhead__stats flex__align">
+                <div class="d-flex align-items-center gap-3">
                     <span>
                         <i class="fa fa-square" id="workope" aria-hidden="true"></i>
                         <span>Working:</span>
@@ -184,7 +193,11 @@
             <section class="program">
                 <div class="column-4" id="displaymachine_circuit"></div>
             </section>
-            <button id="circuit_btn">Load More</button>
+            
+
+            <div class="loadContain">
+                <button id="circuit_btn">Load More</button>
+            </div>
         </div>
     </div>
 </div>
@@ -688,7 +701,8 @@
 
     const displaycamefromtheedit = (data) => {
         let index = loadData.findIndex(item => item.ID === data.ID);
-
+        console.log("INDEX");
+        console.log(index);
         //let objToUpdate = loadData.find(item => item.ID === data.ID);
 
 
@@ -836,7 +850,7 @@
                     break;
             }
         }
-        
+
     }
     function MachineLoadFilterData(data, sectionID, mach) {
         loadData = [];
@@ -1134,7 +1148,6 @@
             var buttonId = $(this).attr('id');
             var rowIndex = buttonId.split('_')[1]; // Extract the index from the button ID
             let result = searchArray(loadData, "ID", rowIndex);
-            console.log(result);
             let setDate;
             // Get the current active tab index
             currentTabIndex = getCurrentTabIndex();
@@ -1252,7 +1265,7 @@
 
 
     //ADD NEW MACHINE DATA
-    addnew.addEventListener('submit', async(event) => {
+    addnew.addEventListener('submit', async (event) => {
         event.preventDefault();
         var formData = new FormData(event.target);
         //var selectedOption = $("input:radio[name=status]:checked").val()
@@ -1268,47 +1281,31 @@
 
         const data = Object.fromEntries(formData);
         let res = await postData('@Url.Action("AddNewmachineList", "FanMajor")', formData);
-        console.log(res);
 
-        //console.log(res);
-        //$.ajax({
-        //    url: apiBaseUrl + "AddNewmachineList", // The URL to the Web API endpoint
-        //    type: 'POST',
-        //    data: formData,
-        //    processData: false, // Do not process data
-        //    contentType: false, // Do not set contentType
-        //    success: function (res) {
-        //        // Handle the success response
-        //        // Handle the success response
-
-        //        if (res.code == 200) {
-        //            Swal.fire({
-        //                title: "Success",
-        //                text: res.message,
-        //                icon: "success",
-        //                timer: 1500,
-        //                showConfirmButton: false
-        //            }).then(() => {
-        //                $("#addedmodal").modal("hide");
-        //                // UpdateMachineData();
-        //                window.location.href = "/machine/Fanmajor";
-        //            });
-
-        //        }
+        if (res && res.Success) {
+            Swal.fire({
+                title: "Success",
+                text: "Add machine successfully Added",
+                icon: "success",
+                timer: 1500,
+                showConfirmButton: false
+            }).then(() => {
+                $("#addedmodal").modal("hide");
+                // UpdateMachineData();
+                window.location.href = "/machine/Fanmajor";
+            });
+        }
 
 
-        //    },
-        //    error: function (jqXHR, textStatus, errorThrown) {
-        //        // Handle the error response
-        //        console.error(textStatus, errorThrown);
-        //    }
-        //});
 
     });
 
     //EDIT MACHINE DATA
-    editmach.addEventListener('submit', event => {
+    editmach.addEventListener('submit', async (event) => {
         event.preventDefault();
+        const savebtn = document.querySelector("#fansaveEdit");
+        savebtn.innerHTML = " <div class='buttonloading'></div>";
+
         let isDel;
         const radioButtons = document.querySelectorAll('[name="Editstatus"]');
 
@@ -1341,50 +1338,32 @@
         formData.append('Isdelete', isDel);
         const data = Object.fromEntries(formData);
 
+        let res = await postData('@Url.Action("EditmachineList", "FanMajor")', formData);
 
-        // Send the form data via AJAX
-        $.ajax({
-            url: apiBaseUrl + "Editmachine", // The URL to the Web API endpoint
-            type: 'POST',
-            data: formData,
-            processData: false, // Do not process data
-            contentType: false, // Do not set contentType
-            success: function (res) {
+        if (res && res.Success) {
+            let newloadData = res.Data[0];
+            console.log(res);
+            setTimeout(() => {
+                Swal.fire({
+                    title: "Success",
+                    text: "Edit Successfully",
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 2000
+                }).then(() => {
 
-                // Handle the success response
-                let newloadData = res.cd[0];
-                const savebtn = document.querySelector("#fansaveEdit");
-                savebtn.innerHTML = " <div class='loaderddd'></div>"
-                if (res.code == 200) {
+                    savebtn.innerHTML = "<span><i class='fa-regular fa-floppy-disk'></i> Save Details</span>"
+                    $("#fansaveEdit").css("display", "none");
+                    $("#fanEnableEdit").css("display", "block");
+                    $('.mode').prop('disabled', true);
+                    displaycamefromtheedit(newloadData);
+                    //UpdateMachineData();
+                    //window.location.href = "/machine/Fanmajor";
+                    $("#Editmodal").modal("hide");
+                });
+            }, 500);
+        }
 
-                    setTimeout(() => {
-                        Swal.fire({
-                            title: "Success",
-                            text: res.message,
-                            icon: "success",
-                            showConfirmButton: false,
-                            timer: 2000
-                        }).then(() => {
-
-                            savebtn.innerHTML = "<span><i class='fa-regular fa-floppy-disk'></i> Save Details</span>"
-                            $("#fansaveEdit").css("display", "none");
-                            $("#fanEnableEdit").css("display", "block");
-                            $('.mode').prop('disabled', true);
-                            displaycamefromtheedit(newloadData);
-                            //UpdateMachineData();
-                            //window.location.href = "/machine/Fanmajor";
-                            $("#Editmodal").modal("hide");
-                        });
-
-                    }, 500)
-                }
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                // Handle the error response
-                alert('An error occurred while Editing and upload images.');
-                console.error(textStatus, errorThrown);
-            }
-        });
     });
 
     $("#selectedSection").change( async(e)=> {

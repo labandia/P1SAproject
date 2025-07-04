@@ -489,8 +489,14 @@
     <Content Include="Content\lib\font-awesome\sprites\solid.svg" />
     <Content Include="Content\live.css" />
     <Content Include="Content\login.css" />
+    <Content Include="Content\login.min.css">
+      <DependentUpon>login.css</DependentUpon>
+    </Content>
     <Content Include="Content\Planning.css" />
     <Content Include="Content\Sidebar_one.css" />
+    <Content Include="Content\Site.min.css">
+      <DependentUpon>Site.css</DependentUpon>
+    </Content>
     <Content Include="Content\sweetalert2.css" />
     <Content Include="Content\sweetalert2.min.css" />
     <Content Include="favicon.ico" />

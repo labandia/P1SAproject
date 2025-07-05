@@ -13,7 +13,24 @@
         <div class="Mold__actions">
             @* MOLD SUMMARY *@
             <div id="MoldSummary">
-
+                <div class="d-flex align-items-center gap-4">
+                    <div class="circularcontainer">
+                        <div class="circulardisplay" style="--progress: 100%" ></div>
+                        <p>Mold die max</p>
+                    </div>
+                    <div class="circularcontainer">
+                        <div class="circulardisplay" style="--progress: 50%" ></div>
+                        <p>Reach-Half die Limit</p>
+                    </div>
+                    <div class="circularcontainer">
+                        <div class="circulardisplay" style="--progress: 25%" ></div>
+                        <p>For Monitoring</p>
+                    </div>
+                    <div class="circularcontainer">
+                        <div class="circulardisplay" style="--progress: 0%" ></div>
+                        <p>End of Life</p>
+                    </div>
+                </div>
             </div>
             @* MOLD MOnitoring *@
             <div id="MoldMonitor">
@@ -189,13 +206,18 @@
                     </button>
                 </div>
 
-                <div class="MoldieBodyModal">
+                <div class="MoldieBodyModal mt-3">
                     <form id="InputPress" autocomplete="off">
                         <div class="row">
-                            <div class="form_group col-12 col-sm-12 col-lg-12 mb-2">
+                            <div class="form_group col-6 col-sm-12 col-lg-6">
                                 <label for="">Select Tool No.</label><br />
                                 <select id="ToolNo">
                                 </select>
+                            </div>
+
+                            <div class="form_group col-6 col-sm-12 col-lg-6">
+                                <label for="">No Press Stamp</label>
+                                <input type="text" name="PressStamp" id="PressStamp" onkeypress="return restrictChars(event)">
                             </div>
                         </div>
 
@@ -224,7 +246,6 @@
                                 </div>
                             </div>
                         </fieldset>
-
                         <fieldset>
                             <legend>Lower</legend>
                             <div class="row">
@@ -239,12 +260,7 @@
                             </div>
                         </fieldset>
 
-                        <div class="row">
-                            <div class="form-group col-12 col-lg-12">
-                                <label for="">No Press Stamp</label>
-                                <input type="text" name="PressStamp" id="PressStamp" onkeypress="return restrictChars(event)">
-                            </div>
-                        </div>
+
 
 
                         <div class="edits_footer" id="editsdisplay">
@@ -393,7 +409,7 @@
 
 
 
-
+<script src="~/Scripts/circle-progress.min.js"></script>
 <script type="text/javascript">
     let TableData = [];
     let PressData = [];
@@ -789,26 +805,45 @@
             // Step 2: Render rows with merged "No"
             groupMap.forEach((groupRows, noValue) => {
                 const DieValue = groupRows[0].Type;
-                //const ModelValue = groupRows[0].Model;
                 const ToolValue = groupRows[0].ToolNo;
                 const StatsValue = groupRows[0].Status;
 
                 const TotalStampValue = groupRows[0].TotalStampPress;
-                //const HeightValue = groupRows[0].DieHeight;
-                //const StdValue = groupRows[0].StdGrind;
-                //const StampValue = groupRows[0].StampGrind;
-
-                //const LineValue = groupRows[0].Line;
+                let percentValue = 0;
+                //const percentValue = Math.round((50 / 100) * 100);
 
                 groupRows.forEach((rowData, idx) => {
                     let rowHtml = "<tr class='rowClick' id='editButton'>";
 
+                    switch (StatsValue) {
+                        case "Max Die Life":
+                            percentValue = 100;
+                            break;
+                        case "For monitoring":
+                            percentValue = 25;
+                            break;
+                        case "Max Die Life":
+                            percentValue = 100;
+                            break;
+                        case "Reach half die limit":
+                            percentValue = 50;
+                            break;
+                        default:
+                            percentValue = 0;
+                            break;
+                    }
+
+
+
+
                     if (idx === 0) {
                         rowHtml += `<td rowspan="${groupRows.length}" data-cell="Type" style="font-weight: 600; color: #222;">${DieValue}</td>`;
                         rowHtml += `<td rowspan="${groupRows.length}" data-cell="ToolNo" style="font-weight: 600; color: #222;">${ToolValue}</td>`;
-                        //rowHtml += `<td rowspan="${groupRows.length}" data-cell="Model">${ModelValue}</td>`;
+                        rowHtml += `<td rowspan="${groupRows.length}" data-cell="Status">
+                                    <div class="circular-progress" style="--progress: ${percentValue}%" ></div>
+                                </td>`;
                         //rowHtml += `<td rowspan="${groupRows.length}" data-cell="Status"><circle-progress  value="50" max="100"></circle-progress></td>`;
-                        rowHtml += `<td rowspan="${groupRows.length}" data-cell="Status">${StatsValue}</td>`;
+                        //rowHtml += `<td rowspan="${groupRows.length}" data-cell="Status">${StatsValue}</td>`;
                     }
 
 
@@ -918,6 +953,8 @@
 
             return totalPages;
         };
+
+
 
         const renderTable = (page) => {
             const totalPages = updatePaginationInfo();
@@ -1186,6 +1223,7 @@
             $("#MoldSummary").show();
             $("#MoldMonitor").hide();
             $("#MoldTooling").hide();
+            $("#MoldControl").hide();
 
             const [regis, Monitor, Summary, Control] = await Promise.all([
                 GetPressRegistry(),

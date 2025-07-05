@@ -3,6 +3,7 @@ using PMACS_V2.Areas.P1SA.Models;
 using PMACS_V2.Controllers;
 using PMACS_V2.Utilities;
 using ProgramPartListWeb.Helper;
+using ProgramPartListWeb.Utilities;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -155,6 +156,8 @@ namespace PMACS_V2.Areas.P1SA.Controllers
 
                 bool result = await _man.AddMachine(obj);
 
+                if (result) CacheHelper.Remove("Machinelist");
+
                 return new JsonResult
                 {
                     Data = new { Success = true, Data = result },
@@ -225,6 +228,8 @@ namespace PMACS_V2.Areas.P1SA.Controllers
                 };
 
                 bool result = await _man.EditMachine(obj);
+
+                if (result) CacheHelper.Remove("Machinelist");
 
                 return new JsonResult
                 {

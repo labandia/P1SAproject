@@ -1,6 +1,7 @@
 ﻿
 //GLOBAL GET FUNCTIONS WITH TOKEN AUTHENTICATION 
 window.FetchAuthenticate = async (url, fdata) => {
+    console.clear();
     var token = localStorage.getItem('accessToken');
     // Convert parameters to a query string
     const queryString = new URLSearchParams(fdata).toString();
@@ -57,6 +58,7 @@ window.FetchAuthenticate = async (url, fdata) => {
 }
 //GLOBAL GET FUNCTIONS WITHOUT TOKEN AUTHENTICATION 
 window.fetchData = async (url, fdata = {}) => {
+    console.clear();
     try {
         const queryString = new URLSearchParams(fdata).toString();
         const fullUrl = queryString ? `${url}?${queryString}` : url;
@@ -82,6 +84,7 @@ window.fetchData = async (url, fdata = {}) => {
     }
 };
 window.postData = async (url, data) => {
+    console.clear();
     try {
         const response = await fetch(url, {
             method: 'POST',
@@ -103,6 +106,7 @@ window.postData = async (url, data) => {
         return null;
     }
 };
+
 
 window.PullUserInformation = async () => {
     const token = localStorage.getItem('accessToken');

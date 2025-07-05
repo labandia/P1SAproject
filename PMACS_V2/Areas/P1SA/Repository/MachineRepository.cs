@@ -51,7 +51,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
         public async Task<List<EquipmentList>> GetEquipmentData(int sectionID)
         {
             string strsql = "SELECT Machine_code, Equipment, Section_ID FROM Major WHERE Section_ID = " + sectionID + "";
-            return await SqlDataAccess.GetData<EquipmentList>(strsql);
+            return await SqlDataAccess.GetData<EquipmentList>(strsql, null, "Equipment");
         }
 
         public async Task<List<MachineModel>> GetMachineData(int offset, int limit, int sect, string mach)
@@ -70,7 +70,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
                     OFFSET {offset} ROWS FETCH NEXT {limit} ROWS ONLY ";
 
             //Debug.WriteLine(strsql);
-            return await SqlDataAccess.GetData<MachineModel>(strsql);
+            return await SqlDataAccess.GetData<MachineModel>(strsql, null, "Machinelist");
         }
 
         public async Task<List<MachineModel>> GetMachineDataByID(int ID)

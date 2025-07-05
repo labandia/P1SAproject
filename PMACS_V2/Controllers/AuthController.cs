@@ -23,7 +23,6 @@ namespace PMACS_V2.Controllers
         [HttpPost]
         public async Task<ActionResult> Authenticate(string username, string password)
         {
-            Debug.WriteLine("Username : " + username);
             var data = await _user.LoginCredentials(username);
             var results = new DataMessageResponse<object> { };
 

@@ -151,14 +151,14 @@
                             <label>Date arrived :</label><br />
                             <input type="date" id="Datearrived" class="" />
                         </div>
-                        <div class="Mold_ToolHeader__group">
-                            <label>Date Repair :</label><br />
-                            <input type="date" id="Daterepair" class="" />
-                        </div>
+                      
                         <button type="button" class="btnclean" id="clearbtn"><i class="fa-solid fa-filter-circle-xmark"></i>  Clear</button>
                     </div>
 
-                    <button class="primary_button_color" id="Registrymodal"><i class="fa-solid fa-plus"></i> Add Data</button>
+                    <div class="d-flex align-items-center gap-2">
+                        <button class="primary_button_color" id="Registrymodal"><i class="fa-solid fa-plus"></i> Add Data</button>
+                        <button  id="Exportbtn"><i class="fa-solid fa-file-arrow-down"></i>Export Data</button>
+                    </div>
                 </div>
                 <div class="DieMainTable">
                     <table>
@@ -443,12 +443,10 @@
     });
 
     $("#Datearrived").on('change', (e) => {
-        $("#Daterepair").val("");
+      
     });
 
-    $("#Daterepair").on('change', (e) => {
-        $("#Datearrived").val("");
-    });
+   
 
     const GetMoldDieSummary = async () => {
         $("#FinalSummaryData").empty();

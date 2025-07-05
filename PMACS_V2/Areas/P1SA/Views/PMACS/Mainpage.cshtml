@@ -154,10 +154,7 @@
             $('#empty-state').show();
         }
     }
-
-
-
-    function LoadUpdates() {
+    const LoadUpdates  = () => {
         window.onload = function () {
             // New system version
             const newVersion = version; // Change this value when there's a new system update
@@ -184,7 +181,6 @@
         };
 
     }
-
 
     // INPUT SEARCH EMPLOYEE NAME WHEN TYPE
     $("#username").keyup(function () {
@@ -215,7 +211,6 @@
 
         resultBox.innerHTML = "<ul>" + content.join('') + "</ul>";
     }
-
     function selectinput(list) {
         $("#username").val(list.innerHTML);
         resultBox.innerHTML = '';
@@ -233,10 +228,8 @@
 
 
     // Add an event listener for the 'keypress' event
-
     inputfield.addEventListener('keydown', function (e) {
         // Check if the Enter key was pressed
-
         if (e.key === 'Enter') {
             e.preventDefault();
             // Prevent the default action (form submission)
@@ -244,9 +237,6 @@
             loginfunc(formData);
         }
     });
-
-
-
 
     $("#viewbtn").click(function () {
         let useronly = {
@@ -260,7 +250,6 @@
         localStorage.setItem('users', JSON.stringify(useronly));
         window.location.href = "/P1SA/PMACS/ManpowerProduction";
     });
-
 
 
 

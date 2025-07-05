@@ -16,9 +16,9 @@ namespace ProgramPartListWeb.Controllers
             Response.StatusCode = statusCode;
             
             // Track the Input of the users
-            Logger.Info("{0} | StatusCode={1}{2}",
-            message,
-            statusCode);
+            //Logger.Info("{0} | StatusCode={1}{2}",
+            //message,
+            //statusCode);
 
             return Json(new
             {

@@ -40,21 +40,24 @@
         let res = await FetchAuthenticate('@Url.Action("GetScheduleDateList", "Patrol")', {});
         if (res && res.Success) {
             Sched = res.Data;
-            $.each(Sched, function (index, res) {
-                const card = `
-                     <div class="Schedule_listContent">
-                          <div>
-                             <h5 style='margin: 0;'>${res.FullName}</h5>
-                             <small>${res.SectionName}</small>
-                          </div>
 
-                          <div style="text-align: right">
-                              <small><i class="fa-regular fa-calendar-days"></i> ${res.ScheduleDate}</small>
-                              <p>${res.ProcessName}</p>
-                          </div>
-                     </div>`;
+            Sched.forEach((res, index) => {
+                const card = `
+                       <div class="Schedule_listContent">
+                            <div>
+                               <h5 style='margin: 0;'>${res.FullName}</h5>
+                               <small>${res.SectionName}</small>
+                            </div>
+
+                            <div style="text-align: right">
+                                <small><i class="fa-regular fa-calendar-days"></i> ${res.ScheduleDate}</small>
+                                <p>${res.ProcessName}</p>
+                            </div>
+                       </div>`;
                 SetData.append(card);
             });
+
+            
         } else {
             SetData.html("<p>No Patrol Schedule today.</p>");
         }

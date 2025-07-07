@@ -5,6 +5,14 @@ using System.Web;
 
 namespace ProgramPartListWeb.Models
 {
+    public class LoginRequest
+    {
+        public string username { get; set; }
+        public string password { get; set; }
+        public int proj { get; set; } = 1;
+    }
+
+
     public class UsersModel
     {
         public int User_ID { get; set; }

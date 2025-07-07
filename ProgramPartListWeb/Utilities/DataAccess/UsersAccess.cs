@@ -21,20 +21,20 @@ namespace ProgramPartListWeb.Utilities
         {
             string host = HttpContext.Current.Request.Url.Host.ToLower();
             string machineName = Environment.MachineName.ToLower();
-            string connectionKey = "UsersLiveConnection";
+            string connectionKey = "";
 
-            //if (host.Contains("p1saportalweb.sdp.com"))
-            //{
-            //    connectionKey = "UsersLiveConnection";
-            //}
+            if (host.Contains("p1saportalweb.sdp.com"))
+            {
+                connectionKey = "UsersLiveConnection";
+            }
 
-            //if (host.Contains("localhost"))
-            //{
-            //    if (machineName == "desktop-fc0up1p") // Home PC name
-            //        connectionKey = "HomeDevelopment";
-            //    else
-            //        connectionKey = "UsersTestConnection";
-            //}
+            if (host.Contains("localhost"))
+            {
+                if (machineName == "desktop-fc0up1p") // Home PC name
+                    connectionKey = "HomeDevelopment";
+                else
+                    connectionKey = "UsersTestConnection";
+            }
 
 
             LogConnectionChoice(host, machineName, connectionKey);

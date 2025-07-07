@@ -5,6 +5,7 @@ using ProgramPartListWeb.Areas.PC.Models;
 using ProgramPartListWeb.Controllers;
 using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Utilities;
+using ProgramPartListWeb.Utilities.Common;
 using Spire.Xls;
 using System;
 using System.Collections.Generic;
@@ -32,9 +33,9 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             var data = await _ins.GetEmployee() ?? new List<Employee>();
             //var res = CacheHelper.GetOrSet("Pressmasterlist", () => product, 15);
             if (data == null || !data.Any())
-                return Problem(404, "No Employee data found", $"There are no Inspectors list on the Data");
+                return Json(ResultMessageResponce.JsonError("No Data Found", 404, "No Employee data found"), JsonRequestBehavior.AllowGet);
 
-            return JsonSuccess(data);
+            return Json(ResultMessageResponce.JsonSuccess(data), JsonRequestBehavior.AllowGet);
         }
 
         //-----------------------------------------------------------------------------------------
@@ -44,9 +45,9 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         {
             var data = await _ins.GetScheduleDate() ?? new List<PatrolSchedule>();
             if (data == null || !data.Any())
-                return Problem(404, "No Schedule data found", $"There are no List of Patrol Inspector");
+                return Json(ResultMessageResponce.JsonError("No Data Found", 404, "No Schedule data found"), JsonRequestBehavior.AllowGet);
 
-            return JsonSuccess(data);
+            return Json(ResultMessageResponce.JsonSuccess(data), JsonRequestBehavior.AllowGet);
         }
         
         //-----------------------------------------------------------------------------------------
@@ -56,9 +57,9 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         {
             var data = await _ins.GetRegistrationData() ?? new List<PatrolRegistionModel>();
             if (data == null || !data.Any())
-                return Problem(404, "No registration data found", $"There are no registration Report Data");
+                return Json(ResultMessageResponce.JsonError("No Data Found", 404, "No registration data found"), JsonRequestBehavior.AllowGet);
 
-            return JsonSuccess(data);
+            return Json(ResultMessageResponce.JsonSuccess(data), JsonRequestBehavior.AllowGet);
         }
         // GET: GetRegistrationNoByID
         public async Task<ActionResult> GetRegistrationNoByID(string Regno)
@@ -92,9 +93,9 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             var data = await _ins.GetInpectorsData() ?? new List<InspectorModel>();
             //var res = CacheHelper.GetOrSet("Pressmasterlist", () => product, 15);
             if (data == null || !data.Any())
-                return Problem(404, "No Inspectors data found", $"There are no Inspectors list on the Data");
+                return Json(ResultMessageResponce.JsonError("No Data Found", 404, "No Inspectors data found"), JsonRequestBehavior.AllowGet);
 
-            return JsonSuccess(data);
+            return Json(ResultMessageResponce.JsonSuccess(data), JsonRequestBehavior.AllowGet);
         }
 
         // GET: GetInspectorsByAdd
@@ -106,9 +107,9 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                                        .Select(g => g.First())
                                        .ToList();
             if (removeDuplicateData == null || !removeDuplicateData.Any())
-                return Problem(404, "No Inspectors data found", $"There are no Inspectors list on the Data");
+                return Json(ResultMessageResponce.JsonError("No Data Found", 404, "No Inspectors data found"), JsonRequestBehavior.AllowGet);
 
-            return JsonSuccess(removeDuplicateData);
+            return Json(ResultMessageResponce.JsonSuccess(removeDuplicateData), JsonRequestBehavior.AllowGet);
         }
 
 
@@ -119,9 +120,9 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             var filterdata = data.Where(p => p.Approval == 1).ToList();
             //var res = CacheHelper.GetOrSet("Pressmasterlist", () => product, 15);
             if (filterdata == null || !filterdata.Any())
-                return Problem(404, "No Inspectors data found", $"No Inspectors Data.");
+                return Json(ResultMessageResponce.JsonError("No Data Found", 404, "No Inspectors data found"), JsonRequestBehavior.AllowGet);
 
-            return JsonSuccess(filterdata);
+            return Json(ResultMessageResponce.JsonSuccess(filterdata), JsonRequestBehavior.AllowGet);
         }
         // GET: GetProcesslist
         public async Task<ActionResult> GetProcesslist(int depid)
@@ -129,9 +130,9 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             var data = await _ins.GetProcessData(depid) ?? new List<ProccessModel>();
             //var res = CacheHelper.GetOrSet("Pressmasterlist", () => product, 15);
             if (data == null || !data.Any())
-                return Problem(404, "No Proccesslist data found", $"There are no Process List Retrieve");
+                return Json(ResultMessageResponce.JsonError("No Data Found", 404, "No Proccesslist data found"), JsonRequestBehavior.AllowGet);
 
-            return JsonSuccess(data);
+            return Json(ResultMessageResponce.JsonSuccess(data), JsonRequestBehavior.AllowGet);
         }
         //-----------------------------------------------------------------------------------------
         // POST : AddInspectors
@@ -240,9 +241,10 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
 
                 if (events == null || !events.Any())
-                    return JsonNotFound("No CalendarEvents data found");
+                    return Json(ResultMessageResponce.JsonError("No Data Found", 404, "No CalendarEvents data found"), JsonRequestBehavior.AllowGet);
 
-                return JsonSuccess(events);
+
+                return Json(ResultMessageResponce.JsonSuccess(events), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -286,9 +288,9 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
 
                 if (events == null || !events.Any())
-                    return JsonNotFound("No CalendarEvents data found");
+                    return Json(ResultMessageResponce.JsonError("No Data Found", 404, "No CalendarEvents data found"), JsonRequestBehavior.AllowGet);
 
-                return JsonSuccess(events);
+                return Json(ResultMessageResponce.JsonSuccess(events), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {

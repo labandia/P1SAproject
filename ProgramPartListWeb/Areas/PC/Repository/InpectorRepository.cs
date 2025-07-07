@@ -13,7 +13,10 @@ namespace ProgramPartListWeb.Areas.PC.Repository
     public class InpectorRepository : IInspector
     {
         // -------------  Employees Or Users Data -------------------
-        public async Task<List<Employee>> GetEmployee() => await SqlDataAccess.GetData<Employee>("EmployeeDataList", null, "Employee");
+        public async Task<List<Employee>> GetEmployee()
+        {
+           return await SqlDataAccess.GetData<Employee>("EmployeeDataList", null, "Employee");
+        }
         public async Task<int> GetEmployeeByDepartment(string employee)
         {
             var data = await GetEmployee();

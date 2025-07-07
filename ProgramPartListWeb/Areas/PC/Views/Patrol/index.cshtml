@@ -200,9 +200,9 @@
         let formData = new FormData(e.target);
         formData.append("proj", 9);
 
+        const data = Object.fromEntries(formData);
+        let res = await postrawData('/Auth/Authenticate', data);
 
-        let res = await postData('/Auth/Authenticate', formData);
-        console.log(res);
         if (res && res.StatusCode === 200) {
             Swal.fire({
                 title: "Success",

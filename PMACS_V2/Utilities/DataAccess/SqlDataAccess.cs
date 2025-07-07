@@ -21,20 +21,20 @@ namespace PMACS_V2.Helper
         {
             string host = HttpContext.Current.Request.Url.Host.ToLower();
             string machineName = Environment.MachineName.ToLower();
-            string connectionKey = "LiveDevelopment";
+            string connectionKey = "";
 
-            //if (host.Contains("pmacsweb.sdp.com"))
-            //{
-            //    connectionKey = "LiveDevelopment";
-            //}
-            
-            //if (host.Contains("localhost"))
-            //{
-            //    if (machineName == "desktop-fc0up1p") // Home PC name
-            //        connectionKey = "HomeDevelopment";
-            //    else
-            //        connectionKey = "TestDevelopment";
-            //}
+            if (host.Contains("pmacsweb.sdp.com"))
+            {
+                connectionKey = "LiveDevelopment";
+            }
+
+            if (host.Contains("localhost"))
+            {
+                if (machineName == "desktop-fc0up1p") // Home PC name
+                    connectionKey = "HomeDevelopment";
+                else
+                    connectionKey = "TestDevelopment";
+            }
 
 
             LogConnectionChoice(host, machineName, connectionKey);

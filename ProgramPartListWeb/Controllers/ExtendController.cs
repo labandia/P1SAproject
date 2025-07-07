@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Web.Mvc;
+using Newtonsoft.Json;
 using NLog;
 using ProgramPartListWeb.Models;
 using ProgramPartListWeb.Utilities;
@@ -70,10 +72,11 @@ namespace ProgramPartListWeb.Controllers
         protected JsonResult JsonError(string message = "An error occurred", int statusCode = 500)
         {
             Response.StatusCode = statusCode;
-            Response.ContentType = "application/json";
 
-            //Logger.Error("Error Response | StatusCode={0} | Message={1}", statusCode, message);
-
+            // Track the Input of the users
+            //Logger.Info("{0} | StatusCode={1}{2}",
+            //message,
+            //statusCode);
 
             return Json(new
             {
@@ -83,25 +86,38 @@ namespace ProgramPartListWeb.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
-        protected JsonResult JsonValidationError(string message = "Validation failed")
+
+        protected ContentResult JsonErrorsample(string message, int statusCode = 400)
+        {
+            Response.StatusCode = statusCode;
+            Response.ContentType = "application/json";
+            var errorJson = JsonConvert.SerializeObject(new
+            {
+                success = false,
+                Message = message
+            });
+            return Content(errorJson, "application/json");
+        }
+
+        protected ActionResult JsonValidationError(string message = "Validation failed")
         {
             //Logger.Warn("Validation Error | Message={0}", message);
             return JsonError(message, 400);
         }
 
-        protected JsonResult JsonNotFound(string message = "Resource not found")
+        protected ActionResult JsonNotFound(string message = "Resource not found")
         {
             //Logger.Warn("Not Found | Message={0}", message);
             return JsonError(message, 404);
         }
 
-        protected JsonResult JsonConflict(string message = "Conflict detected")
+        protected ActionResult JsonConflict(string message = "Conflict detected")
         {
             //Logger.Warn("Conflict | Message={0}", message);
             return JsonError(message, 409);
         }
 
-        protected JsonResult JsonCreated(object data = null, string message = "Created")
+        protected ActionResult JsonCreated(object data = null, string message = "Created")
         {
             //Logger.Info("Resource Created | Message={0}{1}", message, data != null ? $" | Data: {Newtonsoft.Json.JsonConvert.SerializeObject(data)}" : "");
             return JsonSuccess(data, message, 201);

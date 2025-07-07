@@ -646,6 +646,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Utilities\Common\ResultMessageResponce.cs" />
     <Compile Include="Utilities\Security\AesEncryption.cs" />
     <Compile Include="Utilities\Caching\CacheHelper.cs" />
     <Compile Include="Utilities\Compression\CompressResponseAttribute.cs" />

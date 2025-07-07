@@ -7,7 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Linq;
 using ProgramPartListWeb.Helper;
-using System.Diagnostics;
+using ProgramPartListWeb.Utilities.Common;
 
 namespace ProgramPartListWeb.Controllers
 {
@@ -15,6 +15,7 @@ namespace ProgramPartListWeb.Controllers
     {
         private readonly IAuthRepository _auth;
         public AuthController(IAuthRepository auth) => _auth = auth;
+
 
         [AllowAnonymous]
         [HttpPost]
@@ -24,10 +25,12 @@ namespace ProgramPartListWeb.Controllers
             var results = new DataMessageResponse<object> { };
 
             // Check If the user Exist
-            if (user == null) return JsonError("Invalid credentials / Username doesnt exist", 400);
+            if (user == null) 
+                return Json(ResultMessageResponce.JsonError("Login Failed", 400, "Invalid credentials / Username Doesnt Exist"), JsonRequestBehavior.AllowGet);
             // Check If the Password is Correct
-            if (!PasswordHasher.VerifyPassword(user.Password, password)) return JsonError("Invalid credentials / Password is incorrect", 400);
-          
+            if (!PasswordHasher.VerifyPassword(user.Password, password)) 
+                return Json(ResultMessageResponce.JsonError("Login Failed", 401, "Invalid credentials / password is incorrect"), JsonRequestBehavior.AllowGet);
+
             string role = _auth.GetuserRolename(user.Role_ID);
             string fullname = user.Fullname;
 
@@ -36,8 +39,7 @@ namespace ProgramPartListWeb.Controllers
 
             var data = new { access_token = accessToken, refresh_token = refreshToken, fullname, role };
 
-            return JsonSuccess(data, "Login successful");
-
+            return Json(ResultMessageResponce.JsonSuccess(data, "Login Successfully"), JsonRequestBehavior.AllowGet);
         }
 
 
@@ -123,5 +125,7 @@ namespace ProgramPartListWeb.Controllers
             Session.Abandon();
             return Json(new { success = true, message = "Logged out successfully" });
         }
+
+       
     }
 }

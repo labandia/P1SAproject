@@ -975,7 +975,7 @@
                     <td data-cell="Lower_DrawingHeight">${rowData.Lower_DrawingHeight}</td>
                     <td data-cell="Upper_ActualHeight">${rowData.Upper_ActualHeight}</td>
                     <td data-cell="Upper_DrawingHeight">${rowData.Upper_DrawingHeight}</td>
-                    <td data-cell="PressStamp">${rowData.PressStamp}</td>
+                    <td data-cell="PressStamp">${getFormatComma(rowData.PressStamp)}</td>
                 </tr>`;
 
                 tableBody.innerHTML += rowHtml;
@@ -1098,14 +1098,23 @@
             for (let i = startIndex; i < endIndex; i++) {
                 const rowData = filteredData[i];
 
+                let dieCon;
+
+                if (rowData.DieCondition === 1) {
+                    dieCon = "Continue";
+                } else if (rowData.DieCondition === 2) {
+                    dieCon = "Grinding Needed";
+                } else {
+                    dieCon = "Grinding Completed";
+                }
 
                 const rowHtml = `<tr class='row_${i}' >
                                   <td data-cell="Date">${rowData.DateInput}</td>
                                   <td data-cell="Type">${rowData.Type}</td>
-                                  <td data-cell="Stamping">${rowData.Stamp}</td>
+                                  <td data-cell="Stamping">${getFormatComma(rowData.Stamp)}</td>
                                   <td data-cell="Total">233</td>
                                   <td data-cell="Machine">${rowData.Machine}</td>
-                                  <td data-cell="DieCondition">${rowData.DieCondition}</td>
+                                  <td data-cell="DieCondition">${dieCon}</td>
                                   <td data-cell="Operator">${rowData.Operator}</td>
                                   <td data-cell="DieHeight">${rowData.DieHeight}</td>
                                   <td data-cell="LeaderCom">${rowData.LeaderCom}</td>
@@ -1228,8 +1237,8 @@
             const [regis, Monitor, Summary, Control] = await Promise.all([
                 GetPressRegistry(),
                 GetPressMonitoring(setMonth, currentYear),
-                GetPressSummary()
-                //GetPressControl()
+                GetPressSummary(),
+                GetPressControl()
             ]);
 
         } catch (error) {

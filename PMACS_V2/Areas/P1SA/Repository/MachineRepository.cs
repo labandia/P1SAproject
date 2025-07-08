@@ -1,13 +1,8 @@
-﻿using Microsoft.Office.Interop.Excel;
-using PMACS_V2.Areas.P1SA.Interface;
+﻿using PMACS_V2.Areas.P1SA.Interface;
 using PMACS_V2.Areas.P1SA.Models;
 using PMACS_V2.Helper;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
-using System.Web.Mvc;
-using System.Windows.Media.Media3D;
 
 namespace PMACS_V2.Areas.P1SA.Repository
 {
@@ -56,11 +51,8 @@ namespace PMACS_V2.Areas.P1SA.Repository
 
         public async Task<List<MachineModel>> GetMachineData(int offset, int limit, int sect, string mach)
         {
-            string machfilter = "";
-            if (!string.IsNullOrEmpty(mach)){
-                machfilter = $@" AND m.MACH_CODE = '{mach}'";
-            }
-
+            string machfilter = (!string.IsNullOrEmpty(mach)) ? $@" AND m.MACH_CODE = '{mach}'" : "";
+            
             string strsql = $@"SELECT m.ID, m.MACH_CODE as machcode, ma.Equipment, m.Machname, m.Model, m.Manufact, 
                     m.Serial, m.location, m.Status, m.Filepath, m.Asset, m.Shifts,
                     m.Reasons, m.Date_acquired, m.Tongs, m.Section_ID, 
@@ -69,8 +61,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
                     WHERE m.Section_ID = {sect} {machfilter} ORDER BY m.ID DESC 
                     OFFSET {offset} ROWS FETCH NEXT {limit} ROWS ONLY ";
 
-            //Debug.WriteLine(strsql);
-            return await SqlDataAccess.GetData<MachineModel>(strsql, null, "Machinelist");
+            return await SqlDataAccess.GetData<MachineModel>(strsql, null);
         }
 
         public async Task<List<MachineModel>> GetMachineDataByID(int ID)

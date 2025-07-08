@@ -27,21 +27,24 @@ namespace PMACS_V2.Controllers
         public async Task<ActionResult> Authenticate(string username, string password)
         {
             var user = (await _user.LoginCredentials(username)).FirstOrDefault();
+            // Check if user Exist
             if (user == null)
                 return JsonPostError("Invalid credentials / Username Doesnt is Exist", 400, "VALIDATION_ERROR");
+            // Verify the User password
             if (!PasswordHasher.VerifyPassword(user.Password, password))
                 return JsonPostError("Invalid credentials / password is incorrect", 400, "VALIDATION_ERROR");
 
+            // Get the Role name 
             string role = GlobalUtilities.UserRolesname(user.Role_ID);
             string fullname = user.Fullname;
 
-            // Generate the token
+            // Generate token for accesstoken and refreshtoken
             var accessToken = JwtHelper.GenerateAccessToken(fullname, role, user.User_ID);
             var refreshToken = JwtHelper.GenerateRefreshToken(user.User_ID);
 
             var data = new { access_token = accessToken, refresh_token = refreshToken, fullname, role };
 
-            return JsonSuccess(data);   
+            return JsonSuccess(data, "Login Success");   
 
         }
 

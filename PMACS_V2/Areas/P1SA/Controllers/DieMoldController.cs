@@ -6,11 +6,9 @@ using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using System.Windows.Media;
 
 namespace PMACS_V2.Areas.P1SA.Controllers
 {
@@ -25,95 +23,59 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         // ===========================================================
         public async Task<ActionResult> GetMoldDieSummaryList(string ProcessID)
         {
-            try
+            var data = await _die.GetMoldDieSummary(ProcessID);
+            if (data == null || !data.Any())
+                return JsonNotFound("No DieSummary  data not found");
+
+            // Get the Max no of the data
+            int maxNo = data.Max(x => x.No);
+            int monitorCount = 0;
+            int endLifeCount = 0;
+
+            foreach (var list in data)
             {
-                var data = await _die.GetMoldDieSummary(ProcessID);
-                if (data == null || !data.Any())
-                    return JsonNotFound("No DieSummary  data not found");
+                if (list.Remarks == "For Monitoring")
+                    monitorCount++;
+                else if (list.Remarks == "End of Life")
+                    endLifeCount++;
+            }
 
-                // Get the Max no of the data
-                int maxNo = data.Any() ? data.Max(x => x.No) : 0;
+            int maxDieLife = maxNo - (monitorCount + endLifeCount);
 
-                // Get the Total Count base on remarks
-                int monitor = data.Count(x => x.Remarks == "For Monitoring");
-                int Endlife = data.Count(x => x.Remarks == "End of Life");
-                int Maxdie = maxNo - (monitor + Endlife);
+            var summaryList = new List<FinalMoldDieSummary>
+            {
+                new FinalMoldDieSummary { Category = "Max Die life", MoldDie = maxDieLife },
+                new FinalMoldDieSummary { Category = "For Monitoring", MoldDie = monitorCount },
+                new FinalMoldDieSummary { Category = "End of life", MoldDie = endLifeCount }
+            };
 
-                List<FinalMoldDieSummary> item = new List<FinalMoldDieSummary>();   
 
-                for(int i = 1; i <= 3; i++)
-                {
-                    if(i == 1)
-                    {
-                        item.Add(new FinalMoldDieSummary
-                        {
-                            Category = "Max Die life",
-                            MoldDie = Maxdie
-                        });
-                    }else if (i == 2)
-                    {
-                        item.Add(new FinalMoldDieSummary
-                        {
-                            Category = "For Monitoring",
-                            MoldDie = monitor,
-                        });
-                    }
-                    else
-                    {
-                        item.Add(new FinalMoldDieSummary
-                        {
-                            Category = "End of life",
-                            MoldDie = Endlife,
-                        });
-                    }
-                    
-                }
-
-                var dataSets = new Dictionary<string, IEnumerable<object>>
-                {
+            var dataSets = new Dictionary<string, IEnumerable<object>>
+            {
                     { "FinalSummary", data },
-                    { "MoldDieSummary", item }
-                };
+                    { "MoldDieSummary", summaryList }
+            };
 
 
-                return JsonMultipleData(dataSets);
-            }
-            catch (Exception ex)
-            {
-                return JsonError(ex.Message);
-            }
+            return JsonMultipleData(dataSets);
         }
         public async Task<ActionResult> GetMoldDieMonthInputList(int Months, int Year, string ProcessID)
         {
-            try
-            {          
-                var data = await _die.GetMoldDieMonthInput(Months, Year, ProcessID);
+            var data = await _die.GetMoldDieMonthInput(Months, Year, ProcessID) ?? new List<DieMoldTotalPartnum>();
 
-                if (data == null || !data.Any())
-                    return JsonNotFound("No DieMonth input data found");
+            if (data == null || !data.Any())
+                return JsonNotFound("No DieMonth input data found");
 
-                return JsonSuccess(data);
-            }
-            catch (Exception ex)
-            {
-                return JsonError(ex.Message);
-            }
+            return JsonSuccess(data);
         }
         public async Task<ActionResult> GetMoldDieToolingList()
         {
-            try
-            {
-                var data = await _die.GetMoldToolingData();
+            var data = await _die.GetMoldToolingData() ?? new List<DieMoldToolingModel>();
 
-                if (data == null || !data.Any())
-                    return JsonNotFound("No Mold Die Tooling data found");
+            if (data == null || !data.Any())
+                return JsonNotFound("No Mold Die Tooling data found");
 
-                return JsonSuccess(data);
-            }
-            catch (Exception ex)
-            {
-                return JsonError(ex.Message);
-            }
+            return JsonSuccess(data);
         }
 
 
@@ -121,85 +83,56 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         public async Task<ActionResult> AddUpdateMoldDieMonitor(MoldInputModel add)
         {
             bool update = await _die.AddUpdateMoldie(add);
-            var formdata = GlobalUtilities.GetMessageResponse(update, 1);
-            return Json(formdata, JsonRequestBehavior.AllowGet);
+            if (!update) return JsonValidationError();
+            return JsonCreated(add, "Add Data Successfully");
         }
 
         [HttpPost]
         public async Task<ActionResult> AddUpdateMoldDieTooling(DieMoldToolingModel add)
         {
-            //var data = await _die.GetMoldToolingData();
             bool update = await _die.AddMoldieTooling(add);
-            if(update) CacheHelper.Remove("MoldTooling");
-            var formdata = GlobalUtilities.GetMessageResponse(update, 1);
-            return Json(formdata, JsonRequestBehavior.AllowGet);
+            if (!update) return JsonValidationError();
+
+            return JsonCreated(add, "Add Data Successfully");
         }
         // ===========================================================
         // ==================== PRESS MOLD DIE DATA  ==================
         // ===========================================================
         public async Task<ActionResult> GetPressDieRegistryList()
         {
-            try
-            {
-                var data = await _die.GetPressRegistryList();
+            var data = await _die.GetPressRegistryList() ?? new List<PressDieRegistry>();
 
-                if (data == null || !data.Any())
-                    return JsonNotFound("No DieMonth input data found");
+            if (data == null || !data.Any())
+                return JsonNotFound("No DieMonth input data found");
 
-                return JsonSuccess(data);
-            }
-            catch (Exception ex)
-            {
-                return JsonError(ex.Message);
-            }
+            return JsonSuccess(data);
         }
         public async Task<ActionResult> GetPressDieMonitoringList()
         {
-            try
-            {
-                var data = await _die.GetPressMonitoring();
+            var data = await _die.GetPressMonitoring() ?? new List<PressDieMontoring>();
 
-                if (data == null || !data.Any())
-                    return JsonNotFound("No Monitoring data found");
+            if (data == null || !data.Any())
+                return JsonNotFound("No Monitoring data found");
 
-                return JsonSuccess(data);
-            }
-            catch (Exception ex)
-            {
-                return JsonError(ex.Message);
-            }
+            return JsonSuccess(data);
         }
         public async Task<ActionResult> GetPressDieSummaryList()
         {
-            try
-            {
-                var data = await _die.GetPressSummary();
+            var data = await _die.GetPressSummary() ?? new List<PressDieSummary>();
 
-                if (data == null || !data.Any())
-                    return JsonNotFound("No Monitoring data found");
+            if (data == null || !data.Any())
+                return JsonNotFound("No Monitoring data found");
 
-                return JsonSuccess(data);
-            }
-            catch (Exception ex)
-            {
-                return JsonError(ex.Message);
-            }
+            return JsonSuccess(data);
         }
         public async Task<ActionResult> GetPressDieControlList()
         {
-            try
-            {
-                var data = await _die.GetPressControl();
+            var data = await _die.GetPressControl() ?? new List<PressDieControlModel>();
 
-                if (data == null || !data.Any())
-                    return JsonNotFound("No Control data found");
+            if (data == null || !data.Any())
+                return JsonNotFound("No Control data found");
 
-                return JsonSuccess(data);
-            }
-            catch (Exception ex)
-            {
-                return JsonError(ex.Message);
-            }
+            return JsonSuccess(data);
         }
 
         [HttpPost]
@@ -210,16 +143,14 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             await Task.Delay(100);
             return Json(add, JsonRequestBehavior.AllowGet);
         }
-
-
         [HttpPost]
         public async Task<ActionResult> AddPressRegistry(PressDieRegistry obj)
         {
             bool update = await _die.AddPressRegistry(obj);
-            var formdata = GlobalUtilities.GetMessageResponse(update, 0);
-            return Json(formdata, JsonRequestBehavior.AllowGet);
-        }
+            if (!update) return JsonValidationError();
 
+            return JsonCreated(obj, "Add Registry Successfully");
+        }
         [HttpPost]
         public async Task<ActionResult> UpdatePressRegistry()
         {
@@ -234,8 +165,9 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             };
 
             bool update = await _die.EditPressRegistry(obj);
-            var formdata = GlobalUtilities.GetMessageResponse(update, 1);
-            return Json(formdata, JsonRequestBehavior.AllowGet);
+            if (!update) return JsonValidationError();
+
+            return JsonCreated(obj, "Updated Registry Successfully");
         }
 
         // GET: P1SA/DieMold

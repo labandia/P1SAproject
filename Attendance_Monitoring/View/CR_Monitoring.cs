@@ -50,6 +50,8 @@ namespace Attendance_Monitoring.View
 
             CRtable.DataSource = critemlist;
             DisplayTotal.Text = "Total Attendence: " + CRtable.RowCount;
+            EmployID.Text = "";
+            EmployID.Focus();
         }
 
         private async void EnterEmployee(object sender, KeyEventArgs e)

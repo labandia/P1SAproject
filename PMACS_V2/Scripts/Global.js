@@ -1,74 +1,6 @@
 ﻿
 
 
-
-
-
-// GLOBAL FETCH DATA
-function makeAjaxRequest(url, data, req) {
-    // Return a promise
-    return new Promise((resolve, reject) => {
-        // REQUEST GET METHOD
-        if (req == 0) {
-       
-            $.ajax({
-                url: url,
-                type: 'GET',
-                data: data,
-                dataType: 'json',
-                success: function (res) {
-                   
-                    setTimeout(() => {
-                        if (res.status.httpcode === 200) {
-                            resolve(res.payload); // Resolve the promise with the data
-                        } else if (res.code === 404) {
-                          
-                            resolve(null); // Resolve with null or any other indication of no data
-                        }
-                        $('#loading').hide();
-                    }, 1000);
-                },
-                error: function (xhr, status, error) {
-                    console.error(error);
-                    $("#dataSearching").empty();
-                    $('#empty-state').show();
-                    reject(error); // Reject the promise on error
-                }
-            });
-        }
-        // REQUEST POST METHOD
-        else {
-            $.ajax({
-                url: url,
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (res) {
-
-                    if (res.code === 200) {
-                        resolve(res); // Resolve the promise with the data
-                    } else {
-                        Swal.fire({
-                            icon: "error",
-                            title: res.remarks,
-                            text: res.message
-                        });
-                        resolve(null); // Resolve with null or any other indication of failure
-                    }
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    // Handle the error response
-                    console.error(textStatus, errorThrown);
-                    reject(errorThrown); // Reject the promise on error
-                }
-            });
-        }
-    });
-
-}
-
-
 // MERGE THE ARRAY WITH THE SAME MODEL NAME VALUE
 function mergeArrayModels(array, modelname) {
     const newData = array.filter(item => item.Modelname === modelname);
@@ -244,16 +176,3 @@ function restrictChars(e) {
 }
 
 
-
-
-
-
-function loadingSummary(divcontent) {
-    divcontent.empty();
-    var loadData = "<tr class='Loadercontainer'>  " +
-        "<td colspan = '8' > " +
-        "<div class='loader2' id='loadingSpinner'></div> " +
-        "</td>" +
-        "</tr > ";
-    divcontent.append(loadData);
-}

@@ -24,7 +24,7 @@ namespace Attendance_Monitoring.Usercontrols
 
         // Share variable to all
         //public int sec;
-        public string tb;
+        public string tb = "R_summary";
         public string tdate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
 
 
@@ -37,6 +37,7 @@ namespace Attendance_Monitoring.Usercontrols
             //tb = tablename;
             timer = new Timer();
             timer.Interval = 1000;
+            timer.Tick += Timer_Tick;
             _admin = new AdminController();
             _serviceProvider=serviceProvider;
         }
@@ -463,7 +464,7 @@ namespace Attendance_Monitoring.Usercontrols
 
         public void InitializePage()
         {
-            MessageBox.Show("Running after set: " + DepartmentID);
+            //MessageBox.Show("Running after set: " + DepartmentID);
             // Now you can load employees, etc.
         }
 
@@ -509,6 +510,7 @@ namespace Attendance_Monitoring.Usercontrols
             if (String.IsNullOrEmpty(filterText))
             {
                 TimeAttendanceDisplay(selecttime.SelectedIndex);
+                textBox2.Focus();
                 return;
             }
             // Search by Filter
@@ -519,5 +521,11 @@ namespace Attendance_Monitoring.Usercontrols
             attendancetable.DataSource =  filteredList;
             DisplayTotal.Text = "Total Records: " + attendancetable.RowCount;
         }
+
+
+       
+
+       
+        
     }
 }

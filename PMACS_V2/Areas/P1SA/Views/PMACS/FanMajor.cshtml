@@ -562,8 +562,6 @@
             CountMachine(2, "", loadData);
         }
     }
-
-
     const appendData = (machineData, data) => {
         machineData.empty();
         $.each(data, function (index, rowData) {
@@ -701,8 +699,6 @@
 
     const displaycamefromtheedit = (data) => {
         let index = loadData.findIndex(item => item.ID === data.ID);
-        console.log("INDEX");
-        console.log(index);
         //let objToUpdate = loadData.find(item => item.ID === data.ID);
 
 
@@ -749,12 +745,6 @@
         }
 
     }
-
-    // ################################################################################################## //
-
-
-
-
 
     //##################################################################################################### //
     const MachineFilterData = async (formdata, sectionID, mach, mode) => {
@@ -1143,36 +1133,33 @@
             $("#fanEnableEdit").css("display", "grid");
             $("#fansaveEdit").css("display", "none");
 
-            const now = new Date();
-            //const formattedDate = now.toISOString().split('T')[0];
             var buttonId = $(this).attr('id');
-            var rowIndex = buttonId.split('_')[1]; // Extract the index from the button ID
-            let result = searchArray(loadData, "ID", rowIndex);
-            let setDate;
+            var rowIndex = buttonId.split('_')[1]; 
+            let filterdata = loadData.filter(item => item.ID === parseInt(rowIndex));
+      
+            let setDate = changeformattedDate(filterdata[0].Date_acquired); 
             // Get the current active tab index
             currentTabIndex = getCurrentTabIndex();
-            setDate = changeformattedDate(result.Date_acquired);
 
-
-            $('#machine_name').text(result.Machname);
-            $('#EditID').val(result.ID);
-            $('#EditEquip').val(result.Machname);
+            $('#machine_name').text(filterdata[0].Machname);
+            $('#EditID').val(filterdata[0].ID);
+            $('#EditEquip').val(filterdata[0].Machname);
             $('#EditDateacq').val(setDate);
-            $('#EditModel').val(result.Model);
-            $('#Editlocal').val(result.location);
-            $('#EditSerial').val(result.Serial);
-            $('#EditShifts').val(result.Shifts);
-            $('#EditManu').val(result.Manufact);
-            $('#EditAssets').val(result.Asset);
-            $('#edittons').val(result.tongs);
-            $('#reason').val(result.Reasons);
+            $('#EditModel').val(filterdata[0].Model);
+            $('#Editlocal').val(filterdata[0].location);
+            $('#EditSerial').val(filterdata[0].Serial);
+            $('#EditShifts').val(filterdata[0].Shifts);
+            $('#EditManu').val(filterdata[0].Manufact);
+            $('#EditAssets').val(filterdata[0].Asset);
+            $('#edittons').val(filterdata[0].tongs);
+            $('#reason').val(filterdata[0].Reasons);
 
             // Get all radio buttons with the name 'choice'
             const radioButtons = document.querySelectorAll('[name="Editstatus"]');
 
             // CHECK IF THE value is the same value
             radioButtons.forEach(radio => {
-                if (radio.value === result.status) {
+                if (radio.value === filterdata[0].status) {
                     radio.checked = true;
                 }
             });
@@ -1184,13 +1171,12 @@
             //dateInput.value = formattedDate;
 
             const imgsrc = document.getElementById('Editpreview');
-            if (result.ImageBase64) {
-                imgsrc.src = "data:image/jpeg;base64," + result.ImageBase64;
+            if (filterdata[0].ImageBase64) {
+                imgsrc.src = "data:image/jpeg;base64," + filterdata[0].ImageBase64;
             } else {
                 imgsrc.src = "/Content/Images/noimage.png";
             }
 
-            // SHOW A MODAL
             $("#edituploadforms").hide();
             $("#Editmodal").modal("show");
         });
@@ -1342,7 +1328,6 @@
 
         if (res && res.Success) {
             let newloadData = res.Data[0];
-            console.log(res);
             setTimeout(() => {
                 Swal.fire({
                     title: "Success",
@@ -1366,7 +1351,7 @@
 
     });
 
-    $("#selectedSection").change( async(e)=> {
+    $("#selectedSection").change(async(e)=> {
 
         var combobox = $("#addmachcode");
         let res = await fetchData('@Url.Action("GetEquipmenList", "FanMajor")', { sectionID: e.target.value });
@@ -1384,15 +1369,7 @@
 
 
 
-    function searchArray(array, key, value) {
-        var founditem = null;
-        array.forEach(function (item) {
-            if (item[key] === parseInt(value)) {
-                founditem = item;
-            }
-        });
-        return founditem;
-    }
+  
 
 
     // Get the Current Tabs When Click to edit

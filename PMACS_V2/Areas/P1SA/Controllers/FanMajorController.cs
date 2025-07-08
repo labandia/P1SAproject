@@ -5,11 +5,11 @@ using PMACS_V2.Utilities;
 using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Utilities;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Http.Results;
 using System.Web.Mvc;
 
 namespace PMACS_V2.Areas.P1SA.Controllers
@@ -20,9 +20,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
 
         private readonly IMachine _man;
 
-        public FanMajorController(IMachine man) {
-            _man = man;
-        }
+        public FanMajorController(IMachine man) => _man = man;
 
         // ===========================================================
         // ==================== GET FUNCTIONS ========================
@@ -72,34 +70,20 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         // GET: P1SA/GetEquipmenList/ID
         public async Task<ActionResult> GetEquipmenList(int sectionID)
         {
-            try
-            {
-                var data = await _man.GetEquipmentData(sectionID);
-                if (data == null || !data.Any())
-                    return JsonNotFound("No Equipment data found");
+            var data = await _man.GetEquipmentData(sectionID) ?? new List<EquipmentList>();
+            if (data == null || !data.Any())
+                return JsonNotFound("No Equipment data found");
 
-                return JsonSuccess(data);
-            }
-            catch (Exception ex)
-            {
-                return JsonError(ex.Message);
-            }
+            return JsonSuccess(data);
         }
         // GET: P1SA/GetEquipmenList/ID
         public async Task<ActionResult> GetMachineCount(int sectionID, string machcode)
         {
-            try
-            {
-                var data = await _man.GetCountMachine(sectionID, machcode);
-                if (data == null || !data.Any())
-                    return JsonNotFound("No Equipment data found");
+            var data = await _man.GetCountMachine(sectionID, machcode) ?? new List<CountMachineModel>();
+            if (data == null || !data.Any())
+                return JsonNotFound("No Equipment data found");
 
-                return JsonSuccess(data);
-            }
-            catch (Exception ex)
-            {
-                return JsonError(ex.Message);
-            }
+            return JsonSuccess(data);
         }
 
         // ===========================================================

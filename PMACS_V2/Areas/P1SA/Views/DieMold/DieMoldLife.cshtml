@@ -229,7 +229,7 @@
     </div>
 </div>
 <!--########################## Adding Tooling  DATA #############################-->
-<div class="modal fade modal-m" id="AddTooling" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+<div class="modal fade modal-lg" id="AddTooling" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-body">
@@ -243,44 +243,53 @@
 
                 <div class="MoldieBodyModal">
                     <form id="AddToolforms" autocomplete="off">
-                        <div class="form_group col-12 col-sm-12">
-                            <label for="">Registration</label>
-                            <input type="text" name="RegNo" id="RegNo" placeholder="Enter Registration No." required>
+                        <div class="row"> 
+                            <div class="form_group col-12 col-lg-6 col-sm-12">
+                                <label for="">Registration</label>
+                                <input type="text" name="RegNo" id="RegNo" placeholder="Enter Registration No." required>
+                            </div>
+
+                            <div class="form_group col-12 col-lg-6 col-sm-12">
+                                <label for="">Part number</label>
+                                <input type="text" name="PartNo" id="PartNo" placeholder="Enter Part number" required>
+                            </div>
                         </div>
 
-                        <div class="form_group col-12 col-sm-12">
-                            <label for="">Part no.</label>
-                            <input type="text" name="PartNo" id="PartNo" placeholder="Enter Part number" required>
+                        <div class="row">
+                            <div class="form_group col-12 col-lg-6 col-sm-12">
+                                <label for="">Item</label>
+                                <input type="text" name="Item" id="Item" placeholder="Enter No of Items" onkeypress='return restrictChars(event)' required>
+                            </div>
+
+                            <div class="form_group col-12 col-lg-6 col-sm-12">
+                                <label for="">Details of Modification</label>
+                                <input type="text" name="DetailsModify" id="DetailsModify" placeholder="Enter Details of Modification" required>
+                            </div>
                         </div>
 
-                        <div class="form_group col-12 col-sm-12">
-                            <label for="">Item</label>
-                            <input type="text" name="Item" id="Item" placeholder="Enter No of Items" required>
+                        <div class="row">
+                            <div class="form_group col-12 col-lg-6 col-sm-12">
+                                <label for="">Release(Shot Cycle test)</label>
+                                <input type="text" name="ShotRelease" id="ShotRelease" placeholder="Enter Shot Cycle Shot" required>
+                            </div>
+
+                            <div class="form_group col-12 col-lg-6 col-sm-12">
+                                <label for="">Date Arrived</label>
+                                <input type="date" name="DateArrived" id="DateArrived" required>
+                            </div>
                         </div>
 
-                        <div class="form_group col-12 col-sm-12">
-                            <label for="">Details of Modification</label>
-                            <input type="text" name="DetailsModify" id="DetailsModify" placeholder="Enter Details of Modification" required>
+                        <div class="row">
+                            <div class="form_group col-12 col-lg-6 col-sm-12">
+                                <label for="">Date Repair</label>
+                                <input type="date" name="DateRepair" id="DateRepair" required>
+                            </div>
+                            <div class="form_group col-12 col-lg-6 col-sm-12">
+                                <label for="">Incharge</label>
+                                <input type="text" name="Incharge" id="Incharge" placeholder="Enter In Charget name" required>
+                            </div>
                         </div>
 
-                        <div class="form_group col-12 col-sm-12">
-                            <label for="">Release(Shot Cycle test)</label>
-                            <input type="text" name="ShotRelease" id="ShotRelease" placeholder="Enter Shot Cycle Shot" required>
-                        </div>
-
-                        <div class="form_group col-12 col-sm-12">
-                            <label for="">Date Arrived</label>
-                            <input type="date" name="DateArrived" id="DateArrived"  required>
-                        </div>
-
-                        <div class="form_group col-12 col-sm-12">
-                            <label for="">Date Repair</label>
-                            <input type="date" name="DateRepair" id="DateRepair"  required>
-                        </div>
-                        <div class="form_group col-12 col-sm-12">
-                            <label for="">Incharge</label>
-                            <input type="text" name="Incharge" id="Incharge" placeholder="Enter In Charget name" required>
-                        </div>
                         <div class="form_group col-12 col-sm-12">
                             <label for="">Remarks</label>
                             <textarea placeholder="Enter Remarks " name="Remarks" id="Remarks" rows="3" cols="50" required></textarea>
@@ -387,7 +396,7 @@
         const data = Object.fromEntries(formData);
         let res = await postData('@Url.Action("AddUpdateMoldDieTooling", "DieMold")', formData);
 
-        if (res.StatusCode === 200) {
+        if (res.StatusCode === 201) {
             Swal.fire({
                 title: "Success",
                 text: res.Message,
@@ -436,7 +445,7 @@
         //const data = Object.fromEntries(formData);
         //console.log(data);
         let res = await postData('@Url.Action("AddUpdateMoldDieMonitor", "DieMold")', formData);
-        if (res.StatusCode === 200) {
+        if (res.StatusCode === 201) {
             GetMoldDieMonth(select.value, currentYear);
             $("#InputMoldieModal").modal("hide");
         }
@@ -864,15 +873,30 @@
     }
 
 
-    function Initialize() {
-        let setMonth = parseInt(currentMonth) + 1;
-        $("#MoldSummary").show();
-        $("#MoldMonitor").hide();
-        $("#MoldTooling").hide();
-        GetMoldDieSummary();
-        GetMoldDieMonth(setMonth, currentYear);
-        GetMoldDieTooling();
+    // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+    const LoadPageData = async () => {
+        try {
+            let setMonth = parseInt(currentMonth) + 1;
+            $("#MoldSummary").show();
+            $("#MoldMonitor").hide();
+            $("#MoldTooling").hide();
+
+            const [maintable, forest, logs] = await Promise.all([
+                GetMoldDieSummary(),
+                GetMoldDieMonth(setMonth, currentYear),
+                GetMoldDieTooling()
+            ]);
+
+
+        } catch (error) {
+            console.error("Failed to load page data:", error);
+        } finally {
+            // Hide loading spinner whether success or failure
+            //$("#loadingSpinner").hide();
+        }
     }
 
-    Initialize();
+    $(document).ready(() => {
+        LoadPageData();
+    });
 </script>

@@ -214,7 +214,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
         }
         public async Task<List<PressDieMontoring>> GetPressMonitoring()
         {
-            string strquery = @"SELECT FORMAT(DateInput, 'MM/dd/yyyy') as DateInput,
+            string strquery = @"SELECT FORMAT(DateInput, 'MM/dd/yy') as DateInput,
                                     ToolNo,Upper,Lower,Upper_ActualHeight,
 	                                Upper_DrawingHeight,Lower_ActualHeight,
 	                                Lower_DrawingHeight,PressStamp

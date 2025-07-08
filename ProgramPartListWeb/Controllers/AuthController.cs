@@ -25,11 +25,11 @@ namespace ProgramPartListWeb.Controllers
             var results = new DataMessageResponse<object> { };
 
             // Check If the user Exist
-            if (user == null) 
-                return Json(ResultMessageResponce.JsonError("Login Failed", 400, "Invalid credentials / Username Doesnt Exist"), JsonRequestBehavior.AllowGet);
+            if (user == null)
+                return JsonPostError("Invalid credentials / Username Doesnt is Exist", 400, "VALIDATION_ERROR");
             // Check If the Password is Correct
-            if (!PasswordHasher.VerifyPassword(user.Password, password)) 
-                return Json(ResultMessageResponce.JsonError("Login Failed", 401, "Invalid credentials / password is incorrect"), JsonRequestBehavior.AllowGet);
+            if (!PasswordHasher.VerifyPassword(user.Password, password))
+                return JsonPostError("Invalid credentials / password is incorrect", 400, "VALIDATION_ERROR");
 
             string role = _auth.GetuserRolename(user.Role_ID);
             string fullname = user.Fullname;
@@ -39,7 +39,7 @@ namespace ProgramPartListWeb.Controllers
 
             var data = new { access_token = accessToken, refresh_token = refreshToken, fullname, role };
 
-            return Json(ResultMessageResponce.JsonSuccess(data, "Login Successfully"), JsonRequestBehavior.AllowGet);
+            return JsonSuccess(data, "Login Successfully");
         }
 
 

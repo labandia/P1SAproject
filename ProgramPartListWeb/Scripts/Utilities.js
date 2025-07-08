@@ -111,35 +111,29 @@ window.postrawData = async (url, data) => {
         const response = await fetch(url, {
             method: 'POST',
             headers: {
-                "Content-Type": "application/json"
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
         });
 
-        const contentType = response.headers.get("content-type");
-
-        if (!response.ok) {
-            if (contentType && contentType.includes("application/json")) {
-                const errorJson = await response.json();
-                console.error("Server JSON error:", errorJson.message);
-                return errorJson;
-            } else {
-                const errorText = await response.text();
-                console.error("Non-JSON server error:", errorText);
-                return { success: false, message: errorText };
-            }
+        let json;
+        try {
+            json = await response.json();
+            return json;
+        } catch (parseErr) {
+            console.error("Error parsing JSON:", parseErr);
+            const text = await response.text(); // fallback to raw text
+            console.error("Raw response:", text);
+            return { Success: false, Message: "Invalid JSON response", Raw: text };
         }
 
-        if (contentType && contentType.includes("application/json")) {
-            return await response.json();
-        } else {
-            const text = await response.text();
-            return { success: true, message: text };
+        if (!response.ok || json.Success === false) {
+            console.error("Server error:", json.Message || "Unknown error");
+            return json;
         }
-
     } catch (error) {
-        console.error("Client fetch error:", error);
-        return { success: false, message: error.message };
+        console.error("Error posting data:", error);
+        return null;
     }
 };
 

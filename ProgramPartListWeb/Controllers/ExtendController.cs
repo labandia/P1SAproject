@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Newtonsoft.Json;
@@ -12,6 +12,25 @@ namespace ProgramPartListWeb.Controllers
     public class ExtendController : Controller
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+        protected JsonResult JsonPostError(string message = "An error occurred", int statusCode = 500, string errorCode = null, object extra = null)
+        {
+            Response.StatusCode = statusCode;
+
+            var errorResponse = new
+            {
+                Success = false,
+                StatusCode = statusCode,
+                Message = message,
+                ErrorCode = errorCode,
+                Timestamp = DateTime.UtcNow.ToString("o"),
+                Path = Request?.Url?.AbsolutePath,
+                Extra = extra
+            };
+
+            return Json(errorResponse, JsonRequestBehavior.DenyGet);
+        }
+
 
         protected JsonResult JsonSuccess(object data = null, string message = "Success", int statusCode = 200)
         {

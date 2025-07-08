@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -6,6 +7,25 @@ namespace PMACS_V2.Controllers
 {
     public class ExtendController : Controller
     {
+        protected JsonResult JsonPostError(string message = "An error occurred", int statusCode = 500, string errorCode = null, object extra = null)
+        {
+            Response.StatusCode = statusCode;
+
+            var errorResponse = new
+            {
+                Success = false,
+                StatusCode = statusCode,
+                Message = message,
+                ErrorCode = errorCode,
+                Timestamp = DateTime.UtcNow.ToString("o"),
+                Path = Request?.Url?.AbsolutePath,
+                Extra = extra
+            };
+
+            return Json(errorResponse, JsonRequestBehavior.DenyGet);
+        }
+
+
         protected JsonResult JsonPostSuccess(object data = null, string message = "Success", int statusCode = 200)
         {
             Response.StatusCode = statusCode;

@@ -85,19 +85,27 @@ window.postData = async (url, data) => {
     try {
         const response = await fetch(url, {
             method: 'POST',
-            body: data
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
         });
 
-
-        const json = await response.json(); // Parse response regardless of HTTP status
-
-        if (!response.ok || json.Success === false) {
-            // Server returned JSON error
-            console.error("Server error:", json.Message || "Unknown error");
-            return json; // or return null or throw if needed
+        let json;
+        try {
+            json = await response.json();   
+            return json;
+        } catch (parseErr) {
+            console.error("Error parsing JSON:", parseErr);
+            const text = await response.text(); // fallback to raw text
+            console.error("Raw response:", text);
+            return { Success: false, Message: "Invalid JSON response", Raw: text };
         }
 
-        return json;
+        if (!response.ok || json.Success === false) {
+            console.error("Server error:", json.Message || "Unknown error");
+            return json;
+        }
     } catch (error) {
         console.error("Error posting data:", error);
         return null;

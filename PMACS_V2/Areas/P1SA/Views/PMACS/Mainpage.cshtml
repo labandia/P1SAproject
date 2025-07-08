@@ -9,6 +9,7 @@
     <link rel="icon" type="image/x-icon" href="~/Content/Images/pmacs.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
+    <link rel="preload" href="~/Content/fonts/Poppins-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
     <link href="~/Content/Site.min.css" rel="stylesheet" />
     <link href="~/Content/login.min.css" rel="stylesheet" />
     <link href="~/Content/sweetalert2.min.css" rel="stylesheet" />
@@ -264,18 +265,18 @@
         let formData = new FormData(e.target);
         const data = Object.fromEntries(formData);
         const savebtn = document.querySelector("#newpassbtn");
-        savebtn.innerHTML = " <div class='Submitloading'></div>"
+        savebtn.innerHTML = " <div class='Submitloading'></div>";
     });
 
     const loginfunc = async (formData) => {
-         var errorMsg = document.getElementById('error-msg');
-             //let data = Object.fromEntries(formData);
+        var errorMsg = document.getElementById('error-msg');
+        let data = Object.fromEntries(formData);
 
              // Check the inputs validation
         if (validateform()) {
                 const savebtn = document.querySelector("#submitbtn");
-                savebtn.innerHTML = " <div class='buttonloading'></div>";
-                 let res = await postData('/Auth/Authenticate', formData);
+                savebtn.innerHTML = "<div class='buttonloading'></div>";
+                let res = await postData('/Auth/Authenticate', data);
 
                  if (res && res.StatusCode === 200) {
                      setTimeout(() => {
@@ -306,7 +307,7 @@
                      setTimeout(() => {
                          Swal.fire({
                              icon: "error",
-                             text: res && res.Message ? res.Message : "Invalid Credentials / Username and Password is Incorrect",
+                             text: res.Message,
                              timer: 1500,
                              showConfirmButton: false
                          });

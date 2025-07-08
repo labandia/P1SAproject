@@ -10,10 +10,13 @@ using PMACS_V2.Helper;
 using System.Diagnostics;
 using ProgramPartListWeb.Helper;
 using System.Web.Security;
+using System.IO;
+using Microsoft.Ajax.Utilities;
+using System.Data;
 
 namespace PMACS_V2.Controllers
 {
-    public class AuthController : Controller
+    public class AuthController : ExtendController
     {
         private readonly IUserRepository _user;
 
@@ -23,50 +26,22 @@ namespace PMACS_V2.Controllers
         [HttpPost]
         public async Task<ActionResult> Authenticate(string username, string password)
         {
-            var data = await _user.LoginCredentials(username);
-            var results = new DataMessageResponse<object> { };
+            var user = (await _user.LoginCredentials(username)).FirstOrDefault();
+            if (user == null)
+                return JsonPostError("Invalid credentials / Username Doesnt is Exist", 400, "VALIDATION_ERROR");
+            if (!PasswordHasher.VerifyPassword(user.Password, password))
+                return JsonPostError("Invalid credentials / password is incorrect", 400, "VALIDATION_ERROR");
 
-            // CHECKS IF THE USERNAME EXIST
-            if (data.Count() > 0)
-            {
-                // GET ONLY ONE ROW DATA
-                var userRow = data.FirstOrDefault();
-                string strRole = GlobalUtilities.UserRolesname(userRow.Role_ID);
-                string fullname = userRow.Fullname;
-                // CHECKS THE PASSWORD IF IS CORRECT
-                if (PasswordHasher.VerifyPassword(userRow.Password, password))
-                {
-                    // Generate the token
-                    var token = JwtHelper.GenerateAccessToken(fullname, strRole, userRow.User_ID);
-                    var refreshToken = JwtHelper.GenerateRefreshToken(userRow.User_ID);
+            string role = GlobalUtilities.UserRolesname(user.Role_ID);
+            string fullname = user.Fullname;
 
-                    //SetFormsAuthentication(userRow.Role_ID);
-                    //FormsAuthentication.SetAuthCookie(strRole, false);
-                    // Store user information in the session
-                    Session["UserID"] = userRow.User_ID;
-                    Session["Fullname"] = fullname;
-                    Session["Role"] = strRole;
+            // Generate the token
+            var accessToken = JwtHelper.GenerateAccessToken(fullname, role, user.User_ID);
+            var refreshToken = JwtHelper.GenerateRefreshToken(user.User_ID);
 
-                    results.StatusCode = 200;
-                    results.Message = "Login Successfully";
-                    results.Data =  new { fullname = fullname, access_token = token, refresh_token = refreshToken };
-                }
-                else
-                {
-                    results.StatusCode = 401;
-                    results.Message = "Invalid credentials / password is incorrect";
-                    results.Data = null;
-                }
-            }
-            else
-            {
-                results.StatusCode = 401;
-                results.Message = "Invalid credentials / username doesnt exist";
-                results.Data = null;
-            }
+            var data = new { access_token = accessToken, refresh_token = refreshToken, fullname, role };
 
-            return Json(results, JsonRequestBehavior.AllowGet);
-
+            return JsonSuccess(data);   
 
         }
 

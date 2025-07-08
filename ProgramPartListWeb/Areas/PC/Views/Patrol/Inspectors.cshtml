@@ -4,8 +4,6 @@
     Layout = "~/Areas/PC/Views/Shared/_PatrolLayout.cshtml";
 }
 
-
-
 <header class="InspectHead">
     <div class="Inputcontainer">
         <i class="fa-solid fa-magnifying-glass"></i>
@@ -14,7 +12,6 @@
     </div>
     <button id="Showadd" type="button"><i class="fa-solid fa-user-secret"></i> Add New</button>
 </header>
-
 
 <div class="InspecTable">
     <table>
@@ -39,6 +36,7 @@
 
     <div id="MastertableContainer" class="paginationPartlocal"></div>
 </div>
+
 @*=================================================================================*@
 @*=========================== ADD NEW INSPECTORS ==================================*@
 @*=================================================================================*@
@@ -91,7 +89,9 @@
 
 
                     <div class="d-flex justify-content-between align-items-center mt-4">
-                        <small id="Errormessage">Fill up all the input fields</small>
+                        <div>
+                            <small id="Errormessage">Fill up all the input fields</small>
+                        </div>
                         <button id="btnSave"><i class="fa-regular fa-floppy-disk"></i> Save</button>
                     </div>
                 </form>
@@ -256,7 +256,7 @@
                 showConfirmButton: false,
                 timer: 1500
             }).then(() => {
-                //InspectTable();
+                InspectTable();
                 $("#AddProductModal").modal('hide');
             });
         }
@@ -446,7 +446,6 @@
                     let res = await postData('@Url.Action("ChangeApprovalInspect", "Patrol")', formData);
                     if (res && res.Success) {
                         InspectTable(); // Assumes re-rendering table
-                        console.log("Update Complete");
                     }
                     dropdown.fadeOut(100).removeClass('show');
                     break;

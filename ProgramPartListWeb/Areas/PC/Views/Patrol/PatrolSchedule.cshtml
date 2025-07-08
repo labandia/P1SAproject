@@ -131,10 +131,8 @@
         let filterValue = $("#DepartmentID").val();
 
        let res = await FetchAuthenticate('@Url.Action("GetInpectsByApproval", "Patrol")', {});
-       //console.log(res);
         if (res && res.Success) {
             let filteredData = res.Data;
-
 
             if (parseInt(filterValue) !== 0) {
                 filteredData = filteredData.filter(res => res.Department_ID === parseInt(filterValue));
@@ -179,7 +177,7 @@
                 const fullName = $(this).data('name');
 
                 //console.log("Selected Employee: ", fullName);
-                console.log("Employee ID: ", employVal);
+                //console.log("Employee ID: ", employVal);
 
                 // Optionally, when page loads, show all first
                 fetchAndRenderEvents(employVal);
@@ -257,7 +255,7 @@
         formData.append('ModeID', 1);
         //var data = Object.fromEntries(formData);
         let res = await postData('@Url.Action("SetActiveDateSchedule", "Patrol")', formData);
-        console.log(res);
+        //console.log(res);
 
     });
     removebtn.addEventListener('click', async (e) => {
@@ -365,7 +363,7 @@
                 $("#ScheduleID").val("0");
                 $("#ScheduleDate").val(info.dateStr);
                 $("#IsActive").val("0");
-                console.log(employVal);
+                //console.log(employVal);
 
                 if (employVal !== undefined) {
                     PopulateComboxProccess(DepartID, 0);

@@ -557,6 +557,7 @@
             this.sixteen.Name = "sixteen";
             this.sixteen.Size = new System.Drawing.Size(93, 41);
             this.sixteen.TabIndex = 81;
+            this.sixteen.Visible = false;
             // 
             // fiftheen
             // 
@@ -569,6 +570,7 @@
             this.fiftheen.Name = "fiftheen";
             this.fiftheen.Size = new System.Drawing.Size(93, 41);
             this.fiftheen.TabIndex = 80;
+            this.fiftheen.Visible = false;
             // 
             // foutheen
             // 
@@ -581,6 +583,7 @@
             this.foutheen.Name = "foutheen";
             this.foutheen.Size = new System.Drawing.Size(93, 41);
             this.foutheen.TabIndex = 79;
+            this.foutheen.Visible = false;
             // 
             // thirteen
             // 
@@ -593,6 +596,7 @@
             this.thirteen.Name = "thirteen";
             this.thirteen.Size = new System.Drawing.Size(93, 41);
             this.thirteen.TabIndex = 78;
+            this.thirteen.Visible = false;
             // 
             // twelve
             // 
@@ -605,6 +609,7 @@
             this.twelve.Name = "twelve";
             this.twelve.Size = new System.Drawing.Size(93, 41);
             this.twelve.TabIndex = 77;
+            this.twelve.Visible = false;
             // 
             // eleven
             // 
@@ -617,6 +622,7 @@
             this.eleven.Name = "eleven";
             this.eleven.Size = new System.Drawing.Size(93, 41);
             this.eleven.TabIndex = 76;
+            this.eleven.Visible = false;
             // 
             // ten
             // 
@@ -629,6 +635,7 @@
             this.ten.Name = "ten";
             this.ten.Size = new System.Drawing.Size(93, 41);
             this.ten.TabIndex = 75;
+            this.ten.Visible = false;
             // 
             // nine
             // 
@@ -641,6 +648,7 @@
             this.nine.Name = "nine";
             this.nine.Size = new System.Drawing.Size(93, 41);
             this.nine.TabIndex = 74;
+            this.nine.Visible = false;
             // 
             // twentyfour
             // 
@@ -653,6 +661,7 @@
             this.twentyfour.Name = "twentyfour";
             this.twentyfour.Size = new System.Drawing.Size(93, 41);
             this.twentyfour.TabIndex = 97;
+            this.twentyfour.Visible = false;
             // 
             // twentythree
             // 
@@ -665,6 +674,7 @@
             this.twentythree.Name = "twentythree";
             this.twentythree.Size = new System.Drawing.Size(93, 41);
             this.twentythree.TabIndex = 96;
+            this.twentythree.Visible = false;
             // 
             // twentwo
             // 
@@ -677,6 +687,7 @@
             this.twentwo.Name = "twentwo";
             this.twentwo.Size = new System.Drawing.Size(93, 41);
             this.twentwo.TabIndex = 95;
+            this.twentwo.Visible = false;
             // 
             // twentyone
             // 
@@ -689,6 +700,7 @@
             this.twentyone.Name = "twentyone";
             this.twentyone.Size = new System.Drawing.Size(93, 41);
             this.twentyone.TabIndex = 94;
+            this.twentyone.Visible = false;
             // 
             // tweenty
             // 
@@ -701,6 +713,7 @@
             this.tweenty.Name = "tweenty";
             this.tweenty.Size = new System.Drawing.Size(93, 41);
             this.tweenty.TabIndex = 93;
+            this.tweenty.Visible = false;
             // 
             // ninetheen
             // 
@@ -713,6 +726,7 @@
             this.ninetheen.Name = "ninetheen";
             this.ninetheen.Size = new System.Drawing.Size(93, 41);
             this.ninetheen.TabIndex = 92;
+            this.ninetheen.Visible = false;
             // 
             // eigtheen
             // 
@@ -725,6 +739,7 @@
             this.eigtheen.Name = "eigtheen";
             this.eigtheen.Size = new System.Drawing.Size(93, 41);
             this.eigtheen.TabIndex = 91;
+            this.eigtheen.Visible = false;
             // 
             // seventeen
             // 
@@ -737,6 +752,7 @@
             this.seventeen.Name = "seventeen";
             this.seventeen.Size = new System.Drawing.Size(93, 41);
             this.seventeen.TabIndex = 90;
+            this.seventeen.Visible = false;
             // 
             // thirtytwo
             // 
@@ -749,6 +765,7 @@
             this.thirtytwo.Name = "thirtytwo";
             this.thirtytwo.Size = new System.Drawing.Size(93, 41);
             this.thirtytwo.TabIndex = 113;
+            this.thirtytwo.Visible = false;
             // 
             // thirtyone
             // 
@@ -761,6 +778,7 @@
             this.thirtyone.Name = "thirtyone";
             this.thirtyone.Size = new System.Drawing.Size(93, 41);
             this.thirtyone.TabIndex = 112;
+            this.thirtyone.Visible = false;
             // 
             // thirty
             // 
@@ -773,6 +791,7 @@
             this.thirty.Name = "thirty";
             this.thirty.Size = new System.Drawing.Size(93, 41);
             this.thirty.TabIndex = 111;
+            this.thirty.Visible = false;
             // 
             // tweentynine
             // 
@@ -785,6 +804,7 @@
             this.tweentynine.Name = "tweentynine";
             this.tweentynine.Size = new System.Drawing.Size(93, 41);
             this.tweentynine.TabIndex = 110;
+            this.tweentynine.Visible = false;
             // 
             // tweentyeight
             // 
@@ -797,6 +817,7 @@
             this.tweentyeight.Name = "tweentyeight";
             this.tweentyeight.Size = new System.Drawing.Size(93, 41);
             this.tweentyeight.TabIndex = 109;
+            this.tweentyeight.Visible = false;
             // 
             // tweentyseven
             // 
@@ -809,6 +830,7 @@
             this.tweentyseven.Name = "tweentyseven";
             this.tweentyseven.Size = new System.Drawing.Size(93, 41);
             this.tweentyseven.TabIndex = 108;
+            this.tweentyseven.Visible = false;
             // 
             // tweentysix
             // 
@@ -821,6 +843,7 @@
             this.tweentysix.Name = "tweentysix";
             this.tweentysix.Size = new System.Drawing.Size(93, 41);
             this.tweentysix.TabIndex = 107;
+            this.tweentysix.Visible = false;
             // 
             // tweentyfive
             // 
@@ -833,6 +856,7 @@
             this.tweentyfive.Name = "tweentyfive";
             this.tweentyfive.Size = new System.Drawing.Size(93, 41);
             this.tweentyfive.TabIndex = 106;
+            this.tweentyfive.Visible = false;
             // 
             // fourty
             // 
@@ -845,6 +869,7 @@
             this.fourty.Name = "fourty";
             this.fourty.Size = new System.Drawing.Size(93, 41);
             this.fourty.TabIndex = 129;
+            this.fourty.Visible = false;
             // 
             // thirtynine
             // 
@@ -857,6 +882,7 @@
             this.thirtynine.Name = "thirtynine";
             this.thirtynine.Size = new System.Drawing.Size(93, 41);
             this.thirtynine.TabIndex = 128;
+            this.thirtynine.Visible = false;
             // 
             // thirtyeight
             // 
@@ -869,6 +895,7 @@
             this.thirtyeight.Name = "thirtyeight";
             this.thirtyeight.Size = new System.Drawing.Size(93, 41);
             this.thirtyeight.TabIndex = 127;
+            this.thirtyeight.Visible = false;
             // 
             // thirtyseven
             // 
@@ -881,6 +908,7 @@
             this.thirtyseven.Name = "thirtyseven";
             this.thirtyseven.Size = new System.Drawing.Size(93, 41);
             this.thirtyseven.TabIndex = 126;
+            this.thirtyseven.Visible = false;
             // 
             // thirtysix
             // 
@@ -893,6 +921,7 @@
             this.thirtysix.Name = "thirtysix";
             this.thirtysix.Size = new System.Drawing.Size(93, 41);
             this.thirtysix.TabIndex = 125;
+            this.thirtysix.Visible = false;
             // 
             // thirtyfive
             // 
@@ -905,6 +934,7 @@
             this.thirtyfive.Name = "thirtyfive";
             this.thirtyfive.Size = new System.Drawing.Size(93, 41);
             this.thirtyfive.TabIndex = 124;
+            this.thirtyfive.Visible = false;
             // 
             // thirtyfour
             // 
@@ -917,6 +947,7 @@
             this.thirtyfour.Name = "thirtyfour";
             this.thirtyfour.Size = new System.Drawing.Size(93, 41);
             this.thirtyfour.TabIndex = 123;
+            this.thirtyfour.Visible = false;
             // 
             // thirtythree
             // 
@@ -929,6 +960,7 @@
             this.thirtythree.Name = "thirtythree";
             this.thirtythree.Size = new System.Drawing.Size(93, 41);
             this.thirtythree.TabIndex = 122;
+            this.thirtythree.Visible = false;
             // 
             // CaulkDent
             // 

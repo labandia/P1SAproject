@@ -62,7 +62,7 @@ namespace ProductConfirm.Modals
 
 
                             saveRequireMeasurements(PartText.Text, Shoptext.Text, Productcombo.SelectedItem?.ToString());
-                            mn.displayshopordertable();
+                            await mn.displayshopordertable();
                             Visible = false;
                         }
                         else

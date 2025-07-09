@@ -6,44 +6,46 @@
 
 
 
+<div class="selectiontabs">
+    <header class="MainHeader">
+        <div class="d-flex align-items-center gap-3">
+            <a href="/P1SA/PMACS/Selection"><i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+            <h4>Forecast Data</h4>
+        </div>
+        <div class="selectiontabs__header">
+            <div class="active">Total by month</div>
+            <div>Data table</div>
+        </div>
+    </header>
 
-<section class="content">
 
-    <div class="selectiontabs">
 
-        <div class="ForecastHeader d-flex align-items-center justify-content-between">
-            <div class="d-flex align-items-center gap-3">
-                <a href="/P1SA/PMACS/Selection"><i class="fa fa-arrow-left" aria-hidden="true"></i></a>
-                <h3 class="header__title">Forecast Data</h3>
-            </div>
+    
 
-            <div class="selectiontabs__header">
-                <div class="active">Total by month</div>
-                <div>Data table</div>
+    <div class="selectiontabs__body">
+        <div class="active" style="width: 100%;">
+            <div class="Chartwrapper">
+                <canvas id="myChart"></canvas>
             </div>
         </div>
+        <div style="width: 100%;">
+            <div class="forestheader">
+                <div class="forestheader__input">
+                    <div class="searchinputContainer">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" placeholder="Search here ... " id="myInput" />
+                        <div class="line"></div>
+                    </div>
+                </div>
 
-       
-        <div class="selectiontabs__body">
-            <div class="active" style="width: 100%;">
-                <div class="Chartwrapper">
-                    <canvas id="myChart"></canvas>
+                <div class="forestheader__importaction">
+                    <button id="Excelbtn" class="primary_button_color"><i class="fa-solid fa-file-import"></i>  Update forecast</button>
                 </div>
             </div>
-            <div style="width: 100%;">
-                <div class="forestheader">
-                    <div class="forestheader__input">
-                        <div class="customs_input">
-                            <input type="text" id="myInput" placeholder="Search Model base  ...." />
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                        </div>
-                    </div>
 
-                    <div class="forestheader__importaction">
-                        <button id="Excelbtn" class="primary_button_color"><i class="fa-solid fa-file-import"></i>  Update forecast</button>
-                    </div>
-                </div>
-                <table class="foresdata">
+
+            <div class="MainTable">
+                <table>
                     <thead>
                         <tr>
                             <th class="sortable textleft">Model Base</th>
@@ -61,25 +63,28 @@
                             <th>Dec</th>
                         </tr>
                     </thead>
+
                     <tbody id="forecastdata">
                     </tbody>
-
                 </table>
-
-                @*=============== Empty state Display ===================*@
-                <div id="empty-state">
-                    <p>No data available.</p>
-                </div>
-
             </div>
+
+
+
+            @*=============== Empty state Display ===================*@
+            <div id="empty-state">
+                <p>No data available.</p>
+            </div>
+
         </div>
     </div>
+</div>
 
-</section>
+
 
 
 <button class="navbottom" onclick="topFunction()">
-    <i class="fa-solid fa-chevron-up"></i>
+    <i class="fa-solid fa-arrow-up"></i>
 </button>
 
 

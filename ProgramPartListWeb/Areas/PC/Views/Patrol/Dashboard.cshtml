@@ -10,7 +10,7 @@
     </div>
     <div class="Schedule">
         <div class="ScheduleToday mb-4">
-            <h6>Schedule this Week</h6>
+            <h6>Patrol Schedule this Week</h6>
             <div class="Schedule_listContainer" id="Schedule_contain">
                
             </div>
@@ -45,8 +45,8 @@
                 const card = `
                        <div class="Schedule_listContent">
                             <div>
-                               <h5 style='margin: 0;'>${res.FullName}</h5>
-                               <small>${res.SectionName}</small>
+                               <h5 style='margin-bottom: .5em;'>${res.FullName}</h5>
+                               <small><span class="Section ${res.SectionName === "Process Control" ? "Process" : res.SectionName}">${res.SectionName}</span></small>
                             </div>
 
                             <div style="text-align: right">

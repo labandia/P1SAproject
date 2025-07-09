@@ -234,7 +234,7 @@
             this.Summarytable.DefaultCellStyle = dataGridViewCellStyle31;
             this.Summarytable.EnableHeadersVisualStyles = false;
             this.Summarytable.GridColor = System.Drawing.Color.White;
-            this.Summarytable.Location = new System.Drawing.Point(35, 170);
+            this.Summarytable.Location = new System.Drawing.Point(35, 104);
             this.Summarytable.Name = "Summarytable";
             this.Summarytable.ReadOnly = true;
             this.Summarytable.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
@@ -242,7 +242,7 @@
             this.Summarytable.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.Summarytable.RowTemplate.Height = 40;
             this.Summarytable.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.Summarytable.Size = new System.Drawing.Size(1263, 412);
+            this.Summarytable.Size = new System.Drawing.Size(1263, 478);
             this.Summarytable.TabIndex = 4;
             this.Summarytable.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.Summarytable_CellValueChanged);
             this.Summarytable.CurrentCellDirtyStateChanged += new System.EventHandler(this.Summarytable_CurrentCellDirtyStateChanged);
@@ -756,7 +756,7 @@
             this.dateTimePicker1.CustomFormat = "MM/dd/yyyy";
             this.dateTimePicker1.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dateTimePicker1.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePicker1.Location = new System.Drawing.Point(656, 36);
+            this.dateTimePicker1.Location = new System.Drawing.Point(281, 74);
             this.dateTimePicker1.MaximumSize = new System.Drawing.Size(171, 40);
             this.dateTimePicker1.MinimumSize = new System.Drawing.Size(171, 40);
             this.dateTimePicker1.Name = "dateTimePicker1";
@@ -770,7 +770,7 @@
             this.dateTimePicker2.CustomFormat = "MM/dd/yyyy";
             this.dateTimePicker2.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dateTimePicker2.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePicker2.Location = new System.Drawing.Point(865, 36);
+            this.dateTimePicker2.Location = new System.Drawing.Point(490, 74);
             this.dateTimePicker2.MaximumSize = new System.Drawing.Size(171, 40);
             this.dateTimePicker2.MinimumSize = new System.Drawing.Size(171, 40);
             this.dateTimePicker2.Name = "dateTimePicker2";
@@ -790,7 +790,7 @@
             this.button2.ForeColor = System.Drawing.Color.White;
             this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
             this.button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button2.Location = new System.Drawing.Point(1149, 106);
+            this.button2.Location = new System.Drawing.Point(922, 41);
             this.button2.Name = "button2";
             this.button2.Padding = new System.Windows.Forms.Padding(15, 0, 15, 0);
             this.button2.Size = new System.Drawing.Size(149, 40);
@@ -806,7 +806,7 @@
             this.label5.BackColor = System.Drawing.Color.Transparent;
             this.label5.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label5.Location = new System.Drawing.Point(862, 11);
+            this.label5.Location = new System.Drawing.Point(487, 49);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(73, 16);
             this.label5.TabIndex = 31;
@@ -819,7 +819,7 @@
             this.label4.BackColor = System.Drawing.Color.Transparent;
             this.label4.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label4.Location = new System.Drawing.Point(653, 11);
+            this.label4.Location = new System.Drawing.Point(278, 49);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(78, 16);
             this.label4.TabIndex = 30;
@@ -832,7 +832,7 @@
             this.label2.BackColor = System.Drawing.Color.Transparent;
             this.label2.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label2.Location = new System.Drawing.Point(835, 47);
+            this.label2.Location = new System.Drawing.Point(460, 85);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(21, 16);
             this.label2.TabIndex = 35;
@@ -874,7 +874,7 @@
             this.Filterbtn.ForeColor = System.Drawing.Color.Black;
             this.Filterbtn.Image = ((System.Drawing.Image)(resources.GetObject("Filterbtn.Image")));
             this.Filterbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Filterbtn.Location = new System.Drawing.Point(546, 37);
+            this.Filterbtn.Location = new System.Drawing.Point(171, 75);
             this.Filterbtn.Name = "Filterbtn";
             this.Filterbtn.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.Filterbtn.Size = new System.Drawing.Size(95, 41);
@@ -894,7 +894,7 @@
             this.button1.ForeColor = System.Drawing.Color.Black;
             this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
             this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.Location = new System.Drawing.Point(445, 34);
+            this.button1.Location = new System.Drawing.Point(70, 72);
             this.button1.Name = "button1";
             this.button1.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.button1.Size = new System.Drawing.Size(95, 41);
@@ -907,7 +907,8 @@
             // 
             // Searchtext
             // 
-            this.Searchtext.Location = new System.Drawing.Point(37, 106);
+            this.Searchtext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.Searchtext.Location = new System.Drawing.Point(1093, 41);
             this.Searchtext.Multiline = true;
             this.Searchtext.Name = "Searchtext";
             this.Searchtext.Size = new System.Drawing.Size(202, 40);
@@ -916,11 +917,12 @@
             // 
             // label1
             // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
             this.label1.BackColor = System.Drawing.Color.Transparent;
             this.label1.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label1.Location = new System.Drawing.Point(36, 87);
+            this.label1.Location = new System.Drawing.Point(1092, 22);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(82, 16);
             this.label1.TabIndex = 41;

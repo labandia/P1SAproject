@@ -1,6 +1,5 @@
 ﻿using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Models;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -18,21 +17,14 @@ namespace ProgramPartListWeb.Controllers
         //############################  GET DATA  ###############################################//
         public async Task<ActionResult> GetProjectList()
         {
-            try
-            {
-                string strquery = "SELECT Project_Name, Links, SystemImage, DepartmentID, Version " +
+            string strquery = "SELECT Project_Name, Links, SystemImage, DepartmentID, Version " +
                                   "FROM ProjectList " +
                                   "WHERE DeviceID = 1 AND Project_Name != 'All'";
-                var data = await SqlDataAccess.GetData<ProjectsModel>(strquery);
-                if (data == null || !data.Any())
-                    return JsonNotFound("No registration data found");
+            var data = await SqlDataAccess.GetData<ProjectsModel>(strquery);
+            if (data == null || !data.Any())
+                return JsonNotFound("No Projects data found");
 
-                return JsonSuccess(data);
-            }
-            catch (Exception ex)
-            {
-                return JsonError(ex.Message);
-            }
+            return JsonSuccess(data);
         }
 
         public ActionResult SampleEmail()

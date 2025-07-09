@@ -1,5 +1,4 @@
-﻿using Microsoft.Office.Interop.Excel;
-using ProductConfirm.Data;
+﻿using ProductConfirm.Data;
 using ProductConfirm.Models;
 using ProgramPartListWeb.Helper;
 using System;
@@ -13,12 +12,12 @@ namespace ProductConfirm.DataAccess
     public class ProductRepositoryV2 : IProductRepositoryV2
     {
   
-        public Task<List<MasterlistModel>> GetMasterlist()
+        public async Task<List<MasterlistModel>> GetMasterlist()
         {
             string strsql = "SELECT RotorProductID, RotorAssy, ProductType, MachinePressureMinMax, " + 
                             "RecommendedPressureSetting, ModelType " +
                             "FROM ProdCon_RotorProduct";
-            return SqlDataAccess.GetData<MasterlistModel>(strsql);
+            return await SqlDataAccess.GetData<MasterlistModel>(strsql);
         }
         public Task<List<ProductModel>> GetAllProducts() => SqlDataAccess.GetData<ProductModel>("ProdMasterlist");
         public Task<List<ExportModel>> GetDataAndExportoExcel() => SqlDataAccess.GetData<ExportModel>("ProdMasterlist");
@@ -30,11 +29,14 @@ namespace ProductConfirm.DataAccess
             return SqlDataAccess.GetData<ProductToolsModel>(strsql, parameters);
         }
 
-        public Task<List<ShopOrderModel>> GetShoporderlist(int CurrentPageIndex, int pageSize)
+        public async Task<List<ShopOrderModel>> GetShoporderlist(int CurrentPageIndex, int pageSize)
         {
-            return SqlDataAccess.GetData<ShopOrderModel>("ShopOrderlist", new { PageNumber = CurrentPageIndex, PageSize = pageSize });
+            return await SqlDataAccess.GetData<ShopOrderModel>("ShopOrderlist", new { PageNumber = CurrentPageIndex, PageSize = pageSize });
         }  
-        public Task<List<SummaryProductModel>> GetSummaryDataConfirmation() => SqlDataAccess.GetData<SummaryProductModel>("SummaryComfirmation");
+        public async Task<List<SummaryProductModel>> GetSummaryDataConfirmation()
+        {
+            return await SqlDataAccess.GetData<SummaryProductModel>("SummaryComfirmation");
+        }
     
         // CRUD OPERATION PROCESS
         public async Task<bool> AddProducts(AddProductDetailsModel prod)

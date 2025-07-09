@@ -125,6 +125,7 @@
     }
     const ListViewDisplay = (data) => {
         var SetData = $("#dataSearching");
+        SetData.empty();
 
         $.each(data, function (index, rowData) {
             var getdata = "<tr class='tablecard' id='row_" + index + "'>" +

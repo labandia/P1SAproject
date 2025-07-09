@@ -157,6 +157,7 @@ namespace ProgramPartListWeb.Helper
             }
             catch(Exception ex)
             {
+                Debug.WriteLine("Error occur : " + ex.Message);
                 return false;
             }
            

@@ -36,107 +36,63 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
         //[JwtAuthorize]
         public async Task<ActionResult> GetScheduleSeries()
         {
-            try
-            {
-                var data = await _series2.GetSeriesData();
-                if (data == null || !data.Any())
-                {
-                    return JsonNotFound("No Plan Schedule data found");
-                }
-                return JsonSuccess(data);
-            }
-            catch (Exception ex)
-            {
-                return JsonError(ex.Message);
-            }
+            var data = await _series2.GetSeriesData() ?? new List<SeriesviewModel>();
+            if (data == null || !data.Any()) 
+                return JsonNotFound("No Plan Schedule data found");
+          
+            return JsonSuccess(data);
         }
 
         public async Task<ActionResult> GetSummmaryComponentlist(int intval)
         {
-            try
-            {
-                // Get the list of seriesData
-                var datalist = await _series2.GetSeriesData() ?? new List<SeriesviewModel>();
-                // Filter the data in only row data
-                var seriesdata = datalist.FirstOrDefault(p => p.Series_ID == intval);
-                var data = await _series2.GetComponentsSummmary(seriesdata.Series_no) ?? new List<SummaryComponentModel>();
+            // Get the list of seriesData
+            var datalist = await _series2.GetSeriesData() ?? new List<SeriesviewModel>();
+            // Filter the data in only row data
+            var seriesdata = datalist.FirstOrDefault(p => p.Series_ID == intval);
+            var data = await _series2.GetComponentsSummmary(seriesdata.Series_no) ?? new List<SummaryComponentModel>();
 
-                if (data == null || !data.Any())
-                    return JsonNotFound("No Components Summary data found");
+            if (data == null || !data.Any())
+                return JsonNotFound("No Components Summary data found");
 
-                return JsonSuccess(data);
-            }
-            catch (Exception ex)
-            {
-                return JsonError(ex.Message);
-            }
+            return JsonSuccess(data);
         }
 
         public async Task<ActionResult> GetparlistData(int intval)
         {
-            try
-            {
-                // Get the list of seriesData
-                var datalist = await _series2.GetSeriesData() ?? new List<SeriesviewModel>();
-                // Filter the data in only row data
-                var seriesdata = datalist.FirstOrDefault(p => p.Series_ID == intval);
-                var data = await _series2.Getpartlist(seriesdata.Series_no) ?? new List<PartlistModel>();
-                if (data == null || !data.Any())
-                    return JsonNotFound("No Components Partlist data found");
+            // Get the list of seriesData
+            var datalist = await _series2.GetSeriesData() ?? new List<SeriesviewModel>();
+            // Filter the data in only row data
+            var seriesdata = datalist.FirstOrDefault(p => p.Series_ID == intval);
+            var data = await _series2.Getpartlist(seriesdata.Series_no) ?? new List<PartlistModel>();
+            if (data == null || !data.Any())
+                return JsonNotFound("No Components Partlist data found");
 
-                return JsonSuccess(data);
-            }
-            catch (Exception ex)
-            {
-                return JsonError(ex.Message);
-            }
+            return JsonSuccess(data);
         }
         public async Task<ActionResult> GetPreparedWarehouseList(int intval)
         {
-            try
-            {
-                var data = await CacheHelper.GetOrSetAsync("PreparedWarehouse", () => _series2.GetWarehousePreparedData(intval), 10);
-                if (data == null || !data.Any())
-                    return JsonNotFound("No Warehouse data found");
+            var data = await _series2.GetWarehousePreparedData(intval) ?? new List<WarehousePreparedModel>();
+            if (data == null || !data.Any())
+                return JsonNotFound("No Warehouse data found");
 
-                return JsonSuccess(data);
-            }
-            catch (Exception ex)
-            {
-                return JsonError(ex.Message);
-            }
+            return JsonSuccess(data);
         }
         public async Task<ActionResult> GetSupplierDatalist(string partText)
         {
-            try
-            {
-                var data = await _series.GetSuppliersData(partText);
-                if (data == null || !data.Any())
-                    return JsonNotFound("No Supplier data found");
+            var data = await _series.GetSuppliersData(partText) ?? new List<SuppliersModel>();
+            if (data == null || !data.Any())
+                return JsonNotFound("No Supplier data found");
 
-                return JsonSuccess(data);
-            }
-            catch (Exception ex)
-            {
-                return JsonError(ex.Message);
-            }
-
+            return JsonSuccess(data);
         }
         public async Task<ActionResult> GetSeriesDetails(int seriesID)
         {
-            try
-            {
-                var datalist = await _series2.GetSeriesData() ?? new List<SeriesviewModel>();
-                var data = datalist.FirstOrDefault(p => p.Series_ID == seriesID);
-                if (data == null)
-                    return JsonNotFound("No Plan Schedule Details data found");
+            var datalist = await _series2.GetSeriesData() ?? new List<SeriesviewModel>();
+            var data = datalist.FirstOrDefault(p => p.Series_ID == seriesID);
+            if (data == null)
+                return JsonNotFound("No Plan Schedule Details data found");
 
-                return JsonSuccess(data);
-            }
-            catch (Exception ex)
-            {
-                return JsonError(ex.Message);
-            }
+            return JsonSuccess(data);
         }
 
         // ###################### POST METHOD =========================================
@@ -198,18 +154,11 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
         //[JwtAuthorize]
         public async Task<ActionResult> GetSeriesDataList()
         {
-            try
-            {
-                var data = await _series.GetSeriesData();
-                if (data == null || !data.Any())
-                    return JsonNotFound("No  Plan Schedule data found");
+            var data = await _series.GetSeriesData() ?? new List<SeriesviewModel>();
+            if (data == null || !data.Any())
+                return JsonNotFound("No  Plan Schedule data found");
 
-                return JsonSuccess(data);
-            }
-            catch (Exception ex)
-            {
-                return JsonError(ex.Message);
-            }
+            return JsonSuccess(data);
         }
         
 
@@ -563,7 +512,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
         //------------------------------------------------------------------------------
         public async Task<ActionResult> GetHistoryTransactionList()
         {
-            var data = await CacheHelper.GetOrSetAsync("HistoryTransact", () => _series2.GetHistoryTransactionData(), 15);
+            var data = await _series2.GetHistoryTransactionData() ?? new List<SummaryHistory>();
             if (data == null || !data.Any())
                 return JsonNotFound("No History Transaction data found");
 
@@ -635,18 +584,11 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
         [HttpGet]
         public async Task<ActionResult> GetSupplierList()
         {
-            try
-            {
-                var res = await _series2.GetSupplierData();
-                if (res == null || !res.Any())
-                    return JsonNotFound("No Supplier data found");
+            var res = await _series2.GetSupplierData() ?? new List<SupplierModel>();
+            if (res == null || !res.Any())
+                return JsonNotFound("No Supplier data found");
 
-                return JsonSuccess(res);
-            }
-            catch (Exception ex)
-            {
-                return JsonError(ex.Message);
-            }
+            return JsonSuccess(res);
         }
         //######################### POST METHOD ########################################
         [HttpPost]
@@ -654,10 +596,8 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
         {
             bool result = await _series2.AddEditSuppliers(sup);
 
-            if (result)
-            {
-                CacheHelper.Remove("Suppliers");
-            }
+            if (result) CacheHelper.Remove("Suppliers");
+           
             var formdata = GlobalUtilities.GetMessageResponse(result, 1);
             return Json(formdata, JsonRequestBehavior.AllowGet);
         }
@@ -681,48 +621,27 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
         //------------------------------------------------------------------------------
         public async Task<ActionResult> GetWarePartnumberDetails(string partnum)
         {
-            try
-            {
-                var data = await _ware.Warehousepartnumber(partnum);
-                if (data == null || !data.Any())
-                    return JsonNotFound("No Warehouse Partnumber data found");
+            var data = await _ware.Warehousepartnumber(partnum) ?? new List<WarehouseModel>();
+            if (data == null || !data.Any())
+                return JsonNotFound("No Warehouse Partnumber data found");
 
-                return JsonSuccess(data);
-            }
-            catch (Exception ex)
-            {
-                return JsonError(ex.Message);
-            }  
+            return JsonSuccess(data);
         }
         public async Task<ActionResult> GetPartlistDatabase()
         {
-            try
-            {
-                var data = await _ware.Warehousepartsmasterlist();
-                if (data == null || !data.Any())
-                    return JsonNotFound("No Warehouse Masterlist data found");
+            var data = await _ware.Warehousepartsmasterlist() ?? new List<WarehouseModel>();
+            if (data == null || !data.Any())
+                return JsonNotFound("No Warehouse Masterlist data found");
 
-                return JsonSuccess(data);
-            }
-            catch (Exception ex)
-            {
-                return JsonError(ex.Message);
-            }
+            return JsonSuccess(data);
         }
         public async Task<ActionResult> GetPartlistRequestSummary()
         {
-            try
-            {
-                var data = await _ware.PartsRequestSummary();
-                if (data == null || !data.Any())
-                    return JsonNotFound("No Partlist Request data found");
+            var data = await _ware.PartsRequestSummary() ?? new List<PartlistrequestModel>();
+            if (data == null || !data.Any())
+                return JsonNotFound("No Partlist Request data found");
 
-                return JsonSuccess(data);
-            }
-            catch (Exception ex)
-            {
-                return JsonError(ex.Message);
-            }
+            return JsonSuccess(data);
         }
         //###################### POST METHOD ###########################################
         [HttpPost]
@@ -756,15 +675,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
         public ActionResult HistoryTransaction() => View();
         public ActionResult ComponentsOut() => View();
         public ActionResult RegisterSupplier() => View();
-        public ActionResult LogMainpage()
-        {
-            //if (User.Identity.IsAuthenticated)
-            //{
-            ///    return RedirectToAction("LogMainpage", "Series"); // Redirect logged-in users
-            //}
-            return View();
-        }
-       
+        public ActionResult LogMainpage() =>  View();    
 
 
 
@@ -774,11 +685,8 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
             try
             {
                 //Redirect to Main series data if no data exist
-                if (string.IsNullOrEmpty(series))
-                {
-                    return RedirectToAction("PlanSchedule");
-                }
-
+                if (string.IsNullOrEmpty(series)) return RedirectToAction("PlanSchedule");
+               
                 // Decode Base64
                 byte[] data = Convert.FromBase64String(series);
                 string decodedSeries = System.Text.Encoding.UTF8.GetString(data);
@@ -792,19 +700,14 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
             }
         }
 
-
-
         public ActionResult ManagePlanSchedule() => View();
         public ActionResult PlanDetails(string series)
         {
             try
             {
                 //Redirect to Main series data if no data exist
-                if (string.IsNullOrEmpty(series))
-                {
-                    return RedirectToAction("ManagePlanSchedule");
-                }
-
+                if (string.IsNullOrEmpty(series)) return RedirectToAction("ManagePlanSchedule");
+                
                 // Decode Base64
                 byte[] data = Convert.FromBase64String(series);
                 string decodedSeries = System.Text.Encoding.UTF8.GetString(data);

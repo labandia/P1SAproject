@@ -47,7 +47,7 @@ namespace ProductConfirm.Modals
                 if (success)
                 {
                     MessageBox.Show("Update successfully");
-                    _shop.displayshopordertable();
+                    await _shop.displayshopordertable();
                    // _emp.Displayemployee(depid);
                    // _emp.comboBox1.SelectedIndex = comboBox1.SelectedIndex;
                     Visible = false;

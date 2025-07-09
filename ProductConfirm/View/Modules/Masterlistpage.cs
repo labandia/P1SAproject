@@ -1,7 +1,6 @@
 ﻿using Microsoft.Office.Interop.Excel;
 using ProductConfirm.Data;
 using ProductConfirm.DataAccess;
-using ProductConfirm.Global;
 using ProductConfirm.Modals;
 using ProductConfirm.Models;
 using ProductConfirm.View.Modals;
@@ -17,7 +16,7 @@ namespace ProductConfirm.Modules
     {
         public ProductRepositoryV2 _prod;
         private readonly IProductRepositoryV2 _prod2;
-        private static List<ProductModel> _model;
+        //private static List<ProductModel> _model;
 
 
         public DataGridView mastergrid { get { return Masterlistable; } }

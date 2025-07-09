@@ -5,15 +5,13 @@ using System.Threading.Tasks;
 using System.Linq;
 using ProgramPartListWeb.Interfaces;
 using ProgramPartListWeb.Utilities;
-using System.Net.PeerToPeer;
 using System;
-using System.Diagnostics;
 
 namespace ProgramPartListWeb.Data
 {
     public class UserRespository : IUserRepository
     {
-        public async Task<List<UsersModel>> GetAllusers()
+        public Task<List<UsersModel>> GetAllusers()
         {
             string strquery = $@"SELECT ua.User_ID, ua.Username, 
                                 ua.Password, u.Fullname, ua.Role_ID
@@ -21,7 +19,7 @@ namespace ProgramPartListWeb.Data
                                 INNER JOIN Users u ON u.User_ID = ua.User_ID
                                 INNER JOIN ProjectList p ON p.Project_ID = ua.Project_ID
                                 WHERE IsActive = 1";
-            return await UsersAccess.UserGetData<UsersModel>(strquery);
+            return UsersAccess.UserGetData<UsersModel>(strquery);
         }
 
         public Task<bool> CheckUserTable(string employ)
@@ -81,25 +79,19 @@ namespace ProgramPartListWeb.Data
 
         public async Task<string> UsersFullname(int id)
         {
-            string strquery = "SELECT First_Name, Last_Name " +
-                               "FROM UserAccounts WHERE User_ID = @userid ";
-
-            var parameters = new { userid = id };
-
-            var data = await UsersAccess.UserGetData<AuthModel>(strquery, parameters);
-
+            string strquery = $@"SELECT First_Name, Last_Name FROM UserAccounts WHERE User_ID = @userid";
+            var data = await UsersAccess.UserGetData<AuthModel>(strquery, new { userid = id });
             var RowData = data.FirstOrDefault();
 
             return RowData.Fullname;
         }
 
 
-        public async Task<bool> RegiserUserData(object parameters)
+        public Task<bool> RegiserUserData(object parameters)
         {
             string strquery = "INSERT UserAccounts(Username, Password, Role_ID, First_Name, " +
                               "Last_Name) VALUES (@Username, @Password, @Role_ID, @First_Name, @Last_Name)";
-            bool result = await UsersAccess.UpdateUserData(strquery, parameters);
-            return result;
+            return UsersAccess.UpdateUserData(strquery, parameters); ;
         }
 
        
@@ -119,16 +111,16 @@ namespace ProgramPartListWeb.Data
             return SqlDataAccess.GetCountDataSync(strsql, new { Employee_ID = Employee });
         }
 
-        public async Task<List<UserEmployee>> GetUserEmployeeID()
+        public Task<List<UserEmployee>> GetUserEmployeeID()
         {
             string strsql = "SELECT Employee_ID, FullName, Email FROM Users";
-            return await SqlDataAccess.GetData<UserEmployee>(strsql, null);
+            return SqlDataAccess.GetData<UserEmployee>(strsql, null);
         }
 
-        public async Task<bool> CheckUserAccount(string employ, string username)
+        public Task<bool> CheckUserAccount(string employ, string username)
         {
             string strsql = "SELECT Employee_ID, FullName, Email FROM Users";
-            return await SqlDataAccess.Checkdata(strsql, null);
+            return SqlDataAccess.Checkdata(strsql, null);
         }
     }
 }

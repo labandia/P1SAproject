@@ -30,7 +30,7 @@ namespace ProductConfirm
             services.AddTransient<Masterlistpage>();
 
             ServiceProvider = services.BuildServiceProvider();
-            var mainForm = ServiceProvider.GetRequiredService<Loginpage>();
+            var mainForm = ServiceProvider.GetRequiredService<Mainpage>();
             Application.Run(mainForm);
         }
 

@@ -13,7 +13,7 @@ namespace ProgramPartListWeb.Data
     public class SeriesRepository : ISeriesRepository
     {
         // ###################   PULL THE DATA SERIES  ##################################
-        public async Task<List<SeriesviewModel>> GetSeriesData()
+        public  Task<List<SeriesviewModel>> GetSeriesData()
         {
             string strquery = "SELECT s.Series_ID, s.Series_no, s.Line, s.Modelno, " +
                              "s.timetarget, s.createdBy, s.Shift, s.Remarks, " +
@@ -31,30 +31,26 @@ namespace ProgramPartListWeb.Data
                             "GROUP BY Series_ID), 0)  THEN 1 " +
                             "ELSE 0 END AS Planstatus " +
                              "FROM PartList_Series_tbl s ORDER BY Series_ID DESC"; 
-            return await SqlDataAccess.GetData<SeriesviewModel>(strquery, null, "serieslist");
+            return SqlDataAccess.GetData<SeriesviewModel>(strquery, null, "serieslist");
         }
-        public async Task<List<PrepareviewModel>> GetComponentsList(int intseries)
+        public Task<List<PrepareviewModel>> GetComponentsList(int intseries)
         {
-            return await SqlDataAccess.GetData<PrepareviewModel>("Getpartscomponents", new { seriesID = intseries });
+            return  SqlDataAccess.GetData<PrepareviewModel>("Getpartscomponents", new { seriesID = intseries });
         }
-        public async Task<List<WarehousePreparedModel>> GetWarehousePreparedData(int intseries)
+        public Task<List<WarehousePreparedModel>> GetWarehousePreparedData(int intseries)
         {
-            return await SqlDataAccess.GetData<WarehousePreparedModel>("WarehousePrepared", new { seriesID = intseries }, "PreparedWarehouse");
+            return SqlDataAccess.GetData<WarehousePreparedModel>("WarehousePrepared", new { seriesID = intseries }, "PreparedWarehouse");
         }
 
 
         // ################### COMPONENTS SUMMARY DISPLAY ###################################
-        public async Task<List<SummaryComponentModel>> GetComponentsSummmary(string strval)
+        public Task<List<SummaryComponentModel>> GetComponentsSummmary(string strval)
         {
-            string strquery = "ComponentsSummary";
-            var parameters = new { Series_no = strval};
-            return await SqlDataAccess.GetData<SummaryComponentModel>(strquery, parameters, "GetComponentsSummary");
+            return SqlDataAccess.GetData<SummaryComponentModel>("ComponentsSummary", new { Series_no = strval }, "GetComponentsSummary");
         }
-        public async Task<List<PartlistModel>> Getpartlist(string series)
+        public Task<List<PartlistModel>> Getpartlist(string series)
         {
-            string strquery = "PartlistData";
-            var parameters = new { Series_no = series };
-            return await SqlDataAccess.GetData<PartlistModel>(strquery, parameters, "PartlistData");
+            return SqlDataAccess.GetData<PartlistModel>("PartlistData", new { Series_no = series }, "PartlistData");
         }
         //public async Task<List<SeriesviewModel>> GetSeriesDataTable(int pagenum, int pagesize, int filter)
         //{
@@ -78,25 +74,23 @@ namespace ProgramPartListWeb.Data
         //    var parameters = new { PageNumber = pagenum, PageSize = pagesize };
         //    return await SqlDataAccess.GetData<SeriesviewModel>(strquery, parameters);
         //}
-        public async Task<int> GetTotalQuantity(string partnum, int seriesID)
+        public Task<int> GetTotalQuantity(string partnum, int seriesID)
         {
             string strquery = "SummaryCount";
             var parameters = new { AbassadorPartnum = partnum, @Series_ID = seriesID };
-            return await SqlDataAccess.GetCountData(strquery, parameters);
+            return SqlDataAccess.GetCountData(strquery, parameters);
         }
-        public async Task<bool> UpdatePreparedQuantity(object parameters)
+        public Task<bool> UpdatePreparedQuantity(object parameters)
         {
             string strquery = "UPDATE PartList_Coms_Summary_tbl SET Stats =@Stats " +
               "WHERE Series_ID =@Series_ID AND AbassadorPartnum =@AbassadorPartnum";
-            bool result = await SqlDataAccess.UpdateInsertQuery(strquery, parameters);
-            return result;
+            return SqlDataAccess.UpdateInsertQuery(strquery, parameters); ;
         }
-        public async Task<bool> UpdateSummaryQuantity(object parameters)
+        public Task<bool> UpdateSummaryQuantity(object parameters)
         {
             string strquery = "UPDATE PartList_Prepare_tbl SET Prepared_Quantity =@Prepared_Quantity " +
                 "WHERE Series_ID =@Series_ID AND AbassadorPartnum =@AbassadorPartnum";
-            bool result = await SqlDataAccess.UpdateInsertQuery(strquery, parameters);
-            return result;
+            return SqlDataAccess.UpdateInsertQuery(strquery, parameters);
         }
 
 
@@ -127,43 +121,34 @@ namespace ProgramPartListWeb.Data
 
 
 
-        public async Task<bool> SaveSummaryComponents(object parameters)
+        public Task<bool> SaveSummaryComponents(object parameters)
         {  
             string strquery = "INSERT INTO PartList_Coms_Summary_tbl(Series_ID, NeedQuan, ReelID, " +
                               "AbassadorPartnum, CompIN, SetNo, Stats, SupID, LotNo) VALUES(@SeriesID, @NeedQuan, @ReelID, " +
                               "@AbassadorPartnum, @CompIN, @SetNo, @Stats, @SupID, @LotNo)";
-
-            bool result = await SqlDataAccess.UpdateInsertQuery(strquery, parameters);
-            return result;
+            return SqlDataAccess.UpdateInsertQuery(strquery, parameters);
         }
 
-        public async Task<bool> DeleteSummaryComponentList(object parameters)
+        public Task<bool> DeleteSummaryComponentList(object parameters)
         {
             string strquery = "DELETE FROM PartList_Coms_Summary_tbl  WHERE AbassadorPartnum =@AbassadorPartnum";
-            bool result = await SqlDataAccess.UpdateInsertQuery(strquery, parameters);
-            return result;
+            return SqlDataAccess.UpdateInsertQuery(strquery, parameters);
         }
 
 
         public async Task<int> GetSeriesID(string strSeries)
         {
             var seriesData = await GetSeriesData();
-
             var series = seriesData.FirstOrDefault(res => res.Series_no.Equals(strSeries, StringComparison.OrdinalIgnoreCase));
-
             return series?.Series_ID ?? 0;
         }
-        public async Task<bool> SeriesChangeStatus(int Id, int stats)
+        public Task<bool> SeriesChangeStatus(int Id, int stats)
         {
             string query = "UPDATE PartList_Series_tbl SET Ongoing =@Ongoing WHERE Series_ID =@Series_ID";
-            var parameters = new { Ongoing = Id, Series_ID = stats };
-
-            bool result = await SqlDataAccess.UpdateInsertQuery(query, parameters);
-
-            return result;
+            return SqlDataAccess.UpdateInsertQuery(query, new { Ongoing = Id, Series_ID = stats });
         }
         // ###################   ADD NEW DATA FOR THE SERIES ##################################
-        public async Task<bool> AddSeriesData(object parameters)
+        public Task<bool> AddSeriesData(object parameters)
         {    
             string strquery = "INSERT INTO PartList_Series_tbl " +
                               "(Series_no, Line, Timetarget, CreatedBy, " +
@@ -173,17 +158,17 @@ namespace ProgramPartListWeb.Data
                               "@Shift, @Remarks, @SetupNavi, " +
                               "@VisualManage, @Status, @MachineSerial, " +
                               "@Modelno, @SetGroup)";
-            return await SqlDataAccess.UpdateInsertQuery(strquery, parameters, "serieslist"); 
+            return SqlDataAccess.UpdateInsertQuery(strquery, parameters, "serieslist"); 
         }
 
-        public async Task<bool> UpdateSeriesData(object parameters)
+        public Task<bool> UpdateSeriesData(object parameters)
         {
             string strquery = "UPDATE PartList_Series_tbl SET " +
                               "Series_no = @Series_no, Line =@Line, Timetarget =@Timetarget, CreatedBy =@CreatedBy, " +
                               "Remarks =@Remarks, SetupNavi =@SetupNavi, VisualManage =@VisualManage, Status =@Status, " +
                               "MachineSerial =@MachineSerial, Modelno =@Modelno, SetGroup =@SetGroup " +
                               "WHERE Series_ID =@Series_ID";
-            return await SqlDataAccess.UpdateInsertQuery(strquery, parameters);
+            return SqlDataAccess.UpdateInsertQuery(strquery, parameters);
         }
 
 
@@ -355,7 +340,7 @@ namespace ProgramPartListWeb.Data
             return result;
         }
 
-        public async Task<List<ReturnModel>> GetComponentsOutData()
+        public Task<List<ReturnModel>> GetComponentsOutData()
         {
             string strquery = "SELECT  r.ProductName AS ComponentsName, r.ChipCount AS Quantity, w.ItemCode, " +
 	                          "SUBSTRING(r.ProductName, 4, CHARINDEX(' ', r.ProductName) - 4) as Ambassador, " +
@@ -363,18 +348,17 @@ namespace ProgramPartListWeb.Data
                               "FROM PartList_ReturnOut_tbl r " +
                               "LEFT JOIN PartList_Masterlist_Warehouse w ON " +
                               "w.AbassadorPartnum = SUBSTRING(r.ProductName, 4, CHARINDEX(' ', r.ProductName) - 4)";
-            return await SqlDataAccess.GetData<ReturnModel>(strquery);
+            return SqlDataAccess.GetData<ReturnModel>(strquery);
         }
 
-        public async Task<bool> CheckComponentsOutData(int ID)
+        public  Task<bool> CheckComponentsOutData(int ID)
         {
             string strquery = "SELECT COUNT(Series_ID) as SeriesID FROM PartList_ReturnOut_tbl " +
                               "WHERE Series_ID = @Series_ID";
-            var parameter = new { Series_ID = ID };
-            return await SqlDataAccess.Checkdata(strquery, parameter);
+            return SqlDataAccess.Checkdata(strquery, new { Series_ID = ID });
         }
 
-        public async Task<List<SummaryHistory>> GetHistoryTransactionData()
+        public Task<List<SummaryHistory>> GetHistoryTransactionData()
         {
             string strquery = "SELECT s.Series_no, CONCAT('SDP', cs.AbassadorPartnum, ' ', cs.ReelID) as ProductName, " +
 	                          "cs.AbassadorPartnum, w.ItemCode, cs.NeedQuan, " +
@@ -383,21 +367,19 @@ namespace ProgramPartListWeb.Data
                           "FROM  PartList_Coms_Summary_tbl cs " +
                           "INNER JOIN PartList_Series_tbl s ON s.Series_ID = cs.Series_ID " +
                           "LEFT JOIN PartList_Masterlist_Warehouse w ON w.AbassadorPartnum = cs.AbassadorPartnum";
-            return await SqlDataAccess.GetData<SummaryHistory>(strquery);
+            return  SqlDataAccess.GetData<SummaryHistory>(strquery);
         }
 
-        public async Task<List<SuppliersModel>> GetSuppliersData(string partnum)
+        public  Task<List<SuppliersModel>> GetSuppliersData(string partnum)
         {
             string strquery = "SELECT SupID, AbassadorPartnum, Partname, Supplier, Code " +
                               "FROM PartList_Suppliers_tbl WHERE AbassadorPartnum =@AbassadorPartnum";
-            var parameters = new { AbassadorPartnum = partnum };
-            return await SqlDataAccess.GetData<SuppliersModel>(strquery, parameters);
+            return SqlDataAccess.GetData<SuppliersModel>(strquery, new { AbassadorPartnum = partnum });
         }
 
-        public async Task<List<SupplierModel>> GetSupplierData()
+        public  Task<List<SupplierModel>> GetSupplierData()
         {
-            string strquery = "SupplierData";
-            return await SqlDataAccess.GetData<SupplierModel>(strquery, null, "Suppliers");
+            return SqlDataAccess.GetData<SupplierModel>("SupplierData", null, "Suppliers");
         }
 
         public async Task<bool> AddEditSuppliers(SupplierModel sup)

@@ -63,8 +63,14 @@
         padding: 0;
     }
 
-    html {
+    html:focus-within {
         scroll-behavior: smooth;
+    }
+
+
+
+    body{
+        transition: all .5s ease;
     }
 
     body,
@@ -105,12 +111,13 @@
         cursor: pointer;
         outline: none;
         border-radius: .5em;
+        transition: .5s all ease;
     }
     /*=============== BUTTON THAT HAS ICON ===============*/
     button:has(i){
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 20px;
     }
 
 

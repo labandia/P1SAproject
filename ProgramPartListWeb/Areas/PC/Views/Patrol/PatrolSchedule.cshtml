@@ -17,6 +17,7 @@
                     <option value="3">Rotor</option>
                     <option value="4">Winding</option>
                     <option value="5">Circuit</option>
+                    <option value="6">Process Control</option>
                 </select>
                 <input id="searchbox" type="text" placeholder="Search name ... "  />
             </div>
@@ -185,8 +186,6 @@
             });
         }
     };
-
-
     const fetchAndRenderEvents =  async(employeeId) =>{
         let res = await FetchAuthenticate('@Url.Action("GetCalendarEvents", "Patrol")', { Employee_ID : employeeId });
 
@@ -230,19 +229,15 @@
         }
     }
 
-
-
     addform.addEventListener('submit', async (e) => {
         e.preventDefault();
         let formData = new FormData(e.target);
         formData.append('Employee_ID', employVal);
         formData.append('ModeID', 0);
-        //var data = Object.fromEntries(formData);
         //console.log(data);
         let res = await postData('@Url.Action("SetActiveDateSchedule", "Patrol")', formData);
         if (res && res.Success) {
             $("#AddScheduleModal").modal("hide");
-
             // ✅ Refresh the calendar with updated events
             await fetchAndRenderEvents(employVal);
         }
@@ -253,7 +248,6 @@
         let formData = new FormData(e.target);
         formData.append('Employee_ID', employVal);
         formData.append('ModeID', 1);
-        //var data = Object.fromEntries(formData);
         let res = await postData('@Url.Action("SetActiveDateSchedule", "Patrol")', formData);
         //console.log(res);
 
@@ -266,7 +260,6 @@
         let res = await postData('@Url.Action("RemoveDateSchedule", "Patrol")', formData);
         if (res.StatusCode === 200) {
             $("#EditScheduleModal").modal("hide");
-
             await fetchAndRenderEvents(employVal);
         }
 
@@ -358,41 +351,24 @@
             },
 
             dateClick: function (info) {
-                //console.log(info.dateStr);
-                //console.log("Department ID : " + DepartID);
                 $("#ScheduleID").val("0");
                 $("#ScheduleDate").val(info.dateStr);
                 $("#IsActive").val("0");
-                //console.log(employVal);
 
                 if (employVal !== undefined) {
                     PopulateComboxProccess(DepartID, 0);
                     $("#AddScheduleModal").modal('show');
-                } else {
-                    Swal.fire("Select Auditor First");
-                }
-                //alert("HERE" );
+                } 
             },
 
             eventClick: function (info) {
-                //console.log("Department ID : " + DepartID);
                 const eventObj = info.event;
-                //console.log("Event Click " + eventObj);
-                // Example: Log the details
-                //console.log("Event Clicked:");
-                //console.log("ID:", eventObj.id);
-                //console.log("Title:", eventObj.title);
-                //console.log("Start:", eventObj.startStr);
-                //console.log("Active:", eventObj.extendedProps.Active);
-                //console.log("Pro:", eventObj.extendedProps.ProcID);
-                //console.log("All Day:", eventObj.allDay);
                 $("#EditScheduleID").val(eventObj.id);
                 $("#EditScheduleDate").val(eventObj.startStr);
                 $("#EditIsActive").val("1");
 
                 PopulateComboxProccess(DepartID, 1);
                 // Optional: Do something with it, like showing a modal or message
-                //alert(`Selected Schedule\n\nTitle: ${eventObj.title}\nDate: ${eventObj.startStr}`);
                 $("#EditScheduleModal").modal('show');
             }
         });
@@ -405,7 +381,6 @@
         let searchText = $("#searchbox").val();
 
         PopulateComboxInspector(searchText);
-
         // Filter when selection changes
         $("#DepartmentID").on("change", function () {
             PopulateComboxInspector(searchText);

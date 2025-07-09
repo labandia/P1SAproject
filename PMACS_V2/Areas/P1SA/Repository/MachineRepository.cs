@@ -2,6 +2,7 @@
 using PMACS_V2.Areas.P1SA.Models;
 using PMACS_V2.Helper;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace PMACS_V2.Areas.P1SA.Repository
@@ -46,7 +47,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
         public async Task<List<EquipmentList>> GetEquipmentData(int sectionID)
         {
             string strsql = "SELECT Machine_code, Equipment, Section_ID FROM Major WHERE Section_ID = " + sectionID + "";
-            return await SqlDataAccess.GetData<EquipmentList>(strsql, null, "Equipment");
+            return await SqlDataAccess.GetData<EquipmentList>(strsql, null);
         }
 
         public async Task<List<MachineModel>> GetMachineData(int offset, int limit, int sect, string mach)
@@ -60,6 +61,8 @@ namespace PMACS_V2.Areas.P1SA.Repository
                     FROM Machine m INNER JOIN major ma on ma.Machine_code = m.MACH_CODE 
                     WHERE m.Section_ID = {sect} {machfilter} ORDER BY m.ID DESC 
                     OFFSET {offset} ROWS FETCH NEXT {limit} ROWS ONLY ";
+
+            Debug.WriteLine(strsql);
 
             return await SqlDataAccess.GetData<MachineModel>(strsql, null);
         }

@@ -167,27 +167,6 @@
     const addforms = document.getElementById("addnewform");
     const editforms = document.getElementById("editnewform");
 
-    //searchEmployee.addEventListener('input', async (e) => {
-    //    const searchTerm = e.target.value;
-    //    // Only search if user typed something
-    //    if (searchTerm.trim() !== '') {
-    //        let res = await FetchAuthenticate('/User/SearchEmployeeID', { empID: searchTerm });
-    //        if (res.StatusCode === 200) {
-    //            $("#Fullname").css("border", "1px solid green");
-    //            $("#Fullname").val(res.Data.FullName);
-    //            //$("#Noemployee").text("");
-    //        } else {
-    //            $("#Fullname").css("border", "1px solid red");
-    //            $("#Fullname").val('');
-    //            //$("#Noemployee").text("Employee ID Doesnt Exist *");
-    //        }
-    //    } else {
-    //        $("#Noemployee").text("");
-    //        $("#Fullname").css("border", "1px solid #A5A1AA");
-    //    }
-
-    //});
-
     // INPUT SEARCH EMPLOYEE NAME WHEN TYPE
     $("#EmployeeSearch").keyup(function () {
         let result = [];
@@ -324,10 +303,10 @@
 
                 const rowHtml = `
                     <tr class='row_${i} rowClick' id='editButton_${rowData.InspectID}'>
-                        <td style='font-weight: 600; text-align: left; padding-left: 1em; color: #222;' data-cell="Part number">${capitalize(rowData.FullName)}</td>
-                        <td data-cell="DateQualified">${rowData.DateQualified}</td>
-                        <td data-cell="OJTRegistration">${rowData.OJTRegistration}</td>
-                        <td data-cell="Remarks">${rowData.Remarks}</td>
+                        <td style='font-weight: 600; text-align: left; padding-left: 1em; color: #0c382ce8; ' data-cell="Part number">${capitalize(rowData.FullName)}</td>
+                        <td data-cell="DateQualified">${rowData.DateQualified ? rowData.DateQualified : "-"}</td>
+                        <td data-cell="OJTRegistration">${rowData.OJTRegistration ? rowData.OJTRegistration : "-"}</td>
+                        <td data-cell="Remarks">${rowData.Remarks ? rowData.Remarks : "-"}</td>
                         <td data-cell="Approval">
                             <span class='${parseInt(rowData.Approval) === 1 ? "Complete" : "Incomplete"}'>
                                 ${parseInt(rowData.Approval) === 1 ? "Approval" : "Pending"}

@@ -179,7 +179,6 @@ namespace ProductConfirm
             _uiShoporder.shopordergrid.Columns["Shopstats"].Visible = false;
             _uiShoporder.shopordergrid.Columns["ShoporderID"].Visible = false;
             _uiShoporder.shopordergrid.Columns["MachinePressureMinMax"].Visible = false;
-            _uiShoporder.ResultCount.Text = "" + _uiShoporder.shopordergrid.RowCount;
            
         }
 

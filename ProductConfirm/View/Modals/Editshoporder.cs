@@ -76,7 +76,7 @@ namespace ProductConfirm.Modals
             if (check)
             {
                 MessageBox.Show("Update success");
-                _ui.displayshopordertable();
+                await _ui.displayshopordertable();
             }
            
         }

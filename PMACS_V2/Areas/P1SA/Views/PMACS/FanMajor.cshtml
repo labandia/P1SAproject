@@ -842,65 +842,63 @@
         }
 
     }
-    function MachineLoadFilterData(data, sectionID, mach) {
+    async function MachineLoadFilterData(data, sectionID, mach) {
         loadData = [];
-        makeAjaxRequest(apiBaseUrl + 'Machine', data, 0)
-            .then(res => {
-                let load = res.machine;
-                loadData = load;
-                if (parseInt(load[0].SecID) == 1 || parseInt(load[0].SecID) == 2) {
-                    $("#formold").show();
-                    $("#editformold").show();
-                } else {
-                    $("#formold").hide();
-                    $("#editformold").hide();
-                }
 
-                switch (sectionID) {
-                    case 2:
-                        appendData(machineData1, load);
-                        CountMachine(2, mach);
-                        break;
-                    case 1:
-                        appendData(machineData2, load);
-                        CountMachine(1, mach);
-                        break;
-                    case 3:
-                        appendData(machineData3, load);
-                        CountMachine(3, mach);
-                        break;
-                    case 4:
-                        appendData(machineData4, load);
-                        CountMachine(4, mach);
+        let res = await fetchData('@Url.Action("GetFanmajorMachine", "FanMajor")', data);
+        console.log(res);
+        //if (res && res.StatusCode === 200) {
+        //    let load = res.machine;
+        //    loadData = load;
+        //    if (parseInt(load[0].SecID) == 1 || parseInt(load[0].SecID) == 2) {
+        //        $("#formold").show();
+        //        $("#editformold").show();
+        //    } else {
+        //        $("#formold").hide();
+        //        $("#editformold").hide();
+        //    }
 
-                        break;
-                    case 5:
-                        appendData(machineData5, load);
-                        CountMachine(5, mach);
-                        break;
-                }
+        //    switch (sectionID) {
+        //        case 2:
+        //            appendData(machineData1, load);
+        //            CountMachine(2, mach);
+        //            break;
+        //        case 1:
+        //            appendData(machineData2, load);
+        //            CountMachine(1, mach);
+        //            break;
+        //        case 3:
+        //            appendData(machineData3, load);
+        //            CountMachine(3, mach);
+        //            break;
+        //        case 4:
+        //            appendData(machineData4, load);
+        //            CountMachine(4, mach);
 
-            })
-            .catch(error => {
-                console.error('Error occurred:', error);
-                // Handle the error
-            });
+        //            break;
+        //        case 5:
+        //            appendData(machineData5, load);
+        //            CountMachine(5, mach);
+        //            break;
+        //    }
+        //}
+        
     }
 
 
     //################################### FITLER DATA BASE ON DROPDOWN MENU ##################################
     $('#machcode__mold').change(function () {
         $("#molding_btn").show();
-        p_limit = 8;
+        m_limit = 8;
         let formdata = new FormData();
         formdata.append('offset', m_offset);
-        formdata.append('limit', p_limit);
+        formdata.append('limit', m_limit);
         formdata.append('sectionID', 2);
         formdata.append('mach', this.value);
         const data = Object.fromEntries(formdata);
         MachineFilterData(formdata, 2, data.mach, 1);
     });
-    $('#machcode__press').change(function () {
+    $('#machcode__press').change(function (e) {
         $("#press_btn").show();
         p_limit = 8;
         let formdata = new FormData();
@@ -1134,10 +1132,10 @@
             $("#fansaveEdit").css("display", "none");
 
             var buttonId = $(this).attr('id');
-            var rowIndex = buttonId.split('_')[1]; 
+            var rowIndex = buttonId.split('_')[1];
             let filterdata = loadData.filter(item => item.ID === parseInt(rowIndex));
-      
-            let setDate = changeformattedDate(filterdata[0].Date_acquired); 
+
+            let setDate = changeformattedDate(filterdata[0].Date_acquired);
             // Get the current active tab index
             currentTabIndex = getCurrentTabIndex();
 
@@ -1369,7 +1367,7 @@
 
 
 
-  
+
 
 
     // Get the Current Tabs When Click to edit

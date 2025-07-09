@@ -29,6 +29,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         // GET: P1SA/GetFanmajorMachine
         public async Task<ActionResult> GetFanmajorMachine(int offset, int limit, int sectionID, string mach)
         {
+            //Debug.WriteLine($@"OffSet : {offset} - Limit : {limit}");
              var data = await _man.GetMachineData(offset, limit, sectionID, mach);
                 var machineWithImages = data.Select(m => new
                 {

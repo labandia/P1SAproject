@@ -13,7 +13,7 @@ namespace ProgramPartListWeb.Repository
     public sealed class AuthRepository : IAuthRepository
     {
 
-        public async Task<List<AuthModel>> GetByUsername(string username, int proj)
+        public Task<List<AuthModel>> GetByUsername(string username, int proj)
         {
             string strquery = @"SELECT ua.User_ID, ua.Username, ua.Password, ua.Role_ID, u.Fullname
                                 FROM UserAccounts ua
@@ -22,14 +22,10 @@ namespace ProgramPartListWeb.Repository
                                 WHERE ua.IsActive = 1 AND ua.Project_ID = @Project_ID
                                 AND (ua.Username = @Username OR  u.Employee_ID = @Username)";
             int projInt = (username == "Admin" || username == "24050006") ?  1 : proj;         
-            return await UsersAccess.UserGetData<AuthModel>(strquery, new { Username = username, Project_ID  = projInt});
+            return  UsersAccess.UserGetData<AuthModel>(strquery, new { Username = username, Project_ID  = projInt});
         }
-
-        public string GetRefreshToken(int userId)
-        {
-           return JwtHelper.GenerateRefreshToken(userId);
-        }
-
+        public string GetRefreshToken(int userId) => JwtHelper.GenerateRefreshToken(userId);
+ 
         public string GetuserRolename(int roleid)
         {
             switch (roleid)
@@ -49,16 +45,14 @@ namespace ProgramPartListWeb.Repository
             }
         }
 
-        public bool VerifyPassword(string enteredPassword, string storedHash)
-        {
-            return PasswordHasher.VerifyPassword(storedHash, enteredPassword);
-        }
-        public async Task<bool> Changepassword(int ID, string newpass)
+        public bool VerifyPassword(string enteredPassword, string storedHash) => PasswordHasher.VerifyPassword(storedHash, enteredPassword);
+       
+        public Task<bool> Changepassword(int ID, string newpass)
         {
             string strsql = $@"UPDATE UserAccounts SET Password =@Password
                                WHERE User_ID =@User_ID";
             var parameter = new { Password = newpass, User_ID = ID };
-            return await SqlDataAccess.UpdateInsertQuery(strsql, parameter);
+            return SqlDataAccess.UpdateInsertQuery(strsql, parameter);
         }
     }
 }

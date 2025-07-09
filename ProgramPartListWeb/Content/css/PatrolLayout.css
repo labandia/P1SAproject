@@ -444,17 +444,12 @@
         background: #fff;
     }
     /* Optional: Table row styling */
-    .MainTable tbody td{
-        padding: 1em 0.75em;
+    .MainTable tbody td,  .InspecTable tbody td {
+        padding: 0.75em;
         border-bottom: 1px solid #d4d3d3;
     }
 
-    .InspecTable tbody td {
-        padding: 0.75em;
-        border-bottom: 1px solid #eee;
-    }
-
-
+   
     .InspectHead {
         display: flex;
         align-items: center;
@@ -606,11 +601,36 @@
         background: var(--primary-hover);
     }
 
-    .Complete, .Incomplete {
+    .Complete, .Incomplete, .Section {
         font-weight: 600;
         padding: .4em 1em;
         border-radius: .2rem;
         font-size: .8rem;
+    }
+
+    .Molding {
+        background-color: rgba(100, 50, 9, 0.2);
+        color: rgb(100, 50, 9);
+    }
+    .Press{
+        background-color: rgba(100, 30, 9, 0.2);
+        color: rgb(100, 30, 9);
+    }
+    .Rotor {
+        background-color: rgba(9, 45, 100, 0.2);
+        color: rgb(9, 45, 100);
+    }
+    .Winding{
+        background-color: rgba(9, 71, 100, 0.2);
+        color: rgb(9, 71, 100);
+    }
+    .Circuit{
+         background-color: rgb(216, 189, 52, 0.4);
+         color: rgb(68, 57, 5);
+    }
+    .Process{
+      background-color: rgba(33, 9, 100, 0.2);
+      color: rgb(33, 9, 100);
     }
 
     .Incomplete {
@@ -724,9 +744,9 @@
 
     .ScheduleToday h6{
         font-weight: 500;
-        padding: .5em;
+        padding: .5em 1em;
         border-radius: .2em;
-        background: var(--primary-color);
+        background: #1e3a48;
         color: #fff;
     }
 
@@ -844,18 +864,15 @@
     }
 }
 
-.Schedule_listContainer {
-    margin-top: 1em;
-}
-
-
-
-.select-container {
-    width: 100%;
-    position: relative;
-    display: inline-block;
-    margin: .5em 0;
-}
+    .Schedule_listContainer {
+        margin-top: 1em;
+    }
+    .select-container {
+        width: 100%;
+        position: relative;
+        display: inline-block;
+        margin: .5em 0;
+    }
 
 
     .select-container select {

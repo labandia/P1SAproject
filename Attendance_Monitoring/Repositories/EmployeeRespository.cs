@@ -11,17 +11,17 @@ namespace Attendance_Monitoring.Models
 {
     public class EmployeeRespository : IEmployee
     {
-        public async Task<List<Employee>> GetEmployees()
+        public Task<List<Employee>> GetEmployees()
         {
             string strquery = "ManageEmployee";
-            return await SqlDataAccess.GetData<Employee>(strquery);
+            return SqlDataAccess.GetData<Employee>(strquery);
         }
-        public async Task<List<Department>> GetDepartments()
+        public Task<List<Department>> GetDepartments()
         {
             string strquery = "SELECT Department_ID, Department_name FROM Department_tbl";
-            return await SqlDataAccess.GetData<Department>(strquery);
+            return  SqlDataAccess.GetData<Department>(strquery);
         }
-        public async Task<bool> AddEmployee(Employee emp)
+        public Task<bool> AddEmployee(Employee emp)
         {
             string strquery = "AddEmployee";
             var parameters = new
@@ -32,15 +32,15 @@ namespace Attendance_Monitoring.Models
                 Affiliation = emp.Affiliation,
                 Department_ID = emp.Department_ID
             };
-            return await SqlDataAccess.UpdateInsertQuery(strquery, parameters);
+            return SqlDataAccess.UpdateInsertQuery(strquery, parameters);
         }
-        public async Task<bool> DeleteEmployee(string employee)
+        public Task<bool> DeleteEmployee(string employee)
         {
             string strquery = "DeleteEmployee";
             var parameters = new { EmployeeID = employee };
-            return await SqlDataAccess.UpdateInsertQuery(strquery, parameters);
+            return SqlDataAccess.UpdateInsertQuery(strquery, parameters);
         }
-        public async Task<bool> UpdateEmployee(Employee emp, string emptemp)
+        public Task<bool> UpdateEmployee(Employee emp, string emptemp)
         {
             string strquery = "UpdateEmployee";
             var parameters = new
@@ -52,7 +52,7 @@ namespace Attendance_Monitoring.Models
                 Affiliation = emp.Affiliation,
                 Department_ID = emp.Department_ID
             };
-            return await SqlDataAccess.UpdateInsertQuery(strquery, parameters);
+            return SqlDataAccess.UpdateInsertQuery(strquery, parameters);
         }
 
         public async Task<bool> UploadEmployee(DataTable td, int depid, int method)

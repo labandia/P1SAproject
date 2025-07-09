@@ -78,11 +78,9 @@
                             <table>
                                 <thead>
                                     <tr>
-                                        @*<th>No</th>*@
-                                        <th>Part No </th>
+                                        <th style="text-align: left !important; padding-left: 1.5em;">Part Number </th>
                                         <th>Die #</th>
                                         <th>Die Serial</th>
-                                        <th>Die life</th>
                                         <th>2011-2015</th>
                                         <th>Total Shot Count Onward</th>
                                         <th>Status</th>
@@ -105,8 +103,8 @@
                             <table>
                                 <thead>
                                     <tr>
-                                        <th>Category</th>
-                                        <th>No of die</th>
+                                        <th style="text-align: left; padding-left: 1em; width: 70%;">Category</th>
+                                        <th style="width: 30%;">No of die</th>
                                     </tr>
                                 </thead>
                                 <tbody id="FinalSummaryData">
@@ -123,7 +121,7 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Part No </th>
+                                <th  style="text-align: left !important; padding-left: 1.5em;">Part Number </th>
                                 @*<th>Part Description </th>*@
                                 <th>Dimension/ Quality </th>
                                 <th>No. of Cavity</th>
@@ -210,7 +208,7 @@
                             <label for="">Input Quantity</label>
                             <input type="hidden" name="PartNo" id="PartNo">
                             <input type="hidden" name="No" id="No">
-                            <input type="text" name="MoldInput" id="MoldInput" onkeypress="return restrictChars(event)">
+                            <input type="text" name="MoldInput" id="MoldInput" onkeypress="return restrictChars(event)" autocomplete="off">
                         </div>
 
                         <div class="edits_footer" id="editsdisplay">
@@ -467,8 +465,8 @@
             displaySummaryPagination(SummaryData, 'SummarylistData', 'SummaryPaginationContainer', 50, 5);
             $.each(FinalSummaryData, function (index, row) {
                 var setdata = "<tr class= 'row_" + index + "  '  >" +
-                    "<td style='text-align: center;'>" + row.Category + "</td> " +
-                    "<td style='text-align: center;'>" + row.MoldDie + "</td> " +
+                    "<td style='text-align: left; padding: 1em;'>" + row.Category + "</td> " +
+                    "<td style='text-align: center; font-weight: 700;'>" + row.MoldDie + "</td> " +
                     "</tr>;"
                 $("#FinalSummaryData").append(setdata);
             });
@@ -571,7 +569,6 @@
                   if (idx === 0) {
                       rowHtml += `<td rowspan="${groupRows.length}" data-cell="DieNumber">${dienumValue}</td>`;
                       rowHtml += `<td rowspan="${groupRows.length}" data-cell="DieSerial">${dieSerialValue}</td>`;
-                      rowHtml += `<td rowspan="${groupRows.length}" data-cell="DieLife">${dielifeValue}</td>`;
                       rowHtml += `<td rowspan="${groupRows.length}" data-cell="PreviousCount">${PreviousValue}</td>`;
                       rowHtml += `<td rowspan="${groupRows.length}" data-cell="ShotOnwards">${ShotOnValue}</td>`;
 
@@ -597,11 +594,6 @@
                   rowHtml += "</tr>";
                   tableBody.innerHTML += rowHtml;
               });
-
-
-
-
-
           });
 
 
@@ -765,7 +757,7 @@
 
                      //<td data-cell="Description">${rowData.Description}</td>
 
-                     rowHtml += `<td data-cell="PartNo" style="font-weight: 600; color: #222;">${rowData.PartNo}</td>
+                     rowHtml += `<td data-cell="PartNo" style="text-align: left; padding-left: 1.5em; font-weight: 600; color: #222;">${rowData.PartNo}</td>
 
                                 <td data-cell="DimensionQuality">${rowData.DimensionQuality}</td>
                                 <td data-cell="Cavity">${rowData.Cavity}</td>
@@ -849,7 +841,7 @@
              if (result) {
                  $("#PartNo").val(result.PartNo);
                  $("#No").val(result.No);
-                 $("#MoldInput").val(result.TotalDie);
+                 $("#MoldInput").val(result.TotalDie === 0 ? "" : result.TotalDie);
                  $("#InputMoldieModal").modal("show");
              }
          });

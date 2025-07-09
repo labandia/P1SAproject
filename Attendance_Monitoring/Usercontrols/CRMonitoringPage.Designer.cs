@@ -29,17 +29,16 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CRMonitoringPage));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CRMonitoringPage));
             this.panel1 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.EmployID = new System.Windows.Forms.TextBox();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.closebtn = new System.Windows.Forms.Button();
             this.TextName = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.Duration = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -134,7 +133,6 @@
             this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel3.Controls.Add(this.closebtn);
             this.panel3.Controls.Add(this.TextName);
             this.panel3.Controls.Add(this.label2);
             this.panel3.Location = new System.Drawing.Point(565, 3);
@@ -142,22 +140,6 @@
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(535, 94);
             this.panel3.TabIndex = 1;
-            // 
-            // closebtn
-            // 
-            this.closebtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.closebtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(6)))), ((int)(((byte)(26)))), ((int)(((byte)(35)))));
-            this.closebtn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.closebtn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(6)))), ((int)(((byte)(26)))), ((int)(((byte)(35)))));
-            this.closebtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.closebtn.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.closebtn.Image = ((System.Drawing.Image)(resources.GetObject("closebtn.Image")));
-            this.closebtn.Location = new System.Drawing.Point(486, -20);
-            this.closebtn.Name = "closebtn";
-            this.closebtn.Size = new System.Drawing.Size(59, 58);
-            this.closebtn.TabIndex = 7;
-            this.closebtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.closebtn.UseVisualStyleBackColor = false;
             // 
             // TextName
             // 
@@ -379,7 +361,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox EmployID;
         private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Button closebtn;
         private System.Windows.Forms.Label TextName;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.DataGridViewTextBoxColumn Duration;

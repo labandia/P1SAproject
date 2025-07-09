@@ -34,8 +34,8 @@
             this.CRMonitor = new System.Windows.Forms.Button();
             this.Attendance = new System.Windows.Forms.Button();
             this.sidepanel = new System.Windows.Forms.Panel();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.DepartID = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.sidepanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -56,6 +56,7 @@
             this.Logoutbtn.Size = new System.Drawing.Size(58, 48);
             this.Logoutbtn.TabIndex = 8;
             this.Logoutbtn.UseVisualStyleBackColor = false;
+            this.Logoutbtn.Click += new System.EventHandler(this.Logoutbtn_Click);
             // 
             // EmployeeMenu
             // 
@@ -127,14 +128,6 @@
             this.sidepanel.Size = new System.Drawing.Size(81, 703);
             this.sidepanel.TabIndex = 2;
             // 
-            // panel1
-            // 
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(81, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1270, 703);
-            this.panel1.TabIndex = 3;
-            // 
             // DepartID
             // 
             this.DepartID.AutoSize = true;
@@ -143,6 +136,14 @@
             this.DepartID.Size = new System.Drawing.Size(35, 13);
             this.DepartID.TabIndex = 0;
             this.DepartID.Text = "label1";
+            // 
+            // panel1
+            // 
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(81, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(1270, 703);
+            this.panel1.TabIndex = 3;
             // 
             // MainLayout
             // 

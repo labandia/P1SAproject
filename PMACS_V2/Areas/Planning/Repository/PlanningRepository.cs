@@ -209,65 +209,39 @@ namespace PMACS_V2.Areas.Planning.Repository
         }
 
         //----------------- Display the Uploaded data ------------------------
-        public async Task<List<Planningmodel>> GetPCDataList(int intsize, int intnum)
+        public Task<List<Planningmodel>> GetPCDataList(int intsize, int intnum)
         {
-            var strquery = "GetPCData";
-            var parameter = new { PageSize = intsize, PageNumber = intnum };
-            var result = await SqlDataAccess.GetData<Planningmodel>(strquery, parameter);
-            return result;
+            return SqlDataAccess.GetData<Planningmodel>("GetPCData", new { PageSize = intsize, PageNumber = intnum });
         }
 
-        public async Task<List<BranchModel>> GetBranchSummary()
-        {
-            var strquery = "BranchDisplay";
-            var result = await SqlDataAccess.GetData<BranchModel>(strquery);
-            return result;
-        }
-
+        public Task<List<BranchModel>> GetBranchSummary() => SqlDataAccess.GetData<BranchModel>("BranchDisplay");
+     
         //----------------- Display the EndMonth data ------------------------
-        public async Task<List<EndMonthModel>> GetEndMonthlist(string stryear)
-        {
-            var strquery = "EndMonthQuery";
-            var result = await SqlDataAccess.GetData<EndMonthModel>(strquery, new { EndYear = stryear });
-            return result;
-        }
+        public Task<List<EndMonthModel>> GetEndMonthlist(string stryear) => SqlDataAccess.GetData<EndMonthModel>("EndMonthQuery", new { EndYear = stryear });
 
         //------------- GET DATA WHEN THE USERS CLICKS THE ROW DATA ----------------------------
-        public async Task<List<ProductsModel>> GetSelectedDetailsSummary(string strdate, int importID)
+        public  Task<List<ProductsModel>> GetSelectedDetailsSummary(string strdate, int importID)
         {
-            var strquery = "SelectedDetails";
-            var parameter = new { Dateslected = strdate, ImportsID = importID };
-            var result = await SqlDataAccess.GetData<ProductsModel>(strquery, parameter);
-            return result;
+            return SqlDataAccess.GetData<ProductsModel>("SelectedDetails", new { Dateslected = strdate, ImportsID = importID });
         }
 
-        public async Task<List<ProductsModel>> GetSelectedlackDetailsSummary(string strdate, int importID)
+        public Task<List<ProductsModel>> GetSelectedlackDetailsSummary(string strdate, int importID)
         {
             var strquery = "SELECT Partnum as Partnumber, Partname, TotalQuan as Totalpart " +
                           "FROM M1_Lacking_table " +
                           "WHERE CAST(DateImport AS DATE) = @Dateslected " +
                           $"AND Imports IN ({importID})";
-
-            var parameter = new { Dateslected = strdate };
-            var result = await SqlDataAccess.GetData<ProductsModel>(strquery, parameter);
-            return result;
+            return SqlDataAccess.GetData<ProductsModel>(strquery, new { Dateslected = strdate });
         }
 
-        public async Task<List<ShopOrderResultModel>> GetSelectedShopOrderDetailsSummary(string strdate, int importID)
+        public Task<List<ShopOrderResultModel>> GetSelectedShopOrderDetailsSummary(string strdate, int importID)
         {
-            var strquery = "SelectedShopOrderDetails";
-            var parameter = new { Dateslected = strdate, ImportsID = importID };
-            var result = await SqlDataAccess.GetData<ShopOrderResultModel>(strquery, parameter);
-            return result;
+            return SqlDataAccess.GetData<ShopOrderResultModel>("SelectedShopOrderDetails", new { Dateslected = strdate, ImportsID = importID });
         }
 
-        public async Task<List<ShopOrderResultModel>> GetSelectedRequestsDetailsSummary(int colint, int rowint, int yearint)
+        public Task<List<ShopOrderResultModel>> GetSelectedRequestsDetailsSummary(int colint, int rowint, int yearint)
         {
-            Debug.WriteLine($"HERE  Month: {colint}, rowMonth : {rowint} ");
-            var strquery = "SelectedRequestDetails";
-            var parameter = new { DateUpload = rowint, DateSales = colint };
-            var result = await SqlDataAccess.GetData<ShopOrderResultModel>(strquery, parameter);
-            return result;
+            return SqlDataAccess.GetData<ShopOrderResultModel>("SelectedRequestDetails", new { DateUpload = rowint, DateSales = colint });
         }
 
         //----------------- Partnumber summary tabs when Selecting a row data ------------------------

@@ -10,20 +10,20 @@ namespace Attendance_Monitoring.Repositories
 {
     public class AttendanceRepository : IAttendance
     {
-        public async Task<bool> AttendanceTimeIn(string EmployeeID, string shift, string late, string tb)
+        public Task<bool> AttendanceTimeIn(string EmployeeID, string shift, string late, string tb)
         {
             string insertQuery = $@"INSERT INTO {tb} (Employee_ID, Shifts, LateTime) VALUES (@EmpID, @Shifts, @LateTime)";
             var parameters = new { EmpID = EmployeeID, Shifts = shift, LateTime = late };
 
-            return await SqlDataAccess.UpdateInsertQuery(insertQuery, parameters);
+            return SqlDataAccess.UpdateInsertQuery(insertQuery, parameters);
         }
-        public async Task<bool> AttendanceTimeOut(SummaryAttendanceModel sm, string tablename)
+        public Task<bool> AttendanceTimeOut(SummaryAttendanceModel sm, string tablename)
         {
             string updateQuery = " UPDATE " + tablename + " SET TimeOut = @TimeOut, Regular = @Regular, Overtime = @Overtime, Gtotal = @Gtotal" +
                                          " WHERE CAST(Date_today AS DATE) = @Date_today AND Employee_ID = @Employee_ID";
             var parameters = new { TimeOut = sm.Timeout, Regular = sm.Regular, Overtime = sm.Overtime, Gtotal = sm.Gtotal, Date_today = sm.Date_today, Employee_ID = sm.Employee_ID };
 
-            return await SqlDataAccess.UpdateInsertQuery(updateQuery, parameters);
+            return SqlDataAccess.UpdateInsertQuery(updateQuery, parameters);
         }
 
   
@@ -40,7 +40,7 @@ namespace Attendance_Monitoring.Repositories
             return (count > 0);
         }
 
-        public async Task<List<AttendanceModel>> GetAttendanceRecordsList(string tbl, string dDate, string shifts, int selectime)
+        public Task<List<AttendanceModel>> GetAttendanceRecordsList(string tbl, string dDate, string shifts, int selectime)
         {
             string strquery;
 
@@ -62,9 +62,9 @@ namespace Attendance_Monitoring.Repositories
             }
 
             var parameters = new { Datetoday = dDate, Shifts = shifts };
-            return await SqlDataAccess.GetData<AttendanceModel>(strquery, parameters);
+            return SqlDataAccess.GetData<AttendanceModel>(strquery, parameters);
         }
-        public async Task<List<SummaryAttendanceModel>> GetAttendanceSummaryList(string tbl, string startDate, string endDate)
+        public Task<List<SummaryAttendanceModel>> GetAttendanceSummaryList(string tbl, string startDate, string endDate)
         {
             string strquery = $@"SELECT FORMAT(pc.Date_today, 'MM/dd/yyyy') AS Date_today, 
                          pc.Employee_ID, e.FullName, FORMAT(pc.TimeIn, 'HH:mm') as TimeIn, FORMAT(pc.TimeOut, 'HH:mm')  as TimeOut, pc.LateTime, pc.Regular, 
@@ -73,9 +73,9 @@ namespace Attendance_Monitoring.Repositories
                          INNER JOIN Employee_tbl e 
                          ON e.Employee_ID = pc.Employee_ID 
                          WHERE   CAST(Date_today AS DATE) between @startDate AND @endDate";
-            return await SqlDataAccess.GetData<SummaryAttendanceModel>(strquery, new { startDate = startDate, endDate = endDate });
+            return SqlDataAccess.GetData<SummaryAttendanceModel>(strquery, new { startDate = startDate, endDate = endDate });
         }
-        public async Task<List<SummaryAttendanceModel>> GetSummaryDataList(string strsql, string startDate, string endDate, string shifts, string search)
+        public Task<List<SummaryAttendanceModel>> GetSummaryDataList(string strsql, string startDate, string endDate, string shifts, string search)
         {
     
             var parameters = new DynamicParameters();
@@ -89,7 +89,7 @@ namespace Attendance_Monitoring.Repositories
             if (!string.IsNullOrEmpty(search))
                 parameters.Add("Search", search);
 
-            return await SqlDataAccess.GetData<SummaryAttendanceModel>(strsql, parameters);
+            return SqlDataAccess.GetData<SummaryAttendanceModel>(strsql, parameters);
         }
     }
 }

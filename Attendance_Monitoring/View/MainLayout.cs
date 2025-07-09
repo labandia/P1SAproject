@@ -1,4 +1,5 @@
 ﻿using Attendance_Monitoring.Usercontrols;
+using Attendance_Monitoring.View.V2;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -58,7 +59,7 @@ namespace Attendance_Monitoring.View
             _attend.InitializePage(); 
             _attend.BringToFront();
         }
-        private void CRMonitor_Click(object sender, EventArgs e)
+        private async void CRMonitor_Click(object sender, EventArgs e)
         {
             // CHANGE THE COLOR BACKGROUND OF THE MENU BUTTON
             CRMonitor.BackColor = Color.FromArgb(95, 34, 200);
@@ -70,7 +71,11 @@ namespace Attendance_Monitoring.View
             EmployeeMenu.ForeColor = Color.FromArgb(170, 176, 192);
             _cr.DepartmentID = _DepartmentID;
             _cr.InitializePage();
+            
             _cr.BringToFront();
+            await _cr.DisplayCRMonitor();
+            var crlist = _cr.critemlist;
+            _cr.Crgrid.DataSource = crlist;
         }
 
         private void EmployeeMenu_Click(object sender, EventArgs e)
@@ -86,6 +91,13 @@ namespace Attendance_Monitoring.View
             _emp.DepartID = _DepartmentID;
             _emp.InitializePage();
             _emp.BringToFront();
+        }
+
+        private void Logoutbtn_Click(object sender, EventArgs e)
+        {
+            AttendanceMain n = new AttendanceMain(_attend, _cr, _emp);    
+            n.Show();
+            this.Visible = false;   
         }
     }
 }

@@ -837,8 +837,8 @@
 
 
                     if (idx === 0) {
-                        rowHtml += `<td rowspan="${groupRows.length}" data-cell="Type" style="font-weight: 600; color: #222;">${DieValue}</td>`;
-                        rowHtml += `<td rowspan="${groupRows.length}" data-cell="ToolNo" style="font-weight: 600; color: #222;">${ToolValue}</td>`;
+                        rowHtml += `<td rowspan="${groupRows.length}" data-cell="Type" style="font-weight: 600; color: hsl(209, 91%, 34%);">${DieValue}</td>`;
+                        rowHtml += `<td rowspan="${groupRows.length}" data-cell="ToolNo">${ToolValue}</td>`;
                         rowHtml += `<td rowspan="${groupRows.length}" data-cell="Status">
                                     <div class="circular-progress" style="--progress: ${percentValue}%" ></div>
                                 </td>`;
@@ -847,18 +847,18 @@
                     }
 
 
-                    rowHtml += `<td data-cell="DiePart" style="font-weight: 600">${rowData.DiePart}</td>`;
-                    rowHtml += `<td data-cell="DieHeight" style="font-weight: 600">${rowData.DieHeight}</td>`;
-                    rowHtml += `<td data-cell="StdGrind" style="font-weight: 600">${rowData.StdGrind}</td>`;
+                    rowHtml += `<td data-cell="DiePart" ><i class="fa-solid fa-angles-${rowData.DiePart === "Upper" ? "up" : "down" }"></i>  ${rowData.DiePart}</td>`;
+                    rowHtml += `<td data-cell="DieHeight" >${rowData.DieHeight}</td>`;
+                    rowHtml += `<td data-cell="StdGrind" >${rowData.StdGrind}</td>`;
                     //rowHtml += `<td data-cell="StampGrind" style="font-weight: 600">${rowData.StampGrind}</td>`;
-                    rowHtml += `<td data-cell="Line" style="font-weight: 600">${rowData.Line}</td>`;
-                    rowHtml += `<td data-cell="Avg" style="font-weight: 600">${rowData.Avg}</td>`;
+                    rowHtml += `<td data-cell="Line" >${rowData.Line}</td>`;
+                    rowHtml += `<td data-cell="Avg" >${rowData.Avg}</td>`;
 
                     if (idx === 0) {
-                        rowHtml += `<td rowspan="${groupRows.length}" data-cell="TotalStampValue">${TotalStampValue}</td>`;
+                        rowHtml += `<td rowspan="${groupRows.length}" data-cell="TotalStampValue">${getFormatComma(TotalStampValue)}</td>`;
                     }
 
-                    rowHtml += `<td data-cell="Remaining" style="font-weight: 600">${rowData.Remaining}</td>`;
+                    rowHtml += `<td data-cell="Remaining">${getFormatComma(rowData.Remaining)}</td>`;
 
                     //if (idx === 0) {
                     //    rowHtml += `<td rowspan="${groupRows.length}" data-cell="DieNumber">${dienumValue}</td>`;
@@ -968,7 +968,7 @@
                 const rowData = filteredData[i];
                 const rowHtml = ` <tr class='row_${i} rowClick' id='editButton_${i}'>
                     <td data-cell="DateInput">${rowData.DateInput}</td>
-                    <td data-cell="Upper" style="font-weight: 600; color: #222;">${rowData.ToolNo}</td>
+                    <td data-cell="Upper" style="font-weight: 600; color: hsl(209, 91%, 34%);">${rowData.ToolNo}</td>
                     <td data-cell="Upper">${rowData.Upper}</td>
                     <td data-cell="Lower">${rowData.Lower}</td>
                     <td data-cell="Lower_ActualHeight">${rowData.Lower_ActualHeight}</td>

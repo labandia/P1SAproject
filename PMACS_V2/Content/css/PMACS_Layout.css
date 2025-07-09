@@ -408,6 +408,14 @@
         font-size: .8rem;
     }
 
+    .fa-angles-up{
+        color: rgb(9, 100, 73);
+    }
+
+    .fa-angles-down{
+         color: rgb(100, 9, 9);
+    }
+
     .Incomplete {
         background-color: rgba(170, 24, 14, 0.2);
         color: rgb(100, 9, 9);

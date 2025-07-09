@@ -117,16 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="closebtn.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAANNJREFUSEvt
-        lTEKwkAQRQP2nsJ72NvI/GWrVHbeyM6zeAUbFUREdlJa2AsJWAz4MwlmMV0e/Cb75i9sErYoJoZQiawV
-        OCtQZ+aUQlhxr6GAOkNDc+New5Gzwr0Gi7nhXoPFr4hsFXi3njvhXoNFHkoiyyTy4jUO9xosekMpxoUC
-        V1733BYsdg09y3KuwIEdz82mjnGmwJ7L/7tBCDsu792Axa6h7CNi0Rsa9SWP+plWIptRf7Qh4V6Dxdxw
-        r6HAg+WM3LnX+Fw4Ihdn6Nccey+cCY8GBFTPn8L0JgkAAAAASUVORK5CYII=
-</value>
-  </data>
   <metadata name="Duration.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -154,6 +144,7 @@
   <metadata name="timer1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="Summary_data.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAHtJREFUSEtj

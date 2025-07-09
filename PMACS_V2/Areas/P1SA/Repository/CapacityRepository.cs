@@ -14,9 +14,9 @@ namespace PMACS_V2.Areas.P1SA.Repository
         // ===========================================================
         // ==================== P1SA Summary =========================
         // ===========================================================
-        public async Task<List<PsummaryModel>> GetP1SAsummary() => await SqlDataAccess.GetData<PsummaryModel>("P1SAsummary", null);
-        public async Task<List<SelectionGroup>> GetGroupCapacity() => await SqlDataAccess.GetData<SelectionGroup>("Selectiongroup");
-        public async Task<List<CapacitySummaryModel>> GetCapacitySummary(string month, int capid)
+        public Task<List<PsummaryModel>> GetP1SAsummary() => SqlDataAccess.GetData<PsummaryModel>("P1SAsummary", null);
+        public Task<List<SelectionGroup>> GetGroupCapacity() => SqlDataAccess.GetData<SelectionGroup>("Selectiongroup");
+        public  Task<List<CapacitySummaryModel>> GetCapacitySummary(string month, int capid)
         {
             string strquery;
 
@@ -171,14 +171,13 @@ namespace PMACS_V2.Areas.P1SA.Repository
                             "Subquery.OperationTime, Subquery.Cap_Per_Machine";
             }
 
-            return await SqlDataAccess.GetData<CapacitySummaryModel>(strquery, null);
+            return SqlDataAccess.GetData<CapacitySummaryModel>(strquery, null);
         }
-        public async Task<int> GetForecastTotal(string month)
+        public Task<int> GetForecastTotal(string month)
         {
-            string strquery = "SELECT SUM(" + month + ") as total FROM PMACS_Forecast";
-            return await SqlDataAccess.GetCountData(strquery);
+            return SqlDataAccess.GetCountData("SELECT SUM(" + month + ") as total FROM PMACS_Forecast");
         }
-        public async Task<List<string>> GetModelBaseComboxList(int capid)
+        public Task<List<string>> GetModelBaseComboxList(int capid)
         {
             string strTables = "";
 
@@ -208,7 +207,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
                                  "LEFT JOIN PMACS_Forecast f " +
                                  "ON f.Model_name = c.Model_name " +
                                  "WHERE c.Capgroup_ID = " + capid + " AND c.IsDelete = 1";
-            return await SqlDataAccess.GetlistStrings(strsqlquery);
+            return  SqlDataAccess.GetlistStrings(strsqlquery);
         }
         public async Task<List<string>> GetModelBaseDoesntExist(int capid)
         {
@@ -241,8 +240,8 @@ namespace PMACS_V2.Areas.P1SA.Repository
                                 "WHERE(f.Model_name = c.Model_name AND c.Capgroup_ID = 7) AND c.IsDelete = 1)";
             return await SqlDataAccess.GetlistStrings(strsqlquery);
         }
-        public async Task<List<ForecastModel>> GetForecast(string year) => await SqlDataAccess.GetData<ForecastModel>("ForecastData", null);
-        public async Task<List<ForecastModel>> GetForecastChart() => await SqlDataAccess.GetData<ForecastModel>("ForecastChart", null);
+        public Task<List<ForecastModel>> GetForecast(string year) => SqlDataAccess.GetData<ForecastModel>("ForecastData", null);
+        public Task<List<ForecastModel>> GetForecastChart() => SqlDataAccess.GetData<ForecastModel>("ForecastChart", null);
         // ===========================================================
         // ==================== Capacity per Section =================
         // ===========================================================
@@ -255,7 +254,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
 
        
         // Molding Section
-        public async Task<List<MoldingModel>> GetMoldingModels(string months, int capid)
+        public Task<List<MoldingModel>> GetMoldingModels(string months, int capid)
         {
             string strsql = "SELECT DISTINCT m.Capinfo_ID, (NULLIF(m.CycleTime, 0) / NULLIF(m.Actual_cav, 0)) as Cyclepcs, " +
                             "m.DieQty, m.Capgroup_ID, " +
@@ -273,7 +272,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
                             "WHERE IsDelete = 1 " +
                             "ORDER BY m.Capgroup_ID DESC";
 
-           return await SqlDataAccess.GetData<MoldingModel>(strsql, new { Capgroup_ID = capid });
+           return SqlDataAccess.GetData<MoldingModel>(strsql, new { Capgroup_ID = capid });
         }
         public async Task<bool> AddMoldingModels(AddMoldingModelPost mold)
         {
@@ -324,7 +323,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
         }
         public async Task<bool> EditMoldingModels(MoldingPostmodel mold) => await SqlDataAccess.UpdateInsertQuery("UpdateMoldingdetails", mold);
         // Press Section
-        public async Task<List<PressModel>> GetPressModels(string months, int capid)
+        public Task<List<PressModel>> GetPressModels(string months, int capid)
         {
             string CycleTime = "";
 
@@ -362,7 +361,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
                             "WHERE p.Capgroup_ID = " + capid + " AND p.IsDelete = 1 " +
                             "ORDER BY p.Capinfo_ID";
 
-            return await SqlDataAccess.GetData<PressModel>(strsql);
+            return SqlDataAccess.GetData<PressModel>(strsql);
         }
         public async Task<bool> AddPressModels(PressModel press)
         {
@@ -466,7 +465,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
             return await SqlDataAccess.UpdateInsertQuery(strsql, parameter);
         }
         // Rotor Section
-        public async Task<List<RotorModel>> GetRotorModels(string months, int capid)
+        public Task<List<RotorModel>> GetRotorModels(string months, int capid)
         {
             //string month = months == "None" ? months : "";
 
@@ -486,24 +485,24 @@ namespace PMACS_V2.Areas.P1SA.Repository
                             "WHERE c.Capgroup_ID = @Capgroup_ID AND c.IsDelete = 1 " +
                             "ORDER BY c.Capinfo_ID";
 
-            return await SqlDataAccess.GetData<RotorModel>(strsql, new { Capgroup_ID = capid });
+            return SqlDataAccess.GetData<RotorModel>(strsql, new { Capgroup_ID = capid });
         }
         public Task<bool> AddRotorModels(RotorModel mold)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<bool> EditRotorModels(RotorModel mold)
+        public Task<bool> EditRotorModels(RotorModel mold)
         {
             string strsql = "UPDATE PMACS_Capacity_Rotor " +
                             "SET CycleTime =@CycleTime, Cover =@Cover, Dream =@Dream, Impeller =@Impeller, Operation_time =@Operation_time " +
                             "WHERE  Capinfo_ID = @Capinfo_ID";
 
-            return await SqlDataAccess.UpdateInsertQuery(strsql, mold);
+            return SqlDataAccess.UpdateInsertQuery(strsql, mold);
         }
 
         // Winding Section
-        public async Task<List<WindingModel>> GetWindingModels(string months, int capid)
+        public Task<List<WindingModel>> GetWindingModels(string months, int capid)
         {
             string CycleTime = (capid == 1 || capid == 2) ? "(c.CycleTime / CASE WHEN c.Head_count = 0 THEN 1 ELSE c.Head_count END)" : "CASE WHEN c.CycleTime = 0 THEN 1 ELSE c.CycleTime END";
             //string month = months == "None" ? months : "";
@@ -523,7 +522,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
                         ORDER BY c.Capinfo_ID";
 
 
-            return await SqlDataAccess.GetData<WindingModel>(strsql, new { Capgroup_ID = capid });
+            return SqlDataAccess.GetData<WindingModel>(strsql, new { Capgroup_ID = capid });
         }
 
         
@@ -551,7 +550,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
        
 
         // Circuit Section
-        public async Task<List<CircuitModel>> GetCircuitModels(string months, int capid)
+        public Task<List<CircuitModel>> GetCircuitModels(string months, int capid)
         {
             string strsql = "SELECT c.Capinfo_ID, c.CycleTime, " +
                                 "c.Model_name, c.PWB_TYPE, c.Operation_time, c.Model, " +
@@ -570,45 +569,45 @@ namespace PMACS_V2.Areas.P1SA.Repository
                             "WHERE c.Capgroup_ID = " + capid + " " +
                             "ORDER BY c.Capinfo_ID";
 
-            return await SqlDataAccess.GetData<CircuitModel>(strsql);
+            return SqlDataAccess.GetData<CircuitModel>(strsql);
         }
 
 
 
         // -------------------- UPDATE ALL FOR THE SUMMARY --------------------------------
-        public async Task<bool> UpdateCapacityGroup(CapacityGroupPostModel cap)
+        public  Task<bool> UpdateCapacityGroup(CapacityGroupPostModel cap)
         {
             string strsql = "UPDATE PMACS_ProdCapacity SET  Total_machine =@Total_machine, " +
                 "Capday =@Capday, Capmonth =@Capmonth, TotalMan =@TotalMan " +
                 "WHERE Capgroup_ID =@Capgroup_ID";
-            return await SqlDataAccess.UpdateInsertQuery(strsql, cap);   
+            return SqlDataAccess.UpdateInsertQuery(strsql, cap);   
         }
-        public async Task<bool> UpdateManpower(int totalManpower, string processcode)
+        public Task<bool> UpdateManpower(int totalManpower, string processcode)
         {
             string strsql = "UPDATE PMACS_ProdProcess SET RequireManpower =@RequireManpower WHERE ProcessCode =@ProcessCode";
             var parameters = new { RequireManpower = totalManpower, ProcessCode = processcode };
-            return await SqlDataAccess.UpdateInsertQuery(strsql, parameters);
+            return SqlDataAccess.UpdateInsertQuery(strsql, parameters);
         }
 
         // Updated the Capacity Summary
-        public async Task<bool> EditP1SAsummary(PsummaryModel cap)
+        public Task<bool> EditP1SAsummary(PsummaryModel cap)
         {
             string strsql = "UPDATE PMACS_ProdProcess SET AvailMachine =@AvailMachine, " +
                 "ActualMachine =@ActualMachine WHERE ProcessCode =@ProcessCode";
             var parameters = new { ProcessCode = cap.ProcessCode, AvailMachine = cap.AvailMachine, ActualMachine = cap.ActualMachine };
-            return await SqlDataAccess.UpdateInsertQuery(strsql, parameters, "p1sasummary");
+            return SqlDataAccess.UpdateInsertQuery(strsql, parameters, "p1sasummary");
         }
 
-        public async Task<bool> UpdateProcessform(ProcessformPostModel cap)
+        public Task<bool> UpdateProcessform(ProcessformPostModel cap)
         {
             string strsql = "UPDATE PMACS_ProdProcess SET Days =@Days, Months =@Months, " +
                 "OperationTime =@OperationTime, Cap_Per_Machine =@Cap_Per_Machine " +
                 "WHERE ProcessCode =@ProcessCode";
-            return await SqlDataAccess.UpdateInsertQuery(strsql, cap);
+            return SqlDataAccess.UpdateInsertQuery(strsql, cap);
         }
 
 
-        public async Task<bool> DeleteModels(int capinfo_id, int capgroup)
+        public Task<bool> DeleteModels(int capinfo_id, int capgroup)
         {
             string strTable = "";
             switch (capgroup)
@@ -639,8 +638,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
             }
 
             string strquery = "UPDATE " + strTable + " SET IsDelete = 0  WHERE Capinfo_ID =@Capinfo_ID ";
-            Debug.WriteLine(strquery);
-            return await SqlDataAccess.UpdateInsertQuery(strquery, new { Capinfo_ID = capinfo_id });
+            return SqlDataAccess.UpdateInsertQuery(strquery, new { Capinfo_ID = capinfo_id });
         }
 
         public Task<bool> EditWindingProducts(object parameter)

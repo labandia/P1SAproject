@@ -233,7 +233,6 @@ namespace Attendance_Monitoring.View
         {
             dstart.Value = DateTime.Now;
             dend.Value = DateTime.Now;
-            shifts.SelectedIndex = (Timeprocess.TimeIncheck(DateTime.Now) == "DAYSHIFT") ? 0 : 1;
             DisplaysummarytableBySection();
         }
 

@@ -1,14 +1,10 @@
 ﻿using Attendance_Monitoring.Controller;
 using Attendance_Monitoring.Global;
 using Attendance_Monitoring.Models;
-using Microsoft.Office.Interop.Excel;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -18,9 +14,11 @@ namespace Attendance_Monitoring.Usercontrols
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly AdminController _admin;
-        private static List<CRmodel> critemlist;
         private static List<Employee> emplist;
         private readonly Timer timer;
+
+        public DataGridView Crgrid { get { return CRtable; } }
+        public List<CRmodel> critemlist { get; private set; } = new List<CRmodel>();
 
 
         public int DepartmentID { get; set; }
@@ -30,6 +28,8 @@ namespace Attendance_Monitoring.Usercontrols
             InitializeComponent();
             _admin = new AdminController();
             timer = new Timer();
+            timer.Interval = 1000;
+            timer.Tick += Timer_Tick;
             _serviceProvider=serviceProvider;
         }
 
@@ -42,11 +42,11 @@ namespace Attendance_Monitoring.Usercontrols
 
         public void InitializePage()
         {
-            MessageBox.Show("Running after set: " + DepartmentID);
+            //MessageBox.Show("Running after set: " + DepartmentID);
             // Now you can load employees, etc.
         }
 
-        public async void DisplayCRMonitor()
+        public async Task DisplayCRMonitor()
         {
             var dateToday = DateTime.Now.ToString("yyyy-MM-dd");
             string shift = Timeprocess.TimeIncheck(DateTime.Now);
@@ -113,7 +113,7 @@ namespace Attendance_Monitoring.Usercontrols
 
                     timer.Start();
 
-                    DisplayCRMonitor();
+                    await DisplayCRMonitor();
                 }
 
 
@@ -145,7 +145,7 @@ namespace Attendance_Monitoring.Usercontrols
                     }
 
                     timer.Start();
-                    DisplayCRMonitor();
+                    await DisplayCRMonitor();
                 }
 
             }

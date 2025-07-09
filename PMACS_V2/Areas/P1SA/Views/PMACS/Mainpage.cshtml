@@ -277,8 +277,7 @@
                 const savebtn = document.querySelector("#submitbtn");
                 savebtn.innerHTML = "<div class='buttonloading'></div>";
                 let res = await postData('/Auth/Authenticate', data);
-
-                 if (res && res.StatusCode === 200) {
+                if (res && res.StatusCode === 200) {
                      setTimeout(() => {
                          Swal.fire({
                              title: "Success",
@@ -289,7 +288,7 @@
                          }).then(() => {
                              savebtn.innerHTML = "<span class='textload'><i class='fa-solid fa-right-to-bracket'></i> Login</span>"
                              localStorage.removeItem('activeLinkIndex');
-                             localStorage.setItem('users', JSON.stringify(res.Data.payload));
+                             localStorage.setItem('users', JSON.stringify(res.Data));
                              localStorage.setItem('accessToken', res.Data.access_token);
                              localStorage.setItem('refreshToken', res.Data.refresh_token);
 

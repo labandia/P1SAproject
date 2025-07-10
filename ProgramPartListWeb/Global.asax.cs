@@ -122,6 +122,7 @@ namespace ProgramPartListWeb
             container.RegisterType<IUserRepository, UserRespository>();
             container.RegisterType<IEmployee, EmployeeRepository>();
             container.RegisterType<ISeriesRepository, SeriesRepository>();
+            container.RegisterType<INotification, NotificationRepository>();
             container.RegisterType<IAluminumProducts, PressRepository>();
             container.RegisterType<IInspector, InpectorRepository>();
 

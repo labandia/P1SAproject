@@ -104,7 +104,7 @@
                     </div>
 
                     <div class="d-flex justify-content-end mt-4 gap-4">
-                        <button id="btnSave" class="deletebtn"><i class="fa-regular fa-floppy-disk"></i> Remove</button>
+                        <button id="btnRemove" class="deletebtn"><i class="fa-regular fa-floppy-disk"></i> Remove</button>
                         <button id="btnSave"><i class="fa-regular fa-floppy-disk"></i> Save change</button>
                     </div>
                 </form>
@@ -121,6 +121,7 @@
 <script type="text/javascript">
     let employVal;
     let DepartID;
+    let userRole;
     const addform = document.getElementById("addnewform");
     const editform = document.getElementById("editnewform");
     const removebtn = document.querySelector('.deletebtn');
@@ -356,6 +357,8 @@
                 $("#IsActive").val("0");
 
                 if (employVal !== undefined) {
+                    if (ActionRestrict() === false) return;
+
                     PopulateComboxProccess(DepartID, 0);
                     $("#AddScheduleModal").modal('show');
                 } 
@@ -367,6 +370,8 @@
                 $("#EditScheduleDate").val(eventObj.startStr);
                 $("#EditIsActive").val("1");
 
+                if (ActionRestrict() === false) return;
+
                 PopulateComboxProccess(DepartID, 1);
                 // Optional: Do something with it, like showing a modal or message
                 $("#EditScheduleModal").modal('show');
@@ -375,6 +380,14 @@
 
         calendar.render();
     });
+
+    const ActionRestrict = () => {
+        userRole = localStorage.getItem("UserRole");
+        if (userRole === "Leader" || userRole === "Users") {
+            return false;
+        }
+    }
+
 
 
     $(document).ready(function () {

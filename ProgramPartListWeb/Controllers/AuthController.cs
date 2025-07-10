@@ -48,8 +48,10 @@ namespace ProgramPartListWeb.Controllers
         {
             string hashpassword = PasswordHasher.Hashpassword(newpass);
             bool result = await _auth.Changepassword(userID, hashpassword);
-            var formdata = GlobalUtilities.GetMessageResponse(result, 1);
-            return Json(formdata, JsonRequestBehavior.AllowGet);
+
+            if (!result) return JsonValidationError();
+
+            return JsonCreated(null, "Change Password Successfully");
         }
 
         [HttpPost]
@@ -57,7 +59,7 @@ namespace ProgramPartListWeb.Controllers
         {
             await Task.Delay(100);
             bool result = _auth.VerifyPassword(currentpass, datapass);
-            return Json(result);
+            return JsonCreated(result);
         }
 
 

@@ -74,7 +74,7 @@
 
                         <a href="/PC/Patrol/PatrolSchedule" class="sidebar__link">
                             <i class="fa-solid fa-user-secret sidebar__icon"></i>
-                            <span class="sidebar__name">Audit Schedule</span>
+                            <span class="sidebar__name">Patrol Schedule</span>
                         </a>
 
                         @*<div class="sidebar__dropdown">
@@ -144,15 +144,17 @@
     <script type="text/javascript">
         var sessionCheckInterval;
 
+        const GetNotification = async () => {
+            let res = await FetchAuthenticate('@Url.Action("GetNotificationList", "Notification")', {});
+            console.log(res);
+            if (res && res.Success) {
+            
+            }
+        }
+
         const GetFullname = async () => {
             var x = localStorage.getItem("Fullname") || "Guest user";
             $("#UserFullname").text(x);
-            //let res = await fetchData('@Url.Action("GetUsersFullname", "Users")', { userID: parseInt($("#ID").val()) });
-            //console.log(res.Fullname);
-            //if (res.Fullname === null || res.Fullname === "") {
-            //    window.location.href = "/PC/Patrol/index";
-            //}
-            //
         };
 
 
@@ -243,13 +245,19 @@
                 /* Read more about isConfirmed, isDenied below */
                 if (result.isConfirmed) {
                     localStorage.removeItem("Fullname");
+                    localStorage.removeItem("UserRole");
+                    localStorage.removeItem('accessToken');
+                    localStorage.removeItem('refreshToken');
                     logout();
                 }
             });
         });
 
 
+       
+
         GetFullname();
+        GetNotification();
     </script>
 
 

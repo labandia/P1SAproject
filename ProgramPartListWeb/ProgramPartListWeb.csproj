@@ -614,12 +614,15 @@
     <Compile Include="Areas\Circuit\CircuitAreaRegistration.cs" />
     <Compile Include="Areas\Circuit\Controllers\ProgramPartListController.cs" />
     <Compile Include="Areas\Circuit\Repository\PartlistRepository.cs" />
+    <Compile Include="Areas\PC\Controllers\NotificationController.cs" />
     <Compile Include="Areas\PC\Controllers\PatrolController.cs" />
-    <Compile Include="Areas\PC\Controllers\UsersController.cs" />
     <Compile Include="Areas\PC\Interface\IInspector.cs" />
+    <Compile Include="Areas\PC\Interface\INotification.cs" />
     <Compile Include="Areas\PC\Models\InspectorModel.cs" />
+    <Compile Include="Areas\PC\Models\Notification.cs" />
     <Compile Include="Areas\PC\PCAreaRegistration.cs" />
     <Compile Include="Areas\PC\Repository\InpectorRepository.cs" />
+    <Compile Include="Areas\PC\Repository\NotificationRepository.cs" />
     <Compile Include="Areas\Press\Controllers\PartsLocatorController.cs" />
     <Compile Include="Areas\Press\Interfaces\IAluminumProducts.cs" />
     <Compile Include="Areas\Press\PressAreaRegistration.cs" />

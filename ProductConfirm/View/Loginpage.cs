@@ -4,6 +4,7 @@ using ProductConfirm.Models;
 using ProductConfirm.View.Modals;
 using ProgramPartListWeb.Helper;
 using System;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -45,51 +46,31 @@ namespace ProductConfirm
 
         private void password_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
-            {
-                loginfunction();
-            }
+            if (e.KeyCode == Keys.Enter) loginfunction();      
         }
 
 
 
         public async void loginfunction()
         {
+            if (!validateform()) return;
 
-            if (validateform())
-            {
-                var data  = await _user.LoginCredentials(username.Text.Trim());
+            var user = (await _user.LoginCredentials(username.Text.Trim())).FirstOrDefault();
+            if (user == null)
+                MessageBox.Show("Invalid credentials / Username Doesnt Exist", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // CHECKS THE PASSWORD IF IS CORRECT
+            if (!PasswordHasher.VerifyPassword(user.Password, password.Text.Trim()))
+                MessageBox.Show("Invalid credentials / Password is incorrect", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                if (data != null && data.Any())
-                {
-                    var userRow = data.FirstOrDefault();
+            MessageBox.Show("Login success", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            var mainpage = _serviceProvider.GetRequiredService<Mainpage>();
 
-                    // CHECKS THE PASSWORD IF IS CORRECT
-                    if (PasswordHasher.VerifyPassword(userRow.Password, password.Text.Trim()))
-                    {
-                        MessageBox.Show("Login success", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        var mainpage = _serviceProvider.GetRequiredService<Mainpage>();
+            mainpage.userid = user.User_ID;
+            mainpage.Fullname = user.Fullname;
+            mainpage.roleId = user.Role_ID;
 
-                        // Assign properties
-                        mainpage.userid = userRow.User_ID;
-                        mainpage.Fullname = userRow.Fullname;
-                        mainpage.roleId = userRow.Role_ID;
-
-                        mainpage.Show();
-                        this.Hide();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Invalid credentials / Password is incorrect", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("Username Doesnt Exist ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-
-           
-            }
+            mainpage.Show();
+            this.Hide();  
         }
 
         private void Loginpage_Load(object sender, EventArgs e)

@@ -372,6 +372,7 @@
 
     $("#clearbtn").on('click', (e) => {
         e.preventDefault();
+        $("#Datearrived").val("");
         GetMoldDieTooling();
     });
 
@@ -449,10 +450,7 @@
         }
     });
 
-    $("#Datearrived").on('change', (e) => {
-      
-    });
-
+ 
    
 
     const GetMoldDieSummary = async () => {
@@ -489,30 +487,51 @@
         }
     }
     const GetMoldDieTooling = async () => {
-        $("#DieMoldToolist").empty();
+        
         let res = await fetchData('@Url.Action("GetMoldDieToolingList", "DieMold")', {});
         if (res && res.Success) {
             DieTooling = res.Data;
 
-            DieTooling.forEach((row, index) => {
+            // Loads the First Data
+            DisplayTooling(DieTooling);
 
-                var setdata = `<tr class= 'row_${row.RecordID} '  >
-                        <td>${row.RegNo}</td>
-                        <td style='font-weight: 600;'>${row.PartNo} / ${row.DimensionQuality}</td>
-                        <td>${row.Item}</td>
-                        <td>${row.DetailsModify}</td>
-                        <td>${row.ShotRelease}</td>
-                        <td>${row.DateArrived}</td>
-                        <td>${row.DateRepair}</td>
-                        <td>${row.Incharge}</td>
-                        <td>${row.Remarks}</td>
-                    </tr>;`
+           
 
-                $("#DieMoldToolist").append(setdata);
+            $("#Datearrived").on('change', (e) => {
+                const rawDate = e.target.value;
+
+                if (rawDate) {
+                    const [year, month, day] = rawDate.split("-");
+                    const formatted = `${month}/${day}/${year.slice(-2)}`; // "06/11/25"
+                    let filterData = DieTooling.filter(res => res.DateArrived == formatted);
+                    DisplayTooling(filterData);
+                } else {
+                    DisplayTooling(DieTooling);
+                }
+
             });
         }
     }
 
+    function DisplayTooling(dataArray) {
+        $("#DieMoldToolist").empty();
+
+        dataArray.forEach((row, index) => {
+            var setdata = `<tr class= 'row_${row.RecordID} '  >
+             <td>${row.RegNo}</td>
+             <td style='font-weight: 600;'>${row.PartNo} / ${row.DimensionQuality}</td>
+             <td>${row.Item}</td>
+             <td>${row.DetailsModify}</td>
+             <td>${row.ShotRelease}</td>
+             <td>${row.DateArrived}</td>
+             <td>${row.DateRepair}</td>
+             <td>${row.Incharge}</td>
+             <td>${row.Remarks}</td>
+         </tr>;`
+
+            $("#DieMoldToolist").append(setdata);
+        });
+    }
     function displaySummaryPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 10, visibleButtons = 5) {
       let currentPage = 1;
       let filteredData = [...dataArray]; // Make a copy for filtering

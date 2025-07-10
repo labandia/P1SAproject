@@ -22,7 +22,7 @@
                 <th> <i class="fa-solid fa-file-contract"></i> <span style="margin-left: .5em;">Registration No.</span> </th>
                 <th> <i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Remarks</span>  </th>
                 <th> <i class="fa-regular fa-square-check"></i> <span style="margin-left: .5em;">Approval</span>  </th>
-                <th> <i class="fa-solid fa-bolt"></i> <span style="margin-left: .5em;">Action</span> </th>
+                <th id="hiddenColumn"> <i class="fa-solid fa-bolt"></i> <span style="margin-left: .5em;">Action</span> </th>
                 @*<th>Action</th>*@
             </tr>
         </thead>
@@ -162,7 +162,9 @@
     let masterlist = [];
     let loadData = [];
     let employeeID;
+    let userRole;
 
+    let TableDisplay = $("#MasterlistData");
     const resultBox = document.querySelector(".namesdisplay");
     const addforms = document.getElementById("addnewform");
     const editforms = document.getElementById("editnewform");
@@ -211,7 +213,6 @@
         e.preventDefault();
         $("#AddProductModal").modal('show');
     });
-
     addforms.addEventListener('submit', async(e) => {
         e.preventDefault();
         let formData = new FormData(e.target);
@@ -242,7 +243,6 @@
 
         $("#Errormessage").hide();
     });
-
     editforms.addEventListener('submit', async(e) => {
         e.preventDefault();
         let formData = new FormData(e.target);
@@ -263,18 +263,28 @@
     });
 
 
-    const InspectTable = async() => {
-        let res = await FetchAuthenticate('@Url.Action("GetQualifiedInspector", "Patrol")', {});
-        if (res && res.Success) {
-            masterlist = res.Data;
-            MasterlistPagination(masterlist, 'MasterlistData', 'MastertableContainer', 50, 5);
-        }
-    }
+    const InspectTable = async () => {
+        loadingDisplay();
 
+        Loadingsteps(async () => {
+            let res = await FetchAuthenticate('@Url.Action("GetQualifiedInspector", "Patrol")', {});
+            if (res && res.Success) {
+                masterlist = res.Data;
+                TableDisplay.empty(); // Removing the Loading Display
+                MasterlistPagination(masterlist, 'MasterlistData', 'MastertableContainer', 50, 5);
+            }
+        });
+    }
     const GetEmployeeData = async() => {
         let res = await FetchAuthenticate('@Url.Action("GetEmployeelist", "Patrol")', {});
         if (res && res.Success) {
             loadData = res.Data;
+        }
+    }
+    const ActionRestrict = () => {
+        userRole = localStorage.getItem("UserRole");
+        if (userRole === "Leader" || userRole === "Users") {
+            return false;
         }
     }
 
@@ -301,6 +311,22 @@
                 const rowData = filteredData[i];
                 const color = rowData.Color;
 
+                let usercontrol = (ActionRestrict() === false)
+                    ? ``
+                    : `<td data-cell="Menu">
+                        <button style='padding: .3em .7em;' type='button' class='showmenu' id='showmenu_${rowData.InspectID}'>
+                            <i class="fa-solid fa-bars"></i>
+                        </button>
+                        <div class="dropdown-menu" id="menu_${rowData.InspectID}">
+                            <ul>
+                                <li><a href="#" class="dropdown-item" id="approve_${rowData.InspectID}">Approve</a></li>
+                                <li><a href="#" class="dropdown-item" id="disapprove_${rowData.InspectID}">Dissaproved</a></li>
+                                <li><a href="#" class="dropdown-item" id="edit_${rowData.InspectID}">Edit</a></li>
+                            </ul>
+                        </div>
+                    </td>`; 
+
+
                 const rowHtml = `
                     <tr class='row_${i} rowClick' id='editButton_${rowData.InspectID}'>
                         <td style='font-weight: 600; text-align: left; padding-left: 1em; color: #0c382ce8; ' data-cell="Part number">${capitalize(rowData.FullName)}</td>
@@ -312,18 +338,7 @@
                                 ${parseInt(rowData.Approval) === 1 ? "Approval" : "Pending"}
                             </span>
                         </td>
-                        <td data-cell="Menu">
-                            <button style='padding: .3em .7em;' type='button' class='showmenu' id='showmenu_${rowData.InspectID}'>
-                                <i class="fa-solid fa-bars"></i>
-                            </button>
-                            <div class="dropdown-menu" id="menu_${rowData.InspectID}">
-                                <ul>
-                                    <li><a href="#" class="dropdown-item" id="approve_${rowData.InspectID}">Approve</a></li>
-                                    <li><a href="#" class="dropdown-item" id="disapprove_${rowData.InspectID}">Dissaproved</a></li>
-                                    <li><a href="#" class="dropdown-item" id="edit_${rowData.InspectID}">Edit</a></li>
-                                </ul>
-                            </div>
-                        </td>
+                        ${usercontrol}
                     </tr>
                 `;
                 tableBody.innerHTML += rowHtml;
@@ -432,10 +447,9 @@
         });
 
         const searchTable = () => {
-            const query = $('#searchbox').val().toLowerCase();
+            const query = $('#searchbox').val().toLowerCase() || '';
             filteredData = dataArray.filter(item =>
-                item.FullName.toLowerCase().includes(query) ||
-                item.OJTRegistration.toLowerCase().includes(query)
+                item.FullName.toLowerCase().includes(query)
             );
             currentPage = 1;
             renderTable(currentPage);
@@ -463,12 +477,50 @@
         }).join(' ');
     }
 
+    function loadingDisplay() {
+        TableDisplay.empty();
+        const loadData = `<tr>
+                            <td colspan='6'>
+                                <div class='Loadercontainer'>
+                                    <span class="loader"></span>
+                                    <p id="loadingStepText">Fetching data from the database..</p>
+                                </div>
+                            </td>
+                        </tr>`;
+        TableDisplay.append(loadData);
+    }
+
+    function Loadingsteps(callback) {
+        const steps = [
+            "Fetching data from the database...",
+            "Processing data...",
+            "Finalizing table view..."
+        ];
+
+        let stepIndex = 0;
+
+        const interval = setInterval(() => {
+            if (stepIndex < steps.length) {
+                const stepText = document.getElementById("loadingStepText");
+                if (stepText) stepText.innerText = steps[stepIndex];
+                stepIndex++;
+            } else {
+                clearInterval(interval);
+                if (typeof callback === "function") callback();
+            }
+        }, 800);
+    }
 
 
 
     // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
     const LoadPageData = async () => {
         try {
+            if (ActionRestrict() === false) {
+                $('#Showadd').prop('disabled', true);
+                $("#hiddenColumn").hide();
+            }
+
             const [inspect, employ] = await Promise.all([
                 InspectTable(),
                 GetEmployeeData()

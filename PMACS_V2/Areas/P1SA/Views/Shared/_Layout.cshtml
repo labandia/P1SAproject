@@ -138,23 +138,6 @@
 
         const logbtn = document.getElementById("logID");
 
-        ///*==================== SHOW NAVBAR ====================*/
-        //const showMenu = (headerToggle, navbarId) => {
-        //    const toggleBtn = document.getElementById(headerToggle),
-        //        nav = document.getElementById(navbarId)
-
-        //    // Validate that variables exist
-        //    if (headerToggle && navbarId) {
-        //        toggleBtn.addEventListener('click', () => {
-        //            // We add the show-menu class to the div tag with the nav__menu class
-        //            nav.classList.toggle('show-menu')
-        //            // change icon
-        //            toggleBtn.classList.toggle('fa-solid')
-        //        })
-        //    }
-        //}
-        //showMenu('header-toggle', 'sidebar')
-
         /*==================== LINK ACTIVE ====================*/
         const linkColor = document.querySelectorAll('.sidebar__link')
 
@@ -164,9 +147,6 @@
         }
 
         linkColor.forEach(l => l.addEventListener('click', colorLink))
-
-
-
         document.addEventListener("DOMContentLoaded", function () {
             var currentUrl = window.location.pathname.toLowerCase();
             document.querySelectorAll(".sidebar__link").forEach(function (link) {
@@ -175,10 +155,6 @@
                 }
             });
         });
-
-
-
-
 
 
         logbtn.addEventListener('click', function (e) {
@@ -201,6 +177,8 @@
                 }
             });
         });
+
+
     </script>
 
 

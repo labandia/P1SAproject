@@ -25,7 +25,7 @@
                 <th><i class="fa-regular fa-user"></i> <span style="margin-left: .5em;">PIC</span></th>
                 <th><i class="fa-regular fa-calendar"></i> <span style="margin-left: .5em;">Date Conducted</span> </th>
                 <th> <i class="fa-regular fa-file-lines"></i> <span style="margin-left: .5em;">File Attached</span></th>
-                <th> <i class="fa-solid fa-bolt"></i> <span style="margin-left: .5em;">Delete</span> </th>
+                <th id="hiddenColumn"> <i class="fa-solid fa-bolt"></i> <span style="margin-left: .5em;">Delete</span> </th>
             </tr>
         </thead>
         <tbody id="MasterlistData">
@@ -37,7 +37,6 @@
 
     <div class="MasterlistWrap_footer">
         <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
-
         <div id="MastertableContainer" class="paginationPartlocal"></div>
     </div>
 </div>
@@ -45,15 +44,26 @@
 
 
 <script type="text/javascript">
+    let TableDisplay = $("#MasterlistData");
     const addmodal = document.getElementById("Showadd");
     let regisTable = [];
+    let userRole;
 
-
-    const RegistrationTable = async() => {
-        let res = await FetchAuthenticate('@Url.Action("GetRegistrationNo", "Patrol")', {});
-        if (res && res.Success) {
-            regisTable = res.Data;
-            MasterlistPagination(regisTable, 'MasterlistData', 'MastertableContainer', 50, 5);
+    const RegistrationTable = async () => {
+        loadingDisplay();
+        Loadingsteps(async () => {
+            let res = await FetchAuthenticate('@Url.Action("GetRegistrationNo", "Patrol")', {});
+            if (res && res.Success) {
+                regisTable = res.Data;
+                TableDisplay.empty();
+                MasterlistPagination(regisTable, 'MasterlistData', 'MastertableContainer', 50, 5);
+            }
+        });
+    }
+    const ActionRestrict = () => {
+        userRole = localStorage.getItem("UserRole");
+        if (userRole === "Leader" || userRole === "Users") {
+            return false;
         }
     }
 
@@ -90,7 +100,13 @@
                 const rowData = filteredData[i];
                 let color;
 
-             
+                let usercontrol = (ActionRestrict() === false)
+                    ? ``
+                    : `<td data-cell="Delete">
+                           <button  class='deleteData text-danger bg-white' id='deleteData_${rowData.RegNo}' ">
+                               <i class="fa-regular fa-trash-can"></i>
+                           </button>
+                         </td>`;
 
                 const rowHtml = `
                  <tr class='row_${i} editButton' id='editButton_${rowData.RegNo}'>
@@ -104,13 +120,8 @@
                             <i class="fa-solid fa-paperclip"></i>
                         </button>
                      </td>
-                     <td data-cell="Delete">
-                       <button  class='deleteData text-danger bg-white' id='deleteData_${rowData.RegNo}' ">
-                           <i class="fa-regular fa-trash-can"></i>
-                       </button>
-                     </td>
-                 </tr>
-             `;
+                     ${usercontrol}
+                 </tr>`;
 
                 tableBody.innerHTML += rowHtml;
             }
@@ -182,7 +193,7 @@
             e.stopPropagation();
             const buttonId = $(this).attr('id');
             const rowIndex = buttonId.split('_')[1];
-        
+
 
             let searchData = regisTable.filter(item => item.RegNo === rowIndex);
             Swal.fire({
@@ -220,7 +231,7 @@
 
         // 🔍 Search functionality
         const searchTable = () => {
-            const query = $('#searchbox').val().toLowerCase();
+            const query = ($('#searchbox').val() || '').toLowerCase();
 
             filteredData = dataArray.filter(item =>
                 item.RegNo.toLowerCase().includes(query)
@@ -240,7 +251,48 @@
         renderPagination();
     }
 
+    function loadingDisplay() {
+        TableDisplay.empty();
+        var loadData = `<tr>
+                        <td colspan='7'>
+                            <div class='Loadercontainer'>
+                                <span class="loader"></span>
+                                <p id="loadingStepText">Fetching data from the database..</p>
+                            </div>
+                        </td>
+                    </tr>`;
+        TableDisplay.append(loadData);
+    }
+
+    function Loadingsteps(callback) {
+        const steps = [
+            "Fetching data from the database...",
+            "Processing data...",
+            "Finalizing table view..."
+        ];
+
+        let stepIndex = 0;
+
+        const interval = setInterval(() => {
+            if (stepIndex < steps.length) {
+                const stepText = document.getElementById("loadingStepText");
+                if (stepText) stepText.innerText = steps[stepIndex];
+                stepIndex++;
+            } else {
+                clearInterval(interval);
+                if (typeof callback === "function") callback();
+            }
+        }, 800);
+    }
+
+
+
     $(document).ready(() => {
+        if (ActionRestrict() === false) {
+            $('#Showadd').prop('disabled', true);
+            $("#hiddenColumn").hide();
+        }
+
         RegistrationTable();
     });
 

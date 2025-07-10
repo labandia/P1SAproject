@@ -441,9 +441,8 @@
         e.preventDefault();
         let formData = new FormData(e.target);
         formData.append('DateAction', select.value);
-        //const data = Object.fromEntries(formData);
-        //console.log(data);
-        let res = await postData('@Url.Action("AddUpdateMoldDieMonitor", "DieMold")', formData);
+        const data = Object.fromEntries(formData);
+        let res = await postData('@Url.Action("AddUpdateMoldDieMonitor", "DieMold")', data);
         if (res.StatusCode === 201) {
             GetMoldDieMonth(select.value, currentYear);
             $("#InputMoldieModal").modal("hide");

@@ -117,7 +117,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             var data = await _ins.GetInpectorsData() ?? new List<InspectorModel>();
             var filterdata = data.Where(p => p.Approval == 1).ToList();
 
-            if (filterdata == null || !filterdata.Any())  return JsonNotFound("No Inspectors data found");
+            if (filterdata == null || !filterdata.Any())  return JsonNotFound("No Patrol data found");
             return JsonSuccess(filterdata, "Loads Inspector By Approval");
         }
         // GET: GetProcesslist

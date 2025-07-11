@@ -27,7 +27,7 @@ namespace ProgramPartListWeb.Areas.PC.Interface
         Task<List<CalendarSched>> GetCalendarData(string Employee_ID);
         Task<List<ProccessModel>> GetProcessData(int depid);
 
-        Task<bool> AddRegistration(object paramaters, string json);
+        Task<bool> AddRegistration(RegistrationModel reg, string json);
         Task<bool> EditRegistration(object paramaters, string json);
         Task<bool> DeleteRegistration(string RegNo);
 

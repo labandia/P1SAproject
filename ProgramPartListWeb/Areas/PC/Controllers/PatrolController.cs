@@ -90,7 +90,6 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         public async Task<ActionResult> GetQualifiedInspector()
         {
             var data = await _ins.GetInpectorsData() ?? new List<InspectorModel>();
-            //var res = CacheHelper.GetOrSet("Pressmasterlist", () => product, 15);
             if (data == null || !data.Any()) return JsonNotFound("No Inspectors data found");
 
             return JsonSuccess(data, "Load GetQualified Inspectors");
@@ -355,12 +354,13 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         [HttpPost]
         public async Task<ActionResult> AddRegistration()
         {
-
+            // Get Department Name
             int departmentID = await _ins.GetEmployeeByDepartment(Request.Form["Employee_ID"]);
             string departmentName = GlobalUtilities.DepartmentName(departmentID);
 
+           // Get Employee FullName
             //var data = await _ins.GetEmployee() ?? new List<Employee>();
-            //int Department = Convert.ToInt32(data.FirstOrDefault(p => p.EmployeeID == Request.Form["Employee_ID"])?.Department_ID);
+            //string Fullname = data.FirstOrDefault(p => p.EmployeeID == Request.Form["Employee_ID"])?.Fullname;
 
             // Set File Name For the Database
             string newFileName = Request.Form["RegNo"] + "_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".xlsx";
@@ -371,6 +371,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 RegNo = "P1SA-" + Request.Form["RegNo"],
                 DateConduct = Request.Form["DateConduct"],
                 Employee_ID = Request.Form["Employee_ID"],
+                FullName = Request.Form["EmployeeSearch"],    
                 PIC = Request.Form["PIC"],
                 PIC_Comments = Request.Form["PIC_Comments"],
                 FilePath = outputPdfPath,

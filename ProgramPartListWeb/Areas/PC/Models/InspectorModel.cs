@@ -88,6 +88,7 @@ namespace ProgramPartListWeb.Areas.PC.Models
         public string RegNo {  get; set; }
         public string DateConduct { get; set; }
         public string Employee_ID { get; set; }
+        public string FullName { get; set; }
         public string PIC { get; set; }
         public string PIC_Comments { get; set; }
         public string FilePath { get; set; }

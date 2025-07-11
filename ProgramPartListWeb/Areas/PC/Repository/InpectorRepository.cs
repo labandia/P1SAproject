@@ -45,10 +45,14 @@ namespace ProgramPartListWeb.Areas.PC.Repository
         // -------------  Registration Management ----------------------
         public  Task<List<PatrolRegistionModel>> GetRegistrationData() => SqlDataAccess.GetData<PatrolRegistionModel>("GetPatrolRegistration", null, "Registration");
         public  Task<List<FindingModel>> GetPatrolFindings(string reg) => SqlDataAccess.GetData<FindingModel>("GetFindings", new { Regno = reg });
-        public async Task<bool> AddRegistration(object paramaters, string json)
+        public async Task<bool> AddRegistration(RegistrationModel reg, string json)
         {
             //INSERT MAIN REGISTRATION PROCESS
-            bool result = await SqlDataAccess.UpdateInsertQuery("InsertRegistration", paramaters);
+            bool result = await SqlDataAccess.UpdateInsertQuery("InsertRegistration", 
+                          new { RegNo = reg.RegNo, DateConduct = reg.DateConduct, Employee_ID = reg.Employee_ID, 
+                                FilePath = reg.FilePath, PIC = reg.PIC, PIC_Comments = reg.PIC_Comments,
+                                Manager = reg.Manager, Manager_Comments = reg.Manager_Comments
+                          });
 
             // INSERT FINDING AND COUNTERMEASURE PROCESS
             // Deserialize findings

@@ -60,6 +60,8 @@ namespace ProgramPartListWeb.Utilities
                     worksheet.Cells["C53"].Value = "Manager: " + reg.Manager;
                     worksheet.Cells["D48"].Value = "Date Conducted: " + reg.DateConduct;
                     worksheet.Cells["D50"].Value = reg.PIC_Comments;
+                    worksheet.Cells["E53"].Value = reg.FullName;
+                    worksheet.Cells["G53"].Value = reg.PIC;
 
                     var findings = JsonConvert.DeserializeObject<List<FindingModel>>(json);
                     foreach (var f in findings)
@@ -102,6 +104,23 @@ namespace ProgramPartListWeb.Utilities
                 {
                     var workbook = new Spire.Xls.Workbook();
                     workbook.LoadFromStream(excelStream, ExcelVersion.Version2013);
+
+                    var sheet = workbook.Worksheets[0];
+
+                    // ✨ Fix: Set top alignment and wrap to avoid vertical space
+                    var affectedCells = new[] { "B42", "D41", "C41", "D42" };
+                    foreach (var cell in affectedCells)
+                    {
+                        var range = sheet.Range[cell];
+                        range.Style.VerticalAlignment = VerticalAlignType.Top;
+                        range.Style.WrapText = true;
+
+                    }
+
+                    // ✨ Optional: Adjust row heights to avoid excess space
+                    sheet.SetRowHeight(41, 30);
+                    sheet.SetRowHeight(42, 30);
+
 
                     // Save to temporary local file first
                     workbook.SaveToFile(tempPdfPath, FileFormat.PDF);

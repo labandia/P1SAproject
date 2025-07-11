@@ -265,3 +265,26 @@ img {
     text-align: center;
     background: #4800ff;
 }
+
+
+@media screen and (max-width: 730px) {
+    .Webs_header {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 1.5em;
+        margin-left: 0em !important;
+    }
+
+    .Webs_header .Webs_search{
+        width: 100%;
+    }
+/*    .Webs_search {
+        position: relative;
+        margin-left: 1em;
+        border-radius: .2em;
+        background: hsl(120, 1%, 83%);
+        padding: 8px 1.5em 8px 1em;
+    }*/
+}

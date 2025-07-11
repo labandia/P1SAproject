@@ -15,19 +15,19 @@
             <div id="MoldSummary">
                 <div class="d-flex align-items-center gap-4">
                     <div class="circularcontainer">
-                        <div class="circulardisplay" style="--progress: 100%" ></div>
+                        <div class="circulardisplay" style="--progress: 100%"></div>
                         <p>Mold die max</p>
                     </div>
                     <div class="circularcontainer">
-                        <div class="circulardisplay" style="--progress: 50%" ></div>
+                        <div class="circulardisplay" style="--progress: 50%"></div>
                         <p>Reach-Half die Limit</p>
                     </div>
                     <div class="circularcontainer">
-                        <div class="circulardisplay" style="--progress: 25%" ></div>
+                        <div class="circulardisplay" style="--progress: 25%"></div>
                         <p>For Monitoring</p>
                     </div>
                     <div class="circularcontainer">
-                        <div class="circulardisplay" style="--progress: 0%" ></div>
+                        <div class="circulardisplay" style="--progress: 0%"></div>
                         <p>End of Life</p>
                     </div>
                 </div>
@@ -278,8 +278,6 @@
         </div>
     </div>
 </div>
-
-
 <!--########################## Adding Tooling Press DATA #############################-->
 <div class="modal fade modal-m" id="AddTooling" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -406,7 +404,91 @@
         </div>
     </div>
 </div>
+<!--########################## Adding Tooling  DATA #############################-->
+<div class="modal fade modal-lg" id="DieControlTool" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="custom_modal_header">
+                    <h5>Die Control Data</h5>
 
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <div class="MoldieBodyModal">
+                    <form id="DieToolForms" autocomplete="off">
+                        <div class="row">
+                            <div class="form_group col-12 col-lg-6 col-sm-12">
+                                <label for="">Product Type</label>
+                                <input type="text" name="ToolNo" id="ToolNo" placeholder="Enter Product Type" required>
+                            </div>
+
+                            <div class="form_group col-12 col-lg-6 col-sm-12">
+                                <label for="">No# Stamp</label>
+                                <input type="text" name="Stamp" id="Stamp" placeholder="Enter Number Stamp" onkeypress='return restrictChars(event)' required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                           
+                            <div class="form_group col-12 col-lg-6 col-sm-12">
+                                <label for="">Machine</label>
+                                <input type="text" name="Machine" id="Machine" placeholder="Enter Details of Modification" onkeypress='return restrictChars(event)' required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form_group col-12 col-lg-6 col-sm-12">
+                                <label for="">Die Condition</label>
+                                <input type="text" name="DieCondition" id="DieCondition" placeholder="Enter Shot Cycle Shot" required>
+                            </div>
+
+                            <div class="form_group col-12 col-lg-6 col-sm-12">
+                                <label for="">Operator</label>
+                                <input type="text" name="Operator" id="Operator" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form_group col-12 col-lg-6 col-sm-12">
+                                <label for="">Die Height</label>
+                                <input type="text" name="DieHeight" id="DieHeight" required>
+                            </div>
+                            <div class="form_group col-12 col-lg-6 col-sm-12">
+                                <label for="">Leader Confirmation</label>
+                                <input type="text" name="LeaderCom" id="LeaderCom" placeholder="Enter In Charget name" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form_group col-12 col-lg-6 col-sm-12">
+                                <label for="">Gear(ALPHA)</label>
+                                <input type="text" name="Gear" id="Gear" required>
+                            </div>
+                            <div class="form_group col-12 col-lg-6 col-sm-12">
+                                <label for="">Pitch(MXM)</label>
+                                <input type="text" name="Pitch" id="Pitch" placeholder="Enter In Charget name" required>
+                            </div>
+                        </div>
+
+
+                        <div class="edits_footer" id="editsdisplay">
+                            <button type="submit" class="primary_button_color">
+                                <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
 
 
 <script src="~/Scripts/circle-progress.min.js"></script>
@@ -421,8 +503,8 @@
     const editRegistry = document.getElementById("ToolPressforms");
 
     // Date Dropdown Selection
-    const addmod = document.getElementById("addmodal");
     const addRegistry = document.getElementById("AddToolPressforms");
+    const addDieControl = document.getElementById("DieToolForms");
 
     const select = document.getElementById("monthSelect");
     const updatePress = document.getElementById("InputPress");
@@ -490,8 +572,12 @@
         $("#AddTooling").modal("show");
     });
 
+    $("#controlmodal").on('click', (e) => {
+        e.preventDefault();
+        $("#DieControlTool").modal("show");
+    });
 
-    addmod.addEventListener('click', async (e) => {
+    $("#addmodal").on('click', (e) => {
         e.preventDefault();
         $("#InputMoldieModal").modal("show");
     });
@@ -521,6 +607,13 @@
                 showConfirmButton: false
             });
         }
+    });
+
+    addDieControl.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        let formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+        console.log(data);
     });
 
 
@@ -1119,7 +1212,7 @@
                                   <td data-cell="DieHeight">${rowData.DieHeight}</td>
                                   <td data-cell="LeaderCom">${rowData.LeaderCom}</td>
                                   <td data-cell="Gear">${rowData.Gear}</td>
-                                  <td data-cell="Pitch">${rowData.Pitch}</td>                
+                                  <td data-cell="Pitch">${rowData.Pitch}</td>
                               </tr>`;
 
                 tableBody.innerHTML += rowHtml;
@@ -1217,7 +1310,7 @@
         });
 
         // UPDATES THE DETAILS DATA
-         
+
 
             // Initialize table and pagination
         window.changePage = changePage;

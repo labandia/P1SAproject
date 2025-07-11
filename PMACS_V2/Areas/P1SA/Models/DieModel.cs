@@ -423,4 +423,18 @@ namespace PMACS_V2.Areas.P1SA.Models
         public double Lower_DrawingHeight { get; set; }
         public int PressStamp { get; set; }
     }
+
+    public class PressDieControlData
+    {
+        public string ToolNo { get; set; }
+        public int Stamp { get; set; }
+        public int Machine { get; set; }
+        public int DieCondition { get; set; }
+        public string Operator { get; set; }
+        public double DieHeight { get; set; }
+        public string LeaderCom { get; set; }
+
+        public string Gear { get; set; }
+        public string Pitch { get; set; }
+    }
 }

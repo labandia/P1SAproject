@@ -34,6 +34,7 @@ namespace PMACS_V2.Areas.P1SA.Interface
         Task<bool> AddUpdatePressMonitoring(PressInputModel press);
 
         Task<bool> AddPressRegistry(PressDieRegistry press);
+        Task<bool> AddPressDieControl(PressDieControlData press);
         Task<bool> EditPressRegistry(PressDieRegistry press);
     }
 }

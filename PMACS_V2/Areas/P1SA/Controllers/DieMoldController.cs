@@ -2,8 +2,6 @@
 using PMACS_V2.Areas.P1SA.Models;
 using PMACS_V2.Controllers;
 using PMACS_V2.Utilities;
-using ProgramPartListWeb.Helper;
-using ProgramPartListWeb.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -86,7 +84,6 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             if (!update) return JsonValidationError();
             return JsonCreated(add, "Add Data Successfully");
         }
-
         [HttpPost]
         public async Task<ActionResult> AddUpdateMoldDieTooling(DieMoldToolingModel add)
         {
@@ -152,6 +149,16 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             return JsonCreated(obj, "Add Registry Successfully");
         }
         [HttpPost]
+        public async Task<ActionResult> AddPressDieControl(PressDieControlData obj)
+        {
+           
+            bool update = await _die.AddPressDieControl(obj);
+            if (!update) return JsonValidationError();
+
+            return JsonCreated(obj, "Updated Registry Successfully");
+        }
+
+        [HttpPost]
         public async Task<ActionResult> UpdatePressRegistry()
         {
             var obj = new PressDieRegistry
@@ -160,7 +167,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
                 Type = Request.Form["EditType"],
                 Model = Request.Form["EditModel"],
                 Lines = Convert.ToInt32(Request.Form["EditLine"]),
-                Status = Request.Form["EditStatus"],    
+                Status = Request.Form["EditStatus"],
                 Operational = Convert.ToInt32(Request.Form["EditOpe"])
             };
 

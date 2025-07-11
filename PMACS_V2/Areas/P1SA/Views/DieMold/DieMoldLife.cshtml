@@ -460,11 +460,18 @@
             SummaryData = res.Data.FinalSummary;
             FinalSummaryData = res.Data.MoldDieSummary;
             displaySummaryPagination(SummaryData, 'SummarylistData', 'SummaryPaginationContainer', 50, 5);
-            $.each(FinalSummaryData, function (index, row) {
-                var setdata = "<tr class= 'row_" + index + "  '  >" +
-                    "<td style='text-align: left; padding: 1em;'>" + row.Category + "</td> " +
-                    "<td style='text-align: center; font-weight: 700;'>" + row.MoldDie + "</td> " +
-                    "</tr>;"
+            $.each(FinalSummaryData, function (index, row) {            
+                let remarkColor = "";
+                if (row.Category === "For Monitoring") {
+                    remarkColor = "color: #054e92;";
+                } else if (row.Category === "End of life") {
+                    remarkColor = "color: #a81818;";
+                }
+
+                var setdata = `<tr class= 'row_${index}'>
+                                    <td style='text-align: left; padding: 1em; font-size: .8rem;  font-weight: 600; ${remarkColor}'>${row.Category}</td>
+                                    <td style='text-align: center; font-weight: 700;'>${row.MoldDie}</td>
+                               </tr>`;
                 $("#FinalSummaryData").append(setdata);
             });
         }
@@ -516,7 +523,7 @@
         $("#DieMoldToolist").empty();
 
         dataArray.forEach((row, index) => {
-            var setdata = `<tr class= 'row_${row.RecordID} '  >
+            var setdata = `<tr class= 'row_${row.RecordID}'>
              <td>${row.RegNo}</td>
              <td style='font-weight: 600;'>${row.PartNo} / ${row.DimensionQuality}</td>
              <td>${row.Item}</td>
@@ -602,9 +609,9 @@
 
                       let remarkColor = "";
                       if (RemarkeValue === "For Monitoring") {
-                          remarkColor = "color: blue;";
+                          remarkColor = "color: #054e92; font-weight: 600; font-size: .8rem;";
                       } else if (RemarkeValue === "End of Life") {
-                          remarkColor = "color: red;";
+                          remarkColor = "color: #a81818; font-weight: 600; font-size: .8rem;";
                       }
 
                       rowHtml += `<td rowspan="${groupRows.length}" data-cell="Remarks" style="${remarkColor}">${RemarkeValue}</td>`;
@@ -783,7 +790,7 @@
                                 <td data-cell="TotalDie" >${rowData.TotalDie}</td>`;
 
                      if (idx === 0) {
-                         rowHtml += `<td rowspan="${groupRows.length}" data-cell="NewTotal" style="color: hsl(209, 80%, 50%); font-weight: 600; ">${newTotalValue}</td>`;
+                         rowHtml += `<td rowspan="${groupRows.length}" data-cell="NewTotal" style="color: #054e92; font-weight: 600; ">${newTotalValue}</td>`;
                      }
                       rowHtml += "</tr>";
                      tableBody.innerHTML += rowHtml;

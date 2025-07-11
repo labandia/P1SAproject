@@ -14,7 +14,6 @@ namespace PMACS_V2.Areas.P1SA.Controllers
     public class PMACSController : ExtendController
     {
         private readonly IManpower _man;
-
         public PMACSController(IManpower man) => _man = man;
 
 
@@ -51,36 +50,19 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         // ===========================================================
         public async Task<ActionResult> GetManpowerData()
         {
-            try
-            {
-                var data = await CacheHelper.GetOrSetAsync("manpower", () => _man.GetManpower(), 15);
-                if (data == null || !data.Any())
-                    return JsonNotFound("No Manpower data found");
+            var data = await _man.GetManpower();
+            if (data == null || !data.Any())
+                return JsonNotFound("No Manpower data found");
 
-                return JsonSuccess(data);
-            }
-            catch (Exception ex)
-            {
-                return JsonError(ex.Message);
-            }
+            return JsonSuccess(data);
         }
         public async Task<ActionResult> GetTotalmanpower(string months)
         {
-            try
-            {
-               
-                var data = await CacheHelper.GetOrSetAsync("requiredManpower", () => _man.GetTotalManpower(months), 15);
-                if (data == null || !data.Any())
-                {
-                    return JsonNotFound("No Total Manpower found");
-                }
-                   
-                return JsonSuccess(data);
-            }
-            catch (Exception ex)
-            {
-                return JsonError(ex.Message);
-            }
+            var data = await _man.GetTotalManpower(months);
+            if (data == null || !data.Any())
+                return JsonNotFound("No Total Manpower found");
+
+            return JsonSuccess(data);
         }
         // ============================================================
         // ==================== Edit Manpower =========================
@@ -96,10 +78,14 @@ namespace PMACS_V2.Areas.P1SA.Controllers
                 Manpower_ID = Convert.ToInt32(Request.Form["Manpower_ID"])
             };
 
-            CacheHelper.Remove("manpower");
-            await UpdateRepository.UpdateUserLogs(1, 1, "Edit");
-            var formdata = GlobalUtilities.GetMessageResponse(await _man.EditRequireManpower(obj), 0);
-            return Json(formdata, JsonRequestBehavior.AllowGet);
+            bool result = await _man.EditRequireManpower(obj);
+            if (result)
+            {
+                CacheHelper.Remove("manpower");
+                await UpdateRepository.UpdateUserLogs(1, 1, "Edit");
+            }
+
+            return JsonCreated(result, "Edit Manpower Successfully");
         }
         [HttpPost]
         public async Task<ActionResult> EditRequiredManpower()
@@ -117,7 +103,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
                 CacheHelper.Remove("requiredManpower");
                 await UpdateRepository.UpdateUserLogs(1, 1, "Edit");
             }
-            return Json(formdata, JsonRequestBehavior.AllowGet);
+            return JsonCreated(result, "Edit Required Manpower Successfully");
         }
         // ============================================================
 

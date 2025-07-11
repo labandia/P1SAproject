@@ -16,7 +16,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
         // ===========================================================
 
         // MOLD DIE INPUT DATA
-        public async Task<List<DieMoldTotalPartnum>> GetMoldTotalPartNoList(int month, int year, string process)
+        public Task<List<DieMoldTotalPartnum>> GetMoldTotalPartNoList(int month, int year, string process)
         {
             // filter by   WHERE p.ProcessID = 'M003' 
 
@@ -58,7 +58,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
 
             var parameters = new { Month = month, Year = year, ProcessID = process };
 
-            return await SqlDataAccess.GetData<DieMoldTotalPartnum>(totalpartNoquery, parameters);
+            return  SqlDataAccess.GetData<DieMoldTotalPartnum>(totalpartNoquery, parameters);
         }
         public async Task<List<DieMoldTotalPartnum>> GetMoldDieMonthInput(int month, int year, string process = "M002")
         {
@@ -90,14 +90,14 @@ namespace PMACS_V2.Areas.P1SA.Repository
         }
 
         // MOLD DIE SUMMARY DATA
-        public async Task<List<DieMoldSetNotal>> GetSummaryMoldData()
+        public Task<List<DieMoldSetNotal>> GetSummaryMoldData()
         {
             string strquery = @"SELECT No, PreviousCount, DieLife
                               FROM DieMoldProcesses
                               GROUP BY No,  PreviousCount, DieLife";
-            return await SqlDataAccess.GetData<DieMoldSetNotal>(strquery, null);
+            return SqlDataAccess.GetData<DieMoldSetNotal>(strquery, null);
         }
-        public async Task<List<DieMoldSummaryProcess>> GetMoldDieSummary(string process)
+        public Task<List<DieMoldSummaryProcess>> GetMoldDieSummary(string process)
         {
             // filter by   WHERE p.ProcessID = 'M003' 
 
@@ -154,9 +154,9 @@ namespace PMACS_V2.Areas.P1SA.Repository
                                 LEFT JOIN TotalByNo tb ON tb.No = p.No
                                 WHERE p.ProcessID = @ProcessID
                                 ORDER BY p.No ASC";
-            return await SqlDataAccess.GetData<DieMoldSummaryProcess>(strquery, new { ProcessID = process });
+            return  SqlDataAccess.GetData<DieMoldSummaryProcess>(strquery, new { ProcessID = process });
         }
-        public async Task<List<DieMoldToolingModel>> GetMoldToolingData()
+        public Task<List<DieMoldToolingModel>> GetMoldToolingData()
         {
             string strquery = $@"SELECT t.RegNo, t.PartNo, p.DimensionQuality, 
                                 t.Item, t.DetailsModify, t.ShotRelease,
@@ -167,7 +167,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
                                 INNER JOIN DieMoldParts p ON t.PartNo = p.PartNo
                                 ORDER BY t.RecordID DESC";
 
-            return await SqlDataAccess.GetData<DieMoldToolingModel>(strquery, null, "MoldTooling");
+            return SqlDataAccess.GetData<DieMoldToolingModel>(strquery, null, "MoldTooling");
         }
 
         public async Task<bool> AddUpdateMoldie(MoldInputModel mold)
@@ -196,30 +196,30 @@ namespace PMACS_V2.Areas.P1SA.Repository
           
         }
 
-        public async Task<bool> AddMoldieTooling(DieMoldToolingModel mold)
+        public Task<bool> AddMoldieTooling(DieMoldToolingModel mold)
         {
-            string insertquery = @"INSERT INTO DieMoldDieTooling(RegNo, PartNo, Item, DetailsModify, ShotRelease,DateArrived ,DateRepair,Incharge,Remarks)
+            string insertquery = @"INSERT INTO DieMoldDieTooling(RegNo, PartNo, Item, DetailsModify, ShotRelease, DateArrived, DateRepair, Incharge, Remarks)
                                        VALUES(@RegNo, @PartNo, @Item, @DetailsModify, @ShotRelease, @DateArrived , @DateRepair, @Incharge, @Remarks)";
-            return await SqlDataAccess.UpdateInsertQuery(insertquery, mold);
+            return SqlDataAccess.UpdateInsertQuery(insertquery, mold);
         }
 
         // ===========================================================
         // ==================== PRESS DIE MOLD  ======================
         // ===========================================================
-        public async  Task<List<PressDieRegistry>> GetPressRegistryList()
+        public  Task<List<PressDieRegistry>> GetPressRegistryList()
         {
             string strquery = @"SELECT ToolNo,Type,Model,Lines,Note,Status,Operational
                                 FROM DiePressRegistry";
-            return await SqlDataAccess.GetData<PressDieRegistry>(strquery, null);
+            return SqlDataAccess.GetData<PressDieRegistry>(strquery, null);
         }
-        public async Task<List<PressDieMontoring>> GetPressMonitoring()
+        public Task<List<PressDieMontoring>> GetPressMonitoring()
         {
             string strquery = @"SELECT FORMAT(DateInput, 'MM/dd/yy') as DateInput,
                                     ToolNo,Upper,Lower,Upper_ActualHeight,
 	                                Upper_DrawingHeight,Lower_ActualHeight,
 	                                Lower_DrawingHeight,PressStamp
                               FROM DiePressMonitoring";
-            return await SqlDataAccess.GetData<PressDieMontoring>(strquery, null);
+            return SqlDataAccess.GetData<PressDieMontoring>(strquery, null);
         }
         public async Task<List<PressDieSummary>> GetPressSummary()
         {
@@ -252,7 +252,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
             return data;    
         }
 
-        public async Task<List<PressDieLowerUpper>> PressDieUpperLowerlist()
+        public Task<List<PressDieLowerUpper>> PressDieUpperLowerlist()
         {
             string strquery = @"SELECT 
                                 ToolNo,
@@ -261,9 +261,9 @@ namespace PMACS_V2.Areas.P1SA.Repository
                             FROM DiePressSummary
                             GROUP BY ToolNo
                             ORDER BY ToolNo";
-            return await SqlDataAccess.GetData<PressDieLowerUpper>(strquery, null);
+            return SqlDataAccess.GetData<PressDieLowerUpper>(strquery, null);
         }
-        public async Task<List<PressDieSummary>> PressDieSummaryList()
+        public Task<List<PressDieSummary>> PressDieSummaryList()
         {
             string strquery = @"  WITH TotalPressStamp AS (
                                             SELECT ToolNo, SUM(PressStamp) AS TotalStampPress
@@ -281,9 +281,9 @@ namespace PMACS_V2.Areas.P1SA.Repository
                                   FROM DiePressSummary s 
                                   INNER JOIN  DiePressRegistry r ON r.ToolNo = s.ToolNo
                                   LEFT JOIN TotalPressStamp td ON td.ToolNo = s.ToolNo";
-            return await SqlDataAccess.GetData<PressDieSummary>(strquery, null);
+            return  SqlDataAccess.GetData<PressDieSummary>(strquery, null);
         }
-        public async Task<List<PressDieControlModel>> GetPressControl()
+        public Task<List<PressDieControlModel>> GetPressControl()
         {
             string strsql = $@"SELECT FORMAT(c.DateInput, 'MM/dd/yy') as DateInput,
                                 c.ToolNo, c.Brand, r.Type, c.Stamp, c.Machine, 
@@ -291,7 +291,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
 	                            c.Gear, c.Pitch, c.GearCom, c.ReasonDetach
                             FROM DiePressControl c INNER JOIN DiePressRegistry r 
                             ON c.ToolNo = r.ToolNo";
-            return await SqlDataAccess.GetData<PressDieControlModel>(strsql, null, "dieControl");
+            return SqlDataAccess.GetData<PressDieControlModel>(strsql, null, "dieControl");
         }
         public string GetStatusMonitor(double minval)
         {
@@ -329,19 +329,19 @@ namespace PMACS_V2.Areas.P1SA.Repository
             return val;
         }
 
-        public async Task<bool> AddUpdatePressMonitoring(PressInputModel press)
+        public Task<bool> AddUpdatePressMonitoring(PressInputModel press)
         {
             string insertquery = @"INSERT INTO DiePressMonitoring(ToolNo, Upper, Upper_ActualHeight, Upper_DrawingHeight, Lower_ActualHeight, Lower_DrawingHeight, PressStamp)
                                        VALUES(@ToolNo, @Upper, @Upper_ActualHeight, @Upper_DrawingHeight, @Lower_ActualHeight, @Lower_DrawingHeight, @PressStamp)";
-            return await SqlDataAccess.UpdateInsertQuery(insertquery, press);
+            return  SqlDataAccess.UpdateInsertQuery(insertquery, press);
         }
 
-        public async Task<bool> EditPressRegistry(PressDieRegistry press)
+        public Task<bool> EditPressRegistry(PressDieRegistry press)
         {
             string updatequery = $@"UPDATE DiePressRegistry SET Type =@Type, Model =@Model, Lines =@Lines, Status =@Status,  Operational =@Operational
                                     WHERE ToolNo =@ToolNo";
 
-            return await SqlDataAccess.UpdateInsertQuery(updatequery, press);
+            return SqlDataAccess.UpdateInsertQuery(updatequery, press);
         }
 
         public async Task<bool> AddPressRegistry(PressDieRegistry press)
@@ -361,6 +361,11 @@ namespace PMACS_V2.Areas.P1SA.Repository
 
         }
 
-      
+        public Task<bool> AddPressDieControl(PressDieControlData press)
+        {
+            string insertquery = @"INSERT INTO DiePressControl(ToolNo, Stamp, Machine, DieCondition, DieHeight, Operator, LeaderCom, Gear, Pitch)
+                                       VALUES(@ToolNo, @Stamp, @Machine, @DieCondition, @DieHeight, @Operator, @LeaderCom, @Gear, @Pitch)";
+            return SqlDataAccess.UpdateInsertQuery(insertquery, press);
+        }
     }
 }

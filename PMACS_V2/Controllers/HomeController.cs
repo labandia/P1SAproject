@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
 namespace PMACS_V2.Controllers
 {
@@ -12,7 +8,5 @@ namespace PMACS_V2.Controllers
         {
             return RedirectToAction("Mainpage", "PMACS", new { area = "P1SA" });
         }
-
-       
     }
 }

@@ -25,6 +25,27 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             return JsonSuccess(data);
         }
 
+        [HttpPost]
+        public ActionResult SendEmailV2(EmailModel model)
+        {
+            bool result = EmailService.SendEmail(
+                "jaye.labandia@sanyodenki.com",
+                "Reminder: Due Date Approaching",
+                "<h2>Hello!</h2><p>This is your reminder email.</p>"
+            );
 
+            return Json(new { success = result, message = result ? "Email sent." : "Failed to send email." });
+        }
+
+        [HttpPost]
+        public JsonResult SendEmail(EmailModel model)
+        {
+            bool result = EmailService.SendEmail(
+                "jaye.labandia@sanyodenki.com",
+                "Reminder: Due Date Approaching",
+                "<h2>Hello!</h2><p>This is your reminder email.</p>"
+            );
+            return Json(new { success = result, message = result ? "Email sent." : "Failed to send email." });
+        }
     }
 }

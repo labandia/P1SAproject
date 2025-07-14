@@ -9,7 +9,7 @@
     <link rel="icon" type="image/x-icon" href="~/Content/Images/ready-stock.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
-    <link href="~/Content/Site.css" rel="stylesheet" />
+    <link href="~/Content/Site.min.css" rel="stylesheet" />
     <link href="~/Content/css/PatrolLayout.min.css" rel="stylesheet" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
     <link rel="preload" href="~/Content/fonts/Poppins-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
@@ -174,17 +174,14 @@
     const regform = document.getElementById('addnewform');
     const changeform = document.getElementById('changenewform');
 
-    // Modal Forms button
-    const forgetlogs = document.getElementById('forgetbtn');
-    const changeOpen = document.getElementById('changebtn');
 
-    forgetlogs.addEventListener('click', async (e) => {
+    $("#forgetbtn").on('click', (e) => {
         e.preventDefault();
         regform.reset();
         $("#AddProductModal").modal('show');
     });
 
-    changeOpen.addEventListener('click', async (e) => {
+    $("#changebtn").on('click', (e) => {
         e.preventDefault();
         changeform.reset();
         $("#ChangepasswordModal").modal('show');
@@ -273,7 +270,8 @@
         }
     });
 
-    function RegisterValidationForm() {
+
+    const RegisterValidationForm = () => {
         let pass = $("#RegPassword").val();
         let confirmpass = $("#RegConfirmPassword").val();
 
@@ -281,9 +279,8 @@
             $("#Errormessage").text("Password does not Match");
             return;
         }
-    }
-
-    async function ChangeValidationForm() {
+    };
+    const ChangeValidationForm = async () => {
         let newpass = $("#CNewPassword").val();
         let confirmpass = $("#CConfirm").val();
         let employeeID = $("#CEmployee_ID").val();
@@ -303,11 +300,9 @@
 
         $("#ChangeErrormessage").hide();
     }
+   
 
-    const Initialization = () => {
-        $('#logshow').show();
-    }
-
+    $("#logshow").show();
     Initialization();
 </script>
 

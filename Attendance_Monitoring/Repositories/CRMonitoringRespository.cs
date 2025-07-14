@@ -22,28 +22,19 @@ namespace Attendance_Monitoring.Repositories
             return SqlDataAccess.UpdateInsertQuery(strquery, parameters);
         }
 
-        public Task<List<CRaccess>> GetCRAccess()
-        {
-            string strquery = "CRAccessMonitor";
-            var parameters = new {};
-            return SqlDataAccess.GetData<CRaccess>(strquery, parameters);
-        }
+        public Task<List<CRaccess>> GetCRAccess() => SqlDataAccess.GetData<CRaccess>("CRAccessMonitor");   
 
         public Task<List<CRmodel>> GetCRMonitoringData(string dDate, string shifts, int depid)
         {
-            string strquery = "CRMonitor";
             var parameters = new { TimeIn = dDate, Shifts = shifts, Depid = depid };
-            return SqlDataAccess.GetData<CRmodel>(strquery, parameters);
+            return SqlDataAccess.GetData<CRmodel>("CRMonitor", parameters);
         }
 
         public Task<List<CRmodel>> GetCRMonitoringSummary(int depid, string startDate, string endDate)
         {
-            string strquery = "CRMonitorSummary";
-            var parameters = new {  Depid = depid, startDate = startDate, endDate = endDate };
-            return SqlDataAccess.GetData<CRmodel>(strquery, parameters);
+            return SqlDataAccess.GetData<CRmodel>("CRMonitorSummary", new { Depid = depid, startDate = startDate, endDate = endDate });
         }
-
-        public  Task<List<ExportCRmodel>> GetCRMonitoringSummaryDatalist(string strsql, string startDate, string endDate, string shifts, string search)
+        public Task<List<ExportCRmodel>> GetCRMonitoringSummaryDatalist(string strsql, string startDate, string endDate, string shifts, string search)
         {
 
             var parameters = new DynamicParameters();

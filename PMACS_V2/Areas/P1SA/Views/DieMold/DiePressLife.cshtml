@@ -493,12 +493,19 @@
 
 <script src="~/Scripts/circle-progress.min.js"></script>
 <script type="text/javascript">
+    const currentMonth = new Date().getMonth();
+    const currentYear = new Date().getFullYear();
+    let setMonth = parseInt(currentMonth) + 1;
     let TableData = [];
     let PressData = [];
     let ControlData = [];
     let SummaryData = [];
     let FinalSummaryData = [];
 
+    let TableDisplay = $("#DiePressMonitoringlistV2");
+    let MonitorDisplay = $("#DiePressMonitoringlist");
+    let ToolingDisplay = $("#RegistrylistData");
+    let ControlDisplay = $("#DiePressControlist");
 
     const editRegistry = document.getElementById("ToolPressforms");
 
@@ -508,9 +515,9 @@
 
     const select = document.getElementById("monthSelect");
     const updatePress = document.getElementById("InputPress");
-    const currentMonth = new Date().getMonth();
-    const currentYear = new Date().getFullYear();
+   
 
+    let isTabLoaded = [true, false, false, false];
 
     // Tabs Content
     const tabs = document.querySelectorAll(".Mold_tab");
@@ -537,33 +544,47 @@
                 document.getElementById(target).classList.add("show");
             }, 50);
 
-
-            switch (index) {
-                case 0:
-                    $("#MoldSummary").show();
-                    $("#MoldMonitor").hide();
-                    $("#MoldTooling").hide();
-                    $("#MoldControl").hide();
-                    break;
-                case 1:
-                    $("#MoldSummary").hide();
-                    $("#MoldMonitor").show();
-                    $("#MoldTooling").hide();
-                    $("#MoldControl").hide();
-                    break;
-                case 2:
-                    $("#MoldSummary").hide();
-                    $("#MoldMonitor").hide();
-                    $("#MoldTooling").show();
-                    $("#MoldControl").hide();
-                    break;
-                default:
-                    $("#MoldSummary").hide();
-                    $("#MoldMonitor").hide();
-                    $("#MoldTooling").hide();
-                    $("#MoldControl").show();
-                    break;
+            if (index === 0) {
+                $("#MoldSummary").show();
+                $("#MoldMonitor").hide();
+                $("#MoldTooling").hide();
+                $("#MoldControl").hide();
+            } else if (index === 1) {
+                $("#MoldSummary").hide();
+                $("#MoldMonitor").show();
+                $("#MoldTooling").hide();
+                $("#MoldControl").hide();
+            } else if (index === 2) {
+                $("#MoldSummary").hide();
+                $("#MoldMonitor").hide();
+                $("#MoldTooling").show();
+                $("#MoldControl").hide();
+            } else {
+                $("#MoldSummary").hide();
+                $("#MoldMonitor").hide();
+                $("#MoldTooling").hide();
+                $("#MoldControl").show();
             }
+
+            if (!isTabLoaded[index]) {
+                switch (index) {
+                    case 0:
+                        GetPressSummary();
+                        break;
+                    case 1:
+                        GetPressMonitoring(setMonth, currentYear);
+                        break;
+                    case 2:
+                        GetPressRegistry();
+                        break;
+                    default:
+                        GetPressControl();
+                        break;
+                }
+                isTabLoaded[index] = true;
+            }
+
+                 
         });
     });
 
@@ -654,17 +675,20 @@
     const GetPressRegistry = async () => {
         $("#ToolNo").empty();
 
-        let res = await fetchData('@Url.Action("GetPressDieRegistryList", "DieMold")', {});
-        if (res && res.Success) {
-            SummaryData = res.Data;
-            const ToolData = SummaryData.map(res => res.ToolNo);
-            $.each(ToolData, function (index, row) {
-                $("#ToolNo").append("<option value='" + row + "'>" + row + "</option>");
-            });
+        const id = loadingDisplay(2, 6);
+        Loadingsteps(id, async () => {
+            let res = await fetchData('@Url.Action("GetPressDieRegistryList", "DieMold")', {});
+            if (res && res.Success) {
+                SummaryData = res.Data;
+                const ToolData = SummaryData.map(res => res.ToolNo);
+                $.each(ToolData, function (index, row) {
+                    $("#ToolNo").append("<option value='" + row + "'>" + row + "</option>");
+                });
 
-            displaySummaryPagination(SummaryData, 'RegistrylistData', 'RegistryPaginationContainer', 50, 5);
+                displaySummaryPagination(SummaryData, 'RegistrylistData', 'RegistryPaginationContainer', 50, 5);
+            }
+        });
 
-        }
     }
     const GetPressMonitoring = async (month, year) => {
         //let formData = new FormData();
@@ -675,34 +699,42 @@
         //$("#MonthHeader").text(months[month - 1]);
 
         //const data = Object.fromEntries(formData);
-        let res = await fetchData('@Url.Action("GetPressDieMonitoringList", "DieMold")', {});
-        if (res && res.Success) {
-            TableData = res.Data;
-            displayPagination(TableData, 'DiePressMonitoringlist', 'PaginationContainer', 50, 5);
-        } else {
-            console.log("No Data found");
-        }
+        const id = loadingDisplay(1, 9);
+        Loadingsteps(id, async () => {
+             let res = await fetchData('@Url.Action("GetPressDieMonitoringList", "DieMold")', {});
+             if (res && res.Success) {
+                 TableData = res.Data;
+                 displayPagination(TableData, 'DiePressMonitoringlist', 'PaginationContainer', 50, 5);
+             } else {
+                 console.log("No Data found");
+             }
+        });
     }
     const GetPressSummary = async () => {
-
-        let res = await fetchData('@Url.Action("GetPressDieSummaryList", "DieMold")', {});
-        if (res && res.Success) {
-            PressData = res.Data;
-            //console.log(PressData);
-            displaySummarPressPagination(PressData, 'DiePressMonitoringlistV2', 'PaginationContainerv2', 50, 5);
-        } else {
-            console.log("No Data found");
-        }
+        const id = loadingDisplay(0, 10);
+        Loadingsteps(id, async () => {
+            let res = await fetchData('@Url.Action("GetPressDieSummaryList", "DieMold")', {});
+            if (res && res.Success) {
+                PressData = res.Data;
+                //console.log(PressData);
+                displaySummarPressPagination(PressData, 'DiePressMonitoringlistV2', 'PaginationContainerv2', 50, 5);
+            } else {
+                console.log("No Data found");
+            }
+        });
     }
     const GetPressControl = async () => {
-      let res = await fetchData('@Url.Action("GetPressDieControlList", "DieMold")', {});
-      if (res && res.Success) {
-          ControlData = res.Data;
-          console.log(ControlData);
-          displayControlPagination(ControlData, 'DiePressControlist', 'PaginationControlContainer', 50, 5);
-      } else {
-          console.log("No Data found");
-      }
+        const id = loadingDisplay(3, 11);
+        Loadingsteps(id, async () => {
+            let res = await fetchData('@Url.Action("GetPressDieControlList", "DieMold")', {});
+            if (res && res.Success) {
+                ControlData = res.Data;
+                displayControlPagination(ControlData, 'DiePressControlist', 'PaginationControlContainer', 50, 5);
+            } else {
+                console.log("No Data found");
+            }
+        });
+
     }
 
 
@@ -1318,10 +1350,72 @@
         renderPagination();
     }
 
+    function loadingDisplay(load, col) {
+        let targetDisplay, loadingTextId;
+
+        switch (load) {
+            case 0:
+                targetDisplay = TableDisplay;
+                loadingTextId = "loadingStepText_Main";
+                break;
+            case 1:
+                targetDisplay = MonitorDisplay;
+                loadingTextId = "loadingStepText_Monitor";
+                break;
+            case 2:
+                targetDisplay = ToolingDisplay;
+                loadingTextId = "loadingStepText_Tooling";
+                break;
+            default:
+                targetDisplay = ControlDisplay;
+                loadingTextId = "loadingStepText_Control";
+                break;
+        }
+
+
+        const loadData = `<tr>
+                      <td colspan='${col}'>
+                          <div class='Loadercontainer'>
+                              <span class="loader"></span>
+                              <p id="${loadingTextId}">Fetching data from the database..</p>
+                          </div>
+                      </td>
+                  </tr>`;
+
+        targetDisplay.empty();
+        targetDisplay.append(loadData);
+
+        return loadingTextId;
+
+    }
+    function Loadingsteps(loadingTextId, callback) {
+        const steps = [
+            "Fetching data from the database...",
+            "Processing data...",
+            "Finalizing table view..."
+        ];
+
+        let stepIndex = 0;
+
+        const interval = setInterval(() => {
+            const stepText = document.getElementById(loadingTextId);
+            if (stepText) {
+                stepText.innerText = steps[stepIndex];
+                stepIndex++;
+            } else {
+                clearInterval(interval); // in case it's removed
+            }
+
+            if (stepIndex >= steps.length) {
+                clearInterval(interval);
+                if (typeof callback === "function") callback();
+            }
+        }, 800);
+    }
 
     const LoadPageData = async () => {
         try {
-            let setMonth = parseInt(currentMonth) + 1;
+           
             $("#MoldSummary").show();
             $("#MoldMonitor").hide();
             $("#MoldTooling").hide();

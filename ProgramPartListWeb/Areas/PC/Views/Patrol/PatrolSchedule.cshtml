@@ -7,26 +7,34 @@
 <div class="row">
     <div class="col-3">
         <div class="Sched_container">
-           
-            <div class="d-flex align-items-center gap-2">
-
-                <select id="DepartmentID" class="form-control">
-                    <option value="0">All</option>
-                    <option value="1">Molding</option>
-                    <option value="2">Press</option>
-                    <option value="3">Rotor</option>
-                    <option value="4">Winding</option>
-                    <option value="5">Circuit</option>
-                    <option value="6">Process Control</option>
-                </select>
-                <input id="searchbox" type="text" placeholder="Search name ... "  />
+            <small style="font-weight: 600;">Department :</small>
+            <select id="DepartmentID" class="form-control mb-2 mt-2">
+                <option value="0">All</option>
+                <option value="1">Molding</option>
+                <option value="2">Press</option>
+                <option value="3">Rotor</option>
+                <option value="4">Winding</option>
+                <option value="5">Circuit</option>
+                <option value="6">Process Control</option>
+            </select>
+            <div class="Inputcontainer">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" placeholder="Search here ... " id="searchbox" autocomplete="off" />
+                <div class="line"></div>
             </div>
 
+            <hr />
 
-            <div class="Sched_list" id="Sched_list_container"></div>
+
+            <div class="EmployeeListContainer">
+                <div class="Sched_list" id="Sched_list_container"></div>
+            </div>
         </div>
     </div>
     <div class="col-9">
+        <div>
+            <p id="DateShow" style="font-weight: 700;">Department :</p>
+        </div>
         <div class="Calendar_container">
             <div id="calendar"></div>
         </div>
@@ -41,7 +49,7 @@
 
             <div class="modal-body">
                 <div class="custom_modal_header">
-                    <h5>SET SCHEDULE</h5>
+                    <h5>SET TASK SCHEDULE</h5>
 
                     <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
                         <span>&times;</span>
@@ -81,7 +89,7 @@
 
             <div class="modal-body">
                 <div class="custom_modal_header">
-                    <h5>CHANGE PROCESS</h5>
+                    <h5>CHANGE TASK</h5>
 
                     <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
                         <span>&times;</span>
@@ -97,7 +105,6 @@
                             <input type="hidden" name="EditIsActive" id="EditIsActive" />
                         </div>
                         <div class="form_group col-12 col-sm-12  mb-2">
-                            <label>Process Set </label> <br />
                             <select class="form-control" id="EditProcessID" name="EditProcessID">
                             </select>
                         </div>
@@ -229,6 +236,22 @@
             }
         }
     }
+    const DateDisplay = () => {
+        const today = new Date();
+
+        // Get full month name
+        const month = today.toLocaleString('en-US', { month: 'long' });
+
+        // Get day of the month
+        const day = today.getDate();
+
+        // Get full weekday name
+        const weekday = today.toLocaleString('en-US', { weekday: 'long' });
+
+        // Final format: July 14, Monday
+        const formattedDate = `${month} ${day}, ${weekday}`;
+        $("#DateShow").text(formattedDate);
+    };
 
     addform.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -332,23 +355,37 @@
             initialView: 'dayGridMonth',
             selectable: false,
             height: 'auto',
-            headerToolbar: {
-                left: '',
-                center: '',
-                right: 'title'
-            },
+            headerToolbar: false,
             events: [], // Start empty
 
             dayCellDidMount: function (info) {
-                // Format info.date to local date string
-                const cellDate = info.date.getFullYear() + '-' +
-                    String(info.date.getMonth() + 1).padStart(2, '0') + '-' +
-                    String(info.date.getDate()).padStart(2, '0');
+                const cellSunDate = info.date;
 
-                if (cellDate === formattedDate) {
-                    info.el.style.backgroundColor = '#0eaa7b33';
-                    //info.el.style.color = 'white';
+                // Highlights All Sunday
+                const today = new Date();
+                if (
+                    cellSunDate.getFullYear() === today.getFullYear() &&
+                    cellSunDate.getMonth() === today.getMonth() &&
+                    cellSunDate.getDate() === today.getDate()
+                ) {
+                    info.el.style.backgroundColor = '#0eaa7b33'; // Highlight today
                 }
+
+
+                if (cellSunDate.getDay() === 0) {
+                    info.el.style.backgroundColor = '#ffc0c033'; // Light red/orange background
+                }
+
+
+                // Format info.date to local date string
+                //const cellDate = info.date.getFullYear() + '-' +
+                //    String(info.date.getMonth() + 1).padStart(2, '0') + '-' +
+                //    String(info.date.getDate()).padStart(2, '0');
+
+                //if (cellDate === formattedDate) {
+                //    info.el.style.backgroundColor = '#0eaa7b33';
+                //    //info.el.style.color = 'white';
+                //}
             },
 
             dateClick: function (info) {
@@ -392,7 +429,7 @@
 
     $(document).ready(function () {
         let searchText = $("#searchbox").val();
-
+        DateDisplay();
         PopulateComboxInspector(searchText);
         // Filter when selection changes
         $("#DepartmentID").on("change", function () {

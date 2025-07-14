@@ -779,6 +779,16 @@
         color: #fff;
     }
 
+    .EmployeeListContainer{
+        margin-top: 1em;
+        max-height: 400px; /* adjust height as needed */
+        overflow-y: auto;
+    }
+
+    .sunday-highlight {
+        background-color: #ffc0c033 !important;
+    }
+
     .Dashboard {
         display: grid;
         grid-template-columns: 65% 35%;
@@ -930,6 +940,10 @@
 @media screen and (min-width: 1440px){
     .MainTable, .InspecTable {
         max-height: 750px; /* Adjust height as needed for large monitors */
+    }
+
+    .EmployeeListContainer {
+        max-height: 750px;
     }
 }
 
@@ -1221,4 +1235,27 @@
 
     .change__group{
         margin: 1em 0;
+    }
+
+    .Calendar_container{
+        margin-top: .5em;
+    }
+
+    .DateShow{
+        font-size: 1.1rem;
+    }
+
+    .fc-col-header-cell .fc-scrollgrid-sync-inner{
+       background: #d4d3d3 !important;
+       color: #222;
+    }
+
+    .fc-col-header-cell-cushion{
+        color: #222;
+        font-weight: 700;
+    }
+
+    .fc .fc-button-primary{
+        background: none !important;
+        color: #222 ;
     }

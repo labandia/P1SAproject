@@ -738,6 +738,9 @@
     <Content Include="Content\Images\rack.png" />
     <Content Include="Content\Images\ready-stock.ico" />
     <Content Include="Content\Mainfonts.css" />
+    <Content Include="Content\Site.min.css">
+      <DependentUpon>Site.css</DependentUpon>
+    </Content>
     <Content Include="Content\sweetalert.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />

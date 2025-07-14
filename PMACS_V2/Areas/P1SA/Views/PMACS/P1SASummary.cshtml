@@ -117,6 +117,7 @@
     const monthselect = document.getElementById("monthselect");
 
     //const inputsearch = document.getElementById("searchbox");
+    let TableDisplay = $("#dataSearching");
 
     let capid;
     let loadData = [];
@@ -138,7 +139,7 @@
             if (res && res.Success) {
                 loadData = res.Data;
                 setTimeout(() => {
-                    DataTable.empty();
+                    TableDisplay.empty(); // Removing the Loading Display
 
                     loadData.forEach((row, index) => {
                         let buttons = '';
@@ -337,15 +338,37 @@
 
 
     function loadingDisplay() {
-        DataTable.empty();
-        var loadData = `<tr >
-                            <td colspan='9'>
-                                <div class='Loadercontainer'>
-                                    <span class="loader"></span>
-                                </div>
-                            </td>
-                        </tr>`;
-        DataTable.append(loadData);
+        TableDisplay.empty();
+        const loadData = `<tr>
+                         <td colspan='9'>
+                             <div class='Loadercontainer'>
+                                 <span class="loader"></span>
+                                 <p id="loadingStepText">Fetching data from the database..</p>
+                             </div>
+                         </td>
+                     </tr>`;
+        TableDisplay.append(loadData);
+    }
+
+    function Loadingsteps(callback) {
+        const steps = [
+            "Fetching data from the database...",
+            "Processing data...",
+            "Finalizing table view..."
+        ];
+
+        let stepIndex = 0;
+
+        const interval = setInterval(() => {
+            if (stepIndex < steps.length) {
+                const stepText = document.getElementById("loadingStepText");
+                if (stepText) stepText.innerText = steps[stepIndex];
+                stepIndex++;
+            } else {
+                clearInterval(interval);
+                if (typeof callback === "function") callback();
+            }
+        }, 800);
     }
 
     // ############## DISPLAY ALL THE DATA TO THE PAGE ########################

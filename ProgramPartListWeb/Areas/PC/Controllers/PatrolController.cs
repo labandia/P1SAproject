@@ -83,9 +83,9 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             }
         }
 
-        //-----------------------------------------------------------------------------------------
-        //---------------------------- INSPECTOR PROCESS ------------------------------------------
-        //-----------------------------------------------------------------------------------------
+        //=========================================================================================
+        //============================ INSPECTOR PROCESS ==========================================
+        //=========================================================================================
         // GET: GetQualifiedInspector
         public async Task<ActionResult> GetQualifiedInspector()
         {
@@ -94,7 +94,6 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
             return JsonSuccess(data, "Load GetQualified Inspectors");
         }
-
         // GET: GetInspectorsByAdd
         public async Task<ActionResult> GetInspectorsByAdd()
         {
@@ -108,8 +107,6 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
             return JsonSuccess(removeDuplicateData, "LoadInspectorData");
         }
-
-
         // GET: GetInpectsByApproval
         public async Task<ActionResult> GetInpectsByApproval()
         {
@@ -251,7 +248,6 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 return JsonError(ex.Message);
             }
         }
-
         // GET : GetCalendarEvents
         public async Task<ActionResult> GetCalendarEvents(string Employee_ID)
         {
@@ -474,7 +470,6 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
             return Json(new { success = true, filePath = exportedFilePath }, JsonRequestBehavior.AllowGet);
         }
-
         [HttpPost]
         public ActionResult ExportToPdf()
         {

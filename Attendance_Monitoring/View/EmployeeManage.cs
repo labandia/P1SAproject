@@ -37,19 +37,29 @@ namespace Attendance_Monitoring.View
         }
 
 
-        public async void Displayemployee()
+        public async void Displayemployee(int depid)
         {
-            IEnumerable<Employee> items = await _emp.GetEmployees();
+            var items = await _emp.GetEmployees();
             emplist = items.AsParallel().ToList();
             Employeetable.AutoGenerateColumns = false;
-            Employeetable.DataSource = emplist;
+
+            if (comboBox1.SelectedIndex != 0)
+            {
+                var filteredList = emplist.Where(p => p.Department_ID == depid).ToList();
+                Employeetable.DataSource =  filteredList;
+            }
+            else
+            {
+                Employeetable.DataSource =  emplist;
+            }
+
             DisplayTotal.Text = "Total Records: " + Employeetable.RowCount;
         }
 
 
         private async void PopulateComboBox()
         {
-            IEnumerable<Department> items = await _emp.GetDepartments();
+            var items = await _emp.GetDepartments();
 
             // Convert the items to a list and add a default item
             List<Department> itemList = items.ToList();
@@ -158,7 +168,7 @@ namespace Attendance_Monitoring.View
             }
         }
 
-        private  void Employeetable_CellClick(object sender, DataGridViewCellEventArgs e)
+        private async  void Employeetable_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             // Check if the click is on a header
             if (e.RowIndex < 0)
@@ -169,33 +179,32 @@ namespace Attendance_Monitoring.View
             // Proceed with normal cell click processing
             try
             {
-                string EmployeeID = Employeetable.Rows[e.RowIndex].Cells[2].Value.ToString();
+                string EmployeeID = Employeetable.Rows[e.RowIndex].Cells[0].Value.ToString();
 
-                if (e.ColumnIndex == 0)
+                if (e.ColumnIndex == 4)
                 {
                     EditEmployee ed = new EditEmployee(this, _emp);
                     ed.EmpID.Text = EmployeeID;
-                    ed.Fullname.Text = Employeetable.Rows[e.RowIndex].Cells[3].Value.ToString();
-                    ed.Process.Text = Employeetable.Rows[e.RowIndex].Cells[4].Value.ToString();
+                    ed.Fullname.Text = Employeetable.Rows[e.RowIndex].Cells[1].Value.ToString();
+                    ed.Process.Text = Employeetable.Rows[e.RowIndex].Cells[2].Value.ToString();
                     ed.TempID.Text = EmployeeID;
-                    ed.Afili.Text = Employeetable.Rows[e.RowIndex].Cells[5].Value.ToString();
+                    ed.Afili.Text = Employeetable.Rows[e.RowIndex].Cells[3].Value.ToString();
                     ed.comboBox1.SelectedIndex = Convert.ToInt32(Employeetable.Rows[e.RowIndex].Cells[6].Value.ToString());
                     ed.ShowDialog();
                 }
-                else if (e.ColumnIndex == 1)
+                else if (e.ColumnIndex == 5)
                 {
                     DialogResult exit = MessageBox.Show("Are you  sure you want to delete this Employee ID", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                     if (exit == DialogResult.Yes)
                     {
-                        //EmployeeID
-                        //bool result = await _admin.DeleteEmployee(EmployeeID);
+                        bool result = await _emp.DeleteEmployee(EmployeeID);
 
-                        //if (result)
-                        //{
-                        //    MessageBox.Show("Delete data successfully");
-                         //   Displayemployee();
-                        //}
+                        if (result)
+                        {
+                            MessageBox.Show($@"Employee ID: ${EmployeeID} is Already Deleted!!");
+                            Displayemployee(comboBox1.SelectedIndex);
+                        }
                     }
 
                 }
@@ -209,7 +218,7 @@ namespace Attendance_Monitoring.View
         private void EmployeeManage_Load(object sender, EventArgs e)
         {
             //SET THE SECTION MOLDING DISPLAY TABLE
-            Displayemployee();
+            Displayemployee(0);
             PopulateComboBox();
         }
 
@@ -217,18 +226,11 @@ namespace Attendance_Monitoring.View
         private void comboBox1_SelectedIndexChanged_1(object sender, EventArgs e)
         {
            
-            if (comboBox1.SelectedIndex == 0)
-            {
-                Displayemployee();
-            }
-            else
-            {
-                var filteredList = emplist.Where(p => p.Department_ID == comboBox1.SelectedIndex).ToList();
-                Employeetable.DataSource =  filteredList;
-                DisplayTotal.Text = "Total Records: " + Employeetable.RowCount;
-            }
+            if (comboBox1.SelectedIndex == 0) Displayemployee(0);
 
-           
+            var filteredList = emplist.Where(p => p.Department_ID == comboBox1.SelectedIndex).ToList();
+            Employeetable.DataSource =  filteredList;
+            DisplayTotal.Text = "Total Records: " + Employeetable.RowCount;
         }
 
         private void button1_Click(object sender, EventArgs e)

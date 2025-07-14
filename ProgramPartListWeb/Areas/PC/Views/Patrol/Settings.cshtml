@@ -7,6 +7,8 @@
 
 <header>
     <h4 class="header__title">Account Settings</h4>
+
+    <button id="sendEmail">Send Email</button>
 </header>
 
 
@@ -78,16 +80,38 @@
                         }
                     });
                 });
-            } 
+            }
         }
     });
 
+    $("#sendEmail").on('click', (e) => {
+        e.preventDefault();
+
+        fetch('@Url.Action("SendEmailV2", "Notification")', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                to: "jaye.labandia@sanyodenki.com",
+                subject: "Test Email from JS",
+                body: "This email was triggered from JavaScript via MVC."
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+            })
+            .catch(error => {
+                alert("Error: " + error);
+            });
+    });
 
     async function Validateform() {
         const current = document.getElementById("currentpassword").value.trim();;
         const newpass = document.getElementById("newpassword").value.trim();
         const matchpass = document.getElementById("confirmpassword").value.trim();;
-        const err = document.getElementById("errorMessage"); // ✅ use vanilla
+        const err = document.getElementById("errorMessage");
 
         err.textContent = "";
 
@@ -117,7 +141,7 @@
 
         err.textContent = "";
         return true;
-   
+
     }
     async function Getuserinfo() {
         const accessToken = localStorage.getItem('accessToken');

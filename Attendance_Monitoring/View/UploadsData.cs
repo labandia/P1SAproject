@@ -36,7 +36,7 @@ namespace Attendance_Monitoring.View
 
                     if (result)
                     {
-                        _emp.Displayemployee();
+                        _emp.Displayemployee(comboBox1.SelectedIndex);
                         MessageBox.Show("UPLOAD DATA SUCCESSFULLY :");
                         Visible = false;
                     }
@@ -54,7 +54,7 @@ namespace Attendance_Monitoring.View
 
                         if (result)
                         {
-                            _emp.Displayemployee();
+                            _emp.Displayemployee(comboBox1.SelectedIndex);
                             MessageBox.Show("UPLOAD DATA SUCCESSFULLY :");
                             Visible = false;
                         }

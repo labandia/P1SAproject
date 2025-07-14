@@ -311,14 +311,23 @@
 </div>
 
 <script type="text/javascript">
+    const currentMonth = new Date().getMonth();
+    const currentYear = new Date().getFullYear();
+    let setMonth = parseInt(currentMonth) + 1;
     let TableData = [];
     let SummaryData = [];
     let FinalSummaryData = [];
     let DieTooling = [];
+
+    let TableDisplay = $("#SummarylistData");
+    let MonitorDisplay = $("#DieMoldMasterlist");
+    let ToolingDisplay = $("#DieMoldToolist");
+
     // Tabs Content
     const tabs = document.querySelectorAll(".Mold_tab");
     const slider = document.querySelector(".Mold_slider");
     const contents = document.querySelectorAll(".Mold_content");
+    let isTabLoaded = [true, false, false];
 
     tabs.forEach((tab, index) => {
         tab.addEventListener("click", () => {
@@ -340,28 +349,38 @@
                 document.getElementById(target).classList.add("show");
             }, 50);
 
+            if (index === 0) {
+                $("#MoldSummary").show();
+                $("#MoldMonitor").hide();
+                $("#MoldTooling").hide();
+            } else if (index === 1) {
+                $("#MoldSummary").hide();
+                $("#MoldMonitor").show();
+                $("#MoldTooling").hide();
+            } else {
+                $("#MoldSummary").hide();
+                $("#MoldMonitor").hide();
+                $("#MoldTooling").show();
+            }
 
-            switch (index) {
-                case 0:
-                    $("#MoldSummary").show();
-                    $("#MoldMonitor").hide();
-                    $("#MoldTooling").hide();
-                    break;
-                case 1:
-                    $("#MoldSummary").hide();
-                    $("#MoldMonitor").show();
-                    $("#MoldTooling").hide();
-                    break;
-                default:
-                    $("#MoldSummary").hide();
-                    $("#MoldMonitor").hide();
-                    $("#MoldTooling").show();
-                    break;
+            if (!isTabLoaded[index]) {
+                switch (index) {
+                    case 0:
+                        GetMoldDieSummary();
+                        break;
+                    case 1:               
+                        GetMoldDieMonth(setMonth, currentYear);
+                        break;
+                    default:      
+                        GetMoldDieTooling();
+                        break;
+                }
+                isTabLoaded[index] = true;
             }
         });
     });
 
- 
+
     // Date Dropdown Selection
     const months = [
         "January", "February", "March", "April",
@@ -370,8 +389,7 @@
     ];
 
     const select = document.getElementById("monthSelect");
-    const currentMonth = new Date().getMonth();
-    const currentYear = new Date().getFullYear();
+
 
     //===============================================================
     //================= INPUT AND UPDATE DATA =======================
@@ -383,6 +401,7 @@
         const data = Object.fromEntries(formData);
         let res = await postData('@Url.Action("AddUpdateMoldDieMonitor", "DieMold")', data);
         if (res.StatusCode === 201) {
+            isTabLoaded[0] = false;
             GetMoldDieMonth(select.value, currentYear);
             $("#InputMoldieModal").modal("hide");
         }
@@ -450,70 +469,83 @@
     //================ FETCH DATA AND DISPLAY =======================
     //===============================================================
     const GetMoldDieSummary = async () => {
+        const id = loadingDisplay(0, 7);
         $("#FinalSummaryData").empty();
 
-        let res = await fetchData('@Url.Action("GetMoldDieSummaryList", "DieMold")', { ProcessID: $("#ProcessID").val() });
-        if (res && res.Success) {
-            SummaryData = res.Data.FinalSummary;
-            FinalSummaryData = res.Data.MoldDieSummary;
-            displaySummaryPagination(SummaryData, 'SummarylistData', 'SummaryPaginationContainer', 50, 5);
-            $.each(FinalSummaryData, function (index, row) {
-                let remarkColor = "";
-                if (row.Category === "For Monitoring") {
-                    remarkColor = "color: #054e92;";
-                } else if (row.Category === "End of life") {
-                    remarkColor = "color: #a81818;";
-                }
+        Loadingsteps(id, async () => {
+              let res = await fetchData('@Url.Action("GetMoldDieSummaryList", "DieMold")', { ProcessID: $("#ProcessID").val() });
+              if (res && res.Success) {
+                  TableDisplay.empty(); // Removing the Loading Display
 
-                var setdata = `<tr class= 'row_${index}'>
-                                    <td style='text-align: left; padding: 1em; font-size: .8rem;  font-weight: 600; ${remarkColor}'>${row.Category}</td>
-                                    <td style='text-align: center; font-weight: 700;'>${row.MoldDie}</td>
-                               </tr>`;
-                $("#FinalSummaryData").append(setdata);
-            });
-        }
+                  SummaryData = res.Data.FinalSummary;
+                  FinalSummaryData = res.Data.MoldDieSummary;
+                  displaySummaryPagination(SummaryData, 'SummarylistData', 'SummaryPaginationContainer', 50, 5);
+                  $.each(FinalSummaryData, function (index, row) {
+                      let remarkColor = "";
+                      if (row.Category === "For Monitoring") {
+                          remarkColor = "color: #054e92;";
+                      } else if (row.Category === "End of life") {
+                          remarkColor = "color: #a81818;";
+                      }
+
+                      var setdata = `<tr class= 'row_${index}'>
+                                          <td style='text-align: left; padding: 1em; font-size: .8rem;  font-weight: 600; ${remarkColor}'>${row.Category}</td>
+                                          <td style='text-align: center; font-weight: 700;'>${row.MoldDie}</td>
+                                     </tr>`;
+                      $("#FinalSummaryData").append(setdata);
+                  });
+              }
+        });
+
     }
     const GetMoldDieMonth = async (month, year) => {
-        let formData = new FormData();
-        // Where value of month is around 1 - 12
-        formData.append('Months', month);
-        formData.append('Year', year);
-        formData.append('ProcessID', $("#ProcessID").val());
+        const id = loadingDisplay(1, 6);
+        Loadingsteps(id, async () => {
+             let formData = new FormData();
+             // Where value of month is around 1 - 12
+             formData.append('Months', month);
+             formData.append('Year', year);
+             formData.append('ProcessID', $("#ProcessID").val());
 
-        $("#MonthHeader").text(months[month - 1]);
 
-        const data = Object.fromEntries(formData);
-        let res = await fetchData('@Url.Action("GetMoldDieMonthInputList", "DieMold")', data);
-        if (res && res.Success) {
-            TableData = res.Data;
-            displayPagination(TableData, 'DieMoldMasterlist', 'PaginationContainer', 50, 5);
-        }
+             $("#MonthHeader").text(months[month - 1]);
+
+             const data = Object.fromEntries(formData);
+             let res = await fetchData('@Url.Action("GetMoldDieMonthInputList", "DieMold")', data);
+             if (res && res.Success) {
+                 TableData = res.Data;
+                 displayPagination(TableData, 'DieMoldMasterlist', 'PaginationContainer', 50, 5);
+             }
+        });
     }
     const GetMoldDieTooling = async () => {
+        const id = loadingDisplay(2, 9);
+        Loadingsteps(id, async () => {
+               let res = await fetchData('@Url.Action("GetMoldDieToolingList", "DieMold")', {});
+               if (res && res.Success) {
+                   DieTooling = res.Data;
 
-        let res = await fetchData('@Url.Action("GetMoldDieToolingList", "DieMold")', {});
-        if (res && res.Success) {
-            DieTooling = res.Data;
-
-            // Loads the First Data
-            DisplayTooling(DieTooling);
+                   // Loads the First Data
+                   DisplayTooling(DieTooling);
 
 
 
-            $("#Datearrived").on('change', (e) => {
-                const rawDate = e.target.value;
+                   $("#Datearrived").on('change', (e) => {
+                       const rawDate = e.target.value;
 
-                if (rawDate) {
-                    const [year, month, day] = rawDate.split("-");
-                    const formatted = `${month}/${day}/${year.slice(-2)}`; // "06/11/25"
-                    let filterData = DieTooling.filter(res => res.DateArrived == formatted);
-                    DisplayTooling(filterData);
-                } else {
-                    DisplayTooling(DieTooling);
-                }
+                       if (rawDate) {
+                           const [year, month, day] = rawDate.split("-");
+                           const formatted = `${month}/${day}/${year.slice(-2)}`; // "06/11/25"
+                           let filterData = DieTooling.filter(res => res.DateArrived == formatted);
+                           DisplayTooling(filterData);
+                       } else {
+                           DisplayTooling(DieTooling);
+                       }
 
-            });
-        }
+                   });
+               }
+        });
+
     }
 
     function DisplayTooling(dataArray) {
@@ -834,17 +866,75 @@
              }
          });
 
-       
+
          // Initialize table and pagination
          window.changePage = changePage;
          renderTable(currentPage);
          renderPagination();
     }
 
+    function loadingDisplay(load, col) {
+        let targetDisplay, loadingTextId;
+
+        switch (load) {
+            case 0:
+                targetDisplay = TableDisplay;
+                loadingTextId = "loadingStepText_Main";
+                break;
+            case 1:
+                targetDisplay = MonitorDisplay;
+                loadingTextId = "loadingStepText_Monitor";
+                break;
+            default:
+                targetDisplay = ToolingDisplay;
+                loadingTextId = "loadingStepText_Tooling";
+                break;
+        }
+
+
+        const loadData = `<tr>
+                         <td colspan='${col}'>
+                             <div class='Loadercontainer'>
+                                 <span class="loader"></span>
+                                 <p id="${loadingTextId}">Fetching data from the database..</p>
+                             </div>
+                         </td>
+                     </tr>`;
+
+        targetDisplay.empty();
+        targetDisplay.append(loadData);
+
+        return loadingTextId;
+
+    }
+    function Loadingsteps(loadingTextId, callback) {
+        const steps = [
+            "Fetching data from the database...",
+            "Processing data...",
+            "Finalizing table view..."
+        ];
+
+        let stepIndex = 0;
+
+        const interval = setInterval(() => {
+            const stepText = document.getElementById(loadingTextId);
+            if (stepText) {
+                stepText.innerText = steps[stepIndex];
+                stepIndex++;
+            } else {
+                clearInterval(interval); // in case it's removed
+            }
+
+            if (stepIndex >= steps.length) {
+                clearInterval(interval);
+                if (typeof callback === "function") callback();
+            }
+        }, 800);
+    }
+
     //================== INITIALIZE DATA FIRST ======================
     const LoadPageData = async () => {
         try {
-            let setMonth = parseInt(currentMonth) + 1;
             $("#MoldSummary").show();
             $("#MoldMonitor").hide();
             $("#MoldTooling").hide();
@@ -858,7 +948,7 @@
 
         } catch (error) {
             console.error("Failed to load page data:", error);
-        } 
+        }
     }
 
     $(document).ready(() => {

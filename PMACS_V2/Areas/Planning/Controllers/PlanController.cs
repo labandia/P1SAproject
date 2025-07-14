@@ -1,5 +1,4 @@
 ﻿using PMACS_V2.Areas.Planning.Interface;
-using PMACS_V2.Areas.Planning.Repository;
 using PMACS_V2.Controllers;
 using PMACS_V2.Models;
 using System.Collections.Generic;
@@ -31,59 +30,34 @@ namespace PMACS_V2.Areas.Planning.Controllers
         // ####################### FETCH DATA LIST ####################################
         public async Task<ActionResult> GetFirstAndLastDateList()
         {
-            try
-            {
-                var data = await _pl.GetsDatelist() ?? new List<DateModel>();
-                if (data == null || !data.Any())
-                    return JsonNotFound("No Dates Found");
+            var data = await _pl.GetsDatelist() ?? new List<DateModel>();
+            if (data == null || !data.Any())
+                return JsonNotFound("No Dates Found");
 
-                return JsonSuccess(data);
-            }
-            catch (Exception ex)
-            {
-                return JsonError(ex.Message);
-            }
+            return JsonSuccess(data);
         }
 
         public async Task<ActionResult> GetPlanningData()
         {
-            try
-            {
-                var data = await _pl.GetPCDataList(10, 1);
-                if (data == null || !data.Any())
-                    return JsonNotFound("No M1 Planning data found");
+            var data = await _pl.GetPCDataList(10, 1);
+            if (data == null || !data.Any())
+                return JsonNotFound("No M1 Planning data found");
 
-                return JsonSuccess(data);
-            }
-            catch (Exception ex)
-            {
-                return JsonError(ex.Message);
-            }
+            return JsonSuccess(data);
         }
 
-        [HttpGet]
         public async Task<ActionResult> GetBranchData()
         {
-            try
-            {
-                var data = await _pl.GetBranchSummary() ?? new List<BranchModel>();
-                if (data == null || !data.Any())
-                    return JsonNotFound("No Branch data found");
+            var data = await _pl.GetBranchSummary() ?? new List<BranchModel>();
+            if (data == null || !data.Any())
+                return JsonNotFound("No Branch data found");
 
-                return JsonSuccess(data);
-            }
-            catch (Exception ex)
-            {
-                return JsonError(ex.Message);
-            }    
+            return JsonSuccess(data);
         }
-
-        [HttpGet]
         public async Task<ActionResult> GetSummaryPartnum(string stardate, string endDate)
         {
             var dates = new List<string>();
             DataTable data = await _pl.GetDailyPartnumberSummary(stardate, endDate);
-            await Task.Delay(1000);
 
             if (data == null || data.Rows.Count == 0)
             {
@@ -121,7 +95,6 @@ namespace PMACS_V2.Areas.Planning.Controllers
 
             return Json(successObj, JsonRequestBehavior.AllowGet);
         }
-        [HttpGet]
         public async Task<ActionResult> GetSelectedPartnum(string stardate)
         {
             var dates = new List<string>();
@@ -164,7 +137,6 @@ namespace PMACS_V2.Areas.Planning.Controllers
 
             return Json(successObj, JsonRequestBehavior.AllowGet);
         }
-        [HttpGet]
         public async Task<ActionResult> GetAdditionalResult(string stardate, string endDate)
         {
             var dates = new List<string>();
@@ -226,7 +198,6 @@ namespace PMACS_V2.Areas.Planning.Controllers
         }
 
 
-        [HttpGet]
         public async Task<ActionResult> GetLackingResults(string stardate, string endDate)
         {
             var dates = new List<string>();
@@ -269,8 +240,6 @@ namespace PMACS_V2.Areas.Planning.Controllers
 
             return Json(successObj, JsonRequestBehavior.AllowGet);
         }
-
-        [HttpGet]
         public async Task<ActionResult> GetShopOrderResult(string stardate, string endDate)
         {
             var dates = new List<string>();
@@ -313,8 +282,6 @@ namespace PMACS_V2.Areas.Planning.Controllers
 
             return Json(successObj, JsonRequestBehavior.AllowGet);
         }
-
-        [HttpGet]
         public async Task<ActionResult> GetRequestResults()
         {
             var dates = new List<string>();
@@ -356,8 +323,6 @@ namespace PMACS_V2.Areas.Planning.Controllers
 
             return Json(successObj, JsonRequestBehavior.AllowGet);
         }
-
-        [HttpGet]
         public async Task<ActionResult> GetEndCurrentdata()
         {
             string currentYear = DateTime.Now.Year.ToString();
@@ -367,8 +332,6 @@ namespace PMACS_V2.Areas.Planning.Controllers
 
             return Json(formdata, JsonRequestBehavior.AllowGet);
         }
-
-        [HttpGet]
         public async Task<ActionResult> GetSelectedPartnumDetails(string strdate, int impID)
         {
             var data = await _pl.GetSelectedDetailsSummary(strdate, impID);
@@ -378,8 +341,6 @@ namespace PMACS_V2.Areas.Planning.Controllers
         }
 
 
-
-        [HttpGet]
         public async Task<ActionResult> GetLackSelectedPartnumDetails(string strdate, int impID)
         {
             var data = await _pl.GetSelectedlackDetailsSummary(strdate, impID);
@@ -387,7 +348,6 @@ namespace PMACS_V2.Areas.Planning.Controllers
             return Json(formdata, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpGet]
         public async Task<ActionResult> GetSelectedShopOrderDetails(string strdate, int impID)
         {
             var data = await _pl.GetSelectedShopOrderDetailsSummary(strdate, impID);
@@ -395,7 +355,6 @@ namespace PMACS_V2.Areas.Planning.Controllers
             return Json(formdata, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpGet]
         public async Task<ActionResult> GetRequestedResultDetails(int monthcol, int monthrow, int intyear)
         {
            
@@ -462,8 +421,6 @@ namespace PMACS_V2.Areas.Planning.Controllers
                     return Json(new { status = false, Message = "Error occurred during Insert" }, JsonRequestBehavior.AllowGet);
             }
         }
-
-
         [HttpPost]
         public async Task<JsonResult> UploadFiledetails(HttpPostedFileBase uploadedFile)
         {
@@ -501,7 +458,6 @@ namespace PMACS_V2.Areas.Planning.Controllers
                 return Json(new { status = false, Message = "No file uploaded." });
             }
         }
-
         public async Task<DataTable> ImportExcelToDataTable(string filePath, string sheetName)
         {
             var dt = new DataTable();
@@ -644,14 +600,6 @@ namespace PMACS_V2.Areas.Planning.Controllers
         // GET: Planning/Plan
         public ActionResult LiveViewMonitoring() => View();
         public ActionResult MonitoringDashboard() => View();
-
-
-
-
-
-
-
-
 
 
 

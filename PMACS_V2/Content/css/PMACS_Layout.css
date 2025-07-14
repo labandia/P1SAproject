@@ -38,6 +38,12 @@
         border-radius: .2em;
     }
 
+    #Exportbtn{
+        display: flex;
+        align-items: center;
+        gap: 10px !important;
+    }
+
     .btnclean{
         border: 1px solid rgba(149, 157, 165);
         background: #fff;
@@ -424,6 +430,26 @@
     .Complete {
         background-color: rgba(14, 170, 123, 0.2);
         color: rgb(9, 100, 73);
+    }
+
+    .paginationPartlocal {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        color: #222;
+    }
+
+    .paginationPartlocal button {
+        width: 35px;
+        height: 35px;
+        border-radius: .2em;
+        transition: background all ease-in-out;
+    }
+
+    .paginationPartlocal button.active {
+        background-color: var(--primary-color);
+        color: white;
     }
 
 

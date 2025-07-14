@@ -1,6 +1,7 @@
 ﻿using PMACS_V2.Areas.P1SA.Interface;
 using PMACS_V2.Areas.P1SA.Models;
 using PMACS_V2.Areas.P1SA.Repository;
+using PMACS_V2.Controllers;
 using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Utilities;
 using System;
@@ -12,7 +13,7 @@ using System.Web.Mvc;
 
 namespace PMACS_V2.Areas.P1SA.Controllers
 {
-    public class PostCapacityController : Controller
+    public class PostCapacityController : ExtendController
     {
         private readonly ICapacity _cap;
 
@@ -23,15 +24,12 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         {
             bool result = await _cap.EditP1SAsummary(cap);
 
-            if (result)
-            {
-                CacheHelper.Remove("p1sasummary");
-                await UpdateRepository.UpdateUserLogs(9, 1, "Edit");
-            }
+            if (!result) return JsonValidationError();
 
-            var formdata = GlobalUtilities.GetMessageResponse(result, 1);
+            CacheHelper.Remove("p1sasummary");
+            await UpdateRepository.UpdateUserLogs(9, 1, "Edit");
 
-            return Json(formdata, JsonRequestBehavior.AllowGet);
+            return JsonCreated(cap, "Update successfully");
         }
 
        
@@ -54,9 +52,10 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             var update2 = UpdateGroupCapacitySummary(capid, Request.Form["ProcessCode"]);        
 
             bool[] results = await Task.WhenAll(update1, update2);
-          
-            var formdata = GlobalUtilities.GetMessageResponse(results.All(r => r), 1);
-            return Json(formdata, JsonRequestBehavior.AllowGet);
+
+            if (!results.All(r => r)) JsonValidationError();
+
+            return JsonCreated(obj, "Update Process");
 
         }
 
@@ -74,8 +73,8 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             };
 
             bool result = await _cap.UpdateProcessform(obj);
-            var formdata = GlobalUtilities.GetMessageResponse(result, 1);
-            return Json(formdata, JsonRequestBehavior.AllowGet);
+            if (!result) JsonValidationError();
+            return JsonCreated(obj, "Updated Successfully");
         }
         [HttpPost]
         public async Task<ActionResult> AddMoldingModelBase(AddMoldingModelPost add)
@@ -85,12 +84,11 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             var update2 = UpdateGroupCapacitySummary(capid, Request.Form["ProcessCode"]);
 
             bool[] results = await Task.WhenAll(update1, update2);
+            if (!results.All(r => r)) JsonValidationError();
 
             CacheHelper.Remove("Molding");
-
             await UpdateRepository.UpdateUserLogs(5, 1, "Add");
-            var formdata = GlobalUtilities.GetMessageResponse(results.All(r => r), 1);
-            return Json(formdata, JsonRequestBehavior.AllowGet);
+            return JsonCreated(add, "Update Process");
         }
         [HttpPost]
         public async Task<ActionResult> EditMoldingByDetails()
@@ -111,11 +109,11 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             var update2 = UpdateGroupCapacitySummary(capid, Request.Form["ProcessCode"]);
 
             bool[] results = await Task.WhenAll(update1, update2);
+            if (!results.All(r => r)) JsonValidationError();
 
             CacheHelper.Remove("Molding");
             await UpdateRepository.UpdateUserLogs(5, 1, "Edit");
-            var formdata = GlobalUtilities.GetMessageResponse(results.All(r => r), 1);
-            return Json(formdata, JsonRequestBehavior.AllowGet);
+            return JsonCreated(mold, "Update Successfully");
         }
         
 
@@ -139,14 +137,12 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             var update2 = UpdateGroupCapacitySummary(capid, Request.Form["ProcessCode"]);
 
             bool[] results = await Task.WhenAll(update1, update2);
+            if (!results.All(r => r)) JsonValidationError();
 
             CacheHelper.Remove("Rotor");
             await UpdateRepository.UpdateUserLogs(6, 1, "Edit");
-            var formdata = GlobalUtilities.GetMessageResponse(results.All(r => r), 1);
-            return Json(formdata, JsonRequestBehavior.AllowGet);
+            return JsonCreated(rotor, "Update Successfully");
         }
-
-
 
         [HttpPost]
         public async Task<ActionResult> AddPressModelBase(PressModel press)
@@ -184,12 +180,11 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             var update2 = UpdateGroupCapacitySummary(capid, Request.Form["ProcessCode"]);
 
             bool[] results = await Task.WhenAll(update1, update2);
+            if (!results.All(r => r)) JsonValidationError();
 
             CacheHelper.Remove("Press");
             await UpdateRepository.UpdateUserLogs(6, 1, "Add");
-
-            var formdata = GlobalUtilities.GetMessageResponse(results.All(r => r), 1);
-            return Json(formdata, JsonRequestBehavior.AllowGet);
+            return JsonCreated(pressobj, "Update Successfully");
         }
         [HttpPost]
         public async Task<ActionResult> EditPressByDetails()
@@ -227,11 +222,11 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             var update2 = UpdateGroupCapacitySummary(capid, Request.Form["ProcessCode"]);
 
             bool[] results = await Task.WhenAll(update1, update2);
+            if (!results.All(r => r)) JsonValidationError();
 
             CacheHelper.Remove("Press");
             await UpdateRepository.UpdateUserLogs(7, 1, "Add");
-            var formdata = GlobalUtilities.GetMessageResponse(results.All(r => r), 1);
-            return Json(formdata, JsonRequestBehavior.AllowGet);
+            return JsonCreated(press, "Update Successfully");
         }
 
 

@@ -866,7 +866,7 @@
              formData.append('ProcessCode', processcode);
              formData.append('Capgroup_ID', cap_groupID);
              let res = await postData('@Url.Action("UpdateProcessCap", "PostCapacity")', formData);
-             if (res.StatusCode === 200) {
+             if (res.StatusCode === 201) {
                  const savebtn = document.querySelector("#saveEditProcess");
                  savebtn.innerHTML = " <div class='Submitloading'></div>"
                  Swal.fire({

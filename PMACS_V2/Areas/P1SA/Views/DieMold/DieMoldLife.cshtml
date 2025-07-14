@@ -315,10 +315,6 @@
     let SummaryData = [];
     let FinalSummaryData = [];
     let DieTooling = [];
-
-    const processchange = document.getElementById("ProcessID");
-    const AddToolform = document.getElementById("AddToolforms");
-
     // Tabs Content
     const tabs = document.querySelectorAll(".Mold_tab");
     const slider = document.querySelector(".Mold_slider");
@@ -365,18 +361,7 @@
         });
     });
 
-    $("#Registrymodal").on('click', (e) => {
-        e.preventDefault();
-        $("#AddTooling").modal("show");
-    });
-
-    $("#clearbtn").on('click', (e) => {
-        e.preventDefault();
-        $("#Datearrived").val("");
-        GetMoldDieTooling();
-    });
-
-
+ 
     // Date Dropdown Selection
     const months = [
         "January", "February", "March", "April",
@@ -385,11 +370,24 @@
     ];
 
     const select = document.getElementById("monthSelect");
-    const updateMold = document.getElementById("InputMoldie");
     const currentMonth = new Date().getMonth();
     const currentYear = new Date().getFullYear();
 
-    AddToolform.addEventListener('submit', async (e) => {
+    //===============================================================
+    //================= INPUT AND UPDATE DATA =======================
+    //===============================================================
+    $("#InputMoldie").on('submit', async (e) => {
+        e.preventDefault();
+        let formData = new FormData(e.target);
+        formData.append('DateAction', select.value);
+        const data = Object.fromEntries(formData);
+        let res = await postData('@Url.Action("AddUpdateMoldDieMonitor", "DieMold")', data);
+        if (res.StatusCode === 201) {
+            GetMoldDieMonth(select.value, currentYear);
+            $("#InputMoldieModal").modal("hide");
+        }
+    });
+    $("#AddToolforms").on('submit', async (e) => {
         e.preventDefault();
         let formData = new FormData(e.target);
         const data = Object.fromEntries(formData);
@@ -415,6 +413,30 @@
             });
         }
     });
+    $("#Registrymodal").on('click', (e) => {
+        e.preventDefault();
+        $("#AddTooling").modal("show");
+    });
+    //===============================================================
+    //==================== FILTER DATA ==============================
+    //===============================================================
+    $("#ProcessID").on('change', (e) => {
+        e.preventDefault();
+        let setMonth = parseInt(currentMonth) + 1;
+        GetMoldDieSummary();
+        GetMoldDieMonth(setMonth, currentYear);
+    });
+    $("#monthSelect").on('change', (e) => {
+        e.preventDefault();
+        let month = e.target.value;
+        $("#MonthHeader").text(months[month - 1]);
+        GetMoldDieMonth(month, currentYear);
+    })
+    $("#clearbtn").on('click', (e) => {
+        e.preventDefault();
+        $("#Datearrived").val("");
+        GetMoldDieTooling();
+    });
     months.forEach((month, index) => {
         const option = document.createElement("option");
         option.value = index + 1; // 1 to 12
@@ -424,34 +446,9 @@
         }
         select.appendChild(option);
     });
-
-    select.addEventListener('change', (e) => {
-        e.preventDefault();
-        let month = e.target.value;
-        $("#MonthHeader").text(months[month - 1]);
-        GetMoldDieMonth(month, currentYear);
-    });
-    processchange.addEventListener('change', (e) => {
-        e.preventDefault();
-        let setMonth = parseInt(currentMonth) + 1;
-        GetMoldDieSummary();
-        GetMoldDieMonth(setMonth, currentYear);
-    });
-    updateMold.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        let formData = new FormData(e.target);
-        formData.append('DateAction', select.value);
-        const data = Object.fromEntries(formData);
-        let res = await postData('@Url.Action("AddUpdateMoldDieMonitor", "DieMold")', data);
-        if (res.StatusCode === 201) {
-            GetMoldDieMonth(select.value, currentYear);
-            $("#InputMoldieModal").modal("hide");
-        }
-    });
-
- 
-   
-
+    //===============================================================
+    //================ FETCH DATA AND DISPLAY =======================
+    //===============================================================
     const GetMoldDieSummary = async () => {
         $("#FinalSummaryData").empty();
 
@@ -460,7 +457,7 @@
             SummaryData = res.Data.FinalSummary;
             FinalSummaryData = res.Data.MoldDieSummary;
             displaySummaryPagination(SummaryData, 'SummarylistData', 'SummaryPaginationContainer', 50, 5);
-            $.each(FinalSummaryData, function (index, row) {            
+            $.each(FinalSummaryData, function (index, row) {
                 let remarkColor = "";
                 if (row.Category === "For Monitoring") {
                     remarkColor = "color: #054e92;";
@@ -493,7 +490,7 @@
         }
     }
     const GetMoldDieTooling = async () => {
-        
+
         let res = await fetchData('@Url.Action("GetMoldDieToolingList", "DieMold")', {});
         if (res && res.Success) {
             DieTooling = res.Data;
@@ -501,7 +498,7 @@
             // Loads the First Data
             DisplayTooling(DieTooling);
 
-           
+
 
             $("#Datearrived").on('change', (e) => {
                 const rawDate = e.target.value;
@@ -703,35 +700,9 @@
           const buttonId = $(this).attr('id');
           const rowIndex = buttonId.split('_')[1];
           const result = TableData.find(p => p.RecordID == rowIndex);
-          console.log(result);
-          //if (result) {
-          //    $("#Detail_Capinfo_ID").val(result.Capinfo_ID);
-          //    $("#Detail_Dieqty").val(result.DieQty);
-          //    $("#Detail_Actual_cav").val(result.Actual_Cav);
-          //    $("#Detail_CycleTime").val(result.CycleTime);
-          //    $("#Detail_Partnum").val(result.Partnum);
-          //    $("#Detail_Model_name").val(result.Model_name);
-          //    $("#Detail_Manhour").val(RoundNumberOne(result.manhour));
-          //    $("#Detail_Operation_time").val(result.Operation_time);
-          //    $("#Detail_Require").val(RoundNumberOne(result.Require));
-          //    $("#Detail_Capday").val(result.Capday);
-          //    $("#Detail_Capmonth").val(result.Capmonth);
 
-          //    $("#detailsModal").modal("show");
-          //}
       });
 
-       // UPDATES THE DETAILS DATA
-       @*detailsform.addEventListener('submit', async (e) => {
-           e.preventDefault();
-
-           let formData = new FormData(e.target);
-           formData.append('ProcessCode', processcode);
-           formData.append('Capgroup_ID', cap_groupID);
-           const data = Object.fromEntries(formData);
-           let res = await postData('@Url.Action("EditMoldingByDetails", "PostCapacity")', formData);
-           EditResult(res, data);
-      });*@
 
       // Initialize table and pagination
       window.changePage = changePage;
@@ -774,14 +745,6 @@
 
                  groupRows.forEach((rowData, idx) => {
                      let rowHtml = "<tr class='rowClick' id='editButton_" + rowData.RecordID + "'>";
-
-                     // Only add <td> with rowspan on first row of group
-                     //if (idx === 0) {
-                     //    rowHtml += `<td rowspan="${groupRows.length}" data-cell="No">${noValue}</td>`;
-                     //}
-
-                     //<td data-cell="Description">${rowData.Description}</td>
-
                      rowHtml += `<td data-cell="PartNo" style="text-align: left; padding-left: 1.5em; font-weight: 600; color: #222;">${rowData.PartNo}</td>
 
                                 <td data-cell="DimensionQuality">${rowData.DimensionQuality}</td>
@@ -819,9 +782,9 @@
              }
 
              // Previous button
-             paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
-                                            <i class="fa-solid fa-backward"></i>
-                                        </button>`;
+             paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} style='color: #222 !important;' onclick="changePage(${currentPage - 1})">
+                                                <i class="fa-solid fa-backward"></i>
+                                            </button>`;
 
              for (let i = startPage; i <= endPage; i++) {
                  paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
@@ -871,26 +834,14 @@
              }
          });
 
-          // UPDATES THE DETAILS DATA
-          @*detailsform.addEventListener('submit', async (e) => {
-              e.preventDefault();
-
-              let formData = new FormData(e.target);
-              formData.append('ProcessCode', processcode);
-              formData.append('Capgroup_ID', cap_groupID);
-              const data = Object.fromEntries(formData);
-              let res = await postData('@Url.Action("EditMoldingByDetails", "PostCapacity")', formData);
-              EditResult(res, data);
-         });*@
-
+       
          // Initialize table and pagination
          window.changePage = changePage;
          renderTable(currentPage);
          renderPagination();
     }
 
-
-    // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+    //================== INITIALIZE DATA FIRST ======================
     const LoadPageData = async () => {
         try {
             let setMonth = parseInt(currentMonth) + 1;
@@ -907,10 +858,7 @@
 
         } catch (error) {
             console.error("Failed to load page data:", error);
-        } finally {
-            // Hide loading spinner whether success or failure
-            //$("#loadingSpinner").hide();
-        }
+        } 
     }
 
     $(document).ready(() => {

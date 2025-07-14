@@ -7,7 +7,7 @@
 <header class="InspectHead">
     <div class="Inputcontainer">
         <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" placeholder="Search here ... " id="searchbox" />
+        <input type="text" placeholder="Search here ... " id="searchbox" autocomplete="off" />
         <div class="line"></div>
     </div>
     <button id="Showadd" type="button"><i class="fa-solid fa-user-secret"></i> Add New</button>
@@ -462,8 +462,6 @@
         renderTable(currentPage);
         renderPagination();
     }
-
-
     function changeformatDate(change) {
         let parts = change.split("/"); // ["02", "18", "2024"]
         // Convert to YYYY-MM-DD

@@ -2294,6 +2294,15 @@
         gap: 1.5em;
     }
 
+    .LoadercontainerV2{
+        width: 100%;
+        height: 60vh;
+        display: flex;
+        align-items:center;
+        justify-content: center;
+        gap: 1.5em;
+    }
+
     #loadingStepText_Main, #loadingStepText_Monitor, #loadingStepText_Tooling, #loadingStepText_Control, #loadingStepText{
         margin: 0;
     }

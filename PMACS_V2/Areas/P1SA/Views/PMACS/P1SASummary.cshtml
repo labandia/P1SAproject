@@ -130,105 +130,102 @@
 
 
 
-    
+
 
     const getTable = async () => {
-        try {
-            loadingDisplay();
-            let res = await fetchData('@Url.Action("GetPisaSummaryList", "Capacity")', {});
-            if (res && res.Success) {
-                loadData = res.Data;
-                setTimeout(() => {
-                    TableDisplay.empty(); // Removing the Loading Display
+        loadingDisplay();
 
-                    loadData.forEach((row, index) => {
-                        let buttons = '';
-                        let percentage;
+        Loadingsteps(async () => {
+             let res = await fetchData('@Url.Action("GetPisaSummaryList", "Capacity")', {});
+             if (res && res.Success) {
+                 loadData = res.Data;
+                 TableDisplay.empty(); // Removing the Loading Display
 
-                        if (checkrole !== 2) {
-                            $("#headertable").show();
-                            buttons = `<td id='datatable' style='text-align: center;'>
-                                          <button type='submit' Class='btn actionicon text-success editButton' id='editButton_${row.ProcessCode}' >
-                                          <i class='fa-regular fa-pen-to-square action_btn'></i>
-                                          </button>
-                                      </td>`;
-                        } else {
-                            $("#headertable").hide();
-                            $("datatable").hide();
-                        }
+                 loadData.forEach((row, index) => {
+                     let buttons = '';
+                     let percentage;
 
-                        if (row.Machine_Utilization > 100) {
-                            percentage = 100;
-                        } else {
-                            percentage = row.Machine_Utilization
+                     if (checkrole !== 2) {
+                         $("#headertable").show();
+                         buttons = `<td id='datatable' style='text-align: center;'>
+                       <button type='submit' Class='btn actionicon text-success editButton' id='editButton_${row.ProcessCode}' >
+                       <i class='fa-regular fa-pen-to-square action_btn'></i>
+                       </button>
+                   </td>`;
+                     } else {
+                         $("#headertable").hide();
+                         $("datatable").hide();
+                     }
 
-                        }
+                     if (row.Machine_Utilization > 100) {
+                         percentage = 100;
+                     } else {
+                         percentage = row.Machine_Utilization
 
-
-                        var setdata = "<tr class= 'row_" + index + "  '  >" +
-                            "<td class='textleft' style='text-align: left;'>" +
-                            "<strong style='font-weight: 600; color: #222;'>" + row.ProcessName + "</strong>" +
-                            "</td>" +
-                            "<td style='text-align: center;'>" + row.ActualMachine + "</td> " +
-                            "<td style='text-align: center;'>" + row.AvailMachine + "</td> " +
-                            "<td style='text-align: center;'>" +
-                            "<div class='progress-bar'>" +
-                            "<span data-width='" + percentage + "'></span>" +
-                            "</div>" +
-                            "<small style='color: #222; font-weight: 600;'>" + percentage + "%</small>" +
-                            "</td>" +
-                            "<td style='text-align: center;'>" + row.Cap_Per_Machine + "</td>" +
-                            "<td> " + row.PerDay + "</td>" +
-                            "<td> " + row.Minimum + "</td>" +
-                            "<td>" + row.Maximum + "</td>" +
-                            buttons +
-                            "</tr>;"
+                     }
 
 
-                        $("#dataSearching").append(setdata);
-                    });
+                     var setdata = "<tr class= 'row_" + index + "  '  >" +
+                         "<td class='textleft' style='text-align: left;'>" +
+                         "<strong style='font-weight: 600; color: #222;'>" + row.ProcessName + "</strong>" +
+                         "</td>" +
+                         "<td style='text-align: center;'>" + row.ActualMachine + "</td> " +
+                         "<td style='text-align: center;'>" + row.AvailMachine + "</td> " +
+                         "<td style='text-align: center;'>" +
+                         "<div class='progress-bar'>" +
+                         "<span data-width='" + percentage + "'></span>" +
+                         "</div>" +
+                         "<small style='color: #222; font-weight: 600;'>" + percentage + "%</small>" +
+                         "</td>" +
+                         "<td style='text-align: center;'>" + row.Cap_Per_Machine + "</td>" +
+                         "<td> " + row.PerDay + "</td>" +
+                         "<td> " + row.Minimum + "</td>" +
+                         "<td>" + row.Maximum + "</td>" +
+                         buttons +
+                         "</tr>;"
 
 
-                    const spans = document.querySelectorAll('.progress-bar span');
-                    spans.forEach((span) => {
-
-                        if (span.dataset.width >= 60 && span.dataset.width <= 100) {
-                            span.style.background = '#3ccf6d';
-                        }
-                        else if (span.dataset.width > 30 && span.dataset.width < 59) {
-                            span.style.background = '#ee9d41';
-                        }
-                        else {
-                            span.style.background = '#ee4141';
-                        }
-                        span.style.width = span.dataset.width + "%";
-                        //span.innerHTML = span.dataset.width;
-                    });
-                    $("#empty-state").hide();
+                     $("#dataSearching").append(setdata);
+                 });
 
 
-                    $(document).on('click', '.editButton', function () {
-                        var buttonId = $(this).attr('id');
-                        var rowIndex = buttonId.split('_')[1]; // Extract the index from the button ID
-                        let result = loadData.filter(item => item.ProcessCode === rowIndex);
-                        capid = result[0].Capgroup_ID;
-                        $("#ProcessCode").val(result[0].ProcessCode);
-                        $("#AvailMachine").val(result[0].AvailMachine);
-                        $("#ActualMachine").val(result[0].ActualMachine);
-                        $("#exampleModal").modal("show");
+                 const spans = document.querySelectorAll('.progress-bar span');
+                 spans.forEach((span) => {
 
-                    });
-                }, 1000);
-            } else {
-                $("#empty-state").show();
-            }
-        } catch (ex) {
-            console.log(ex.Message);
-        }
+                     if (span.dataset.width >= 60 && span.dataset.width <= 100) {
+                         span.style.background = '#3ccf6d';
+                     }
+                     else if (span.dataset.width > 30 && span.dataset.width < 59) {
+                         span.style.background = '#ee9d41';
+                     }
+                     else {
+                         span.style.background = '#ee4141';
+                     }
+                     span.style.width = span.dataset.width + "%";
+                     //span.innerHTML = span.dataset.width;
+                 });
+                 $("#empty-state").hide();
+
+
+                 $(document).on('click', '.editButton', function () {
+                     var buttonId = $(this).attr('id');
+                     var rowIndex = buttonId.split('_')[1]; // Extract the index from the button ID
+                     let result = loadData.filter(item => item.ProcessCode === rowIndex);
+                     capid = result[0].Capgroup_ID;
+                     $("#ProcessCode").val(result[0].ProcessCode);
+                     $("#AvailMachine").val(result[0].AvailMachine);
+                     $("#ActualMachine").val(result[0].ActualMachine);
+                     $("#exampleModal").modal("show");
+
+                 });
+             } else {
+                 $("#empty-state").show();
+             }
+        });
     }
 
 
-    
+
 
 
     editform.addEventListener('submit', async (e)=> {
@@ -236,7 +233,7 @@
 
         let formData = new FormData(e.target);
         const data = Object.fromEntries(formData);
-      
+
         let res = await postData('@Url.Action("P1saSummaryUpdated", "PostCapacity")', data);
 
          if (res.StatusCode == 201) {
@@ -329,7 +326,7 @@
 
             if (res && res.Success) {
                 $("#Updatelog").text("Last Updated : " + res.Data[0].LastUpdated);
-            } 
+            }
         } catch (e) {
             console.error("Error fetch:", e.message);
         }
@@ -383,8 +380,8 @@
                 getTotalForecastData(),
                 getLogsUpdated()
             ]);
-            
-         
+
+
         } catch (error) {
             console.error("Failed to load page data:", error);
         } finally {

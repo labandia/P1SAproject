@@ -50,7 +50,10 @@
     const GetData = async () => {
         
          $("#selectionID").show();
-         $("#listselectionID").hide();
+        $("#listselectionID").hide();
+
+
+
          let res = await fetchData('@Url.Action("GetGroupCapacityList", "Capacity")', {});
          if (res && res.Success) {
              loadSelect = res.Data;
@@ -91,7 +94,7 @@
     const GridViewDisplay = (data) => {
         loadingDisplay();
 
-        setTimeout(() => {
+        Loadingsteps(async () => {
             DataTable.empty();
             var SetData = $("#cardContainer");
 
@@ -110,7 +113,7 @@
                     "<div class='selectioncard__col'><small>Capacity/day</small><span>" + rowData.Capday + "</span></div>" +
                     "<div class='selectioncard__col'><small>Capacity/Month</small><span>" + rowData.Capmonth + "</span></div>" +
                     "</div>" +
-                    "</div>"
+                    "</div>";
                 SetData.append(getdata);
             });
 
@@ -121,7 +124,10 @@
                 let secID = parseInt(rowIndex) + 1;
                 RedirectCapacity(secID);
             });
-        }, 1000);
+        });
+
+
+        
     }
     const ListViewDisplay = (data) => {
         var SetData = $("#dataSearching");
@@ -187,10 +193,32 @@
 
     function loadingDisplay() {
         DataTable.empty();
-        var loadData = `<div class='Loadercontainer'>
+        var loadData = `<div class='LoadercontainerV2'>
                             <span class="loader"></span>
+                            <p id="loadingStepText">Fetching data from the database..</p>
                         </div>`;
         DataTable.append(loadData);
+    }
+
+    function Loadingsteps(callback) {
+        const steps = [
+            "Fetching data from the database...",
+            "Processing data...",
+            "Finalizing table view..."
+        ];
+
+        let stepIndex = 0;
+
+        const interval = setInterval(() => {
+            if (stepIndex < steps.length) {
+                const stepText = document.getElementById("loadingStepText");
+                if (stepText) stepText.innerText = steps[stepIndex];
+                stepIndex++;
+            } else {
+                clearInterval(interval);
+                if (typeof callback === "function") callback();
+            }
+        }, 800);
     }
 
 

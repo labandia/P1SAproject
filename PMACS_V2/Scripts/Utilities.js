@@ -193,6 +193,74 @@ window.ActionRestrict = () => {
     }
 }
 
+window.IsLoginUser = (options = {}) => {
+    const {
+        storageKey,
+        expectedValue,
+        redirectUrl,
+        redirectIfLoggedInUrl,
+        expirationKey,
+        maxHours
+    } = {
+        storageKey: 'isLoggedIn',
+        expectedValue: 'true',
+        redirectUrl: '/Account/Login',
+        redirectIfLoggedInUrl: null,
+        expirationKey: null,
+        maxHours: null,
+        ...options
+    };
+
+   
+
+    const value = localStorage.getItem(storageKey);
+    console.log("HERE 1" + value);
+    // 1. Handle redirect if already logged in
+    if (value === expectedValue && redirectIfLoggedInUrl) {
+        console.log("HERE 1");
+        // Optionally check expiration even for already-logged-in redirect
+        if (expirationKey && maxHours) {
+            const loginTimeStr = localStorage.getItem(expirationKey);
+            if (loginTimeStr) {
+                const loginTime = new Date(loginTimeStr);
+                const now = new Date();
+                const diffHours = Math.abs(now - loginTime) / 36e5;
+                if (diffHours <= maxHours) {
+                    window.location.href = redirectIfLoggedInUrl;
+                    return;
+                }
+            }
+        } else {
+            // No expiration check, just redirect
+            window.location.href = redirectIfLoggedInUrl;
+            return;
+        }
+    }
+    // 2. Handle redirect if NOT logged in
+    if (value !== expectedValue) {
+     
+        if (typeof ActionRestrict === 'function' ? ActionRestrict() !== false : true) {
+            window.location.href = redirectUrl;
+            console.log("HERE");
+        }
+        return;
+    }
+
+    // 3. Check expiration and force logout if exceeded
+    if (expirationKey && maxHours) {
+        const loginTimeStr = localStorage.getItem(expirationKey);
+        if (loginTimeStr) {
+            const loginTime = new Date(loginTimeStr);
+            const now = new Date();
+            const diffHours = Math.abs(now - loginTime) / 36e5;
+
+            if (diffHours > maxHours) {
+                localStorage.clear(); // Or selectively remove items
+                //window.location.href = redirectUrl;
+            }
+        }
+    }
+}
 
 
 window.logout = async () => {

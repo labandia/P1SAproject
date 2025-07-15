@@ -140,7 +140,7 @@
     }
 
     .PatrolDesign_wrapper h3{
-        font-size: 1.5rem;
+        font-size: 1.4rem;
         line-height: 1.5;
         font-weight: 600;
         margin-bottom: 1.5em;
@@ -554,11 +554,11 @@
 
     .Inputcontainer {
         position: relative;
-        border-radius: .5em;
+        border-radius: .2em;
         font-size: var(--normal-font-size);
         /*    background: #e0e0e0;*/
         background: #fff;
-        padding: 8px 1.5em 8px 1em;
+        padding: 6px 1.5em 6px 1em;
         border: 1px solid #bebfca;
     }
 
@@ -600,7 +600,7 @@
         gap: 10px;
         background: var(--primary-color);
         padding: .5em 1.5em;
-         border-radius: .5em;
+         border-radius: .2em;
         color: #fff;
         font-size: var(--normal-font-size);
         transition: .5s ease-in-out;

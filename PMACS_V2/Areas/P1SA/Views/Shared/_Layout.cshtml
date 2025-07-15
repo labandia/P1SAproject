@@ -178,6 +178,7 @@
                         localStorage.removeItem('activeLinkIndex');
                         localStorage.removeItem('UserRole');
                         localStorage.removeItem('users');
+                        localStorage.removeItem('isLoggedInPMACS');
                         window.location.href = "/P1SA/PMACS/Mainpage";
                     }
                 });
@@ -186,6 +187,7 @@
                 localStorage.removeItem('Fullname');
                 localStorage.removeItem('accessToken');
                 localStorage.removeItem('refreshToken');
+                localStorage.removeItem('isLoggedInPMACS');
                 window.location.href = "/P1SA/PMACS/Mainpage";
             }
 
@@ -197,7 +199,13 @@
         }
 
 
-        
+        window.IsLoginUser({
+            storageKey: 'isLoggedInPMACS',
+            expectedValue: 'true',
+            redirectUrl: '/P1SA/PMACS/Mainpage',
+            expirationKey: 'loginTime',
+            maxHours: 24
+        });
     </script>
 
 

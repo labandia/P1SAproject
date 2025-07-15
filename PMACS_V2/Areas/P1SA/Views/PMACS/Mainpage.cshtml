@@ -283,6 +283,7 @@
                              localStorage.removeItem('activeLinkIndex');
                              localStorage.setItem('UserRole', res.Data.role);
                              localStorage.setItem('Fullname', res.Data.fullname);
+                             localStorage.setItem('isLoggedInPMACS', 'true');
                              localStorage.setItem('accessToken', res.Data.access_token);
                              localStorage.setItem('refreshToken', res.Data.refresh_token);
 
@@ -333,10 +334,11 @@
 
     // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
     const LoadPageData = async () => {
-        if ($("#Employee_ID").val() !== "") {
-            resultBox.style.display = 'none';
-        }
+       
         try {
+            if ($("#Employee_ID").val() !== "") {
+                resultBox.style.display = 'none';
+            }
             $("#username").val("");
             $("#password").val("");
             const [updates, users] = await Promise.all([
@@ -354,6 +356,14 @@
 
     $(document).ready(() => {
         LoadPageData();
+    });
+
+
+    window.IsLoginUser({
+        storageKey: 'isLoggedInPMACS',
+        redirectIfLoggedInUrl: '/P1SA/PMACS/ManpowerProduction',
+        expirationKey: 'loginTime',
+        maxHours: 24
     });
 </script>
 

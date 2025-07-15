@@ -35,9 +35,6 @@ namespace ProductConfirm.Modules
             Masterlistable.DataSource = Products.ToList();
         }
 
-
-      
-
         private void button1_Click(object sender, EventArgs e)
         {
             AddProduct ad = new AddProduct(this, _prod2);

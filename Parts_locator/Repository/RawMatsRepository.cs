@@ -12,7 +12,7 @@ namespace Parts_locator.Repository
     internal class RawMatsRepository : IRawMats
     {
         // =================== GET DATA ========================
-        public async Task<List<RawMatModel>> GetRawMatProduct()
+        public Task<List<RawMatModel>> GetRawMatProduct()
         {
             string sql = @"SELECT m.Type, b.PartNumber, m.ModelName, m.RotorBush, 
                                 m.ShaftPartnum, m.ShaftBushAssyPartnum, 
@@ -22,7 +22,7 @@ namespace Parts_locator.Repository
                             ON m.PartNumber = b.PartNumber 
                             LEFT JOIN Parts_MoldingRawImage i ON i.PartNumber = m.PartNumber ";
 
-            return await SqlDataAccess.GetData<RawMatModel>(sql);
+            return SqlDataAccess.GetData<RawMatModel>(sql);
         }
 
         public Task<List<RawMatModel>> GetRawMatProductByID(int act)
@@ -33,7 +33,6 @@ namespace Parts_locator.Repository
         {
             try
             {
-                
                 var data = await GetRawMatProduct();
                 var filterdata = data.Where(res => res.Type == bushtype).ToList();
                 return filterdata;
@@ -43,7 +42,7 @@ namespace Parts_locator.Repository
                 return new List<RawMatModel>();
             }
         }
-        public async Task<List<RawMatSummaryModel>> GetShopOrderlist(int act)
+        public Task<List<RawMatSummaryModel>> GetShopOrderlist(int act)
         {
             string strsql = @"SELECT FORMAT(DateInput, 'MM/dd/yyyy') as DateInput, 
                            FORMAT(DateInput, 'HH:mm:ss tt') as TimeInput,PartNumber, 
@@ -51,7 +50,7 @@ namespace Parts_locator.Repository
                            FROM Part_transaction_BushMold_shoporder 
                            WHERE Action = @Action
                            ORDER BY TransactionID DESC";
-            return await SqlDataAccess.GetData<RawMatSummaryModel>(strsql, new { Action = act });
+            return  SqlDataAccess.GetData<RawMatSummaryModel>(strsql, new { Action = act });
         }
 
 
@@ -65,16 +64,16 @@ namespace Parts_locator.Repository
             throw new NotImplementedException();
         }
 
-        public async Task<bool> EditMasterlist(string partnum, int qty, int type)
+        public Task<bool> EditMasterlist(string partnum, int qty, int type)
         {
             //UPDATES THE STORAGE QUANTITY BY PALLETE
-            string updatestorage = "UPDATE Part_ProductBushLocation SET " +
-                                   " Quantity =@Quantity " +
-                                   " WHERE PartNumber = @PartNumber AND Racks =@Racks";
+            string updatestorage = $@"UPDATE Part_ProductBushLocation SET 
+                                    Quantity =@Quantity 
+                                   WHERE PartNumber = @PartNumber AND Racks =@Racks";
 
             var parameter = new { Quantity = qty, PartNumber = partnum, Racks = type };
 
-            return await SqlDataAccess.UpdateInsertQuery(updatestorage, parameter);   
+            return  SqlDataAccess.UpdateInsertQuery(updatestorage, parameter);   
         }
 
 
@@ -101,10 +100,12 @@ namespace Parts_locator.Repository
             string shopinserquery = "INSERT INTO Part_transaction_BushMold_shoporder(PartNumber, Quantity, Inputby, Action) " +
                                    "VALUES (@PartNumber, @Quantity, @Inputby, @Action)";
            
-            bool updateresult = await SqlDataAccess.UpdateInsertQuery(updatestorage, updateparam);
-            bool insertresult = await SqlDataAccess.UpdateInsertQuery(shopinserquery, raw);
+            var updateresult =  SqlDataAccess.UpdateInsertQuery(updatestorage, updateparam);
+            var insertresult =  SqlDataAccess.UpdateInsertQuery(shopinserquery, raw);
 
-            return updateresult && insertresult;
+            bool[] results = await Task.WhenAll(updateresult, insertresult);
+
+            return results.All(r => r);
         }
     }
 }

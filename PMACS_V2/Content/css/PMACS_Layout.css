@@ -438,18 +438,45 @@
         justify-content: center;
         gap: 10px;
         color: #222;
+        margin-top: 1em;
+     
     }
 
     .paginationPartlocal button {
-        width: 35px;
-        height: 35px;
         border-radius: .2em;
+        padding: .2em .8em;
         transition: background all ease-in-out;
+    }
+
+    .paginationPartlocal button:hover, .paginationPartlocal button.active:hover{
+        background: var(--primary-alt-color);
+        color: #fff;
+    }
+
+    .paginationPartlocal button:disabled{
+        color: #222 ;
+        background: #f5f5f5;
     }
 
     .paginationPartlocal button.active {
         background-color: var(--primary-color);
         color: white;
+    }
+
+
+       
+
+    .paginationPartlocal button:first-child:hover {
+         background: var(--clr-secondary);
+         color: #222;
+    }
+    .paginationPartlocal button:last-child:hover {
+         background: var(--clr-secondary);
+         color: #222;
+    }
+
+    .paginationPartlocal button:first-child, button i:last-child {
+         font-weight: 800;
     }
 
 
@@ -633,7 +660,9 @@
         display: none; /* Hide the default dropdown arrow in IE */
     }
 
-
+    .table__action button{
+        padding: .3em .5em;
+    }
 
 
     /* Initial hidden state for the dropdown */

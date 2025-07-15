@@ -8,7 +8,6 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Diagnostics;
-using Parts_locator.Utilities;
 
 namespace Parts_locator.Utilities
 {

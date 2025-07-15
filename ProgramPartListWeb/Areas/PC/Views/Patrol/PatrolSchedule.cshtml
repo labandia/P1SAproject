@@ -7,33 +7,37 @@
 <div class="row">
     <div class="col-3">
         <div class="Sched_container">
-            <small style="font-weight: 600;">Department :</small>
-            <select id="DepartmentID" class="form-control mb-2 mt-2">
-                <option value="0">All</option>
-                <option value="1">Molding</option>
-                <option value="2">Press</option>
-                <option value="3">Rotor</option>
-                <option value="4">Winding</option>
-                <option value="5">Circuit</option>
-                <option value="6">Process Control</option>
-            </select>
-            <div class="Inputcontainer">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" placeholder="Search here ... " id="searchbox" autocomplete="off" />
-                <div class="line"></div>
-            </div>
-
+            <small style="font-weight: 600;">Selection Patrol Inspector :</small>
             <hr />
-
-
             <div class="EmployeeListContainer">
                 <div class="Sched_list" id="Sched_list_container"></div>
             </div>
         </div>
     </div>
     <div class="col-9">
-        <div>
+        <div class="d-flex align-items-center justify-content-between">
             <p id="DateShow" style="font-weight: 700;">Department :</p>
+
+
+            <div class="d-flex align-items-center text-nowrap gap-2">
+                <div class="select-container">
+                    <select id="DepartmentID">
+                        <option value="0">All</option>
+                        <option value="1">Molding</option>
+                        <option value="2">Press</option>
+                        <option value="3">Rotor</option>
+                        <option value="4">Winding</option>
+                        <option value="5">Circuit</option>
+                        <option value="6">Process Control</option>
+                    </select>
+                </div>
+                
+                <div class="Inputcontainer">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" placeholder="Search here ... " id="searchbox" autocomplete="off" />
+                    <div class="line"></div>
+                </div>
+            </div>
         </div>
         <div class="Calendar_container">
             <div id="calendar"></div>
@@ -142,7 +146,6 @@
        let res = await FetchAuthenticate('@Url.Action("GetInpectsByApproval", "Patrol")', {});
         if (res && res.Success) {
             let filteredData = res.Data;
-
             if (parseInt(filterValue) !== 0) {
                 filteredData = filteredData.filter(res => res.Department_ID === parseInt(filterValue));
             }
@@ -159,15 +162,39 @@
                 return;
             }
 
+
             $.each(filteredData, function (index, res) {
+                let Depname = DepartmentName(parseInt(res.Department_ID));
+                let color;
+
+                if (res.Department_ID === 1) {
+                    color = "rgb(100, 50, 9)";
+                } else if (res.Department_ID === 2) {
+                    color = "rgb(100, 30, 9)";
+                } else if (res.Department_ID === 3) {
+                    color = "rgb(9, 45, 100)";
+                } else if (res.Department_ID === 4) {
+                    color = "rgb(9, 71, 100)";
+                } else if (res.Department_ID === 5) {
+                    color = "rgb(68, 57, 5)";
+                } else {
+                    color = "rgb(33, 9, 100)";
+                }
+
+
                 const getdata = `
                     <div class="SchedCard d-flex align-items-center gap-3"
                         id="SchedCard_${res.Employee_ID}"
                         data-dept="${res.Department_ID}"
                         data-emp="${res.Employee_ID}"
                         data-name="${res.FullName}">
-                       <i class="fa-regular fa-user"></i>
-                        <span>${res.FullName}</span>
+                        <div class="d-flex align-items-center gap-3">
+                             <i class="fa-regular fa-user"></i>
+                            <div>
+                                <span>${res.FullName}</span>
+                                <p style='color: ${color}'>${Depname}</p>
+                            </div>
+                        </div>
                     </div>`;
                 SetData.append(getdata);
             });
@@ -178,8 +205,8 @@
             $(document).off('click', '.SchedCard').on('click', '.SchedCard', function (e) {
                 e.stopPropagation();
 
-                $('.SchedCard').removeClass('active'); // remove previous selection
-                $(this).addClass('active'); // mark current one
+                $('.SchedCard').removeClass('activeSched'); // remove previous selection
+                $(this).addClass('activeSched'); // mark current one
 
                 DepartID = $(this).data('dept');
                 employVal = $(this).data('emp');
@@ -389,6 +416,18 @@
             },
 
             dateClick: function (info) {
+                const clickedDate = info.dateStr;
+
+                // ✅ Only trigger dateClick if no events exist on that day
+                const hasEvent = calendar.getEvents().some(event =>
+                    event.startStr.startsWith(clickedDate)
+                );
+
+                if (hasEvent) {
+                    return; // Prevent "Add Schedule" if there’s already an event
+                }
+
+
                 $("#ScheduleID").val("0");
                 $("#ScheduleDate").val(info.dateStr);
                 $("#IsActive").val("0");
@@ -425,6 +464,28 @@
         }
     }
 
+    const DepartmentName = (ID) => {
+        switch (ID) {
+            case 1:
+                return "Molding";
+                break;
+            case 2:
+                return "Press";
+                break;
+            case 3:
+                return "Rotor";
+                break;
+            case 4:
+                return "Winding";
+                break;
+            case 5:
+                return "Circuit";
+                break;
+            default:
+                return "Process-Control";
+                break;
+        }
+    };
 
 
     $(document).ready(function () {

@@ -40,7 +40,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Section</th>
+                            <th >Section</th>
                             <th>Actual</th>
                             <th>Required</th>
                             <th>Lacking</th>
@@ -57,7 +57,7 @@
                 <table>
                     <thead>
                         <tr style="background: hsl(209, 97%, 13%) !important; color: #fff; ">
-                            <th class='textleft' style="padding: 0 1.5em;">Process</th>
+                            <th style="text-align: left; padding-left: 2em;">Process</th>
                             <th>SDP</th>
                             <th>Subcon</th>
                             <th>Remarks</th>
@@ -172,6 +172,7 @@
      var loadData = [];
      var totalarrayload = [];
      let checkrole = 0;
+     let userRole;
 
      const GetManpowerData = async() =>{
          let res = await fetchData('@Url.Action("GetManpowerData", "PMACS")', {});
@@ -223,6 +224,9 @@
              });
          }
      }
+
+   
+
 
 
      // LOADS THE DATA FIRST
@@ -432,7 +436,7 @@
 
          SetData.empty();
          $.each(array, function (index, rowData) {
-             if (checkrole !== 2) {
+             if (ActionRestrict() !== false) {
                  $("#headertable").show();
                  buttons = "<td><div class='table__action'> " +
                      "<button type='button' class= 'row_" + index + " editButton' id='editButton_" + rowData.Manpower_ID + "'><i class='fa-regular fa-pen-to-square action_btn'></i> </button>" +
@@ -444,7 +448,7 @@
 
 
              var getdata = "<tr class= 'row_" + index + "'>" +
-                 "<td class='textleft' style='font-weight: 600;'> " + rowData.Process + "</td>" +
+                 "<td style='text-align: left; padding-left: 2em;'> " + rowData.Process + "</td>" +
                  "<td>" + rowData.SDP + "</td>" +
                  "<td>" + rowData.SubCon + "</td>" +
                  "<td>" + rowData.Remarks + "</td>" +
@@ -563,6 +567,10 @@
       // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
      const LoadPageData = async() => {
          try {
+             if (ActionRestrict()) {
+                 $("#headertable").hide();
+             }
+
              $("#currentdatetime").text(Month + "  " + currentYear)
 
              const [logs, manpower, total] = await Promise.all([

@@ -122,6 +122,7 @@
     let capid;
     let loadData = [];
     let checkrole = 1;
+    let userRole;
 
      // Display the current month to comboBox
     $("#monthselect").val(setDate);
@@ -145,13 +146,13 @@
                      let buttons = '';
                      let percentage;
 
-                     if (checkrole !== 2) {
+                     if (ActionRestrict() !== false) {
                          $("#headertable").show();
                          buttons = `<td id='datatable' style='text-align: center;'>
-                       <button type='submit' Class='btn actionicon text-success editButton' id='editButton_${row.ProcessCode}' >
-                       <i class='fa-regular fa-pen-to-square action_btn'></i>
-                       </button>
-                   </td>`;
+                                       <button type='submit' Class='btn actionicon text-success editButton' id='editButton_${row.ProcessCode}' >
+                                       <i class='fa-regular fa-pen-to-square action_btn'></i>
+                                       </button>
+                                   </td>`;
                      } else {
                          $("#headertable").hide();
                          $("datatable").hide();
@@ -318,7 +319,7 @@
             $("#totalfore").text(getFormatComma(res.Data));
         }
     }
-
+    
 
     const getLogsUpdated = async () => {
         try {
@@ -346,7 +347,6 @@
                      </tr>`;
         TableDisplay.append(loadData);
     }
-
     function Loadingsteps(callback) {
         const steps = [
             "Fetching data from the database...",

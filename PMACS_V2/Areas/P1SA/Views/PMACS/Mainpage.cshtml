@@ -240,15 +240,8 @@
     });
 
     $("#viewbtn").click(function () {
-        let useronly = {
-            AccountID: 999,
-            EmployeeID: "Guest",
-            Fullname: "Guest",
-            active: 1,
-            Roles_ID: 2
-        }
-
-        localStorage.setItem('users', JSON.stringify(useronly));
+        localStorage.setItem('UserRole', 'Users');
+        localStorage.setItem('Fullname', 'GUEST');
         window.location.href = "/P1SA/PMACS/ManpowerProduction";
     });
 
@@ -288,17 +281,13 @@
                          }).then(() => {
                              savebtn.innerHTML = "<span class='textload'><i class='fa-solid fa-right-to-bracket'></i> Login</span>"
                              localStorage.removeItem('activeLinkIndex');
-                             localStorage.setItem('users', JSON.stringify(res.Data));
+                             localStorage.setItem('UserRole', res.Data.role);
+                             localStorage.setItem('Fullname', res.Data.fullname);
                              localStorage.setItem('accessToken', res.Data.access_token);
                              localStorage.setItem('refreshToken', res.Data.refresh_token);
 
-                             //let roles = res.Data.userRole;
                              window.location.href = "/P1SA/PMACS/ManpowerProduction";
-                             //if (roles === 1 || roles === 3) {
-
-                             //} else if(roles == 0){
-                             //    window.location.href = "/User/Userspanel";
-                             //}
+                           
                          });
                      }, 1000);          
                  }

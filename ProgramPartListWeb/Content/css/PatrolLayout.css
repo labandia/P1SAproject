@@ -408,7 +408,9 @@
         color: var(--primary-color);
     }
 
-
+    .activeSched {
+        background: #d4d3d3;
+    }
 /*========== CUSTOM TABLE ==========*/
     .MainTable::-webkit-scrollbar, .InspecTable::-webkit-scrollbar  {
         width: 8px;
@@ -475,7 +477,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 1rem 3rem 1rem 6rem;
+        padding: .8rem 3rem .8rem 6rem;
         font-weight: 500;
         font-size: .9rem;
         border-top: 1px solid #d4d3d3;
@@ -483,7 +485,6 @@
 
     .MasterlistWrap_footer span{
         color: #222;
-        font-weight: 600;
     }
 
 
@@ -497,6 +498,7 @@
 
     .paginationPartlocal button {
         border-radius: .2em;
+        padding: .3rem .9em;
         transition: background all ease-in-out;
     }
 
@@ -532,8 +534,17 @@
         padding: .5em 1em;
     }
 
+    .SchedCard span{
+        font-weight: 600;
+        font-size: var(--normal-font-size);
+    }
+
+    .SchedCard p{
+        font-size: var(--small-font-size);
+    }
+
     .SchedCard:hover{
-       background: #A5A1AA;
+       background: #f5f5f5;
     }
 
     .fc-daygrid-day-number{
@@ -781,7 +792,7 @@
 
     .EmployeeListContainer{
         margin-top: 1em;
-        max-height: 400px; /* adjust height as needed */
+        max-height: 500px; /* adjust height as needed */
         overflow-y: auto;
     }
 
@@ -939,7 +950,7 @@
 
 @media screen and (min-width: 1440px){
     .MainTable, .InspecTable {
-        max-height: 750px; /* Adjust height as needed for large monitors */
+        max-height: 735px; /* Adjust height as needed for large monitors */
     }
 
     .EmployeeListContainer {
@@ -960,7 +971,7 @@
 
     .select-container select {
         width: 100%;
-        padding: 10px 3em 10px 1em;
+        padding: 7px 3em 7px 1em;
         appearance: none;
         border: 1px solid #A5A1AA;
         border-radius: 4px;
@@ -1000,8 +1011,25 @@
         transform: translateY(0)  translateX(-100px) !important; /* Slide into view */
     }
 
+    .dropdown-menu.show li{
+        display: grid;
+        grid-template-columns: 40% 1fr;
+    }
 
+    .dropdown-menu.show li:hover{
+        background: #f5f5f5;
+    }
 
+    .dropdown-menu.show li .fa-check{
+        color: hsl(169, 81%, 41%);
+    }
+    .dropdown-menu.show li .fa-xmark{
+        color:#a81818;
+    }
+
+    .dropdown-menu.show li .fa-pencil{
+        color: rgb(9, 45, 100);
+    }
 
     .namesdisplay ul li {
         list-style: none;
@@ -1259,3 +1287,27 @@
         background: none !important;
         color: #222 ;
     }
+
+
+
+
+/* Make the event span the full width of the cell */
+.fc-daygrid-event {
+    display: block;
+    padding: 3px 4px;
+    cursor: pointer;
+}
+
+.fc-event {
+    cursor: pointer;
+}
+
+/* Optional: make the whole background clickable */
+.fc-daygrid-day-events {
+    position: relative;
+    z-index: 1;
+}
+
+.fc-daygrid-event-harness {
+    width: 100%;
+}

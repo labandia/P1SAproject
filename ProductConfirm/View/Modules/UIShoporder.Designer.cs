@@ -313,6 +313,7 @@
             // changeremarks
             // 
             this.changeremarks.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.changeremarks.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(248)))), ((int)(((byte)(250)))));
             this.changeremarks.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.changeremarks.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold);
             this.changeremarks.Location = new System.Drawing.Point(123, 543);

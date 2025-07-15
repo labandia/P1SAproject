@@ -57,7 +57,7 @@
             this.Headerpanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.Headerpanel.Location = new System.Drawing.Point(0, 0);
             this.Headerpanel.Name = "Headerpanel";
-            this.Headerpanel.Size = new System.Drawing.Size(1350, 80);
+            this.Headerpanel.Size = new System.Drawing.Size(1375, 80);
             this.Headerpanel.TabIndex = 0;
             // 
             // summarymenu
@@ -130,7 +130,7 @@
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(34)))), ((int)(((byte)(200)))));
             this.panel1.Location = new System.Drawing.Point(0, 78);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1350, 2);
+            this.panel1.Size = new System.Drawing.Size(1375, 2);
             this.panel1.TabIndex = 12;
             // 
             // button1
@@ -143,7 +143,7 @@
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button1.ForeColor = System.Drawing.SystemColors.ControlText;
             this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
-            this.button1.Location = new System.Drawing.Point(1227, 20);
+            this.button1.Location = new System.Drawing.Point(1252, 20);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(41, 37);
             this.button1.TabIndex = 11;
@@ -162,7 +162,7 @@
             this.closebtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.closebtn.ForeColor = System.Drawing.SystemColors.ControlText;
             this.closebtn.Image = ((System.Drawing.Image)(resources.GetObject("closebtn.Image")));
-            this.closebtn.Location = new System.Drawing.Point(1270, 20);
+            this.closebtn.Location = new System.Drawing.Point(1295, 20);
             this.closebtn.Name = "closebtn";
             this.closebtn.Size = new System.Drawing.Size(41, 37);
             this.closebtn.TabIndex = 8;
@@ -177,7 +177,7 @@
             this.accountname.BackColor = System.Drawing.Color.Transparent;
             this.accountname.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.accountname.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(170)))), ((int)(((byte)(176)))), ((int)(((byte)(192)))));
-            this.accountname.Location = new System.Drawing.Point(979, 31);
+            this.accountname.Location = new System.Drawing.Point(1004, 31);
             this.accountname.MaximumSize = new System.Drawing.Size(250, 18);
             this.accountname.MinimumSize = new System.Drawing.Size(250, 18);
             this.accountname.Name = "accountname";
@@ -202,24 +202,22 @@
             this.panelContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelContainer.Location = new System.Drawing.Point(0, 80);
             this.panelContainer.Name = "panelContainer";
-            this.panelContainer.Size = new System.Drawing.Size(1350, 626);
+            this.panelContainer.Size = new System.Drawing.Size(1375, 609);
             this.panelContainer.TabIndex = 1;
             // 
             // Mainpage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1350, 706);
-            this.ControlBox = false;
+            this.ClientSize = new System.Drawing.Size(1375, 689);
             this.Controls.Add(this.panelContainer);
             this.Controls.Add(this.Headerpanel);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.HelpButton = true;
             this.Name = "Mainpage";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "-";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.Text = "Product Confirmation System";
             this.Load += new System.EventHandler(this.Mainpage_Load);
             this.Headerpanel.ResumeLayout(false);
             this.Headerpanel.PerformLayout();

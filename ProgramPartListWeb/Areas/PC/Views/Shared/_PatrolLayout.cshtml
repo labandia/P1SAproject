@@ -136,7 +136,6 @@
 
         const GetNotification = async () => {
             let res = await FetchAuthenticate('@Url.Action("GetNotificationList", "Notification")', {});
-            console.log(res);
             if (res && res.Success) {
             
             }
@@ -247,7 +246,7 @@
        
 
         GetFullname();
-        GetNotification();
+        //GetNotification();
     </script>
 
 

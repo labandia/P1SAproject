@@ -186,6 +186,15 @@ async function refreshAccessToken() {
     }
 }
 
+window.ActionRestrict = () => {
+    userRole = localStorage.getItem("UserRole");
+    if (userRole === "Leader" || userRole === "Users") {
+        return false;
+    }
+}
+
+
+
 window.logout = async () => {
     const logout = localStorage.getItem('Logout');
     try {

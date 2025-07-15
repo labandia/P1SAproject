@@ -48,6 +48,16 @@ namespace ProductConfirm
             Controls.Add(_master);
             Controls.Add(_summary);
         }
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                const int CS_NOCLOSE = 0x200;
+                CreateParams cp = base.CreateParams;
+                cp.ClassStyle |= CS_NOCLOSE;
+                return cp;
+            }
+        }
 
 
 

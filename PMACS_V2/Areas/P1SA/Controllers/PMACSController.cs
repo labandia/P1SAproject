@@ -114,7 +114,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         // GET: P1SA/Mainpage
         public ActionResult Mainpage()
         {
-            ViewData["Version"] = "2.0.9";
+            ViewData["Version"] = "2.0.10";
             return View();
         }
         // GET: P1SA/ManpowerProduction

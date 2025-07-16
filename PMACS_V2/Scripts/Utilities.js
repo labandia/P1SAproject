@@ -220,22 +220,22 @@ window.IsLoginUser = (options = {}) => {
     };
 
     const value = localStorage.getItem(storageKey);
-    console.log(`[IsLoginUser] storageKey = "${storageKey}", value = "${value}", expected = "${expectedValue}"`);
+    //console.log(`[IsLoginUser] storageKey = "${storageKey}", value = "${value}", expected = "${expectedValue}"`);
 
     // 1. Redirect if already logged in and trying to access login page
     if (value === expectedValue && redirectIfLoggedInUrl) {
-        console.log(`[IsLoginUser] Already logged in. Redirecting to: ${redirectIfLoggedInUrl}`);
+        //console.log(`[IsLoginUser] Already logged in. Redirecting to: ${redirectIfLoggedInUrl}`);
        
         //window.location.href = redirectIfLoggedInUrl;
 
         if (expirationKey && maxHours) {
             const loginTimeStr = localStorage.getItem(expirationKey);
-            console.log(loginTimeStr);
+            //console.log(loginTimeStr);
             if (loginTimeStr) {
                 const loginTime = new Date(loginTimeStr);
                 const now = new Date();
                 const diffHours = Math.abs(now - loginTime) / 36e5;
-                console.log(`[IsLoginUser] Time since login: ${diffHours.toFixed(2)}h (max: ${maxHours})`);
+                //console.log(`[IsLoginUser] Time since login: ${diffHours.toFixed(2)}h (max: ${maxHours})`);
 
                 if (diffHours <= maxHours) {
                     window.location.href = redirectIfLoggedInUrl;
@@ -255,11 +255,11 @@ window.IsLoginUser = (options = {}) => {
         const shouldRedirect = currentPath !== redirectUrl;
 
         if (shouldRedirect) {
-            console.log(`[IsLoginUser] Redirecting to: ${redirectUrl}`);
+            //console.log(`[IsLoginUser] Redirecting to: ${redirectUrl}`);
 
             if (typeof ActionRestrict === 'function') {
                 const allowed = ActionRestrict();
-                console.log(`[IsLoginUser] ActionRestrict returned: ${allowed}`);
+                //console.log(`[IsLoginUser] ActionRestrict returned: ${allowed}`);
                 if (allowed !== false) {
                     window.location.href = redirectUrl;
                     return;
@@ -269,7 +269,7 @@ window.IsLoginUser = (options = {}) => {
                 return;
             }
         } else {
-            console.log(`[IsLoginUser] Already on redirectUrl (${redirectUrl}). No redirect to prevent infinite loop.`);
+            //console.log(`[IsLoginUser] Already on redirectUrl (${redirectUrl}). No redirect to prevent infinite loop.`);
         }
 
         return;
@@ -285,32 +285,32 @@ window.IsLoginUser = (options = {}) => {
             const loginTime = new Date(loginTimeStr);
             const now = new Date();
             const diffHours = Math.abs(now - loginTime) / 36e5;
-            console.log(`[IsLoginUser] Time since login: ${diffHours.toFixed(2)}h`);
+            //console.log(`[IsLoginUser] Time since login: ${diffHours.toFixed(2)}h`);
 
             if (diffHours > maxHours) {
-                console.log(`[IsLoginUser] Session expired. Logging out...`);
+                //console.log(`[IsLoginUser] Session expired. Logging out...`);
                 localStorage.clear();
 
                 if (currentPath !== targetPath) {
                     window.location.href = redirectUrl;
                 } else {
-                    console.log(`[IsLoginUser] Already on redirectUrl. Avoiding infinite loop.`);
+                    //console.log(`[IsLoginUser] Already on redirectUrl. Avoiding infinite loop.`);
                 }
             }
         } else {
-            console.log(`[IsLoginUser] No expiration key found. Logging out...`);
+            //console.log(`[IsLoginUser] No expiration key found. Logging out...`);
             localStorage.clear();
 
             if (currentPath !== targetPath) {
                 window.location.href = redirectUrl;
             } else {
-                console.log(`[IsLoginUser] Already on redirectUrl. Avoiding infinite loop.`);
+                //console.log(`[IsLoginUser] Already on redirectUrl. Avoiding infinite loop.`);
             }
         }
     }
 
 
-    console.log(`[IsLoginUser] Access granted. No redirect.`);
+    //console.log(`[IsLoginUser] Access granted. No redirect.`);
 };
 
 

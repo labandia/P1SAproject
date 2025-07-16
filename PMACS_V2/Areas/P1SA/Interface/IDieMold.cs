@@ -29,6 +29,7 @@ namespace PMACS_V2.Areas.P1SA.Interface
         Task<List<PressDieSummary>> GetPressSummary();
         Task<List<PressDieRegistry>> GetPressRegistryList();
         Task<List<PressDieMontoring>> GetPressMonitoring();
+        Task<List<PressMainMonitor>> GetPressMainMonitoring();
         Task<List<PressDieControlModel>> GetPressControl();
 
         Task<bool> AddUpdatePressMonitoring(PressInputModel press);

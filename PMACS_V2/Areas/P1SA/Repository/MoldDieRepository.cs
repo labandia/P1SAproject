@@ -212,6 +212,22 @@ namespace PMACS_V2.Areas.P1SA.Repository
                                 FROM DiePressRegistry";
             return SqlDataAccess.GetData<PressDieRegistry>(strquery, null);
         }
+
+        public Task<List<PressMainMonitor>> GetPressMainMonitoring()
+        {
+            string strquery = $@"SELECT m.MonitorID, m.ToolNo, r.Type, m.Line, 
+                                  m.MinUpper, m.MinLower, m.TotalPressStamp, 
+                                  CASE 
+                                        WHEN r.Operational = 0 THEN 'End of Life'
+                                        WHEN r.Operational = 1 THEN 'Monitoring'
+                                        ELSE 'Unknown'
+                                    END AS Operational
+                                  FROM DiePressMainMonitor m
+                                  INNER JOIN DiePressRegistry r ON r.ToolNo = m.ToolNo ";
+            return SqlDataAccess.GetData<PressMainMonitor>(strquery, null);
+        }
+
+
         public Task<List<PressDieMontoring>> GetPressMonitoring()
         {
             string strquery = @"SELECT FORMAT(DateInput, 'MM/dd/yy') as DateInput,
@@ -265,22 +281,37 @@ namespace PMACS_V2.Areas.P1SA.Repository
         }
         public Task<List<PressDieSummary>> PressDieSummaryList()
         {
-            string strquery = @"  WITH TotalPressStamp AS (
-                                            SELECT ToolNo, SUM(PressStamp) AS TotalStampPress
-                                            FROM DiePressMonitoring
-                                            GROUP BY ToolNo
-                                 )
-                                  SELECT  
-	                                s.ToolNo, 
-	                                r.Type, r.Model, 
-	                                s.DiePart, s.DieHeight, 
-	                                s.StdGrind, s.StampGrind, 
-	                                s.Line, s.Avg, 
-	                                (s.DieHeight / s.StdGrind * s.StampGrind * s.Line / s.Avg) as Remaining, 
-	                                td.TotalStampPress
-                                  FROM DiePressSummary s 
-                                  INNER JOIN  DiePressRegistry r ON r.ToolNo = s.ToolNo
-                                  LEFT JOIN TotalPressStamp td ON td.ToolNo = s.ToolNo";
+            //string strquery = @"  WITH TotalPressStamp AS (
+            //                                SELECT ToolNo, SUM(PressStamp) AS TotalStampPress
+            //                                FROM DiePressMonitoring
+            //                                GROUP BY ToolNo
+            //                     )
+            //                      SELECT  
+            //                     s.ToolNo, 
+            //                     r.Type, r.Model, 
+            //                     s.DiePart, s.DieHeight, 
+            //                     s.StdGrind, s.StampGrind, 
+            //                     s.Line, s.Avg, 
+            //                     (s.DieHeight / s.StdGrind * s.StampGrind * s.Line / s.Avg) as Remaining, 
+            //                     td.TotalStampPress
+            //                      FROM DiePressSummary s 
+            //                      INNER JOIN  DiePressRegistry r ON r.ToolNo = s.ToolNo
+            //                      LEFT JOIN TotalPressStamp td ON td.ToolNo = s.ToolNo";
+            string strquery = @"WITH TotalPressStamp AS (
+                                    SELECT ToolNo, TotalPressStamp
+                                    FROM DiePressMainMonitor
+                                )
+                                SELECT  
+                                s.ToolNo, 
+                                r.Type, r.Model, 
+                                s.DiePart, s.DieHeight, 
+                                s.StdGrind, s.StampGrind, 
+                                s.Line, s.Avg, 
+                                (s.DieHeight / s.StdGrind * s.StampGrind * s.Line / s.Avg) as Remaining, 
+                                td.TotalPressStamp
+                                FROM DiePressSummary s 
+                                INNER JOIN  DiePressRegistry r ON r.ToolNo = s.ToolNo
+                                LEFT JOIN TotalPressStamp td ON td.ToolNo = s.ToolNo";
             return  SqlDataAccess.GetData<PressDieSummary>(strquery, null);
         }
         public Task<List<PressDieControlModel>> GetPressControl()
@@ -367,5 +398,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
                                        VALUES(@ToolNo, @Stamp, @Machine, @DieCondition, @DieHeight, @Operator, @LeaderCom, @Gear, @Pitch)";
             return SqlDataAccess.UpdateInsertQuery(insertquery, press);
         }
+
+       
     }
 }

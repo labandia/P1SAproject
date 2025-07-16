@@ -337,6 +337,18 @@ namespace PMACS_V2.Areas.P1SA.Models
 
 
     //############################# PRESS MOLD DIE =======================================
+    public class PressMainMonitor
+    {
+        public int MonitorID { get; set; }  
+        public string ToolNo { get; set; }
+        public string Type { get; set; }
+        public int Line { get; set; }
+        public double MinUpper { get; set; }
+        public double MinLower { get; set; }
+        public int TotalPressStamp { get; set; }
+        public string Operational { get; set; }
+    }
+
     public class PressDieRegistry
     {
         public string ToolNo { get; set; }

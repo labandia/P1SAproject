@@ -6,12 +6,19 @@
 
 <head>
     <meta charset="utf-8" />
-    <link rel="icon" type="image/x-icon" href="~/Content/Images/ready-stock.ico">
+    <link rel="icon" type="image/x-icon" href="@Url.Content("~/Content/Images/ready-stock.ico")">
+    <link rel="preload" href="@Url.Content("~/Content/fonts/Poppins-Regular.ttf")" as="font" type="font/ttf" crossorigin="anonymous">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
-    <script src="~/Content/font-awesome/js/all.min.js"></script>
     <link href="~/Content/css/Programpartlist.min.css" rel="stylesheet" />
-    <link href="~/Content/Site.css" rel="stylesheet" />
+    <link href="~/Content/Site.min.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery-3.7.1.min.js"></script>
+    <script src="~/Content/font-awesome/js/all.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/Utilities.js"></script>
+    <script src="~/Scripts/sweetalert2.min.js"></script>
+    <script src="~/Scripts/Popper.min.js"></script>
     @Scripts.Render("~/bundles/modernizr")
 </head>
 
@@ -64,9 +71,6 @@
      
  </div>
 
-    <script src="~/Scripts/Utilities.js"></script>
-    <script src="~/Scripts/sweetalert2.min.js"></script>
-    <script src="~/Scripts/jquery-3.7.1.min.js"></script>
     <script type="text/javascript">
              const logform = document.getElementById('logincredentials');
              const regform = document.getElementById('Registerform');
@@ -109,8 +113,20 @@
                          }).then(() => {
                              savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-solid fa-right-to-bracket'></i>  Login</span>"
                              localStorage.setItem('Logout', "/Circuit/ProgramPartList/LogMainpage");
+
+                             // For Info of the user
+                             localStorage.setItem('UserRole', res.Data.role);
+                             localStorage.setItem('Fullname', res.Data.fullname);
+
+                             // For Authorize User Access
                              localStorage.setItem('accessToken', res.Data.access_token);
                              localStorage.setItem('refreshToken', res.Data.refresh_token);
+
+                             // For Persitent Login
+                             localStorage.setItem('PartlistTime', new Date().toISOString());
+                             localStorage.setItem('isLoggedInProgram', 'true');
+
+
                              window.location.href = "/Circuit/ProgramPartList/PlanSchedule";
                          });
                      } else {
@@ -151,4 +167,13 @@
                      //    savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-regular fa-floppy-disk'></i>  Registered</span>"
                      //}
              });
+
+            window.IsLoginUser({
+                storageKey: "isLoggedInProgram",
+                redirectUrl: '/Circuit/ProgramPartList/LogMainpage',
+                expectedValue: 'true',
+                redirectIfLoggedInUrl: '/Circuit/ProgramPartList/PlanSchedule',
+                expirationKey: 'PartlistTime',
+                maxHours: 24
+            });
     </script>

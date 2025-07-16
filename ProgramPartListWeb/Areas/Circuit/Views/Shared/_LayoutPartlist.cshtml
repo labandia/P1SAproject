@@ -193,6 +193,14 @@
             });
         });
 
+        window.IsLoginUser({
+            storageKey: "isLoggedInProgram",
+            redirectUrl: '/Circuit/ProgramPartList/LogMainpage',
+            expectedValue: 'true',
+            expirationKey: 'PartlistTime',
+            maxHours: 24
+        });
+
     </script>
 
     <script src="~/Scripts/Popper.min.js"></script>

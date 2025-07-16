@@ -210,10 +210,18 @@
             }).then(() => {
                 savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-solid fa-right-to-bracket'></i>  Login</span>"
                 localStorage.setItem('Logout', "/PC/Patrol/index");
+                // For Info of the user
                 localStorage.setItem('UserRole', res.Data.role);
                 localStorage.setItem('Fullname', res.Data.fullname);
+
+                // For Authorize User Access
                 localStorage.setItem('accessToken', res.Data.access_token);
                 localStorage.setItem('refreshToken', res.Data.refresh_token);
+
+                // For Persitent Login
+                localStorage.setItem('PatrolTime', new Date().toISOString());
+                localStorage.setItem('isLoggedInPatrol', 'true');
+
                 window.location.href = "/PC/Patrol/Dashboard";
             });
         } else {
@@ -303,5 +311,15 @@
    
 
     $("#logshow").show();
+
+
+    window.IsLoginUser({
+        storageKey: "isLoggedInPatrol",
+        redirectUrl: '/PC/Patrol/index',
+        expectedValue: 'true',
+        redirectIfLoggedInUrl: '/PC/Patrol/Dashboard',
+        expirationKey: 'PatrolTime',
+        maxHours: 24
+    });
 </script>
 

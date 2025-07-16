@@ -193,13 +193,6 @@ window.ActionRestrict = () => {
     }
 }
 
-window.IsLoginUserV2 = (options = {}) => {
-    
-
-};
-
-
-
 
 window.IsLoginUser = (options = {}) => {
     const {

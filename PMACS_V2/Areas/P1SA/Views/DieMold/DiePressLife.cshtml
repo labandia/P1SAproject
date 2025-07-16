@@ -88,7 +88,7 @@
                     </table>
 
                     <div class="PaginationfooterContainer d-flex align-items-center justify-content-between pt-2 pb-4">
-                        <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
+                        <span>Showing  <span id="SummarypagecountID">-</span> to <span id="SummarytotalpageID">-</span> of  <span id="SummaryDatalengthID">-</span> Entries</span>
 
                         <div id="PaginationContainerv2" class="paginationPartlocal"></div>
                     </div>
@@ -96,7 +96,7 @@
             </div>
             <div class="Mold_content" id="Monitoring">
                 <div class="DieMainTable">
-                    <table>
+                    @*<table>
                         <thead>
                             <tr class="header-row">
                                 <th rowspan="2">Date Input</th>
@@ -115,6 +115,22 @@
                                 <th style="border: 1px solid rgba(57, 61, 65, 0.5);">Drawing Height</th>
                             </tr>
 
+                        </thead>
+                        <tbody id="DiePressMonitoringlist">
+                        </tbody>
+                    </table>*@
+
+                    <table>
+                        <thead>                       
+                            <tr>
+                                <th>ToolNo</th>
+                                <th>Type</th>
+                                <th>Lines</th>
+                                <th>Lower</th>
+                                <th>Upper</th>
+                                <th>Press Stamp</th>
+                                <th>Status</th>
+                            </tr>
                         </thead>
                         <tbody id="DiePressMonitoringlist">
                         </tbody>
@@ -699,12 +715,13 @@
         //$("#MonthHeader").text(months[month - 1]);
 
         //const data = Object.fromEntries(formData);
-        const id = loadingDisplay(1, 9);
+        const id = loadingDisplay(1, 7);
         Loadingsteps(id, async () => {
-             let res = await fetchData('@Url.Action("GetPressDieMonitoringList", "DieMold")', {});
+             let res = await fetchData('@Url.Action("GetPressDieMainMonitoringList", "DieMold")', {});
              if (res && res.Success) {
                  TableData = res.Data;
-                 displayPagination(TableData, 'DiePressMonitoringlist', 'PaginationContainer', 50, 5);
+                 console.log(TableData);
+                 displayMainMonitoring(TableData, 'DiePressMonitoringlist', 'PaginationContainer', 50, 5);
              } else {
                  console.log("No Data found");
              }
@@ -787,7 +804,7 @@
               tableBody.innerHTML += rowHtml;
           }
 
-          $("#spagecountID").text(currentPage);
+          $("#SummarypagecountID").text(currentPage);
       };
 
       const renderPagination = () => {
@@ -809,21 +826,22 @@
           }
 
           // Previous button
-          paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
+          paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="SummarychangePage(${currentPage - 1})">
                                          <i class="fa-solid fa-backward"></i>
                                      </button>`;
 
           for (let i = startPage; i <= endPage; i++) {
-              paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+              paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="SummarychangePage(${i})">${i}</button>`;
           }
 
           // Next button
-          paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
+          paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="SummarychangePage(${currentPage + 1})">
                                         <i class="fa-solid fa-forward"></i>
                                      </button>`;
       };
 
-      const changePage = (page) => {
+        const SummarychangePage = (page) => {
+            console.log("Summary Click");
           if (page >= 1 && page <= updatePaginationInfo()) {
               currentPage = page;
               renderTable(currentPage);
@@ -903,8 +921,8 @@
             const totalRecords = filteredData.length;
             const totalPages = Math.ceil(totalRecords / recordsPerPage);
 
-            $("#stotalpageID").text(totalPages);
-            $("#sDatalengthID").text(totalRecords);
+            $("#SummarytotalpageID").text(totalPages);
+            $("#SummaryDatalengthID").text(totalRecords);
 
             return totalPages;
         };
@@ -1000,7 +1018,7 @@
             });
 
 
-            $("#spagecountID").text(currentPage);
+            $("#SummarypagecountID").text(currentPage);
         };
 
         const renderPagination = () => {
@@ -1022,21 +1040,21 @@
             }
 
             // Previous button
-            paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
+            paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="SummarychangePage(${currentPage - 1})">
                                        <i class="fa-solid fa-backward"></i>
                                    </button>`;
 
             for (let i = startPage; i <= endPage; i++) {
-                paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+                paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="SummarychangePage(${i})">${i}</button>`;
             }
 
             // Next button
-            paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
+            paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="SummarychangePage(${currentPage + 1})">
                                       <i class="fa-solid fa-forward"></i>
                                    </button>`;
         };
 
-        const changePage = (page) => {
+        const SummarychangePage = (page) => {
             if (page >= 1 && page <= updatePaginationInfo()) {
                 currentPage = page;
                 renderTable(currentPage);
@@ -1062,7 +1080,7 @@
 
 
          // Initialize table and pagination
-         window.changePage = changePage;
+         window.SummarychangePage = SummarychangePage;
          renderTable(currentPage);
          renderPagination();
     }
@@ -1198,6 +1216,132 @@
          renderTable(currentPage);
          renderPagination();
     }
+
+    function displayMainMonitoring(dataArray, tableBodyId, paginationId, recordsPerPage = 50, visibleButtons = 5) {
+        let currentPage = 1;
+        let filteredData = [...dataArray]; // Make a copy for filtering
+
+        const updatePaginationInfo = () => {
+            const totalRecords = filteredData.length;
+            const totalPages = Math.ceil(totalRecords / recordsPerPage);
+
+            $("#totalpageID").text(totalPages);
+            $("#DatalengthID").text(totalRecords);
+
+            return totalPages;
+        };
+        const renderTable = (page) => {
+            const totalPages = updatePaginationInfo();
+            const startIndex = (page - 1) * recordsPerPage;
+            const endIndex = Math.min(startIndex + recordsPerPage, filteredData.length);
+            const tableBody = document.getElementById(tableBodyId);
+            tableBody.innerHTML = '';
+
+            for (let i = startIndex; i < endIndex; i++) {
+
+                const rowData = filteredData[i];
+                const rowHtml = ` <tr class='row_${i} rowClick' id='editButton_${i}'>
+                    <td data-cell="ToolNo">${rowData.ToolNo}</td>
+                    <td data-cell="Type" style="font-weight: 600; color: hsl(209, 91%, 34%);">${rowData.Type}</td>
+                    <td data-cell="Upper">${rowData.Line}</td>
+                    <td data-cell="Upper">${rowData.MinUpper}</td>
+                    <td data-cell="Lower">${rowData.MinLower}</td>
+                    <td data-cell="Lower_ActualHeight">${rowData.TotalPressStamp}</td>
+                    <td data-cell="Lower_DrawingHeight">${rowData.Operational}</td>
+                </tr>`;
+
+                tableBody.innerHTML += rowHtml;
+            }
+
+
+            $("#pagecountID").text(currentPage);
+        };
+        const renderPagination = () => {
+            const totalPages = updatePaginationInfo();
+            const paginationContainer = document.getElementById(paginationId);
+            paginationContainer.innerHTML = '';
+
+            let startPage = Math.max(1, currentPage - Math.floor(visibleButtons / 2));
+            let endPage = Math.min(totalPages, startPage + visibleButtons - 1);
+
+            if (endPage > totalPages) {
+                endPage = totalPages;
+                startPage = Math.max(1, endPage - visibleButtons + 1);
+            }
+
+            if (totalPages <= visibleButtons) {
+                startPage = 1;
+                endPage = totalPages;
+            }
+
+            // Previous button
+            paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
+                                        <i class="fa-solid fa-backward"></i>
+                                    </button>`;
+
+            for (let i = startPage; i <= endPage; i++) {
+                paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+            }
+
+            // Next button
+            paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
+                                       <i class="fa-solid fa-forward"></i>
+                                    </button>`;
+        };
+        const changePage = (page) => {
+            if (page >= 1 && page <= updatePaginationInfo()) {
+                currentPage = page;
+                renderTable(currentPage);
+                renderPagination();
+            }
+        };
+        // 🔍 Search functionality
+        const searchTable = () => {
+            const query = $('#searchbox').val().toLowerCase();
+
+            filteredData = dataArray.filter(item =>
+                item.PartNo.toLowerCase().includes(query)
+            );
+
+            currentPage = 1;
+            renderTable(currentPage);
+            renderPagination();
+        };
+
+        // Add event listener for search input
+        //$('#searchbox').on('input', searchTable);
+
+        //// Handle click event for edit button
+        //$(document).on('click', '.rowClick', function (e) {
+        //    e.stopPropagation();
+        //    const buttonId = $(this).attr('id');
+        //    const rowIndex = buttonId.split('_')[1];
+        //    const result = TableData.find(p => p.RecordID == rowIndex);
+        //    if (result) {
+        //        $("#PartNo").val(result.PartNo);
+        //        $("#No").val(result.No);
+        //        $("#MoldInput").val(result.TotalDie);
+        //        $("#InputMoldieModal").modal("show");
+        //    }
+        //});
+
+        // UPDATES THE DETAILS DATA
+        @* detailsform.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            let formData = new FormData(e.target);
+            formData.append('ProcessCode', processcode);
+            formData.append('Capgroup_ID', cap_groupID);
+            const data = Object.fromEntries(formData);
+            let res = await postData('@Url.Action("EditMoldingByDetails", "PostCapacity")', formData);
+            EditResult(res, data);
+        });*@
+                 // Initialize table and pagination
+         window.changePage = changePage;
+         renderTable(currentPage);
+         renderPagination();
+    }
+
 
 
     function displayControlPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 10, visibleButtons = 5) {

@@ -6,10 +6,10 @@
 
 <head>
     <meta charset="utf-8" />
-    <link rel="icon" type="image/x-icon" href="~/Content/Images/pmacs.ico">
+    <link rel="icon" type="image/x-icon" href="@Url.Content("~/Content/Images/pmacs.ico")">
+    <link rel="preload" href="@Url.Content("~/Content/fonts/Poppins-Regular.ttf")" as="font" type="font/ttf" crossorigin="anonymous">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
-    <link rel="preload" href="~/Content/fonts/Poppins-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
     <link href="~/Content/Site.min.css" rel="stylesheet" />
     <link href="~/Content/login.min.css" rel="stylesheet" />
     <link href="~/Content/sweetalert2.min.css" rel="stylesheet" />
@@ -20,6 +20,7 @@
     <script src="~/Scripts/sweetalert2.min.js"></script>
     <script src="~/Scripts/Popper.min.js"></script>
     <script src="~/Content/lib/font-awesome/js/all.min.js"></script>
+
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <section class="main">

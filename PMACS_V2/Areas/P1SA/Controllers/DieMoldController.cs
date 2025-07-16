@@ -104,6 +104,16 @@ namespace PMACS_V2.Areas.P1SA.Controllers
 
             return JsonSuccess(data);
         }
+
+        public async Task<ActionResult> GetPressDieMainMonitoringList()
+        {
+            var data = await _die.GetPressMainMonitoring() ?? new List<PressMainMonitor>();
+            if (data == null || !data.Any())
+                return JsonNotFound("No Monitoring data found");
+
+            return JsonSuccess(data);
+        }
+
         public async Task<ActionResult> GetPressDieMonitoringList()
         {
             var data = await _die.GetPressMonitoring() ?? new List<PressDieMontoring>();

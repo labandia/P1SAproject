@@ -23,14 +23,11 @@ namespace PMACS_V2
                       "~/Scripts/bootstrap.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/PMACS_Layout.css",
-                      "~/Content/bootstrap.css",
-                      "~/Content/site.css",
-                      "~/Content/fonts.css",
-                      "~/Content/login.css",
-                      "~/Content/Capacity.css",
-                      "~/Content/FanMajor.css",
-                      "~/Content/Summary.css"));
+                      "~/Content/css/PMACS_Layout.css",
+                      "~/Content/Site.css",
+                      "~/Content/login.css"));
+
+            BundleTable.EnableOptimizations = true;
         }
     }
 }

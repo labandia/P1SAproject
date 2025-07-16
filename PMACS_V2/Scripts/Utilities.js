@@ -193,6 +193,14 @@ window.ActionRestrict = () => {
     }
 }
 
+window.IsLoginUserV2 = (options = {}) => {
+    
+
+};
+
+
+
+
 window.IsLoginUser = (options = {}) => {
     const {
         storageKey,
@@ -202,65 +210,109 @@ window.IsLoginUser = (options = {}) => {
         expirationKey,
         maxHours
     } = {
-        storageKey: 'isLoggedIn',
+        storageKey: 'isLoggedInPMACS',
         expectedValue: 'true',
-        redirectUrl: '/Account/Login',
+        redirectUrl: '/P1SA/PMACS/Mainpage',              
         redirectIfLoggedInUrl: null,
         expirationKey: null,
         maxHours: null,
         ...options
     };
 
-   
-
     const value = localStorage.getItem(storageKey);
-    console.log("HERE 1" + value);
-    // 1. Handle redirect if already logged in
+    console.log(`[IsLoginUser] storageKey = "${storageKey}", value = "${value}", expected = "${expectedValue}"`);
+
+    // 1. Redirect if already logged in and trying to access login page
     if (value === expectedValue && redirectIfLoggedInUrl) {
-        console.log("HERE 1");
-        // Optionally check expiration even for already-logged-in redirect
+        console.log(`[IsLoginUser] Already logged in. Redirecting to: ${redirectIfLoggedInUrl}`);
+       
+        //window.location.href = redirectIfLoggedInUrl;
+
         if (expirationKey && maxHours) {
             const loginTimeStr = localStorage.getItem(expirationKey);
+            console.log(loginTimeStr);
             if (loginTimeStr) {
                 const loginTime = new Date(loginTimeStr);
                 const now = new Date();
                 const diffHours = Math.abs(now - loginTime) / 36e5;
+                console.log(`[IsLoginUser] Time since login: ${diffHours.toFixed(2)}h (max: ${maxHours})`);
+
                 if (diffHours <= maxHours) {
                     window.location.href = redirectIfLoggedInUrl;
                     return;
                 }
             }
         } else {
-            // No expiration check, just redirect
             window.location.href = redirectIfLoggedInUrl;
             return;
         }
     }
-    // 2. Handle redirect if NOT logged in
+
+    //// 2. Redirect if not logged in
     if (value !== expectedValue) {
-     
-        if (typeof ActionRestrict === 'function' ? ActionRestrict() !== false : true) {
-            window.location.href = redirectUrl;
-            console.log("HERE");
+        //console.log(`[IsLoginUser] Not logged in or invalid value. Redirecting to: ${redirectUrl}`);
+        const currentPath = window.location.pathname;
+        const shouldRedirect = currentPath !== redirectUrl;
+
+        if (shouldRedirect) {
+            console.log(`[IsLoginUser] Redirecting to: ${redirectUrl}`);
+
+            if (typeof ActionRestrict === 'function') {
+                const allowed = ActionRestrict();
+                console.log(`[IsLoginUser] ActionRestrict returned: ${allowed}`);
+                if (allowed !== false) {
+                    window.location.href = redirectUrl;
+                    return;
+                }
+            } else {
+                window.location.href = redirectUrl;
+                return;
+            }
+        } else {
+            console.log(`[IsLoginUser] Already on redirectUrl (${redirectUrl}). No redirect to prevent infinite loop.`);
         }
+
         return;
     }
 
-    // 3. Check expiration and force logout if exceeded
+    // 3. Check expiration if still logged in
     if (expirationKey && maxHours) {
         const loginTimeStr = localStorage.getItem(expirationKey);
+        const currentPath = window.location.pathname;
+        const targetPath = new URL(redirectUrl, window.location.origin).pathname;
+
         if (loginTimeStr) {
             const loginTime = new Date(loginTimeStr);
             const now = new Date();
             const diffHours = Math.abs(now - loginTime) / 36e5;
+            console.log(`[IsLoginUser] Time since login: ${diffHours.toFixed(2)}h`);
 
             if (diffHours > maxHours) {
-                localStorage.clear(); // Or selectively remove items
-                //window.location.href = redirectUrl;
+                console.log(`[IsLoginUser] Session expired. Logging out...`);
+                localStorage.clear();
+
+                if (currentPath !== targetPath) {
+                    window.location.href = redirectUrl;
+                } else {
+                    console.log(`[IsLoginUser] Already on redirectUrl. Avoiding infinite loop.`);
+                }
+            }
+        } else {
+            console.log(`[IsLoginUser] No expiration key found. Logging out...`);
+            localStorage.clear();
+
+            if (currentPath !== targetPath) {
+                window.location.href = redirectUrl;
+            } else {
+                console.log(`[IsLoginUser] Already on redirectUrl. Avoiding infinite loop.`);
             }
         }
     }
-}
+
+
+    console.log(`[IsLoginUser] Access granted. No redirect.`);
+};
+
 
 
 window.logout = async () => {

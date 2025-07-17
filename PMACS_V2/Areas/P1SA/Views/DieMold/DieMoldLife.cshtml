@@ -49,7 +49,7 @@
             @* MOLD TOOLING*@
             <div id="MoldTooling">
                 <div class="d-flex align-items-center gap-2">
-                   
+
 
                     <div class="searchinputContainer">
                         <i class="fa-solid fa-magnifying-glass"></i>
@@ -90,11 +90,7 @@
                                 <tbody id="SummarylistData">
                                 </tbody>
                             </table>
-                            <div class="PaginationfooterContainer d-flex align-items-center justify-content-between pt-2 pb-4">
-                                <span>Showing  <span id="spagecountID">-</span> to <span id="stotalpageID">-</span> of  <span id="sDatalengthID">-</span> Entries</span>
 
-                                <div id="SummaryPaginationContainer" class="paginationPartlocal"></div>
-                            </div>
                         </div>
                     </div>
 
@@ -121,7 +117,7 @@
                     <table>
                         <thead>
                             <tr>
-                                <th  style="text-align: left !important; padding-left: 1.5em;">Part Number </th>
+                                <th style="text-align: left !important; padding-left: 1.5em;">Part Number </th>
                                 @*<th>Part Description </th>*@
                                 <th>Dimension/ Quality </th>
                                 <th>No. of Cavity</th>
@@ -134,11 +130,7 @@
                         </tbody>
                     </table>
 
-                    <div class="PaginationfooterContainer d-flex align-items-center justify-content-between pt-2 pb-4">
-                        <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
 
-                        <div id="PaginationContainer" class="paginationPartlocal"></div>
-                    </div>
                 </div>
             </div>
 
@@ -149,13 +141,13 @@
                             <label>Date arrived :</label><br />
                             <input type="date" id="Datearrived" class="" />
                         </div>
-                      
+
                         <button type="button" class="btnclean" id="clearbtn"><i class="fa-solid fa-filter-circle-xmark"></i>  Clear</button>
                     </div>
 
                     <div class="d-flex align-items-center gap-2">
                         <button class="primary_button_color" id="Registrymodal"><i class="fa-solid fa-plus"></i> Add Data</button>
-                        <button  id="Exportbtn"><i class="fa-solid fa-file-arrow-down"></i>Export Data</button>
+                        <button id="Exportbtn"><i class="fa-solid fa-file-arrow-down"></i>Export Data</button>
                     </div>
                 </div>
                 <div class="DieMainTable">
@@ -189,6 +181,26 @@
 
 </section>
 
+
+
+<div class="MoldiefooterContainer" id="Summaryfooter">
+    <span>Showing  <span id="SummarypagecountID">-</span> to <span id="SummarytotalpageID">-</span> of  <span id="SummaryDatalengthID">-</span> Entries</span>
+
+    <div id="SummaryPaginationContainer" class="paginationPartlocal"></div>
+</div>
+
+
+<div class="MoldiefooterContainer" id="Monitorfooter">
+    <span>Showing  <span id="MonitorpagecountID">-</span> to <span id="MonitortotalpageID">-</span> of  <span id="MonitorDatalengthID">-</span> Entries</span>
+
+    <div id="PaginationContainer" class="paginationPartlocal"></div>
+</div>
+
+
+
+
+
+
 <!--########################## INPUT DATA #############################-->
 <div class="modal fade modal-m" id="InputMoldieModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -219,11 +231,11 @@
                     </form>
                 </div>
 
-                    
-             </div>
+
+            </div>
 
 
-         </div>
+        </div>
     </div>
 </div>
 <!--########################## Adding Tooling  DATA #############################-->
@@ -241,7 +253,7 @@
 
                 <div class="MoldieBodyModal">
                     <form id="AddToolforms" autocomplete="off">
-                        <div class="row"> 
+                        <div class="row">
                             <div class="form_group col-12 col-lg-6 col-sm-12">
                                 <label for="">Registration</label>
                                 <input type="text" name="RegNo" id="RegNo" placeholder="Enter Registration No." required>
@@ -353,14 +365,26 @@
                 $("#MoldSummary").show();
                 $("#MoldMonitor").hide();
                 $("#MoldTooling").hide();
+
+                // Footer Show
+                $("#Summaryfooter").show();
+                $("#Monitorfooter").hide();
             } else if (index === 1) {
                 $("#MoldSummary").hide();
                 $("#MoldMonitor").show();
                 $("#MoldTooling").hide();
+
+                // Footer Show
+                $("#Summaryfooter").hide();
+                $("#Monitorfooter").show();
             } else {
                 $("#MoldSummary").hide();
                 $("#MoldMonitor").hide();
                 $("#MoldTooling").show();
+
+                // Footer Show
+                $("#Summaryfooter").hide();
+                $("#Monitorfooter").hide();
             }
 
             if (!isTabLoaded[index]) {
@@ -368,10 +392,10 @@
                     case 0:
                         GetMoldDieSummary();
                         break;
-                    case 1:               
+                    case 1:
                         GetMoldDieMonth(setMonth, currentYear);
                         break;
-                    default:      
+                    default:
                         GetMoldDieTooling();
                         break;
                 }
@@ -575,8 +599,8 @@
           const totalRecords = filteredData.length;
           const totalPages = Math.ceil(totalRecords / recordsPerPage);
 
-          $("#stotalpageID").text(totalPages);
-          $("#sDatalengthID").text(totalRecords);
+          $("#SummarytotalpageID").text(totalPages);
+          $("#SummaryDatalengthID").text(totalRecords);
 
           return totalPages;
       };
@@ -666,7 +690,7 @@
               //span.innerHTML = span.dataset.width;
           });
 
-          $("#spagecountID").text(currentPage);
+          $("#SummarypagecountID").text(currentPage);
       };
 
       const renderPagination = () => {
@@ -688,21 +712,21 @@
           }
 
           // Previous button
-          paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
+          paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="SummarychangePage(${currentPage - 1})">
                                          <i class="fa-solid fa-backward"></i>
                                      </button>`;
 
           for (let i = startPage; i <= endPage; i++) {
-              paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+              paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="SummarychangePage(${i})">${i}</button>`;
           }
 
           // Next button
-          paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
+          paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="SummarychangePage(${currentPage + 1})">
                                         <i class="fa-solid fa-forward"></i>
                                      </button>`;
       };
 
-      const changePage = (page) => {
+        const SummarychangePage = (page) => {
           if (page >= 1 && page <= updatePaginationInfo()) {
               currentPage = page;
               renderTable(currentPage);
@@ -737,7 +761,7 @@
 
 
       // Initialize table and pagination
-      window.changePage = changePage;
+      window.SummarychangePage = SummarychangePage;
       renderTable(currentPage);
       renderPagination();
   }
@@ -749,8 +773,8 @@
              const totalRecords = filteredData.length;
              const totalPages = Math.ceil(totalRecords / recordsPerPage);
 
-             $("#totalpageID").text(totalPages);
-             $("#DatalengthID").text(totalRecords);
+             $("#MonitortotalpageID").text(totalPages);
+             $("#MonitorDatalengthID").text(totalRecords);
 
              return totalPages;
          };
@@ -792,7 +816,7 @@
                  });
              });
 
-             $("#pagecountID").text(currentPage);
+             $("#MonitorpagecountID").text(currentPage);
          };
 
          const renderPagination = () => {
@@ -814,21 +838,21 @@
              }
 
              // Previous button
-             paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} style='color: #222 !important;' onclick="changePage(${currentPage - 1})">
+             paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} style='color: #222 !important;' onclick="MonitorchangePage(${currentPage - 1})">
                                                 <i class="fa-solid fa-backward"></i>
                                             </button>`;
 
              for (let i = startPage; i <= endPage; i++) {
-                 paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+                 paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="MonitorchangePage(${i})">${i}</button>`;
              }
 
              // Next button
-             paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
+             paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="MonitorchangePage(${currentPage + 1})">
                                            <i class="fa-solid fa-forward"></i>
                                         </button>`;
          };
 
-         const changePage = (page) => {
+         const MonitorchangePage = (page) => {
              if (page >= 1 && page <= updatePaginationInfo()) {
                  currentPage = page;
                  renderTable(currentPage);
@@ -868,7 +892,7 @@
 
 
          // Initialize table and pagination
-         window.changePage = changePage;
+         window.MonitorchangePage = MonitorchangePage;
          renderTable(currentPage);
          renderPagination();
     }
@@ -938,6 +962,10 @@
             $("#MoldSummary").show();
             $("#MoldMonitor").hide();
             $("#MoldTooling").hide();
+
+            // Footer Show
+            $("#Summaryfooter").show();
+            $("#Monitorfooter").hide();
 
             const [maintable, forest, logs] = await Promise.all([
                 GetMoldDieSummary(),

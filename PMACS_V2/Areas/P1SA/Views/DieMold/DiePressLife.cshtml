@@ -87,41 +87,37 @@
                         </tbody>
                     </table>
 
-                    <div class="PaginationfooterContainer d-flex align-items-center justify-content-between pt-2 pb-4">
-                        <span>Showing  <span id="SummarypagecountID">-</span> to <span id="SummarytotalpageID">-</span> of  <span id="SummaryDatalengthID">-</span> Entries</span>
 
-                        <div id="PaginationContainerv2" class="paginationPartlocal"></div>
-                    </div>
                 </div>
             </div>
             <div class="Mold_content" id="Monitoring">
                 <div class="DieMainTable">
                     @*<table>
-                        <thead>
-                            <tr class="header-row">
-                                <th rowspan="2">Date Input</th>
-                                <th rowspan="2">Tool No.</th>
-                                <th rowspan="2">Upper</th>
-                                <th rowspan="2">Lower</th>
-                                <th colspan="2" style="padding: .2em 0; border: 1px solid rgba(57, 61, 65, 0.5); ">Upper Grind</th>
-                                <th colspan="2" style="padding: .2em 0; border: 1px solid rgba(57, 61, 65, 0.5); ">Lower Grind</th>
-                                <th rowspan="2">Press stamp</th>
-                            </tr>
+                            <thead>
+                                <tr class="header-row">
+                                    <th rowspan="2">Date Input</th>
+                                    <th rowspan="2">Tool No.</th>
+                                    <th rowspan="2">Upper</th>
+                                    <th rowspan="2">Lower</th>
+                                    <th colspan="2" style="padding: .2em 0; border: 1px solid rgba(57, 61, 65, 0.5); ">Upper Grind</th>
+                                    <th colspan="2" style="padding: .2em 0; border: 1px solid rgba(57, 61, 65, 0.5); ">Lower Grind</th>
+                                    <th rowspan="2">Press stamp</th>
+                                </tr>
 
-                            <tr>
-                                <th style="border: 1px solid rgba(57, 61, 65, 0.5);">Actual Height</th>
-                                <th style="border: 1px solid rgba(57, 61, 65, 0.5);">Drawing Height</th>
-                                <th style="border: 1px solid rgba(57, 61, 65, 0.5);">Actual Height</th>
-                                <th style="border: 1px solid rgba(57, 61, 65, 0.5);">Drawing Height</th>
-                            </tr>
+                                <tr>
+                                    <th style="border: 1px solid rgba(57, 61, 65, 0.5);">Actual Height</th>
+                                    <th style="border: 1px solid rgba(57, 61, 65, 0.5);">Drawing Height</th>
+                                    <th style="border: 1px solid rgba(57, 61, 65, 0.5);">Actual Height</th>
+                                    <th style="border: 1px solid rgba(57, 61, 65, 0.5);">Drawing Height</th>
+                                </tr>
 
-                        </thead>
-                        <tbody id="DiePressMonitoringlist">
-                        </tbody>
-                    </table>*@
+                            </thead>
+                            <tbody id="DiePressMonitoringlist">
+                            </tbody>
+                        </table>*@
 
                     <table>
-                        <thead>                       
+                        <thead>
                             <tr>
                                 <th>ToolNo</th>
                                 <th>Type</th>
@@ -136,11 +132,7 @@
                         </tbody>
                     </table>
 
-                    <div class="PaginationfooterContainer d-flex align-items-center justify-content-between pt-2 pb-4">
-                        <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
 
-                        <div id="PaginationContainer" class="paginationPartlocal"></div>
-                    </div>
                 </div>
             </div>
             <div class="Mold_content" id="Tooling">
@@ -167,11 +159,7 @@
                         <tbody id="RegistrylistData">
                         </tbody>
                     </table>
-                    <div class="PaginationfooterContainer d-flex align-items-center justify-content-between pt-2 pb-4">
-                        <span>Showing  <span id="spagecountID">-</span> to <span id="stotalpageID">-</span> of  <span id="sDatalengthID">-</span> Entries</span>
 
-                        <div id="RegistryPaginationContainer" class="paginationPartlocal"></div>
-                    </div>
                 </div>
             </div>
             <div class="Mold_content" id="DieControl">
@@ -196,11 +184,7 @@
                         </tbody>
                     </table>
 
-                    <div class="PaginationfooterContainer d-flex align-items-center justify-content-between pt-2 pb-4">
-                        <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
 
-                        <div id="PaginationControlContainer" class="paginationPartlocal"></div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -208,6 +192,33 @@
 
 
 </section>
+
+
+<div class="PressMoldfooterContainer" id="Summaryfooter">
+    <span>Showing  <span id="SummarypagecountID">-</span> to <span id="SummarytotalpageID">-</span> of  <span id="SummaryDatalengthID">-</span> Entries</span>
+
+    <div id="PaginationContainerv2" class="paginationPartlocal"></div>
+</div>
+
+<div class="PressMoldfooterContainer" id="Monitorfooter">
+    <span>Showing  <span id="MonitorpagecountID">-</span> to <span id="MonitortotalpageID">-</span> of  <span id="MonitorDatalengthID">-</span> Entries</span>
+
+    <div id="PaginationContainer" class="paginationPartlocal"></div>
+</div>
+
+<div class="PressMoldfooterContainer" id="Registryfooter">
+    <span>Showing  <span id="RegistrypagecountID">-</span> to <span id="RegistrytotalpageID">-</span> of  <span id="RegistryDatalengthID">-</span> Entries</span>
+
+    <div id="RegistryPaginationContainer" class="paginationPartlocal"></div>
+</div>
+
+<div class="PressMoldfooterContainer" id="DieControlfooter">
+    <span>Showing  <span id="DieControlpagecountID">-</span> to <span id="DieControltotalpageID">-</span> of  <span id="DieControlDatalengthID">-</span> Entries</span>
+
+    <div id="PaginationControlContainer" class="paginationPartlocal"></div>
+</div>
+
+
 
 <!--########################## INPUT DATA #############################-->
 <div class="modal fade modal-m" id="InputMoldieModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
@@ -295,7 +306,7 @@
     </div>
 </div>
 <!--########################## Adding Tooling Press DATA #############################-->
-<div class="modal fade modal-m" id="AddTooling" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+<div class="modal fade modal-lg" id="AddTooling" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-body">
@@ -309,39 +320,43 @@
 
                 <div class="MoldieBodyModal">
                     <form id="AddToolPressforms" autocomplete="off">
-                        <div class="form_group col-12 col-sm-12">
-                            <label for="">Die No.</label>
-                            <input type="text" name="ToolNo" id="ToolNo" placeholder="Enter Die No." required>
+                        <div class="row">
+                            <div class="form_group col-12 col-lg-6 col-sm-12">
+                                <label for="">Die No.</label>
+                                <input type="text" name="ToolNo" id="ToolNo" placeholder="Enter Die No." required>
+                            </div>
+
+                            <div class="form_group col-12 col-lg-6 col-sm-12">
+                                <label for="">Type</label>
+                                <input type="text" name="Type" id="Type" placeholder="Enter Type" required>
+                            </div>
                         </div>
 
-                        <div class="form_group col-12 col-sm-12">
-                            <label for="">Type</label>
-                            <input type="text" name="Type" id="Type" placeholder="Enter Type" required>
+                        <div class="row">
+                            <div class="form_group col-12 col-lg-6 col-sm-12">
+                                <label for="">Model</label>
+                                <input type="text" name="Model" id="Model" placeholder="Enter Model" required>
+                            </div>
+
+                            <div class="form_group col-12 col-lg-6 col-sm-12">
+                                <label for="">Line</label>
+                                <input type="text" name="Lines" id="Lines" placeholder="Enter Line" onkeypress="return restrictChars(event)" required>
+                            </div>
                         </div>
 
-                        <div class="form_group col-12 col-sm-12">
-                            <label for="">Model</label>
-                            <input type="text" name="Model" id="Model" placeholder="Enter Model" required>
+                        <div class="row">
+                            <div class="form_group col-12 col-lg-6 col-sm-12">
+                                <label for="">Status</label>
+                                <textarea placeholder="Enter Status " name="Status" id="Status" rows="3" cols="50" required></textarea>
+                            </div>
+
+                            <div class="form_group col-12 col-lg-6 col-sm-12 d-flex align-items-center gap-2">
+                                <input type="radio" name="Operational" value="1" required />
+                                <span style="color: #04bd6c;">Operational</span>
+                                <input type="radio" name="Operational" value="0" required />
+                                <span style="color: red;">Not Operational</span>
+                            </div>
                         </div>
-
-                        <div class="form_group col-12 col-sm-12">
-                            <label for="">Line</label>
-                            <input type="text" name="Lines" id="Lines" placeholder="Enter Line" onkeypress="return restrictChars(event)" required>
-                        </div>
-
-                        <div class="form_group col-12 col-sm-12">
-                            <label for="">Status</label>
-                            <textarea placeholder="Enter Status " name="Status" id="Status" rows="3" cols="50" required></textarea>
-                        </div>
-
-                        <div class="form_group col-12 col-sm-12 d-flex align-items-center gap-2">
-                            <input type="radio" name="Operational" value="1" required />
-                            <span style="color: #04bd6c;">Operational</span>
-                            <input type="radio" name="Operational" value="0" required />
-                            <span style="color: red;">Not Operational</span>
-                        </div>
-
-
 
                         <div class="edits_footer" id="editsdisplay">
                             <button type="submit" class="primary_button_color">
@@ -448,7 +463,7 @@
                         </div>
 
                         <div class="row">
-                           
+
                             <div class="form_group col-12 col-lg-6 col-sm-12">
                                 <label for="">Machine</label>
                                 <input type="text" name="Machine" id="Machine" placeholder="Enter Details of Modification" onkeypress='return restrictChars(event)' required>
@@ -531,7 +546,7 @@
 
     const select = document.getElementById("monthSelect");
     const updatePress = document.getElementById("InputPress");
-   
+
 
     let isTabLoaded = [true, false, false, false];
 
@@ -565,21 +580,45 @@
                 $("#MoldMonitor").hide();
                 $("#MoldTooling").hide();
                 $("#MoldControl").hide();
+
+                // Footer Pagination
+                $("#Summaryfooter").show();
+                $("#Monitorfooter").hide();
+                $("#Registryfooter").hide();
+                $("#DieControlfooter").hide();
             } else if (index === 1) {
                 $("#MoldSummary").hide();
                 $("#MoldMonitor").show();
                 $("#MoldTooling").hide();
                 $("#MoldControl").hide();
+
+                // Footer Pagination
+                $("#Summaryfooter").hide();
+                $("#Monitorfooter").show();
+                $("#Registryfooter").hide();
+                $("#DieControlfooter").hide();
             } else if (index === 2) {
                 $("#MoldSummary").hide();
                 $("#MoldMonitor").hide();
                 $("#MoldTooling").show();
                 $("#MoldControl").hide();
+
+                // Footer Pagination
+                $("#Summaryfooter").hide();
+                $("#Monitorfooter").hide();
+                $("#Registryfooter").show();
+                $("#DieControlfooter").hide();
             } else {
                 $("#MoldSummary").hide();
                 $("#MoldMonitor").hide();
                 $("#MoldTooling").hide();
                 $("#MoldControl").show();
+
+                // Footer Pagination
+                $("#Summaryfooter").hide();
+                $("#Monitorfooter").hide();
+                $("#Registryfooter").hide();
+                $("#DieControlfooter").show();
             }
 
             if (!isTabLoaded[index]) {
@@ -600,7 +639,7 @@
                 isTabLoaded[index] = true;
             }
 
-                 
+
         });
     });
 
@@ -701,7 +740,7 @@
                     $("#ToolNo").append("<option value='" + row + "'>" + row + "</option>");
                 });
 
-                displaySummaryPagination(SummaryData, 'RegistrylistData', 'RegistryPaginationContainer', 50, 5);
+                displayRegistryPagination(SummaryData, 'RegistrylistData', 'RegistryPaginationContainer', 50, 5);
             }
         });
 
@@ -720,7 +759,6 @@
              let res = await fetchData('@Url.Action("GetPressDieMainMonitoringList", "DieMold")', {});
              if (res && res.Success) {
                  TableData = res.Data;
-                 console.log(TableData);
                  displayMainMonitoring(TableData, 'DiePressMonitoringlist', 'PaginationContainer', 50, 5);
              } else {
                  console.log("No Data found");
@@ -756,7 +794,7 @@
     }
 
 
-    function displaySummaryPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 10, visibleButtons = 5) {
+    function displayRegistryPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 10, visibleButtons = 5) {
       let currentPage = 1;
       let filteredData = [...dataArray]; // Make a copy for filtering
 
@@ -764,8 +802,8 @@
           const totalRecords = filteredData.length;
           const totalPages = Math.ceil(totalRecords / recordsPerPage);
 
-          $("#stotalpageID").text(totalPages);
-          $("#sDatalengthID").text(totalRecords);
+          $("#RegistrytotalpageID").text(totalPages);
+          $("#RegistryDatalengthID").text(totalRecords);
 
           return totalPages;
       };
@@ -804,7 +842,7 @@
               tableBody.innerHTML += rowHtml;
           }
 
-          $("#SummarypagecountID").text(currentPage);
+          $("#RegistrypagecountID").text(currentPage);
       };
 
       const renderPagination = () => {
@@ -826,22 +864,21 @@
           }
 
           // Previous button
-          paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="SummarychangePage(${currentPage - 1})">
+          paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="RegistrychangePage(${currentPage - 1})">
                                          <i class="fa-solid fa-backward"></i>
                                      </button>`;
 
           for (let i = startPage; i <= endPage; i++) {
-              paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="SummarychangePage(${i})">${i}</button>`;
+              paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="RegistrychangePage(${i})">${i}</button>`;
           }
 
           // Next button
-          paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="SummarychangePage(${currentPage + 1})">
+          paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="RegistrychangePage(${currentPage + 1})">
                                         <i class="fa-solid fa-forward"></i>
                                      </button>`;
       };
 
-        const SummarychangePage = (page) => {
-            console.log("Summary Click");
+        const RegistrychangePage = (page) => {
           if (page >= 1 && page <= updatePaginationInfo()) {
               currentPage = page;
               renderTable(currentPage);
@@ -909,7 +946,7 @@
       });*@
 
       // Initialize table and pagination
-      window.changePage = changePage;
+      window.RegistrychangePage = RegistrychangePage;
       renderTable(currentPage);
       renderPagination();
     }
@@ -1254,7 +1291,7 @@
             }
 
 
-            $("#pagecountID").text(currentPage);
+            $("#MonitorpagecountID").text(currentPage);
         };
         const renderPagination = () => {
             const totalPages = updatePaginationInfo();
@@ -1275,20 +1312,20 @@
             }
 
             // Previous button
-            paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
+            paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="MonitorchangePage(${currentPage - 1})">
                                         <i class="fa-solid fa-backward"></i>
                                     </button>`;
 
             for (let i = startPage; i <= endPage; i++) {
-                paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+                paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="MonitorchangePage(${i})">${i}</button>`;
             }
 
             // Next button
-            paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
+            paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="MonitorchangePage(${currentPage + 1})">
                                        <i class="fa-solid fa-forward"></i>
                                     </button>`;
         };
-        const changePage = (page) => {
+        const MonitorchangePage = (page) => {
             if (page >= 1 && page <= updatePaginationInfo()) {
                 currentPage = page;
                 renderTable(currentPage);
@@ -1336,8 +1373,8 @@
             let res = await postData('@Url.Action("EditMoldingByDetails", "PostCapacity")', formData);
             EditResult(res, data);
         });*@
-                 // Initialize table and pagination
-         window.changePage = changePage;
+        // Initialize table and pagination
+         window.MonitorchangePage = MonitorchangePage;
          renderTable(currentPage);
          renderPagination();
     }
@@ -1352,8 +1389,8 @@
             const totalRecords = filteredData.length;
             const totalPages = Math.ceil(totalRecords / recordsPerPage);
 
-            $("#stotalpageID").text(totalPages);
-            $("#sDatalengthID").text(totalRecords);
+            $("#DieControltotalpageID").text(totalPages);
+            $("#DieControlDatalengthID").text(totalRecords);
 
             return totalPages;
         };
@@ -1395,7 +1432,7 @@
                 tableBody.innerHTML += rowHtml;
             }
 
-            $("#spagecountID").text(currentPage);
+            $("#DieControlpagecountID").text(currentPage);
         };
 
         const renderPagination = () => {
@@ -1417,21 +1454,21 @@
             }
 
             // Previous button
-            paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
+            paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="DieControlchangePage(${currentPage - 1})">
                                      <i class="fa-solid fa-backward"></i>
                                  </button>`;
 
             for (let i = startPage; i <= endPage; i++) {
-                paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+                paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="DieControlchangePage(${i})">${i}</button>`;
             }
 
             // Next button
-            paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
+            paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="DieControlchangePage(${currentPage + 1})">
                                     <i class="fa-solid fa-forward"></i>
                                  </button>`;
         };
 
-        const changePage = (page) => {
+        const DieControlchangePage = (page) => {
             if (page >= 1 && page <= updatePaginationInfo()) {
                 currentPage = page;
                 renderTable(currentPage);
@@ -1490,7 +1527,7 @@
 
 
             // Initialize table and pagination
-        window.changePage = changePage;
+        window.DieControlchangePage = DieControlchangePage;
         renderTable(currentPage);
         renderPagination();
     }
@@ -1560,11 +1597,17 @@
 
     const LoadPageData = async () => {
         try {
-           
+
             $("#MoldSummary").show();
             $("#MoldMonitor").hide();
             $("#MoldTooling").hide();
             $("#MoldControl").hide();
+
+            // Footer Pagination
+            $("#Summaryfooter").show();
+            $("#Monitorfooter").hide();
+            $("#Registryfooter").hide();
+            $("#DieControlfooter").hide();
 
             const [regis, Monitor, Summary, Control] = await Promise.all([
                 GetPressRegistry(),

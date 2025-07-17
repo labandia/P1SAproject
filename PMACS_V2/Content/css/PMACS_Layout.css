@@ -432,14 +432,27 @@
         color: rgb(9, 100, 73);
     }
 
+    .MoldiefooterContainer, .PressMoldfooterContainer {
+        z-index: 99;
+        bottom: 0;
+        left: 0;
+        background: #fff;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: fixed;
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
+/*        border: 1px solid red;*/
+        padding: .7em 2em .7em 6em;
+    }
+
     .paginationPartlocal {
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 10px;
         color: #222;
-        margin-top: 1em;
-     
     }
 
     .paginationPartlocal button {

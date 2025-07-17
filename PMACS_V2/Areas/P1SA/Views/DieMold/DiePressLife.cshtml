@@ -664,7 +664,7 @@
         const data = Object.fromEntries(formData);
         let res = await postData('@Url.Action("AddPressRegistry", "DieMold")', formData);
 
-        if (res.StatusCode === 200) {
+        if (res.StatusCode === 201) {
             Swal.fire({
                 title: "Success",
                 text: res.Message,
@@ -980,16 +980,13 @@
                 groupMap.get(row.ToolNo).push(row);
             }
 
-
-
-
             // Step 2: Render rows with merged "No"
             groupMap.forEach((groupRows, noValue) => {
                 const DieValue = groupRows[0].Type;
                 const ToolValue = groupRows[0].ToolNo;
                 const StatsValue = groupRows[0].Status;
 
-                const TotalStampValue = groupRows[0].TotalStampPress;
+                const TotalStampValue = groupRows[0].TotalPressStamp;
                 let percentValue = 0;
                 //const percentValue = Math.round((50 / 100) * 100);
 
@@ -1257,7 +1254,6 @@
     function displayMainMonitoring(dataArray, tableBodyId, paginationId, recordsPerPage = 50, visibleButtons = 5) {
         let currentPage = 1;
         let filteredData = [...dataArray]; // Make a copy for filtering
-
         const updatePaginationInfo = () => {
             const totalRecords = filteredData.length;
             const totalPages = Math.ceil(totalRecords / recordsPerPage);
@@ -1275,9 +1271,9 @@
             tableBody.innerHTML = '';
 
             for (let i = startIndex; i < endIndex; i++) {
-
+                
                 const rowData = filteredData[i];
-                const rowHtml = ` <tr class='row_${i} rowClick' id='editButton_${i}'>
+                const rowHtml = ` <tr class='row_${rowData.MonitorID} rowClick' id='editButton_${rowData.MonitorID}'>
                     <td data-cell="ToolNo">${rowData.ToolNo}</td>
                     <td data-cell="Type" style="font-weight: 600; color: hsl(209, 91%, 34%);">${rowData.Type}</td>
                     <td data-cell="Upper">${rowData.Line}</td>
@@ -1348,19 +1344,15 @@
         // Add event listener for search input
         //$('#searchbox').on('input', searchTable);
 
-        //// Handle click event for edit button
-        //$(document).on('click', '.rowClick', function (e) {
-        //    e.stopPropagation();
-        //    const buttonId = $(this).attr('id');
-        //    const rowIndex = buttonId.split('_')[1];
-        //    const result = TableData.find(p => p.RecordID == rowIndex);
-        //    if (result) {
-        //        $("#PartNo").val(result.PartNo);
-        //        $("#No").val(result.No);
-        //        $("#MoldInput").val(result.TotalDie);
-        //        $("#InputMoldieModal").modal("show");
-        //    }
-        //});
+        // Handle click event for edit button
+        $(document).on('click', '.rowClick', function (e) {
+            e.stopPropagation();
+            const buttonId = $(this).attr('id');
+            const rowIndex = buttonId.split('_')[1];
+
+            window.location.href = "/P1SA/DieMold/DiePressMonitorDetails?ID=" + rowIndex;
+          
+        });
 
         // UPDATES THE DETAILS DATA
         @* detailsform.addEventListener('submit', async (e) => {

@@ -1,0 +1,269 @@
+﻿
+@model  PMACS_V2.Areas.P1SA.Models.PressMainMonitor
+
+@{
+    ViewBag.Title = "DiePressMonitorDetails";
+    Layout = "~/Areas/P1SA/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="d-flex align-items-center gap-2">
+            <label>Model:  </label>
+            <p class="m-0"><span>@Model.Type</span>  Stator Die (<span>@Model.Line</span> lines)</p>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+            <label>Tool No:  </label>
+            <p class="m-0" id="ToolText">@Model.ToolNo</p>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+            <label>Status:  </label>
+            <p class="m-0">@Model.Operational</p>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+            <label>Press stamp(total):  </label>
+            <p class="m-0">@Model.TotalPressStamp</p>
+        </div>
+
+        <hr />
+
+        <form id="AddMoldieform">
+            <input type="hidden" name="ToolNo" value="@Model.ToolNo" />
+            <input type="hidden" name="MonitorID" value="@Model.MonitorID" />
+            <label>Up Actual Height</label>
+            <input type="text" name="Upper_ActualHeight" />
+            <label>Up Drawing Height</label>
+            <input type="text" name="Upper_DrawingHeight" />
+
+            <label>low Actual Height</label>
+            <input type="text" name="Lower_ActualHeight" />
+            <label>low Drawing Height</label>
+            <input type="text" name="Lower_DrawingHeight" />
+            <label>No. of Stamping Press</label>
+            <input type="text" name="PressStamp" />
+            <button type="submit" id="savebtn">Save</button>
+        </form>
+
+    </div>
+
+    <div class="col-md-9">
+        <div class="DieMainTable">
+            <table>
+                <thead>
+                    <tr>
+                        <th rowspan="3">Date</th>
+                        <th colspan="2" class="green-header">Die Life</th>
+                        <th colspan="6" class="blue-header">Die Grinding</th>
+                        <th rowspan="3" class="blue-header">
+                            14,963,000<br>No. of Press stamp
+                        </th>
+                    </tr>
+                    <tr>
+                        <th class="green-header">Upper</th>
+                        <th class="green-header">Lower</th>
+
+                        <th colspan="3" class="blue-subheader">Upper</th>
+                        <th colspan="3" class="blue-subheader">Lower</th>
+                    </tr>
+                    <tr>
+                        <td class="green-header">11<br>2.74</td>
+                        <td class="green-header">10<br>4.81</td>
+
+                        <!-- Upper Grinding -->
+                        <td class="blue-subheader">①<br>Actual<br>Height</td>
+                        <td class="blue-subheader">②<br>Drawing<br>Height</td>
+                        <td class="blue-subheader">③<br>②−①</td>
+
+                        <!-- Lower Grinding -->
+                        <td class="blue-subheader">①<br>Actual<br>Height</td>
+                        <td class="blue-subheader">②<br>Drawing<br>Height</td>
+                        <td class="blue-subheader">③<br>②−①</td>
+                    </tr>
+                </thead>
+                <tbody id="DieMoldToolist">
+                </tbody>
+            </table>
+
+
+        </div>
+    </div>
+</div>
+
+
+<div class="PressMoldfooterContainer" id="Summaryfooter">
+    <span>Showing  <span id="SummarypagecountID">-</span> to <span id="SummarytotalpageID">-</span> of  <span id="SummaryDatalengthID">-</span> Entries</span>
+    <div id="PaginationContainer" class="paginationPartlocal"></div>
+</div>
+
+
+
+<script type="text/javascript">
+
+    $("#AddMoldieform").on('submit', async (e) => {
+        e.preventDefault();
+        let formdata = new FormData(e.target);
+        const data = Object.fromEntries(formdata);
+
+        let res = await postData('@Url.Action("AddMoldiePressMonitor", "DieMold")', data);
+        if (res.StatusCode === 201) {
+            Swal.fire({
+                title: "Success",
+                text: res.Message,
+                icon: "success",
+                confirmButtonColor: "#0d97c9",
+                timer: 1500
+            }).then(() => {
+                GetPressMonitoring();
+               
+                //$("#AddMoldieform").reset();
+            });
+        } else {
+            Swal.fire({
+                icon: "error",
+                text: data.ToolNo + " is already Exist",
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }
+    });
+
+
+    const GetPressMonitoring = async () => {
+        let res = await fetchData('@Url.Action("GetPressDieMonitoringList", "DieMold")', { ToolNo: $("#ToolText").text() });
+         if (res && res.Success) {
+             TableData = res.Data;
+             console.log(TableData);
+             displaySummarPressPagination(TableData, 'DieMoldToolist', 'PaginationContainer', 50, 5);
+         } else {
+             console.log("No Data found");
+         }
+     }
+    function displaySummarPressPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 50, visibleButtons = 5) {
+         let currentPage = 1;
+         let filteredData = [...dataArray]; // Make a copy for filtering
+         const updatePaginationInfo = () => {
+             const totalRecords = filteredData.length;
+             const totalPages = Math.ceil(totalRecords / recordsPerPage);
+
+             $("#totalpageID").text(totalPages);
+             $("#DatalengthID").text(totalRecords);
+
+             return totalPages;
+         };
+         const renderTable = (page) => {
+             const totalPages = updatePaginationInfo();
+             const startIndex = (page - 1) * recordsPerPage;
+             const endIndex = Math.min(startIndex + recordsPerPage, filteredData.length);
+             const tableBody = document.getElementById(tableBodyId);
+             tableBody.innerHTML = '';
+
+             for (let i = startIndex; i < endIndex; i++) {
+             
+                 const rowData = filteredData[i];
+                 const rowHtml = ` <tr class='row_${rowData.MonitorID} rowClick' id='editButton_${rowData.MonitorID}'>
+                     <td data-cell="DateInput">${rowData.DateInput}</td>
+                     <td data-cell="Type" >${rowData.Up}</td>
+                     <td data-cell="Upper">${rowData.Low}</td>
+                     <td data-cell="Upper">${rowData.Upper_ActualHeight}</td>
+                     <td data-cell="Lower">${rowData.Upper_DrawingHeight}</td>
+                     <td data-cell="Lower_ActualHeight">${rowData.GrindUpper}</td>
+                     <td data-cell="Upper">${rowData.Lower_ActualHeight}</td>
+                     <td data-cell="Lower">${rowData.Lower_DrawingHeight}</td>
+                     <td data-cell="Lower_ActualHeight">${rowData.GrindLower}</td>
+                     <td data-cell="Lower_ActualHeight">${rowData.PressStamp}</td>
+                 </tr>`;
+
+                 tableBody.innerHTML += rowHtml;
+             }
+
+
+             $("#MonitorpagecountID").text(currentPage);
+         };
+         const renderPagination = () => {
+             const totalPages = updatePaginationInfo();
+             const paginationContainer = document.getElementById(paginationId);
+             paginationContainer.innerHTML = '';
+
+             let startPage = Math.max(1, currentPage - Math.floor(visibleButtons / 2));
+             let endPage = Math.min(totalPages, startPage + visibleButtons - 1);
+
+             if (endPage > totalPages) {
+                 endPage = totalPages;
+                 startPage = Math.max(1, endPage - visibleButtons + 1);
+             }
+
+             if (totalPages <= visibleButtons) {
+                 startPage = 1;
+                 endPage = totalPages;
+             }
+
+             // Previous button
+             paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="MonitorchangePage(${currentPage - 1})">
+                                         <i class="fa-solid fa-backward"></i>
+                                     </button>`;
+
+             for (let i = startPage; i <= endPage; i++) {
+                 paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="MonitorchangePage(${i})">${i}</button>`;
+             }
+
+             // Next button
+             paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="MonitorchangePage(${currentPage + 1})">
+                                        <i class="fa-solid fa-forward"></i>
+                                     </button>`;
+         };
+         const MonitorchangePage = (page) => {
+             if (page >= 1 && page <= updatePaginationInfo()) {
+                 currentPage = page;
+                 renderTable(currentPage);
+                 renderPagination();
+             }
+         };
+         // 🔍 Search functionality
+         //const searchTable = () => {
+         //    const query = $('#searchbox').val().toLowerCase();
+
+         //    filteredData = dataArray.filter(item =>
+         //        item.PartNo.toLowerCase().includes(query)
+         //    );
+
+         //    currentPage = 1;
+         //    renderTable(currentPage);
+         //    renderPagination();
+         //};
+
+         // Add event listener for search input
+         //$('#searchbox').on('input', searchTable);
+
+         // Handle click event for edit button
+         $(document).on('click', '.rowClick', function (e) {
+             e.stopPropagation();
+             const buttonId = $(this).attr('id');
+             const rowIndex = buttonId.split('_')[1];
+
+             window.location.href = "/P1SA/DieMold/DiePressMonitorDetails?ID=" + rowIndex;
+       
+         });
+
+         // UPDATES THE DETAILS DATA
+         @* detailsform.addEventListener('submit', async (e) => {
+             e.preventDefault();
+
+             let formData = new FormData(e.target);
+             formData.append('ProcessCode', processcode);
+             formData.append('Capgroup_ID', cap_groupID);
+             const data = Object.fromEntries(formData);
+             let res = await postData('@Url.Action("EditMoldingByDetails", "PostCapacity")', formData);
+             EditResult(res, data);
+         });*@
+         // Initialize table and pagination
+          window.MonitorchangePage = MonitorchangePage;
+          renderTable(currentPage);
+          renderPagination();
+     }
+
+
+    GetPressMonitoring();
+</script>

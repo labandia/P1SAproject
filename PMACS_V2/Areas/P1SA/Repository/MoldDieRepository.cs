@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace PMACS_V2.Areas.P1SA.Repository
@@ -230,11 +231,25 @@ namespace PMACS_V2.Areas.P1SA.Repository
 
         public Task<List<PressDieMontoring>> GetPressMonitoring()
         {
-            string strquery = @"SELECT FORMAT(DateInput, 'MM/dd/yy') as DateInput,
-                                    ToolNo,Upper,Lower,Upper_ActualHeight,
-	                                Upper_DrawingHeight,Lower_ActualHeight,
-	                                Lower_DrawingHeight,PressStamp
-                              FROM DiePressMonitoring";
+            string strquery = @"  SELECT p.MonitorID, 
+                                  FORMAT(p.DateInput, 'MM/dd/yy') as DateInput, p.ToolNo,
+                                  (m.Up -  ABS(p.Upper_ActualHeight - (SELECT TOP 1 Upper_DrawingHeight
+                                FROM DiePressMonitoring
+                                ORDER BY RecordID ASC))) as Up,
+                                  (m.low - ABS(p.Lower_ActualHeight - (SELECT TOP 1 Lower_DrawingHeight
+                                FROM DiePressMonitoring
+                                ORDER BY RecordID ASC))) as Low,
+                                  p.Upper_ActualHeight, p.Upper_DrawingHeight, 
+                                    ABS(p.Upper_ActualHeight - (SELECT TOP 1 Upper_DrawingHeight
+                                FROM DiePressMonitoring
+                                ORDER BY RecordID ASC)) as GrindUpper,
+                                  p.Lower_ActualHeight, p.Lower_DrawingHeight, 
+                                   ABS(p.Lower_ActualHeight - (SELECT TOP 1 Lower_DrawingHeight
+                                FROM DiePressMonitoring
+                                ORDER BY RecordID ASC)) as GrindLower, 
+                                  p.PressStamp, p.DieStatus
+                                  FROM DiePressMonitoring p
+                                  INNER JOIN DiePressMainMonitor m ON p.MonitorID = m.MonitorID";
             return SqlDataAccess.GetData<PressDieMontoring>(strquery, null);
         }
         public async Task<List<PressDieSummary>> GetPressSummary()
@@ -367,6 +382,28 @@ namespace PMACS_V2.Areas.P1SA.Repository
             return  SqlDataAccess.UpdateInsertQuery(insertquery, press);
         }
 
+        public async Task<bool> AddPressMonitorData(PressMonitorInput press)
+        {
+            string insertquery = @"INSERT INTO DiePressMonitoring(MonitorID, ToolNo, Upper_ActualHeight, 
+                                 Upper_DrawingHeight, Lower_ActualHeight, Lower_DrawingHeight, PressStamp)
+                                   VALUES(@MonitorID, @ToolNo, @Upper_ActualHeight, @Upper_DrawingHeight, 
+                                    @Lower_ActualHeight, @Lower_DrawingHeight, @PressStamp)";
+            bool insertResult = await SqlDataAccess.UpdateInsertQuery(insertquery, press);
+
+            if (insertResult)
+            {
+                int getTotal = await SqlDataAccess.GetCountData($@"SELECT SUM(PressStamp) as Total
+                                                    FROM DiePressMonitoring
+                                                    GROUP BY ToolNo");
+
+                string updateQuery = @"UPDATE DiePressMainMonitor SET TotalPressStamp =@TotalPressStamp WHERE MonitorID =@MonitorID";
+
+                await SqlDataAccess.UpdateInsertQuery(updateQuery, new { TotalPressStamp = getTotal, MonitorID = press.MonitorID });
+            }
+
+            return insertResult;
+        }
+
         public Task<bool> EditPressRegistry(PressDieRegistry press)
         {
             string updatequery = $@"UPDATE DiePressRegistry SET Type =@Type, Model =@Model, Lines =@Lines, Status =@Status,  Operational =@Operational
@@ -399,6 +436,6 @@ namespace PMACS_V2.Areas.P1SA.Repository
             return SqlDataAccess.UpdateInsertQuery(insertquery, press);
         }
 
-       
+        
     }
 }

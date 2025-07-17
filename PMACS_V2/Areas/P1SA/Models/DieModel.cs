@@ -364,13 +364,16 @@ namespace PMACS_V2.Areas.P1SA.Models
     {
         public string DateInput { get; set; }
         public string ToolNo { get; set; }
-        public double Upper { get; set; }
-        public double Lower { get; set; }
+        public double Up { get; set; }
+        public double Low { get; set; }
+        public double GrindUpper { get; set; }
+        public double GrindLower { get; set; }
         public double Upper_ActualHeight { get; set; }
         public double Upper_DrawingHeight { get; set; }
         public double Lower_ActualHeight { get; set; }
         public double Lower_DrawingHeight { get; set; }
         public double PressStamp { get; set; }
+        public int DieStatus { get; set; }
     }
 
 
@@ -389,7 +392,7 @@ namespace PMACS_V2.Areas.P1SA.Models
 
         public int Remaining { get; set; }
         public string Status { get; set; }
-        public int TotalStampPress { get; set; }    
+        public int TotalPressStamp { get; set; }    
     }
 
     public class PressDieControlModel
@@ -435,6 +438,19 @@ namespace PMACS_V2.Areas.P1SA.Models
         public double Lower_DrawingHeight { get; set; }
         public int PressStamp { get; set; }
     }
+
+    public class PressMonitorInput
+    {
+        public int MonitorID { get; set; }
+        public string ToolNo { get; set; }
+        public double Upper_ActualHeight { get; set; }
+        public double Upper_DrawingHeight { get; set; }
+        public double Lower_ActualHeight { get; set; }
+        public double Lower_DrawingHeight { get; set; }
+        public int PressStamp { get; set; }
+    }
+
+
 
     public class PressDieControlData
     {

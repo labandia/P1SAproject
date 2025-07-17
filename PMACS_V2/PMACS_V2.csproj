@@ -564,6 +564,7 @@
     <Content Include="Content\fonts\SharpSans.otf" />
     <Content Include="Content\fonts\Figtree.ttf" />
     <Content Include="Content\fonts\Quicksand.ttf" />
+    <Content Include="Areas\P1SA\Views\DieMold\DiePressMonitorDetails.cshtml" />
     <None Include="bundleconfig.json" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\chart.js" />

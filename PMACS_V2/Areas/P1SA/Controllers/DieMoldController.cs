@@ -4,6 +4,7 @@ using PMACS_V2.Controllers;
 using PMACS_V2.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -114,11 +115,12 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             return JsonSuccess(data);
         }
 
-        public async Task<ActionResult> GetPressDieMonitoringList()
+        public async Task<ActionResult> GetPressDieMonitoringList(string ToolNo)
         {
+            Debug.WriteLine($@"HERE INSIEDE" + ToolNo);
             var data = await _die.GetPressMonitoring() ?? new List<PressDieMontoring>();
-
-            if (data == null || !data.Any())
+            var filterdata = data.Where(res => res.ToolNo == ToolNo);
+            if (filterdata == null || !filterdata.Any())
                 return JsonNotFound("No Monitoring data found");
 
             return JsonSuccess(data);
@@ -150,6 +152,19 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             await Task.Delay(100);
             return Json(add, JsonRequestBehavior.AllowGet);
         }
+
+
+        [HttpPost]
+        public async Task<ActionResult> AddMoldiePressMonitor(PressMonitorInput add)
+        {
+            bool update = await _die.AddPressMonitorData(add);
+            if (!update) return JsonValidationError();
+
+            return JsonCreated(add, "Insert Successfully");
+        }
+
+
+
         [HttpPost]
         public async Task<ActionResult> AddPressRegistry(PressDieRegistry obj)
         {
@@ -190,6 +205,22 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         // GET: P1SA/DieMold
         public ActionResult DieMoldLife() =>  View();
         public ActionResult DiePressLife() => View();
+
+
+        // GET: P1SA/DieMold/DiePressMonitorDetails/:ID
+        public async Task<ActionResult> DiePressMonitorDetails(int ID)
+        {
+            var data = await _die.GetPressMainMonitoring() ?? new List<PressMainMonitor>();
+            var filterData = data.SingleOrDefault(res => res.MonitorID == ID);
+            Debug.WriteLine($@"ID selected : " + ID);
+            if (filterData == null)
+            {
+                return HttpNotFound("Monitor not found.");
+            }
+
+            return View(filterData);
+        }
+
 
     }
 }

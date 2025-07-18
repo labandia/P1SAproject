@@ -246,6 +246,11 @@ namespace ProgramPartListWeb.Areas.PC.Models
         public string ProcessName { get; set; }
         public int DepartmentID { get; set; }
     }
+    
+    
+    
+    
+   
     public class CalendarSched
     {
         public int ScheduleID { get; set; }
@@ -256,6 +261,9 @@ namespace ProgramPartListWeb.Areas.PC.Models
         public string ProcessName { get; set; }
         public int IsActive { get; set; }   
     }
+    
+    
+    
     public class EmailModel
     {
         public string To { get; set; }

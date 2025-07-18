@@ -567,7 +567,7 @@
       // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
      const LoadPageData = async() => {
          try {
-             if (ActionRestrict()) {
+             if (ActionRestrict() === false) {
                  $("#headertable").hide();
              }
 

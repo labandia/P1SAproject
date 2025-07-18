@@ -123,7 +123,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             if (filterdata == null || !filterdata.Any())
                 return JsonNotFound("No Monitoring data found");
 
-            return JsonSuccess(data);
+            return JsonSuccess(filterdata);
         }
         public async Task<ActionResult> GetPressDieSummaryList()
         {
@@ -147,12 +147,10 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         [HttpPost]
         public async Task<ActionResult> AddUpdatePressDieMonitor(PressInputModel add)
         {
-            //bool update = await _die.AddUpdatePressMonitoring(add);
-            //var formdata = GlobalUtilities.GetMessageResponse(update, 1);
-            await Task.Delay(100);
-            return Json(add, JsonRequestBehavior.AllowGet);
+            bool update = await _die.AddUpdatePressMonitoring(add);
+            if (!update) return JsonValidationError();
+            return JsonCreated(add, "Update Successfully");
         }
-
 
         [HttpPost]
         public async Task<ActionResult> AddMoldiePressMonitor(PressMonitorInput add)
@@ -160,9 +158,24 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             bool update = await _die.AddPressMonitorData(add);
             if (!update) return JsonValidationError();
 
-            return JsonCreated(add, "Insert Successfully");
-        }
+            var data = await _die.GetPressMonitoring() ?? new List<PressDieMontoring>();
+            int newTotal = data
+                            .Where(res => res.ToolNo == add.ToolNo)
+                            .Sum(res => res.PressStamp);
 
+
+            return JsonCreated(newTotal, "Insert Successfully");
+        }
+        [HttpPost]
+        public async Task<ActionResult> EndofLifeMonitor(string ToolNo)
+        {
+            bool update = await _die.UpdateEndofLifeMonitorData(ToolNo);
+            if (!update) return JsonValidationError();
+
+           
+
+            return JsonCreated("End of Life Successfully");
+        }
 
 
         [HttpPost]
@@ -182,7 +195,6 @@ namespace PMACS_V2.Areas.P1SA.Controllers
 
             return JsonCreated(obj, "Updated Registry Successfully");
         }
-
         [HttpPost]
         public async Task<ActionResult> UpdatePressRegistry()
         {
@@ -202,6 +214,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             return JsonCreated(obj, "Updated Registry Successfully");
         }
 
+
         // GET: P1SA/DieMold
         public ActionResult DieMoldLife() =>  View();
         public ActionResult DiePressLife() => View();
@@ -212,7 +225,6 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         {
             var data = await _die.GetPressMainMonitoring() ?? new List<PressMainMonitor>();
             var filterData = data.SingleOrDefault(res => res.MonitorID == ID);
-            Debug.WriteLine($@"ID selected : " + ID);
             if (filterData == null)
             {
                 return HttpNotFound("Monitor not found.");

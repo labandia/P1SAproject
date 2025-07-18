@@ -33,6 +33,10 @@
          background: var(--primary-alt-color);
     }
 
+    .primary_button_color:disabled{
+         background: #A5A1AA;
+    }
+
     button{
         padding: .5em 1.5em;
         border-radius: .2em;
@@ -2449,6 +2453,8 @@
 }
 /*------------------------------------------------------------------------------- */
 
-
+    #DieWrapper{
+        margin-bottom: 5em !important;
+    }
 
    

@@ -4,7 +4,7 @@
     Layout = "~/Areas/P1SA/Views/Shared/_Layout.cshtml";
 }
 
-<section>
+<section >
     <header class="MainHeader">
         <div class="MoldTitle">
             <h4>Press Mold Die Life </h4>
@@ -65,7 +65,7 @@
 
         <div class="Mold_contentbox">
             <div class="Mold_content show" id="Summary">
-                <div class="DieMainTable">
+                <div class="DieMainTable" id="DieWrapper">
                     <table>
                         <thead>
                             <tr>
@@ -91,7 +91,7 @@
                 </div>
             </div>
             <div class="Mold_content" id="Monitoring">
-                <div class="DieMainTable">
+                <div class="DieMainTable" id="DieWrapper">
                     @*<table>
                             <thead>
                                 <tr class="header-row">
@@ -144,7 +144,7 @@
                         <span>Not Operational </span>
                     </div>
                 </div>
-                <div class="DieMainTable" id="DieWrapcolumn">
+                <div class="DieMainTable" id="DieWrapper">
                     <table>
                         <thead>
                             <tr>
@@ -153,7 +153,7 @@
                                 <th style="width: 300px;">Model</th>
                                 <th style="width: 100px;"> No. of Line</th>
                                 <th>Status</th>
-                                <th style="width: 100px;">Action</th>
+                                <th style="width: 100px;" id="HiddenColumns">Action</th>
                             </tr>
                         </thead>
                         <tbody id="RegistrylistData">
@@ -163,7 +163,7 @@
                 </div>
             </div>
             <div class="Mold_content" id="DieControl">
-                <div class="DieMainTable">
+                <div class="DieMainTable" id="DieWrapper">
                     <table>
                         <thead>
                             <tr>
@@ -235,59 +235,28 @@
 
                 <div class="MoldieBodyModal mt-3">
                     <form id="InputPress" autocomplete="off">
-                        <div class="row">
-                            <div class="form_group col-6 col-sm-12 col-lg-6">
-                                <label for="">Select Tool No.</label><br />
-                                <select id="ToolNo">
-                                </select>
-                            </div>
+                        <div class="form_group col-12 col-sm-12 col-lg-12 mb-2">
+                            <label for="">Select Tool No.</label><br />
+                            <select id="ToolNo" name="ToolNo">
+                            </select>
+                        </div>
 
-                            <div class="form_group col-6 col-sm-12 col-lg-6">
-                                <label for="">No Press Stamp</label>
-                                <input type="text" name="PressStamp" id="PressStamp" onkeypress="return restrictChars(event)">
-                            </div>
+                        <div class="form_group col-12 col-sm-12 col-lg-12">
+                            <label for="">Line </label><br />
+                           <input type="text" name="Line" onkeypress="return restrictChars(event)">
                         </div>
 
                         <div class="row">
                             <div class="form_group col-6 col-sm-12 col-lg-6">
                                 <label for="">Upper</label>
-                                <input type="text" name="Upper" id="Upper" onkeypress="return restrictChars(event)">
+                                <input type="text" name="Up" onkeypress="return restrictChars(event)">
                             </div>
 
                             <div class="form_group col-6 col-sm-12 col-lg-6">
                                 <label for="">Lower</label>
-                                <input type="text" name="Lower" id="Lower" onkeypress="return restrictChars(event)">
+                                <input type="text" name="low" onkeypress="return restrictChars(event)">
                             </div>
                         </div>
-
-                        <fieldset>
-                            <legend>Upper</legend>
-                            <div class="row">
-                                <div class="form_group col-6 col-sm-12 col-lg-6">
-                                    <label for="">Actual Height</label>
-                                    <input type="text" name="Upper_ActualHeight" id="Upper_ActualHeight" onkeypress="return restrictChars(event)">
-                                </div>
-                                <div class="form_group col-6 col-sm-12 col-lg-6">
-                                    <label for="">Drawing Height</label>
-                                    <input type="text" name="Upper_DrawingHeight" id="Upper_DrawingHeight" onkeypress="return restrictChars(event)">
-                                </div>
-                            </div>
-                        </fieldset>
-                        <fieldset>
-                            <legend>Lower</legend>
-                            <div class="row">
-                                <div class="form_group col-6 col-sm-12 col-lg-6">
-                                    <label for="">Actual Height</label>
-                                    <input type="text" name="Lower_ActualHeight" id="Lower_ActualHeight" onkeypress="return restrictChars(event)">
-                                </div>
-                                <div class="form_group col-6 col-sm-12 col-lg-6">
-                                    <label for="">Drawing Height</label>
-                                    <input type="text" name="Lower_DrawingHeight" id="Lower_DrawingHeight" onkeypress="return restrictChars(event)">
-                                </div>
-                            </div>
-                        </fieldset>
-
-
 
 
                         <div class="edits_footer" id="editsdisplay">
@@ -718,24 +687,25 @@
         e.preventDefault();
         let formData = new FormData(e.target);
         const data = Object.fromEntries(formData);
-        //console.log(data);
-        let res = await postData('@Url.Action("AddUpdatePressDieMonitor", "DieMold")', formData);
-        console.log(res);
-        //if (res.StatusCode === 200) {
-        //    //GetMoldDieMonth(select.value, currentYear);
-        //    //$("#InputMoldieModal").modal("hide");
-        //}
+        let res = await postData('@Url.Action("AddUpdatePressDieMonitor", "DieMold")', data);
+        if (res.StatusCode === 201) {
+            GetPressMonitoring(setMonth, currentYear);
+            //GetMoldDieMonth(select.value, currentYear);
+            $("#InputMoldieModal").modal("hide");
+        }
     });
 
     const GetPressRegistry = async () => {
         $("#ToolNo").empty();
 
-        const id = loadingDisplay(2, 6);
+        const colval = (ActionRestrict() === false) ? 5 : 6; 
+
+        const id = loadingDisplay(2, colval);
         Loadingsteps(id, async () => {
             let res = await fetchData('@Url.Action("GetPressDieRegistryList", "DieMold")', {});
             if (res && res.Success) {
                 SummaryData = res.Data;
-                const ToolData = SummaryData.map(res => res.ToolNo);
+                const ToolData = SummaryData.filter(res => res.Operational === 1).map(res => res.ToolNo);
                 $.each(ToolData, function (index, row) {
                     $("#ToolNo").append("<option value='" + row + "'>" + row + "</option>");
                 });
@@ -774,7 +744,6 @@
                 //console.log(PressData);
                 displaySummarPressPagination(PressData, 'DiePressMonitoringlistV2', 'PaginationContainerv2', 50, 5);
             } else {
-
                 console.log("No Data found");
             }
         });
@@ -816,10 +785,22 @@
           tableBody.innerHTML = '';
 
           for (let i = startIndex; i < endIndex; i++) {
-              let buttons;
+              let buttons = "";
               const rowData = filteredData[i];
 
               let colorcirle = rowData.Operational === 1 ? "#04bd6c" : "red";
+
+              if (ActionRestrict() !== false) {
+                  $("#HiddenColumns").show();
+                  buttons = ` <td id='datatable' style='text-align: center;'>
+                                <button type='button' class='btn actionicon text-primary rowClick' id='editButton_${rowData.ToolNo}' >
+                                   <i class='fa-regular fa-pen-to-square action_btn'></i>
+                                </button>
+                            </td>`;
+              } else {
+                  $("#HiddenColumns").hide();
+              }
+
 
               const rowHtml = `<tr class='row_${i}' >
                                   <td style='font-weight: 600; color: #222; padding-left: 1.5em;' data-cell="ToolNo">
@@ -832,12 +813,8 @@
                                   <td data-cell="Model">${rowData.Model}</td>
                                   <td data-cell="Lines">${rowData.Lines}</td>
                                   <td data-cell="Status">${rowData.Status}</td>
-                                  <td id='datatable' style='text-align: center;'>
-                                 <button type='button' class='btn actionicon text-primary rowClick' id='editButton_${rowData.ToolNo}' >
-                                    <i class='fa-regular fa-pen-to-square action_btn'></i>
-                                 </button>
-                          </td>
-                      </tr>`;
+                                  ${buttons}
+                              </tr>`;
 
               tableBody.innerHTML += rowHtml;
           }
@@ -991,7 +968,7 @@
                 //const percentValue = Math.round((50 / 100) * 100);
 
                 groupRows.forEach((rowData, idx) => {
-                    let rowHtml = "<tr class='rowClick' id='editButton'>";
+                    let rowHtml = "<tr >";
 
                     switch (StatsValue) {
                         case "Max Die Life":
@@ -1273,14 +1250,16 @@
             for (let i = startIndex; i < endIndex; i++) {
                 
                 const rowData = filteredData[i];
+                let remarkColor = (rowData.Operational === "End of Life") ? "color: #a81818;" : "color: #054e92;";
+               
                 const rowHtml = ` <tr class='row_${rowData.MonitorID} rowClick' id='editButton_${rowData.MonitorID}'>
                     <td data-cell="ToolNo">${rowData.ToolNo}</td>
-                    <td data-cell="Type" style="font-weight: 600; color: hsl(209, 91%, 34%);">${rowData.Type}</td>
+                    <td data-cell="Type" >${rowData.Type}</td>
                     <td data-cell="Upper">${rowData.Line}</td>
                     <td data-cell="Upper">${rowData.MinUpper}</td>
                     <td data-cell="Lower">${rowData.MinLower}</td>
-                    <td data-cell="Lower_ActualHeight">${rowData.TotalPressStamp}</td>
-                    <td data-cell="Lower_DrawingHeight">${rowData.Operational}</td>
+                    <td data-cell="Lower_ActualHeight">${getFormatComma(rowData.TotalPressStamp)}</td>
+                    <td data-cell="Lower_DrawingHeight" style="${remarkColor};">${rowData.Operational}</td>
                 </tr>`;
 
                 tableBody.innerHTML += rowHtml;
@@ -1589,6 +1568,10 @@
 
     const LoadPageData = async () => {
         try {
+            if (ActionRestrict() !== false) {
+                $("#HiddenColumns").hide();
+            }
+
 
             $("#MoldSummary").show();
             $("#MoldMonitor").hide();

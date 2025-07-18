@@ -231,7 +231,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
 
         public Task<List<PressDieMontoring>> GetPressMonitoring()
         {
-            string strquery = @"  SELECT p.MonitorID, 
+            string strquery = @" SELECT p.MonitorID, p.RecordID,
                                   FORMAT(p.DateInput, 'MM/dd/yy') as DateInput, p.ToolNo,
                                   (m.Up -  ABS(p.Upper_ActualHeight - (SELECT TOP 1 Upper_DrawingHeight
                                 FROM DiePressMonitoring
@@ -296,22 +296,6 @@ namespace PMACS_V2.Areas.P1SA.Repository
         }
         public Task<List<PressDieSummary>> PressDieSummaryList()
         {
-            //string strquery = @"  WITH TotalPressStamp AS (
-            //                                SELECT ToolNo, SUM(PressStamp) AS TotalStampPress
-            //                                FROM DiePressMonitoring
-            //                                GROUP BY ToolNo
-            //                     )
-            //                      SELECT  
-            //                     s.ToolNo, 
-            //                     r.Type, r.Model, 
-            //                     s.DiePart, s.DieHeight, 
-            //                     s.StdGrind, s.StampGrind, 
-            //                     s.Line, s.Avg, 
-            //                     (s.DieHeight / s.StdGrind * s.StampGrind * s.Line / s.Avg) as Remaining, 
-            //                     td.TotalStampPress
-            //                      FROM DiePressSummary s 
-            //                      INNER JOIN  DiePressRegistry r ON r.ToolNo = s.ToolNo
-            //                      LEFT JOIN TotalPressStamp td ON td.ToolNo = s.ToolNo";
             string strquery = @"WITH TotalPressStamp AS (
                                     SELECT ToolNo, TotalPressStamp
                                     FROM DiePressMainMonitor
@@ -377,8 +361,8 @@ namespace PMACS_V2.Areas.P1SA.Repository
 
         public Task<bool> AddUpdatePressMonitoring(PressInputModel press)
         {
-            string insertquery = @"INSERT INTO DiePressMonitoring(ToolNo, Upper, Upper_ActualHeight, Upper_DrawingHeight, Lower_ActualHeight, Lower_DrawingHeight, PressStamp)
-                                       VALUES(@ToolNo, @Upper, @Upper_ActualHeight, @Upper_DrawingHeight, @Lower_ActualHeight, @Lower_DrawingHeight, @PressStamp)";
+            string insertquery = @"INSERT INTO DiePressMainMonitor(ToolNo, Up, low, Line)
+                                       VALUES(@ToolNo, @Up, @low, @Line)";
             return  SqlDataAccess.UpdateInsertQuery(insertquery, press);
         }
 
@@ -394,7 +378,8 @@ namespace PMACS_V2.Areas.P1SA.Repository
             {
                 int getTotal = await SqlDataAccess.GetCountData($@"SELECT SUM(PressStamp) as Total
                                                     FROM DiePressMonitoring
-                                                    GROUP BY ToolNo");
+                                                    WHERE MonitorID =@MonitorID
+                                                    GROUP BY ToolNo", new { MonitorID = press.MonitorID });
 
                 string updateQuery = @"UPDATE DiePressMainMonitor SET TotalPressStamp =@TotalPressStamp WHERE MonitorID =@MonitorID";
 
@@ -403,7 +388,12 @@ namespace PMACS_V2.Areas.P1SA.Repository
 
             return insertResult;
         }
-
+        public Task<bool> UpdateEndofLifeMonitorData(string ToolNo)
+        {
+            string updatequery = $@"UPDATE DiePressRegistry SET Operational = 0
+                                    WHERE ToolNo =@ToolNo";
+            return SqlDataAccess.UpdateInsertQuery(updatequery, new {ToolNo = ToolNo});
+        }
         public Task<bool> EditPressRegistry(PressDieRegistry press)
         {
             string updatequery = $@"UPDATE DiePressRegistry SET Type =@Type, Model =@Model, Lines =@Lines, Status =@Status,  Operational =@Operational
@@ -436,6 +426,6 @@ namespace PMACS_V2.Areas.P1SA.Repository
             return SqlDataAccess.UpdateInsertQuery(insertquery, press);
         }
 
-        
+       
     }
 }

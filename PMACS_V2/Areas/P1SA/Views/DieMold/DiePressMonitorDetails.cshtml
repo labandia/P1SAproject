@@ -6,93 +6,66 @@
     Layout = "~/Areas/P1SA/Views/Shared/_Layout.cshtml";
 }
 
-<div class="row">
-    <div class="col-md-3">
-        <div class="d-flex align-items-center gap-2">
-            <label>Model:  </label>
-            <p class="m-0"><span>@Model.Type</span>  Stator Die (<span>@Model.Line</span> lines)</p>
+<section class="mb-3">
+    <header class="MainHeader">
+        <div class="MoldTitle">
+            <div class="d-flex align-items-center gap-4">
+                <a class="d-flex align-items-center justify-content-center" href="/P1SA/DieMold/DiePressLife"><i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+                <div>
+                    <span class="fw-bold fs-5" style="color: #222;"><span>@Model.Type</span>  Stator Die (<span>@Model.Line</span> lines) </span> <br />
+                    <span class="fw-bold" style="color: #222;">Tool No: </span><span id="ToolText">@Model.ToolNo</span> <span class="m-0" id="Ope">@Model.Operational</span>
+                </div>
+            </div>
         </div>
-
-        <div class="d-flex align-items-center gap-2">
-            <label>Tool No:  </label>
-            <p class="m-0" id="ToolText">@Model.ToolNo</p>
+        <div class="Mold__actions">
+            <button id="sortbtn"><i class="fa-solid fa-arrow-down-short-wide"></i></button>
+            <button class="primary_button_color" id="cancelmodal"><i class="fa-solid fa-plus"></i>End of Life</button>
+            <button class="primary_button_color" id="addmodal"><i class="fa-solid fa-plus"></i> Add Data</button>
         </div>
-
-        <div class="d-flex align-items-center gap-2">
-            <label>Status:  </label>
-            <p class="m-0">@Model.Operational</p>
-        </div>
-
-        <div class="d-flex align-items-center gap-2">
-            <label>Press stamp(total):  </label>
-            <p class="m-0">@Model.TotalPressStamp</p>
-        </div>
-
-        <hr />
-
-        <form id="AddMoldieform">
-            <input type="hidden" name="ToolNo" value="@Model.ToolNo" />
-            <input type="hidden" name="MonitorID" value="@Model.MonitorID" />
-            <label>Up Actual Height</label>
-            <input type="text" name="Upper_ActualHeight" />
-            <label>Up Drawing Height</label>
-            <input type="text" name="Upper_DrawingHeight" />
-
-            <label>low Actual Height</label>
-            <input type="text" name="Lower_ActualHeight" />
-            <label>low Drawing Height</label>
-            <input type="text" name="Lower_DrawingHeight" />
-            <label>No. of Stamping Press</label>
-            <input type="text" name="PressStamp" />
-            <button type="submit" id="savebtn">Save</button>
-        </form>
-
-    </div>
-
-    <div class="col-md-9">
-        <div class="DieMainTable">
-            <table>
-                <thead>
-                    <tr>
-                        <th rowspan="3">Date</th>
-                        <th colspan="2" class="green-header">Die Life</th>
-                        <th colspan="6" class="blue-header">Die Grinding</th>
-                        <th rowspan="3" class="blue-header">
-                            14,963,000<br>No. of Press stamp
-                        </th>
-                    </tr>
-                    <tr>
-                        <th class="green-header">Upper</th>
-                        <th class="green-header">Lower</th>
-
-                        <th colspan="3" class="blue-subheader">Upper</th>
-                        <th colspan="3" class="blue-subheader">Lower</th>
-                    </tr>
-                    <tr>
-                        <td class="green-header">11<br>2.74</td>
-                        <td class="green-header">10<br>4.81</td>
-
-                        <!-- Upper Grinding -->
-                        <td class="blue-subheader">①<br>Actual<br>Height</td>
-                        <td class="blue-subheader">②<br>Drawing<br>Height</td>
-                        <td class="blue-subheader">③<br>②−①</td>
-
-                        <!-- Lower Grinding -->
-                        <td class="blue-subheader">①<br>Actual<br>Height</td>
-                        <td class="blue-subheader">②<br>Drawing<br>Height</td>
-                        <td class="blue-subheader">③<br>②−①</td>
-                    </tr>
-                </thead>
-                <tbody id="DieMoldToolist">
-                </tbody>
-            </table>
+    </header>
+</section>
 
 
-        </div>
-    </div>
+<div class="DieMainTable">
+    <table>
+        <thead>
+            <tr>
+                <th rowspan="3">Date</th>
+                <th colspan="2" class="green-header">Die Life</th>
+                <th colspan="6" class="blue-header">Die Grinding</th>
+                <th rowspan="3" class="blue-header">
+                    No. of Press stamp
+                    <span id="TotalStamp">@Model.TotalPressStamp</span>
+                </th>
+            </tr>
+            <tr>
+                <th class="green-header">Upper</th>
+                <th class="green-header">Lower</th>
+
+                <th colspan="3" class="blue-subheader">Upper</th>
+                <th colspan="3" class="blue-subheader">Lower</th>
+            </tr>
+            <tr>
+                <td class="green-header">11</td>
+                <td class="green-header">10</td>
+
+                <!-- Upper Grinding -->
+                <td class="blue-subheader">①<br>Actual<br>Height</td>
+                <td class="blue-subheader">②<br>Drawing<br>Height</td>
+                <td class="blue-subheader">③<br>②−①</td>
+
+                <!-- Lower Grinding -->
+                <td class="blue-subheader">①<br>Actual<br>Height</td>
+                <td class="blue-subheader">②<br>Drawing<br>Height</td>
+                <td class="blue-subheader">③<br>②−①</td>
+            </tr>
+        </thead>
+        <tbody id="DieMoldToolist">
+        </tbody>
+    </table>
+
+
 </div>
-
-
 <div class="PressMoldfooterContainer" id="Summaryfooter">
     <span>Showing  <span id="SummarypagecountID">-</span> to <span id="SummarytotalpageID">-</span> of  <span id="SummaryDatalengthID">-</span> Entries</span>
     <div id="PaginationContainer" class="paginationPartlocal"></div>
@@ -100,33 +73,157 @@
 
 
 
+
+
+<div class="modal fade modal-md" id="MonitorModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="custom_modal_header">
+                    <h5>Die Control Data</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <div class="MoldieBodyModal">
+                    <form id="AddMoldieform" autocomplete="off">
+                        <input type="hidden" name="ToolNo" value="@Model.ToolNo" />
+                        <input type="hidden" name="MonitorID" value="@Model.MonitorID" />
+                        <div class="row">
+                            <div class="form_group col-12 col-lg-6 col-sm-12">
+                                <label>Up Actual Height</label>
+                                <input type="text" name="Upper_ActualHeight" onkeypress="return restrictChars(event)" required />
+                            </div>
+
+                            <div class="form_group col-12 col-lg-6 col-sm-12">
+                                <label>Up Drawing Height</label>
+                                <input type="text" name="Upper_DrawingHeight" onkeypress="return restrictChars(event)" required />
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="form_group col-12 col-lg-6 col-sm-12">
+                                <label>low Actual Height</label>
+                                <input type="text" name="Lower_ActualHeight" onkeypress="return restrictChars(event)" required />
+                            </div>
+
+                            <div class="form_group col-12 col-lg-6 col-sm-12">
+                                <label>low Drawing Height</label>
+                                <input type="text" name="Lower_DrawingHeight" onkeypress="return restrictChars(event)" required />
+                            </div>
+                        </div>
+
+
+                        <div class="form_group col-12  col-sm-12">
+                            <label>No. of Stamping Press</label>
+                            <input type="text" name="PressStamp" onkeypress="return restrictChars(event)"  />
+                        </div>
+
+
+                        <div class="edits_footer" id="editsdisplay">
+                            <button type="submit" class="primary_button_color">
+                                <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
 <script type="text/javascript">
+    let sort = 0;
+    let StatusName = "@Model.Operational";
+
+    $("#addmodal").on('click', (e) => {
+        e.preventDefault();
+        $("#MonitorModal").modal('show');
+    });
+
+    $("#sortbtn").on('click', (e) => {
+        e.preventDefault();
+        sort = (sort === 0) ? 1 : 0;
+        GetPressMonitoring();
+    });
+
+    $("#cancelmodal").on('click',  (e) => {
+        e.preventDefault();
+        Swal.fire({
+            title: "End of Life ?",
+            text: "Are you sure you want press it?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#a3a3a3",
+            confirmButtonText: "Log out"
+        }).then(async (result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                let res = await postData('@Url.Action("EndofLifeMonitor", "DieMold")', { ToolNo: $("#ToolText").text() });
+                if (res.StatusCode === 201) {
+                    Swal.fire({
+                        title: "Success",
+                        text: res.Message,
+                        icon: "success",
+                        confirmButtonColor: "#0d97c9",
+                        timer: 1500
+                    }).then(() => {
+                        $("#cancelmodal").prop("disabled", true);
+                        $("#addmodal").prop("disabled", true);
+                        $("#Ope").text("End of Life");
+                    });
+                }
+            }
+        });
+    });
 
     $("#AddMoldieform").on('submit', async (e) => {
         e.preventDefault();
+        const addmodelform = document.querySelector('#AddMoldieform');
         let formdata = new FormData(e.target);
         const data = Object.fromEntries(formdata);
 
         let res = await postData('@Url.Action("AddMoldiePressMonitor", "DieMold")', data);
+        console.log(res);
         if (res.StatusCode === 201) {
-            Swal.fire({
-                title: "Success",
-                text: res.Message,
-                icon: "success",
-                confirmButtonColor: "#0d97c9",
-                timer: 1500
-            }).then(() => {
-                GetPressMonitoring();
-               
-                //$("#AddMoldieform").reset();
-            });
+            GetPressMonitoring();
+            addmodelform.reset();
+            $("#TotalStamp").text(res.Data);
+            $("#MonitorModal").modal('hide');
+
+            //Swal.fire({
+            //    title: "Success",
+            //    text: res.Message,
+            //    icon: "success",
+            //    confirmButtonColor: "#0d97c9",
+            //    timer: 1500
+            //}).then(() => {
+            //    GetPressMonitoring();
+            //    addmodelform.reset();
+            //    $("#TotalStamp").text(res.Data);   
+            //    $("#MonitorModal").modal('hide');
+            //});
         } else {
-            Swal.fire({
-                icon: "error",
-                text: data.ToolNo + " is already Exist",
-                timer: 1500,
-                showConfirmButton: false
-            });
+            //Swal.fire({
+            //    icon: "error",
+            //    text: data.ToolNo + " is already Exist",
+            //    timer: 1500,
+            //    showConfirmButton: false
+            //});
         }
     });
 
@@ -135,7 +232,13 @@
         let res = await fetchData('@Url.Action("GetPressDieMonitoringList", "DieMold")', { ToolNo: $("#ToolText").text() });
          if (res && res.Success) {
              TableData = res.Data;
-             console.log(TableData);
+
+             if (sort == 0) {
+                 TableData.sort((a, b) => a.RecordID - b.RecordID);
+             } else {
+                 TableData.sort((a, b) => b.RecordID - a.RecordID);
+             }
+             
              displaySummarPressPagination(TableData, 'DieMoldToolist', 'PaginationContainer', 50, 5);
          } else {
              console.log("No Data found");
@@ -161,7 +264,7 @@
              tableBody.innerHTML = '';
 
              for (let i = startIndex; i < endIndex; i++) {
-             
+
                  const rowData = filteredData[i];
                  const rowHtml = ` <tr class='row_${rowData.MonitorID} rowClick' id='editButton_${rowData.MonitorID}'>
                      <td data-cell="DateInput">${rowData.DateInput}</td>
@@ -243,8 +346,7 @@
              const buttonId = $(this).attr('id');
              const rowIndex = buttonId.split('_')[1];
 
-             window.location.href = "/P1SA/DieMold/DiePressMonitorDetails?ID=" + rowIndex;
-       
+
          });
 
          // UPDATES THE DETAILS DATA
@@ -264,6 +366,12 @@
           renderPagination();
      }
 
-
-    GetPressMonitoring();
+    $(document).ready(() => {
+        if (StatusName === "End of Life") {
+            $("#cancelmodal").prop("disabled", true);
+            $("#addmodal").prop("disabled", true);
+        }
+        GetPressMonitoring();
+    });
+   
 </script>

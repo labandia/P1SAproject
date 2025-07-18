@@ -79,9 +79,9 @@
             this.Loginbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Loginbtn.Font = new System.Drawing.Font("Century Gothic", 12.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Loginbtn.ForeColor = System.Drawing.Color.Transparent;
-            this.Loginbtn.Location = new System.Drawing.Point(823, 466);
+            this.Loginbtn.Location = new System.Drawing.Point(823, 465);
             this.Loginbtn.Name = "Loginbtn";
-            this.Loginbtn.Size = new System.Drawing.Size(428, 62);
+            this.Loginbtn.Size = new System.Drawing.Size(428, 63);
             this.Loginbtn.TabIndex = 15;
             this.Loginbtn.Text = "Sign In";
             this.Loginbtn.UseVisualStyleBackColor = false;

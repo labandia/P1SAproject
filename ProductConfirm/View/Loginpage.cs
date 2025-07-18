@@ -57,10 +57,18 @@ namespace ProductConfirm
 
             var user = (await _user.LoginCredentials(username.Text.Trim())).FirstOrDefault();
             if (user == null)
+            {
                 MessageBox.Show("Invalid credentials / Username Doesnt Exist", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+              
                 // CHECKS THE PASSWORD IF IS CORRECT
             if (!PasswordHasher.VerifyPassword(user.Password, password.Text.Trim()))
+            {
                 MessageBox.Show("Invalid credentials / Password is incorrect", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;    
+            }
+               
 
             MessageBox.Show("Login success", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
             var mainpage = _serviceProvider.GetRequiredService<Mainpage>();

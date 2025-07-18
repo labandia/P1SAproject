@@ -110,7 +110,7 @@
         border: none;
         cursor: pointer;
         outline: none;
-        border-radius: .5em;
+        border-radius: .2em;
         transition: .5s all ease;
     }
     /*=============== BUTTON THAT HAS ICON ===============*/

@@ -6,10 +6,10 @@ using System.Web;
 using System.Web.Mvc;
 using System.IO;
 using ProgramPartListWeb.Utilities;
+using System.Diagnostics;
 
 namespace ProgramPartListWeb.Controllers
 {
-    [GlobalErrorException]
     [CompressResponse]
     public class P1SAportalwebController : ExtendController
     {
@@ -46,6 +46,18 @@ namespace ProgramPartListWeb.Controllers
             return File(System.IO.File.ReadAllBytes(filePath), mimeType);
         }
 
+
+        public ActionResult ViewPDF(string strfilepath)
+        {
+            Debug.WriteLine("HERE");
+            // Map your RegNo to a file path or file bytes
+            var filePath = $"\\\\SDP010F6C\\Users\\USER\\Pictures\\Access\\" + strfilepath;
+
+            if (!System.IO.File.Exists(filePath))
+                return HttpNotFound();
+
+            return File(filePath, "application/pdf");
+        }
 
 
         // GET: P1SAportalweb

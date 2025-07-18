@@ -21,7 +21,14 @@
             <div class="HeadTitle">
                 <span>Production 1 Sub Assembly Web Portal</span>
                 <div class="HeadTitle__action">
-                    <a href="/P1SAportalweb/GuideInstallsdsad"><span>How to set as Desktop</span>   <i class="fa-regular fa-bookmark"></i></a>
+                    @*<button type="button" class="open-pdf-btn">
+            <i class="fa-solid fa-paperclip"></i>
+        </button>*@
+                    <a href="#" data-pdf-url="/P1SAportalweb/ViewPDF?strfilepath=InstallDesktop.pdf" class="open-pdf-link">
+                        <span>How to set as Desktop</span>
+                        <i class="fa-regular fa-bookmark"></i>
+                    </a>
+
                 </div>
             </div>
         </div>
@@ -305,5 +312,17 @@
 
         // Initial load
         handleCheckboxFilter();
+    });
+
+
+
+    document.querySelectorAll(".open-pdf-link").forEach(link => {
+        link.addEventListener("click", function (e) {
+            e.preventDefault(); // prevent href="#" from scrolling
+            const pdfUrl = this.getAttribute("data-pdf-url");
+            if (pdfUrl) {
+                window.open(pdfUrl, "_blank"); // open in new tab
+            }
+        });
     });
 </script>

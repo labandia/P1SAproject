@@ -48,6 +48,11 @@
         gap: 10px !important;
     }
 
+    #sortbtn, #cancelmodal{
+        background: #fff;
+        border: 1px solid #d4d3d3;
+    }
+
     .btnclean{
         border: 1px solid rgba(149, 157, 165);
         background: #fff;
@@ -1086,7 +1091,7 @@
 
     .Mold_ToolHeader__group input[type='date']{
          border: 1px solid #d4d3d3;
-         padding: 5px 1em;
+         padding: 8px 1.5em 8px 1em;
          background: #fff;
     }
 

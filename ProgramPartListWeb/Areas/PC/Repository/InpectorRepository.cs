@@ -125,7 +125,8 @@ namespace ProgramPartListWeb.Areas.PC.Repository
         public Task<List<CalendarSched>> GetScheduleDateByMonth()
         {
             string strsql = $@"SELECT s.ScheduleID, s.Employee_ID, e.FullName,
-                                     p.ProcessID, p.ProcessName, s.ScheduleDate, s.IsActive 
+                                     p.ProcessID, p.ProcessName, s.ScheduleDate, s.IsActive,
+                                     e.Department_ID
                             FROM Patrol_Schedule s 
                             INNER JOIN Patrol_Process p ON s.ProcessID = p.ProcessID  
                             INNER JOIN Employee_tbl e ON e.Employee_ID = s.Employee_ID

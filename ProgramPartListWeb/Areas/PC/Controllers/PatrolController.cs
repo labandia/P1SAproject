@@ -221,6 +221,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                             title = x.ProcessName,
                             start = parsedDate.ToString("yyyy-MM-dd"), // convert to correct format
                             allDay = true,
+                            Department_ID = x.Department_ID,
                             Fullname = x.FullName,
                             extendedProps = new
                             {

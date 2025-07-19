@@ -25,6 +25,8 @@ namespace ProductConfirm.Data
         Task<List<ProductModel>> GetAllProducts();
         Task<List<ProductOneModel>> GetOnlyOneProducts(int ID);     
         Task<List<MasterlistModel>> GetMasterlist();
+        Task<List<CaulkingDent>> GetCaulkingDentData(int ID);
+
         // CRUD OPERATION MASTERLIST
         Task<bool> AddProducts(AddProductDetailsModel prod);
         Task<bool> EditProducts(AddProductDetailsModel prod);
@@ -36,6 +38,12 @@ namespace ProductConfirm.Data
         Task<List<SummaryProductModel>> GetSummaryDataConfirmation();
         Task<List<ExportModel>> GetDataAndExportoExcel();
 
+
+        // SHOP ORDER DATA LIST PER PROCESS
+        Task<bool> UpdateShopOrderStatus(int stats, int Item, int ID);
+        Task<bool> UpdateAndAddSuppliers(string shop, string supp, string lot, int shopID);
+
+        Task<bool> AddAndUpdateCaulkingDentData(CaulkingDentInput cd);
     }
 
 

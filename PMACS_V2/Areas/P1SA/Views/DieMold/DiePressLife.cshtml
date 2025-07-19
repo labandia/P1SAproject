@@ -992,7 +992,7 @@
 
 
                     if (idx === 0) {
-                        rowHtml += `<td rowspan="${groupRows.length}" data-cell="Type" style="font-weight: 600; color: hsl(209, 91%, 34%);">${DieValue}</td>`;
+                        rowHtml += `<td rowspan="${groupRows.length}" data-cell="Type" style="font-weight: 600; color: #222;">${DieValue}</td>`;
                         rowHtml += `<td rowspan="${groupRows.length}" data-cell="ToolNo">${ToolValue}</td>`;
                         rowHtml += `<td rowspan="${groupRows.length}" data-cell="Status">
                                     <div class="circular-progress" style="--progress: ${percentValue}%" ></div>
@@ -1253,7 +1253,7 @@
                 let remarkColor = (rowData.Operational === "End of Life") ? "color: #a81818;" : "color: #054e92;";
                
                 const rowHtml = ` <tr class='row_${rowData.MonitorID} rowClick' id='editButton_${rowData.MonitorID}'>
-                    <td data-cell="ToolNo">${rowData.ToolNo}</td>
+                    <td data-cell="ToolNo" style='font-weight: 600;'>${rowData.ToolNo}</td>
                     <td data-cell="Type" >${rowData.Type}</td>
                     <td data-cell="Upper">${rowData.Line}</td>
                     <td data-cell="Upper">${rowData.MinUpper}</td>

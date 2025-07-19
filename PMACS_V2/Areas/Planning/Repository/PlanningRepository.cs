@@ -198,11 +198,32 @@ namespace PMACS_V2.Areas.Planning.Repository
             var formattedOrders = columns.Select(res => $"[{res}]").ToArray();
             var joinOrders = string.Join(", ", formattedOrders);
 
-            var strquery = "SELECT Partnum, Partname, " + joinedColumns + " " +
-                          "FROM (SELECT CONVERT(VARCHAR, DateImport, 111) AS Dateupload, " +
-                          "Partnum, Partname, TotalQuan FROM M1_Lacking_table) AS SourceTable " +
-                          $"PIVOT (MAX(TotalQuan) FOR Dateupload IN ({joinOrders})) AS PivotTable " +
-                          $"ORDER BY {joinOrders} DESC;";
+            //var strquery = "SELECT Partnum, Partname, " + joinedColumns + " " +
+            //              "FROM (SELECT CONVERT(VARCHAR, DateImport, 111) AS Dateupload, " +
+            //              "Partnum, Partname, TotalQuan FROM M1_Lacking_table) AS SourceTable " +
+            //              $"PIVOT (MAX(TotalQuan) FOR Dateupload IN ({joinOrders})) AS PivotTable " +
+            //              $"ORDER BY {joinOrders} DESC;";
+            string strquery = $@"
+                                SELECT 
+                                    Partnum, 
+                                    Partname, 
+                                    {joinedColumns}
+                                FROM (
+                                    SELECT 
+                                        CONVERT(VARCHAR, DateImport, 111) AS Dateupload, 
+                                        Partnum, 
+                                        Partname, 
+                                        TotalQuan 
+                                    FROM M1_Lacking_table
+                                ) AS SourceTable 
+                                PIVOT (
+                                    MAX(TotalQuan) 
+                                    FOR Dateupload IN (
+                                        {joinOrders}
+                                    )
+                                ) AS PivotTable 
+                                ORDER BY {string.Join(" DESC, ", formattedOrders)} DESC;
+                            ";
 
             var result = await SqlDataAccess.GetDataByDataTable(strquery);
             return result;

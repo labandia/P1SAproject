@@ -9,7 +9,8 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
-
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 
@@ -17,6 +18,8 @@ namespace ProductConfirm.Modals
 {
     public partial class CaulkDent : Form
     {
+        private readonly IProductRepositoryV2 _prod;
+
         private UIShoporder ui;
 
 
@@ -33,10 +36,11 @@ namespace ProductConfirm.Modals
         public double max;
        
 
-        public CaulkDent(UIShoporder sh)
+        public CaulkDent(UIShoporder sh, IProductRepositoryV2 prod)
         {
             InitializeComponent();
             this.ui = sh;      
+            _prod = prod;   
         }
 
         public bool ValidationForm()
@@ -60,108 +64,64 @@ namespace ProductConfirm.Modals
             var cdList = GetCaulkingDentList();
             string jsonString = JsonConvert.SerializeObject(cdList, Formatting.Indented);
 
-
-            Dataconnect db = new Dataconnect();
             if (ValidationForm())
             {
-                int stats = 1;
-                string updatesmeasure = "UPDATE ProdCon_ShopOrderData_tbl SET Status =@Status " +
-                                        "WHERE Item_ID =@Item_ID AND ShopOrderID =@ShopOrderID";
-                SqlParameter[] shopParameters =
-                {
-                    new SqlParameter("@Status", stats),
-                    new SqlParameter("@Item_ID", itemID),
-                    new SqlParameter("@ShopOrderID", ID)
-                };
+                var Task1 = _prod.UpdateShopOrderStatus(1, itemID, ID);
+                var Task2 = _prod.UpdateAndAddSuppliers(shopordersec, SupplierText.Text, ShaftText.Text, ID);
+                bool[] results = await Task.WhenAll(Task1, Task2);
 
-                await db.ExecuteCommandUpdate(updatesmeasure, shopParameters);
-
-
-
-                //CHECK IF THE ProdCon_ShopOrder_supplier IS ALREADY INSERTED 
-                string strsupply = "SELECT p.Shoporder FROM ProdCon_ShopOrder_supplier p " +
-                                "WHERE p.ShopOrderID = " + ID + "";
-                if (await db.CheckifExist(strsupply))
-                {
-                    string updatesql = " UPDATE ProdCon_ShopOrder_supplier SET " +
-                          " CD_supply =@CD_supply, CD_lot =@CD_lot " +
-                          " WHERE Shoporder =@Shoporder AND ShopOrderID =@ShopOrderID";
-                    SqlParameter[] updateparameter =
+                if(results.All(r => r)){
+                    var newcdlist = new CaulkingDentInput
                     {
-                     new SqlParameter("@Shoporder", shopordersec),
-                     new SqlParameter("@CD_supply", SupplierText.Text),
-                     new SqlParameter("@CD_lot", ShaftText.Text),
-                     new SqlParameter("@ShopOrderID", ID)
-                };
+                        ShopOrderID = ID,
+                        Shoporder = shopordersec,
+                        CD_first = string.IsNullOrWhiteSpace(firstText.Text) ? 0 : Convert.ToDouble(firstText.Text),
+                        CD_second = string.IsNullOrWhiteSpace(SecondText.Text) ? 0 : Convert.ToDouble(SecondText.Text),
+                        CD_third = string.IsNullOrWhiteSpace(thirdText.Text) ? 0 : Convert.ToDouble(thirdText.Text),
+                        CD_fourth = string.IsNullOrWhiteSpace(fourthText.Text) ? 0 : Convert.ToDouble(fourthText.Text),
+                        CD_fifth = string.IsNullOrWhiteSpace(FifthText.Text) ? 0 : Convert.ToDouble(FifthText.Text),
+                        CD_six = string.IsNullOrWhiteSpace(sixText.Text) ? 0 : Convert.ToDouble(sixText.Text),
+                        CD_seven = string.IsNullOrWhiteSpace(seventhText.Text) ? 0 : Convert.ToDouble(seventhText.Text),
+                        CD_eight = string.IsNullOrWhiteSpace(eightText.Text) ? 0 : Convert.ToDouble(eightText.Text),
+                        CD_nine = string.IsNullOrWhiteSpace(nine.Text) ? 0 : Convert.ToDouble(nine.Text),
+                        CD_ten = string.IsNullOrWhiteSpace(ten.Text) ? 0 : Convert.ToDouble(ten.Text),
+                        CD_eleven = string.IsNullOrWhiteSpace(eleven.Text) ? 0 : Convert.ToDouble(eleven.Text),
+                        CD_twelve = string.IsNullOrWhiteSpace(twelve.Text) ? 0 : Convert.ToDouble(twelve.Text),
+                        CD_thirteen = string.IsNullOrWhiteSpace(thirteen.Text) ? 0 : Convert.ToDouble(thirteen.Text),
+                        CD_14 = string.IsNullOrWhiteSpace(foutheen.Text) ? 0 : Convert.ToDouble(foutheen.Text),
+                        CD_15 = string.IsNullOrWhiteSpace(fiftheen.Text) ? 0 : Convert.ToDouble(fiftheen.Text),
+                        CD_16 = string.IsNullOrWhiteSpace(sixteen.Text) ? 0 : Convert.ToDouble(sixteen.Text),
+                        CD_17 = string.IsNullOrWhiteSpace(seventeen.Text) ? 0 : Convert.ToDouble(seventeen.Text),
+                        CD_18 = string.IsNullOrWhiteSpace(eigtheen.Text) ? 0 : Convert.ToDouble(eigtheen.Text),
+                        CD_19 = string.IsNullOrWhiteSpace(ninetheen.Text) ? 0 : Convert.ToDouble(ninetheen.Text),
+                        CD_20 = string.IsNullOrWhiteSpace(tweenty.Text) ? 0 : Convert.ToDouble(tweenty.Text),
+                        CD_21 = string.IsNullOrWhiteSpace(twentyone.Text) ? 0 : Convert.ToDouble(twentyone.Text),
+                        CD_22 = string.IsNullOrWhiteSpace(twentwo.Text) ? 0 : Convert.ToDouble(twentwo.Text),
+                        CD_23 = string.IsNullOrWhiteSpace(twentythree.Text) ? 0 : Convert.ToDouble(twentythree.Text),
+                        CD_24 = string.IsNullOrWhiteSpace(twentyfour.Text) ? 0 : Convert.ToDouble(twentyfour.Text),
+                        CD_25 = string.IsNullOrWhiteSpace(tweentyfive.Text) ? 0 : Convert.ToDouble(tweentyfive.Text),
+                        CD_26 = string.IsNullOrWhiteSpace(tweentysix.Text) ? 0 : Convert.ToDouble(tweentysix.Text),
+                        CD_27 = string.IsNullOrWhiteSpace(tweentyseven.Text) ? 0 : Convert.ToDouble(tweentyseven.Text),
+                        CD_28 = string.IsNullOrWhiteSpace(tweentyeight.Text) ? 0 : Convert.ToDouble(tweentyeight.Text),
+                        CD_29 = string.IsNullOrWhiteSpace(tweentynine.Text) ? 0 : Convert.ToDouble(tweentynine.Text),
+                        CD_30 = string.IsNullOrWhiteSpace(thirty.Text) ? 0 : Convert.ToDouble(thirty.Text),
+                        CD_31 = string.IsNullOrWhiteSpace(thirtyone.Text) ? 0 : Convert.ToDouble(thirtyone.Text),
+                        CD_32 = string.IsNullOrWhiteSpace(thirtytwo.Text) ? 0 : Convert.ToDouble(thirtytwo.Text),
+                        CD_33 = string.IsNullOrWhiteSpace(thirtythree.Text) ? 0 : Convert.ToDouble(thirtythree.Text),
+                        CD_34 = string.IsNullOrWhiteSpace(thirtyfour.Text) ? 0 : Convert.ToDouble(thirtyfour.Text),
+                        CD_35 = string.IsNullOrWhiteSpace(thirtyfive.Text) ? 0 : Convert.ToDouble(thirtyfive.Text),
+                        CD_36 = string.IsNullOrWhiteSpace(thirtysix.Text) ? 0 : Convert.ToDouble(thirtysix.Text),
+                        CD_37 = string.IsNullOrWhiteSpace(thirtyseven.Text) ? 0 : Convert.ToDouble(thirtyseven.Text),
+                        CD_38 = string.IsNullOrWhiteSpace(thirtyeight.Text) ? 0 : Convert.ToDouble(thirtyeight.Text),
+                        CD_39 = string.IsNullOrWhiteSpace(thirtynine.Text) ? 0 : Convert.ToDouble(thirtynine.Text),
+                        CD_40 = string.IsNullOrWhiteSpace(fourty.Text) ? 0 : Convert.ToDouble(fourty.Text)
+                    };
 
-                    await db.ExecuteCommandUpdate(updatesql, updateparameter);
+                    await _prod.AddAndUpdateCaulkingDentData(newcdlist);
+
+                    ui.displaymeasurementTable(shopordersec, ID);
+                    Visible = false;
                 }
-                else
-                {
-                    // INSERT THE THE SHOPORDER SUPPLIER
-                    string measurequery = "INSERT INTO ProdCon_ShopOrder_supplier(Shoporder, CD_supply, CD_lot, ShopOrderID) " +
-                     "VALUES (@Shoporder, @CD_supply, @CD_lot, @ShopOrderID)";
-
-                    SqlParameter[] measurepararmeter =
-                    {
-                   new SqlParameter("@Shoporder", shopordersec),
-                   new SqlParameter("@CD_supply", SupplierText.Text),
-                   new SqlParameter("@CD_lot", ShaftText.Text),
-                   new SqlParameter("@ShopOrderID", ID)
-                };
-
-                   await db.ExecuteCommandUpdate(measurequery, measurepararmeter);
-                }
-
-
-                //CHECK IF THE ProdCon_ShopOrder_ActualData IS ALREADY INSERTED 
-                string stractualData = "SELECT p.Shoporder FROM ProdCon_ShopOrder_ActualData p " +
-                             "WHERE p.ShopOrderID = " + ID + "";
-                if (await db.CheckifExist(stractualData))
-                {
-                    string updatesqldata = " UPDATE ProdCon_ShopOrder_ActualData SET " +
-                                       " CD_first =@CD_first, CD_second =@CD_second, CD_third =@CD_third, CD_fourth =@CD_fourth, CD_fifth =@CD_fifth, CD_six =@CD_six, CD_seven =@CD_seven, CD_eight =@CD_eight  " +
-                                       " WHERE Shoporder = @Shoporder AND ShopOrderID =@ShopOrderID";
-                    SqlParameter[] updatedataparameter =
-                    {
-                     new SqlParameter("@Shoporder", shopordersec),
-                     new SqlParameter("@CD_first", string.IsNullOrWhiteSpace(firstText.Text) ? 0 : Convert.ToDouble(firstText.Text)),
-                     new SqlParameter("@CD_second", string.IsNullOrWhiteSpace(SecondText.Text) ? 0 : Convert.ToDouble(SecondText.Text)),
-                     new SqlParameter("@CD_third", string.IsNullOrWhiteSpace(thirdText.Text) ? 0 : Convert.ToDouble(thirdText.Text)),
-                     new SqlParameter("@CD_fourth", string.IsNullOrWhiteSpace(fourthText.Text) ? 0 : Convert.ToDouble(fourthText.Text)),
-                     new SqlParameter("@CD_fifth", string.IsNullOrWhiteSpace(FifthText.Text) ? 0 : Convert.ToDouble(FifthText.Text)),
-                     new SqlParameter("@CD_six", string.IsNullOrWhiteSpace(sixText.Text) ? 0 : Convert.ToDouble(sixText.Text)),
-                     new SqlParameter("@CD_seven", string.IsNullOrWhiteSpace(seventhText.Text) ? 0 : Convert.ToDouble(seventhText.Text)),
-                     new SqlParameter("@CD_eight", string.IsNullOrWhiteSpace(eightText.Text) ? 0 : Convert.ToDouble(eightText.Text)),
-                     new SqlParameter("@ShopOrderID", ID)
-                 };
-                    await db.ExecuteCommandUpdate(updatesqldata, updatedataparameter);
-                }
-                else
-                {
-                    // INSERT THE THE SHOPORDER ACTUAL DATA
-                    string dataquery = "INSERT INTO ProdCon_ShopOrder_ActualData(Shoporder, CD_first, CD_second, CD_third, CD_fourth, CD_fifth, CD_six, CD_seven, CD_eight, ShopOrderID) " +
-                     "VALUES (@Shoporder, @CD_first, @CD_second, @CD_third, @CD_fourth, @CD_fifth, @CD_six, @CD_seven, @CD_eight, @ShopOrderID)";
-
-                    SqlParameter[] dataparameter =
-                    {
-                         new SqlParameter("@Shoporder", shopordersec),
-                         new SqlParameter("@CD_first", string.IsNullOrWhiteSpace(firstText.Text) ? 0 : Convert.ToDouble(firstText.Text)),
-                         new SqlParameter("@CD_second", string.IsNullOrWhiteSpace(SecondText.Text) ? 0 : Convert.ToDouble(SecondText.Text)),
-                         new SqlParameter("@CD_third", string.IsNullOrWhiteSpace(thirdText.Text) ? 0 : Convert.ToDouble(thirdText.Text)),
-                         new SqlParameter("@CD_fourth", string.IsNullOrWhiteSpace(fourthText.Text) ? 0 : Convert.ToDouble(fourthText.Text)),
-                         new SqlParameter("@CD_fifth", string.IsNullOrWhiteSpace(FifthText.Text) ? 0 : Convert.ToDouble(FifthText.Text)),
-                         new SqlParameter("@CD_six", string.IsNullOrWhiteSpace(sixText.Text) ? 0 : Convert.ToDouble(sixText.Text)),
-                         new SqlParameter("@CD_seven", string.IsNullOrWhiteSpace(seventhText.Text) ? 0 : Convert.ToDouble(seventhText.Text)),
-                         new SqlParameter("@CD_eight", string.IsNullOrWhiteSpace(eightText.Text) ? 0 : Convert.ToDouble(eightText.Text)),
-                         new SqlParameter("@ShopOrderID", ID)
-                };
-                    await db.ExecuteCommandUpdate(dataquery, dataparameter);
-                }
-
-               
-                ui.displaymeasurementTable(shopordersec, ID);
-                Visible = false;
             }
         }
 
@@ -908,52 +868,54 @@ namespace ProductConfirm.Modals
 
       
 
-        public List<CaulkingDent> GetCaulkingDentList()
+        public List<CaulkingDentInput> GetCaulkingDentList()
         {
-            List<CaulkingDent> item = new List<CaulkingDent>();
+            List<CaulkingDentInput> item = new List<CaulkingDentInput>();
 
-            var cdList = new CaulkingDent
+            var cdList = new CaulkingDentInput
             {
-                CD1 = string.IsNullOrWhiteSpace(firstText.Text) ? 0 : Convert.ToDouble(firstText.Text),
-                CD2 = string.IsNullOrWhiteSpace(SecondText.Text) ? 0 : Convert.ToDouble(SecondText.Text),
-                CD3 = string.IsNullOrWhiteSpace(thirdText.Text) ? 0 : Convert.ToDouble(thirdText.Text),
-                CD4 = string.IsNullOrWhiteSpace(fourthText.Text) ? 0 : Convert.ToDouble(fourthText.Text),
-                CD5 = string.IsNullOrWhiteSpace(FifthText.Text) ? 0 : Convert.ToDouble(FifthText.Text),
-                CD6 = string.IsNullOrWhiteSpace(sixText.Text) ? 0 : Convert.ToDouble(sixText.Text),
-                CD7 = string.IsNullOrWhiteSpace(seventhText.Text) ? 0 : Convert.ToDouble(seventhText.Text),
-                CD8 = string.IsNullOrWhiteSpace(eightText.Text) ? 0 : Convert.ToDouble(eightText.Text),
-                CD9 = string.IsNullOrWhiteSpace(nine.Text) ? 0 : Convert.ToDouble(nine.Text),
-                CD10 = string.IsNullOrWhiteSpace(ten.Text) ? 0 : Convert.ToDouble(ten.Text),
-                CD11 = string.IsNullOrWhiteSpace(eleven.Text) ? 0 : Convert.ToDouble(eleven.Text),
-                CD12 = string.IsNullOrWhiteSpace(twelve.Text) ? 0 : Convert.ToDouble(twelve.Text),
-                CD13 = string.IsNullOrWhiteSpace(thirteen.Text) ? 0 : Convert.ToDouble(thirteen.Text),
-                CD14 = string.IsNullOrWhiteSpace(foutheen.Text) ? 0 : Convert.ToDouble(foutheen.Text),
-                CD15 = string.IsNullOrWhiteSpace(fiftheen.Text) ? 0 : Convert.ToDouble(fiftheen.Text),
-                CD16 = string.IsNullOrWhiteSpace(sixteen.Text) ? 0 : Convert.ToDouble(sixteen.Text),
-                CD17 = string.IsNullOrWhiteSpace(seventeen.Text) ? 0 : Convert.ToDouble(seventeen.Text),
-                CD18 = string.IsNullOrWhiteSpace(eigtheen.Text) ? 0 : Convert.ToDouble(eigtheen.Text),
-                CD19 = string.IsNullOrWhiteSpace(ninetheen.Text) ? 0 : Convert.ToDouble(ninetheen.Text),
-                CD20 = string.IsNullOrWhiteSpace(tweenty.Text) ? 0 : Convert.ToDouble(tweenty.Text),
-                CD21 = string.IsNullOrWhiteSpace(twentyone.Text) ? 0 : Convert.ToDouble(twentyone.Text),
-                CD22 = string.IsNullOrWhiteSpace(twentwo.Text) ? 0 : Convert.ToDouble(twentwo.Text),
-                CD23 = string.IsNullOrWhiteSpace(twentythree.Text) ? 0 : Convert.ToDouble(twentythree.Text),
-                CD24 = string.IsNullOrWhiteSpace(twentyfour.Text) ? 0 : Convert.ToDouble(twentyfour.Text),
-                CD25 = string.IsNullOrWhiteSpace(tweentyfive.Text) ? 0 : Convert.ToDouble(tweentyfive.Text),
-                CD26 = string.IsNullOrWhiteSpace(tweentysix.Text) ? 0 : Convert.ToDouble(tweentysix.Text),
-                CD27 = string.IsNullOrWhiteSpace(tweentyseven.Text) ? 0 : Convert.ToDouble(tweentyseven.Text),
-                CD28 = string.IsNullOrWhiteSpace(tweentyeight.Text) ? 0 : Convert.ToDouble(tweentyeight.Text),
-                CD29 = string.IsNullOrWhiteSpace(tweentynine.Text) ? 0 : Convert.ToDouble(tweentynine.Text),
-                CD30 = string.IsNullOrWhiteSpace(thirty.Text) ? 0 : Convert.ToDouble(thirty.Text),
-                CD31 = string.IsNullOrWhiteSpace(thirtyone.Text) ? 0 : Convert.ToDouble(thirtyone.Text),
-                CD32 = string.IsNullOrWhiteSpace(thirtytwo.Text) ? 0 : Convert.ToDouble(thirtytwo.Text),
-                CD33 = string.IsNullOrWhiteSpace(thirtythree.Text) ? 0 : Convert.ToDouble(thirtythree.Text),
-                CD34 = string.IsNullOrWhiteSpace(thirtyfour.Text) ? 0 : Convert.ToDouble(thirtyfour.Text),
-                CD35 = string.IsNullOrWhiteSpace(thirtyfive.Text) ? 0 : Convert.ToDouble(thirtyfive.Text),
-                CD36 = string.IsNullOrWhiteSpace(thirtysix.Text) ? 0 : Convert.ToDouble(thirtysix.Text),
-                CD37 = string.IsNullOrWhiteSpace(thirtyseven.Text) ? 0 : Convert.ToDouble(thirtyseven.Text),
-                CD38 = string.IsNullOrWhiteSpace(thirtyeight.Text) ? 0 : Convert.ToDouble(thirtyeight.Text),
-                CD39 = string.IsNullOrWhiteSpace(thirtynine.Text) ? 0 : Convert.ToDouble(thirtynine.Text),
-                CD40 = string.IsNullOrWhiteSpace(fourty.Text) ? 0 : Convert.ToDouble(fourty.Text)
+                ShopOrderID = ID,
+                Shoporder = shopordersec,
+                CD_first = string.IsNullOrWhiteSpace(firstText.Text) ? 0 : Convert.ToDouble(firstText.Text),
+                CD_second = string.IsNullOrWhiteSpace(SecondText.Text) ? 0 : Convert.ToDouble(SecondText.Text),
+                CD_third = string.IsNullOrWhiteSpace(thirdText.Text) ? 0 : Convert.ToDouble(thirdText.Text),
+                CD_fourth = string.IsNullOrWhiteSpace(fourthText.Text) ? 0 : Convert.ToDouble(fourthText.Text),
+                CD_fifth = string.IsNullOrWhiteSpace(FifthText.Text) ? 0 : Convert.ToDouble(FifthText.Text),
+                CD_six = string.IsNullOrWhiteSpace(sixText.Text) ? 0 : Convert.ToDouble(sixText.Text),
+                CD_seven = string.IsNullOrWhiteSpace(seventhText.Text) ? 0 : Convert.ToDouble(seventhText.Text),
+                CD_eight = string.IsNullOrWhiteSpace(eightText.Text) ? 0 : Convert.ToDouble(eightText.Text),
+                CD_nine = string.IsNullOrWhiteSpace(nine.Text) ? 0 : Convert.ToDouble(nine.Text),
+                CD_ten = string.IsNullOrWhiteSpace(ten.Text) ? 0 : Convert.ToDouble(ten.Text),
+                CD_eleven = string.IsNullOrWhiteSpace(eleven.Text) ? 0 : Convert.ToDouble(eleven.Text),
+                CD_twelve = string.IsNullOrWhiteSpace(twelve.Text) ? 0 : Convert.ToDouble(twelve.Text),
+                CD_thirteen = string.IsNullOrWhiteSpace(thirteen.Text) ? 0 : Convert.ToDouble(thirteen.Text),
+                CD_14 = string.IsNullOrWhiteSpace(foutheen.Text) ? 0 : Convert.ToDouble(foutheen.Text),
+                CD_15 = string.IsNullOrWhiteSpace(fiftheen.Text) ? 0 : Convert.ToDouble(fiftheen.Text),
+                CD_16 = string.IsNullOrWhiteSpace(sixteen.Text) ? 0 : Convert.ToDouble(sixteen.Text),
+                CD_17 = string.IsNullOrWhiteSpace(seventeen.Text) ? 0 : Convert.ToDouble(seventeen.Text),
+                CD_18 = string.IsNullOrWhiteSpace(eigtheen.Text) ? 0 : Convert.ToDouble(eigtheen.Text),
+                CD_19 = string.IsNullOrWhiteSpace(ninetheen.Text) ? 0 : Convert.ToDouble(ninetheen.Text),
+                CD_20 = string.IsNullOrWhiteSpace(tweenty.Text) ? 0 : Convert.ToDouble(tweenty.Text),
+                CD_21 = string.IsNullOrWhiteSpace(twentyone.Text) ? 0 : Convert.ToDouble(twentyone.Text),
+                CD_22 = string.IsNullOrWhiteSpace(twentwo.Text) ? 0 : Convert.ToDouble(twentwo.Text),
+                CD_23 = string.IsNullOrWhiteSpace(twentythree.Text) ? 0 : Convert.ToDouble(twentythree.Text),
+                CD_24 = string.IsNullOrWhiteSpace(twentyfour.Text) ? 0 : Convert.ToDouble(twentyfour.Text),
+                CD_25 = string.IsNullOrWhiteSpace(tweentyfive.Text) ? 0 : Convert.ToDouble(tweentyfive.Text),
+                CD_26 = string.IsNullOrWhiteSpace(tweentysix.Text) ? 0 : Convert.ToDouble(tweentysix.Text),
+                CD_27 = string.IsNullOrWhiteSpace(tweentyseven.Text) ? 0 : Convert.ToDouble(tweentyseven.Text),
+                CD_28 = string.IsNullOrWhiteSpace(tweentyeight.Text) ? 0 : Convert.ToDouble(tweentyeight.Text),
+                CD_29 = string.IsNullOrWhiteSpace(tweentynine.Text) ? 0 : Convert.ToDouble(tweentynine.Text),
+                CD_30 = string.IsNullOrWhiteSpace(thirty.Text) ? 0 : Convert.ToDouble(thirty.Text),
+                CD_31 = string.IsNullOrWhiteSpace(thirtyone.Text) ? 0 : Convert.ToDouble(thirtyone.Text),
+                CD_32 = string.IsNullOrWhiteSpace(thirtytwo.Text) ? 0 : Convert.ToDouble(thirtytwo.Text),
+                CD_33 = string.IsNullOrWhiteSpace(thirtythree.Text) ? 0 : Convert.ToDouble(thirtythree.Text),
+                CD_34 = string.IsNullOrWhiteSpace(thirtyfour.Text) ? 0 : Convert.ToDouble(thirtyfour.Text),
+                CD_35 = string.IsNullOrWhiteSpace(thirtyfive.Text) ? 0 : Convert.ToDouble(thirtyfive.Text),
+                CD_36 = string.IsNullOrWhiteSpace(thirtysix.Text) ? 0 : Convert.ToDouble(thirtysix.Text),
+                CD_37 = string.IsNullOrWhiteSpace(thirtyseven.Text) ? 0 : Convert.ToDouble(thirtyseven.Text),
+                CD_38 = string.IsNullOrWhiteSpace(thirtyeight.Text) ? 0 : Convert.ToDouble(thirtyeight.Text),
+                CD_39 = string.IsNullOrWhiteSpace(thirtynine.Text) ? 0 : Convert.ToDouble(thirtynine.Text),
+                CD_40 = string.IsNullOrWhiteSpace(fourty.Text) ? 0 : Convert.ToDouble(fourty.Text)
             };
 
 

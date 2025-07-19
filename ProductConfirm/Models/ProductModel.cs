@@ -657,47 +657,47 @@ namespace ProductConfirm.Models
     }
     public class CaulkingDent
     {
-        public double CD1 { get; set; }
-        public double CD2 { get; set; }
-        public double CD3 { get; set; }
-        public double CD4 { get; set; }
-        public double CD5 { get; set; }
-        public double CD6 { get; set; }
-        public double CD7 { get; set; }
-        public double CD8 { get; set; }
-        public double CD9 { get; set; }
-        public double CD10 { get; set; }
-        public double CD11 { get; set; }
-        public double CD12 { get; set; }
-        public double CD13 { get; set; }
-        public double CD14 { get; set; }
-        public double CD15 { get; set; }
-        public double CD16 { get; set; }
-        public double CD17 { get; set; }
-        public double CD18 { get; set; }
-        public double CD19 { get; set; }
-        public double CD20 { get; set; }
+        public double CD_first { get; set; }
+        public double CD_second { get; set; }
+        public double CD_third { get; set; }
+        public double CD_fourth { get; set; }
+        public double CD_fifth { get; set; }
+        public double CD_six { get; set; }
+        public double CD_seven { get; set; }
+        public double CD_eight { get; set; }
+        public double CD_nine { get; set; }
+        public double CD_ten { get; set; }
+        public double CD_eleven { get; set; }
+        public double CD_twelve { get; set; }
+        public double CD_thirteen { get; set; }
+        public double CD_14 { get; set; }
+        public double CD_15 { get; set; }
+        public double CD_16 { get; set; }
+        public double CD_17 { get; set; }
+        public double CD_18 { get; set; }
+        public double CD_19 { get; set; }
+        public double CD_20 { get; set; }
+        public double CD_21 { get; set; }
+        public double CD_22 { get; set; }
+        public double CD_23 { get; set; }
+        public double CD_24 { get; set; }
+        public double CD_25 { get; set; }
+        public double CD_26 { get; set; }
+        public double CD_27 { get; set; }
+        public double CD_28 { get; set; }
+        public double CD_29 { get; set; }
+        public double CD_30 { get; set; }
+        public double CD_31 { get; set; }
+        public double CD_32 { get; set; }
+        public double CD_33 { get; set; }
+        public double CD_34 { get; set; }
+        public double CD_35 { get; set; }
+        public double CD_36 { get; set; }
+        public double CD_37 { get; set; }
+        public double CD_38 { get; set; }
+        public double CD_39 { get; set; }
+        public double CD_40 { get; set; }
 
-        public double CD21 { get; set; }
-        public double CD22 { get; set; }
-        public double CD23 { get; set; }
-        public double CD24 { get; set; }
-        public double CD25 { get; set; }
-        public double CD26 { get; set; }
-        public double CD27 { get; set; }
-        public double CD28 { get; set; }
-        public double CD29 { get; set; }
-        public double CD30 { get; set; }
-        public double CD31 { get; set; }
-        public double CD32 { get; set; }
-        public double CD33 { get; set; }
-        public double CD34 { get; set; }
-        public double CD35 { get; set; }
-        public double CD36 { get; set; }
-        public double CD37 { get; set; }
-        public double CD38 { get; set; }
-        public double CD39 { get; set; }
-        public double CD40 { get; set; }
     }
 
 
@@ -737,5 +737,56 @@ namespace ProductConfirm.Models
         public decimal MagnetHeightMax { get; set; } = decimal.Zero;
         public int ShaftPullingForce { get; set; } = 0;
         public int BushPullingForce { get; set; } = 0;
+    }
+
+
+
+
+
+    public class CaulkingDentInput
+    {
+        public int ShopOrderID { get; set; }
+        public string Shoporder { get; set; }
+        public double CD_first { get; set; }
+        public double CD_second { get; set; }
+        public double CD_third { get; set; }
+        public double CD_fourth { get; set; }
+        public double CD_fifth { get; set; }
+        public double CD_six { get; set; }
+        public double CD_seven { get; set; }
+        public double CD_eight { get; set; }
+        public double CD_nine { get; set; }
+        public double CD_ten { get; set; }
+        public double CD_eleven { get; set; }
+        public double CD_twelve { get; set; }
+        public double CD_thirteen { get; set; }
+        public double CD_14 { get; set; }
+        public double CD_15 { get; set; }
+        public double CD_16 { get; set; }
+        public double CD_17 { get; set; }
+        public double CD_18 { get; set; }
+        public double CD_19 { get; set; }
+        public double CD_20 { get; set; }
+        public double CD_21 { get; set; }
+        public double CD_22 { get; set; }
+        public double CD_23 { get; set; }
+        public double CD_24 { get; set; }
+        public double CD_25 { get; set; }
+        public double CD_26 { get; set; }
+        public double CD_27 { get; set; }
+        public double CD_28 { get; set; }
+        public double CD_29 { get; set; }
+        public double CD_30 { get; set; }
+        public double CD_31 { get; set; }
+        public double CD_32 { get; set; }
+        public double CD_33 { get; set; }
+        public double CD_34 { get; set; }
+        public double CD_35 { get; set; }
+        public double CD_36 { get; set; }
+        public double CD_37 { get; set; }
+        public double CD_38 { get; set; }
+        public double CD_39 { get; set; }
+        public double CD_40 { get; set; }
+
     }
 }

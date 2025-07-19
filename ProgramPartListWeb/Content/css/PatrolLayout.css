@@ -758,8 +758,8 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        border-bottom: 1px solid #A5A1AA;
-        padding: .5em 0;
+        border-bottom: 1px solid #d4d3d3;
+        padding: .7em 0;
     }
 
     .Schedule_listContent:last-child{
@@ -1288,26 +1288,42 @@
         color: #222 ;
     }
 
+    .fc-button-active{
+/*        background: hsl(169, 81%, 41%) !important;*/
+/*        color: #222 !important;*/
+    }
+
+    .fc-event {
+        border-radius: 5px !important;
+        padding: 4px 8px !important;
+        font-size: 12px !important;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05) !important;
+    }
 
 
+    .fc-event-title {
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
 
 /* Make the event span the full width of the cell */
-.fc-daygrid-event {
-    display: block;
-    padding: 3px 4px;
-    cursor: pointer;
-}
+    .fc-daygrid-event {
+        display: block;
+        padding: 3px 4px;
+        cursor: pointer;
+    }
 
-.fc-event {
-    cursor: pointer;
-}
+    .fc-event {
+        cursor: pointer;
+    }
 
 /* Optional: make the whole background clickable */
-.fc-daygrid-day-events {
-    position: relative;
-    z-index: 1;
-}
+    .fc-daygrid-day-events {
+        position: relative;
+        z-index: 1;
+    }
 
-.fc-daygrid-event-harness {
-    width: 100%;
-}
+    .fc-daygrid-event-harness {
+        width: 100%;
+    }

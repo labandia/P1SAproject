@@ -17,9 +17,9 @@
                 </div>
             </div>
         </div>
-        <div class="Mold__actions">
+        <div class="Mold__actions d-flex gap-2">
             <button id="sortbtn"><i class="fa-solid fa-arrow-down-short-wide"></i></button>
-            <button class="primary_button_color" id="cancelmodal"><i class="fa-solid fa-plus"></i>End of Life</button>
+            <button  id="cancelmodal"><i class="fa-solid fa-stop"></i> End of Life</button>
             <button class="primary_button_color" id="addmodal"><i class="fa-solid fa-plus"></i> Add Data</button>
         </div>
     </header>
@@ -80,14 +80,14 @@
         <div class="modal-content">
             <div class="modal-body">
                 <div class="custom_modal_header">
-                    <h5>Die Control Data</h5>
+                    <h5>Die Life Monitoring Input</h5>
 
                     <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
                         <span>&times;</span>
                     </button>
                 </div>
 
-                <div class="MoldieBodyModal">
+                <div class="MoldieBodyModal mt-3">
                     <form id="AddMoldieform" autocomplete="off">
                         <input type="hidden" name="ToolNo" value="@Model.ToolNo" />
                         <input type="hidden" name="MonitorID" value="@Model.MonitorID" />
@@ -268,15 +268,15 @@
                  const rowData = filteredData[i];
                  const rowHtml = ` <tr class='row_${rowData.MonitorID} rowClick' id='editButton_${rowData.MonitorID}'>
                      <td data-cell="DateInput">${rowData.DateInput}</td>
-                     <td data-cell="Type" >${rowData.Up}</td>
-                     <td data-cell="Upper">${rowData.Low}</td>
-                     <td data-cell="Upper">${rowData.Upper_ActualHeight}</td>
-                     <td data-cell="Lower">${rowData.Upper_DrawingHeight}</td>
-                     <td data-cell="Lower_ActualHeight">${rowData.GrindUpper}</td>
-                     <td data-cell="Upper">${rowData.Lower_ActualHeight}</td>
-                     <td data-cell="Lower">${rowData.Lower_DrawingHeight}</td>
-                     <td data-cell="Lower_ActualHeight">${rowData.GrindLower}</td>
-                     <td data-cell="Lower_ActualHeight">${rowData.PressStamp}</td>
+                     <td data-cell="Up" style='font-weight: 600;'>${rowData.Up}</td>
+                     <td data-cell="Low" style='font-weight: 600;'>${rowData.Low}</td>
+                     <td data-cell="Upper_ActualHeight" style='font-weight: 600;'>${rowData.Upper_ActualHeight}</td>
+                     <td data-cell="Upper_DrawingHeight" style='font-weight: 600;'>${rowData.Upper_DrawingHeight}</td>
+                     <td data-cell="GrindUpper" style='font-weight: 600;'>${rowData.GrindUpper}</td>
+                     <td data-cell="Lower_ActualHeight" style='font-weight: 600;'>${rowData.Lower_ActualHeight}</td>
+                     <td data-cell="Lower_DrawingHeight" style='font-weight: 600;'>${rowData.Lower_DrawingHeight}</td>
+                     <td data-cell="GrindLower" style='font-weight: 600;'>${rowData.GrindLower}</td>
+                     <td data-cell="PressStamp">${rowData.PressStamp}</td>
                  </tr>`;
 
                  tableBody.innerHTML += rowHtml;

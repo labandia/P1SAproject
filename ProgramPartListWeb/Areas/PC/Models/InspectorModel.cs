@@ -259,7 +259,8 @@ namespace ProgramPartListWeb.Areas.PC.Models
         public string ScheduleDate { get; set; }
         public int ProcessID { get; set; }
         public string ProcessName { get; set; }
-        public int IsActive { get; set; }   
+        public int IsActive { get; set; }
+        public int Department_ID { get; set; }
     }
     
     

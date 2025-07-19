@@ -36,6 +36,10 @@
             <div id="MoldMonitor">
                 <div class="d-flex align-items-center gap-2">
                     <div class="select-container">
+                        <select id="yearselect"></select>
+                    </div>
+
+                    <div class="select-container">
                         <select id="monthSelect"></select>
                     </div>
 
@@ -138,7 +142,6 @@
                 <div class="Mold_ToolHeader">
                     <div class="d-flex align-items-end gap-2">
                         <div class="Mold_ToolHeader__group">
-                            <label>Date arrived :</label><br />
                             <input type="date" id="Datearrived" class="" />
                         </div>
 
@@ -475,6 +478,16 @@
         $("#MonthHeader").text(months[month - 1]);
         GetMoldDieMonth(month, currentYear);
     })
+
+    $("#yearselect").on('change', (e) => {
+        e.preventDefault();
+        let year = e.target.value;
+        let month = $("#MonthHeader").val();
+        $("#MonthHeader").text(months[month - 1]);
+        GetMoldDieMonth(month, year);
+    })
+
+
     $("#clearbtn").on('click', (e) => {
         e.preventDefault();
         $("#Datearrived").val("");
@@ -539,6 +552,25 @@
              if (res && res.Success) {
                  TableData = res.Data;
                  displayPagination(TableData, 'DieMoldMasterlist', 'PaginationContainer', 50, 5);
+                 console.log(TableData);
+
+                 const currentYear = new Date().getFullYear();
+
+                 const years = Array.from(new Set(
+                     TableData.map(item => {
+                         const rawDate = item.DateAction;
+                         const parsedDate = new Date(rawDate);
+                         return (!rawDate || isNaN(parsedDate.getTime()))
+                             ? currentYear
+                             : parsedDate.getFullYear();
+                     })
+                 ));
+
+                 //const year = TableData.map(item => new Date(item.DateAction).getFullYear());
+                 $("#yearselect").empty();
+                 $.each(years, function (index, row) {
+                     $("#yearselect").append("<option value='" + row + "'>" + row + "</option>");
+                 });
              }
         });
     }

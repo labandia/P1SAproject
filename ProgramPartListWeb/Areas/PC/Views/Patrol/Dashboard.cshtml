@@ -16,14 +16,7 @@
             </div>
         </div>
 
-        @*<div class="ScheduleNext">
-            <p>Next Schedule</p>
-            <div class="ScheduleNext_listContainer" id="ScheduleNext_contain">
-                <div class="ScheduleNext_listContent">
-
-                </div>
-            </div>
-        </div>*@
+       
     </div>
 </div>
 
@@ -46,7 +39,7 @@
                        <div class="Schedule_listContent">
                             <div>
                                <h5 style='margin-bottom: .5em;'>${res.FullName}</h5>
-                               <small><span class="Section ${res.SectionName === "Process Control" ? "Process" : res.SectionName}">${res.SectionName}</span></small>
+                               <small><span class=" ${res.SectionName === "Process Control" ? "Process" : res.SectionName}">${res.SectionName}</span></small>
                             </div>
 
                             <div style="text-align: right">
@@ -105,15 +98,42 @@
             headerToolbar: {
                 left: 'title',
                 center: '',
-                right: 'dayGridMonth,listWeek'
+                right: 'customMonthView,customListView'
+            }, customButtons: {
+                customMonthView: {
+                    text: '', // We'll set innerHTML after render
+                    click: function () {
+                        calendar.changeView('dayGridMonth');
+                    }
+                },
+                customListView: {
+                    text: '', // We'll set innerHTML after render
+                    click: function () {
+                        calendar.changeView('listMonth');
+                    }
+                }
             },
             events: function (fetchInfo, successCallback, failureCallback) {
                  FetchAuthenticate('@Url.Action("GetCalendarEventsMonth", "Patrol")', {})
                      .then(res => {
                          let data = res.Data;
+                         console.log(data);
+                         const departmentColors = {
+                             1: '#D7D1F8', // Molding - Soft Purple
+                             2: '#C8F1FF', // Press - Light Blue
+                             3: '#FFE8C7', // Rotor - Soft Orange
+                             4: '#E9ECEF',  // Winding - Light Grey
+                             5: '#FFE8C7', // Rotor - Soft Orange
+                             6: '#21096433'  // Winding - Light Grey
+                         };
+
+
                          const events = data.map(item => ({
                              title: item.Fullname + ' - ' + item.title, 
                              start: item.start,
+                             backgroundColor: departmentColors[item.Department_ID] || '#dee2e6', // fallback
+                             borderColor: 'transparent',
+                             textColor: '#000',
                              extendedProps: {
                                  fullName: item.Fullname
                              }
@@ -144,7 +164,7 @@
                 cellDate.setHours(0, 0, 0, 0);
 
                 if (cellDate >= startOfWeek && cellDate <= endOfWeek) {
-                    info.el.style.backgroundColor = '#0eaa7b33';
+                    info.el.style.backgroundColor = '#0eaa7b11';
                     info.el.style.color = 'white';
                 }
             },
@@ -162,6 +182,12 @@
             }
         });
         calendar.render();
+
+        // Replace button innerHTML after render
+        setTimeout(() => {
+            document.querySelector('.fc-customMonthView-button').innerHTML = '<i class="fas fa-calendar-days"></i>';
+            document.querySelector('.fc-customListView-button').innerHTML = '<i class="fas fa-list"></i>';
+        }, 0);
     });
 
 

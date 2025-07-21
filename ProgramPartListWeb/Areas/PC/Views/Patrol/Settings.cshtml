@@ -9,6 +9,10 @@
     <h4 class="header__title">Account Settings</h4>
 
     @*<button id="sendEmail">Send Email</button>*@
+
+    <span>Signature</span>
+    <span>Upload Image Signature</span>
+    <button id="Excelbtn" class="primary_button_color"><i class="fa-solid fa-file-import"></i>  Upload Signature</button>
 </header>
 
 
@@ -28,27 +32,86 @@
 <form class="ChangepassContainer" id="changeform">
     <div class="change__group">
         <label>Current Password :</label>
-        <input type="password" name="currentpassword" id="currentpassword" placeholder="Input your old password" autofocus autocomplete="off"  />
+        <input type="password" name="currentpassword" id="currentpassword" placeholder="Input your old password" autofocus autocomplete="off" />
     </div>
     <div class="change__group">
         <label>New Password :</label>
-        <input type="password" name="newpassword" id="newpassword" placeholder="input new password" autocomplete="off"  />
+        <input type="password" name="newpassword" id="newpassword" placeholder="input new password" autocomplete="off" />
     </div>
 
     <div class="change__group">
         <label>Confirm Password :</label>
-        <input type="password" name="confirmpassword" id="confirmpassword" placeholder="Verify the password" autocomplete="off"  />
+        <input type="password" name="confirmpassword" id="confirmpassword" placeholder="Verify the password" autocomplete="off" />
     </div>
     <p id="errorMessage" style="color:red;"></p>
 
     <button type="submit" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i>  Save changes</button>
 </form>
 
+
+
+<!--########################## UPLOAD DATA #############################-->
+<div class="modal fade modal-lg " id="uploadmodal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog"
+     data-bs-backdrop="static"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="custom_modal_header">
+                    <div class="custom_modal__icon">
+                        <div class="custom_icon_container">
+                            <i class="fa-solid fa-file-import"></i>
+                        </div>
+                        <div class="custom_modal_title">
+                            <span>Upload your Signature</span>
+                            <p id="procname">Upload Excel File Only</p>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+
+                <div class="custom_modal_body">
+                    <form method="post" enctype="multipart/form-data" id="ImportExcel">
+                        <div class="upload-container" id="upload-container">
+                            <div class="upload-icon">📷</div>
+                            <div class="file-info">Upload a photo of your signature.<br>Max file size: 1MB<br>png, jpg, jpeg, bmp, gif</div>
+                            <input type="file" id="fileInput" accept=".png,.jpg,.jpeg,.bmp,.gif" class="hidden">
+                            <button class="upload-btn" id="uploadBtn">Upload Photo</button>
+                        </div>
+
+                    </form>
+
+                    <div class="preview-container" id="previewContainer">
+                        <img id="previewImage" class="preview-image" src="" alt="Signature Preview">
+                    </div>
+
+                    <button class="save-btn" id="saveBtn">Save</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
 <script src="~/Scripts/Utilities.js"></script>
 <script type="text/javascript">
     let nowpass;
     let UserID;
     const forms = document.getElementById('changeform');
+
+
+    $("#Excelbtn").click(function () {
+        $("#uploadmodal").modal("show");
+    });
+
 
     forms.addEventListener('submit', async(e) => {
         e.preventDefault();
@@ -83,6 +146,99 @@
             }
         }
     });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const InputFile = document.getElementById('fileInput');
+        const uploadbtn = document.getElementById('uploadBtn');
+        const savebtn = document.getElementById('saveBtn');
+
+        const previewContainer = document.getElementById('previewContainer');
+        const previewImage = document.getElementById('previewImage');
+
+        // Handle Upload button Click
+        uploadbtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            InputFile.click();
+        });
+
+        // Handle Functional of File Input Upload
+        InputFile.addEventListener('change', function (e) {
+            e.preventDefault();
+            //Check if the Image data exist
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+
+                // Check the file size (Max 1 MB)
+                if (file.size > 1024 * 1024) {
+                    alert('File size exceeds 1MB limit');
+                    return;
+                }
+                // Check file Type
+                const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/bmp', 'image/gif'];
+
+                if (!validTypes.includes(file.type)) {
+                    alert("Invalid file type, Please upload a png, jpeg, bmp or gif file");
+                    return;
+                }
+
+                //Create a Preview Image When the Upload the file
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewImage.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+
+        // handle save button click
+        savebtn.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            //validate the form
+            let IsValid = true;
+
+            if (!InputFile.files || InputFile.files.length === 0) {
+                alert("Please upload an image of your signature before saving");
+                isValid = false;
+            }
+
+            if (!IsValid) return;
+
+            const formData = new FormData();
+            formData.append('SignatureImage', InputFile[0].files[0]);
+            formData.append('UserID', UserID);
+
+            const data = Object.fromEntries(formData);
+            console.log(data);
+
+             //$.ajax({
+             //    url: '/User/UploadSignature',
+             //       type: 'POST',
+             //       data: formData,
+             //       processData: false,
+             //       contentType: false,
+             //       success: function (response) {
+             //        console.log(response); 
+             //       },
+             //       error: function(xhr, status, error) {
+             //           //$('#signatureImageError').text('An error occurred: ' + error);
+             //       },
+             //       complete: function() {
+             //           //saveBtn.prop('disabled', false).text('Save');
+             //       }
+             //   });
+
+            alert("Upload to the Database");
+            // Reset the form
+            InputFile.value = '';
+            previewImage.src = '';
+            previewContainer.style.display = 'none';
+            $("#uploadmodal").modal("hide");
+        });
+    });
+
 
     $("#sendEmail").on('click', (e) => {
         e.preventDefault();

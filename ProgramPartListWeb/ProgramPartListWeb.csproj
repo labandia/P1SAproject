@@ -632,6 +632,7 @@
     <Compile Include="Controllers\P1SAportalwebController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Interfaces\IAuthRepository.cs" />
+    <Compile Include="Models\SignatureModel.cs" />
     <Compile Include="Repository\AuthRepository.cs" />
     <Compile Include="Services\EmployeeHub.cs" />
     <Compile Include="Interfaces\IEmployee.cs" />

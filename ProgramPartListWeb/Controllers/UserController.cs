@@ -4,6 +4,7 @@ using ProgramPartListWeb.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -110,7 +111,23 @@ namespace ProgramPartListWeb.Controllers
 
 
 
+        [HttpPost]
+        public ActionResult UploadSignature(SignatureModel sig)
+        {
+            if(sig.SignatureImage != null && sig.SignatureImage.ContentLength > 0)
+            {
+                //save file to the Database
+                var filename = Path.GetFileName(sig.SignatureImage.FileName);
+                var pathfile = Path.Combine(Server.MapPath(""), filename);
+                sig.SignatureImage.SaveAs(pathfile);
 
+                return Json(new { success = true, message = "Uplaod Success" }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new { success = false, message = "Failed Upload" }, JsonRequestBehavior.AllowGet);
+            }
+        }
 
 
         

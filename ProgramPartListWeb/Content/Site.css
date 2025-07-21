@@ -63,13 +63,6 @@ body {
     text-rendering: optimizeSpeed;
 }
 
-/*body {
-    -webkit-font-smoothing: antialiased;
-    font-family: var(--body-font);
-    font-size: var(--normal-font-size);  
-}*/
-
-
 
 a {
     text-decoration: none;

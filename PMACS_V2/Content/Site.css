@@ -56,6 +56,8 @@
         }
     }
 
+   
+
     /*=============== BASE ===============*/
     *, ::before, ::after {
         box-sizing: border-box;
@@ -71,6 +73,7 @@
 
     body{
         transition: all .5s ease;
+        font-size: var(--normal-font-size);
     }
 
     body,
@@ -83,12 +86,22 @@
          /* line-height: 1.5;*/
     }
 
+    /* For table rows and data cells */
+    table td, table th {
+        font-size: 0.875rem !important; /* 14px - cleaner and compact */
+    }
+
     a { text-decoration: none; }
 
     ul {
         margin: 0;
         padding: 0;
         list-style: none;
+    }
+
+    ul[role='list'],
+    ol[role='list'] {
+      list-style: none;
     }
 
     h1, h2, h3, h4 {
@@ -125,6 +138,13 @@
         background-color: transparent;
         border: none;
         outline: none;
+    }
+
+    /* Inherit fonts for inputs and buttons */
+    input, button,
+    textarea, select {
+      font-family: inherit;
+      font-size: inherit;
     }
 
     fieldset {

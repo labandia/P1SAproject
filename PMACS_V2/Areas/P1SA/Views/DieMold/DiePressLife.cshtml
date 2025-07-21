@@ -233,7 +233,7 @@
                     </button>
                 </div>
 
-                <div class="MoldieBodyModal mt-3">
+                <div class="MoldieBodyModal mt-2">
                     <form id="InputPress" autocomplete="off">
                         <div class="form_group col-12 col-sm-12 col-lg-12 mb-2">
                             <label for="">Select Tool No.</label><br />
@@ -275,7 +275,8 @@
     </div>
 </div>
 <!--########################## Adding Tooling Press DATA #############################-->
-<div class="modal fade modal-lg" id="AddTooling" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+<div class="modal fade modal-m" id="AddTooling" tabindex="-1" role="dialog"  
+     aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-body">
@@ -313,18 +314,16 @@
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="form_group col-12 col-lg-6 col-sm-12">
-                                <label for="">Status</label>
-                                <textarea placeholder="Enter Status " name="Status" id="Status" rows="3" cols="50" required></textarea>
-                            </div>
+                        <div class="form_group col-12 col-lg-12 col-sm-12">
+                            <label for="">Status</label>
+                            <textarea placeholder="Enter Status " name="Status" id="Status" rows="3" cols="50" required></textarea>
+                        </div>
 
-                            <div class="form_group col-12 col-lg-6 col-sm-12 d-flex align-items-center gap-2">
-                                <input type="radio" name="Operational" value="1" required />
-                                <span style="color: #04bd6c;">Operational</span>
-                                <input type="radio" name="Operational" value="0" required />
-                                <span style="color: red;">Not Operational</span>
-                            </div>
+                        <div class="form_group col-12 col-lg-12 col-sm-12 d-flex align-items-center gap-2">
+                            <input type="radio" name="Operational" value="1" required />
+                            <span style="color: #04bd6c;">Operational</span>
+                            <input type="radio" name="Operational" value="0" required />
+                            <span style="color: red;">Not Operational</span>
                         </div>
 
                         <div class="edits_footer" id="editsdisplay">

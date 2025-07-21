@@ -21,7 +21,7 @@ namespace ProgramPartListWeb.Controllers
         [HttpPost]
         public async Task<ActionResult> Authenticate(string username, string password, int proj = 1)
         {
-            var user = (await _auth.GetByUsername(username, proj)).FirstOrDefault();
+            var user = (await _auth.GetByUsername(username.Trim(), proj)).FirstOrDefault();
             var results = new DataMessageResponse<object> { };
 
             // Check If the user Exist

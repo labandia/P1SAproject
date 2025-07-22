@@ -4,13 +4,13 @@
     Layout = "~/Areas/PC/Views/Shared/_PatrolLayout.cshtml";
 }
 
-<header class="InspectHead">
+<header class="InspectHead flex_space">
     <div class="Inputcontainer">
         <i class="fa-solid fa-magnifying-glass"></i>
         <input type="text" placeholder="Search here ... " id="searchbox" autocomplete="off" />
         <div class="line"></div>
     </div>
-    <button id="Showadd" type="button"><i class="fa-solid fa-user-secret"></i> Add New</button>
+    <button id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-user-secret"></i> Add New</button>
 </header>
 
 <div class="InspecTable">
@@ -31,10 +31,10 @@
     </table>
 </div>
 
-<div class="MasterlistWrap_footer">
+<div class="MasterlistWrap_footer ">
     <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
 
-    <div id="MastertableContainer" class="paginationPartlocal"></div>
+    <div id="MastertableContainer" class="paginationPartlocal flex_align"></div>
 </div>
 
 @*=================================================================================*@
@@ -92,7 +92,7 @@
                         <div>
                             <small id="Errormessage">Fill up all the input fields</small>
                         </div>
-                        <button id="btnSave"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                        <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
                     </div>
                 </form>
             </div>
@@ -141,10 +141,8 @@
                         <textarea placeholder="Type any remarks" name="EditRemarks" id="EditRemarks" rows="3" cols="50" required></textarea>
                     </div>
 
-
-
                     <div class="d-flex justify-content-end mt-4">
-                        <button id="btnSave"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                        <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
                     </div>
                 </form>
             </div>

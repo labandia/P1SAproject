@@ -1,8 +1,9 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/x-icon" href="~/Content/Images/ready-stock.ico">
+    <meta name="description" content="Learn how to improve your website with caching, accessibility, and SEO best practices.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Production Patrol Inspection Report System</title>
     <link rel="preload" href="~/Content/fonts/Poppins-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
@@ -22,7 +23,7 @@
 <body>
     <!--========== HEADER ==========-->
     <header class="header">
-        <div class="header__container">
+        <div class="header__container flex_space">
             <a href="#" class="header__logo">Production Patrol Inspection</a>
             <div class="d-flex align-items-center gap-3">
                 @*<i class="fa-regular fa-bell"></i>*@
@@ -41,7 +42,6 @@
     <div class="sidebar" id="sidebar">
         <nav class="sidebar__container">
             <div>
-                
                 <div class="sidebar__list">
                     <div class="sidebar__items">
                         <h3 class="sidebar__subtitle">Main Menu</h3>
@@ -67,20 +67,7 @@
                             <span class="sidebar__name">Patrol Schedule</span>
                         </a>
 
-                        @*<div class="sidebar__dropdown">
-                            <a href="#" class="sidebar__link">
-                                <i class="fa-regular fa-circle-user sidebar__icon"></i>
-                                <span class="sidebar__name">Inspectors Schedule</span>
-                                <i class='bx bx-chevron-down sidebar__icon sidebar__dropdown-icon'></i>
-                            </a>
-
-                            <div class="sidebar__dropdown-collapse">
-                                <div class="sidebar__dropdown-content">
-                                    <a href="#" class="sidebar__dropdown-item">Check Schedule</a>
-                                    <a href="/PC/Patrol/PatrolSchedule" class="sidebar__dropdown-item">Set Schedule</a>
-                                </div>
-                            </div>
-                        </div>*@
+                       
                     </div>
 
                     <div class="sidebar__items">
@@ -104,10 +91,7 @@
 
                             </div>*@
 
-                        @*<a href="#" class="sidebar__link">
-                            <i class="fa-solid fa-table-columns sidebar__icon"></i>
-                            <span class="sidebar__name">Reports</span>
-                        </a>*@
+                     
                         <a href="/PC/Patrol/Settings" class="sidebar__link">
                             <i class="fa-solid fa-gear sidebar__icon"></i>
                             <span class="sidebar__name">Settings</span>

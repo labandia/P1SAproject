@@ -309,7 +309,13 @@ namespace PMACS_V2.Areas.Planning.Repository
 
         public Task<bool> DeleteEndMonthData(int ID)
         {
-            string strquery = "UPDATE  M1_Monthly_Table SET IsDeleted = 0 WHERE RecordID =@RecordID";
+            string strquery = $@"UPDATE M1_Monthly_Table
+                                SET IsDeleted = 
+                                    CASE 
+                                        WHEN IsDeleted = 0 THEN 1
+                                        ELSE 0  
+                                    END 
+                                WHERE RecordID =@RecordID";
             return SqlDataAccess.UpdateInsertQuery(strquery, new { RecordID = ID });    
         }
 

@@ -45,7 +45,8 @@ namespace PMACS_V2.Areas.Planning.Interface
 
 
         Task<bool> AddEndMonthData(object parameters);
-        Task<bool> UpdateEndMonthData(object parameters);
+        Task<bool> UpdateEndMonthData(PostMontlyEndResult end);
+        Task<bool> DeleteEndMonthData(int ID);
         Task<bool> CheckEndMonthExist(string strdate);
     }
 }

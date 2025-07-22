@@ -145,4 +145,18 @@ namespace PMACS_V2.Areas.Planning.Model
         public int MonthUpload { get; set; }
         public int DateYearupload { get; set; }
     }
+
+
+
+
+
+
+    public class PostMontlyEndResult
+    {
+        public int RecordID { get; set; }
+        public double EndTotalOrdersEdit { get; set; }
+        public double EndRemainOrdersEdit { get; set; }
+        public decimal CurrentTotalOrdersEdit { get; set; }
+        public double CurrentRemainsEdit { get; set; }
+    }
 }

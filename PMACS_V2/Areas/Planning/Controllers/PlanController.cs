@@ -326,7 +326,6 @@ namespace PMACS_V2.Areas.Planning.Controllers
         public async Task<ActionResult> GetEndCurrentdata()
         {
             string currentYear = DateTime.Now.Year.ToString();
-            Debug.WriteLine(currentYear);
             var data = await _pl.GetEndMonthlist(currentYear);
             var formdata = GlobalUtilities.DataGetMessageResponse(data);
 
@@ -366,27 +365,11 @@ namespace PMACS_V2.Areas.Planning.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> EditEndMonthResult()
+        public async Task<ActionResult> EditEndMonthResult(PostMontlyEndResult end)
         {
-            string currentMonthName = DateTime.Now.ToString("MMMM");
-            int currentYear = DateTime.Now.Year;
-
-            var newinput = new
-            {
-                RecordID = Convert.ToInt32(Request.Form["RecordID"]),
-                DateMonth = currentMonthName,
-                EndTotalOrders = Request.Form["EndTotalOrdersEdit"],
-                EndRemainOrders = Request.Form["EndRemainOrdersEdit"],
-                CurrentTotalOrders = Request.Form["CurrentTotalOrdersEdit"],
-                CurrentRemains = Request.Form["CurrentRemainsEdit"],
-                EndYear = currentYear
-            };
-            bool result = await _pl.UpdateEndMonthData(newinput);
-
-            if (result)
-                return Json(new { status = true, Message = "Update data successfully" }, JsonRequestBehavior.AllowGet);
-            else
-                return Json(new { status = false, Message = "Error occurred during Update" }, JsonRequestBehavior.AllowGet);
+            bool result = await _pl.UpdateEndMonthData(end);
+            if (!result) JsonValidationError();
+            return JsonCreated(null, "Update data successfully!");   
         }
 
         [HttpPost]
@@ -421,6 +404,18 @@ namespace PMACS_V2.Areas.Planning.Controllers
                     return Json(new { status = false, Message = "Error occurred during Insert" }, JsonRequestBehavior.AllowGet);
             }
         }
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteEndMonthResult(int RecordID)
+        {
+            Debug.WriteLine("ID" + RecordID);
+            bool result = await _pl.DeleteEndMonthData(RecordID);
+            if (!result) JsonValidationError();
+            return JsonCreated(null, "Delete data successfully!");
+        }
+
+
+
         [HttpPost]
         public async Task<JsonResult> UploadFiledetails(HttpPostedFileBase uploadedFile)
         {

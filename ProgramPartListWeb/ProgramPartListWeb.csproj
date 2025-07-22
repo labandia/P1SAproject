@@ -854,6 +854,9 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\live_w_locator.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\modernizr-2.8.3.min.js">
+      <DependentUpon>modernizr-2.8.3.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\Popper.min.js" />
     <Content Include="Scripts\quagga.js" />
     <Content Include="Scripts\Quangga.min.js" />

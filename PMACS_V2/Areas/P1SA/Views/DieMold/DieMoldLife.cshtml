@@ -86,7 +86,7 @@
                                         <th>Die #</th>
                                         <th>Die Serial</th>
                                         <th>2011-2015</th>
-                                        <th>Total Shot Count Onward</th>
+                                        <th>Shot Count Onward</th>
                                         <th>Status</th>
                                         <th>Renarks</th>
                                     </tr>
@@ -511,27 +511,27 @@
 
         Loadingsteps(id, async () => {
               let res = await fetchData('@Url.Action("GetMoldDieSummaryList", "DieMold")', { ProcessID: $("#ProcessID").val() });
-              if (res && res.Success) {
-                  TableDisplay.empty(); // Removing the Loading Display
+            if (res && res.Success) {
+                TableDisplay.empty(); // Removing the Loading Display
 
-                  SummaryData = res.Data.FinalSummary;
-                  FinalSummaryData = res.Data.MoldDieSummary;
-                  displaySummaryPagination(SummaryData, 'SummarylistData', 'SummaryPaginationContainer', 50, 5);
-                  $.each(FinalSummaryData, function (index, row) {
-                      let remarkColor = "";
-                      if (row.Category === "For Monitoring") {
-                          remarkColor = "color: #054e92;";
-                      } else if (row.Category === "End of life") {
-                          remarkColor = "color: #a81818;";
-                      }
+                SummaryData = res.Data.FinalSummary;
+                FinalSummaryData = res.Data.MoldDieSummary;
+                displaySummaryPagination(SummaryData, 'SummarylistData', 'SummaryPaginationContainer', 50, 5);
+                $.each(FinalSummaryData, function (index, row) {
+                    let remarkColor = "";
+                    if (row.Category === "For Monitoring") {
+                        remarkColor = "color: #054e92;";
+                    } else if (row.Category === "End of life") {
+                        remarkColor = "color: #a81818;";
+                    }
 
-                      var setdata = `<tr class= 'row_${index}'>
+                    var setdata = `<tr class= 'row_${index}'>
                                           <td style='text-align: left; padding: 1em; font-size: .8rem;  font-weight: 600; ${remarkColor}'>${row.Category}</td>
                                           <td style='text-align: center; font-weight: 700;'>${row.MoldDie}</td>
                                      </tr>`;
-                      $("#FinalSummaryData").append(setdata);
-                  });
-              }
+                    $("#FinalSummaryData").append(setdata);
+                });
+            } 
         });
 
     }
@@ -552,7 +552,6 @@
              if (res && res.Success) {
                  TableData = res.Data;
                  displayPagination(TableData, 'DieMoldMasterlist', 'PaginationContainer', 50, 5);
-                 console.log(TableData);
 
                  const currentYear = new Date().getFullYear();
 
@@ -571,6 +570,14 @@
                  $.each(years, function (index, row) {
                      $("#yearselect").append("<option value='" + row + "'>" + row + "</option>");
                  });
+             } else {
+                 MonitorDisplay.empty();
+                 var setdata = `<tr>
+                                 <td colspan='6'>
+                                      ${res.Message}
+                                 </td>
+                               </tr>`;
+                 MonitorDisplay.append(setdata);
              }
         });
     }

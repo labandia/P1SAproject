@@ -20,11 +20,11 @@ namespace ProgramPartListWeb
                         "~/Scripts/modernizr-*"));
 
             bundles.Add(new Bundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js"));
+                      "~/Scripts/bootstrap.min.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+                      "~/Content/bootstrap.min.css",
+                      "~/Content/site.min.css"));
             //bundles.Add(new StyleBundle("~/Content/css/css").Include(
             //     "~/Content/css/loginlayout.css",
             //     "~/Content/css/Main.css",

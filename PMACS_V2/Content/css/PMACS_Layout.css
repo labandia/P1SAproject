@@ -36,20 +36,13 @@
          background: #A5A1AA;
     }
     .primary_delete_color{
-         background: rgba(170, 24, 14, 0.8);
+        background: rgba(170, 24, 14, 0.8);
         color: #fff;
     }
     .primary_delete_color:hover{
         background: rgba(117, 16, 9, 0.8);
     }
 
-  
-
-    #Exportbtn{
-        display: flex;
-        align-items: center;
-        gap: 10px !important;
-    }
 
     #sortbtn, #cancelmodal{
         background: #fff;
@@ -80,7 +73,6 @@
         background: #f3f3f3;
         color: #222;
         padding: .7em 0;
-        font-size: .8rem;
         text-align: center;
     }
 
@@ -89,7 +81,7 @@
         cursor: pointer;
         padding: .7em 1em;
         text-align: center;
-        color:#222;
+        color: #222;
     }
     /*    table tbody tr:nth-of-type(even) {
         background-color: #f3f3f3;
@@ -949,7 +941,6 @@
         width: 100%;
         table-layout: fixed;
 /*        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);*/
-        font-size: 0.9rem;
         text-align: center;
         border: 1px solid #d4d3d3;
     }
@@ -968,12 +959,11 @@
         font-weight: 600;
         cursor: pointer;
         padding: .7em 0;
-        font-size: .8rem;
     }
 
 
     .DieMainTable table td {
-       border: 1px solid #d4d3d3;
+        border: 1px solid #d4d3d3;
         cursor: pointer;
         padding: .7em 1em;
     }

@@ -1,19 +1,4 @@
-﻿ 
-    @font-face {
-        font-family: 'Quicksand';
-        src: url('fonts/Quicksand.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-    }
-
-    @font-face {
-        font-family: 'Nunito';
-        src: url('fonts/Nunito.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-    }
-
-    
+﻿
     @font-face {
         font-family: 'Poppins';
         src: url('fonts/Poppins-Regular.ttf') format('truetype');
@@ -37,6 +22,8 @@
         --normal-font-size: .938rem;
         --small-font-size: .75rem;
         --smaller-font-size: .75rem;
+
+        --table-Data-size: 0.875rem;
         /*========== Font weight ==========*/
         --font-medium: 500;
         --font-semi-bold: 600;
@@ -53,8 +40,17 @@
             --normal-font-size: 1rem;
             --small-font-size: .875rem;
             --smaller-font-size: .813rem;
+
+
+            --table-Data-size: 0.875rem;
         }
     }
+
+     @media screen and (min-width: 1440px) {
+        :root {
+            --table-Data-size: .938rem;
+        }
+     }
 
    
 
@@ -68,8 +64,6 @@
     html:focus-within {
         scroll-behavior: smooth;
     }
-
-
 
     body{
         transition: all .5s ease;
@@ -87,8 +81,12 @@
     }
 
     /* For table rows and data cells */
-    table td, table th {
-        font-size: 0.875rem !important; /* 14px - cleaner and compact */
+     table th {
+        font-size: 0.8rem !important; 
+    }
+
+    table td {
+        font-size: var(--table-Data-size) !important;
     }
 
     a { text-decoration: none; }

@@ -94,12 +94,13 @@ button, a {
     margin: 0 auto;*/
 }
 
-
-
+.deleteButton{
+    color: #FF3D00;
+}
 /* ------- HEADERS DESIGN -------------*/
-    .headerplan__container {
-        padding: 1.5em;
-    }
+.headerplan__container {
+    padding: 1.5em;
+}
 
     .headerplan__container h5{
         font-weight: 600;

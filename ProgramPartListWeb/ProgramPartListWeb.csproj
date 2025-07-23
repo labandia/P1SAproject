@@ -826,6 +826,7 @@
     </Content>
     <Content Include="Areas\Circuit\Views\ProgramPartList\FeederType.cshtml" />
     <Content Include="Content\Uploads\PGFY-00031FORM_1.xlsx" />
+    <Content Include="Areas\PC\Views\Patrol\CheckSheet.cshtml" />
     <None Include="bundleconfig.json" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
@@ -861,6 +862,7 @@
     <Content Include="Scripts\quagga.js" />
     <Content Include="Scripts\Quangga.min.js" />
     <Content Include="Scripts\Quanv2.js" />
+    <Content Include="Scripts\signature_pad.umd.min.js" />
     <Content Include="Scripts\sweetalert2.min.js" />
     <Content Include="Scripts\Utilities.js" />
     <Content Include="Scripts\xlsx.full.min.js" />

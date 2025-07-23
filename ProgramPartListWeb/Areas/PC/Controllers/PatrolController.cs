@@ -559,6 +559,8 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         // GET: PC/Inspectors
         public ActionResult Inspectors() => View();
         // GET: PC/PatrolReport
+        public ActionResult CheckSheet() => View();
+        // GET: PC/PatrolReport
         //[RoleAuthorize("Manager", "SuperAdmin")]
         public ActionResult PatrolReport() => View();
         // GET: PC/PatrolReport

@@ -224,7 +224,7 @@
 <div class="modal fade modal-m" id="InputMoldieModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-body">
+            <div class="modal-body modalwrap">
                 <div class="custom_modal_header">
                     <h5>Input Data</h5>
 
@@ -279,7 +279,7 @@
      aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-body">
+            <div class="modal-body modalwrap">
                 <div class="custom_modal_header">
                     <h5>Add Data</h5>
 
@@ -345,7 +345,7 @@
 <div class="modal fade modal-m" id="EdiTooling" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-body">
+            <div class="modal-body modalwrap">
                 <div class="custom_modal_header">
                     <div>
                         <h5 id="ToolName"></h5>
@@ -407,7 +407,7 @@
 <div class="modal fade modal-lg" id="DieControlTool" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-body">
+            <div class="modal-body modalwrap">
                 <div class="custom_modal_header">
                     <h5>Die Control Data</h5>
 
@@ -792,7 +792,7 @@
               if (ActionRestrict() !== false) {
                   $("#HiddenColumns").show();
                   buttons = ` <td id='datatable' style='text-align: center;'>
-                                <button type='button' class='btn actionicon text-primary rowClick' id='editButton_${rowData.ToolNo}' >
+                                <button type='button' class='btn actionicon text-primary EditClick' id='editButton_${rowData.ToolNo}' >
                                    <i class='fa-regular fa-pen-to-square action_btn'></i>
                                 </button>
                             </td>`;
@@ -879,7 +879,7 @@
       $('#Summarysearchbox').on('input', searchTable);
 
       // Handle click event for edit button
-      $(document).on('click', '.rowClick', function (e) {
+      $(document).on('click', '.EditClick', function (e) {
           e.stopPropagation();
           const buttonId = $(this).attr('id');
           const rowIndex = buttonId.split('_')[1];
@@ -1348,9 +1348,6 @@
          renderTable(currentPage);
          renderPagination();
     }
-
-
-
     function displayControlPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 10, visibleButtons = 5) {
         let currentPage = 1;
         let filteredData = [...dataArray]; // Make a copy for filtering

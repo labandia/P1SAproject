@@ -14,7 +14,7 @@ namespace ProgramPartListWeb.Data
         public Task<List<UsersModel>> GetAllusers()
         {
             string strquery = $@"SELECT ua.User_ID, ua.Username, 
-                                ua.Password, u.Fullname, ua.Role_ID
+                                ua.Password, u.Fullname, ua.Role_ID, u.Signature, u.Email
                                 FROM UserAccounts ua
                                 INNER JOIN Users u ON u.User_ID = ua.User_ID
                                 INNER JOIN ProjectList p ON p.Project_ID = ua.Project_ID
@@ -121,6 +121,12 @@ namespace ProgramPartListWeb.Data
         {
             string strsql = "SELECT Employee_ID, FullName, Email FROM Users";
             return SqlDataAccess.Checkdata(strsql, null);
+        }
+
+        public Task<bool> SaveSignatureData(int userID, string fileName)
+        {
+            string strsql = "UPDATE Users Set Signature =@Signature WHERE User_ID =@User_ID";
+            return SqlDataAccess.UpdateInsertQuery(strsql, new { Signature  = fileName, User_ID = userID});
         }
     }
 }

@@ -101,7 +101,7 @@ namespace ProgramPartListWeb.Controllers
 
                 var datalist = await _user.GetUserById(Convert.ToInt32(userId));
                 //var data = datalist.FirstOrDefault(p => p.Employee_ID == empID);
-                return Json(new { success = true, userId, name, role, datalist.Password }, JsonRequestBehavior.AllowGet);
+                return Json(new { success = true, userId, name, role, datalist.Password, datalist.Signature, datalist.Email }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -112,20 +112,36 @@ namespace ProgramPartListWeb.Controllers
 
 
         [HttpPost]
-        public ActionResult UploadSignature(SignatureModel sig)
+        public async Task<ActionResult> UploadSignature(SignatureModel sig)
         {
-            if(sig.SignatureImage != null && sig.SignatureImage.ContentLength > 0)
+            try
             {
-                //save file to the Database
-                var filename = Path.GetFileName(sig.SignatureImage.FileName);
-                var pathfile = Path.Combine(Server.MapPath(""), filename);
-                sig.SignatureImage.SaveAs(pathfile);
+                if (sig.SignatureImage != null && sig.SignatureImage.ContentLength > 0)
+                {
+                    //save file to the Database
+                    string filename = Path.GetFileName(sig.SignatureImage.FileName);
+                    var pathfile = Path.Combine(@"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\Signatures", filename);
+                    // Ensure directory exists
+                    var dir = Path.GetDirectoryName(pathfile);
+                    if (!Directory.Exists(dir))
+                        Directory.CreateDirectory(dir);
 
-                return Json(new { success = true, message = "Uplaod Success" }, JsonRequestBehavior.AllowGet);
+                    bool result = await _user.SaveSignatureData(sig.UserID, filename);
+
+                    // if the Image file name is Save 
+                    if (result) sig.SignatureImage.SaveAs(pathfile);
+
+
+                    return Json(new { success = true, message = "Upload Success" }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new { success = false, message = "Failed Upload" }, JsonRequestBehavior.AllowGet);
+                }
             }
-            else
+            catch(Exception ex)
             {
-                return Json(new { success = false, message = "Failed Upload" }, JsonRequestBehavior.AllowGet);
+                return Json(new { success = false, message = ex.Message }, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -168,7 +184,20 @@ namespace ProgramPartListWeb.Controllers
         }
 
 
+        public ActionResult GetSignatureImage(string filename)
+        {
+            if (string.IsNullOrWhiteSpace(filename))
+                return HttpNotFound();
 
+            string folderPath = @"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\Signatures\";
+            string fullPath = Path.Combine(folderPath, filename);
+
+            if (!System.IO.File.Exists(fullPath))
+                return File("~/Content/Images/bussiness-man.png", "image/png");
+
+            byte[] fileBytes = System.IO.File.ReadAllBytes(fullPath);
+            return File(fileBytes, "image/png"); // Change to "image/jpeg" if needed
+        }
 
     }
 }

@@ -62,9 +62,6 @@
                                 <div class="line"></div>
                                 <i class="fa-solid fa-magnifying-glass"></i>
                             </div>
-
-                            
-
                         </div>
 
                     </div>
@@ -159,7 +156,7 @@
                 </form>
 
 
-              
+
 
                 @*####################################################################################*@
 
@@ -172,7 +169,9 @@
 
 
 
-<!--########################## ADD DATA #############################-->
+@*=================================================================================*@
+@*=========================== ADD NEW MODELBASE ===================================*@
+@*=================================================================================*@
 <div class="modal fade modal-lg" id="addmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -232,7 +231,7 @@
                         </div>
                     </div>
 
-                    <div class="modal-footer flex__space">
+                    <div class="modal-footer flex__space mt-3">
                         <strong id="newmodel">No Modelbase available </strong>
                         <button type="submit" class="saveEditsum"><i class="fa fa-plus-circle"></i> Save</button>
                     </div>
@@ -244,13 +243,15 @@
     </div>
 </div>
 
-<!--########################## SHOW DETAILS   #############################-->
+@*=================================================================================*@
+@*=========================== SHOW AND EDIT DETAILS ===============================*@
+@*=================================================================================*@
 <div class="modal fade modal-lg" id="detailsModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-body">
                 <div class="custom_modal_header">
-                    <div class="custom_modal__icon2">
+                    <div class="custom_modal__icon">
                         <div class="custom_icon_container">
                             <i class="fa-regular fa-rectangle-list"></i>
                         </div>
@@ -420,7 +421,7 @@
              displayPagination(TableData, 'dataSearching', 'PaginationContainer', 20, 5);
         }
      }
-     
+
      const userDataRole = () => {
 
          if (roleint == 2) {
@@ -539,7 +540,7 @@
              });
          });
 
-        
+
      }
      async function displaySummaryTable(data, filter) {
          let totalmachoine = 0;
@@ -956,7 +957,7 @@
          GetCapacitySummary();
          // GET THE TABLE DATA
          GetMoldingData();
-  
+
      }
 
      // ##############  LOADS THE DATA WHEN THE PAGE IS LOADED ##############

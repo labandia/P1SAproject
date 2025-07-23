@@ -342,6 +342,7 @@
 
 /*=========== UPLOAD IMAGE INPUT  =================*/
     .upload-container {
+        flex-direction: column;
         text-align: center;
         padding: 30px;
         border: 2px dashed #bdc3c7;
@@ -446,6 +447,33 @@
         justify-content: space-between;
         padding: .5em;
     }
+    .custom_modal__icon {
+        display: flex;
+        align-items: center;
+        gap: 1em;
+    }
+
+     .custom_icon_container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        padding: 1em;
+        background: hsl(209, 84%, 88%);
+        color: hsl(209, 80%, 50%);
+    }
+
+    .custom_icon_container i {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        font-size: 3rem !important;
+        transform: translate(-50%, -50%);
+    }
+
      .custom_modal_header h5 { font-weight: 600; }
     .formcontainer {
         width: min(100%, 1200px);
@@ -827,7 +855,19 @@
         font-size: var(--small-font-size);
     }
 
+.SignatureWrapper{
+    width: 500px;
+    height: 100px;
+    overflow: hidden;
+    border: 1px solid black;
+}
 
+.SignatureWrapper img{
+    width: 100%;
+    object-fit: cover;
+    background-position: center;
+
+}
 
 
 

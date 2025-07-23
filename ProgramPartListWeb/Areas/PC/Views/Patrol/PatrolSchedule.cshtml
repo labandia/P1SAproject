@@ -31,7 +31,7 @@
                         <option value="6">Process Control</option>
                     </select>
                 </div>
-                
+
                 <div class="Inputcontainer">
                     <i class="fa-solid fa-magnifying-glass"></i>
                     <input type="text" placeholder="Search here ... " id="searchbox" autocomplete="off" />
@@ -44,9 +44,9 @@
         </div>
     </div>
 </div>
-
-
-@*=========================== ADD NEW SCHEDULE LIST ==================================*@
+@*=================================================================================*@
+@*=========================== ADD NEW SCHEDULE LIST ===============================*@
+@*=================================================================================*@
 <div class="modal fade modal-l" id="AddScheduleModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -86,7 +86,9 @@
     </div>
 </div>
 
-@*=========================== CANCEL SCHEDULE LIST ==================================*@
+@*=================================================================================*@
+@*========================= CHANGE OR REMOVE SCHEDULE LIST ========================*@
+@*=================================================================================*@
 <div class="modal fade modal-l" id="EditScheduleModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -133,93 +135,101 @@
     let employVal;
     let DepartID;
     let userRole;
+    let TableDisplay = $("#Sched_list_container");
+
     const addform = document.getElementById("addnewform");
     const editform = document.getElementById("editnewform");
     const removebtn = document.querySelector('.deletebtn');
 
     const PopulateComboxInspector = async (searchText = "") => {
-        const SetData = $("#Sched_list_container");
-        SetData.empty();
+        loadingDisplay();
 
-        let filterValue = $("#DepartmentID").val();
+        Loadingsteps(async () => {
+            let filterValue = $("#DepartmentID").val();
 
-       let res = await FetchAuthenticate('@Url.Action("GetInpectsByApproval", "Patrol")', {});
-        if (res && res.Success) {
-            let filteredData = res.Data;
-            if (parseInt(filterValue) !== 0) {
-                filteredData = filteredData.filter(res => res.Department_ID === parseInt(filterValue));
-            }
+            let res = await FetchAuthenticate('@Url.Action("GetInpectsByApproval", "Patrol")', {});
+            if (res && res.Success) {
+                     let filteredData = res.Data;
+                     TableDisplay.empty(); // Removing the Loading Display
+                     if (parseInt(filterValue) !== 0) {
+                         filteredData = filteredData.filter(res => res.Department_ID === parseInt(filterValue));
+                     }
 
-            if (searchText) {
-                const lowerSearch = searchText.toLowerCase();
-                filteredData = filteredData.filter(res =>
-                    res.FullName.toLowerCase().includes(lowerSearch)
-                );
-            }
+                     if (searchText) {
+                         const lowerSearch = searchText.toLowerCase();
+                         filteredData = filteredData.filter(res =>
+                             res.FullName.toLowerCase().includes(lowerSearch)
+                         );
+                     }
 
-            if (filteredData.length === 0) {
-                SetData.html(`<p>No Patrol data found.</p>`);
-                return;
-            }
-
-
-            $.each(filteredData, function (index, res) {
-                let Depname = DepartmentName(parseInt(res.Department_ID));
-                let color;
-
-                if (res.Department_ID === 1) {
-                    color = "rgb(100, 50, 9)";
-                } else if (res.Department_ID === 2) {
-                    color = "rgb(100, 30, 9)";
-                } else if (res.Department_ID === 3) {
-                    color = "rgb(9, 45, 100)";
-                } else if (res.Department_ID === 4) {
-                    color = "rgb(9, 71, 100)";
-                } else if (res.Department_ID === 5) {
-                    color = "rgb(68, 57, 5)";
-                } else {
-                    color = "rgb(33, 9, 100)";
-                }
+                     if (filteredData.length === 0) {
+                         SetData.html(`<p>No Patrol data found.</p>`);
+                         return;
+                     }
 
 
-                const getdata = `
-                    <div class="SchedCard flex_align"
-                        id="SchedCard_${res.Employee_ID}"
-                        data-dept="${res.Department_ID}"
-                        data-emp="${res.Employee_ID}"
-                        data-name="${res.FullName}">
-                        <div class="d-flex align-items-center gap-3">
-                             <i class="fa-regular fa-user"></i>
-                            <div>
-                                <span>${res.FullName}</span>
-                                <p style='color: ${color}'>${Depname}</p>
-                            </div>
-                        </div>
-                    </div>`;
-                SetData.append(getdata);
-            });
+                     $.each(filteredData, function (index, res) {
+                         let Depname = DepartmentName(parseInt(res.Department_ID));
+                         let color;
 
-            
+                         if (res.Department_ID === 1) {
+                             color = "rgb(100, 50, 9)";
+                         } else if (res.Department_ID === 2) {
+                             color = "rgb(100, 30, 9)";
+                         } else if (res.Department_ID === 3) {
+                             color = "rgb(9, 45, 100)";
+                         } else if (res.Department_ID === 4) {
+                             color = "rgb(9, 71, 100)";
+                         } else if (res.Department_ID === 5) {
+                             color = "rgb(68, 57, 5)";
+                         } else {
+                             color = "rgb(33, 9, 100)";
+                         }
 
-            // Attach click event once
-            $(document).off('click', '.SchedCard').on('click', '.SchedCard', function (e) {
-                e.stopPropagation();
 
-                $('.SchedCard').removeClass('activeSched'); // remove previous selection
-                $(this).addClass('activeSched'); // mark current one
+                         const getdata = `
+                             <div class="SchedCard flex_align"
+                                 id="SchedCard_${res.Employee_ID}"
+                                 data-dept="${res.Department_ID}"
+                                 data-emp="${res.Employee_ID}"
+                                 data-name="${res.FullName}">
+                                 <div class="d-flex align-items-center gap-3">
+                                      <i class="fa-regular fa-user"></i>
+                                     <div>
+                                         <span>${res.FullName}</span>
+                                         <p style='color: ${color}'>${Depname}</p>
+                                     </div>
+                                 </div>
+                             </div>`;
+                         TableDisplay.append(getdata);
+                     });
 
-                DepartID = $(this).data('dept');
-                employVal = $(this).data('emp');
-                const fullName = $(this).data('name');
 
-                //console.log("Selected Employee: ", fullName);
-                //console.log("Employee ID: ", employVal);
 
-                // Optionally, when page loads, show all first
-                fetchAndRenderEvents(employVal);
-                PopulateComboxProccess(DepartID, 0);
-            });
-        }
+                     // Attach click event once
+                     $(document).off('click', '.SchedCard').on('click', '.SchedCard', function (e) {
+                         e.stopPropagation();
+
+                         $('.SchedCard').removeClass('activeSched'); // remove previous selection
+                         $(this).addClass('activeSched'); // mark current one
+
+                         DepartID = $(this).data('dept');
+                         employVal = $(this).data('emp');
+                         const fullName = $(this).data('name');
+
+                         //console.log("Selected Employee: ", fullName);
+                         //console.log("Employee ID: ", employVal);
+
+                         // Optionally, when page loads, show all first
+                         fetchAndRenderEvents(employVal);
+                         PopulateComboxProccess(DepartID, 0);
+                     });
+                 }
+
+        });
+
+
+
     };
     const fetchAndRenderEvents =  async(employeeId) =>{
         let res = await FetchAuthenticate('@Url.Action("GetCalendarEvents", "Patrol")', { Employee_ID : employeeId });
@@ -292,7 +302,6 @@
             // ✅ Refresh the calendar with updated events
             await fetchAndRenderEvents(employVal);
         }
-
     });
     editform.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -316,53 +325,7 @@
 
     });
 
-    //document.addEventListener('DOMContentLoaded', function () {
-    //    const today = new Date();
-    //    const year = today.getFullYear();
-    //    const month = String(today.getMonth() + 1).padStart(2, '0');
-    //    const day = String(today.getDate()).padStart(2, '0');
-    //    const formattedDate = `${year}-${month}-${day}`;
 
-    //    var calendarEl = document.getElementById('calendar');
-    //    var calendar = new FullCalendar.Calendar(calendarEl, {
-    //        initialView: 'dayGridMonth',
-    //        aspectRatio: 1.8,
-
-    //        dayCellDidMount: function (info) {
-    //            // Format info.date to local date string
-    //            const cellDate = info.date.getFullYear() + '-' +
-    //                String(info.date.getMonth() + 1).padStart(2, '0') + '-' +
-    //                String(info.date.getDate()).padStart(2, '0');
-
-    //            if (cellDate === formattedDate) {
-    //                info.el.style.backgroundColor = '#3664F4';
-    //                info.el.style.color = 'white';
-    //            }
-    //        },
-
-    //        dateClick: function (info) {
-    //            const selected = $('.SchedCard.active');
-    //            if (!selected.length) {
-    //                alert("Please select an inspector first.");
-    //                return;
-    //            }
-
-    //            DepartID = selected.data('dept');
-    //            employVal = selected.data('emp');
-
-    //            console.log("Date Clicked: " + info.dateStr);
-    //            console.log("Department : " + DepartID);
-    //            console.log("Employee ID: " + employVal);
-
-    //            PopulateComboxProccess(DepartID); // your custom function
-    //            $("#DateID").val(info.dateStr);
-    //            $("#AddScheduleModal").modal('show');
-    //        }
-    //    });
-
-    //    calendar.render();
-
-    //});
 
     // Initialize Calendar (example with FullCalendar)
     document.addEventListener('DOMContentLoaded', function () {
@@ -437,7 +400,7 @@
 
                     PopulateComboxProccess(DepartID, 0);
                     $("#AddScheduleModal").modal('show');
-                } 
+                }
             },
 
             eventClick: function (info) {
@@ -488,22 +451,63 @@
     };
 
 
-    $(document).ready(function () {
-        let searchText = $("#searchbox").val();
-        DateDisplay();
-        PopulateComboxInspector(searchText);
-        // Filter when selection changes
-        $("#DepartmentID").on("change", function () {
-            PopulateComboxInspector(searchText);
-        });
+    function loadingDisplay() {
+        TableDisplay.empty();
+        const loadData = `<div class='Loadercontainer flex_center'>
+                            <span class="loader"></span>
+                            <p id="loadingStepText">Loading Inspectors...</p>
+                        </div>`;
+        TableDisplay.append(loadData);
+    }
 
 
-        // Filter when user types in a Input
-        $('#searchbox').on('input', function (e) {
-            PopulateComboxInspector(e.target.value);
-        });
+    function Loadingsteps(callback) {
+        const steps = [
+            "Loading Inspectors... "
+        ];
+
+        let stepIndex = 0;
+
+        const interval = setInterval(() => {
+            if (stepIndex < steps.length) {
+                const stepText = document.getElementById("loadingStepText");
+                if (stepText) stepText.innerText = steps[stepIndex];
+                stepIndex++;
+            } else {
+                clearInterval(interval);
+                if (typeof callback === "function") callback();
+            }
+        }, 800);
+    }
+
+    // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+    const LoadPageData = async () => {
+        try {
+            let searchText = $("#searchbox").val();
+
+            const [inspect, employ] = await Promise.all([
+                DateDisplay(),
+                PopulateComboxInspector(searchText),
+            ]);
+
+            // Filter when selection changes
+            $("#DepartmentID").on("change", function () {
+                PopulateComboxInspector(searchText);
+            });
+            // Filter when user types in a Input
+            $('#searchbox').on('input', function (e) {
+                PopulateComboxInspector(e.target.value);
+            });
+        } catch (error) {
+            console.error("Failed to load page data:", error);
+        } finally {
+            // Hide loading spinner whether success or failure
+            //$("#loadingSpinner").hide();
+        }
+    }
+
+
+    $(document).ready(() => {
+        LoadPageData();
     });
-
-
-   
 </script>

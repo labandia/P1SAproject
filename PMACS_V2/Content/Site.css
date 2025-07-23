@@ -60,14 +60,13 @@
         margin: 0;
         padding: 0;
     }
-
-    html:focus-within {
-        scroll-behavior: smooth;
-    }
+    html:focus-within {  scroll-behavior: smooth; }
 
     body{
-        transition: all .5s ease;
-        font-size: var(--normal-font-size);
+        -webkit-font-smoothing: antialiased;
+        line-height: 1.5;
+        scroll-behavior: smooth;
+        text-rendering: optimizeSpeed;
     }
 
     body,
@@ -97,52 +96,125 @@
         list-style: none;
     }
 
-    ul[role='list'],
-    ol[role='list'] {
-      list-style: none;
+     body,
+    h1,
+    h2,
+    h3,
+    h4,
+    p,
+    ul[class],
+    ol[class],
+    li,
+    figure,
+    figcaption,
+    blockquote,
+    dl,
+    dd {
+        margin: 0;
+    }
+
+    ol,
+    ul {
+        list-style: none;
     }
 
     h1, h2, h3, h4 {
         font-weight: var(--font-semi-bold);
         margin: 0;
     }
+
+    p, h1, h2, h3, h4, h5, h6 {
+        overflow-wrap: break-word;
+    }
     /* Improve media defaults */
-    picture, video, canvas, svg {
+   img, picture, video, canvas, svg {
         display: block;
         max-width: 100%;
     }
 
-    img {
-        max-width: 100%;
-        height: auto;
-    }
 
     button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
         border: none;
         cursor: pointer;
         outline: none;
         border-radius: .2em;
-        transition: .5s all ease;
+        padding: .5em 1em;
+        transition: .5s ease-in-out;
     }
-    /*=============== BUTTON THAT HAS ICON ===============*/
-    button:has(i){
-        display: flex;
-        align-items: center;
-        gap: 20px;
-    }
-
-
+ 
     input {
         background-color: transparent;
         border: none;
         outline: none;
     }
 
-    /* Inherit fonts for inputs and buttons */
-    input, button,
-    textarea, select {
-      font-family: inherit;
-      font-size: inherit;
+    /*=============== TABLE COMMON ================*/
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+        text-align: center;
+    }
+
+    table th {
+        font-weight: 400;
+        cursor: pointer;
+        padding: 1em 0;
+        font-size: var(--small-font-size);
+    }
+
+    table tbody {
+        background: #fff;
+    }
+
+    table th i {
+        font-size: .8rem;
+    }
+
+    table td {
+        cursor: pointer;
+        font-size: var(--small-font-size);
+        border-top: 1px solid #dcdce2;
+    }
+
+    table tbody tr:hover {
+        background: #e5e5e6;
+    }
+
+ /*=============== FLEX DISPLAY  ===============*/
+    .flex_align {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .flex_center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .flex_space {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .flex_start {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+    }
+    .flex_end {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+    .flex_around {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
     }
 
     fieldset {

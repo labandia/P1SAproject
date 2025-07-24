@@ -447,6 +447,8 @@
             
         }
     });
+
+
     $("#AddToolforms").on('submit', async (e) => {
         e.preventDefault();
         let formData = new FormData(e.target);
@@ -472,6 +474,8 @@
             });
         }
     });
+
+
     $("#Registrymodal").on('click', (e) => {
         e.preventDefault();
         $("#AddTooling").modal("show");
@@ -506,6 +510,7 @@
         $("#Datearrived").val("");
         GetMoldDieTooling();
     });
+
     months.forEach((month, index) => {
         const option = document.createElement("option");
         option.value = index + 1; // 1 to 12
@@ -588,7 +593,7 @@
         });
 
     }
-    const GetMoldDieMonth = async (month, year) => {
+    const GetMoldDieMonth = async (month = setMonth, year = currentYear) => {
         const id = loadingDisplay(1, 6);
         Loadingsteps(id, async () => {
              let formData = new FormData();
@@ -1064,7 +1069,7 @@
 
             const [maintable, forest, logs] = await Promise.all([
                 GetMoldDieSummary(),
-                GetMoldDieMonth(setMonth, currentYear),
+                GetMoldDieMonth(),
                 GetMoldDieTooling()
             ]);
 

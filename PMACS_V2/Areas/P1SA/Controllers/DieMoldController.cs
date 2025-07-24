@@ -117,7 +117,6 @@ namespace PMACS_V2.Areas.P1SA.Controllers
 
         public async Task<ActionResult> GetPressDieMonitoringList(string ToolNo)
         {
-            Debug.WriteLine($@"HERE INSIEDE" + ToolNo);
             var data = await _die.GetPressMonitoring() ?? new List<PressDieMontoring>();
             var filterdata = data.Where(res => res.ToolNo == ToolNo);
             if (filterdata == null || !filterdata.Any())

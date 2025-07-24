@@ -9,6 +9,7 @@ using ProgramPartListWeb.Utilities.Common;
 using Spire.Xls;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -408,12 +409,15 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 RegNo = Request.Form["RegNo"],
                 DateConduct = Request.Form["DateConduct"],
                 Employee_ID = Request.Form["Employee_ID"],
+                FullName = Request.Form["EmployeeSearch"],
                 PIC = Request.Form["PIC"],
                 PIC_Comments = Request.Form["PIC_Comments"],
                 FilePath = outputPdfPath,
                 Manager = Request.Form["Manager"],
                 Manager_Comments = Request.Form["Manager_Comments"]
             };
+
+            Debug.WriteLine($@"Registration : {obj.PIC} - EmployeeID : {obj.Employee_ID}");
 
 
             string findJson = Request.Form["FindJson"];
@@ -422,14 +426,13 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
             if (result)
             {
-
                 if (System.IO.File.Exists(excelfilepath))  System.IO.File.Delete(excelfilepath);
                 
                 CacheHelper.Remove("Registration");
                 ExportFiler.SaveFileasPDF(obj, findJson, GlobalUtilities.DepartmentName(Department), newFileName, templatePath);
             }
 
-            if (result == false) return JsonError("Problem during saving Data.", 500);
+            if (!result) JsonValidationError();
             return JsonCreated(result, "Updated successfully");
 
         }

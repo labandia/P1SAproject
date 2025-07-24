@@ -103,7 +103,7 @@
 @*=================================================================================*@
 @*=========================== EDIT INSPECTORS =====================================*@
 @*=================================================================================*@
-<div class="modal fade modal-l" id="EditInpectorModal" tabindex="-1" role="dialog">
+<div class="modal fade modal-l" id="EditInpectorModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
 
@@ -312,9 +312,11 @@
                 let usercontrol = (ActionRestrict() === false)
                     ? ``
                     : `<td data-cell="Menu">
-                        <button style='padding: .3em .7em;' type='button' class='showmenu' id='showmenu_${rowData.InspectID}'>
-                            <i class="fa-solid fa-bars"></i>
-                        </button>
+                        <div class='flex_center'>
+                            <button style='padding: .3em .7em;' type='button' class='showmenu' id='showmenu_${rowData.InspectID}'>
+                                <i class="fa-solid fa-bars"></i>
+                            </button>
+                        </div>
                         <div class="dropdown-menu" id="menu_${rowData.InspectID}">
                             <ul>
                                 <li><a href="#" class="dropdown-item" id="approve_${rowData.InspectID}"><i class="fa-solid fa-check"></i> Approve</a></li>

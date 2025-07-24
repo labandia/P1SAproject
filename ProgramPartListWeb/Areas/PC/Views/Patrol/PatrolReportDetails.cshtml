@@ -187,33 +187,60 @@
     const ReportsDetails = async () => {
         let res = await FetchAuthenticate('@Url.Action("GetRegistrationNoByID", "Patrol")', { Regno: strRegno });
         if (res && res.Success) {
-            let RegisterData = res.Data.Register;
-            let FindingData = res.Data.Finding;
+                let RegisterData = res.Data.Register;
+                let FindingData = res.Data.Finding;
 
-            let strDate = changeformatDate(RegisterData[0].DateConduct);
-            $("#RegNo").val(RegisterData[0].RegNo);
-            $("#TempRegno").val(RegisterData[0].RegNo);
-            $("#Manager").val(RegisterData[0].Manager);
-            $("#Manager_Comments").val(RegisterData[0].Manager_Comments);
-            $("#PIC").val(RegisterData[0].PIC);
-            $("#Filepath").val(RegisterData[0].Filepath);
-            $("#PIC_Comments").val(RegisterData[0].PIC_Comments);
-            $("#DateConduct").val(strDate);
+                let strDate = changeformatDate(RegisterData[0].DateConduct);
+                $("#RegNo").val(RegisterData[0].RegNo);
+                $("#TempRegno").val(RegisterData[0].RegNo);
+                $("#Manager").val(RegisterData[0].Manager);
+                $("#Manager_Comments").val(RegisterData[0].Manager_Comments);
+                $("#PIC").val(RegisterData[0].PIC);
+                $("#Filepath").val(RegisterData[0].Filepath);
+                $("#PIC_Comments").val(RegisterData[0].PIC_Comments);
+                $("#DateConduct").val(strDate);
 
-            $("#Employee_ID").val(RegisterData[0].Employee_ID);
-            $("#EmployeeSearch").val(RegisterData[0].FullName);
+                $("#Employee_ID").val(RegisterData[0].Employee_ID);
+                $("#EmployeeSearch").val(RegisterData[0].FullName);
 
-            PopulateComboxInspector(RegisterData[0].Employee_ID);
+                PopulateComboxInspector(RegisterData[0].Employee_ID);
 
-            FindingData.forEach(item => {
-                $(`#Inpects${item.FindID}`).val(item.FindDescription);
-                $(`#counter${item.FindID}`).val(item.Countermeasure);
-            });
+                FindingData.forEach(item => {
+                    $(`#Inpects${item.FindID}`).val(item.FindDescription);
+                    $(`#counter${item.FindID}`).val(item.Countermeasure);
+                });
 
-            //$("#Inpects1").val(FindingData[0]);
+                //$("#Inpects1").val(FindingData[0]);
         }
+
+        //if (res && res.Success) {
+        //    let RegisterData = res.Data.Register;
+        //    let FindingData = res.Data.Finding;
+
+        //    let strDate = changeformatDate(RegisterData[0].DateConduct);
+        //    $("#RegNo").val(RegisterData[0].RegNo);
+        //    $("#TempRegno").val(RegisterData[0].RegNo);
+        //    $("#Manager").val(RegisterData[0].Manager);
+        //    $("#Manager_Comments").val(RegisterData[0].Manager_Comments);
+        //    $("#PIC").val(RegisterData[0].PIC);
+        //    $("#Filepath").val(RegisterData[0].Filepath);
+        //    $("#PIC_Comments").val(RegisterData[0].PIC_Comments);
+        //    $("#DateConduct").val(strDate);
+
+        //    $("#Employee_ID").val(RegisterData[0].Employee_ID);
+        //    $("#EmployeeSearch").val(RegisterData[0].FullName);
+
+        //    PopulateComboxInspector(RegisterData[0].Employee_ID);
+
+        //    FindingData.forEach(item => {
+        //        $(`#Inpects${item.FindID}`).val(item.FindDescription);
+        //        $(`#counter${item.FindID}`).val(item.Countermeasure);
+        //    });
+
+        //    //$("#Inpects1").val(FindingData[0]);
+        //}
     }
-    const RegistrationTable = async() => {
+    const RegistrationTable = async () => {
           let res = await FetchAuthenticate('@Url.Action("GetRegistrationNo", "Patrol")', {});
           if (res && res.Success) {
               regisTable = res.Data;
@@ -264,16 +291,7 @@
           finalformData.append('FindJson', strfind);
 
           const finaldata = Object.fromEntries(finalformData);
-          //console.log(finaldata);
-
-          //if (formValidation(finaldata.RegNo)) {
-          //    $("#errorvalid").show();
-          //    $("#labelguide").hide();
-          //    $("#RegNo").css("border", "1px solid red");
-          //    return;
-          //}
-
-
+      
           let res = await postData('@Url.Action("EditRegistration", "Patrol")', finalformData);
           if (res.StatusCode === 201 && res.Success) {
               Swal.fire({
@@ -284,6 +302,7 @@
                   timer: 1500
               }).then(() => {
                   setTimeout(() => {
+                      editform.reset();
                       window.location.href = "/PC/Patrol/PatrolReport";
                   }, 3000);
               });

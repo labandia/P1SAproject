@@ -278,31 +278,30 @@ namespace PMACS_V2.Areas.P1SA.Repository
         {
             int IsDelete = 1;
 
-            string Check_Existing_data = "SELECT m.Model_name FROM PMACS_Capacity_Molding m WHERE " +
-                                        "(m.model_name = N'@model_name' AND m.IsDelete = 0) " +
-                                        "AND  m.Capgroup_ID = @Capgroup_ID ";
+            string Check_Existing_data = $@"SELECT m.Model_name FROM PMACS_Capacity_Molding m WHERE 
+                                        (m.model_name = N'@model_name' AND m.IsDelete = 0) 
+                                        AND  m.Capgroup_ID = @Capgroup_ID";
             var Checkparams = new { model_name = mold.Model_name, Capgroup_ID = mold.Capgroup_ID };
             bool Checkresult = await SqlDataAccess.Checkdata(Check_Existing_data, Checkparams);
 
             //If the Add model is already Inserted. Updates the information only
             if (Checkresult)
             {
-                string UpdateMoldingQuery = "UPDATE PMACS_Capacity_Molding SET Partnum =@Partnum, CycleTime  =@CycleTime, " +
-                              "DieQty =@DieQty, Actual_cav =@Actual_cav, IsDelete =@IsDelete, Operation_time =@Operation_time  " +
-                              "WHERE (model_name = @model_name AND IsDelete = 0) AND  Capgroup_ID = @Capgroup_ID";
+                string UpdateMoldingQuery = $@"UPDATE PMACS_Capacity_Molding SET Partnum =@Partnum, CycleTime  =@CycleTime, 
+                              DieQty =@DieQty, Actual_cav =@Actual_cav, IsDelete =@IsDelete, Operation_time =@Operation_time 
+                              WHERE (model_name = @model_name AND IsDelete = 0) AND  Capgroup_ID = @Capgroup_ID";
                 var Updateparams = new { Partnum = mold.Partnum, CycleTime = mold.CycleTime, Model_name = mold.Model_name, DieQty = mold.DieQty,
                                          Actual_cav = mold.Actual_cav, Operation_time = mold.Operation_time, IsDelete = IsDelete, Capgroup_ID = mold.Capgroup_ID};
 
-                bool res = await SqlDataAccess.UpdateInsertQuery(UpdateMoldingQuery, Updateparams);
                 //if the query is not Update successfully
-                if (!res)  return false;
-            } // Insert a New Model if doesnt Exist or the IsDelete value is not 0
+                return await SqlDataAccess.UpdateInsertQuery(UpdateMoldingQuery, Updateparams); ;
+            } 
             else
             {
-                string InsertMoldingQuery = "INSERT INTO PMACS_Capacity_Molding(Partnum, CycleTime, Model_name, " +
-                              "DieQty, Actual_cav, Operation_time, Capgroup_ID, ProcessCode) " +
-                              "VALUES(@Partnum, @CycleTime, @Model_name, " +
-                              "@DieQty, @Actual_cav, @Operation_time, @Capgroup_ID, @ProcessCode)";
+                string InsertMoldingQuery = $@"INSERT INTO PMACS_Capacity_Molding(Partnum, CycleTime, Model_name, 
+                                              DieQty, Actual_cav, Operation_time, Capgroup_ID, ProcessCode) 
+                                              VALUES(@Partnum, @CycleTime, @Model_name, 
+                                              @DieQty, @Actual_cav, @Operation_time, @Capgroup_ID, @ProcessCode)";
                 var Insertparams = new
                 {
                     Partnum = mold.Partnum,
@@ -314,14 +313,11 @@ namespace PMACS_V2.Areas.P1SA.Repository
                     Capgroup_ID = mold.Capgroup_ID,
                     ProcessCode = mold.ProcessCode
                 };
-                bool res = await SqlDataAccess.UpdateInsertQuery(InsertMoldingQuery, Insertparams);
-                //if the query is not Update successfully
-                if (!res) return false;
-            }
 
-            return true;
+                return await SqlDataAccess.UpdateInsertQuery(InsertMoldingQuery, Insertparams); 
+            }
         }
-        public async Task<bool> EditMoldingModels(MoldingPostmodel mold) => await SqlDataAccess.UpdateInsertQuery("UpdateMoldingdetails", mold);
+        public  Task<bool> EditMoldingModels(MoldingPostmodel mold) =>  SqlDataAccess.UpdateInsertQuery("UpdateMoldingdetails", mold);
         // Press Section
         public Task<List<PressModel>> GetPressModels(string months, int capid)
         {

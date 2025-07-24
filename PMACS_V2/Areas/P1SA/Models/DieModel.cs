@@ -44,11 +44,84 @@ namespace PMACS_V2.Areas.P1SA.Models
     }
 
 
-    public class DieMoldToolingModel
+
+    public class DieMoldToolingModelDisplay
     {
         private int _RecordID;
         private string _RegNo;
         private string _PartNo;
+        private string _DimensionQuality;
+        private int _Item;
+        private string _DetailsModify;
+        private int _ShotRelease;
+        private string _DateArrived;
+        private string _DateRepair;
+        private string _Incharge;
+        private string _Remarks;
+
+        public int RecordID
+        {
+            get => _RecordID;
+            set => _RecordID = value;
+        }
+
+        public string RegNo
+        {
+            get => _RegNo;
+            set => _RegNo = value;
+        }
+        public string PartNo
+        {
+            get => _PartNo;
+            set => _PartNo = value;
+        }
+        public string DimensionQuality
+        {
+            get => _DimensionQuality;
+            set => _DimensionQuality = value;
+        }
+        public int Item
+        {
+            get => _Item;
+            set => _Item = value;
+        }
+        public string DetailsModify
+        {
+            get => _DetailsModify;
+            set => _DetailsModify = value;
+        }
+        public int ShotRelease
+        {
+            get => _ShotRelease;
+            set => _ShotRelease = value;
+        }
+        public string DateArrived
+        {
+            get => _DateArrived;
+            set => _DateArrived = value;
+        }
+        public string DateRepair
+        {
+            get => _DateRepair;
+            set => _DateRepair = value;
+        }
+        public string Incharge
+        {
+            get => _Incharge;
+            set => _Incharge = value;
+        }
+        public string Remarks
+        {
+            get => _Remarks;
+            set => _Remarks = value;
+        }
+    }
+
+    public class DieMoldToolingModel
+    {
+        private int _RecordID;
+        private string _RegNo;
+        private string _ParNoSearch;
         private string _DimensionQuality;
         private int _Item;
         private string _DetailsModify;
@@ -69,10 +142,10 @@ namespace PMACS_V2.Areas.P1SA.Models
             get => _RegNo;
             set => _RegNo = value;
         }
-        public string PartNo
+        public string ParNoSearch
         {
-            get => _PartNo;
-            set => _PartNo = value;
+            get => _ParNoSearch;
+            set => _ParNoSearch = value;
         }
         public string DimensionQuality
         {

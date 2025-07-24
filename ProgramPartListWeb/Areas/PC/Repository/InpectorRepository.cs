@@ -3,6 +3,7 @@ using ProgramPartListWeb.Areas.PC.Interface;
 using ProgramPartListWeb.Areas.PC.Models;
 using ProgramPartListWeb.Helper;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -72,10 +73,20 @@ namespace ProgramPartListWeb.Areas.PC.Repository
 
             return result;
         }
-        public async Task<bool> EditRegistration(object paramaters, string json)
+        public async Task<bool> EditRegistration(RegistrationModel reg, string json)
         {
             // INSERT MAIN REGISTRATION PROCESS
-            bool result = await SqlDataAccess.UpdateInsertQuery("UpdateRegistration", paramaters);
+            bool result = await SqlDataAccess.UpdateInsertQuery("UpdateRegistration", new
+            {
+                RegNo = reg.RegNo,
+                DateConduct = reg.DateConduct,
+                Employee_ID = reg.Employee_ID,
+                FilePath = reg.FilePath,
+                PIC = reg.PIC,
+                PIC_Comments = reg.PIC_Comments,
+                Manager = reg.Manager,
+                Manager_Comments = reg.Manager_Comments
+            });
 
             // INSERT FINDING AND COUNTERMEASURE PROCESS
             // Deserialize findings
@@ -90,7 +101,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                     FindDescription = f.FindDescription,
                     Countermeasure = f.Countermeasure
                 };
-                await SqlDataAccess.UpdateInsertQuery("UpdateFindings", findparams);
+                await SqlDataAccess.UpdateInsertQuery("UpdateFindings", findparams, "Registration");
             }
 
             return result;

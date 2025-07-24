@@ -59,9 +59,11 @@ namespace ProgramPartListWeb.Utilities
                     worksheet.Cells["C48"].Value = reg.Manager_Comments;
                     worksheet.Cells["C53"].Value = "Manager: " + reg.Manager;
                     worksheet.Cells["D48"].Value = "Date Conducted: " + reg.DateConduct;
+                    worksheet.Cells["D49"].Value = " Comment (Person In-Charge):" + reg.PIC;
+                    worksheet.Cells["G53"].Value = reg.PIC;
                     worksheet.Cells["D50"].Value = reg.PIC_Comments;
                     worksheet.Cells["E53"].Value = reg.FullName;
-                    worksheet.Cells["G53"].Value = reg.PIC;
+                  
 
                     var findings = JsonConvert.DeserializeObject<List<FindingModel>>(json);
                     foreach (var f in findings)

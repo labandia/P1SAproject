@@ -220,7 +220,7 @@
                 <div class="MoldieBodyModal">
                     <form id="InputMoldie">
                         <div class="form_group col-12 col-sm-12">
-                            <label for="">Input Quantity</label>
+                            <label for="">Input Quantity : </label>
                             <input type="hidden" name="PartNo" id="PartNo">
                             <input type="hidden" name="No" id="No">
                             <input type="text" name="MoldInput" id="MoldInput" onkeypress="return restrictChars(event)" autocomplete="off">
@@ -264,7 +264,12 @@
 
                             <div class="form_group col-12 col-lg-6 col-sm-12">
                                 <label for="">Part number</label>
-                                <input type="text" name="PartNo" id="PartNo" placeholder="Enter Part number" required>
+                                @*<input type="text" name="PartNo" id="PartNo" placeholder="Enter Part number" required>*@
+                                <div class="search-box">
+                                    <input type="text" placeholder="Type Part number" name="ParNoSearch" id="ParNoSearch" required>
+                                    <div class="namesdisplay"></div>
+                                </div>
+                                   
                             </div>
                         </div>
 
@@ -337,6 +342,8 @@
     let TableDisplay = $("#SummarylistData");
     let MonitorDisplay = $("#DieMoldMasterlist");
     let ToolingDisplay = $("#DieMoldToolist");
+
+    const resultBox = document.querySelector(".namesdisplay");
 
     // Tabs Content
     const tabs = document.querySelectorAll(".Mold_tab");
@@ -428,17 +435,23 @@
         const data = Object.fromEntries(formData);
         let res = await postData('@Url.Action("AddUpdateMoldDieMonitor", "DieMold")', data);
         if (res.StatusCode === 201) {
+            const index = $('#InputMoldie').data('update-index');
+            //alert("Index : " + index);
             isTabLoaded[0] = false;
+            //console.log(res);
             GetMoldDieMonth(select.value, currentYear);
             $("#InputMoldieModal").modal("hide");
+            //if (isTabLoaded[index] == false) {
+     
+            //}
+            
         }
     });
     $("#AddToolforms").on('submit', async (e) => {
         e.preventDefault();
         let formData = new FormData(e.target);
         const data = Object.fromEntries(formData);
-        let res = await postData('@Url.Action("AddUpdateMoldDieTooling", "DieMold")', formData);
-
+        let res = await postData('@Url.Action("AddUpdateMoldDieTooling", "DieMold")', data);
         if (res.StatusCode === 201) {
             Swal.fire({
                 title: "Success",
@@ -502,6 +515,46 @@
         }
         select.appendChild(option);
     });
+
+    // INPUT SEARCH EMPLOYEE NAME WHEN TYPE
+    $("#ParNoSearch").keyup(function () {
+        let result = [];
+        let input = this.value;
+        if (input.length > 0) {
+            result = SummaryData.filter((item) => {
+                return item.PartNo.toLowerCase().includes(input.toLowerCase());
+            });
+
+            if (result.length > 0) {
+                resultBox.style.display = 'block';
+                display(result); // assumes display() handles array of objects
+            } else {
+                resultBox.style.display = 'block';
+                resultBox.innerHTML = '<div style="padding: 5px; color: #999;">No search found</div>';
+            }
+        } else {
+            resultBox.style.display = 'none';
+            resultBox.innerHTML = ''; // clear the previous results or message
+        }
+    });
+
+    function display(result) {
+        const content = result.map((list) => {
+            return `<li onclick="selectinput(this)" data-id="${list.PartNo}">${list.PartNo}</li>`;
+        });
+
+        resultBox.innerHTML = "<ul>" + content.join('') + "</ul>";
+    }
+
+
+    function selectinput(list) {
+        const selecPartno = list.getAttribute("data-id");
+        //employeeID = employeeId;
+        //$("#Employee_ID").val(employeeId);
+        $("#ParNoSearch").val(list.innerHTML);
+        resultBox.innerHTML = '';
+        resultBox.style.display = 'none';
+    }
     //===============================================================
     //================ FETCH DATA AND DISPLAY =======================
     //===============================================================
@@ -590,9 +643,6 @@
 
                    // Loads the First Data
                    DisplayTooling(DieTooling);
-
-
-
                    $("#Datearrived").on('change', (e) => {
                        const rawDate = e.target.value;
 
@@ -828,7 +878,10 @@
              // Step 1: Group by "No"
              const groupMap = new Map();
              for (let i = startIndex; i < endIndex; i++) {
-                 const row = filteredData[i];
+                 const row = {
+                     ...filteredData[i],
+                     _indexInTableData: dataArray.indexOf(filteredData[i])
+                 };
                  if (!groupMap.has(row.No)) groupMap.set(row.No, []);
                  groupMap.get(row.No).push(row);
              }
@@ -839,7 +892,9 @@
 
 
                  groupRows.forEach((rowData, idx) => {
-                     let rowHtml = "<tr class='rowClick' id='editButton_" + rowData.RecordID + "'>";
+                     const originalIndex = rowData._indexInTableData;
+
+                     let rowHtml = `<tr class='rowClick' id='editButton_${rowData.RecordID}' data-index='${originalIndex}'>`;
                      rowHtml += `<td data-cell="PartNo" style="text-align: left; padding-left: 1.5em; font-weight: 600; color: #222;">${rowData.PartNo}</td>
 
                                 <td data-cell="DimensionQuality">${rowData.DimensionQuality}</td>
@@ -923,6 +978,7 @@
              const result = TableData.find(p => p.RecordID == rowIndex);
              if (result) {
                  $("#PartNo").val(result.PartNo);
+                 $('#InputMoldie').data('update-index', rowIndex); 
                  $("#No").val(result.No);
                  $("#MoldInput").val(result.TotalDie === 0 ? "" : result.TotalDie);
                  $("#InputMoldieModal").modal("show");

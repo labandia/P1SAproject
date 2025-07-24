@@ -80,14 +80,12 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         public async Task<ActionResult> AddMoldingModelBase(AddMoldingModelPost add)
         {
             int capid = Convert.ToInt32(Request.Form["Capgroup_ID"]);
-            var update1 = _cap.AddMoldingModels(add);
-            var update2 = UpdateGroupCapacitySummary(capid, Request.Form["ProcessCode"]);
+            bool result = await _cap.AddMoldingModels(add);
 
-            bool[] results = await Task.WhenAll(update1, update2);
-            if (!results.All(r => r)) JsonValidationError();
+            if (!result) JsonValidationError();
 
-            CacheHelper.Remove("Molding");
-            await UpdateRepository.UpdateUserLogs(5, 1, "Add");
+            await UpdateGroupCapacitySummary(capid, Request.Form["ProcessCode"]);
+      
             return JsonCreated(add, "Update Process");
         }
         [HttpPost]
@@ -105,12 +103,11 @@ namespace PMACS_V2.Areas.P1SA.Controllers
                 Partnum =  Request.Form["Detail_Partnum"]
             };
 
-            var update1 = _cap.EditMoldingModels(mold);
-            var update2 = UpdateGroupCapacitySummary(capid, Request.Form["ProcessCode"]);
+            bool result = await _cap.EditMoldingModels(mold);
 
-            bool[] results = await Task.WhenAll(update1, update2);
-            if (!results.All(r => r)) JsonValidationError();
+            if (!result) JsonValidationError();
 
+            await UpdateGroupCapacitySummary(capid, Request.Form["ProcessCode"]);
             CacheHelper.Remove("Molding");
             await UpdateRepository.UpdateUserLogs(5, 1, "Edit");
             return JsonCreated(mold, "Update Successfully");

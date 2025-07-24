@@ -69,7 +69,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         }
         public async Task<ActionResult> GetMoldDieToolingList()
         {
-            var data = await _die.GetMoldToolingData() ?? new List<DieMoldToolingModel>();
+            var data = await _die.GetMoldToolingData() ?? new List<DieMoldToolingModelDisplay>();
 
             if (data == null || !data.Any())
                 return JsonNotFound("No Mold Die Tooling data found");

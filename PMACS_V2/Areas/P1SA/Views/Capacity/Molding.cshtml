@@ -179,7 +179,7 @@
             <div class="modal-body">
 
                 <div class="custom_modal_header">
-                    <div class="custom_modal__icon d-flex align-items-center mb-3 gap-2">
+                    <div class="custom_modal__icon flex_center">
                         <div class="custom_icon_container">
                             <i class="fa-regular fa-pen-to-square"></i>
                         </div>
@@ -233,7 +233,7 @@
 
                     <div class="modal-footer flex__space mt-3">
                         <strong id="newmodel">No Modelbase available </strong>
-                        <button type="submit" class="saveEditsum"><i class="fa fa-plus-circle"></i> Save</button>
+                        <button type="submit" class='primary_button_color saveEditsum'><i class="fa fa-plus-circle"></i> Save</button>
                     </div>
                 </form>
 
@@ -344,9 +344,6 @@
 </div>
 
 
-<script src="~/Scripts/jquery-3.7.0.js"></script>
-<script src="~/Scripts/Utilities.js"></script>
-<script src="~/Scripts/Global.js"></script>
 <script type="text/javascript">
      // CAPACITY PROCESSS type
     let cap_groupID = parseInt(@capid);
@@ -778,8 +775,10 @@
              formData.append('ProcessCode', processcode);
              formData.append('Capgroup_ID', cap_groupID);
              const data = Object.fromEntries(formData);
+             console.log(data);
              let res = await postData('@Url.Action("EditMoldingByDetails", "PostCapacity")', formData);
-             EditResult(res, data);
+             console.log(res);
+             //EditResult(res, data);
         });
 
         // Initialize table and pagination
@@ -836,12 +835,11 @@
              formData.append('Capgroup_ID', cap_groupID);
              const data = Object.fromEntries(formData);
 
-             let res = await postData('@Url.Action("AddMoldingModelBase", "PostCapacity")', formData);
-
-             if (res.code == 200) {
+             let res = await postData('@Url.Action("AddMoldingModelBase", "PostCapacity")', data);
+             if (res && res.Success) {
                     Swal.fire({
                         title: "Add success",
-                        text: res.message,
+                        text: res.Message,
                         icon: "success",
                         showConfirmButton: false,
                         timer: 1500
@@ -905,7 +903,7 @@
      }
      function EditResult(res, data) {
 
-         if (res.StatusCode == 200) {
+         if (res && res.Success) {
              Swal.fire({
                  title: "Edit Successful",
                  icon: "success",

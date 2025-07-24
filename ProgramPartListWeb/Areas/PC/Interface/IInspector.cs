@@ -28,7 +28,7 @@ namespace ProgramPartListWeb.Areas.PC.Interface
         Task<List<ProccessModel>> GetProcessData(int depid);
 
         Task<bool> AddRegistration(RegistrationModel reg, string json);
-        Task<bool> EditRegistration(object paramaters, string json);
+        Task<bool> EditRegistration(RegistrationModel reg, string json);
         Task<bool> DeleteRegistration(string RegNo);
 
         // GET DATA FOR THE LIST TRAINERS AND SCHUDLE

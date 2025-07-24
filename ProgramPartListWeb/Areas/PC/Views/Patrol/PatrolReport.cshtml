@@ -100,11 +100,13 @@
 
                 let usercontrol = (ActionRestrict() === false)
                     ? ``
-                    : `<td data-cell="Delete">
-                           <button  class='deleteData text-danger bg-white' id='deleteData_${rowData.RegNo}' ">
-                               <i class="fa-regular fa-trash-can"></i>
-                           </button>
-                         </td>`;
+                    : `<td data-cell="Delete" >
+                            <div class='flex_center'>
+                                <button  class='deleteData text-danger bg-white' id='deleteData_${rowData.RegNo}' ">
+                                    <i class="fa-regular fa-trash-can"></i>
+                                </button>
+                            </div>
+                    </td>`;
 
                 const rowHtml = `
                  <tr class='row_${i} editButton' id='editButton_${rowData.RegNo}'>
@@ -113,10 +115,12 @@
                      <td data-cell="SectionName"><span class="Section ${rowData.SectionName}">${rowData.SectionName}</span></td>
                      <td data-cell="PIC">${rowData.PIC}</td>
                      <td data-cell="DateConduct">${rowData.DateConduct}</td>
-                     <td data-cell="Filepath">
-                        <button class="open-pdf-btn" data-pdf-url="/Patrol/ViewPDF?strfilepath=${rowData.Filepath}">
-                            <i class="fa-solid fa-paperclip"></i>
-                        </button>
+                     <td data-cell="Filepath" >
+                        <div class='flex_center'>
+                             <button class="open-pdf-btn" data-pdf-url="/Patrol/ViewPDF?strfilepath=${rowData.Filepath}">
+                                 <i class="fa-solid fa-paperclip"></i>
+                             </button>
+                        </div>   
                      </td>
                      ${usercontrol}
                  </tr>`;

@@ -61,7 +61,7 @@
 
 
 <!--########################## EDIT DATA #############################-->
-<div class="modal modal-m" id="exampleModal" tabindex="-1" role="dialog">
+<div class="modal fade modal-m" id="exampleModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
 
@@ -84,16 +84,24 @@
 
 
                 <form id="EditPisa" autocomplete='off'>
-                    <label style='font-weight: 600; color: #222; margin-bottom: .5em;'>Total Machine : </label>
                     <input type='hidden' name='ProcessCode' id='ProcessCode' />
-                    <input type='text' name='ActualMachine' id='ActualMachine' onkeypress='return restrictChars(event)' /><br />
-                    <label style='font-weight: 600; color: #222; margin-bottom: .5em;'>Total Operational :</label> <br />
-                    <input type='text' name='AvailMachine' id='AvailMachine' onkeypress='return restrictChars(event)' /><br />
-                    <div class='footer d-flex justify-content-end pt-4 pb-2 gap-2'>
-                        <button type='submit' class='btn btn-primary' id='saveEditsum'>
+
+                    <div class="detail__inputfield">
+                        <label>Total Machine : </label>
+                        <input type='text' name='ActualMachine' id='ActualMachine' onkeypress='return restrictChars(event)' /><br />
+                    </div>
+                    <div class="detail__inputfield">
+                        <label>Total Operational :</label>
+                        <input type='text' name='AvailMachine' id='AvailMachine' onkeypress='return restrictChars(event)' /><br />
+                    </div>
+
+                    <div class="edits_footer" id="editsdisplay">
+                        <button type='submit' class='primary_button_color' id='saveEditsum'>
                             <i class='fa-regular fa-pen-to-square action_btn'></i> Save
                         </button>
                     </div>
+                   
+                   
                 </form>
             </div>
 
@@ -148,8 +156,8 @@
                      if (ActionRestrict() !== false) {
                          $("#headertable").show();
                          buttons = `<td id='datatable' style='text-align: center;'>
-                                       <button type='submit' Class='btn actionicon text-success editButton' id='editButton_${row.ProcessCode}' >
-                                       <i class='fa-regular fa-pen-to-square action_btn'></i>
+                                       <button style='color: var(--primary-color);' type='submit' class='btn actionicon  editButton' id='editButton_${row.ProcessCode}' >
+                                        <i class='fa-regular fa-pen-to-square action_btn'></i>
                                        </button>
                                    </td>`;
                      } else {

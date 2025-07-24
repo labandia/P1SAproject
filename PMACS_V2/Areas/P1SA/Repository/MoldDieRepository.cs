@@ -157,7 +157,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
                                 ORDER BY p.No ASC";
             return  SqlDataAccess.GetData<DieMoldSummaryProcess>(strquery, new { ProcessID = process });
         }
-        public Task<List<DieMoldToolingModel>> GetMoldToolingData()
+        public Task<List<DieMoldToolingModelDisplay>> GetMoldToolingData()
         {
             string strquery = $@"SELECT t.RegNo, t.PartNo, p.DimensionQuality, 
                                 t.Item, t.DetailsModify, t.ShotRelease,
@@ -168,7 +168,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
                                 INNER JOIN DieMoldParts p ON t.PartNo = p.PartNo
                                 ORDER BY t.RecordID DESC";
 
-            return SqlDataAccess.GetData<DieMoldToolingModel>(strquery, null, "MoldTooling");
+            return SqlDataAccess.GetData<DieMoldToolingModelDisplay>(strquery, null, "MoldTooling");
         }
 
         public async Task<bool> AddUpdateMoldie(MoldInputModel mold)
@@ -199,9 +199,23 @@ namespace PMACS_V2.Areas.P1SA.Repository
 
         public Task<bool> AddMoldieTooling(DieMoldToolingModel mold)
         {
-            string insertquery = @"INSERT INTO DieMoldDieTooling(RegNo, PartNo, Item, DetailsModify, ShotRelease, DateArrived, DateRepair, Incharge, Remarks)
-                                       VALUES(@RegNo, @PartNo, @Item, @DetailsModify, @ShotRelease, @DateArrived , @DateRepair, @Incharge, @Remarks)";
-            return SqlDataAccess.UpdateInsertQuery(insertquery, mold);
+            string insertquery = @"INSERT INTO DieMoldDieTooling(RegNo, PartNo, Item, DetailsModify, ShotRelease, 
+                                                                DateArrived, DateRepair, Incharge, Remarks)
+                                   VALUES(@RegNo, @PartNo, @Item, @DetailsModify, @ShotRelease, @DateArrived , @DateRepair, 
+                                    @Incharge, @Remarks)";
+            var parameter = new
+            {
+                RegNo = mold.RegNo,
+                PartNo = mold.ParNoSearch,
+                Item = mold.Item,
+                DetailsModify = mold.DetailsModify,
+                ShotRelease = mold.ShotRelease, 
+                DateArrived = mold.DateArrived,
+                DateRepair = mold.DateRepair,   
+                Incharge = mold.Incharge,   
+                Remarks = mold.Remarks
+            };
+            return SqlDataAccess.UpdateInsertQuery(insertquery, parameter, "MoldTooling");
         }
 
         // ===========================================================

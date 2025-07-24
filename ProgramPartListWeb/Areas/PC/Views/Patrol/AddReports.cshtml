@@ -247,6 +247,52 @@
         return JSON.stringify(findings);
     };
 
+    
+
+    addform.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        let strfind = findingsJson(e.target);
+        let finalformData = new FormData(e.target);
+        finalformData.append('FindJson', strfind);
+
+        const finaldata = Object.fromEntries(finalformData);
+        let reg = "P1SA-" + finaldata.RegNo;
+        if (formValidation(reg)) {
+            Swal.fire({
+                icon: "error",
+                text: "Registration No is already inserted",
+                timer: 1500,
+                showConfirmButton: false
+            });
+
+            $("#errorvalid").show();
+            $("#labelguide").hide();
+            $("#RegNo").css("border", "1px solid red");
+            return;
+        }
+        const savebtn = document.querySelector("#btnSave");
+        savebtn.innerHTML = " <div class='buttonloading'></div> Generating PDF Please wait...";
+        let res = await postData('@Url.Action("AddRegistration", "Patrol")', finalformData);
+        if (res.StatusCode === 201) {
+            Swal.fire({
+                title: "Success",
+                text: res.Message,
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1500
+            }).then(() => {
+                setTimeout(() => {
+                    window.location.href = "/PC/Patrol/PatrolReport";
+                }, 3000);
+            });
+        }
+
+        Resetforms();
+    });
+
+
+
     // INPUT SEARCH EMPLOYEE NAME WHEN TYPE
     $("#EmployeeSearch").keyup(function () {
         let result = [];
@@ -269,42 +315,6 @@
             resultBox.style.display = 'none';
             resultBox.innerHTML = ''; // clear the previous results or message
         }
-    });
-
-    addform.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const savebtn = document.querySelector("#btnSave");
-        savebtn.innerHTML = " <div class='buttonloading'></div> Generating PDF Please wait...";
-
-        let strfind = findingsJson(e.target);
-        let finalformData = new FormData(e.target);
-        finalformData.append('FindJson', strfind);
-
-        const finaldata = Object.fromEntries(finalformData);
-        if (formValidation(finaldata.RegNo)) {
-            $("#errorvalid").show();
-            $("#labelguide").hide();
-            $("#RegNo").css("border", "1px solid red");
-            return;
-        }
-
-        let res = await postData('@Url.Action("AddRegistration", "Patrol")', finalformData);
-        if (res.StatusCode === 201) {
-            Swal.fire({
-                title: "Success",
-                text: res.Message,
-                icon: "success",
-                showConfirmButton: false,
-                timer: 1500
-            }).then(() => {
-                setTimeout(() => {
-                    window.location.href = "/PC/Patrol/PatrolReport";
-                }, 3000);
-            });
-        }
-
-        Resetforms();
     });
 
     function display(result) {

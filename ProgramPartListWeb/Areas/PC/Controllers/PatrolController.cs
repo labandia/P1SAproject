@@ -384,7 +384,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             if (result)
             {
                 CacheHelper.Remove("Registration");
-                ExportFiler.SaveFileasPDF(obj, findJson, departmentName, newFileName, templatePath);
+                await ExportFiler.SaveFileasPDF(obj, findJson, departmentName, newFileName, templatePath);
             }
             if (result == false) return JsonError("Problem during saving Data.", 500);
             return JsonCreated(result, "Change Status successfully");
@@ -429,7 +429,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 if (System.IO.File.Exists(excelfilepath))  System.IO.File.Delete(excelfilepath);
                 
                 CacheHelper.Remove("Registration");
-                ExportFiler.SaveFileasPDF(obj, findJson, GlobalUtilities.DepartmentName(Department), newFileName, templatePath);
+                await ExportFiler.SaveFileasPDF(obj, findJson, GlobalUtilities.DepartmentName(Department), newFileName, templatePath);
             }
 
             if (!result) JsonValidationError();

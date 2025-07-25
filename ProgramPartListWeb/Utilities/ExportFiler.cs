@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using System.Web;
@@ -11,6 +12,7 @@ using OfficeOpenXml;
 using ProgramPartListWeb.Areas.PC.Models;
 using ProgramPartListWeb.Helper;
 using Spire.Xls;
+using Spire.Xls.Core;
 
 
 namespace ProgramPartListWeb.Utilities
@@ -37,7 +39,7 @@ namespace ProgramPartListWeb.Utilities
 
 
 
-        public static void SaveFileasPDF(RegistrationModel reg, string json, string department, string outputfilename, string template)
+        public static async Task SaveFileasPDF(RegistrationModel reg, string json, string department, string outputfilename, string template)
         {
             try
             {
@@ -49,6 +51,9 @@ namespace ProgramPartListWeb.Utilities
                 byte[] excelBytes;
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
+                DateTime date = DateTime.ParseExact(reg.DateConduct, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                string formatted = date.ToString("MMMM dd, yyyy");  // Output: "July 24, 2025"
+
                 // Step 1: Generate Excel in memory
                 using (var package = new ExcelPackage(new FileInfo(template)))
                 {
@@ -58,8 +63,8 @@ namespace ProgramPartListWeb.Utilities
                     worksheet.Cells["B4"].Value = "Dept. /Section Inspected: P1SA-" + department;
                     worksheet.Cells["C48"].Value = reg.Manager_Comments;
                     worksheet.Cells["C53"].Value = "Manager: " + reg.Manager;
-                    worksheet.Cells["D48"].Value = "Date Conducted: " + reg.DateConduct;
-                    worksheet.Cells["D49"].Value = " Comment (Person In-Charge):" + reg.PIC;
+                    worksheet.Cells["D48"].Value = " Date Conducted: " + formatted;
+                    worksheet.Cells["D49"].Value = " Comment (Person In-Charge):  " + reg.PIC;
                     worksheet.Cells["G53"].Value = reg.PIC;
                     worksheet.Cells["D50"].Value = reg.PIC_Comments;
                     worksheet.Cells["E53"].Value = reg.FullName;
@@ -123,6 +128,46 @@ namespace ProgramPartListWeb.Utilities
                     sheet.SetRowHeight(41, 30);
                     sheet.SetRowHeight(42, 30);
 
+                    // ⭐️ Next Step : Insert user signature image at C55
+                    string imagePath = await GetImageString(reg.Employee_ID);
+                    if (!string.IsNullOrEmpty(imagePath))
+                    {
+                        string pathfile = Path.Combine(@"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\Signatures", imagePath);
+                        Debug.WriteLine("HERE : " +  pathfile);
+                        //CellRange cell = sheet.Range["E53"];
+                        //ExcelPicture picture = sheet.Pictures.Add(cell.Row, cell.Column, pathfile);
+
+                        //picture.TopRowOffset = 0;
+                        //picture.LeftColumnOffset = 0;
+                        //picture.Width = (int)(cell.ColumnWidth * 7); // Scale approx. to column width
+                        //picture.Height = (int)sheet.Rows[cell.Row - 1].RowHeight; // Match row height
+
+                        if (File.Exists(pathfile))
+                        {
+                            foreach (IShape shape in sheet.PrstGeomShapes)
+                            {
+                                if (shape.Name == "SignaImage")
+                                {
+                                    // Make sure it's a shape that supports image fill
+                                    if (shape is IPrstGeomShape imageShape)
+                                    {
+                                        // Apply the image fill
+                                        imageShape.Fill.CustomPicture(pathfile);
+
+                                        // Optional: Auto-size the shape to image dimensions or vice versa
+                                        // This is optional; you can also resize the shape manually
+                                        //System.Drawing.Image img = System.Drawing.Image.FromFile(pathfile);
+                                        //shape.Width = img.Width;
+                                        //shape.Height = img.Height;
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            Debug.WriteLine("Image file not found at: " + pathfile);
+                        }
+                    }
 
                     // Save to temporary local file first
                     workbook.SaveToFile(tempPdfPath, FileFormat.PDF);
@@ -138,6 +183,20 @@ namespace ProgramPartListWeb.Utilities
             {
                 Debug.WriteLine("Error generating PDF: " + ex);
             }
+        }
+
+        private static async Task<string>GetImageString(string EmpID)
+        {
+            string imagepath = "";
+            string strquery = $@"SELECT u.Signature
+                                FROM UserAccounts ua
+                                INNER JOIN Users u ON u.User_ID = ua.User_ID
+                                INNER JOIN ProjectList p ON p.Project_ID = ua.Project_ID
+                                WHERE IsActive = 1 AND u.Employee_ID =@ID";
+
+            string data = await SqlDataAccess.GetOneData(strquery, new { ID = EmpID });
+            imagepath = (!string.IsNullOrEmpty(data)) ? data : "";
+            return imagepath;   
         }
     }
 }

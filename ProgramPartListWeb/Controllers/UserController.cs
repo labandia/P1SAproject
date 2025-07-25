@@ -129,7 +129,10 @@ namespace ProgramPartListWeb.Controllers
                     bool result = await _user.SaveSignatureData(sig.UserID, filename);
 
                     // if the Image file name is Save 
-                    if (result) sig.SignatureImage.SaveAs(pathfile);
+                    if (result)
+                    {
+                        sig.SignatureImage.SaveAs(pathfile);
+                    }
 
 
                     return Json(new { success = true, message = "Upload Success" }, JsonRequestBehavior.AllowGet);

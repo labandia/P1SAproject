@@ -6,6 +6,8 @@ using System.Linq;
 using ProgramPartListWeb.Interfaces;
 using ProgramPartListWeb.Utilities;
 using System;
+using System.IO;
+using System.Diagnostics;
 
 namespace ProgramPartListWeb.Data
 {
@@ -123,10 +125,31 @@ namespace ProgramPartListWeb.Data
             return SqlDataAccess.Checkdata(strsql, null);
         }
 
-        public Task<bool> SaveSignatureData(int userID, string fileName)
+        public async Task<bool> SaveSignatureData(int userID, string fileName)
         {
             string strsql = "UPDATE Users Set Signature =@Signature WHERE User_ID =@User_ID";
-            return SqlDataAccess.UpdateInsertQuery(strsql, new { Signature  = fileName, User_ID = userID});
+
+            var userData = await GetAllusers();
+            string existingSignatureFile = userData.Where(res => res.User_ID == userID)
+                                .Select(p => p.Signature)
+                                .FirstOrDefault();
+            if (!string.IsNullOrEmpty(existingSignatureFile))
+            {
+                var pathfile = Path.Combine(@"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\Signatures", existingSignatureFile);
+
+                try
+                {
+                    if (File.Exists(pathfile)) File.Delete(pathfile);
+                }
+                catch (Exception ex)
+                {
+                    // Optional: log or handle exception
+                    Debug.WriteLine($"Failed to delete signature file: {ex.Message}");
+                }
+            }
+
+
+            return await SqlDataAccess.UpdateInsertQuery(strsql, new { Signature  = fileName, User_ID = userID});
         }
     }
 }

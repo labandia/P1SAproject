@@ -853,6 +853,60 @@
 /*------------------------------------------------------------------------------- */
 
 
+    .Mold_tabs {
+        display: flex;
+        position: relative;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .Mold_tabs button {
+      width: 150px;
+      background: none;
+      border: none;
+      padding: 1rem;
+      cursor: pointer;
+      font-weight: 600;
+      color: #222;
+      font-size: var(--small-font-size);
+      transition: color 0.3s;
+      position: relative;
+      z-index: 1;
+    }
+
+    .Mold_tabs button.active {
+      color: var(--primary-color);
+    }
+
+    .Mold_slider {
+      position: absolute;
+      bottom: 0;
+      height: 2px;
+      width: 150px;
+      background: var(--primary-color);
+      transition: transform 0.3s ease;
+    }
+
+    .Mold_contentbox {
+      position: relative;
+      min-height: 100px;
+    }
+
+    .Mold_content {
+      opacity: 0;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    /*  width: 100%;*/
+      top: 0;
+      left: 0;
+      display: none;
+      padding: 1em 0 0;
+    }
+
+    .Mold_content.show {
+      opacity: 1;
+      transform: translateX(0);
+      display: block;
+    }
+
 
     #UserFullname {
         font-weight: 600;
@@ -871,6 +925,22 @@
     object-fit: cover;
     background-position: center;
 
+}
+.SignatureAction{
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    flex-direction: column;
+    gap: 1em;
+    margin-top: 3em;
+}
+.clearbtn{
+    border: 1px solid rgba(37, 37, 37,0.5);
+}
+
+
+.SignatureAction button {
+    width: 100%;
 }
 
 
@@ -934,7 +1004,7 @@
     }
 
     .Copyrights{
-        position: absolute;
+        position: fixed;
         bottom: 0;
         left: 0;
         width: 100%;

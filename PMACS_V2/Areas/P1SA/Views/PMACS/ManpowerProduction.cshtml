@@ -15,13 +15,13 @@
 <section class="mt-4">
     <div class="row">
         <div class="col-8">
-            <div class="chart_container" style="padding: 1.5em; background: #fff; border: 1px solid #d4d3d3; border-radius: .5em;">
-                <canvas id="lackingChart" width="600" height="300"></canvas>
+            <div class="chart_container" >
+                <canvas id="lackingChart" ></canvas>
             </div>
         </div>
 
         <div class="col-4">
-            <div class="chart_container" style="padding: 1.5em; background: #fff; border: 1px solid #d4d3d3; border-radius: .5em;">
+            <div class="chart_container">
                 <canvas id="manpowerChart" width="200" height="200" style="width: 200px !important; height: 200px"></canvas>
             </div>
         </div>
@@ -40,7 +40,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th >Section</th>
+                            <th style="text-align: left; padding-left: 1.5em;">Section</th>
                             <th>Actual</th>
                             <th>Required</th>
                             <th>Lacking</th>
@@ -215,7 +215,7 @@
                  const color = negativecolor < 0 ? 'red' : 'black';
 
                  var getdata = "<tr class= 'row_" + index + "  '>" +
-                     "<td style='font-weight: 600;'>" + rowData.SectionName + "</td>" +
+                     "<td style='font-weight: 600; text-align: left; padding-left: 1.5em;' >" + rowData.SectionName + "</td>" +
                      "<td style='text-align: center;'>" + rowData.Actual + "</td>" +
                      "<td style='text-align: center;'>" + rowData.Required + "</td>" +
                      "<td style='text-align: center;   color: " + color + "; font-weight: 600;'>" + rowData.Lacking + "</td>" +
@@ -266,6 +266,8 @@
             type: 'bar',
             data: data,
             options: {
+                responsive: true,
+                maintainAspectRatio: false,
                 scales: {
                     x: {
                         beginAtZero: true,
@@ -338,6 +340,7 @@
             data: data,
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 cutout: '70%',
                 plugins: {
                     title: {
@@ -438,7 +441,7 @@
          $.each(array, function (index, rowData) {
              if (ActionRestrict() !== false) {
                  $("#headertable").show();
-                 buttons = "<td><div class='table__action'> " +
+                 buttons = "<td><div class='table__action flex_center'> " +
                      "<button type='button' class= 'row_" + index + " editButton' id='editButton_" + rowData.Manpower_ID + "'><i class='fa-regular fa-pen-to-square action_btn'></i> </button>" +
                      "</div></td>";
              } else {

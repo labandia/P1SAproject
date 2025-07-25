@@ -4,23 +4,29 @@
     Layout = "~/Areas/P1SA/Views/Shared/_Layout.cshtml";
 }
 
-
-
 <div class="selectiontabs">
     <header class="MainHeader">
         <div class="d-flex align-items-center gap-3">
             <a href="/P1SA/PMACS/Selection"><i class="fa fa-arrow-left" aria-hidden="true"></i></a>
             <h4>Forecast Data</h4>
         </div>
-        <div class="selectiontabs__header">
-            <div class="active">Total by month</div>
-            <div>Data table</div>
+
+        <div class="Mold__actions flex_align">
+            <div class="searchinputContainer" id="hiddenInput">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" placeholder="Search here ... " id="searchbox" />
+                <div class="line"></div>
+            </div>
+            <button id="Excelbtn" class="primary_button_color"><i class="fa-solid fa-file-import"></i>  Update forecast</button>
         </div>
     </header>
 
+    <div class="selectiontabs__header mt-3">
+        <div class="active">Total by month</div>
+        <div>Data table</div>
+    </div>
 
 
-    
 
     <div class="selectiontabs__body">
         <div class="active" style="width: 100%;">
@@ -29,26 +35,11 @@
             </div>
         </div>
         <div style="width: 100%;">
-            <div class="forestheader">
-                <div class="forestheader__input">
-                    <div class="searchinputContainer">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" placeholder="Search here ... " id="myInput" />
-                        <div class="line"></div>
-                    </div>
-                </div>
-
-                <div class="forestheader__importaction">
-                    <button id="Excelbtn" class="primary_button_color"><i class="fa-solid fa-file-import"></i>  Update forecast</button>
-                </div>
-            </div>
-
-
-            <div class="MainTable">
+            <div class="ForecastTable">
                 <table>
                     <thead>
                         <tr>
-                            <th class="sortable textleft">Model Base</th>
+                            <th class="sortable" style="text-align: left; padding-left: 1.5em; width: 150px;">Model Base</th>
                             <th>Jan</th>
                             <th>Feb</th>
                             <th>Mar</th>
@@ -68,24 +59,17 @@
                     </tbody>
                 </table>
             </div>
-
-
-
-            @*=============== Empty state Display ===================*@
-            <div id="empty-state">
-                <p>No data available.</p>
-            </div>
-
         </div>
     </div>
 </div>
 
+<div class="MasterlistWrap_footer " id="tablefooter">
+    <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
+
+    <div id="MastertableContainer" class="paginationPartlocal flex_align"></div>
+</div>
 
 
-
-<button class="navbottom" onclick="topFunction()">
-    <i class="fa-solid fa-arrow-up"></i>
-</button>
 
 
 
@@ -169,73 +153,9 @@
         let nov = 0.0;
         let dec = 0.0;
 
-
-        // Get the current year
-        var currentYear = currentDate.getFullYear();
-        var SetData = $("#forecastdata");
-
-        let res = await fetchData('@Url.Action("GetForecastModelList", "Capacity")', { year: currentYear });
+        let res = await fetchData('@Url.Action("GetForecastModelList", "Capacity")', { year: currentDate.getFullYear() });
         if (res && res.Success) {
-            $.each(res.Data, function (index, rowData) {
-                var getdata = "<tr class= 'row_" + index + "'>" +
-                    "<td class='textleft' style='font-weight: 600;'>" + rowData.Model_name + "</td>" +
-                    "<td>" + rowData.January + "</td>" +
-                    "<td>" + rowData.February + "</td>" +
-                    "<td>" + rowData.March + "</td>" +
-                    "<td>" + rowData.April + "</td>" +
-                    "<td>" + rowData.May + "</td>" +
-                    "<td>" + rowData.June + "</td>" +
-                    "<td>" + rowData.July + "</td>" +
-                    "<td>" + rowData.August + "</td>" +
-                    "<td>" + rowData.September + "</td>" +
-                    "<td>" + rowData.October + "</td>" +
-                    "<td>" + rowData.November + "</td>" +
-                    "<td>" + rowData.December + "</td>" +
-
-                    "</tr>";
-                SetData.append(getdata);
-
-
-                jan += parseFloat(rowData.January);
-                feb += parseFloat(rowData.February);
-                mar += parseFloat(rowData.March);
-                apr += parseFloat(rowData.April);
-                may += parseFloat(rowData.May);
-                jun += parseFloat(rowData.June);
-                jul += parseFloat(rowData.July);
-                aug += parseFloat(rowData.August);
-                sep += parseFloat(rowData.September);
-                oct += parseFloat(rowData.October);
-                nov += parseFloat(rowData.November);
-                dec += parseFloat(rowData.December);
-            });
-            totalSumData.push(jan)
-            totalSumData.push(feb)
-            totalSumData.push(jan)
-            totalSumData.push(mar)
-            totalSumData.push(apr)
-            totalSumData.push(may)
-            totalSumData.push(jun)
-            totalSumData.push(jul)
-            totalSumData.push(aug)
-            totalSumData.push(sep)
-            totalSumData.push(oct)
-            totalSumData.push(nov)
-            totalSumData.push(dec)
-
-            $("#jan").text(getFormatComma(jan));
-            $("#feb").text(getFormatComma(feb));
-            $("#mar").text(getFormatComma(mar));
-            $("#apr").text(getFormatComma(apr));
-            $("#may").text(getFormatComma(may));
-            $("#jun").text(getFormatComma(jun));
-            $("#jul").text(getFormatComma(jul));
-            $("#aug").text(getFormatComma(aug));
-            $("#sep").text(getFormatComma(sep));
-            $("#oct").text(getFormatComma(oct));
-            $("#nov").text(getFormatComma(nov));
-            $("#dec").text(getFormatComma(dec));
-
+            MasterlistPagination(res.Data, 'forecastdata', 'MastertableContainer', 50, 5);
         }
 
     }
@@ -246,7 +166,6 @@
             DisplayChartData(result);
         }
     }
-
     function DisplayChartData(data) {
         // DISPLAY THE CHART TOTAL
         const ctx = document.getElementById('myChart');
@@ -270,6 +189,16 @@
                 }]
             },
             options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false // 👈 removes the legend box (red area)
+                    },
+                    title: {
+                        display: false
+                    }
+                },
                 scales: {
                     y: {
                         beginAtZero: true,
@@ -293,20 +222,8 @@
                         }
                     }
                 }
-            },
-            plugins: {
-                legend: {
-                    labels: {
-                        font: {
-                            family: 'Poppins', // Change the font family
-                            size: 14,        // Change the font size
-                            weight: 'bold'   // Change the font weight
-                        },
-                        color: '#FF5733' // Change the font color
-                    }
-                }
-
             }
+            
         });
     }
 
@@ -327,42 +244,16 @@
             tabBodynodes[i].classList.add("active");
 
             if (i === 1) {
-                $(".navbottom").show();
+                $("#hiddenInput").show();
+                $("#tablefooter").show();
             } else {
-                $(".navbottom").hide();
+                $("#hiddenInput").hide();
+                $("#tablefooter").hide();
             }
         });
     }
 
-    // SEARCH DATA USING KEYUP EVENT
-    $("#myInput").on("keyup", function () {
-        var value = $(this).val().toLowerCase();
-        var hasMatch = false;
-
-        $("#forecastdata tr").each(function () {
-            var modelBase = $(this).find("td:first").text().toLowerCase();
-            if (modelBase.indexOf(value) > -1) {
-                $(this).show();
-                hasMatch = true;
-            } else {
-                $(this).hide();
-            }
-        });
-
-        // Show or hide the empty state based on matches
-        if (hasMatch) {
-            $("#empty-state").hide();
-        } else {
-            $("#empty-state").show();
-        }
-
-        // Show all rows if the search input is empty
-        if (value === "") {
-            $("#forecastdata tr").show();
-            $("#empty-state").hide();
-        }
-    });
-
+    
     function ValidationForm() {
         if ($("#calendar").val() == 'month') {
             return false;
@@ -471,83 +362,176 @@
 
 
 
-        function handleFiles3(files) {
-            if (files.length === 0) return;
-            const file = files[0];
-            if (!file.name.endsWith('.xlsx') && !file.name.endsWith('.xls')) {
-                alert('Please upload a valid Excel file.');
-                return;
-            }
-            const formData = new FormData();
-            formData.append('excelfile', file);
-            formData.append('calendar', $("#calendar").val());
-            //const data = Object.fromEntries(formData);
-            //console.log(data);
-            // You can now send the formData to the server using fetch or XMLHttpRequest
-            // Example using fetch:
-            // fetch('/your-upload-endpoint', {
-            //     method: 'POST',
-            //     body: formData
-            // }).then(response => response.json())
-            //   .then(data => console.log(data))
-            //   .catch(error => console.error('Error:', error));
-            let check = ValidationForm();
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', apiBaseUrl + 'Importupdatedforecast', true);
-
-            xhr.upload.addEventListener('progress', function (e) {
-                if (e.lengthComputable) {
-                    const percentComplete = (e.loaded / e.total) * 100;
-                    const progressBar = document.getElementById('progress-bar');
-                    progressBar.style.display = 'block';
-                    progressBar.value = percentComplete;
-                }
-            });
-
-            xhr.addEventListener('load', function () {
-                const progressBar = document.getElementById('progress-bar');
-                progressBar.style.display = 'none';
-                if (xhr.status === 200) {
-                    const res = JSON.parse(xhr.responseText);
-                    if (res.isSuccess) {
-                        $("#uploadmodal").modal("hide");
-                        Swal.fire({
-                            text: res.message,
-                            icon: "success",
-                            confirmButtonColor: "#0d97c9",
-                            timer: 2000
-                        }).then(() => {
-                            window.location.href = "/Capacity/ForecastData";
-                        });
-                    } else {
-                        alert("Upload a file first");
-                    }
-                } else {
-                    alert('Upload failed!');
-                }
-            });
-
-            xhr.addEventListener('error', function () {
-                alert('An error occurred while uploading the file.');
-            });
-
-
-            xhr.send(formData);
-
-
-        }
+      
     });
-    function topFunction() {
-        document.body.scrollTop = 0;
-        document.documentElement.scrollTop = 0;
-    }
+  
+    function MasterlistPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 7, visibleButtons = 5) {
+          let currentPage = 1;
+          let filteredData = [...dataArray];
+
+          const updatePaginationInfo = () => {
+              const totalRecords = filteredData.length;
+              const totalPages = Math.ceil(totalRecords / recordsPerPage);
+              $("#totalpageID").text(totalPages);
+              $("#DatalengthID").text(totalRecords);
+              return totalPages;
+          };
+
+          const renderTable = (page) => {
+              let jan = 0.0;
+              let feb = 0.0;
+              let mar = 0.0;
+              let apr = 0.0;
+              let may = 0.0;
+              let jun = 0.0;
+              let jul = 0.0;
+              let aug = 0.0;
+              let sep = 0.0;
+              let oct = 0.0;
+              let nov = 0.0;
+              let dec = 0.0;
 
 
+              const totalPages = updatePaginationInfo();
+              const startIndex = (page - 1) * recordsPerPage;
+              const endIndex = Math.min(startIndex + recordsPerPage, filteredData.length);
+              const tableBody = document.getElementById(tableBodyId);
+              tableBody.innerHTML = '';
+
+              for (let i = startIndex; i < endIndex; i++) {
+                  const rowData = filteredData[i];
+                  const color = rowData.Color;
+
+                  var rowHtml = `<tr class= 'row_${i}'>
+                                      <td style='font-weight: 600; text-align: left; padding-left: 1.5em; width: 150px;'>${rowData.Model_name}</td>
+                                      <td>${rowData.January}</td>
+                                      <td>${rowData.February}</td>
+                                      <td>${rowData.March}</td>
+                                      <td>${rowData.April}</td>
+                                      <td>${rowData.May}</td>
+                                      <td>${rowData.June}</td>
+                                      <td>${rowData.July}</td>
+                                      <td>${rowData.August}</td>
+                                      <td>${rowData.September}</td>
+                                      <td>${rowData.October}</td>
+                                      <td>${rowData.November}</td>
+                                      <td>${rowData.December}</td>
+                                </tr>`;
+                  tableBody.innerHTML += rowHtml;
+
+
+                  jan += parseFloat(rowData.January);
+                  feb += parseFloat(rowData.February);
+                  mar += parseFloat(rowData.March);
+                  apr += parseFloat(rowData.April);
+                  may += parseFloat(rowData.May);
+                  jun += parseFloat(rowData.June);
+                  jul += parseFloat(rowData.July);
+                  aug += parseFloat(rowData.August);
+                  sep += parseFloat(rowData.September);
+                  oct += parseFloat(rowData.October);
+                  nov += parseFloat(rowData.November);
+                  dec += parseFloat(rowData.December);
+              }
+
+
+              totalSumData.push(jan)
+              totalSumData.push(feb)
+              totalSumData.push(jan)
+              totalSumData.push(mar)
+              totalSumData.push(apr)
+              totalSumData.push(may)
+              totalSumData.push(jun)
+              totalSumData.push(jul)
+              totalSumData.push(aug)
+              totalSumData.push(sep)
+              totalSumData.push(oct)
+              totalSumData.push(nov)
+              totalSumData.push(dec)
+
+              $("#jan").text(getFormatComma(jan));
+              $("#feb").text(getFormatComma(feb));
+              $("#mar").text(getFormatComma(mar));
+              $("#apr").text(getFormatComma(apr));
+              $("#may").text(getFormatComma(may));
+              $("#jun").text(getFormatComma(jun));
+              $("#jul").text(getFormatComma(jul));
+              $("#aug").text(getFormatComma(aug));
+              $("#sep").text(getFormatComma(sep));
+              $("#oct").text(getFormatComma(oct));
+              $("#nov").text(getFormatComma(nov));
+              $("#dec").text(getFormatComma(dec));
+
+
+
+
+              $("#pagecountID").text(currentPage);
+          };
+
+          const renderPagination = () => {
+              const totalPages = updatePaginationInfo();
+              const paginationContainer = document.getElementById(paginationId);
+              paginationContainer.innerHTML = '';
+
+              let startPage = Math.max(1, currentPage - Math.floor(visibleButtons / 2));
+              let endPage = Math.min(totalPages, startPage + visibleButtons - 1);
+
+              if (endPage > totalPages) {
+                  endPage = totalPages;
+                  startPage = Math.max(1, endPage - visibleButtons + 1);
+              }
+
+              if (totalPages <= visibleButtons) {
+                  startPage = 1;
+                  endPage = totalPages;
+              }
+
+              // Previous button
+              paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
+                  <i class="fa-solid fa-backward"></i>
+              </button>`;
+
+              for (let i = startPage; i <= endPage; i++) {
+                  paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+              }
+
+              // Next button
+              paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
+                  <i class="fa-solid fa-forward"></i>
+              </button>`;
+          };
+
+          const changePage = (page) => {
+              if (page >= 1 && page <= updatePaginationInfo()) {
+                  currentPage = page;
+                  renderTable(currentPage);
+                  renderPagination();
+              }
+          };
+
+
+          const searchTable = () => {
+              const query = $('#searchbox').val().toLowerCase() || '';
+              filteredData = dataArray.filter(item =>
+                  item.Model_name.toLowerCase().includes(query)
+              );
+              currentPage = 1;
+              renderTable(currentPage);
+              renderPagination();
+          };
+
+          $('#searchbox').on('input', searchTable);
+
+          window.changePage = changePage;
+          renderTable(currentPage);
+          renderPagination();
+      }
 
     // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
     const LoadPageData = async () => {
         try {
-            $(".navbottom").hide();
+            $("#hiddenInput").hide();
+            $("#tablefooter").hide();
 
             const [logs, manpower, total] = await Promise.all([
                 GetForecastData(),

@@ -274,20 +274,54 @@
         font-weight: 600;
     }
 
-    
-
     .MasterlistWrap_footer {
+        width: 100%;
+        position: fixed;
+        background: #fff;
+        bottom: 0;
+        left: 0;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 1em 0;
-        font-weight: 600;
+        padding: .8rem 3rem .8rem 6rem;
+        font-weight: 500;
         font-size: .9rem;
+        border-top: 1px solid #d4d3d3;
     }
+
+   
+
+    .chart_container {
+        position: relative;
+        width: 100%;
+        height: 60vh;
+        padding: 1.5em; 
+        background: #fff; 
+        border: 1px solid #d4d3d3; 
+        border-radius: .5em;
+    }
+
+
+    .Chartwrapper{
+        position: relative;
+        width: 100%;
+        height: 70vh;
+        padding: 1em 1.5em;
+        background: #fff;
+        border: 1px solid #d4d3d3; 
+        border-radius: .5em;
+    }
+
+     #lackingChart, #manpowerChart, #myChart {
+        width: 100% !important;
+        height: auto !important;
+
+    }
+
+
 
     .chart_container h1{
         width: 100%;
-        background: red;
         border-bottom: 1px solid #d4d3d3;
         padding: 2em;
         color: red;
@@ -301,10 +335,7 @@
         font-size: var(--h2-font-size) !important;
     }
 
-    .Chartwrapper{
-        width: 900px;
-        height: 10vh !important;
-    }
+
 
     .Inputcontainer {
         position: relative;
@@ -652,6 +683,19 @@
             }
     }
 
+
+    @media screen and (min-width: 1366px){
+        .ForecastTable {
+            max-height: 735px !important; /* Adjust height as needed for large monitors */
+        }
+
+        .chart_container {
+            position: relative;
+            width: 100%;
+            height: 40vh;
+        }
+    }
+
     .header__count p{
         margin: 0;
     }
@@ -696,6 +740,9 @@
         padding: .3em .5em;
     }
 
+    
+
+    
 
     /* Initial hidden state for the dropdown */
     .dropdown-menu {
@@ -943,6 +990,46 @@
 
     
 
+    .ForecastTable::-webkit-scrollbar  {
+        width: 8px;
+    }
+
+    .ForecastTable::-webkit-scrollbar-thumb {
+        background-color: #ccc;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+     .ForecastTable {
+        max-height: 420px; /* adjust height as needed */
+        overflow-y: auto;
+        border: 1px solid #d4d3d3;
+        border-radius: .4em .4em 0 0;
+    }
+
+    .ForecastTable table {
+        border-radius: 1em 1em 0 0;
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
+
+    .ForecastTable thead th{
+        position: sticky;
+        background: #d4d3d3 !important;
+        top: 0;
+        font-weight: 600;
+        cursor: pointer;
+        padding: 1em 0;
+        font-size: .8rem;
+        background: #fff;
+    }
+    /* Optional: Table row styling */
+    .ForecastTable tbody td {
+        padding: 0.75em;
+        border-bottom: 1px solid #d4d3d3;
+    }
+
 
 
 
@@ -960,13 +1047,7 @@
         border: 1px solid rgba(149, 157, 165);
     }
 
-/*    .DieMainTable table tbody tr:nth-of-type(even) {
-        background-color: #f3f3f3;
-    }
 
-    .DieMainTable table tbody tr:nth-of-type(odd) {
-        background-color: #fff;
-    }*/
 
     .DieMainTable table th, .MainTable table th {
         background: #d4d3d3;
@@ -1518,36 +1599,31 @@
 
     .selectiontabs__header {
         display: flex;
-        gap: 1em;
     }
 
-    .selectiontabs__header > div {
-        position: relative;
-        background: #fff;
-        line-height: 30px;
-        height: 30px;
-        text-align: center;
-        z-index: 2;
-        font-weight: 600;
-        color: #222;
-        cursor: pointer;
-        transition: all 300ms ease-in-out;
-        font-size: var(--small-font-size);
-        padding: 0 1em;
+   .selectiontabs__header > div {
+       border: 1px solid rgba(149, 157, 165, 0.7);
+       position: relative;
+       background: #fff;
+       line-height: 30px;
+       height: 30px;
+       text-align: center;
+       z-index: 2;
+       font-weight: 400;
+       color: #222;
+       cursor: pointer;
+       transition: .5s ease-in-out;
+       font-size: var(--small-font-size);
+       padding: 0 1em;
+   }
+
+    .selectiontabs__header > div:hover {
+        background-color: #d4d3d3;
     }
-
-
-        .selectiontabs__header > div:hover {
-            background-color: rgba(25, 131, 230, 0.2);
-            color: var(--first-color-alt);
-        }
-
-
-
-        .selectiontabs__header > div.active {
-            background-color: rgba(25, 131, 230, 0.2);
-            color: var(--first-color-alt);
-        }
+    .selectiontabs__header > div.active {
+        background-color: #d4d3d3;
+        font-weight: 700;
+    }
 
 
 
@@ -1669,14 +1745,7 @@
 
 
 
-.Chartwrapper {
-    width: 100%;
-    margin-bottom: 3em;
-}
 
-#myChart {
-    width: 100%;
-}
 
 .custom_modal_body {
     padding: 0 1em 1.5em;

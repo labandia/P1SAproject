@@ -4,6 +4,7 @@ using ProgramPartListWeb.Areas.PC.Interface;
 using ProgramPartListWeb.Areas.PC.Models;
 using ProgramPartListWeb.Controllers;
 using ProgramPartListWeb.Helper;
+using ProgramPartListWeb.Models;
 using ProgramPartListWeb.Utilities;
 using ProgramPartListWeb.Utilities.Common;
 using Spire.Xls;
@@ -557,7 +558,16 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         // GET: PC/PatrolReport
         public ActionResult Dashboard() => View();
         // GET: PC/index
-        public ActionResult index() => View();
+        public ActionResult index()
+        {
+            var viewModel = new UserViewModel
+            {
+                auth = new AuthModel(),
+                reg = new RegisterModel()   
+            };
+
+            return View(viewModel); 
+        }
 
         // GET: PC/Inspectors
         public ActionResult Inspectors() => View();

@@ -2,14 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Newtonsoft.Json;
+using NLog;
+using PMACS_V2.Models;
+using PMACS_V2.Utilities;
+
 
 namespace PMACS_V2.Controllers
 {
     public class ExtendController : Controller
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         protected JsonResult JsonPostError(string message = "An error occurred", int statusCode = 500, string errorCode = null, object extra = null)
         {
             Response.StatusCode = statusCode;
+            Logger.Error("Error POST Response | Message={0} | StatusCode={1} | Path={2}",
+                          message, statusCode, Request?.Url?.AbsolutePath);
+
 
             var errorResponse = new
             {
@@ -42,6 +52,10 @@ namespace PMACS_V2.Controllers
         protected JsonResult JsonSuccess(object data = null, string message = "Success", int statusCode = 200)
         {
             Response.StatusCode = statusCode;
+
+            Logger.Info("Response Success | Message={0} | StatusCode={1} | Path={2}",
+                      message, statusCode, Request?.Url?.AbsolutePath);
+
             return Json(new
             {
                 Success = true,
@@ -83,12 +97,20 @@ namespace PMACS_V2.Controllers
             };
 
             Response.StatusCode = statusCode;
+
+            Logger.Info("{0} | StatusCode={1} | TotalItems={2}", responseMessage, statusCode, totalCount);
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
         protected JsonResult JsonError(string message = "An error occurred", int statusCode = 500)
         {
             Response.StatusCode = statusCode;
+
+            // Track the Input of the users
+            Logger.Error("Error Response | Message={0} | StatusCode={1} | Path={2}",
+                            message, statusCode, Request?.Url?.AbsolutePath);
+
+
             return Json(new
             {
                 Success = false,
@@ -99,11 +121,13 @@ namespace PMACS_V2.Controllers
 
         protected JsonResult JsonValidationError(string message = "Validation failed")
         {
+            Logger.Warn("Input Validation Error | Message={0}", message);
             return JsonError(message, 400);
         }
 
         protected JsonResult JsonNotFound(string message = "Resource not found")
         {
+            Logger.Warn("Data Not Found | Message={0}", message);
             return JsonError(message, 404);
         }
 
@@ -114,7 +138,24 @@ namespace PMACS_V2.Controllers
 
         protected JsonResult JsonCreated(object data = null, string message = "Created")
         {
+            Logger.Info("SubmitData: Process Submitting Data succeed");
             return JsonSuccess(data, message, 201);
+        }
+
+        protected ActionResult Problem(int status, string title, string detail)
+        {
+            Logger.Error("Error POST Response | Message={0} | StatusCode={1} | Path={2}",
+                          detail, 500, Request?.Url?.AbsolutePath);
+
+            var problem = new ProblemDetails
+            {
+                Title = title,
+                Status = status,
+                Detail = detail,
+                Instance = Request?.Url?.AbsoluteUri
+            };
+
+            return new ProblemDetailsActionResult(problem);
         }
     }
 }

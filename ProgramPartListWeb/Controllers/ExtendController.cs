@@ -16,6 +16,8 @@ namespace ProgramPartListWeb.Controllers
         protected JsonResult JsonPostError(string message = "An error occurred", int statusCode = 500, string errorCode = null, object extra = null)
         {
             Response.StatusCode = statusCode;
+            Logger.Error("Error POST Response | Message={0} | StatusCode={1} | Path={2}",
+                          message, statusCode, Request?.Url?.AbsolutePath);
 
             var errorResponse = new
             {
@@ -35,11 +37,9 @@ namespace ProgramPartListWeb.Controllers
         protected JsonResult JsonSuccess(object data = null, string message = "Success", int statusCode = 200)
         {
             Response.StatusCode = statusCode;
-            
-            // Track the Input of the users
-            //Logger.Info("{0} | StatusCode={1}{2}",
-            //message,
-            //statusCode);
+
+            Logger.Info("Response Success | Message={0} | StatusCode={1} | Path={2}",
+                        message, statusCode, Request?.Url?.AbsolutePath);
 
             return Json(new
             {
@@ -93,9 +93,8 @@ namespace ProgramPartListWeb.Controllers
             Response.StatusCode = statusCode;
 
             // Track the Input of the users
-            //Logger.Info("{0} | StatusCode={1}{2}",
-            //message,
-            //statusCode);
+            Logger.Error("Error Response | Message={0} | StatusCode={1} | Path={2}",
+                            message, statusCode, Request?.Url?.AbsolutePath);
 
             return Json(new
             {
@@ -120,13 +119,13 @@ namespace ProgramPartListWeb.Controllers
 
         protected ActionResult JsonValidationError(string message = "Validation failed")
         {
-            //Logger.Warn("Validation Error | Message={0}", message);
+            Logger.Warn("Input Validation Error | Message={0}", message);
             return JsonError(message, 400);
         }
 
         protected ActionResult JsonNotFound(string message = "Resource not found")
         {
-            //Logger.Warn("Not Found | Message={0}", message);
+            Logger.Warn("Data Not Found | Message={0}", message);
             return JsonError(message, 404);
         }
 
@@ -138,12 +137,15 @@ namespace ProgramPartListWeb.Controllers
 
         protected ActionResult JsonCreated(object data = null, string message = "Created")
         {
-            //Logger.Info("Resource Created | Message={0}{1}", message, data != null ? $" | Data: {Newtonsoft.Json.JsonConvert.SerializeObject(data)}" : "");
+            Logger.Info("SubmitData: Process Submitting Data succeed");
             return JsonSuccess(data, message, 201);
         }
 
         protected ActionResult Problem(int status, string title, string detail)
         {
+            Logger.Error("Error POST Response | Message={0} | StatusCode={1} | Path={2}",
+                          detail, 500, Request?.Url?.AbsolutePath);
+
             var problem = new ProblemDetails
             {
                 Title = title,

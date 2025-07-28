@@ -7,12 +7,7 @@ namespace ProgramPartListWeb.Interfaces
     public interface IUserRepository
     {
         Task<List<UsersModel>> GetAllusers();
-        Task<bool> CheckUserTable(string employ);
-
-        Task<bool> CheckUserAccount(string employ, string username);
-
-
-        Task<List<UserEmployee>> GetUserEmployeeID();
+        Task<List<UsersModel>> GetUserEmployeeID();
 
         Task<UsersModel> GetUserById(int userId);
 

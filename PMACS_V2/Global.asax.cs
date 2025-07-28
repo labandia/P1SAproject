@@ -28,16 +28,18 @@ namespace PMACS_V2
             string homeMachineName = "DESKTOP-FC0UP1P";
             string currentMachine = Environment.MachineName.ToUpperInvariant();
 
-            string homePath = @"C:\Users\Jaye Labandia\Desktop\Samplelogs"; // Use your preferred folder
-            string officePath = @"\\172.29.1.5\sdpsyn01\Process Control\Sir Lionell";
+            string homePath = @"C:\Users\Jaye Labandia\Desktop\Samplelogs";
+            string officePath = @"\\sdp01034s\SYSTEM EXECUTABLE\P1SA-PC_System\WebLogs";
 
             string selectedPath = currentMachine == homeMachineName ? homePath : officePath;
 
             LogManager.Configuration.Variables["logDirectory"] = selectedPath;
             LogManager.ReconfigExistingLoggers(); // Apply change
 
+            // DEPENDENCY INJECTION CONFIGURATION
             AreaRegistration.RegisterAllAreas();
             RegisterDependencyInjection();
+
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);

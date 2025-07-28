@@ -89,35 +89,7 @@ namespace ProgramPartListWeb.Controllers
             return RedirectToAction("Login", "Account");
         }
 
-        //[HttpPost]
-        //public async Task<ActionResult>RefreshToken(string refreshToken)
-        //{
-        //    try
-        //    {
-        //        var Users = await _user.GetAllusers();
-        //        var principal = JwtHelper.ValidateToken(refreshToken, true);
-
-        //        if (principal == null)
-        //        {
-        //            return Json(new { success = false, message = "Invalid or expired refresh token" }, JsonRequestBehavior.AllowGet);
-        //        }
-
-        //        var userId = int.Parse(principal.FindFirst("UserId").Value);
-        //        var user = Users.FirstOrDefault(u => u.User_ID == userId);
-
-        //        if (user == null)
-        //        {
-        //            return Json(new { success = false, message = "User not found" }, JsonRequestBehavior.AllowGet);
-        //        }
-
-        //        var newAccessToken = JwtHelper.GenerateAccessToken(user.Username, Convert.ToString(user.Role_ID), user.User_ID);
-        //        return Json(new { success = true, accessToken = newAccessToken });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Json(new { success = false, message = "Failed to refresh token: " + ex.Message }, JsonRequestBehavior.AllowGet);
-        //    }
-        //}
+       
 
 
         [HttpPost]

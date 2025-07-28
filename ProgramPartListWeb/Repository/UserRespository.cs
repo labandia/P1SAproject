@@ -24,10 +24,7 @@ namespace ProgramPartListWeb.Data
             return UsersAccess.UserGetData<UsersModel>(strquery);
         }
 
-        public Task<bool> CheckUserTable(string employ)
-        {
-            throw new NotImplementedException();
-        }
+      
 
         public async Task<bool> CheckAccountsTable(RegisterModel reg)
         {
@@ -113,17 +110,13 @@ namespace ProgramPartListWeb.Data
             return SqlDataAccess.GetCountDataSync(strsql, new { Employee_ID = Employee });
         }
 
-        public Task<List<UserEmployee>> GetUserEmployeeID()
+        public Task<List<UsersModel>> GetUserEmployeeID()
         {
             string strsql = "SELECT Employee_ID, FullName, Email FROM Users";
-            return SqlDataAccess.GetData<UserEmployee>(strsql, null);
+            return SqlDataAccess.GetData<UsersModel>(strsql, null);
         }
 
-        public Task<bool> CheckUserAccount(string employ, string username)
-        {
-            string strsql = "SELECT Employee_ID, FullName, Email FROM Users";
-            return SqlDataAccess.Checkdata(strsql, null);
-        }
+     
 
         public async Task<bool> SaveSignatureData(int userID, string fileName)
         {

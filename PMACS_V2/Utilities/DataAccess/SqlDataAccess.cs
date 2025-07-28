@@ -9,18 +9,20 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Web;
-using System.IO;
+using NLog;
 using ProgramPartListWeb.Utilities;
 
 namespace PMACS_V2.Helper
 {
     public static class SqlDataAccess
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         // Auto Connection Based on the Domain URL
         public static string _connectionString()
         {
             string host = HttpContext.Current.Request.Url.Host.ToLower();
-            string machineName = Environment.MachineName.ToLower();
+            string Hostname = Environment.MachineName.ToLower();
             string connectionKey = "";
 
             if (host.Contains("pmacsweb.sdp.com"))
@@ -30,14 +32,13 @@ namespace PMACS_V2.Helper
 
             if (host.Contains("localhost"))
             {
-                if (machineName == "desktop-fc0up1p") // Home PC name
-                    connectionKey = "HomeDevelopment";
-                else
-                    connectionKey = "TestDevelopment";
+                connectionKey = Hostname == "desktop-fc0up1p"
+                                          ? "HomeDevelopment"
+                                          : "TestDevelopment";
             }
 
 
-            LogConnectionChoice(host, machineName, connectionKey);
+            LogConnectionChoice(host, Hostname, connectionKey);
 
             return AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings[connectionKey].ConnectionString);
         }
@@ -45,26 +46,10 @@ namespace PMACS_V2.Helper
         // CHECK CONNECTION 
         private static void LogConnectionChoice(string host, string machineName, string connectionKey)
         {
-            try
-            {
-                //string logFile = HttpContext.Current.Server.MapPath("~/App_Data/connection_log.txt");
-
-                string logEntry = $"{DateTime.Now:u} | Host: {host} | Machine: {machineName} | Connection: {connectionKey}";
-                Debug.WriteLine(logEntry);
-                //File.AppendAllText(logFile, logEntry + Environment.NewLine);
-            }
-            catch
-            {
-                // Silent fail to avoid crashing the app
-            }
+            string logEntry = $"{DateTime.Now:u} | Host: {host} | Machine: {machineName} | Connection: {connectionKey}";
+            Debug.WriteLine(logEntry);
         }
-
-
-
-        public static SqlConnection GetSqlConnection(string connectionString)
-        {
-            return new SqlConnection(connectionString);
-        }
+        public static SqlConnection GetSqlConnection(string connectionString) => new SqlConnection(connectionString);
         // ############ DYNAMIC FUNCTION LIST<T> GETDATA ########################
         public static async Task<List<T>> GetData<T>(string query, object parameters = null, string cacheKey = null, int cacheMinutes = 10)
         {
@@ -77,14 +62,11 @@ namespace PMACS_V2.Helper
                     {
                         using (IDbConnection con = GetSqlConnection(_connectionString()))
                         {
-                            if (Regex.IsMatch(query, @"^\w+$"))
-                            {
-                                return (await con.QueryAsync<T>(query, parameters, commandType: CommandType.StoredProcedure)).ToList();
-                            }
-                            else
-                            {
-                                return (await con.QueryAsync<T>(query, parameters)).ToList();
-                            }
+                            bool IsStoreProd = Regex.IsMatch(query, @"^\w+$");
+                            var commandType = IsStoreProd ? CommandType.StoredProcedure : CommandType.Text;
+                            var result = await con.QueryAsync<T>(query, parameters, commandType: commandType);
+
+                            return result.ToList();
                         }
                     }, cacheMinutes);
                 }
@@ -93,21 +75,17 @@ namespace PMACS_V2.Helper
                     // No caching
                     using (IDbConnection con = GetSqlConnection(_connectionString()))
                     {
-                        if (Regex.IsMatch(query, @"^\w+$"))
-                        {
-                            return (await con.QueryAsync<T>(query, parameters, commandType: CommandType.StoredProcedure)).ToList();
-                        }
-                        else
-                        {
-                            return (await con.QueryAsync<T>(query, parameters)).ToList();
-                        }
+                        bool IsStoreProd = Regex.IsMatch(query, @"^\w+$");
+                        var commandType = IsStoreProd ? CommandType.StoredProcedure : CommandType.Text;
+                        var result = await con.QueryAsync<T>(query, parameters, commandType: commandType);
+
+                        return result.ToList();
                     }
                 }
             }
             catch (SqlException ex)
             {
-                //CustomLogger.LogError(ex);
-                Debug.WriteLine(ex.Message);
+                Logger.Error(ex, $"SQL Exception while executing query. Query: {query}, CacheKey: {cacheKey}");
                 return new List<T>();
             }
         }
@@ -123,7 +101,7 @@ namespace PMACS_V2.Helper
             }
             catch (Exception ex)
             {
-                CustomLogger.LogError(ex);
+                Logger.Error(ex, $"SQL Exception while executing query. Query: {query}");
                 return "";
             }
         }
@@ -148,7 +126,7 @@ namespace PMACS_V2.Helper
             }
             catch (Exception ex)
             {
-                CustomLogger.LogError(ex);
+                Logger.Error(ex, $"SQL Exception while executing query. Query: {query}");
                 return 0;
             }
         }
@@ -159,26 +137,18 @@ namespace PMACS_V2.Helper
             {
                 using (IDbConnection con = GetSqlConnection(_connectionString()))
                 {
-                    int count;
-                    // Checks if the string is one word
-                    if (Regex.IsMatch(query, @"^\w+$"))
-                    {
-                        // This code is a Procudure query
-                        count = await con.ExecuteScalarAsync<int>(query, parameters, commandType: CommandType.StoredProcedure);
-                    }
-                    else
-                    {
-                        count = await con.ExecuteScalarAsync<int>(query, parameters);
-                    }
+                    bool IsStoreprod = Regex.IsMatch(query, @"^\w+$");
+                    var commandType = IsStoreprod ? CommandType.StoredProcedure : CommandType.Text;
+
+                    int count = await con.ExecuteScalarAsync<int>(query, parameters, commandType: commandType);
                     return count > 0;
                 }
             }
             catch(Exception ex)
             {
-                CustomLogger.LogError(ex);
+                Logger.Error(ex, $"SQL Exception while executing query. Query: {query}");
                 return false;
-            }
-           
+            }     
         }
         // ############ INSERT AND UPDATE QUERY ########################
         public static async Task<bool> UpdateInsertQuery(string strQuery, object parameters, string cacheKeyToInvalidate = null)
@@ -205,8 +175,7 @@ namespace PMACS_V2.Helper
             }
             catch (Exception ex)
             {
-                //CustomLogger.LogError(ex);
-                Debug.WriteLine($"Exception in UpdateInsertQuery: {ex.Message}");
+                Logger.Error(ex, $"SQL Exception while executing query. Query: {strQuery}");
                 return false;
             }
         }
@@ -235,7 +204,7 @@ namespace PMACS_V2.Helper
             }
             catch (SqlException ex)
             {
-                Debug.WriteLine("SQL Exception: " + ex.Message);
+                Logger.Error(ex, $"SQL Exception while executing query. Query: {query}");
             }
 
             return stringList;
@@ -281,7 +250,7 @@ namespace PMACS_V2.Helper
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("SQL Exception: " + ex.Message);
+                Logger.Error(ex, $"SQL Exception while executing query. Query: {query}");
             }
 
             return resultData;

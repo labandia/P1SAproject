@@ -17,9 +17,9 @@ namespace ProgramPartListWeb.Controllers
         //############################  GET DATA  ###############################################//
         public async Task<ActionResult> GetProjectList()
         {
-            string strquery = "SELECT Project_Name, Links, SystemImage, DepartmentID, Version " +
-                                  "FROM ProjectList " +
-                                  "WHERE DeviceID = 1 AND Project_Name != 'All'";
+            string strquery = $@"SELECT Project_Name, Links, SystemImage, DepartmentID, Version 
+                                  FROM ProjectList 
+                                  WHERE DeviceID = 1 AND Project_Name != 'All'";
             var data = await SqlDataAccess.GetData<ProjectsModel>(strquery);
             if (data == null || !data.Any())
                 return JsonNotFound("No Projects data found");

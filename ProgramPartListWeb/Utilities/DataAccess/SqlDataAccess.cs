@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Web;
 using ProgramPartListWeb.Utilities;
+using System.Web.UI.WebControls;
 
 namespace ProgramPartListWeb.Helper
 {
@@ -21,34 +22,25 @@ namespace ProgramPartListWeb.Helper
         // Auto Connection Based on the Domain URL
         public static string _connectionString()
         {
-            try
+            string host = HttpContext.Current.Request.Url.Host.ToLower();
+            string Hostname = Environment.MachineName.ToLower();
+            string connectionKey = "";
+
+            if (host.Contains("p1saportalweb.sdp.com"))
             {
-                string host = HttpContext.Current.Request.Url.Host.ToLower();
-                string Hostname = Environment.MachineName.ToLower();
-                string connectionKey = "";
-
-                if (host.Contains("p1saportalweb.sdp.com"))
-                {
-                    connectionKey = "LiveDevelopment";
-                }
-
-                if (host.Contains("localhost"))
-                {
-                    connectionKey = Hostname == "desktop-fc0up1p"
-                                              ? "HomeDevelopment"
-                                              : "TestDevelopment";
-                }
-
-
-                LogConnectionChoice(host, Hostname, connectionKey);
-
-                return AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings[connectionKey].ConnectionString);
+                connectionKey = "LiveDevelopment";
             }
-            catch (Exception ex)
+
+            if (host.Contains("localhost"))
             {
-                Debug.WriteLine(ex.Message);
-                return "";
+                connectionKey = Hostname == "desktop-fc0up1p"
+                                          ? "HomeDevelopment"
+                                          : "TestDevelopment";
             }
+
+            LogConnectionChoice(host, Hostname, connectionKey);
+
+            return AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings[connectionKey].ConnectionString);
         }
 
 
@@ -76,7 +68,7 @@ namespace ProgramPartListWeb.Helper
                         {
                             bool IsStoreProd = Regex.IsMatch(query, @"^\w+$");
                             var commandType = IsStoreProd ? CommandType.StoredProcedure : CommandType.Text;
-                            var result = await con.QueryAsync<T>(query, parameters, commandType: CommandType.StoredProcedure);
+                            var result = await con.QueryAsync<T>(query, parameters, commandType: commandType);
 
                             return result.ToList();
                         }
@@ -87,9 +79,9 @@ namespace ProgramPartListWeb.Helper
                     // No caching
                     using (IDbConnection con = GetSqlConnection(_connectionString()))
                     {
-                        var IsStoreProd = Regex.IsMatch(query, @"^\w+$");
+                        bool IsStoreProd = Regex.IsMatch(query, @"^\w+$");
                         var commandType = IsStoreProd ? CommandType.StoredProcedure : CommandType.Text;
-                        var result = await con.QueryAsync<T>(query, parameters, commandType: CommandType.StoredProcedure);
+                        var result = await con.QueryAsync<T>(query, parameters, commandType: commandType);
 
                         return result.ToList();
                     }
@@ -198,22 +190,16 @@ namespace ProgramPartListWeb.Helper
                 {
                     IEnumerable<string> dataList;
 
-                    // Check if the query is a stored procedure name (no spaces or symbols, just word characters)
-                    if (Regex.IsMatch(query, @"^\w+$"))
-                    {
-                        dataList = await con.QueryAsync<string>(query, parameters, commandType: CommandType.StoredProcedure);
-                    }
-                    else
-                    {
-                        dataList = await con.QueryAsync<string>(query, parameters);
-                    }
+                    bool IsStoreProd = Regex.IsMatch(query, @"^\w+$");
+                    var commandType = IsStoreProd ? CommandType.StoredProcedure : CommandType.Text;
+                    dataList = await con.QueryAsync<string>(query, parameters, commandType: commandType);
 
                     stringList = dataList.ToList();
                 }
             }
             catch (SqlException ex)
             {
-                Debug.WriteLine("SQL Exception: " + ex.Message);
+                Logger.Error(ex, $"SQL Exception while executing query. Query: {query}");
             }
 
             return stringList;
@@ -225,15 +211,9 @@ namespace ProgramPartListWeb.Helper
                 using (IDbConnection con = GetSqlConnection(_connectionString()))
                 {
                     int count;
-                    if (Regex.IsMatch(query, @"^\w+$"))
-                    {
-                        // This code is a Procudure query
-                        count = await con.ExecuteScalarAsync<int>(query, parameters, commandType: CommandType.StoredProcedure);
-                    }
-                    else
-                    {
-                        count = await con.ExecuteScalarAsync<int>(query, parameters);
-                    }
+                    bool IsStoreProd = Regex.IsMatch(query, @"^\w+$");
+                    var commandType = IsStoreProd ? CommandType.StoredProcedure : CommandType.Text;
+                    count = await con.ExecuteScalarAsync<int>(query, parameters, commandType: commandType);
                     return count;
                 }
             }

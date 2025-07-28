@@ -7,6 +7,7 @@ using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Models;
 using ProgramPartListWeb.Utilities;
 using ProgramPartListWeb.Utilities.Common;
+using ProgramPartListWeb.Utilities.Security;
 using Spire.Xls;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ using System.Web.UI.WebControls;
 namespace ProgramPartListWeb.Areas.PC.Controllers
 {
     [CompressResponse]
+    [RateLimiting(10, 1)] // Limits the No of Request
     public class PatrolController : ExtendController
     {
         private readonly IInspector _ins;
@@ -43,6 +45,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         //-----------------------------------------------------------------------------------------
         //---------------------------- DASHBOARD CALENDAR -----------------------------------------
         //-----------------------------------------------------------------------------------------
+       
         public async Task<ActionResult> GetScheduleDateList()
         {
             var data = await _ins.GetScheduleDate() ?? new List<PatrolSchedule>();

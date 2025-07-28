@@ -2,6 +2,7 @@
 using PMACS_V2.Areas.P1SA.Models;
 using PMACS_V2.Controllers;
 using PMACS_V2.Utilities;
+using PMACS_V2.Utilities.Security;
 using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Utilities;
 using System;
@@ -15,6 +16,7 @@ using System.Web.Mvc;
 namespace PMACS_V2.Areas.P1SA.Controllers
 {
     [CompressResponse]
+    [RateLimiting(10, 1)] // Limits the No of Request
     public class FanMajorController : ExtendController
     {
 

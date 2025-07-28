@@ -1,6 +1,7 @@
 ﻿using PMACS_V2.Areas.P1SA.Interface;
 using PMACS_V2.Areas.P1SA.Repository;
 using PMACS_V2.Controllers;
+using PMACS_V2.Utilities.Security;
 using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Utilities;
 using System;
@@ -10,6 +11,7 @@ using System.Web.Mvc;
 
 namespace PMACS_V2.Areas.P1SA.Controllers
 {
+    [RateLimiting(10, 1)] // Limits the No of Request
     [GlobalErrorException]
     public class PMACSController : ExtendController
     {

@@ -9,11 +9,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using ProgramPartListWeb.Utilities;
+using ProductConfirm.Utilities;
 
 namespace ProgramPartListWeb.Helper
 {
     public static class SqlDataAccess
     {
+        private static readonly MemoryCacheService _cache = new MemoryCacheService();
         //private static readonly string _connectionString = AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings["LiveDevelopment"].ConnectionString);
 
         public static string connectionString()
@@ -62,23 +64,15 @@ namespace ProgramPartListWeb.Helper
         // ############ DYNAMIC FUNCTION LIST<T> GETDATA ########################
         public static async Task<List<T>> GetData<T>(string query, object parameters = null)
         {
-            //var resultData = new List<T>();
             try
             {
                 using (IDbConnection con = GetSqlConnection(connectionString()))
                 {
-                    // Checks if the string is one word
-                    if(Regex.IsMatch(query, @"^\w+$"))
-                    {
-                        // This code is a Procudure query
-                        return (await con.QueryAsync<T>(query, parameters, commandType: CommandType.StoredProcedure)).ToList();
-                    }
-                    else
-                    {
-                        // Ordinary Query string
-                        return (await con.QueryAsync<T>(query, parameters)).ToList();
-                    }
-                    //return resultData;
+                    var IsStoreProd = Regex.IsMatch(query, @"^\w+$");
+                    var commandType = IsStoreProd ? CommandType.StoredProcedure : CommandType.Text;
+                    var result = await con.QueryAsync<T>(query, parameters, commandType: CommandType.StoredProcedure);
+
+                    return result.ToList();
                 }
             }
             catch (SqlException ex)

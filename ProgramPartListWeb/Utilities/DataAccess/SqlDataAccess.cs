@@ -6,6 +6,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using NLog;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Web;
@@ -15,6 +16,8 @@ namespace ProgramPartListWeb.Helper
 {
     public sealed class SqlDataAccess
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         // Auto Connection Based on the Domain URL
         public static string _connectionString()
         {
@@ -31,10 +34,9 @@ namespace ProgramPartListWeb.Helper
 
                 if (host.Contains("localhost"))
                 {
-                    if (Hostname == "desktop-fc0up1p") // Home PC name
-                        connectionKey = "HomeDevelopment";
-                    else
-                        connectionKey = "TestDevelopment";
+                    connectionKey = Hostname == "desktop-fc0up1p"
+                                              ? "HomeDevelopment"
+                                              : "TestDevelopment";
                 }
 
 
@@ -72,14 +74,11 @@ namespace ProgramPartListWeb.Helper
                     {
                         using (IDbConnection con = GetSqlConnection(_connectionString()))
                         {
-                            if (Regex.IsMatch(query, @"^\w+$"))
-                            {
-                                return (await con.QueryAsync<T>(query, parameters, commandType: CommandType.StoredProcedure)).ToList();
-                            }
-                            else
-                            {
-                                return (await con.QueryAsync<T>(query, parameters)).ToList();
-                            }
+                            bool IsStoreProd = Regex.IsMatch(query, @"^\w+$");
+                            var commandType = IsStoreProd ? CommandType.StoredProcedure : CommandType.Text;
+                            var result = await con.QueryAsync<T>(query, parameters, commandType: CommandType.StoredProcedure);
+
+                            return result.ToList();
                         }
                     }, cacheMinutes);
                 }
@@ -88,21 +87,17 @@ namespace ProgramPartListWeb.Helper
                     // No caching
                     using (IDbConnection con = GetSqlConnection(_connectionString()))
                     {
-                        if (Regex.IsMatch(query, @"^\w+$"))
-                        {
-                            return (await con.QueryAsync<T>(query, parameters, commandType: CommandType.StoredProcedure)).ToList();
-                        }
-                        else
-                        {
-                            return (await con.QueryAsync<T>(query, parameters)).ToList();
-                        }
+                        var IsStoreProd = Regex.IsMatch(query, @"^\w+$");
+                        var commandType = IsStoreProd ? CommandType.StoredProcedure : CommandType.Text;
+                        var result = await con.QueryAsync<T>(query, parameters, commandType: CommandType.StoredProcedure);
+
+                        return result.ToList();
                     }
                 }
             }
             catch (SqlException ex)
             {
-                //CustomLogger.LogError(ex);
-                Debug.WriteLine(ex.Message);
+                Logger.Error(ex, $"SQL Exception while executing query. Query: {query}, CacheKey: {cacheKey}");
                 return new List<T>();
             }
         }
@@ -119,8 +114,7 @@ namespace ProgramPartListWeb.Helper
             }
             catch (Exception ex)
             {
-                //CustomLogger.LogError(ex);
-                Debug.WriteLine(ex.Message);
+                Logger.Error(ex, $"SQL Exception while executing query. Query: {query}");
                 return "";
             }
         }
@@ -137,8 +131,7 @@ namespace ProgramPartListWeb.Helper
             }
             catch (Exception ex)
             {
-                //CustomLogger.LogError(ex);
-                Debug.WriteLine(ex.Message);
+                Logger.Error(ex, $"SQL Exception while executing query. Query: {query}");
                 return 0;
             }  
         }
@@ -150,23 +143,16 @@ namespace ProgramPartListWeb.Helper
             {
                 using (IDbConnection con = GetSqlConnection(_connectionString()))
                 {
-                    int count;
-                    // Checks if the string is one word
-                    if (Regex.IsMatch(query, @"^\w+$"))
-                    {
-                        // This code is a Procudure query
-                        count = await con.ExecuteScalarAsync<int>(query, parameters, commandType: CommandType.StoredProcedure);
-                    }
-                    else
-                    {
-                        count = await con.ExecuteScalarAsync<int>(query, parameters);
-                    }
+                    bool IsStoreprod = Regex.IsMatch(query, @"^\w+$");
+                    var commandType = IsStoreprod ? CommandType.StoredProcedure : CommandType.Text;
+
+                    int count = await con.ExecuteScalarAsync<int>(query, parameters, commandType: commandType);
                     return count > 0;
                 }
             }
             catch(Exception ex)
             {
-                CustomLogger.LogError(ex);
+                Logger.Error(ex, $"SQL Exception while executing query. Query: {query}");
                 return false;
             }
            
@@ -196,8 +182,7 @@ namespace ProgramPartListWeb.Helper
             }
             catch (Exception ex)
             {
-                //CustomLogger.LogError(ex);
-                Debug.WriteLine($"Exception in UpdateInsertQuery: {ex.Message}");
+                Logger.Error(ex, $"SQL Exception while executing query. Query: {strQuery}");
                 return false;
             }
         }
@@ -254,8 +239,7 @@ namespace ProgramPartListWeb.Helper
             }
             catch (Exception ex)
             {
-                //CustomLogger.LogError(ex);
-                Debug.WriteLine(ex.Message);
+                Logger.Error(ex, $"SQL Exception while executing query. Query: {query}");
                 return 0;
             }
         }

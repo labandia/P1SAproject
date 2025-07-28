@@ -420,6 +420,7 @@
     <Compile Include="Utilities\Security\PasswordHasher.cs" />
     <Compile Include="Utilities\DataAccess\SqlDataAccess.cs" />
     <Compile Include="Utilities\DataAccess\UserAccess.cs" />
+    <Compile Include="Utilities\Security\RateLimiting.cs" />
     <Compile Include="Utilities\Utilities.cs" />
   </ItemGroup>
   <ItemGroup>

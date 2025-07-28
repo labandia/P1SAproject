@@ -8,11 +8,12 @@ using System.Web.Mvc;
 using System.Linq;
 using PMACS_V2.Controllers;
 using PMACS_V2.Utilities;
-using Microsoft.AspNet.SignalR;
+using PMACS_V2.Utilities.Security;
 
 namespace PMACS_V2.Areas.P1SA.Controllers
 {
     [CompressResponse]
+    [RateLimiting(10, 1)] // Limits the No of Request
     public class CapacityController : ExtendController
     {
         private readonly ICapacity _cap;

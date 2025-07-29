@@ -29,11 +29,13 @@ namespace PracticeC_
             //DateTime now = DateTime.Now;
 
             //TimeSpan ts = launchDate - now;
-            samplehash();
+            //samplehash();
             //Console.WriteLine("TimeSpan: {0}", ts.ToString());
             //string machineName = Environment.MachineName.ToLower();
             //Console.WriteLine($"Original: {machineName}");
             //Console.WriteLine(VerifyPassword("ErcXN5O+LcsWG5/cMOMWOg==:cZs22bq4HkpRKxiubSnaRQ0U4NIhfn7xUHi3De8cXWw=", "sdp1234a*"));
+
+            Console.WriteLine(DecodeBase64ToString("S5AwS8+uYF2bHGvpx8AHssz7yc9SMCPT9d0LWphOCHK5KSE"));
 
             Console.ReadKey();
         }
@@ -62,7 +64,7 @@ namespace PracticeC_
             //string connectionString = "server=DESKTOP-FC0UP1P;User ID=PCsystem;password=p1saprocess;database=P1sa";
             //string connectionString = "server=SDP0706ES;User ID=p1sa;password=p1sa1234a*;database=PMACS_TEST;Pooling=True;Min Pool Size=50;Max Pool Size=100;";
             //string connectionString = "server=172.29.3.139;User ID=p1sa;password=p1sa1234a*;database=PRODCONF;Pooling=True;Min Pool Size=50;Max Pool Size=100;";
-            string connectionString = "Data Source=DESKTOP-FC0UP1P;Initial Catalog=Prodcon;Persist Security Info=True;User ID=PCsystem;Password=p1saprocess;";
+            //string connectionString = "Data Source=DESKTOP-FC0UP1P;Initial Catalog=Prodcon;Persist Security Info=True;User ID=PCsystem;Password=p1saprocess;";
 
             //string connectionString = "server=172.29.3.139;User ID=p1sa;password=p1sa1234a*;database=PMACS_LIVE;Pooling=True;Min Pool Size=50;Max Pool Size=100;";
             //string connectionString = "server=SDP0706ES; User ID = p1sa; password=p1sa1234a*; database=PMACS_LIVE; Pooling=True; Min Pool Size=50; Max Pool Size=100;";

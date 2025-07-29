@@ -10,7 +10,7 @@ using System.Diagnostics;
 
 namespace ProgramPartListWeb.Controllers
 {
-    [CompressResponse]
+    //[CompressResponse]
     public class P1SAportalwebController : ExtendController
     {
    

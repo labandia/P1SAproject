@@ -11,6 +11,7 @@ using System.Web.Mvc;
 
 namespace PMACS_V2.Areas.P1SA.Controllers
 {
+    [RateLimiting(10, 1)] // Limits the No of Request
     public class PMACSController : ExtendController
     {
         private readonly IManpower _man;

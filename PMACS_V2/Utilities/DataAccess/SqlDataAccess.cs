@@ -157,25 +157,21 @@ namespace PMACS_V2.Helper
             {
                 using (IDbConnection con = new SqlConnection(_connectionString()))
                 {
-                    int rowsAffected;
-
+                   
                     bool isStoredProcedure = Regex.IsMatch(strQuery, @"^\w+$");
                     CommandType commandType = isStoredProcedure ? CommandType.StoredProcedure : CommandType.Text;
 
-                    rowsAffected = await con.ExecuteAsync(strQuery, parameters, commandType: commandType);
+                    int rowsAffected = await con.ExecuteAsync(strQuery, parameters, commandType: commandType);
 
                     // If update was successful and a cache key is provided, remove it
-                    if (rowsAffected > 0 && !string.IsNullOrEmpty(cacheKeyToInvalidate))
-                    {
-                        CacheHelper.Remove(cacheKeyToInvalidate);
-                    }
-
+                    if (rowsAffected > 0 && !string.IsNullOrEmpty(cacheKeyToInvalidate)) CacheHelper.Remove(cacheKeyToInvalidate);
+                   
                     return rowsAffected > 0;
                 }
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, $"SQL Exception while executing query. Query: {strQuery}");
+                Logger.Error(ex, $"SQL Exception : {ex.Message}");
                 return false;
             }
         }

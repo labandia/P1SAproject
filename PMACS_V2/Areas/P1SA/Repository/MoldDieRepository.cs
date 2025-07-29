@@ -199,16 +199,18 @@ namespace PMACS_V2.Areas.P1SA.Repository
 
         public Task<bool> AddMoldieTooling(DieMoldToolingModel mold)
         {
-            string insertquery = @"INSERT INTO DieMoldDieTooling(RegNo, PartNo, Item, DetailsModify, ShotRelease, 
+            string insertquery = @"INSERT INTO DieMoldDieTooling(RegNo, PartNo, Item, Item2, DetailsModify, DetailsModify2, ShotRelease, 
                                                                 DateArrived, DateRepair, Incharge, Remarks)
-                                   VALUES(@RegNo, @PartNo, @Item, @DetailsModify, @ShotRelease, @DateArrived , @DateRepair, 
+                                   VALUES(@RegNo, @PartNo, @Item, @Item2, @DetailsModify, @DetailsModify2, @ShotRelease, @DateArrived , @DateRepair, 
                                     @Incharge, @Remarks)";
             var parameter = new
             {
                 RegNo = mold.RegNo,
                 PartNo = mold.ParNoSearch,
                 Item = mold.Item,
+                Item2 = mold.Item2,
                 DetailsModify = mold.DetailsModify,
+                DetailsModify2 = mold.DetailsModify2,
                 ShotRelease = mold.ShotRelease, 
                 DateArrived = mold.DateArrived,
                 DateRepair = mold.DateRepair,   

@@ -12,6 +12,7 @@ using System.Web.Mvc;
 namespace PMACS_V2.Areas.P1SA.Controllers
 {
     [CompressResponse]
+    [RateLimiting(10, 1)] // Limits the No of Request
     public class DieMoldController : ExtendController
     {
         private readonly IDieMold _die;

@@ -125,6 +125,8 @@ namespace PMACS_V2.Areas.P1SA.Models
         private string _DimensionQuality;
         private int _Item;
         private string _DetailsModify;
+        private int _Item2;
+        private string _DetailsModify2;
         private int _ShotRelease;
         private string _DateArrived;
         private string _DateRepair;
@@ -161,6 +163,16 @@ namespace PMACS_V2.Areas.P1SA.Models
         {
             get => _DetailsModify;
             set => _DetailsModify = value;
+        }
+        public int Item2
+        {
+            get => _Item2;
+            set => _Item2 = value;
+        }
+        public string DetailsModify2
+        {
+            get => _DetailsModify2;
+            set => _DetailsModify2 = value;
         }
         public int ShotRelease
         {

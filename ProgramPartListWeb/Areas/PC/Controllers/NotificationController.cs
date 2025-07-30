@@ -2,14 +2,12 @@
 using ProgramPartListWeb.Areas.PC.Models;
 using ProgramPartListWeb.Controllers;
 using ProgramPartListWeb.Utilities;
-using ProgramPartListWeb.Utilities.Common;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace ProgramPartListWeb.Areas.PC.Controllers
 {
-    [CompressResponse]
     public class NotificationController : ExtendController
     {
         private readonly INotification _not;

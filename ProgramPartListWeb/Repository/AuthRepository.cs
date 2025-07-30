@@ -2,6 +2,7 @@
 using ProgramPartListWeb.Interfaces;
 using ProgramPartListWeb.Models;
 using ProgramPartListWeb.Utilities;
+using ProgramPartListWeb.Utilities.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,7 @@ namespace ProgramPartListWeb.Repository
             int projInt = (username == "Admin" || username == "24050006") ?  1 : proj;         
             return  UsersAccess.UserGetData<AuthModel>(strquery, new { Username = username, Project_ID  = projInt});
         }
-        public string GetRefreshToken(int userId) => JwtHelper.GenerateRefreshToken(userId);
+        public string GetRefreshToken(int userId) => JWTAuthentication.GenerateRefreshToken(userId);
  
         public string GetuserRolename(int roleid)
         {

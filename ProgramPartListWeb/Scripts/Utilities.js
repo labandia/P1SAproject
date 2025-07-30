@@ -3,7 +3,6 @@
 window.FetchAuthenticate = async (url, fdata) => {
     console.clear();
     var token = localStorage.getItem('accessToken');
-    // Convert parameters to a query string
     const queryString = new URLSearchParams(fdata).toString();
     const fullUrl = `${url}?${queryString}`;  // Append parameters to URL
 
@@ -13,8 +12,7 @@ window.FetchAuthenticate = async (url, fdata) => {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + tokenToUse
-            },
-            dataType: 'json'
+            }
         });
     };
 
@@ -28,27 +26,27 @@ window.FetchAuthenticate = async (url, fdata) => {
                 // Retry with new token
                 token = localStorage.getItem('accessToken');
                 res = await makeRequest(token);
+
+                if (res.status === 401) {
+                    // Still unauthorized even after refresh
+                    window.location.href = '/Error/Unauthorized';
+                    return;
+                }
             } else {
                 // Redirect if refresh fails
                 window.location.href = '/Error/Unauthorized';
                 return;
             }
-
-            // Token expired or unauthorized, refresh the token
-            //await refreshAccessToken();
-            // Retry the original request
-            //return FetchAuthenticate(url, fdata);
-            //window.location.href = '/Error/Unauthorized';
         }
+
+
+        //if (!res.ok) {
+        //    const errorData = await res.json().catch(() => ({}));
+        //    return { success: false, status: res.status, error: errorData.message || 'Request failed' };
+        //}
 
        
         const result = await res.json();
-
-        //if (!res.ok) {
-        //    //console.warn(`Error ${res.status}: ${result.Message}`);
-        //    return result;
-        //}
-
         return result;
 
     } catch (error) {
@@ -295,9 +293,9 @@ async function refreshAccessToken() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ refreshToken: refreshToken })
         });
-
+        console.warn("Refresh token");
         const result = await response.json();
-        if (response.ok && result.access_token) {
+        if (response.ok && result.accessToken) {
             localStorage.setItem("accessToken", data.accessToken);
         } else {
             console.warn("Refresh token failed. Logging out...");

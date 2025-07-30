@@ -1,8 +1,10 @@
 ﻿using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Interfaces;
 using ProgramPartListWeb.Models;
+using ProgramPartListWeb.Utilities.Security;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
@@ -88,19 +90,29 @@ namespace ProgramPartListWeb.Controllers
         }
 
         [HttpGet]
+        [JwtAuthorize]  
         public async Task<ActionResult> GetUserInformation(string accessToken)
         {
             try
             {
-                var principal = JwtHelper.ValidateToken(accessToken);
-                string userId = principal.FindFirst("UserId")?.Value;
-                //var userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                var name = principal.FindFirst(ClaimTypes.Name)?.Value;
-                var role = principal.FindFirst(ClaimTypes.Role)?.Value;
+                var identity = (ClaimsIdentity)User.Identity;
+
+                var userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var name = identity.FindFirst(ClaimTypes.Name)?.Value;
+                var role = identity.FindFirst(ClaimTypes.Role)?.Value;
 
                 var datalist = await _user.GetUserById(Convert.ToInt32(userId));
-                //var data = datalist.FirstOrDefault(p => p.Employee_ID == empID);
-                return Json(new { success = true, userId, name, role, datalist.Password, datalist.Signature, datalist.Email }, JsonRequestBehavior.AllowGet);
+
+                return Json(new
+                {
+                    success = true,
+                    userId,
+                    name,
+                    role,
+                    datalist.Password,
+                    datalist.Signature,
+                    datalist.Email
+                }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -148,10 +160,33 @@ namespace ProgramPartListWeb.Controllers
         }
 
 
-        
+        [HttpPost]
+        public ActionResult RefreshToken(string refreshToken)
+        {
+            var principal = JWTAuthentication.ValidateRefreshToken(refreshToken);
+
+            if (principal == null)
+            {
+                return Json(new { success = false, message = "Invalid refresh token" });
+            }
+
+            var fullName = principal.Claims.FirstOrDefault(c => c.Type == "FullName")?.Value;
+            var role = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+            var userId = int.Parse(principal.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value ?? "0");
+
+            var newAccessToken = JWTAuthentication.GenerateAccessToken(fullName, role, userId);
+            var newRefreshToken = JWTAuthentication.GenerateRefreshToken(userId);
+
+            return Json(new
+            {
+                success = true,
+                accessToken = newAccessToken,
+                refreshToken = newRefreshToken
+            });
+        }
 
 
-       
+
 
         public void SetFormsAuthentication(int userID)
         {

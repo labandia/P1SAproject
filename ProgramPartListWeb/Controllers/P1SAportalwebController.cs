@@ -6,11 +6,9 @@ using System.Web;
 using System.Web.Mvc;
 using System.IO;
 using ProgramPartListWeb.Utilities;
-using System.Diagnostics;
 
 namespace ProgramPartListWeb.Controllers
 {
-    //[CompressResponse]
     public class P1SAportalwebController : ExtendController
     {
    
@@ -30,7 +28,6 @@ namespace ProgramPartListWeb.Controllers
         public ActionResult SampleEmail()
         {
             EmailService.SendEmailOutlook("jaye.labandia@sanyodenki.com", "Test", "Sample Body"); 
-
             return Json("GOOD", JsonRequestBehavior.AllowGet);
         }
 
@@ -49,8 +46,6 @@ namespace ProgramPartListWeb.Controllers
 
         public ActionResult ViewPDF(string strfilepath)
         {
-            Debug.WriteLine("HERE");
-            // Map your RegNo to a file path or file bytes
             var filePath = $"\\\\SDP010F6C\\Users\\USER\\Pictures\\Access\\" + strfilepath;
 
             if (!System.IO.File.Exists(filePath))

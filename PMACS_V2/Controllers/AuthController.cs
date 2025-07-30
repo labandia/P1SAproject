@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using PMACS_V2.Interface;
 using PMACS_V2.Helper;
 using ProgramPartListWeb.Helper;
+using PMACS_V2.Utilities.Security;
 
 
 namespace PMACS_V2.Controllers
@@ -18,6 +19,7 @@ namespace PMACS_V2.Controllers
         public AuthController(IUserRepository user) => _user = user;
 
         [AllowAnonymous]
+        [RateLimiting(5, 1)]
         [HttpPost]
         public async Task<ActionResult> Authenticate(string username, string password)
         {

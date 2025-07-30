@@ -16,7 +16,6 @@ using System.Diagnostics;
 
 namespace ProgramPartListWeb.Areas.Circuit.Controllers
 {
-    [CompressResponse]
     public class ProgramPartListController : ExtendController
     {
         private readonly WarehouseRepository _ware;

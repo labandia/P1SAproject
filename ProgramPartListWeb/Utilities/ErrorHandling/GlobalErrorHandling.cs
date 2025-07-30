@@ -17,7 +17,7 @@ public class GlobalErrorException : FilterAttribute, IExceptionFilter
         Exception ex = filterContext.Exception;
 
         // Log the exception
-        LogException(ex);
+        //LogException(ex);
 
         // Redirect to a friendly error page
         filterContext.Result = new RedirectToRouteResult(

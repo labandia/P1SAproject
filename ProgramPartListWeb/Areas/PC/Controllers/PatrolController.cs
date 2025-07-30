@@ -20,8 +20,7 @@ using System.Web.UI.WebControls;
 
 namespace ProgramPartListWeb.Areas.PC.Controllers
 {
-    [CompressResponse]
-    [RateLimiting(10, 1)] // Limits the No of Request
+    [RateLimiting(300, 1)] // Limits the No of Request
     public class PatrolController : ExtendController
     {
         private readonly IInspector _ins;
@@ -45,7 +44,6 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         //-----------------------------------------------------------------------------------------
         //---------------------------- DASHBOARD CALENDAR -----------------------------------------
         //-----------------------------------------------------------------------------------------
-       
         public async Task<ActionResult> GetScheduleDateList()
         {
             var data = await _ins.GetScheduleDate() ?? new List<PatrolSchedule>();
@@ -58,6 +56,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         //---------------------------- REGISTRATION NO --------------------------------------------
         //-----------------------------------------------------------------------------------------
         // GET: GetRegistrationNo
+        [JwtAuthorize]
         public async Task<ActionResult> GetRegistrationNo()
         {
             var data = await _ins.GetRegistrationData() ?? new List<PatrolRegistionModel>();
@@ -66,6 +65,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             return JsonSuccess(data, "Load Registration No#");
         }
         // GET: GetRegistrationNoByID
+        [JwtAuthorize]
         public async Task<ActionResult> GetRegistrationNoByID(string Regno)
         {
             try
@@ -92,6 +92,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         //============================ INSPECTOR PROCESS ==========================================
         //=========================================================================================
         // GET: GetQualifiedInspector
+        [JwtAuthorize]
         public async Task<ActionResult> GetQualifiedInspector()
         {
             var data = await _ins.GetInpectorsData() ?? new List<InspectorModel>();
@@ -113,6 +114,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             return JsonSuccess(removeDuplicateData, "LoadInspectorData");
         }
         // GET: GetInpectsByApproval
+        [JwtAuthorize]
         public async Task<ActionResult> GetInpectsByApproval()
         {
             var data = await _ins.GetInpectorsData() ?? new List<InspectorModel>();
@@ -208,6 +210,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         //---------------------------- INSPECTOR DATE SCHEDULE ------------------------------------
         //-----------------------------------------------------------------------------------------
         // GET : GetCalendarEventsMonth
+        [JwtAuthorize]
         public async Task<ActionResult> GetCalendarEventsMonth()
         {
             try
@@ -255,6 +258,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             }
         }
         // GET : GetCalendarEvents
+        [JwtAuthorize]
         public async Task<ActionResult> GetCalendarEvents(string Employee_ID)
         {
             try
@@ -420,9 +424,6 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 Manager = Request.Form["Manager"],
                 Manager_Comments = Request.Form["Manager_Comments"]
             };
-
-            Debug.WriteLine($@"Registration : {obj.PIC} - EmployeeID : {obj.Employee_ID}");
-
 
             string findJson = Request.Form["FindJson"];
             string templatePath = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Uploads/PGFY-00031FORM_1.xlsx");

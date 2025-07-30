@@ -29,6 +29,7 @@
     .primarybtn{
         transition: .5s ease-in-out;
         background: var(--primary-color) !important;
+        border-radius: .2em;
         color: #fff;
     }
     .primarybtn:hover{

@@ -7,7 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Linq;
 using ProgramPartListWeb.Helper;
-using ProgramPartListWeb.Utilities.Common;
+using ProgramPartListWeb.Utilities.Security;
 
 namespace ProgramPartListWeb.Controllers
 {
@@ -18,6 +18,7 @@ namespace ProgramPartListWeb.Controllers
 
 
         [AllowAnonymous]
+        [RateLimiting(5, 1)] // Limits the No of Request
         [HttpPost]
         public async Task<ActionResult> Authenticate(string username, string password, int proj = 1)
         {
@@ -34,7 +35,7 @@ namespace ProgramPartListWeb.Controllers
             string role = _auth.GetuserRolename(user.Role_ID);
             string fullname = user.Fullname;
 
-            var accessToken = JwtHelper.GenerateAccessToken(fullname, role, user.User_ID);
+            var accessToken = JWTAuthentication.GenerateAccessToken(fullname, role, user.User_ID);
             var refreshToken = _auth.GetRefreshToken(user.User_ID);
 
             var data = new { access_token = accessToken, refresh_token = refreshToken, fullname, role };

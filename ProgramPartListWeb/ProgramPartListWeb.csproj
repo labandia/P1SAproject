@@ -659,9 +659,8 @@
     <Compile Include="Utilities\ExportFiler.cs" />
     <Compile Include="Utilities\ErrorHandling\GlobalErrorHandling.cs" />
     <Compile Include="Utilities\ErrorHandling\GlobalExceptionFilter.cs" />
-    <Compile Include="Utilities\Security\JwtAuthenticationAttribute.cs" />
+    <Compile Include="Utilities\Security\JWTAuthentication.cs" />
     <Compile Include="Utilities\Security\JwtAuthorizeAttribute.cs" />
-    <Compile Include="Utilities\Security\JwtHelper.cs" />
     <Compile Include="Utilities\NotificationHub.cs" />
     <Compile Include="Utilities\Security\PasswordHasher.cs" />
     <Compile Include="Utilities\ProblemDetailsActionResult.cs" />
@@ -679,7 +678,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\ErrorLog.txt" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-grid.rtl.css" />
@@ -887,6 +885,7 @@
     <Content Include="Views\P1SAportalweb\GuideInstall.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Views\Dashboard\" />
     <Folder Include="Areas\Admin\Views\Shared\" />

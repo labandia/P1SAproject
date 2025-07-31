@@ -44,7 +44,7 @@ namespace Attendance_Monitoring
 
 
             ServiceProvider = services.BuildServiceProvider();
-            var mainForm = ServiceProvider.GetRequiredService<AttendanceMain>();
+            var mainForm = ServiceProvider.GetRequiredService<Selection>();
             Application.Run(mainForm);
         }
     }

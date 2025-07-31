@@ -2,6 +2,7 @@
 using ProgramPartListWeb.Areas.PC.Interface;
 using ProgramPartListWeb.Areas.PC.Models;
 using ProgramPartListWeb.Helper;
+using ProgramPartListWeb.Models;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -20,6 +21,17 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             var employeedata = data.SingleOrDefault(e => e.EmployeeID == employee);
             return (employeedata != null) ? employeedata.Department_ID : 0;
         }
+
+        public Task<List<UsersModel>> GetUsersInfoSetting()
+        {
+            string strsql = $@"SELECT u.Employee_ID, u.Fullname, u.Signature
+                            FROM UserAccounts ua
+                            INNER JOIN Users u ON u.User_ID = ua.User_ID
+                            INNER JOIN ProjectList p ON p.Project_ID = ua.Project_ID
+                            WHERE ua.IsActive = 1 AND (p.Project_ID IN (1, 9))";
+            return SqlDataAccess.GetData<UsersModel>(strsql);
+        }
+
 
         // -------------  DashBoard Schedule Inpectors --------------
         public Task<List<PatrolSchedule>> GetScheduleDate() => SqlDataAccess.GetData<PatrolSchedule>("GetScheduleDate", null);

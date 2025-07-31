@@ -62,7 +62,7 @@
                                 <small class="text-danger" id="Noemployee"></small>
                             </div>*@
                         <div class="form_group col-12 col-sm-12 col-lg-12 mb-2">
-                            <label>Employee Name  </label> <br />
+                            <label>Employee Name  <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
                             @*<input type="text" placeholder="N/A" name="Fullname" id="Fullname" />*@
                             <div class="search-box">
                                 <input type="hidden" name="Employee_ID" id="Employee_ID">
@@ -72,12 +72,12 @@
                         </div>
                     </div>
                     <div class="form_group col-12 col-sm-12">
-                        <label>OJT Registration No.  </label>
+                        <label>OJT Registration No.  <small style="color: #a81818; font-weight: 600;">*</small></label>
                         <input type="text" placeholder="type Ojt registration No." name="OJTRegistration" id="OJTRegistration" required />
                     </div>
 
                     <div class="form_group col-12 col-sm-12 ">
-                        <label>Date Qualified </label> <br />
+                        <label>Date Qualified <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
                         <input type="date" placeholder="Select Date Qualified" name="DateQualified" id="DateQualified" required />
                     </div>
 
@@ -90,7 +90,7 @@
 
                     <div class="d-flex justify-content-between align-items-center mt-4">
                         <div>
-                            <small id="Errormessage">Fill up all the input fields</small>
+                            <small >All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
                         </div>
                         <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
                     </div>

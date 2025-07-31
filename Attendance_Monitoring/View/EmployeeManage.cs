@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
+using System.Threading.Tasks;
 
 
 namespace Attendance_Monitoring.View
@@ -37,13 +38,13 @@ namespace Attendance_Monitoring.View
         }
 
 
-        public async void Displayemployee(int depid)
+        public async Task Displayemployee(int depid)
         {
             var items = await _emp.GetEmployees();
-            emplist = items.AsParallel().ToList();
+            emplist = items.ToList();
             Employeetable.AutoGenerateColumns = false;
-
-            if (comboBox1.SelectedIndex != 0)
+            //Employeetable.DataSource =  emplist;
+            if (depid != 0)
             {
                 var filteredList = emplist.Where(p => p.Department_ID == depid).ToList();
                 Employeetable.DataSource =  filteredList;
@@ -137,35 +138,37 @@ namespace Attendance_Monitoring.View
         private void searchbox_TextChanged(object sender, EventArgs e)
         {
             string filterText = searchbox.Text.ToLower();
-            // Filter the list using LINQ
-
+            var filteredList = new List<Employee>();
+            // All Section if the ComboBox is 0
             if (comboBox1.SelectedIndex == 0)
             {
-                var filteredList = emplist.Where(p => p.EmployeeID.ToLower().Contains(filterText) ||
-                       p.Fullname.ToLower().Contains(filterText))
-                       .ToList();
-
-                Employeetable.DataSource =  filteredList;
-                DisplayTotal.Text = "Total Records: " + Employeetable.RowCount;
+                if (filterText != "")
+                {
+                    filteredList = emplist.Where(p => p.EmployeeID.ToLower().Contains(filterText) ||
+                               p.Fullname.ToLower().Contains(filterText))
+                               .ToList();
+                }
+                else
+                {
+                    filteredList = emplist.ToList();
+                }
             }
             else
             {
                 if (filterText != "")
                 {
-                    var filteredList = emplist.Where(p => p.EmployeeID.ToLower().Contains(filterText) ||
+                    filteredList = emplist.Where(p => p.EmployeeID.ToLower().Contains(filterText) ||
                     p.Fullname.ToLower().Contains(filterText) && p.Department_ID == comboBox1.SelectedIndex)
                     .ToList();
-                    Employeetable.DataSource =  filteredList;
-                    DisplayTotal.Text = "Total Records: " + Employeetable.RowCount;
                 }
                 else
                 {
-                    var filteredList = emplist.Where(p => p.Department_ID == comboBox1.SelectedIndex).ToList();
-                    Employeetable.DataSource =  filteredList;
-                    DisplayTotal.Text = "Total Records: " + Employeetable.RowCount;
+                    filteredList = emplist.Where(p => p.Department_ID == comboBox1.SelectedIndex).ToList();
                 }
-                      
             }
+
+            Employeetable.DataSource =  filteredList;
+            DisplayTotal.Text = "Total Records: " + Employeetable.RowCount;
         }
 
         private async  void Employeetable_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -203,7 +206,7 @@ namespace Attendance_Monitoring.View
                         if (result)
                         {
                             MessageBox.Show($@"Employee ID: ${EmployeeID} is Already Deleted!!");
-                            Displayemployee(comboBox1.SelectedIndex);
+                            await Displayemployee(comboBox1.SelectedIndex);
                         }
                     }
 
@@ -217,20 +220,13 @@ namespace Attendance_Monitoring.View
 
         private void EmployeeManage_Load(object sender, EventArgs e)
         {
-            //SET THE SECTION MOLDING DISPLAY TABLE
-            Displayemployee(0);
             PopulateComboBox();
         }
 
 
-        private void comboBox1_SelectedIndexChanged_1(object sender, EventArgs e)
+        private async void comboBox1_SelectedIndexChanged_1(object sender, EventArgs e)
         {
-           
-            if (comboBox1.SelectedIndex == 0) Displayemployee(0);
-
-            var filteredList = emplist.Where(p => p.Department_ID == comboBox1.SelectedIndex).ToList();
-            Employeetable.DataSource =  filteredList;
-            DisplayTotal.Text = "Total Records: " + Employeetable.RowCount;
+            await Displayemployee((comboBox1.SelectedIndex == 0) ? 0 : comboBox1.SelectedIndex);
         }
 
         private void button1_Click(object sender, EventArgs e)

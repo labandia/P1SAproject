@@ -551,7 +551,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: .5em 0;
+        padding: .5em;
     }
 
     .custom_modal__icon{
@@ -587,9 +587,7 @@
         margin-bottom: 1em;
     }
 
-    .addformcontainer {
-        padding: .5em;
-    }
+    .addformcontainer, .formcontainer { padding: .5em; }
 
 
     .formcontainer h5, .addformcontainer h5 {
@@ -610,6 +608,12 @@
         padding: .6em;
         font-size: var(--normal-font-size);
         border-radius: .3em;
+    }
+
+    .addformcontainer input[type='radio']{
+          width: auto !important;
+          margin: 0 !important;
+          padding: 0 !important;
     }
 
     .formcontainer textarea, .addformcontainer textarea {
@@ -1544,12 +1548,7 @@
     }
 
 
-    .edits_footer {
-        display: flex;
-        align-items: center;
-        place-content: flex-end;
-        margin-top: .5em;
-    }
+    
 
     #Editdetailsbtn {
         background: var(--primary-color);
@@ -1766,7 +1765,6 @@
 }
 
 .MoldieBodyModal label{
-    font-weight: 600;
     font-size: var(--small-font-size);
 }
 

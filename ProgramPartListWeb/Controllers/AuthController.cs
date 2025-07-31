@@ -36,7 +36,7 @@ namespace ProgramPartListWeb.Controllers
             string fullname = user.Fullname;
 
             var accessToken = JWTAuthentication.GenerateAccessToken(fullname, role, user.User_ID);
-            var refreshToken = _auth.GetRefreshToken(user.User_ID);
+            var refreshToken = _auth.GetRefreshToken(fullname, role, user.User_ID);
 
             var data = new { access_token = accessToken, refresh_token = refreshToken, fullname, role };
 

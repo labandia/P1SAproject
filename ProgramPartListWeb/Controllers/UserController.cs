@@ -5,6 +5,7 @@ using ProgramPartListWeb.Utilities.Security;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
@@ -159,23 +160,31 @@ namespace ProgramPartListWeb.Controllers
             }
         }
 
+        public class RefreshTokenModel
+        {
+            public string RefreshToken { get; set; }
+        }
+
 
         [HttpPost]
-        public ActionResult RefreshToken(string refreshToken)
+        public JsonResult RefreshToken(RefreshTokenModel request)
         {
-            var principal = JWTAuthentication.ValidateRefreshToken(refreshToken);
-
+            var principal = JWTAuthentication.ValidateRefreshToken(request.RefreshToken);
+           
             if (principal == null)
-            {
                 return Json(new { success = false, message = "Invalid refresh token" });
-            }
 
-            var fullName = principal.Claims.FirstOrDefault(c => c.Type == "FullName")?.Value;
-            var role = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
-            var userId = int.Parse(principal.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value ?? "0");
 
-            var newAccessToken = JWTAuthentication.GenerateAccessToken(fullName, role, userId);
-            var newRefreshToken = JWTAuthentication.GenerateRefreshToken(userId);
+            string userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var fullname = principal.FindFirst("Fullname")?.Value;
+            string role = principal.FindFirst(ClaimTypes.Role)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+                return Json(new { success = false, message = "Invalid token claims" });
+
+
+            var newAccessToken = JWTAuthentication.GenerateAccessToken(fullname, role, int.Parse(userId));
+            var newRefreshToken = JWTAuthentication.GenerateRefreshToken(fullname, role, int.Parse(userId)); // optional
 
             return Json(new
             {

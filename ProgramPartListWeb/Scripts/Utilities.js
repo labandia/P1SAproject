@@ -19,33 +19,38 @@ window.FetchAuthenticate = async (url, fdata) => {
 
     try {
         let res = await makeRequest(token);
-
+        const logout = localStorage.getItem('Logout');
         if (res.status === 401) {
             const refreshSuccess = await refreshAccessToken();
             if (refreshSuccess) {
                 // Retry with new token
                 token = localStorage.getItem('accessToken');
                 res = await makeRequest(token);
-
                 if (res.status === 401) {
-                    // Still unauthorized even after refresh
-                    window.location.href = '/Error/Unauthorized';
+                    localStorage.clear();
+                    window.location.href = logout;
                     return;
+                }
+
+                // Still 401 after refresh attempt
+                if (res.status === 401) {
+                    localStorage.clear();
+                    if (logout) {
+                        window.location.href = logout;
+                    }
+                    return null;
                 }
             } else {
                 // Redirect if refresh fails
-                window.location.href = '/Error/Unauthorized';
+                localStorage.clear();
+                window.location.href = logout;
                 return;
             }
         }
-
-
         //if (!res.ok) {
         //    const errorData = await res.json().catch(() => ({}));
         //    return { success: false, status: res.status, error: errorData.message || 'Request failed' };
-        //}
-
-       
+        //}  
         const result = await res.json();
         return result;
 
@@ -290,30 +295,22 @@ async function refreshAccessToken() {
     try {
         const response = await fetch("/User/RefreshToken", {
             method: "POST",
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ refreshToken: refreshToken })
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ refreshToken })
         });
-        console.warn("Refresh token");
         const result = await response.json();
         if (response.ok && result.accessToken) {
-            localStorage.setItem("accessToken", data.accessToken);
+            localStorage.setItem("accessToken", result.accessToken);
+            return true;
         } else {
             console.warn("Refresh token failed. Logging out...");
+            localStorage.clear();
             window.location.href = logout;
         }
 
-        //const data = await response.json();
-
-        //if (data.success) {
-        //    localStorage.setItem("accessToken", data.accessToken);
-        //} else {
-        //    console.warn("Refresh token failed. Logging out...");
-        //    window.location.href = logout;
-        //}
     } catch (error) {
         console.error("Error refreshing token:", error);
         return false;
-        // logout();
     }
 }
 window.logout = async () => {

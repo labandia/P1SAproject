@@ -229,22 +229,21 @@
                     </button>
                 </div>
 
-                <div class="MoldieBodyModal">
-                    <form id="InputMoldie">
-                        <div class="form_group col-12 col-sm-12">
-                            <label for="">Input Quantity : </label>
-                            <input type="hidden" name="PartNo" id="PartNo">
-                            <input type="hidden" name="No" id="No">
-                            <input type="text" name="MoldInput" id="MoldInput" onkeypress="return restrictChars(event)" autocomplete="off">
-                        </div>
+                <form id="InputMoldie" class="addformcontainer">
+                    <div class="form_group col-12 col-sm-12">
+                        <label for="">Input Quantity *: </label>
+                        <input type="hidden" name="PartNo" id="PartNo">
+                        <input type="hidden" name="No" id="No">
+                        <input type="text" name="MoldInput" id="MoldInput" onkeypress="return restrictChars(event)" autocomplete="off">
+                    </div>
 
-                        <div class="edits_footer" id="editsdisplay">
-                            <button type="submit" class="primary_button_color">
-                                <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                    <div class="flex_space" id="editsdisplay">
+                        <small>Input quantity is required.</small>
+                        <button type="submit" class="primary_button_color">
+                            <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
+                        </button>
+                    </div>
+                </form>
 
 
             </div>
@@ -266,86 +265,85 @@
                     </button>
                 </div>
 
-                <div class="MoldieBodyModal">
-                    <form id="AddToolforms" autocomplete="off">
-                        <div class="row">
-                            <div class="form_group col-4 col-lg-4 col-sm-12">
-                                <label for="">Registration</label>
-                                <input type="text" name="RegNo" id="RegNo" placeholder="Enter Registration No." required>
-                            </div>
+                <form id="AddToolforms" class="addformcontainer" autocomplete="off">
+                    <div class="row">
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Registration *</label>
+                            <input type="text" name="RegNo" id="RegNo" placeholder="Enter Registration No." required>
+                        </div>
 
-                            <div class="form_group col-4 col-lg-4 col-sm-12">
-                                <label for="">Part number</label>
-                                @*<input type="text" name="PartNo" id="PartNo" placeholder="Enter Part number" required>*@
-                                <div class="search-box">
-                                    <input type="text" placeholder="Type Part number" name="ParNoSearch" id="ParNoSearch" required>
-                                    <div class="namesdisplay"></div>
-                                </div>
-                            </div>
-
-                            <div class="form_group col-4 col-lg-4 col-sm-12">
-                                <label for="">Item # 1</label>
-                                <input type="text" name="Item" id="Item" placeholder="Enter Items 1" onkeypress='return restrictChars(event)' required>
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Part number *</label>
+                            @*<input type="text" name="PartNo" id="PartNo" placeholder="Enter Part number" required>*@
+                            <div class="search-box">
+                                <input type="text" placeholder="Type Part number" name="ParNoSearch" id="ParNoSearch" required>
+                                <div class="namesdisplay"></div>
                             </div>
                         </div>
 
-                       
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Item # 1</label>
+                            <input type="text" name="Item" id="Item" placeholder="Enter Items 1" onkeypress='return restrictChars(event)' required>
+                        </div>
+                    </div>
 
-                        <div class="row">
-                            <div class="form_group col-4 col-lg-4 col-sm-12">
-                                <label for="">Release(Shot Cycle test)</label>
-                                <input type="text" name="ShotRelease" id="ShotRelease" placeholder="Enter Shot Cycle Shot" onkeypress='return restrictChars(event)' required>
-                            </div>
 
-                            <div class="form_group col-4 col-lg-4 col-sm-12">
-                                <label for="">Date Arrived</label>
-                                <input type="date" name="DateArrived" id="DateArrived" required>
-                            </div>
 
-                            <div class="form_group col-4 col-lg-4 col-sm-12">
-                                <label for="">Details of Modification</label>
-                                <input type="text" name="DetailsModify" id="DetailsModify" placeholder="Enter Details of Modification" required>
-                            </div>
+                    <div class="row">
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Release(Shot Cycle test)</label>
+                            <input type="text" name="ShotRelease" id="ShotRelease" placeholder="Enter Cycle Shot" onkeypress='return restrictChars(event)' required>
                         </div>
 
-                        <div class="row">
-                            <div class="form_group col-4 col-lg-4 col-sm-12">
-                                <label for="">Date Repair</label>
-                                <input type="date" name="DateRepair" id="DateRepair" required>
-                            </div>
-                            <div class="form_group col-4 col-lg-4 col-sm-12">
-                                <label for="">Incharge</label>
-                                <input type="text" name="Incharge" id="Incharge" placeholder="Enter In Charget name" required>
-                            </div>
-
-                            <div class="form_group col-4 col-lg-4 col-sm-12">
-                                <label for="">Item # 2</label>
-                                <input type="text" name="Item2" id="Item2" placeholder="Enter No of Items" onkeypress='return restrictChars(event)' required>
-                            </div>
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Date Arrived</label>
+                            <input type="date" name="DateArrived" id="DateArrived" required>
                         </div>
 
-                        <div class="row">
-                            <div class="form_group col-8 col-lg-8 col-sm-12">
-                                <label for="">Remarks</label>
-                                <textarea placeholder="Enter Remarks " name="Remarks" id="Remarks" rows="3" cols="50" required></textarea>
-                            </div>
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Details of Modification</label>
+                            <input type="text" name="DetailsModify" id="DetailsModify" placeholder="Enter Details" required>
+                        </div>
+                    </div>
 
-                            <div class="form_group col-4 col-lg-4 col-sm-12">
-                                <label for="">Details of Modification</label>
-                                <input type="text" name="DetailsModify2" id="DetailsModify2" placeholder="Enter Details of Modification" required>
-                            </div>
+                    <div class="row">
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Date Repair</label>
+                            <input type="date" name="DateRepair" id="DateRepair" required>
+                        </div>
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Incharge</label>
+                            <input type="text" name="Incharge" id="Incharge" placeholder="Enter the name of Incharged" required>
                         </div>
 
-                        
-
-
-                        <div class="edits_footer" id="editsdisplay">
-                            <button type="submit" class="primary_button_color">
-                                <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
-                            </button>
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Item # 2</label>
+                            <input type="text" name="Item2" id="Item2" placeholder="Enter No of Items" onkeypress='return restrictChars(event)' required>
                         </div>
-                    </form>
-                </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form_group col-8 col-lg-8 col-sm-12">
+                            <label for="">Remarks</label>
+                            <textarea placeholder="Write something here..." name="Remarks" id="Remarks" rows="3" cols="50" required></textarea>
+                        </div>
+
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Details of Modification</label>
+                            <input type="text" name="DetailsModify2" id="DetailsModify2" placeholder="Enter Details" required>
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="flex_space" id="editsdisplay">
+                        <small>All fields marked with (*) must be filled out</small>
+                        <button type="submit" class="primary_button_color">
+                            <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
+                        </button>
+                    </div>
+                </form>
 
 
             </div>
@@ -455,6 +453,10 @@
     //===============================================================
     $("#InputMoldie").on('submit', async (e) => {
         e.preventDefault();
+        if ($("#MoldInput").val() === "") {
+            return;
+        } 
+        
         let formData = new FormData(e.target);
         formData.append('DateAction', select.value);
         const data = Object.fromEntries(formData);

@@ -1,4 +1,5 @@
 ﻿using ProgramPartListWeb.Areas.PC.Models;
+using ProgramPartListWeb.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,6 +10,7 @@ namespace ProgramPartListWeb.Areas.PC.Interface
         // Employee Information
         Task<List<Employee>> GetEmployee();
         Task<int> GetEmployeeByDepartment(string employee);
+        Task<List<UsersModel>> GetUsersInfoSetting();
 
         // GET SCHEDULE TODAY LIST FOR DASHBOARD
         Task<List<PatrolSchedule>> GetScheduleDate();

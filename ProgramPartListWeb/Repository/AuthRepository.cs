@@ -25,7 +25,7 @@ namespace ProgramPartListWeb.Repository
             int projInt = (username == "Admin" || username == "24050006") ?  1 : proj;         
             return  UsersAccess.UserGetData<AuthModel>(strquery, new { Username = username, Project_ID  = projInt});
         }
-        public string GetRefreshToken(int userId) => JWTAuthentication.GenerateRefreshToken(userId);
+        public string GetRefreshToken(string fullname, string role, int userId) => JWTAuthentication.GenerateRefreshToken(fullname, role, userId);
  
         public string GetuserRolename(int roleid)
         {

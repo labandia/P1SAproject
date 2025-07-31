@@ -502,6 +502,12 @@
         font-size: var(--small-font-size);
         border-radius: .3em;
     }
+    .formcontainer input[type='checkbox']{
+        width: auto;
+        margin: 0;
+        padding: 0;
+    }
+
     .formcontainer textarea, .addformcontainer textarea {
         width: 100%;
         margin: .5em 0 1em 0;
@@ -914,22 +920,36 @@
         font-size: var(--small-font-size);
     }
 
-.SignatureWrapper{
-    width: 500px;
-    height: 100px;
-    overflow: hidden;
-    border: 1px solid black;
+.SignatureWrapper {
+    max-width: 500px;
+    text-align: center;
+    border: 1px dashed #999;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
 }
 
-.SignatureWrapper img{
+/*.SignatureWrapper img{
     width: 100%;
     object-fit: cover;
     background-position: center;
 
+}*/
+.SignatureImage {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    background: white;
+    box-shadow: 0 0 4px rgba(0,0,0,0.1);
 }
-.SignatureAction{
+
+
+
+.SignatureAction {
     display: flex;
-    justify-content:center;
+    justify-content: center;
     align-items: center;
     flex-direction: column;
     gap: 1em;

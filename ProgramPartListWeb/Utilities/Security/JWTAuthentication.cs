@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -10,17 +11,16 @@ namespace ProgramPartListWeb.Utilities.Security
 {
     public class JWTAuthentication
     {
-        private static string RefreshSecretKey =>
-        ConfigurationManager.AppSettings["config:RefreshSecretKey"];
-
-        private static string SecretKey =>
-            ConfigurationManager.AppSettings["config:JwtKey"];
-
-        private static string Issuer =>
-            ConfigurationManager.AppSettings["config:JwtIssuer"];
-
-        private static string Audience =>
-            ConfigurationManager.AppSettings["config:JwtAudience"];
+  
+        public static class JwtConfig
+        {
+            public static string Issuer => ConfigurationManager.AppSettings["config:JwtIssuer"];
+            public static string Audience => ConfigurationManager.AppSettings["config:JwtAudience"];
+            public static string AccessSecretKey => ConfigurationManager.AppSettings["config:JwtKey"];
+            public static string RefreshSecretKey => ConfigurationManager.AppSettings["config:RefreshSecretKey"];
+            public static int ExpireMinutes => int.Parse(ConfigurationManager.AppSettings["config:JwtExpireMinutes"]);
+            public static int RefreshExpireDays => int.Parse(ConfigurationManager.AppSettings["config:JwtExpireDays"]);
+        }
 
 
         public static string GenerateAccessToken(string fullName, string role, int userId)
@@ -37,16 +37,16 @@ namespace ProgramPartListWeb.Utilities.Security
                     ClaimValueTypes.Integer64)
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(ConfigurationManager.AppSettings["config:JwtKey"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtConfig.AccessSecretKey));
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var expires = DateTime.UtcNow.AddMinutes(
-                    Convert.ToDouble(ConfigurationManager.AppSettings["config:JwtExpireMinutes"] ?? "15"));
+                    Convert.ToDouble(JwtConfig.ExpireMinutes));
 
             var token = new JwtSecurityToken(
-                          issuer: ConfigurationManager.AppSettings["config:JwtIssuer"],
-                          audience: ConfigurationManager.AppSettings["config:JwtAudience"],
+                          issuer: JwtConfig.Issuer,
+                          audience: JwtConfig.Audience,
                           claims: claims,
                           expires: expires,
                           signingCredentials: creds);
@@ -58,27 +58,31 @@ namespace ProgramPartListWeb.Utilities.Security
 
 
 
-        public static string GenerateRefreshToken(int userId, int expireDays = 30)
+        public static string GenerateRefreshToken(string fullName, string role, int userId)
         {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(RefreshSecretKey));
-            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var claims = new[]
-                    {
+            var claims = new List<Claim>
+            {
                 new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
+                new Claim("Fullname", fullName),
+                new Claim(ClaimTypes.Role, role),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Iat,
                     new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds().ToString(),
                     ClaimValueTypes.Integer64)
             };
 
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtConfig.RefreshSecretKey));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var expires = DateTime.UtcNow.AddDays(Convert.ToDouble(JwtConfig.RefreshExpireDays));
+
             var token = new JwtSecurityToken(
-                issuer: Issuer,
-                audience: Audience,
+                issuer: JwtConfig.Issuer,
+                audience: JwtConfig.Audience,
                 claims: claims,
-                expires: DateTime.UtcNow.AddDays(expireDays),
-                signingCredentials: credentials
-            );
+                expires: expires,
+                signingCredentials: creds);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
@@ -96,7 +100,7 @@ namespace ProgramPartListWeb.Utilities.Security
                 throw new SecurityTokenMalformedException($"Expected 3 segments, got {segments.Length}");
 
             var key = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(isRefreshToken ? RefreshSecretKey : SecretKey));
+                Encoding.UTF8.GetBytes(isRefreshToken ? JwtConfig.RefreshSecretKey : JwtConfig.AccessSecretKey));
 
             var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -106,8 +110,8 @@ namespace ProgramPartListWeb.Utilities.Security
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                ValidIssuer = Issuer,
-                ValidAudience = Audience,
+                ValidIssuer = JwtConfig.Issuer,
+                ValidAudience = JwtConfig.Audience,
                 IssuerSigningKey = key,
                 ClockSkew = TimeSpan.Zero
             };
@@ -119,17 +123,24 @@ namespace ProgramPartListWeb.Utilities.Security
 
         public static ClaimsPrincipal ValidateRefreshToken(string refreshToken)
         {
+            //Debug.WriteLine($@"Issure : {JwtConfig.Issuer}");
+            //Debug.WriteLine($@"Audience : {JwtConfig.Audience}");
+            //Debug.WriteLine($@"AccessSecretKey :  {JwtConfig.AccessSecretKey}");
+            //Debug.WriteLine($@"RefreshSecretKey :    {JwtConfig.RefreshSecretKey}");
+            //Debug.WriteLine($@"ExpireMinutes :  {JwtConfig.ExpireMinutes}");
+            //Debug.WriteLine($@"RefreshExpireDays :  {JwtConfig.RefreshExpireDays}");
+
             refreshToken = refreshToken.Replace("Bearer ", "").Trim();
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(RefreshSecretKey);
+            var key = Encoding.UTF8.GetBytes(JwtConfig.RefreshSecretKey);
 
             var parameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
-                ValidIssuer = Issuer,
+                ValidIssuer = JwtConfig.Issuer,
                 ValidateAudience = true,
-                ValidAudience = Audience,
+                ValidAudience = JwtConfig.Audience,
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(key),
                 ValidateLifetime = true,

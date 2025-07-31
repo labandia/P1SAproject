@@ -103,15 +103,15 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         // GET: GetInspectorsByAdd
         public async Task<ActionResult> GetInspectorsByAdd()
         {
-            var data = await _ins.GetInpectorsData() ?? new List<InspectorModel>();
-            var removeDuplicateData = data
-                                       .GroupBy(x => x.Employee_ID)
-                                       .Select(g => g.First())
-                                       .ToList();
-            if (removeDuplicateData == null || !removeDuplicateData.Any())
-                return JsonNotFound("No Inspectors data found");
-
-            return JsonSuccess(removeDuplicateData, "LoadInspectorData");
+            var data = await _ins.GetUsersInfoSetting() ?? new List<UsersModel>();
+            //var removeDuplicateData = data
+            //                           .GroupBy(x => x.Employee_ID)
+            //                           .Select(g => g.First())
+            //                           .ToList();
+            //if (removeDuplicateData == null || !removeDuplicateData.Any())
+            //    return JsonNotFound("No Inspectors data found");
+            if(!data.Any()) return JsonNotFound("No Inspectors data found");
+            return JsonSuccess(data, "LoadInspectorData");
         }
         // GET: GetInpectsByApproval
         [JwtAuthorize]

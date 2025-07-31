@@ -15,7 +15,7 @@
             <hr />
             <div class="row">
                 <div class="col-12 col-sm-12 col-lg-6">
-                    <label>Registration No.  </label> <br />
+                    <label>Registration No. <small style="color: #a81818; font-weight: 600;">*</small> </label> <br />
                     @*<input type="text" placeholder="Type Registration No." name="RegNo" id="RegNo" required />*@
                     <div class="date-wrapper">
                         <span class="prefix">P1SA-</span>
@@ -28,18 +28,22 @@
                     </div>
                 </div>
                 <div class="col-12 col-sm-12 col-lg-6">
-                    <label>Input Inspectors  </label>
+                    <label>Input Inspectors <small style="color: #a81818; font-weight: 600;">*</small> </label>
                     @*<div class="select-container">
                         <select id="Employee_ID" name="Employee_ID">
                             <option>-- Select Inspector --</option>
                         </select>
                     </div>*@
-
-                    <div class="search-box">
-                        <input type="hidden" name="Employee_ID" id="Employee_ID">
-                        <input type="text" placeholder="Type Name or ID no." name="EmployeeSearch" id="EmployeeSearch">
-                        <div class="namesdisplay"></div>
+                    <div class="flex_align" >
+                        <div class="search-box" style="width: 70%;">
+                            <input type="hidden" name="Employee_ID" id="Employee_ID">
+                            <input type="text" placeholder="Type Name or ID no." name="EmployeeSearch" id="EmployeeSearch">
+                            <div class="namesdisplay"></div>
+                        </div>
+                        <small>Include signature: </small>
+                        <input type="checkbox" name="IsSign" id="IsSign"  checked />
                     </div>
+                    
                 </div>
             </div>
 
@@ -172,7 +176,7 @@
 
     <div class="d-flex align-items-center justify-content-between">
         <span id="errorvalid" class="text-danger">* Registration No is already inserted</span>
-        <span id="labelguide" style="color: rgb(100, 9, 9);">* Please Fill up all the required Fields</span>
+        <span id="labelguide" >All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</span>
         <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
     </div>
 </form>
@@ -300,7 +304,7 @@
 
         if (input.length > 0) {
             result = loadData.filter((item) => {
-                return item.FullName.toLowerCase().includes(input.toLowerCase()) ||
+                return item.Fullname.toLowerCase().includes(input.toLowerCase()) ||
                     item.Employee_ID.toLowerCase().includes(input.toLowerCase());
             });
 
@@ -319,7 +323,7 @@
 
     function display(result) {
         const content = result.map((list) => {
-            return `<li onclick="selectinput(this)" data-id="${list.Employee_ID}">${list.FullName}</li>`;
+            return `<li onclick="selectinput(this)" data-id="${list.Employee_ID}">${list.Fullname}</li>`;
         });
 
         resultBox.innerHTML = "<ul>" + content.join('') + "</ul>";

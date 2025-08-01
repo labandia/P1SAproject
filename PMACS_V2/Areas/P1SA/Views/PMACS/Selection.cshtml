@@ -54,7 +54,7 @@
 
 
 
-         let res = await fetchData('@Url.Action("GetGroupCapacityList", "Capacity")', {});
+        let res = await FetchAuthenticate('@Url.Action("GetGroupCapacityList", "Capacity")', {});
          if (res && res.Success) {
              loadSelect = res.Data;
 

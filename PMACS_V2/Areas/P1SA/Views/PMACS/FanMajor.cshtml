@@ -545,7 +545,7 @@
         formdata.append('limit', m_limit);
         formdata.append('sectionID', 2);
         formdata.append('mach', '');
-        let res = await fetchData('/FanMajor/GetFanmajorMachine', formdata);
+        let res = await FetchAuthenticate('/FanMajor/GetFanmajorMachine', formdata);
         if (res && res.Success) {
             loadData = res.Data;
 
@@ -749,7 +749,7 @@
     //##################################################################################################### //
     const MachineFilterData = async (formdata, sectionID, mach, mode) => {
         loadData = [];
-        let res = await fetchData('@Url.Action("GetFanmajorMachine", "FanMajor")', formdata);
+        let res = await FetchAuthenticate('@Url.Action("GetFanmajorMachine", "FanMajor")', formdata);
         if (res && res.Success) {
             loadData = res.Data;
 
@@ -793,7 +793,7 @@
         loadData = [];
 
 
-        let res = await fetchData('@Url.Action("GetFanmajorMachine", "FanMajor")', data);
+        let res = await FetchAuthenticate('@Url.Action("GetFanmajorMachine", "FanMajor")', data);
         if (res && res.Success) {
             let load = res.Data;
             loadData = load;
@@ -845,7 +845,7 @@
     async function MachineLoadFilterData(data, sectionID, mach) {
         loadData = [];
 
-        let res = await fetchData('@Url.Action("GetFanmajorMachine", "FanMajor")', data);
+        let res = await FetchAuthenticate('@Url.Action("GetFanmajorMachine", "FanMajor")', data);
         console.log(res);
         //if (res && res.StatusCode === 200) {
         //    let load = res.machine;

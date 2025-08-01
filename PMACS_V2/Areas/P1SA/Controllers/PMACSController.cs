@@ -49,6 +49,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         // ===========================================================
         // ==================== Manpower Data ========================
         // ===========================================================
+        [JwtAuthorize]
         public async Task<ActionResult> GetManpowerData()
         {
             var data = await _man.GetManpower();
@@ -57,6 +58,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
 
             return JsonSuccess(data);
         }
+        [JwtAuthorize]
         public async Task<ActionResult> GetTotalmanpower(string months)
         {
             var data = await _man.GetTotalManpower(months);

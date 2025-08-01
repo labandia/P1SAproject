@@ -2,6 +2,7 @@
 using PMACS_V2.Areas.P1SA.Models;
 using PMACS_V2.Controllers;
 using PMACS_V2.Utilities.Security;
+using ProgramPartListWeb.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         // ===========================================================
         // ==================== MOLD DIE DATA  =======================
         // ===========================================================
+        [JwtAuthorize]
         public async Task<ActionResult> GetMoldDieSummaryList(string ProcessID)
         {
             var data = await _die.GetMoldDieSummary(ProcessID);
@@ -57,6 +59,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
 
             return JsonMultipleData(dataSets);
         }
+        [JwtAuthorize]
         public async Task<ActionResult> GetMoldDieMonthInputList(int Months, int Year, string ProcessID)
         {
             var data = await _die.GetMoldDieMonthInput(Months, Year, ProcessID) ?? new List<DieMoldTotalPartnum>();
@@ -66,6 +69,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
 
             return JsonSuccess(data);
         }
+        [JwtAuthorize]
         public async Task<ActionResult> GetMoldDieToolingList()
         {
             var data = await _die.GetMoldToolingData() ?? new List<DieMoldToolingModelDisplay>();
@@ -95,6 +99,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         // ===========================================================
         // ==================== PRESS MOLD DIE DATA  ==================
         // ===========================================================
+        [JwtAuthorize]
         public async Task<ActionResult> GetPressDieRegistryList()
         {
             var data = await _die.GetPressRegistryList() ?? new List<PressDieRegistry>();
@@ -104,7 +109,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
 
             return JsonSuccess(data);
         }
-
+        [JwtAuthorize]
         public async Task<ActionResult> GetPressDieMainMonitoringList()
         {
             var data = await _die.GetPressMainMonitoring() ?? new List<PressMainMonitor>();
@@ -113,7 +118,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
 
             return JsonSuccess(data);
         }
-
+        [JwtAuthorize]
         public async Task<ActionResult> GetPressDieMonitoringList(string ToolNo)
         {
             var data = await _die.GetPressMonitoring() ?? new List<PressDieMontoring>();
@@ -123,6 +128,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
 
             return JsonSuccess(filterdata);
         }
+        [JwtAuthorize]
         public async Task<ActionResult> GetPressDieSummaryList()
         {
             var data = await _die.GetPressSummary() ?? new List<PressDieSummary>();
@@ -132,6 +138,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
 
             return JsonSuccess(data);
         }
+        [JwtAuthorize]
         public async Task<ActionResult> GetPressDieControlList()
         {
             var data = await _die.GetPressControl() ?? new List<PressDieControlModel>();

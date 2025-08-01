@@ -702,7 +702,7 @@
 
         const id = loadingDisplay(2, colval);
         Loadingsteps(id, async () => {
-            let res = await fetchData('@Url.Action("GetPressDieRegistryList", "DieMold")', {});
+            let res = await FetchAuthenticate('@Url.Action("GetPressDieRegistryList", "DieMold")', {});
             if (res && res.Success) {
                 SummaryData = res.Data;
                 const ToolData = SummaryData.filter(res => res.Operational === 1).map(res => res.ToolNo);
@@ -726,7 +726,7 @@
         //const data = Object.fromEntries(formData);
         const id = loadingDisplay(1, 7);
         Loadingsteps(id, async () => {
-             let res = await fetchData('@Url.Action("GetPressDieMainMonitoringList", "DieMold")', {});
+            let res = await FetchAuthenticate('@Url.Action("GetPressDieMainMonitoringList", "DieMold")', {});
              if (res && res.Success) {
                  TableData = res.Data;
                  displayMainMonitoring(TableData, 'DiePressMonitoringlist', 'PaginationContainer', 50, 5);
@@ -738,7 +738,7 @@
     const GetPressSummary = async () => {
         const id = loadingDisplay(0, 10);
         Loadingsteps(id, async () => {
-            let res = await fetchData('@Url.Action("GetPressDieSummaryList", "DieMold")', {});
+            let res = await FetchAuthenticate('@Url.Action("GetPressDieSummaryList", "DieMold")', {});
             if (res && res.Success) {
                 PressData = res.Data;
                 //console.log(PressData);
@@ -751,7 +751,7 @@
     const GetPressControl = async () => {
         const id = loadingDisplay(3, 11);
         Loadingsteps(id, async () => {
-            let res = await fetchData('@Url.Action("GetPressDieControlList", "DieMold")', {});
+            let res = await FetchAuthenticate('@Url.Action("GetPressDieControlList", "DieMold")', {});
             if (res && res.Success) {
                 ControlData = res.Data;
                 displayControlPagination(ControlData, 'DiePressControlist', 'PaginationControlContainer', 50, 5);

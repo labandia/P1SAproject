@@ -280,6 +280,7 @@
                          }).then(() => {
                              savebtn.innerHTML = "<span class='textload'><i class='fa-solid fa-right-to-bracket'></i> Login</span>"
                              localStorage.removeItem('activeLinkIndex');
+                             localStorage.setItem('Logout', "/P1SA/PMACS/Mainpage");
 
                              // For Info of the user
                              localStorage.setItem('UserRole', res.Data.role);

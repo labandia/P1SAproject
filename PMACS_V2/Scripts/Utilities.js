@@ -2,7 +2,6 @@
 //GLOBAL GET FUNCTIONS WITH TOKEN AUTHENTICATION 
 window.FetchAuthenticate = async (url, fdata) => {
     var token = localStorage.getItem('accessToken');
-    // Convert parameters to a query string
     const queryString = new URLSearchParams(fdata).toString();
     const fullUrl = `${url}?${queryString}`;  // Append parameters to URL
 
@@ -12,42 +11,50 @@ window.FetchAuthenticate = async (url, fdata) => {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + tokenToUse
-            },
-            dataType: 'json'
+            }
         });
     };
 
 
     try {
         let res = await makeRequest(token);
-
+        const logout = localStorage.getItem('Logout');
         if (res.status === 401) {
             const refreshSuccess = await refreshAccessToken();
             if (refreshSuccess) {
                 // Retry with new token
                 token = localStorage.getItem('accessToken');
                 res = await makeRequest(token);
+                if (res.status === 401) {
+                    localStorage.removeItem("refreshToken");
+                    localStorage.removeItem("accessToken");
+                    window.location.href = logout;
+                    return;
+                }
+
+                // Still 401 after refresh attempt
+                if (res.status === 401) {
+                    //localStorage.clear();
+                    if (logout) {
+                        localStorage.removeItem("refreshToken");
+                        localStorage.removeItem("accessToken");
+                        window.location.href = logout;
+                    }
+                    return null;
+                }
             } else {
                 // Redirect if refresh fails
-                window.location.href = '/Error/Unauthorized';
+                localStorage.removeItem("refreshToken");
+                localStorage.removeItem("accessToken");
+                window.location.href = logout;
                 return;
             }
-
-            // Token expired or unauthorized, refresh the token
-            //await refreshAccessToken();
-            // Retry the original request
-            //return FetchAuthenticate(url, fdata);
-            //window.location.href = '/Error/Unauthorized';
         }
-
-
-        const result = await res.json();
-
         //if (!res.ok) {
-        //    //console.warn(`Error ${res.status}: ${result.Message}`);
-        //    return result;
-        //}
-
+        //    const errorData = await res.json().catch(() => ({}));
+        //    return { success: false, status: res.status, error: errorData.message || 'Request failed' };
+        //}  
+        const result = await res.json();
         return result;
 
     } catch (error) {
@@ -163,26 +170,29 @@ window.postPartialData = async (url, data) => {
 
 async function refreshAccessToken() {
     const logout = localStorage.getItem('Logout');
-    const refreshToken = localStorage.getItem("refreshToken");
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (!refreshToken) return false;
 
     try {
         const response = await fetch("/User/RefreshToken", {
             method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: `_refreshToken=${refreshToken}`
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ refreshToken })
         });
-
-        const data = await response.json();
-
-        if (data.success) {
-            localStorage.setItem("accessToken", data.accessToken);
+        const result = await response.json();
+        if (response.ok && result.accessToken) {
+            localStorage.setItem("accessToken", result.accessToken);
+            return true;
         } else {
             console.warn("Refresh token failed. Logging out...");
+            localStorage.removeItem("refreshToken");
+            localStorage.removeItem("accessToken");
             window.location.href = logout;
         }
+
     } catch (error) {
         console.error("Error refreshing token:", error);
-        // logout();
+        return false;
     }
 }
 

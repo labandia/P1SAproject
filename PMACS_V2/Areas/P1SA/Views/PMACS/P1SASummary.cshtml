@@ -144,7 +144,7 @@
         loadingDisplay();
 
         Loadingsteps(async () => {
-             let res = await fetchData('@Url.Action("GetPisaSummaryList", "Capacity")', {});
+            let res = await FetchAuthenticate('@Url.Action("GetPisaSummaryList", "Capacity")', {});
             if (res && res.Success) {
                 loadData = res.Data;
                 TableDisplay.empty(); // Removing the Loading Display

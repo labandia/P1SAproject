@@ -1,44 +1,69 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using PMACS_V2.Utilities.Security;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Routing;
 
 
 namespace ProgramPartListWeb.Helper
 {
     public class JwtAuthorizeAttribute : AuthorizeAttribute
     {
-        protected override bool AuthorizeCore(HttpContextBase httpContext)
+        private readonly string _requiredRole;
+
+        public JwtAuthorizeAttribute(string role = null)
         {
-            var authorizationHeader = httpContext.Request.Headers["Authorization"];
-
-            if (string.IsNullOrEmpty(authorizationHeader) || !authorizationHeader.StartsWith("Bearer "))
-                return false;
-
-            var token = authorizationHeader.Replace("Bearer ", "").Trim();
-
-            if (string.IsNullOrEmpty(token))
-                return false;
-
-            var principal = JwtHelper.ValidateToken(token);
-
-            if (principal == null)
-                return false;
-
-            httpContext.User = principal;
-            return true;
+            _requiredRole = role;
         }
 
+        protected override bool AuthorizeCore(HttpContextBase httpContext)
+        {
+            var authHeader = httpContext.Request.Headers["Authorization"];
+            if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
+                return false;
+
+            var token = authHeader.Substring("Bearer ".Length).Trim();
+
+            try
+            {
+                var principal = JWTAuthentication.ValidateToken(token);
+                if (principal == null)
+                    return false;
+
+                httpContext.User = principal; // Set the current principal
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
         protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
         {
-            filterContext.HttpContext.Response.StatusCode = 401; // Unauthorized
-            filterContext.Result = new JsonResult
+            var request = filterContext.HttpContext.Request;
+
+            bool isApiRequest = request.Headers["Authorization"] != null
+                                || request.AcceptTypes?.Any(t => t.Contains("application/json")) == true;
+
+            if (isApiRequest)
             {
-                Data = new { message = "Unauthorized" },
-                JsonRequestBehavior = JsonRequestBehavior.AllowGet
-            };
+                filterContext.Result = new JsonResult
+                {
+                    Data = new
+                    {
+                        success = false,
+                        message = "Unauthorized: Access is denied due to invalid token or insufficient permissions."
+                    },
+                    JsonRequestBehavior = JsonRequestBehavior.AllowGet
+                };
+
+                filterContext.HttpContext.Response.StatusCode = 401;
+                filterContext.HttpContext.Response.SuppressFormsAuthenticationRedirect = true;
+            }
+            else
+            {
+                // Fallback for browser requests
+                filterContext.Result = new RedirectResult("~/Error/Unauthorized");
+            }
         }
     }
 }

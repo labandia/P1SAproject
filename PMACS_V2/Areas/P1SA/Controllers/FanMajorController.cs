@@ -27,6 +27,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         // ===========================================================
 
         // GET: P1SA/GetFanmajorMachine
+        [JwtAuthorize]
         public async Task<ActionResult> GetFanmajorMachine(int offset, int limit, int sectionID, string mach)
         {
             //Debug.WriteLine($@"OffSet : {offset} - Limit : {limit}");

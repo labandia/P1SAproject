@@ -5,7 +5,6 @@ using ProgramPartListWeb.Utilities.Security;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
@@ -169,28 +168,29 @@ namespace ProgramPartListWeb.Controllers
         [HttpPost]
         public JsonResult RefreshToken(RefreshTokenModel request)
         {
-            var principal = JWTAuthentication.ValidateRefreshToken(request.RefreshToken);
-           
-            if (principal == null)
-                return Json(new { success = false, message = "Invalid refresh token" });
+            Debug.WriteLine("Request : " + request);
+
+            //var principal = JWTAuthentication.ValidateRefreshToken(request.RefreshToken);
+            //if (principal == null)
+            //    return Json(new { success = false, message = "Invalid refresh token" });
 
 
-            string userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var fullname = principal.FindFirst("Fullname")?.Value;
-            string role = principal.FindFirst(ClaimTypes.Role)?.Value;
+            //string userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            //var fullname = principal.FindFirst("Fullname")?.Value;
+            //string role = principal.FindFirst(ClaimTypes.Role)?.Value;
 
-            if (string.IsNullOrEmpty(userId))
-                return Json(new { success = false, message = "Invalid token claims" });
+            //if (string.IsNullOrEmpty(userId))
+            //    return Json(new { success = false, message = "Invalid token claims" });
 
 
-            var newAccessToken = JWTAuthentication.GenerateAccessToken(fullname, role, int.Parse(userId));
-            var newRefreshToken = JWTAuthentication.GenerateRefreshToken(fullname, role, int.Parse(userId)); // optional
+            //var newAccessToken = JWTAuthentication.GenerateAccessToken(fullname, role, int.Parse(userId));
+            //var newRefreshToken = JWTAuthentication.GenerateRefreshToken(fullname, role, int.Parse(userId)); // optional
 
             return Json(new
             {
                 success = true,
-                accessToken = newAccessToken,
-                refreshToken = newRefreshToken
+                accessToken = "ADASD",
+                refreshToken = "adasda"
             });
         }
 

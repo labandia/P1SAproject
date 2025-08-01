@@ -6,11 +6,10 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace ProgramPartListWeb.Utilities.Security
+namespace PMACS_V2.Utilities.Security
 {
     public class JWTAuthentication
     {
-  
         public static class JwtConfig
         {
             public static string Issuer => ConfigurationManager.AppSettings["config:JwtIssuer"];
@@ -27,10 +26,10 @@ namespace ProgramPartListWeb.Utilities.Security
             // Store To Claims Like an Mail Envelope that is Seal in information
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),       
-                new Claim(JwtRegisteredClaimNames.UniqueName, fullName),         
-                new Claim(ClaimTypes.Role, role),                            
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), 
+                new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
+                new Claim(JwtRegisteredClaimNames.UniqueName, fullName),
+                new Claim(ClaimTypes.Role, role),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Iat,
                     new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds().ToString(),
                     ClaimValueTypes.Integer64)

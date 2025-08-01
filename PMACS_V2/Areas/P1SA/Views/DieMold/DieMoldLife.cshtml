@@ -600,7 +600,7 @@
         $("#FinalSummaryData").empty();
 
         Loadingsteps(id, async () => {
-              let res = await fetchData('@Url.Action("GetMoldDieSummaryList", "DieMold")', { ProcessID: $("#ProcessID").val() });
+            let res = await FetchAuthenticate('@Url.Action("GetMoldDieSummaryList", "DieMold")', { ProcessID: $("#ProcessID").val() });
             if (res && res.Success) {
                 TableDisplay.empty(); // Removing the Loading Display
 
@@ -647,7 +647,7 @@
              $("#MonthHeader").text(months[month - 1]);
 
              const data = Object.fromEntries(formData);
-             let res = await fetchData('@Url.Action("GetMoldDieMonthInputList", "DieMold")', data);
+             let res = await FetchAuthenticate('@Url.Action("GetMoldDieMonthInputList", "DieMold")', data);
              if (res && res.Success) {
                  TableData = res.Data;
                  displayPagination(TableData, 'DieMoldMasterlist', 'PaginationContainer', 50, 5);
@@ -684,7 +684,7 @@
     const GetMoldDieTooling = async () => {
         const id = loadingDisplay(2, 9);
         Loadingsteps(id, async () => {
-               let res = await fetchData('@Url.Action("GetMoldDieToolingList", "DieMold")', {});
+            let res = await FetchAuthenticate('@Url.Action("GetMoldDieToolingList", "DieMold")', {});
             if (res && res.Success) {
                 DieTooling = res.Data;
 

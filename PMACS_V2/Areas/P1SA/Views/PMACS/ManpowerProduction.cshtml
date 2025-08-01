@@ -175,7 +175,7 @@
      let userRole;
 
      const GetManpowerData = async() =>{
-         let res = await fetchData('@Url.Action("GetManpowerData", "PMACS")', {});
+         let res = await FetchAuthenticate('@Url.Action("GetManpowerData", "PMACS")', {});
          if (res && res.Success) {
              let load = res.Data;
              loadData = load;
@@ -198,7 +198,7 @@
              "July", "August", "September", "October", "November", "December"
          ];
 
-         let res = await fetchData('@Url.Action("GetTotalmanpower", "PMACS")', { months: monthNames[new Date().getMonth()] });
+         let res = await FetchAuthenticate('@Url.Action("GetTotalmanpower", "PMACS")', { months: monthNames[new Date().getMonth()] });
          if (res && res.Success) {
              totalarrayload = res.Data;
 

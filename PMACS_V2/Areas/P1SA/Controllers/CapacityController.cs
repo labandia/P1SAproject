@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using System.Linq;
 using PMACS_V2.Controllers;
 using PMACS_V2.Utilities.Security;
+using ProgramPartListWeb.Helper;
 
 namespace PMACS_V2.Areas.P1SA.Controllers
 {
@@ -21,7 +22,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         // ===========================================================
         // ==================== P1SA Summary  ========================
         // ===========================================================
-
+        [JwtAuthorize]
         public async Task<ActionResult> GetPisaSummaryList()
         {
             var data = await _cap.GetP1SAsummary() ?? new List<PsummaryModel>();
@@ -30,6 +31,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
 
             return JsonSuccess(data);
         }
+        [JwtAuthorize]
         public async Task<ActionResult> GetCapacitySummaryList(string month, int capid)
         {
             var data = await _cap.GetCapacitySummary(month, capid) ?? new List<CapacitySummaryModel>();
@@ -37,6 +39,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
                 return JsonNotFound("No Capacity Summary data found");
             return JsonSuccess(data);
         }
+
         public async Task<ActionResult> GetForecastTotalData(string month)
         {
             int data = await _cap.GetForecastTotal(month);
@@ -45,6 +48,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
 
             return JsonSuccess(data);
         }
+        [JwtAuthorize]
         public async Task<ActionResult> GetGroupCapacityList()
         {
             var getdata = await _cap.GetGroupCapacity() ?? new List<SelectionGroup>();
@@ -53,6 +57,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
 
             return JsonSuccess(getdata);
         }
+        [JwtAuthorize]
         public async Task<ActionResult> GetModelbaseComboBox(int CapID)
         {
             var data = await _cap.GetModelBaseComboxList(CapID);
@@ -85,6 +90,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         // ===========================================================
         // ==================== CAPACITY PER SECTION =================
         // ===========================================================
+        [JwtAuthorize]
         public async Task<ActionResult> GetForecastModelList(string year)
         {
             var data = await _cap.GetForecast(year) ?? new List<ForecastModel>();
@@ -93,6 +99,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
 
             return JsonSuccess(data);
         }
+        [JwtAuthorize]
         public async Task<ActionResult> GetForecastChartList()
         {
             var data = await _cap.GetForecastChart() ?? new List<ForecastModel>();
@@ -101,7 +108,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
 
             return JsonSuccess(data);
         }
-
+        [JwtAuthorize]
         public async Task<ActionResult> GetMoldingModelData(int CapID, string Month)
         {
             var data = await _cap.GetMoldingModels(Month, CapID) ?? new List<MoldingModel>();
@@ -110,6 +117,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
 
             return JsonSuccess(data);
         }
+        [JwtAuthorize]
         public async Task<ActionResult> GetRotorModelData(int CapID, string Month)
         {
             var data = await CacheHelper.GetOrSetAsync("Rotor", () => _cap.GetRotorModels(Month, CapID), 15);

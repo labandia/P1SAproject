@@ -153,14 +153,14 @@
         let nov = 0.0;
         let dec = 0.0;
 
-        let res = await fetchData('@Url.Action("GetForecastModelList", "Capacity")', { year: currentDate.getFullYear() });
+        let res = await FetchAuthenticate('@Url.Action("GetForecastModelList", "Capacity")', { year: currentDate.getFullYear() });
         if (res && res.Success) {
             MasterlistPagination(res.Data, 'forecastdata', 'MastertableContainer', 50, 5);
         }
 
     }
     const GetForecastForChart = async () => {
-        let res = await fetchData('@Url.Action("GetForecastChartList", "Capacity")', {})
+        let res = await FetchAuthenticate('@Url.Action("GetForecastChartList", "Capacity")', {})
         if (res && res.Success) {
             const result = Object.values(res.Data[0]).map(value => Math.round(value));
             DisplayChartData(result);

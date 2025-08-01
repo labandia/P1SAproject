@@ -1,9 +1,7 @@
 ﻿
 using ProgramPartListWeb.Interfaces;
 using ProgramPartListWeb.Models;
-using System;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using System.Linq;
 using ProgramPartListWeb.Helper;
@@ -62,45 +60,6 @@ namespace ProgramPartListWeb.Controllers
             bool result = _auth.VerifyPassword(currentpass, datapass);
             return JsonCreated(result);
         }
-
-
-        [HttpPost]
-        public ActionResult Logout()
-        {
-            Session.Clear();
-
-            if (Request.Cookies["jwt"] != null)
-            {
-                var cookie = new HttpCookie("jwt")
-                {
-                    Expires = DateTime.Now.AddDays(-1)
-                };
-                Response.Cookies.Add(cookie);
-            }
-
-            if (Request.Cookies["refresh_token"] != null)
-            {
-                var refreshCookie = new HttpCookie("refresh_token")
-                {
-                    Expires = DateTime.Now.AddDays(-1)
-                };
-                Response.Cookies.Add(refreshCookie);
-            }
-
-            return RedirectToAction("Login", "Account");
-        }
-
-       
-
-
-        [HttpPost]
-        public ActionResult LogoutV2()
-        {
-            Session.Clear();
-            Session.Abandon();
-            return Json(new { success = true, message = "Logged out successfully" });
-        }
-
        
     }
 }

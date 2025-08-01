@@ -415,6 +415,7 @@
     <Compile Include="Utilities\Compression\CompressResponseAttribute.cs" />
     <Compile Include="Utilities\Logging\CustomLogger.cs" />
     <Compile Include="Utilities\ErrorHandling\GlobalErrorHandling.cs" />
+    <Compile Include="Utilities\Security\JWTAuthentication.cs" />
     <Compile Include="Utilities\Security\JwtAuthorizeAttribute.cs" />
     <Compile Include="Utilities\Security\JwtHelper.cs" />
     <Compile Include="Utilities\Security\PasswordHasher.cs" />

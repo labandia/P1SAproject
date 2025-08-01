@@ -8,7 +8,7 @@ using System.Text;
 
 namespace ProgramPartListWeb.Utilities.Security
 {
-    public class JWTAuthentication
+    public sealed class JWTAuthentication
     {
   
         public static class JwtConfig

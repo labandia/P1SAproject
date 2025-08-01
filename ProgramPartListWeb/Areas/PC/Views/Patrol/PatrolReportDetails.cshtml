@@ -27,11 +27,16 @@
                             <option>-- Select Inspector --</option>
                         </select>
                     </div>*@
-                    <div class="search-box">
-                        <input type="hidden" name="Employee_ID" id="Employee_ID">
-                        <input type="text" placeholder="Type Name or ID no." name="EmployeeSearch" id="EmployeeSearch">
-                        <div class="namesdisplay"></div>
+                    <div class="flex_align" >
+                        <div class="search-box" style="width: 70%;">
+                            <input type="hidden" name="Employee_ID" id="Employee_ID">
+                            <input type="text" placeholder="Type Name or ID no." name="EmployeeSearch" id="EmployeeSearch">
+                            <div class="namesdisplay"></div>
+                        </div>
+                        <small>Include signature: </small>
+                        <input type="checkbox" name="IsSign" id="IsSign"  />
                     </div>
+
                 </div>
             </div>
 
@@ -186,6 +191,7 @@
      }
     const ReportsDetails = async () => {
         let res = await FetchAuthenticate('@Url.Action("GetRegistrationNoByID", "Patrol")', { Regno: strRegno });
+        console.log(res);
         if (res && res.Success) {
                 let RegisterData = res.Data.Register;
                 let FindingData = res.Data.Finding;
@@ -202,6 +208,10 @@
 
                 $("#Employee_ID").val(RegisterData[0].Employee_ID);
                 $("#EmployeeSearch").val(RegisterData[0].FullName);
+
+                if (RegisterData[0].IsSigned) {
+                    $('#IsSign').prop('checked', true);
+                }
 
                 PopulateComboxInspector(RegisterData[0].Employee_ID);
 

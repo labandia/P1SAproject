@@ -26,8 +26,7 @@ window.FetchAuthenticate = async (url, fdata) => {
                 token = localStorage.getItem('accessToken');
                 res = await makeRequest(token);
                 if (res.status === 401) {
-                    localStorage.removeItem("refreshToken");
-                    localStorage.removeItem("accessToken");
+                    localStorage.clear();
                     window.location.href = logout;
                     return;
                 }
@@ -36,16 +35,14 @@ window.FetchAuthenticate = async (url, fdata) => {
                 if (res.status === 401) {
                     //localStorage.clear();
                     if (logout) {
-                        localStorage.removeItem("refreshToken");
-                        localStorage.removeItem("accessToken");
+                        localStorage.clear();
                         window.location.href = logout;
                     }
                     return null;
                 }
             } else {
                 // Redirect if refresh fails
-                localStorage.removeItem("refreshToken");
-                localStorage.removeItem("accessToken");
+                localStorage.clear();
                 window.location.href = logout;
                 return;
             }
@@ -185,8 +182,7 @@ async function refreshAccessToken() {
             return true;
         } else {
             console.warn("Refresh token failed. Logging out...");
-            localStorage.removeItem("refreshToken");
-            localStorage.removeItem("accessToken");
+            localStorage.clear();
             window.location.href = logout;
         }
 

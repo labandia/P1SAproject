@@ -64,7 +64,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             bool result = await SqlDataAccess.UpdateInsertQuery("InsertRegistration", 
                           new { RegNo = reg.RegNo, DateConduct = reg.DateConduct, Employee_ID = reg.Employee_ID, 
                                 FilePath = reg.FilePath, PIC = reg.PIC, PIC_Comments = reg.PIC_Comments,
-                                Manager = reg.Manager, Manager_Comments = reg.Manager_Comments
+                                Manager = reg.Manager, Manager_Comments = reg.Manager_Comments, IsSigned = reg.IsSigned
                           });
 
             // INSERT FINDING AND COUNTERMEASURE PROCESS

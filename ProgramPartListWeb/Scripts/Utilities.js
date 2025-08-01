@@ -1,7 +1,6 @@
 ﻿
 //GLOBAL GET FUNCTIONS WITH TOKEN AUTHENTICATION 
 window.FetchAuthenticate = async (url, fdata) => {
-    console.clear();
     var token = localStorage.getItem('accessToken');
     const queryString = new URLSearchParams(fdata).toString();
     const fullUrl = `${url}?${queryString}`;  // Append parameters to URL
@@ -34,8 +33,9 @@ window.FetchAuthenticate = async (url, fdata) => {
 
                 // Still 401 after refresh attempt
                 if (res.status === 401) {
-                    localStorage.clear();
+                    
                     if (logout) {
+                        localStorage.clear();
                         window.location.href = logout;
                     }
                     return null;

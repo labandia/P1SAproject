@@ -44,6 +44,7 @@
             this.Ambassador.Name = "Ambassador";
             this.Ambassador.Size = new System.Drawing.Size(218, 20);
             this.Ambassador.TabIndex = 0;
+            this.Ambassador.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SearchAmbassador);
             // 
             // WarehouseText
             // 

@@ -68,5 +68,10 @@ namespace ZebraPrinterLabel
             bool printed = ZebraProcess.SendZplToPrinter("Zebra ZD421", zplCode);
             MessageBox.Show(printed ? "Printed successfully!" : "Print failed.");
         }
+
+        private void SearchAmbassador(object sender, KeyEventArgs e)
+        {
+
+        }
     }
 }

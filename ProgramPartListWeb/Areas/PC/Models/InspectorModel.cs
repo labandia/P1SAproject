@@ -1,4 +1,6 @@
 ﻿
+using Microsoft.AspNet.SignalR;
+
 namespace ProgramPartListWeb.Areas.PC.Models
 {
 
@@ -95,6 +97,7 @@ namespace ProgramPartListWeb.Areas.PC.Models
         public string Manager { get; set; }
         public string Manager_Comments { get; set; }
         public int IsImage { get; set; }    
+        public bool IsSigned { get; set; }
     }
     public class InspectorModel
     {
@@ -167,6 +170,7 @@ namespace ProgramPartListWeb.Areas.PC.Models
         private string _PIC_Comments;
         private string _Manager;
         private string _Manager_Comments;
+        private bool _IsSigned;
 
         public string RegNo
         {
@@ -233,6 +237,11 @@ namespace ProgramPartListWeb.Areas.PC.Models
             set => _Manager_Comments = value;
         }
 
+        public bool IsSigned
+        {
+            get => _IsSigned;
+            set => _IsSigned = value;
+        }
     }
     public class FindingModel
     {

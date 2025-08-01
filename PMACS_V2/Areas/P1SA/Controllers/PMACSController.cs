@@ -1,10 +1,12 @@
 ﻿using PMACS_V2.Areas.P1SA.Interface;
+using PMACS_V2.Areas.P1SA.Models;
 using PMACS_V2.Areas.P1SA.Repository;
 using PMACS_V2.Controllers;
 using PMACS_V2.Utilities.Security;
 using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Utilities;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -20,7 +22,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
 
         public async Task<ActionResult> GetUpdateLogs(int Module)
         {
-            var data = await UpdateRepository.GetUserLogs(Module);
+            var data = await UpdateRepository.GetUserLogs(Module) ?? new List<UserLogs>();
             if (data == null || !data.Any())
                 return JsonNotFound("No Manpower data found");
 
@@ -29,7 +31,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
 
         public async Task<ActionResult> GetFullnameList()
         {
-            var data = await _man.GetUserFullname();
+            var data = await _man.GetUserFullname() ?? new List<UserAccount>();
             if (data == null || !data.Any())
                 return JsonNotFound("No Manpower data found");
 
@@ -38,7 +40,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
 
         public async Task<ActionResult> GetLastUpdatedData()
         {
-            var data = await CacheHelper.GetOrSetAsync("Updatestats", () => _man.GetUpdatedData(), 15);
+            var data = await _man.GetUpdatedData() ?? new List<UpdateStatusModel>();
             if (data == null || !data.Any())
                 return JsonNotFound("No Updatestats data found");
 
@@ -52,7 +54,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         [JwtAuthorize]
         public async Task<ActionResult> GetManpowerData()
         {
-            var data = await _man.GetManpower();
+            var data = await _man.GetManpower() ?? new List<ManpowerModel>();
             if (data == null || !data.Any())
                 return JsonNotFound("No Manpower data found");
 
@@ -61,7 +63,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         [JwtAuthorize]
         public async Task<ActionResult> GetTotalmanpower(string months)
         {
-            var data = await _man.GetTotalManpower(months);
+            var data = await _man.GetTotalManpower(months) ?? new List<TotalManpowerSection>();
             if (data == null || !data.Any())
                 return JsonNotFound("No Total Manpower found");
 

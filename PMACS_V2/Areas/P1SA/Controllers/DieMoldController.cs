@@ -23,7 +23,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         [JwtAuthorize]
         public async Task<ActionResult> GetMoldDieSummaryList(string ProcessID)
         {
-            var data = await _die.GetMoldDieSummary(ProcessID);
+            var data = await _die.GetMoldDieSummary(ProcessID) ?? new List<DieMoldSummaryProcess>();
             if (data == null || !data.Any())
                 return JsonNotFound("No DieSummary  data not found");
 
@@ -103,7 +103,6 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         public async Task<ActionResult> GetPressDieRegistryList()
         {
             var data = await _die.GetPressRegistryList() ?? new List<PressDieRegistry>();
-
             if (data == null || !data.Any())
                 return JsonNotFound("No DieMonth input data found");
 

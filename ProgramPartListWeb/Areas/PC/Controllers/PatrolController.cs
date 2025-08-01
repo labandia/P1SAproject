@@ -44,6 +44,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         //-----------------------------------------------------------------------------------------
         //---------------------------- DASHBOARD CALENDAR -----------------------------------------
         //-----------------------------------------------------------------------------------------
+        [JwtAuthorize]
         public async Task<ActionResult> GetScheduleDateList()
         {
             var data = await _ins.GetScheduleDate() ?? new List<PatrolSchedule>();
@@ -363,8 +364,8 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             // Get Department Name
             int departmentID = await _ins.GetEmployeeByDepartment(Request.Form["Employee_ID"]);
             string departmentName = GlobalUtilities.DepartmentName(departmentID);
-
-           // Get Employee FullName
+            bool isSign = !string.IsNullOrEmpty(Request.Form["IsSign"]);
+            // Get Employee FullName
             //var data = await _ins.GetEmployee() ?? new List<Employee>();
             //string Fullname = data.FirstOrDefault(p => p.EmployeeID == Request.Form["Employee_ID"])?.Fullname;
 
@@ -377,12 +378,13 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 RegNo = "P1SA-" + Request.Form["RegNo"],
                 DateConduct = Request.Form["DateConduct"],
                 Employee_ID = Request.Form["Employee_ID"],
-                FullName = Request.Form["EmployeeSearch"],    
+                FullName = Request.Form["EmployeeSearch"],
                 PIC = Request.Form["PIC"],
                 PIC_Comments = Request.Form["PIC_Comments"],
                 FilePath = outputPdfPath,
                 Manager = Request.Form["Manager"],
-                Manager_Comments = Request.Form["Manager_Comments"]
+                Manager_Comments = Request.Form["Manager_Comments"],
+                IsSigned = isSign
             };
 
             string findJson = Request.Form["FindJson"];
@@ -392,7 +394,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             if (result)
             {
                 CacheHelper.Remove("Registration");
-                await ExportFiler.SaveFileasPDF(obj, findJson, departmentName, newFileName, templatePath);
+                await ExportFiler.SaveFileasPDF(obj, findJson, departmentName, newFileName, templatePath, isSign);
             }
             if (result == false) return JsonError("Problem during saving Data.", 500);
             return JsonCreated(result, "Change Status successfully");
@@ -403,6 +405,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         {
             var data = await _ins.GetEmployee() ?? new List<Employee>();
             int Department = Convert.ToInt32(data.FirstOrDefault(p => p.EmployeeID == Request.Form["Employee_ID"])?.Department_ID);
+            bool isSign = !string.IsNullOrEmpty(Request.Form["IsSign"]);
 
             string exportFolder = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\";
             string excelfilepath = Path.Combine(exportFolder, Request.Form["Filepath"]);
@@ -422,7 +425,8 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 PIC_Comments = Request.Form["PIC_Comments"],
                 FilePath = outputPdfPath,
                 Manager = Request.Form["Manager"],
-                Manager_Comments = Request.Form["Manager_Comments"]
+                Manager_Comments = Request.Form["Manager_Comments"],
+                IsSigned = isSign
             };
 
             string findJson = Request.Form["FindJson"];
@@ -434,7 +438,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 if (System.IO.File.Exists(excelfilepath))  System.IO.File.Delete(excelfilepath);
                 
                 CacheHelper.Remove("Registration");
-                await ExportFiler.SaveFileasPDF(obj, findJson, GlobalUtilities.DepartmentName(Department), newFileName, templatePath);
+                await ExportFiler.SaveFileasPDF(obj, findJson, GlobalUtilities.DepartmentName(Department), newFileName, templatePath, isSign);
             }
 
             if (!result) JsonValidationError();

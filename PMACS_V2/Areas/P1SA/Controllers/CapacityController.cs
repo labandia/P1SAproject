@@ -69,7 +69,6 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         public async Task<ActionResult> GetModelbaseComboBoxDoesntExistList(int CapID)
         {
             var getdata = await _cap.GetModelBaseDoesntExist(CapID);
-            //var data = CacheHelper.GetOrSet("NoExistModelbase", () => getdata, 15);
             if (getdata == null || !getdata.Any())
                 return JsonNotFound("No Model Base Combobox found");
 
@@ -78,7 +77,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         public async Task<ActionResult> GetModelbaseForAddForm(int CapID)
         {
             var getdata = await _cap.GetModelBaseComboxList(CapID);
-            var getforest = await _cap.GetForecastChart();
+            var getforest = await _cap.GetForecastChart() ?? new List<ForecastModel>();
 
             var filtercombo = getdata.Where(f => !getforest.Any(fa => fa.Model_name == f)).ToList();
 

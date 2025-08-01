@@ -119,6 +119,55 @@ namespace Attendance_Monitoring.Models
 
     }
 
-   
 
+    public class P1SA_AttendanceModel
+    {
+        private int  _RecordID;
+        private string _Employee_ID;
+        private string _TimeIn;
+        private string _fullname;
+        private string timein;
+        private string shift;
+        private string lateTime;
+
+        public int RecordID
+        {
+            get => _RecordID;
+            set => _RecordID = value;
+        }
+
+        public string Employee_ID
+        {
+            get => _Employee_ID;
+            set => _Employee_ID = value;
+        }
+
+        public string fullname
+        {
+            get => _fullname;
+            set => _fullname = value;
+        }
+        public string Fullname
+        {
+            get => fullname;
+            set => fullname = value;
+        }
+
+        public string TimeIn
+        {
+            get => timein;
+            set => timein = value;
+        }
+
+        public string Shifts
+        {
+            get => shift;
+            set => shift = value;
+        }
+        public string LateTime
+        {
+            get => lateTime;
+            set => lateTime = value;
+        }
+    }
 }

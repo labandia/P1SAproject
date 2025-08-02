@@ -9,6 +9,7 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Attendance_Monitoring.Usercontrols
@@ -46,11 +47,11 @@ namespace Attendance_Monitoring.Usercontrols
         }
 
         //  ####################  DISPLAY  THE TIME IN AND OUT  #################### //
-        public async void TimeAttendanceDisplay(int selectime)
+        public async Task TimeAttendanceDisplay(int selectime)
         {
             try
             {
-                string shift;
+                int Shift;
                 string timecheck;
                 string Timeout_date;
 
@@ -62,17 +63,17 @@ namespace Attendance_Monitoring.Usercontrols
 
                 if (selectime == 0)
                 {
-                    shift = Timeprocess.TimeIncheck(DateTime.Now);
+                    Shift = Timeprocess.TimeIncheckAsInt(DateTime.Now);
                     timecheck = tdate;
                 }
                 else
                 {
-                    shift = Timeprocess.Timeoutcheck(DateTime.Now);
-                    Timeout_date = shift == "DAYSHIFT" ? tdate : yest;
+                    Shift = Timeprocess.TimeIncheckAsInt(DateTime.Now);
+                    Timeout_date = Shift == 1 ? tdate : yest;
                     timecheck = Timeout_date;
                 }
 
-                itemattends = await _admin.GetAttendanceMonitor(tb, timecheck, shift, selectime);
+                itemattends = await _attend.GetAttendanceRecordsList(timecheck, Shift, selectime, DepartmentID);
                 //DataTable dt = await connect.GetData(query);
                 attendancetable.DataSource = itemattends;
                 DisplayTotal.Text = "Total Attendence: " + attendancetable.RowCount;
@@ -85,9 +86,9 @@ namespace Attendance_Monitoring.Usercontrols
         }
 
 
-        private void Selecttime_SelectedIndexChanged(object sender, EventArgs e)
+        private async void Selecttime_SelectedIndexChanged(object sender, EventArgs e)
         {
-            TimeAttendanceDisplay(selecttime.SelectedIndex);
+            await TimeAttendanceDisplay(selecttime.SelectedIndex);
         }
 
 

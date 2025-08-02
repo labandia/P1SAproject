@@ -445,6 +445,16 @@ namespace PMACS_V2.Areas.P1SA.Models
         public int Operational { get; set; }
     }
 
+    public class PressDieRegistryEdit
+    {
+        public string EditToolNo { get; set; }
+        public string EditType { get; set; }
+        public string EditModel { get; set; }
+        public int EditLine { get; set; }
+        public string EditStatus { get; set; }
+        public int EditOpe { get; set; }
+    }
+
     public class PressDieMontoring
     {
         public int RecordID { get; set; }

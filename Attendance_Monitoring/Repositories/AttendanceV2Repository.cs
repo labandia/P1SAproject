@@ -3,6 +3,7 @@ using Attendance_Monitoring.Models;
 using Attendance_Monitoring.Utilities;
 using Dapper;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace Attendance_Monitoring.Repositories
@@ -29,10 +30,10 @@ namespace Attendance_Monitoring.Repositories
             return (count > 0);
         }
 
-        public Task<List<AttendanceModel>> GetAttendanceRecordsList(string dDate, string shifts, int selectime)
+        public Task<List<AttendanceModel>> GetAttendanceRecordsList(string dDate, int shifts, int selectime, int depid)
         {
             string strquery = (selectime == 0) ? "AttendanceMonitorIN" : "AttendanceMonitorOUT";
-            var parameters = new { Datetoday = dDate, Shifts = shifts };
+            var parameters = new { Datetoday = dDate, Shifts = shifts, Department_ID = depid };
 
             return SqlDataAccess.GetData<AttendanceModel>(strquery, parameters);     
         }

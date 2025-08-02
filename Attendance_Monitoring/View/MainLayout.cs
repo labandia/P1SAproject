@@ -1,7 +1,10 @@
 ﻿using Attendance_Monitoring.Usercontrols;
 using Attendance_Monitoring.View.V2;
+using Microsoft.Office.Interop.Excel;
 using System;
 using System.Drawing;
+using System.Linq;
+using System.Net;
 using System.Windows.Forms;
 
 namespace Attendance_Monitoring.View
@@ -25,7 +28,7 @@ namespace Attendance_Monitoring.View
             _attend.Dock = DockStyle.Fill;
             _cr.Dock = DockStyle.Fill;
             _emp.Dock = DockStyle.Fill;
-       
+
             Controls.Add(_attend);
             Controls.Add(_cr);
             Controls.Add(_emp);
@@ -42,7 +45,7 @@ namespace Attendance_Monitoring.View
             EmployeeMenu.BackColor = Color.Transparent;
             EmployeeMenu.ForeColor = Color.FromArgb(170, 176, 192);
             _attend.DepartmentID = _DepartmentID;
-            _attend.InitializePage();  
+            _attend.InitializePage();
             _attend.BringToFront();
         }
         private void Attendance_Click_1(object sender, EventArgs e)
@@ -56,7 +59,7 @@ namespace Attendance_Monitoring.View
             EmployeeMenu.BackColor = Color.Transparent;
             EmployeeMenu.ForeColor = Color.FromArgb(170, 176, 192);
             _attend.DepartmentID = _DepartmentID;
-            _attend.InitializePage(); 
+            _attend.InitializePage();
             _attend.BringToFront();
         }
         private async void CRMonitor_Click(object sender, EventArgs e)
@@ -71,7 +74,7 @@ namespace Attendance_Monitoring.View
             EmployeeMenu.ForeColor = Color.FromArgb(170, 176, 192);
             _cr.DepartmentID = _DepartmentID;
             _cr.InitializePage();
-            
+
             _cr.BringToFront();
             await _cr.DisplayCRMonitor();
             var crlist = _cr.critemlist;
@@ -95,9 +98,60 @@ namespace Attendance_Monitoring.View
 
         private void Logoutbtn_Click(object sender, EventArgs e)
         {
-            AttendanceMain n = new AttendanceMain(_attend, _cr, _emp);    
+            AttendanceMain n = new AttendanceMain(_attend, _cr, _emp);
             n.Show();
-            this.Visible = false;   
+            this.Visible = false;
         }
+
+        private void sidepanel_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+
+        //public void CheckAccessMenu()
+        //{
+        //    try
+        //    {
+        //        string hostName = Dns.GetHostName();
+        //        string ipAddress = Dns.GetHostAddresses(hostName)
+        //                              .FirstOrDefault(ip => ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)?
+        //        .ToString();
+
+
+        //        var emp = await _admin.GetCRaccess();
+
+        //        var employee = emp.FirstOrDefault(p => p.IPaddress.Equals(ipAddress, StringComparison.OrdinalIgnoreCase));
+
+        //        if (employee != null)
+        //        {
+        //            if (employee.Active == 1)
+        //            {
+        //                Attendance.Enabled = true;
+        //            }
+        //            else
+        //            {
+        //                Attendance.Enabled = false;
+        //            }
+
+        //            if (employee.CRactive == 1)
+        //            {
+        //                CRMonitor.Enabled = true;
+        //            }
+        //            else
+        //            {
+        //                CRMonitor.Enabled = false;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            CRMonitor.Enabled = false;
+        //        }
+        //    }
+        //    catch (FormatException)
+        //    {
+        //        MessageBox.Show("Can Detect local ip address", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //    }
+        //}
     }
 }

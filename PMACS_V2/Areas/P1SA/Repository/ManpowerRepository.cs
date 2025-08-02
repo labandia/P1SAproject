@@ -1,23 +1,18 @@
-﻿using Newtonsoft.Json;
-using PMACS_V2.Areas.Attendance.Model;
-using PMACS_V2.Areas.P1SA.Interface;
+﻿using PMACS_V2.Areas.P1SA.Interface;
 using PMACS_V2.Areas.P1SA.Models;
 using PMACS_V2.Helper;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Unity.Policy;
 
 namespace PMACS_V2.Areas.P1SA.Repository
 {
     public class ManpowerRepository : IManpower
     {
-        public async Task<List<ManpowerModel>> GetManpower()
+        public Task<List<ManpowerModel>> GetManpower()
         {
-            return await SqlDataAccess.GetData<ManpowerModel>("Manpowerlist");
+            return SqlDataAccess.GetData<ManpowerModel>("Manpowerlist");
         }
-        public async Task<List<TotalManpowerSection>> GetTotalManpower(string month)
+        public Task<List<TotalManpowerSection>> GetTotalManpower(string month)
         {
             string strquery = "WITH ActualMan AS (SELECT p.DepartmentID, d.SectionName,  SUM(p.SDP + p.SubCon) as Actual " +
                                                 "FROM PMACS_ProdManpower p " +
@@ -35,29 +30,29 @@ namespace PMACS_V2.Areas.P1SA.Repository
                                                 "FROM ActualMan " +
                                                 "LEFT JOIN Manrequire ON Manrequire.DepartmentID = ActualMan.DepartmentID " +
                                                 "ORDER BY ActualMan.DepartmentID";
-            return await SqlDataAccess.GetData<TotalManpowerSection>(strquery);
+            return SqlDataAccess.GetData<TotalManpowerSection>(strquery);
         }
-        public async Task<bool> EditManpowerList(object parameters)
+        public Task<bool> EditManpowerList(object parameters)
         {
             string strquery = "UPDATE Totalmanpower SET  Required =@Required WHERE Section_ID = @Section_ID";
-            return await SqlDataAccess.UpdateInsertQuery(strquery, parameters);
+            return SqlDataAccess.UpdateInsertQuery(strquery, parameters);
         }
-        public async Task<bool> EditRequireManpower(object parameters)
+        public Task<bool> EditRequireManpower(object parameters)
         {
             string strquery = "UPDATE PMACS_ProdManpower SET  SDP = @SDP, SubCon = @SubCon, Remarks = @Remarks  WHERE Manpower_ID = @Manpower_ID";
-            return await SqlDataAccess.UpdateInsertQuery(strquery, parameters);
+            return SqlDataAccess.UpdateInsertQuery(strquery, parameters);
         }
 
-        public async Task<List<UserAccount>> GetUserFullname()
+        public Task<List<UserAccount>> GetUserFullname()
         {
             string strquery = "SELECT Fullname FROM Useraccount_tbl";
-            return await SqlDataAccess.GetData<UserAccount>(strquery, null, "username");
+            return  SqlDataAccess.GetData<UserAccount>(strquery, null, "username");
         }
 
-        public async Task<List<UpdateStatusModel>> GetUpdatedData()
+        public Task<List<UpdateStatusModel>> GetUpdatedData()
         {
             string strquery = "SELECT Module, LastUpdated, UpdatedBy FROM PMACS_UpdatedData";
-            return await SqlDataAccess.GetData<UpdateStatusModel>(strquery);
+            return SqlDataAccess.GetData<UpdateStatusModel>(strquery);
         }
     }
 }

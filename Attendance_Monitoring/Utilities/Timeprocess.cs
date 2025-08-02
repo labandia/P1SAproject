@@ -319,6 +319,31 @@ namespace Attendance_Monitoring.Global
         }
 
 
+        // CHECK THE TIME IN OF DAYSHIFT
+        public static int TimeIncheckAsInt(DateTime timetoCheck)
+        {
+            DateTime dayshiftStart = DateTime.Today.Add(new TimeSpan(3, 0, 0));
+            DateTime dayshiftEnd = DateTime.Today.Add(new TimeSpan(14, 30, 0));
+            DateTime nightshiftStart = DateTime.Today.Add(new TimeSpan(15, 0, 0));
+            DateTime nightshiftEnd = DateTime.Today.Add(new TimeSpan(2, 30, 0)).AddDays(1);
+
+            string currentTime = DateTime.Now.ToString("tt");
+
+            if (timetoCheck >= dayshiftStart && timetoCheck < dayshiftEnd)
+            {
+                return 1;
+            }
+            else if (timetoCheck >= nightshiftStart || timetoCheck < nightshiftEnd)
+            {
+                return 2;
+            }
+            else
+            {
+                return currentTime == "AM" ? 1 : 2;
+            }
+        }
+
+
 
         // CALCULATE THE LATE TIME
         public static string CalculateLateTime()

@@ -519,7 +519,7 @@
          outline: 1px solid var(--primary-color);
     }
 
-    #Errormessage, #ChangeErrormessage{ color: darkred; }
+/*   #ChangeErrormessage{ color: darkred; }*/
     .Schedule { padding: 1em; }
     .Schedule_listContent {
         border-bottom: 1px solid #d4d3d3;

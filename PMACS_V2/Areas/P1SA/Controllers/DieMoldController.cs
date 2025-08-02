@@ -5,6 +5,7 @@ using PMACS_V2.Utilities.Security;
 using ProgramPartListWeb.Helper;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -200,16 +201,17 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             return JsonCreated(obj, "Updated Registry Successfully");
         }
         [HttpPost]
-        public async Task<ActionResult> UpdatePressRegistry()
+        public async Task<ActionResult> UpdatePressRegistry(PressDieRegistryEdit edit)
         {
+            Debug.WriteLine($@"Tool No : {edit.EditToolNo}");
             var obj = new PressDieRegistry
             {
-                ToolNo = Request.Form["EditToolNo"],
-                Type = Request.Form["EditType"],
-                Model = Request.Form["EditModel"],
-                Lines = Convert.ToInt32(Request.Form["EditLine"]),
-                Status = Request.Form["EditStatus"],
-                Operational = Convert.ToInt32(Request.Form["EditOpe"])
+                ToolNo = edit.EditToolNo,
+                Type = edit.EditType,
+                Model = edit.EditModel,
+                Lines = edit.EditLine,
+                Status = edit.EditStatus,
+                Operational = edit.EditOpe
             };
 
             bool update = await _die.EditPressRegistry(obj);

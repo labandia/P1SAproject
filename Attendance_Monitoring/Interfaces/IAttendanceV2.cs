@@ -6,7 +6,7 @@ namespace Attendance_Monitoring.Interfaces
 {
     public interface IAttendanceV2
     {
-        Task<List<AttendanceModel>> GetAttendanceRecordsList(string dDate, string shifts, int selectime);
+        Task<List<AttendanceModel>> GetAttendanceRecordsList(string dDate, int shifts, int selectime, int depid);
         Task<List<SummaryAttendanceModel>> GetAttendanceSummaryList(string startDate, string endDate);
         Task<List<SummaryAttendanceModel>> GetSummaryDataList(string strsql, string startDate, string endDate, string shifts, string search);
         // CHECKS THE TIME IN AND OUT IF EXIST

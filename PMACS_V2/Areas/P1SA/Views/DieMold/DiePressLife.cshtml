@@ -389,7 +389,7 @@
                         </div>
 
 
-                        <div class="edits_footer" id="editsdisplay">
+                        <div class="flex_end" id="editsdisplay">
                             <button type="submit" class="primary_button_color">
                                 <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
                             </button>
@@ -437,36 +437,35 @@
                                 <label for="">Machine</label>
                                 <input type="text" name="Machine" id="Machine" placeholder="Enter Details of Modification" onkeypress='return restrictChars(event)' required>
                             </div>
-                        </div>
-
-                        <div class="row">
                             <div class="form_group col-12 col-lg-6 col-sm-12">
                                 <label for="">Die Condition</label>
                                 <input type="text" name="DieCondition" id="DieCondition" placeholder="Enter Shot Cycle Shot" required>
                             </div>
-
-                            <div class="form_group col-12 col-lg-6 col-sm-12">
-                                <label for="">Operator</label>
-                                <input type="text" name="Operator" id="Operator" required>
-                            </div>
                         </div>
 
                         <div class="row">
                             <div class="form_group col-12 col-lg-6 col-sm-12">
-                                <label for="">Die Height</label>
-                                <input type="text" name="DieHeight" id="DieHeight" required>
+                                <label for="">Operator</label>
+                                <input type="text" name="Operator" id="Operator" placeholder="Enter Name of Operator" required>
                             </div>
+                            <div class="form_group col-12 col-lg-6 col-sm-12">
+                                <label for="">Die Height</label>
+                                <input type="text" name="DieHeight" id="DieHeight" placeholder="Enter Die Height" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
                             <div class="form_group col-12 col-lg-6 col-sm-12">
                                 <label for="">Leader Confirmation</label>
                                 <input type="text" name="LeaderCom" id="LeaderCom" placeholder="Enter In Charget name" required>
                             </div>
-                        </div>
-
-                        <div class="row">
                             <div class="form_group col-12 col-lg-6 col-sm-12">
                                 <label for="">Gear(ALPHA)</label>
-                                <input type="text" name="Gear" id="Gear" required>
+                                <input type="text" name="Gear" id="Gear"   required>
                             </div>
+                        </div>
+
+                        <div class="row">   
                             <div class="form_group col-12 col-lg-6 col-sm-12">
                                 <label for="">Pitch(MXM)</label>
                                 <input type="text" name="Pitch" id="Pitch" placeholder="Enter In Charget name" required>
@@ -474,7 +473,7 @@
                         </div>
 
 
-                        <div class="edits_footer" id="editsdisplay">
+                        <div class="flex_end" id="editsdisplay">
                             <button type="submit" class="primary_button_color">
                                 <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
                             </button>
@@ -666,14 +665,13 @@
         e.preventDefault();
         let formData = new FormData(e.target);
         const data = Object.fromEntries(formData);
-        let res = await postData('@Url.Action("UpdatePressRegistry", "DieMold")', formData);
-
-        if (res.StatusCode === 200) {
+        let res = await postData('@Url.Action("UpdatePressRegistry", "DieMold")', data);
+        if (res && res.Success) {
             Swal.fire({
                 title: "Success",
                 text: res.Message,
                 icon: "success",
-                confirmButtonColor: "#0d97c9",
+                showConfirmButton: false,
                 timer: 1500
             }).then(() => {
                 GetPressRegistry();

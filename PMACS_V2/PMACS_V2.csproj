@@ -356,17 +356,6 @@
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Areas\Attendance\AttendanceAreaRegistration.cs" />
-    <Compile Include="Areas\Attendance\Controllers\AttendanceController.cs" />
-    <Compile Include="Areas\Attendance\Controllers\V2Controller.cs" />
-    <Compile Include="Areas\Attendance\Interface\IAttendance.cs" />
-    <Compile Include="Areas\Attendance\Interface\ICRmonitor.cs" />
-    <Compile Include="Areas\Attendance\Interface\IEmployee.cs" />
-    <Compile Include="Areas\Attendance\Model\AttendanceModel.cs" />
-    <Compile Include="Areas\Attendance\Model\CRmodel.cs" />
-    <Compile Include="Areas\Attendance\Model\Employee.cs" />
-    <Compile Include="Areas\Attendance\Repository\AttendanceRepository.cs" />
-    <Compile Include="Areas\Attendance\Repository\EmployeeRepository.cs" />
     <Compile Include="Areas\P1SA\Controllers\CapacityController.cs" />
     <Compile Include="Areas\P1SA\Controllers\DieMoldController.cs" />
     <Compile Include="Areas\P1SA\Controllers\FanMajorController.cs" />
@@ -548,9 +537,6 @@
     <Content Include="Areas\P1SA\Views\Capacity\Winding.cshtml" />
     <Content Include="Areas\P1SA\Views\PMACS\FanMajor.cshtml" />
     <Content Include="libman.json" />
-    <Content Include="Areas\Attendance\Views\web.config" />
-    <Content Include="Areas\Attendance\Views\Shared\_Sidebar.cshtml" />
-    <Content Include="Areas\Attendance\Views\V2\TimeInandOut.cshtml" />
     <Content Include="Areas\P1SA\Views\Capacity\Press.cshtml" />
     <Content Include="Areas\P1SA\Views\Capacity\Rotor.cshtml" />
     <Content Include="Areas\P1SA\Views\Shared\_CapacitySummary.cshtml" />

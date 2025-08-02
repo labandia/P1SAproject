@@ -1,5 +1,3 @@
-using PMACS_V2.Areas.Attendance.Interface;
-using PMACS_V2.Areas.Attendance.Repository;
 using PMACS_V2.Areas.P1SA.Interface;
 using PMACS_V2.Areas.P1SA.Repository;
 using PMACS_V2.Controllers;
@@ -123,8 +121,6 @@ namespace PMACS_V2
             container.RegisterType<IManpower, ManpowerRepository>();
             container.RegisterType<ICapacity, CapacityRepository>();
             container.RegisterType<IMachine, MachineRepository>();
-            container.RegisterType<IEmployee, EmployeeRepository>();
-            container.RegisterType<IAttendance, AttendanceRepository>();
             container.RegisterType<IDieMold, MoldDieRepository>();
 
 

@@ -77,19 +77,19 @@
 
             <div class="form forgetform">
                 <form id="forgetform" class="forgetdesign">
-                    <button class="forgetbtn"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+                    @*<button class="forgetbtn"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>*@
 
                     <h2 style="font-weight: 600; font-size: 1.5rem;"> Forgot Password ?</h2>
-                    <p style="line-height: 1.6; margin-bottom: 1em;">Enter your employee ID and we'll help you reset your password </p>
+                    <p style="line-height: 1.6; margin-bottom: 1em;">We'll help you reset your password </p>
+                    <Label>Username:</Label>
+                    <input type="text" placeholder="Enter your username" id="EmpID" name="EmpID" required>
                     <Label>Employee ID:</Label>
-                    <input type="text" placeholder="Enter your ID ..." id="EmpID" name="EmpID" required>
-                    <br />
-                    <Label>Email Address:</Label>
-                    <input type="text" placeholder="Enter your Email here ..." id="Email" name="Email" required>
+                    <input type="text" placeholder="Enter your Employee ID" id="EmpID" name="EmpID" required>
+                    <Label>New password :</Label>
+                    <input type="text" placeholder="Enter your new password" id="Email" name="Email" required>
 
 
-
-                    <button type="submit" class="newpassbtn" id="newpassbtn" >Submit</button>
+                    <button type="submit" class="newpassbtn" id="newpassbtn"><i class="fa-solid fa-paper-plane"></i> Submit</button>
 
                 </form>
             </div>
@@ -133,7 +133,7 @@
     const version = "@ViewData["Version"]";
 
     let logbtn = document.querySelector(".signin");
-    let forbtn = document.querySelector(".forgetbtn");
+    //let forbtn = document.querySelector(".forgetbtn");
     let mainbody = document.querySelector(".main");
     const form = document.getElementById('loginsubmit');
     const resultBox = document.querySelector(".namesdisplay");
@@ -222,9 +222,9 @@
          mainbody.classList.add('slide');
      }
 
-     forbtn.onclick = function () {
-         mainbody.classList.remove('slide');
-    }
+    // forbtn.onclick = function () {
+    //     mainbody.classList.remove('slide');
+    //}
 
 
     // Add an event listener for the 'keypress' event

@@ -229,7 +229,7 @@
 
 
     const GetPressMonitoring = async () => {
-        let res = await fetchData('@Url.Action("GetPressDieMonitoringList", "DieMold")', { ToolNo: $("#ToolText").text() });
+        let res = await FetchAuthenticate('@Url.Action("GetPressDieMonitoringList", "DieMold")', { ToolNo: $("#ToolText").text() });
          if (res && res.Success) {
              TableData = res.Data;
 

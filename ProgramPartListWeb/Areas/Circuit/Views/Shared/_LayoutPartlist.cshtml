@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <link rel="icon" type="image/x-icon" href="~/Content/Images/ready-stock.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title</title>
     <script src="~/Content/font-awesome/js/all.min.js"></script>
 
     <link href="~/Content/css/Programpartlist.css" rel="stylesheet" />
@@ -13,185 +13,175 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <div class="ProgramsMainpage">
-        <nav id="sidebar">
-            <ul>
-                <li>
-                    <span class="logo">Program Partlist</span>
-                    <button id="toggle-btn" onclick="toggleSidebar()">
-                        <i class="fa-solid fa-chevron-right"></i>
-                    </button>
-                </li>
-                <li>
-                    <a class="nav-link" href="/Circuit/ProgramPartList/PlanSchedule">
-                        <i class="fa-solid fa-calendar-day"></i>
-                        <span>Plan Schedule</span>
-                    </a>
-                </li>
+    <!--========== NAV ==========-->
+    <div class="sidebar" id="sidebar">
+        <nav class="sidebar__container">
+            <div>
+               
+
+                <div class="sidebar__list">
+                    <div class="sidebar__items">
+                        <h3 class="sidebar__subtitle">Main Menu</h3>
+
+                        <a href="/Circuit/ProgramPartList/PlanSchedule" class="sidebar__link">
+                            <i class="fa-solid fa-calendar-day sidebar__icon"></i>
+                            <span class="sidebar__name">Plan Schedule</span>
+                        </a>
 
 
-                <li>
-                    <a class="nav-link" href="/Circuit/ProgramPartList/ManagePlanSchedule">
-                        <i class="fa-solid fa-table"></i>
-                        <span>Partlist Data</span>
-                    </a>
-                </li>
-                <li>
-                    <a class="nav-link" href="/Circuit/ProgramPartList/ManageWarehouse">
-                        <i class="fa-solid fa-box-archive"></i>
-                        <span>Warehouse</span>
-                        @*@Session["Role"]*@
-                    </a>
-                </li>
-                <li>
-                    <a class="nav-link" href="/Circuit/ProgramPartList/ComponentsOut">
-                        <i class="fa-solid fa-boxes-packing"></i>
-                        <span>Comp out</span>
-                    </a>
-                </li>
+                        <a href="/Circuit/ProgramPartList/ManagePlanSchedule" class="sidebar__link">
+                            <i class="fa-solid fa-table sidebar__icon"></i>
+                            <span class="sidebar__name">Partlist Data</span>
+                        </a>
 
 
-                <li>
-                    <a class="nav-link" href="/Circuit/ProgramPartList/HistoryTransaction">
-                        <i class="fa-regular fa-rectangle-list"></i>
-                        <span>History</span>
 
-                    </a>
-                </li>
+                        <a href="/Circuit/ProgramPartList/ManageWarehouse" class="sidebar__link">
+                            <i class="fa fa-microchip  sidebar__icon"></i>
+                            <span class="sidebar__name">Warehouse</span>
+                        </a>
 
-                <li>
-                    <a class="nav-link" href="/Circuit/ProgramPartList/RegisterSupplier">
-                        <i class="fa-regular fa-rectangle-list"></i>
-                        <span>Register Supplier</span>
-                    </a>
-                </li>
+                        <a href="/Circuit/ProgramPartList/ComponentsOut" class="sidebar__link">
+                            <i class="fa fa-table  sidebar__icon"></i>
+                            <span class="sidebar__name">Comp out</span>
+                        </a>
 
-                @*<li>
-                    <a class="nav-link" href="/Circuit/ProgramPartList/FeederType">
-                        <i class="fa-regular fa-rectangle-list"></i>
-                        <span>Feeder Types</span>
-                    </a>
-                </li>*@
+                        <a href="/Circuit/ProgramPartList/HistoryTransaction" class="sidebar__link">
+                            <i class="fa fa-table  sidebar__icon"></i>
+                            <span class="sidebar__name">History</span>
+                        </a>
 
-                @*<li>
-            <a href="/Series/Index">
-                <i class='bx bx-cube-alt'></i>
-                Profile
+                        <a href="/Circuit/ProgramPartList/RegisterSupplier" class="sidebar__link">
+                            <i class="fa fa-table  sidebar__icon"></i>
+                            <span class="sidebar__name">Register Supplier</span>
+                        </a>
+
+                    </div>
+
+                    <div class="sidebar__items">
+                        @*<h3 class="sidebar__subtitle">Settings</h3>
+
+
+
+                            <a href="#" class="sidebar__link">
+                                <i class="fa-solid fa-table-columns sidebar__icon"></i>
+                                <span class="sidebar__name">Change Password</span>
+                            </a>*@
+
+                    </div>
+                </div>
+            </div>
+
+            <a href="#" id="logID" class="sidebar__link sidebar__logout">
+                <i class="fa-solid fa-right-from-bracket sidebar__icon"></i>
+                <span class="sidebar__name" id="Exitname">Log Out</span>
             </a>
-        </li>*@
-
-
-                <li>
-                    <a href="#" id="logID">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                        <span>Logout</span>
-                    </a>
-                </li>
-            </ul>
         </nav>
-        <main>
-            @RenderBody()
-        </main>
     </div>
+
+    <!--========== CONTENTS ==========-->
+    <main>
+        @RenderBody()
+    </main>
 
     <script src="~/Scripts/Utilities.js"></script>
     <script type="text/javascript">
-        var sessionCheckInterval;
-        function startSessionCheck() {
-            clearInterval(sessionCheckInterval); // Clear previous interval
-            sessionCheckInterval = setInterval(checkSession, 3600000); // Restart session check every 60 seconds
-        }
+        //var sessionCheckInterval;
+        //function startSessionCheck() {
+        //    clearInterval(sessionCheckInterval); // Clear previous interval
+        //    sessionCheckInterval = setInterval(checkSession, 3600000); // Restart session check every 60 seconds
+        //}
 
 
-        function checkSession() {
-            $.ajax({
-                url: "/User/CheckSession",
-                method: "GET",
-                success: function (response) {
-                    if (!response.isAuthenticated) {
-                        //alert("Your session has expired. Redirecting to login page.");
-                        window.location.href = "/Series/LogMainpage";
-                    }
-                }
-            });
-        }
+        //function checkSession() {
+        //    $.ajax({
+        //        url: "/User/CheckSession",
+        //        method: "GET",
+        //        success: function (response) {
+        //            if (!response.isAuthenticated) {
+        //                //alert("Your session has expired. Redirecting to login page.");
+        //                window.location.href = "/Series/LogMainpage";
+        //            }
+        //        }
+        //    });
+        //}
 
-        // Start interval on page load
-        startSessionCheck();
+        //// Start interval on page load
+        //startSessionCheck();
 
-        // Reset interval on user activity
-        document.addEventListener("mousemove", startSessionCheck); // Mouse movement
-        document.addEventListener("keydown", startSessionCheck);   // Keyboard typing
-        document.addEventListener("click", startSessionCheck);     // Mouse clicks
-
-
-
-
-        document.addEventListener("DOMContentLoaded", function () {
-            var currentUrl = window.location.pathname.toLowerCase();
-            document.querySelectorAll(".nav-link").forEach(function (link) {
-                if (link.getAttribute("href").toLowerCase() === currentUrl) {
-                    link.classList.add("active");
-                }
-            });
-        });
+        //// Reset interval on user activity
+        //document.addEventListener("mousemove", startSessionCheck); // Mouse movement
+        //document.addEventListener("keydown", startSessionCheck);   // Keyboard typing
+        //document.addEventListener("click", startSessionCheck);     // Mouse clicks
 
 
 
-        const togglebutton = document.getElementById('toggle-btn');
-        const logbtn = document.getElementById("logID");
-        const sidebar = document.getElementById('sidebar');
 
-        function toggleSidebar() {
-            sidebar.classList.toggle('close');
-            togglebutton.classList.toggle('rotate');
-
-            // sidebar.getElementsByClassName('show');
-
-            closeallSubMenus();
-        }
-
-        function toggleSubMenu(button) {
-
-            if (button.nextElementSibling.classList.contains('show')) {
-                closeallSubMenus();
-            }
-
-            button.nextElementSibling.classList.toggle('show');
-            button.classList.toggle('rotate');
-
-            if (sidebar.classList.contains('close')) {
-                sidebar.classList.toggle('close');
-                togglebutton.classList.toggle('rotate');
-            }
-        }
-
-        function closeallSubMenus() {
-            Array.from(sidebar.getElementsByClassName('show')).forEach(ul => {
-                ul.classList.remove('show');
-                ul.previousElementSibling.classList.remove('rotate');
-            });
-        }
+        //document.addEventListener("DOMContentLoaded", function () {
+        //    var currentUrl = window.location.pathname.toLowerCase();
+        //    document.querySelectorAll(".nav-link").forEach(function (link) {
+        //        if (link.getAttribute("href").toLowerCase() === currentUrl) {
+        //            link.classList.add("active");
+        //        }
+        //    });
+        //});
 
 
-        logbtn.addEventListener('click', function (e) {
-            e.preventDefault();
-            Swal.fire({
-                title: "Sign out ?",
-                text: "Are you sure you want to sign out?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#a3a3a3",
-                confirmButtonText: "Log out"
-            }).then((result) => {
-                /* Read more about isConfirmed, isDenied below */
-                if (result.isConfirmed) {
-                    logout();
 
-                }
-            });
-        });
+        //const togglebutton = document.getElementById('toggle-btn');
+        //const logbtn = document.getElementById("logID");
+        //const sidebar = document.getElementById('sidebar');
+
+        //function toggleSidebar() {
+        //    sidebar.classList.toggle('close');
+        //    togglebutton.classList.toggle('rotate');
+
+        //    // sidebar.getElementsByClassName('show');
+
+        //    closeallSubMenus();
+        //}
+
+        //function toggleSubMenu(button) {
+
+        //    if (button.nextElementSibling.classList.contains('show')) {
+        //        closeallSubMenus();
+        //    }
+
+        //    button.nextElementSibling.classList.toggle('show');
+        //    button.classList.toggle('rotate');
+
+        //    if (sidebar.classList.contains('close')) {
+        //        sidebar.classList.toggle('close');
+        //        togglebutton.classList.toggle('rotate');
+        //    }
+        //}
+
+        //function closeallSubMenus() {
+        //    Array.from(sidebar.getElementsByClassName('show')).forEach(ul => {
+        //        ul.classList.remove('show');
+        //        ul.previousElementSibling.classList.remove('rotate');
+        //    });
+        //}
+
+
+        //logbtn.addEventListener('click', function (e) {
+        //    e.preventDefault();
+        //    Swal.fire({
+        //        title: "Sign out ?",
+        //        text: "Are you sure you want to sign out?",
+        //        icon: "warning",
+        //        showCancelButton: true,
+        //        confirmButtonColor: "#3085d6",
+        //        cancelButtonColor: "#a3a3a3",
+        //        confirmButtonText: "Log out"
+        //    }).then((result) => {
+        //        /* Read more about isConfirmed, isDenied below */
+        //        if (result.isConfirmed) {
+        //            logout();
+
+        //        }
+        //    });
+        //});
 
         window.IsLoginUser({
             storageKey: "isLoggedInProgram",

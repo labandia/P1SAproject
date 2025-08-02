@@ -40,7 +40,7 @@
             // 
             // Ambassador
             // 
-            this.Ambassador.Location = new System.Drawing.Point(23, 39);
+            this.Ambassador.Location = new System.Drawing.Point(64, 90);
             this.Ambassador.Name = "Ambassador";
             this.Ambassador.Size = new System.Drawing.Size(218, 20);
             this.Ambassador.TabIndex = 0;
@@ -66,7 +66,7 @@
             // 
             // Printbtn
             // 
-            this.Printbtn.Location = new System.Drawing.Point(642, 379);
+            this.Printbtn.Location = new System.Drawing.Point(23, 414);
             this.Printbtn.Name = "Printbtn";
             this.Printbtn.Size = new System.Drawing.Size(126, 41);
             this.Printbtn.TabIndex = 3;
@@ -76,22 +76,22 @@
             // 
             // PrintCount
             // 
-            this.PrintCount.Location = new System.Drawing.Point(490, 391);
+            this.PrintCount.Location = new System.Drawing.Point(53, 320);
             this.PrintCount.Name = "PrintCount";
             this.PrintCount.Size = new System.Drawing.Size(120, 20);
             this.PrintCount.TabIndex = 4;
             // 
             // panel1
             // 
-            this.panel1.Location = new System.Drawing.Point(23, 128);
+            this.panel1.Location = new System.Drawing.Point(661, 39);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(745, 227);
+            this.panel1.Size = new System.Drawing.Size(745, 664);
             this.panel1.TabIndex = 5;
             // 
             // dateTimePicker1
             // 
             this.dateTimePicker1.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dateTimePicker1.Location = new System.Drawing.Point(23, 83);
+            this.dateTimePicker1.Location = new System.Drawing.Point(53, 232);
             this.dateTimePicker1.Name = "dateTimePicker1";
             this.dateTimePicker1.Size = new System.Drawing.Size(114, 20);
             this.dateTimePicker1.TabIndex = 6;
@@ -100,7 +100,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1444, 740);
             this.Controls.Add(this.dateTimePicker1);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.PrintCount);
@@ -110,6 +110,7 @@
             this.Controls.Add(this.Ambassador);
             this.Name = "ZebraPrinter";
             this.Text = "ZebraPrinter";
+            this.Load += new System.EventHandler(this.ZebraPrinter_Load);
             ((System.ComponentModel.ISupportInitialize)(this.PrintCount)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

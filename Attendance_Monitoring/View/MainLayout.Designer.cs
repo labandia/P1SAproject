@@ -155,6 +155,7 @@
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.sidepanel);
             this.Name = "MainLayout";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "P1SA Production System";
             this.Load += new System.EventHandler(this.MainLayout_Load);
             this.sidepanel.ResumeLayout(false);

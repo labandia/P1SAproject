@@ -71,6 +71,12 @@ namespace ZebraPrinterLabel
 
         private void SearchAmbassador(object sender, KeyEventArgs e)
         {
+            string partnum = Ambassador.Text.Trim();
+            string AmbassadorPartnum = $@"SDP{partnum} ";
+        }
+
+        private void ZebraPrinter_Load(object sender, EventArgs e)
+        {
 
         }
     }

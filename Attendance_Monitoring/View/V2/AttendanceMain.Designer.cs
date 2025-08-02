@@ -238,6 +238,7 @@
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "AttendanceMain";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Attendance Monitoring System";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

@@ -1,5 +1,6 @@
 ﻿using Attendance_Monitoring.Controller;
 using Attendance_Monitoring.Global;
+using Attendance_Monitoring.Interfaces;
 using Attendance_Monitoring.Models;
 using Attendance_Monitoring.Utilities;
 using System;
@@ -15,6 +16,7 @@ namespace Attendance_Monitoring.Usercontrols
     public partial class AttendancePage : UserControl
     {
         private readonly IServiceProvider _serviceProvider;
+        private readonly IAttendanceV2 _attend;
         private readonly AdminController _admin;
         private static List<AttendanceModel> itemattends;
         private static List<Employee> emplist;
@@ -30,7 +32,7 @@ namespace Attendance_Monitoring.Usercontrols
 
         public int DepartmentID { get; set; }
 
-        public AttendancePage(IServiceProvider serviceProvider)
+        public AttendancePage(IServiceProvider serviceProvider, IAttendanceV2 attend)
         {
             InitializeComponent();
             //sec = section;
@@ -39,6 +41,7 @@ namespace Attendance_Monitoring.Usercontrols
             timer.Interval = 1000;
             timer.Tick += Timer_Tick;
             _admin = new AdminController();
+            _attend = attend;
             _serviceProvider=serviceProvider;
         }
 

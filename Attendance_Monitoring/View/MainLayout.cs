@@ -34,7 +34,7 @@ namespace Attendance_Monitoring.View
         private void MainLayout_Load(object sender, EventArgs e)
         {
             // CHANGE THE COLOR BACKGROUND OF THE MENU BUTTON
-            Attendance.BackColor = Color.FromArgb(95, 34, 200);
+            Attendance.BackColor = Color.FromArgb(54, 97, 235);
             Attendance.ForeColor = Color.FromArgb(255, 255, 255);
             // CHANGE COLOR OF THE OTHER MENU BUTTON TO TRANSPARENT
             CRMonitor.BackColor = Color.Transparent;
@@ -48,7 +48,7 @@ namespace Attendance_Monitoring.View
         private void Attendance_Click_1(object sender, EventArgs e)
         {
             // CHANGE THE COLOR BACKGROUND OF THE MENU BUTTON
-            Attendance.BackColor = Color.FromArgb(95, 34, 200);
+            Attendance.BackColor = Color.FromArgb(54, 97, 235);
             Attendance.ForeColor = Color.FromArgb(255, 255, 255);
             // CHANGE COLOR OF THE OTHER MENU BUTTON TO TRANSPARENT
             CRMonitor.BackColor = Color.Transparent;
@@ -62,7 +62,7 @@ namespace Attendance_Monitoring.View
         private async void CRMonitor_Click(object sender, EventArgs e)
         {
             // CHANGE THE COLOR BACKGROUND OF THE MENU BUTTON
-            CRMonitor.BackColor = Color.FromArgb(95, 34, 200);
+            CRMonitor.BackColor = Color.FromArgb(54, 97, 235);
             CRMonitor.ForeColor = Color.FromArgb(255, 255, 255);
             // CHANGE COLOR OF THE OTHER MENU BUTTON TO TRANSPARENT
             Attendance.BackColor = Color.Transparent;
@@ -78,10 +78,10 @@ namespace Attendance_Monitoring.View
             _cr.Crgrid.DataSource = crlist;
         }
 
-        private void EmployeeMenu_Click(object sender, EventArgs e)
+        private async void EmployeeMenu_Click(object sender, EventArgs e)
         {
             // CHANGE THE COLOR BACKGROUND OF THE MENU BUTTON
-            EmployeeMenu.BackColor = Color.FromArgb(95, 34, 200);
+            EmployeeMenu.BackColor = Color.FromArgb(54, 97, 235);
             EmployeeMenu.ForeColor = Color.FromArgb(255, 255, 255);
             // CHANGE COLOR OF THE OTHER MENU BUTTON TO TRANSPARENT
             Attendance.BackColor = Color.Transparent;
@@ -89,7 +89,7 @@ namespace Attendance_Monitoring.View
             CRMonitor.BackColor = Color.Transparent;
             CRMonitor.ForeColor = Color.FromArgb(170, 176, 192);
             _emp.DepartID = _DepartmentID;
-            _emp.InitializePage();
+            await _emp.InitializePage();
             _emp.BringToFront();
         }
 

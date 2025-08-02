@@ -188,9 +188,9 @@
             this.label1.ForeColor = System.Drawing.Color.White;
             this.label1.Location = new System.Drawing.Point(51, 50);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(448, 36);
+            this.label1.Size = new System.Drawing.Size(350, 36);
             this.label1.TabIndex = 9;
-            this.label1.Text = "Attendance Monitoring System";
+            this.label1.Text = "P1SA Production System";
             // 
             // button1
             // 

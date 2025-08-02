@@ -150,10 +150,11 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1351, 703);
+            this.ControlBox = false;
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.sidepanel);
             this.Name = "MainLayout";
-            this.Text = "MainLayout";
+            this.Text = "P1SA Production System";
             this.Load += new System.EventHandler(this.MainLayout_Load);
             this.sidepanel.ResumeLayout(false);
             this.sidepanel.PerformLayout();

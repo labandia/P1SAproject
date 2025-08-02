@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 
 namespace Attendance_Monitoring.Models
@@ -126,9 +127,8 @@ namespace Attendance_Monitoring.Models
         private string _Employee_ID;
         private string _TimeIn;
         private string _fullname;
-        private string timein;
-        private string shift;
-        private string lateTime;
+        private string _Shift;
+        private string _LateTime;
 
         public int RecordID
         {
@@ -136,6 +136,7 @@ namespace Attendance_Monitoring.Models
             set => _RecordID = value;
         }
 
+        [Required(ErrorMessage = "Employee ID is required.")]
         public string Employee_ID
         {
             get => _Employee_ID;
@@ -155,19 +156,19 @@ namespace Attendance_Monitoring.Models
 
         public string TimeIn
         {
-            get => timein;
-            set => timein = value;
+            get => _TimeIn;
+            set => _TimeIn = value;
         }
 
         public string Shifts
         {
-            get => shift;
-            set => shift = value;
+            get => _Shift;
+            set => _Shift = value;
         }
         public string LateTime
         {
-            get => lateTime;
-            set => lateTime = value;
+            get => _LateTime;
+            set => _LateTime = value;
         }
     }
 }

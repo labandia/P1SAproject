@@ -1,7 +1,6 @@
 ﻿using Attendance_Monitoring.Models;
 using Attendance_Monitoring.Utilities;
 using Dapper;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

@@ -6,6 +6,7 @@ using Attendance_Monitoring.Repositories;
 using Attendance_Monitoring.Models;
 using Attendance_Monitoring.Usercontrols;
 using Attendance_Monitoring.View.V2;
+using Attendance_Monitoring.Interfaces;
 
 namespace Attendance_Monitoring
 {
@@ -24,6 +25,7 @@ namespace Attendance_Monitoring
             services.AddSingleton<IEmployee, EmployeeRespository>();
             services.AddSingleton<ICRmonitor, CRMonitoringRespository>();
             services.AddSingleton<IAttendance, AttendanceRepository>();
+            services.AddSingleton<IAttendanceV2, AttendanceV2Repository>();
 
             services.AddSingleton<Selection>();
             services.AddSingleton<Mainpage>();
@@ -40,8 +42,6 @@ namespace Attendance_Monitoring
             services.AddTransient<EmployeeManagement>();
             services.AddSingleton<MainLayout>();
             services.AddTransient<AttendanceMain>();
-
-
 
             ServiceProvider = services.BuildServiceProvider();
             var mainForm = ServiceProvider.GetRequiredService<AttendanceMain>();

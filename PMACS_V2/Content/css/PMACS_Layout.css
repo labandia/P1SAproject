@@ -265,6 +265,12 @@
         align-items: center;
         justify-content: space-between;
     }
+
+     .MainHeader h4{
+        color: #222;
+        font-weight: 600;
+        font-size: var(--h2-font-size);
+    }
     
     .header__action{
         display: flex;
@@ -272,11 +278,7 @@
         gap: 10px;
     }
 
-    .MainHeader h4{
-        color: #222;
-        font-weight: 600;
-        font-size: var(--h2-font-size);
-    }
+   
 
     .MasterlistWrap_footer {
         width: 100%;

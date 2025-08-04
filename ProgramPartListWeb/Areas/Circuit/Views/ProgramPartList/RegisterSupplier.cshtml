@@ -4,49 +4,45 @@
     Layout = "~/Areas/Circuit/Views/Shared/_LayoutPartlist.cshtml";
 }
 
-<section class="Serieswrapper">
-    <div class="SeriesTitle d-flex align-items-center justify-content-between mb-3">
-        <h5 class="m-0">Register Supplier</h5>
 
-
-        <div class="d-flex align-items-center gap-2">
-            <div class="SearchInputbox">
-                <input type="text" name="searchbox" id="searchbox" placeholder="Search Plan Schedule " />
-                <i class="fa-solid fa-magnifying-glass"></i>
-            </div>
-            <button class="primarybtn" id="suppbtn"><i class="fa-solid fa-plus"></i>  Register Suppliers</button>
+<header class="MainHeader">
+    <h4>Register Supplier</h4>
+    <div class="header__action flex_align">
+        <div class="searchinputContainer">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" placeholder="Search Plan Schedule... " id="searchbox" />
+            <div class="line"></div>
         </div>
+        <button class="primarybtn" id="suppbtn"><i class="fa-solid fa-plus"></i>  Register Suppliers</button>
     </div>
+</header>
 
 
+<div class="MainTable">
+    <table>
+        <thead>
+            <tr>
+                <th>Ambassador</th>
+                <th>Part Name </th>
+                <th>Supplier</th>
+                <th>Code</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="SupplierData">
+        </tbody>
+    </table>
 
-
-    <div class="MainTable">
-        <table>
-            <thead>
-                <tr>
-                    <th>Ambassador</th>
-                    <th>Part Name </th>
-                    <th>Supplier</th>
-                    <th>Code</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="SupplierData">
-            </tbody>
-        </table>
-
-        <div class="tableseriesNoData">
-            <p>No Data Found</p>
-        </div>
+    <div class="tableseriesNoData">
+        <p>No Data Found</p>
     </div>
+</div>
 
-    <div style="margin-top: 1em;" class="Table_footer d-flex align-items-center justify-content-between pt-1 ">
-        <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
+<div class="MasterlistWrap_footer">
+    <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
 
-        <div id="PaginationContainer" class="paginationPartlocal"></div>
-    </div>
-</section>
+    <div id="PaginationContainer" class="paginationPartlocal"></div>
+</div>
 
 
 <div class="modal fade modal-m" id="addrequestmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">

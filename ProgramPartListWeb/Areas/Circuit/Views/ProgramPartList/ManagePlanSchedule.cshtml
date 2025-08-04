@@ -4,28 +4,40 @@
     Layout = "~/Areas/Circuit/Views/Shared/_LayoutPartlist.cshtml";
 }
 
+<header class="MainHeader mb-3">
+    <h4>Plan Schedule List</h4>
+</header>
+
+
+
 
 <section class="Serieswrapper">
-    <div class="SeriesFilter d-flex align-items-center justify-content-between mb-3">
-        <div class="Searchbox d-flex align-items-center gap-2">
+    <div class="flex_space mb-3">
+        <div class="searchinputContainer">
             <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" placeholder="Search by Series No" id="searchInput" />
+            <input type="text" placeholder="Search by Series No" ... " id="searchInput" />
+            <div class="line"></div>
         </div>
 
-        <div class="d-flex align-items-center gap-3 SeriesTitle">
-            <select id="filterselect">
-                <option value="2">All</option>
-                <option value="1">Online</option>
-                <option value="0">Offline</option>
-            </select>
+        
+
+        <div class="flex_align">
+            <div class="select-container">
+                <select id="filterselect">
+                    <option value="2">All</option>
+                    <option value="1">Online</option>
+                    <option value="0">Offline</option>
+                </select>
+            </div>
+            
 
             @if (Session["Role"]?.ToString() == "SuperAdmin")
             {
-                <button id="Seriesaddmodal" class="primarybtn"><i class='bx bx-save'></i> Add Data</button>
+                <button id="Seriesaddmodal" class="primarybtn"><i class="fa-solid fa-plus"></i> Add Data</button>
             }
             else
             {
-                <button id="Seriesaddmodal" class="btn btn-secondary" disabled><i class='bx bx-save'></i> Add Data</button>
+                <button id="Seriesaddmodal" class="primarybtn" disabled><i class="fa-solid fa-plus"></i> Add Data</button>
             }
 
         </div>
@@ -51,25 +63,24 @@
                 </tr>
 
                 <tbody id="dataSearching">
-                  
                 </tbody>
 
             </table>
         </div>
 
-        <div style="margin-top: 1em;" class="Table_footer d-flex align-items-center justify-content-between pt-1 ">
+        <div class="MasterlistWrap_footer">
             <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
 
             <div id="PaginationContainer" class="paginationPartlocal"></div>
         </div>
 
-       
+
 
     </div>
 
 
 
-   
+
     <div class="d-flex align-items-center gap-3">
         <div class="loadingdata">
             <div class="bar"></div>
@@ -348,7 +359,7 @@
 
         let formData = new FormData(e.target);
         let res = await postData('@Url.Action("Addnewseries", "ProgramPartList")', formData);
-        
+
         if (res.StatusCode == 200) {
             Swal.fire({
                 title: "Success",
@@ -456,7 +467,7 @@
         OngoinSeriesData();
     });
 
-   
+
 
     function encodeBase64(input) {
         return btoa(input); // Convert string to Base64

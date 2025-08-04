@@ -2,6 +2,7 @@
 using Attendance_Monitoring.Models;
 using Attendance_Monitoring.Repositories;
 using Attendance_Monitoring.View;
+using Attendance_Monitoring.View.V2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,8 +60,7 @@ namespace Attendance_Monitoring.Usercontrols
 
         private void Addbtn_Click(object sender, EventArgs e)
         {
-            EmployeeManage empv = new EmployeeManage(_emp, _serviceProvider);
-            Add_Employee form2 = new Add_Employee(empv, _emp);
+            AddProduction form2 = new AddProduction();
             form2.Show();
         }
 

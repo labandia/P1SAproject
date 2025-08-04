@@ -138,9 +138,9 @@
             <div class="Mold_content" id="Tooling">
                 <div class=" d-flex align-items-center justify-content-end">
                     <div class="Legends d-flex align-items-center gap-2 mb-2">
-                        <div class="circleprog" style="margin: 0; background: #04bd6c; "></div>
+                        <div class="circleprog" style="margin: 0; background: #138557; "></div>
                         <span>Operational </span>
-                        <div class="circleprog" style="margin: 0;"></div>
+                        <div class="circleprog" style="margin: 0; background: #a70c0c;"></div>
                         <span>Not Operational </span>
                     </div>
                 </div>
@@ -151,7 +151,7 @@
                                 <th style="width: 200px; text-align: left; padding-left: 1.5em; ">Die No.</th>
                                 <th style="width: 150px;">Type</th>
                                 <th style="width: 300px;">Model</th>
-                                <th style="width: 100px;"> No. of Line</th>
+                                <th style="width: 100px;"> Line #</th>
                                 <th>Status</th>
                                 <th style="width: 100px;" id="HiddenColumns">Action</th>
                             </tr>
@@ -235,7 +235,7 @@
 
                 <form id="InputPress" class="addformcontainer" autocomplete="off">
                     <div class="form_group col-12 col-sm-12 col-lg-12 mb-2">
-                        <label for="">Select Tool No. *</label><br />
+                        <label for="">Select Tool No. <small style="color: #a81818; font-weight: 600;">*</small></label><br />
                         <div class="select-container" style="width: 100% !important;">
                               <select id="ToolNo" name="ToolNo">
                               </select>
@@ -244,7 +244,7 @@
                     </div>
 
                     <div class="form_group col-12 col-sm-12 col-lg-12">
-                        <label for="">Line *</label><br />
+                        <label for="">Line <small style="color: #a81818; font-weight: 600;">*</small></label><br />
                         <input type="text" placeholder="Enter a line" name="Line" onkeypress="return restrictChars(event)">
                     </div>
 
@@ -262,7 +262,7 @@
 
 
                     <div class="flex_space mt-3" id="editsdisplay">
-                        <small>All fields marked with (*) must be filled out</small>
+                        <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
                         <button type="submit" class="primary_button_color">
                             <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
                         </button>
@@ -293,24 +293,24 @@
                 <form id="AddToolPressforms" class="addformcontainer" autocomplete="off">
                     <div class="row">
                         <div class="form_group col-12 col-lg-6 col-sm-12">
-                            <label for="">Die No. *</label>
+                            <label for="">Die No. <small style="color: #a81818; font-weight: 600;">*</small></label>
                             <input type="text" name="ToolNo" id="ToolNo" placeholder="Enter Die No." required>
                         </div>
 
                         <div class="form_group col-12 col-lg-6 col-sm-12">
-                            <label for="">Type *</label>
+                            <label for="">Type <small style="color: #a81818; font-weight: 600;">*</small></label>
                             <input type="text" name="Type" id="Type" placeholder="Enter Type" required>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form_group col-12 col-lg-6 col-sm-12">
-                            <label for="">Model *</label>
+                            <label for="">Model <small style="color: #a81818; font-weight: 600;">*</small></label>
                             <input type="text" name="Model" id="Model" placeholder="Enter Model" required>
                         </div>
 
                         <div class="form_group col-12 col-lg-6 col-sm-12">
-                            <label for="">Line *</label>
+                            <label for="">Line <small style="color: #a81818; font-weight: 600;">*</small></label>
                             <input type="text" name="Lines" id="Lines" placeholder="Enter Line" onkeypress="return restrictChars(event)" required>
                         </div>
                     </div>
@@ -328,7 +328,7 @@
                     </div>
 
                     <div class="flex_space" id="editsdisplay">
-                        <small>All fields marked with (*) must be filled out</small>
+                        <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
                         <button type="submit" class="primary_button_color">
                             <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
                         </button>
@@ -417,69 +417,67 @@
                     </button>
                 </div>
 
-                <div class="MoldieBodyModal">
-                    <form id="DieToolForms" autocomplete="off">
-                        <div class="row">
-                            <div class="form_group col-12 col-lg-6 col-sm-12">
-                                <label for="">Product Type</label>
-                                <input type="text" name="ToolNo" id="ToolNo" placeholder="Enter Product Type" required>
-                            </div>
-
-                            <div class="form_group col-12 col-lg-6 col-sm-12">
-                                <label for="">No# Stamp</label>
-                                <input type="text" name="Stamp" id="Stamp" placeholder="Enter Number Stamp" onkeypress='return restrictChars(event)' required>
-                            </div>
+                <form id="DieToolForms" class="addformcontainer" autocomplete="off">
+                    <div class="row">
+                        <div class="form_group col-12 col-lg-6 col-sm-12">
+                            <label for="">Product Type</label>
+                            <input type="text" name="ToolNo" id="ToolNo" placeholder="Enter Product Type" required>
                         </div>
 
-                        <div class="row">
-
-                            <div class="form_group col-12 col-lg-6 col-sm-12">
-                                <label for="">Machine</label>
-                                <input type="text" name="Machine" id="Machine" placeholder="Enter Details of Modification" onkeypress='return restrictChars(event)' required>
-                            </div>
-                            <div class="form_group col-12 col-lg-6 col-sm-12">
-                                <label for="">Die Condition</label>
-                                <input type="text" name="DieCondition" id="DieCondition" placeholder="Enter Shot Cycle Shot" required>
-                            </div>
+                        <div class="form_group col-12 col-lg-6 col-sm-12">
+                            <label for="">No# Stamp</label>
+                            <input type="text" name="Stamp" id="Stamp" placeholder="Enter Number Stamp" onkeypress='return restrictChars(event)' required>
                         </div>
+                    </div>
 
-                        <div class="row">
-                            <div class="form_group col-12 col-lg-6 col-sm-12">
-                                <label for="">Operator</label>
-                                <input type="text" name="Operator" id="Operator" placeholder="Enter Name of Operator" required>
-                            </div>
-                            <div class="form_group col-12 col-lg-6 col-sm-12">
-                                <label for="">Die Height</label>
-                                <input type="text" name="DieHeight" id="DieHeight" placeholder="Enter Die Height" required>
-                            </div>
+                    <div class="row">
+
+                        <div class="form_group col-12 col-lg-6 col-sm-12">
+                            <label for="">Machine</label>
+                            <input type="text" name="Machine" id="Machine" placeholder="Enter Details of Modification" onkeypress='return restrictChars(event)' required>
                         </div>
-
-                        <div class="row">
-                            <div class="form_group col-12 col-lg-6 col-sm-12">
-                                <label for="">Leader Confirmation</label>
-                                <input type="text" name="LeaderCom" id="LeaderCom" placeholder="Enter In Charget name" required>
-                            </div>
-                            <div class="form_group col-12 col-lg-6 col-sm-12">
-                                <label for="">Gear(ALPHA)</label>
-                                <input type="text" name="Gear" id="Gear"   required>
-                            </div>
+                        <div class="form_group col-12 col-lg-6 col-sm-12">
+                            <label for="">Die Condition</label>
+                            <input type="text" name="DieCondition" id="DieCondition" placeholder="Enter Shot Cycle Shot" required>
                         </div>
+                    </div>
 
-                        <div class="row">   
-                            <div class="form_group col-12 col-lg-6 col-sm-12">
-                                <label for="">Pitch(MXM)</label>
-                                <input type="text" name="Pitch" id="Pitch" placeholder="Enter In Charget name" required>
-                            </div>
+                    <div class="row">
+                        <div class="form_group col-12 col-lg-6 col-sm-12">
+                            <label for="">Operator</label>
+                            <input type="text" name="Operator" id="Operator" placeholder="Enter Name of Operator" required>
                         </div>
-
-
-                        <div class="flex_end" id="editsdisplay">
-                            <button type="submit" class="primary_button_color">
-                                <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
-                            </button>
+                        <div class="form_group col-12 col-lg-6 col-sm-12">
+                            <label for="">Die Height</label>
+                            <input type="text" name="DieHeight" id="DieHeight" placeholder="Enter Die Height" required>
                         </div>
-                    </form>
-                </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form_group col-12 col-lg-6 col-sm-12">
+                            <label for="">Leader Confirmation</label>
+                            <input type="text" name="LeaderCom" id="LeaderCom" placeholder="Enter In Charget name" required>
+                        </div>
+                        <div class="form_group col-12 col-lg-6 col-sm-12">
+                            <label for="">Gear(ALPHA)</label>
+                            <input type="text" name="Gear" id="Gear" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form_group col-12 col-lg-6 col-sm-12">
+                            <label for="">Pitch(MXM)</label>
+                            <input type="text" name="Pitch" id="Pitch" placeholder="Enter In Charget name" required>
+                        </div>
+                    </div>
+
+
+                    <div class="flex_end" id="editsdisplay">
+                        <button type="submit" class="primary_button_color">
+                            <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
+                        </button>
+                    </div>
+                </form>
 
 
             </div>
@@ -786,7 +784,7 @@
               let buttons = "";
               const rowData = filteredData[i];
 
-              let colorcirle = rowData.Operational === 1 ? "#04bd6c" : "red";
+              let colorcirle = rowData.Operational === 1 ? "#138557" : "#a70c0c";
 
               if (ActionRestrict() !== false) {
                   $("#HiddenColumns").show();
@@ -807,7 +805,7 @@
                                             <span>${rowData.ToolNo}</span>
                                         </div>
                                   </td>
-                                  <td data-cell="Type">${rowData.Type}</td>
+                                  <td data-cell="Type" style='text-align: left; padding-left: 1.5em;'>${rowData.Type}</td>
                                   <td data-cell="Model">${rowData.Model}</td>
                                   <td data-cell="Lines">${rowData.Lines}</td>
                                   <td data-cell="Status">${rowData.Status}</td>
@@ -1390,9 +1388,9 @@
                                   <td data-cell="DieCondition">${dieCon}</td>
                                   <td data-cell="Operator">${rowData.Operator}</td>
                                   <td data-cell="DieHeight">${rowData.DieHeight}</td>
-                                  <td data-cell="LeaderCom">${rowData.LeaderCom}</td>
-                                  <td data-cell="Gear">${rowData.Gear}</td>
-                                  <td data-cell="Pitch">${rowData.Pitch}</td>
+                                  <td data-cell="LeaderCom">${rowData?.LeaderCom || '-'}</td>
+                                  <td data-cell="Gear">${rowData?.Gear || '-'} </td>
+                                  <td data-cell="Pitch">${rowData?.Pitch || '-'} </td>
                               </tr>`;
 
                 tableBody.innerHTML += rowHtml;

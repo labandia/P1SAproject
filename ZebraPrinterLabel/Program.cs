@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Windows.Forms;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ZebraPrinterLabel
 {
     internal static class Program
     {
+        public static IServiceProvider ServiceProvider { get; private set; }
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -13,7 +15,14 @@ namespace ZebraPrinterLabel
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new ZebraPrinter());
+            var services = new ServiceCollection();
+            services.AddSingleton<IMasterlist, MasterlistRepository>();
+
+            services.AddSingleton<ZebraPrinter>();
+
+            ServiceProvider = services.BuildServiceProvider();
+            var mainForm = ServiceProvider.GetRequiredService<ZebraPrinter>();
+            Application.Run(mainForm);
         }
     }
 }

@@ -1,20 +1,51 @@
-﻿using System;
+﻿using QRCoder;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ZebraPrinterLabel.Services;
+using ZXing;
+using ZXing.Common;
 
 namespace ZebraPrinterLabel
 {
     public partial class ZebraPrinter : Form
     {
-        public ZebraPrinter()
+        private readonly IMasterlist _master;
+        private List<LabelData> _labelsToPrint = new List<LabelData>();
+        public string reelID;
+        public string Warehouse;
+        public int LocationQty;
+
+        public int Todayprint;
+
+        private void LoadSampleLabels()
+        {
+            _labelsToPrint = new List<LabelData>
+        {
+            new LabelData { PartNumber = "SDP00715310-02", BarcodeText = "RCC3A001001001", Quantity = "50" },
+            new LabelData { PartNumber = "SDP0038921-12", BarcodeText = "RCC3B002003003", Quantity = "30" },
+            new LabelData { PartNumber = "SDP12345678-99", BarcodeText = "RCC3C003004004", Quantity = "75" },
+            // Add as many labels as needed
+        };
+        }
+
+        public ZebraPrinter(IMasterlist master)
         {
             InitializeComponent();
+            _master=master;
+
+            Timer timer = new Timer();
+            timer.Interval = 60000;
+            timer.Tick += (s, e) => FileServices.ResetCountPrinter();
+            timer.Start();
         }
 
 
@@ -57,27 +88,230 @@ namespace ZebraPrinterLabel
 
             ^XZ";
         }
-
+        private int _currentLabelIndex = 0;
         private void Printbtn_Click(object sender, EventArgs e)
         {
-            string zplCode = GenerateZplLabel(
-                "SDP00715310-02 410210268",
-                "RCC3A001001001",
-                "50"
-            );
-            bool printed = ZebraProcess.SendZplToPrinter("Zebra ZD421", zplCode);
-            MessageBox.Show(printed ? "Printed successfully!" : "Print failed.");
+            //string zplCode = GenerateZplLabel(
+            //    "SDP00715310-02 410210268",
+            //    "RCC3A001001001",
+            //    "50"
+            //);
+            //DrawLabelPreview("SDP00715310-02 410210268", "RCC3A001001001", "50");
+
+            //bool printed = ZebraProcess.SendZplToPrinter("Zebra ZD421", zplCode);
+            //MessageBox.Show(printed ? "Printed successfully!" : "Print failed.");
+
+            LoadSampleLabels(); // Fill _labelsToPrint
+            _currentLabelIndex = 0;
+
+            PrintDocument printDoc = new PrintDocument();
+            printDoc.DefaultPageSettings.PaperSize = new PaperSize("Custom", 850, 1200); // Approx. A4
+            printDoc.PrintPage += PrintDoc_PrintPage;
+
+            PrintPreviewDialog previewDialog = new PrintPreviewDialog
+            {
+                Document = printDoc,
+                Width = 1000,
+                Height = 800
+            };
+            previewDialog.ShowDialog();
         }
 
-        private void SearchAmbassador(object sender, KeyEventArgs e)
+        private void PrintDoc_PrintPage(object sender, PrintPageEventArgs e)
         {
-            string partnum = Ambassador.Text.Trim();
-            string AmbassadorPartnum = $@"SDP{partnum} ";
+            Graphics g = e.Graphics;
+
+            int dpi = 300;
+            int labelWidthPx = (int)(264.56692913);   // ≈ 70 mm equivalent
+            int labelHeightPx = (int)(98.267716535);  // ≈ 26 mm equivalent
+            int marginLeft = 10;
+            int marginTop = 10;
+            int spacingY = 20;
+            int labelsPerPage = 3;
+
+            for (int i = 0; i < labelsPerPage; i++)
+            {
+                // Creating a Rectangle Form
+                int yOffset = marginTop + i * (labelHeightPx + spacingY);
+
+                g.DrawRectangle(Pens.Black, marginLeft, yOffset, labelWidthPx, labelHeightPx);
+
+                // Sample Data
+                string sdp = "SDP00715310-02 410210268";
+                string location = "RCC3A001001001";
+                string qty = "50";
+
+                using (Font fontNormal = new Font("Arial", 7))
+                {
+                    int xText = marginLeft;
+                    int yText = yOffset;
+
+                    // SDP Text
+                    g.DrawString("SDP: " + sdp, fontNormal, Brushes.Black, xText, yText);
+                    Bitmap sdpBarcode = CodeGenerator.GenerateBarcode(sdp);
+                    g.DrawImage(sdpBarcode, xText, yText + 30, 300, 40); // Adjust width/height
+
+                    // QTY Text
+                    g.DrawString("QTY: " + qty, fontNormal, Brushes.Black, xText, yText + 80);
+                    Bitmap qtyBarcode = CodeGenerator.GenerateBarcode(qty);
+                    g.DrawImage(qtyBarcode, xText, yText + 110, 200, 40);
+
+                    // LOC Text
+                    g.DrawString("LOC: " + location, fontNormal, Brushes.Black, xText, yText + 160);
+                    Bitmap locBarcode = CodeGenerator.GenerateBarcode(location);
+                    g.DrawImage(locBarcode, xText, yText + 190, 300, 40);
+                }
+
+                // QR Code (top-right)
+                Bitmap qr = CodeGenerator.GenerateQRCode(sdp);
+                g.DrawImage(qr, marginLeft + labelWidthPx - 200, 10 + 20, 80, 80);
+            }
+
+            e.HasMorePages = false;
         }
 
+     
         private void ZebraPrinter_Load(object sender, EventArgs e)
         {
+            CountToday ct = FileServices.GetReelIDCount();
 
+            if(ct != null)
+            {
+                //MessageBox.Show($"Date: {ct.DateStart}\nCount: {ct.Count}");
+                Todayprint = ct.Count;
+            }
+            else
+            {
+                MessageBox.Show("Failed to load data.");
+            }
+        }
+
+        private void DrawLabelPreview(string partNum, string barcodeText, string qty)
+        {
+            Bitmap labelImage = new Bitmap(panelPreview.Width, panelPreview.Height);
+            using (Graphics g = Graphics.FromImage(labelImage))
+            {
+                g.Clear(Color.White);
+
+                // Draw border
+                g.DrawRectangle(Pens.Black, 0, 0, labelImage.Width - 1, labelImage.Height - 1);
+
+                // Part Number
+                using (Font font = new Font("Arial", 10, FontStyle.Bold))
+                {
+                    g.DrawString(partNum, font, Brushes.Black, new PointF(10, 5));
+                }
+
+                // Quantity
+                using (Font font = new Font("Arial", 9, FontStyle.Regular))
+                {
+                    g.DrawString("Qty: " + qty, font, Brushes.Black, new PointF(10, 25));
+                }
+
+                // Barcode (simulate only)
+                using (Font font = new Font("IDAutomationHC39M", 16))  // Or Code 39 font
+                {
+                    g.DrawString("*" + barcodeText + "*", font, Brushes.Black, new PointF(10, 50));
+                }
+
+                // Simulated QR code
+                g.FillRectangle(Brushes.Black, new Rectangle(labelImage.Width - 70, 10, 60, 60));
+            }
+
+            panelPreview.BackgroundImage = labelImage;
+        }
+
+        private void Preview_Click(object sender, EventArgs e)
+        {
+            if (String.IsNullOrEmpty(Ambassador.Text.Trim()))
+            {
+                MessageBox.Show("Input Ambassador Partnum");
+                return;
+            }
+
+            if (Convert.ToInt32(PrintCount.Value) == 0) 
+            {
+                MessageBox.Show("Select A printer Count");
+                return;
+            }
+
+
+            int UpdateTotal = Todayprint + Convert.ToInt32(PrintCount.Value);
+            string NewUpdateCount = GetReeIDnumber(UpdateTotal.ToString()); 
+            MessageBox.Show("COUNT : " + NewUpdateCount);
+
+            //FileServices.UpdateCountToday(UpdateTotal);
+
+
+            DateTime selectedDate = dateTimePicker1.Value;
+            // Get last digit of the year
+            int oneDigitYear = selectedDate.Year % 10;
+
+            // Remove leading zeros for month and day
+            string month = selectedDate.Month.ToString("D2");
+            int day = selectedDate.Day;
+
+            // Combine to format
+            string formatted = $"{oneDigitYear}{month}{day}";
+
+            reelID = $@"*SDP{Ambassador.Text.Trim()} {formatted}{NewUpdateCount}*";
+
+            MessageBox.Show("ReelID " + reelID);
+        }
+
+        private async void SearchAmbassador(object sender, KeyEventArgs e)
+        {
+          
+            if (e.KeyCode != Keys.Enter) return;
+            
+            string partnum = Ambassador.Text.Trim();
+
+            //Checks if the input is Empty
+            if (String.IsNullOrEmpty(partnum)) return;
+
+            var data = await _master.GetAmbassadordata(partnum);
+
+            // Checkss if the Data is Exist
+            if (data == null || !data.Any())
+            {
+                MessageBox.Show("No Ambassador Partnumber found");
+                return;
+            }
+
+
+            foreach (var prod in data)
+            {
+                Warehouse = prod.WarehouseLocal;
+                LocationQty = prod.Qty;
+
+                WarehouseText.Text = Warehouse;
+                QuantityText.Text = LocationQty.ToString();
+
+
+                Debug.WriteLine($@"Partnumber : {prod.Partnum} - Warehouse Location : {prod.WarehouseLocal}");
+
+               
+                
+
+                //MessageBox.Show(reelID);
+            }
+        }
+
+
+        public string GetReeIDnumber(string count)
+        {
+            int Rcount = Convert.ToInt32(count.Length);
+            switch (Rcount)
+            {
+                case 1:
+                    return "000" + count;
+                case 2:
+                    return "00" + count;
+                case 3:
+                    return "0" + count;
+                default:
+                    return count;
+            }
         }
     }
 }

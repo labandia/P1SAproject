@@ -266,6 +266,12 @@
     <Compile Include="View\UploadsData.Designer.cs">
       <DependentUpon>UploadsData.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\V2\AddProduction.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\V2\AddProduction.Designer.cs">
+      <DependentUpon>AddProduction.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\V2\AttendanceMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -332,6 +338,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\UploadsData.resx">
       <DependentUpon>UploadsData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\V2\AddProduction.resx">
+      <DependentUpon>AddProduction.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\V2\AttendanceMain.resx">
       <DependentUpon>AttendanceMain.cs</DependentUpon>

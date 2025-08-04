@@ -1,24 +1,21 @@
-﻿using Dapper;
-using System.Text.RegularExpressions;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Data;
 using System.Diagnostics;
-using ProgramPartListWeb.Utilities;
-using ProductConfirm.Utilities;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Configuration;
+using Dapper;
+using ZebraPrinterLabel.Services;
 
-namespace ProgramPartListWeb.Helper
+namespace ZebraPrinterLabel.Data
 {
-    public static class SqlDataAccess
+    public sealed class SqlDataAccess
     {
-        private static readonly MemoryCacheService _cache = new MemoryCacheService();
-        //private static readonly string _connectionString = AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings["LiveDevelopment"].ConnectionString);
 
-        public static string connectionString()
+        public static string ConnectionString()
         {
             try
             {
@@ -42,10 +39,6 @@ namespace ProgramPartListWeb.Helper
             }
         }
 
-
-
-
-
         // CHECK CONNECTION 
         private static void LogConnectionChoice(string machineName, string connectionKey)
         {
@@ -53,24 +46,32 @@ namespace ProgramPartListWeb.Helper
             Debug.WriteLine(logEntry);
         }
 
-        public static SqlConnection GetSqlConnection(string connectionString)
+
+        public static SqlConnection GetConnection(string connectionString)
         {
             return new SqlConnection(connectionString);
         }
 
-
         // ############ DYNAMIC FUNCTION LIST<T> GETDATA ########################
         public static async Task<List<T>> GetData<T>(string query, object parameters = null)
         {
+            //var resultData = new List<T>();
             try
             {
-                using (IDbConnection con = GetSqlConnection(connectionString()))
+                using (IDbConnection con = GetConnection(ConnectionString()))
                 {
-                    var IsStoreProd = Regex.IsMatch(query, @"^\w+$");
-                    var commandType = IsStoreProd ? CommandType.StoredProcedure : CommandType.Text;
-                    var result = await con.QueryAsync<T>(query, parameters, commandType: CommandType.StoredProcedure);
-
-                    return result.ToList();
+                    // Checks if the string is one word
+                    if (Regex.IsMatch(query, @"^\w+$"))
+                    {
+                        // This code is a Procudure query
+                        return (await con.QueryAsync<T>(query, parameters, commandType: CommandType.StoredProcedure)).ToList();
+                    }
+                    else
+                    {
+                        // Ordinary Query string
+                        return (await con.QueryAsync<T>(query, parameters)).ToList();
+                    }
+                    //return resultData;
                 }
             }
             catch (SqlException ex)
@@ -78,50 +79,49 @@ namespace ProgramPartListWeb.Helper
                 Console.WriteLine("SQL Exception: " + ex.Message);
                 return null;
             }
-            
 
-           // return resultData;
+
+            // return resultData;
         }
         // ############ SELECTS ONLY ONE ROW DATA  ##############################
         public static async Task<string> GetOneData(string query, object parameters)
         {
             try
             {
-                using (IDbConnection con = GetSqlConnection(connectionString()))
+                using (IDbConnection con = GetConnection(ConnectionString()))
                 {
-                    return  await con.QuerySingleOrDefaultAsync<string>(query, parameters);
+                    return await con.QuerySingleOrDefaultAsync<string>(query, parameters);
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"{ex.Message}");
-                return "";
+                return ex.Message;
             }
         }
         // ############ GET THE TOTAL COUNT OF THE QUERY ########################
-        public static async Task<int> GetCountData(string query, object parameters = null, CommandType commandType = CommandType.Text)
+        public static async Task<int> GetCountData(string query, object parameters)
         {
             try
             {
-                using (IDbConnection con = GetSqlConnection(connectionString()))
+                using (IDbConnection con = GetConnection(ConnectionString()))
                 {
+                    int count = 0;
+
                     if (Regex.IsMatch(query, @"^\w+$"))
                     {
                         // This code is a Procudure query
-                        int count = await con.ExecuteScalarAsync<int>(query, parameters, commandType: CommandType.StoredProcedure);
-                        return count;
+                        count = await con.ExecuteScalarAsync<int>(query, parameters, commandType: CommandType.StoredProcedure);
                     }
                     else
                     {
-                        // Ordinary Query string
-                        int count = await con.ExecuteScalarAsync<int>(query, parameters, commandType: commandType);
-                        return count;
+                        count = await con.ExecuteScalarAsync<int>(query, parameters);
                     }
+                    return count;
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"{ex.Message}");
+                Debug.Write(ex.Message);
                 return 0;
             }
         }
@@ -131,7 +131,7 @@ namespace ProgramPartListWeb.Helper
         {
             try
             {
-                using (IDbConnection con = GetSqlConnection(connectionString()))
+                using (IDbConnection con = GetConnection(ConnectionString()))
                 {
                     int count;
                     // Checks if the string is one word
@@ -147,19 +147,19 @@ namespace ProgramPartListWeb.Helper
                     return count > 0;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                Debug.WriteLine("Error occur : " + ex.Message);
+                Debug.WriteLine("SQL Exception: " + ex.Message);
                 return false;
             }
-           
+
         }
         // ############ INSERT AND UPDATE QUERY ########################
         public static async Task<bool> UpdateInsertQuery(string strQuery, object parameters)
-        {   
+        {
             try
             {
-                using (IDbConnection con = new SqlConnection(connectionString()))
+                using (IDbConnection con = GetConnection(ConnectionString()))
                 {
                     int rowsAffected;
 
@@ -174,15 +174,14 @@ namespace ProgramPartListWeb.Helper
                     }
                     return rowsAffected > 0;
                 }
-            }       
+            }
             catch (Exception ex)
             {
-                // Log other exceptions
                 Debug.WriteLine($"Exception: {ex.Message}");
-          
+
                 return false;
             }
-            
+
         }
         public static async Task<List<string>> StringList(string query, object parameters = null)
         {
@@ -190,7 +189,7 @@ namespace ProgramPartListWeb.Helper
 
             try
             {
-                using (IDbConnection con = GetSqlConnection(connectionString()))
+                using (IDbConnection con = GetConnection(ConnectionString()))
                 {
                     IEnumerable<string> dataList;
 
@@ -218,7 +217,7 @@ namespace ProgramPartListWeb.Helper
         {
             try
             {
-                using (IDbConnection con = GetSqlConnection(connectionString()))
+                using (IDbConnection con = GetConnection(ConnectionString()))
                 {
                     int count;
                     if (Regex.IsMatch(query, @"^\w+$"))
@@ -235,10 +234,55 @@ namespace ProgramPartListWeb.Helper
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"{ex.Message}");
+                Debug.WriteLine("SQL Exception: " + ex.Message);
                 return 0;
             }
         }
 
+
+        // ############ GET DATA BY DATATABLE ##################
+        public static async Task<DataTable> GetDataByDataTable(string query, object parameters = null)
+        {
+            var resultData = new DataTable();
+            try
+            {
+                using (IDbConnection con = GetConnection(ConnectionString()))
+                {
+                    // Execute the query using Dapper
+                    var result = await con.QueryAsync(query, parameters);
+
+                    // If there are results, populate the DataTable
+                    if (result != null && result.Any())
+                    {
+                        // Create columns dynamically based on the first record
+                        var firstRow = (IDictionary<string, object>)result.First();
+                        foreach (var column in firstRow)
+                        {
+                            resultData.Columns.Add(column.Key, column.Value?.GetType() ?? typeof(string));
+                        }
+
+                        // Add rows
+                        foreach (var record in result)
+                        {
+                            var row = resultData.NewRow();
+                            var dict = (IDictionary<string, object>)record;
+                            foreach (var column in dict)
+                            {
+                                row[column.Key] = column.Value ?? DBNull.Value;
+                            }
+                            resultData.Rows.Add(row);
+                        }
+                    }
+
+                    return resultData;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("SQL Exception: " + ex.Message);
+            }
+
+            return resultData;
+        }
     }
 }

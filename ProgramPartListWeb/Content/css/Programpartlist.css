@@ -18,6 +18,8 @@
         --nav-color: hsl(210, 29%, 9%);
         /*========== Font and typography ==========*/
         --body-font: 'poppins-regular', sans-serif;
+
+        --border-color: #a09e9e;
     }
 
    body{
@@ -41,6 +43,78 @@
          background: #A5A1AA;
     }
 
+
+/*========== CUSTOM  DROPDOWN =========== */
+    .select-container {
+        position: relative;
+        display: inline-block;
+        margin: .5em 0;
+    }
+    .select-container select {
+        width: 100%;
+        color: #222;
+        padding: .5em 3em .5em 1em;
+        appearance: none;
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        background: white;
+        font-size: var(--small-font-size);
+        position: relative;
+        outline: none;
+    }
+
+    .select-container::after {
+        content: '▼'; /* Unicode character for a down arrow */
+        font-size: var(--normal-font-size);
+        position: absolute;
+        top: 50%;
+        right: 15px;
+        transform: translateY(-50%);
+        pointer-events: none;
+        color: #999;
+    }
+
+    .select-container select::-ms-expand {
+        display: none; /* Hide the default dropdown arrow in IE */
+    }
+/* =============== CUSTOM SEARCH ====================== */
+    .searchinputContainer {
+        position: relative;
+        background: #fff;
+        border-radius: .2em;
+        padding: 7px 1.5em 7px 1em;
+        border: 1px solid var(--border-color);
+    }
+
+    .searchinputContainer input {
+        border-radius: .2em;
+        outline: none;
+        font-size: var(--small-font-size);
+        margin-left: 5px;
+    }
+
+        .searchinputContainer input:focus + .line {
+            width: 100%;
+            background-color: var(--primary-color);
+        }
+
+    .searchinputContainer .line {
+        height: 2px;
+        width: 0px;
+        position: absolute;
+        background-color: var(--primary-color);
+        display: inline-block;
+        transition: .3s width ease-in-out;
+        bottom: 0;
+        left: 0;
+    }
+
+    .searchinputContainer i {
+        position: absolute;
+        right: 5%;
+        top: 50%;
+        transform: translateY(-50%);
+    }
 
 /*========== NAV ==========*/
     .sidebar {

@@ -9,48 +9,41 @@
 
 
     <div class="d-flex align-items-center justify-content-between gap-4">
-        <div class="SearchInputbox">
-            <input type="text" name="searchbox" id="searchbox" placeholder="Search here... " />
+     
+        <div class="searchinputContainer">
             <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" placeholder="Search here ... " id="searchbox" />
+            <div class="line"></div>
         </div>
 
-        @*<select id="lineselect">
-            <option value="1">Line 1</option>
-            <option value="2">Line 2</option>
-            <option value="3">Line 3</option>
-            <option value="4">Line 4</option>
-            <option value="5">Line 5</option>
-            <option value="6">Line 6</option>
-            <option value="7">Line 7</option>
-            <option value="8">Line 8</option>
-            <option value="9">Line 9</option>
-            <option value="10">Line 10</option>
-            <option value="11">Line 11</option>
-            <option value="12">Line 12</option>
-        </select>*@
+        <div class="d-flex align-items-center gap-3">
+            <div class="select-container">
+                <select id="filterselect">
+                    <option value="2">All</option>
+                    <option value="1">Completed</option>
+                    <option value="0">Not Completed</option>
+                </select>
+            </div>
 
-    <div class="d-flex align-items-center gap-3">
-        <select id="filterselect">
-            <option value="2">All</option>
-            <option value="1">Completed</option>
-            <option value="0">Not Completed</option>
-        </select>
+            <div class="select-container">
+                <select id="monthFilter">
+                    <option value="1">January</option>
+                    <option value="2">February</option>
+                    <option value="3">March</option>
+                    <option value="4">April</option>
+                    <option value="5">May</option>
+                    <option value="6">June</option>
+                    <option value="7">July</option>
+                    <option value="8">August</option>
+                    <option value="9">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                </select>
+            </div>
 
-        <select id="monthFilter">
-            <option value="1">January</option>
-            <option value="2">February</option>
-            <option value="3">March</option>
-            <option value="4">April</option>
-            <option value="5">May</option>
-            <option value="6">June</option>
-            <option value="7">July</option>
-            <option value="8">August</option>
-            <option value="9">September</option>
-            <option value="10">October</option>
-            <option value="11">November</option>
-            <option value="12">December</option>
-        </select>
-    </div>
+
+        </div>
     </div>
 
 </header>
@@ -77,7 +70,6 @@
 <script src="~/Scripts/sweetalert2.min.js"></script>
 <script src="~/Scripts/jquery-3.7.1.min.js"></script>
 <script type="text/javascript">
-    //const linechange = document.getElementById("lineselect");
 
     const logstring = ""
 

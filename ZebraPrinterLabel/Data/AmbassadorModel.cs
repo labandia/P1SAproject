@@ -21,4 +21,12 @@ namespace ZebraPrinterLabel
         public string DateStart { get; set; }
         public int Count { get; set; }
     }
+
+
+    public class FinalLabelData
+    {
+        public string SDP { get; set; }
+        public string Warehouse { get; set; }
+        public string Quantity { get; set; }
+    }
 }

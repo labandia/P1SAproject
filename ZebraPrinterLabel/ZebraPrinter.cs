@@ -1,4 +1,5 @@
-﻿using QRCoder;
+﻿using BarcodeStandard;
+using QRCoder;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,7 +8,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Printing;
 using System.Linq;
-using System.Text;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ZebraPrinterLabel.Services;
@@ -20,6 +21,7 @@ namespace ZebraPrinterLabel
     {
         private readonly IMasterlist _master;
         private List<LabelData> _labelsToPrint = new List<LabelData>();
+        private List<FinalLabelData> _labelPrint = new List<FinalLabelData>();
         public string reelID;
         public string Warehouse;
         public int LocationQty;
@@ -42,10 +44,15 @@ namespace ZebraPrinterLabel
             InitializeComponent();
             _master=master;
 
-            Timer timer = new Timer();
-            timer.Interval = 60000;
-            timer.Tick += (s, e) => FileServices.ResetCountPrinter();
-            timer.Start();
+            //Timer time = new Timer();
+            //time.Interval = 60000;
+            //time.Tick += (s, e) => FileServices.ResetCountPrinter();
+            //time.Start();
+
+            Timer time = new Timer();
+            time.Interval = 3000;
+            time.Tick += timer1_Tick;
+            time.Start();
         }
 
 
@@ -89,34 +96,84 @@ namespace ZebraPrinterLabel
             ^XZ";
         }
         private int _currentLabelIndex = 0;
-        private void Printbtn_Click(object sender, EventArgs e)
+        private  void Printbtn_Click(object sender, EventArgs e)
         {
-            //string zplCode = GenerateZplLabel(
-            //    "SDP00715310-02 410210268",
-            //    "RCC3A001001001",
-            //    "50"
-            //);
-            //DrawLabelPreview("SDP00715310-02 410210268", "RCC3A001001001", "50");
 
-            //bool printed = ZebraProcess.SendZplToPrinter("Zebra ZD421", zplCode);
-            //MessageBox.Show(printed ? "Printed successfully!" : "Print failed.");
+            //List<(string partNum, string barcodeText, string qty)> labelDataList = new List<(string, string, string)>();
 
-            LoadSampleLabels(); // Fill _labelsToPrint
-            _currentLabelIndex = 0;
-
-            PrintDocument printDoc = new PrintDocument();
-            printDoc.DefaultPageSettings.PaperSize = new PaperSize("Custom", 850, 1200); // Approx. A4
-            printDoc.PrintPage += PrintDoc_PrintPage;
-
-            PrintPreviewDialog previewDialog = new PrintPreviewDialog
+            foreach (var item in _labelPrint)
             {
-                Document = printDoc,
-                Width = 1000,
-                Height = 800
-            };
-            previewDialog.ShowDialog();
+                //Debug.WriteLine($@"SDP : {item.SDP} - Warehouse : {item.Warehouse} - Quantity : {item.Quantity}");
+                //labelDataList.Add((item.SDP, item.Warehouse, item.Quantity));
+                string zplCode = GenerateZplLabel(
+                    item.SDP,
+                    item.Warehouse,
+                    item.Quantity
+                );
+
+                bool printed = ZebraProcess.SendZplToPrinter("Zebra ZD421", zplCode);
+                MessageBox.Show(printed ? "Printed successfully!" : "Print failed.");
+
+                //string zplCode = GenerateZplLabel(item.SDP, item.Warehouse, item.Quantity);
+
+                //// Convert ZPL to Image
+                //Image labelImage = await GetLabelPreviewAsync(zplCode); // Implement this or use API
+
+                //// Create PictureBox
+                //PictureBox pic = new PictureBox();
+                //pic.Image = labelImage;
+                //pic.SizeMode = PictureBoxSizeMode.AutoSize;
+                //pic.Margin = new Padding(5);
+
+                //// Add to panel
+                //flowLayoutPanelPreview.Controls.Add(pic);
+            }
+
+            // Draw all in one preview
+            //DrawLabelPreview(labelDataList);
+
+
+
+
+
+            //LoadSampleLabels(); // Fill _labelsToPrint
+            //_currentLabelIndex = 0;
+
+            //PrintDocument printDoc = new PrintDocument();
+            //printDoc.DefaultPageSettings.PaperSize = new PaperSize("Custom", 850, 1200); // Approx. A4
+            //printDoc.PrintPage += PrintDoc_PrintPage;
+
+            //PrintPreviewDialog previewDialog = new PrintPreviewDialog
+            //{
+            //    Document = printDoc,
+            //    Width = 1000,
+            //    Height = 800
+            //};
+            //previewDialog.ShowDialog();
+
+            //FileServices.UpdateCountToday(UpdateTotal);
+
         }
 
+
+        public async Task<Image> GetLabelPreviewAsync(string zpl)
+        {
+            using (var client = new HttpClient())
+            {
+                var content = new StringContent(zpl);
+                var response = await client.PostAsync("http://api.labelary.com/v1/printers/8dpmm/labels/4x6/0/", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var stream = await response.Content.ReadAsStreamAsync();
+                    return Image.FromStream(stream);
+                }
+                else
+                {
+                    throw new Exception("Failed to get label preview: " + response.StatusCode);
+                }
+            }
+        }
         private void PrintDoc_PrintPage(object sender, PrintPageEventArgs e)
         {
             Graphics g = e.Graphics;
@@ -170,78 +227,128 @@ namespace ZebraPrinterLabel
             e.HasMorePages = false;
         }
 
-     
+
         private void ZebraPrinter_Load(object sender, EventArgs e)
         {
             CountToday ct = FileServices.GetReelIDCount();
 
-            if(ct != null)
-            {
-                //MessageBox.Show($"Date: {ct.DateStart}\nCount: {ct.Count}");
-                Todayprint = ct.Count;
-            }
-            else
-            {
-                MessageBox.Show("Failed to load data.");
-            }
+            timer1 = new Timer();
+            timer1.Interval = 3000; // Every 5 seconds
+            timer1.Tick += timer1_Tick;
+
+            timer1.Start();
+
+            Todayprint = (ct != null) ? ct.Count : 0;
+
         }
 
-        private void DrawLabelPreview(string partNum, string barcodeText, string qty)
+        private void DrawLabelPreview(List<(string partNum, string barcodeText, string qty)> labelDataList)
         {
-            Bitmap labelImage = new Bitmap(panelPreview.Width, panelPreview.Height);
+            int labelHeight = 140;  // Height of one label row
+            int totalHeight = labelHeight * labelDataList.Count;
+
+            Bitmap labelImage = new Bitmap(panelPreview.Width, totalHeight);
             using (Graphics g = Graphics.FromImage(labelImage))
             {
                 g.Clear(Color.White);
 
-                // Draw border
-                g.DrawRectangle(Pens.Black, 0, 0, labelImage.Width - 1, labelImage.Height - 1);
+                Font fontBold = new Font("Arial", 10, FontStyle.Bold);
+                Font fontRegular = new Font("Arial", 9);
 
-                // Part Number
-                using (Font font = new Font("Arial", 10, FontStyle.Bold))
+                for (int i = 0; i < labelDataList.Count; i++)
                 {
-                    g.DrawString(partNum, font, Brushes.Black, new PointF(10, 5));
-                }
+                    var (partNum, barcodeText, qty) = labelDataList[i];
 
-                // Quantity
-                using (Font font = new Font("Arial", 9, FontStyle.Regular))
-                {
-                    g.DrawString("Qty: " + qty, font, Brushes.Black, new PointF(10, 25));
-                }
+                    int offsetY = i * labelHeight;
 
-                // Barcode (simulate only)
-                using (Font font = new Font("IDAutomationHC39M", 16))  // Or Code 39 font
-                {
-                    g.DrawString("*" + barcodeText + "*", font, Brushes.Black, new PointF(10, 50));
-                }
+                    // Draw border for each label
+                    g.DrawRectangle(Pens.Black, 0, offsetY, labelImage.Width - 1, labelHeight - 1);
 
-                // Simulated QR code
-                g.FillRectangle(Brushes.Black, new Rectangle(labelImage.Width - 70, 10, 60, 60));
+                    // Text
+                    g.DrawString(partNum, fontRegular, Brushes.Black, new PointF(10, offsetY + 15));
+                    // Barcode for SDP
+                    var SDPBarcodeWriter = new BarcodeWriter
+                    {
+                        Format = BarcodeFormat.CODE_128,
+                        Options = new EncodingOptions
+                        {
+                            Height = 30,
+                            Width = 200,
+                            Margin = 0,
+                            PureBarcode = true
+                        }
+                    };
+                    Bitmap SDPbarcodeImage = SDPBarcodeWriter.Write(partNum);
+                    g.DrawImage(SDPbarcodeImage, new PointF(15, offsetY + 35));
+
+
+
+                    g.DrawString("SMT WH : *" + barcodeText + "*", fontRegular, Brushes.Black, new PointF(10, offsetY + 75));
+
+                    //Barcode Warehouse
+                    var WarehousebarcodeWriter = new BarcodeWriter
+                    {
+                        Format = BarcodeFormat.CODE_128,
+                        Options = new EncodingOptions
+                        {
+                            Height = 30,
+                            Width = 200,
+                            Margin = 0,
+                            PureBarcode = true
+                        }
+                    };
+                    Bitmap WarehousebarcodeImage = WarehousebarcodeWriter.Write(barcodeText);
+                    g.DrawImage(WarehousebarcodeImage, new PointF(5, offsetY + 95));
+
+                    // QR Code
+                    var qrWriter = new BarcodeWriter
+                    {
+                        Format = BarcodeFormat.QR_CODE,
+                        Options = new EncodingOptions
+                        {
+                            Height = 70,
+                            Width = 70,
+                            Margin = 0
+                        }
+                    };
+                    Bitmap qrImage = qrWriter.Write(barcodeText);
+                    g.DrawImage(qrImage, new PointF(labelImage.Width - 90, offsetY + 15));
+
+                    
+                    g.DrawString("Qty : ", fontRegular, Brushes.Black, new PointF(labelImage.Width - 90, offsetY + 85));
+
+                    //Barcode Quantity
+                    var QuantitybarcodeWriter = new BarcodeWriter
+                    {
+                        Format = BarcodeFormat.CODE_128,
+                        Options = new EncodingOptions
+                        {
+                            Height = 20,
+                            Width = 25,
+                            Margin = 0,
+                            PureBarcode = true
+                        }
+                    };
+                    Bitmap QuantitybarcodeImage = QuantitybarcodeWriter.Write(qty);
+                    g.DrawImage(QuantitybarcodeImage, new PointF(labelImage.Width - 85, offsetY + 100));
+                }
             }
 
-            panelPreview.BackgroundImage = labelImage;
+            panelPreview.Image = labelImage;
+            panelPreview.Size = labelImage.Size;
+            //panelPreview.BackgroundImage = labelImage;
+
         }
+
 
         private void Preview_Click(object sender, EventArgs e)
         {
-            if (String.IsNullOrEmpty(Ambassador.Text.Trim()))
-            {
-                MessageBox.Show("Input Ambassador Partnum");
-                return;
-            }
-
-            if (Convert.ToInt32(PrintCount.Value) == 0) 
-            {
-                MessageBox.Show("Select A printer Count");
-                return;
-            }
+            if(!FormValidation()) return;
 
 
-            int UpdateTotal = Todayprint + Convert.ToInt32(PrintCount.Value);
-            string NewUpdateCount = GetReeIDnumber(UpdateTotal.ToString()); 
-            MessageBox.Show("COUNT : " + NewUpdateCount);
+            int getTotalprint = Convert.ToInt32(PrintCount.Value);
 
-            //FileServices.UpdateCountToday(UpdateTotal);
-
+            // =============== FOR THE DATE DISPLAY FORMATED  =====================
 
             DateTime selectedDate = dateTimePicker1.Value;
             // Get last digit of the year
@@ -249,14 +356,59 @@ namespace ZebraPrinterLabel
 
             // Remove leading zeros for month and day
             string month = selectedDate.Month.ToString("D2");
-            int day = selectedDate.Day;
+            string day = selectedDate.Day.ToString("D2");
 
             // Combine to format
             string formatted = $"{oneDigitYear}{month}{day}";
+            // ====================================================================
 
-            reelID = $@"*SDP{Ambassador.Text.Trim()} {formatted}{NewUpdateCount}*";
 
-            MessageBox.Show("ReelID " + reelID);
+
+            for (int i = 0; i < getTotalprint; i++)
+            {
+                Todayprint += 1;
+                string strCount = GetReeIDnumber(Todayprint.ToString());
+                var newData = new FinalLabelData
+                {
+                    SDP =  $@"*SDP{Ambassador.Text.Trim()} {formatted}{strCount}*",
+                    Warehouse = WarehouseText.Text,
+                    Quantity = QuantityText.Text
+                };
+
+                _labelPrint.Add(newData);
+            }
+
+
+
+
+
+            List<(string partNum, string barcodeText, string qty)> labelDataList = new List<(string, string, string)>();
+
+            foreach (var item in _labelPrint)
+            {
+                labelDataList.Add((item.SDP, item.Warehouse, item.Quantity));
+            }
+
+            // Draw all in one preview
+            DrawLabelPreview(labelDataList);
+
+
+
+            //int UpdateTotal = Todayprint + Convert.ToInt32(PrintCount.Value);
+            //string NewUpdateCount = GetReeIDnumber(UpdateTotal.ToString());
+
+            ////FileServices.UpdateCountToday(UpdateTotal);
+
+
+
+            //reelID = $@"*SDP{Ambassador.Text.Trim()} {formatted}{NewUpdateCount}*";
+
+            //MessageBox.Show($@"COUNT : " + NewUpdateCount);
+            //MessageBox.Show("ReelID " + reelID);
+
+            Preview.Visible = false;
+            Cancelbtn.Visible = true;
+            Printbtn.Visible = true;
         }
 
         private async void SearchAmbassador(object sender, KeyEventArgs e)
@@ -274,7 +426,7 @@ namespace ZebraPrinterLabel
             // Checkss if the Data is Exist
             if (data == null || !data.Any())
             {
-                MessageBox.Show("No Ambassador Partnumber found");
+                MessageBox.Show("No Ambassador Partnumber found", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -289,14 +441,50 @@ namespace ZebraPrinterLabel
 
 
                 Debug.WriteLine($@"Partnumber : {prod.Partnum} - Warehouse Location : {prod.WarehouseLocal}");
-
-               
-                
-
-                //MessageBox.Show(reelID);
+                FinalRealIDText.Text = CreationReelID(prod.Partnum, Todayprint);
             }
+
+            Ambassador.Text = partnum;
         }
 
+        public string CreationReelID(string partnum, int LatestCount)
+        {
+            string strcount; 
+            // =============== FOR THE DATE DISPLAY FORMATED  =====================
+
+            DateTime selectedDate = dateTimePicker1.Value;
+            // Get last digit of the year
+            int oneDigitYear = selectedDate.Year % 10;
+
+            // Remove leading zeros for month and day
+            string month = selectedDate.Month.ToString("D2");
+            string day = selectedDate.Day.ToString("D2");
+
+            // Combine to format
+            string formatted = $"{oneDigitYear}{month}{day}";
+            // ====================================================================
+
+            // ==================== PRINT COUNT VALUE   ===========================
+            if (Convert.ToInt32(PrintCount.Value) != 0)
+            {
+                int UpdateTotal = Todayprint + Convert.ToInt32(PrintCount.Value);
+                string NewUpdateCount = GetReeIDnumber(UpdateTotal.ToString());
+                strcount = NewUpdateCount;
+                Todayprint = UpdateTotal;
+            }
+            else
+            {
+                string NewUpdateCount = GetReeIDnumber(Todayprint.ToString());
+                strcount = NewUpdateCount;
+            }
+            // ====================================================================
+
+
+            reelID = $@"*SDP{partnum} {formatted}{strcount}*";
+
+
+            return reelID;
+        }
 
         public string GetReeIDnumber(string count)
         {
@@ -312,6 +500,57 @@ namespace ZebraPrinterLabel
                 default:
                     return count;
             }
+        }
+
+        private void Cancelbtn_Click(object sender, EventArgs e)
+        {
+            Preview.Visible = true;
+            Cancelbtn.Visible = false;
+            Printbtn.Visible = false;
+        }
+
+
+        //===================== FOR FORM VALIDATION ======================
+        public bool FormValidation()
+        {
+            bool IsEmpPartnum = string.IsNullOrWhiteSpace(Ambassador.Text);
+            bool IsQuanValue = Convert.ToInt32(PrintCount.Value) == 0;
+
+            part_error.Visible = IsEmpPartnum;
+            Numb_error.Visible = IsQuanValue;
+
+
+            return !(IsEmpPartnum || IsQuanValue);
+        }
+
+        private async  void timer1_Tick(object sender, EventArgs e)
+        {
+            Debug.WriteLine("ADASDAS" + await ZebraProcess.IsZebraPrinterConnectedAndOnline());
+            if (await ZebraProcess.IsZebraPrinterConnectedAndOnline())
+            {
+                printerStats.Text = "Zebra printer is Connected";
+                printerStats.ForeColor = Color.FromArgb(19, 211, 176);
+            }
+            else
+            {
+                printerStats.Text = "Zebra printer is not Connected";
+                printerStats.ForeColor = Color.FromArgb(219, 36, 36);
+            }
+        }
+
+        private void Exitbtn_Click(object sender, EventArgs e)
+        {
+            Application.Exit(); 
+        }
+
+        private void panelPreview_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        {
+            FinalRealIDText.Text = CreationReelID(Ambassador.Text.Trim(), Todayprint);
         }
     }
 }

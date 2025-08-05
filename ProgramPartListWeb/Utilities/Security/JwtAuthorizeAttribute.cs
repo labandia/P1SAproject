@@ -1,4 +1,5 @@
 ﻿using ProgramPartListWeb.Utilities.Security;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -27,7 +28,9 @@ namespace ProgramPartListWeb.Helper
             {
                 var principal = JWTAuthentication.ValidateToken(token);
                 if (principal == null)
+                {
                     return false;
+                }
 
                 httpContext.User = principal; // Set the current principal
                 return true;

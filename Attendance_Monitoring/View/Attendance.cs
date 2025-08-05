@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Timer = System.Windows.Forms.Timer;
 
@@ -539,5 +540,12 @@ namespace Attendance_Monitoring.View
             attendancetable.DataSource =  filteredList;
             DisplayTotal.Text = "Total Records: " + attendancetable.RowCount;
         }
+
+        //public async Task RunningClock()
+        //{
+        //    await Task.Yield();
+        //    Timeclock.Text = DateTime.Now.ToLongTimeString();
+        //    timer1.Start();
+        //}
     }
 }

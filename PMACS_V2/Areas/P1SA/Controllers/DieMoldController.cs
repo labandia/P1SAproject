@@ -176,9 +176,6 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         {
             bool update = await _die.UpdateEndofLifeMonitorData(ToolNo);
             if (!update) return JsonValidationError();
-
-           
-
             return JsonCreated("End of Life Successfully");
         }
 

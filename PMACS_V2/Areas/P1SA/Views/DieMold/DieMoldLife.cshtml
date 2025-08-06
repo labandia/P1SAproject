@@ -63,13 +63,14 @@
                             <table>
                                 <thead>
                                     <tr>
+                                        <th>No. </th>
                                         <th style="text-align: left !important; padding-left: 1.5em;">Part Number </th>
                                         <th>Die #</th>
                                         <th>Die Serial</th>
                                         <th>2011-2015</th>
                                         <th>Shot Count Onward</th>
                                         <th>Status</th>
-                                        <th>Renarks</th>
+                                        @*<th>Renarks</th>*@
                                     </tr>
                                 </thead>
                                 <tbody id="SummarylistData">
@@ -784,9 +785,9 @@
                   let percentage = parseFloat(StatusValue) || 0;
                   let rowHtml = "<tr class='rowClick' id='editButton'>";
 
-                  //if (idx === 0) {
-                  //    rowHtml += `<td rowspan="${groupRows.length}" data-cell="No" style="font-weight: 600; color: #222;">${NoValue}</td>`;
-                  //}
+                  if (idx === 0) {
+                      rowHtml += `<td rowspan="${groupRows.length}" data-cell="No" style="font-weight: 600; color: #222;">${NoValue}</td>`;
+                  }
 
                   rowHtml += `<td data-cell="PartNo" style="font-weight: 600; color: #222;">${rowData.PartNo}</td>`;
 
@@ -813,24 +814,24 @@
                           remarkColor = "color: #a81818; font-weight: 600; font-size: .8rem;";
                       }
 
-                      rowHtml += `<td rowspan="${groupRows.length}" data-cell="Remarks" style="${remarkColor}">${RemarkeValue}</td>`;
+                      //rowHtml += `<td rowspan="${groupRows.length}" data-cell="Remarks" style="${remarkColor}">${RemarkeValue}</td>`;
                   }
                   rowHtml += "</tr>";
                   tableBody.innerHTML += rowHtml;
               });
           });
 
-
+         
 
           const spans = document.querySelectorAll('.progress-bar span');
           spans.forEach((span) => {
               // For Monitoring
               if (span.dataset.width <= 100) {
-                  span.style.background = '#3ccf6d';
+                  span.style.background = '#054e92';
               }
               else {
                   // End Of life
-                  span.style.background = '#ee4141';
+                  span.style.background = '#a81818';
               }
               span.style.width = span.dataset.width + "%";
               //span.innerHTML = span.dataset.width;

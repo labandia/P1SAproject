@@ -46,8 +46,8 @@
                 <th colspan="3" class="blue-subheader">Lower</th>
             </tr>
             <tr>
-                <td class="green-header">11</td>
-                <td class="green-header">10</td>
+                <td class="green-header">@Model.Up</td>
+                <td class="green-header">@Model.low</td>
 
                 <!-- Upper Grinding -->
                 <td class="blue-subheader">①<br>Actual<br>Height</td>
@@ -78,7 +78,7 @@
 <div class="modal fade modal-md" id="MonitorModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-body">
+            <div class="modal-body modalwrap">
                 <div class="custom_modal_header">
                     <h5>Die Life Monitoring Input</h5>
 
@@ -87,49 +87,47 @@
                     </button>
                 </div>
 
-                <div class="MoldieBodyModal mt-3">
-                    <form id="AddMoldieform" autocomplete="off">
-                        <input type="hidden" name="ToolNo" value="@Model.ToolNo" />
-                        <input type="hidden" name="MonitorID" value="@Model.MonitorID" />
-                        <div class="row">
-                            <div class="form_group col-12 col-lg-6 col-sm-12">
-                                <label>Up Actual Height</label>
-                                <input type="text" name="Upper_ActualHeight" onkeypress="return restrictChars(event)" required />
-                            </div>
-
-                            <div class="form_group col-12 col-lg-6 col-sm-12">
-                                <label>Up Drawing Height</label>
-                                <input type="text" name="Upper_DrawingHeight" onkeypress="return restrictChars(event)" required />
-                            </div>
+                <form id="AddMoldieform" class="addformcontainer" autocomplete="off">
+                    <input type="hidden" name="ToolNo" value="@Model.ToolNo" />
+                    <input type="hidden" name="MonitorID" value="@Model.MonitorID" />
+                    <div class="row">
+                        <div class="form_group col-12 col-lg-6 col-sm-12">
+                            <label>Up Actual Height</label>
+                            <input type="text" name="Upper_ActualHeight" onkeypress="return restrictChars(event)" required />
                         </div>
 
+                        <div class="form_group col-12 col-lg-6 col-sm-12">
+                            <label>Up Drawing Height</label>
+                            <input type="text" name="Upper_DrawingHeight" onkeypress="return restrictChars(event)" required />
+                        </div>
+                    </div>
 
-                        <div class="row">
-                            <div class="form_group col-12 col-lg-6 col-sm-12">
-                                <label>low Actual Height</label>
-                                <input type="text" name="Lower_ActualHeight" onkeypress="return restrictChars(event)" required />
-                            </div>
 
-                            <div class="form_group col-12 col-lg-6 col-sm-12">
-                                <label>low Drawing Height</label>
-                                <input type="text" name="Lower_DrawingHeight" onkeypress="return restrictChars(event)" required />
-                            </div>
+                    <div class="row">
+                        <div class="form_group col-12 col-lg-6 col-sm-12">
+                            <label>low Actual Height</label>
+                            <input type="text" name="Lower_ActualHeight" onkeypress="return restrictChars(event)" required />
                         </div>
 
-
-                        <div class="form_group col-12  col-sm-12">
-                            <label>No. of Stamping Press</label>
-                            <input type="text" name="PressStamp" onkeypress="return restrictChars(event)"  />
+                        <div class="form_group col-12 col-lg-6 col-sm-12">
+                            <label>low Drawing Height</label>
+                            <input type="text" name="Lower_DrawingHeight" onkeypress="return restrictChars(event)" required />
                         </div>
+                    </div>
 
 
-                        <div class="edits_footer" id="editsdisplay">
-                            <button type="submit" class="primary_button_color">
-                                <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                    <div class="form_group col-12  col-sm-12">
+                        <label>No. of Stamping Press</label>
+                        <input type="text" name="PressStamp" onkeypress="return restrictChars(event)" />
+                    </div>
+
+
+                    <div class="flex_space" id="editsdisplay">
+                        <button type="submit" class="primary_button_color">
+                            <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
+                        </button>
+                    </div>
+                </form>
 
 
             </div>

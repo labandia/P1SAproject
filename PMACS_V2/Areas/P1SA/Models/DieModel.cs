@@ -428,6 +428,8 @@ namespace PMACS_V2.Areas.P1SA.Models
         public string ToolNo { get; set; }
         public string Type { get; set; }
         public int Line { get; set; }
+        public int Up { get; set; }
+        public int low { get; set; }
         public double MinUpper { get; set; }
         public double MinLower { get; set; }
         public int TotalPressStamp { get; set; }

@@ -233,7 +233,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
         public Task<List<PressMainMonitor>> GetPressMainMonitoring()
         {
             string strquery = $@"SELECT m.MonitorID, m.ToolNo, r.Type, m.Line, 
-                                  m.MinUpper, m.MinLower, m.TotalPressStamp, 
+                                  m.MinUpper, m.MinLower, m.TotalPressStamp, m.Up, m.low,
                                   CASE 
                                         WHEN r.Operational = 0 THEN 'End of Life'
                                         WHEN r.Operational = 1 THEN 'Monitoring'

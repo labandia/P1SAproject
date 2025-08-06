@@ -33,7 +33,14 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             int monitorCount = 0;
             int endLifeCount = 0;
 
-            foreach (var list in data)
+            var groupNo = data.GroupBy(x => x.No)
+                .Select(x => new {
+                    Remarks = x.First().Remarks
+                });
+
+
+
+            foreach (var list in groupNo)
             {
                 if (list.Remarks == "For Monitoring")
                     monitorCount++;
@@ -41,7 +48,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
                     endLifeCount++;
             }
 
-            int maxDieLife = maxNo - (monitorCount + endLifeCount);
+            int maxDieLife = Math.Abs(maxNo - (monitorCount + endLifeCount));
 
             var summaryList = new List<FinalMoldDieSummary>
             {

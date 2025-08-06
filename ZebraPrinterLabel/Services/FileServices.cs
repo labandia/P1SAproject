@@ -62,42 +62,48 @@ namespace ZebraPrinterLabel.Services
             }
         }
 
-        public static void ResetCountPrinter()
+        public static async Task ResetCountPrinterAsync()
         {
             DateTime now = DateTime.Now;
             string today = now.ToString("yyyy-MM-dd");
 
-            // Only run if time is exactly 2:30 AM
-            if (now.Hour == 2 && now.Minute  == 30)
+            if (now.Hour == 2 && now.Minute == 30)
             {
                 if (File.Exists(filepath))
                 {
                     try
                     {
-                        string json = File.ReadAllText(filepath);  
+                        string json;
+                        using (var reader = new StreamReader(filepath))
+                        {
+                            json = await reader.ReadToEndAsync();
+                        }
+
                         CountToday obj = JsonSerializer.Deserialize<CountToday>(json);
 
-                        if (obj != null)
+                        if (obj != null && obj.DateStart != today)
                         {
-                            // Only Reset if the date is Different
-                            if (obj.DateStart != today)
-                            {
-                                obj.DateStart = today;
-                                obj.Count = 0;
+                            obj.DateStart = today;
+                            obj.Count = 0;
 
-                                string updatedJson = JsonSerializer.Serialize(obj, new JsonSerializerOptions { WriteIndented = true });
-                                File.WriteAllText(filepath, updatedJson);
-                                // Optional: log or notify
-                                Debug.WriteLine("Count reset at 2:30 AM.");
+                            string updatedJson = JsonSerializer.Serialize(obj, new JsonSerializerOptions { WriteIndented = true });
+
+                            using (var writer = new StreamWriter(filepath, false))
+                            {
+                                await writer.WriteAsync(updatedJson);
                             }
+
+                            Debug.WriteLine("Count reset at 2:30 AM.");
                         }
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine("Error " + ex.Message);
+                        Debug.WriteLine("Error: " + ex.Message);
                     }
                 }
             }
         }
+
+
     }
 }

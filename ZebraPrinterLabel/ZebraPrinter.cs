@@ -44,15 +44,7 @@ namespace ZebraPrinterLabel
             InitializeComponent();
             _master=master;
 
-            //Timer time = new Timer();
-            //time.Interval = 60000;
-            //time.Tick += (s, e) => FileServices.ResetCountPrinter();
-            //time.Start();
-
-            Timer time = new Timer();
-            time.Interval = 3000;
-            time.Tick += timer1_Tick;
-            time.Start();
+        
         }
 
 
@@ -99,59 +91,23 @@ namespace ZebraPrinterLabel
         private  void Printbtn_Click(object sender, EventArgs e)
         {
 
-            //List<(string partNum, string barcodeText, string qty)> labelDataList = new List<(string, string, string)>();
+      
+            List<(string SDP, string Warehouse, string Quantity)> labelData = new List<(string SDP, string Warehouse, string Quantity)>();
 
             foreach (var item in _labelPrint)
             {
                 //Debug.WriteLine($@"SDP : {item.SDP} - Warehouse : {item.Warehouse} - Quantity : {item.Quantity}");
-                //labelDataList.Add((item.SDP, item.Warehouse, item.Quantity));
-                string zplCode = GenerateZplLabel(
-                    item.SDP,
-                    item.Warehouse,
-                    item.Quantity
-                );
-
-                bool printed = ZebraProcess.SendZplToPrinter("Zebra ZD421", zplCode);
-                MessageBox.Show(printed ? "Printed successfully!" : "Print failed.");
-
-                //string zplCode = GenerateZplLabel(item.SDP, item.Warehouse, item.Quantity);
-
-                //// Convert ZPL to Image
-                //Image labelImage = await GetLabelPreviewAsync(zplCode); // Implement this or use API
-
-                //// Create PictureBox
-                //PictureBox pic = new PictureBox();
-                //pic.Image = labelImage;
-                //pic.SizeMode = PictureBoxSizeMode.AutoSize;
-                //pic.Margin = new Padding(5);
-
-                //// Add to panel
-                //flowLayoutPanelPreview.Controls.Add(pic);
+                labelData.Add((item.SDP, item.Warehouse, item.Quantity));
+  
             }
 
-            // Draw all in one preview
-            //DrawLabelPreview(labelDataList);
+            string zplCode = ZebraProcess.GenerateMultiLabelZpl(labelData);
 
-
-
-
-
-            //LoadSampleLabels(); // Fill _labelsToPrint
-            //_currentLabelIndex = 0;
-
-            //PrintDocument printDoc = new PrintDocument();
-            //printDoc.DefaultPageSettings.PaperSize = new PaperSize("Custom", 850, 1200); // Approx. A4
-            //printDoc.PrintPage += PrintDoc_PrintPage;
-
-            //PrintPreviewDialog previewDialog = new PrintPreviewDialog
-            //{
-            //    Document = printDoc,
-            //    Width = 1000,
-            //    Height = 800
-            //};
-            //previewDialog.ShowDialog();
-
-            //FileServices.UpdateCountToday(UpdateTotal);
+            bool printed = ZebraProcess.SendZplToPrinter("ZDesigner ZD421-203dpi ZPL", zplCode);
+            MessageBox.Show(printed ? "Printed successfully!" : "Print failed.");
+        
+            int UpdateTotal = Todayprint + Convert.ToInt32(PrintCount.Value);
+            FileServices.UpdateCountToday(UpdateTotal);
 
         }
 
@@ -238,6 +194,13 @@ namespace ZebraPrinterLabel
 
             timer1.Start();
 
+            timer2 = new Timer();
+            timer2.Interval = 3000;
+            timer2.Tick += timer2_Tick;
+            timer2.Start();
+
+
+
             Todayprint = (ct != null) ? ct.Count : 0;
 
         }
@@ -253,7 +216,7 @@ namespace ZebraPrinterLabel
                 g.Clear(Color.White);
 
                 Font fontBold = new Font("Arial", 10, FontStyle.Bold);
-                Font fontRegular = new Font("Arial", 9);
+                Font fontRegular = new Font("Arial", 6);
 
                 for (int i = 0; i < labelDataList.Count; i++)
                 {
@@ -269,11 +232,11 @@ namespace ZebraPrinterLabel
                     // Barcode for SDP
                     var SDPBarcodeWriter = new BarcodeWriter
                     {
-                        Format = BarcodeFormat.CODE_128,
+                        Format = BarcodeFormat.CODE_93,
                         Options = new EncodingOptions
                         {
-                            Height = 30,
-                            Width = 200,
+                            Height = 15,
+                            Width = 50,
                             Margin = 0,
                             PureBarcode = true
                         }
@@ -283,16 +246,16 @@ namespace ZebraPrinterLabel
 
 
 
-                    g.DrawString("SMT WH : *" + barcodeText + "*", fontRegular, Brushes.Black, new PointF(10, offsetY + 75));
+                    g.DrawString("SMT WH : " + barcodeText + "", fontRegular, Brushes.Black, new PointF(10, offsetY + 75));
 
                     //Barcode Warehouse
                     var WarehousebarcodeWriter = new BarcodeWriter
                     {
-                        Format = BarcodeFormat.CODE_128,
+                        Format = BarcodeFormat.CODE_93,
                         Options = new EncodingOptions
                         {
-                            Height = 30,
-                            Width = 200,
+                            Height = 15,
+                            Width = 50,
                             Margin = 0,
                             PureBarcode = true
                         }
@@ -306,8 +269,8 @@ namespace ZebraPrinterLabel
                         Format = BarcodeFormat.QR_CODE,
                         Options = new EncodingOptions
                         {
-                            Height = 70,
-                            Width = 70,
+                            Height = 80,
+                            Width = 80,
                             Margin = 0
                         }
                     };
@@ -426,7 +389,22 @@ namespace ZebraPrinterLabel
             // Checkss if the Data is Exist
             if (data == null || !data.Any())
             {
-                MessageBox.Show("No Ambassador Partnumber found", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                DialogResult result = MessageBox.Show(
+                    "Do you want to add this Partnumber to the Database? ",
+                    "No partnum found",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Warning
+                );
+
+                if (result == DialogResult.Yes)
+                {
+                     MessageBox.Show("OPEN DIALOG");
+                }
+                else if (result == DialogResult.No)
+                {
+                    MessageBox.Show("CLOSE THE ad");
+                }
+                
                 return;
             }
 
@@ -504,9 +482,7 @@ namespace ZebraPrinterLabel
 
         private void Cancelbtn_Click(object sender, EventArgs e)
         {
-            Preview.Visible = true;
-            Cancelbtn.Visible = false;
-            Printbtn.Visible = false;
+            ResetForms();
         }
 
 
@@ -522,10 +498,23 @@ namespace ZebraPrinterLabel
 
             return !(IsEmpPartnum || IsQuanValue);
         }
+        //===================== RESETS FORMS ==============================
+        public void ResetForms()
+        {
+            Ambassador.Text = string.Empty;
+            WarehouseText.Text = "N/A";
+            QuantityText.Text = "N/A";
+            FinalRealIDText.Text = "N/A";
+            PrintCount.Value = 0;
+            dateTimePicker1.Value = DateTime.Now;
+
+            Preview.Visible = true;
+            Cancelbtn.Visible = false;
+            Printbtn.Visible = false;
+        }
 
         private async  void timer1_Tick(object sender, EventArgs e)
         {
-            Debug.WriteLine("ADASDAS" + await ZebraProcess.IsZebraPrinterConnectedAndOnline());
             if (await ZebraProcess.IsZebraPrinterConnectedAndOnline())
             {
                 printerStats.Text = "Zebra printer is Connected";
@@ -536,6 +525,11 @@ namespace ZebraPrinterLabel
                 printerStats.Text = "Zebra printer is not Connected";
                 printerStats.ForeColor = Color.FromArgb(219, 36, 36);
             }
+        }
+
+        private async void timer2_Tick(object sender, EventArgs e)
+        {
+            await FileServices.ResetCountPrinterAsync();
         }
 
         private void Exitbtn_Click(object sender, EventArgs e)
@@ -552,5 +546,7 @@ namespace ZebraPrinterLabel
         {
             FinalRealIDText.Text = CreationReelID(Ambassador.Text.Trim(), Todayprint);
         }
+
+        
     }
 }

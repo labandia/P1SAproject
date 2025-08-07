@@ -56,6 +56,7 @@
             this.flowLayoutPanelPreview = new System.Windows.Forms.Panel();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.button1 = new System.Windows.Forms.Button();
+            this.Historybtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.PrintCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.panelPreview)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -137,11 +138,11 @@
             // 
             // panelPreview
             // 
-            this.panelPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.panelPreview.BackColor = System.Drawing.Color.Silver;
+            this.panelPreview.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelPreview.Location = new System.Drawing.Point(0, 0);
             this.panelPreview.Name = "panelPreview";
-            this.panelPreview.Size = new System.Drawing.Size(439, 599);
+            this.panelPreview.Size = new System.Drawing.Size(439, 564);
             this.panelPreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.panelPreview.TabIndex = 7;
             this.panelPreview.TabStop = false;
@@ -194,7 +195,7 @@
             this.Preview.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Preview.Image = ((System.Drawing.Image)(resources.GetObject("Preview.Image")));
             this.Preview.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Preview.Location = new System.Drawing.Point(54, 588);
+            this.Preview.Location = new System.Drawing.Point(49, 629);
             this.Preview.Name = "Preview";
             this.Preview.Padding = new System.Windows.Forms.Padding(120, 0, 130, 0);
             this.Preview.Size = new System.Drawing.Size(362, 50);
@@ -314,7 +315,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(44, 538);
+            this.label7.Location = new System.Drawing.Point(44, 535);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(61, 20);
             this.label7.TabIndex = 24;
@@ -324,7 +325,7 @@
             // 
             this.FinalRealIDText.AutoSize = true;
             this.FinalRealIDText.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FinalRealIDText.Location = new System.Drawing.Point(44, 564);
+            this.FinalRealIDText.Location = new System.Drawing.Point(44, 561);
             this.FinalRealIDText.Name = "FinalRealIDText";
             this.FinalRealIDText.Size = new System.Drawing.Size(42, 21);
             this.FinalRealIDText.TabIndex = 23;
@@ -335,9 +336,9 @@
             this.flowLayoutPanelPreview.AutoScroll = true;
             this.flowLayoutPanelPreview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.flowLayoutPanelPreview.Controls.Add(this.panelPreview);
-            this.flowLayoutPanelPreview.Location = new System.Drawing.Point(514, 101);
+            this.flowLayoutPanelPreview.Location = new System.Drawing.Point(514, 136);
             this.flowLayoutPanelPreview.Name = "flowLayoutPanelPreview";
-            this.flowLayoutPanelPreview.Size = new System.Drawing.Size(441, 601);
+            this.flowLayoutPanelPreview.Size = new System.Drawing.Size(441, 566);
             this.flowLayoutPanelPreview.TabIndex = 25;
             // 
             // timer2
@@ -359,12 +360,28 @@
             this.button1.TabIndex = 26;
             this.button1.UseVisualStyleBackColor = false;
             // 
+            // Historybtn
+            // 
+            this.Historybtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.Historybtn.BackColor = System.Drawing.Color.Transparent;
+            this.Historybtn.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.Historybtn.FlatAppearance.BorderSize = 0;
+            this.Historybtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Historybtn.Image = ((System.Drawing.Image)(resources.GetObject("Historybtn.Image")));
+            this.Historybtn.Location = new System.Drawing.Point(899, 81);
+            this.Historybtn.Name = "Historybtn";
+            this.Historybtn.Size = new System.Drawing.Size(55, 46);
+            this.Historybtn.TabIndex = 27;
+            this.Historybtn.UseVisualStyleBackColor = false;
+            this.Historybtn.Click += new System.EventHandler(this.Historybtn_Click);
+            // 
             // ZebraPrinter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1018, 728);
+            this.Controls.Add(this.Historybtn);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.flowLayoutPanelPreview);
             this.Controls.Add(this.label7);
@@ -431,5 +448,6 @@
         private System.Windows.Forms.Panel flowLayoutPanelPreview;
         private System.Windows.Forms.Timer timer2;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button Historybtn;
     }
 }

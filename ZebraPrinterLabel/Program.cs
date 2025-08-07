@@ -19,6 +19,8 @@ namespace ZebraPrinterLabel
             services.AddSingleton<IMasterlist, MasterlistRepository>();
 
             services.AddSingleton<ZebraPrinter>();
+            services.AddSingleton<AddMasterlist>();
+            services.AddSingleton<Printer_History>();
 
             ServiceProvider = services.BuildServiceProvider();
             var mainForm = ServiceProvider.GetRequiredService<ZebraPrinter>();

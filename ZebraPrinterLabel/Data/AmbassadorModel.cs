@@ -29,4 +29,22 @@ namespace ZebraPrinterLabel
         public string Warehouse { get; set; }
         public string Quantity { get; set; }
     }
+
+    public class MasterlistData
+    {
+        public string Partnum { get; set; }
+        public string WarehouseLocal { get; set; }
+        public int Qty { get; set; }
+    }
+
+
+
+    public class ReelIDHistory
+    {
+        public string DateInput { get; set; }
+        public string ReelID { get; set; }
+        public string Partnum { get; set; }
+        public string WarehouseLocal { get; set; }
+        public int Qty { get; set; }
+    }
 }

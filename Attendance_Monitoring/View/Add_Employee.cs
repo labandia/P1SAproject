@@ -93,7 +93,7 @@ namespace Attendance_Monitoring.View
                     if (await _admin.AddEmployee(emp))
                     {
                         Clear();
-                        _emp.Displayemployee(selectsection.SelectedIndex);
+                        await _emp.Displayemployee(selectsection.SelectedIndex);
                         MessageBox.Show("Add employee Successfully");
                         Visible = false;
                     }

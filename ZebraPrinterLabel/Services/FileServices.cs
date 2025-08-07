@@ -52,7 +52,6 @@ namespace ZebraPrinterLabel.Services
                         obj.Count = newCount;
                         string updateJson = JsonSerializer.Serialize(obj, new JsonSerializerOptions { WriteIndented = true });
                         File.WriteAllText(filepath, updateJson);
-                        MessageBox.Show("Count updated successfully.");
                     }
                 }
                 catch (Exception ex)

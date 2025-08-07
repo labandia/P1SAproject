@@ -86,6 +86,7 @@
             this.Quantity.Name = "Quantity";
             this.Quantity.Size = new System.Drawing.Size(370, 37);
             this.Quantity.TabIndex = 39;
+            this.Quantity.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Quantity_KeyPress);
             // 
             // label3
             // 
@@ -193,6 +194,7 @@
             this.Controls.Add(this.Cancebtn);
             this.Controls.Add(this.Savebtn);
             this.Name = "AddMasterlist";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "AddMasterlist";
             this.Load += new System.EventHandler(this.AddMasterlist_Load);
             this.ResumeLayout(false);

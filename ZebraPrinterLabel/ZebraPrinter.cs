@@ -28,6 +28,13 @@ namespace ZebraPrinterLabel
 
         public int Todayprint;
 
+        public string AmbassadorText
+        {
+            get => Ambassador.Text;
+            set => Ambassador.Text = value;
+        }
+
+
         private void LoadSampleLabels()
         {
             _labelsToPrint = new List<LabelData>
@@ -88,7 +95,7 @@ namespace ZebraPrinterLabel
             ^XZ";
         }
         private int _currentLabelIndex = 0;
-        private  void Printbtn_Click(object sender, EventArgs e)
+        private  async void Printbtn_Click(object sender, EventArgs e)
         {
 
       
@@ -96,7 +103,6 @@ namespace ZebraPrinterLabel
 
             foreach (var item in _labelPrint)
             {
-                //Debug.WriteLine($@"SDP : {item.SDP} - Warehouse : {item.Warehouse} - Quantity : {item.Quantity}");
                 labelData.Add((item.SDP, item.Warehouse, item.Quantity));
   
             }
@@ -104,10 +110,24 @@ namespace ZebraPrinterLabel
             string zplCode = ZebraProcess.GenerateMultiLabelZpl(labelData);
 
             bool printed = ZebraProcess.SendZplToPrinter("ZDesigner ZD421-203dpi ZPL", zplCode);
-            MessageBox.Show(printed ? "Printed successfully!" : "Print failed.");
-        
-            int UpdateTotal = Todayprint + Convert.ToInt32(PrintCount.Value);
-            FileServices.UpdateCountToday(UpdateTotal);
+
+            if (printed)
+            {
+                int UpdateTotal = Todayprint + Convert.ToInt32(PrintCount.Value);
+             
+                foreach (var item in _labelPrint)
+                {
+                    await _master.AddnewHistorylist(Ambassador.Text.Trim(), item.SDP);
+                }
+                FileServices.UpdateCountToday(UpdateTotal);
+                MessageBox.Show("Print successfully!");
+                ResetForms();
+                
+            }
+            else
+            {
+                MessageBox.Show("Print failed.");
+            }  
 
         }
 
@@ -216,7 +236,7 @@ namespace ZebraPrinterLabel
                 g.Clear(Color.White);
 
                 Font fontBold = new Font("Arial", 10, FontStyle.Bold);
-                Font fontRegular = new Font("Arial", 6);
+                Font fontRegular = new Font("Arial", 9);
 
                 for (int i = 0; i < labelDataList.Count; i++)
                 {
@@ -232,11 +252,11 @@ namespace ZebraPrinterLabel
                     // Barcode for SDP
                     var SDPBarcodeWriter = new BarcodeWriter
                     {
-                        Format = BarcodeFormat.CODE_93,
+                        Format = BarcodeFormat.CODE_128,
                         Options = new EncodingOptions
                         {
-                            Height = 15,
-                            Width = 50,
+                            Height = 30,
+                            Width = 200,
                             Margin = 0,
                             PureBarcode = true
                         }
@@ -251,11 +271,11 @@ namespace ZebraPrinterLabel
                     //Barcode Warehouse
                     var WarehousebarcodeWriter = new BarcodeWriter
                     {
-                        Format = BarcodeFormat.CODE_93,
+                        Format = BarcodeFormat.CODE_128,
                         Options = new EncodingOptions
                         {
-                            Height = 15,
-                            Width = 50,
+                            Height = 30,
+                            Width = 200,
                             Margin = 0,
                             PureBarcode = true
                         }
@@ -269,8 +289,8 @@ namespace ZebraPrinterLabel
                         Format = BarcodeFormat.QR_CODE,
                         Options = new EncodingOptions
                         {
-                            Height = 80,
-                            Width = 80,
+                            Height = 70,
+                            Width = 70,
                             Margin = 0
                         }
                     };
@@ -380,6 +400,7 @@ namespace ZebraPrinterLabel
             if (e.KeyCode != Keys.Enter) return;
             
             string partnum = Ambassador.Text.Trim();
+            Ambassador.Text = partnum;
 
             //Checks if the input is Empty
             if (String.IsNullOrEmpty(partnum)) return;
@@ -392,13 +413,14 @@ namespace ZebraPrinterLabel
                 DialogResult result = MessageBox.Show(
                     "Do you want to add this Partnumber to the Database? ",
                     "No partnum found",
-                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxButtons.YesNo,
                     MessageBoxIcon.Warning
                 );
 
                 if (result == DialogResult.Yes)
                 {
-                     MessageBox.Show("OPEN DIALOG");
+                    AddMasterlist mas = new AddMasterlist(this, Ambassador.Text, _master);
+                    mas.Show();
                 }
                 else if (result == DialogResult.No)
                 {
@@ -508,6 +530,12 @@ namespace ZebraPrinterLabel
             PrintCount.Value = 0;
             dateTimePicker1.Value = DateTime.Now;
 
+            if (panelPreview.Image != null)
+            {
+                panelPreview.Image.Dispose();
+                panelPreview.Image = null;
+            }
+
             Preview.Visible = true;
             Cancelbtn.Visible = false;
             Printbtn.Visible = false;
@@ -547,6 +575,18 @@ namespace ZebraPrinterLabel
             FinalRealIDText.Text = CreationReelID(Ambassador.Text.Trim(), Todayprint);
         }
 
-        
+        public void SetDataBack(string partnum, string warehouse, string Qty)
+        {
+            Ambassador.Text = "";
+            Ambassador.Text = partnum;
+            WarehouseText.Text = warehouse;
+            QuantityText.Text = Qty;
+        }
+
+        private void Historybtn_Click(object sender, EventArgs e)
+        {
+            Printer_History h = new Printer_History(_master);
+            h.Show();
+        }
     }
 }

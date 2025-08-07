@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddMasterlist));
-            this.Name_error = new System.Windows.Forms.Label();
-            this.Emp_error = new System.Windows.Forms.Label();
+            this.Ware_error = new System.Windows.Forms.Label();
+            this.Partnum_error = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.Quantity = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -40,31 +40,32 @@
             this.label1 = new System.Windows.Forms.Label();
             this.Cancebtn = new System.Windows.Forms.Button();
             this.Savebtn = new System.Windows.Forms.Button();
+            this.QuanError = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // Name_error
+            // Ware_error
             // 
-            this.Name_error.AutoSize = true;
-            this.Name_error.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold);
-            this.Name_error.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.Name_error.Location = new System.Drawing.Point(240, 214);
-            this.Name_error.Name = "Name_error";
-            this.Name_error.Size = new System.Drawing.Size(177, 16);
-            this.Name_error.TabIndex = 46;
-            this.Name_error.Text = "Employee Name is required *";
-            this.Name_error.Visible = false;
+            this.Ware_error.AutoSize = true;
+            this.Ware_error.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold);
+            this.Ware_error.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.Ware_error.Location = new System.Drawing.Point(219, 214);
+            this.Ware_error.Name = "Ware_error";
+            this.Ware_error.Size = new System.Drawing.Size(198, 16);
+            this.Ware_error.TabIndex = 46;
+            this.Ware_error.Text = "Warehouse Location is required *";
+            this.Ware_error.Visible = false;
             // 
-            // Emp_error
+            // Partnum_error
             // 
-            this.Emp_error.AutoSize = true;
-            this.Emp_error.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold);
-            this.Emp_error.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.Emp_error.Location = new System.Drawing.Point(278, 126);
-            this.Emp_error.Name = "Emp_error";
-            this.Emp_error.Size = new System.Drawing.Size(139, 16);
-            this.Emp_error.TabIndex = 45;
-            this.Emp_error.Text = "ID number is required *";
-            this.Emp_error.Visible = false;
+            this.Partnum_error.AutoSize = true;
+            this.Partnum_error.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold);
+            this.Partnum_error.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.Partnum_error.Location = new System.Drawing.Point(278, 126);
+            this.Partnum_error.Name = "Partnum_error";
+            this.Partnum_error.Size = new System.Drawing.Size(149, 16);
+            this.Partnum_error.TabIndex = 45;
+            this.Partnum_error.Text = "Partnumber  is required *";
+            this.Partnum_error.Visible = false;
             // 
             // label6
             // 
@@ -176,14 +177,27 @@
             this.Savebtn.UseVisualStyleBackColor = false;
             this.Savebtn.Click += new System.EventHandler(this.Savebtn_Click);
             // 
+            // QuanError
+            // 
+            this.QuanError.AutoSize = true;
+            this.QuanError.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold);
+            this.QuanError.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.QuanError.Location = new System.Drawing.Point(290, 299);
+            this.QuanError.Name = "QuanError";
+            this.QuanError.Size = new System.Drawing.Size(127, 16);
+            this.QuanError.TabIndex = 47;
+            this.QuanError.Text = "Quantity is required *";
+            this.QuanError.Visible = false;
+            // 
             // AddMasterlist
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(484, 525);
             this.ControlBox = false;
-            this.Controls.Add(this.Name_error);
-            this.Controls.Add(this.Emp_error);
+            this.Controls.Add(this.QuanError);
+            this.Controls.Add(this.Ware_error);
+            this.Controls.Add(this.Partnum_error);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.Quantity);
             this.Controls.Add(this.label3);
@@ -203,8 +217,8 @@
         }
 
         #endregion
-        private System.Windows.Forms.Label Name_error;
-        private System.Windows.Forms.Label Emp_error;
+        private System.Windows.Forms.Label Ware_error;
+        private System.Windows.Forms.Label Partnum_error;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox Quantity;
         private System.Windows.Forms.Label label3;
@@ -214,5 +228,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button Cancebtn;
         private System.Windows.Forms.Button Savebtn;
+        private System.Windows.Forms.Label QuanError;
     }
 }

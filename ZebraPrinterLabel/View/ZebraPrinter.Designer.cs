@@ -81,6 +81,7 @@
             this.Ambassador.Size = new System.Drawing.Size(373, 41);
             this.Ambassador.TabIndex = 0;
             this.Ambassador.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SearchAmbassador);
+            this.Ambassador.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Ambassador_KeyPress);
             // 
             // WarehouseText
             // 
@@ -202,7 +203,7 @@
             this.Preview.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Preview.Image = ((System.Drawing.Image)(resources.GetObject("Preview.Image")));
             this.Preview.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Preview.Location = new System.Drawing.Point(45, 679);
+            this.Preview.Location = new System.Drawing.Point(46, 679);
             this.Preview.Name = "Preview";
             this.Preview.Padding = new System.Windows.Forms.Padding(120, 0, 130, 0);
             this.Preview.Size = new System.Drawing.Size(371, 50);

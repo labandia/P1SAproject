@@ -38,5 +38,12 @@ namespace ZebraPrinterLabel
                                   VALUES(@Partnum, @WarehouseLocal, @Qty)";
             return SqlDataAccess.UpdateInsertQuery(insertsql, final);
         }
+
+        public Task<bool> EditMasterlist(int qty, string partnum)
+        {
+            string insertsql = $@"UPDATE PartList_PrintLabelData SET Qty =@Qty
+                                  WHERE Partnum =@Partnum";
+            return SqlDataAccess.UpdateInsertQuery(insertsql, new { Qty = qty, Partnum  = partnum });
+        }
     }
 }

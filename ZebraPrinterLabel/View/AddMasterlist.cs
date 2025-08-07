@@ -22,7 +22,7 @@ namespace ZebraPrinterLabel
             InitializeComponent();
             _master = master;
             _print=print;
-            partnumText = partnum; 
+            partnumText = partnum;
         }
 
         private void AddMasterlist_Load(object sender, EventArgs e)
@@ -32,11 +32,13 @@ namespace ZebraPrinterLabel
 
         private async void Savebtn_Click(object sender, EventArgs e)
         {
+            if (!FormValidation()) return;
+
             var obj = new MasterlistData
             {
-                Partnum = Partnum.Text.Trim(),
-                WarehouseLocal = Warehouse.Text,
-                Qty = Convert.ToInt32(Quantity.Text)
+                Partnum = string.IsNullOrWhiteSpace(Partnum.Text) ? string.Empty : Partnum.Text.Trim(),
+                WarehouseLocal = string.IsNullOrWhiteSpace(Warehouse.Text) ? string.Empty : Warehouse.Text.Trim(),
+                Qty = string.IsNullOrWhiteSpace(Quantity.Text) ? 0 : Convert.ToInt32(Quantity.Text)
             };
 
             bool result = await _master.AddnewMasterlist(obj);
@@ -47,8 +49,24 @@ namespace ZebraPrinterLabel
                 _print.SetDataBack(Partnum.Text, Warehouse.Text, Quantity.Text);
                 this.Close();
             }
-
         }
+
+
+        //===================== FOR FORM VALIDATION ======================
+        public bool FormValidation()
+        {
+            bool IsPartnum = string.IsNullOrWhiteSpace(Partnum.Text);
+            bool IsQuanValue = !int.TryParse(Quantity.Text, out int qty) || qty == 0;
+            bool IsWarehouseValue = string.IsNullOrWhiteSpace(Warehouse.Text);
+
+            Partnum_error.Visible = IsPartnum;
+            Ware_error.Visible = IsWarehouseValue;
+            QuanError.Visible = IsQuanValue;
+
+            return !(IsPartnum || IsQuanValue || IsWarehouseValue);
+        }
+
+
 
         private void Cancebtn_Click(object sender, EventArgs e)
         {

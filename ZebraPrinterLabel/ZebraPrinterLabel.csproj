@@ -28,7 +28,7 @@
     <MinimumRequiredVersion>1.0.0.10</MinimumRequiredVersion>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>11</ApplicationRevision>
+    <ApplicationRevision>17</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -164,6 +164,12 @@
     </Compile>
     <Compile Include="Data\AmbassadorModel.cs" />
     <Compile Include="Data\SqlDataAccess.cs" />
+    <Compile Include="View\EditMasterlist.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\EditMasterlist.Designer.cs">
+      <DependentUpon>EditMasterlist.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\Printer_History.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -186,6 +192,9 @@
     <Compile Include="Services\ZebraProcess.cs" />
     <EmbeddedResource Include="View\AddMasterlist.resx">
       <DependentUpon>AddMasterlist.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\EditMasterlist.resx">
+      <DependentUpon>EditMasterlist.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\Printer_History.resx">
       <DependentUpon>Printer_History.cs</DependentUpon>

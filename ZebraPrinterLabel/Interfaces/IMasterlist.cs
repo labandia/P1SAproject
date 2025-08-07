@@ -13,6 +13,7 @@ namespace ZebraPrinterLabel
 
 
         Task<bool> AddnewMasterlist(MasterlistData final);
+        Task<bool> EditMasterlist(int qty, string partnum);
         Task<bool> AddnewHistorylist(string partnum, string ReelID);
     }
 }

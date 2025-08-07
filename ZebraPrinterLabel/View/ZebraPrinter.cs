@@ -13,6 +13,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ZebraPrinterLabel.Services;
+using ZebraPrinterLabel.View;
 using ZXing;
 using ZXing.Common;
 
@@ -212,7 +213,7 @@ namespace ZebraPrinterLabel
             // =============== FOR THE DATE DISPLAY FORMATED  =====================
             string formattedDate = $"{selectedDate.Year % 10}{selectedDate.Month:D2}{selectedDate.Day:D2}";
 
-            string sdpPrefix = $"*SDP{Ambassador.Text.Trim()} {formattedDate}";
+            string sdpPrefix = $"SDP{Ambassador.Text.Trim()} {formattedDate}";
             string warehouse = WarehouseText.Text;
             string quantity = QuantityText.Text;
             // ====================================================================
@@ -222,7 +223,7 @@ namespace ZebraPrinterLabel
             {
                 Todayprint++;
                 string reelId = LabelGenerator.GetReeIDnumber(Todayprint.ToString());
-                string fullSDP = $"{sdpPrefix}{reelId}*";
+                string fullSDP = $"{sdpPrefix}{reelId}";
 
                 var labelData = new FinalLabelData
                 {
@@ -279,9 +280,8 @@ namespace ZebraPrinterLabel
             var prod = data.First();
             Warehouse = prod.WarehouseLocal;
             LocationQty = prod.Qty;
-
             WarehouseText.Text = Warehouse;
-            QuantityText.Text = LocationQty.ToString();
+            QuantityText.Text = LocationQty.ToString(); 
 
             FinalRealIDText.Text = LabelGenerator.GenerateReelID(
                dateTimePicker1.Value,
@@ -290,6 +290,12 @@ namespace ZebraPrinterLabel
                Convert.ToInt32(PrintCount.Value)
            );
             Ambassador.Text = partnum;
+
+            if (prod.Qty == 0)
+            {
+                EditMasterlist ed = new EditMasterlist(this, _master, partnum);  
+                ed.Show();
+            }
         }
 
       
@@ -324,7 +330,7 @@ namespace ZebraPrinterLabel
                 panelPreview.Image.Dispose();
                 panelPreview.Image = null;
             }
-
+            _labelPrint.Clear();
             Preview.Visible = true;
             Cancelbtn.Visible = false;
             Printbtn.Visible = false;
@@ -378,10 +384,35 @@ namespace ZebraPrinterLabel
             QuantityText.Text = Qty;
         }
 
+        public void EditQuantityBack(string Qty)
+        {
+            QuantityText.Text = Qty;
+        }
+
         private void Historybtn_Click(object sender, EventArgs e)
         {
             Printer_History h = new Printer_History(_master);
             h.Show();
+        }
+
+        private void Ambassador_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Allow control characters like Backspace
+            if (char.IsControl(e.KeyChar))
+                return;
+
+            // Allow only letters, digits, and dash
+            if (!char.IsLetterOrDigit(e.KeyChar) && e.KeyChar != '-')
+            {
+                e.Handled = true; // Block invalid character
+                return;
+            }
+
+            // Enforce max length of 11
+            if (Ambassador.Text.Length >= 11)
+            {
+                e.Handled = true;
+            }
         }
     }
 }

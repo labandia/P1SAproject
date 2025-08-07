@@ -142,7 +142,7 @@ namespace ZebraPrinterLabel
 
                 // --- Header Text ---
                 zpl.AppendLine($"^CF0,15");
-                zpl.AppendLine($"^FO0,{20 + yOffset}^FD{item.SDP}^FS");
+                zpl.AppendLine($"^FO30,{20 + yOffset}^FD* {item.SDP} *^FS");
 
                 // --- QR Code ---
                 zpl.AppendLine($"^FO380,{0 + yOffset}");
@@ -150,24 +150,24 @@ namespace ZebraPrinterLabel
                 zpl.AppendLine($"^FDLA,{item.SDP}^FS");
 
                 // --- SDP Barcode ---
-                zpl.AppendLine($"^FO0,{40 + yOffset}");
+                zpl.AppendLine($"^FO30,{40 + yOffset}");
                 zpl.AppendLine("^BY1.2,2,10");
                 zpl.AppendLine("^BCN,50,N,N,N");
                 zpl.AppendLine($"^FD{item.SDP}^FS");
 
                 // --- Warehouse Text ---
                 zpl.AppendLine("^CF0,15");
-                zpl.AppendLine($"^FO0,{110 + yOffset}^FDSMT WH : {item.Warehouse}^FS");
+                zpl.AppendLine($"^FO30,{110 + yOffset}^FDSMT WH : {item.Warehouse}^FS");
 
                 // --- Warehouse Barcode ---
-                zpl.AppendLine($"^FO0,{130 + yOffset}");
+                zpl.AppendLine($"^FO30,{130 + yOffset}");
                 zpl.AppendLine("^BY1.2,2,10");
                 zpl.AppendLine("^B3N,N,50,N,N");
                 zpl.AppendLine($"^FD{item.Warehouse}^FS");
 
                 // --- Quantity Text ---
                 zpl.AppendLine("^CF0,15");
-                zpl.AppendLine($"^FO300,{110 + yOffset}^FDQty:0{item.Quantity}^FS");
+                zpl.AppendLine($"^FO300,{110 + yOffset}^FDQty:* 0{item.Quantity} *^FS");
 
                 // --- Quantity Barcode ---
                 zpl.AppendLine($"^FO300,{130 + yOffset}");

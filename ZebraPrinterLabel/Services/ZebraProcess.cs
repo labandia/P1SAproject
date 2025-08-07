@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using System.Drawing.Printing;
 using System.Management;
-using System.Net.Sockets;
-
 
 namespace ZebraPrinterLabel
 {
@@ -78,58 +74,7 @@ namespace ZebraPrinterLabel
             return success;
         }
 
-
-        //public static bool SendZplToPrinter(string printerName, string zpl)
-        //{
-        //    IntPtr hPrinter;
-        //    DOCINFOA di = new DOCINFOA
-        //    {
-        //        pDocName = "ZPL Label",
-        //        pDataType = "RAW"
-        //    };
-
-        //    if (OpenPrinter(printerName, out hPrinter, IntPtr.Zero))
-        //    {
-        //        if (StartDocPrinter(hPrinter, 1, ref di))
-        //        {
-        //            StartPagePrinter(hPrinter);
-
-        //            IntPtr pBytes = Marshal.StringToCoTaskMemAnsi(zpl);
-        //            WritePrinter(hPrinter, pBytes, zpl.Length, out _);
-        //            Marshal.FreeCoTaskMem(pBytes);
-
-        //            EndPagePrinter(hPrinter);
-        //            EndDocPrinter(hPrinter);
-        //        }
-        //        ClosePrinter(hPrinter);
-        //        return true;
-        //    }
-        //    return false;
-        //}
-
-        public static string GenerateZPLFromList(List<FinalLabelData> dataList)
-        {
-            StringBuilder zplBuilder = new StringBuilder();
-
-            // Start ZPL
-            zplBuilder.AppendLine("^XA");
-
-            foreach (var data in dataList)
-            {
-                zplBuilder.AppendLine("^FO20,20^A0N,40,40^FD" + data.SDP + "^FS");
-                zplBuilder.AppendLine("^FO20,80^A0N,30,30^FD" + data.Warehouse + "^FS");
-                zplBuilder.AppendLine("^FO20,120^A0N,30,30^FD" + data.Quantity + "^FS");
-                // Add more ^FO / ^FD fields based on your layout and `FinalLabelData` fields
-
-                zplBuilder.AppendLine("^XZ"); // Close current label
-                zplBuilder.AppendLine("^XA"); // Open a new label for next item
-            }
-
-            zplBuilder.AppendLine("^XZ"); // Final close
-            return zplBuilder.ToString();
-        }
-
-        // TESTING NOW
+        // FIRST CODE ZPL GENERATOR
         public static string GenerateMultiLabelZplV2(List<(string SDP, string Warehouse, string Quantity)> labels)
         {
             StringBuilder zpl = new StringBuilder();
@@ -182,7 +127,6 @@ namespace ZebraPrinterLabel
             zpl.AppendLine("^XZ"); // Final end
             return zpl.ToString();
         }
-
         public static string GenerateMultiLabelZpl(List<(string SDP, string Warehouse, string Quantity)> labels)
         {
             StringBuilder zpl = new StringBuilder();
@@ -245,74 +189,7 @@ namespace ZebraPrinterLabel
 
             return zpl.ToString();
         }
-
-
-
-
-        public static bool ZebraPrinterConnected()
-        {
-            foreach (string printer in PrinterSettings.InstalledPrinters)
-            {
-                if (printer.ToLower().Contains("zebra"))
-                {
-                    PrinterSettings settings = new PrinterSettings
-                    {
-                         PrinterName = printer,
-                    };
-
-                    if (settings.IsValid)
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false; // No Zebra printer found
-        }
-
-        public async static Task<bool> IsZebraPrinterConnectedViaUSB()
-        {
-            return await Task.Run(() =>
-            {
-                using (var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_Printer"))
-                {
-                    foreach (ManagementObject printer in searcher.Get())
-                    {
-                        string name = printer["Name"]?.ToString() ?? "";
-                        string port = printer["PortName"]?.ToString() ?? "";
-
-                        if (name.Equals("EPSON L3210 Series", StringComparison.OrdinalIgnoreCase) &&
-                            port.ToLower().Contains("usb"))
-                        {
-                            return true;
-                        }
-                    }
-                }
-                return false;
-            });
-        }
-        public static bool IsZebraPrinterOnline(string ipAddress, int port = 9100)
-        {
-            try
-            {
-                using (var client = new TcpClient())
-                {
-                    var result = client.BeginConnect(ipAddress, port, null, null);
-                    var success = result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(2));
-                    if (!success)
-                        return false;
-
-                    client.EndConnect(result);
-                    return true;
-                }
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-
+        // CHECKS IF THE ZEBRA PRINTER IS CONNECTED
         public async static Task<bool> IsZebraPrinterConnectedAndOnline()
         {
             return await Task.Run(() =>
@@ -337,6 +214,5 @@ namespace ZebraPrinterLabel
                 return false;
             });
         }
-
     }
 }

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ZXing.Common;
 using ZXing;
+using System.Windows.Forms;
 
 namespace ZebraPrinterLabel
 {
@@ -81,6 +82,58 @@ namespace ZebraPrinterLabel
             }
 
             return label;
+        }
+
+
+        public static string GenerateReelID(DateTime date, string partnum, int LatestCount, int inputcount)
+        {
+            string strcount;
+
+            // =============== FOR THE DATE DISPLAY FORMATED  =====================
+
+            // Get last digit of the year
+            int oneDigitYear = date.Year % 10;
+
+            // Remove leading zeros for month and day
+            string month = date.Month.ToString("D2");
+            string day = date.Day.ToString("D2");
+
+            // Combine to format
+            string formatted = $"{oneDigitYear}{month}{day}";
+            // ====================================================================
+            // ==================== PRINT COUNT VALUE   ===========================
+            if (inputcount != 0)
+            {
+                int UpdateTotal = LatestCount + inputcount;
+                string NewUpdateCount = GetReeIDnumber(UpdateTotal.ToString());
+                strcount = NewUpdateCount;
+                LatestCount = UpdateTotal;
+            }
+            else
+            {
+                string NewUpdateCount = GetReeIDnumber(LatestCount.ToString());
+                strcount = NewUpdateCount;
+            }
+            // ===================================================================
+
+            return $@"*SDP{partnum} {formatted}{strcount}*";
+        }
+
+
+        public static string GetReeIDnumber(string count)
+        {
+            int Rcount = Convert.ToInt32(count.Length);
+            switch (Rcount)
+            {
+                case 1:
+                    return "000" + count;
+                case 2:
+                    return "00" + count;
+                case 3:
+                    return "0" + count;
+                default:
+                    return count;
+            }
         }
     }
 }

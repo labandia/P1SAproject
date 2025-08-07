@@ -57,21 +57,28 @@
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.button1 = new System.Windows.Forms.Button();
             this.Historybtn = new System.Windows.Forms.Button();
+            this.label8 = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.panel4 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.PrintCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.panelPreview)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.flowLayoutPanelPreview.SuspendLayout();
+            this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.panel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // Ambassador
             // 
             this.Ambassador.BackColor = System.Drawing.Color.Gainsboro;
-            this.Ambassador.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Ambassador.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Ambassador.Location = new System.Drawing.Point(45, 136);
+            this.Ambassador.Location = new System.Drawing.Point(45, 143);
             this.Ambassador.Multiline = true;
             this.Ambassador.Name = "Ambassador";
-            this.Ambassador.Size = new System.Drawing.Size(371, 41);
+            this.Ambassador.Size = new System.Drawing.Size(373, 41);
             this.Ambassador.TabIndex = 0;
             this.Ambassador.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SearchAmbassador);
             // 
@@ -79,7 +86,7 @@
             // 
             this.WarehouseText.AutoSize = true;
             this.WarehouseText.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.WarehouseText.Location = new System.Drawing.Point(42, 234);
+            this.WarehouseText.Location = new System.Drawing.Point(13, 10);
             this.WarehouseText.Name = "WarehouseText";
             this.WarehouseText.Size = new System.Drawing.Size(42, 21);
             this.WarehouseText.TabIndex = 1;
@@ -89,7 +96,7 @@
             // 
             this.QuantityText.AutoSize = true;
             this.QuantityText.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.QuantityText.Location = new System.Drawing.Point(42, 305);
+            this.QuantityText.Location = new System.Drawing.Point(12, 10);
             this.QuantityText.Name = "QuantityText";
             this.QuantityText.Size = new System.Drawing.Size(42, 21);
             this.QuantityText.TabIndex = 2;
@@ -103,14 +110,14 @@
             this.Printbtn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(152)))), ((int)(((byte)(126)))));
             this.Printbtn.FlatAppearance.BorderSize = 0;
             this.Printbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Printbtn.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Printbtn.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Printbtn.ForeColor = System.Drawing.Color.White;
             this.Printbtn.Image = ((System.Drawing.Image)(resources.GetObject("Printbtn.Image")));
             this.Printbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Printbtn.Location = new System.Drawing.Point(249, 629);
+            this.Printbtn.Location = new System.Drawing.Point(247, 679);
             this.Printbtn.Name = "Printbtn";
-            this.Printbtn.Padding = new System.Windows.Forms.Padding(35, 0, 40, 0);
-            this.Printbtn.Size = new System.Drawing.Size(160, 50);
+            this.Printbtn.Padding = new System.Windows.Forms.Padding(50, 0, 45, 0);
+            this.Printbtn.Size = new System.Drawing.Size(167, 50);
             this.Printbtn.TabIndex = 3;
             this.Printbtn.Text = "Print";
             this.Printbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -121,16 +128,17 @@
             // PrintCount
             // 
             this.PrintCount.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PrintCount.Location = new System.Drawing.Point(48, 484);
+            this.PrintCount.Location = new System.Drawing.Point(48, 488);
             this.PrintCount.Name = "PrintCount";
             this.PrintCount.Size = new System.Drawing.Size(361, 27);
             this.PrintCount.TabIndex = 4;
             // 
             // dateTimePicker1
             // 
+            this.dateTimePicker1.CalendarMonthBackground = System.Drawing.Color.White;
             this.dateTimePicker1.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dateTimePicker1.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dateTimePicker1.Location = new System.Drawing.Point(48, 387);
+            this.dateTimePicker1.Location = new System.Drawing.Point(48, 408);
             this.dateTimePicker1.Name = "dateTimePicker1";
             this.dateTimePicker1.Size = new System.Drawing.Size(361, 26);
             this.dateTimePicker1.TabIndex = 6;
@@ -142,11 +150,10 @@
             this.panelPreview.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelPreview.Location = new System.Drawing.Point(0, 0);
             this.panelPreview.Name = "panelPreview";
-            this.panelPreview.Size = new System.Drawing.Size(439, 564);
+            this.panelPreview.Size = new System.Drawing.Size(439, 586);
             this.panelPreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.panelPreview.TabIndex = 7;
             this.panelPreview.TabStop = false;
-            this.panelPreview.Click += new System.EventHandler(this.panelPreview_Click);
             // 
             // label1
             // 
@@ -162,7 +169,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(42, 279);
+            this.label2.Location = new System.Drawing.Point(42, 295);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(76, 20);
             this.label2.TabIndex = 10;
@@ -172,7 +179,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(44, 447);
+            this.label3.Location = new System.Drawing.Point(44, 460);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(135, 20);
             this.label3.TabIndex = 11;
@@ -182,7 +189,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(44, 355);
+            this.label4.Location = new System.Drawing.Point(44, 383);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(74, 20);
             this.label4.TabIndex = 12;
@@ -195,10 +202,10 @@
             this.Preview.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Preview.Image = ((System.Drawing.Image)(resources.GetObject("Preview.Image")));
             this.Preview.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Preview.Location = new System.Drawing.Point(49, 629);
+            this.Preview.Location = new System.Drawing.Point(45, 679);
             this.Preview.Name = "Preview";
             this.Preview.Padding = new System.Windows.Forms.Padding(120, 0, 130, 0);
-            this.Preview.Size = new System.Drawing.Size(362, 50);
+            this.Preview.Size = new System.Drawing.Size(371, 50);
             this.Preview.TabIndex = 13;
             this.Preview.Text = "Print view";
             this.Preview.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -209,7 +216,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(41, 104);
+            this.label5.Location = new System.Drawing.Point(41, 117);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(112, 20);
             this.label5.TabIndex = 15;
@@ -234,11 +241,11 @@
             // 
             this.label6.AutoSize = true;
             this.label6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(23)))), ((int)(((byte)(30)))));
-            this.label6.Font = new System.Drawing.Font("Century Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.ForeColor = System.Drawing.Color.White;
-            this.label6.Location = new System.Drawing.Point(89, 26);
+            this.label6.Location = new System.Drawing.Point(84, 28);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(196, 23);
+            this.label6.Size = new System.Drawing.Size(163, 19);
             this.label6.TabIndex = 17;
             this.label6.Text = "Reel ID Printer  Label";
             // 
@@ -261,10 +268,10 @@
             this.Cancelbtn.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Cancelbtn.Image = ((System.Drawing.Image)(resources.GetObject("Cancelbtn.Image")));
             this.Cancelbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Cancelbtn.Location = new System.Drawing.Point(48, 629);
+            this.Cancelbtn.Location = new System.Drawing.Point(48, 679);
             this.Cancelbtn.Name = "Cancelbtn";
-            this.Cancelbtn.Padding = new System.Windows.Forms.Padding(20, 0, 25, 0);
-            this.Cancelbtn.Size = new System.Drawing.Size(160, 50);
+            this.Cancelbtn.Padding = new System.Windows.Forms.Padding(50, 0, 40, 0);
+            this.Cancelbtn.Size = new System.Drawing.Size(179, 50);
             this.Cancelbtn.TabIndex = 19;
             this.Cancelbtn.Text = "Cancel";
             this.Cancelbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -277,11 +284,11 @@
             this.part_error.AutoSize = true;
             this.part_error.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.part_error.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.part_error.Location = new System.Drawing.Point(239, 107);
+            this.part_error.Location = new System.Drawing.Point(266, 120);
             this.part_error.Name = "part_error";
-            this.part_error.Size = new System.Drawing.Size(179, 15);
+            this.part_error.Size = new System.Drawing.Size(150, 15);
             this.part_error.TabIndex = 20;
-            this.part_error.Text = "Part number input is required *";
+            this.part_error.Text = "Part number  is required *";
             this.part_error.Visible = false;
             // 
             // Numb_error
@@ -289,7 +296,7 @@
             this.Numb_error.AutoSize = true;
             this.Numb_error.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Numb_error.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.Numb_error.Location = new System.Drawing.Point(255, 449);
+            this.Numb_error.Location = new System.Drawing.Point(255, 462);
             this.Numb_error.Name = "Numb_error";
             this.Numb_error.Size = new System.Drawing.Size(155, 15);
             this.Numb_error.TabIndex = 21;
@@ -304,7 +311,7 @@
             this.Exitbtn.FlatAppearance.BorderSize = 0;
             this.Exitbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Exitbtn.Image = ((System.Drawing.Image)(resources.GetObject("Exitbtn.Image")));
-            this.Exitbtn.Location = new System.Drawing.Point(911, 17);
+            this.Exitbtn.Location = new System.Drawing.Point(911, 16);
             this.Exitbtn.Name = "Exitbtn";
             this.Exitbtn.Size = new System.Drawing.Size(55, 46);
             this.Exitbtn.TabIndex = 22;
@@ -315,7 +322,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(44, 535);
+            this.label7.Location = new System.Drawing.Point(44, 540);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(61, 20);
             this.label7.TabIndex = 24;
@@ -325,7 +332,7 @@
             // 
             this.FinalRealIDText.AutoSize = true;
             this.FinalRealIDText.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FinalRealIDText.Location = new System.Drawing.Point(44, 561);
+            this.FinalRealIDText.Location = new System.Drawing.Point(12, 11);
             this.FinalRealIDText.Name = "FinalRealIDText";
             this.FinalRealIDText.Size = new System.Drawing.Size(42, 21);
             this.FinalRealIDText.TabIndex = 23;
@@ -336,9 +343,9 @@
             this.flowLayoutPanelPreview.AutoScroll = true;
             this.flowLayoutPanelPreview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.flowLayoutPanelPreview.Controls.Add(this.panelPreview);
-            this.flowLayoutPanelPreview.Location = new System.Drawing.Point(514, 136);
+            this.flowLayoutPanelPreview.Location = new System.Drawing.Point(514, 143);
             this.flowLayoutPanelPreview.Name = "flowLayoutPanelPreview";
-            this.flowLayoutPanelPreview.Size = new System.Drawing.Size(441, 566);
+            this.flowLayoutPanelPreview.Size = new System.Drawing.Size(441, 588);
             this.flowLayoutPanelPreview.TabIndex = 25;
             // 
             // timer2
@@ -354,7 +361,7 @@
             this.button1.FlatAppearance.BorderSize = 0;
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
-            this.button1.Location = new System.Drawing.Point(31, 14);
+            this.button1.Location = new System.Drawing.Point(30, 14);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(55, 46);
             this.button1.TabIndex = 26;
@@ -368,24 +375,75 @@
             this.Historybtn.FlatAppearance.BorderSize = 0;
             this.Historybtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Historybtn.Image = ((System.Drawing.Image)(resources.GetObject("Historybtn.Image")));
-            this.Historybtn.Location = new System.Drawing.Point(899, 81);
+            this.Historybtn.Location = new System.Drawing.Point(899, 92);
             this.Historybtn.Name = "Historybtn";
             this.Historybtn.Size = new System.Drawing.Size(55, 46);
             this.Historybtn.TabIndex = 27;
             this.Historybtn.UseVisualStyleBackColor = false;
             this.Historybtn.Click += new System.EventHandler(this.Historybtn_Click);
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.BackColor = System.Drawing.Color.Transparent;
+            this.label8.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.ForeColor = System.Drawing.Color.Black;
+            this.label8.Location = new System.Drawing.Point(803, 107);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(99, 20);
+            this.label8.TabIndex = 28;
+            this.label8.Text = "Print History";
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.panel1.Controls.Add(this.WarehouseText);
+            this.panel1.Location = new System.Drawing.Point(47, 231);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(371, 41);
+            this.panel1.TabIndex = 29;
+            // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.panel2.Controls.Add(this.QuantityText);
+            this.panel2.Location = new System.Drawing.Point(47, 319);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(371, 41);
+            this.panel2.TabIndex = 30;
+            // 
+            // panel3
+            // 
+            this.panel3.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.panel3.Controls.Add(this.FinalRealIDText);
+            this.panel3.Location = new System.Drawing.Point(49, 568);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(367, 41);
+            this.panel3.TabIndex = 31;
+            // 
+            // panel4
+            // 
+            this.panel4.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.panel4.Location = new System.Drawing.Point(48, 645);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(365, 3);
+            this.panel4.TabIndex = 32;
+            // 
             // ZebraPrinter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1018, 728);
+            this.ClientSize = new System.Drawing.Size(1018, 777);
+            this.Controls.Add(this.panel4);
+            this.Controls.Add(this.panel3);
+            this.Controls.Add(this.panel2);
+            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.label8);
             this.Controls.Add(this.Historybtn);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.flowLayoutPanelPreview);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.FinalRealIDText);
             this.Controls.Add(this.Exitbtn);
             this.Controls.Add(this.Numb_error);
             this.Controls.Add(this.part_error);
@@ -402,8 +460,6 @@
             this.Controls.Add(this.dateTimePicker1);
             this.Controls.Add(this.PrintCount);
             this.Controls.Add(this.Printbtn);
-            this.Controls.Add(this.QuantityText);
-            this.Controls.Add(this.WarehouseText);
             this.Controls.Add(this.Ambassador);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "ZebraPrinter";
@@ -415,6 +471,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.flowLayoutPanelPreview.ResumeLayout(false);
             this.flowLayoutPanelPreview.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -449,5 +511,10 @@
         private System.Windows.Forms.Timer timer2;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button Historybtn;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel panel4;
     }
 }

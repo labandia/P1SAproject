@@ -36,8 +36,6 @@ namespace ZebraPrinterLabel.Services
                 return null;
             }
         }
-
-
         public static void UpdateCountToday(int newCount)
         {
             if (File.Exists(filepath))
@@ -60,7 +58,6 @@ namespace ZebraPrinterLabel.Services
                 }
             }
         }
-
         public static async Task ResetCountPrinterAsync()
         {
             DateTime now = DateTime.Now;
@@ -102,7 +99,5 @@ namespace ZebraPrinterLabel.Services
                 }
             }
         }
-
-
     }
 }

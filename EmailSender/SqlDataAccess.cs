@@ -27,9 +27,6 @@ namespace EmailSender
                 else
                     connectionKey = "LiveDevelopment";
 
-
-                //LogConnectionChoice(machineName, connectionKey);
-
                 return AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings[connectionKey].ConnectionString);
             }
             catch (Exception ex)

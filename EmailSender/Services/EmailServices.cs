@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Outlook = Microsoft.Office.Interop.Outlook;
 
 namespace EmailSender.Services
@@ -30,7 +26,6 @@ namespace EmailSender.Services
                 return false;
             }
         }
-
         public static bool SendMailOutlookV2(string fromSender, string emailTo, string subject, string body)
         {
             try
@@ -52,8 +47,6 @@ namespace EmailSender.Services
                 return false;
             }
         }
-
-
         public static string CreateAEmailBody(string Fullname, string Content)
         {
             return $@" <html>
@@ -85,8 +78,6 @@ namespace EmailSender.Services
                     </html>
                     ";
         }
-
-
         public static string CreateAEmailBodyV2(string Fullname, string messageContent)
         {
             return $@"
@@ -139,6 +130,5 @@ namespace EmailSender.Services
                         </body>
                         </html>";
         }
-
     }
 }

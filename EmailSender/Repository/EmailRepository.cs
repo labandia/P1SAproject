@@ -1,9 +1,6 @@
 ﻿using EmailSender.Services;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EmailSender.Repository
@@ -53,32 +50,6 @@ namespace EmailSender.Repository
 
             await Task.WhenAll(tasks);
             Console.WriteLine("Email process completed.");
-
-            //foreach (var item in EmailsList)
-            //{
-            //    string updatequery = "UPDATE P1SA_EmailSend SET IsSent = 1 WHERE EmailID =@EmailID";
-            //    Console.WriteLine($"Email Sender {item.Sender} - Recepient : {item.Recipient}");
-            //    // Send and Checks the Emails Sent
-            //    if (EmailServices.SendMailOutlookV2(item.Sender, item.Recipient, item.Subject, item.Body))
-            //    {
-            //        Console.WriteLine("Emails Data is Sent to Outlook ");
-
-            //        bool IsSent = await SqlDataAccess.UpdateInsertQuery(updatequery, new { EmailID = item.EmailID });
-            //        if (IsSent)
-            //        {
-            //            // SENDING EMAIL DIRECTLY TO OUTLOOK 
-            //            Console.WriteLine("Emails Table is Updated ...");
-            //        }
-            //        else
-            //        {
-            //            Console.WriteLine("Emails Tables Not Updating");
-            //        }
-            //    }
-            //    else
-            //    {
-            //        Console.WriteLine("Emails Data is not Sending . . .");
-            //    }
-            //}
         }
     }
 }

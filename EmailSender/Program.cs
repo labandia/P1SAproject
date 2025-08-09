@@ -1,9 +1,4 @@
 ﻿using EmailSender.Repository;
-using EmailSender.Services;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Threading;
 
 namespace EmailSender

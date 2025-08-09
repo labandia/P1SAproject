@@ -11,10 +11,12 @@ using ProgramPartListWeb.Utilities.Security;
 using Spire.Xls;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.UI.WebControls;
 
@@ -24,6 +26,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
     public class PatrolController : ExtendController
     {
         private readonly IInspector _ins;
+        public static string strSender => ConfigurationManager.AppSettings["config:SMTPEmail"];
         public PatrolController(IInspector ins) => _ins = ins;
 
         //-----------------------------------------------------------------------------------------
@@ -359,19 +362,41 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> AddRegistration()
+        public async Task<ActionResult> AddRegistration(HttpPostedFileBase ExcelFile)
         {
             // Get Department Name
             int departmentID = await _ins.GetEmployeeByDepartment(Request.Form["Employee_ID"]);
             string departmentName = GlobalUtilities.DepartmentName(departmentID);
             bool isSign = !string.IsNullOrEmpty(Request.Form["IsSign"]);
+
             // Get Employee FullName
             //var data = await _ins.GetEmployee() ?? new List<Employee>();
             //string Fullname = data.FirstOrDefault(p => p.EmployeeID == Request.Form["Employee_ID"])?.Fullname;
 
-            // Set File Name For the Database
+            // Set File Name For Registration No. PDF file
             string newFileName = Request.Form["RegNo"] + "_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".xlsx";
             string outputPdfPath = newFileName.Replace(".xlsx", ".pdf");
+
+
+            // Set File Name for Countermeasures Excel File
+            string strExcelname = null;
+
+            // Default template path For Registration PDF
+            string templatePath = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Uploads/PGFY-00031FORM_1.xlsx");
+
+            // If user uploaded an Excel file, save it and use as template
+            if (ExcelFile != null && ExcelFile.ContentLength > 0)
+            {
+                string uploadedFileName = Path.GetFileNameWithoutExtension(ExcelFile.FileName);
+                string fileExtension = Path.GetExtension(ExcelFile.FileName);
+                string savedFileName = $"Countermeasure_{Request.Form["RegNo"]}_{DateTime.Now:yyyyMMdd_HHmmss}{fileExtension}";
+
+                strExcelname = savedFileName;
+
+                // Export the file Network Folder
+                ExportFiler.SaveFileasExcel(ExcelFile, savedFileName);
+
+            }
 
             var obj = new RegistrationModel
             {
@@ -384,19 +409,41 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 FilePath = outputPdfPath,
                 Manager = Request.Form["Manager"],
                 Manager_Comments = Request.Form["Manager_Comments"],
+                CounterPath = strExcelname,
                 IsSigned = isSign
             };
 
             string findJson = Request.Form["FindJson"];
-            string templatePath = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Uploads/PGFY-00031FORM_1.xlsx");
+
             bool result = await _ins.AddRegistration(obj, findJson);
 
             if (result)
             {
                 CacheHelper.Remove("Registration");
+
+                string creatbody = EmailService.CreateAEmailBody(
+                    "JUAN DELA CRUZ",
+                    "This is a sample email body used for testing purposes. Please disregard."
+                );
+
+                var SendEmail = new SentEmailModel
+                {
+                    Subject = "Patrol Inspection",
+                    Sender = strSender,
+                    Body = creatbody,
+                    Recipient = "p1sa-processcontrol@sanyodenki.com"
+                };
+
+                // GENERATE A PDF FILE AND SAVE TO THE NETWORK FILE
                 await ExportFiler.SaveFileasPDF(obj, findJson, departmentName, newFileName, templatePath, isSign);
+
+                // EMAIL SAVE TO THE DATABASE
+                await EmailService.SendEmailViaSqlDatabase(SendEmail);
+
             }
-            if (result == false) return JsonError("Problem during saving Data.", 500);
+            if (result == false)
+                return JsonError("Problem during saving Data.");
+
             return JsonCreated(result, "Change Status successfully");
 
         }
@@ -554,12 +601,12 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         }
 
 
-        [HttpPost]
-        public JsonResult SendEmail(EmailModel model)
-        {
-            bool result = EmailService.SendEmail(model.To, model.Subject, model.Body);
-            return Json(new { success = result, message = result ? "Email sent." : "Failed to send email." });
-        }
+        //[HttpPost]
+        //public JsonResult SendEmail(EmailModel model)
+        //{
+        //    bool result = EmailService.SendEmail(model.To, model.Subject, model.Body);
+        //    return Json(new { success = result, message = result ? "Email sent." : "Failed to send email." });
+        //}
 
 
 

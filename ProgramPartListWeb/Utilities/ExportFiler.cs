@@ -141,6 +141,13 @@ namespace ProgramPartListWeb.Utilities
         }
 
 
+        public static void SaveFileasExcel(HttpPostedFileBase ExcelFile, string FilenameExtension)
+        {
+            string exportFolder = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\";
+            string saveFilePath = $@"{exportFolder}{FilenameExtension}";
+            ExcelFile.SaveAs(saveFilePath);
+        }
+
 
         //public static async Task SaveFileasPDF(RegistrationModel reg, string json, string department, string outputfilename, string template, bool Sign)
         //{

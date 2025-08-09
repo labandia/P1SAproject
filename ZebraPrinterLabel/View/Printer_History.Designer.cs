@@ -31,7 +31,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.HistoryGrid = new System.Windows.Forms.DataGridView();
             this.DateInput = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ReelID = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.ReelID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Partnum = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.WarehouseLocal = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Qty = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -52,6 +52,8 @@
             // 
             this.HistoryGrid.AllowUserToAddRows = false;
             this.HistoryGrid.AllowUserToDeleteRows = false;
+            this.HistoryGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.HistoryGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.HistoryGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.DateInput,
@@ -64,7 +66,7 @@
             this.HistoryGrid.ReadOnly = true;
             this.HistoryGrid.RowHeadersVisible = false;
             this.HistoryGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.HistoryGrid.Size = new System.Drawing.Size(614, 582);
+            this.HistoryGrid.Size = new System.Drawing.Size(989, 582);
             this.HistoryGrid.TabIndex = 46;
             // 
             // DateInput
@@ -80,6 +82,8 @@
             this.ReelID.HeaderText = "ReelID";
             this.ReelID.Name = "ReelID";
             this.ReelID.ReadOnly = true;
+            this.ReelID.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.ReelID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // Partnum
             // 
@@ -106,7 +110,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(717, 745);
+            this.ClientSize = new System.Drawing.Size(1092, 745);
             this.Controls.Add(this.HistoryGrid);
             this.Controls.Add(this.label6);
             this.Name = "Printer_History";
@@ -124,7 +128,7 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.DataGridView HistoryGrid;
         private System.Windows.Forms.DataGridViewTextBoxColumn DateInput;
-        private System.Windows.Forms.DataGridViewButtonColumn ReelID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ReelID;
         private System.Windows.Forms.DataGridViewTextBoxColumn Partnum;
         private System.Windows.Forms.DataGridViewTextBoxColumn WarehouseLocal;
         private System.Windows.Forms.DataGridViewTextBoxColumn Qty;

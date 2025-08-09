@@ -18,11 +18,11 @@
 </header>
 
 
-<div class="MainTable">
+<div class="MainTable mt-4">
     <table>
         <thead>
             <tr>
-                <th>Ambassador</th>
+                <th style="text-align: left; padding-left: 2em;">Ambassador</th>
                 <th>Part Name </th>
                 <th>Supplier</th>
                 <th>Code</th>
@@ -283,11 +283,11 @@
 
                 const rowHtml = `
                      <tr class='row_${i} rowClick' id='editButton_${rowData.Storage_ID}'>
-                         <td data-cell="Part number">${rowData.AbassadorPartnum}</td>
+                         <td data-cell="Part number" style="text-align: left; padding-left: 2em; font-weight: 600;">${rowData.AbassadorPartnum}</td>
                          <td data-cell="Model">${rowData.Partname}</td>
                          <td data-cell="Supplier">${rowData.Supplier}</td>
                          <td data-cell="Code">${rowData.Code}</td>
-                         <td data-cell="Action">${usercontrols}</td>
+                         <td data-cell="Action" style='display: flex; align-items: center; justify-content: center;'>${usercontrols}</td>
                      </tr>`;
 
                 tableBody.innerHTML += rowHtml;

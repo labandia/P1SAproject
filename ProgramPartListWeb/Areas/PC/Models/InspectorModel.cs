@@ -94,6 +94,7 @@ namespace ProgramPartListWeb.Areas.PC.Models
         public string PIC { get; set; }
         public string PIC_Comments { get; set; }
         public string FilePath { get; set; }
+        public string CounterPath { get; set; }
         public string Manager { get; set; }
         public string Manager_Comments { get; set; }
         public int IsImage { get; set; }    

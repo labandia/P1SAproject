@@ -3,56 +3,47 @@
     Layout = "~/Areas/Circuit/Views/Shared/_LayoutPartlist.cshtml";
 }
 
-<section class="Serieswrapper">
-    <div class="SeriesTitle d-flex align-items-center justify-content-between mb-3">
-        <h5 class="m-0">History Transaction</h5>
-        <div class="d-flex align-items-center">
-            <button id="exportbtn" class="primarybtn">Download csv</button>
-            <div class="SearchInputbox">
-                <input type="text" name="searchbox" id="searchbox" placeholder="Search Plan Schedule " />
-                <i class="fa-solid fa-magnifying-glass"></i>
-            </div>
+<header class="MainHeader">
+    <h4>History Transaction</h4>
+    <div class="header__action flex_align">
+        <button id="exportbtn" class="primarybtn">Download csv</button>
+        <div class="searchinputContainer">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" placeholder="Search Plan Schedule... " id="searchbox" />
+            <div class="line"></div>
         </div>
     </div>
+</header>
 
+<div class="MainTable">
+    <table>
+        <thead>
+            <tr>
+                <th>Plan Schedule</th>
+                <th>ProductName </th>
+                <th>Ambassador</th>
+                <th>ItemCode</th>
+                <th>Need Qty</th>
+                <th>IN</th>
+                <th>OUT</th>
+                <th>Return Qty</th>
+                <th>Diff %</th>
+            </tr>
+        </thead>
+        <tbody id="HistorylistData">
+        </tbody>
+    </table>
 
-
-
-    <div class="MainTable">
-        <table>
-            <thead>
-                <tr>
-                    <th>Plan Schedule</th>
-                    <th>ProductName </th>
-                    <th>Ambassador</th>
-                    <th>ItemCode</th>
-                    <th>Need Qty</th>
-                    <th>IN</th>
-                    <th>OUT</th>
-                    <th>Return Qty</th>
-                    <th>Diff %</th>
-                </tr>
-            </thead>
-            <tbody id="HistorylistData">
-            </tbody>
-        </table>
-
-        <div class="tableseriesNoData">
-            <p>No Data Found</p>
-        </div>
+    <div class="tableseriesNoData">
+        <p>No Data Found</p>
     </div>
+</div>
 
+<div class="MasterlistWrap_footer">
+    <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
 
-    <div style="margin-top: 1em;" class="Table_footer d-flex align-items-center justify-content-between pt-1 ">
-        <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
-
-        <div id="PaginationContainer" class="paginationPartlocal"></div>
-    </div>
-
-
-
-</section>
-
+    <div id="PaginationContainer" class="paginationPartlocal"></div>
+</div>
 
 <script src="~/Scripts/Utilities.js"></script>
 <script src="~/Scripts/html5-qrcode.min.js"></script>
@@ -166,7 +157,7 @@
             const query = $('#searchbox').val().toLowerCase();
 
             filteredData = dataArray.filter(item =>
-                (item.AbassadorPartnum != null && item.AbassadorPartnum.toLowerCase().includes(query)) || 
+                (item.AbassadorPartnum != null && item.AbassadorPartnum.toLowerCase().includes(query)) ||
                 (item.Series_no.toLowerCase().includes(query))
             );
 

@@ -4,43 +4,44 @@
     Layout = "~/Areas/Circuit/Views/Shared/_LayoutPartlist.cshtml";
 }
 
-<section class="Serieswrapper">
-    <div class="SeriesTitle d-flex align-items-center justify-content-between mb-3">
-        <h5 class="m-0">Components Partlist Out</h5>
-    </div>
-
-    <div class="d-flex align-items-center justify-content-between mb-3">
-        <div class="SearchInputbox">
-            <input type="text" name="searchID" id="searchID" placeholder="Search something " />
+<header class="MainHeader">
+    <h4>Components Partlist Out</h4>
+    <div class="header__action flex_align">
+        <button id="Excelbtn" class="primarybtn"><i class="fa-solid fa-upload"></i>  Upload Components Out</button>
+        <div class="searchinputContainer">
             <i class="fa-solid fa-magnifying-glass"></i>
-        </div>
-
-        <div class="SeriesAction">
-            <button id="Excelbtn" class="primarybtn"><i class="fa-solid fa-upload"></i>  Upload Components Out</button>
+            <input type="text" placeholder="Search something " id="searchbox" />
+            <div class="line"></div>
         </div>
     </div>
+</header>
 
 
-    <div class="MainTable">
-        <table>
-            <thead>
-                <tr>
-                    <th>Component Name</th>
-                    <th>Quantity</th>
-                    <th>Parts Code</th>
-                    <th>Ambassador</th>
-                    <th>Reel ID</th>
-                </tr>
-            </thead>
-            <tbody id="ComponentsData">
-            </tbody>
-        </table>
 
-        <div class="tableseriesNoData">
-            <p>No Data Found</p>
-        </div>
+<div class="MainTable">
+    <table>
+        <thead>
+            <tr>
+                <th style="text-align: left; padding-left: 2em;">Component Name</th>
+                <th>Quantity</th>
+                <th>Parts Code</th>
+                <th>Ambassador</th>
+                <th>Reel ID</th>
+            </tr>
+        </thead>
+        <tbody id="ComponentsData">
+        </tbody>
+    </table>
+
+    <div class="tableseriesNoData">
+        <p>No Data Found</p>
     </div>
-</section>
+</div>
+
+<div class="MasterlistWrap_footer">
+    <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
+    <div id="PaginationContainer" class="paginationPartlocal"></div>
+</div>
 
 
 
@@ -89,38 +90,13 @@
 <script src="~/Scripts/sweetalert2.min.js"></script>
 <script src="~/Scripts/jquery-3.7.1.min.js"></script>
 <script type="text/javascript">
-    const searchinput = document.getElementById("searchID");
     const excelbtn = document.getElementById("Excelbtn");
 
     excelbtn.addEventListener('click', function (e) {
         e.preventDefault();
         $("#uploadmodal").modal("show");
     });
-    // Search while typing filter data
-    searchinput.addEventListener('input', function () {
-        const input = this.value.toLowerCase();
-        const tableRows = document.querySelectorAll('#ComponentsData tr');
-        let foundMatch = false;
-
-        tableRows.forEach(row => {
-            const seriesNoCell = row.cells[0].textContent.toLowerCase();
-
-            // If input is empty, show all rows
-            if (!input || seriesNoCell.includes(input)) {
-                row.classList.remove('hidden'); // Show matching rows
-                foundMatch = true;
-            } else {
-                row.classList.add('hidden'); // Hide non-matching rows
-            }
-        });
-
-        // Show or hide the "Nodata" element based on matches
-        if (foundMatch) {
-            $(".Nodata").addClass('hidden'); // Hide the "No data" message
-        } else {
-            $(".Nodata").removeClass('hidden'); // Show the "No data" message
-        }
-    });
+  
 
     const DisplayComponentsOut = async() => {
         let res = await FetchAuthenticate('@Url.Action("GetComponentOutList", "ProgramPartList")', {});
@@ -128,25 +104,136 @@
         if (res && res.Success) {
             var setData = $("#ComponentsData");
             setData.empty();
-            $.each(res.Data, function (index, rowData) {
-                var getdata = `
-                     <tr class='row_${index} rowClick' >
-                     <td data-cell="Series no">${rowData.ComponentsName}</td>
-                     <td data-cell="Machine">${rowData.Quantity}</td>
-                     <td data-cell="Time Target">${rowData.ItemCode}</td>
-                       <td data-cell="Time Target">${rowData.Ambassador}</td>
-                         <td data-cell="Time Target">${rowData.Reel_ID}</td>
-                     </tr>`;
 
-                setData.append(getdata);
-            });
+            TablePagination(res.Data, 'ComponentsData', 'PaginationContainer', 100, 5);
+           
             $(".tableseriesNoData").hide();
         } else {
             $(".tableseriesNoData").show();
         }
     }
 
+    function TablePagination(dataArray, tableBodyId, paginationId, recordsPerPage = 7, visibleButtons = 5) {
+        let currentPage = 1;
+        let filteredData = [...dataArray]; // Make a copy for filtering
 
+        const updatePaginationInfo = () => {
+            const totalRecords = filteredData.length;
+            const totalPages = Math.ceil(totalRecords / recordsPerPage);
+
+            $("#totalpageID").text(totalPages);
+            $("#DatalengthID").text(totalRecords);
+
+            return totalPages;
+        };
+
+        const renderTable = (page) => {
+            const totalPages = updatePaginationInfo();
+            const startIndex = (page - 1) * recordsPerPage;
+            const endIndex = Math.min(startIndex + recordsPerPage, filteredData.length);
+            const tableBody = document.getElementById(tableBodyId);
+            tableBody.innerHTML = '';
+
+            for (let i = startIndex; i < endIndex; i++) {
+                const rowData = filteredData[i];
+    
+                const rowHtml = `
+                 <tr class='row_${i} rowClick' id='editButton_${i}'>
+                     <td data-cell="ComponentsName" style="text-align: left; padding-left: 2em; font-weight: 600;">${rowData.ComponentsName}</td>
+                     <td data-cell="Quantity">${rowData.Quantity}</td>
+                     <td data-cell="ItemCode">${rowData.ItemCode}</td>
+                     <td data-cell="Ambassador">${rowData.Ambassador}</td>
+                     <td data-cell="Reel_ID" >${rowData.Reel_ID}</td>
+                 </tr>`;
+
+            
+                tableBody.innerHTML += rowHtml;
+            }
+
+            $("#pagecountID").text(currentPage);
+        };
+
+        const renderPagination = () => {
+            const totalPages = updatePaginationInfo();
+            const paginationContainer = document.getElementById(paginationId);
+            paginationContainer.innerHTML = '';
+
+            let startPage = Math.max(1, currentPage - Math.floor(visibleButtons / 2));
+            let endPage = Math.min(totalPages, startPage + visibleButtons - 1);
+
+            if (endPage > totalPages) {
+                endPage = totalPages;
+                startPage = Math.max(1, endPage - visibleButtons + 1);
+            }
+
+            if (totalPages <= visibleButtons) {
+                startPage = 1;
+                endPage = totalPages;
+            }
+
+            // Previous button
+            paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
+                                       <i class="fa-solid fa-backward"></i>
+                                   </button>`;
+
+            for (let i = startPage; i <= endPage; i++) {
+                paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+            }
+
+            // Next button
+            paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
+                                       <i class="fa-solid fa-forward"></i>
+                                   </button>`;
+        };
+
+        const changePage = (page) => {
+            if (page >= 1 && page <= updatePaginationInfo()) {
+                currentPage = page;
+                renderTable(currentPage);
+                renderPagination();
+            }
+        };
+
+        // 🔍 Search functionality
+        const searchTable = () => {
+            const query = $('#searchbox').val().toLowerCase();
+
+            filteredData = dataArray.filter(item =>
+                (item.ComponentsName != null && item.ComponentsName.toLowerCase().includes(query)) ||
+                (item.Ambassador != null && item.Ambassador.toLowerCase().includes(query))
+            );
+
+            currentPage = 1;
+            renderTable(currentPage);
+            renderPagination();
+        };
+
+        // Add event listener for search input
+        $('#searchbox').on('input', searchTable);
+
+        // Handle click event for edit button
+        $(document).on('click', '.editButton', function (e) {
+            e.stopPropagation();
+            const buttonId = $(this).attr('id');
+            const rowIndex = buttonId.split('_')[1];
+
+            const result = supplyarray.find(p => p.SupID == rowIndex);
+
+            if (result) {
+                $(".SupID").val(result.SupID);
+                $(".AbassadorPartnum").val(result.AbassadorPartnum);
+                $(".Partname").val(result.Partname);
+                $(".Supplier").val(result.Supplier);
+                $(".Code").val(result.Code);
+                $("#editRequestmodal").modal("show");
+            }
+        });
+
+        // Initialize table and pagination
+        window.changePage = changePage;
+        renderTable(currentPage);
+        renderPagination();
+    }
 
     //-------------------  UPLOAD EXCEL FILE ------------------------------
     document.addEventListener('DOMContentLoaded', () => {

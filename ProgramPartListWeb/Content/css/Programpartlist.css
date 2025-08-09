@@ -349,7 +349,7 @@
         width: 8px;
     }
     .MainTable::-webkit-scrollbar-thumb, .InspecTable::-webkit-scrollbar-thumb {
-        background-color: #ccc;
+/*        background-color: #ccc;*/
         border-radius: 4px;
         cursor: pointer;
     }
@@ -367,13 +367,13 @@
     }
     .MainTable thead th, .InspecTable thead th{
         position: sticky;
-        background: #d4d3d3 !important;
+        background: hsl(210, 29%, 9%) !important;
         top: 0;
-        font-weight: 600;
+        font-weight: 500;
         cursor: pointer;
         padding: 1em 0;
         font-size: .8rem;
-        background: #fff;
+        color: #fff ;
     }
      /* Optional: Table row styling */
     .MainTable tbody td,  .InspecTable tbody td {
@@ -385,7 +385,98 @@
 
 
 
+/* ===================================================== */
+/* ================= MEDIA QUERIES ===================== */
+/* For small devices reduce search*/
+@media screen and (max-width: 320px) {
+    .header__search {
+        width: 70%;
+    }
+}
+@media screen and (min-width: 768px) {
+    body {
+        padding: 1rem 3rem 0 6rem;
+    }
 
+    .header {
+        padding: 0 3rem 0 6rem;
+    }
+
+    .header__container {
+        height: calc(var(--header-height) + .5rem);
+    }
+
+    .header__search {
+        width: 300px;
+        padding: .55rem .75rem;
+    }
+
+    .header__toggle {
+        display: none;
+    }
+
+    .header__logo {
+        display: block;
+    }
+
+    .header__img {
+        width: 40px;
+        height: 40px;
+        order: 1;
+    }
+
+    .sidebar {
+        left: 0;
+        padding: 1.2rem 1.5rem 0;
+        width: 68px; /* Reduced navbar */
+    }
+
+    .sidebar__items {
+        row-gap: 1.7rem;
+    }
+
+    .sidebar__icon {
+        font-size: 1.3rem;
+    }
+    /* Element opacity */
+    .sidebar__logo-name,
+    .sidebar__name,
+    .sidebar__subtitle,
+    .sidebar__dropdown-icon {
+        opacity: 0;
+        transition: 1s;
+    }
+    /* Navbar expanded */
+    .sidebar:hover {
+        width: var(--nav-width);
+    }
+        /* Visible elements */
+        .sidebar:hover .sidebar__logo-name {
+            opacity: 1;
+        }
+
+        .sidebar:hover .sidebar__subtitle {
+            opacity: 1;
+        }
+
+        .sidebar:hover .sidebar__name {
+            opacity: 1;
+        }
+
+        .sidebar:hover .sidebar__dropdown-icon {
+            opacity: 1;
+        }
+}
+@media screen and (min-width: 1440px) {
+    .MainTable, .InspecTable {
+        max-height: 735px; /* Adjust height as needed for large monitors */
+    }
+
+    .EmployeeListContainer {
+        max-height: 750px;
+    }
+}
+/* ===================================================== */
 
 
 

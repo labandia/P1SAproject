@@ -19,5 +19,7 @@ namespace ProgramPartListWeb.Interfaces
 
         Task<bool> CheckAccountsTable(RegisterModel reg);
         Task<bool> CreateNewAccount(RegisterModel reg);
+
+
     }
 }

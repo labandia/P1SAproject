@@ -362,5 +362,32 @@ namespace PracticeC_
             string jsonString = JsonConvert.SerializeObject(cdList, Newtonsoft.Json.Formatting.Indented);
             Console.WriteLine(jsonString);
         }
+
+
+        public static void Samplelog()
+        {
+
+            //// Get the Downloads folder path
+            //string downloadsPath = Path.Combine(
+            //    Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+            //    "Downloads"
+            //);
+
+            //// Full path to the log file
+            //string logFilePath = Path.Combine(downloadsPath, "tasklog.txt");
+
+            //Console.WriteLine("Logging to: " + logFilePath);
+
+            //while (true)
+            //{
+            //    using (StreamWriter sw = new StreamWriter(logFilePath, true)) // 'true' = append
+            //    {
+            //        sw.WriteLine($"{DateTime.Now} - This is Running on Task");
+            //    }
+
+            //    Console.WriteLine("Wrote to file.");
+            //    Thread.Sleep(5000); // Wait for 5 seconds
+            //}
+        }
     }
 }

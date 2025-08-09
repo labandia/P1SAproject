@@ -462,7 +462,7 @@
             this.Controls.Add(this.PrintCount);
             this.Controls.Add(this.Printbtn);
             this.Controls.Add(this.Ambassador);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "ZebraPrinter";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ZebraPrinter";

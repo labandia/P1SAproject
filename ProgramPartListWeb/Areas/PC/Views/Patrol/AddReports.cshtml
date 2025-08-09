@@ -22,7 +22,7 @@
                         <input name="RegNo" id="RegNo" class="styled-date" type="text" placeholder="YYMMDD" readonly required>
 
                         <div class="calendar-icon-wrapper">
-                            <i class="fa-regular fa-calendar-days calendar-icon" ></i>
+                            <i class="fa-regular fa-calendar-days calendar-icon"></i>
                             <input type="date" class="real-date-input" id="hiddenDatePicker" onchange="formatAndDisplayDate(this.value)">
                         </div>
                     </div>
@@ -30,20 +30,20 @@
                 <div class="col-12 col-sm-12 col-lg-6">
                     <label>Input Inspectors <small style="color: #a81818; font-weight: 600;">*</small> </label>
                     @*<div class="select-container">
-                        <select id="Employee_ID" name="Employee_ID">
-                            <option>-- Select Inspector --</option>
-                        </select>
-                    </div>*@
-                    <div class="flex_align" >
+                            <select id="Employee_ID" name="Employee_ID">
+                                <option>-- Select Inspector --</option>
+                            </select>
+                        </div>*@
+                    <div class="flex_align">
                         <div class="search-box" style="width: 70%;">
                             <input type="hidden" name="Employee_ID" id="Employee_ID">
                             <input type="text" placeholder="Type Name or ID no." name="EmployeeSearch" id="EmployeeSearch">
                             <div class="namesdisplay"></div>
                         </div>
                         <small>Include signature: </small>
-                        <input type="checkbox" name="IsSign" id="IsSign"  />
+                        <input type="checkbox" name="IsSign" id="IsSign" />
                     </div>
-                    
+
                 </div>
             </div>
 
@@ -83,7 +83,7 @@
             <div class="row">
                 <div class="col-12 col-sm-12 col-lg-6 ">
                     <label>3. Condition and status of documents / records.</label> <br />
-                    <input type="hidden" value="3" id="Find3" name="Find3" required/>
+                    <input type="hidden" value="3" id="Find3" name="Find3" required />
                     <textarea placeholder="Type text here..." name="Inpects3" id="Inpects3" rows="3" cols="40"></textarea>
                 </div>
 
@@ -110,7 +110,7 @@
             <div class="row">
                 <div class="col-12 col-sm-12 col-lg-6 ">
                     <label>5. Calibration of equipment and jigs used for measurement or inspection.</label> <br />
-                    <input type="hidden" value="5" id="Find5" name="Find5" required/>
+                    <input type="hidden" value="5" id="Find5" name="Find5" required />
                     <textarea placeholder="Type text here..." name="Inpects5" id="Inpects5" rows="3" cols="40"></textarea>
                 </div>
 
@@ -125,7 +125,7 @@
             <div class="row">
                 <div class="col-12 col-sm-12 col-lg-6 ">
                     <label>6. Countermeasure and implementation of previous quality and safety</label> <br />
-                    <input type="hidden" value="6" id="Find5" name="Find6" required/>
+                    <input type="hidden" value="6" id="Find5" name="Find6" required />
                     <textarea placeholder="Type text here..." name="Inpects6" id="Inpects6" rows="3" cols="40"></textarea>
                 </div>
 
@@ -172,11 +172,19 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-12 col-sm-12 col-lg-6">
+            <label>Upload Counter Measures</label> <br />
+            <input type="file" name="ExcelFile" id="ExcelFile" accept=".xlsx,.xls" class="form-control" />
+            <small class="text-muted">Only .xlsx or .xls files are allowed</small>
+        </div>
+    </div>
+
     <hr />
 
     <div class="d-flex align-items-center justify-content-between">
         <span id="errorvalid" class="text-danger">* Registration No is already inserted</span>
-        <span id="labelguide" >All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</span>
+        <span id="labelguide">All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</span>
         <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
     </div>
 </form>
@@ -256,10 +264,27 @@
     addform.addEventListener('submit', async (e) => {
         e.preventDefault();
 
+        // Validate Excel file type before sending
+        let fileInput = document.querySelector('#ExcelFile');
+        let file = fileInput.files[0];
+        if (file) {
+            if (!/\.(xls|xlsx)$/i.test(file.name)) {
+                Swal.fire({
+                    icon: "error",
+                    text: "Only Excel files (.xls, .xlsx) are allowed",
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+                return;
+            }
+        }
+
+        // Append form data
         let strfind = findingsJson(e.target);
         let finalformData = new FormData(e.target);
         finalformData.append('FindJson', strfind);
 
+        // For registration validation, read RegNo from form data
         const finaldata = Object.fromEntries(finalformData);
         let reg = "P1SA-" + finaldata.RegNo;
         if (formValidation(reg)) {
@@ -275,8 +300,11 @@
             $("#RegNo").css("border", "1px solid red");
             return;
         }
+
         const savebtn = document.querySelector("#btnSave");
         savebtn.innerHTML = " <div class='buttonloading'></div> Generating PDF Please wait...";
+
+        // Send form data with file to controller
         let res = await postData('@Url.Action("AddRegistration", "Patrol")', finalformData);
         if (res.StatusCode === 201) {
             Swal.fire({
@@ -304,8 +332,8 @@
 
         if (input.length > 0) {
             result = loadData.filter((item) => {
-                return item.Fullname.toLowerCase().includes(input.toLowerCase()) ||
-                    item.Employee_ID.toLowerCase().includes(input.toLowerCase());
+                return item.Fullname?.toLowerCase().includes(input.toLowerCase()) ||
+                    (item.Employee_ID?.toLowerCase() || '').includes(input.toLowerCase());
             });
 
             if (result.length > 0) {

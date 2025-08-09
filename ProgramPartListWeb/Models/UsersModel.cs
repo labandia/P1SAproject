@@ -5,7 +5,13 @@ namespace ProgramPartListWeb.Models
     public class UsersModel
     {
         public int User_ID { get; set; }
-        public string Employee_ID { get; set; }
+
+        private string _employee_ID;
+        public string Employee_ID
+        {
+            get => _employee_ID;
+            set => _employee_ID = value?.Trim();
+        }
         public string Username { get; set; }
         public string Password { get; set; }
         public string Fullname { get; set; }

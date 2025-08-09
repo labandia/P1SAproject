@@ -24,7 +24,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
 
         public Task<List<UsersModel>> GetUsersInfoSetting()
         {
-            string strsql = $@"SELECT u.Employee_ID, u.Fullname, u.Signature
+            string strsql = $@"SELECT ua.User_ID, u.Employee_ID, u.Fullname, u.Signature
                             FROM UserAccounts ua
                             INNER JOIN Users u ON u.User_ID = ua.User_ID
                             INNER JOIN ProjectList p ON p.Project_ID = ua.Project_ID
@@ -63,7 +63,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             //INSERT MAIN REGISTRATION PROCESS
             bool result = await SqlDataAccess.UpdateInsertQuery("InsertRegistration", 
                           new { RegNo = reg.RegNo, DateConduct = reg.DateConduct, Employee_ID = reg.Employee_ID, 
-                                FilePath = reg.FilePath, PIC = reg.PIC, PIC_Comments = reg.PIC_Comments,
+                                FilePath = reg.FilePath, CounterPath = reg.CounterPath,  PIC = reg.PIC, PIC_Comments = reg.PIC_Comments,
                                 Manager = reg.Manager, Manager_Comments = reg.Manager_Comments, IsSigned = reg.IsSigned
                           });
 

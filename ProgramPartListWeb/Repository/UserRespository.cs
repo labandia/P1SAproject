@@ -90,7 +90,7 @@ namespace ProgramPartListWeb.Data
         {
             string strquery = "INSERT UserAccounts(Username, Password, Role_ID, First_Name, " +
                               "Last_Name) VALUES (@Username, @Password, @Role_ID, @First_Name, @Last_Name)";
-            return UsersAccess.UpdateUserData(strquery, parameters); ;
+            return UsersAccess.UpdateUserData(strquery, parameters); 
         }
 
        
@@ -143,6 +143,13 @@ namespace ProgramPartListWeb.Data
 
 
             return await SqlDataAccess.UpdateInsertQuery(strsql, new { Signature  = fileName, User_ID = userID});
+        }
+
+        public Task<bool> SendEmailToDatabase(SentEmailModel em)
+        {
+            string strquery = $@"INSERT P1SA_EmailSend(Sender, Recipient, Subject, Body) 
+                                VALUES (@Sender, @Recipient, @Subject, @Body)";
+            return UsersAccess.UpdateUserData(strquery, em);
         }
     }
 }

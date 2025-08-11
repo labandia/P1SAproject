@@ -5,6 +5,7 @@ using PMACS_V2.Utilities.Security;
 using ProgramPartListWeb.Helper;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
     public class DieMoldController : ExtendController
     {
         private readonly IDieMold _die;
+        public static string strSender => ConfigurationManager.AppSettings["config:SMTPEmail"];
         public DieMoldController(IDieMold die) => _die = die;
 
         // ===========================================================

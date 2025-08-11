@@ -398,6 +398,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\AuthRepository.cs" />
     <Compile Include="Repository\UserRespository.cs" />
+    <Compile Include="Services\EmailService.cs" />
     <Compile Include="Utilities\ProblemDetailsActionResult.cs" />
     <Compile Include="Utilities\Security\AesEncryption.cs" />
     <Compile Include="Utilities\Caching\CacheHelper.cs" />

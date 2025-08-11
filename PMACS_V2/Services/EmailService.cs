@@ -1,13 +1,13 @@
 ﻿using System;
+using System.Configuration;
+using System.Diagnostics;
 using System.Net.Mail;
 using System.Net;
-using System.Diagnostics;
-using System.Configuration;
-using ProgramPartListWeb.Models;
-using ProgramPartListWeb.Helper;
 using System.Threading.Tasks;
+using PMACS_V2.Models;
+using PMACS_V2.Helper;
 
-namespace ProgramPartListWeb.Utilities
+namespace PMACS_V2.Services
 {
     public class EmailService
     {
@@ -53,7 +53,6 @@ namespace ProgramPartListWeb.Utilities
 
         public static void SendEmailOutlook(string stremail, string sub, string body)
         {
-            Debug.WriteLine("HERE");
 
             try
             {
@@ -79,12 +78,11 @@ namespace ProgramPartListWeb.Utilities
         }
 
 
-
-        public static  Task<bool> SendEmailViaSqlDatabase(SentEmailModel em)
+        public static Task<bool> SendEmailViaSqlDatabase(SentEmailModel em)
         {
             string strsql = $@"INSERT INTO P1SA_EmailSend(Subject, Sender, Recipient, Body)
                                VALUES(@Subject, @Sender, @Recipient, @Body)";
-            return  SqlDataAccess.UpdateInsertQuery(strsql, em);
+            return SqlDataAccess.UpdateInsertQuery(strsql, em);
         }
 
         public static string CreateAEmailBody(string Fullname, string messageContent)
@@ -152,5 +150,4 @@ namespace ProgramPartListWeb.Utilities
 
 
     }
-
 }

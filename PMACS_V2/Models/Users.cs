@@ -45,4 +45,14 @@ namespace PMACS_V2.Models
         public string Fullname { get; set; }
         //public string Last_Name { get; set; }
     }
+
+    public class SentEmailModel
+    {
+        public string Subject { get; set; }
+        public string Sender { get; set; }
+        public string Recipient { get; set; }
+        public string BCC { get; set; }
+        public string Body { get; set; }
+
+    }
 }

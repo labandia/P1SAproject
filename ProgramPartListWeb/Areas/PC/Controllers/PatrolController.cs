@@ -12,7 +12,6 @@ using Spire.Xls;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -430,8 +429,9 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 {
                     Subject = "Patrol Inspection",
                     Sender = strSender,
+                    BCC = "",
                     Body = creatbody,
-                    Recipient = "p1sa-processcontrol@sanyodenki.com"
+                    Recipient = "jaye.labandia@sanyodenki.com"
                 };
 
                 // GENERATE A PDF FILE AND SAVE TO THE NETWORK FILE

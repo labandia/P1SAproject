@@ -4,7 +4,6 @@ using System.Data.SqlClient;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Dapper;
@@ -19,14 +18,7 @@ namespace EmailSender
         {
             try
             {
-                string machineName = Environment.MachineName.ToLower();
-                string connectionKey = "";
-
-                if (machineName == "desktop-fc0up1p") //  Home production
-                    connectionKey = "HomeDevelopment";
-                else
-                    connectionKey = "LiveDevelopment";
-
+                string connectionKey = "LiveDevelopment";
                 return AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings[connectionKey].ConnectionString);
             }
             catch (Exception ex)
@@ -52,7 +44,6 @@ namespace EmailSender
         // ############ DYNAMIC FUNCTION LIST<T> GETDATA ########################
         public static async Task<List<T>> GetData<T>(string query, object parameters = null)
         {
-            //var resultData = new List<T>();
             try
             {
                 using (IDbConnection con = GetConnection(ConnectionString()))

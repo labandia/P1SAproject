@@ -7,7 +7,7 @@
 
 <div class="d-flex align-items-center justify-content-between">
     <div class="d-flex align-items-start gap-3">
-        <a class="Backbtn"  href="/Circuit/ProgramPartList/PlanSchedule"><i class="fa-solid fa-arrow-left"></i></a>
+        <a class="Backbtn" href="/Circuit/ProgramPartList/PlanSchedule"><i class="fa-solid fa-arrow-left"></i></a>
         <div class="">
             <h4 class="header_title m-0"><span id="seriesID"></span></h4>
             <p>Total Components Part list: <span id="Countnum" style="font-weight: 600"></span></p>
@@ -66,15 +66,9 @@
                 </div>
             </div>
 
-            <div style="margin-top: 1em;" class="Table_footer d-flex align-items-center justify-content-between pt-1 ">
-                <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
-
-                <div id="PaginationContainer" class="paginationPartlocal"></div>
-            </div>
 
 
 
-            @* <div id="summarytableContainer" class="pagination"></div>*@
 
         </div>
         <div>
@@ -96,11 +90,7 @@
                 </tbody>
             </table>
 
-            <div style="margin-top: 1em;" class="Table_footer d-flex align-items-center justify-content-between pt-1 ">
-                <span>Showing  <span id="WarepagecountID">-</span> to <span id="WaretotalpageID">-</span> of  <span id="WareDatalengthID">-</span> Entries</span>
 
-                <div id="WarehouseContainer" class="paginationPartlocal"></div>
-            </div>
 
         </div>
         <div style="width: 100%;">
@@ -127,7 +117,24 @@
 
 
 
+<div class="MasterlistWrap_footer">
+    <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
 
+    <div id="PaginationContainer" class="paginationPartlocal"></div>
+</div>
+
+<div class="MasterlistWrap_footer">
+    <span>Showing  <span id="WarepagecountID">-</span> to <span id="WaretotalpageID">-</span> of  <span id="WareDatalengthID">-</span> Entries</span>
+
+    <div id="WarehouseContainer" class="paginationPartlocal"></div>
+</div>
+
+
+@*<div class="MasterlistWrap_footer">
+        <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
+
+        <div id="PaginationContainer" class="paginationPartlocal"></div>
+    </div>*@
 
 
 
@@ -175,26 +182,26 @@
 
                         <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
                             <label>AbassadorPartnum : </label>
-                            <input  name="Line_add" id="PartText" />
+                            <input name="Line_add" id="PartText" />
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
                             <label>Partname : </label>
-                            <input  name="Time_add" id="PartnameText" />
+                            <input name="Time_add" id="PartnameText" />
                         </div>
 
                         <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
                             <label>Check point: </label>
-                            <input  name="Created_add" id="Checksum" />
+                            <input name="Created_add" id="Checksum" />
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
                             <label>Warehouse : </label>
-                            <input  name="Remark_add" id="locationText" />
+                            <input name="Remark_add" id="locationText" />
                         </div>
 
                         <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">

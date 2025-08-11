@@ -1,16 +1,9 @@
-﻿using BarcodeStandard;
-using QRCoder;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Printing;
 using System.Linq;
-using System.Net.Http;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using ZebraPrinterLabel.Services;
 using ZebraPrinterLabel.View;
@@ -40,6 +33,7 @@ namespace ZebraPrinterLabel
             InitializeComponent();
             _master=master;
         }
+
         private async void Printbtn_Click(object sender, EventArgs e)
         {
             try
@@ -53,7 +47,6 @@ namespace ZebraPrinterLabel
 
                 if (printed)
                 {
-                    int updateTotal = Todayprint + Convert.ToInt32(PrintCount.Value);
                     // Get the Ambasssador Partnumber 
                     string ambassadorText = Ambassador.Text.Trim();
 
@@ -64,8 +57,7 @@ namespace ZebraPrinterLabel
                     }
 
                     // Update state
-                    Todayprint = updateTotal;
-                    FileServices.UpdateCountToday(updateTotal);
+                    FileServices.UpdateCountToday(Todayprint);
 
                     MessageBox.Show("Print successfully!");
                     ResetForms();
@@ -352,7 +344,16 @@ namespace ZebraPrinterLabel
 
         private async void timer2_Tick(object sender, EventArgs e)
         {
-            await FileServices.ResetCountPrinterAsync();
+            timer2.Stop();
+            try
+            {
+                Debug.WriteLine("timer2_Tick fired at " + DateTime.Now);
+                await FileServices.ResetCountPrinterAsync();
+            }
+            finally
+            {
+                timer2.Start();
+            }
         }
 
         private void Exitbtn_Click(object sender, EventArgs e)
@@ -413,6 +414,11 @@ namespace ZebraPrinterLabel
             {
                 e.Handled = true;
             }
+        }
+
+        private void panelPreview_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

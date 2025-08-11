@@ -155,6 +155,7 @@
             this.panelPreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.panelPreview.TabIndex = 7;
             this.panelPreview.TabStop = false;
+            this.panelPreview.Click += new System.EventHandler(this.panelPreview_Click);
             // 
             // label1
             // 

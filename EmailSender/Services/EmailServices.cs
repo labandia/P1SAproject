@@ -26,7 +26,7 @@ namespace EmailSender.Services
                 return false;
             }
         }
-        public static bool SendMailOutlookV2(string fromSender, string emailTo, string subject, string body)
+        public static bool SendMailOutlookV2(string fromSender, string emailTo, string emailBCC, string subject, string body)
         {
             try
             {
@@ -34,6 +34,11 @@ namespace EmailSender.Services
                 Outlook.MailItem mailItem = (Outlook.MailItem)outlookApp.CreateItem(Outlook.OlItemType.olMailItem);
 
                 mailItem.To = emailTo;
+                
+                // If Email has a BCC value
+                if (!string.IsNullOrWhiteSpace(emailBCC))
+                    mailItem.CC = emailBCC;
+
                 mailItem.Subject = subject;
                 mailItem.HTMLBody = body;
                 mailItem.SentOnBehalfOfName = fromSender;

@@ -7,12 +7,12 @@ namespace EmailSender.Repository
 {
     public sealed class EmailRepository
     {
-        public async static void EmailSentProcess()
+        public static async Task EmailSentProcess()
         {
             Console.WriteLine("Starting email process...");
             string strsql = $@"SELECT 
 	                            e.EmailID, e.Employee_ID, emp.FullName, e.Sender, e.Recipient, 
-	                            e.SentDate, e.Recipient, e.Subject, e.Body, e.AttachmentPath
+	                            e.SentDate, e.Recipient, e.BCC, e.Subject, e.Body, e.AttachmentPath
                             FROM P1SA_EmailSend e
                             LEFT JOIN Employee_tbl emp ON emp.Employee_ID = e.Employee_ID
                             WHERE e.IsSent = 0";
@@ -32,7 +32,7 @@ namespace EmailSender.Repository
             {
                 Console.WriteLine($"Sending email: From {item.Sender} To {item.Recipient}");
 
-                bool sent = EmailServices.SendMailOutlookV2(item.Sender, item.Recipient, item.Subject, item.Body);
+                bool sent = EmailServices.SendMailOutlookV2(item.Sender, item.Recipient, item.BCC, item.Subject, item.Body);
 
                 if (!sent)
                 {

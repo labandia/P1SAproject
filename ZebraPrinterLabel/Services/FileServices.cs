@@ -63,41 +63,64 @@ namespace ZebraPrinterLabel.Services
             DateTime now = DateTime.Now;
             string today = now.ToString("yyyy-MM-dd");
 
-            if (now.Hour == 2 && now.Minute == 30)
+            if (!File.Exists(filepath))
             {
-                if (File.Exists(filepath))
+                Debug.WriteLine($"File not found: {filepath}");
+                return;
+            }
+
+            try
+            {
+                string json;
+                using (var reader = new StreamReader(filepath))
                 {
-                    try
+                    json = await reader.ReadToEndAsync();
+                }
+
+                CountToday obj = JsonSerializer.Deserialize<CountToday>(json);
+
+                if (obj == null)
+                {
+                    Debug.WriteLine("Deserialized object is null.");
+                    return;
+                }
+
+                if (!DateTime.TryParse(obj.DateStart, out DateTime savedDate))
+                {
+                    Debug.WriteLine("Failed to parse saved date. Resetting to today.");
+                    obj.DateStart = today;
+                    obj.Count = 0;
+                }
+                else
+                {
+                    // Check if savedDate is before today and time is past 2:30 AM
+                    if (savedDate.Date < now.Date && now.TimeOfDay >= new TimeSpan(2, 30, 0))
                     {
-                        string json;
-                        using (var reader = new StreamReader(filepath))
-                        {
-                            json = await reader.ReadToEndAsync();
-                        }
-
-                        CountToday obj = JsonSerializer.Deserialize<CountToday>(json);
-
-                        if (obj != null && obj.DateStart != today)
-                        {
-                            obj.DateStart = today;
-                            obj.Count = 0;
-
-                            string updatedJson = JsonSerializer.Serialize(obj, new JsonSerializerOptions { WriteIndented = true });
-
-                            using (var writer = new StreamWriter(filepath, false))
-                            {
-                                await writer.WriteAsync(updatedJson);
-                            }
-
-                            Debug.WriteLine("Count reset at 2:30 AM.");
-                        }
+                        Debug.WriteLine($"Saved date {savedDate:yyyy-MM-dd} is older than today {now:yyyy-MM-dd}. Resetting.");
+                        obj.DateStart = today;
+                        obj.Count = 0;
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        Debug.WriteLine("Error: " + ex.Message);
+                        Debug.WriteLine($"No reset needed. SavedDate: {savedDate:yyyy-MM-dd}, Now: {now:yyyy-MM-dd HH:mm}");
                     }
                 }
+
+                string updatedJson = JsonSerializer.Serialize(obj, new JsonSerializerOptions { WriteIndented = true });
+
+                using (var writer = new StreamWriter(filepath, false))
+                {
+                    await writer.WriteAsync(updatedJson);
+                }
+
+                Debug.WriteLine("File updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error: " + ex.Message);
             }
         }
+
+
     }
 }

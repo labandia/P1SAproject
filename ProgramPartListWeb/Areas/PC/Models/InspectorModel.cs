@@ -167,6 +167,7 @@ namespace ProgramPartListWeb.Areas.PC.Models
         private string _Employee_ID;
         private string _FullName;
         private string _Filepath;
+        private string _CounterPath;
         private string _PIC;
         private string _PIC_Comments;
         private string _Manager;
@@ -216,6 +217,11 @@ namespace ProgramPartListWeb.Areas.PC.Models
         {
             get => _Filepath;
             set => _Filepath = value;
+        }
+        public string CounterPath
+        {
+            get => _CounterPath;
+            set => _CounterPath = value;
         }
         public string PIC
         {

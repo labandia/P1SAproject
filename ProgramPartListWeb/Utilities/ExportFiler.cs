@@ -35,12 +35,11 @@ namespace ProgramPartListWeb.Utilities
 
             return exportPath;
         }
-
         public static async Task SaveFileasPDF(RegistrationModel reg, string json, string department, string outputfilename, string template, bool Sign)
         {
             try
             {
-                string exportFolder = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\";
+                string exportFolder = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\Patrol_Registration\";
                 string outputPdfPath = Path.Combine(exportFolder, Path.ChangeExtension(outputfilename, ".pdf"));
                 string tempPdfPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".pdf");
 
@@ -93,7 +92,7 @@ namespace ProgramPartListWeb.Utilities
                     foreach (var cell in affectedCells)
                     {
                         var range = sheet.Range[cell];
-                        range.Style.VerticalAlignment = VerticalAlignType.Top;
+                        range.Style.VerticalAlignment = VerticalAlignType.Center;
                         range.Style.WrapText = true;
                     }
 
@@ -143,7 +142,7 @@ namespace ProgramPartListWeb.Utilities
 
         public static void SaveFileasExcel(HttpPostedFileBase ExcelFile, string FilenameExtension)
         {
-            string exportFolder = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\";
+            string exportFolder = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\Patrol_Countermeasure\";
             string saveFilePath = $@"{exportFolder}{FilenameExtension}";
             ExcelFile.SaveAs(saveFilePath);
         }
@@ -297,7 +296,6 @@ namespace ProgramPartListWeb.Utilities
 
         private static async Task<string>GetImageString(string EmpID)
         {
-            string imagepath = "";
             string strquery = $@"SELECT u.Signature
                                 FROM UserAccounts ua
                                 INNER JOIN Users u ON u.User_ID = ua.User_ID
@@ -305,8 +303,7 @@ namespace ProgramPartListWeb.Utilities
                                 WHERE IsActive = 1 AND u.Employee_ID =@ID";
 
             string data = await SqlDataAccess.GetOneData(strquery, new { ID = EmpID });
-            imagepath = (!string.IsNullOrEmpty(data)) ? data : "";
-            return imagepath;   
+            return (!string.IsNullOrEmpty(data)) ? data : "";   
         }
     }
 }

@@ -40,19 +40,6 @@ namespace ProgramPartListWeb.Controllers
 
             return JsonSuccess(data, "Login Successfully");
         }
-
-
-        [HttpPost]
-        public async Task<ActionResult> ChangePasswordUser(int userID, string newpass)
-        {
-            string hashpassword = PasswordHasher.Hashpassword(newpass);
-            bool result = await _auth.Changepassword(userID, hashpassword);
-
-            if (!result) return JsonValidationError();
-
-            return JsonCreated(null, "Change Password Successfully");
-        }
-
         [HttpPost]
         public async Task<ActionResult>MatchPassword(string datapass, string currentpass)
         {

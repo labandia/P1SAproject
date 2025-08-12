@@ -44,13 +44,14 @@ namespace ProductConfirm.DataAccess
             return SqlDataAccess.GetData<ProductToolsModel>(strsql, parameters);
         }
 
-        public async Task<List<ShopOrderModel>> GetShoporderlist(int CurrentPageIndex, int pageSize)
+        public Task<List<ShopOrderModel>> GetShoporderlist(int CurrentPageIndex, int pageSize)
         {
-            return await SqlDataAccess.GetData<ShopOrderModel>("ShopOrderlist", new { PageNumber = CurrentPageIndex, PageSize = pageSize });
+            return  SqlDataAccess.GetData<ShopOrderModel>("ShopOrderlist", 
+                new { PageNumber = CurrentPageIndex, PageSize = pageSize });
         }  
-        public async Task<List<SummaryProductModel>> GetSummaryDataConfirmation()
+        public Task<List<SummaryProductModel>>GetSummaryDataConfirmation()
         {
-            return await SqlDataAccess.GetData<SummaryProductModel>("SummaryComfirmation");
+            return SqlDataAccess.GetData<SummaryProductModel>("SummaryComfirmation");
         }
     
         // CRUD OPERATION PROCESS

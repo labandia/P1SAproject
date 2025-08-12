@@ -22,7 +22,6 @@ namespace PMACS_V2.Controllers
         [HttpPost]
         public JsonResult RefreshToken(RefreshTokenModel request)
         {
-            Debug.WriteLine("Request : " + request.RefreshToken);
 
             var principal = JWTAuthentication.ValidateRefreshToken(request.RefreshToken);
 
@@ -34,9 +33,7 @@ namespace PMACS_V2.Controllers
             var fullname = principal.FindFirst("Fullname")?.Value;
             string role = principal.FindFirst(ClaimTypes.Role)?.Value;
 
-            Debug.WriteLine("User ID : " + userId);
-            Debug.WriteLine("fullname : " + fullname);
-            Debug.WriteLine("role : " + role);
+
             if (string.IsNullOrEmpty(userId))
                 return Json(new { success = false, message = "Invalid token claims" });
 

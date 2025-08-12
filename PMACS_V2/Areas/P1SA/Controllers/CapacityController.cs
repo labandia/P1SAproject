@@ -126,6 +126,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             }
             return JsonSuccess(data);
         }
+        [JwtAuthorize]
         public async Task<ActionResult> GetWindingModelData(int CapID, string Month)
         {
             var data = await _cap.GetWindingModels(Month, CapID) ?? new List<WindingModel>();
@@ -134,6 +135,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
 
             return JsonSuccess(data);
         }
+        [JwtAuthorize]
         public async Task<ActionResult> GetPressModelData(int CapID, string Month)
         {
             var data = await _cap.GetPressModels(Month, CapID) ?? new List<PressModel>();
@@ -142,6 +144,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
 
             return JsonSuccess(data);
         }
+        [JwtAuthorize]
         public async Task<ActionResult> GetCircuitModelData(int CapID, string Month)
         {
             var data = await _cap.GetCircuitModels(Month, CapID) ?? new List<CircuitModel>();

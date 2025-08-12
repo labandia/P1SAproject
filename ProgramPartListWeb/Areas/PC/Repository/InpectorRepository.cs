@@ -5,6 +5,7 @@ using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Models;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.PerformanceData;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -97,6 +98,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                 PIC = reg.PIC,
                 PIC_Comments = reg.PIC_Comments,
                 Manager = reg.Manager,
+                CounterPath = reg.CounterPath,
                 Manager_Comments = reg.Manager_Comments
             });
 

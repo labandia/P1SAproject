@@ -4,6 +4,7 @@ namespace ProgramPartListWeb.Models
 {
     public class UsersModel
     {
+        [Key]
         public int User_ID { get; set; }
 
         private string _employee_ID;
@@ -31,6 +32,13 @@ namespace ProgramPartListWeb.Models
         public string Fullname { get; set; }
     }
 
+
+    public class RefreshTokenModel
+    {
+        public string RefreshToken { get; set; }
+    }
+
+
     // FOR INPUT DATA 
     public class RegisterModel
     {
@@ -43,6 +51,14 @@ namespace ProgramPartListWeb.Models
         public int Role_ID { get; set; }
         public string Email { get; set; }
     }
+
+    public class ChangePassModel
+    {
+        public int User_ID { get; set; }
+        public int Project_ID { get; set; }
+        public string Password { get; set; }
+    }
+
 
 
     public class UserViewModel

@@ -565,6 +565,8 @@ namespace PMACS_V2.Areas.P1SA.Repository
                             "WHERE c.Capgroup_ID = " + capid + " " +
                             "ORDER BY c.Capinfo_ID";
 
+            Debug.WriteLine(strsql);
+
             return SqlDataAccess.GetData<CircuitModel>(strsql);
         }
 

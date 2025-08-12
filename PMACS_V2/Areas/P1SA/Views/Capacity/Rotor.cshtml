@@ -63,23 +63,22 @@
             @* ########################   Display the Data Table  ###############################*@
             <div class="capacity_col">
                 <div class="cap_header">
-                    <div class="row align-items-center">
-                        <div class="col-6">
-                            <div class="masterlistInput">
+                    <div class="row">
+                        <div class="col-5">
+                            <div class="searchinputContainer">
+                                <i class="fa-solid fa-magnifying-glass"></i>
                                 <input type="text" placeholder="Search here ... " id="searchbox" />
                                 <div class="line"></div>
-                                <i class="fa-solid fa-magnifying-glass"></i>
                             </div>
                         </div>
-
                         <div class="col-6">
-                            <i class="fa fa-cogs"></i>
-                            <select id="Processid" name="Processid">
-                                <option Value="None" data-icon="fas fa-cogs">Process</option>
-                            </select>
+                            <div class="select-container">
+                                <select id="Processid" name="Processid">
+                                    <option Value="None" data-icon="fas fa-cogs">Process</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
-
                 </div>
                 @*DISPLAY THE TABLE DATA*@
                 <div class="tablewrap">
@@ -269,9 +268,7 @@
 </div>
 
 
-<script src="~/Scripts/jquery-3.7.0.js"></script>
-<script src="~/Scripts/Utilities.js"></script>
-<script src="~/Scripts/Global.js"></script>
+
 <script type="text/javascript">
      // CAPACITY PROCESSS type
      let cap_groupID = parseInt(@capid);
@@ -321,8 +318,8 @@
     let Summaryload_table = $("#SummarybodyID");
 
     const GetCapacitySummary = async() => {
-          loadingSummary();
-          let res = await fetchData('@Url.Action("GetCapacitySummaryList", "Capacity")', { month: Month, capid: cap_groupID });
+        loadingSummary();
+        let res = await FetchAuthenticate('@Url.Action("GetCapacitySummaryList", "Capacity")', { month: Month, capid: cap_groupID });
           if (res && res.Success) {
              SummaryData = res.Data;
 
@@ -350,7 +347,7 @@
           var SetData = $("#dataSearching");
           $("#dataSearching").empty();
           $("#tableloads").show();
-           let res = await fetchData('@Url.Action("GetRotorModelData", "Capacity")', { CapID: cap_groupID, Month: Month });
+           let res = await FetchAuthenticate('@Url.Action("GetRotorModelData", "Capacity")', { CapID: cap_groupID, Month: Month });
            if (res &&  res.Success) {
                TableData = res.Data;
                $("#tableloads").hide();

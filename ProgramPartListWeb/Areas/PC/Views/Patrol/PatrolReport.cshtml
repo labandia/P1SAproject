@@ -10,8 +10,10 @@
         <i class="fa-solid fa-magnifying-glass"></i>
         <input type="text" placeholder="Search here ... " id="searchbox" autocomplete="off" />
         <div class="line"></div>
-
     </div>
+    
+
+   
     <button id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-file-circle-plus"></i> Add New</button>
 </header>
 
@@ -25,6 +27,7 @@
                 <th><i class="fa-regular fa-user"></i> <span style="margin-left: .5em;">PIC</span></th>
                 <th><i class="fa-regular fa-calendar"></i> <span style="margin-left: .5em;">Date Conducted</span> </th>
                 <th> <i class="fa-regular fa-file-lines"></i> <span style="margin-left: .5em;">File Attached</span></th>
+                <th> <i class="fa-regular fa-file-lines"></i> <span style="margin-left: .5em;">CounterMeasure</span></th>
                 <th id="hiddenColumn"> <i class="fa-solid fa-bolt"></i> <span style="margin-left: .5em;">Delete</span> </th>
             </tr>
         </thead>
@@ -55,6 +58,16 @@
                 regisTable = res.Data;
                 TableDisplay.empty();
                 MasterlistPagination(regisTable, 'MasterlistData', 'MastertableContainer', 50, 5);
+            } else {
+                const loadData = `<tr>
+                  <td colspan='8'>
+                      🔍 ${res.Message}
+                  </td>
+              </tr>`;
+
+                TableDisplay.empty();
+                TableDisplay.append(loadData);
+
             }
         });
     }
@@ -108,6 +121,18 @@
                             </div>
                     </td>`;
 
+                let hasPDFfile = (rowData.Filepath != null && rowData.Filepath.trim() !== "") 
+                            ? `<button class="open-pdf-btn" data-pdf-url="/Patrol/ViewPDF?strfilepath=${rowData.Filepath}">
+                                  <i class="fa-solid fa-file-pdf"></i>
+                                </button>`
+                            : `<i class="fa-solid fa-square-xmark text-danger"></i>`;
+
+                let hasExcelfile = (rowData.CounterPath != null && rowData.CounterPath.trim() !== "") 
+                            ? `<button class="open-pdf-btn" data-pdf-url="/Patrol/ViewExcel?strfilepath=${encodeURIComponent(rowData.CounterPath)}">
+                                    <i class="fa-solid fa-file-excel"></i>
+                                </button>`
+                            : `<i class="fa-solid fa-square-xmark text-danger"></i>`;
+
                 const rowHtml = `
                  <tr class='row_${i} editButton' id='editButton_${rowData.RegNo}'>
                      <td style='font-weight: 600; text-align: left; padding-left: 1.5em;' data-cell="RegNo">${rowData.RegNo}</td>
@@ -117,11 +142,14 @@
                      <td data-cell="DateConduct">${rowData.DateConduct}</td>
                      <td data-cell="Filepath" >
                         <div class='flex_center'>
-                             <button class="open-pdf-btn" data-pdf-url="/Patrol/ViewPDF?strfilepath=${rowData.Filepath}">
-                                 <i class="fa-solid fa-paperclip"></i>
-                             </button>
+                            ${hasPDFfile}
                         </div>   
                      </td>
+                     <td data-cell="CounterPath" >
+                       <div class='flex_center'>
+                            ${hasExcelfile}
+                       </div>   
+                    </td>
                      ${usercontrol}
                  </tr>`;
 
@@ -190,6 +218,8 @@
         });
 
 
+
+
          //Handle click event for edit button
         $(document).on('click', '.deleteData',  function (e) {
             e.stopPropagation();
@@ -256,7 +286,7 @@
     function loadingDisplay() {
         TableDisplay.empty();
         var loadData = `<tr>
-                        <td colspan='7'>
+                        <td colspan='8'>
                             <div class='Loadercontainer'>
                                 <span class="loader"></span>
                                 <p id="loadingStepText">Fetching data from the database..</p>
@@ -287,7 +317,25 @@
         }, 800);
     }
 
+   document.addEventListener("DOMContentLoaded", function () {
+    // Delegate click events from the table body
+    document.getElementById("MasterlistData").addEventListener("click", function (e) {
+        const button = e.target.closest(".open-pdf-btn");
+        if (button) {
+            e.preventDefault();
 
+            const fileUrl = button.getAttribute("data-pdf-url");
+
+            if (!fileUrl) {
+                alert("No file path provided.");
+                return;
+            }
+
+            // Open file in a new tab/window
+            window.open(fileUrl, "_blank");
+        }
+    });
+});
 
     $(document).ready(() => {
         if (ActionRestrict() === false) {

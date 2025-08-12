@@ -270,6 +270,16 @@
                 masterlist = res.Data;
                 TableDisplay.empty(); // Removing the Loading Display
                 MasterlistPagination(masterlist, 'MasterlistData', 'MastertableContainer', 50, 5);
+            } else {
+                const loadData = `<tr>
+                  <td colspan='6'>
+                      🔍 ${res.Message}
+                  </td>
+              </tr>`;
+
+                TableDisplay.empty();
+                TableDisplay.append(loadData);
+
             }
         });
     }

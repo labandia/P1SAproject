@@ -240,11 +240,13 @@
         e.preventDefault();
         let formData = new FormData(e.target);
         formData.append('ProjectID', 9);
-        if (RegisterValidationForm()) {
-            //const savebtn = document.querySelector("#Regisbtn");
-            //savebtn.innerHTML = " <div class='buttonloading'></div>";
+        
+        const data = Object.fromEntries(formData);
+        if (!RegisterValidationForm()) {
+              //const savebtn = document.querySelector("#Regisbtn");
+              //savebtn.innerHTML = " <div class='buttonloading'></div>";
             let res = await postData('/User/CreateNewUser', formData);
-            if (res.StatusCode === 201) {
+            if (res && res.Success) {
                 Swal.fire({
                     title: "Success",
                     text: res.Message,
@@ -274,8 +276,35 @@
     changeform.addEventListener('submit', async (e) => {
         e.preventDefault();
         let formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+       
         if (ChangeValidationForm()) {
+            console.log(data);
+            let res = await postData('/User/ChangePassword', formData);
+            if (res && res.Success) {
+                Swal.fire({
+                    title: "Success",
+                    text: res.Message,
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
+                    $("#ChangepasswordModal").modal('hide');
+                    changeform.reset();
+                    //savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-regular fa-floppy-disk'></i>  Registered</span>"
+                    //document.querySelector('.Registrationcontainer').classList.remove('activeforms');
+                    //document.querySelector('.logincontainer').classList.add('activeforms');
+                });
 
+                //savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-regular fa-floppy-disk'></i>  Registered</span>"
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    text: res.Message,
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            }
         }
     });
 
@@ -287,8 +316,9 @@
         if (pass !== confirmpass) {
             $("#Errormessage").text("Password does not Match");
             $("#Errormessage").css("color", "darkred");
-            return;
+            return true;
         }
+        return false;
     };
     const ChangeValidationForm = async () => {
         let newpass = $("#CNewPassword").val();

@@ -23,7 +23,6 @@ namespace ProductConfirm.DataAccess
             string strquery = "Prod_userlogin";
             var parameters = new { username = users };
 
-            // Calls the data provider to get user information
             return await SqlDataAccess.Checkdata(strquery, parameters);
         }
 

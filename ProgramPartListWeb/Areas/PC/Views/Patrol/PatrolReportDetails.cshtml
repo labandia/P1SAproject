@@ -10,7 +10,7 @@
         <div class="col-12">
             <div class="d-flex align-items-center gap-4">
                 <a href="/PC/Patrol/PatrolReport"><i class="fa-solid fa-arrow-left"></i></a>
-                <h5 class="mb-0 fw-bold">Details Information  <input type="hidden"  id="Regno" value="@regno" />  </h5>
+                <h5 class="mb-0 fw-bold">Details Information  <input type="hidden" id="Regno" value="@regno" />  </h5>
             </div>
             <hr />
             <div class="row">
@@ -23,18 +23,18 @@
                 <div class="col">
                     <label>Input Inspectors <small style="color: #a81818; font-weight: 600;">*</small> </label>
                     @*<div class="select-container">
-                        <select id="Employee_ID" name="Employee_ID">
-                            <option>-- Select Inspector --</option>
-                        </select>
-                    </div>*@
-                    <div class="flex_align" >
+                            <select id="Employee_ID" name="Employee_ID">
+                                <option>-- Select Inspector --</option>
+                            </select>
+                        </div>*@
+                    <div class="flex_align">
                         <div class="search-box" style="width: 70%;">
                             <input type="hidden" name="Employee_ID" id="Employee_ID">
                             <input type="text" placeholder="Type Name or ID no." name="EmployeeSearch" id="EmployeeSearch">
                             <div class="namesdisplay"></div>
                         </div>
                         <small>Include signature: </small>
-                        <input type="checkbox" name="IsSign" id="IsSign"  />
+                        <input type="checkbox" name="IsSign" id="IsSign" />
                     </div>
 
                 </div>
@@ -165,6 +165,14 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-12 col-sm-12 col-lg-6">
+            <label>Upload Counter Measures file</label> <br />
+            <input type="file" name="ExcelFile" id="ExcelFile" accept=".xlsx,.xls" class="form-control" />
+            <small class="text-muted">Only .xlsx or .xls files are allowed</small>
+        </div>
+    </div>
+
     <hr />
 
     <div class="d-flex align-items-center justify-content-between">
@@ -191,7 +199,6 @@
      }
     const ReportsDetails = async () => {
         let res = await FetchAuthenticate('@Url.Action("GetRegistrationNoByID", "Patrol")', { Regno: strRegno });
-        console.log(res);
         if (res && res.Success) {
                 let RegisterData = res.Data.Register;
                 let FindingData = res.Data.Finding;
@@ -294,6 +301,22 @@
           e.preventDefault();
           const savebtn = document.querySelector("#btnSave");
           savebtn.innerHTML = " <div class='buttonloading'></div> Generating PDF Please wait...";
+
+          // Optional: Validate Excel file input before sending
+          let fileInput = document.querySelector('#ExcelFile');
+          let file = fileInput?.files[0];
+          if (file) {
+              if (!/\.(xls|xlsx)$/i.test(file.name)) {
+                  Swal.fire({
+                      icon: "error",
+                      text: "Only Excel files (.xls, .xlsx) are allowed",
+                      timer: 1500,
+                      showConfirmButton: false
+                  });
+                  savebtn.innerHTML = "Save";
+                  return;
+              }
+          }
 
 
           let strfind = findingsJson(e.target);

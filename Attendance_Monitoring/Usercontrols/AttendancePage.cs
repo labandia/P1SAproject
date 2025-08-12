@@ -142,7 +142,7 @@ namespace Attendance_Monitoring.Usercontrols
 
 
                         timer.Start();
-                        TimeAttendanceDisplay(selecttime.SelectedIndex);
+                        await TimeAttendanceDisplay(selecttime.SelectedIndex);
                     }
                     else
                     {
@@ -284,7 +284,7 @@ namespace Attendance_Monitoring.Usercontrols
 
                         if (success)
                         {
-                            TimeAttendanceDisplay(selecttime.SelectedIndex);
+                            await TimeAttendanceDisplay(selecttime.SelectedIndex);
                             TextName.Text = fullname;
                             // Code to execute after the delay
                             Statustext.BackColor = Color.FromArgb(50, 181, 111);
@@ -412,7 +412,7 @@ namespace Attendance_Monitoring.Usercontrols
 
                         if (success)
                         {
-                            TimeAttendanceDisplay(selecttime.SelectedIndex);
+                            await TimeAttendanceDisplay(selecttime.SelectedIndex);
                             TextName.Text = fullname;
                             // Code to execute after the delay
                             Statustext.BackColor = Color.FromArgb(50, 181, 111);
@@ -506,14 +506,14 @@ namespace Attendance_Monitoring.Usercontrols
             }
         }
 
-        private void Searchinput(object sender, EventArgs e)
+        private async void Searchinput(object sender, EventArgs e)
         {
             string filterText = textBox2.Text.ToLower();
 
             // If the input Text is String only returns to Default Data
             if (String.IsNullOrEmpty(filterText))
             {
-                TimeAttendanceDisplay(selecttime.SelectedIndex);
+                await TimeAttendanceDisplay(selecttime.SelectedIndex);
                 textBox2.Focus();
                 return;
             }

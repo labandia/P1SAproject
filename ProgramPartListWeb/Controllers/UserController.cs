@@ -4,14 +4,12 @@ using ProgramPartListWeb.Models;
 using ProgramPartListWeb.Utilities.Security;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
-using System.Web.Security;
+
 
 namespace ProgramPartListWeb.Controllers
 {
@@ -49,14 +47,30 @@ namespace ProgramPartListWeb.Controllers
                 // Insert in the Database
                 await _user.CreateNewAccount(obj);
 
-                return JsonCreated(obj, "Add Inspector Successfully");
+                return JsonCreated(obj, "New Account Created Successfully");
             }
             catch (Exception ex)
             {
                 return JsonError(ex.Message, 500);
             }
         }
+        [HttpPost]
+        public async Task<ActionResult> ChangePassword(string CEmployee_ID, string CNewPassword)
+        {
+            var data = await _user.GetAllusers();
+            int GetUserID = data.SingleOrDefault(res => res.Employee_ID == CEmployee_ID).User_ID;
 
+            var obj = new ChangePassModel
+            {
+                User_ID = GetUserID,
+                Project_ID = 9,
+                Password = PasswordHasher.Hashpassword(CNewPassword)
+            };
+
+            bool result = await _user.Changepassword(obj);
+            if (!result) return JsonValidationError();
+            return JsonCreated(null, "Change Password Successfully");
+        }
         [HttpPost]
         public async Task<ActionResult> CheckMatchPassword(int ID, string password)
         {     
@@ -84,7 +98,7 @@ namespace ProgramPartListWeb.Controllers
         [HttpGet]
         public async Task<ActionResult> CheckEmployeeID(string empID)
         {
-            var data = await _user.GetUserEmployeeID();
+            var data = await _user.GetAllusers();
             var filterData = data.Where(res => res.Employee_ID == empID);
             return Json(filterData.Any() ? true : false, JsonRequestBehavior.AllowGet);
         }
@@ -158,67 +172,39 @@ namespace ProgramPartListWeb.Controllers
                 return Json(new { success = false, message = ex.Message }, JsonRequestBehavior.AllowGet);
             }
         }
-
-        public class RefreshTokenModel
-        {
-            public string RefreshToken { get; set; }
-        }
-
-
         [HttpPost]
         public JsonResult RefreshToken(RefreshTokenModel request)
         {
-            Debug.WriteLine("Request : " + request);
+            var principal = JWTAuthentication.ValidateRefreshToken(request.RefreshToken);
 
-            //var principal = JWTAuthentication.ValidateRefreshToken(request.RefreshToken);
-            //if (principal == null)
-            //    return Json(new { success = false, message = "Invalid refresh token" });
-
-
-            //string userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            //var fullname = principal.FindFirst("Fullname")?.Value;
-            //string role = principal.FindFirst(ClaimTypes.Role)?.Value;
-
-            //if (string.IsNullOrEmpty(userId))
-            //    return Json(new { success = false, message = "Invalid token claims" });
+            if (principal == null)
+                return Json(new { success = false, message = "Invalid refresh token" });
 
 
-            //var newAccessToken = JWTAuthentication.GenerateAccessToken(fullname, role, int.Parse(userId));
-            //var newRefreshToken = JWTAuthentication.GenerateRefreshToken(fullname, role, int.Parse(userId)); // optional
+            string userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var fullname = principal.FindFirst("Fullname")?.Value;
+            string role = principal.FindFirst(ClaimTypes.Role)?.Value;
+
+
+            if (string.IsNullOrEmpty(userId))
+                return Json(new { success = false, message = "Invalid token claims" });
+
+
+            var newAccessToken = JWTAuthentication.GenerateAccessToken(fullname, role, int.Parse(userId));
+            var newRefreshToken = JWTAuthentication.GenerateRefreshToken(fullname, role, int.Parse(userId)); // optional
 
             return Json(new
             {
                 success = true,
-                accessToken = "ADASD",
-                refreshToken = "adasda"
+                accessToken = newAccessToken,
+                refreshToken = newRefreshToken
             });
         }
-
-
-
-
-        public void SetFormsAuthentication(int userID)
-        {
-            // Set Forms Authentication ticket
-            var authTicket = new FormsAuthenticationTicket(
-                1,
-                GlobalUtilities.UserRolesname(userID), // This becomes Identity.Name
-                DateTime.Now,
-                DateTime.Now.AddMinutes(30),
-                false,
-                userID.ToString() // user data - optional
-            );
-
-            string encryptedTicket = FormsAuthentication.Encrypt(authTicket);
-            var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
-            Response.Cookies.Add(authCookie);
-        }
-
         [HttpGet]
         public async Task<ActionResult> GetUsersFullname(int userID)
         {
-            string Fullname = await _user.UsersFullname(userID);
-            return Json(new { Fullname }, JsonRequestBehavior.AllowGet);
+            var data = await _user.GetUserById(userID);
+            return Json(new { data.Fullname }, JsonRequestBehavior.AllowGet);
         }
 
         //IDLE USER WITHIN 60 SECONDs

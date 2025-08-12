@@ -56,15 +56,15 @@
                 @* ########################   Display the Data Table  ###############################*@
                 <div class="capacity_col">
                     <div class="cap_header">
+                      
                         <div class="row">
-                            <div class="masterlistInput">
-                                <input type="text" placeholder="Search here ... " id="searchbox" />
-                                <div class="line"></div>
-                                <i class="fa-solid fa-magnifying-glass"></i>
+                            <div class="col-5">
+                                <div class="searchinputContainer">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                    <input type="text" placeholder="Search here ... " id="searchbox" />
+                                    <div class="line"></div>
+                                </div>
                             </div>
-
-
-
                         </div>
 
                     </div>
@@ -613,9 +613,6 @@
 </div>
 
 
-<script src="~/Scripts/jquery-3.7.0.js"></script>
-<script src="~/Scripts/Utilities.js"></script>
-<script src="~/Scripts/Global.js"></script>
 <script type="text/javascript">
      // CAPACITY PROCESSS type
     let cap_groupID = parseInt(@capid);
@@ -654,7 +651,7 @@
 
     const GetCapacitySummary = async() => {
         loadingSummary();
-        let res = await fetchData('@Url.Action("GetCapacitySummaryList", "Capacity")', { month: Month, capid: cap_groupID });
+        let res = await FetchAuthenticate('@Url.Action("GetCapacitySummaryList", "Capacity")', { month: Month, capid: cap_groupID });
         if (res && res.Success) {
             SummaryData = res.Data;
 
@@ -672,7 +669,7 @@
          }
     }
     const GetPressData = async () => {
-       let res = await fetchData('@Url.Action("GetPressModelData", "Capacity")', { CapID: cap_groupID, Month: Month });
+       let res = await FetchAuthenticate('@Url.Action("GetPressModelData", "Capacity")', { CapID: cap_groupID, Month: Month });
         if (res && res.Success) {
             TableData = res.Data;
             $("#tableloads").hide();
@@ -1101,18 +1098,30 @@
         });
     });
 
-    // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
-    const InitializeData = () => {
-        $("#EditCapacity").show();
-        // GET THE USERS DATA
-        //userDataRole();
-        // GET SUMMARY DATA FOR ALL
-        GetCapacitySummary();
-        // GET THE TABLE DATA
-        GetPressData();
 
+    // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+    const LoadPageData = async () => {
+        try {
+            //if (ActionRestrict() === false) {
+            //    $("#headertable").hide();
+            //}
+
+            $("#EditCapacity").show();
+
+            const [logs, manpower, total] = await Promise.all([
+                GetCapacitySummary(),
+                GetPressData()
+            ]);
+
+        } catch (error) {
+            console.error("Failed to load page data:", error);
+        } finally {
+            // Hide loading spinner whether success or failure
+            //$("#loadingSpinner").hide();
+        }
     }
 
-    // ##############  LOADS THE DATA WHEN THE PAGE IS LOADED ##############
-    InitializeData();
+    $(document).ready(() => {
+        LoadPageData();
+    });
 </script>

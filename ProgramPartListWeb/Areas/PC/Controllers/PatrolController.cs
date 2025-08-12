@@ -12,6 +12,7 @@ using Spire.Xls;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -373,7 +374,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             //string Fullname = data.FirstOrDefault(p => p.EmployeeID == Request.Form["Employee_ID"])?.Fullname;
 
             // Set File Name For Registration No. PDF file
-            string newFileName = Request.Form["RegNo"] + "_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".xlsx";
+            string newFileName = $"RN_{Request.Form["RegNo"]}_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.xlsx";
             string outputPdfPath = newFileName.Replace(".xlsx", ".pdf");
 
 
@@ -388,7 +389,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             {
                 string uploadedFileName = Path.GetFileNameWithoutExtension(ExcelFile.FileName);
                 string fileExtension = Path.GetExtension(ExcelFile.FileName);
-                string savedFileName = $"Countermeasure_{Request.Form["RegNo"]}_{DateTime.Now:yyyyMMdd_HHmmss}{fileExtension}";
+                string savedFileName = $"CM_{Request.Form["RegNo"]}_{DateTime.Now:yyyyMMdd_HHmmss}{fileExtension}";
 
                 strExcelname = savedFileName;
 
@@ -448,18 +449,62 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
         }
         [HttpPost]
-        public async Task<ActionResult> EditRegistration()
+        public async Task<ActionResult> EditRegistration(HttpPostedFileBase ExcelFile)
         {
             var data = await _ins.GetEmployee() ?? new List<Employee>();
             int Department = Convert.ToInt32(data.FirstOrDefault(p => p.EmployeeID == Request.Form["Employee_ID"])?.Department_ID);
             bool isSign = !string.IsNullOrEmpty(Request.Form["IsSign"]);
 
-            string exportFolder = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\";
-            string excelfilepath = Path.Combine(exportFolder, Request.Form["Filepath"]);
 
-            // Set File Name For the Database
-            string newFileName = Request.Form["RegNo"] + "_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".xlsx";
-            string outputPdfPath = newFileName.Replace(".xlsx", ".pdf");
+            // Step 1:  Get existing record to get old Countermeasures Excel file path if needed
+            var regData = await _ins.GetRegistrationData();
+            string oldCounterPath = regData.SingleOrDefault(res => res.RegNo == Request.Form["RegNo"]).CounterPath;
+
+              // Prepare new file names
+    string newFileName = $"RN_{Request.Form["RegNo"]}_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+    string outputPdfPath = newFileName.Replace(".xlsx", ".pdf");
+
+
+            string newCounterPath = null;
+
+            // Default template path for PDF generation (keep your default or adjust if needed)
+            string templatePath = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Uploads/PGFY-00031FORM_1.xlsx");
+
+            // Step 2: Checks If a new Excel file is uploaded
+            if (ExcelFile != null && ExcelFile.ContentLength > 0)
+            {
+                string fileExtension = Path.GetExtension(ExcelFile.FileName);
+                string savedFileName = $"CM_{Request.Form["RegNo"]}_{DateTime.Now:yyyyMMdd_HHmmss}{fileExtension}";
+                newCounterPath = savedFileName;
+
+                // Save new Excel file
+                ExportFiler.SaveFileasExcel(ExcelFile, savedFileName);
+
+                // Delete old Countermeasures Excel file if exists and different
+                if (!string.IsNullOrEmpty(oldCounterPath))
+                {
+                    string exportFolder = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\";
+                    string oldFullPath = Path.Combine(exportFolder, oldCounterPath);
+
+                    if (System.IO.File.Exists(oldFullPath))
+                    {
+                        try
+                        {
+                            System.IO.File.Delete(oldFullPath);
+                        }
+                        catch (Exception ex)
+                        {
+                            // Log error but don't fail edit
+                            Debug.WriteLine("Failed to delete old Excel file: " + ex.Message);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // No new file uploaded, keep old CounterPath
+                newCounterPath = oldCounterPath;
+            }
 
 
             var obj = new RegistrationModel
@@ -473,22 +518,25 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 FilePath = outputPdfPath,
                 Manager = Request.Form["Manager"],
                 Manager_Comments = Request.Form["Manager_Comments"],
+                CounterPath = newCounterPath,
                 IsSigned = isSign
             };
 
             string findJson = Request.Form["FindJson"];
-            string templatePath = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Uploads/PGFY-00031FORM_1.xlsx");
+
+
+            // Step 3: UPDATES the Information and PDF FILE
             bool result = await _ins.EditRegistration(obj, findJson);
 
             if (result)
-            {
-                if (System.IO.File.Exists(excelfilepath))  System.IO.File.Delete(excelfilepath);
-                
+            {   
                 CacheHelper.Remove("Registration");
                 await ExportFiler.SaveFileasPDF(obj, findJson, GlobalUtilities.DepartmentName(Department), newFileName, templatePath, isSign);
             }
 
             if (!result) JsonValidationError();
+
+
             return JsonCreated(result, "Updated successfully");
 
         }
@@ -592,12 +640,27 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         public ActionResult ViewPDF(string strfilepath)
         {
             // Map your RegNo to a file path or file bytes
-            var filePath = $"\\\\SDP010F6C\\Users\\USER\\Pictures\\Access\\Excel\\" + strfilepath;
+            var filePath = $"\\\\SDP010F6C\\Users\\USER\\Pictures\\Access\\Excel\\Patrol_Registration\\" + strfilepath;
 
             if (!System.IO.File.Exists(filePath))
                 return HttpNotFound();
 
             return File(filePath, "application/pdf");
+        }
+
+        public ActionResult ViewExcel(string strfilepath)
+        {
+            var filePath = $@"\\SDP010F6C\Users\USER\Pictures\Access\Excel\Patrol_Countermeasure\{strfilepath}";
+
+            if (!System.IO.File.Exists(filePath))
+                return HttpNotFound();
+
+            // Choose MIME type based on file extension
+            string contentType = Path.GetExtension(filePath).ToLower() == ".xls"
+                ? "application/vnd.ms-excel"
+                : "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+            return File(filePath, "application/vnd.ms-excel", Path.GetFileName(filePath));
         }
 
 

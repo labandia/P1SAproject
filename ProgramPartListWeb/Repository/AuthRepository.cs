@@ -3,11 +3,8 @@ using ProgramPartListWeb.Interfaces;
 using ProgramPartListWeb.Models;
 using ProgramPartListWeb.Utilities;
 using ProgramPartListWeb.Utilities.Security;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace ProgramPartListWeb.Repository
 {
@@ -48,12 +45,6 @@ namespace ProgramPartListWeb.Repository
 
         public bool VerifyPassword(string enteredPassword, string storedHash) => PasswordHasher.VerifyPassword(storedHash, enteredPassword);
        
-        public Task<bool> Changepassword(int ID, string newpass)
-        {
-            string strsql = $@"UPDATE UserAccounts SET Password =@Password
-                               WHERE User_ID =@User_ID";
-            var parameter = new { Password = newpass, User_ID = ID };
-            return SqlDataAccess.UpdateInsertQuery(strsql, parameter);
-        }
+        
     }
 }

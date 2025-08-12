@@ -230,8 +230,6 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         // GET: P1SA/DieMold
         public ActionResult DieMoldLife() =>  View();
         public ActionResult DiePressLife() => View();
-
-
         // GET: P1SA/DieMold/DiePressMonitorDetails/:ID
         public async Task<ActionResult> DiePressMonitorDetails(int ID)
         {
@@ -244,7 +242,6 @@ namespace PMACS_V2.Areas.P1SA.Controllers
 
             return View(filterData);
         }
-
 
     }
 }

@@ -15,7 +15,7 @@ namespace ProgramPartListWeb.Data
     {
         public Task<List<UsersModel>> GetAllusers()
         {
-            string strquery = $@"SELECT ua.User_ID, ua.Username, 
+            string strquery = $@"SELECT ua.User_ID, ua.Username, u.Employee_ID,
                                 ua.Password, u.Fullname, ua.Role_ID, u.Signature, u.Email
                                 FROM UserAccounts ua
                                 INNER JOIN Users u ON u.User_ID = ua.User_ID
@@ -23,41 +23,49 @@ namespace ProgramPartListWeb.Data
                                 WHERE IsActive = 1";
             return UsersAccess.UserGetData<UsersModel>(strquery);
         }
+        public async Task<UsersModel> GetUserById(int userId)
+        {
+            var data = await GetAllusers();
+            var filterData = data.SingleOrDefault(res => res.User_ID == userId);
 
-      
-
+            return filterData == null ? null : filterData;
+        }
         public async Task<bool> CheckAccountsTable(RegisterModel reg)
         {
+            // Step 1: Ensure user exists
             string strUsers = "SELECT COUNT(*) FROM Users WHERE Employee_ID =@Employee_ID";
-            bool CheckUser = await SqlDataAccess.Checkdata(strUsers, new { Employee_ID = reg.Employee_ID });
+            bool userExists = await SqlDataAccess.Checkdata(strUsers, new { Employee_ID = reg.Employee_ID });
 
             // If the User doesnt exist in the Users Table
-            if (!CheckUser)
+            if (!userExists)
             {
-                string insUser = "INSERT INTO Users(Employee_ID, FullName, Email) VALUES(@Employee_ID, @FullName, @Email)";
+                // INSERT a new Employee ID 
+                string insUser = @"
+                        INSERT INTO Users (Employee_ID, FullName, Email)
+                        SELECT @Employee_ID, @FullName, @Email
+                        WHERE NOT EXISTS (
+                            SELECT 1 FROM Users WHERE Employee_ID = @Employee_ID
+                        )";
                 await SqlDataAccess.UpdateInsertQuery(insUser, reg);
             }
 
-            int UserID = await GetUserID(reg.Employee_ID);
+            // Step 2: Get User ID
+            var data = await GetAllusers();
+            int userId = data.SingleOrDefault(res => res.Employee_ID == reg.Employee_ID).User_ID;
+            if (userId == 0) return false;
 
-            if (UserID != 0)
-            {
-                // Check if user Exist in the database
-                string strAccounts = $@"SELECT COUNT(*) 
+            // Check if user Exist in the database
+            string strAccounts = $@"SELECT COUNT(*) 
                                         FROM UserAccounts 
-                                        WHERE (User_ID = @User_ID AND Username = @Username) 
-                                        AND Project_ID = @Project_ID";
-                bool checkAccount = await SqlDataAccess.Checkdata(strAccounts, new { User_ID = UserID, Username = reg.Username, Project_ID = reg.Project_ID });
-                return checkAccount;
-            }
-            else
-            {
-                return false;
-            }
+                                        WHERE (User_ID = @User_ID AND Project_ID = @Project_ID)";
+            bool checkAccount = await SqlDataAccess.Checkdata(strAccounts, new { User_ID = userId, Project_ID = reg.Project_ID });
+            return checkAccount;
+
         }
         public async Task<bool> CreateNewAccount(RegisterModel reg)
         {
-            int UserID = await GetUserID(reg.Employee_ID);
+            var data = await GetAllusers();
+            int UserID = data.SingleOrDefault(res => res.Employee_ID == reg.Employee_ID).User_ID;
             if (UserID == 0) return false;
 
             // if user account doesnt Exist
@@ -72,52 +80,6 @@ namespace ProgramPartListWeb.Data
                 Role_ID = reg.Role_ID
             });
         }
-
-
-
-
-        public async Task<string> UsersFullname(int id)
-        {
-            string strquery = $@"SELECT First_Name, Last_Name FROM UserAccounts WHERE User_ID = @userid";
-            var data = await UsersAccess.UserGetData<AuthModel>(strquery, new { userid = id });
-            var RowData = data.FirstOrDefault();
-
-            return RowData.Fullname;
-        }
-
-
-        public Task<bool> RegiserUserData(object parameters)
-        {
-            string strquery = "INSERT UserAccounts(Username, Password, Role_ID, First_Name, " +
-                              "Last_Name) VALUES (@Username, @Password, @Role_ID, @First_Name, @Last_Name)";
-            return UsersAccess.UpdateUserData(strquery, parameters); 
-        }
-
-       
-        public async Task<UsersModel> GetUserById(int userId)
-        {
-            var data = await GetAllusers();
-            var filterData = data.SingleOrDefault(res => res.User_ID == userId);    
-
-            return filterData == null ? null : filterData;
-        }
-
-        
-
-        public Task<int> GetUserID(string Employee)
-        {
-            string strsql = "SELECT User_ID FROM Users WHERE Employee_ID =@Employee_ID";
-            return SqlDataAccess.GetCountDataSync(strsql, new { Employee_ID = Employee });
-        }
-
-        public Task<List<UsersModel>> GetUserEmployeeID()
-        {
-            string strsql = "SELECT Employee_ID, FullName, Email FROM Users";
-            return SqlDataAccess.GetData<UsersModel>(strsql, null);
-        }
-
-     
-
         public async Task<bool> SaveSignatureData(int userID, string fileName)
         {
             string strsql = "UPDATE Users Set Signature =@Signature WHERE User_ID =@User_ID";
@@ -144,12 +106,12 @@ namespace ProgramPartListWeb.Data
 
             return await SqlDataAccess.UpdateInsertQuery(strsql, new { Signature  = fileName, User_ID = userID});
         }
-
-        public Task<bool> SendEmailToDatabase(SentEmailModel em)
+        public Task<bool> Changepassword(ChangePassModel ch)
         {
-            string strquery = $@"INSERT P1SA_EmailSend(Sender, Recipient, Subject, Body) 
-                                VALUES (@Sender, @Recipient, @Subject, @Body)";
-            return UsersAccess.UpdateUserData(strquery, em);
+            string strsql = $@"UPDATE UserAccounts SET Password =@Password
+                               WHERE User_ID =@User_ID AND Project_ID = 9";
+            var parameter = new { Password = ch.Password, User_ID = ch.User_ID };
+            return SqlDataAccess.UpdateInsertQuery(strsql, parameter);
         }
     }
 }

@@ -113,28 +113,32 @@
             events: function (fetchInfo, successCallback, failureCallback) {
                  FetchAuthenticate('@Url.Action("GetCalendarEventsMonth", "Patrol")', {})
                      .then(res => {
-                         let data = res.Data;
-                         const departmentColors = {
-                             1: '#D7D1F8', // Molding - Soft Purple
-                             2: '#C8F1FF', // Press - Light Blue
-                             3: '#FFE8C7', // Rotor - Soft Orange
-                             4: '#E9ECEF',  // Winding - Light Grey
-                             5: '#FFE8C7', // Rotor - Soft Orange
-                             6: '#21096433'  // Winding - Light Grey
-                         };
+
+                         if (res && res.Success) {
+                             let data = res.Data;
+                             console.log(data);
+                             const departmentColors = {
+                                 1: '#D7D1F8', // Molding - Soft Purple
+                                 2: '#C8F1FF', // Press - Light Blue
+                                 3: '#FFE8C7', // Rotor - Soft Orange
+                                 4: '#E9ECEF',  // Winding - Light Grey
+                                 5: '#FFE8C7', // Rotor - Soft Orange
+                                 6: '#21096433'  // Winding - Light Grey
+                             };
 
 
-                         const events = data.map(item => ({
-                             title: item.Fullname + ' - ' + item.title, 
-                             start: item.start,
-                             backgroundColor: departmentColors[item.Department_ID] || '#dee2e6', // fallback
-                             borderColor: 'transparent',
-                             textColor: '#000',
-                             extendedProps: {
-                                 fullName: item.Fullname
-                             }
-                         }));
-                        successCallback(events);
+                             const events = data.map(item => ({
+                                 title: item.Fullname + ' - ' + item.title,
+                                 start: item.start,
+                                 backgroundColor: departmentColors[item.Department_ID] || '#dee2e6', // fallback
+                                 borderColor: 'transparent',
+                                 textColor: '#000',
+                                 extendedProps: {
+                                     fullName: item.Fullname
+                                 }
+                             }));
+                             successCallback(events);
+                         }
                 })
                 .catch(error => {
                     console.error('Error fetching calendar events:', error);

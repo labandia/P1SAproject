@@ -688,18 +688,24 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         }
 
         // GET: PC/Inspectors
+        [CompressResponse]
         public ActionResult Inspectors() => View();
         // GET: PC/PatrolReport
         public ActionResult CheckSheet() => View();
         // GET: PC/PatrolReport
         //[RoleAuthorize("Manager", "SuperAdmin")]
+        [CompressResponse]
         public ActionResult PatrolReport() => View();
         // GET: PC/PatrolReport
+        [CompressResponse]
         public ActionResult PatrolSchedule() => View();
         // GET: PC/AddReports
+        [CompressResponse]
         public ActionResult AddReports() => View();
         // GET: PC/PatrolReport
+        [CompressResponse]
         public ActionResult PatrolReportDetails(string Regno) => View();
+        [CompressResponse]
         public ActionResult Settings() => View();
     }
 }

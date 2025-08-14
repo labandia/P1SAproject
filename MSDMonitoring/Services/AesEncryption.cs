@@ -4,7 +4,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace ZebraPrinterLabel.Services
+namespace MSDMonitoring.Services
 {
     public static class AesEncryption
     {

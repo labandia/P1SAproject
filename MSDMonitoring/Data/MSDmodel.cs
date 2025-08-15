@@ -3,6 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MSDMonitoring.Data
 {
+ 
+
+
+
     public class MSDCardModel
     {
         public int RecordID { get; set; }
@@ -39,18 +43,20 @@ namespace MSDMonitoring.Data
     public class MSDmodel
     {
         [Key]
+        public int RecordID { get; set; }   
         public string ReelID { get; set; }
-        public string AmbassadorPartnum { get; set; }
+        public string Partnumber { get; set; }
         public int FloorLife { get; set; }
         public string Level { get; set; }
+        public string LotNo { get; set; }
         public string DateIn { get; set; }
         public string TimeIn { get; set; }
-        public int QuantityIN { get; set; }
-        public string InputIn { get; set; }
+        public int Reel_Quantity { get; set; }
+        public string InputName { get; set; }
         public string DateOut { get; set; }
         public string TimeOut { get; set; }
-        public int QuantityOut { get; set; }
-        public string INputOut { get; set; }
+        public int Quantity_IN { get; set; }
+        public string Input_Name { get; set; }
         public double Exphours { get; set;  }
         public double TotalHours { get; set; }
         public string RemainLife { get; set; }
@@ -81,6 +87,7 @@ namespace MSDMonitoring.Data
         public int QuantityIN { get; set; }
         public double RemainFloor { get; set; }
         public int Line { get; set; }
+        public string LotNo { get; set; }   
     }
 
 

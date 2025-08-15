@@ -99,7 +99,7 @@ namespace MSDMonitoring.Data
             }
         }
         // ############ GET THE TOTAL COUNT OF THE QUERY ########################
-        public static async Task<int> GetCountData(string query, object parameters)
+        public static async Task<int> GetCountData(string query, object parameters = null)
         {
             try
             {

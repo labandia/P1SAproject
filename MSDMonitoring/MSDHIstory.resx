@@ -117,6 +117,57 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <metadata name="ReelID.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="Partnumber.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="FloorLife.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="Level.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="LotNo.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="DateIn.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="TimeIn.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="Reel_Quantity.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="InputName.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="DateOut.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="TimeOut.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="Quantity_IN.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="Input_Name.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="Exphours.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="TotalHours.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="RemainLife.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="RecordID.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="Exitbtn.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -129,6 +180,43 @@
         TLc4mqf/JHbXl2fdCPYni7QLA2N80YrWLfkf2iM5S3WZi7RSO0E8qeyicYc+kkn9CX7sRbPHB048E2bF
         YWKK0QPDel6cNC0GlDVNwNAiUiFVXQyNSCtHngQfixnfBL4FHZc3F3wsppRrYICmy+eN+BId0AkeIhdD
         DZwVNK8TtBlLbgRcsh7ZsjIqLWxf0OepFSfEP9X5VBMPmqcCAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="label6.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAd1JREFUSEvt
+        lLtrFVEQh4Ng41sLEYkSLAQRRa1sFPJHLFzO/GZzds7NgjZWIorFbS0UfIA2KSIItkJIJ2ICIU1UsFC0
+        EQsRQXyAaBBUZpkVMptdL8RK/OCwj28ee/bs2ZGRf5aSeW8CzgnwUICPOgrggQBn+0SjPn5oiGiLAPcE
+        +NkxfiTmu2VZbvD5nWiCAE+tyDchuioh7Ku9ngvRDQGWLWaxLMv1K6t0IES3q0Tm133mA97X9PP8sABv
+        rMll71clEh2yhO8pz49670khnLT4Zen1dnvfoACua4IevWujYL6jOYn5vHcNBHipwZMTEwe9a0NCGK8a
+        AHPeNRDgiwYPBoN13rWRsmyHrdl77xoI8FmDmXmjd22czrJNtg7vvGsgwBNbg2PetdEnOm4N7nvXIBFd
+        qoKJbnrXhgDT9oqueddgMs/36w4d9jONwAl7+uFnXTBPWdIrbeh9TQzhiABvrfgt71txv4qvCbhS9Hp7
+        aq9NtaDOsn56IVoQkc0rK3VQZtlWAWZ+F1h9fNC/qgBLdv0oxrjN1+okxjgmwAUB5gX4ZK9kNjFfPBXC
+        do2xfVB9fQl4rNe+zpqpmjA/s5m8YOadPmbNaFEBnlczIRLv/woxxl0JOOPv/+eP/AIYwwpDoLbz7QAA
+        AABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="BtnPrev.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAGZJREFUSEtj
+        YBgFowAHmMzAwFCALkgtMIuBgeE/FLegS1IKkA0H4WnoCsgFjLQ2fCE9DZ+LrohcgMtwkDhVAM0tAAFc
+        llAVYLOEapEMA3SzhGZ5ARkgW9KGLkktALKEZoXdKBhiAADSozJijofdoAAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="BtnNext.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAGBJREFUSEtj
+        YBgFowAKKhkYGCajC1IL9DMwMPyH4lnoktQA05AsGNqWzKW1JYw4LAGJUw2ADFuCZslCalqCzRdUs4Cm
+        hoMAuuFUDX+aJlOaGg4CNC8qQKCaloXdKBjiAAAsoTJ6PZKIUAAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="Exportbtn.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAL1JREFUSEvt
+        lMEKwjAQRPsTguDBn+pfe5SqIH7LSCAp9m2SST33nTK7M7uXJNN0sAdJs6SH9nGTdOasKpIWpgd5Dy0p
+        bupO/STpmc9+SUlRt+r5nJak4Yn+ktagFj++i6RPLt/XgaQS7ILstVbfYA0Gm7cGg81bg8HmacgP71Xq
+        FVJvbuUDNAw+vKWVD9BATdinDtBATdinDtBATdinDtBATdinDtBATdinDgzeGsd6qwL53pef8R827+Jg
+        iC9FAQ+1szqcnAAAAABJRU5ErkJggg==
 </value>
   </data>
 </root>

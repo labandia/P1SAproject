@@ -1,5 +1,6 @@
 ﻿using MSDMonitoring.Interface;
 using System.Collections.Generic;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -26,8 +27,8 @@ namespace MSDMonitoring.Data
 
         public Task<bool> AddComponentsData(InputIN_MSD msd)
         {
-            string strinsert = $@"INSERT INTO MSD_MonitorList(ReelID, AmbassadorPartnum, DateIn, InputIn, QuantityIN, Line, RemainFloor) 
-                                     VALUES(@ReelID, @AmbassadorPartnum, @DateIn, @InputIn, @QuantityIN, @Line, @RemainFloor)";
+            string strinsert = $@"INSERT INTO MSD_MonitorList(ReelID, AmbassadorPartnum, DateIn, InputIn, QuantityIN, Line, RemainFloor, LotNo) 
+                                     VALUES(@ReelID, @AmbassadorPartnum, @DateIn, @InputIn, @QuantityIN, @Line, @RemainFloor, @LotNo)";
             return  SqlDataAccess.UpdateInsertQuery(strinsert, 
                 new { 
                     ReelID = msd.ReelID,
@@ -36,19 +37,45 @@ namespace MSDMonitoring.Data
                     InputIn = msd.InputIn,
                     QuantityIN = msd.QuantityIN, 
                     Line = msd.Line,
-                    RemainFloor = msd.RemainFloor
+                    RemainFloor = msd.RemainFloor,
+                    LotNo = msd.LotNo
                 });
         }
 
-        public Task<bool> UpdateComponentsData(InputOUT_MSD msd)
+        public async Task<bool> UpdateComponentsData(InputOUT_MSD msd)
         {
+            //if (msd.QuantityOut == 0)
+            //{
+            //    string strudpdate = $@"UPDATE MSD_MonitorList SET DateOut =@DateOut, INputOut =@INputOut, QuantityOut =@QuantityOut, 
+            //                      RemainFloor =@RemainFloor, IsStats =@IsStats
+            //                      WHERE RecordID =@RecordID";
+            //}
+
+
             string strinsert = $@"UPDATE MSD_MonitorList SET DateOut =@DateOut, INputOut =@INputOut, QuantityOut =@QuantityOut, 
                                   RemainFloor =@RemainFloor, IsStats =@IsStats
                                   WHERE RecordID =@RecordID";
-            return SqlDataAccess.UpdateInsertQuery(strinsert, msd);
+            return await SqlDataAccess.UpdateInsertQuery(strinsert, msd);
         }
 
-        public Task<List<MSDmodel>> GetMSDHistoryList() => SqlDataAccess.GetData<MSDmodel>("MSDHistory");
+        public Task<List<MSDmodel>> GetMSDHistoryList(int CurrentPageIndex, int pageSize, string searchTerm = "")
+        {
+            return SqlDataAccess.GetData<MSDmodel>(
+                "MSDHistory",
+                new
+                {
+                    PageNumber = CurrentPageIndex,
+                    PageSize = pageSize,
+                    SearchTerm = searchTerm
+                });
+        }
+
+        public Task<int> GetTotalHistoryList()
+        {
+            return SqlDataAccess.GetCountData("Select COUNT(*) FROM MSD_MonitorList");
+        }
+
+
         public Task<List<MSDMasterlistodel>> GetMSDMasterlist() => SqlDataAccess.GetData<MSDMasterlistodel>("MSDMaster");
     
 
@@ -82,6 +109,24 @@ namespace MSDMonitoring.Data
         }
 
         public Task<bool> AddHistoryData(InputMSD msd) => SqlDataAccess.UpdateInsertQuery("InsertMSD", msd);
-       
+
+        public Task<bool> EditComponentsData(int ID, int quan)
+        {
+            string strinsert = $@"UPDATE MSD_MonitorList SET  QuantityIN =@QuantityIN
+                                     WHERE RecordID =@RecordID";
+            return  SqlDataAccess.UpdateInsertQuery(strinsert, new { RecordID = ID, QuantityIN = quan});
+        }
+
+        public Task<List<MSDmodel>> GetMSDExportList()
+        {
+            return SqlDataAccess.GetData<MSDmodel>("GetExportClose");
+        }
+
+        public Task<bool> UpdateExportHistory(int ID)
+        {
+            string strinsert = $@"UPDATE MSD_MonitorList SET  IsExport = 1
+                                     WHERE RecordID =@RecordID";
+            return SqlDataAccess.UpdateInsertQuery(strinsert, new { RecordID = ID});
+        }
     }
 }

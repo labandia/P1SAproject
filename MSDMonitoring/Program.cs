@@ -23,6 +23,9 @@ namespace MSDMonitoring
             var services = new ServiceCollection();
             services.AddSingleton<IMSD, MSDRepository>();
             services.AddSingleton<MSDstartup>();
+            services.AddSingleton<MSDHIstory>();
+            services.AddSingleton<ComponentsOut>();
+            services.AddSingleton<MSDMasterlist>();
 
             ServiceProvider = services.BuildServiceProvider();
             var mainForm = ServiceProvider.GetRequiredService<MSDstartup>();

@@ -60,17 +60,17 @@ namespace MSDMonitoring
         // ========================================================================== //
         private async void updatebtn_Click(object sender, EventArgs e)
         {
+            DateTime selectedDate = DateTime.Now;
 
             if (FormValidation())
             {
-
+                int getQuan = Convert.ToInt32(QuantityInput.Text);
+                if(getQuan == 0) getFloorlife = 0;
+              
                 int remainQuan = setQuantity - Convert.ToInt32(QuantityInput.Text);
 
                 // Update the ReelChecker
                 await _msd.UpdateChecker(ReelText.Text, getFloorlife, remainQuan);
-
-                DateTime selectedDate = DateTime.Now;
-
 
                 // Updates the History Data
                 var obj = new InputOUT_MSD
@@ -88,7 +88,8 @@ namespace MSDMonitoring
 
                 if (result)
                 {
-                    MessageBox.Show("Update successfully");
+                    MessageBox.Show("Updated successfully", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("MSD History is Updated", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     await _msdform.LoadData();
                     this.Close();
                 }
@@ -138,11 +139,18 @@ namespace MSDMonitoring
 
         public bool FormValidation()
         {
+            if (string.IsNullOrEmpty(NameInput.Text))
+            {
+                ReelID_error.Visible = string.IsNullOrEmpty(NameInput.Text) ? true : false;
+                return false;
+            }
+
+
             int remainQuan = setQuantity - Convert.ToInt32(QuantityInput.Text);
 
             if(remainQuan < 0)
             {
-                MessageBox.Show("Invalid Input");
+                MessageBox.Show("Invalid Input Quantity", "Input Validation", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -151,6 +159,14 @@ namespace MSDMonitoring
         private void cancelbtn_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void QuantityInput_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true; // Reject the input
+            }
         }
     }
 }

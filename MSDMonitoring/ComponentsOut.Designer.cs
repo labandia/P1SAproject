@@ -53,6 +53,7 @@
             this.RemainText = new System.Windows.Forms.Label();
             this.TimeText = new System.Windows.Forms.Label();
             this.RemainClock = new System.Windows.Forms.Timer(this.components);
+            this.ReelID_error = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel5.SuspendLayout();
@@ -240,6 +241,7 @@
             this.QuantityInput.Name = "QuantityInput";
             this.QuantityInput.Size = new System.Drawing.Size(270, 41);
             this.QuantityInput.TabIndex = 81;
+            this.QuantityInput.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.QuantityInput_KeyPress);
             // 
             // ReelText
             // 
@@ -301,12 +303,25 @@
             // 
             this.RemainClock.Tick += new System.EventHandler(this.RemainClock_Tick);
             // 
+            // ReelID_error
+            // 
+            this.ReelID_error.AutoSize = true;
+            this.ReelID_error.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ReelID_error.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.ReelID_error.Location = new System.Drawing.Point(437, 186);
+            this.ReelID_error.Name = "ReelID_error";
+            this.ReelID_error.Size = new System.Drawing.Size(153, 16);
+            this.ReelID_error.TabIndex = 119;
+            this.ReelID_error.Text = "Name Input required *";
+            this.ReelID_error.Visible = false;
+            // 
             // ComponentsOut
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(734, 469);
             this.ControlBox = false;
+            this.Controls.Add(this.ReelID_error);
             this.Controls.Add(this.TimeText);
             this.Controls.Add(this.RemainText);
             this.Controls.Add(this.label1);
@@ -358,5 +373,6 @@
         private System.Windows.Forms.Label TimeText;
         private System.Windows.Forms.Timer RemainClock;
         private System.Windows.Forms.Label TimeRunner;
+        private System.Windows.Forms.Label ReelID_error;
     }
 }

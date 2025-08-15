@@ -126,6 +126,39 @@ namespace MSDMonitoring.Data
             }
         }
 
+        public static async Task<double> GetCountByDouble(string query, object parameters = null)
+        {
+            try
+            {
+                using (IDbConnection con = GetConnection(ConnectionString()))
+                {
+                    double count = 0.0;
+
+                    if (Regex.IsMatch(query, @"^\w+$"))
+                    {
+                        // This is a Stored Procedure
+                        count = await con.ExecuteScalarAsync<double>(
+                            query, parameters, commandType: CommandType.StoredProcedure
+                        );
+                    }
+                    else
+                    {
+                        count = await con.ExecuteScalarAsync<double>(
+                            query, parameters
+                        );
+                    }
+
+                    return count;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.Write(ex.Message);
+                return 0.0; // must be double now
+            }
+        }
+
+
         // ############ CHECKS IF THE ROW DATA IS EXIST ########################
         public static async Task<bool> Checkdata(string query, object parameters = null)
         {

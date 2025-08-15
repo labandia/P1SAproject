@@ -13,7 +13,7 @@ namespace MSDMonitoring.Interface
         // FOR THE CARD LAYOUT 
         Task<List<MSDCardModel>> GetListComponentIN();
         Task<bool> AddComponentsData(InputIN_MSD msd);
-        Task<bool> UpdateComponentsData(InputOUT_MSD msd);
+        Task<bool> UpdateComponentsData(InputOUT_MSD msd, string ReelID, decimal totalhours);
 
 
 

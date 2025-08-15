@@ -205,7 +205,7 @@
             this.LotText.Location = new System.Drawing.Point(878, 48);
             this.LotText.Name = "LotText";
             this.LotText.Size = new System.Drawing.Size(178, 27);
-            this.LotText.TabIndex = 76;
+            this.LotText.TabIndex = 67;
             // 
             // flowLayoutPanel1
             // 
@@ -236,7 +236,7 @@
             this.NewEntryBtn.Name = "NewEntryBtn";
             this.NewEntryBtn.Padding = new System.Windows.Forms.Padding(50, 0, 50, 0);
             this.NewEntryBtn.Size = new System.Drawing.Size(186, 39);
-            this.NewEntryBtn.TabIndex = 81;
+            this.NewEntryBtn.TabIndex = 68;
             this.NewEntryBtn.Text = "Add";
             this.NewEntryBtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.NewEntryBtn.UseVisualStyleBackColor = false;
@@ -250,7 +250,7 @@
             this.LineText.Location = new System.Drawing.Point(737, 48);
             this.LineText.Name = "LineText";
             this.LineText.Size = new System.Drawing.Size(119, 27);
-            this.LineText.TabIndex = 83;
+            this.LineText.TabIndex = 66;
             this.LineText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.LineText_KeyPress);
             // 
             // label14

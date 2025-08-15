@@ -1,5 +1,6 @@
 ﻿using MSDMonitoring.Interface;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing.Printing;
 using System.Linq;
 using System.Threading.Tasks;
@@ -42,20 +43,45 @@ namespace MSDMonitoring.Data
                 });
         }
 
-        public async Task<bool> UpdateComponentsData(InputOUT_MSD msd)
+        public async Task<bool> UpdateComponentsData(InputOUT_MSD msd, string ReelID, decimal totalhours)
         {
-            //if (msd.QuantityOut == 0)
-            //{
-            //    string strudpdate = $@"UPDATE MSD_MonitorList SET DateOut =@DateOut, INputOut =@INputOut, QuantityOut =@QuantityOut, 
-            //                      RemainFloor =@RemainFloor, IsStats =@IsStats
-            //                      WHERE RecordID =@RecordID";
-            //}
-
-
+         
             string strinsert = $@"UPDATE MSD_MonitorList SET DateOut =@DateOut, INputOut =@INputOut, QuantityOut =@QuantityOut, 
                                   RemainFloor =@RemainFloor, IsStats =@IsStats
                                   WHERE RecordID =@RecordID";
-            return await SqlDataAccess.UpdateInsertQuery(strinsert, msd);
+
+            bool result = await SqlDataAccess.UpdateInsertQuery(strinsert, msd);
+
+            if (result)
+            {
+                double getTotalHours = await SqlDataAccess.GetCountByDouble($@"SELECT
+	                                    SUM(CAST(DATEDIFF(SECOND, e.DateIn, e.DateOut) / 3600.0 AS DECIMAL(10, 2))) AS Exphours
+                                    FROM MSD_MonitorList e
+                                    WHERE e.ReelID = @ReelID ", new { ReelID = ReelID });
+
+                if (getTotalHours == 0)
+                {
+                    return await SqlDataAccess.UpdateInsertQuery(@"
+                                UPDATE MSD_MonitorList 
+                                SET TotalHours = @TotalHours
+                                WHERE RecordID = @RecordID",
+                                new { TotalHours = totalhours, RecordID = msd.RecordID }
+                            );
+                }
+                else
+                {
+                    return await SqlDataAccess.UpdateInsertQuery(@"
+                                        UPDATE MSD_MonitorList 
+                                        SET TotalHours = @TotalHours
+                                        WHERE RecordID = @RecordID",
+                        new { TotalHours = getTotalHours, RecordID = msd.RecordID }
+                    );
+                }
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public Task<List<MSDmodel>> GetMSDHistoryList(int CurrentPageIndex, int pageSize, string searchTerm = "")

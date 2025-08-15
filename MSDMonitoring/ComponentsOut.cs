@@ -1,6 +1,7 @@
 ﻿using MSDMonitoring.Data;
 using MSDMonitoring.Interface;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -12,6 +13,8 @@ namespace MSDMonitoring
         private readonly MSDstartup _msdform;
         private readonly IMSD _msd;
 
+        public string strTimeIN;
+        public string strReelID;
         public string strstartTime;
         public int setQuantity;
 
@@ -39,9 +42,11 @@ namespace MSDMonitoring
             var filterdata = data.SingleOrDefault(res => res.RecordID == ID);
             if (filterdata != null)
             {
+                strTimeIN = filterdata.DateCheck;
                 setFloorlife = filterdata.RemainFloor;
                 strstartTime = filterdata.DateCheck;
                 ReelText.Text = filterdata.ReelID;
+                strReelID = filterdata.ReelID;  
                 DateText.Text = "Date IN : " + filterdata.DateIn;
                 TimeText.Text = "Time IN : " + filterdata.TimeIn;
                 QuanText.Text = "Reel Quantity : " + filterdata.QuantityIN.ToString();
@@ -62,11 +67,26 @@ namespace MSDMonitoring
         {
             DateTime selectedDate = DateTime.Now;
 
+            Debug.WriteLine("Date : " + strTimeIN);
+
+            DateTime startTime = DateTime.ParseExact(
+                strTimeIN,
+                "MM/dd/yyyy HH:mm:ss",
+                System.Globalization.CultureInfo.InvariantCulture
+            );
+
+            string strEndTime  = selectedDate.ToString("yyyy-MM-dd HH:mm:ss.fff");
+            DateTime endTime = DateTime.ParseExact(strEndTime, "yyyy-MM-dd HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture);
+
+            decimal elapsedHours = (decimal)(endTime - startTime).TotalSeconds / 3600m;
+
+
+
             if (FormValidation())
             {
                 int getQuan = Convert.ToInt32(QuantityInput.Text);
-                if(getQuan == 0) getFloorlife = 0;
-              
+                if (getQuan == 0) getFloorlife = 0;
+
                 int remainQuan = setQuantity - Convert.ToInt32(QuantityInput.Text);
 
                 // Update the ReelChecker
@@ -84,7 +104,7 @@ namespace MSDMonitoring
                 };
 
 
-                bool result = await _msd.UpdateComponentsData(obj);
+                bool result = await _msd.UpdateComponentsData(obj, strReelID, elapsedHours);
 
                 if (result)
                 {

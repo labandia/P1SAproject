@@ -45,7 +45,6 @@
             this.LotText = new System.Windows.Forms.TextBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.NewEntryBtn = new System.Windows.Forms.Button();
-            this.LineText = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
             this.ReelID_error = new System.Windows.Forms.Label();
             this.QuanError = new System.Windows.Forms.Label();
@@ -53,10 +52,16 @@
             this.LineError = new System.Windows.Forms.Label();
             this.Historybtn = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.lotError = new System.Windows.Forms.Label();
+            this.LineSelect = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.LevelText = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel2.SuspendLayout();
+            this.panel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // Exitbtn
@@ -78,9 +83,9 @@
             // 
             this.panel1.BackColor = System.Drawing.Color.Gainsboro;
             this.panel1.Controls.Add(this.FloorLifeText);
-            this.panel1.Location = new System.Drawing.Point(305, 48);
+            this.panel1.Location = new System.Drawing.Point(379, 48);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(119, 27);
+            this.panel1.Size = new System.Drawing.Size(81, 27);
             this.panel1.TabIndex = 55;
             // 
             // FloorLifeText
@@ -119,7 +124,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(449, 25);
+            this.label2.Location = new System.Drawing.Point(478, 25);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(103, 16);
             this.label2.TabIndex = 38;
@@ -129,7 +134,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(301, 25);
+            this.label1.Location = new System.Drawing.Point(375, 25);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(72, 16);
             this.label1.TabIndex = 37;
@@ -152,15 +157,16 @@
             this.Ambassador.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Ambassador.Location = new System.Drawing.Point(25, 48);
             this.Ambassador.Name = "Ambassador";
-            this.Ambassador.Size = new System.Drawing.Size(260, 27);
+            this.Ambassador.Size = new System.Drawing.Size(211, 27);
             this.Ambassador.TabIndex = 33;
+            this.Ambassador.TextChanged += new System.EventHandler(this.Ambassador_TextChanged);
             this.Ambassador.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Ambassador_KeyDown);
             // 
             // label12
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(592, 25);
+            this.label12.Location = new System.Drawing.Point(947, 25);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(58, 16);
             this.label12.TabIndex = 60;
@@ -171,10 +177,11 @@
             this.QtyIn.BackColor = System.Drawing.Color.Gainsboro;
             this.QtyIn.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.QtyIn.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.QtyIn.Location = new System.Drawing.Point(452, 48);
+            this.QtyIn.Location = new System.Drawing.Point(481, 48);
             this.QtyIn.Name = "QtyIn";
             this.QtyIn.Size = new System.Drawing.Size(119, 27);
             this.QtyIn.TabIndex = 64;
+            this.QtyIn.TextChanged += new System.EventHandler(this.QtyIn_TextChanged);
             this.QtyIn.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.QtyIn_KeyPress);
             // 
             // InputIn
@@ -182,16 +189,17 @@
             this.InputIn.BackColor = System.Drawing.Color.Gainsboro;
             this.InputIn.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.InputIn.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.InputIn.Location = new System.Drawing.Point(598, 48);
+            this.InputIn.Location = new System.Drawing.Point(953, 48);
             this.InputIn.Name = "InputIn";
-            this.InputIn.Size = new System.Drawing.Size(119, 27);
+            this.InputIn.Size = new System.Drawing.Size(107, 27);
             this.InputIn.TabIndex = 65;
+            this.InputIn.KeyDown += new System.Windows.Forms.KeyEventHandler(this.InputIn_KeyDown);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(875, 25);
+            this.label3.Location = new System.Drawing.Point(619, 25);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(55, 16);
             this.label3.TabIndex = 77;
@@ -202,7 +210,7 @@
             this.LotText.BackColor = System.Drawing.Color.Gainsboro;
             this.LotText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.LotText.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LotText.Location = new System.Drawing.Point(878, 48);
+            this.LotText.Location = new System.Drawing.Point(622, 48);
             this.LotText.Name = "LotText";
             this.LotText.Size = new System.Drawing.Size(178, 27);
             this.LotText.TabIndex = 67;
@@ -242,22 +250,11 @@
             this.NewEntryBtn.UseVisualStyleBackColor = false;
             this.NewEntryBtn.Click += new System.EventHandler(this.NewEntryBtn_Click);
             // 
-            // LineText
-            // 
-            this.LineText.BackColor = System.Drawing.Color.Gainsboro;
-            this.LineText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.LineText.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LineText.Location = new System.Drawing.Point(737, 48);
-            this.LineText.Name = "LineText";
-            this.LineText.Size = new System.Drawing.Size(119, 27);
-            this.LineText.TabIndex = 66;
-            this.LineText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.LineText_KeyPress);
-            // 
             // label14
             // 
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(734, 25);
+            this.label14.Location = new System.Drawing.Point(806, 25);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(41, 16);
             this.label14.TabIndex = 82;
@@ -280,7 +277,7 @@
             this.QuanError.AutoSize = true;
             this.QuanError.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.QuanError.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.QuanError.Location = new System.Drawing.Point(559, 27);
+            this.QuanError.Location = new System.Drawing.Point(588, 27);
             this.QuanError.Name = "QuanError";
             this.QuanError.Size = new System.Drawing.Size(13, 16);
             this.QuanError.TabIndex = 85;
@@ -292,7 +289,7 @@
             this.NameError.AutoSize = true;
             this.NameError.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.NameError.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.NameError.Location = new System.Drawing.Point(649, 27);
+            this.NameError.Location = new System.Drawing.Point(1004, 27);
             this.NameError.Name = "NameError";
             this.NameError.Size = new System.Drawing.Size(13, 16);
             this.NameError.TabIndex = 86;
@@ -304,7 +301,7 @@
             this.LineError.AutoSize = true;
             this.LineError.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LineError.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.LineError.Location = new System.Drawing.Point(784, 27);
+            this.LineError.Location = new System.Drawing.Point(857, 27);
             this.LineError.Name = "LineError";
             this.LineError.Size = new System.Drawing.Size(13, 16);
             this.LineError.TabIndex = 87;
@@ -332,27 +329,96 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel2.BackColor = System.Drawing.Color.White;
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel2.Controls.Add(this.lotError);
+            this.panel2.Controls.Add(this.LineSelect);
+            this.panel2.Controls.Add(this.LineError);
+            this.panel2.Controls.Add(this.label4);
+            this.panel2.Controls.Add(this.panel3);
+            this.panel2.Controls.Add(this.NameError);
             this.panel2.Controls.Add(this.NewEntryBtn);
             this.panel2.Controls.Add(this.Ambassador);
-            this.panel2.Controls.Add(this.LineError);
+            this.panel2.Controls.Add(this.label14);
             this.panel2.Controls.Add(this.label1);
-            this.panel2.Controls.Add(this.NameError);
             this.panel2.Controls.Add(this.label2);
+            this.panel2.Controls.Add(this.label12);
             this.panel2.Controls.Add(this.QuanError);
             this.panel2.Controls.Add(this.label5);
+            this.panel2.Controls.Add(this.InputIn);
             this.panel2.Controls.Add(this.ReelID_error);
             this.panel2.Controls.Add(this.panel1);
-            this.panel2.Controls.Add(this.LineText);
-            this.panel2.Controls.Add(this.label12);
-            this.panel2.Controls.Add(this.label14);
             this.panel2.Controls.Add(this.QtyIn);
-            this.panel2.Controls.Add(this.InputIn);
             this.panel2.Controls.Add(this.label3);
             this.panel2.Controls.Add(this.LotText);
             this.panel2.Location = new System.Drawing.Point(26, 77);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(1288, 100);
             this.panel2.TabIndex = 89;
+            // 
+            // lotError
+            // 
+            this.lotError.AutoSize = true;
+            this.lotError.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lotError.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.lotError.Location = new System.Drawing.Point(680, 27);
+            this.lotError.Name = "lotError";
+            this.lotError.Size = new System.Drawing.Size(13, 16);
+            this.lotError.TabIndex = 91;
+            this.lotError.Text = "*";
+            this.lotError.Visible = false;
+            // 
+            // LineSelect
+            // 
+            this.LineSelect.Font = new System.Drawing.Font("Segoe UI", 11.25F);
+            this.LineSelect.FormattingEnabled = true;
+            this.LineSelect.Items.AddRange(new object[] {
+            "Select Line",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12"});
+            this.LineSelect.Location = new System.Drawing.Point(809, 46);
+            this.LineSelect.Name = "LineSelect";
+            this.LineSelect.Size = new System.Drawing.Size(137, 28);
+            this.LineSelect.TabIndex = 90;
+            this.LineSelect.Text = "Select Line";
+            this.LineSelect.SelectedIndexChanged += new System.EventHandler(this.LineSelect_SelectedIndexChanged);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(243, 25);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(69, 16);
+            this.label4.TabIndex = 88;
+            this.label4.Text = "MS LEVEL:";
+            // 
+            // panel3
+            // 
+            this.panel3.BackColor = System.Drawing.Color.Gainsboro;
+            this.panel3.Controls.Add(this.LevelText);
+            this.panel3.Location = new System.Drawing.Point(247, 48);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(119, 27);
+            this.panel3.TabIndex = 89;
+            // 
+            // LevelText
+            // 
+            this.LevelText.AutoSize = true;
+            this.LevelText.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LevelText.Location = new System.Drawing.Point(5, 3);
+            this.LevelText.Name = "LevelText";
+            this.LevelText.Size = new System.Drawing.Size(42, 21);
+            this.LevelText.TabIndex = 1;
+            this.LevelText.Text = "N/A";
             // 
             // button1
             // 
@@ -362,12 +428,11 @@
             this.button1.FlatAppearance.BorderSize = 0;
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
-            this.button1.Location = new System.Drawing.Point(1136, 8);
+            this.button1.Location = new System.Drawing.Point(1139, 8);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(55, 46);
             this.button1.TabIndex = 90;
             this.button1.UseVisualStyleBackColor = false;
-            this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // MSDstartup
@@ -391,6 +456,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -413,7 +480,6 @@
         private System.Windows.Forms.TextBox LotText;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.Button NewEntryBtn;
-        private System.Windows.Forms.TextBox LineText;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label ReelID_error;
         private System.Windows.Forms.Label QuanError;
@@ -422,5 +488,10 @@
         private System.Windows.Forms.Button Historybtn;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Label LevelText;
+        private System.Windows.Forms.ComboBox LineSelect;
+        private System.Windows.Forms.Label lotError;
     }
 }

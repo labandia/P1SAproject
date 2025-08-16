@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -114,43 +115,14 @@ namespace MSDMonitoring
         private void MonitorTable_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             // Make sure a valid row is clicked (not header)
-            if (e.RowIndex < 0) return;
+            //if (e.RowIndex < 0) return;
 
-            int currentValue = Convert.ToInt32(MonitorTable.Rows[e.RowIndex].Cells[0].Value);
-            int QuanValue = Convert.ToInt32(MonitorTable.Rows[e.RowIndex].Cells[8].Value);
+            //int currentValue = Convert.ToInt32(MonitorTable.Rows[e.RowIndex].Cells[0].Value);
+            //int QuanValue = Convert.ToInt32(MonitorTable.Rows[e.RowIndex].Cells[8].Value);
+        
+            //ChangeQuantity c = new ChangeQuantity(_msd, currentValue, QuanValue,  this);
+            //c.Show();
 
-            ChangeQuantity c = new ChangeQuantity(_msd, currentValue, QuanValue,  this);
-            c.Show();
-
-        }
-
-
-        public static string ShowDialog(string text, string caption, string defaultValue = "")
-        {
-            Form prompt = new Form()
-            {
-                Width = 400,
-                Height = 150,
-                FormBorderStyle = FormBorderStyle.FixedDialog,
-                Text = caption,
-                StartPosition = FormStartPosition.CenterParent
-            };
-
-            Label textLabel = new Label() { Left = 20, Top = 20, Text = text, Width = 340 };
-            TextBox inputBox = new TextBox() { Left = 20, Top = 50, Width = 340, Text = defaultValue };
-
-            Button okButton = new Button() { Text = "OK", Left = 200, Width = 70, Top = 80, DialogResult = DialogResult.OK };
-            Button cancelButton = new Button() { Text = "Cancel", Left = 280, Width = 70, Top = 80, DialogResult = DialogResult.Cancel };
-
-            prompt.Controls.Add(textLabel);
-            prompt.Controls.Add(inputBox);
-            prompt.Controls.Add(okButton);
-            prompt.Controls.Add(cancelButton);
-
-            prompt.AcceptButton = okButton;
-            prompt.CancelButton = cancelButton;
-
-            return prompt.ShowDialog() == DialogResult.OK ? inputBox.Text : null;
         }
 
         private async void Exportbtn_Click(object sender, EventArgs e)
@@ -239,7 +211,74 @@ namespace MSDMonitoring
             }
         }
 
+        private void MonitorTable_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+           
+            
+        }
+
+        private void MonitorTable_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // Make sure a valid row is clicked (not header)
+            if (e.RowIndex < 0) return;
+
+            var obj = new PrintLabelModel
+            {
+                ReelID = MonitorTable.Rows[e.RowIndex].Cells[1].Value.ToString(),
+                Partnumber = MonitorTable.Rows[e.RowIndex].Cells[2].Value.ToString(),
+                FloorLife = Convert.ToInt32(MonitorTable.Rows[e.RowIndex].Cells[3].Value),
+                Level = "LEVEL " + MonitorTable.Rows[e.RowIndex].Cells[4].Value.ToString(),
+                LotNo = MonitorTable.Rows[e.RowIndex].Cells[5].Value.ToString(),
+                Date_IN = MonitorTable.Rows[e.RowIndex].Cells[10].Value.ToString(),
+                Quantity_IN = Convert.ToInt32(MonitorTable.Rows[e.RowIndex].Cells[12].Value),
+                RemainLife = Convert.ToInt32(MonitorTable.Rows[e.RowIndex].Cells[17].Value.ToString())
+            };
+            // Template path
+            string templatePath = @"C:\Users\jaye-labandia\Desktop\MSDPrintLabel.xlsx";
+            if (!File.Exists(templatePath))
+            {
+                MessageBox.Show("Template file not found: " + templatePath);
+                return;
+            }
+
+            // Create Excel application
+            Excel.Application excelApp = new Excel.Application();
+            excelApp.Visible = true; // Optional: show Excel
+
+            // Open the template workbook
+            Excel.Workbook workbook = excelApp.Workbooks.Open(templatePath);
+
+            // Reference worksheet by name
+            Excel.Worksheet worksheet = workbook.Sheets["Label"] as Excel.Worksheet;
+
+            // Populate cells C2:C10
+            worksheet.Range["C3"].Value = obj.ReelID;
+            worksheet.Range["C4"].Value = obj.Partnumber;
+            worksheet.Range["C5"].Value = obj.FloorLife;
+            worksheet.Range["C6"].Value = obj.Level;
+            worksheet.Range["C7"].Value = obj.LotNo;
+            worksheet.Range["C8"].Value = obj.Date_IN;
+            worksheet.Range["C9"].Value = obj.Quantity_IN;
+            worksheet.Range["C10"].Value = obj.RemainLife;
+
+            // Show print dialog
+            worksheet.PrintOut(
+                Type.Missing, Type.Missing, Type.Missing,
+                true,  // Preview = true opens Print dialog
+                Type.Missing, Type.Missing, Type.Missing
+            );
+
+            // Optional: close workbook without saving
+            // workbook.Close(false);
+            // excelApp.Quit();
+
+            // Optional: release COM objects
+            // Marshal.ReleaseComObject(worksheet);
+            // Marshal.ReleaseComObject(workbook);
+            // Marshal.ReleaseComObject(excelApp);
 
 
+            //Debug.WriteLine($@"Reel ID : {ReeID} - Partnumber {Partnumber}");
+        }
     }
 }

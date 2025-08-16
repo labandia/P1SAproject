@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ChangeQuantity));
             this.Addbtn = new System.Windows.Forms.Button();
             this.Button1 = new System.Windows.Forms.Button();
             this.quan = new System.Windows.Forms.TextBox();
@@ -36,15 +37,19 @@
             // 
             // Addbtn
             // 
-            this.Addbtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(97)))), ((int)(((byte)(235)))));
+            this.Addbtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(152)))), ((int)(((byte)(126)))));
             this.Addbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Addbtn.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Addbtn.ForeColor = System.Drawing.Color.White;
+            this.Addbtn.Image = ((System.Drawing.Image)(resources.GetObject("Addbtn.Image")));
+            this.Addbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Addbtn.Location = new System.Drawing.Point(253, 145);
             this.Addbtn.Name = "Addbtn";
+            this.Addbtn.Padding = new System.Windows.Forms.Padding(40, 0, 40, 0);
             this.Addbtn.Size = new System.Drawing.Size(189, 47);
             this.Addbtn.TabIndex = 11;
-            this.Addbtn.Text = "Continue";
+            this.Addbtn.Text = "Change";
+            this.Addbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.Addbtn.UseVisualStyleBackColor = false;
             this.Addbtn.Click += new System.EventHandler(this.Addbtn_Click);
             // 

@@ -29,9 +29,10 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MSDMasterlist));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.BtnLast = new System.Windows.Forms.Button();
             this.BtnFirst = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
@@ -46,6 +47,14 @@
             this.ReelText = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.MonitorTable = new System.Windows.Forms.DataGridView();
+            this.Exportbtn = new System.Windows.Forms.Button();
+            this.AmbassadorPartnum = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Partname = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SupplyPartName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SupplyName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Level = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FloorLife = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Edit = new System.Windows.Forms.DataGridViewImageColumn();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MonitorTable)).BeginInit();
             this.SuspendLayout();
@@ -54,22 +63,22 @@
             // 
             this.BtnLast.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.BtnLast.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BtnLast.Image = ((System.Drawing.Image)(resources.GetObject("BtnLast.Image")));
             this.BtnLast.Location = new System.Drawing.Point(1315, 692);
             this.BtnLast.Name = "BtnLast";
             this.BtnLast.Size = new System.Drawing.Size(57, 30);
             this.BtnLast.TabIndex = 108;
-            this.BtnLast.Text = "Last";
             this.BtnLast.UseVisualStyleBackColor = true;
             // 
             // BtnFirst
             // 
             this.BtnFirst.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.BtnFirst.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BtnFirst.Image = ((System.Drawing.Image)(resources.GetObject("BtnFirst.Image")));
             this.BtnFirst.Location = new System.Drawing.Point(1134, 692);
             this.BtnFirst.Name = "BtnFirst";
             this.BtnFirst.Size = new System.Drawing.Size(64, 30);
             this.BtnFirst.TabIndex = 107;
-            this.BtnFirst.Text = "First";
             this.BtnFirst.UseVisualStyleBackColor = true;
             // 
             // label5
@@ -150,13 +159,12 @@
             // 
             // label6
             // 
-            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label6.BackColor = System.Drawing.Color.Transparent;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.ForeColor = System.Drawing.Color.Transparent;
             this.label6.Image = ((System.Drawing.Image)(resources.GetObject("label6.Image")));
             this.label6.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label6.Location = new System.Drawing.Point(1064, 116);
+            this.label6.Location = new System.Drawing.Point(303, 112);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(39, 39);
             this.label6.TabIndex = 100;
@@ -164,12 +172,12 @@
             // 
             // searchBox
             // 
-            this.searchBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.searchBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.searchBox.Location = new System.Drawing.Point(1098, 116);
+            this.searchBox.Location = new System.Drawing.Point(31, 114);
             this.searchBox.Name = "searchBox";
             this.searchBox.Size = new System.Drawing.Size(266, 38);
             this.searchBox.TabIndex = 99;
+            this.searchBox.TextChanged += new System.EventHandler(this.searchBox_TextChanged);
             // 
             // Exitbtn
             // 
@@ -184,6 +192,7 @@
             this.Exitbtn.Size = new System.Drawing.Size(55, 46);
             this.Exitbtn.TabIndex = 97;
             this.Exitbtn.UseVisualStyleBackColor = false;
+            this.Exitbtn.Click += new System.EventHandler(this.Exitbtn_Click);
             // 
             // ReelText
             // 
@@ -193,9 +202,9 @@
             this.ReelText.ForeColor = System.Drawing.Color.White;
             this.ReelText.Location = new System.Drawing.Point(27, 35);
             this.ReelText.Name = "ReelText";
-            this.ReelText.Size = new System.Drawing.Size(416, 24);
+            this.ReelText.Size = new System.Drawing.Size(212, 24);
             this.ReelText.TabIndex = 95;
-            this.ReelText.Text = " MOISTURE SENSITIVE DEVICES MASTERLIST\r\n";
+            this.ReelText.Text = " MSD Registration list";
             // 
             // pictureBox1
             // 
@@ -213,12 +222,12 @@
             this.MonitorTable.AllowUserToDeleteRows = false;
             this.MonitorTable.AllowUserToOrderColumns = true;
             this.MonitorTable.AllowUserToResizeRows = false;
-            dataGridViewCellStyle7.BackColor = System.Drawing.Color.WhiteSmoke;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Century Gothic", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.Color.WhiteSmoke;
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.MonitorTable.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.WhiteSmoke;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Century Gothic", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.WhiteSmoke;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.MonitorTable.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.MonitorTable.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -227,25 +236,33 @@
             this.MonitorTable.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.MonitorTable.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleVertical;
             this.MonitorTable.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.Color.Silver;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.Color.Silver;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.MonitorTable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.Silver;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Silver;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.MonitorTable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.MonitorTable.ColumnHeadersHeight = 45;
             this.MonitorTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            this.MonitorTable.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.AmbassadorPartnum,
+            this.Partname,
+            this.SupplyPartName,
+            this.SupplyName,
+            this.Level,
+            this.FloorLife,
+            this.Edit});
             this.MonitorTable.Cursor = System.Windows.Forms.Cursors.Hand;
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.MonitorTable.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.MonitorTable.DefaultCellStyle = dataGridViewCellStyle4;
             this.MonitorTable.EnableHeadersVisualStyles = false;
             this.MonitorTable.GridColor = System.Drawing.Color.White;
             this.MonitorTable.Location = new System.Drawing.Point(31, 170);
@@ -262,12 +279,92 @@
             this.MonitorTable.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.MonitorTable.Size = new System.Drawing.Size(1342, 506);
             this.MonitorTable.TabIndex = 96;
+            this.MonitorTable.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.MonitorTable_CellClick);
+            this.MonitorTable.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.MonitorTable_CellContentClick);
+            // 
+            // Exportbtn
+            // 
+            this.Exportbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.Exportbtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(152)))), ((int)(((byte)(126)))));
+            this.Exportbtn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(152)))), ((int)(((byte)(126)))));
+            this.Exportbtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(152)))), ((int)(((byte)(126)))));
+            this.Exportbtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(152)))), ((int)(((byte)(126)))));
+            this.Exportbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Exportbtn.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Exportbtn.ForeColor = System.Drawing.Color.Transparent;
+            this.Exportbtn.Image = ((System.Drawing.Image)(resources.GetObject("Exportbtn.Image")));
+            this.Exportbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Exportbtn.Location = new System.Drawing.Point(1258, 117);
+            this.Exportbtn.Name = "Exportbtn";
+            this.Exportbtn.Padding = new System.Windows.Forms.Padding(15, 0, 15, 0);
+            this.Exportbtn.Size = new System.Drawing.Size(115, 35);
+            this.Exportbtn.TabIndex = 109;
+            this.Exportbtn.Text = "Add";
+            this.Exportbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Exportbtn.UseVisualStyleBackColor = false;
+            this.Exportbtn.Click += new System.EventHandler(this.Exportbtn_Click);
+            // 
+            // AmbassadorPartnum
+            // 
+            this.AmbassadorPartnum.DataPropertyName = "AmbassadorPartnum";
+            this.AmbassadorPartnum.HeaderText = "AMBASSADOR PART NUMBER";
+            this.AmbassadorPartnum.Name = "AmbassadorPartnum";
+            this.AmbassadorPartnum.ReadOnly = true;
+            // 
+            // Partname
+            // 
+            this.Partname.DataPropertyName = "Partname";
+            this.Partname.HeaderText = "PART NAME";
+            this.Partname.Name = "Partname";
+            this.Partname.ReadOnly = true;
+            // 
+            // SupplyPartName
+            // 
+            this.SupplyPartName.DataPropertyName = "SupplyPartName";
+            this.SupplyPartName.HeaderText = "Supplier Part Name";
+            this.SupplyPartName.Name = "SupplyPartName";
+            this.SupplyPartName.ReadOnly = true;
+            // 
+            // SupplyName
+            // 
+            this.SupplyName.DataPropertyName = "SupplyName";
+            this.SupplyName.HeaderText = "SUPPLIER NAME";
+            this.SupplyName.Name = "SupplyName";
+            this.SupplyName.ReadOnly = true;
+            // 
+            // Level
+            // 
+            this.Level.DataPropertyName = "Level";
+            this.Level.HeaderText = "MSD LEVEL";
+            this.Level.Name = "Level";
+            this.Level.ReadOnly = true;
+            // 
+            // FloorLife
+            // 
+            this.FloorLife.DataPropertyName = "FloorLife";
+            this.FloorLife.HeaderText = "FLOOR LIFE";
+            this.FloorLife.Name = "FloorLife";
+            this.FloorLife.ReadOnly = true;
+            // 
+            // Edit
+            // 
+            this.Edit.DataPropertyName = "Edit";
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.NullValue = ((object)(resources.GetObject("dataGridViewCellStyle3.NullValue")));
+            this.Edit.DefaultCellStyle = dataGridViewCellStyle3;
+            this.Edit.HeaderText = "Edit";
+            this.Edit.Image = ((System.Drawing.Image)(resources.GetObject("Edit.Image")));
+            this.Edit.Name = "Edit";
+            this.Edit.ReadOnly = true;
+            this.Edit.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             // 
             // MSDMasterlist
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1418, 737);
+            this.ControlBox = false;
+            this.Controls.Add(this.Exportbtn);
             this.Controls.Add(this.BtnLast);
             this.Controls.Add(this.BtnFirst);
             this.Controls.Add(this.label5);
@@ -283,6 +380,7 @@
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.MonitorTable);
             this.Name = "MSDMasterlist";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MSDMasterlist";
             this.Load += new System.EventHandler(this.MSDMasterlist_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -303,10 +401,18 @@
         private System.Windows.Forms.Button BtnPrev;
         private System.Windows.Forms.Button BtnNext;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox searchBox;
         private System.Windows.Forms.Button Exitbtn;
         private System.Windows.Forms.Label ReelText;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.DataGridView MonitorTable;
+        private System.Windows.Forms.Button Exportbtn;
+        public System.Windows.Forms.TextBox searchBox;
+        private System.Windows.Forms.DataGridViewTextBoxColumn AmbassadorPartnum;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Partname;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SupplyPartName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SupplyName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Level;
+        private System.Windows.Forms.DataGridViewTextBoxColumn FloorLife;
+        private System.Windows.Forms.DataGridViewImageColumn Edit;
     }
 }

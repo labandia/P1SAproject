@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MSDHIstory));
             this.ReelText = new System.Windows.Forms.Label();
             this.MonitorTable = new System.Windows.Forms.DataGridView();
@@ -46,6 +46,7 @@
             this.DateOut = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TimeOut = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Quantity_IN = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PlanQty = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Input_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Exphours = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TotalHours = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -86,12 +87,12 @@
             this.MonitorTable.AllowUserToDeleteRows = false;
             this.MonitorTable.AllowUserToOrderColumns = true;
             this.MonitorTable.AllowUserToResizeRows = false;
-            dataGridViewCellStyle7.BackColor = System.Drawing.Color.WhiteSmoke;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Century Gothic", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.Color.WhiteSmoke;
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.MonitorTable.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.WhiteSmoke;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Century Gothic", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.WhiteSmoke;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.MonitorTable.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.MonitorTable.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -100,14 +101,14 @@
             this.MonitorTable.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.MonitorTable.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleVertical;
             this.MonitorTable.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.Color.Silver;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.Color.Silver;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.MonitorTable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.Silver;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Silver;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.MonitorTable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.MonitorTable.ColumnHeadersHeight = 45;
             this.MonitorTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.MonitorTable.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -123,20 +124,21 @@
             this.DateOut,
             this.TimeOut,
             this.Quantity_IN,
+            this.PlanQty,
             this.Input_Name,
             this.Exphours,
             this.TotalHours,
             this.RemainLife,
             this.RecordID});
             this.MonitorTable.Cursor = System.Windows.Forms.Cursors.Hand;
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.MonitorTable.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.MonitorTable.DefaultCellStyle = dataGridViewCellStyle3;
             this.MonitorTable.EnableHeadersVisualStyles = false;
             this.MonitorTable.GridColor = System.Drawing.Color.White;
             this.MonitorTable.Location = new System.Drawing.Point(31, 155);
@@ -153,6 +155,8 @@
             this.MonitorTable.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.MonitorTable.Size = new System.Drawing.Size(1342, 506);
             this.MonitorTable.TabIndex = 82;
+            this.MonitorTable.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.MonitorTable_CellClick);
+            this.MonitorTable.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.MonitorTable_CellContentClick);
             this.MonitorTable.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.MonitorTable_CellDoubleClick);
             this.MonitorTable.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.MonitorTable_CellFormatting);
             // 
@@ -222,7 +226,7 @@
             // DateOut
             // 
             this.DateOut.DataPropertyName = "DateOut";
-            this.DateOut.HeaderText = "Date Out";
+            this.DateOut.HeaderText = "Date_IN";
             this.DateOut.Name = "DateOut";
             this.DateOut.ReadOnly = true;
             // 
@@ -239,6 +243,13 @@
             this.Quantity_IN.HeaderText = "Quantity IN";
             this.Quantity_IN.Name = "Quantity_IN";
             this.Quantity_IN.ReadOnly = true;
+            // 
+            // PlanQty
+            // 
+            this.PlanQty.DataPropertyName = "PlanQty";
+            this.PlanQty.HeaderText = "PlanQty";
+            this.PlanQty.Name = "PlanQty";
+            this.PlanQty.ReadOnly = true;
             // 
             // Input_Name
             // 
@@ -308,7 +319,7 @@
             this.label6.ForeColor = System.Drawing.Color.Transparent;
             this.label6.Image = ((System.Drawing.Image)(resources.GetObject("label6.Image")));
             this.label6.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label6.Location = new System.Drawing.Point(26, 102);
+            this.label6.Location = new System.Drawing.Point(303, 102);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(39, 39);
             this.label6.TabIndex = 86;
@@ -317,7 +328,7 @@
             // searchBox
             // 
             this.searchBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.searchBox.Location = new System.Drawing.Point(60, 102);
+            this.searchBox.Location = new System.Drawing.Point(31, 103);
             this.searchBox.Name = "searchBox";
             this.searchBox.Size = new System.Drawing.Size(266, 38);
             this.searchBox.TabIndex = 85;
@@ -495,6 +506,7 @@
         public System.Windows.Forms.Label lblCurrentPage;
         private System.Windows.Forms.Button BtnPrev;
         private System.Windows.Forms.Button BtnNext;
+        private System.Windows.Forms.Button Exportbtn;
         private System.Windows.Forms.DataGridViewTextBoxColumn ReelID;
         private System.Windows.Forms.DataGridViewTextBoxColumn Partnumber;
         private System.Windows.Forms.DataGridViewTextBoxColumn FloorLife;
@@ -507,11 +519,11 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn DateOut;
         private System.Windows.Forms.DataGridViewTextBoxColumn TimeOut;
         private System.Windows.Forms.DataGridViewTextBoxColumn Quantity_IN;
+        private System.Windows.Forms.DataGridViewTextBoxColumn PlanQty;
         private System.Windows.Forms.DataGridViewTextBoxColumn Input_Name;
         private System.Windows.Forms.DataGridViewTextBoxColumn Exphours;
         private System.Windows.Forms.DataGridViewTextBoxColumn TotalHours;
         private System.Windows.Forms.DataGridViewTextBoxColumn RemainLife;
         private System.Windows.Forms.DataGridViewTextBoxColumn RecordID;
-        private System.Windows.Forms.Button Exportbtn;
     }
 }

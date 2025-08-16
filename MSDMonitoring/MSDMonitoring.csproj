@@ -24,7 +24,7 @@
     <UpdateRequired>true</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <MinimumRequiredVersion>1.0.0.0</MinimumRequiredVersion>
-    <ApplicationRevision>6</ApplicationRevision>
+    <ApplicationRevision>8</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -112,56 +112,74 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChangeQuantity.cs">
+    <Compile Include="View\Modals\AddMasterList.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ChangeQuantity.Designer.cs">
+    <Compile Include="View\Modals\AddMasterList.Designer.cs">
+      <DependentUpon>AddMasterList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Modals\ChangeQuantity.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Modals\ChangeQuantity.Designer.cs">
       <DependentUpon>ChangeQuantity.cs</DependentUpon>
     </Compile>
-    <Compile Include="ComponentsOut.cs">
+    <Compile Include="View\Modals\ComponentsOut.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ComponentsOut.Designer.cs">
+    <Compile Include="View\Modals\ComponentsOut.Designer.cs">
       <DependentUpon>ComponentsOut.cs</DependentUpon>
     </Compile>
     <Compile Include="Data\MSDmodel.cs" />
     <Compile Include="Data\MSDRepository.cs" />
     <Compile Include="Data\SqlDataAccess.cs" />
     <Compile Include="Interface\IMSD.cs" />
-    <Compile Include="MSDHIstory.cs">
+    <Compile Include="View\Modals\EditMasterlist.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MSDHIstory.Designer.cs">
+    <Compile Include="View\Modals\EditMasterlist.Designer.cs">
+      <DependentUpon>EditMasterlist.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\MSDHIstory.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\MSDHIstory.Designer.cs">
       <DependentUpon>MSDHIstory.cs</DependentUpon>
     </Compile>
-    <Compile Include="MSDMasterlist.cs">
+    <Compile Include="View\MSDMasterlist.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MSDMasterlist.Designer.cs">
+    <Compile Include="View\MSDMasterlist.Designer.cs">
       <DependentUpon>MSDMasterlist.cs</DependentUpon>
     </Compile>
-    <Compile Include="MSDstartup.cs">
+    <Compile Include="View\MSDstartup.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MSDstartup.Designer.cs">
+    <Compile Include="View\MSDstartup.Designer.cs">
       <DependentUpon>MSDstartup.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AesEncryption.cs" />
-    <EmbeddedResource Include="ChangeQuantity.resx">
+    <EmbeddedResource Include="View\Modals\AddMasterList.resx">
+      <DependentUpon>AddMasterList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Modals\ChangeQuantity.resx">
       <DependentUpon>ChangeQuantity.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ComponentsOut.resx">
+    <EmbeddedResource Include="View\Modals\ComponentsOut.resx">
       <DependentUpon>ComponentsOut.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MSDHIstory.resx">
+    <EmbeddedResource Include="View\Modals\EditMasterlist.resx">
+      <DependentUpon>EditMasterlist.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\MSDHIstory.resx">
       <DependentUpon>MSDHIstory.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MSDMasterlist.resx">
+    <EmbeddedResource Include="View\MSDMasterlist.resx">
       <DependentUpon>MSDMasterlist.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MSDstartup.resx">
+    <EmbeddedResource Include="View\MSDstartup.resx">
       <DependentUpon>MSDstartup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

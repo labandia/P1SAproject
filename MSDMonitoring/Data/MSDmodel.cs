@@ -1,12 +1,20 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MSDMonitoring.Data
 {
+    public class PrintLabelModel
+    {
+        public string ReelID { get; set; }
+        public string Partnumber { get; set; }
+        public int FloorLife { get; set; }
+        public string Level { get; set; }
+        public string LotNo { get; set; }
+        public string Date_IN { get; set; }
+        public int Quantity_IN { get; set; }
+        public int RemainLife { get; set; }
+    }
+
  
-
-
-
     public class MSDCardModel
     {
         public int RecordID { get; set; }
@@ -24,6 +32,7 @@ namespace MSDMonitoring.Data
     {
         public string ReelID { get; set; }
         public int FloorLife { get; set; }
+        public int Level { get; set; }
         public int RemainQuantity { get; set; }
         public bool IsDone { get; set; }
     }
@@ -60,6 +69,7 @@ namespace MSDMonitoring.Data
         public double Exphours { get; set;  }
         public double TotalHours { get; set; }
         public string RemainLife { get; set; }
+        public int PlanQty { get; set; }
     }
 
     public class InputMSD
@@ -98,6 +108,7 @@ namespace MSDMonitoring.Data
         public string INputOut { get; set; }
         public int QuantityOut { get; set; }
         public double RemainFloor { get; set; } 
+        public int PlanQty { get; set; }
         public int IsStats { get; set; }    
     }
 }

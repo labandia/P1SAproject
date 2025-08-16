@@ -2,10 +2,12 @@
 using MSDMonitoring.Interface;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace MSDMonitoring
 {
@@ -20,6 +22,9 @@ namespace MSDMonitoring
         public string strEndTime;
 
         private Timer liveTimer;
+        private Timer ScanTimer;
+        private bool isScanning = false;
+        private bool scanHandled = false;
 
         // ---------------------------
         // Class-level fields
@@ -30,6 +35,13 @@ namespace MSDMonitoring
         {
             InitializeComponent();
             _msd = msd;
+
+            // Setup scan detection timer
+            ScanTimer = new System.Windows.Forms.Timer();
+            ScanTimer.Interval = 200; // Adjust depending on scanner speed
+            ScanTimer.Tick += ScanTimer_Tick;
+
+            Ambassador.TextChanged += Ambassador_TextChanged;
         }
         private async void Ambassador_KeyDown(object sender, KeyEventArgs e)
         {
@@ -47,12 +59,15 @@ namespace MSDMonitoring
             if(ReelData != null)
             {
             
-                if (ReelData.RemainQuantity == 0)
+                if (ReelData.RemainQuantity == 0 || ReelData.FloorLife == 0)
                 {
-                    MessageBox.Show("Reel ID is Already Used ... ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Reel ID is Already Used ... ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Ambassador.Text = "";
+                    Ambassador.Focus();
                     return;
                 }
                 FloorLifeText.Text = ReelData.FloorLife.ToString();
+                LevelText.Text = ReelData.Level.ToString();
                 QtyIn.Text = ReelData.RemainQuantity.ToString();
                 QtyIn.ReadOnly = true;
                 strFloorlife = ReelData.FloorLife;
@@ -65,15 +80,16 @@ namespace MSDMonitoring
 
                 var filterdata = GetMastelistData.SingleOrDefault(res => res.AmbassadorPartnum == ambassadorpartnum);
 
+                // Checks if the Partnumber is Exist in the MasterlistData
                 if (filterdata != null)
                 {
                     FloorLifeText.Text = filterdata.FloorLife.ToString();
                     strFloorlife = filterdata.FloorLife;
+                    LevelText.Text = filterdata.Level.ToString();
                 }
                 else
                 {
-                    FloorLifeText.Text = "168"; // default value
-                    strFloorlife = 168; // default value
+                    MessageBox.Show("No Partnum in the Masterlist ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
                 QtyIn.Focus();
@@ -89,7 +105,7 @@ namespace MSDMonitoring
         {
             this.WindowState = FormWindowState.Maximized;
             this.FormBorderStyle = FormBorderStyle.Sizable; // keeps title bar
-
+            LineSelect.SelectedIndex = 0;
 
             liveTimer = new Timer { Interval = 1000 }; // 1 second updates
             liveTimer.Tick += LiveTimer_Tick;
@@ -121,34 +137,7 @@ namespace MSDMonitoring
             BuildCards();
         }
 
-        // ---------------------------
-        // Build Cards (Responsive Width)
-        // ---------------------------
-        private void BuildCards()
-        {
-            flowLayoutPanel1.Controls.Clear();
-
-            if (_cardDataCache.Count == 0)
-                return;
-
-            int panelWidth = flowLayoutPanel1.ClientSize.Width;
-            int columns;
-
-            if (panelWidth >= 1280)       // Around 1366px monitor width
-                columns = 3;
-            else if (panelWidth >= 900)   // Medium screens
-                columns = 2;
-            else                          // Small screens
-                columns = 1;
-
-            int totalSpacing = flowLayoutPanel1.Padding.Left + flowLayoutPanel1.Padding.Right + (columns * 20);
-            int cardWidth = (panelWidth - totalSpacing) / columns;
-
-            foreach (var card in _cardDataCache)
-            {
-                AddCardReelID(card.RecordID, card.ReelID, card.DateIn, card.Line, card.QuantityIN, card.TimeIn, cardWidth);
-            }
-        }
+      
 
         // ---------------------------
         // Resize Event Handler
@@ -162,9 +151,11 @@ namespace MSDMonitoring
         public void ResetForm()
         {
             Ambassador.Text = "";
-            FloorLifeText.Text = "";
+            LevelText.Text = "N/A";
+            FloorLifeText.Text = "N/A";
             QtyIn.Text = "";
-            LineText.Text = "";
+            //LineText.Text = "";
+            LineSelect.SelectedIndex = 0;
             InputIn.Text = "";
             LotText.Text ="";
         }
@@ -294,7 +285,34 @@ namespace MSDMonitoring
 
             flowLayoutPanel1.Controls.Add(card);
         }
+        // ---------------------------
+        // Build Cards (Responsive Width)
+        // ---------------------------
+        private void BuildCards()
+        {
+            flowLayoutPanel1.Controls.Clear();
 
+            if (_cardDataCache.Count == 0)
+                return;
+
+            int panelWidth = flowLayoutPanel1.ClientSize.Width;
+            int columns;
+
+            if (panelWidth >= 1280)       // Around 1366px monitor width
+                columns = 3;
+            else if (panelWidth >= 900)   // Medium screens
+                columns = 2;
+            else                          // Small screens
+                columns = 1;
+
+            int totalSpacing = flowLayoutPanel1.Padding.Left + flowLayoutPanel1.Padding.Right + (columns * 20);
+            int cardWidth = (panelWidth - totalSpacing) / columns;
+
+            foreach (var card in _cardDataCache)
+            {
+                AddCardReelID(card.RecordID, card.ReelID, card.DateIn, card.Line, card.QuantityIN, card.TimeIn, cardWidth);
+            }
+        }
         private void Card_Click(object sender, EventArgs e)
         {
             if (sender is Panel cardPanel && cardPanel.Tag is int id)
@@ -359,67 +377,50 @@ namespace MSDMonitoring
         // ========================= ADD FUNCTIONALITY ============================== //
         // ========================================================================== //
         private async void NewEntryBtn_Click(object sender, EventArgs e)
-        {
-            if (await FormValidation())
-            {
-                await _msd.UpdateChecker(strReelID, strFloorlife, Convert.ToInt32(QtyIn.Text));
-
-
-                DateTime selectedDate = DateTime.Now;
-
-
-                var entryobj = new InputIN_MSD
-                {
-                    ReelID = strReelID,
-                    AmbassadorPartnum = strpartnum,
-                    DateIn =  selectedDate.ToString("yyyy-MM-dd HH:mm:ss.fff"),
-                    QuantityIN = Convert.ToInt32(QtyIn.Text),
-                    Line = Convert.ToInt32(LineText.Text),
-                    RemainFloor = Convert.ToDouble(FloorLifeText.Text),
-                    InputIn = InputIn.Text, 
-                    LotNo = LotText.Text
-                };
-
-                bool result = await _msd.AddComponentsData(entryobj);
-
-                if (!result) return;
-
-                await LoadData();
-                ResetForm();    
-            }
+        {   
+            await ComponentsDataEntry();
         }
         public async Task<bool> FormValidation()
         {
             var data = await _msd.GetListComponentIN();
 
-            if(string.IsNullOrEmpty(Ambassador.Text) || string.IsNullOrEmpty(QtyIn.Text) || string.IsNullOrEmpty(InputIn.Text) || string.IsNullOrEmpty(LineText.Text))
+            if(string.IsNullOrEmpty(Ambassador.Text) || string.IsNullOrEmpty(QtyIn.Text) || string.IsNullOrEmpty(InputIn.Text) || string.IsNullOrEmpty(LotText.Text))
             {
                 ReelID_error.Visible = string.IsNullOrEmpty(Ambassador.Text) ? true : false;
                 QuanError.Visible = string.IsNullOrEmpty(QtyIn.Text) ? true : false;
                 NameError.Visible = string.IsNullOrEmpty(InputIn.Text) ? true : false;
-                LineError.Visible = string.IsNullOrEmpty(LineText.Text) ? true : false;
+                lotError.Visible = string.IsNullOrEmpty(LotText.Text) ? true : false;
                 return false;
             }
+
+            if(LineSelect.SelectedIndex == 0)
+            {
+                LineError.Visible = LineSelect.SelectedIndex == 0 ? true : false;
+                return false;
+            }
+
+
 
             // Validate Line number is integer
-            if (!int.TryParse(LineText.Text, out int lineNumber))
-            {
-                MessageBox.Show("Line must be a number.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return false;
-            }
+            //if (!int.TryParse(LineText.Text, out int lineNumber))
+            //{
+            //    MessageBox.Show("Line must be a number.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //    return false;
+            //}
 
-            // Validate range 1 - 12
-            if (lineNumber < 1 || lineNumber > 12)
-            {
-                MessageBox.Show("Line must be between 1 and 12.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return false;
-            }
+            //// Validate range 1 - 12
+            //if (lineNumber < 1 || lineNumber > 12)
+            //{
+            //    MessageBox.Show("Line must be between 1 and 12.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //    return false;
+            //}
 
             // Check for duplicates in data
-            var isDuplicate = data.Any(res => res.Line == lineNumber);
+            int selectedLine = Convert.ToInt32(LineSelect.Text);
+            var isDuplicate = data.Any(res => res.Line == selectedLine);
             if (isDuplicate)
             {
-                MessageBox.Show($"Line {lineNumber} is already input.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Line {selectedLine} is already input.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -431,10 +432,19 @@ namespace MSDMonitoring
         // ========================================================================== //
         private void QtyIn_KeyPress(object sender, KeyPressEventArgs e)
         {
+            // Only allow control keys (e.g., Backspace) and digits
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
             {
-                e.Handled = true; // Reject the input
+                e.Handled = true;
+                return;
             }
+
+            // Limit to 5 digits
+            if (!char.IsControl(e.KeyChar) && QtyIn.Text.Length >= 5)
+            {
+                e.Handled = true;
+            }
+            LotText.Focus();
         }
         private void LineText_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -473,6 +483,155 @@ namespace MSDMonitoring
         {
             MSDMasterlist md = new MSDMasterlist(_msd);
             md.ShowDialog();
+        }
+
+        private void QtyIn_TextChanged(object sender, EventArgs e)
+        {
+            if (QtyIn.Text.Length > 1)
+            {
+                // Remove all leading zeros
+                QtyIn.Text = QtyIn.Text.TrimStart('0');
+
+                // If everything got removed, keep a single zero
+                if (string.IsNullOrEmpty(QtyIn.Text))
+                    QtyIn.Text = "0";
+
+                // Keep cursor at the end
+                QtyIn.SelectionStart = QtyIn.Text.Length;
+            }
+        }
+
+        private async void InputIn_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode != Keys.Enter) return;
+            await ComponentsDataEntry();
+        }
+
+
+        public async Task ComponentsDataEntry()
+        {
+            if (await FormValidation())
+            {
+                await _msd.UpdateChecker(strReelID, strFloorlife, Convert.ToInt32(QtyIn.Text));
+
+                int selectedLine = Convert.ToInt32(LineSelect.Text);
+                DateTime selectedDate = DateTime.Now;
+
+
+                var entryobj = new InputIN_MSD
+                {
+                    ReelID = strReelID,
+                    AmbassadorPartnum = strpartnum,
+                    DateIn =  selectedDate.ToString("yyyy-MM-dd HH:mm:ss.fff"),
+                    QuantityIN = Convert.ToInt32(QtyIn.Text),
+                    Line = selectedLine,
+                    RemainFloor = Convert.ToDouble(FloorLifeText.Text),
+                    InputIn = InputIn.Text,
+                    LotNo = LotText.Text
+                };
+
+                bool result = await _msd.AddComponentsData(entryobj);
+
+                if (!result) return;
+
+                await LoadData();
+                ResetForm();
+            }
+        }
+
+        private void LineSelect_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            InputIn.Focus();
+        }
+
+        private void Ambassador_TextChanged(object sender, EventArgs e)
+        {
+            if (scanHandled) return; // Ignore changes after processing
+
+            isScanning = true;
+            ScanTimer.Stop();
+            ScanTimer.Start();
+        }
+
+        private async void ScanTimer_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                ScanTimer.Stop();
+
+                if (isScanning && !scanHandled)
+                {
+                    isScanning = false;
+                    scanHandled = true; // Prevent double execution
+
+                    // === Your original scan handling code ===
+                    string partnum = Ambassador.Text;
+                    strReelID = partnum;
+
+                    if (string.IsNullOrEmpty(partnum) || partnum.Length <= 3)
+                    {
+                        MessageBox.Show("Invalid scanned Reel ID", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Ambassador.Text = "";
+                        scanHandled = false; // Allow next scan
+                        Ambassador.Focus();
+                        return;
+                    }
+
+
+                    string ambassadorpartnum = partnum.Substring(3).Split(' ')[0];
+                    strpartnum = ambassadorpartnum;
+
+                    // Step 2 : Get the History List
+                    var ReelData = await _msd.GetReelID(partnum);
+
+                    if (ReelData != null)
+                    {
+                        if (ReelData.RemainQuantity == 0 || ReelData.FloorLife == 0)
+                        {
+                            MessageBox.Show("Reel ID is Already Used ... ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            Ambassador.Text = "";
+                            scanHandled = false; // Allow next scan
+                            Ambassador.Focus();
+                            return;
+                        }
+                        FloorLifeText.Text = ReelData.FloorLife.ToString();
+                        LevelText.Text = ReelData.Level.ToString();
+                        QtyIn.Text = ReelData.RemainQuantity.ToString();
+                        QtyIn.ReadOnly = true;
+                        strFloorlife = ReelData.FloorLife;
+                    }
+                    else
+                    {
+                        // Get the Data of Masterlist
+                        var GetMastelistData = await _msd.GetMSDMasterlist();
+                        var filterdata = GetMastelistData.SingleOrDefault(res => res.AmbassadorPartnum == ambassadorpartnum);
+
+                        if (filterdata != null)
+                        {
+                            FloorLifeText.Text = filterdata.FloorLife.ToString();
+                            strFloorlife = filterdata.FloorLife;
+                            LevelText.Text = filterdata.Level.ToString();
+                        }
+                        else
+                        {
+                            MessageBox.Show("No Partnum in the Masterlist ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            Ambassador.Text = "";
+                            scanHandled = false; // Allow next scan
+                            Ambassador.Focus();
+                            return;
+                        }
+
+                        QtyIn.Focus();
+                    }
+
+                    Ambassador.Text = partnum;
+                    // === End of your code ===
+                }
+            }
+            catch(Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
         }
     }
 }

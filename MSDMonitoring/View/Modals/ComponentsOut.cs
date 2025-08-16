@@ -66,9 +66,6 @@ namespace MSDMonitoring
         private async void updatebtn_Click(object sender, EventArgs e)
         {
             DateTime selectedDate = DateTime.Now;
-
-            Debug.WriteLine("Date : " + strTimeIN);
-
             DateTime startTime = DateTime.ParseExact(
                 strTimeIN,
                 "MM/dd/yyyy HH:mm:ss",
@@ -100,7 +97,8 @@ namespace MSDMonitoring
                     QuantityOut = String.IsNullOrEmpty(QuantityInput.Text) ? 0 : Convert.ToInt32(QuantityInput.Text),
                     INputOut =  String.IsNullOrEmpty(NameInput.Text) ? "" : NameInput.Text,
                     RemainFloor = getFloorlife,
-                    IsStats = 1
+                    IsStats = 1, 
+                    PlanQty = remainQuan
                 };
 
 
@@ -164,8 +162,6 @@ namespace MSDMonitoring
                 ReelID_error.Visible = string.IsNullOrEmpty(NameInput.Text) ? true : false;
                 return false;
             }
-
-
             int remainQuan = setQuantity - Convert.ToInt32(QuantityInput.Text);
 
             if(remainQuan < 0)

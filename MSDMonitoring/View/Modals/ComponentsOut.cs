@@ -3,6 +3,7 @@ using MSDMonitoring.Interface;
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Remoting.Contexts;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -182,6 +183,42 @@ namespace MSDMonitoring
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
             {
                 e.Handled = true; // Reject the input
+            }
+        }
+
+        private void QuantityInput_TextChanged(object sender, EventArgs e)
+        {
+            // Reset timer every time text changes
+            if (scanTimer == null)
+            {
+                scanTimer = new System.Windows.Forms.Timer();
+                scanTimer.Interval = 50; // 50 ms after last character
+                scanTimer.Tick += ScanTimerV2_Tick;
+            }
+
+            scanTimer.Stop();
+            scanTimer.Start();
+        }
+        private System.Windows.Forms.Timer scanTimer;
+        private void ScanTimerV2_Tick(object sender, EventArgs e)
+        {
+            scanTimer.Stop();
+
+            if (QuantityInput.Text.Length > 0)
+            {
+                // Parse safely
+                if (int.TryParse(QuantityInput.Text, out int value))
+                {
+                    QuantityInput.Text = value.ToString(); // 00067 -> 67
+                    QuantityInput.SelectionStart = QuantityInput.Text.Length;
+
+                    NameInput.Focus();
+                }
+                else
+                {
+                    QuantityInput.Text = "0";
+                    QuantityInput.SelectionStart = QuantityInput.Text.Length;
+                }
             }
         }
     }

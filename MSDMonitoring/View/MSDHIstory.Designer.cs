@@ -154,7 +154,7 @@
             this.MonitorTable.RowTemplate.DefaultCellStyle.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.MonitorTable.RowTemplate.Height = 50;
             this.MonitorTable.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.MonitorTable.Size = new System.Drawing.Size(1342, 506);
+            this.MonitorTable.Size = new System.Drawing.Size(1294, 506);
             this.MonitorTable.TabIndex = 82;
             this.MonitorTable.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.MonitorTable_CellClick);
             this.MonitorTable.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.MonitorTable_CellContentClick);
@@ -305,7 +305,7 @@
             this.Exitbtn.FlatAppearance.BorderSize = 0;
             this.Exitbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Exitbtn.Image = ((System.Drawing.Image)(resources.GetObject("Exitbtn.Image")));
-            this.Exitbtn.Location = new System.Drawing.Point(1315, 22);
+            this.Exitbtn.Location = new System.Drawing.Point(1267, 22);
             this.Exitbtn.Name = "Exitbtn";
             this.Exitbtn.Size = new System.Drawing.Size(55, 46);
             this.Exitbtn.TabIndex = 83;
@@ -318,7 +318,7 @@
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(1418, 83);
+            this.pictureBox1.Size = new System.Drawing.Size(1370, 83);
             this.pictureBox1.TabIndex = 84;
             this.pictureBox1.TabStop = false;
             // 
@@ -348,7 +348,7 @@
             // 
             this.BtnLast.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.BtnLast.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BtnLast.Location = new System.Drawing.Point(1315, 677);
+            this.BtnLast.Location = new System.Drawing.Point(1267, 677);
             this.BtnLast.Name = "BtnLast";
             this.BtnLast.Size = new System.Drawing.Size(57, 30);
             this.BtnLast.TabIndex = 94;
@@ -360,7 +360,7 @@
             // 
             this.BtnFirst.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.BtnFirst.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BtnFirst.Location = new System.Drawing.Point(1134, 677);
+            this.BtnFirst.Location = new System.Drawing.Point(1086, 677);
             this.BtnFirst.Name = "BtnFirst";
             this.BtnFirst.Size = new System.Drawing.Size(64, 30);
             this.BtnFirst.TabIndex = 93;
@@ -425,7 +425,7 @@
             this.BtnPrev.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.BtnPrev.Image = ((System.Drawing.Image)(resources.GetObject("BtnPrev.Image")));
             this.BtnPrev.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.BtnPrev.Location = new System.Drawing.Point(1217, 677);
+            this.BtnPrev.Location = new System.Drawing.Point(1169, 677);
             this.BtnPrev.Name = "BtnPrev";
             this.BtnPrev.Size = new System.Drawing.Size(35, 30);
             this.BtnPrev.TabIndex = 88;
@@ -438,7 +438,7 @@
             this.BtnNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.BtnNext.Image = ((System.Drawing.Image)(resources.GetObject("BtnNext.Image")));
             this.BtnNext.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.BtnNext.Location = new System.Drawing.Point(1258, 677);
+            this.BtnNext.Location = new System.Drawing.Point(1210, 677);
             this.BtnNext.Name = "BtnNext";
             this.BtnNext.Size = new System.Drawing.Size(35, 30);
             this.BtnNext.TabIndex = 87;
@@ -451,15 +451,15 @@
             this.Exportbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Exportbtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(152)))), ((int)(((byte)(126)))));
             this.Exportbtn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.Exportbtn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(152)))), ((int)(((byte)(126)))));
-            this.Exportbtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(152)))), ((int)(((byte)(126)))));
-            this.Exportbtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(152)))), ((int)(((byte)(126)))));
+            this.Exportbtn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(56)))), ((int)(((byte)(44)))));
+            this.Exportbtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(56)))), ((int)(((byte)(44)))));
+            this.Exportbtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(56)))), ((int)(((byte)(44)))));
             this.Exportbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Exportbtn.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Exportbtn.ForeColor = System.Drawing.Color.Transparent;
             this.Exportbtn.Image = ((System.Drawing.Image)(resources.GetObject("Exportbtn.Image")));
             this.Exportbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Exportbtn.Location = new System.Drawing.Point(1239, 102);
+            this.Exportbtn.Location = new System.Drawing.Point(1191, 102);
             this.Exportbtn.Name = "Exportbtn";
             this.Exportbtn.Padding = new System.Windows.Forms.Padding(15, 0, 15, 0);
             this.Exportbtn.Size = new System.Drawing.Size(133, 35);
@@ -473,7 +473,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1418, 737);
+            this.ClientSize = new System.Drawing.Size(1370, 737);
             this.ControlBox = false;
             this.Controls.Add(this.Exportbtn);
             this.Controls.Add(this.BtnLast);

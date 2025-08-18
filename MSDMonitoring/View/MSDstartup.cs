@@ -7,7 +7,6 @@ using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace MSDMonitoring
 {
@@ -433,18 +432,19 @@ namespace MSDMonitoring
         private void QtyIn_KeyPress(object sender, KeyPressEventArgs e)
         {
             // Only allow control keys (e.g., Backspace) and digits
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
-            {
-                e.Handled = true;
-                return;
-            }
+            //if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            //{
+            //    e.Handled = true;
+            //    return;
+            //}
 
-            // Limit to 5 digits
-            if (!char.IsControl(e.KeyChar) && QtyIn.Text.Length >= 5)
-            {
-                e.Handled = true;
-            }
-            LotText.Focus();
+            //// Limit to 5 digits
+            //if (!char.IsControl(e.KeyChar) && QtyIn.Text.Length >= 5)
+            //{
+            //    e.Handled = true;
+            
+            //}
+            //   LotText.Focus();
         }
         private void LineText_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -484,21 +484,19 @@ namespace MSDMonitoring
             MSDMasterlist md = new MSDMasterlist(_msd);
             md.ShowDialog();
         }
-
+        private bool _isUpdating = false;
         private void QtyIn_TextChanged(object sender, EventArgs e)
         {
-            if (QtyIn.Text.Length > 1)
+            // Reset timer every time text changes
+            if (scanTimer == null)
             {
-                // Remove all leading zeros
-                QtyIn.Text = QtyIn.Text.TrimStart('0');
-
-                // If everything got removed, keep a single zero
-                if (string.IsNullOrEmpty(QtyIn.Text))
-                    QtyIn.Text = "0";
-
-                // Keep cursor at the end
-                QtyIn.SelectionStart = QtyIn.Text.Length;
+                scanTimer = new System.Windows.Forms.Timer();
+                scanTimer.Interval = 50; // 50 ms after last character
+                scanTimer.Tick += ScanTimerV2_Tick;
             }
+
+            scanTimer.Stop();
+            scanTimer.Start();
         }
 
         private async void InputIn_KeyDown(object sender, KeyEventArgs e)
@@ -631,6 +629,31 @@ namespace MSDMonitoring
             catch(Exception ex)
             {
                 Debug.WriteLine(ex.Message);
+            }
+        }
+
+        private System.Windows.Forms.Timer scanTimer;
+
+        private void ScanTimerV2_Tick(object sender, EventArgs e)
+        {
+            scanTimer.Stop();
+
+            if (QtyIn.Text.Length > 0)
+            {
+                // Parse safely
+                if (int.TryParse(QtyIn.Text, out int value))
+                {
+                    QtyIn.Text = value.ToString(); // 00067 -> 67
+                    QtyIn.SelectionStart = QtyIn.Text.Length;
+
+                    // Move to LotText after scan
+                    LotText.Focus();
+                }
+                else
+                {
+                    QtyIn.Text = "0";
+                    QtyIn.SelectionStart = QtyIn.Text.Length;
+                }
             }
         }
     }

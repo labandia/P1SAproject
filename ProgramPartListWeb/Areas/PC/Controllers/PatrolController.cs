@@ -461,8 +461,8 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             string oldCounterPath = regData.SingleOrDefault(res => res.RegNo == Request.Form["RegNo"]).CounterPath;
 
               // Prepare new file names
-    string newFileName = $"RN_{Request.Form["RegNo"]}_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
-    string outputPdfPath = newFileName.Replace(".xlsx", ".pdf");
+            string newFileName = $"RN_{Request.Form["RegNo"]}_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+            string outputPdfPath = newFileName.Replace(".xlsx", ".pdf");
 
 
             string newCounterPath = null;

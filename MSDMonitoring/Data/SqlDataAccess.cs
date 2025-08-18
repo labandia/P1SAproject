@@ -60,18 +60,11 @@ namespace MSDMonitoring.Data
             {
                 using (IDbConnection con = GetConnection(ConnectionString()))
                 {
-                    // Checks if the string is one word
-                    if (Regex.IsMatch(query, @"^\w+$"))
-                    {
-                        // This code is a Procudure query
-                        return (await con.QueryAsync<T>(query, parameters, commandType: CommandType.StoredProcedure)).ToList();
-                    }
-                    else
-                    {
-                        // Ordinary Query string
-                        return (await con.QueryAsync<T>(query, parameters)).ToList();
-                    }
-                    //return resultData;
+                    bool IsStoreProd = Regex.IsMatch(query, @"^\w+$");
+                    var commandType = IsStoreProd ? CommandType.StoredProcedure : CommandType.Text;
+                    var result = await con.QueryAsync<T>(query, parameters, commandType: commandType);
+
+                    return result.ToList();
                 }
             }
             catch (SqlException ex)

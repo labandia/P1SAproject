@@ -235,8 +235,7 @@ namespace MSDMonitoring
                     Level = MonitorTable.Rows[e.RowIndex].Cells[5].Value.ToString(),
                     LotNo = MonitorTable.Rows[e.RowIndex].Cells[6].Value.ToString(),
                     Date_IN = MonitorTable.Rows[e.RowIndex].Cells[11].Value.ToString(),
-                    Quantity_IN = Convert.ToInt32(MonitorTable.Rows[e.RowIndex].Cells[13].Value),
-                    RemainLife = Convert.ToInt32(MonitorTable.Rows[e.RowIndex].Cells[18].Value.ToString())
+                    Quantity_IN = Convert.ToInt32(MonitorTable.Rows[e.RowIndex].Cells[13].Value)
                 };
                 // Template path
                 string templatePath = @"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\Templates\MSDPrintLabel.xlsx";
@@ -264,14 +263,11 @@ namespace MSDMonitoring
                 worksheet.Range["C7"].Value = obj.LotNo;
                 worksheet.Range["C8"].Value = obj.Date_IN;
                 worksheet.Range["C9"].Value = obj.Quantity_IN;
-                worksheet.Range["C10"].Value = obj.RemainLife;
+                worksheet.Range["C10"].Value =  MonitorTable.Rows[e.RowIndex].Cells[17].Value.ToString();
 
                 // Show print dialog
-                worksheet.PrintOut(
-                    Type.Missing, Type.Missing, Type.Missing,
-                    true,  // Preview = true opens Print dialog
-                    Type.Missing, Type.Missing, Type.Missing
-                );
+                worksheet.PrintPreview();
+
 
                 // Optional: close workbook without saving
                 // workbook.Close(false);
@@ -286,7 +282,7 @@ namespace MSDMonitoring
                 //Debug.WriteLine($@"Reel ID : {ReeID} - Partnumber {Partnumber}");
             }
 
-                
-            }
+
+        }
     }
 }

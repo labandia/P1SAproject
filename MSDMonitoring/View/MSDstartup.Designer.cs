@@ -46,7 +46,6 @@
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.NewEntryBtn = new System.Windows.Forms.Button();
             this.label14 = new System.Windows.Forms.Label();
-            this.ReelID_error = new System.Windows.Forms.Label();
             this.QuanError = new System.Windows.Forms.Label();
             this.NameError = new System.Windows.Forms.Label();
             this.LineError = new System.Windows.Forms.Label();
@@ -58,6 +57,7 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.LevelText = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
+            this.ReelID_error = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel2.SuspendLayout();
@@ -222,9 +222,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.flowLayoutPanel1.BackColor = System.Drawing.Color.White;
             this.flowLayoutPanel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(26, 189);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(26, 205);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(1288, 535);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(1288, 519);
             this.flowLayoutPanel1.TabIndex = 80;
             // 
             // NewEntryBtn
@@ -259,18 +259,6 @@
             this.label14.Size = new System.Drawing.Size(41, 16);
             this.label14.TabIndex = 82;
             this.label14.Text = "Line :";
-            // 
-            // ReelID_error
-            // 
-            this.ReelID_error.AutoSize = true;
-            this.ReelID_error.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ReelID_error.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.ReelID_error.Location = new System.Drawing.Point(120, 27);
-            this.ReelID_error.Name = "ReelID_error";
-            this.ReelID_error.Size = new System.Drawing.Size(13, 16);
-            this.ReelID_error.TabIndex = 84;
-            this.ReelID_error.Text = "*";
-            this.ReelID_error.Visible = false;
             // 
             // QuanError
             // 
@@ -435,6 +423,18 @@
             this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // ReelID_error
+            // 
+            this.ReelID_error.AutoSize = true;
+            this.ReelID_error.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ReelID_error.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.ReelID_error.Location = new System.Drawing.Point(120, 27);
+            this.ReelID_error.Name = "ReelID_error";
+            this.ReelID_error.Size = new System.Drawing.Size(13, 16);
+            this.ReelID_error.TabIndex = 84;
+            this.ReelID_error.Text = "*";
+            this.ReelID_error.Visible = false;
+            // 
             // MSDstartup
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -481,7 +481,6 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.Button NewEntryBtn;
         private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.Label ReelID_error;
         private System.Windows.Forms.Label QuanError;
         private System.Windows.Forms.Label NameError;
         private System.Windows.Forms.Label LineError;
@@ -493,5 +492,6 @@
         private System.Windows.Forms.Label LevelText;
         private System.Windows.Forms.ComboBox LineSelect;
         private System.Windows.Forms.Label lotError;
+        private System.Windows.Forms.Label ReelID_error;
     }
 }

@@ -52,6 +52,7 @@
             this.TotalHours = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.RemainLife = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.RecordID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Print = new System.Windows.Forms.DataGridViewImageColumn();
             this.Exitbtn = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -85,7 +86,6 @@
             // 
             this.MonitorTable.AllowUserToAddRows = false;
             this.MonitorTable.AllowUserToDeleteRows = false;
-            this.MonitorTable.AllowUserToOrderColumns = true;
             this.MonitorTable.AllowUserToResizeRows = false;
             dataGridViewCellStyle1.BackColor = System.Drawing.Color.WhiteSmoke;
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Century Gothic", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -129,7 +129,8 @@
             this.Exphours,
             this.TotalHours,
             this.RemainLife,
-            this.RecordID});
+            this.RecordID,
+            this.Print});
             this.MonitorTable.Cursor = System.Windows.Forms.Cursors.Hand;
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
@@ -287,6 +288,15 @@
             this.RecordID.ReadOnly = true;
             this.RecordID.Visible = false;
             // 
+            // Print
+            // 
+            this.Print.HeaderText = "Print";
+            this.Print.Image = ((System.Drawing.Image)(resources.GetObject("Print.Image")));
+            this.Print.Name = "Print";
+            this.Print.ReadOnly = true;
+            this.Print.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Print.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
             // Exitbtn
             // 
             this.Exitbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -440,6 +450,7 @@
             // 
             this.Exportbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Exportbtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(152)))), ((int)(((byte)(126)))));
+            this.Exportbtn.Cursor = System.Windows.Forms.Cursors.Hand;
             this.Exportbtn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(152)))), ((int)(((byte)(126)))));
             this.Exportbtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(152)))), ((int)(((byte)(126)))));
             this.Exportbtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(152)))), ((int)(((byte)(126)))));
@@ -525,5 +536,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn TotalHours;
         private System.Windows.Forms.DataGridViewTextBoxColumn RemainLife;
         private System.Windows.Forms.DataGridViewTextBoxColumn RecordID;
+        private System.Windows.Forms.DataGridViewImageColumn Print;
     }
 }

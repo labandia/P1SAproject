@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MSDMasterlist));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
             this.BtnLast = new System.Windows.Forms.Button();
             this.BtnFirst = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
@@ -47,7 +47,6 @@
             this.ReelText = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.MonitorTable = new System.Windows.Forms.DataGridView();
-            this.Exportbtn = new System.Windows.Forms.Button();
             this.AmbassadorPartnum = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Partname = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SupplyPartName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -55,6 +54,7 @@
             this.Level = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.FloorLife = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Edit = new System.Windows.Forms.DataGridViewImageColumn();
+            this.Exportbtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MonitorTable)).BeginInit();
             this.SuspendLayout();
@@ -62,6 +62,7 @@
             // BtnLast
             // 
             this.BtnLast.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.BtnLast.Cursor = System.Windows.Forms.Cursors.Hand;
             this.BtnLast.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BtnLast.Image = ((System.Drawing.Image)(resources.GetObject("BtnLast.Image")));
             this.BtnLast.Location = new System.Drawing.Point(1315, 692);
@@ -73,6 +74,7 @@
             // BtnFirst
             // 
             this.BtnFirst.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.BtnFirst.Cursor = System.Windows.Forms.Cursors.Hand;
             this.BtnFirst.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BtnFirst.Image = ((System.Drawing.Image)(resources.GetObject("BtnFirst.Image")));
             this.BtnFirst.Location = new System.Drawing.Point(1134, 692);
@@ -136,6 +138,7 @@
             // BtnPrev
             // 
             this.BtnPrev.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.BtnPrev.Cursor = System.Windows.Forms.Cursors.Hand;
             this.BtnPrev.Image = ((System.Drawing.Image)(resources.GetObject("BtnPrev.Image")));
             this.BtnPrev.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.BtnPrev.Location = new System.Drawing.Point(1217, 692);
@@ -148,6 +151,7 @@
             // BtnNext
             // 
             this.BtnNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.BtnNext.Cursor = System.Windows.Forms.Cursors.Hand;
             this.BtnNext.Image = ((System.Drawing.Image)(resources.GetObject("BtnNext.Image")));
             this.BtnNext.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.BtnNext.Location = new System.Drawing.Point(1258, 692);
@@ -164,7 +168,7 @@
             this.label6.ForeColor = System.Drawing.Color.Transparent;
             this.label6.Image = ((System.Drawing.Image)(resources.GetObject("label6.Image")));
             this.label6.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label6.Location = new System.Drawing.Point(303, 112);
+            this.label6.Location = new System.Drawing.Point(303, 113);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(39, 39);
             this.label6.TabIndex = 100;
@@ -187,7 +191,7 @@
             this.Exitbtn.FlatAppearance.BorderSize = 0;
             this.Exitbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Exitbtn.Image = ((System.Drawing.Image)(resources.GetObject("Exitbtn.Image")));
-            this.Exitbtn.Location = new System.Drawing.Point(1296, 26);
+            this.Exitbtn.Location = new System.Drawing.Point(1296, 22);
             this.Exitbtn.Name = "Exitbtn";
             this.Exitbtn.Size = new System.Drawing.Size(55, 46);
             this.Exitbtn.TabIndex = 97;
@@ -200,7 +204,7 @@
             this.ReelText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(23)))), ((int)(((byte)(30)))));
             this.ReelText.Font = new System.Drawing.Font("Century Gothic", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ReelText.ForeColor = System.Drawing.Color.White;
-            this.ReelText.Location = new System.Drawing.Point(27, 35);
+            this.ReelText.Location = new System.Drawing.Point(27, 30);
             this.ReelText.Name = "ReelText";
             this.ReelText.Size = new System.Drawing.Size(212, 24);
             this.ReelText.TabIndex = 95;
@@ -222,12 +226,12 @@
             this.MonitorTable.AllowUserToDeleteRows = false;
             this.MonitorTable.AllowUserToOrderColumns = true;
             this.MonitorTable.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.WhiteSmoke;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Century Gothic", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.WhiteSmoke;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.MonitorTable.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle9.BackColor = System.Drawing.Color.WhiteSmoke;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Century Gothic", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.Color.WhiteSmoke;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.MonitorTable.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle9;
             this.MonitorTable.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -236,14 +240,14 @@
             this.MonitorTable.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.MonitorTable.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleVertical;
             this.MonitorTable.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.Silver;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Silver;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.MonitorTable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle10.BackColor = System.Drawing.Color.Silver;
+            dataGridViewCellStyle10.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold);
+            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.Color.Silver;
+            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.MonitorTable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle10;
             this.MonitorTable.ColumnHeadersHeight = 45;
             this.MonitorTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.MonitorTable.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -255,14 +259,14 @@
             this.FloorLife,
             this.Edit});
             this.MonitorTable.Cursor = System.Windows.Forms.Cursors.Hand;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.MonitorTable.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.MonitorTable.DefaultCellStyle = dataGridViewCellStyle12;
             this.MonitorTable.EnableHeadersVisualStyles = false;
             this.MonitorTable.GridColor = System.Drawing.Color.White;
             this.MonitorTable.Location = new System.Drawing.Point(31, 170);
@@ -281,28 +285,6 @@
             this.MonitorTable.TabIndex = 96;
             this.MonitorTable.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.MonitorTable_CellClick);
             this.MonitorTable.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.MonitorTable_CellContentClick);
-            // 
-            // Exportbtn
-            // 
-            this.Exportbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.Exportbtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(152)))), ((int)(((byte)(126)))));
-            this.Exportbtn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(152)))), ((int)(((byte)(126)))));
-            this.Exportbtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(152)))), ((int)(((byte)(126)))));
-            this.Exportbtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(152)))), ((int)(((byte)(126)))));
-            this.Exportbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Exportbtn.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Exportbtn.ForeColor = System.Drawing.Color.Transparent;
-            this.Exportbtn.Image = ((System.Drawing.Image)(resources.GetObject("Exportbtn.Image")));
-            this.Exportbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Exportbtn.Location = new System.Drawing.Point(1258, 117);
-            this.Exportbtn.Name = "Exportbtn";
-            this.Exportbtn.Padding = new System.Windows.Forms.Padding(15, 0, 15, 0);
-            this.Exportbtn.Size = new System.Drawing.Size(115, 35);
-            this.Exportbtn.TabIndex = 109;
-            this.Exportbtn.Text = "Add";
-            this.Exportbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.Exportbtn.UseVisualStyleBackColor = false;
-            this.Exportbtn.Click += new System.EventHandler(this.Exportbtn_Click);
             // 
             // AmbassadorPartnum
             // 
@@ -349,14 +331,37 @@
             // Edit
             // 
             this.Edit.DataPropertyName = "Edit";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.NullValue = ((object)(resources.GetObject("dataGridViewCellStyle3.NullValue")));
-            this.Edit.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle11.NullValue = ((object)(resources.GetObject("dataGridViewCellStyle11.NullValue")));
+            this.Edit.DefaultCellStyle = dataGridViewCellStyle11;
             this.Edit.HeaderText = "Edit";
             this.Edit.Image = ((System.Drawing.Image)(resources.GetObject("Edit.Image")));
             this.Edit.Name = "Edit";
             this.Edit.ReadOnly = true;
             this.Edit.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            // 
+            // Exportbtn
+            // 
+            this.Exportbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.Exportbtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(152)))), ((int)(((byte)(126)))));
+            this.Exportbtn.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.Exportbtn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(152)))), ((int)(((byte)(126)))));
+            this.Exportbtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(152)))), ((int)(((byte)(126)))));
+            this.Exportbtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(152)))), ((int)(((byte)(126)))));
+            this.Exportbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Exportbtn.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Exportbtn.ForeColor = System.Drawing.Color.Transparent;
+            this.Exportbtn.Image = ((System.Drawing.Image)(resources.GetObject("Exportbtn.Image")));
+            this.Exportbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Exportbtn.Location = new System.Drawing.Point(1258, 117);
+            this.Exportbtn.Name = "Exportbtn";
+            this.Exportbtn.Padding = new System.Windows.Forms.Padding(15, 0, 15, 0);
+            this.Exportbtn.Size = new System.Drawing.Size(115, 35);
+            this.Exportbtn.TabIndex = 109;
+            this.Exportbtn.Text = "Add";
+            this.Exportbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Exportbtn.UseVisualStyleBackColor = false;
+            this.Exportbtn.Click += new System.EventHandler(this.Exportbtn_Click);
             // 
             // MSDMasterlist
             // 

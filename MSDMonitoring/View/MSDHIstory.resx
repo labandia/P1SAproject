@@ -171,7 +171,23 @@
   <metadata name="RecordID.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <metadata name="Print.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="Print.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAA
+        rwAAAK8BK7AVuQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAGMSURBVEhLxVU9
+        T8MwED1XnkCZKnXo0LXqmAGQkoWOXRCMkbpUgt+A2JC6sDUrW/8BS4ZITOzA0P/SEYye5asSO27cRion
+        vcV5H/El9hH9c50T0QMRPXpwbzhHlZRSfhOR2oder/cFri0OqRgGeZ6r7XbbiNVqxUHgBhe35RXisiwd
+        YwaemQBwg9olhRC1tgQGaAghWtul2zIej1Ucx8EB4EIT0q5rFhwawHzj0Vh3RPQBUhRFGiyeTqeNYNMq
+        33jc2uZXRPQbRdHPcDhUXQAPeBHRRTXgCenz+VwtFotOgIfZCTx39YzFLMvUaDTSb5KmqSMOhQmA54kD
+        bOKxaA1IksT5eG2A5qCAfr8f/JuC2xbg/EWz2UwTcZjW67VaLpc1YI0PGris8/1Fl/Y54B3AZDKZsGgH
+        rHEAuKzznQMUTt8bEb0bfHLAZrNRRVHUgLXKZQcu6+BxY5s3lb6XYDIYDJwdYK0S4L1/9pW+WTFUfDs4
+        duBwSTMOnbevosvIRGFCYVK9eIBnZ7bopPUHkst28ZVLJ8kAAAAASUVORK5CYII=
+</value>
+  </data>
   <data name="Exitbtn.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAcdJREFUSEul

@@ -34,11 +34,25 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MSDHIstory));
             this.ReelText = new System.Windows.Forms.Label();
             this.MonitorTable = new System.Windows.Forms.DataGridView();
+            this.Exitbtn = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.searchBox = new System.Windows.Forms.TextBox();
+            this.BtnLast = new System.Windows.Forms.Button();
+            this.BtnFirst = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
+            this.lblTotalPages = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.lblCurrentPage = new System.Windows.Forms.Label();
+            this.BtnPrev = new System.Windows.Forms.Button();
+            this.BtnNext = new System.Windows.Forms.Button();
+            this.Exportbtn = new System.Windows.Forms.Button();
             this.ReelID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Partnumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.FloorLife = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Level = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.LotNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Line = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DateIn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TimeIn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Reel_Quantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -53,19 +67,6 @@
             this.RemainLife = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.RecordID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Print = new System.Windows.Forms.DataGridViewImageColumn();
-            this.Exitbtn = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.searchBox = new System.Windows.Forms.TextBox();
-            this.BtnLast = new System.Windows.Forms.Button();
-            this.BtnFirst = new System.Windows.Forms.Button();
-            this.label5 = new System.Windows.Forms.Label();
-            this.lblTotalPages = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.lblCurrentPage = new System.Windows.Forms.Label();
-            this.BtnPrev = new System.Windows.Forms.Button();
-            this.BtnNext = new System.Windows.Forms.Button();
-            this.Exportbtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.MonitorTable)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -117,6 +118,7 @@
             this.FloorLife,
             this.Level,
             this.LotNo,
+            this.Line,
             this.DateIn,
             this.TimeIn,
             this.Reel_Quantity,
@@ -160,142 +162,6 @@
             this.MonitorTable.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.MonitorTable_CellContentClick);
             this.MonitorTable.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.MonitorTable_CellDoubleClick);
             this.MonitorTable.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.MonitorTable_CellFormatting);
-            // 
-            // ReelID
-            // 
-            this.ReelID.DataPropertyName = "ReelID";
-            this.ReelID.HeaderText = "Reel ID";
-            this.ReelID.Name = "ReelID";
-            this.ReelID.ReadOnly = true;
-            // 
-            // Partnumber
-            // 
-            this.Partnumber.DataPropertyName = "Partnumber";
-            this.Partnumber.HeaderText = "Partnumber";
-            this.Partnumber.Name = "Partnumber";
-            this.Partnumber.ReadOnly = true;
-            // 
-            // FloorLife
-            // 
-            this.FloorLife.DataPropertyName = "FloorLife";
-            this.FloorLife.HeaderText = "FloorLife";
-            this.FloorLife.Name = "FloorLife";
-            this.FloorLife.ReadOnly = true;
-            // 
-            // Level
-            // 
-            this.Level.DataPropertyName = "Level";
-            this.Level.HeaderText = "Level";
-            this.Level.Name = "Level";
-            this.Level.ReadOnly = true;
-            // 
-            // LotNo
-            // 
-            this.LotNo.DataPropertyName = "LotNo";
-            this.LotNo.HeaderText = "Lot No";
-            this.LotNo.Name = "LotNo";
-            this.LotNo.ReadOnly = true;
-            // 
-            // DateIn
-            // 
-            this.DateIn.DataPropertyName = "DateIn";
-            this.DateIn.HeaderText = "DateIn";
-            this.DateIn.Name = "DateIn";
-            this.DateIn.ReadOnly = true;
-            // 
-            // TimeIn
-            // 
-            this.TimeIn.DataPropertyName = "TimeIn";
-            this.TimeIn.HeaderText = "Time IN";
-            this.TimeIn.Name = "TimeIn";
-            this.TimeIn.ReadOnly = true;
-            // 
-            // Reel_Quantity
-            // 
-            this.Reel_Quantity.DataPropertyName = "Reel_Quantity";
-            this.Reel_Quantity.HeaderText = "Reel Quantity";
-            this.Reel_Quantity.Name = "Reel_Quantity";
-            this.Reel_Quantity.ReadOnly = true;
-            // 
-            // InputName
-            // 
-            this.InputName.DataPropertyName = "InputName";
-            this.InputName.HeaderText = "Input Name";
-            this.InputName.Name = "InputName";
-            this.InputName.ReadOnly = true;
-            // 
-            // DateOut
-            // 
-            this.DateOut.DataPropertyName = "DateOut";
-            this.DateOut.HeaderText = "Date_IN";
-            this.DateOut.Name = "DateOut";
-            this.DateOut.ReadOnly = true;
-            // 
-            // TimeOut
-            // 
-            this.TimeOut.DataPropertyName = "TimeOut";
-            this.TimeOut.HeaderText = "Time Out";
-            this.TimeOut.Name = "TimeOut";
-            this.TimeOut.ReadOnly = true;
-            // 
-            // Quantity_IN
-            // 
-            this.Quantity_IN.DataPropertyName = "Quantity_IN";
-            this.Quantity_IN.HeaderText = "Quantity IN";
-            this.Quantity_IN.Name = "Quantity_IN";
-            this.Quantity_IN.ReadOnly = true;
-            // 
-            // PlanQty
-            // 
-            this.PlanQty.DataPropertyName = "PlanQty";
-            this.PlanQty.HeaderText = "PlanQty";
-            this.PlanQty.Name = "PlanQty";
-            this.PlanQty.ReadOnly = true;
-            // 
-            // Input_Name
-            // 
-            this.Input_Name.DataPropertyName = "Input_Name";
-            this.Input_Name.HeaderText = "Input Name";
-            this.Input_Name.Name = "Input_Name";
-            this.Input_Name.ReadOnly = true;
-            // 
-            // Exphours
-            // 
-            this.Exphours.DataPropertyName = "Exphours";
-            this.Exphours.HeaderText = "Expose Hours";
-            this.Exphours.Name = "Exphours";
-            this.Exphours.ReadOnly = true;
-            // 
-            // TotalHours
-            // 
-            this.TotalHours.DataPropertyName = "TotalHours";
-            this.TotalHours.HeaderText = "Total Exp hours";
-            this.TotalHours.Name = "TotalHours";
-            this.TotalHours.ReadOnly = true;
-            // 
-            // RemainLife
-            // 
-            this.RemainLife.DataPropertyName = "RemainLife";
-            this.RemainLife.HeaderText = "Remain Life";
-            this.RemainLife.Name = "RemainLife";
-            this.RemainLife.ReadOnly = true;
-            // 
-            // RecordID
-            // 
-            this.RecordID.DataPropertyName = "RecordID";
-            this.RecordID.HeaderText = "RecordID";
-            this.RecordID.Name = "RecordID";
-            this.RecordID.ReadOnly = true;
-            this.RecordID.Visible = false;
-            // 
-            // Print
-            // 
-            this.Print.HeaderText = "Print";
-            this.Print.Image = ((System.Drawing.Image)(resources.GetObject("Print.Image")));
-            this.Print.Name = "Print";
-            this.Print.ReadOnly = true;
-            this.Print.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Print.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             // 
             // Exitbtn
             // 
@@ -469,6 +335,149 @@
             this.Exportbtn.UseVisualStyleBackColor = false;
             this.Exportbtn.Click += new System.EventHandler(this.Exportbtn_Click);
             // 
+            // ReelID
+            // 
+            this.ReelID.DataPropertyName = "ReelID";
+            this.ReelID.HeaderText = "Reel ID";
+            this.ReelID.Name = "ReelID";
+            this.ReelID.ReadOnly = true;
+            // 
+            // Partnumber
+            // 
+            this.Partnumber.DataPropertyName = "Partnumber";
+            this.Partnumber.HeaderText = "Partnumber";
+            this.Partnumber.Name = "Partnumber";
+            this.Partnumber.ReadOnly = true;
+            // 
+            // FloorLife
+            // 
+            this.FloorLife.DataPropertyName = "FloorLife";
+            this.FloorLife.HeaderText = "FloorLife";
+            this.FloorLife.Name = "FloorLife";
+            this.FloorLife.ReadOnly = true;
+            // 
+            // Level
+            // 
+            this.Level.DataPropertyName = "Level";
+            this.Level.HeaderText = "Level";
+            this.Level.Name = "Level";
+            this.Level.ReadOnly = true;
+            // 
+            // LotNo
+            // 
+            this.LotNo.DataPropertyName = "LotNo";
+            this.LotNo.HeaderText = "Lot No";
+            this.LotNo.Name = "LotNo";
+            this.LotNo.ReadOnly = true;
+            // 
+            // Line
+            // 
+            this.Line.DataPropertyName = "Line";
+            this.Line.HeaderText = "Line";
+            this.Line.Name = "Line";
+            this.Line.ReadOnly = true;
+            // 
+            // DateIn
+            // 
+            this.DateIn.DataPropertyName = "DateIn";
+            this.DateIn.HeaderText = "DateIn";
+            this.DateIn.Name = "DateIn";
+            this.DateIn.ReadOnly = true;
+            // 
+            // TimeIn
+            // 
+            this.TimeIn.DataPropertyName = "TimeIn";
+            this.TimeIn.HeaderText = "Time IN";
+            this.TimeIn.Name = "TimeIn";
+            this.TimeIn.ReadOnly = true;
+            // 
+            // Reel_Quantity
+            // 
+            this.Reel_Quantity.DataPropertyName = "Reel_Quantity";
+            this.Reel_Quantity.HeaderText = "Reel Quantity";
+            this.Reel_Quantity.Name = "Reel_Quantity";
+            this.Reel_Quantity.ReadOnly = true;
+            // 
+            // InputName
+            // 
+            this.InputName.DataPropertyName = "InputName";
+            this.InputName.HeaderText = "Input Name";
+            this.InputName.Name = "InputName";
+            this.InputName.ReadOnly = true;
+            // 
+            // DateOut
+            // 
+            this.DateOut.DataPropertyName = "DateOut";
+            this.DateOut.HeaderText = "Date_IN";
+            this.DateOut.Name = "DateOut";
+            this.DateOut.ReadOnly = true;
+            // 
+            // TimeOut
+            // 
+            this.TimeOut.DataPropertyName = "TimeOut";
+            this.TimeOut.HeaderText = "Time Out";
+            this.TimeOut.Name = "TimeOut";
+            this.TimeOut.ReadOnly = true;
+            // 
+            // Quantity_IN
+            // 
+            this.Quantity_IN.DataPropertyName = "Quantity_IN";
+            this.Quantity_IN.HeaderText = "Quantity IN";
+            this.Quantity_IN.Name = "Quantity_IN";
+            this.Quantity_IN.ReadOnly = true;
+            // 
+            // PlanQty
+            // 
+            this.PlanQty.DataPropertyName = "PlanQty";
+            this.PlanQty.HeaderText = "Use plan Qty";
+            this.PlanQty.Name = "PlanQty";
+            this.PlanQty.ReadOnly = true;
+            // 
+            // Input_Name
+            // 
+            this.Input_Name.DataPropertyName = "Input_Name";
+            this.Input_Name.HeaderText = "Input Name";
+            this.Input_Name.Name = "Input_Name";
+            this.Input_Name.ReadOnly = true;
+            // 
+            // Exphours
+            // 
+            this.Exphours.DataPropertyName = "Exphours";
+            this.Exphours.HeaderText = "Expose Hours";
+            this.Exphours.Name = "Exphours";
+            this.Exphours.ReadOnly = true;
+            // 
+            // TotalHours
+            // 
+            this.TotalHours.DataPropertyName = "TotalHours";
+            this.TotalHours.HeaderText = "Total Exp hours";
+            this.TotalHours.Name = "TotalHours";
+            this.TotalHours.ReadOnly = true;
+            // 
+            // RemainLife
+            // 
+            this.RemainLife.DataPropertyName = "RemainLife";
+            this.RemainLife.HeaderText = "Remain Life";
+            this.RemainLife.Name = "RemainLife";
+            this.RemainLife.ReadOnly = true;
+            // 
+            // RecordID
+            // 
+            this.RecordID.DataPropertyName = "RecordID";
+            this.RecordID.HeaderText = "RecordID";
+            this.RecordID.Name = "RecordID";
+            this.RecordID.ReadOnly = true;
+            this.RecordID.Visible = false;
+            // 
+            // Print
+            // 
+            this.Print.HeaderText = "Print";
+            this.Print.Image = ((System.Drawing.Image)(resources.GetObject("Print.Image")));
+            this.Print.Name = "Print";
+            this.Print.ReadOnly = true;
+            this.Print.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Print.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
             // MSDHIstory
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -523,6 +532,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn FloorLife;
         private System.Windows.Forms.DataGridViewTextBoxColumn Level;
         private System.Windows.Forms.DataGridViewTextBoxColumn LotNo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Line;
         private System.Windows.Forms.DataGridViewTextBoxColumn DateIn;
         private System.Windows.Forms.DataGridViewTextBoxColumn TimeIn;
         private System.Windows.Forms.DataGridViewTextBoxColumn Reel_Quantity;

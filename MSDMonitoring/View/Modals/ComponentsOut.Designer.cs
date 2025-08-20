@@ -54,6 +54,8 @@
             this.TimeText = new System.Windows.Forms.Label();
             this.RemainClock = new System.Windows.Forms.Timer(this.components);
             this.ReelID_error = new System.Windows.Forms.Label();
+            this.InputInText = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel5.SuspendLayout();
@@ -316,12 +318,35 @@
             this.ReelID_error.Text = "Name Input required *";
             this.ReelID_error.Visible = false;
             // 
+            // InputInText
+            // 
+            this.InputInText.AutoSize = true;
+            this.InputInText.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.InputInText.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.InputInText.Location = new System.Drawing.Point(437, 323);
+            this.InputInText.Name = "InputInText";
+            this.InputInText.Size = new System.Drawing.Size(14, 18);
+            this.InputInText.TabIndex = 121;
+            this.InputInText.Text = "-";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(360, 323);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(69, 18);
+            this.label5.TabIndex = 120;
+            this.label5.Text = "Name  : ";
+            // 
             // ComponentsOut
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(734, 469);
             this.ControlBox = false;
+            this.Controls.Add(this.InputInText);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.ReelID_error);
             this.Controls.Add(this.TimeText);
             this.Controls.Add(this.RemainText);
@@ -375,5 +400,7 @@
         private System.Windows.Forms.Timer RemainClock;
         private System.Windows.Forms.Label TimeRunner;
         private System.Windows.Forms.Label ReelID_error;
+        private System.Windows.Forms.Label InputInText;
+        private System.Windows.Forms.Label label5;
     }
 }

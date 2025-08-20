@@ -12,6 +12,9 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Linq;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 
 namespace PracticeC_
 {
@@ -22,6 +25,54 @@ namespace PracticeC_
 
         static void Main(string[] args)
         {
+            string filePath = @"C:\Users\jaye-labandia\Downloads\MSD_MasterList.pdf";
+
+            // 1. Create Document (doc is NOT null now)
+            Document doc = new Document(PageSize.A4, 20, 20, 20, 20);
+
+            // 2. Bind writer
+            PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(filePath, FileMode.Create));
+
+            // 3. Open doc before writing anything
+            doc.Open();
+
+            // 4. Add content
+            Font titleFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 14);
+            Paragraph title = new Paragraph("MASTER LIST OF MOISTURE SENSITIVE DEVICES", titleFont);
+            title.Alignment = Element.ALIGN_CENTER;
+            doc.Add(title);
+
+            doc.Add(new Paragraph("\n")); // spacer
+
+            PdfPTable table = new PdfPTable(3);
+            table.WidthPercentage = 100;
+
+            // header
+            Font headerFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
+            table.AddCell(new PdfPCell(new Phrase("ID", headerFont)));
+            table.AddCell(new PdfPCell(new Phrase("Part Number", headerFont)));
+            table.AddCell(new PdfPCell(new Phrase("Floor Life", headerFont)));
+
+            // dummy data
+            Font rowFont = FontFactory.GetFont(FontFactory.HELVETICA, 10);
+            for (int i = 1; i <= 5; i++)
+            {
+                table.AddCell(new Phrase(i.ToString(), rowFont));
+                table.AddCell(new Phrase("PN-" + i, rowFont));
+                table.AddCell(new Phrase("168 hrs", rowFont));
+            }
+
+            doc.Add(table);
+
+            // 5. Close doc
+            doc.Close();
+            writer.Close();
+
+            Console.WriteLine("PDF created: " + filePath);
+
+
+
+
             //TimeSpan interval = new TimeSpan(5, 6, 22);
             //Console.WriteLine(interval.ToString());
 
@@ -35,7 +86,7 @@ namespace PracticeC_
             //Console.WriteLine($"Original: {machineName}");
             //Console.WriteLine(VerifyPassword("ErcXN5O+LcsWG5/cMOMWOg==:cZs22bq4HkpRKxiubSnaRQ0U4NIhfn7xUHi3De8cXWw=", "sdp1234a*"));
 
-            Console.WriteLine(DecodeBase64ToString("S5AwS8+uYF2bHGvpx8AHssz7yc9SMCPT9d0LWphOCHK5KSE"));
+            //Console.WriteLine(DecodeBase64ToString("S5AwS8+uYF2bHGvpx8AHssz7yc9SMCPT9d0LWphOCHK5KSE"));
 
             Console.ReadKey();
         }

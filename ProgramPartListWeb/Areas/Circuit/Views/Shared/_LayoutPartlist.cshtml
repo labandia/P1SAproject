@@ -5,11 +5,13 @@
     <link rel="icon" type="image/x-icon" href="~/Content/Images/ready-stock.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
-    <script src="~/Content/font-awesome/js/all.min.js"></script>
 
-    <link href="~/Content/css/Programpartlist.css" rel="stylesheet" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
-    <link href="~/Content/Site.css" rel="stylesheet" />
+
+    @Styles.Render("~/Content/shared-css")
+    @Styles.Render("~/Content/partlist-css")
+
+    @Scripts.Render("~/bundles/shared-js")
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>

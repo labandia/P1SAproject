@@ -25,6 +25,7 @@ namespace MSDMonitoring.Data
         public string TimeIn { get; set; }
         public string DateCheck { get; set; }
         public double RemainFloor { get; set; } 
+        public string InputIn { get; set; } 
     }
 
 
@@ -55,6 +56,7 @@ namespace MSDMonitoring.Data
         public int RecordID { get; set; }   
         public string ReelID { get; set; }
         public string Partnumber { get; set; }
+        public int Line { get; set;}
         public int FloorLife { get; set; }
         public string Level { get; set; }
         public string LotNo { get; set; }

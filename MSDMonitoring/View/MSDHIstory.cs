@@ -52,7 +52,7 @@ namespace MSDMonitoring
             this.FormBorderStyle = FormBorderStyle.Sizable; // keeps title bar
             // // First column, index 0
             await LoadData();
-            MonitorTable.Columns["Print"].DisplayIndex = 18;
+            MonitorTable.Columns["Print"].DisplayIndex = 19;
             MonitorTable.Columns["Print"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
             MonitorTable.Columns["Print"].Width = 70;
 
@@ -121,7 +121,7 @@ namespace MSDMonitoring
             // Make sure a valid row is clicked (not header)
             if (e.RowIndex < 0) return;
             int currentValue = Convert.ToInt32(MonitorTable.Rows[e.RowIndex].Cells[1].Value);
-            int QuanValue = Convert.ToInt32(MonitorTable.Rows[e.RowIndex].Cells[9].Value);
+            int QuanValue = Convert.ToInt32(MonitorTable.Rows[e.RowIndex].Cells[10].Value);
 
             ChangeQuantity c = new ChangeQuantity(_msd, currentValue, QuanValue, this);
             c.Show();
@@ -231,11 +231,11 @@ namespace MSDMonitoring
                 {
                     ReelID = MonitorTable.Rows[e.RowIndex].Cells[2].Value.ToString(),
                     Partnumber = MonitorTable.Rows[e.RowIndex].Cells[3].Value.ToString(),
-                    FloorLife = Convert.ToInt32(MonitorTable.Rows[e.RowIndex].Cells[4].Value),
-                    Level = MonitorTable.Rows[e.RowIndex].Cells[5].Value.ToString(),
-                    LotNo = MonitorTable.Rows[e.RowIndex].Cells[6].Value.ToString(),
-                    Date_IN = MonitorTable.Rows[e.RowIndex].Cells[11].Value.ToString(),
-                    Quantity_IN = Convert.ToInt32(MonitorTable.Rows[e.RowIndex].Cells[13].Value)
+                    FloorLife = Convert.ToInt32(MonitorTable.Rows[e.RowIndex].Cells[5].Value),
+                    Level = MonitorTable.Rows[e.RowIndex].Cells[6].Value.ToString(),
+                    LotNo = MonitorTable.Rows[e.RowIndex].Cells[7].Value.ToString(),
+                    Date_IN = MonitorTable.Rows[e.RowIndex].Cells[12].Value.ToString(),
+                    Quantity_IN = Convert.ToInt32(MonitorTable.Rows[e.RowIndex].Cells[14].Value)
                 };
                 // Template path
                 string templatePath = @"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\Templates\MSDPrintLabel.xlsx";
@@ -263,7 +263,7 @@ namespace MSDMonitoring
                 worksheet.Range["C7"].Value = obj.LotNo;
                 worksheet.Range["C8"].Value = obj.Date_IN;
                 worksheet.Range["C9"].Value = obj.Quantity_IN;
-                worksheet.Range["C10"].Value =  MonitorTable.Rows[e.RowIndex].Cells[17].Value.ToString();
+                worksheet.Range["C10"].Value =  MonitorTable.Rows[e.RowIndex].Cells[18].Value.ToString();
 
                 // Show print dialog
                 worksheet.PrintPreview();

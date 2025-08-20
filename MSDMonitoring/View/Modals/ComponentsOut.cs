@@ -53,6 +53,7 @@ namespace MSDMonitoring
                 QuanText.Text = "Reel Quantity : " + filterdata.QuantityIN.ToString();
                 setQuantity = filterdata.QuantityIN;
                 LineText.Text = "Line : " + filterdata.Line.ToString();
+                InputInText.Text = filterdata.InputIn.ToString();   
             }
           
         }

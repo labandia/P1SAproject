@@ -678,23 +678,23 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\bootstrap-grid.css" />
-    <Content Include="Content\bootstrap-grid.min.css" />
-    <Content Include="Content\bootstrap-grid.rtl.css" />
-    <Content Include="Content\bootstrap-grid.rtl.min.css" />
-    <Content Include="Content\bootstrap-reboot.css" />
-    <Content Include="Content\bootstrap-reboot.min.css" />
-    <Content Include="Content\bootstrap-reboot.rtl.css" />
-    <Content Include="Content\bootstrap-reboot.rtl.min.css" />
-    <Content Include="Content\bootstrap-utilities.css" />
-    <Content Include="Content\bootstrap-utilities.min.css" />
-    <Content Include="Content\bootstrap-utilities.rtl.css" />
-    <Content Include="Content\bootstrap-utilities.rtl.min.css" />
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\bootstrap.rtl.css" />
-    <Content Include="Content\bootstrap.rtl.min.css" />
-    <Content Include="Content\boxicons.min.css" />
+    <Content Include="Content\Shared\bootstrap-grid.css" />
+    <Content Include="Content\Shared\bootstrap-grid.min.css" />
+    <Content Include="Content\Shared\bootstrap-grid.rtl.css" />
+    <Content Include="Content\Shared\bootstrap-grid.rtl.min.css" />
+    <Content Include="Content\Shared\bootstrap-reboot.css" />
+    <Content Include="Content\Shared\bootstrap-reboot.min.css" />
+    <Content Include="Content\Shared\bootstrap-reboot.rtl.css" />
+    <Content Include="Content\Shared\bootstrap-reboot.rtl.min.css" />
+    <Content Include="Content\Shared\bootstrap-utilities.css" />
+    <Content Include="Content\Shared\bootstrap-utilities.min.css" />
+    <Content Include="Content\Shared\bootstrap-utilities.rtl.css" />
+    <Content Include="Content\Shared\bootstrap-utilities.rtl.min.css" />
+    <Content Include="Content\Shared\bootstrap.css" />
+    <Content Include="Content\Shared\bootstrap.min.css" />
+    <Content Include="Content\Shared\bootstrap.rtl.css" />
+    <Content Include="Content\Shared\bootstrap.rtl.min.css" />
+    <Content Include="Content\Shared\boxicons.min.css" />
     <Content Include="Content\css\loginlayout.min.css">
       <DependentUpon>loginlayout.css</DependentUpon>
     </Content>
@@ -714,9 +714,26 @@
     <Content Include="Content\font-awesome\css\fontawesome.css" />
     <Content Include="Content\font-awesome\css\fontawesome.min.css" />
     <Content Include="Content\font-awesome\js\all.js" />
-    <Content Include="Content\font-awesome\js\all.min.js" />
+    <Content Include="Scripts\all.min.js" />
+    <Content Include="Scripts\bootstrap.bundle.js" />
+    <Content Include="Scripts\bootstrap.bundle.min.js" />
+    <Content Include="Scripts\bootstrap.esm.js" />
+    <Content Include="Scripts\bootstrap.esm.min.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Scripts\jquery-3.7.1.intellisense.js" />
+    <Content Include="Scripts\jquery-3.7.1.js" />
+    <Content Include="Scripts\jquery-3.7.1.min.js" />
+    <Content Include="Scripts\jquery-3.7.1.slim.js" />
+    <Content Include="Scripts\jquery-3.7.1.slim.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\Popper.min.js" />
     <Content Include="Content\font-awesome\js\fontawesome.js" />
-    <Content Include="Content\font-awesome\js\fontawesome.min.js" />
+    <Content Include="Scripts\fontawesome.min.js" />
     <Content Include="Content\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\Images\back-in-store.png" />
     <Content Include="Content\Images\box.png" />
@@ -733,50 +750,39 @@
     <Content Include="Content\css\Sidebar.css" />
     <Content Include="Content\Images\out-of-stock.png" />
     <Content Include="Content\Images\package.png" />
+    <Content Include="Content\Images\patrol .ico" />
     <Content Include="Content\Images\Presslocation.png" />
     <Content Include="Content\Images\RA92-25-2.jpg" />
     <Content Include="Content\Images\rack.png" />
     <Content Include="Content\Images\ready-stock.ico" />
-    <Content Include="Content\Mainfonts.css" />
-    <Content Include="Content\Site.min.css">
+    <Content Include="Content\Shared\Mainfonts.css" />
+    <Content Include="Content\Shared\Site.min.css">
       <DependentUpon>Site.css</DependentUpon>
     </Content>
-    <Content Include="Content\sweetalert.min.css" />
+    <Content Include="Content\Shared\sweetalert.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <Content Include="Content\Site.css" />
+    <Content Include="Content\Shared\Site.css" />
     <Content Include="logs\error_log.txt" />
     <Content Include="logs\UsersRoles.txt" />
     <Content Include="ready-stock.ico" />
     <Content Include="Scripts\adapter-latest.js" />
-    <Content Include="Scripts\bootstrap.bundle.js" />
-    <Content Include="Scripts\bootstrap.bundle.min.js" />
-    <Content Include="Scripts\bootstrap.esm.js" />
-    <Content Include="Scripts\bootstrap.esm.min.js" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\bootstrap.min.js.map" />
-    <Content Include="Scripts\bootstrap.js.map" />
-    <Content Include="Scripts\bootstrap.esm.min.js.map" />
-    <Content Include="Scripts\bootstrap.esm.js.map" />
-    <Content Include="Scripts\bootstrap.bundle.min.js.map" />
-    <Content Include="Scripts\bootstrap.bundle.js.map" />
-    <Content Include="Content\bootstrap.rtl.min.css.map" />
-    <Content Include="Content\bootstrap.rtl.css.map" />
-    <Content Include="Content\bootstrap.min.css.map" />
-    <Content Include="Content\bootstrap.css.map" />
-    <Content Include="Content\bootstrap-utilities.rtl.min.css.map" />
-    <Content Include="Content\bootstrap-utilities.rtl.css.map" />
-    <Content Include="Content\bootstrap-utilities.min.css.map" />
-    <Content Include="Content\bootstrap-utilities.css.map" />
-    <Content Include="Content\bootstrap-reboot.rtl.min.css.map" />
-    <Content Include="Content\bootstrap-reboot.rtl.css.map" />
-    <Content Include="Content\bootstrap-reboot.min.css.map" />
-    <Content Include="Content\bootstrap-reboot.css.map" />
-    <Content Include="Content\bootstrap-grid.rtl.min.css.map" />
-    <Content Include="Content\bootstrap-grid.rtl.css.map" />
-    <Content Include="Content\bootstrap-grid.min.css.map" />
-    <Content Include="Content\bootstrap-grid.css.map" />
+    <Content Include="Content\Shared\bootstrap.rtl.min.css.map" />
+    <Content Include="Content\Shared\bootstrap.rtl.css.map" />
+    <Content Include="Content\Shared\bootstrap.min.css.map" />
+    <Content Include="Content\Shared\bootstrap.css.map" />
+    <Content Include="Content\Shared\bootstrap-utilities.rtl.min.css.map" />
+    <Content Include="Content\Shared\bootstrap-utilities.rtl.css.map" />
+    <Content Include="Content\Shared\bootstrap-utilities.min.css.map" />
+    <Content Include="Content\Shared\bootstrap-utilities.css.map" />
+    <Content Include="Content\Shared\bootstrap-reboot.rtl.min.css.map" />
+    <Content Include="Content\Shared\bootstrap-reboot.rtl.css.map" />
+    <Content Include="Content\Shared\bootstrap-reboot.min.css.map" />
+    <Content Include="Content\Shared\bootstrap-reboot.css.map" />
+    <Content Include="Content\Shared\bootstrap-grid.rtl.min.css.map" />
+    <Content Include="Content\Shared\bootstrap-grid.rtl.css.map" />
+    <Content Include="Content\Shared\bootstrap-grid.min.css.map" />
+    <Content Include="Content\Shared\bootstrap-grid.css.map" />
     <Content Include="libman.json" />
     <Content Include="Areas\Press\Views\web.config" />
     <Content Include="Areas\Press\Views\PartsLocator\Home.cshtml" />
@@ -810,7 +816,7 @@
     <Content Include="Areas\PC\Views\Patrol\PatrolReport.cshtml" />
     <Content Include="Areas\PC\Views\Patrol\PatrolReportDetails.cshtml" />
     <Content Include="Areas\PC\Views\Patrol\AddReports.cshtml" />
-    <Content Include="Content\manifest.json" />
+    <Content Include="Content\Shared\manifest.json" />
     <Content Include="Areas\PC\Views\Patrol\Settings.cshtml" />
     <Content Include="Areas\PC\Views\Patrol\PatrolSchedule.cshtml" />
     <Content Include="Areas\PC\Views\Patrol\Dashboard.cshtml" />
@@ -830,7 +836,14 @@
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Scripts\jquery-3.7.1.intellisense.js" />
+    <Content Include="Scripts\bootstrap.bundle.js.map" />
+    <Content Include="Scripts\bootstrap.bundle.min.js.map" />
+    <Content Include="Scripts\bootstrap.esm.js.map" />
+    <Content Include="Scripts\bootstrap.esm.min.js.map" />
+    <Content Include="Scripts\bootstrap.js.map" />
+    <Content Include="Scripts\bootstrap.min.js.map" />
+    <Content Include="Scripts\jquery-3.7.1.min.map" />
+    <Content Include="Scripts\jquery-3.7.1.slim.min.map" />
     <Content Include="Scripts\Cryptojs.min.js" />
     <Content Include="Scripts\fullcalendar%406.1.17\index.global.min.js" />
     <Content Include="Scripts\fullcalendar%406.1.17\interaction\index.global.js" />
@@ -838,29 +851,38 @@
     <Content Include="Scripts\fullcalendar%406.1.17\timegrid\index.global.js" />
     <Content Include="Scripts\fullcalendar%406.1.17\timegrid\index.global.min.js" />
     <Content Include="Scripts\html5-qrcode.min.js" />
-    <Content Include="Scripts\jquery-3.7.1.js" />
-    <Content Include="Scripts\jquery-3.7.1.min.js" />
-    <Content Include="Scripts\jquery-3.7.1.slim.js" />
-    <Content Include="Scripts\jquery-3.7.1.slim.min.js" />
-    <Content Include="Scripts\jquery-3.7.1.slim.min.map" />
-    <Content Include="Scripts\jquery-3.7.1.min.map" />
-    <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery-barcode.js" />
     <Content Include="Scripts\jquery.signalR-2.4.3.js" />
     <Content Include="Scripts\jquery.signalR-2.4.3.min.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\live_w_locator.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\modernizr-2.8.3.min.js">
       <DependentUpon>modernizr-2.8.3.js</DependentUpon>
     </Content>
-    <Content Include="Scripts\Popper.min.js" />
     <Content Include="Scripts\quagga.js" />
     <Content Include="Scripts\Quangga.min.js" />
     <Content Include="Scripts\Quanv2.js" />
+    <Content Include="Scripts\Shared\bootstrap.bundle.js.map" />
+    <Content Include="Scripts\Shared\bootstrap.bundle.min.js.map" />
+    <Content Include="Scripts\Shared\bootstrap.esm.js.map" />
+    <Content Include="Scripts\Shared\bootstrap.esm.min.js.map" />
+    <Content Include="Scripts\Shared\bootstrap.js.map" />
+    <Content Include="Scripts\Shared\bootstrap.min.js.map" />
+    <None Include="Scripts\Shared\jquery-3.7.1.intellisense.js" />
+    <Content Include="Scripts\Shared\bootstrap.bundle.js" />
+    <Content Include="Scripts\Shared\bootstrap.bundle.min.js" />
+    <Content Include="Scripts\Shared\bootstrap.esm.js" />
+    <Content Include="Scripts\Shared\bootstrap.esm.min.js" />
+    <Content Include="Scripts\Shared\bootstrap.js" />
+    <Content Include="Scripts\Shared\bootstrap.min.js" />
+    <Content Include="Scripts\Shared\jquery-3.7.1.js" />
+    <Content Include="Scripts\Shared\jquery-3.7.1.min.js" />
+    <Content Include="Scripts\Shared\jquery-3.7.1.slim.js" />
+    <Content Include="Scripts\Shared\jquery-3.7.1.slim.min.js" />
+    <Content Include="Scripts\Shared\Utilities.js" />
+    <Content Include="Scripts\Shared\Utilities.min.js">
+      <DependentUpon>Utilities.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\signature_pad.umd.min.js" />
     <Content Include="Scripts\sweetalert2.min.js" />
     <Content Include="Scripts\Utilities.js" />
@@ -883,6 +905,8 @@
     <Content Include="Views\Error\General.cshtml" />
     <Content Include="Views\Error\ServerError.cshtml" />
     <Content Include="Views\P1SAportalweb\GuideInstall.cshtml" />
+    <Content Include="Scripts\Shared\jquery-3.7.1.min.map" />
+    <Content Include="Scripts\Shared\jquery-3.7.1.slim.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -903,7 +927,8 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>ready-stock.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />

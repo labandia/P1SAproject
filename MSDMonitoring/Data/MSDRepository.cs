@@ -21,7 +21,7 @@ namespace MSDMonitoring.Data
                                 DateIn as DateCheck,
 	                            FORMAT(DateIn, 'MM/dd/yy') as DateIn,
 	                            FORMAT(DateIn, 'HH:mm') as TimeIn, 
-	                            RemainFloor
+	                            RemainFloor, InputIn
                             FROM MSD_MonitorList
                             WHERE IsStats = 0 AND 
                             LINE IN (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)

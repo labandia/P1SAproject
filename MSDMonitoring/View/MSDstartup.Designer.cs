@@ -66,6 +66,7 @@
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.Refreshbtn = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel3.SuspendLayout();
@@ -589,12 +590,28 @@
             this.tableLayoutPanel3.Size = new System.Drawing.Size(152, 27);
             this.tableLayoutPanel3.TabIndex = 92;
             // 
+            // Refreshbtn
+            // 
+            this.Refreshbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.Refreshbtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(23)))), ((int)(((byte)(30)))));
+            this.Refreshbtn.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.Refreshbtn.FlatAppearance.BorderSize = 0;
+            this.Refreshbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Refreshbtn.Image = ((System.Drawing.Image)(resources.GetObject("Refreshbtn.Image")));
+            this.Refreshbtn.Location = new System.Drawing.Point(1078, 8);
+            this.Refreshbtn.Name = "Refreshbtn";
+            this.Refreshbtn.Size = new System.Drawing.Size(55, 46);
+            this.Refreshbtn.TabIndex = 93;
+            this.Refreshbtn.UseVisualStyleBackColor = false;
+            this.Refreshbtn.Click += new System.EventHandler(this.Refreshbtn_Click);
+            // 
             // MSDstartup
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1344, 749);
             this.ControlBox = false;
+            this.Controls.Add(this.Refreshbtn);
             this.Controls.Add(this.tableLayoutPanel2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.panel2);
@@ -670,5 +687,6 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+        private System.Windows.Forms.Button Refreshbtn;
     }
 }

@@ -25,6 +25,8 @@ namespace MSDMonitoring
         private bool isScanning = false;
         private bool scanHandled = false;
 
+        private Timer LoadTimer;
+
         // ---------------------------
         // Class-level fields
         // ---------------------------
@@ -39,6 +41,9 @@ namespace MSDMonitoring
             ScanTimer = new System.Windows.Forms.Timer();
             ScanTimer.Interval = 200; // Adjust depending on scanner speed
             ScanTimer.Tick += ScanTimer_Tick;
+
+
+            LoadDataTimer();
 
             Ambassador.TextChanged += Ambassador_TextChanged;
         }
@@ -111,7 +116,7 @@ namespace MSDMonitoring
             liveTimer.Start();
 
 
-            await LoadData();         
+            await LoadData();
         }
         public async Task LoadData()
         {
@@ -130,7 +135,8 @@ namespace MSDMonitoring
                     DateIn = c.DateIn,
                     Line = c.Line,
                     QuantityIN = c.QuantityIN,
-                    TimeIn = c.TimeIn
+                    TimeIn = c.TimeIn, 
+                    InputIn = c.InputIn
                 }).ToList();
 
             BuildCards();
@@ -163,14 +169,24 @@ namespace MSDMonitoring
         // ========================================================================== //
         // =================== CARD LAYOUT AND FUNCTIONALITY ======================== //
         // ========================================================================== //
-        public void AddCardReelID(int id, string reelID, string DateIn, int Line, int Quan, string TimeIn, int cardWidth)
+        public void AddCardReelID(int id, string reelID, string DateIn, int Line, int Quan, string TimeIn, int cardWidth, string inputIn)
         {
+            // Parse TimeIn
+            DateTime timeInValue;
+            if (!DateTime.TryParse(TimeIn, out timeInValue))
+            {
+                timeInValue = DateTime.Now; // fallback in case of invalid time
+            }
+
+            // Calculate exposed hours (decimal)
+            double exposedHours = (DateTime.Now - timeInValue).TotalHours;
+
             // Main Card Panel (dynamic width)
             Panel card = new Panel
             {
                 Width = cardWidth,
                 Height = 130,
-                BackColor = Color.White,
+                BackColor = exposedHours >= 1.0 ? Color.Yellow : Color.White, // 🔹 Change color if >= 1 hour
                 BorderStyle = BorderStyle.FixedSingle,
                 Margin = new Padding(10),
                 Cursor = Cursors.Hand,
@@ -244,7 +260,7 @@ namespace MSDMonitoring
             // ===== FOOTER =====
             Label lblUser = new Label
             {
-                Text = "Quantity : " + Quan,
+                Text = "Quantity : " + Quan + "   Name : " + inputIn,
                 Location = new Point(10, 100),
                 Font = new Font("Segoe UI", 10, FontStyle.Bold),
                 ForeColor = Color.Black,
@@ -309,7 +325,7 @@ namespace MSDMonitoring
 
             foreach (var card in _cardDataCache)
             {
-                AddCardReelID(card.RecordID, card.ReelID, card.DateIn, card.Line, card.QuantityIN, card.TimeIn, cardWidth);
+                AddCardReelID(card.RecordID, card.ReelID, card.DateIn, card.Line, card.QuantityIN, card.TimeIn, cardWidth, card.InputIn);
             }
         }
         private void Card_Click(object sender, EventArgs e)
@@ -655,6 +671,25 @@ namespace MSDMonitoring
                     QtyIn.SelectionStart = QtyIn.Text.Length;
                 }
             }
+        }
+
+
+        private void LoadDataTimer()
+        {
+            LoadTimer = new Timer();
+            LoadTimer.Interval = 10000; // 10 seconds = 10000 milliseconds
+            LoadTimer.Tick += TimerLoad_Tick;
+            LoadTimer.Start(); // start the timer
+        }
+
+        private async void TimerLoad_Tick(object sender, EventArgs e)
+        {
+            await LoadData();
+        }
+
+        private async void Refreshbtn_Click(object sender, EventArgs e)
+        {
+           await LoadData();
         }
     }
 }

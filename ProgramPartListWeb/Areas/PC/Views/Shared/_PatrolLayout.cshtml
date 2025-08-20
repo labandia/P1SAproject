@@ -2,22 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <link rel="icon" type="image/x-icon" href="~/Content/Images/ready-stock.ico">
+    <link rel="icon" type="image/x-icon" href="~/Content/Images/patrol .ico">
     <meta name="description" content="Learn how to improve your website with caching, accessibility, and SEO best practices.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Production Patrol Inspection Report System</title>
     <link rel="preload" href="~/Content/fonts/Poppins-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
-    <link href="~/Content/css/PatrolLayout.min.css" rel="stylesheet" />
-    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
-    <link href="~/Content/Site.css" rel="stylesheet" />
 
-    <script src="~/Scripts/Cryptojs.min.js"></script>
-    <script src="~/Scripts/jquery-3.7.1.min.js"></script>
-    <script src="~/Scripts/Utilities.js"></script>
+    <script src="~/Scripts/Shared/Utilities.js"></script>
     <script src="~/Scripts/Popper.min.js"></script>
-    <script src="~/Scripts/sweetalert2.min.js"></script>
-    <script src="~/Content/font-awesome/js/all.min.js"></script>
-    @*@Styles.Render("~/Content/css")*@
+
+    @Styles.Render("~/Content/shared-css")
+    @Styles.Render("~/Content/patrol-css")
+
+    @Scripts.Render("~/bundles/shared-js")
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
@@ -30,7 +27,7 @@
                 <span id="UserFullname"></span>
                 <img src="~/Content/Images/bussiness-man.png" alt="" class="header__img" />
             </div>
-           
+
 
             <div class="header__toggle">
                 <i class="fa-solid fa-location-crosshairs" id="header-toggle"></i>
@@ -65,9 +62,9 @@
                             <span class="sidebar__name">Patrol Schedule</span>
                         </a>
                         @*<a href="/PC/Patrol/CheckSheet" class="sidebar__link">
-                            <i class="fa-regular fa-square-check sidebar__icon"></i>
-                            <span class="sidebar__name">CheckSheet Patrol</span>
-                        </a>*@
+                                <i class="fa-regular fa-square-check sidebar__icon"></i>
+                                <span class="sidebar__name">CheckSheet Patrol</span>
+                            </a>*@
                     </div>
 
                     <div class="sidebar__items">
@@ -91,7 +88,7 @@
 
                             </div>*@
 
-                     
+
                         <a href="/PC/Patrol/Settings" class="sidebar__link">
                             <i class="fa-solid fa-gear sidebar__icon"></i>
                             <span class="sidebar__name">Settings</span>
@@ -121,7 +118,7 @@
         const GetNotification = async () => {
             let res = await FetchAuthenticate('@Url.Action("GetNotificationList", "Notification")', {});
             if (res && res.Success) {
-            
+
             }
         }
 
@@ -227,9 +224,9 @@
         });
 
 
-      
 
-       
+
+
 
         GetFullname();
         //GetNotification();
@@ -244,9 +241,5 @@
     </script>
 
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
-    @RenderSection("styles", required: false)
 </body>
 </html>

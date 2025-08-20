@@ -10,17 +10,16 @@
     <link rel="preload" href="@Url.Content("~/Content/fonts/Poppins-Regular.ttf")" as="font" type="font/ttf" crossorigin="anonymous">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@ViewBag.Title</title>
-    <link href="~/Content/Site.min.css" rel="stylesheet" />
-    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
-    <link href="~/Content/css/Programpartlist.min.css" rel="stylesheet" />
     <link rel="preload" href="~/Content/fonts/Poppins-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 
-    <script src="~/Scripts/jquery-3.7.1.min.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
-    <script src="~/Scripts/Utilities.js"></script>
-    <script src="~/Scripts/sweetalert2.min.js"></script>
+    <script src="~/Scripts/Shared/Utilities.js"></script>
     <script src="~/Scripts/Popper.min.js"></script>
-    <script src="~/Content/font-awesome/js/all.min.js"></script>
+
+    @Styles.Render("~/Content/shared-css")
+    @Styles.Render("~/Content/partlist-css")
+
+    @Scripts.Render("~/bundles/shared-js")
     @Scripts.Render("~/bundles/modernizr")
 </head>
 

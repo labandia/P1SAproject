@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System.IO;
+using System.Web;
 using System.Web.Optimization;
 
 namespace PMACS_V2
@@ -8,25 +9,74 @@ namespace PMACS_V2
         // For more information on bundling, visit https://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
-            bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-{version}.js"));
+            // =======================
+            // 1. SHARED CSS
+            // =======================
+            bundles.Add(new StyleBundle("~/Content/shared-css")
+                .Include(
+                    "~/Content/Shared/bootstrap.min.css",
+                    "~/Content/Shared/site.min.css",
+                    "~/Content/Shared/sweetalert2.min.css"
+                ));
 
+            // =======================
+            // 2. SHARED JS (CORE LIBRARIES)
+            // =======================     
+            bundles.Add(new ScriptBundle("~/bundles/shared-js").Include(
+                 "~/Scripts/Shared/jquery-{version}.js",
+                 "~/Scripts/Shared/jquery.validate*",
+                 "~/Scripts/Shared/all.min.js",
+                 "~/Scripts/Shared/sweetalert2.min.js"
+            ));
+
+            // =======================
+            // 3. Validation + Modernizr
+            // =======================
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
-                        "~/Scripts/jquery.validate*"));
+                "~/Scripts/Shared/jquery.validate*"
+            ));
 
-            // Use the development version of Modernizr to develop with and learn from. Then, when you're
-            // ready for production, use the build tool at https://modernizr.com to pick only the tests you need.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
-                        "~/Scripts/modernizr-*"));
+                "~/Scripts/modernizr-*"
+            ));
 
-            bundles.Add(new Bundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js"));
+            // For Patrol Inspection  CSS
+            bundles.Add(new StyleBundle("~/Content/pmacs-css").Include("~/Content/css/PMACS_Layout.min.css"));
 
-            bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/css/PMACS_Layout.css",
-                      "~/Content/Site.css",
-                      "~/Content/login.css"));
 
+            // =======================
+            // 4. AUTO-DETECT AREA CSS/JS
+            // =======================
+            string contentPath = HttpContext.Current.Server.MapPath("~/Content");
+            foreach (var dir in Directory.GetDirectories(contentPath))
+            {
+                string folderName = Path.GetFileName(dir);
+
+                if (folderName.Equals("Shared", System.StringComparison.OrdinalIgnoreCase))
+                    continue; // skip Shared
+
+                string cssBundlePath = $"~/Content/{folderName.ToLower()}-css";
+                bundles.Add(new StyleBundle(cssBundlePath)
+                    .Include($"~/Content/{folderName}/*.css"));
+            }
+
+            string scriptsPath = HttpContext.Current.Server.MapPath("~/Scripts");
+            foreach (var dir in Directory.GetDirectories(scriptsPath))
+            {
+                string folderName = Path.GetFileName(dir);
+
+                if (folderName.Equals("Shared", System.StringComparison.OrdinalIgnoreCase))
+                    continue; // skip Shared
+
+                string jsBundlePath = $"~/bundles/{folderName.ToLower()}-js";
+                bundles.Add(new ScriptBundle(jsBundlePath)
+                    .Include($"~/Scripts/{folderName}/*.js"));
+            }
+
+            // =======================
+            // Enable Bundling/Minification
+            // =======================
+            bundles.UseCdn = true;
             BundleTable.EnableOptimizations = true;
         }
     }

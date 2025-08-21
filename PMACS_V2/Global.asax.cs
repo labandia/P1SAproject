@@ -16,6 +16,7 @@ using System.Security.Principal;
 using System.Web.Security;
 using PMACS_V2.Areas.Planning.Interface;
 using PMACS_V2.Areas.Planning.Repository;
+using System.IO.Compression;
 
 namespace PMACS_V2
 {
@@ -43,6 +44,42 @@ namespace PMACS_V2
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             
+        }
+
+        protected void Application_BeginRequest(object sender, EventArgs e)
+        {
+            HttpContext.Current.Response.AddHeader("Access-Control-Allow-Origin", "*");
+            HttpContext.Current.Response.AddHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+            HttpContext.Current.Response.AddHeader("Access-Control-Allow-Headers", "Content-Type, Accept, Authorization");
+
+            if (HttpContext.Current.Request.HttpMethod == "OPTIONS")
+            {
+                HttpContext.Current.Response.StatusCode = 200;
+                HttpContext.Current.Response.End();
+            }
+
+            HttpResponse response = HttpContext.Current.Response;
+
+            string acceptEncoding = HttpContext.Current.Request.Headers["Accept-Encoding"];
+
+            if (!string.IsNullOrEmpty(acceptEncoding))
+            {
+                acceptEncoding = acceptEncoding.ToLower();
+
+                if (acceptEncoding.Contains("gzip"))
+                {
+                    response.Filter = new GZipStream(response.Filter, CompressionMode.Compress);
+                    response.AppendHeader("Content-Encoding", "gzip");
+                }
+                else if (acceptEncoding.Contains("deflate"))
+                {
+                    response.Filter = new DeflateStream(response.Filter, CompressionMode.Compress);
+                    response.AppendHeader("Content-Encoding", "deflate");
+                }
+            }
+
+            // Add Vary header
+            response.AppendHeader("Vary", "Content-Encoding");
         }
 
         protected void Application_EndRequest()

@@ -16,7 +16,7 @@
     }
 
     body {
-/*        background-color: var(--body-color);*/
+        font-family: var(--body-font) !important;
         color: var(--text-color);
     }
     body, h1, h2, h3, h4, div, p, strong, small, button, select {

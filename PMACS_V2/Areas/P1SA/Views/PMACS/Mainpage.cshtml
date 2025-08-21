@@ -10,17 +10,17 @@
     <link rel="preload" href="@Url.Content("~/Content/fonts/Poppins-Regular.ttf")" as="font" type="font/ttf" crossorigin="anonymous">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
-    <link href="~/Content/Site.min.css" rel="stylesheet" />
     <link href="~/Content/login.min.css" rel="stylesheet" />
-    <link href="~/Content/sweetalert2.min.css" rel="stylesheet" />
 
-    <script src="~/Scripts/jquery-3.7.1.min.js"></script>
-    <script src="~/Scripts/bootstrap.min.js"></script>
-    <script src="~/Scripts/Utilities.js"></script>
-    <script src="~/Scripts/sweetalert2.min.js"></script>
-    <script src="~/Scripts/Popper.min.js"></script>
-    <script src="~/Content/lib/font-awesome/js/all.min.js"></script>
 
+    <script src="~/Scripts/Shared/bootstrap.min.js"></script>
+    <script src="~/Scripts/Shared/Utilities.js"></script>
+    <script src="~/Scripts/Shared/popper.min.js"></script>
+
+
+    @Styles.Render("~/Content/shared-css")
+
+    @Scripts.Render("~/bundles/shared-js")
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <section class="main">
@@ -133,7 +133,6 @@
     const version = "@ViewData["Version"]";
 
     let logbtn = document.querySelector(".signin");
-    //let forbtn = document.querySelector(".forgetbtn");
     let mainbody = document.querySelector(".main");
     const form = document.getElementById('loginsubmit');
     const resultBox = document.querySelector(".namesdisplay");
@@ -340,7 +339,6 @@
 
     // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
     const LoadPageData = async () => {
-       
         try {
             if ($("#Employee_ID").val() !== "") {
                 resultBox.style.display = 'none';
@@ -354,16 +352,10 @@
 
         } catch (error) {
             console.error("Failed to load page data:", error);
-        } finally {
-            // Hide loading spinner whether success or failure
-            //$("#loadingSpinner").hide();
-        }
+        } 
     }
 
-    $(document).ready(() => {
-        LoadPageData();
-        
-    });
+    $(document).ready(() => { LoadPageData(); });
 
 
     window.IsLoginUser({

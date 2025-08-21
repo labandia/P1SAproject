@@ -17,11 +17,6 @@ namespace ProgramPartListWeb
                     "~/Content/Shared/bootstrap.min.css",
                     "~/Content/Shared/site.min.css"
                 ));
-
-
-          
-
-
             // =======================
             // 2. SHARED JS (CORE LIBRARIES)
             // =======================     

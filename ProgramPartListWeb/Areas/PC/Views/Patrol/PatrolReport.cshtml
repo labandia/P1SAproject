@@ -6,10 +6,21 @@
 
 
 <header class="InspectHead flex_space">
-    <div class="Inputcontainer">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" placeholder="Search here ... " id="searchbox" autocomplete="off" />
-        <div class="line"></div>
+    <div class="flex_align">
+        <div class="Inputcontainer">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" placeholder="Search here ... " id="searchbox" autocomplete="off" />
+            <div class="line"></div>
+        </div>
+
+        <div class="flex_align">
+            <i class="fa-solid fa-file-pdf "></i>
+            <small>PDF file</small>
+            <i class="fa-solid fa-file-excel text-success"></i>
+            <small>Excel file</small>
+            <i class="fa-solid fa-square-xmark text-danger"></i>
+            <small>No Attachement files</small>
+        </div>
     </div>
     
 
@@ -129,7 +140,7 @@
 
                 let hasExcelfile = (rowData.CounterPath != null && rowData.CounterPath.trim() !== "") 
                             ? `<button class="open-pdf-btn" data-pdf-url="/Patrol/ViewExcel?strfilepath=${encodeURIComponent(rowData.CounterPath)}">
-                                    <i class="fa-solid fa-file-excel"></i>
+                                    <i class="fa-solid fa-file-excel text-success"></i>
                                 </button>`
                             : `<i class="fa-solid fa-square-xmark text-danger"></i>`;
 

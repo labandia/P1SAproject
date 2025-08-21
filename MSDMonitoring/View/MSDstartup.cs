@@ -415,21 +415,6 @@ namespace MSDMonitoring
             }
 
 
-
-            // Validate Line number is integer
-            //if (!int.TryParse(LineText.Text, out int lineNumber))
-            //{
-            //    MessageBox.Show("Line must be a number.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            //    return false;
-            //}
-
-            //// Validate range 1 - 12
-            //if (lineNumber < 1 || lineNumber > 12)
-            //{
-            //    MessageBox.Show("Line must be between 1 and 12.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            //    return false;
-            //}
-
             // Check for duplicates in data
             int selectedLine = Convert.ToInt32(LineSelect.Text);
             var isDuplicate = data.Any(res => res.Line == selectedLine);

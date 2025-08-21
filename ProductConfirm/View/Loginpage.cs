@@ -1,9 +1,11 @@
 ﻿
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using ProductConfirm.Models;
 using ProductConfirm.View.Modals;
 using ProgramPartListWeb.Helper;
 using System;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -53,32 +55,64 @@ namespace ProductConfirm
 
         public async void loginfunction()
         {
-            if (!validateform()) return;
+            var logs = new AuthModel
+            {
+                Username = username.Text.Trim(),
+                Password = password.Text
+            };
 
-            var user = (await _user.LoginCredentials(username.Text.Trim())).FirstOrDefault();
-            if (user == null)
+            var validator = new AuthValidation();
+            var result = validator.Validate(logs);
+
+
+            if (!result.IsValid)
             {
-                MessageBox.Show("Invalid credentials / Username Doesnt Exist", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                foreach(var failure in result.Errors)
+                {
+                    if (failure.PropertyName == nameof(logs.Username))
+                    {
+                        user_error.Text = failure.ErrorMessage;
+                        user_error.Visible = true;
+                    }
+                    if (failure.PropertyName == nameof(logs.Password))
+                    {
+                        pass_error.Text = failure.ErrorMessage;
+                        pass_error.Visible = true;
+                    }
+                }
+
+                return; // Stop the logic code
             }
+
+
+
+
+            //if (!validateform()) return;
+
+            //var user = (await _user.LoginCredentials(username.Text.Trim())).FirstOrDefault();
+            //if (user == null)
+            //{
+            //    MessageBox.Show("Invalid credentials / Username Doesnt Exist", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    return;
+            //}
               
-                // CHECKS THE PASSWORD IF IS CORRECT
-            if (!PasswordHasher.VerifyPassword(user.Password, password.Text.Trim()))
-            {
-                MessageBox.Show("Invalid credentials / Password is incorrect", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;    
-            }
+            //    // CHECKS THE PASSWORD IF IS CORRECT
+            //if (!PasswordHasher.VerifyPassword(user.Password, password.Text.Trim()))
+            //{
+            //    MessageBox.Show("Invalid credentials / Password is incorrect", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    return;    
+            //}
                
 
-            MessageBox.Show("Login success", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            var mainpage = _serviceProvider.GetRequiredService<Mainpage>();
+            //MessageBox.Show("Login success", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //var mainpage = _serviceProvider.GetRequiredService<Mainpage>();
 
-            mainpage.userid = user.User_ID;
-            mainpage.Fullname = user.Fullname;
-            mainpage.roleId = user.Role_ID;
+            //mainpage.userid = user.User_ID;
+            //mainpage.Fullname = user.Fullname;
+            //mainpage.roleId = user.Role_ID;
 
-            mainpage.Show();
-            this.Hide();  
+            //mainpage.Show();
+            //this.Hide();  
         }
 
         private void Loginpage_Load(object sender, EventArgs e)
@@ -108,6 +142,15 @@ namespace ProductConfirm
         {
             Registermodal r = new Registermodal();  
             r.Show();
+        }
+
+        private void username_Leave(object sender, EventArgs e)
+        {
+            var validator = new AuthValidation();
+            var result = validator.Validate(new AuthModel { Username = username.Text });
+
+            var error = result.Errors.FirstOrDefault(x => x.PropertyName == nameof(AuthModel.Username));
+            user_error.Text = error?.ErrorMessage ?? "";
         }
     }
 }

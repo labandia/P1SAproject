@@ -217,7 +217,7 @@ namespace ProductConfirm.Modules
                 switch (checktool)
                 {
                     case "Caulking Dent ":
-                        CaulkDent cd = new CaulkDent(this);
+                        CaulkDent cd = new CaulkDent(this, _prod);
                         cd.ID = shopID;
                         cd.RotorID = RotorID;
                         cd.measureID = measureID;

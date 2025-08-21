@@ -116,6 +116,7 @@
             this.username.Name = "username";
             this.username.Size = new System.Drawing.Size(426, 39);
             this.username.TabIndex = 1;
+            this.username.Leave += new System.EventHandler(this.username_Leave);
             // 
             // label3
             // 

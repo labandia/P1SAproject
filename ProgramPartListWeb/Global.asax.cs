@@ -17,6 +17,7 @@ using System.Security.Principal;
 using System.Web.Security;
 using System.Web.Http;
 using System.Net.Http.Headers;
+using System.IO.Compression;
 
 namespace ProgramPartListWeb
 {
@@ -125,6 +126,29 @@ namespace ProgramPartListWeb
                 HttpContext.Current.Response.StatusCode = 200;
                 HttpContext.Current.Response.End();
             }
+
+            HttpResponse response = HttpContext.Current.Response;
+
+            string acceptEncoding = HttpContext.Current.Request.Headers["Accept-Encoding"];
+
+            if (!string.IsNullOrEmpty(acceptEncoding))
+            {
+                acceptEncoding = acceptEncoding.ToLower();
+
+                if (acceptEncoding.Contains("gzip"))
+                {
+                    response.Filter = new GZipStream(response.Filter, CompressionMode.Compress);
+                    response.AppendHeader("Content-Encoding", "gzip");
+                }
+                else if (acceptEncoding.Contains("deflate"))
+                {
+                    response.Filter = new DeflateStream(response.Filter, CompressionMode.Compress);
+                    response.AppendHeader("Content-Encoding", "deflate");
+                }
+            }
+
+            // Add Vary header
+            response.AppendHeader("Vary", "Content-Encoding");
         }
 
         private void RegisterDependencyInjection()

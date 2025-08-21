@@ -85,6 +85,7 @@ namespace ProgramPartListWeb
             // =======================
             // Enable Bundling/Minification
             // =======================
+            bundles.UseCdn = true;
             BundleTable.EnableOptimizations = true;
         }
     }

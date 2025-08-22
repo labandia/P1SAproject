@@ -21,7 +21,7 @@ namespace EmailSender.Repository
 
             if (EmailsList == null || EmailsList.Count == 0)
             {
-                Console.WriteLine("No pending emails found.");
+                //Console.WriteLine("No pending emails found.");
                 return;
             }
 
@@ -30,26 +30,26 @@ namespace EmailSender.Repository
 
             var tasks = EmailsList.Select(async item =>
             {
-                Console.WriteLine($"Sending email: From {item.Sender} To {item.Recipient}");
+                //Console.WriteLine($"Sending email: From {item.Sender} To {item.Recipient}");
 
                 bool sent = EmailServices.SendMailOutlookV2(item.Sender, item.Recipient, item.BCC, item.Subject, item.Body);
 
                 if (!sent)
                 {
-                    Console.WriteLine($"Failed to send email to {item.Recipient}");
+                    //Console.WriteLine($"Failed to send email to {item.Recipient}");
                     return;
                 }
-                Console.WriteLine("Email sent successfully. Updating database...");
+                //Console.WriteLine("Email sent successfully. Updating database...");
 
                 bool updated = await SqlDataAccess.UpdateInsertQuery(updatequery, new { EmailID = item.EmailID });
 
-                Console.WriteLine(updated
-                            ? $"Database updated for EmailID {item.EmailID}"
-                            : $"Database update failed for EmailID {item.EmailID}");
+                //Console.WriteLine(updated
+                //            ? $"Database updated for EmailID {item.EmailID}"
+                //            : $"Database update failed for EmailID {item.EmailID}");
             });
 
             await Task.WhenAll(tasks);
-            Console.WriteLine("Email process completed.");
+            //Console.WriteLine("Email process completed.");
         }
     }
 }

@@ -186,7 +186,7 @@
             // 
             this.SupplierNameText.BackColor = System.Drawing.Color.WhiteSmoke;
             this.SupplierNameText.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SupplierNameText.Location = new System.Drawing.Point(374, 301);
+            this.SupplierNameText.Location = new System.Drawing.Point(374, 295);
             this.SupplierNameText.Multiline = true;
             this.SupplierNameText.Name = "SupplierNameText";
             this.SupplierNameText.Size = new System.Drawing.Size(245, 41);
@@ -216,7 +216,7 @@
             // 
             this.SupplierText.BackColor = System.Drawing.Color.WhiteSmoke;
             this.SupplierText.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SupplierText.Location = new System.Drawing.Point(51, 304);
+            this.SupplierText.Location = new System.Drawing.Point(51, 298);
             this.SupplierText.Multiline = true;
             this.SupplierText.Name = "SupplierText";
             this.SupplierText.Size = new System.Drawing.Size(245, 41);
@@ -313,7 +313,7 @@
             // 
             this.Ambassador.BackColor = System.Drawing.Color.WhiteSmoke;
             this.Ambassador.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Ambassador.Location = new System.Drawing.Point(52, 201);
+            this.Ambassador.Location = new System.Drawing.Point(52, 193);
             this.Ambassador.Multiline = true;
             this.Ambassador.Name = "Ambassador";
             this.Ambassador.Size = new System.Drawing.Size(245, 41);
@@ -323,7 +323,7 @@
             // 
             this.FloorlifeText.BackColor = System.Drawing.Color.WhiteSmoke;
             this.FloorlifeText.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FloorlifeText.Location = new System.Drawing.Point(377, 406);
+            this.FloorlifeText.Location = new System.Drawing.Point(377, 401);
             this.FloorlifeText.Multiline = true;
             this.FloorlifeText.Name = "FloorlifeText";
             this.FloorlifeText.Size = new System.Drawing.Size(245, 41);
@@ -334,7 +334,7 @@
             // 
             this.partnameText.BackColor = System.Drawing.Color.WhiteSmoke;
             this.partnameText.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.partnameText.Location = new System.Drawing.Point(374, 201);
+            this.partnameText.Location = new System.Drawing.Point(374, 193);
             this.partnameText.Multiline = true;
             this.partnameText.Name = "partnameText";
             this.partnameText.Size = new System.Drawing.Size(245, 41);
@@ -366,7 +366,7 @@
             // 
             this.levelText.BackColor = System.Drawing.Color.WhiteSmoke;
             this.levelText.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.levelText.Location = new System.Drawing.Point(53, 406);
+            this.levelText.Location = new System.Drawing.Point(53, 401);
             this.levelText.Multiline = true;
             this.levelText.Name = "levelText";
             this.levelText.Size = new System.Drawing.Size(245, 41);

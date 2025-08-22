@@ -398,9 +398,11 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
             }
 
+            string finalprefix = "P1SA-" + Request.Form["RegNo"];
+
             var obj = new RegistrationModel
             {
-                RegNo = "P1SA-" + Request.Form["RegNo"],
+                RegNo = finalprefix,
                 DateConduct = Request.Form["DateConduct"],
                 Employee_ID = Request.Form["Employee_ID"],
                 FullName = Request.Form["EmployeeSearch"],
@@ -445,7 +447,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             if (result == false)
                 return JsonError("Problem during saving Data.");
 
-            return JsonCreated(result, "Change Status successfully");
+            return JsonCreated(result, $@"Registration No : {finalprefix} is Add  successfully");
 
         }
         [HttpPost]

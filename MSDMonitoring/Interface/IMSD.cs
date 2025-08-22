@@ -20,7 +20,7 @@ namespace MSDMonitoring.Interface
         // ---------------------------
         // INSERT AND UPDATE DATA 
         // ---------------------------
-        Task<bool> AddEditMasterlistData(MSDMasterlistodel msd, int act);
+        Task<bool> AddEditMasterlistData(MSDMasterlistodel msd, int act, string temp = "");
         Task<bool> AddComponentsData(InputIN_MSD msd);
         Task<bool> UpdateComponentsData(InputOUT_MSD msd, string ReelID, decimal totalhours);
         Task<bool> EditComponentsData(int ID, int quan);

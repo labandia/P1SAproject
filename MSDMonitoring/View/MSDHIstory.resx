@@ -162,6 +162,9 @@
   <metadata name="Input_Name.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <metadata name="SupplierName.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
   <metadata name="Exphours.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -181,7 +184,7 @@
   <data name="Print.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAA
-        qQAAAKkBq7NRIgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAGMSURBVEhLxVU9
+        qAAAAKgBefSzxgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAGMSURBVEhLxVU9
         T8MwED1XnkCZKnXo0LXqmAGQkoWOXRCMkbpUgt+A2JC6sDUrW/8BS4ZITOzA0P/SEYye5asSO27cRion
         vcV5H/El9hH9c50T0QMRPXpwbzhHlZRSfhOR2oder/cFri0OqRgGeZ6r7XbbiNVqxUHgBhe35RXisiwd
         YwaemQBwg9olhRC1tgQGaAghWtul2zIej1Ucx8EB4EIT0q5rFhwawHzj0Vh3RPQBUhRFGiyeTqeNYNMq

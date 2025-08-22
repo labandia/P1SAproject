@@ -52,7 +52,7 @@ namespace MSDMonitoring
             this.FormBorderStyle = FormBorderStyle.Sizable; // keeps title bar
             // // First column, index 0
             await LoadData();
-            MonitorTable.Columns["Print"].DisplayIndex = 19;
+            MonitorTable.Columns["Print"].DisplayIndex = 20;
             MonitorTable.Columns["Print"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
             MonitorTable.Columns["Print"].Width = 70;
 
@@ -66,7 +66,7 @@ namespace MSDMonitoring
                 e.CellStyle.Font = new Font(MonitorTable.Font, FontStyle.Bold);
             }
 
-            if (e.ColumnIndex == 16 && e.Value != null)
+            if (e.ColumnIndex == 19 && e.Value != null)
             {
                 if (e.Value.ToString().Trim().Equals("CLOSE", StringComparison.OrdinalIgnoreCase))
                 {
@@ -225,6 +225,27 @@ namespace MSDMonitoring
             // Make sure a valid row is clicked (not header)
             if (e.RowIndex < 0) return;
 
+            //Debug.WriteLine($@" 0 " + MonitorTable.Rows[e.RowIndex].Cells[1].Value.ToString());
+            //Debug.WriteLine($@" 1 " + MonitorTable.Rows[e.RowIndex].Cells[2].Value.ToString());
+            //Debug.WriteLine($@" 2 " + MonitorTable.Rows[e.RowIndex].Cells[3].Value.ToString());
+            //Debug.WriteLine($@" 3 " + MonitorTable.Rows[e.RowIndex].Cells[4].Value.ToString());
+            //Debug.WriteLine($@" 4 " + MonitorTable.Rows[e.RowIndex].Cells[5].Value.ToString());
+            //Debug.WriteLine($@" 6 " + MonitorTable.Rows[e.RowIndex].Cells[6].Value.ToString());
+            //Debug.WriteLine($@" 7 " + MonitorTable.Rows[e.RowIndex].Cells[7].Value.ToString());
+            //Debug.WriteLine($@" 8 " + MonitorTable.Rows[e.RowIndex].Cells[8].Value.ToString());
+            //Debug.WriteLine($@" 9 " + MonitorTable.Rows[e.RowIndex].Cells[9].Value.ToString());
+            //Debug.WriteLine($@" 10 " + MonitorTable.Rows[e.RowIndex].Cells[10].Value.ToString());
+            //Debug.WriteLine($@" 11 " + MonitorTable.Rows[e.RowIndex].Cells[11].Value.ToString());
+
+            //Debug.WriteLine($@" 12 " + MonitorTable.Rows[e.RowIndex].Cells[12].Value.ToString());
+            //Debug.WriteLine($@" 13 " + MonitorTable.Rows[e.RowIndex].Cells[13].Value.ToString());
+            //Debug.WriteLine($@" 14 " + MonitorTable.Rows[e.RowIndex].Cells[14].Value.ToString());
+            //Debug.WriteLine($@" 15 " + MonitorTable.Rows[e.RowIndex].Cells[15].Value.ToString());
+            //Debug.WriteLine($@" 16 " + MonitorTable.Rows[e.RowIndex].Cells[16].Value.ToString());
+            //Debug.WriteLine($@" 17 " + MonitorTable.Rows[e.RowIndex].Cells[17].Value.ToString());
+            //Debug.WriteLine($@" 18 " + MonitorTable.Rows[e.RowIndex].Cells[18].Value.ToString());
+            //Debug.WriteLine($@" 19 " + MonitorTable.Rows[e.RowIndex].Cells[19].Value.ToString());
+            //Debug.WriteLine($@" 20 " + MonitorTable.Rows[e.RowIndex].Cells[20].Value.ToString());
             if (e.ColumnIndex == 0)
             {
                 var obj = new PrintLabelModel
@@ -235,7 +256,8 @@ namespace MSDMonitoring
                     Level = MonitorTable.Rows[e.RowIndex].Cells[6].Value.ToString(),
                     LotNo = MonitorTable.Rows[e.RowIndex].Cells[7].Value.ToString(),
                     Date_IN = MonitorTable.Rows[e.RowIndex].Cells[12].Value.ToString(),
-                    Quantity_IN = Convert.ToInt32(MonitorTable.Rows[e.RowIndex].Cells[14].Value)
+                    Quantity_IN = Convert.ToInt32(MonitorTable.Rows[e.RowIndex].Cells[14].Value),
+                    SupplierName =  MonitorTable.Rows[e.RowIndex].Cells[20].Value?.ToString()
                 };
                 // Template path
                 string templatePath = @"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\Templates\MSDPrintLabel.xlsx";
@@ -260,10 +282,11 @@ namespace MSDMonitoring
                 worksheet.Range["C4"].Value = obj.Partnumber;
                 worksheet.Range["C5"].Value = obj.FloorLife;
                 worksheet.Range["C6"].Value = obj.Level;
-                worksheet.Range["C7"].Value = obj.LotNo;
-                worksheet.Range["C8"].Value = obj.Date_IN;
-                worksheet.Range["C9"].Value = obj.Quantity_IN;
-                worksheet.Range["C10"].Value =  MonitorTable.Rows[e.RowIndex].Cells[18].Value.ToString();
+                worksheet.Range["C7"].Value = obj.SupplierName;
+                worksheet.Range["C8"].Value = obj.LotNo;
+                worksheet.Range["C9"].Value = obj.Date_IN;
+                worksheet.Range["C10"].Value = obj.Quantity_IN;
+                worksheet.Range["C11"].Value =  MonitorTable.Rows[e.RowIndex].Cells[18].Value.ToString();
 
                 // Show print dialog
                 worksheet.PrintPreview();

@@ -41,6 +41,7 @@ namespace MSDMonitoring
 
             await DisplayData();
             MonitorTable.Columns["Edit"].DisplayIndex = 6;
+            MonitorTable.Columns["AmbassadorPartnum"].DisplayIndex = 1;
             MonitorTable.Columns["Edit"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
             MonitorTable.Columns["Edit"].Width = 70;
         }
@@ -71,6 +72,10 @@ namespace MSDMonitoring
 
             filteredList = _masterData.Where(p => p.AmbassadorPartnum.ToLower().Contains(filterText)).ToList();
             MonitorTable.DataSource =  filteredList;
+            MonitorTable.Columns["Edit"].DisplayIndex = 6;
+            MonitorTable.Columns["AmbassadorPartnum"].DisplayIndex = 1;
+            MonitorTable.Columns["Edit"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            MonitorTable.Columns["Edit"].Width = 70;
         }
 
         private void MonitorTable_CellClick(object sender, DataGridViewCellEventArgs e)

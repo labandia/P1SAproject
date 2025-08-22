@@ -12,6 +12,7 @@ namespace MSDMonitoring.Data
         public string Date_IN { get; set; }
         public int Quantity_IN { get; set; }
         public int RemainLife { get; set; }
+        public string SupplierName { get; set; }
     }
 
  
@@ -72,6 +73,7 @@ namespace MSDMonitoring.Data
         public double TotalHours { get; set; }
         public string RemainLife { get; set; }
         public int PlanQty { get; set; }
+        public string SupplierName { get; set; }
     }
 
     public class InputMSD
@@ -100,6 +102,7 @@ namespace MSDMonitoring.Data
         public double RemainFloor { get; set; }
         public int Line { get; set; }
         public string LotNo { get; set; }   
+        public string SupplierName { get; set; }
     }
 
 

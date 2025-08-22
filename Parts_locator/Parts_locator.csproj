@@ -296,6 +296,12 @@
     <Compile Include="View\Moldingbush\RawMaterialProductDetails.Designer.cs">
       <DependentUpon>RawMaterialProductDetails.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\Rotor\RotorPartsLocator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Rotor\RotorPartsLocator.Designer.cs">
+      <DependentUpon>RotorPartsLocator.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\Rotor\Shoporder_IN.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -402,6 +408,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\Moldingbush\RawMaterialProductDetails.resx">
       <DependentUpon>RawMaterialProductDetails.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Rotor\RotorPartsLocator.resx">
+      <DependentUpon>RotorPartsLocator.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\Rotor\Shoporder_IN.resx">
       <DependentUpon>Shoporder_IN.cs</DependentUpon>

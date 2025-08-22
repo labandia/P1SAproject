@@ -48,6 +48,12 @@
             this.panel8 = new System.Windows.Forms.Panel();
             this.FloorlifeText = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.partnameText = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.PartnameError = new System.Windows.Forms.Label();
+            this.ambassadorError = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.Ambassador = new System.Windows.Forms.TextBox();
             this.panel6.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -58,7 +64,7 @@
             // 
             this.levelText.BackColor = System.Drawing.Color.WhiteSmoke;
             this.levelText.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.levelText.Location = new System.Drawing.Point(53, 299);
+            this.levelText.Location = new System.Drawing.Point(53, 388);
             this.levelText.Multiline = true;
             this.levelText.Name = "levelText";
             this.levelText.Size = new System.Drawing.Size(245, 41);
@@ -128,7 +134,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(49, 267);
+            this.label4.Location = new System.Drawing.Point(49, 356);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(59, 18);
             this.label4.TabIndex = 115;
@@ -138,7 +144,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(374, 264);
+            this.label7.Location = new System.Drawing.Point(374, 353);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(81, 18);
             this.label7.TabIndex = 108;
@@ -148,7 +154,7 @@
             // 
             this.SupplierNameText.BackColor = System.Drawing.Color.WhiteSmoke;
             this.SupplierNameText.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SupplierNameText.Location = new System.Drawing.Point(374, 194);
+            this.SupplierNameText.Location = new System.Drawing.Point(374, 283);
             this.SupplierNameText.Multiline = true;
             this.SupplierNameText.Name = "SupplierNameText";
             this.SupplierNameText.Size = new System.Drawing.Size(245, 41);
@@ -195,7 +201,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(372, 160);
+            this.label5.Location = new System.Drawing.Point(372, 249);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(125, 18);
             this.label5.TabIndex = 106;
@@ -205,7 +211,7 @@
             // 
             this.SupplierText.BackColor = System.Drawing.Color.WhiteSmoke;
             this.SupplierText.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SupplierText.Location = new System.Drawing.Point(51, 197);
+            this.SupplierText.Location = new System.Drawing.Point(51, 286);
             this.SupplierText.Multiline = true;
             this.SupplierText.Name = "SupplierText";
             this.SupplierText.Size = new System.Drawing.Size(245, 41);
@@ -215,7 +221,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(48, 159);
+            this.label2.Location = new System.Drawing.Point(48, 248);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(150, 18);
             this.label2.TabIndex = 101;
@@ -229,7 +235,7 @@
             this.panel5.Controls.Add(this.Save_btn);
             this.panel5.Controls.Add(this.Cancel_btn);
             this.panel5.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel5.Location = new System.Drawing.Point(0, 406);
+            this.panel5.Location = new System.Drawing.Point(0, 491);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(676, 95);
             this.panel5.TabIndex = 113;
@@ -246,7 +252,7 @@
             // 
             this.FloorlifeText.BackColor = System.Drawing.Color.WhiteSmoke;
             this.FloorlifeText.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FloorlifeText.Location = new System.Drawing.Point(377, 299);
+            this.FloorlifeText.Location = new System.Drawing.Point(377, 388);
             this.FloorlifeText.Multiline = true;
             this.FloorlifeText.Name = "FloorlifeText";
             this.FloorlifeText.Size = new System.Drawing.Size(245, 41);
@@ -263,12 +269,82 @@
             this.label1.TabIndex = 100;
             this.label1.Text = "Edit Registration";
             // 
+            // partnameText
+            // 
+            this.partnameText.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.partnameText.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.partnameText.Location = new System.Drawing.Point(368, 192);
+            this.partnameText.Multiline = true;
+            this.partnameText.Name = "partnameText";
+            this.partnameText.Size = new System.Drawing.Size(245, 41);
+            this.partnameText.TabIndex = 124;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(365, 162);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(90, 18);
+            this.label6.TabIndex = 123;
+            this.label6.Text = "Part name :";
+            // 
+            // PartnameError
+            // 
+            this.PartnameError.AutoSize = true;
+            this.PartnameError.Font = new System.Drawing.Font("Century Gothic", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.PartnameError.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.PartnameError.Location = new System.Drawing.Point(484, 165);
+            this.PartnameError.Name = "PartnameError";
+            this.PartnameError.Size = new System.Drawing.Size(12, 15);
+            this.PartnameError.TabIndex = 125;
+            this.PartnameError.Text = "*";
+            this.PartnameError.Visible = false;
+            // 
+            // ambassadorError
+            // 
+            this.ambassadorError.AutoSize = true;
+            this.ambassadorError.Font = new System.Drawing.Font("Century Gothic", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ambassadorError.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.ambassadorError.Location = new System.Drawing.Point(239, 165);
+            this.ambassadorError.Name = "ambassadorError";
+            this.ambassadorError.Size = new System.Drawing.Size(15, 15);
+            this.ambassadorError.TabIndex = 122;
+            this.ambassadorError.Text = " *";
+            this.ambassadorError.Visible = false;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(42, 162);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(200, 18);
+            this.label3.TabIndex = 120;
+            this.label3.Text = "Ambassador Part number :";
+            // 
+            // Ambassador
+            // 
+            this.Ambassador.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.Ambassador.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Ambassador.Location = new System.Drawing.Point(46, 192);
+            this.Ambassador.Multiline = true;
+            this.Ambassador.Name = "Ambassador";
+            this.Ambassador.Size = new System.Drawing.Size(245, 41);
+            this.Ambassador.TabIndex = 121;
+            // 
             // EditMasterlist
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(676, 501);
+            this.ClientSize = new System.Drawing.Size(676, 586);
             this.ControlBox = false;
+            this.Controls.Add(this.partnameText);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.PartnameError);
+            this.Controls.Add(this.ambassadorError);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.Ambassador);
             this.Controls.Add(this.levelText);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label7);
@@ -314,5 +390,11 @@
         private System.Windows.Forms.Panel panel8;
         private System.Windows.Forms.TextBox FloorlifeText;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox partnameText;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label PartnameError;
+        private System.Windows.Forms.Label ambassadorError;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox Ambassador;
     }
 }

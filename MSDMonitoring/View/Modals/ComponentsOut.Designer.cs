@@ -309,11 +309,11 @@
             // ReelID_error
             // 
             this.ReelID_error.AutoSize = true;
-            this.ReelID_error.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ReelID_error.Font = new System.Drawing.Font("Century Gothic", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ReelID_error.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.ReelID_error.Location = new System.Drawing.Point(437, 186);
+            this.ReelID_error.Location = new System.Drawing.Point(543, 187);
             this.ReelID_error.Name = "ReelID_error";
-            this.ReelID_error.Size = new System.Drawing.Size(153, 16);
+            this.ReelID_error.Size = new System.Drawing.Size(125, 15);
             this.ReelID_error.TabIndex = 119;
             this.ReelID_error.Text = "Name Input required *";
             this.ReelID_error.Visible = false;

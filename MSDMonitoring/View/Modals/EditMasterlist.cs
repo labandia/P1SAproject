@@ -31,7 +31,7 @@ namespace MSDMonitoring.View.Modals
             var obj = new MSDMasterlistodel
             {
                 AmbassadorPartnum = _msdinput.AmbassadorPartnum,
-                Partname = _msdinput.Partname,
+                Partname = partnameText.Text,
                 SupplyName = SupplierText.Text,
                 SupplyPartName = SupplierNameText.Text,
                 Level = Convert.ToInt32(levelText.Text),
@@ -39,8 +39,8 @@ namespace MSDMonitoring.View.Modals
             };
 
 
-            bool result = await _msd.AddEditMasterlistData(obj, 1);
-
+            bool result = await _msd.AddEditMasterlistData(obj, 1, Ambassador.Text.Trim());
+           
             if (result)
             {
                 MessageBox.Show("Edit Masterlist Successfully");
@@ -52,6 +52,8 @@ namespace MSDMonitoring.View.Modals
 
         private void EditMasterlist_Load(object sender, EventArgs e)
         {
+            Ambassador.Text = _msdinput.AmbassadorPartnum;
+            partnameText.Text = _msdinput.Partname;
             SupplierNameText.Text = _msdinput.SupplyPartName;
             SupplierText.Text = _msdinput.SupplyName;
             levelText.Text = _msdinput.Level.ToString();

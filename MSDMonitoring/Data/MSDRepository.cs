@@ -14,18 +14,29 @@ namespace MSDMonitoring.Data
         // ---------------------------
         public Task<List<MSDCardModel>> GetListComponentIN()
         {
-            string strquery = $@"SELECT 
-	                            TOP 12
-	                            RecordID, ReelID, Line, 
-	                            QuantityIN, 
-                                DateIn as DateCheck,
-	                            FORMAT(DateIn, 'MM/dd/yy') as DateIn,
-	                            FORMAT(DateIn, 'HH:mm') as TimeIn, 
-	                            RemainFloor, InputIn
-                            FROM MSD_MonitorList
-                            WHERE IsStats = 0 AND 
-                            LINE IN (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
-                            ORDER BY DateIn DESC";
+            string strquery = $@"WITH LineLimited AS (
+                                    SELECT 
+                                        RecordID, 
+                                        ReelID, 
+                                        Line, 
+                                        QuantityIN, 
+                                        DateIn as DateCheck,
+                                        FORMAT(DateIn, 'MM/dd/yy') as DateIn,
+                                        FORMAT(DateIn, 'HH:mm') as TimeIn, 
+                                        RemainFloor, 
+                                        InputIn,
+                                        ROW_NUMBER() OVER (PARTITION BY Line ORDER BY DateIn DESC) AS rn
+                                    FROM MSD_MonitorList
+                                    WHERE IsStats = 0
+                                      AND LINE BETWEEN 1 AND 12
+                                )
+                                SELECT *
+                                FROM LineLimited
+                                WHERE 
+                                    (Line BETWEEN 1 AND 8  AND rn <= 1)   -- only 1 record for Lines 1–8
+                                    OR 
+                                    (Line BETWEEN 9 AND 12 AND rn <= 2)   -- only 2 records for Lines 9–12
+                                ORDER BY Line, DateCheck DESC;";
             return SqlDataAccess.GetData<MSDCardModel>(strquery);
         }
         public Task<List<MSDMasterlistodel>> GetMSDMasterlist() => SqlDataAccess.GetData<MSDMasterlistodel>("MSDMaster");
@@ -62,8 +73,8 @@ namespace MSDMonitoring.Data
         // ---------------------------
         public Task<bool> AddComponentsData(InputIN_MSD msd)
         {
-            string strinsert = $@"INSERT INTO MSD_MonitorList(ReelID, AmbassadorPartnum, DateIn, InputIn, QuantityIN, Line, RemainFloor, LotNo) 
-                                     VALUES(@ReelID, @AmbassadorPartnum, @DateIn, @InputIn, @QuantityIN, @Line, @RemainFloor, @LotNo)";
+            string strinsert = $@"INSERT INTO MSD_MonitorList(ReelID, AmbassadorPartnum, DateIn, InputIn, QuantityIN, Line, RemainFloor, LotNo, SupplierName) 
+                                     VALUES(@ReelID, @AmbassadorPartnum, @DateIn, @InputIn, @QuantityIN, @Line, @RemainFloor, @LotNo, @SupplierName)";
             return SqlDataAccess.UpdateInsertQuery(strinsert,
                 new
                 {
@@ -74,7 +85,8 @@ namespace MSDMonitoring.Data
                     QuantityIN = msd.QuantityIN,
                     Line = msd.Line,
                     RemainFloor = msd.RemainFloor,
-                    LotNo = msd.LotNo
+                    LotNo = msd.LotNo,
+                    SupplierName = msd.SupplierName
                 });
         }
         public async Task<bool> UpdateComponentsData(InputOUT_MSD msd, string ReelID, decimal totalhours)
@@ -150,7 +162,7 @@ namespace MSDMonitoring.Data
             return SqlDataAccess.UpdateInsertQuery(strinsert, new { RecordID = ID});
         }
 
-        public Task<bool> AddEditMasterlistData(MSDMasterlistodel msd, int act)
+        public Task<bool> AddEditMasterlistData(MSDMasterlistodel msd, int act, string temp = "")
         {
             if (act == 0)
             {
@@ -160,9 +172,20 @@ namespace MSDMonitoring.Data
             }
             else
             {
-                string strinsert = $@"UPDATE MSD_Masterlist SET  Partname =@Partname, SupplyPartName =@SupplyPartName, SupplyName =@SupplyName,  Level =@Level, FloorLife =@FloorLife
+                string strinsert = $@"UPDATE MSD_Masterlist SET AmbassadorPartnum =@temp, Partname =@Partname, SupplyPartName =@SupplyPartName, 
+                                     SupplyName =@SupplyName,  
+                                     Level =@Level, FloorLife =@FloorLife
                                      WHERE AmbassadorPartnum =@AmbassadorPartnum";
-                return SqlDataAccess.UpdateInsertQuery(strinsert, msd);
+                return SqlDataAccess.UpdateInsertQuery(strinsert, new
+                {
+                    temp = (temp == "") ? msd.AmbassadorPartnum : temp,
+                    Partname = msd.Partname,
+                    SupplyPartName = msd.SupplyPartName,
+                    SupplyName = msd.SupplyName,
+                    Level = msd.Level,
+                    FloorLife = msd.FloorLife,
+                    AmbassadorPartnum = msd.AmbassadorPartnum
+                });
             }
 
         }

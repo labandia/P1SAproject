@@ -391,20 +391,21 @@ namespace MSDMonitoring
         // ========================================================================== //
         // ========================= ADD FUNCTIONALITY ============================== //
         // ========================================================================== //
-        private async void NewEntryBtn_Click(object sender, EventArgs e)
-        {   
-            await ComponentsDataEntry();
-        }
+        private async void NewEntryBtn_Click(object sender, EventArgs e) => await ComponentsDataEntry();
+        
         public async Task<bool> FormValidation()
         {
             var data = await _msd.GetListComponentIN();
 
-            if(string.IsNullOrEmpty(Ambassador.Text) || string.IsNullOrEmpty(QtyIn.Text) || string.IsNullOrEmpty(InputIn.Text) || string.IsNullOrEmpty(LotText.Text))
+            if(string.IsNullOrEmpty(Ambassador.Text) || string.IsNullOrEmpty(QtyIn.Text) 
+                || string.IsNullOrEmpty(InputIn.Text) || string.IsNullOrEmpty(LotText.Text)
+                || string.IsNullOrEmpty(SupplierText.Text))
             {
                 ReelID_error.Visible = string.IsNullOrEmpty(Ambassador.Text) ? true : false;
                 QuanError.Visible = string.IsNullOrEmpty(QtyIn.Text) ? true : false;
                 NameError.Visible = string.IsNullOrEmpty(InputIn.Text) ? true : false;
                 lotError.Visible = string.IsNullOrEmpty(LotText.Text) ? true : false;
+                SupplyError.Visible = string.IsNullOrEmpty(SupplierText.Text) ? true : false;
                 return false;
             }
 
@@ -417,11 +418,17 @@ namespace MSDMonitoring
 
             // Check for duplicates in data
             int selectedLine = Convert.ToInt32(LineSelect.Text);
-            var isDuplicate = data.Any(res => res.Line == selectedLine);
-            if (isDuplicate)
+            // ✅ Only apply "2 record max" to Lines 9–12
+            if (selectedLine >= 9 && selectedLine <= 12)
             {
-                MessageBox.Show($"Line {selectedLine} is already input.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
+                int lineCount = data.Count(res => res.Line == selectedLine);
+
+                if (lineCount >= 2)
+                {
+                    MessageBox.Show($"Line {selectedLine} already has 2 entries. Maximum limit reached.",
+                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
             }
 
             return true;
@@ -430,32 +437,10 @@ namespace MSDMonitoring
         // ========================================================================== //
         // ========================= TEXT BOX CONTROLS ============================== //
         // ========================================================================== //
-        private void QtyIn_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            // Only allow control keys (e.g., Backspace) and digits
-            //if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
-            //{
-            //    e.Handled = true;
-            //    return;
-            //}
-
-            //// Limit to 5 digits
-            //if (!char.IsControl(e.KeyChar) && QtyIn.Text.Length >= 5)
-            //{
-            //    e.Handled = true;
-            
-            //}
-            //   LotText.Focus();
-        }
         private void LineText_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
-            {
-                e.Handled = true; // Reject the input
-            }
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar)) e.Handled = true; // Reject the input
         }
-
-
         // ========================================================================== //
         // ========================= ACTION BUTTONS ================================= //
         // ========================================================================== //
@@ -485,7 +470,7 @@ namespace MSDMonitoring
             MSDMasterlist md = new MSDMasterlist(_msd);
             md.ShowDialog();
         }
-        private bool _isUpdating = false;
+        //private bool _isUpdating = false;
         private void QtyIn_TextChanged(object sender, EventArgs e)
         {
             // Reset timer every time text changes
@@ -526,7 +511,8 @@ namespace MSDMonitoring
                     Line = selectedLine,
                     RemainFloor = Convert.ToDouble(FloorLifeText.Text),
                     InputIn = InputIn.Text,
-                    LotNo = LotText.Text
+                    LotNo = LotText.Text,
+                    SupplierName = SupplierText.Text
                 };
 
                 bool result = await _msd.AddComponentsData(entryobj);
@@ -538,11 +524,8 @@ namespace MSDMonitoring
             }
         }
 
-        private void LineSelect_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            InputIn.Focus();
-        }
-
+        private void LineSelect_SelectedIndexChanged(object sender, EventArgs e) => InputIn.Focus();
+      
         private void Ambassador_TextChanged(object sender, EventArgs e)
         {
             if (scanHandled) return; // Ignore changes after processing
@@ -675,6 +658,11 @@ namespace MSDMonitoring
         private async void Refreshbtn_Click(object sender, EventArgs e)
         {
            await LoadData();
+        }
+
+        private async void NewEntryBtn_Click_1(object sender, EventArgs e)
+        {
+            await ComponentsDataEntry();
         }
     }
 }

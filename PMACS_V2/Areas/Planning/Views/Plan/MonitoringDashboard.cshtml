@@ -1,6 +1,7 @@
 ﻿
 @{
     Layout = "~/Areas/Planning/Views/Shared/_PlanningLayout.cshtml";
+
 }
 
 
@@ -385,11 +386,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="PaginationfooterContainer d-flex align-items-center justify-content-between pt-2 pb-4">
-                <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
-
-                <div id="PaginationContainer" class="paginationPartlocal"></div>
-            </div>
+            
             <div class="M1loading">
                 <div class="loading-container">
                     <table>
@@ -591,6 +588,15 @@
 </section>
 
 
+<div class="PaginationfooterContainer " id="pagination">
+    <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
+
+    <div id="PaginationContainer" class="paginationPartlocal"></div>
+</div>
+
+
+
+
 
 <!--########################## ADDTIONAL INPUT END RESULT #############################-->
 <div class="modal fade modal-m" id="Resultmodal" tabindex="-1" role="dialog">
@@ -771,10 +777,7 @@
 
 
 
-
-<script src="~/Scripts/Utilities.js"></script>
-<script src="~/Scripts/Global.js"></script>
-<script src="~/Scripts/jquery-3.7.1.min.js"></script>
+<script src="~/Scripts/Shared/Global.js"></script>
 <script type="text/javascript">
     let firstDate;
     let LastDate;
@@ -1396,7 +1399,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         const uploadContainer = document.getElementById('upload-container');
         const fileInput = document.getElementById('uploadedFile');
-
+        console.log("DROP  CALL");
         uploadContainer.addEventListener('click', () => fileInput.click());
 
         uploadContainer.addEventListener('dragover', (event) => {
@@ -1410,15 +1413,19 @@
 
         uploadContainer.addEventListener('drop', (event) => {
             event.preventDefault();
+            console.log("DROP  CALL");
             uploadContainer.classList.remove('dragover');
             handleFiles(event.dataTransfer.files);
         });
 
         fileInput.addEventListener('change', (event) => {
+            console.log("CHANGE CALL");
             handleFiles(event.target.files);
         });
 
         function handleFiles(files) {
+
+
             if (files.length === 0) return;
 
             const file = files[0];
@@ -1449,6 +1456,7 @@
 
                 try {
                     const res = JSON.parse(xhr.responseText);
+                    console.log(res);
                     if (res.status) {
                         Swal.fire({
                             title: "Success",
@@ -1514,7 +1522,7 @@
 
     const initialLoad = async () => {
         await LoadfirstAndLastDate(); // Wait for async to finish
-
+        $("#pagination").hide();
         // If you want to get values from inputs again
         firstDate = $('#summarystartdate').val();
         LastDate = $('#summaryendDate').val();
@@ -1555,6 +1563,7 @@
                     $("#Maction").hide();
                     $("#date-container").hide();
                     $("#EndResults").hide();
+                    $("#pagination").hide();
                     $("#dashaction").show();
                     break;
                 case 1:
@@ -1570,6 +1579,7 @@
                     $("#Maction").hide();
                     $("#dashaction").hide();
                     $("#EndResults").hide();
+                    $("#pagination").hide();
                     $("#date-container").show();
                     break;
                 case 2:
@@ -1579,6 +1589,7 @@
                     $("#date-container").hide();
                     $("#EndResults").hide();
                     $("#Maction").show();
+                    $("#pagination").show();
                     break;
                 case 3:
                     $('#RequestTable').empty();
@@ -1589,6 +1600,7 @@
                     $("#dashaction").hide();
                     $("#date-container").hide();
                     $("#Maction").hide();
+                    $("#pagination").hide();
                     $("#EndResults").show();
                     break;
             }
@@ -2285,18 +2297,7 @@
             //}
         });
 
-        // UPDATES THE DETAILS DATA
-        @* detailsform.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            let formData = new FormData(e.target);
-            formData.append('ProcessCode', processcode);
-            formData.append('Capgroup_ID', cap_groupID);
-            const data = Object.fromEntries(formData);
-            let res = await postData('@Url.Action("EditMoldingByDetails", "PostCapacity")', formData);
-            EditResult(res, data);
-        });*@
-
+  
             // Initialize table and pagination
             window.changePage = changePage;
         renderTable(currentPage);

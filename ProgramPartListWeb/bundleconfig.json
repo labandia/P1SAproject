@@ -27,7 +27,12 @@
     "outputFileName": "Content/Site.min.css",
     "inputFiles": [
       "Content/Site.css"
-    ]
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
   },
   {
     "outputFileName": "Scripts/modernizr-2.8.3.min.js",

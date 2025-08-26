@@ -39,7 +39,7 @@ namespace PMACS_V2.Areas.Planning.Controllers
 
         public async Task<ActionResult> GetPlanningData()
         {
-            var data = await _pl.GetPCDataList(10, 1);
+            var data = await _pl.GetPCDataList();
             if (data == null || !data.Any())
                 return JsonNotFound("No M1 Planning data found");
 

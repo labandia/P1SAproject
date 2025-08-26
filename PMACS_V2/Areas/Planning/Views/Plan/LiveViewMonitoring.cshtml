@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Live View ";
     Layout = null;
 }
 
@@ -9,9 +9,17 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
     <title>LiveViewMonitoring</title>
     <link href="~/Content/lib/font-awesome/css/all.css" rel="stylesheet" />
-    <link href="~/Content/live.css" rel="stylesheet" />
+    <script src="~/Scripts/chart.js"></script>
+    <script src="~/Scripts/Shared/Utilities.js"></script>
+
+
+    @Styles.Render("~/Content/live-css")
+
+    @Scripts.Render("~/bundles/shared-js")
+    @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
     <header class="heads">
@@ -240,9 +248,7 @@
 </body>
 </html>
 
-<script src="~/Scripts/chart.js"></script>
-<script src="~/Scripts/Utilities.js"></script>
-<script src="~/Scripts/jquery-3.7.1.min.js"></script>
+
 <script type="text/javascript">
     let firstDate;
     let LastDate;

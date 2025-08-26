@@ -44,34 +44,6 @@ function mergeArrayModels(array, modelname) {
 
 
 
-// ###################### UTILITIES ###########################################
-
-// DISABLE INPUT TEXT WHEN TYPING
-const numberInputs = document.querySelectorAll('.num');
-numberInputs.forEach(function (input) {
-    // Add event listener for keypress
-    input.addEventListener('keypress', function (event) {
-        // Get the value of the input field
-        // Prevent default behavior if max length is reached
-        if (this.value.length >= 8 && event.key !== 'Backspace') {
-            event.preventDefault();
-            return;
-        }
-
-
-
-        const value = this.value + String.fromCharCode(event.keyCode);
-
-        // Define regular expression to match only numbers and decimal points
-        const regex = /^[0-9]*\.?[0-9]*$/;
-
-        // Test the value against the regular expression
-        if (!regex.test(value)) {
-            // Prevent default behavior (typing the character)
-            event.preventDefault();
-        }
-    });
-});
 
 
 // FOR FORMATTING NUMBERS

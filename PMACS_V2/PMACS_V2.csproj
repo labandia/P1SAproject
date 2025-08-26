@@ -41,7 +41,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -416,6 +416,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\ErrorLog.txt" />
+    <Content Include="Content\css\live.min.css">
+      <DependentUpon>live.css</DependentUpon>
+    </Content>
+    <Content Include="Content\css\Planning.min.css">
+      <DependentUpon>Planning.css</DependentUpon>
+    </Content>
     <Content Include="Content\Shared\bootstrap-grid.css" />
     <Content Include="Content\Shared\bootstrap-grid.min.css" />
     <Content Include="Content\Shared\bootstrap-grid.rtl.css" />

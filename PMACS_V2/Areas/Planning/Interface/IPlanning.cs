@@ -31,7 +31,7 @@ namespace PMACS_V2.Areas.Planning.Interface
         //###########################################
 
         //############ DATA MANAGEMENT ####################
-        Task<List<Planningmodel>> GetPCDataList(int intsize, int intnum);
+        Task<List<Planningmodel>> GetPCDataList();
 
         Task<List<EndMonthModel>> GetEndMonthlist(string stryear);
         //###########################################

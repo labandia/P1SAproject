@@ -10,29 +10,27 @@
     <link rel="preload" href="@Url.Content("~/Content/fonts/Poppins-Regular.ttf")" as="font" type="font/ttf" crossorigin="anonymous">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
-    <link href="~/Content/login.min.css" rel="stylesheet" />
 
-
-    <script src="~/Scripts/Shared/bootstrap.min.js"></script>
+    <script src="~/Scripts/Shared/bootstrap.bundle.min.js"></script>
     <script src="~/Scripts/Shared/Utilities.js"></script>
-    <script src="~/Scripts/Shared/popper.min.js"></script>
 
 
     @Styles.Render("~/Content/shared-css")
+    @Styles.Render("~/Content/pmacs-css")
 
     @Scripts.Render("~/bundles/shared-js")
     @Scripts.Render("~/bundles/modernizr")
 </head>
-<section class="main">
+<section class="main flex_center">
     <div class="main__container">
         <!----------- login background design -------->
         <div class="main__contain">
             <h1 style="line-height: 1.6;">
-                <span class="bold">P</span>roduction
-                <span class="bold">M</span>anpower
-                <span class="bold">A</span>nd
-                <span class="bold">C</span>apacity
-                <span class="bold">S</span>ystem
+                <span style="font-weight: 600; color: #053766;">P</span>roduction
+                <span style="font-weight: 600; color: #053766;">M</span>anpower
+                <span style="font-weight: 600; color: #053766;">A</span>nd
+                <span style="font-weight: 600; color: #053766;">C</span>apacity
+                <span style="font-weight: 600; color: #053766;">S</span>ystem
             </h1>
         </div>
         <div class="main__contain">
@@ -64,7 +62,7 @@
                         <div id="error-msg" style="color: red;"></div>
                         <div class="formbox__action">
                             <button type="button" id="viewbtn"><i class="fa-regular fa-eye"></i> View Only</button>
-                            <button class="submitbtn" id="submitbtn" type="submit"><span class="textload"><i class="fa-solid fa-right-to-bracket"></i> Login</span></button>
+                            <button class="submitbtn" id="submitbtn" type="submit"><span class="flex_align"><i class="fa-solid fa-right-to-bracket"></i> Login</span></button>
                         </div>
 
                         <div Class="footer">
@@ -82,15 +80,18 @@
                     <h2 style="font-weight: 600; font-size: 1.5rem;"> Forgot Password ?</h2>
                     <p style="line-height: 1.6; margin-bottom: 1em;">We'll help you reset your password </p>
                     <Label>Username:</Label>
-                    <input type="text" placeholder="Enter your username" id="EmpID" name="EmpID" required>
+                    <input type="text" placeholder="Enter your username" id="changeuser" name="changeuser" required>
                     <Label>Employee ID:</Label>
-                    <input type="text" placeholder="Enter your Employee ID" id="EmpID" name="EmpID" required>
+                    <input type="text" placeholder="Enter your Employee ID" id="changeEmpID" name="changeEmpID" required>
                     <Label>New password :</Label>
-                    <input type="text" placeholder="Enter your new password" id="Email" name="Email" required>
+                    <input type="text" placeholder="Enter your new password" id="changepass" name="changepass" required>
 
 
-                    <button type="submit" class="newpassbtn" id="newpassbtn"><i class="fa-solid fa-paper-plane"></i> Submit</button>
-
+                    @*<button type="submit" class="newpassbtn" id="newpassbtn"><i class="fa-solid fa-paper-plane"></i> Submit</button>*@
+                    <div class="forgetfooter flex_align">
+                        <button type="button" id="forgetviewbtn" class="backlogs"><i class="fa fa-arrow-left" aria-hidden="true"></i>Back</button>
+                        <button  type="submit" class="newpassbtn" id="newpassbtn" ><span class="flex_align"><i class="fa-solid fa-paper-plane"></i> Submit</span></button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -135,6 +136,7 @@
     let logbtn = document.querySelector(".signin");
     let mainbody = document.querySelector(".main");
     const form = document.getElementById('loginsubmit');
+    let forbtn = document.querySelector(".backlogs");
     const resultBox = document.querySelector(".namesdisplay");
     const inputbox = document.getElementById("username");
 
@@ -221,9 +223,9 @@
          mainbody.classList.add('slide');
      }
 
-    // forbtn.onclick = function () {
-    //     mainbody.classList.remove('slide');
-    //}
+     forbtn.onclick = function () {
+         mainbody.classList.remove('slide');
+    }
 
 
     // Add an event listener for the 'keypress' event

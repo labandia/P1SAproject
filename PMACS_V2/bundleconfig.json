@@ -16,5 +16,17 @@
     "inputFiles": [
       "Content/Site.css"
     ]
+  },
+  {
+    "outputFileName": "Content/css/Planning.min.css",
+    "inputFiles": [
+      "Content/css/Planning.css"
+    ]
+  },
+  {
+    "outputFileName": "Content/css/live.min.css",
+    "inputFiles": [
+      "Content/css/live.css"
+    ]
   }
 ]

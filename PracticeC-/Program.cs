@@ -1,5 +1,4 @@
-﻿//using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -25,50 +24,55 @@ namespace PracticeC_
 
         static void Main(string[] args)
         {
-            string filePath = @"C:\Users\jaye-labandia\Downloads\MSD_MasterList.pdf";
+            samplemethod(i: 1);
 
-            // 1. Create Document (doc is NOT null now)
-            Document doc = new Document(PageSize.A4, 20, 20, 20, 20);
+                
 
-            // 2. Bind writer
-            PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(filePath, FileMode.Create));
 
-            // 3. Open doc before writing anything
-            doc.Open();
+            //string filePath = @"C:\Users\jaye-labandia\Downloads\MSD_MasterList.pdf";
 
-            // 4. Add content
-            Font titleFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 14);
-            Paragraph title = new Paragraph("MASTER LIST OF MOISTURE SENSITIVE DEVICES", titleFont);
-            title.Alignment = Element.ALIGN_CENTER;
-            doc.Add(title);
+            //// 1. Create Document (doc is NOT null now)
+            //Document doc = new Document(PageSize.A4, 20, 20, 20, 20);
 
-            doc.Add(new Paragraph("\n")); // spacer
+            //// 2. Bind writer
+            //PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(filePath, FileMode.Create));
 
-            PdfPTable table = new PdfPTable(3);
-            table.WidthPercentage = 100;
+            //// 3. Open doc before writing anything
+            //doc.Open();
 
-            // header
-            Font headerFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
-            table.AddCell(new PdfPCell(new Phrase("ID", headerFont)));
-            table.AddCell(new PdfPCell(new Phrase("Part Number", headerFont)));
-            table.AddCell(new PdfPCell(new Phrase("Floor Life", headerFont)));
+            //// 4. Add content
+            //Font titleFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 14);
+            //Paragraph title = new Paragraph("MASTER LIST OF MOISTURE SENSITIVE DEVICES", titleFont);
+            //title.Alignment = Element.ALIGN_CENTER;
+            //doc.Add(title);
 
-            // dummy data
-            Font rowFont = FontFactory.GetFont(FontFactory.HELVETICA, 10);
-            for (int i = 1; i <= 5; i++)
-            {
-                table.AddCell(new Phrase(i.ToString(), rowFont));
-                table.AddCell(new Phrase("PN-" + i, rowFont));
-                table.AddCell(new Phrase("168 hrs", rowFont));
-            }
+            //doc.Add(new Paragraph("\n")); // spacer
 
-            doc.Add(table);
+            //PdfPTable table = new PdfPTable(3);
+            //table.WidthPercentage = 100;
 
-            // 5. Close doc
-            doc.Close();
-            writer.Close();
+            //// header
+            //Font headerFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
+            //table.AddCell(new PdfPCell(new Phrase("ID", headerFont)));
+            //table.AddCell(new PdfPCell(new Phrase("Part Number", headerFont)));
+            //table.AddCell(new PdfPCell(new Phrase("Floor Life", headerFont)));
 
-            Console.WriteLine("PDF created: " + filePath);
+            //// dummy data
+            //Font rowFont = FontFactory.GetFont(FontFactory.HELVETICA, 10);
+            //for (int i = 1; i <= 5; i++)
+            //{
+            //    table.AddCell(new Phrase(i.ToString(), rowFont));
+            //    table.AddCell(new Phrase("PN-" + i, rowFont));
+            //    table.AddCell(new Phrase("168 hrs", rowFont));
+            //}
+
+            //doc.Add(table);
+
+            //// 5. Close doc
+            //doc.Close();
+            //writer.Close();
+
+            //Console.WriteLine("PDF created: " + filePath);
 
 
 
@@ -412,6 +416,13 @@ namespace PracticeC_
 
             string jsonString = JsonConvert.SerializeObject(cdList, Newtonsoft.Json.Formatting.Indented);
             Console.WriteLine(jsonString);
+        }
+
+
+
+        public static void samplemethod(string name = "", int i = 0)
+        {
+
         }
 
 

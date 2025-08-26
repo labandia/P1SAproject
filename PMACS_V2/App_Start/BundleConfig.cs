@@ -40,8 +40,14 @@ namespace PMACS_V2
                 "~/Scripts/modernizr-*"
             ));
 
-            // For Patrol Inspection  CSS
+            // For PMACS CSS
             bundles.Add(new StyleBundle("~/Content/pmacs-css").Include("~/Content/css/PMACS_Layout.min.css"));
+
+            // For Planning Monitor CSS
+            bundles.Add(new StyleBundle("~/Content/planning-css").Include("~/Content/css/Planning.min.css",
+                 "~/Content/Shared/bootstrap.min.css"));
+            bundles.Add(new StyleBundle("~/Content/live-css").Include("~/Content/css/live.min.css",
+                "~/Content/Shared/bootstrap.min.css"));
 
 
             // =======================

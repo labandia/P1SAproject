@@ -230,9 +230,9 @@ namespace PMACS_V2.Areas.Planning.Repository
         }
 
         //----------------- Display the Uploaded data ------------------------
-        public Task<List<Planningmodel>> GetPCDataList(int intsize, int intnum)
+        public Task<List<Planningmodel>> GetPCDataList()
         {
-            return SqlDataAccess.GetData<Planningmodel>("GetPCData", new { PageSize = intsize, PageNumber = intnum });
+            return SqlDataAccess.GetData<Planningmodel>("GetPCData");
         }
 
         public Task<List<BranchModel>> GetBranchSummary() => SqlDataAccess.GetData<BranchModel>("BranchDisplay");

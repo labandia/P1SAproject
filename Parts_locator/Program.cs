@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
 using Parts_locator.View.Rotor;
+using System.Diagnostics;
 
 namespace Parts_locator
 {
@@ -26,7 +27,7 @@ namespace Parts_locator
         [STAThread]
         static void Main()
         {
-
+            Debug.WriteLine($@"Department : ");
             //Application.EnableVisualStyles();
             //Application.SetCompatibleTextRenderingDefault(false);
 
@@ -43,50 +44,9 @@ namespace Parts_locator
 
             // Set presenters to the views (if necessary).
 
-            string localIP = GetLocalIPv4();
-            if (localIP == null)
-            {
-                MessageBox.Show("Cannot determine local IP address. Application will exit.");
-                return;
-            }
 
 
-            var octets = localIP.Split('.');
-            if (octets.Length != 4)
-            {
-                MessageBox.Show($"Invalid IP address: {localIP}");
-                return;
-            }
 
-            string department = null;
-
-            switch (octets[2])
-            {
-                case "7":
-                    department = "Molding";
-                    break;
-                case "2":
-                    department = "Press";
-                    break;
-                case "1":
-                    department = "Rotor";
-                    break;
-                case "4":
-                    department = "Winding";
-                    break;
-                case "5":
-                    department = "Circuit";
-                    break;
-                default:
-                    department = null;
-                    break;
-            }
-
-            if (department == null)
-            {
-                MessageBox.Show($"This program cannot run on this network segment: {localIP}");
-                return;
-            }
             //Application.Run(new Startup());
 
             Application.EnableVisualStyles();
@@ -108,7 +68,7 @@ namespace Parts_locator
             services.AddSingleton<BushPartDetails>();
             services.AddSingleton<EditMasterlist>();
 
- 
+
 
             ServiceProvider = services.BuildServiceProvider();
             var mainForm = ServiceProvider.GetRequiredService<Startup>();
@@ -133,15 +93,7 @@ namespace Parts_locator
 
         }
 
-        private static string GetLocalIPv4()
-        {
-            foreach (var ni in Dns.GetHostEntry(Dns.GetHostName()).AddressList)
-            {
-                if (ni.AddressFamily == AddressFamily.InterNetwork)
-                    return ni.ToString();
-            }
-            return null;
-        }
+        
     }   
 
     

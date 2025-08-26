@@ -2,6 +2,8 @@
 using Parts_locator.View.Moldingbush;
 using System;
 using System.Data;
+using System.Net.Sockets;
+using System.Net;
 using System.Windows.Forms;
 
 namespace Parts_locator
@@ -147,5 +149,63 @@ namespace Parts_locator
             //}
         }
 
+        private void Startup_Load(object sender, EventArgs e)
+        {
+
+            string localIP = GetLocalIPv4();
+            if (localIP == null)
+            {
+                MessageBox.Show("Cannot determine local IP address. Application will exit.");
+                return;
+            }
+
+
+            var octets = localIP.Split('.');
+            if (octets.Length != 4)
+            {
+                MessageBox.Show($"Invalid IP address: {localIP}");
+                return;
+            }
+
+            string department = null;
+
+            switch (octets[2])
+            {
+                case "7":
+                    department = "Molding";
+                    break;
+                case "2":
+                    department = "Press";
+                    break;
+                case "1":
+                    department = "Rotor";
+                    break;
+                case "4":
+                    department = "Winding";
+                    break;
+                case "5":
+                    department = "Circuit";
+                    break;
+                default:
+                    department = null;
+                    break;
+            }
+
+            if (department == null)
+            {
+                MessageBox.Show($"This program cannot run on this network segment: {localIP}");
+                return;
+            }
+        }
+
+        private static string GetLocalIPv4()
+        {
+            foreach (var ni in Dns.GetHostEntry(Dns.GetHostName()).AddressList)
+            {
+                if (ni.AddressFamily == AddressFamily.InterNetwork)
+                    return ni.ToString();
+            }
+            return null;
+        }
     }
 }

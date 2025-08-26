@@ -202,6 +202,7 @@
             this.Name = "Startup";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Startup";
+            this.Load += new System.EventHandler(this.Startup_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);

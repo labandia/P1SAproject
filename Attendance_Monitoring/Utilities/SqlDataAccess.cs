@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Dapper;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
+using ProgramPartListWeb.Utilities;
 
 
 namespace Attendance_Monitoring.Utilities
@@ -51,7 +52,10 @@ namespace Attendance_Monitoring.Utilities
             string logEntry = $"{DateTime.Now:u} | Machine: {machineName} | Connection: {connectionKey}";
             Debug.WriteLine(logEntry);
         }
-
+        public static SqlConnection CreateConnection()
+        {
+            return new SqlConnection(ConnectionString());
+        }
 
         public static SqlConnection GetConnection(string connectionString)
         {
@@ -89,6 +93,49 @@ namespace Attendance_Monitoring.Utilities
 
             // return resultData;
         }
+
+
+        public static async Task<List<T>> GetDataList<T>(
+            string query,
+            object parameters = null,
+            string cacheKey = null,
+            int cacheMinutes = 10)
+        {
+            try
+            {
+                bool IsStoredProcedure = Regex.IsMatch(query, @"^\w+$", RegexOptions.IgnoreCase);
+
+                async Task<List<T>> FetchData()
+                {
+                    using (IDbConnection con = SqlDataAccess.CreateConnection())
+                    {
+                        var commandType = IsStoredProcedure ? CommandType.StoredProcedure : CommandType.Text;
+                        var result = await con.QueryAsync<T>(query, parameters, commandType: commandType);
+                        return result.ToList();
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(cacheKey))
+                {
+                    return await CacheHelper.GetOrSetAsync(cacheKey, FetchData, cacheMinutes);
+                }
+
+
+                return await FetchData();
+            }
+            catch (SqlException ex)
+            {
+                //_logger.Error(ex, $"SQL Exception in {nameof(GetDataList)} | Query: {query} | CacheKey: {cacheKey}");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                //_logger.Error(ex, $"Unexpected error in {nameof(GetDataList)} | Query: {query}");
+                return null;
+            }
+        }
+
+
         // ############ SELECTS ONLY ONE ROW DATA  ##############################
         public static async Task<string> GetOneData(string query, object parameters)
         {

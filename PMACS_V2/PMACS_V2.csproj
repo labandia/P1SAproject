@@ -600,6 +600,9 @@
     <Content Include="Scripts\Quangga.js" />
     <Content Include="Scripts\Shared\sweetalert2.min.js" />
     <Content Include="Scripts\Shared\Utilities.js" />
+    <Content Include="Scripts\Shared\Utilities.min.js">
+      <DependentUpon>Utilities.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\xlsx\shim.min.js" />
     <Content Include="Scripts\xlsx\xlsx.full.min.js" />
     <Content Include="Scripts\xlsx\xlsx.mini.min.js" />

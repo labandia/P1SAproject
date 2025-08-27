@@ -613,7 +613,10 @@
     <Compile Include="Areas\Admin\Controllers\DashboardController.cs" />
     <Compile Include="Areas\Circuit\CircuitAreaRegistration.cs" />
     <Compile Include="Areas\Circuit\Controllers\ProgramPartListController.cs" />
+    <Compile Include="Areas\Circuit\Interface\IPlanRepository.cs" />
+    <Compile Include="Areas\Circuit\Models\PlanPartslist.cs" />
     <Compile Include="Areas\Circuit\Repository\PartlistRepository.cs" />
+    <Compile Include="Areas\Circuit\Repository\PartlistRepositoryV2.cs" />
     <Compile Include="Areas\PC\Controllers\NotificationController.cs" />
     <Compile Include="Areas\PC\Controllers\PatrolController.cs" />
     <Compile Include="Areas\PC\Interface\IInspector.cs" />
@@ -632,8 +635,10 @@
     <Compile Include="Controllers\P1SAportalwebController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Interfaces\IAuthRepository.cs" />
+    <Compile Include="Interfaces\ICRUD_Repository.cs" />
     <Compile Include="Models\SignatureModel.cs" />
     <Compile Include="Repository\AuthRepository.cs" />
+    <Compile Include="Repository\CRUD_Repository.cs" />
     <Compile Include="Services\EmployeeHub.cs" />
     <Compile Include="Interfaces\IEmployee.cs" />
     <Compile Include="Areas\Circuit\Interface\ISeriesRepository.cs" />
@@ -886,6 +891,9 @@
     <Content Include="Scripts\signature_pad.umd.min.js" />
     <Content Include="Scripts\sweetalert2.min.js" />
     <Content Include="Scripts\Utilities.js" />
+    <Content Include="Scripts\Utilities.min.js">
+      <DependentUpon>Utilities.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\xlsx.full.min.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

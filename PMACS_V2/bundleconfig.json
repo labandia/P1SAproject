@@ -28,5 +28,11 @@
     "inputFiles": [
       "Content/css/live.css"
     ]
+  },
+  {
+    "outputFileName": "Scripts/Shared/Utilities.min.js",
+    "inputFiles": [
+      "Scripts/Shared/Utilities.js"
+    ]
   }
 ]

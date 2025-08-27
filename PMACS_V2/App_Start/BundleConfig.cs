@@ -26,7 +26,8 @@ namespace PMACS_V2
                  "~/Scripts/Shared/jquery-3.7.1.js",
                  "~/Scripts/Shared/jquery.validate.js",
                  "~/Scripts/Shared/all.min.js",
-                 "~/Scripts/Shared/sweetalert2.min.js"
+                 "~/Scripts/Shared/sweetalert2.min.js",
+                 "~/Scripts/Shared/Utilities.min.js"
             ));
 
             // =======================

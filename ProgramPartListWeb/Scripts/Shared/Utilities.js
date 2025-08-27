@@ -1,1 +1,256 @@
-﻿async function refreshAccessToken() { let e = localStorage.getItem("Logout"), r = localStorage.getItem("refreshToken"); if (!r) return !1; try { let t = await fetch("/User/RefreshToken", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ refreshToken: r }) }), a = await t.json(); if (t.ok && a.accessToken) return localStorage.setItem("accessToken", a.accessToken), !0; console.warn("Refresh token failed. Logging out..."), localStorage.clear(), window.location.href = e } catch (n) { return console.error("Error refreshing token:", n), !1 } } window.FetchAuthenticate = async (e, r) => { var t = localStorage.getItem("accessToken"); let a = new URLSearchParams(r).toString(), n = `${e}?${a}`, o = async e => await fetch(n, { method: "GET", headers: { "Content-Type": "application/json", Authorization: "Bearer " + e } }); try { let s = await o(t), i = localStorage.getItem("Logout"); if (401 === s.status) { let c = await refreshAccessToken(); if (c) { if (s = await o(t = localStorage.getItem("accessToken")), 401 === s.status) { localStorage.clear(), window.location.href = i; return } if (401 === s.status) return i && (localStorage.clear(), window.location.href = i), null } else { localStorage.clear(), window.location.href = i; return } } let l = await s.json(); return l } catch (u) { console.error("Error fetching data:", u) } }, window.fetchData = async (e, r = {}) => { console.clear(); try { let t = new URLSearchParams(r).toString(), a = t ? `${e}?${t}` : e, n = await fetch(a, { method: "GET", headers: { "Content-Type": "application/json" } }), o = await n.json(); return o } catch (s) { return console.error("Fetch Error:", s), null } }, window.postData = async (e, r) => { console.clear(); try { let t = await fetch(e, { method: "POST", body: r }), a = await t.json(); return t.ok && !1 !== a.Success || console.error("Server error:", a.Message || "Unknown error"), a } catch (n) { return console.error("Error posting data:", n), null } }, window.postrawData = async (e, r) => { try { let t = await fetch(e, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(r) }), a; try { return a = await t.json() } catch (n) { console.error("Error parsing JSON:", n); let o = await t.text(); return console.error("Raw response:", o), { Success: !1, Message: "Invalid JSON response", Raw: o } } if (!t.ok || !1 === a.Success) return console.error("Server error:", a.Message || "Unknown error"), a } catch (s) { return console.error("Error posting data:", s), null } }, window.PullUserInformation = async () => { let e = localStorage.getItem("accessToken"), r = await fetch("/User/GetUserInformation", { method: "POST", headers: { Authorization: "Bearer " + e, "Content-Type": "application/json" } }); if (401 === r.status) { console.warn("Unauthorized"); return } let t = await r.json(); if (t.success) return t; console.warn(t.message || "Unknown error") }, window.IsLoginUser = (e = {}) => { let { storageKey: r, expectedValue: t, redirectUrl: a, redirectIfLoggedInUrl: n, expirationKey: o, maxHours: s } = { storageKey: "isLoggedInPatrol", expectedValue: "true", redirectUrl: "/PC/Patrol/index", redirectIfLoggedInUrl: null, expirationKey: null, maxHours: null, ...e }, i = localStorage.getItem(r); if (i === t && n) { if (o && s) { let c = localStorage.getItem(o); if (c) { let l = new Date(c), u = new Date, h = Math.abs(u - l) / 36e5; if (h <= s) { window.location.href = n; return } } } else { window.location.href = n; return } } if (i !== t) { let f = window.location.pathname, g = f !== a; if (g) { if ("function" == typeof ActionRestrict) { let w = ActionRestrict(); !1 !== w && (window.location.href = a) } else window.location.href = a } return } if (o && s) { let y = localStorage.getItem(o), d = window.location.pathname, p = new URL(a, window.location.origin).pathname; if (y) { let m = new Date(y), T = new Date, k = Math.abs(T - m) / 36e5; k > s && (localStorage.clear(), d !== p && (window.location.href = a)) } else localStorage.clear(), d !== p && (window.location.href = a) } }, window.logout = async () => { let e = localStorage.getItem("Logout"); try { localStorage.clear(), window.location.href = e } catch (r) { console.error("Logout failed:", r) } }, window.restrictChars = e => { var r = e.which || e.keycode; return !!(r >= 48) && !!(r <= 57) || 46 == r };
+﻿// GLOBAL GET FUNCTIONS WITH TOKEN AUTHENTICATION 
+window.FetchAuthenticate = function (url, fdata) {
+    var token = localStorage.getItem('accessToken');
+    var queryString = Object.keys(fdata || {})
+        .map(function (k) { return encodeURIComponent(k) + '=' + encodeURIComponent(fdata[k]); })
+        .join('&');
+    var fullUrl = url + (queryString ? '?' + queryString : '');
+
+    function makeRequest(tokenToUse) {
+        return fetch(fullUrl, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + tokenToUse
+            }
+        });
+    }
+
+    return makeRequest(token).then(function (res) {
+        var logout = localStorage.getItem('Logout');
+        if (res.status === 401) {
+            return refreshAccessToken().then(function (refreshSuccess) {
+                if (refreshSuccess) {
+                    token = localStorage.getItem('accessToken');
+                    return makeRequest(token).then(function (res2) {
+                        if (res2.status === 401) {
+                            localStorage.clear();
+                            window.location.href = logout;
+                            return null;
+                        }
+                        return res2.json();
+                    });
+                } else {
+                    localStorage.clear();
+                    window.location.href = logout;
+                    return null;
+                }
+            });
+        }
+        return res.json();
+    }).catch(function (error) {
+        console.error('Error fetching data:', error);
+    });
+};
+
+// GLOBAL GET FUNCTIONS WITHOUT TOKEN AUTHENTICATION 
+window.fetchData = function (url, fdata) {
+    if (fdata === void 0) fdata = {};
+    console.clear();
+
+    var queryString = Object.keys(fdata || {})
+        .map(function (k) { return encodeURIComponent(k) + '=' + encodeURIComponent(fdata[k]); })
+        .join('&');
+    var fullUrl = queryString ? (url + '?' + queryString) : url;
+
+    return fetch(fullUrl, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+    })
+        .then(function (res) { return res.json(); })
+        .catch(function (error) {
+            console.error('Fetch Error:', error);
+            return null;
+        });
+};
+
+window.postData = function (url, data) {
+    console.clear();
+    return fetch(url, {
+        method: 'POST',
+        body: data
+    })
+        .then(function (response) {
+            return response.json().then(function (json) {
+                if (!response.ok || json.Success === false) {
+                    console.error("Server error:", json.Message || "Unknown error");
+                }
+                return json;
+            });
+        })
+        .catch(function (error) {
+            console.error("Error posting data:", error);
+            return null;
+        });
+};
+
+window.postrawData = function (url, data) {
+    return fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    })
+        .then(function (response) {
+            return response.json()
+                .then(function (json) {
+                    if (!response.ok || json.Success === false) {
+                        console.error("Server error:", json.Message || "Unknown error");
+                    }
+                    return json;
+                })
+                .catch(function (parseErr) {
+                    console.error("Error parsing JSON:", parseErr);
+                    return response.text().then(function (text) {
+                        console.error("Raw response:", text);
+                        return { Success: false, Message: "Invalid JSON response", Raw: text };
+                    });
+                });
+        })
+        .catch(function (error) {
+            console.error("Error posting data:", error);
+            return null;
+        });
+};
+
+window.PullUserInformation = function () {
+    var token = localStorage.getItem('accessToken');
+    return fetch('/User/GetUserInformation', {
+        method: 'POST',
+        headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json'
+        }
+    }).then(function (res) {
+        if (res.status === 401) {
+            console.warn("Unauthorized");
+            return;
+        }
+        return res.json().then(function (result) {
+            if (result.success) {
+                console.log("User ID:", result.userId);
+                console.log("Name:", result.name);
+                console.log("Role:", result.role);
+                return result;
+            } else {
+                console.warn(result.message || "Unknown error");
+            }
+        });
+    });
+};
+
+// Login check logic (unchanged, only arrow removed)
+window.IsLoginUser = function (options) {
+    options = options || {};
+    var storageKey = options.storageKey || 'isLoggedInPatrol';
+    var expectedValue = options.expectedValue || 'true';
+    var redirectUrl = options.redirectUrl || '/PC/Patrol/index';
+    var redirectIfLoggedInUrl = options.redirectIfLoggedInUrl || null;
+    var expirationKey = options.expirationKey || null;
+    var maxHours = options.maxHours || null;
+
+    var value = localStorage.getItem(storageKey);
+
+    if (value === expectedValue && redirectIfLoggedInUrl) {
+        if (expirationKey && maxHours) {
+            var loginTimeStr = localStorage.getItem(expirationKey);
+            if (loginTimeStr) {
+                var loginTime = new Date(loginTimeStr);
+                var now = new Date();
+                var diffHours = Math.abs(now - loginTime) / 36e5;
+                if (diffHours <= maxHours) {
+                    window.location.href = redirectIfLoggedInUrl;
+                    return;
+                }
+            }
+        } else {
+            window.location.href = redirectIfLoggedInUrl;
+            return;
+        }
+    }
+
+    if (value !== expectedValue) {
+        var currentPath = window.location.pathname;
+        if (currentPath !== redirectUrl) {
+            if (typeof ActionRestrict === 'function') {
+                var allowed = ActionRestrict();
+                if (allowed !== false) {
+                    window.location.href = redirectUrl;
+                    return;
+                }
+            } else {
+                window.location.href = redirectUrl;
+                return;
+            }
+        }
+        return;
+    }
+
+    if (expirationKey && maxHours) {
+        var loginTimeStr2 = localStorage.getItem(expirationKey);
+        var currentPath2 = window.location.pathname;
+        var targetPath = new URL(redirectUrl, window.location.origin).pathname;
+
+        if (loginTimeStr2) {
+            var loginTime2 = new Date(loginTimeStr2);
+            var now2 = new Date();
+            var diffHours2 = Math.abs(now2 - loginTime2) / 36e5;
+            if (diffHours2 > maxHours) {
+                localStorage.clear();
+                if (currentPath2 !== targetPath) {
+                    window.location.href = redirectUrl;
+                }
+            }
+        } else {
+            localStorage.clear();
+            if (currentPath2 !== targetPath) {
+                window.location.href = redirectUrl;
+            }
+        }
+    }
+};
+
+// Refresh Token
+function refreshAccessToken() {
+    var logout = localStorage.getItem('Logout');
+    var refreshToken = localStorage.getItem('refreshToken');
+    if (!refreshToken) return Promise.resolve(false);
+
+    return fetch("/User/RefreshToken", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refreshToken: refreshToken })
+    })
+        .then(function (response) {
+            return response.json().then(function (result) {
+                if (response.ok && result.accessToken) {
+                    localStorage.setItem("accessToken", result.accessToken);
+                    return true;
+                } else {
+                    console.warn("Refresh token failed. Logging out...");
+                    localStorage.clear();
+                    window.location.href = logout;
+                    return false;
+                }
+            });
+        })
+        .catch(function (error) {
+            console.error("Error refreshing token:", error);
+            return false;
+        });
+}
+
+window.logout = function () {
+    var logout = localStorage.getItem('Logout');
+    try {
+        localStorage.clear();
+        window.location.href = logout;
+    } catch (error) {
+        console.error("Logout failed:", error);
+    }
+};
+
+// Restriction of typing characters
+window.restrictChars = function (e) {
+    var x = e.which || e.keycode;
+    return (x >= 48 && x <= 57) || x === 46;
+};

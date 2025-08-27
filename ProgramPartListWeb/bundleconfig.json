@@ -31,8 +31,7 @@
     "minify": {
       "enabled": true,
       "renameLocals": true
-    },
-    "sourceMap": false
+    }
   },
   {
     "outputFileName": "Scripts/modernizr-2.8.3.min.js",
@@ -44,6 +43,12 @@
     "outputFileName": "Scripts/Shared/Utilities.min.js",
     "inputFiles": [
       "Scripts/Shared/Utilities.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/Utilities.min.js",
+    "inputFiles": [
+      "Scripts/Utilities.js"
     ]
   }
 ]

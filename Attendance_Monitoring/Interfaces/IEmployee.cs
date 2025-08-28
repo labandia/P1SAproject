@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 
 namespace Attendance_Monitoring.Repositories
 {
-    public  interface IEmployee
+    public interface IEmployee
     {
         Task<List<Employee>> GetEmployees();
-        Task<List<Department>> GetDepartments();
         Task<bool> AddEmployee(Employee emp);
         Task<bool> UpdateEmployee(Employee emp, string temp);
         Task<bool> DeleteEmployee(string empID);

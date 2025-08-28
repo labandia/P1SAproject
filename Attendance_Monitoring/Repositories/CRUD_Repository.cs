@@ -86,7 +86,7 @@ namespace Attendance_Monitoring.Repositories
             }
         }
 
-        public async Task<int> AddUpdateData(T entity, string query)
+        public async Task<bool> AddUpdateData(object parameters, string query)
         {
             try
             {
@@ -97,22 +97,22 @@ namespace Attendance_Monitoring.Repositories
                     var commandType = IsStoredProcedure ? CommandType.StoredProcedure : CommandType.Text;
 
                     // Execute query and return affected rows
-                    int rowsAffected = await con.ExecuteAsync(query, entity, commandType: commandType);
-                    return rowsAffected;
+                    int rowsAffected = await con.ExecuteAsync(query, parameters, commandType: commandType);
+                    return rowsAffected > 0;
                 }
             }
             catch (SqlException ex)
             {
                 _logger.Error(ex, $"SQL Exception in {nameof(AddUpdateData)} | Query: {query}");
-                return 0;
+                return false;
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, $"Unexpected error in {nameof(AddUpdateData)} | Query: {query}");
-                return 0;
+                return false;
             }
         }
-        public async Task<int> DeleteData(string query, object id)
+        public async Task<bool> DeleteData(string query, object id)
         {
             try
             {
@@ -124,18 +124,18 @@ namespace Attendance_Monitoring.Repositories
 
                     // Execute query and return affected rows
                     int rowsAffected = await con.ExecuteAsync(query, id, commandType: commandType);
-                    return rowsAffected;
+                    return rowsAffected > 0;
                 }
             }
             catch (SqlException ex)
             {
                 _logger.Error(ex, $"SQL Exception in {nameof(DeleteData)} | Query: {query}");
-                return 0;
+                return false;
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, $"Unexpected error in {nameof(DeleteData)} | Query: {query}");
-                return 0;
+                return false;
             }
         }
 

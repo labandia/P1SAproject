@@ -37,7 +37,7 @@
                     <div class="flex_align">
                         <div class="search-box" style="width: 70%;">
                             <input type="hidden" name="Employee_ID" id="Employee_ID">
-                            <input type="text" placeholder="Type Name or ID no." name="EmployeeSearch" id="EmployeeSearch">
+                            <input type="text" placeholder="Type Name or ID no." name="EmployeeSearch" id="EmployeeSearch" autocomplete="off">
                             <div class="namesdisplay"></div>
                         </div>
                         <small>Include signature: </small>
@@ -241,6 +241,17 @@
         return checkexist;
     };
 
+    // CHECKS IF THE USER HAS A ACCOUNT TO THE SYSTEM 
+    const CheckAccountName = () => {
+        let gettext = $("#EmployeeSearch").val();
+        var exists = loadData.some(u => u.Fullname === gettext);
+
+        if (!exists) {   // means no match found
+            return true;
+        }
+        return false;
+    }
+
     const findingsJson = (e) => {
         let formData = new FormData(e);
         const data = Object.fromEntries(formData);
@@ -300,6 +311,19 @@
             $("#RegNo").css("border", "1px solid red");
             return;
         }
+
+
+        if (CheckAccountName()) {
+            Swal.fire({
+                icon: "error",
+                text: "The name you entered was not found in the database.",
+                timer: 1500,
+                showConfirmButton: false
+            });
+            return;
+        }
+
+
 
         const savebtn = document.querySelector("#btnSave");
         savebtn.innerHTML = " <div class='buttonloading'></div> Generating PDF Please wait...";

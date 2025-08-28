@@ -22,10 +22,12 @@ namespace Attendance_Monitoring
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             var services = new ServiceCollection();
-            services.AddSingleton<IEmployee, EmployeeRespository>();
+            //services.AddSingleton<IEmployee, EmployeeRespository>();
             services.AddSingleton<ICRmonitor, CRMonitoringRespository>();
             services.AddSingleton<IAttendance, AttendanceRepository>();
             services.AddSingleton<IAttendanceV2, AttendanceV2Repository>();
+
+            services.AddSingleton<IEmployee, EmployeeRespositoryV2>();
 
             services.AddSingleton<Selection>();
             services.AddSingleton<Mainpage>();

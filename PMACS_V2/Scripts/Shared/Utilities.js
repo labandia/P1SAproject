@@ -181,55 +181,69 @@ window.ActionRestrict = function () {
 // =======================
 window.IsLoginUser = function (options) {
     options = options || {};
-    var settings = {
-        storageKey: 'isLoggedInPMACS',
-        expectedValue: 'true',
-        redirectUrl: '/P1SA/PMACS/Mainpage',
-        redirectIfLoggedInUrl: null,
-        expirationKey: null,
-        maxHours: null
-    };
+    var storageKey = options.storageKey || 'isLoggedInPatrol';
+    var expectedValue = options.expectedValue || 'true';
+    var redirectUrl = options.redirectUrl || '/P1SA/PMACS/Mainpage';
+    var redirectIfLoggedInUrl = options.redirectIfLoggedInUrl || null;
+    var expirationKey = options.expirationKey || null;
+    var maxHours = options.maxHours || null;
 
-    for (var key in options) {
-        if (options.hasOwnProperty(key)) {
-            settings[key] = options[key];
+    var value = localStorage.getItem(storageKey);
+
+    if (value === expectedValue && redirectIfLoggedInUrl) {
+        if (expirationKey && maxHours) {
+            var loginTimeStr = localStorage.getItem(expirationKey);
+            if (loginTimeStr) {
+                var loginTime = new Date(loginTimeStr);
+                var now = new Date();
+                var diffHours = Math.abs(now - loginTime) / 36e5;
+                if (diffHours <= maxHours) {
+                    window.location.href = redirectIfLoggedInUrl;
+                    return;
+                }
+            }
+        } else {
+            window.location.href = redirectIfLoggedInUrl;
+            return;
         }
     }
 
-    var value = localStorage.getItem(settings.storageKey);
-
-    if (value !== settings.expectedValue) {
+    if (value !== expectedValue) {
         var currentPath = window.location.pathname;
-        if (currentPath !== settings.redirectUrl) {
+        if (currentPath !== redirectUrl) {
             if (typeof ActionRestrict === 'function') {
                 var allowed = ActionRestrict();
                 if (allowed !== false) {
-                    window.location.href = settings.redirectUrl;
+                    window.location.href = redirectUrl;
+                    return;
                 }
             } else {
-                window.location.href = settings.redirectUrl;
+                window.location.href = redirectUrl;
+                return;
             }
         }
         return;
     }
 
-    if (settings.expirationKey && settings.maxHours) {
-        var loginTimeStr = localStorage.getItem(settings.expirationKey);
-        if (loginTimeStr) {
-            var loginTime = new Date(loginTimeStr);
-            var now = new Date();
-            var diffHours = Math.abs(now - loginTime) / 36e5;
+    if (expirationKey && maxHours) {
+        var loginTimeStr2 = localStorage.getItem(expirationKey);
+        var currentPath2 = window.location.pathname;
+        var targetPath = new URL(redirectUrl, window.location.origin).pathname;
 
-            if (diffHours > settings.maxHours) {
+        if (loginTimeStr2) {
+            var loginTime2 = new Date(loginTimeStr2);
+            var now2 = new Date();
+            var diffHours2 = Math.abs(now2 - loginTime2) / 36e5;
+            if (diffHours2 > maxHours) {
                 localStorage.clear();
-                if (window.location.pathname !== settings.redirectUrl) {
-                    window.location.href = settings.redirectUrl;
+                if (currentPath2 !== targetPath) {
+                    window.location.href = redirectUrl;
                 }
             }
         } else {
             localStorage.clear();
-            if (window.location.pathname !== settings.redirectUrl) {
-                window.location.href = settings.redirectUrl;
+            if (currentPath2 !== targetPath) {
+                window.location.href = redirectUrl;
             }
         }
     }

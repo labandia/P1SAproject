@@ -254,3 +254,14 @@ window.restrictChars = function (e) {
     var x = e.which || e.keycode;
     return (x >= 48 && x <= 57) || x === 46;
 };
+
+
+// =======================
+// ACTION RESTRICT
+// =======================
+window.ActionButtons = function () {
+    var userRole = localStorage.getItem("UserRole");
+    if (userRole === "Leader" || userRole === "Users") {
+        return false;
+    }
+};

@@ -72,7 +72,7 @@ namespace Attendance_Monitoring.Usercontrols
 
             if (filterText != "")
             {
-                filteredList = emplist.Where(p => p.EmployeeID.ToLower().Contains(filterText) ||
+                filteredList = emplist.Where(p => p.Employee_ID.ToLower().Contains(filterText) ||
                            p.Fullname.ToLower().Contains(filterText))
                            .ToList();
             }

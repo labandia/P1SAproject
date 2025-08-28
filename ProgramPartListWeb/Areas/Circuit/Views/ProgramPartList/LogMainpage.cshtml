@@ -12,8 +12,7 @@
     <title>@ViewBag.Title</title>
     <link rel="preload" href="~/Content/fonts/Poppins-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 
-    <script src="~/Scripts/bootstrap.min.js"></script>
-    <script src="~/Scripts/Popper.min.js"></script>
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
 
     @Styles.Render("~/Content/shared-css")
     @Styles.Render("~/Content/partlist-css")
@@ -127,7 +126,7 @@
                              localStorage.setItem('isLoggedInProgram', 'true');
 
 
-                             window.location.href = "/Circuit/ProgramPartList/PlanSchedule";
+                             window.location.href = "/Circuit/ProgramPartList/ManagePlanSchedule";
                          });
                      } else {
                          Swal.fire({
@@ -172,7 +171,7 @@
                 storageKey: "isLoggedInProgram",
                 redirectUrl: '/Circuit/ProgramPartList/LogMainpage',
                 expectedValue: 'true',
-                redirectIfLoggedInUrl: '/Circuit/ProgramPartList/PlanSchedule',
+                redirectIfLoggedInUrl: '/Circuit/ProgramPartList/ManagePlanSchedule',
                 expirationKey: 'PartlistTime',
                 maxHours: 24
             });

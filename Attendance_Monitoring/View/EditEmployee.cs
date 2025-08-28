@@ -27,7 +27,7 @@ namespace Attendance_Monitoring.View
 
                 var emp = new Employee
                 {
-                    EmployeeID = empid,
+                    Employee_ID = empid,
                     Fullname = string.IsNullOrEmpty(Fullname.Text) ? "" : Fullname.Text,
                     Process = string.IsNullOrEmpty(Process.Text) ? "" : Process.Text,
                     Affiliation = string.IsNullOrEmpty(Afili.Text) ? "" : Afili.Text,

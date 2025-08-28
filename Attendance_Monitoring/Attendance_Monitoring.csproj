@@ -49,7 +49,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -177,6 +177,7 @@
     <Compile Include="Repositories\AttendanceMonitorRepository.cs" />
     <Compile Include="Repositories\AttendanceV2Repository.cs" />
     <Compile Include="Repositories\CRUD_Repository.cs" />
+    <Compile Include="Repositories\EmployeeRespositoryV2.cs" />
     <Compile Include="Utilities\Caching\CacheHelper.cs" />
     <Compile Include="Utilities\Logging\CustomLogger.cs" />
     <Compile Include="Utilities\Timeprocess.cs" />

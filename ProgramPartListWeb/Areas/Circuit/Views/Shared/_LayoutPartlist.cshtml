@@ -1,12 +1,18 @@
-﻿<!DOCTYPE html>
-<html>
+﻿@{ 
+    ViewBag.Title = "Program Partlist";
+}
+
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/x-icon" href="~/Content/Images/ready-stock.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Learn how to improve your website with caching, accessibility, and SEO best practices.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
 
-    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
 
     @Styles.Render("~/Content/shared-css")
     @Styles.Render("~/Content/partlist-css")
@@ -19,11 +25,17 @@
     <div class="sidebar" id="sidebar">
         <nav class="sidebar__container">
             <div>
-               
-
                 <div class="sidebar__list">
                     <div class="sidebar__items">
                         <h3 class="sidebar__subtitle">Main Menu</h3>
+
+
+                        <a href="/Circuit/ProgramPartList/ManagePlanSchedule" class="sidebar__link">
+                            <i class="fa-solid fa-table sidebar__icon"></i>
+                            <span class="sidebar__name">Partlist Data</span>
+                        </a>
+
+
 
                         <a href="/Circuit/ProgramPartList/PlanSchedule" class="sidebar__link">
                             <i class="fa-solid fa-calendar-day sidebar__icon"></i>
@@ -31,10 +43,6 @@
                         </a>
 
 
-                        <a href="/Circuit/ProgramPartList/ManagePlanSchedule" class="sidebar__link">
-                            <i class="fa-solid fa-table sidebar__icon"></i>
-                            <span class="sidebar__name">Partlist Data</span>
-                        </a>
 
 
 

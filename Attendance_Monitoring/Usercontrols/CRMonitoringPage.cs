@@ -66,7 +66,7 @@ namespace Attendance_Monitoring.Usercontrols
             string shift = Timeprocess.TimeIncheck(DateTime.Now);
 
             // Filter employee once
-            var employee = emplist.FirstOrDefault(p => p.EmployeeID.Equals(empid, StringComparison.OrdinalIgnoreCase) &&
+            var employee = emplist.FirstOrDefault(p => p.Employee_ID.Equals(empid, StringComparison.OrdinalIgnoreCase) &&
                                                     p.Department_ID == DepartmentID);
 
             if (employee == null)

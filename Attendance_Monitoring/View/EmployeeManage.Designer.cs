@@ -44,6 +44,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.Employeetable = new System.Windows.Forms.DataGridView();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.EmployeeID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Fullname = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Process = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -51,7 +52,6 @@
             this.Edit = new System.Windows.Forms.DataGridViewImageColumn();
             this.Delete = new System.Windows.Forms.DataGridViewImageColumn();
             this.DepartmentID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Employeetable)).BeginInit();
             this.SuspendLayout();
@@ -272,9 +272,13 @@
             this.Employeetable.TabIndex = 0;
             this.Employeetable.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Employeetable_CellClick);
             // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
             // EmployeeID
             // 
-            this.EmployeeID.DataPropertyName = "EmployeeID";
+            this.EmployeeID.DataPropertyName = "Employee_ID";
             this.EmployeeID.FillWeight = 78.53725F;
             this.EmployeeID.HeaderText = "EmployeeID";
             this.EmployeeID.Name = "EmployeeID";
@@ -331,10 +335,6 @@
             this.DepartmentID.ReadOnly = true;
             this.DepartmentID.Visible = false;
             // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.FileName = "openFileDialog1";
-            // 
             // EmployeeManage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -372,6 +372,8 @@
         private System.Windows.Forms.Label label1;
         public System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.DataGridView Employeetable;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.DataGridViewTextBoxColumn EmployeeID;
         private System.Windows.Forms.DataGridViewTextBoxColumn Fullname;
         private System.Windows.Forms.DataGridViewTextBoxColumn Process;
@@ -379,7 +381,5 @@
         private System.Windows.Forms.DataGridViewImageColumn Edit;
         private System.Windows.Forms.DataGridViewImageColumn Delete;
         private System.Windows.Forms.DataGridViewTextBoxColumn DepartmentID;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }

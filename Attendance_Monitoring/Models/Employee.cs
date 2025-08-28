@@ -11,7 +11,10 @@ namespace Attendance_Monitoring.Models
         private string affiliation = "";
         private int departmentID = 0;
 
-        public string EmployeeID
+
+        //public string EmpTemp { get; set; } = "";
+
+        public string Employee_ID
         {
             get => employee_ID;
             set => employee_ID = !string.IsNullOrWhiteSpace(value) ? value : throw new ArgumentException("Employee ID cannot be empty.");

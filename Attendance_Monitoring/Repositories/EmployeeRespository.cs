@@ -26,7 +26,7 @@ namespace Attendance_Monitoring.Models
             string strquery = "AddEmployee";
             var parameters = new
             {
-                Employee_ID = emp.EmployeeID,
+                Employee_ID = emp.Employee_ID,
                 FullName = emp.Fullname,
                 Process = emp.Process,
                 Affiliation = emp.Affiliation,
@@ -46,7 +46,7 @@ namespace Attendance_Monitoring.Models
             var parameters = new
             {
                 CurrentID = emptemp,
-                NewID = emp.EmployeeID,
+                NewID = emp.Employee_ID,
                 FullName = emp.Fullname,
                 Process = emp.Process,
                 Affiliation = emp.Affiliation,

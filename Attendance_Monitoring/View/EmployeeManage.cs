@@ -10,6 +10,9 @@ using System.Linq;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Threading.Tasks;
+using Attendance_Monitoring.Interfaces;
+using System.Diagnostics;
+using Microsoft.Office.Interop.Excel;
 
 
 namespace Attendance_Monitoring.View
@@ -19,6 +22,8 @@ namespace Attendance_Monitoring.View
         private readonly IServiceProvider _serviceProvider;
         private readonly IEmployee _emp;
         private static IEnumerable<Employee> emplist;
+
+
 
         public EmployeeManage(IEmployee emp, IServiceProvider serviceProvider)
         {
@@ -41,17 +46,19 @@ namespace Attendance_Monitoring.View
         public async Task Displayemployee(int depid)
         {
             var items = await _emp.GetEmployees();
+
+
             emplist = items.ToList();
             Employeetable.AutoGenerateColumns = false;
             //Employeetable.DataSource =  emplist;
             if (depid != 0)
             {
                 var filteredList = emplist.Where(p => p.Department_ID == depid).ToList();
-                Employeetable.DataSource =  filteredList;
+                Employeetable.DataSource = filteredList;
             }
             else
             {
-                Employeetable.DataSource =  emplist;
+                Employeetable.DataSource = emplist;
             }
 
             DisplayTotal.Text = "Total Records: " + Employeetable.RowCount;
@@ -60,18 +67,69 @@ namespace Attendance_Monitoring.View
 
         private async void PopulateComboBox()
         {
-            var items = await _emp.GetDepartments();
+            // 1. Get all employees
+            var items = await _emp.GetEmployees();
 
-            // Convert the items to a list and add a default item
-            List<Department> itemList = items.ToList();
-            itemList.Insert(0, new Department { Department_ID = 0, Department_name = "All Section" });
+            // 2. Group by Department_ID and project into Department objects
+            var itemlist = items
+                .GroupBy(emp => emp.Department_ID)   // group by ID to remove duplicates
+                .Select(g => new Department
+                {
+                    Department_ID = g.Key,
+                    Department_name = GetDepartmentName(g.Key)
+                })
+                .ToList();
 
-            comboBox1.DataSource = itemList;
+
+
+
+            // 3. Add "All Section" at the top
+            itemlist.Insert(0, new Department { Department_ID = 0, Department_name = "All Section" });
+
+            // 4. Bind to ComboBox
+            comboBox1.DataSource = itemlist;
             comboBox1.DisplayMember = "Department_name";
             comboBox1.ValueMember = "Department_ID";
+            comboBox1.SelectedIndex = 0;
+
+
+            //var items = await _emp.GetEmployees();
+
+            //var DepGroup = items.GroupBy(p => p.Department_ID);
+
+
+
+            //foreach (var item in DepGroup)
+            //{
+            //    Debug.WriteLine(item);
+            //}
+
+            //var items = await _emp.GetDepartments();
+
+            //// Convert the items to a list and add a default item
+            //List<Department> itemList = items.ToList();
+            //itemList.Insert(0, new Department { Department_ID = 0, Department_name = "All Section" });
+
+            //comboBox1.DataSource = itemList;
+            //comboBox1.DisplayMember = "Department_name";
+            //comboBox1.ValueMember = "Department_ID";
 
             // Optionally set the default selected index to the first item
-            comboBox1.SelectedIndex = 0;
+            //comboBox1.SelectedIndex = 0;
+        }
+
+        private string GetDepartmentName(int id)
+        {
+            switch (id)
+            {
+                case 1: return "Molding";
+                case 2: return "Press";
+                case 3: return "Rotor";
+                case 4: return "Winding";
+                case 5: return "Circuit";
+                case 6: return "Process Control";
+                default: return "";
+            }
         }
 
         private void addbtn_Click(object sender, EventArgs e)
@@ -89,7 +147,7 @@ namespace Attendance_Monitoring.View
         }
 
 
-        private void ExportToExcel(DataTable dataTable)
+        private void ExportToExcel(System.Data.DataTable dataTable)
         {
             try
             {
@@ -144,7 +202,7 @@ namespace Attendance_Monitoring.View
             {
                 if (filterText != "")
                 {
-                    filteredList = emplist.Where(p => p.EmployeeID.ToLower().Contains(filterText) ||
+                    filteredList = emplist.Where(p => p.Employee_ID.ToLower().Contains(filterText) ||
                                p.Fullname.ToLower().Contains(filterText))
                                .ToList();
                 }
@@ -157,7 +215,7 @@ namespace Attendance_Monitoring.View
             {
                 if (filterText != "")
                 {
-                    filteredList = emplist.Where(p => p.EmployeeID.ToLower().Contains(filterText) ||
+                    filteredList = emplist.Where(p => p.Employee_ID.ToLower().Contains(filterText) ||
                     p.Fullname.ToLower().Contains(filterText) && p.Department_ID == comboBox1.SelectedIndex)
                     .ToList();
                 }
@@ -218,15 +276,16 @@ namespace Attendance_Monitoring.View
             }   
         }
 
-        private void EmployeeManage_Load(object sender, EventArgs e)
+        private  void EmployeeManage_Load(object sender, EventArgs e)
         {
-            PopulateComboBox();
+             PopulateComboBox();
         }
 
 
         private async void comboBox1_SelectedIndexChanged_1(object sender, EventArgs e)
         {
-            await Displayemployee((comboBox1.SelectedIndex == 0) ? 0 : comboBox1.SelectedIndex);
+            Debug.WriteLine(comboBox1.SelectedIndex);
+            await Displayemployee((comboBox1.SelectedIndex == 0) ? 1 : comboBox1.SelectedIndex);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -257,9 +316,9 @@ namespace Attendance_Monitoring.View
         }
 
 
-        private DataTable ReadExcelFile(string filePath)
+        private System.Data.DataTable ReadExcelFile(string filePath)
         {
-            var dt = new DataTable();
+            var dt = new System.Data.DataTable();
 
             using (var package = new ExcelPackage(new FileInfo(filePath)))
             {

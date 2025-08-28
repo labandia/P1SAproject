@@ -25,14 +25,7 @@
         </div>
 
 
-        @if (Session["Role"]?.ToString() == "SuperAdmin")
-        {
-            <button id="Seriesaddmodal" class="primarybtn"><i class="fa-solid fa-plus"></i> Add Data</button>
-        }
-        else
-        {
-            <button id="Seriesaddmodal" class="primarybtn" disabled><i class="fa-solid fa-plus"></i> Add Data</button>
-        }
+        <button id="Seriesaddmodal" class="primarybtn"><i class="fa-solid fa-plus"></i> Add Data</button>
 
     </div>
 </div>
@@ -40,20 +33,19 @@
 
 <div class="MainTable">
     <table>
-        <tr>
-            <th>Series no</th>
-            <th>Machine</th>
-            <th>Plan</th>
-            <th>Time Target</th>
-            <th>Total partlist</th>
-            @if (Session["Role"]?.ToString() == "SuperAdmin")
-            {
-                <th>Ongoing schedule</th>
-                <th>Details</th>
-                <th>Edit</th>
-            }
+        <thead>
+            <tr>
+                <th>Series no</th>
+                <th>Machine</th>
+                <th>Plan</th>
+                <th>Time Target</th>
+                <th>Total partlist</th>
+                <th id="restrict">Ongoing schedule</th>
+                <th id="restrict">Details</th>
+                <th id="restrict">Edit</th>
+            </tr>
+        </thead>
 
-        </tr>
 
         <tbody id="dataSearching">
         </tbody>
@@ -77,30 +69,39 @@
 
 
 
-
-<div class="modal fade modal-xl" id="addseriesmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+@*=================================================================================*@
+@*====================== ADD PLAN SCHEDULE ========================================*@
+@*=================================================================================*@
+<div class="modal fade modal-xl" id="addseriesmodal" tabindex="-1"  role="dialog" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-
-            <div class="modal-body">
+            <div class="modal-body modalwrap">
                 <div class="custom_modal_header">
-                    <div class="custom_modal__icon">
-                        <div class="custom_icon_container">
-                            <i class="fa-solid fa-plus"></i>
-                        </div>
-                        <div class="custom_modal_title">
-                            <span>Add new Series data</span>
-                            <p>Fill all the required input</p>
-                        </div>
-                    </div>
+                    <h5>Add Plan Schedule</h5>
 
-                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
                     </button>
                 </div>
 
+                @*<div class="custom_modal_header">
+                <div class="custom_modal__icon">
+                    <div class="custom_icon_container">
+                        <i class="fa-solid fa-plus"></i>
+                    </div>
+                    <div class="custom_modal_title">
+                        <span>Add new Series data</span>
+                        <p>Fill all the required input</p>
+                    </div>
+                </div>
 
-                <form method="post" enctype="multipart/form-data" class="formcontainer" id="AddSeriesdata" autocomplete="off">
+                <button type="button" class="btn btn-light  close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>*@
+
+
+                <form method="post" enctype="multipart/form-data" class="addformcontainer" id="AddSeriesdata" autocomplete="off">
 
                     <div class="row">
                         <div class="form_group col-12 col-sm-12 col-lg-6 col-xl-4 mb-3">
@@ -187,11 +188,14 @@
                     </div>
                 </form>
             </div>
-
         </div>
-    </div>
 </div>
+    </div>
 
+
+@*=================================================================================*@
+@*====================== EDIT PLAN SCHEDULE =======================================*@
+@*=================================================================================*@
 <div class="modal fade modal-xl" id="Editseriesmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -294,9 +298,6 @@
 
 
 
-<script src="~/Scripts/Utilities.js"></script>
-<script src="~/Scripts/sweetalert2.min.js"></script>
-<script src="~/Scripts/jquery-3.7.1.min.js"></script>
 <script type="text/javascript">
     var userRole = '@Session["Role"]';
     let currentpage = 1;
@@ -400,28 +401,28 @@
     });
 
     // Validation Input to numeric only
-    lineinputnumericonly.addEventListener('input', function () {
-        const inputvalue = $(this).val(); // Get current input value
-        const $errorLabel = $('.invalid-line'); // Target error label
-        // Check if the input contains non-numeric characters
-        if (/[^0-9.]/.test(inputvalue) || (inputvalue.match(/\./g) || []).length > 1) {
-            $errorLabel.show(); // Show error message
-            $(this).val(inputvalue.replace(/\D/g, '')); // Remove non-numeric characters
-        } else {
-            $errorLabel.hide(); // Hide error message
-        }
-    });
-    timeinputnumericonly.addEventListener('input', function () {
-        const inputvalue = $(this).val(); // Get current input value
-        const $errorLabel = $('.invalid-Time'); // Target error label
-        // Check if the input contains non-numeric characters
-        if (/[^0-9.]/.test(inputvalue) || (inputvalue.match(/\./g) || []).length > 1) {
-            $errorLabel.show(); // Show error message
-            $(this).val(inputvalue.replace(/\D/g, '')); // Remove non-numeric characters
-        } else {
-            $errorLabel.hide(); // Hide error message
-        }
-    });
+    //lineinputnumericonly.addEventListener('input', function () {
+    //    const inputvalue = $(this).val(); // Get current input value
+    //    const $errorLabel = $('.invalid-line'); // Target error label
+    //    // Check if the input contains non-numeric characters
+    //    if (/[^0-9.]/.test(inputvalue) || (inputvalue.match(/\./g) || []).length > 1) {
+    //        $errorLabel.show(); // Show error message
+    //        $(this).val(inputvalue.replace(/\D/g, '')); // Remove non-numeric characters
+    //    } else {
+    //        $errorLabel.hide(); // Hide error message
+    //    }
+    //});
+    //timeinputnumericonly.addEventListener('input', function () {
+    //    const inputvalue = $(this).val(); // Get current input value
+    //    const $errorLabel = $('.invalid-Time'); // Target error label
+    //    // Check if the input contains non-numeric characters
+    //    if (/[^0-9.]/.test(inputvalue) || (inputvalue.match(/\./g) || []).length > 1) {
+    //        $errorLabel.show(); // Show error message
+    //        $(this).val(inputvalue.replace(/\D/g, '')); // Remove non-numeric characters
+    //    } else {
+    //        $errorLabel.hide(); // Hide error message
+    //    }
+    //});
 
     // Search while typing filter data
     searchinput.addEventListener('input', function () {
@@ -501,31 +502,30 @@
                 let isOnline = rowData.Ongoing === 1;
                 let usercontrols = '';
 
-
-                if (userRole == 'SuperAdmin') {
+                if (ActionButtons() !== false) {
                     usercontrols = ` <td style='display: flex; align-item: center; justify-content: center;' data-cell="Ongoing schedule">
-                                    <div class='radio-group'>
-                                         <input type='radio' class='checkonline' id='online_${rowData.Series_ID}' name='option_${rowData.Series_ID}' ${isOnline ? "checked" : ""}>
-                                         <label for='online_${rowData.Series_ID}'>
-                                             <span>Online</span>
-                                         </label>
-                                         <input type='radio' class='checkoffline' id='offline_${rowData.Series_ID}' name='option_${rowData.Series_ID}' ${!isOnline ? "checked" : ""}>
-                                         <label for='offline_${rowData.Series_ID}'>
-                                             <span>Offline</span>
-                                         </label>
-                                     </div>
-                                </td>
-                                <td data-cell="Details">
-                                    <button type='button' class='detailsbutton text-primary bg-white' id='detailsbutton_${rowData.Series_ID}' >
-                                       <i class="fa-solid fa-circle-info"></i>
-                                    </button>
-                                </td>
-                                <td data-cell="Details">
-                                    <button type='button' class='Editbtnbutton text-primary bg-white' id='Editbtnbutton_${rowData.Series_ID}' >
-                                      <i class="fa-regular fa-pen-to-square"></i>
-                                    </button>
-                                </td>`;
-                } else {
+                                <div class='radio-group'>
+                                     <input type='radio' class='checkonline' id='online_${rowData.Series_ID}' name='option_${rowData.Series_ID}' ${isOnline ? "checked" : ""}>
+                                     <label for='online_${rowData.Series_ID}'>
+                                         <span>Online</span>
+                                     </label>
+                                     <input type='radio' class='checkoffline' id='offline_${rowData.Series_ID}' name='option_${rowData.Series_ID}' ${!isOnline ? "checked" : ""}>
+                                     <label for='offline_${rowData.Series_ID}'>
+                                         <span>Offline</span>
+                                     </label>
+                                 </div>
+                            </td>
+                            <td data-cell="Details">
+                                <button type='button' class='detailsbutton text-primary bg-white' id='detailsbutton_${rowData.Series_ID}' >
+                                   <i class="fa-solid fa-circle-info"></i>
+                                </button>
+                            </td>
+                            <td data-cell="Details">
+                                <button type='button' class='Editbtnbutton text-primary bg-white' id='Editbtnbutton_${rowData.Series_ID}' >
+                                  <i class="fa-regular fa-pen-to-square"></i>
+                                </button>
+                            </td>`;
+                }else {
                     usercontrols = '';
                 }
 
@@ -674,9 +674,31 @@
     }
 
 
-    // Display the page at the begginning
-    $(document).ready(function () {
-        OngoinSeriesData();
+
+    // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+    const LoadPageData = async () => {
+        try {
+
+            document.getElementById("Seriesaddmodal").disabled = ActionButtons() === false ? true : false;
+
+            if (ActionButtons() === false) {
+                $("#restrict").hide();
+            } else {
+                $("#restrict").show();
+            }
+
+            const [logs] = await Promise.all([
+                OngoinSeriesData()
+            ]);
+
+        } catch (error) {
+            console.error("Failed to load page data:", error);
+        }
+    }
+
+    $(document).ready(() => {
+        LoadPageData();
     });
+
 </script>
 

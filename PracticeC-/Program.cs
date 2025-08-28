@@ -24,9 +24,11 @@ namespace PracticeC_
 
         static void Main(string[] args)
         {
-            samplemethod(i: 1);
+            //samplemethod(i: 1);
 
-                
+
+
+
 
 
             //string filePath = @"C:\Users\jaye-labandia\Downloads\MSD_MasterList.pdf";
@@ -90,7 +92,7 @@ namespace PracticeC_
             //Console.WriteLine($"Original: {machineName}");
             //Console.WriteLine(VerifyPassword("ErcXN5O+LcsWG5/cMOMWOg==:cZs22bq4HkpRKxiubSnaRQ0U4NIhfn7xUHi3De8cXWw=", "sdp1234a*"));
 
-            //Console.WriteLine(DecodeBase64ToString("S5AwS8+uYF2bHGvpx8AHssz7yc9SMCPT9d0LWphOCHK5KSE"));
+            ConvertstringtoBase64();
 
             Console.ReadKey();
         }
@@ -129,7 +131,7 @@ namespace PracticeC_
             // Print the encoded connection string
             //Console.WriteLine($"Base64 Encoded Connection String: {base64ConnectionString}");
             // Print the encoded connection string
-            string a = DecodeBase64ToString("c2VydmVyPTE3Mi4yOS4zLjEzOTtVc2VyIElEPXAxc2E7cGFzc3dvcmQ9cDFzYTEyMzRhKjtkYXRhYmFzZT1QUk9EQ09ORjtQb29saW5nPVRydWU7TWluIFBvb2wgU2l6ZT01MDtNYXggUG9vbCBTaXplPTEwMDs=");
+            string a = DecodeBase64ToString("c2VydmVyPVNEUDA3MDZFUztVc2VyIElEPXAxc2E7cGFzc3dvcmQ9cDFzYTEyMzRhKjtkYXRhYmFzZT1QTUFDU19URVNUO1Bvb2xpbmc9VHJ1ZTtNaW4gUG9vbCBTaXplPTUwO01heCBQb29sIFNpemU9MTAwOw==");
             Console.WriteLine($"Base64 Decrypted {a}");
             Console.ReadKey();
         }

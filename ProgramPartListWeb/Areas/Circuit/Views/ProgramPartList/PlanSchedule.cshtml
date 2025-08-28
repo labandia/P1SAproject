@@ -4,8 +4,13 @@
     Layout = "~/Areas/Circuit/Views/Shared/_LayoutPartlist.cshtml";
 }
 
+<div>
+    <input type="text" placeholder="Search by Reel ID" id="searchReelID" autocomplete="off" />
+</div>
+
+
 <header>
-    <h4 class="mb-3">Ongoing Plan Schedule</h4>
+    <h4 class="mb-3">Plan Schedule</h4>
 
 
     <div class="d-flex align-items-center justify-content-between gap-4">
@@ -65,11 +70,31 @@
 
 
 
-<script src="~/Scripts/Cryptojs.min.js"></script>
-<script src="~/Scripts/Utilities.js"></script>
-<script src="~/Scripts/sweetalert2.min.js"></script>
-<script src="~/Scripts/jquery-3.7.1.min.js"></script>
+
 <script type="text/javascript">
+    const searchID = document.getElementById("searchReelID");
+    let plandata = [];
+
+    searchID.addEventListener('keydown', function (e) {
+        if (e.key === "Enter" || e.keyCode === 13) {
+            e.preventDefault();
+            
+
+            var filter = plandata.filter(res => res.Series_no === e.target.value);
+
+            if (filter.length === 0 || filter[0].Ongoing === 0) {
+                alert("No Plan Schedule Found or Already Completed");
+                this.value = "";
+                return;
+            }
+
+
+            var encodedSeries = encodeBase64(filter[0].Series_ID);
+            window.location.href = "/Circuit/ProgramPartList/PlanScheduleDetails?series=" + encodedSeries;
+        }
+    });
+
+
 
     const logstring = ""
 
@@ -93,7 +118,8 @@
 
     if (res && res.Success) {
         let hasValidData = false;
-
+        plandata = res.Data;
+        console.log(plandata);
         $.each(res.Data, function (index, resItem) {
             if (resItem.Ongoing == 1) {
 
@@ -158,8 +184,9 @@
             e.stopPropagation();
             var buttonId = $(this).attr('id');
             var rowIndex = buttonId.split('_')[1];
-            var encodedSeries = encodeBase64(rowIndex);
-            window.location.href = "/Circuit/ProgramPartList/PlanScheduleDetails?series=" + encodedSeries;
+            console.log(rowIndex);
+            //var encodedSeries = encodeBase64(rowIndex);
+            //window.location.href = "/Circuit/ProgramPartList/PlanScheduleDetails?series=" + encodedSeries;
         });
     } else {
         $(".showData").hide();

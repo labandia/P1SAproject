@@ -334,3 +334,13 @@ window.restrictChars = (e) => {
 }
 
 
+
+// =======================
+// ACTION RESTRICT
+// =======================
+window.ActionButtons = function () {
+    var userRole = localStorage.getItem("UserRole");
+    if (userRole === "Leader" || userRole === "Users") {
+        return false;
+    }
+};

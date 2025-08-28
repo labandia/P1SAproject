@@ -1,6 +1,8 @@
 ﻿using Attendance_Monitoring.Models;
 using Attendance_Monitoring.Repositories;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -23,20 +25,32 @@ namespace Attendance_Monitoring.View
         {
             try
             {
-                var items = await _admin.GetDepartments();
+                // 1. Get all employees
+                var items = await _admin.GetEmployees();
 
-                // Convert the items to a list and add a default item
-                var itemList = items.ToList();
-                itemList.Insert(0, new Department { Department_ID = 0, Department_name = "All Section" });
+                // 2. Group by Department_ID and project into Department objects
+                var itemlist = items
+                    .GroupBy(emp => emp.Department_ID)   // group by ID to remove duplicates
+                    .Select(g => new Department
+                    {
+                        Department_ID = g.Key,
+                        Department_name = GetDepartmentName(g.Key)
+                    })
+                    .ToList();
 
-                selectsection.DataSource = itemList;
+             
+
+
+                // 3. Add "All Section" at the top
+                itemlist.Insert(0, new Department { Department_ID = 0, Department_name = "All Section" });
+
+                // 4. Bind to ComboBox
+                selectsection.DataSource = itemlist;
                 selectsection.DisplayMember = "Department_name";
                 selectsection.ValueMember = "Department_ID";
-
-                // Optionally set the default selected index to the first item
                 selectsection.SelectedIndex = 0;
             }
-            catch(FormatException)
+            catch (FormatException)
             {
                 MessageBox.Show("Error found at the Combobox.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -83,11 +97,11 @@ namespace Attendance_Monitoring.View
                 {
                     var emp = new Employee
                     {
-                        EmployeeID = EmpID.Text.Replace("-", "").Trim(),
+                        Employee_ID = EmpID.Text.Replace("-", "").Trim(),
                         Fullname = string.IsNullOrEmpty(Fullname.Text) ? "" : Fullname.Text,
                         Process = string.IsNullOrEmpty(process.Text) ? "" : process.Text,
                         Affiliation = string.IsNullOrEmpty(Affili.Text) ? "" : Affili.Text,
-                        Department_ID = selectsection.SelectedIndex
+                        Department_ID = selectsection.SelectedIndex 
                     };
 
                     if (await _admin.AddEmployee(emp))
@@ -111,7 +125,10 @@ namespace Attendance_Monitoring.View
         }
 
         private void Cancebtn_Click(object sender, EventArgs e) => Visible = false;
-        private void Add_Employee_Load(object sender, EventArgs e) => PopulateComboBox();
+        private void Add_Employee_Load(object sender, EventArgs e)
+        {
+            PopulateComboBox();
+        }
         
 
         public void Clear()
@@ -121,5 +138,20 @@ namespace Attendance_Monitoring.View
             Affili.Text = "";
             process.Text = "";
         }
+
+        private string GetDepartmentName(int id)
+        {
+            switch (id)
+            {
+                case 1: return "Molding";
+                case 2: return "Press";
+                case 3: return "Rotor";
+                case 4: return "Winding";
+                case 5: return "Circuit";
+                case 6: return "Process Control";
+                default: return "";
+            }
+        }
+
     }
 }

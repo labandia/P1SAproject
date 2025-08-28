@@ -292,6 +292,7 @@
             this.Controls.Add(this.DisplayTotal);
             this.Name = "EmployeeManagement";
             this.Size = new System.Drawing.Size(1194, 672);
+            this.Load += new System.EventHandler(this.EmployeeManagement_Load);
             ((System.ComponentModel.ISupportInitialize)(this.Employeetable)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

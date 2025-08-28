@@ -66,7 +66,7 @@ namespace Attendance_Monitoring.Repositories
             string insertQuery = $@"INSERT INTO P1SA_AttendanceMonitor 
                     (Employee_ID, Shifts, LateTime) VALUES (@EmpID, @Shifts, @LateTime)";
             var parameters = new { EmpID = EmployeeID, Shifts = shift, LateTime = late };
-            return AddUpdateData(parameters, insertQuery);
+            return AddUpdateData(insertQuery, parameters);
         }
         public Task<bool> AttendanceTimeOut(P1SA_AttendanceModel attend)
         {
@@ -77,7 +77,7 @@ namespace Attendance_Monitoring.Repositories
                 Regular = attend.Regular, Overtime = attend.Overtime, Gtotal = attend.Gtotal, 
                 Date_today = attend.TimeIn, Employee_ID = attend.Employee_ID };
 
-            return AddUpdateData(parameters, updateQuery);
+            return AddUpdateData(updateQuery, parameters);
         }
 
     }

@@ -7,21 +7,41 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Attendance_Monitoring.Models;
+using Attendance_Monitoring.Repositories;
+using Attendance_Monitoring.Usercontrols;
 
 namespace Attendance_Monitoring.View.V2
 {
     public partial class AddProduction : Form
     {
-        public AddProduction()
+        private readonly EmployeeManagement _employ;
+        private readonly IEmployee _emp;
+
+
+        public AddProduction(EmployeeManagement employ, IEmployee emp)
         {
             InitializeComponent();
+            _employ = employ;
+            _emp = emp;
         }
 
-        private void Savebtn_Click(object sender, EventArgs e)
+        private async void Savebtn_Click(object sender, EventArgs e)
         {
             if (!FormValidation()) return;
-          
-            MessageBox.Show("GOOD TO INSERT");
+
+            var obj = new Employee
+            {
+                Employee_ID = EmpID.Text,
+                Affiliation = Affili.Text,
+                Fullname = Fullname.Text,
+                Process = process.Text,
+                Department_ID = selectsection.SelectedIndex
+            };
+
+            bool result = await _emp.AddEmployee(obj);
+            if (!result) return;
+            await _employ.Displayemployee(selectsection.SelectedIndex);
         }
 
 

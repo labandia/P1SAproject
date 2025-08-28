@@ -1,7 +1,6 @@
 ﻿using Attendance_Monitoring.Controller;
 using Attendance_Monitoring.Models;
 using Attendance_Monitoring.Repositories;
-using Attendance_Monitoring.View;
 using Attendance_Monitoring.View.V2;
 using System;
 using System.Collections.Generic;
@@ -25,6 +24,7 @@ namespace Attendance_Monitoring.Usercontrols
             _admin = new AdminController();
         }
 
+        // PURPOSE IS TO REFRESH THE TABLE WHEN DONE ADDING AND UPDATING
         public async Task Displayemployee(int depid)
         {
             var items = await _emp.GetEmployees();
@@ -55,35 +55,30 @@ namespace Attendance_Monitoring.Usercontrols
             Employeetable.DataSource =  filteredList;
             DisplayTotal.Text = "Total Records: " + Employeetable.RowCount;
             //MessageBox.Show("Running after set: " + DepartID);
-            // Now you can load employees, etc.
         }
 
         private void Addbtn_Click(object sender, EventArgs e)
         {
-            AddProduction form2 = new AddProduction();
+            AddProduction form2 = new AddProduction(this, _emp);
             form2.Show();
         }
 
         private void searchbox_TextChanged(object sender, EventArgs e)
         {
             string filterText = searchbox.Text.ToLower();
-            var filteredList = new List<Employee>();
-
-
-            if (filterText != "")
-            {
-                filteredList = emplist.Where(p => p.Employee_ID.ToLower().Contains(filterText) ||
+            var filteredList = (filterText != "")  
+                        ? emplist.Where(p => p.Employee_ID.ToLower().Contains(filterText) ||
                            p.Fullname.ToLower().Contains(filterText))
-                           .ToList();
-            }
-            else
-            {
-                filteredList = emplist.ToList();
-            }
-
+                           .ToList() 
+                        : emplist.ToList();
 
             Employeetable.DataSource =  filteredList;
             DisplayTotal.Text = "Total Records: " + Employeetable.RowCount;
+        }
+
+        private void EmployeeManagement_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

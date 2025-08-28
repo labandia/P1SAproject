@@ -86,7 +86,7 @@ namespace Attendance_Monitoring.Repositories
             }
         }
 
-        public async Task<bool> AddUpdateData(object parameters, string query)
+        public async Task<bool> AddUpdateData(string query, object parameters)
         {
             try
             {

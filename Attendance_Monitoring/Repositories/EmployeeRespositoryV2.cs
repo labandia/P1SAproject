@@ -7,7 +7,7 @@ namespace Attendance_Monitoring.Repositories
 {
     internal class EmployeeRespositoryV2 : CRUD_Repository<Employee>, IEmployee
     {
-        public Task<bool> AddEmployee(Employee emp) => AddUpdateData(emp, "AddEmployee");
+        public Task<bool> AddEmployee(Employee emp) => AddUpdateData("AddEmployee", emp);
         public Task<bool> DeleteEmployee(string empID) => DeleteData($@"
                 UPDATE Employee_tbl SET IsDelete = 0 WHERE Employee_ID = @Employee_ID", 
                 new { Employee_ID = empID });
@@ -25,7 +25,7 @@ namespace Attendance_Monitoring.Repositories
                 Affiliation = emp.Affiliation,
                 Department_ID = emp.Department_ID
             };
-            return AddUpdateData(parameters, "UpdateEmployee");
+            return AddUpdateData("UpdateEmployee", parameters);
         }
 
         public Task<bool> UploadEmployee(List<Employee> emp, int depid, int method)

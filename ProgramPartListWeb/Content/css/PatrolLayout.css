@@ -779,15 +779,19 @@
         box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
     }
 
+    .RequestWrapper{
+        background: #fff;
+        border: 1px solid #222;
+    }
 
-
-
-
+    .RequestContainer{
+        width: 100%;
+        display: grid;
+        grid-template-columns: 25% 25%  25% 25% 1fr;
+    }
 
 
 /*------------------------ BUTTON LOADING ANIMATION ------------------- */
-
-
 .buttonloading {
     width: 30px;
     padding: 8px;

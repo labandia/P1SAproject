@@ -19,8 +19,8 @@
                 <option value="0">-- Category --</option>
             </select>
         </div>
-        <button style="width: 100%;" id="ShowStocks" class="primarybtn" type="button"><i class="fa-solid fa-user-secret"></i> Add Stocks</button>
-        <button style="display: none;" id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-user-secret"></i> Add parts</button>
+        <button style="width: 100%; display: none;" id="ShowStocks" class="primarybtn" type="button"><i class="fa-solid fa-user-secret"></i> Add Stocks</button>
+        <button style="width: 100%;" id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-user-secret"></i> Add Stocks</button>
     </div>
 </header>
 
@@ -28,8 +28,9 @@
     <table>
         <thead>
             <tr>
-                <th style="width: 15%; text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-user-secret"></i>  <span style="margin-left: .5em;">Part No.</span> </th>
-                <th style="width: 25%;"> <i class="fa-regular fa-calendar-days"></i> <span style="margin-left: .5em;">Part Name</span></th>
+                <th> <i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Image</span>  </th>
+                <th style="width: 20%; text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-user-secret"></i>  <span style="margin-left: .5em;">Part No. / Partname</span> </th>
+                <th> <i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Category</span>  </th>
                 <th> <i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Supplier</span>  </th>
                 <th> <i class="fa-regular fa-square-check"></i> <span style="margin-left: .5em;">Stock Qty</span>  </th>
                 <th style="width: 10%;"> <i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Status</span>  </th>
@@ -273,8 +274,12 @@
 
                 const rowHtml = `
                     <tr class='rowClick' id='editButton_${rowData.PartID}'>
-                        <td style='font-weight: 600; text-align: left; padding-left: 1em; color: #0c382ce8; ' data-cell="PartNo">${rowData.PartNo}</td>
-                        <td data-cell="PartName">${rowData.PartName ? rowData.PartName : "-"}</td>
+                       <td data-cell="Images">-</td>
+                       <td style='text-align: left; padding-left: 1em;' data-cell="PartNo">
+                            <p style='color: #0c382ce8; font-weight: 600;'>${rowData.PartName ? rowData.PartName : "-"}</p>
+                            <small> ${rowData.PartNo}</small>
+                        </td>
+                        <td data-cell="CategoryName">${rowData.CategoryName ? rowData.CategoryName : "-"}</td>
                         <td data-cell="Supplier">${rowData.Supplier ? rowData.Supplier : "-"}</td>
                         <td data-cell="CurrentQty">${rowData.CurrentQty}  ${rowData.Unit}</td>
 
@@ -437,7 +442,7 @@
 
     addmodal.addEventListener('click', (e) => {
         e.preventDefault();
-        $("#AddChamberModal").modal('show');
+        //$("#AddChamberModal").modal('show');
     });
 
     addquan.addEventListener('click', (e) => {

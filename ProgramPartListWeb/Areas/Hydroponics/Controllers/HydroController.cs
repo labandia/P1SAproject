@@ -150,6 +150,8 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         public ActionResult Index() => View();
         // GET: Hydroponics/Inventorylist
         public ActionResult Inventorylist() => View();
+        // GET: Hydroponics/Inventorylist
+        public ActionResult AddStocks() => View();
         // GET: Hydroponics/Orderpage
         public ActionResult Orderpage() => View();
         // GET: Hydroponics/Chambers

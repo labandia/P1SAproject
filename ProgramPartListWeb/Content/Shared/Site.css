@@ -57,6 +57,7 @@
         line-height: 1.5;
         scroll-behavior: smooth;
         text-rendering: optimizeSpeed;
+        font-size: var(--normal-font-size) !important;
     }
 
 

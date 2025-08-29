@@ -8,52 +8,47 @@
     <h5 style="margin: 0; font-weight: 600;">Add Stocks</h5>
 </div>
 
-<div class="flex_align">
-    <div>
+<div class="StocksInput">
+    <div class="StocksInput_group">
         <label>Type Partname / Partno  <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
-        @*<input type="text" placeholder="N/A" name="Fullname" id="Fullname" />*@
         <div class="search-box">
             <input type="hidden" name="PartID" id="PartID">
             <input type="text" placeholder="Type here ..." name="searchPartno" id="searchPartno" autocomplete="off" required>
             <div class="namesdisplay"></div>
         </div>
     </div>
-
-
-
-    <div >
+    <div class="StocksInput_group">
         <label>Input Quantity</label> <br />
         <input type="text" id="Quantity" placeholder="Enter the Quantity" onkeypress="return restrictChars(event)" autocomplete="off" name="Quantity" required />
     </div>
-    <button id="sampleSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Add</button>
+    <div class="StocksInput_group">
+        <button id="sampleSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Add</button>
+    </div>
 </div>
 
 
 
+    <div class="InspecTable">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 10%;"> <span style="margin-left: .5em;">Item #</span>  </th>
+                    <th style="width: 20%; text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-screwdriver-wrench"></i>  <span style="margin-left: .5em;">Part No. / Partname</span> </th>
+                    <th> <i class="fa-regular fa-rectangle-list"></i> <span style="margin-left: .5em;">Category</span>  </th>
+                    <th> <i class="fa-regular fa-address-card"></i> <span style="margin-left: .5em;">Supplier</span>  </th>
+                    <th style="width: 10%;"> <span style="margin-left: .5em;">Quantity</span>  </th>
+                    <th style="width: 10%;"> <span style="margin-left: .5em;">Action</span>  </th>
+                </tr>
+            </thead>
+            <tbody id="AddStocksData">
+            </tbody>
+        </table>
+    </div>
 
-<div class="InspecTable">
-    <table>
-        <thead>
-            <tr>
-                <th style="width: 10%;"> <span style="margin-left: .5em;">Item #</span>  </th>
-                <th style="width: 20%; text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-screwdriver-wrench"></i>  <span style="margin-left: .5em;">Part No. / Partname</span> </th>
-                <th> <i class="fa-regular fa-rectangle-list"></i> <span style="margin-left: .5em;">Category</span>  </th>
-                <th> <i class="fa-regular fa-address-card"></i> <span style="margin-left: .5em;">Supplier</span>  </th>
-                <th style="width: 10%;"> <span style="margin-left: .5em;">Quantity</span>  </th>
-                <th style="width: 10%;"> <span style="margin-left: .5em;">Action</span>  </th>
-            </tr>
-        </thead>
-        <tbody id="AddStocksData">
-        </tbody>
-    </table>
-</div>
-
-<div class="flex_end mt-3">
-    <button id="SaveStocks" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
-</div>
+   <button id="SaveStocks" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
 
 
-<script type="text/javascript">
+    <script type="text/javascript">
     let additems = [];
     let partlistData = [];
     let partsID;
@@ -158,10 +153,10 @@
         if (addquantity > 0) {
             additems[rowIndex].Quantity = addquantity;
         } else {
-            additems.splice(rowIndex, 1);    
+            additems.splice(rowIndex, 1);
         }
 
-        // if no items exist bring back to No Data 
+        // if no items exist bring back to No Data
         if (additems.length == 0) {
 
             const loadData = `<tr>
@@ -191,7 +186,7 @@
          e.stopPropagation();
          const buttonId = $(this).attr('id');
          const rowIndex = buttonId.split('_')[1];
-         additems.splice(rowIndex, 1); 
+         additems.splice(rowIndex, 1);
          TableData.empty(); // clear table
 
 
@@ -296,13 +291,13 @@
                              <div class='flex_center'>
                                  <button  class='RemoveQuan text-primary bg-white' id='RemoveQuan_${index}' ">
                                    <i class="fa-regular fa-square-minus"></i>
-                                </button>                         
+                                </button>
                                  <span> ${row.Quantity}</span>
                                  <button  class='AddQuan text-success bg-white' id='AddQuan_${index}' ">
                                   <i class="fa-regular fa-square-plus"></i>
                                 </button>
                              </div>
-                            
+
                        </td>
                        <td data-cell="Delete" >
                                 <div class='flex_center'>
@@ -318,4 +313,4 @@
 
 
     PartlistTable();
-</script>
+    </script>

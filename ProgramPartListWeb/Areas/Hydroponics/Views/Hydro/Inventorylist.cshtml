@@ -23,6 +23,7 @@
         <button style="width: 100%;" id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-box-archive"></i> Add Stocks</button>
     </div>
 </section>
+<hr />
 
 <div class="InspecTable">
     <table>
@@ -30,10 +31,11 @@
             <tr>
                 <th> <i class="fa-regular fa-image"></i> <span style="margin-left: .5em;">Image</span>  </th>
                 <th style="width: 20%; text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-screwdriver-wrench"></i> <span style="margin-left: .5em;">Part No. / Partname</span> </th>
-                <th> <i class="fa-regular fa-rectangle-list"></i>  <span style="margin-left: .5em;">Category</span>  </th>
                 <th> <i class="fa-regular fa-address-card"></i> <span style="margin-left: .5em;">Supplier</span>  </th>
                 <th> <i class="fa-regular fa-square-check"></i> <span style="margin-left: .5em;">Stock Qty</span>  </th>
+                <th> <i class="fa-regular fa-square-check"></i> <span style="margin-left: .5em;">Low alert Level</span>  </th>
                 <th style="width: 15%;"> <i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Status</span>  </th>
+                <th> <i class="fa-regular fa-square-check"></i> <span style="margin-left: .5em;">Action</span>  </th>
             </tr>
         </thead>
         <tbody id="InventorylistData">
@@ -203,6 +205,7 @@
 
         Loadingsteps(async () => {
             let res = await FetchAuthenticate('@Url.Action("GetHydroInventory", "Hydro")', {});
+            console.log(res);
             if (res && res.Success) {
                 Inventlist = res.Data;
                 TableDisplay.empty(); // Removing the Loading Display
@@ -285,15 +288,21 @@
                             <p style='color: #185d8b; font-weight: 600;'>${rowData.PartName ? rowData.PartName : "-"}</p>
                             <small> ${rowData.PartNo}</small>
                         </td>
-                        <td data-cell="CategoryName">${rowData.CategoryName ? rowData.CategoryName : "-"}</td>
                         <td data-cell="Supplier">${rowData.Supplier ? rowData.Supplier : "-"}</td>
                         <td data-cell="CurrentQty" style="font-weight: 600;">${rowData.CurrentQty}</td>
-
+                        <td data-cell="WarningLevel" style="font-weight: 600;">${rowData.WarningLevel}</td>
                         <td data-cell="Approval" >
                           <div class='${getStatusClass(rowData.Status)}'>
                             ${rowData.Status}
                           </div>
                         </td>
+                        <td data-cell="Delete" >
+                         <div class='flex_center'>
+                             <button  class='Editbtnbutton text-primary bg-white' id='editButton_${rowData.PartID}' ">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                             </button>
+                         </div>
+                         </td>
                     </tr>
                 `;
                 tableBody.innerHTML += rowHtml;

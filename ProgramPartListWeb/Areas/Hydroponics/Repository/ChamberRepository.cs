@@ -107,7 +107,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 	                            cp.CategoryName,
 	                            i.Supplier,
                                 c.QuantityPerChamber,
-	                            CONCAT(c.QuantityPerChamber, ' ', i.Unit) as RequireQty,
+	                            CONCAT(CAST(ROUND(c.QuantityPerChamber, 0) AS INT), ' ', i.Unit) AS RequireQty,
 	                            c.UnitCost_PHP,
 	                            c.QuantityPerChamber * c.UnitCost_PHP as TotalPHPCost,
                                 i.ImageParts

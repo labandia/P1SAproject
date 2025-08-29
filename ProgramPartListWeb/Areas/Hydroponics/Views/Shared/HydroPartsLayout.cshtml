@@ -29,16 +29,16 @@
         <div class="nav-menu">
             <a href="/Hydroponics/Hydro/Orderpage" class="nav-item">
                 <i class="fas fa-file-invoice-dollar"></i>
-                <span class="nav-text">Request</span>
+                <span class="nav-text">Request Chambers</span>
             </a>
 
             <a href="/Hydroponics/Hydro/Chambers" class="nav-item">
                 <i class="fas fa-chart-line"></i>
-                <span class="nav-text">Chambers</span>
+                <span class="nav-text">Hydroponics Chambers</span>
             </a>
             <a href="/Hydroponics/Hydro/Inventorylist" class="nav-item">
                 <i class="fas fa-users"></i>
-                <span class="nav-text">Stocks</span>
+                <span class="nav-text">Manage Stocks</span>
             </a>
             <a href="/Hydroponics/Hydro/PartList" class="nav-item">
                 <i class="fas fa-cog"></i>
@@ -46,7 +46,7 @@
             </a>
             <a href="#" class="nav-item">
                 <i class="fas fa-question-circle"></i>
-                <span class="nav-text">History</span>
+                <span class="nav-text">Transaction History</span>
             </a>
             <a href="#" class="nav-item">
                 <i class="fas fa-users"></i>
@@ -116,7 +116,7 @@
 
                     switch (actionpage) {
                         case "orderpage":
-                            $("#titlepage").text("Request Chambers");
+                            $("#titlepage").text(`<i class="fas fa-file-invoice-dollar"></i> Request Chambers`);
                             break;
                         case "chambers":
                             $("#titlepage").text("DFT Hydroponic Chamber");

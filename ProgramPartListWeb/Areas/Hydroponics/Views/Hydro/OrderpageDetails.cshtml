@@ -89,7 +89,7 @@
 
                 <form id="InputQuantity" class="addformcontainer">
                     <label for="">Material Parts : <span id="PartName">Black Coated Pipe</span> </label> <br />
-                    <label for="">Available Stocks : <span id="CurrentQty"></span> </label>
+                  
 
                     <div class="form_group col-12 col-sm-12">
                         <label for="">Used Quantity <small style="color: #a81818; font-weight: 600;">*</small> </label>
@@ -97,7 +97,7 @@
                         <input type="number" name="QtyUsed" id="QtyUsed" onkeypress="return restrictChars(event)" autocomplete="off">
                     </div>
                     <div class="flex_space" id="editsdisplay">
-                        <small>Input quantity is required.</small>
+                        <label for="">Available Stocks : <span id="CurrentQty"></span> </label>
                         <button type="submit" class="primarybtn">
                             <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
                         </button>
@@ -117,6 +117,7 @@
 <script type="text/javascript">
     let requestData = [];
     let previousValue = 0;
+    let inputvalue = 0;
     let newValueQuan = 0;
     let ID = parseInt($("#chambID").val());
     let addQuanform = document.getElementById("InputQuantity");
@@ -173,6 +174,7 @@
             $("#QtyUsed").val(filterdata.QtyUsed);
             $("#CurrentQty").text(filterdata.CurrentQty);
             previousValue = filterdata.QtyUsed;
+            inputvalue = filterdata.CurrentQty;
             $("#QtyUsed").attr("min", filterdata.QtyUsed);
             $("#QtyUsed").attr("max", filterdata.RequiredQty);
 
@@ -185,6 +187,11 @@
 
     // Limits the input required
     useInput.addEventListener("input", function () {
+        if (inputvalue < this.value) {
+            alert("No Stocks ssd");
+            return;
+            //$("#CurrentQty")
+        }
         if (this.value !== "") {
             let val = Number(this.value);
             if (val < this.min) this.value = this.min;
@@ -199,6 +206,8 @@
         } else if (diff < 0) {
             newValueQuan--;
         }
+
+        
 
        // previousValue = newValue; // update the last known value
     });

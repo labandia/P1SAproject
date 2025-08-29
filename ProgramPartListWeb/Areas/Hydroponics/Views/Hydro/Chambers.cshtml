@@ -8,7 +8,7 @@
 <section class="InspectHead flex_space">
     <div class="flex_align">
         <div class="Pricedisplay">
-            <small style=" font-weight: 500;">Total PHP Cost:  </small><span id="TotalPH"></span> - 
+            <small style=" font-weight: 500;">Total PHP Cost:  </small><span id="TotalPH"></span> -
             <small style="font-weight: 500;">Total USD Cost:  </small><span id="TotalUSD"></span>
         </div>
         <div class="Inputcontainer" style="display: none;">
@@ -27,7 +27,8 @@
     </div>
 </section>
 
-
+<hr />
+<strong>Material used :</strong>
 
 <div class="InspecTable">
     <table>
@@ -37,10 +38,8 @@
                 <th style="width: 20%; text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-user-secret"></i>  <span style="margin-left: .5em;">Part No. / Partname</span> </th>
                 <th><i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Supplier</span>  </th>
                 <th><i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Require Qty</span>  </th>
-                <th style="width: 10%;"> <span style="margin-left: .5em;">Total Cost($)</span>  </th>
-                <th style="width: 10%;">  <span style="margin-left: .5em;">Total Cost(₱)</span>  </th>
-                <th style="width: 10%;"> <span style="margin-left: .5em;">Total Cost($)</span>  </th>
-                <th style="width: 10%;">  <span style="margin-left: .5em;">Total Cost(₱)</span>  </th>
+                <th> <span style="margin-left: .5em;">Unit Cost</span>  </th>
+                <th> <span style="margin-left: .5em;">Total Cost</span>  </th>
             </tr>
         </thead>
         <tbody id="ChamberlistData">
@@ -160,7 +159,7 @@
       let res = await FetchAuthenticate('@Url.Action("GetTotalPriceChamber", "Hydro")', { chamber: ID });
       if (res && res.Success) {
           $("#TotalPH").text("$ " + res.Data.PHPTotal.toLocaleString('en-US'));
-          $("#TotalUSD").text("P " +res.Data.USDTotal.toLocaleString('en-US'));
+          $("#TotalUSD").text("₱ " +res.Data.USDTotal.toLocaleString('en-US'));
       }
     };
 
@@ -253,11 +252,15 @@
                                 <small> ${rowData.PartNo}</small>
                             </td>
                             <td data-cell="Supplier">${rowData.Supplier ? rowData.Supplier : "-"}</td>
-                            <td data-cell="Supplier">${rowData.RequireQty ? rowData.RequireQty : "-"}</td>
-                            <td data-cell="UnitUSD">${roundedNum}</td>
-                            <td data-cell="UnitUSD">${rowData.UnitCost_PHP}</td>
-                            <td data-cell="UnitUSD">${totalUSDCost.toFixed(2) }</td>
-                            <td data-cell="UnitUSD">${rowData.TotalPHPCost}</td>
+                            <td data-cell="Supplier" style='font-weight: 600;'>${rowData.RequireQty ? rowData.RequireQty : "-"}</td>
+                            <td data-cell="UnitUSD" style='text-align: left;'>
+                                <p>Dollar ($): <strong> ${roundedNum}</strong>  </p>
+                                <p>Pesos (₱): <strong> ${rowData.UnitCost_PHP}</strong>  </p>
+                             </td>
+                            <td data-cell="UnitUSD" style='text-align: left;'>
+                                <p>Dollar ($): <strong> ${totalUSDCost.toFixed(2) }</strong>  </p>
+                                <p>Pesos (₱):  <strong> ${rowData.TotalPHPCost}</strong>  </p>
+                              </td>
                         </tr>
                     `;
                 tableBody.innerHTML += rowHtml;

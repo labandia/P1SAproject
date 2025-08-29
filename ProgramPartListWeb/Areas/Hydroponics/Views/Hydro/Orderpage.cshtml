@@ -24,7 +24,6 @@
         <button class="Mold_tab active" data-target="All">Active Request</button>
         <button class="Mold_tab" data-target="Completed">Completed</button>
         <button class="Mold_tab" data-target="InProgress">In Progress</button>
-        <button class="Mold_tab" data-target="Pending">Transaction</button>
         <div class="Mold_slider"></div>
     </div>
 
@@ -42,10 +41,7 @@
             <h1>Tab 3</h1>
 
         </div>
-        <div class="Mold_content" id="Pending">
-            <h1>Tab 4</h1>
-
-        </div>
+       
     </div>
 </div>
 
@@ -179,9 +175,7 @@
                  else if (percent >= 50) colorClass = "orange";
 
                  const loadData = `<div class="RequestContainer" id='Details_${row.OrderID}'>
-                                         <div class="RequestContent">
-                                             <img class='NoImages' src="@Url.Content("~/Content/Images/no-image.png")" />
-                                         </div>
+                                        
                                          <div class="RequestContent">
                                              <p style='color: #0c382ce8; font-weight: 600;'>${row.ChamberName}</p>
                                              <span>Quantity : ${row.ChambersOrdered} </span> 

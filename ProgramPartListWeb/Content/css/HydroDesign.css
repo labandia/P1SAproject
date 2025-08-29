@@ -687,7 +687,7 @@ th {
     .RequestContainer {
         width: 100%;
         display: grid;
-        grid-template-columns: 7% 1fr 1fr 1fr 1fr 1fr;
+        grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
         align-items: center;
         justify-content: center;
         box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
@@ -737,6 +737,19 @@ th {
     .circular-progress .value {
         position: absolute;
     }
+
+    .StocksInput{
+        width: 100%;
+        display: grid;
+        grid-template-columns: 40% 40% 1fr;
+    }
+
+    #SaveStocks{
+        position: absolute;
+        bottom: 2em;
+        right: 2em;
+    }
+
 /* Responsive styles */
 @media (max-width: 992px) {
     .sidebar {

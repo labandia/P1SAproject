@@ -16,7 +16,7 @@ namespace Attendance_Monitoring.Interfaces
              object parameters = null) where TResult : class;
 
         Task<T> GetDataListById(string query, object parameters = null);
-        Task<bool> AddUpdateData(object parameters, string query);
+        Task<bool> AddUpdateData(string query, object parameters);
         Task<bool> DeleteData(string query, object id);
     }
 }

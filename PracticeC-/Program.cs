@@ -26,7 +26,9 @@ namespace PracticeC_
         {
             //samplemethod(i: 1);
 
+            string strReelID = "SDP00287327-01 505113353";
 
+            Console.WriteLine("Number of String : " +  strReelID.Length);
 
 
 

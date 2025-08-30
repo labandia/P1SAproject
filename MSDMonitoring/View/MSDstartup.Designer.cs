@@ -58,31 +58,31 @@
             this.button1 = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
+            this.label7 = new System.Windows.Forms.Label();
+            this.SupplyError = new System.Windows.Forms.Label();
+            this.NewEntryBtn = new System.Windows.Forms.Button();
             this.tableLayoutPanel8 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
+            this.label2 = new System.Windows.Forms.Label();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.Refreshbtn = new System.Windows.Forms.Button();
-            this.NewEntryBtn = new System.Windows.Forms.Button();
             this.SupplierText = new System.Windows.Forms.TextBox();
-            this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
-            this.label7 = new System.Windows.Forms.Label();
-            this.SupplyError = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.Refreshbtn = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel3.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
+            this.tableLayoutPanel9.SuspendLayout();
             this.tableLayoutPanel8.SuspendLayout();
             this.tableLayoutPanel7.SuspendLayout();
             this.tableLayoutPanel6.SuspendLayout();
             this.tableLayoutPanel5.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
-            this.tableLayoutPanel9.SuspendLayout();
             this.SuspendLayout();
             // 
             // Exitbtn
@@ -171,6 +171,7 @@
             this.Ambassador.Dock = System.Windows.Forms.DockStyle.Top;
             this.Ambassador.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Ambassador.Location = new System.Drawing.Point(8, 41);
+            this.Ambassador.MaxLength = 24;
             this.Ambassador.Name = "Ambassador";
             this.Ambassador.Size = new System.Drawing.Size(134, 27);
             this.Ambassador.TabIndex = 33;
@@ -474,6 +475,68 @@
             this.tableLayoutPanel2.Size = new System.Drawing.Size(1281, 77);
             this.tableLayoutPanel2.TabIndex = 92;
             // 
+            // tableLayoutPanel9
+            // 
+            this.tableLayoutPanel9.ColumnCount = 2;
+            this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 80F));
+            this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel9.Controls.Add(this.label7, 0, 0);
+            this.tableLayoutPanel9.Controls.Add(this.SupplyError, 1, 0);
+            this.tableLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel9.Location = new System.Drawing.Point(922, 8);
+            this.tableLayoutPanel9.Name = "tableLayoutPanel9";
+            this.tableLayoutPanel9.RowCount = 1;
+            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel9.Size = new System.Drawing.Size(171, 27);
+            this.tableLayoutPanel9.TabIndex = 99;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.label7.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(3, 11);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(130, 16);
+            this.label7.TabIndex = 60;
+            this.label7.Text = "Supplier : ";
+            // 
+            // SupplyError
+            // 
+            this.SupplyError.AutoSize = true;
+            this.SupplyError.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.SupplyError.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SupplyError.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.SupplyError.Location = new System.Drawing.Point(139, 11);
+            this.SupplyError.Name = "SupplyError";
+            this.SupplyError.Size = new System.Drawing.Size(29, 16);
+            this.SupplyError.TabIndex = 86;
+            this.SupplyError.Text = "*";
+            this.SupplyError.Visible = false;
+            // 
+            // NewEntryBtn
+            // 
+            this.NewEntryBtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(152)))), ((int)(((byte)(126)))));
+            this.NewEntryBtn.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.NewEntryBtn.Dock = System.Windows.Forms.DockStyle.Top;
+            this.NewEntryBtn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(152)))), ((int)(((byte)(126)))));
+            this.NewEntryBtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(56)))), ((int)(((byte)(44)))));
+            this.NewEntryBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(56)))), ((int)(((byte)(44)))));
+            this.NewEntryBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.NewEntryBtn.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.NewEntryBtn.ForeColor = System.Drawing.Color.White;
+            this.NewEntryBtn.Image = ((System.Drawing.Image)(resources.GetObject("NewEntryBtn.Image")));
+            this.NewEntryBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.NewEntryBtn.Location = new System.Drawing.Point(1099, 41);
+            this.NewEntryBtn.Name = "NewEntryBtn";
+            this.NewEntryBtn.Padding = new System.Windows.Forms.Padding(40, 0, 40, 0);
+            this.NewEntryBtn.Size = new System.Drawing.Size(174, 26);
+            this.NewEntryBtn.TabIndex = 68;
+            this.NewEntryBtn.Text = "Add";
+            this.NewEntryBtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.NewEntryBtn.UseVisualStyleBackColor = false;
+            this.NewEntryBtn.Click += new System.EventHandler(this.NewEntryBtn_Click_1);
+            // 
             // tableLayoutPanel8
             // 
             this.tableLayoutPanel8.ColumnCount = 2;
@@ -534,6 +597,17 @@
             this.tableLayoutPanel5.Size = new System.Drawing.Size(134, 27);
             this.tableLayoutPanel5.TabIndex = 94;
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.label2.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(3, 11);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(101, 16);
+            this.label2.TabIndex = 86;
+            this.label2.Text = "Reel Quantity:";
+            // 
             // tableLayoutPanel4
             // 
             this.tableLayoutPanel4.ColumnCount = 2;
@@ -562,6 +636,17 @@
             this.tableLayoutPanel3.Size = new System.Drawing.Size(134, 27);
             this.tableLayoutPanel3.TabIndex = 92;
             // 
+            // SupplierText
+            // 
+            this.SupplierText.BackColor = System.Drawing.Color.Gainsboro;
+            this.SupplierText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.SupplierText.Dock = System.Windows.Forms.DockStyle.Top;
+            this.SupplierText.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SupplierText.Location = new System.Drawing.Point(922, 41);
+            this.SupplierText.Name = "SupplierText";
+            this.SupplierText.Size = new System.Drawing.Size(171, 27);
+            this.SupplierText.TabIndex = 98;
+            // 
             // Refreshbtn
             // 
             this.Refreshbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -576,90 +661,6 @@
             this.Refreshbtn.TabIndex = 93;
             this.Refreshbtn.UseVisualStyleBackColor = false;
             this.Refreshbtn.Click += new System.EventHandler(this.Refreshbtn_Click);
-            // 
-            // NewEntryBtn
-            // 
-            this.NewEntryBtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(152)))), ((int)(((byte)(126)))));
-            this.NewEntryBtn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.NewEntryBtn.Dock = System.Windows.Forms.DockStyle.Top;
-            this.NewEntryBtn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(152)))), ((int)(((byte)(126)))));
-            this.NewEntryBtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(56)))), ((int)(((byte)(44)))));
-            this.NewEntryBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(56)))), ((int)(((byte)(44)))));
-            this.NewEntryBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.NewEntryBtn.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.NewEntryBtn.ForeColor = System.Drawing.Color.White;
-            this.NewEntryBtn.Image = ((System.Drawing.Image)(resources.GetObject("NewEntryBtn.Image")));
-            this.NewEntryBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.NewEntryBtn.Location = new System.Drawing.Point(1099, 41);
-            this.NewEntryBtn.Name = "NewEntryBtn";
-            this.NewEntryBtn.Padding = new System.Windows.Forms.Padding(40, 0, 40, 0);
-            this.NewEntryBtn.Size = new System.Drawing.Size(174, 26);
-            this.NewEntryBtn.TabIndex = 68;
-            this.NewEntryBtn.Text = "Add";
-            this.NewEntryBtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.NewEntryBtn.UseVisualStyleBackColor = false;
-            this.NewEntryBtn.Click += new System.EventHandler(this.NewEntryBtn_Click_1);
-            // 
-            // SupplierText
-            // 
-            this.SupplierText.BackColor = System.Drawing.Color.Gainsboro;
-            this.SupplierText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.SupplierText.Dock = System.Windows.Forms.DockStyle.Top;
-            this.SupplierText.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SupplierText.Location = new System.Drawing.Point(922, 41);
-            this.SupplierText.Name = "SupplierText";
-            this.SupplierText.Size = new System.Drawing.Size(171, 27);
-            this.SupplierText.TabIndex = 98;
-            // 
-            // tableLayoutPanel9
-            // 
-            this.tableLayoutPanel9.ColumnCount = 2;
-            this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 80F));
-            this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel9.Controls.Add(this.label7, 0, 0);
-            this.tableLayoutPanel9.Controls.Add(this.SupplyError, 1, 0);
-            this.tableLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel9.Location = new System.Drawing.Point(922, 8);
-            this.tableLayoutPanel9.Name = "tableLayoutPanel9";
-            this.tableLayoutPanel9.RowCount = 1;
-            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel9.Size = new System.Drawing.Size(171, 27);
-            this.tableLayoutPanel9.TabIndex = 99;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.label7.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(3, 11);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(130, 16);
-            this.label7.TabIndex = 60;
-            this.label7.Text = "Supplier : ";
-            // 
-            // SupplyError
-            // 
-            this.SupplyError.AutoSize = true;
-            this.SupplyError.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.SupplyError.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SupplyError.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.SupplyError.Location = new System.Drawing.Point(139, 11);
-            this.SupplyError.Name = "SupplyError";
-            this.SupplyError.Size = new System.Drawing.Size(29, 16);
-            this.SupplyError.TabIndex = 86;
-            this.SupplyError.Text = "*";
-            this.SupplyError.Visible = false;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.label2.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(3, 11);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(101, 16);
-            this.label2.TabIndex = 86;
-            this.label2.Text = "Reel Quantity:";
             // 
             // MSDstartup
             // 
@@ -688,6 +689,8 @@
             this.tableLayoutPanel1.PerformLayout();
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
+            this.tableLayoutPanel9.ResumeLayout(false);
+            this.tableLayoutPanel9.PerformLayout();
             this.tableLayoutPanel8.ResumeLayout(false);
             this.tableLayoutPanel8.PerformLayout();
             this.tableLayoutPanel7.ResumeLayout(false);
@@ -700,8 +703,6 @@
             this.tableLayoutPanel4.PerformLayout();
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
-            this.tableLayoutPanel9.ResumeLayout(false);
-            this.tableLayoutPanel9.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -231,17 +231,17 @@ namespace Attendance_Monitoring.View
 
         private async  void Employeetable_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            // Check if the click is on a header
+      
             if (e.RowIndex < 0)
-            {
-                // Do nothing or handle the header click as needed
+            {       
                 return;
             }
-            // Proceed with normal cell click processing
+           
             try
             {
                 string EmployeeID = Employeetable.Rows[e.RowIndex].Cells[0].Value.ToString();
 
+                // ====================== EDIT EMPLOYEES ================================== //
                 if (e.ColumnIndex == 4)
                 {
                     EditEmployee ed = new EditEmployee(this, _emp);
@@ -253,6 +253,7 @@ namespace Attendance_Monitoring.View
                     ed.comboBox1.SelectedIndex = Convert.ToInt32(Employeetable.Rows[e.RowIndex].Cells[6].Value.ToString());
                     ed.ShowDialog();
                 }
+                // ===================== DELETE EMPLOYEES ================================= //
                 else if (e.ColumnIndex == 5)
                 {
                     DialogResult exit = MessageBox.Show("Are you  sure you want to delete this Employee ID", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);

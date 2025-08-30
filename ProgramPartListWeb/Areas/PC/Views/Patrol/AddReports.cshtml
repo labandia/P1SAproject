@@ -174,9 +174,19 @@
 
     <div class="row">
         <div class="col-12 col-sm-12 col-lg-6">
-            <label>Upload Counter Measures file</label> <br />
+            <label>Upload Counter Measures File:</label> <br />
             <input type="file" name="ExcelFile" id="ExcelFile" accept=".xlsx,.xls" class="form-control" />
             <small class="text-muted">Only .xlsx or .xls files are allowed</small>
+        </div>
+
+        <div class="col-12 col-sm-12 col-lg-6 ">
+            <label>Send Notification To: </label> <br />
+            <div class="select-container">
+                <select id="Sendto" name="Sendto">
+                <option value="jaye.labandia@sanyodenki.com">Jaye Labandia</option>
+                </select>
+            </div>
+            
         </div>
     </div>
 
@@ -297,6 +307,7 @@
 
         // For registration validation, read RegNo from form data
         const finaldata = Object.fromEntries(finalformData);
+
         let reg = "P1SA-" + finaldata.RegNo;
         if (formValidation(reg)) {
             Swal.fire({

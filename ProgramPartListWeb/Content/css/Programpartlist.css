@@ -397,8 +397,7 @@
     }
 
     .custom_modal_header h5 { font-weight: 600 !important; }
-
-     .formcontainer {
+    .formcontainer {
         width: min(100%, 1200px);
         margin: 0 auto;
         background: var(--container-color);
@@ -408,14 +407,18 @@
         margin-inline: auto;
         box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
     }
+
     .addformcontainer { padding: .5em; }
+
     .formcontainer h5, .addformcontainer h5, .formcontainer label, .addformcontainer label {
         font-weight: 500;
         color: #222;
     }
+
     .formcontainer label, .addformcontainer label {
         font-size: var(--small-font-size);
     }
+
     .formcontainer input, .formcontainer textarea, .addformcontainer input, .addformcontainer textarea {
         width: 100%;
         margin: .5em 0 1em 0;
@@ -424,11 +427,12 @@
         font-size: var(--small-font-size);
         border-radius: .3em;
     }
-    .formcontainer input[type='checkbox']{
-        width: auto;
-        margin: 0;
-        padding: 0;
-    }
+
+        .formcontainer input[type='checkbox'] {
+            width: auto;
+            margin: 0;
+            padding: 0;
+        }
 
     .formcontainer textarea, .addformcontainer textarea {
         width: 100%;
@@ -437,9 +441,60 @@
         padding: .6em;
         font-size: var(--normal-font-size);
     }
-    .formcontainer input:focus, .formcontainer textarea:focus, .addformcontainer input:focus, .addformcontainer textarea:focus {
-         outline: 1px solid var(--primary-color);
+
+        .formcontainer input:focus, .formcontainer textarea:focus, .addformcontainer input:focus, .addformcontainer textarea:focus {
+            outline: 1px solid var(--primary-color);
+        }
+
+
+    /* ========= LOADING ANIMATION =========== */
+    .Loadercontainer2{
+        display: flex;
+        align-items:center;
+        justify-content: center;
+        padding: 1em 0;
+        gap: 1.5em;
     }
+
+    .Loadercontainer2 p{
+        margin: 0;
+    }
+
+    .loader2 {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #1e3a48;
+      border-radius: 50%;
+      display: inline-block;
+      position: relative;
+      box-sizing: border-box;
+      animation: rotation 1s linear infinite;
+    }
+    .loader2::after {
+      content: '';  
+      box-sizing: border-box;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: 3px solid;
+      border-color: var(--primary-color) transparent;
+    }
+
+    @keyframes rotation {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    } 
+
+
+
 
 /* ===================================================== */
 /* ================= MEDIA QUERIES ===================== */
@@ -868,25 +923,6 @@
         outline: 2px solid var(--clr-neon-primary);
     }
 
-.form_group label {
-    display: block;
-    margin-bottom: 10px;
-    font-weight: 500;
-    font-size: 15px;
-}
-
-.form_group input, textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #bbb;
-    font-size: 15px;
-    border-radius: 2px;
-}
-
-
-.barcodecontainer label {
-    font-weight: 600;
-}
 
 
 
@@ -1932,8 +1968,39 @@ footer {
 
 
 
+.PDAWrapper {
+    width: 500px;
+    border: 1px solid #A5A1AA;
+}
 
+.PDA_header {
+    background: #222;
+    color: #fff;
+    text-align: center;
+    padding: .8em 0;
+}
 
+.PDA_header h5{
+    margin: 0;
+}
+
+.PDA_content{
+    padding: 2em;
+}
+
+.PDA_content label{
+    font-weight: 600;
+    font-size: .9rem;
+}
+
+.PDA_content input{
+      width: 100%;
+      margin: .5em 0 1em 0;
+      border: 1px solid #A5A1AA;
+      padding: .6em 1em;
+      font-size: var(--small-font-size);
+      border-radius: .3em;
+}
 
 
 
@@ -1965,12 +2032,6 @@ footer {
 
 #SearchInputbox {
 } 
-
-
-
-
-
-
 
 
 

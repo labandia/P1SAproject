@@ -11,7 +11,7 @@
 <div class="flex_space mb-3">
     <div class="searchinputContainer">
         <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" placeholder="Search by Series No" ... " id="searchInput" />
+        <input type="text" placeholder="Search by Plan Schedule " id="searchInput" />
         <div class="line"></div>
     </div>
 
@@ -41,7 +41,6 @@
                 <th>Time Target</th>
                 <th>Total partlist</th>
                 <th id="restrict">Ongoing schedule</th>
-                <th id="restrict">Details</th>
                 <th id="restrict">Edit</th>
             </tr>
         </thead>
@@ -104,64 +103,64 @@
                 <form method="post" enctype="multipart/form-data" class="addformcontainer" id="AddSeriesdata" autocomplete="off">
 
                     <div class="row">
-                        <div class="form_group col-12 col-sm-12 col-lg-6 col-xl-4 mb-3">
+                        <div class="form_group col-12 col-sm-12 col-lg-6 col-xl-4">
                             <label>Series No: </label>
                             <input placeholder="Enter Series no#" name="Series_add" required />
                             <div class="invalid-feedback">Please enter a valid Series No</div>
                         </div>
 
-                        <div class="form_group col-12 col-sm-12 col-lg-6 col-xl-4 mb-3">
+                        <div class="form_group col-12 col-sm-12 col-lg-6 col-xl-4">
                             <label>Line no.: </label>
                             <input type="text" placeholder="Enter line no." name="Line_add" id="Lineid" required />
                             <div class="invalid-line">Only numeric values are allowed.</div>
                         </div>
 
-                        <div class="form_group col-12 col-sm-12 col-lg-6 col-xl-4 mb-2">
+                        <div class="form_group col-12 col-sm-12 col-lg-6 col-xl-4">
                             <label>Time target (hrs): </label>
                             <input type="text" placeholder="Enter Time Target" name="Time_add" id="Timeid" required />
                             <div class="invalid-Time">Please enter a valid Time Target ex :(1.0).</div>
                         </div>
 
-                        <div class="form_group col-12 col-sm-12 col-lg-6 col-xl-4 mb-3">
+                        <div class="form_group col-12 col-sm-12 col-lg-6 col-xl-4">
                             <label>Created By : </label>
                             <input placeholder="Enter name " name="Created_add" />
                         </div>
 
 
-                        <div class="form_group col-12  col-sm-12 col-lg-6 col-xl-4 mb-3">
+                        <div class="form_group col-12  col-sm-12 col-lg-6 col-xl-4">
 
                             <label>Set Group : </label>
                             <input placeholder="Enter set group" name="Group_add" />
                         </div>
 
-                        <div class="form_group col-12 col-sm-12 col-lg-6 col-xl-4 mb-3">
+                        <div class="form_group col-12 col-sm-12 col-lg-6 col-xl-4 ">
                             <label>Setup Navi : </label>
                             <input placeholder="Enter Setup Navi" name="Navi_add" />
                         </div>
 
-                        <div class="form_group col-12 col-sm-12 col-lg-6 col-xl-4 mb-3">
+                        <div class="form_group col-12 col-sm-12 col-lg-6 col-xl-4 ">
                             <label>Visual Management : </label>
                             <input placeholder="Enter Visual Manage" name="Visual_add" />
                         </div>
 
-                        <div class="form_group col-12 col-sm-12 col-lg-6 col-xl-4 mb-3">
+                        <div class="form_group col-12 col-sm-12 col-lg-6 col-xl-4 ">
                             <label>Status : </label>
                             <input placeholder="Enter Status" name="Status_add" />
                         </div>
 
-                        <div class="form_group col-12 col-sm-12 col-lg-6 col-xl-4 mb-3">
+                        <div class="form_group col-12 col-sm-12 col-lg-6 col-xl-4 ">
                             <label>Machine serial no : </label>
                             <input placeholder="Enter Machine serial" name="Machine_add" />
                         </div>
 
-                        <div class="form_group col-12 col-sm-12 col-lg-6 col-xl-4 mb-3">
+                        <div class="form_group col-12 col-sm-12 col-lg-6 col-xl-4 ">
                             <label>Model/Machine no : </label>
                             <input placeholder="Enter Model no." name="Model_add" />
                         </div>
 
 
 
-                        <div class="form_group col-12 col-lg-12 col-lg-6 col-xl-4 mb-3">
+                        <div class="form_group col-12 col-lg-12 col-lg-6 col-xl-4 ">
                             <label>Remarks : </label>
                             <textarea placeholder="Enter Remarks" name="Remark_add"></textarea>
                         </div>
@@ -503,8 +502,8 @@
                 let usercontrols = '';
 
                 if (ActionButtons() !== false) {
-                    usercontrols = ` <td style='display: flex; align-item: center; justify-content: center;' data-cell="Ongoing schedule">
-                                <div class='radio-group'>
+                    usercontrols = ` <td class = "flex_center" data-cell="Ongoing schedule">
+                                <div class='flex_center'>
                                      <input type='radio' class='checkonline' id='online_${rowData.Series_ID}' name='option_${rowData.Series_ID}' ${isOnline ? "checked" : ""}>
                                      <label for='online_${rowData.Series_ID}'>
                                          <span>Online</span>
@@ -515,12 +514,8 @@
                                      </label>
                                  </div>
                             </td>
-                            <td data-cell="Details">
-                                <button type='button' class='detailsbutton text-primary bg-white' id='detailsbutton_${rowData.Series_ID}' >
-                                   <i class="fa-solid fa-circle-info"></i>
-                                </button>
-                            </td>
-                            <td data-cell="Details">
+                           
+                            <td data-cell="Details"  >
                                 <button type='button' class='Editbtnbutton text-primary bg-white' id='Editbtnbutton_${rowData.Series_ID}' >
                                   <i class="fa-regular fa-pen-to-square"></i>
                                 </button>
@@ -531,7 +526,7 @@
 
 
                 const rowHtml = `
-                           <tr class='row_${i} rowClick' id='series_${rowData.Series_ID}'>
+                           <tr class='row_${rowData.Series_ID} detailsbutton' id='detailsbutton_${rowData.Series_ID}'>
                            <td data-cell="Series no" style="font-weight: 600">${rowData.Series_no}</td>
                            <td data-cell="Machine">${rowData.MachineSerial}</td>
                            <td data-cell="Time Target">${rowData.SetGroup}</td>
@@ -547,7 +542,8 @@
             $("#pagecountID").text(currentPage);
 
 
-            $(document).on('change', '.radio-group input[type="radio"]', async function () {
+            $(document).on('change', '.radio-group input[type="radio"]', async function (e) {
+                        e.stopPropagation();
                        const selectedValue = $(this).attr('id').includes('online') ? 1 : 0;
                        const seriesId = $(this).closest('tr').attr('id').split('_')[1];
                        const row = $(this).closest('tr'); // Get the parent row
@@ -558,6 +554,8 @@
                        const data = Object.fromEntries(formData);
                        let res = await postData('@Url.Action("SetActiveSeries", "ProgramPartList")', formData);
             });
+
+
 
 
             $(document).on('click', '.detailsbutton', function (e) {

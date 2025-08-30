@@ -150,11 +150,10 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                     Remarks = Request.Form["Remarks"]
                 };
                 bool result = await _ins.AddEditInpectors(obj, 0);
-                if (!result)
-                {
-                    CacheHelper.Remove("Inspectors");
-                    return JsonPostError("Insert failed.", 500);
-                }
+
+                if (!result) return JsonPostError("Insert failed.", 500);
+
+                CacheHelper.Remove("Inspectors");
                 return JsonCreated(obj, "Add Inspector Successfully");
             }
             catch (Exception ex)
@@ -179,11 +178,10 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 };
 
                 bool result = await _ins.AddEditInpectors(obj, 1);
-                if (!result)
-                {
-                    CacheHelper.Remove("Inspectors");
-                    return JsonPostError("Edit failed.", 500);
-                }
+
+                if (!result) return JsonPostError("Edit failed.", 500);
+
+                CacheHelper.Remove("Inspectors");
                 return JsonCreated(obj, "Edit Inspector Successfully");
             }
             catch (Exception ex)
@@ -416,6 +414,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             };
 
             string findJson = Request.Form["FindJson"];
+            string IsSend = Request.Form["Sendto"];
 
             bool result = await _ins.AddRegistration(obj, findJson);
 
@@ -434,7 +433,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                     Sender = strSender,
                     BCC = "",
                     Body = creatbody,
-                    Recipient = "jaye.labandia@sanyodenki.com"
+                    Recipient = IsSend
                 };
 
                 // GENERATE A PDF FILE AND SAVE TO THE NETWORK FILE

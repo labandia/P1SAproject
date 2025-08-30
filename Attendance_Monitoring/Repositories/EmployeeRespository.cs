@@ -90,5 +90,10 @@ namespace Attendance_Monitoring.Models
             }
             return result;
         }
+
+        public Task<bool> UploadEmployee(List<Employee> emp, int depid, int method)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -679,6 +679,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
 
 
         public ActionResult PlanSchedule() => View();
+        public ActionResult PDAView() => View();
         public ActionResult PlanScheduleDetails(string series)
         {
             try

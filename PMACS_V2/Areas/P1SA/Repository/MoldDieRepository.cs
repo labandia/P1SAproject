@@ -73,7 +73,6 @@ namespace PMACS_V2.Areas.P1SA.Repository
             foreach (var item in totalpart)
             {
                 item.TotalNo = totalByNo[item.No];
-                //Debug.WriteLine($"No - {item.No} : PartNo - {item.PartNo} : Updated TotalQty - {item.TotalQty} : New total {item.TotalNo}");
             }
 
             //var GroupbyMold = totalpart.GroupBy(x => x.No);
@@ -155,6 +154,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
                                 LEFT JOIN TotalByNo tb ON tb.No = p.No
                                 WHERE p.ProcessID = @ProcessID
                                 ORDER BY p.No ASC";
+
             return  SqlDataAccess.GetData<DieMoldSummaryProcess>(strquery, new { ProcessID = process });
         }
         public Task<List<DieMoldToolingModelDisplay>> GetMoldToolingData()

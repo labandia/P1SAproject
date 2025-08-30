@@ -24,11 +24,13 @@ namespace MSDMonitoring.Data
 
                 if (machineName == "desktop-fc0up1p") //  Home production
                     connectionKey = "HomeDevelopment";
+                else if (machineName == "sdp04003c") //  Test production
+                    connectionKey = "TestDevelopment";
                 else
                     connectionKey = "LiveDevelopment";
 
 
-                //LogConnectionChoice(machineName, connectionKey);
+                LogConnectionChoice(machineName, connectionKey);
 
                 return AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings[connectionKey].ConnectionString);
             }

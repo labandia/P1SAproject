@@ -38,7 +38,7 @@ namespace Attendance_Monitoring.View
                 {
                     MessageBox.Show("Update successfully");
                     Clear();
-                    _emp.Displayemployee(comboBox1.SelectedIndex);
+                    await _emp.Displayemployee(comboBox1.SelectedIndex);
                     _emp.comboBox1.SelectedIndex = comboBox1.SelectedIndex;
                     Visible = false;
                 }

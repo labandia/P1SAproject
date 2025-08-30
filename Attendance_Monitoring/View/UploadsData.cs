@@ -25,41 +25,41 @@ namespace Attendance_Monitoring.View
             if (!string.IsNullOrWhiteSpace(filepathText.Text) && comboBox1.SelectedIndex != 0)
             {
           
-                DialogResult exit = MessageBox.Show("Are you  sure you want to reset this Masterlist", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                //DialogResult exit = MessageBox.Show("Are you  sure you want to reset this Masterlist", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
-                // DELETES THE WHOLE MASTERLIST DEPENDS ON THE SECTION 
-                if (exit == DialogResult.Yes)
-                {
-                    string strfilePath = openFileDialog1.FileName;
-                    DataTable dtExcel = ReadExcelFile(strfilePath);
-                    bool result = await _admin.UploadEmployee(dtExcel, comboBox1.SelectedIndex, 0);
+                //// DELETES THE WHOLE MASTERLIST DEPENDS ON THE SECTION 
+                //if (exit == DialogResult.Yes)
+                //{
+                //    string strfilePath = openFileDialog1.FileName;
+                //    DataTable dtExcel = ReadExcelFile(strfilePath);
+                //    bool result = await _admin.UploadEmployee(dtExcel, comboBox1.SelectedIndex, 0);
 
-                    if (result)
-                    {
-                        _emp.Displayemployee(comboBox1.SelectedIndex);
-                        MessageBox.Show("UPLOAD DATA SUCCESSFULLY :");
-                        Visible = false;
-                    }
-                }
-                else
-                {
-                    // Updates only the list 
-                    DialogResult updates = MessageBox.Show("Do you want only to Update the Masterlist ", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                //    if (result)
+                //    {
+                //        _emp.Displayemployee(comboBox1.SelectedIndex);
+                //        MessageBox.Show("UPLOAD DATA SUCCESSFULLY :");
+                //        Visible = false;
+                //    }
+                //}
+                //else
+                //{
+                //    // Updates only the list 
+                //    DialogResult updates = MessageBox.Show("Do you want only to Update the Masterlist ", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
-                    if (updates == DialogResult.Yes)
-                    {
-                        string strfilePath = openFileDialog1.FileName;
-                        DataTable dtExcel = ReadExcelFile(strfilePath);
-                        bool result = await _admin.UploadEmployee(dtExcel, comboBox1.SelectedIndex, 1);
+                //    if (updates == DialogResult.Yes)
+                //    {
+                //        string strfilePath = openFileDialog1.FileName;
+                //        DataTable dtExcel = ReadExcelFile(strfilePath);
+                //        bool result = await _admin.UploadEmployee(dtExcel, comboBox1.SelectedIndex, 1);
 
-                        if (result)
-                        {
-                            _emp.Displayemployee(comboBox1.SelectedIndex);
-                            MessageBox.Show("UPLOAD DATA SUCCESSFULLY :");
-                            Visible = false;
-                        }
-                    }
-                }
+                //        if (result)
+                //        {
+                //            _emp.Displayemployee(comboBox1.SelectedIndex);
+                //            MessageBox.Show("UPLOAD DATA SUCCESSFULLY :");
+                //            Visible = false;
+                //        }
+                //    }
+                //}
               
             }
             else

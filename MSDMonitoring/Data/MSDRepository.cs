@@ -1,7 +1,5 @@
 ﻿using MSDMonitoring.Interface;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing.Printing;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,43 +13,29 @@ namespace MSDMonitoring.Data
         public Task<List<MSDCardModel>> GetListComponentIN()
         {
             string strquery = $@"WITH LineLimited AS (
-                                    SELECT 
-                                        RecordID, 
-                                        ReelID, 
-                                        Line, 
-                                        QuantityIN, 
-                                        DateIn as DateCheck,
-                                        FORMAT(DateIn, 'MM/dd/yy') as DateIn,
-                                        FORMAT(DateIn, 'HH:mm') as TimeIn, 
-                                        RemainFloor, 
-                                        InputIn,
-                                        ROW_NUMBER() OVER (PARTITION BY Line ORDER BY DateIn DESC) AS rn
-                                    FROM MSD_MonitorList
-                                    WHERE IsStats = 0
-                                      AND LINE BETWEEN 1 AND 12
-                                )
-                                SELECT *
-                                FROM LineLimited
-                                WHERE 
-                                    (Line BETWEEN 1 AND 8  AND rn <= 1)   -- only 1 record for Lines 1–8
-                                    OR 
-                                    (Line BETWEEN 9 AND 12 AND rn <= 2)   -- only 2 records for Lines 9–12
-                                ORDER BY Line, DateCheck DESC;";
+                                        SELECT 
+                                            RecordID, 
+                                            ReelID, 
+                                            Line, 
+                                            QuantityIN, 
+                                            DateIn as DateCheck,
+                                            FORMAT(DateIn, 'MM/dd/yy') as DateIn,
+                                            FORMAT(DateIn, 'HH:mm') as TimeIn, 
+                                            RemainFloor, 
+                                            InputIn,
+                                            ROW_NUMBER() OVER (PARTITION BY Line ORDER BY DateIn DESC) AS rn
+                                        FROM MSD_MonitorList
+                                        WHERE IsStats = 0
+                                          AND LINE BETWEEN 1 AND 12
+                                    )
+                                    SELECT *
+                                    FROM LineLimited
+                                    WHERE 
+                                        (Line IN (9, 11) AND rn <= 4)      -- 4 records for line 9 and 11
+                                        OR (Line NOT IN (9, 11) AND rn <= 2) -- 2 records for all other lines
+                                    ORDER BY Line, DateCheck DESC;";
             return SqlDataAccess.GetData<MSDCardModel>(strquery);
         }
-        public Task<List<MSDMasterlistodel>> GetMSDMasterlist() => SqlDataAccess.GetData<MSDMasterlistodel>("MSDMaster");
-        public Task<List<MSDmodel>> GetMSDHistoryList(int CurrentPageIndex, int pageSize, string searchTerm = "")
-        {
-            return SqlDataAccess.GetData<MSDmodel>(
-                "MSDHistory",
-                new
-                {
-                    PageNumber = CurrentPageIndex,
-                    PageSize = pageSize,
-                    SearchTerm = searchTerm
-                });
-        }
-        public Task<List<MSDmodel>> GetMSDExportList() => SqlDataAccess.GetData<MSDmodel>("GetExportClose");
         public async Task<MSDReelID> GetReelID(string reelid)
         {
             var data = await SqlDataAccess.GetData<MSDReelID>($@"SELECT 
@@ -64,9 +48,30 @@ namespace MSDMonitoring.Data
             return data.SingleOrDefault();
         }
 
+        // ---------------------------
+        // GET HISTORY DISPLAY
+        // ---------------------------
+        public Task<List<MSDmodel>> GetMSDHistoryList(int CurrentPageIndex, int pageSize, string searchTerm = "")
+        {
+            return SqlDataAccess.GetData<MSDmodel>(
+                "MSDHistory",
+                new
+                {
+                    PageNumber = CurrentPageIndex,
+                    PageSize = pageSize,
+                    SearchTerm = searchTerm
+                });
+        }
+        public Task<List<MSDmodel>> GetMSDExportList() => SqlDataAccess.GetData<MSDmodel>("GetExportClose");
+
 
         public Task<int> GetTotalHistoryList() => SqlDataAccess.GetCountData("Select COUNT(*) FROM MSD_MonitorList");
-       
+        // ---------------------------
+        // GET MASTERLIST DISPLAY
+        // ---------------------------
+        public Task<List<MSDMasterlistodel>> GetMSDMasterlist() => SqlDataAccess.GetData<MSDMasterlistodel>("MSDMaster");
+
+
 
         // ---------------------------
         // INSERT AND UPDATE DATA 

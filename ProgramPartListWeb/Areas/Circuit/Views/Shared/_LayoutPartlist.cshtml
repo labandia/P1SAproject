@@ -11,9 +11,8 @@
     <meta name="description" content="Learn how to improve your website with caching, accessibility, and SEO best practices.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
-
+    <link href="~/Content/css/Programpartlist.css" rel="stylesheet" />
     <script src="~/Scripts/bootstrap.bundle.min.js"></script>
-
     @Styles.Render("~/Content/shared-css")
     @Styles.Render("~/Content/partlist-css")
 
@@ -35,7 +34,10 @@
                             <span class="sidebar__name">Partlist Data</span>
                         </a>
 
-
+                        <a href="/Circuit/ProgramPartList/PDAView" class="sidebar__link">
+                            <i class="fa-solid fa-table sidebar__icon"></i>
+                            <span class="sidebar__name">PDA view</span>
+                        </a>
 
                         <a href="/Circuit/ProgramPartList/PlanSchedule" class="sidebar__link">
                             <i class="fa-solid fa-calendar-day sidebar__icon"></i>

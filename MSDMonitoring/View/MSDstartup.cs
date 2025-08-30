@@ -418,17 +418,19 @@ namespace MSDMonitoring
 
             // Check for duplicates in data
             int selectedLine = Convert.ToInt32(LineSelect.Text);
-            // ✅ Only apply "2 record max" to Lines 9–12
-            if (selectedLine >= 9 && selectedLine <= 12)
-            {
-                int lineCount = data.Count(res => res.Line == selectedLine);
 
-                if (lineCount >= 2)
-                {
-                    MessageBox.Show($"Line {selectedLine} already has 2 entries. Maximum limit reached.",
-                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
+            // ✅ Different record limits depending on line
+            int maxAllowed = (selectedLine == 9 || selectedLine == 11) ? 4 : 2;
+
+            int lineCount = data.Count(res => res.Line == selectedLine);
+
+            if (lineCount >= maxAllowed)
+            {
+                MessageBox.Show(
+                    $"Line {selectedLine} already has {maxAllowed} entries. Maximum limit reached.",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error
+                );
+                return false;
             }
 
             return true;

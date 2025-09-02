@@ -132,6 +132,12 @@
         outline: none;
     }
 
+    input[readonly] {
+        background-color: #f0f0f0;  /* light gray */
+        color: #555;                /* darker text */
+        cursor: not-allowed;        /* indicate it's readonly */
+    }
+
 /*=============== TABLE COMMON ================*/
     table {
         width: 100%;

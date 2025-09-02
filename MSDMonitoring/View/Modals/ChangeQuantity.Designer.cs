@@ -33,6 +33,8 @@
             this.Button1 = new System.Windows.Forms.Button();
             this.quan = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.SuspendLayout();
             // 
             // Addbtn
@@ -46,7 +48,7 @@
             this.Addbtn.ForeColor = System.Drawing.Color.White;
             this.Addbtn.Image = ((System.Drawing.Image)(resources.GetObject("Addbtn.Image")));
             this.Addbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Addbtn.Location = new System.Drawing.Point(253, 145);
+            this.Addbtn.Location = new System.Drawing.Point(253, 232);
             this.Addbtn.Name = "Addbtn";
             this.Addbtn.Padding = new System.Windows.Forms.Padding(40, 0, 40, 0);
             this.Addbtn.Size = new System.Drawing.Size(189, 47);
@@ -59,7 +61,7 @@
             // Button1
             // 
             this.Button1.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Button1.Location = new System.Drawing.Point(33, 145);
+            this.Button1.Location = new System.Drawing.Point(33, 232);
             this.Button1.Name = "Button1";
             this.Button1.Size = new System.Drawing.Size(189, 47);
             this.Button1.TabIndex = 10;
@@ -70,7 +72,7 @@
             // quan
             // 
             this.quan.Font = new System.Drawing.Font("Century Gothic", 12.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.quan.Location = new System.Drawing.Point(33, 75);
+            this.quan.Location = new System.Drawing.Point(33, 68);
             this.quan.Multiline = true;
             this.quan.Name = "quan";
             this.quan.Size = new System.Drawing.Size(409, 43);
@@ -88,11 +90,31 @@
             this.label1.TabIndex = 8;
             this.label1.Text = "Change quantity:";
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.label2.Location = new System.Drawing.Point(30, 132);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(63, 18);
+            this.label2.TabIndex = 12;
+            this.label2.Text = "Time In:";
+            // 
+            // dateTimePicker1
+            // 
+            this.dateTimePicker1.Location = new System.Drawing.Point(33, 163);
+            this.dateTimePicker1.Name = "dateTimePicker1";
+            this.dateTimePicker1.Size = new System.Drawing.Size(409, 20);
+            this.dateTimePicker1.TabIndex = 13;
+            // 
             // ChangeQuantity
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(472, 228);
+            this.ClientSize = new System.Drawing.Size(472, 324);
+            this.Controls.Add(this.dateTimePicker1);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.Addbtn);
             this.Controls.Add(this.Button1);
             this.Controls.Add(this.quan);
@@ -112,5 +134,7 @@
         private System.Windows.Forms.Button Button1;
         private System.Windows.Forms.TextBox quan;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.DateTimePicker dateTimePicker1;
     }
 }

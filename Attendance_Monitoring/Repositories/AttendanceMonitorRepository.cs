@@ -9,36 +9,29 @@ namespace Attendance_Monitoring.Repositories
     {
         public Task<List<P1SA_AttendanceModel>> GetAttendanceRecordsList(string dDate, int shifts, int selectime, int depid)
         {
-            string strquery;
+            string strquery = (selectime == 0) ? $@"SELECT
+	                                                    FORMAT(pc.TimeIn, 'MM/dd/yyyy') as Date_today, 
+	                                                    FORMAT(pc.TimeIn, 'hh:mm:ss tt') as TimeIn, 
+	                                                    pc.Shifts,
+	                                                    CASE 
+	                                                    WHEN pc.Shifts = 0 THEN 'DAYSHIFT'
+	                                                    ELSE 'NIGHTSHIFT'
+	                                                    END as Shifts,
+	                                                    pc.Employee_ID, e.FullName, pc.LateTime 
+                                                    FROM P1SA_AttendanceMonitor pc 
+                                                    INNER JOIN Employee_tbl e ON e.Employee_ID = pc.Employee_ID
+                                                    WHERE (CAST(pc.TimeIn AS DATE) = @Datetoday AND pc.Shifts = @Shifts) AND 
+                                                    e.Department_ID = @Department_ID
+                                                    ORDER BY pc.RecordID DESC"
+                                            : $@"SELECT  
+                                                  FORMAT(pc.TimeIn, 'MM/dd/yyyy') as Date_today, 
+                                                  pc.TimeOut, pc.Shifts, pc.LateTime 
+                                                  FROM P1SA_AttendanceMonitor pc 
+                                                  INNER JOIN Employee_tbl e ON e.Employee_ID = pc.Employee_ID 
+                                                  WHERE CAST(pc.TimeIn AS DATE) = @Datetoday 
+                                                  AND (pc.TimeOut is Not null AND pc.Shifts = @Shifts) AND e.Department_ID = @Department_ID
+                                                  ORDER BY pc.TimeOut DESC";
 
-            if(selectime == 0)
-            {
-                strquery = $@"SELECT
-	                        FORMAT(pc.TimeIn, 'MM/dd/yyyy') as Date_today, 
-	                        FORMAT(pc.TimeIn, 'hh:mm:ss tt') as TimeIn, 
-	                        pc.Shifts,
-	                        CASE 
-	                        WHEN pc.Shifts = 0 THEN 'DAYSHIFT'
-	                        ELSE 'NIGHTSHIFT'
-	                        END as Shifts,
-	                        pc.Employee_ID, e.FullName, pc.LateTime 
-                        FROM P1SA_AttendanceMonitor pc 
-                        INNER JOIN Employee_tbl e ON e.Employee_ID = pc.Employee_ID
-                        WHERE (CAST(pc.TimeIn AS DATE) = @Datetoday AND pc.Shifts = @Shifts) AND 
-                        e.Department_ID = @Department_ID
-                        ORDER BY pc.RecordID DESC";
-            }
-            else
-            {
-                strquery = $@"SELECT  
-                              FORMAT(pc.TimeIn, 'MM/dd/yyyy') as Date_today, 
-                              pc.TimeOut, pc.Shifts, pc.LateTime 
-                              FROM P1SA_AttendanceMonitor pc 
-                              INNER JOIN Employee_tbl e ON e.Employee_ID = pc.Employee_ID 
-                              WHERE CAST(pc.TimeIn AS DATE) = @Datetoday 
-                              AND (pc.TimeOut is Not null AND pc.Shifts = @Shifts) AND e.Department_ID = @Department_ID
-                              ORDER BY pc.TimeOut DESC";
-            }
 
             var parameters = new { Datetoday = dDate, Shifts = shifts, Department_ID = depid };
 
@@ -47,12 +40,13 @@ namespace Attendance_Monitoring.Repositories
         }
         public Task<List<P1SA_AttendanceModel>> GetAttendanceSummaryList(string startDate, string endDate, string search = "")
         {
-            string strquery = $@"SELECT FORMAT(pc.TimeIn, 'MM/dd/yyyy') AS Date_today, 
-                                pc.Employee_ID, e.FullName, 
-                                FORMAT(pc.TimeIn, 'HH:mm') as TimeIn, 
-                                FORMAT(pc.TimeOut, 'HH:mm')  as TimeOut, 
-                                pc.LateTime, pc.Regular, 
-                                pc.Overtime, pc.Gtotal, pc.Shifts 
+            string strquery = $@"SELECT 
+                                    FORMAT(pc.TimeIn, 'MM/dd/yyyy') AS Date_today, 
+                                    pc.Employee_ID, e.FullName, 
+                                    FORMAT(pc.TimeIn, 'HH:mm') as TimeIn, 
+                                    FORMAT(pc.TimeOut, 'HH:mm')  as TimeOut, 
+                                    pc.LateTime, pc.Regular, 
+                                    pc.Overtime, pc.Gtotal, pc.Shifts 
                                 FROM P1SA_AttendanceMonitor pc 
                                 INNER JOIN Employee_tbl e 
                                 ON e.Employee_ID = pc.Employee_ID 

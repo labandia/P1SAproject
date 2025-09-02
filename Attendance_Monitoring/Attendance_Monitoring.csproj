@@ -173,9 +173,11 @@
     <Compile Include="Controller\AdminController.cs" />
     <Compile Include="Interfaces\IAttendanceMonitor.cs" />
     <Compile Include="Interfaces\IAttendanceV2.cs" />
+    <Compile Include="Interfaces\ICRmonitorV2.cs" />
     <Compile Include="Interfaces\ICRUD_Repository.cs" />
     <Compile Include="Repositories\AttendanceMonitorRepository.cs" />
     <Compile Include="Repositories\AttendanceV2Repository.cs" />
+    <Compile Include="Repositories\CRMonitorRepositoryV2.cs" />
     <Compile Include="Repositories\CRUD_Repository.cs" />
     <Compile Include="Repositories\EmployeeRespositoryV2.cs" />
     <Compile Include="Utilities\Caching\CacheHelper.cs" />

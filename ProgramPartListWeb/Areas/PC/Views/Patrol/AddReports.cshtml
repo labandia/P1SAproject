@@ -180,7 +180,7 @@
         </div>
 
         <div class="col-12 col-sm-12 col-lg-6 ">
-            <label>Send Notification To: </label> <br />
+            <label>Send Email To: </label> <br />
             <div class="select-container">
                 <select id="Sendto" name="Sendto">
                 <option value="jaye.labandia@sanyodenki.com">Jaye Labandia</option>
@@ -202,6 +202,7 @@
 
 
 <script type="text/javascript">
+    let EmpID;
     let regisTable = [];
     let loadData = [];
 
@@ -220,21 +221,23 @@
         const dd = String(date.getDate()).padStart(2, '0');
         document.getElementById('RegNo').value = `${yy}${mm}${dd}`;
     }
-   
-
     const RegistrationTable = async() => {
         let res = await FetchAuthenticate('@Url.Action("GetRegistrationNo", "Patrol")', {});
         if (res && res.Success) {
             regisTable = res.Data;
         }
     }
-
     const PopulateComboxInspector = async () => {
         Resetforms();
         let res = await FetchAuthenticate('@Url.Action("GetInspectorsByAdd", "Patrol")', {});
         if (res && res.Success) {
             loadData = res.Data;
         }
+    }
+    const Getuserinfo = async() =>{
+        const accessToken = localStorage.getItem('accessToken');
+        const result = await FetchAuthenticate('/User/GetUserInformation', { accessToken });
+        EmpID = result.Employee_ID;
     }
 
     // RESETS FORM
@@ -261,7 +264,6 @@
         }
         return false;
     }
-
     const findingsJson = (e) => {
         let formData = new FormData(e);
         const data = Object.fromEntries(formData);
@@ -279,8 +281,6 @@
 
         return JSON.stringify(findings);
     };
-
-    
 
     addform.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -358,8 +358,6 @@
         Resetforms();
     });
 
-
-
     // INPUT SEARCH EMPLOYEE NAME WHEN TYPE
     $("#EmployeeSearch").keyup(function () {
         let result = [];
@@ -401,7 +399,7 @@
         resultBox.style.display = 'none';
     }
 
-  
+    
 
 
     // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
@@ -410,9 +408,10 @@
             $("#errorvalid").hide();
             //$("#currentdatetime").text(Month + "  " + currentYear);
 
-            const [combo, regis] = await Promise.all([
+            const [combo, regis, emp] = await Promise.all([
                 PopulateComboxInspector(),
-                RegistrationTable()
+                RegistrationTable(),
+                Getuserinfo()
             ]);
 
         } catch (error) {

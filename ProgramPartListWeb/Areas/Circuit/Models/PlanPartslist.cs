@@ -8,26 +8,22 @@ namespace ProgramPartListWeb.Areas.Circuit.Models
 {
     public class PlanPartslist
     {
-        public int Series_ID { get; set; }
-        public string Series_no { get; set; }
+        public string PlanSched { get; set; }   
         public int Line { get; set; }
-        public decimal Timetarget { get; set; }
-        public string CreatedBy { get; set; }
-        public string Shift { get; set; }
+        public float Timetarget { get; set; }   
+        public string SetupNavi { get; set; }   
+        public string VisualManage { get; set; }    
+        public string Serial {  get; set; } 
         public string Remarks { get; set; }
-        public string SetupNavi { get; set; }
-        public string VisualManage { get; set; }
-        public string Status { get; set; }
-        public string MachineSerial { get; set; }
         public string Modelno { get; set; }
-        public string SetGroup { get; set; }
-        public int Ongoing { get; set; }
-        public int TotalCount { get; set; }
-        public int Planstatus { get; set; }
-        public string DateCreated { get; set; }
+        public string SetGroup {  get; set; }   
+        public int Shift { get; set; }
+        public int Status { get; set; }
+        public int Ongoing { get; set; }    
+        public string CreatedBy {  get; set; }  
 
-        public List<partlistComponents> components { get; set; } = new List<partlistComponents>();
-        public List<SummaryComponentModelV2> summary { get; set; } = new List<SummaryComponentModelV2>();
+
+
     }
 
     public class partlistComponents

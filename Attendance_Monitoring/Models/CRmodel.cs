@@ -13,6 +13,8 @@ namespace Attendance_Monitoring.Models
         private string timeOut;
         private string duration;
 
+   
+
 
         public DateTime Date_today
         {

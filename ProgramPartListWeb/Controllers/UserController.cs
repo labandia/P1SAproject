@@ -123,6 +123,7 @@ namespace ProgramPartListWeb.Controllers
                     userId,
                     name,
                     role,
+                    datalist.Employee_ID,
                     datalist.Password,
                     datalist.Signature,
                     datalist.Email

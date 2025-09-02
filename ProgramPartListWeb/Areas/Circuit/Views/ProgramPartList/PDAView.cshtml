@@ -16,15 +16,14 @@
         <input type="text" placeholder="Search Plan Schedule" id="searchReelID" autocomplete="off" />
         <br />
 
-
-
-
         <label>Scan Reel ID : </label>
         <br />
         <input type="text" placeholder="Input ReelID" id="searchpartnum" autocomplete="off" />
 
         <br />
-
+        <label>Location: </label>
+        <br />
+        <input type="text" placeholder="Warehouse Location" id="locationText" autocomplete="off" />
 
         <div class="row">
             <div class=" col-12 col-sm-12 col-lg-6 mb-2">
@@ -34,13 +33,13 @@
 
             <div class=" col-12 col-sm-12 col-lg-6 mb-2">
                 <label>Lot No : </label>
-                <input type="text" placeholder="Enter the Lot No." id="LotNo" />
+                <input type="text" placeholder="Enter the Lot No." id="LotNo" autocomplete="off" />
             </div>
         </div>
 
         <div class="row">
             <div class=" col-12 col-sm-12 col-lg-6 mb-2">
-                <label>Select Supplier : </label>
+                <label>Select Supplier : </label><br />
                 <div class="select-container">
                     <select id="Supplierselect" name="Supplierselect">
                         <option value="">-- Supplier Select --</option>
@@ -50,16 +49,17 @@
 
             <div class=" col-12 col-sm-12 col-lg-6 mb-2">
                 <label>Code : </label>
-                <input type="text" placeholder="Supplier Code" name="SupCode" id="SupCode" required />
+                <input type="text" placeholder="Supplier Code" name="SupCode" id="SupCode" autocomplete="off" required />
             </div>
         </div>
-        <label>Location: </label>
-        <br />
-        <input type="text" placeholder="Warehouse Location" id="locationText" autocomplete="off" />
+
         <hr />
         <input type="hidden" placeholder="Enter Series" name="Visual_add" id="Quantext" />
-        <input type="hidden" placeholder="Enter Set no" name="Series_add" id="SetText" />
-        <button id="btnSave" style="width: 100%"><i class="fa-regular fa-floppy-disk"></i>  Save</button>
+        <input type="hidden" placeholder="Enter Set no" name="Series_add" id="SetText" autocomplete="off" />
+        <div class="flex_align">
+            <button type="button" style="width: 100%" id="resetbtn"><i class="fa-regular fa-floppy-disk"></i>  Reset</button>
+            <button id="btnSave" style="width: 100%"><i class="fa-regular fa-floppy-disk"></i>  Save</button>
+        </div>
     </div>
 
 </div>
@@ -73,6 +73,7 @@
     const searchID = document.getElementById("searchReelID");
     const searchpart = document.getElementById("searchpartnum");
     const QuanEvent = document.getElementById("ActualQuantity");
+    const resetButton = document.getElementById("resetbtn");
 
     const selectSupply = document.getElementById("Supplierselect");
 
@@ -103,11 +104,11 @@
 
         if (res && res.Success) {
             partlistTemp = res.Data;
-            console.log(partlistTemp);
         }
     }
     // =================== LOADS THE COMPONENTS SUMMARY LIST ==============================
     const SummaryComponentsdetails = async (params) => {
+        console.log("Series ID :" + params);
       summarylistTemp = [];
 
       let res = await FetchAuthenticate('@Url.Action("GetSummmaryComponentlist", "ProgramPartList")', { intval: params });
@@ -117,11 +118,13 @@
           if (data.length === 0) return;
 
           summarylistTemp = data;
+          console.log(summarylistTemp);
+
       }
    }
 
     // =================== LOAD THE SUPPLER LIST ===========================================
-     const LoadSupplierList = async (partnum) => {
+    const LoadSupplierList = async (partnum) => {
         let res = await FetchAuthenticate('@Url.Action("GetSupplierDatalist", "ProgramPartList")', { partText: partnum });
 
          if (res && res.Success) {
@@ -162,10 +165,13 @@
             machserial = filter[0].MachineSerial;
             seriesNo = filter[0].Series_no;
 
+            document.getElementById("searchReelID").readOnly = true;
+
             LoadComponentsPartlist(seriesID);
             SummaryComponentsdetails(seriesID);
 
             $("#searchpartnum").focus();
+
         }
     });
     searchpart.addEventListener('keydown', function (e) {
@@ -175,7 +181,6 @@
 
         }
     });
-
     QuanEvent.addEventListener('keydown', function (e) {
 
         if (e.key === "Enter") {
@@ -194,8 +199,6 @@
             $("#LotNo").focus();
         }
     });
-
-
     sumbtn.addEventListener('click', (e) => {
         e.preventDefault();
 
@@ -203,7 +206,7 @@
 
          var formData = new FormData();
          formData.append("SeriesID", seriesID);
-        formData.append("ComponentName", reelID);
+         formData.append("ComponentName", reelID);
 
          formData.append("QuantityInput", parseInt($("#ActualQuantity").val()));
          formData.append("LotID", finalReel ?? "");
@@ -216,10 +219,73 @@
          formData.append("Supplierselect", $("#Supplierselect").val());
          let data = Object.fromEntries(formData);
 
-         console.log(data);
+
+         $.ajax({
+         url: '@Url.Action("AddSummaryComponents", "ProgramPartList")',
+         type: 'POST',
+         data: formData,
+         processData: false, // Don't process the data (jQuery does this automatically)
+         contentType: false, // Don't set content type as multipart/form-data
+         success: function (res) {
+
+             if (res.StatusCode === 200) {
+                 Swal.fire({
+                     title: "Add success",
+                     text: res.Message,
+                     icon: "success",
+                     showConfirmButton: false,
+                     timer: 1500
+                 }).then(() => {
+                     console.log(res.Message);
+                     let select = document.getElementById("Supplierselect");
+                     select.innerHTML = '<option value="">-- Supplier Select --</option>';
+
+                     $("#searchpartnum").val("");
+
+                     $("#locationText").val("");
+                     $("#ActualQuantity").val("");
+                     $("#LotNo").val("");
+                     $("#SupCode").val("");
+
+                     $("#searchpartnum").focus();
+
+                     SummaryComponentsdetails(seriesID);
+                 });
+             } else {
+                 Swal.fire({
+                     title: "Invalid Data",
+                     text: res.Message,
+                     icon: "error",
+                     showConfirmButton: false,
+                     timer: 1500
+                 }).then(() => {
+                 });
+             }
+         },
+         error: function (error) {
+             console.error("Error creating product:", error);
+         }
+     });
+
+
     });
+    resetButton.addEventListener('click', function (e) {
+        e.preventDefault();
+        let select = document.getElementById("Supplierselect");
 
+        document.getElementById("searchReelID").readOnly = false;
+        document.getElementById("searchReelID").value = "";
 
+        select.innerHTML = '<option value="">-- Supplier Select --</option>';
+
+        $("#searchpartnum").val("");
+        $("#locationText").val("");
+        $("#ActualQuantity").val("");
+        $("#LotNo").val("");
+        $("#SupCode").val("");
+
+        $("#searchReelID").focus();
+    });
 
     //----------- BARCODE PROCESS -------------------- //
     function SDP_ScanText(scan) {
@@ -231,6 +297,11 @@
         strReelID = input.substring(14);
         finalReel = strReelID.split(' ')[1].trim();  // "410210268"
 
+        //let findData = summarylistTemp.filter(res => res.ReelID === finalReel);
+
+        //console.log(findData);
+
+
         //CHECKS THE REEL ID IF IS ALREADY INPUT THE COMPONENTS SUMMARY
         if (summarylistTemp.some(res => String(res.LotID).trim() === finalReel)) {
             showInvalidData("Reel ID is already Inserted in the Components Summary");
@@ -240,10 +311,6 @@
         var product = partlistTemp.find(p => p.AbassadorPartnum == strpartnum);
 
         if (product != undefined) {
-            //$("#partnumText").css("border", "2px solid green");
-            //setTimeout(() => {
-            //    $("#partnumText").css("border", "");
-            //}, 2000);
 
             $("#SetText").val(product.SetNo ?? "");
             //$("#PartText").val(product.AbassadorPartnum ?? "");
@@ -260,8 +327,8 @@
 
         } else {
             Swal.fire({
-                title: "Invalid Data",
-                text: "Wrong Part number input",
+                title: "Invalid input",
+                text: "Wrong Partnumber input",
                 icon: "error",
                 showConfirmButton: false,
                 timer: 1500
@@ -272,7 +339,7 @@
 
     }
 
- 
+
 
 
 

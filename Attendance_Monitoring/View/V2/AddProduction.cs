@@ -59,5 +59,8 @@ namespace Attendance_Monitoring.View.V2
 
             return !(isEmpIDEmpty || isFullnameEmpty || isSectionInvalid);
         }
+
+       
+
     }
 }

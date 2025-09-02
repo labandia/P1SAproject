@@ -50,5 +50,11 @@
     "inputFiles": [
       "Scripts/Utilities.js"
     ]
+  },
+  {
+    "outputFileName": "Content/Shared/Site.min.css",
+    "inputFiles": [
+      "Content/Shared/Site.css"
+    ]
   }
 ]

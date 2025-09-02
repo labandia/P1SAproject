@@ -678,7 +678,7 @@
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Name = "MSDstartup";
-            this.Text = "s";
+            this.Text = "MSD montoring System ";
             this.Load += new System.EventHandler(this.MSDstartup_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

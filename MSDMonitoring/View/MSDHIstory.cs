@@ -42,8 +42,12 @@ namespace MSDMonitoring
 
 
             MonitorTable.DataSource = await _msd.GetMSDHistoryList(CurrentPageIndex, PageSize, searchTerm);
-            MonitorTable.Columns[0].Width = 200;
-            MonitorTable.Columns[1].Width = 200;
+            //MonitorTable.Columns[0].Width = 200;
+            //MonitorTable.Columns[1].Width = 200;
+
+            MonitorTable.Columns["Print"].DisplayIndex = 20;
+            MonitorTable.Columns["Print"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            MonitorTable.Columns["Print"].Width = 70;
         }
 
         private async void MSDHIstory_Load(object sender, EventArgs e)
@@ -52,9 +56,7 @@ namespace MSDMonitoring
             this.FormBorderStyle = FormBorderStyle.Sizable; // keeps title bar
             // // First column, index 0
             await LoadData();
-            MonitorTable.Columns["Print"].DisplayIndex = 20;
-            MonitorTable.Columns["Print"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            MonitorTable.Columns["Print"].Width = 70;
+          
 
         }
 
@@ -123,7 +125,12 @@ namespace MSDMonitoring
             int currentValue = Convert.ToInt32(MonitorTable.Rows[e.RowIndex].Cells[1].Value);
             int QuanValue = Convert.ToInt32(MonitorTable.Rows[e.RowIndex].Cells[10].Value);
 
-            ChangeQuantity c = new ChangeQuantity(_msd, currentValue, QuanValue, this);
+            string strDate = MonitorTable.Rows[e.RowIndex].Cells[8].Value.ToString();
+            string strTime = MonitorTable.Rows[e.RowIndex].Cells[9].Value.ToString();
+            Debug.WriteLine("DATe : " + MonitorTable.Rows[e.RowIndex].Cells[8].Value.ToString());
+            Debug.WriteLine("Time : " + MonitorTable.Rows[e.RowIndex].Cells[9].Value.ToString());
+            
+            ChangeQuantity c = new ChangeQuantity(_msd, currentValue, QuanValue, this, strDate, strTime);
             c.Show();
 
         }
@@ -225,27 +232,6 @@ namespace MSDMonitoring
             // Make sure a valid row is clicked (not header)
             if (e.RowIndex < 0) return;
 
-            //Debug.WriteLine($@" 0 " + MonitorTable.Rows[e.RowIndex].Cells[1].Value.ToString());
-            //Debug.WriteLine($@" 1 " + MonitorTable.Rows[e.RowIndex].Cells[2].Value.ToString());
-            //Debug.WriteLine($@" 2 " + MonitorTable.Rows[e.RowIndex].Cells[3].Value.ToString());
-            //Debug.WriteLine($@" 3 " + MonitorTable.Rows[e.RowIndex].Cells[4].Value.ToString());
-            //Debug.WriteLine($@" 4 " + MonitorTable.Rows[e.RowIndex].Cells[5].Value.ToString());
-            //Debug.WriteLine($@" 6 " + MonitorTable.Rows[e.RowIndex].Cells[6].Value.ToString());
-            //Debug.WriteLine($@" 7 " + MonitorTable.Rows[e.RowIndex].Cells[7].Value.ToString());
-            //Debug.WriteLine($@" 8 " + MonitorTable.Rows[e.RowIndex].Cells[8].Value.ToString());
-            //Debug.WriteLine($@" 9 " + MonitorTable.Rows[e.RowIndex].Cells[9].Value.ToString());
-            //Debug.WriteLine($@" 10 " + MonitorTable.Rows[e.RowIndex].Cells[10].Value.ToString());
-            //Debug.WriteLine($@" 11 " + MonitorTable.Rows[e.RowIndex].Cells[11].Value.ToString());
-
-            //Debug.WriteLine($@" 12 " + MonitorTable.Rows[e.RowIndex].Cells[12].Value.ToString());
-            //Debug.WriteLine($@" 13 " + MonitorTable.Rows[e.RowIndex].Cells[13].Value.ToString());
-            //Debug.WriteLine($@" 14 " + MonitorTable.Rows[e.RowIndex].Cells[14].Value.ToString());
-            //Debug.WriteLine($@" 15 " + MonitorTable.Rows[e.RowIndex].Cells[15].Value.ToString());
-            //Debug.WriteLine($@" 16 " + MonitorTable.Rows[e.RowIndex].Cells[16].Value.ToString());
-            //Debug.WriteLine($@" 17 " + MonitorTable.Rows[e.RowIndex].Cells[17].Value.ToString());
-            //Debug.WriteLine($@" 18 " + MonitorTable.Rows[e.RowIndex].Cells[18].Value.ToString());
-            //Debug.WriteLine($@" 19 " + MonitorTable.Rows[e.RowIndex].Cells[19].Value.ToString());
-            //Debug.WriteLine($@" 20 " + MonitorTable.Rows[e.RowIndex].Cells[20].Value.ToString());
             if (e.ColumnIndex == 0)
             {
                 var obj = new PrintLabelModel

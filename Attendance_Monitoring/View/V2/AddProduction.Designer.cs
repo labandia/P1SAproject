@@ -87,7 +87,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Century Gothic", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(41, 47);
+            this.label6.Location = new System.Drawing.Point(40, 56);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(203, 28);
             this.label6.TabIndex = 28;
@@ -248,7 +248,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(467, 682);
+            this.ClientSize = new System.Drawing.Size(467, 688);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.Name_error);
             this.Controls.Add(this.Emp_error);

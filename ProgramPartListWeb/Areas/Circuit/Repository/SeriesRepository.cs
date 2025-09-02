@@ -15,22 +15,32 @@ namespace ProgramPartListWeb.Data
         // ###################   PULL THE DATA SERIES  ##################################
         public  Task<List<SeriesviewModel>> GetSeriesData()
         {
-            string strquery = "SELECT s.Series_ID, s.Series_no, s.Line, s.Modelno, " +
-                             "s.timetarget, s.createdBy, s.Shift, s.Remarks, " +
-                             "s.SetupNavi, s.VisualManage, s.Status,  " +
-                             "s.MachineSerial, s.SetGroup, s.Ongoing, " +
-                             "FORMAT(s.DateCreated, 'MM/dd/yyyy') as DateCreated, " + 
-                             "(SELECT COUNT(p.Series_ID) FROM PartList_Prepare_tbl p " +
-                             "WHERE p.Series_ID = s.Series_ID) as TotalCount, " +
-                             "Case WHEN COALESCE((SELECT COUNT(Series_ID) as Parts " +
-                            "FROM PartList_Coms_Summary_tbl " +
-                            "WHERE Series_ID = s.Series_ID " +
-                            "GROUP BY Series_ID), 0) >= COALESCE((SELECT COUNT(Series_ID) as Parts " +
-                            "FROM PartList_Prepare_tbl " +
-                            "WHERE Series_ID = s.Series_ID " +
-                            "GROUP BY Series_ID), 0)  THEN 1 " +
-                            "ELSE 0 END AS Planstatus " +
-                             "FROM PartList_Series_tbl s ORDER BY Series_ID DESC"; 
+            string strquery = $@"SELECT 
+	                            s.Series_ID, s.Series_no, 
+	                            s.Line, s.Modelno, 
+	                            s.timetarget, s.createdBy, 
+	                            s.Shift, s.Remarks, 
+	                            s.SetupNavi, s.VisualManage, 
+	                            s.Status, s.MachineSerial, 
+	                            s.SetGroup, s.Ongoing, 
+	                            FORMAT(s.DateCreated, 'MM/dd/yyyy') as DateCreated,  
+	                            ISNULL(pp.TotalCount, 0) AS TotalCount,
+                                CASE 
+                                    WHEN ISNULL(cs.CountParts, 0) >= ISNULL(pp.TotalCount, 0) 
+                                    THEN 1 ELSE 0 
+                                END AS Planstatus
+                            FROM PartList_Series_tbl s 
+                            LEFT JOIN (
+                                SELECT Series_ID, COUNT(Series_ID) as TotalCount
+                                FROM PartList_Prepare_tbl 
+	                            GROUP BY Series_ID
+                            ) pp ON pp.Series_ID = s.Series_ID
+                            LEFT JOIN (
+                                SELECT Series_ID, COUNT(*) AS CountParts
+                                FROM PartList_Coms_Summary_tbl
+                                GROUP BY Series_ID
+                            ) cs ON cs.Series_ID = s.Series_ID
+                              ORDER BY Series_ID DESC"; 
             return SqlDataAccess.GetData<SeriesviewModel>(strquery, null, "serieslist");
         }
         public Task<List<PrepareviewModel>> GetComponentsList(int intseries)
@@ -46,7 +56,7 @@ namespace ProgramPartListWeb.Data
         // ################### COMPONENTS SUMMARY DISPLAY ###################################
         public Task<List<SummaryComponentModel>> GetComponentsSummmary(string strval)
         {
-            return SqlDataAccess.GetData<SummaryComponentModel>("ComponentsSummary", new { Series_no = strval }, "GetComponentsSummary");
+            return SqlDataAccess.GetData<SummaryComponentModel>("ComponentsSummary", new { Series_no = strval });
         }
         public Task<List<PartlistModel>> Getpartlist(string series)
         {

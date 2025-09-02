@@ -31,7 +31,11 @@ namespace MSDMonitoring
         public async Task DisplayData()
         {
             _masterData = await _msd.GetMSDMasterlist();
-            MonitorTable.DataSource = _masterData;    
+            MonitorTable.DataSource = _masterData;
+            MonitorTable.Columns["Edit"].DisplayIndex = 6;
+            MonitorTable.Columns["AmbassadorPartnum"].DisplayIndex = 1;
+            MonitorTable.Columns["Edit"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            MonitorTable.Columns["Edit"].Width = 70;
         }
 
         private async void MSDMasterlist_Load(object sender, EventArgs e)
@@ -40,10 +44,7 @@ namespace MSDMonitoring
             this.FormBorderStyle = FormBorderStyle.Sizable; // keeps title bar
 
             await DisplayData();
-            MonitorTable.Columns["Edit"].DisplayIndex = 6;
-            MonitorTable.Columns["AmbassadorPartnum"].DisplayIndex = 1;
-            MonitorTable.Columns["Edit"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            MonitorTable.Columns["Edit"].Width = 70;
+            
         }
 
         private void Exitbtn_Click(object sender, EventArgs e)

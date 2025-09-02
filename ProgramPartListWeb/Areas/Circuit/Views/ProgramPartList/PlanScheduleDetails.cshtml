@@ -5,12 +5,12 @@
 }
 
 
-<div class="d-flex align-items-center justify-content-between">
+<div class="flex_space">
     <div class="d-flex align-items-start gap-3">
         <a class="Backbtn" href="/Circuit/ProgramPartList/PlanSchedule"><i class="fa-solid fa-arrow-left"></i></a>
         <div class="">
-            <h4 class="header_title m-0"><span id="seriesID"></span></h4>
-            <p>Total Components Part list: <span id="Countnum" style="font-weight: 600"></span></p>
+            <h4 class="header_title m-0" ><span id="seriesID"></span></h4>
+            <p style="margin: 0;">Total Components Part list: <span id="Countnum" style="font-weight: 600"></span></p>
         </div>
     </div>
 
@@ -408,7 +408,9 @@
            formData.append("SetNo", parseInt($("#SetText").val()));
            formData.append("Series_no", detailsData.Series_no);
            formData.append("Supplierselect", $("#Supplierselect").val());
-           //var data = Object.fromEntries(formData);
+        var data = Object.fromEntries(formData);
+
+        console.log(data);
 
         //CHECKS THE SUPPLIERS INPUT
         if (summarylistTemp.some(res =>

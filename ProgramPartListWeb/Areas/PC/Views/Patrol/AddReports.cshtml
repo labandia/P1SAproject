@@ -4,6 +4,19 @@
     Layout = "~/Areas/PC/Views/Shared/_PatrolLayout.cshtml";
 }
 
+<button id="btnRunConsole" class="btn btn-primary">
+    Run Console App
+</button>
+
+<div id="result"></div>
+
+
+<input type="text" id="fileNameInput" placeholder="Enter Excel filename" />
+<button id="openExcelBtn">Open Excel</button>
+
+<div id="resultMsg"></div>
+
+
 
 <form method="post" enctype="multipart/form-data" class="formcontainer" id="addnewform" autocomplete="off">
     <div class="row">
@@ -174,7 +187,7 @@
 
     <div class="row">
         <div class="col-12 col-sm-12 col-lg-6">
-            <label>Upload Counter Measures File:</label> <br />
+            <label>Upload Patrol Findings:</label> <br />
             <input type="file" name="ExcelFile" id="ExcelFile" accept=".xlsx,.xls" class="form-control" />
             <small class="text-muted">Only .xlsx or .xls files are allowed</small>
         </div>
@@ -183,10 +196,10 @@
             <label>Send Email To: </label> <br />
             <div class="select-container">
                 <select id="Sendto" name="Sendto">
-                <option value="jaye.labandia@sanyodenki.com">Jaye Labandia</option>
+                    <option value="jaye.labandia@sanyodenki.com">Jaye Labandia</option>
                 </select>
             </div>
-            
+
         </div>
     </div>
 
@@ -206,8 +219,54 @@
     let regisTable = [];
     let loadData = [];
 
+
+
     const addform = document.getElementById("addnewform");
     const resultBox = document.querySelector(".namesdisplay");
+
+      $("#openExcelBtn").on("click", function () {
+        var filename = $("#fileNameInput").val();
+
+        $.ajax({
+            url: '@Url.Action("OpenExcelApplication", "Patrol")', // Adjust controller name if needed
+            type: "POST",
+            data: { filename: "CM_250901_20250830_172115.xlsx" },
+            success: function (response) {
+                if (response.success) {
+                    $("#resultMsg").text(response.message).css("color", "green");
+                } else {
+                    $("#resultMsg").text(response.message).css("color", "red");
+                }
+            },
+            error: function (xhr, status, error) {
+                $("#resultMsg").text("AJAX error: " + error).css("color", "red");
+            }
+        });
+    });
+
+
+
+
+
+
+    $('#btnRunConsole').click(function () {
+    $.ajax({
+        type: 'POST',
+        url: '@Url.Action("RunConsoleAppV2", "Patrol")',
+        success: function (response) {
+            if (response.success) {
+                $('#result').html('<span style="color:green;">' + response.message + '</span>');
+            } else {
+                $('#result').html('<span style="color:red;">' + response.message + '</span>');
+            }
+        },
+        error: function () {
+            $('#result').html('<span style="color:red;">Server error occurred.</span>');
+        }
+    });
+});
+
+
 
     function triggerDatePicker() {
         document.getElementById("hiddenDatePicker").click();
@@ -254,7 +313,7 @@
         return checkexist;
     };
 
-    // CHECKS IF THE USER HAS A ACCOUNT TO THE SYSTEM 
+    // CHECKS IF THE USER HAS A ACCOUNT TO THE SYSTEM
     const CheckAccountName = () => {
         let gettext = $("#EmployeeSearch").val();
         var exists = loadData.some(u => u.Fullname === gettext);
@@ -399,7 +458,7 @@
         resultBox.style.display = 'none';
     }
 
-    
+
 
 
     // ############## DISPLAY ALL THE DATA TO THE PAGE ########################

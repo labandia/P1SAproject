@@ -60,4 +60,13 @@ namespace ProgramPartListWeb.Areas.Circuit.Models
         public string Partname { get; set; }
         public string Series_no { get; set; }
     }
+
+    public class SupplerList
+    {
+        public string AbassadorPartnum { get; set;}
+        public string Partname { get; set;} 
+        public string Location { get; set;}
+        public string Supplier { get; set;}
+        public string Code { get; set;} 
+    }
 }

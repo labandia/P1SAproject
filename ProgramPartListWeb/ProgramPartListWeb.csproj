@@ -614,9 +614,11 @@
     <Compile Include="Areas\Circuit\CircuitAreaRegistration.cs" />
     <Compile Include="Areas\Circuit\Controllers\ProgramPartListController.cs" />
     <Compile Include="Areas\Circuit\Interface\IPlanRepository.cs" />
+    <Compile Include="Areas\Circuit\Interface\ISupplier.cs" />
     <Compile Include="Areas\Circuit\Models\PlanPartslist.cs" />
     <Compile Include="Areas\Circuit\Repository\PartlistRepository.cs" />
     <Compile Include="Areas\Circuit\Repository\PartlistRepositoryV2.cs" />
+    <Compile Include="Areas\Circuit\Repository\SupplierRepository.cs" />
     <Compile Include="Areas\PC\Controllers\NotificationController.cs" />
     <Compile Include="Areas\PC\Controllers\PatrolController.cs" />
     <Compile Include="Areas\PC\Interface\IInspector.cs" />

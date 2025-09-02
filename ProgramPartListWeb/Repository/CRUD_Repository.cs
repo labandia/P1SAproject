@@ -119,7 +119,7 @@ namespace ProgramPartListWeb.Repository
                 return null; // Return null if not found or error
             }
         }
-        public async Task<int> AddUpdateData(T entity, string query)
+        public async Task<bool> AddUpdateData(T entity, string query)
         {
             try
             {
@@ -131,21 +131,21 @@ namespace ProgramPartListWeb.Repository
 
                     // Execute query and return affected rows
                     int rowsAffected = await con.ExecuteAsync(query, entity, commandType: commandType);
-                    return rowsAffected;
+                    return rowsAffected > 0;
                 }
             }
             catch (SqlException ex)
             {
                 _logger.Error(ex, $"SQL Exception in {nameof(AddUpdateData)} | Query: {query}");
-                return 0;
+                return false;
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, $"Unexpected error in {nameof(AddUpdateData)} | Query: {query}");
-                return 0;
+                return false;
             }
         }
-        public async Task<int> DeleteData(string query, object id)
+        public async Task<bool> DeleteData(string query, object id)
         {
             try
             {
@@ -157,18 +157,18 @@ namespace ProgramPartListWeb.Repository
 
                     // Execute query and return affected rows
                     int rowsAffected = await con.ExecuteAsync(query, id, commandType: commandType);
-                    return rowsAffected;
+                    return rowsAffected > 0;
                 }
             }
             catch (SqlException ex)
             {
                 _logger.Error(ex, $"SQL Exception in {nameof(DeleteData)} | Query: {query}");
-                return 0;
+                return false;
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, $"Unexpected error in {nameof(DeleteData)} | Query: {query}");
-                return 0;
+                return false;
             }
         }
 

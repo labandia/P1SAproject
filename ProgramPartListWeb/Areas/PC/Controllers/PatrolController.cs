@@ -15,6 +15,7 @@ using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -27,6 +28,9 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
     {
         private readonly IInspector _ins;
         public static string strSender => ConfigurationManager.AppSettings["config:SMTPEmail"];
+        string exePath = @"\\sdp01034s\SYSTEM EXECUTABLE\P1SA-PC_System\OpenExcel\OpenExcelApp.exe";
+
+
         public PatrolController(IInspector ins) => _ins = ins;
 
         //-----------------------------------------------------------------------------------------
@@ -673,6 +677,71 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         //}
 
 
+        [HttpPost]
+        public ActionResult OpenExcelApplication(string filename)
+        { 
+
+            try
+            {
+                // 1. OVERWRITE  THE TEXT FILE 
+                string textfilepath = @"\\sdp01034s\SYSTEM EXECUTABLE\P1SA-PC_System\OpenExcel\ExcelFile.txt";
+                string newContent = filename;
+                System.IO.File.WriteAllText(textfilepath, newContent);
+
+                // 2. OPEN THE EXCEL FILES AFTER
+                Process.Start(exePath); // Runs on server
+                return Json(new { success = true, message = "Console app started on server." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"Failed to start: {ex.Message}" });
+            }
+        }
+
+
+
+        [HttpPost]
+        public ActionResult RunConsoleAppV2()
+        {
+            try
+            {
+                string exePath = @"\\sdp01034s\SYSTEM EXECUTABLE\P1SA-PC_System\OpenExcel\OpenExcelApp.exe";
+
+                var psi = new ProcessStartInfo
+                {
+                    FileName = exePath,
+                    Arguments = "", // optional
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true // no visible window
+                };
+
+                using (var process = new Process { StartInfo = psi })
+                {
+                    process.Start();
+                    string output = process.StandardOutput.ReadToEnd();
+                    string error = process.StandardError.ReadToEnd();
+                    process.WaitForExit();
+
+                    return Json(new { success = true, message = output + error });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+
+    
+
+      
+        public ActionResult OpenFolder()
+        {
+            string folderPath = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\Patrol_Countermeasure";
+            return Redirect("file:///" + folderPath.Replace("\\", "/"));
+        }
 
         // GET: PC/PatrolReport
         public ActionResult Dashboard() => View();
@@ -687,7 +756,6 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
             return View(viewModel); 
         }
-
         // GET: PC/Inspectors
         [CompressResponse]
         public ActionResult Inspectors() => View();

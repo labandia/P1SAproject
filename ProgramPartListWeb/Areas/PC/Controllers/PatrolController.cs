@@ -48,6 +48,17 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             return Json(ResultMessageResponce.JsonSuccess(data), JsonRequestBehavior.AllowGet);
         }
 
+        // GET: GetEmailList
+        public async Task<ActionResult> GetEmailList()
+        {
+            var data = await _ins.GetEmailsList() ?? new List<EmailRecepients>();
+
+            if(data == null || !data.Any())
+                if (data == null || !data.Any()) return JsonNotFound("No Patrol Schedule today.");
+
+            return JsonSuccess(data, "Load Emails");
+        }
+
         //-----------------------------------------------------------------------------------------
         //---------------------------- DASHBOARD CALENDAR -----------------------------------------
         //-----------------------------------------------------------------------------------------
@@ -413,7 +424,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 FilePath = outputPdfPath,
                 Manager = Request.Form["Manager"],
                 Manager_Comments = Request.Form["Manager_Comments"],
-                CounterPath = strExcelname,
+                PatrolPath = strExcelname,
                 IsSigned = isSign
             };
 
@@ -463,7 +474,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
             // Step 1:  Get existing record to get old Countermeasures Excel file path if needed
             var regData = await _ins.GetRegistrationData();
-            string oldCounterPath = regData.SingleOrDefault(res => res.RegNo == Request.Form["RegNo"]).CounterPath;
+            string oldCounterPath = regData.SingleOrDefault(res => res.RegNo == Request.Form["RegNo"]).PatrolPath;
 
               // Prepare new file names
             string newFileName = $"RN_{Request.Form["RegNo"]}_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
@@ -523,7 +534,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 FilePath = outputPdfPath,
                 Manager = Request.Form["Manager"],
                 Manager_Comments = Request.Form["Manager_Comments"],
-                CounterPath = newCounterPath,
+                PatrolPath = newCounterPath,
                 IsSigned = isSign
             };
 
@@ -703,40 +714,46 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         [HttpPost]
         public ActionResult RunConsoleAppV2()
         {
+            // Maps virtual path ~/Contents/OpenExcelApp.exe to physical path
+            string exePath = Server.MapPath("~/Content/OpenExcelApp.exe");
+
             try
             {
-                string exePath = @"\\sdp01034s\SYSTEM EXECUTABLE\P1SA-PC_System\OpenExcel\OpenExcelApp.exe";
-
-                var psi = new ProcessStartInfo
+                ProcessStartInfo psi = new ProcessStartInfo
                 {
                     FileName = exePath,
-                    Arguments = "", // optional
+                    UseShellExecute = false,       // Required for IIS
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true // no visible window
+                    CreateNoWindow = true          // Prevent server window
                 };
 
-                using (var process = new Process { StartInfo = psi })
+                using (Process proc = Process.Start(psi))
                 {
-                    process.Start();
-                    string output = process.StandardOutput.ReadToEnd();
-                    string error = process.StandardError.ReadToEnd();
-                    process.WaitForExit();
+                    proc.WaitForExit(10000); // optional timeout
+                    string output = proc.StandardOutput.ReadToEnd();
+                    string errors = proc.StandardError.ReadToEnd();
 
-                    return Json(new { success = true, message = output + error });
+                    return Content($"Console app executed.\nOutput: {output}\nErrors: {errors}");
                 }
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, message = ex.Message });
+                return Content($"Failed to run console app: {ex.Message}");
             }
         }
 
+        private System.Security.SecureString ConvertToSecureString(string password)
+        {
+            var secure = new System.Security.SecureString();
+            foreach (char c in password)
+                secure.AppendChar(c);
+            secure.MakeReadOnly();
+            return secure;
+        }
 
-    
 
-      
+
         public ActionResult OpenFolder()
         {
             string folderPath = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\Patrol_Countermeasure";

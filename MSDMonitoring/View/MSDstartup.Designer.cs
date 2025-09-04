@@ -71,6 +71,7 @@
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.SupplierText = new System.Windows.Forms.TextBox();
             this.Refreshbtn = new System.Windows.Forms.Button();
+            this.TotalDisplay = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel3.SuspendLayout();
@@ -242,9 +243,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.flowLayoutPanel1.BackColor = System.Drawing.Color.White;
             this.flowLayoutPanel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(26, 172);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(26, 199);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(1288, 551);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(1288, 524);
             this.flowLayoutPanel1.TabIndex = 80;
             // 
             // label14
@@ -662,12 +663,22 @@
             this.Refreshbtn.UseVisualStyleBackColor = false;
             this.Refreshbtn.Click += new System.EventHandler(this.Refreshbtn_Click);
             // 
+            // TotalDisplay
+            // 
+            this.TotalDisplay.AutoSize = true;
+            this.TotalDisplay.Location = new System.Drawing.Point(26, 178);
+            this.TotalDisplay.Name = "TotalDisplay";
+            this.TotalDisplay.Size = new System.Drawing.Size(102, 13);
+            this.TotalDisplay.TabIndex = 94;
+            this.TotalDisplay.Text = "Total Count Display:";
+            // 
             // MSDstartup
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1344, 749);
             this.ControlBox = false;
+            this.Controls.Add(this.TotalDisplay);
             this.Controls.Add(this.Refreshbtn);
             this.Controls.Add(this.tableLayoutPanel2);
             this.Controls.Add(this.button1);
@@ -751,5 +762,6 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label SupplyError;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label TotalDisplay;
     }
 }

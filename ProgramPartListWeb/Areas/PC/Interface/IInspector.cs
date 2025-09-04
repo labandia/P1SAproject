@@ -37,6 +37,9 @@ namespace ProgramPartListWeb.Areas.PC.Interface
         Task<bool> SetScheduleCalendar(object paramaters, int mode);
         Task<bool> RemoveScheduleCalendar(int ID);
 
+
+        // GET EMAILS 
+        Task<List<EmailRecepients>> GetEmailsList();
       
     }
 }

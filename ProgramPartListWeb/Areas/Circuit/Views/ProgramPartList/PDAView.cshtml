@@ -125,7 +125,7 @@
 
     // =================== LOAD THE SUPPLER LIST ===========================================
     const LoadSupplierList = async (partnum) => {
-        let res = await FetchAuthenticate('@Url.Action("GetSupplierDatalist", "ProgramPartList")', { partText: partnum });
+        let res = await FetchAuthenticate('@Url.Action("GetSupplierListID", "ProgramPartList")', { partText: partnum });
 
          if (res && res.Success) {
              let select = $("#Supplierselect");
@@ -133,16 +133,20 @@
              supplierTemp = res.Data;
 
              let arrayData = res.Data;
-             $.each(arrayData, function (index, rowData) {
-                 select.append('<option value="' + rowData.SupID + '">' + rowData.Supplier + '</option>');
-             });
+             console.log(arrayData);
+             $("#locationText").val(arrayData.Location);
+             select.append('<option value="' + arrayData.AbassadorPartnum + '">' + arrayData.Supplier + '</option>');
+             $("#SupCode").val(arrayData.Code);
+             //$.each(arrayData, function (index, rowData) {
+             //    select.append('<option value="' + rowData.SupID + '">' + rowData.Supplier + '</option>');
+             //});
 
-             $("#SupCode").val(arrayData[0].Code);
+             //$("#SupCode").val(arrayData[0].Code);
 
-             selectSupply.addEventListener('change', (e) => {
-                 var supply = supplierTemp.find(p => p.SupID === parseInt(e.target.value));
-                 $("#SupCode").val(supply.Code);
-             });
+             //selectSupply.addEventListener('change', (e) => {
+             //    var supply = supplierTemp.find(p => p.SupID === parseInt(e.target.value));
+             //    $("#SupCode").val(supply.Code);
+             //});
          }
       }
 
@@ -274,8 +278,7 @@
          formData.append("SetNo", parseInt($("#SetText").val()));
          formData.append("Series_no", seriesNo);
          formData.append("Supplierselect", $("#Supplierselect").val());
-         let data = Object.fromEntries(formData);
-
+        let data = Object.fromEntries(formData);
 
          $.ajax({
          url: '@Url.Action("AddSummaryComponents", "ProgramPartList")',

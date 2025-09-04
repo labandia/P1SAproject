@@ -63,13 +63,16 @@ namespace ProgramPartListWeb.Areas.PC.Repository
         {
             //INSERT MAIN REGISTRATION PROCESS
             bool result = await SqlDataAccess.UpdateInsertQuery("InsertRegistration", 
-                          new { RegNo = reg.RegNo, DateConduct = reg.DateConduct, Employee_ID = reg.Employee_ID, 
-                                FilePath = reg.FilePath, CounterPath = reg.CounterPath,  PIC = reg.PIC, PIC_Comments = reg.PIC_Comments,
+                          new { RegNo = reg.RegNo, DateConduct = reg.DateConduct, Employee_ID = reg.Employee_ID,  
+                                PIC = reg.PIC, PIC_Comments = reg.PIC_Comments,
                                 Manager = reg.Manager, Manager_Comments = reg.Manager_Comments, IsSigned = reg.IsSigned
                           });
 
+            // INSERT FILES TO THE OTHER TABLES
+            await SqlDataAccess.UpdateInsertQuery("InserFiles", new { RegNo = reg.RegNo, FilePath  = reg.FilePath, PatrolPath = reg.PatrolPath});
+
             // INSERT FINDING AND COUNTERMEASURE PROCESS
-            // Deserialize findings
+            // Make a Json format 
             var findings = JsonConvert.DeserializeObject<List<FindingModel>>(json);
 
             foreach (var f in findings)
@@ -98,7 +101,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                 PIC = reg.PIC,
                 PIC_Comments = reg.PIC_Comments,
                 Manager = reg.Manager,
-                CounterPath = reg.CounterPath,
+                CounterPath = reg.PatrolPath,
                 Manager_Comments = reg.Manager_Comments
             });
 
@@ -182,6 +185,12 @@ namespace ProgramPartListWeb.Areas.PC.Repository
            return SqlDataAccess.UpdateInsertQuery(strsql, new { IsActive = 0, ScheduleID = ID });
         }
 
-        
+        public Task<List<EmailRecepients>> GetEmailsList()
+        {
+            return SqlDataAccess.GetData<EmailRecepients>($@"SELECT 
+                        FirstName, LastName, Email, Local 
+                        FROM P1SA_Emails 
+                        ORDER BY LastName DESC");
+        }
     }
 }

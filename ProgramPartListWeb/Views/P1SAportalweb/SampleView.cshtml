@@ -1,0 +1,56 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SampleView</title>
+
+    @Styles.Render("~/Content/shared-css")
+
+    @Scripts.Render("~/bundles/shared-js")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <button id="btnRunConsole" class="btn btn-primary">
+        Run Console App
+    </button>
+
+    <div id="result" style="margin-top:10px;"></div>
+    <div id="output" style="margin-top:10px; white-space: pre-wrap;"></div>
+</body>
+</html>
+
+
+<script type="text/javascript">
+$('#btnRunConsole').click(function () {
+        $('#result').html('Running console app...');
+        $('#output').html('');
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("RunConsoleAppV2", "P1SAportalweb")',
+            success: function (response) {
+                if (response.success) {
+                    $('#result').html('<span style="color:green;">' + response.message + '</span>');
+                    if(response.output) {
+                        $('#output').html('<b>Output:</b>\n' + response.output);
+                    }
+                    if(response.error) {
+                        $('#output').append('\n<b>Error:</b>\n' + response.error);
+                    }
+                } else {
+                    $('#result').html('<span style="color:red;">' + response.message + '</span>');
+                }
+            },
+            error: function () {
+                $('#result').html('<span style="color:red;">Server error occurred.</span>');
+            }
+        });
+    });
+
+</script>

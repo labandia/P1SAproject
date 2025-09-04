@@ -1,20 +1,44 @@
 ﻿
 @{
-    ViewBag.Title = "AddReports";
-    Layout = "~/Areas/PC/Views/Shared/_PatrolLayout.cshtml";
+    ViewBag.Title = "Production Patrol Inspection Report System";
+    Layout = "";
 }
 
-<button id="btnRunConsole" class="btn btn-primary">
-    Run Console App
-</button>
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/x-icon" href="@Url.Content("~/Content/Images/patrol .ico")">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title</title>
+    <link rel="preload" href="~/Content/fonts/Poppins-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 
-<div id="result"></div>
+
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
 
 
-<input type="text" id="fileNameInput" placeholder="Enter Excel filename" />
-<button id="openExcelBtn">Open Excel</button>
+    @Styles.Render("~/Content/shared-css")
+    @Styles.Render("~/Content/patrol-css")
 
-<div id="resultMsg"></div>
+    @Scripts.Render("~/bundles/shared-js")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+
+
+<header class="Formheader flex_align">
+    <div class="flex_align">
+        <button type="button" id="OpenSenders">To</button>
+        <input type="text" id="selectedEmails" placeholder="Selected emails will appear here">
+        <button type="button" id="OpenCC">CC</button>
+        <input type="text" id="selectedCC" placeholder="Selected emails will appear here">
+        <button>Send</button>
+    </div>
+</header>
+
+<label>Attachments : </label>
+<section class="flex_align">
+    <input type="file" id="fileInput" multiple>
+
+    <ul id="fileList" class="file-list flex_align"></ul>
+</section>
 
 
 
@@ -192,15 +216,7 @@
             <small class="text-muted">Only .xlsx or .xls files are allowed</small>
         </div>
 
-        <div class="col-12 col-sm-12 col-lg-6 ">
-            <label>Send Email To: </label> <br />
-            <div class="select-container">
-                <select id="Sendto" name="Sendto">
-                    <option value="jaye.labandia@sanyodenki.com">Jaye Labandia</option>
-                </select>
-            </div>
 
-        </div>
     </div>
 
     <hr />
@@ -213,250 +229,160 @@
 </form>
 
 
+@*=================================================================================*@
+@*=========================== OPEN SENDER LIST ==================================*@
+@*=================================================================================*@
+<div class="modal fade modal-lg" id="OpenSenderModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Select Recepient</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:50px;">Select</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email Address</th>
+                            <th style="width:60px;">Local</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recipientTable">
+                    </tbody>
+                </table>
+
+
+                <div class="modal-footer">
+                    <button class="btn-ok" id="btnOk">OK</button>
+                    <button class="btn-cancel">Cancel</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript">
-    let EmpID;
-    let regisTable = [];
-    let loadData = [];
+    let emailTable = [];
+
+    const fileInput = document.getElementById("fileInput");
+    const fileList = document.getElementById("fileList");
+
+    let selectedFiles = [];
+
+    // ================= LOAD DATA =======================
+    const EmailsTablelist = async () => {
+      let res = await FetchAuthenticate('@Url.Action("GetEmailList", "Patrol")', {});
+       if (res && res.Success) {
+           let selectManager = $("#ManagerSelect");
+           let selectPIC = $("#PICselect");
+           selectManager.empty();
+           selectPIC.empty();
+
+           emailTable = res.Data;
+           var SetData = $("#recipientTable");
+
+           $.each(emailTable, function (index, res) {
+               var getdata = `<tr>
+                               <td><input type="checkbox" class="emailCheck" value="${res.Email}"></td>
+                               <td>${res.FirstName}</td>
+                               <td>${res.LastName}</td>
+                               <td>${res.Email}</td>
+                               <td>${res.Local}</td>
+                           </tr>`;
+               SetData.append(getdata);
+
+               selectManager.append('<option value="' + res.Email + '">' + res.FirstName + '</option>');
+               selectPIC.append('<option value="' + res.Email + '">' + res.FirstName + '</option>');
+           });
 
 
 
-    const addform = document.getElementById("addnewform");
-    const resultBox = document.querySelector(".namesdisplay");
+      }
+   }
 
-      $("#openExcelBtn").on("click", function () {
-        var filename = $("#fileNameInput").val();
 
-        $.ajax({
-            url: '@Url.Action("OpenExcelApplication", "Patrol")', // Adjust controller name if needed
-            type: "POST",
-            data: { filename: "CM_250901_20250830_172115.xlsx" },
-            success: function (response) {
-                if (response.success) {
-                    $("#resultMsg").text(response.message).css("color", "green");
-                } else {
-                    $("#resultMsg").text(response.message).css("color", "red");
-                }
-            },
-            error: function (xhr, status, error) {
-                $("#resultMsg").text("AJAX error: " + error).css("color", "red");
-            }
-        });
+
+    // ================= OPEN MODAL ======================
+    let buttonselect;
+    const table = document.getElementById("recipientTable");
+    const btnOk = document.getElementById("btnOk");
+
+    btnOk.addEventListener("click", function () {
+        const selectedEmails = document.getElementById("selectedEmails");
+        const selectedCC = document.getElementById("selectedCC");
+        let checked = document.querySelectorAll(".emailCheck:checked");
+        let emails = [];
+        checked.forEach(cb => emails.push(cb.value));
+
+        if (buttonselect === "OpenSenders") {
+            selectedEmails.value = emails.join("; ");
+        } else if (buttonselect === "OpenCC") {
+            selectedCC.value = emails.join("; ");
+        }
+
+        // ✅ Clear all checkboxes after OK
+        document.querySelectorAll(".emailCheck").forEach(cb => cb.checked = false);
+
+
+        $("#OpenSenderModal").modal('hide');
     });
 
 
-
-
-
-
-    $('#btnRunConsole').click(function () {
-    $.ajax({
-        type: 'POST',
-        url: '@Url.Action("RunConsoleAppV2", "Patrol")',
-        success: function (response) {
-            if (response.success) {
-                $('#result').html('<span style="color:green;">' + response.message + '</span>');
-            } else {
-                $('#result').html('<span style="color:red;">' + response.message + '</span>');
-            }
-        },
-        error: function () {
-            $('#result').html('<span style="color:red;">Server error occurred.</span>');
-        }
-    });
-});
-
-
-
-    function triggerDatePicker() {
-        document.getElementById("hiddenDatePicker").click();
-    }
-
-    function formatAndDisplayDate(value) {
-        if (!value) return;
-        const date = new Date(value);
-        const yy = String(date.getFullYear()).slice(-2);
-        const mm = String(date.getMonth() + 1).padStart(2, '0');
-        const dd = String(date.getDate()).padStart(2, '0');
-        document.getElementById('RegNo').value = `${yy}${mm}${dd}`;
-    }
-    const RegistrationTable = async() => {
-        let res = await FetchAuthenticate('@Url.Action("GetRegistrationNo", "Patrol")', {});
-        if (res && res.Success) {
-            regisTable = res.Data;
-        }
-    }
-    const PopulateComboxInspector = async () => {
-        Resetforms();
-        let res = await FetchAuthenticate('@Url.Action("GetInspectorsByAdd", "Patrol")', {});
-        if (res && res.Success) {
-            loadData = res.Data;
-        }
-    }
-    const Getuserinfo = async() =>{
-        const accessToken = localStorage.getItem('accessToken');
-        const result = await FetchAuthenticate('/User/GetUserInformation', { accessToken });
-        EmpID = result.Employee_ID;
-    }
-
-    // RESETS FORM
-    const Resetforms = () => {
-        //Resets the Form
-        $("#RegNo").css("border", "1px solid #A5A1AA");
-        $("#errorvalid").hide();
-        $("#labelguide").show();
-    };
-
-    // CHECKS IF THE REGISTRATION NUMBER EXIST
-    const formValidation = (regno) => {
-        const checkexist = regisTable.find(n => n.RegNo === regno);
-        return checkexist;
-    };
-
-    // CHECKS IF THE USER HAS A ACCOUNT TO THE SYSTEM
-    const CheckAccountName = () => {
-        let gettext = $("#EmployeeSearch").val();
-        var exists = loadData.some(u => u.Fullname === gettext);
-
-        if (!exists) {   // means no match found
-            return true;
-        }
-        return false;
-    }
-    const findingsJson = (e) => {
-        let formData = new FormData(e);
-        const data = Object.fromEntries(formData);
-
-        const findings = [];
-
-        for (let i = 1; i <= 6; i++) {
-            findings.push({
-                RegNo: data.RegNo,
-                FindID: data[`Find${i}`],
-                FindDescription: data[`Inpects${i}`],
-                Countermeasure: data[`counter${i}`]
-            });
-        }
-
-        return JSON.stringify(findings);
-    };
-
-    addform.addEventListener('submit', async (e) => {
+    $("#OpenSenders").on('click', function (e) {
         e.preventDefault();
-
-        // Validate Excel file type before sending
-        let fileInput = document.querySelector('#ExcelFile');
-        let file = fileInput.files[0];
-        if (file) {
-            if (!/\.(xls|xlsx)$/i.test(file.name)) {
-                Swal.fire({
-                    icon: "error",
-                    text: "Only Excel files (.xls, .xlsx) are allowed",
-                    timer: 1500,
-                    showConfirmButton: false
-                });
-                return;
-            }
-        }
-
-        // Append form data
-        let strfind = findingsJson(e.target);
-        let finalformData = new FormData(e.target);
-        finalformData.append('FindJson', strfind);
-
-        // For registration validation, read RegNo from form data
-        const finaldata = Object.fromEntries(finalformData);
-
-        let reg = "P1SA-" + finaldata.RegNo;
-        if (formValidation(reg)) {
-            Swal.fire({
-                icon: "error",
-                text: "Registration No is already inserted",
-                timer: 1500,
-                showConfirmButton: false
-            });
-
-            $("#errorvalid").show();
-            $("#labelguide").hide();
-            $("#RegNo").css("border", "1px solid red");
-            return;
-        }
-
-
-        if (CheckAccountName()) {
-            Swal.fire({
-                icon: "error",
-                text: "The name you entered was not found in the database.",
-                timer: 1500,
-                showConfirmButton: false
-            });
-            return;
-        }
-
-
-
-        const savebtn = document.querySelector("#btnSave");
-        savebtn.innerHTML = " <div class='buttonloading'></div> Generating PDF Please wait...";
-
-        // Send form data with file to controller
-        let res = await postData('@Url.Action("AddRegistration", "Patrol")', finalformData);
-        if (res.StatusCode === 201) {
-            Swal.fire({
-                title: "Success",
-                text: res.Message,
-                icon: "success",
-                showConfirmButton: false,
-                timer: 1500
-            }).then(() => {
-                setTimeout(() => {
-                    window.location.href = "/PC/Patrol/PatrolReport";
-                }, 3000);
-            });
-        }
-
-        Resetforms();
+        buttonselect = this.id;
+        $("#OpenSenderModal").modal('show');
+    });
+    $("#OpenCC").on('click', function (e) {
+        e.preventDefault();
+        buttonselect = this.id;
+        $("#OpenSenderModal").modal('show');
     });
 
-    // INPUT SEARCH EMPLOYEE NAME WHEN TYPE
-    $("#EmployeeSearch").keyup(function () {
-        let result = [];
-        let input = this.value;
 
-        if (input.length > 0) {
-            result = loadData.filter((item) => {
-                return item.Fullname?.toLowerCase().includes(input.toLowerCase()) ||
-                    (item.Employee_ID?.toLowerCase() || '').includes(input.toLowerCase());
-            });
 
-            if (result.length > 0) {
-                resultBox.style.display = 'block';
-                display(result); // assumes display() handles array of objects
-            } else {
-                resultBox.style.display = 'block';
-                resultBox.innerHTML = '<div style="padding: 5px; color: #999;">No search found</div>';
+    // =================== MULTIPLE UPLOAD FILES ==============================
+    fileInput.addEventListener("change", function () {
+        // Add new files to the array (avoid duplicates by name+size)
+        for (let file of fileInput.files) {
+            let exists = selectedFiles.some(f => f.name === file.name && f.size === file.size);
+            if (!exists) {
+                selectedFiles.push(file);
             }
-        } else {
-            resultBox.style.display = 'none';
-            resultBox.innerHTML = ''; // clear the previous results or message
         }
+        renderFileList();
+        fileInput.value = ""; // reset input to allow re-upload of same file
     });
 
-    function display(result) {
-        const content = result.map((list) => {
-            return `<li onclick="selectinput(this)" data-id="${list.Employee_ID}">${list.Fullname}</li>`;
+    function renderFileList() {
+        fileList.innerHTML = "";
+        selectedFiles.forEach((file, index) => {
+            let li = document.createElement("li");
+            li.textContent = file.name;
+
+            let removeBtn = document.createElement("button");
+            removeBtn.textContent = "Remove";
+            removeBtn.onclick = () => {
+                selectedFiles.splice(index, 1);
+                renderFileList();
+            };
+
+            li.appendChild(removeBtn);
+            fileList.appendChild(li);
         });
-
-        resultBox.innerHTML = "<ul>" + content.join('') + "</ul>";
     }
 
-    function selectinput(list) {
-        const employeeId = list.getAttribute("data-id");
-        employeeID = employeeId;
-        $("#Employee_ID").val(employeeId);
-        $("#EmployeeSearch").val(list.innerHTML);
-        resultBox.innerHTML = '';
-        resultBox.style.display = 'none';
-    }
+
+
 
 
 
@@ -464,13 +390,11 @@
     // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
     const LoadPageData = async () => {
         try {
-            $("#errorvalid").hide();
+            //$("#errorvalid").hide();
             //$("#currentdatetime").text(Month + "  " + currentYear);
 
-            const [combo, regis, emp] = await Promise.all([
-                PopulateComboxInspector(),
-                RegistrationTable(),
-                Getuserinfo()
+            const [emp] = await Promise.all([
+                EmailsTablelist()
             ]);
 
         } catch (error) {

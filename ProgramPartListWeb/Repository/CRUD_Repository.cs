@@ -119,7 +119,7 @@ namespace ProgramPartListWeb.Repository
                 return null; // Return null if not found or error
             }
         }
-        public async Task<bool> AddUpdateData(T entity, string query)
+        public async Task<bool> AddUpdateData(string query, object parameter)
         {
             try
             {
@@ -130,7 +130,7 @@ namespace ProgramPartListWeb.Repository
                     var commandType = IsStoredProcedure ? CommandType.StoredProcedure : CommandType.Text;
 
                     // Execute query and return affected rows
-                    int rowsAffected = await con.ExecuteAsync(query, entity, commandType: commandType);
+                    int rowsAffected = await con.ExecuteAsync(query, parameter, commandType: commandType);
                     return rowsAffected > 0;
                 }
             }

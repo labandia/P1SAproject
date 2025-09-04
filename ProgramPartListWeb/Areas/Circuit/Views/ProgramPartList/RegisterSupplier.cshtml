@@ -10,7 +10,7 @@
     <div class="header__action flex_align">
         <div class="searchinputContainer">
             <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" placeholder="Search Plan Schedule... " id="searchbox" />
+            <input type="text" placeholder="Search Ambassador... " id="searchbox" />
             <div class="line"></div>
         </div>
         <button class="primarybtn" id="suppbtn"><i class="fa-solid fa-plus"></i>  Register Suppliers</button>
@@ -25,8 +25,10 @@
                 <th style="text-align: left; padding-left: 2em;">Ambassador</th>
                 <th>Part Name </th>
                 <th>Supplier</th>
+                <th>Location</th>
                 <th>Code</th>
-                <th>Action</th>
+                <th id="HideColumn">Edit</th>
+                <th id="HideColumn">Delete</th>
             </tr>
         </thead>
         <tbody id="SupplierData">
@@ -124,10 +126,9 @@
                 <form method="post" class="mt-4" id="Editrequestforms" autocomplete="off">
                     <div class="row">
                         <div class="form_group col-12 mb-2">
-                            <label>Input Ambassador Part number: </label>
-                            <input type="hidden" class="SupID" name="SupID" id="SupID">
+                            <label>Ambassador Partnumber: </label>
+                            <input type="hidden" id="TempAbassadorPartnum" class="TempAbassadorPartnum" name="TempAbassadorPartnum" />
                             <input type="text" class="AbassadorPartnum form-control" placeholder="Enter Ambassador partnumber" name="AbassadorPartnum" id="AbassadorPartnum" required>
-
                         </div>
 
                         <div class="form_group col-12  mb-2">
@@ -139,7 +140,10 @@
                             <label>Supplier : </label>
                             <input type="text" class="Supplier" placeholder="Enter Supplier name" name="Supplier" id="Supplier" />
                         </div>
-
+                        <div class="form_group col-12 mb-2">
+                            <label>Location : </label>
+                            <input type="text" class="Location" placeholder="Enter Location Area" name="Location" id="Location" />
+                        </div>
 
                         <div class="form_group col-12 mb-2">
                             <label>Code : </label>
@@ -160,10 +164,6 @@
 </div>
 
 
-<script src="~/Scripts/Utilities.js"></script>
-<script src="~/Scripts/html5-qrcode.min.js"></script>
-<script src="~/Scripts/sweetalert2.min.js"></script>
-<script src="~/Scripts/jquery-3.7.1.min.js"></script>
 <script type="text/javascript">
     let supplyarray = [];
 
@@ -173,14 +173,15 @@
     const editsupplier = document.getElementById("Editrequestforms");
 
     const LoadsupplierData = async () => {
-      let res = await FetchAuthenticate('@Url.Action("GetSupplierList", "ProgramPartList")', {});
-      if (res && res.Success) {
-            supplyarray = res.Data;
-            TablePagination(supplyarray, 'SupplierData', 'PaginationContainer', 100, 5);
-            $(".tableseriesNoData").hide();
-      } else {
-            $(".tableseriesNoData").show();
-      }
+       
+          let res = await FetchAuthenticate('@Url.Action("GetSupplierList", "ProgramPartList")', {});
+          if (res && res.Success) {
+                supplyarray = res.Data;
+                TablePagination(supplyarray, 'SupplierData', 'PaginationContainer', 100, 5);
+                $(".tableseriesNoData").hide();
+          } else {
+                $(".tableseriesNoData").show();
+          }
     }
 
     supplierbtn.addEventListener('click', () => {
@@ -193,7 +194,7 @@
         let formData = new FormData(e.target);
         let res = await postData('@Url.Action("AddSuppliersData", "ProgramPartList")', formData);
 
-        if (res.StatusCode == 200) {
+        if (res && res.Success) {
             Swal.fire({
                 title: "Success",
                 text: "Add Supplier successfully",
@@ -223,9 +224,10 @@
         e.preventDefault();
 
         let formData = new FormData(e.target);
-        let res = await postData('@Url.Action("AddSuppliersData", "ProgramPartList")', formData);
+        const data = Object.fromEntries(formData);
+        let res = await postData('@Url.Action("EdituppliersData", "ProgramPartList")', formData);
 
-        if (res.StatusCode == 200) {
+        if (res && res.Success) {
             Swal.fire({
                 title: "Success",
                 text: "Edit Supplier successfully",
@@ -233,9 +235,8 @@
                 showConfirmButton: false,
                 timer: 1500
             }).then(() => {
-                LoadsupplierData();
-                // Reset the form
                 e.target.reset();
+                LoadsupplierData();
                 $("#editRequestmodal").modal("hide");
             });
 
@@ -250,7 +251,7 @@
 
     });
 
-    LoadsupplierData();
+
 
     function TablePagination(dataArray, tableBodyId, paginationId, recordsPerPage = 7, visibleButtons = 5) {
         let currentPage = 1;
@@ -275,19 +276,27 @@
 
             for (let i = startIndex; i < endIndex; i++) {
                 const rowData = filteredData[i];
-                const usercontrols = `<button type='button' class='editButton text-primary bg-white' id='editButton_${rowData.SupID}' >
+                const usercontrols = (true) ?
+                            `<td data-cell="Action" >
+                                <button type='button' class='editButton text-primary bg-white' id='editButton_${rowData.AbassadorPartnum}' >
+                                   <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                             </td>
+                            <td data-cell="Delete">
+                                <button type='button' class='editButton text-primary bg-white' id='editButton_${rowData.AbassadorPartnum}' >
                                   <i class="fa-solid fa-pen-to-square"></i>
-                               </button>`;
+                               </button>
+                            </td>` : ``;
 
-                const color = rowData.Color;
 
                 const rowHtml = `
-                     <tr class='row_${i} rowClick' id='editButton_${rowData.Storage_ID}'>
+                     <tr class='row_${i} rowClick' id='editButton_${rowData.AbassadorPartnum}'>
                          <td data-cell="Part number" style="text-align: left; padding-left: 2em; font-weight: 600;">${rowData.AbassadorPartnum}</td>
                          <td data-cell="Model">${rowData.Partname}</td>
                          <td data-cell="Supplier">${rowData.Supplier}</td>
+                         <td data-cell="Location">${rowData.Location}</td>
                          <td data-cell="Code">${rowData.Code}</td>
-                         <td data-cell="Action" style='display: flex; align-items: center; justify-content: center;'>${usercontrols}</td>
+                         ${usercontrols}
                      </tr>`;
 
                 tableBody.innerHTML += rowHtml;
@@ -360,13 +369,16 @@
             const buttonId = $(this).attr('id');
             const rowIndex = buttonId.split('_')[1];
 
-            const result = supplyarray.find(p => p.SupID == rowIndex);
+            const result = supplyarray.find(p => p.AbassadorPartnum == rowIndex);
 
+            console.log(result);
             if (result) {
-               $(".SupID").val(result.SupID);
+                //$(".SupID").val(result.SupID);
+               $(".TempAbassadorPartnum").val(result.AbassadorPartnum);
                $(".AbassadorPartnum").val(result.AbassadorPartnum);
                $(".Partname").val(result.Partname);
                $(".Supplier").val(result.Supplier);
+               $(".Location").val(result.Location);
                $(".Code").val(result.Code);
                $("#editRequestmodal").modal("show");
            }
@@ -377,4 +389,27 @@
         renderTable(currentPage);
         renderPagination();
     }
+
+
+
+    // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+    const LoadPageData = async () => {
+        try {
+            //if (ActionRestrict() === false) {
+            //    $("#HideColumn").hide();
+            //}
+
+            const [supply] = await Promise.all([
+                LoadsupplierData()
+            ]);
+        } catch (error) {
+            console.error("Failed to load page data:", error);
+        } finally {
+            //$("#loadingSpinner").hide();
+        }
+    }
+
+    $(document).ready(() => {
+        LoadPageData();
+    });
 </script>

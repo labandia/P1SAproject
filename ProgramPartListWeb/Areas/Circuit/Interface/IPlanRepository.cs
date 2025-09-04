@@ -1,5 +1,4 @@
 ﻿using ProgramPartListWeb.Areas.Circuit.Models;
-using ProgramPartListWeb.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

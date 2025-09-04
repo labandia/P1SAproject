@@ -18,6 +18,8 @@ using System.Web.Security;
 using System.Web.Http;
 using System.Net.Http.Headers;
 using System.IO.Compression;
+using ProgramPartListWeb.Areas.Circuit.Interface;
+using ProgramPartListWeb.Areas.Circuit.Repository;
 
 namespace ProgramPartListWeb
 {
@@ -163,6 +165,7 @@ namespace ProgramPartListWeb
             container.RegisterType<INotification, NotificationRepository>();
             container.RegisterType<IAluminumProducts, PressRepository>();
             container.RegisterType<IInspector, InpectorRepository>();
+            container.RegisterType<ISupplier, SupplierRepository>();
 
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }

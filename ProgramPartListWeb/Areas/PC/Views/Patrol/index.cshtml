@@ -278,7 +278,6 @@
         const data = Object.fromEntries(formData);
        
         if (ChangeValidationForm()) {
-            console.log(data);
             let res = await postData('/User/ChangePassword', formData);
             if (res && res.Success) {
                 Swal.fire({

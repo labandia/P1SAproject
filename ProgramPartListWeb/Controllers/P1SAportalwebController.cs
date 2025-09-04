@@ -6,6 +6,8 @@ using System.Web;
 using System.Web.Mvc;
 using System.IO;
 using ProgramPartListWeb.Utilities;
+using System.Diagnostics;
+using System;
 
 namespace ProgramPartListWeb.Controllers
 {
@@ -55,9 +57,43 @@ namespace ProgramPartListWeb.Controllers
         }
 
 
+        [HttpPost]
+        public ActionResult RunConsoleAppV2()
+        {
+            // Maps virtual path ~/Contents/OpenExcelApp.exe to physical path
+            string exePath = Server.MapPath("~/Content/OpenExcelApp.exe");
+
+            try
+            {
+                ProcessStartInfo psi = new ProcessStartInfo
+                {
+                    FileName = exePath,
+                    UseShellExecute = false,       // Required for IIS
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true          // Prevent server window
+                };
+
+                using (Process proc = Process.Start(psi))
+                {
+                    proc.WaitForExit(10000); // optional timeout
+                    string output = proc.StandardOutput.ReadToEnd();
+                    string errors = proc.StandardError.ReadToEnd();
+
+                    return Content($"Console app executed.\nOutput: {output}\nErrors: {errors}");
+                }
+            }
+            catch (Exception ex)
+            {
+                return Content($"Failed to run console app: {ex.Message}");
+            }
+        }
+
         // GET: P1SAportalweb
         public ActionResult Index() =>   View();
         // GET: GuideInstall
         public ActionResult GuideInstall() => View();
+
+        public ActionResult SampleView() => View();
     }
 }

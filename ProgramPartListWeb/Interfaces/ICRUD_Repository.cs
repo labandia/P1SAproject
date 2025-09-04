@@ -16,7 +16,7 @@ namespace ProgramPartListWeb.Interfaces
              object parameters = null) where TResult : class;
 
         Task<T> GetDataListById(string query, object parameters = null);
-        Task<bool> AddUpdateData(T entity, string query);
+        Task<bool> AddUpdateData(string query, object parameter = null);
         Task<bool> DeleteData(string query, object id);
     }
 }

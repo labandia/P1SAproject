@@ -8,11 +8,32 @@
 <form method="post" enctype="multipart/form-data" class="formcontainer" id="addnewform" autocomplete="off">
     <div class="row">
         <div class="col-12">
-            <div class="d-flex align-items-center gap-4">
-                <a href="/PC/Patrol/PatrolReport"><i class="fa-solid fa-arrow-left"></i></a>
-                <h5 class="mb-0 fw-bold">Details Information  <input type="hidden" id="Regno" value="@regno" />  </h5>
+            <div class="flex_space">
+                <div class="flex_align">
+                    <a href="/PC/Patrol/PatrolReport"><i class="fa-solid fa-arrow-left"></i></a>
+                    <h5 class="mb-0 fw-bold">Details Information  <input type="hidden" id="Regno" value="@regno" />  </h5>
+                </div>
+
+
             </div>
+
+            <div class="flex_align">
+                <button type="button" id="OpenSenders">To</button>
+                <input type="text" id="selectedEmails" placeholder="Selected emails will appear here">
+                <button type="button" id="OpenCC">CC</button>
+                <input type="text" id="selectedCC" placeholder="Selected emails will appear here">
+                <button>Send</button>
+            </div>
+
+
             <hr />
+            <label>Attachments : </label> <br />
+            <input type="file" id="fileInput" multiple>
+
+            <ul id="fileList" class="file-list"></ul>
+
+
+
             <div class="row">
                 <div class="col">
                     <label>Registration No.  </label> <br />
@@ -23,10 +44,10 @@
                 <div class="col">
                     <label>Input Inspectors <small style="color: #a81818; font-weight: 600;">*</small> </label>
                     @*<div class="select-container">
-                            <select id="Employee_ID" name="Employee_ID">
-                                <option>-- Select Inspector --</option>
-                            </select>
-                        </div>*@
+                    <select id="Employee_ID" name="Employee_ID">
+                        <option>-- Select Inspector --</option>
+                    </select>
+                </div>*@
                     <div class="flex_align">
                         <div class="search-box" style="width: 70%;">
                             <input type="hidden" name="Employee_ID" id="Employee_ID">
@@ -132,6 +153,11 @@
                 <div class="col ">
                     <div class="form_group col-12 col-sm-12 ">
                         <label>Managers </label> <br />
+                        <div class="select-container">
+                            <select id="ManagerSelect" name="ManagerSelect">
+                                <option value="">-- Manager Select --</option>
+                            </select>
+                        </div>
                         <input type="text" placeholder="type person in charge" name="Manager" id="Manager" />
                     </div>
 
@@ -149,6 +175,11 @@
 
                     <div class="form_group col-12 col-sm-12 ">
                         <label>Person In Charge </label> <br />
+                        <div class="select-container">
+                            <select id="PICselect" name="PICselect">
+                                <option value="">-- PIC Select --</option>
+                            </select>
+                        </div>
                         <input type="text" placeholder="type person in charge" name="PIC" id="PIC" />
                     </div>
 
@@ -172,6 +203,7 @@
             <small class="text-muted">Only .xlsx or .xls files are allowed</small>
         </div>
     </div>
+    <input type="file" id="excelFileupload" name="filetoupload" accept=".xlsx, .xls, .csv" multiple />
 
     <hr />
 
@@ -182,9 +214,65 @@
 </form>
 
 
+@*=================================================================================*@
+@*=========================== OPEN SENDER LIST ==================================*@
+@*=================================================================================*@
+<div class="modal fade modal-lg" id="OpenSenderModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Select Recepient</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:50px;">Select</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email Address</th>
+                            <th style="width:60px;">Local</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recipientTable">
+                       
+                    </tbody>
+                </table>
+
+
+                <div class="modal-footer">
+                    <button class="btn-ok" id="btnOk">OK</button>
+                    <button class="btn-cancel">Cancel</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
 <script type="text/javascript">
     let regisTable = [];
+    let emailTable = [];
     let loadData = [];
+
+    const fileInput = document.getElementById("fileInput");
+    const fileList = document.getElementById("fileList");
+
+    let selectedFiles = [];
+
+    const table = document.getElementById("recipientTable");
+    const btnOk = document.getElementById("btnOk");
+    
+
 
     const resultBox = document.querySelector(".namesdisplay");
 
@@ -257,12 +345,113 @@
         //    //$("#Inpects1").val(FindingData[0]);
         //}
     }
+
+    fileInput.addEventListener("change", function () {
+        // Add new files to the array (avoid duplicates by name+size)
+        for (let file of fileInput.files) {
+            let exists = selectedFiles.some(f => f.name === file.name && f.size === file.size);
+            if (!exists) {
+                selectedFiles.push(file);
+            }
+        }
+        renderFileList();
+        fileInput.value = ""; // reset input to allow re-upload of same file
+    });
+
+    function renderFileList() {
+        fileList.innerHTML = "";
+        selectedFiles.forEach((file, index) => {
+            let li = document.createElement("li");
+            li.textContent = file.name;
+
+            let removeBtn = document.createElement("button");
+            removeBtn.textContent = "Remove";
+            removeBtn.onclick = () => {
+                selectedFiles.splice(index, 1);
+                renderFileList();
+            };
+
+            li.appendChild(removeBtn);
+            fileList.appendChild(li);
+        });
+    }
+
+
+
+
     const RegistrationTable = async () => {
           let res = await FetchAuthenticate('@Url.Action("GetRegistrationNo", "Patrol")', {});
-          if (res && res.Success) {
+        if (res && res.Success) {
               regisTable = res.Data;
           }
     }
+
+    const EmailsTablelist = async () => {
+       let res = await FetchAuthenticate('@Url.Action("GetEmailList", "Patrol")', {});
+        if (res && res.Success) {
+            let selectManager = $("#ManagerSelect");
+            let selectPIC = $("#PICselect");
+            selectManager.empty();
+            selectPIC.empty();
+
+            emailTable = res.Data;
+            var SetData = $("#recipientTable");
+
+            $.each(emailTable, function (index, res) {
+                var getdata = `<tr>
+                                <td><input type="checkbox" class="emailCheck" value="${res.Email}"></td>
+                                <td>${res.FirstName}</td>
+                                <td>${res.LastName}</td>
+                                <td>${res.Email}</td>
+                                <td>${res.Local}</td>
+                            </tr>`;
+                SetData.append(getdata);
+
+                selectManager.append('<option value="' + res.Email + '">' + res.FirstName + '</option>');
+                selectPIC.append('<option value="' + res.Email + '">' + res.FirstName + '</option>');
+            });
+
+
+           
+       }
+    }
+
+    let buttonselect;
+
+    btnOk.addEventListener("click", function () {
+        const selectedEmails = document.getElementById("selectedEmails");
+        const selectedCC = document.getElementById("selectedCC");
+        let checked = document.querySelectorAll(".emailCheck:checked");
+        let emails = [];
+        checked.forEach(cb => emails.push(cb.value));
+
+        if (buttonselect === "OpenSenders") {
+            selectedEmails.value = emails.join("; ");
+        } else if (buttonselect === "OpenCC") {
+            selectedCC.value = emails.join("; ");
+        }
+
+        // ✅ Clear all checkboxes after OK
+        document.querySelectorAll(".emailCheck").forEach(cb => cb.checked = false);
+
+
+        $("#OpenSenderModal").modal('hide');
+    });
+
+
+
+    $("#OpenSenders").on('click', function (e) {
+        e.preventDefault();
+        buttonselect = this.id;
+        $("#OpenSenderModal").modal('show');
+    });
+    $("#OpenCC").on('click', function (e) {
+        e.preventDefault();
+        buttonselect = this.id;
+        $("#OpenSenderModal").modal('show');
+    });
+
+
 
       // RESETS FORM
       const Resetforms = () => {
@@ -324,7 +513,7 @@
           finalformData.append('FindJson', strfind);
 
           const finaldata = Object.fromEntries(finalformData);
-      
+
           let res = await postData('@Url.Action("EditRegistration", "Patrol")', finalformData);
           if (res.StatusCode === 201 && res.Success) {
               Swal.fire({
@@ -407,6 +596,29 @@
         resultBox.style.display = 'none';
     }
 
-    ReportsDetails();
-    RegistrationTable();
+
+
+    // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+    const LoadPageData = async () => {
+        try {
+            //$("#errorvalid").hide();
+            //$("#currentdatetime").text(Month + "  " + currentYear);
+
+            const [combo, regis, emp] = await Promise.all([
+                ReportsDetails(),
+                RegistrationTable(),
+                EmailsTablelist()
+            ]);
+
+        } catch (error) {
+            console.error("Failed to load page data:", error);
+        } finally {
+            // Hide loading spinner whether success or failure
+            //$("#loadingSpinner").hide();
+        }
+    }
+
+    $(document).ready(() => {
+        LoadPageData();
+    });
 </script>

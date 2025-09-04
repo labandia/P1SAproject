@@ -12,6 +12,8 @@ using OfficeOpenXml;
 using System.IO;
 using ProgramPartListWeb.Controllers;
 using System.Diagnostics;
+using ProgramPartListWeb.Areas.Circuit.Interface;
+using ProgramPartListWeb.Areas.Circuit.Models;
 
 
 namespace ProgramPartListWeb.Areas.Circuit.Controllers
@@ -21,12 +23,14 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
         private readonly WarehouseRepository _ware;
         private readonly SeriesRepository _series;
         private readonly ISeriesRepository _series2;
+        private readonly ISupplier _supply;
 
-        public ProgramPartListController(ISeriesRepository series)
+        public ProgramPartListController(ISeriesRepository series, ISupplier supply)
         {
             _series = new SeriesRepository();
             _ware = new WarehouseRepository();
             _series2 = series;
+            _supply = supply;
         }
 
         //------------------------------------------------------------------------------
@@ -119,7 +123,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
                 AbassadorPartnum = strpartnum,
                 CompIN = Convert.ToInt32(Request.Form["QuantityInput"]),
                 SetNo = Convert.ToInt32(Request.Form["SetNo"]),
-                SupID = Convert.ToInt32(Request.Form["Supplierselect"]),
+                SupID = 1,
                 LotNo = strLotNo,
                 Stats = Status
             };
@@ -583,22 +587,55 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
         [HttpGet]
         public async Task<ActionResult> GetSupplierList()
         {
-            var res = await _series2.GetSupplierData() ?? new List<SupplierModel>();
+            var res = await _supply.GetSupplerLists() ?? new List<SupplerList>();
             if (res == null || !res.Any())
+                return JsonNotFound("No Supplier data found");
+
+            return JsonSuccess(res);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetSupplierListID(string partText)
+        {
+            var res = await _supply.GetSuppliersById(partText);
+            if (res == null)
                 return JsonNotFound("No Supplier data found");
 
             return JsonSuccess(res);
         }
         //######################### POST METHOD ########################################
         [HttpPost]
-        public async Task<ActionResult> AddSuppliersData(SupplierModel sup)
+        public async Task<ActionResult> AddSuppliersData(SupplerList sup)
         {
-            bool result = await _series2.AddEditSuppliers(sup);
+            bool result = await _supply.AddSupplierList(sup);
 
-            if (result) CacheHelper.Remove("Suppliers");
-           
-            var formdata = GlobalUtilities.GetMessageResponse(result, 1);
-            return Json(formdata, JsonRequestBehavior.AllowGet);
+            if (!result) return JsonPostError("Insert failed.", 500);
+
+            CacheHelper.Remove("Suppliers");
+            return JsonCreated(sup, "Add Supplier Successfully");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> EdituppliersData()
+        {
+            string Temp = Request.Form["AbassadorPartnum"];
+
+            var obj = new SupplerList
+            {
+                AbassadorPartnum = Request.Form["TempAbassadorPartnum"],
+                Partname = Request.Form["Partname"],
+                Supplier = Request.Form["Supplier"],
+                Location = Request.Form["Location"],
+                Code = Request.Form["Code"]
+            };
+
+
+            bool result = await _supply.EditSupplierList(obj, Temp);
+
+            if (!result) return JsonPostError("Insert failed.", 500);
+
+            CacheHelper.Remove("Suppliers");
+            return JsonCreated(obj, "Edit Successfully");
         }
 
         //#######################################################################################//

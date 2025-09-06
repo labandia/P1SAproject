@@ -72,6 +72,7 @@
             this.SupplierText = new System.Windows.Forms.TextBox();
             this.Refreshbtn = new System.Windows.Forms.Button();
             this.TotalDisplay = new System.Windows.Forms.Label();
+            this.FilterLine = new System.Windows.Forms.ComboBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel3.SuspendLayout();
@@ -243,9 +244,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.flowLayoutPanel1.BackColor = System.Drawing.Color.White;
             this.flowLayoutPanel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(26, 199);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(26, 216);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(1288, 524);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(1288, 507);
             this.flowLayoutPanel1.TabIndex = 80;
             // 
             // label14
@@ -315,6 +316,8 @@
             // 
             // panel2
             // 
+            this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panel2.BackColor = System.Drawing.Color.White;
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel2.Location = new System.Drawing.Point(26, 77);
@@ -666,11 +669,38 @@
             // TotalDisplay
             // 
             this.TotalDisplay.AutoSize = true;
-            this.TotalDisplay.Location = new System.Drawing.Point(26, 178);
+            this.TotalDisplay.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TotalDisplay.Location = new System.Drawing.Point(26, 185);
             this.TotalDisplay.Name = "TotalDisplay";
-            this.TotalDisplay.Size = new System.Drawing.Size(102, 13);
+            this.TotalDisplay.Size = new System.Drawing.Size(152, 18);
             this.TotalDisplay.TabIndex = 94;
             this.TotalDisplay.Text = "Total Count Display:";
+            // 
+            // FilterLine
+            // 
+            this.FilterLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.FilterLine.Font = new System.Drawing.Font("Segoe UI", 11.25F);
+            this.FilterLine.FormattingEnabled = true;
+            this.FilterLine.Items.AddRange(new object[] {
+            "All",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12"});
+            this.FilterLine.Location = new System.Drawing.Point(1217, 177);
+            this.FilterLine.Name = "FilterLine";
+            this.FilterLine.Size = new System.Drawing.Size(97, 28);
+            this.FilterLine.TabIndex = 95;
+            this.FilterLine.Text = "All";
+            this.FilterLine.SelectedIndexChanged += new System.EventHandler(this.FilterLine_SelectedIndexChanged);
             // 
             // MSDstartup
             // 
@@ -678,6 +708,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1344, 749);
             this.ControlBox = false;
+            this.Controls.Add(this.FilterLine);
             this.Controls.Add(this.TotalDisplay);
             this.Controls.Add(this.Refreshbtn);
             this.Controls.Add(this.tableLayoutPanel2);
@@ -763,5 +794,6 @@
         private System.Windows.Forms.Label SupplyError;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label TotalDisplay;
+        private System.Windows.Forms.ComboBox FilterLine;
     }
 }

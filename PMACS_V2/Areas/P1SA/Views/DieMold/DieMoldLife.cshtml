@@ -34,7 +34,7 @@
             </div>
             @* MOLD MOnitoring *@
             <div id="MoldMonitor">
-             
+                <button class="primary_button_color" id="addMold"><i class="fa-solid fa-plus"></i> Add Data</button>
             </div>
             @* MOLD TOOLING*@
             <div id="MoldTooling">
@@ -106,32 +106,33 @@
                         <div class="line"></div>
                     </div>
 
-                        <div class="flex_align">
-                            <div class="select-container">
-                                <select id="yearselect"></select>
-                            </div>
-
-                            <div class="select-container">
-                                <select id="monthSelect"></select>
-                            </div>
-
-                            <div class="select-container">
-                                <select id="MonitorProcess">
-                                    <option value="M002">Mold  Frame</option>
-                                    <option value="M001">ACM</option>
-                                    <option value="M003">Mold Impeller</option>
-                                    <option value="M004">Slot Insulator </option>
-                                    <option value="M005">Stepping Motor</option>
-                                </select>
-                            </div>
-                            
+                    <div class="flex_align">
+                        <div class="select-container">
+                            <select id="yearselect"></select>
                         </div>
+
+                        <div class="select-container">
+                            <select id="monthSelect"></select>
+                        </div>
+
+                        <div class="select-container">
+                            <select id="MonitorProcess">
+                                <option value="M002">Mold  Frame</option>
+                                <option value="M001">ACM</option>
+                                <option value="M003">Mold Impeller</option>
+                                <option value="M004">Slot Insulator </option>
+                                <option value="M005">Stepping Motor</option>
+                            </select>
+                        </div>
+
                     </div>
+                </div>
 
                 <div class="DieMainTable" id="DieWrapper">
                     <table>
                         <thead>
                             <tr>
+                                <th>No</th>
                                 <th style="text-align: left !important; padding-left: 1.5em;">Part Number </th>
                                 @*<th>Part Description </th>*@
                                 <th>Dimension/ Quality </th>
@@ -139,6 +140,8 @@
                                 <th>Die Serial</th>
                                 <th id="MonthHeader">Jan-16</th>
                                 <th>TotalQty</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
                             </tr>
                         </thead>
                         <tbody id="DieMoldMasterlist">
@@ -164,7 +167,7 @@
                             <input type="date" id="Datearrived" class="" />
                         </div>
                     </div>
- 
+
                 </div>
                 <div class="DieMainTable" id="DieWrapper">
                     <table>
@@ -213,7 +216,44 @@
 </div>
 
 
+<!--########################## Add Moldie Parts #############################-->
+<div class="modal fade modal-m" id="AddMoldModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Add Mold Die </h5>
 
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <form id="AddMoldieForm" class="addformcontainer">
+                    <div class="form_group col-12 col-sm-12">
+                        <label for="">Partnumber: </label>
+                        <input type="text" name="MoldInput" id="MoldInput" onkeypress="return restrictChars(event)" autocomplete="off">
+                    </div>
+
+                    <div class="form_group col-4 col-lg-4 col-sm-12">
+                        <label for="">Registration <small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <input type="text" name="RegNo" id="RegNo" placeholder="Enter Registration No." required>
+                    </div>
+
+                    <div class="flex_space" id="editsdisplay">
+                        <small>Input quantity is required.</small>
+                        <button type="submit" class="primary_button_color">
+                            <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
+                        </button>
+                    </div>
+                </form>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
 
 
 
@@ -354,6 +394,109 @@
     </div>
 </div>
 
+<!--########################## Edit Tooling  DATA #############################-->
+<div class="modal fade modal-xl" id="Editooling" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Edit Tooling Data</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <form id="AddToolforms" class="addformcontainer" autocomplete="off">
+                    <div class="row">
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Registration <small style="color: #a81818; font-weight: 600;">*</small></label>
+                            <input type="text" name="RegNo" id="RegNo" placeholder="Enter Registration No." required>
+                        </div>
+
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Part number <small style="color: #a81818; font-weight: 600;">*</small></label>
+                            @*<input type="text" name="PartNo" id="PartNo" placeholder="Enter Part number" required>*@
+                            <div class="search-box">
+                                <input type="text" placeholder="Type Part number" name="ParNoSearch" id="ParNoSearch" required>
+                                <div class="namesdisplay"></div>
+                            </div>
+                        </div>
+
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Item # 1</label>
+                            <input type="text" name="Item" id="Item" placeholder="Enter Items 1" onkeypress='return restrictChars(event)' required>
+                        </div>
+                    </div>
+
+
+
+                    <div class="row">
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Release(Shot Cycle test)</label>
+                            <input type="text" name="ShotRelease" id="ShotRelease" placeholder="Enter Cycle Shot" onkeypress='return restrictChars(event)' required>
+                        </div>
+
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Date Arrived</label>
+                            <input type="date" name="DateArrived" id="DateArrived" required>
+                        </div>
+
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Details of Modification</label>
+                            <input type="text" name="DetailsModify" id="DetailsModify" placeholder="Enter Details" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Date Repair</label>
+                            <input type="date" name="DateRepair" id="DateRepair" required>
+                        </div>
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Incharge</label>
+                            <input type="text" name="Incharge" id="Incharge" placeholder="Enter the name of Incharged" required>
+                        </div>
+
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Item # 2</label>
+                            <input type="text" name="Item2" id="Item2" placeholder="Enter No of Items" onkeypress='return restrictChars(event)' required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form_group col-8 col-lg-8 col-sm-12">
+                            <label for="">Remarks</label>
+                            <textarea placeholder="Write something here..." name="Remarks" id="Remarks" rows="3" cols="50" required></textarea>
+                        </div>
+
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Details of Modification</label>
+                            <input type="text" name="DetailsModify2" id="DetailsModify2" placeholder="Enter Details" required>
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="flex_space" id="editsdisplay">
+                        <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                        <button type="submit" class="primary_button_color">
+                            <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
+                        </button>
+                    </div>
+                </form>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
 <script type="text/javascript">
     const currentMonth = new Date().getMonth();
     const currentYear = new Date().getFullYear();
@@ -456,8 +599,8 @@
         e.preventDefault();
         if ($("#MoldInput").val() === "") {
             return;
-        } 
-        
+        }
+
         let formData = new FormData(e.target);
         formData.append('DateAction', select.value);
         const data = Object.fromEntries(formData);
@@ -470,9 +613,9 @@
             GetMoldDieMonth(select.value, currentYear, $("#MonitorProcess").val());
             $("#InputMoldieModal").modal("hide");
             //if (isTabLoaded[index] == false) {
-     
+
             //}
-            
+
         }
     });
     $("#AddToolforms").on('submit', async (e) => {
@@ -489,7 +632,7 @@
                 timer: 1500
             }).then(() => {
                 GetMoldDieTooling();
-                $("#AddToolforms")[0].reset(); 
+                $("#AddToolforms")[0].reset();
                 $("#AddTooling").modal("hide");
             });
         } else {
@@ -504,6 +647,10 @@
     $("#Registrymodal").on('click', (e) => {
         e.preventDefault();
         $("#AddTooling").modal("show");
+    });
+    $("#addMold").on('click', (e) => {
+        e.preventDefault();
+        $("#AddMoldModal").modal("show");
     });
     //===============================================================
     //==================== FILTER DATA ==============================
@@ -521,7 +668,7 @@
         GetMoldDieSummary();
         GetMoldDieMonth(setMonth, currentYear, e.target.value);
     });
-    
+
     $("#monthSelect").on('change', (e) => {
         e.preventDefault();
         let month = e.target.value;
@@ -723,7 +870,7 @@
         $("#DieMoldToolist").empty();
 
         dataArray.forEach((row, index) => {
-            var setdata = `<tr class= 'row_${row.RecordID}'>
+            var setdata = `<tr class= 'EditClick row_${row.RecordID}' id='editButton_${row.RecordID}'>
              <td>${row.RegNo}</td>
              <td style='font-weight: 600;'>${row.PartNo} / ${row.DimensionQuality}</td>
              <td>${row.Item}</td>
@@ -736,6 +883,16 @@
          </tr>;`
 
             $("#DieMoldToolist").append(setdata);
+        });
+
+
+        // Handle click event for edit button
+        $(document).on('click', '.EditClick', function (e) {
+            e.stopPropagation();
+            const buttonId = $(this).attr('id');
+            const rowIndex = buttonId.split('_')[1];
+            console.log("Row Selected : " + rowIndex);
+            $("#Editooling").modal("show");
         });
     }
     function displaySummaryPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 10, visibleButtons = 5) {
@@ -821,7 +978,7 @@
               });
           });
 
-         
+
 
           const spans = document.querySelectorAll('.progress-bar span');
           spans.forEach((span) => {
@@ -946,6 +1103,7 @@
 
              // Step 2: Render rows with merged "No"
              groupMap.forEach((groupRows, noValue) => {
+                 const newNo = groupRows[0].No;
                  const newTotalValue = groupRows[0].TotalNo;
 
 
@@ -953,8 +1111,13 @@
                      const originalIndex = rowData._indexInTableData;
 
                      let rowHtml = `<tr class='rowClick' id='editButton_${rowData.RecordID}' data-index='${originalIndex}'>`;
-                     rowHtml += `<td data-cell="PartNo" style="text-align: left; padding-left: 1.5em; font-weight: 600; color: #222;">${rowData.PartNo}</td>
 
+                     if (idx === 0) {
+                         rowHtml += `<td rowspan="${groupRows.length}" data-cell="NewTotal" style="color: #054e92; font-weight: 600; ">${newNo}</td>`;
+                     }
+
+                     rowHtml += `
+                                <td data-cell="PartNo" style="text-align: left; padding-left: 1.5em; font-weight: 600; color: #222;">${rowData.PartNo}</td>
                                 <td data-cell="DimensionQuality">${rowData.DimensionQuality}</td>
                                 <td data-cell="Cavity">${rowData.Cavity}</td>
                                 <td data-cell="DieSerial">${rowData.DieSerial}</td>
@@ -963,6 +1126,18 @@
                      if (idx === 0) {
                          rowHtml += `<td rowspan="${groupRows.length}" data-cell="NewTotal" style="color: #054e92; font-weight: 600; ">${newTotalValue}</td>`;
                      }
+
+                     rowHtml += `<td data-cell="Edit"  style='text-align: center;'>
+                                <button type='button' class='btn actionicon text-primary EditClick' id='editButton_${rowData.RecordID}' >
+                                   <i class='fa-regular fa-pen-to-square action_btn'></i>
+                                </button>
+                            </td>`;
+                     rowHtml += `<td data-cell="Delete"  style='text-align: center;'>
+                                <button type='button' class='btn actionicon text-primary EditClick' id='editButton_${rowData.RecordID}' >
+                                   <i class='fa-regular fa-pen-to-square action_btn'></i>
+                                </button>
+                            </td>`;
+
                       rowHtml += "</tr>";
                      tableBody.innerHTML += rowHtml;
                  });
@@ -1036,7 +1211,7 @@
              const result = TableData.find(p => p.RecordID == rowIndex);
              if (result) {
                  $("#PartNo").val(result.PartNo);
-                 $('#InputMoldie').data('update-index', rowIndex); 
+                 $('#InputMoldie').data('update-index', rowIndex);
                  $("#No").val(result.No);
                  $("#MoldInput").val(result.TotalDie === 0 ? "" : result.TotalDie);
                  $("#InputMoldieModal").modal("show");

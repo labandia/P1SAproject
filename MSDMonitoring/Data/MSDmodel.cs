@@ -74,6 +74,9 @@ namespace MSDMonitoring.Data
         public string RemainLife { get; set; }
         public int PlanQty { get; set; }
         public string SupplierName { get; set; }
+        public int Storelocation { get; set; }
+        public string Position { get; set; }
+
     }
 
     public class InputMSD
@@ -115,5 +118,7 @@ namespace MSDMonitoring.Data
         public double RemainFloor { get; set; } 
         public int PlanQty { get; set; }
         public int IsStats { get; set; }    
+        public int Storelocation { get; set; }
+        public int Position { get; set; }
     }
 }

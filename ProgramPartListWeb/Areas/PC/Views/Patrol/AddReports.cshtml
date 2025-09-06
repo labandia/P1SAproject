@@ -262,7 +262,6 @@
 
                 <div class="modal-footer">
                     <button class="btn-ok" id="btnOk">OK</button>
-                    <button class="btn-cancel">Cancel</button>
                 </div>
             </div>
 
@@ -271,10 +270,16 @@
 </div>
 
 <script type="text/javascript">
+    let EmpID;
     let emailTable = [];
+    let regisTable = [];
+    let loadData = [];
 
     const fileInput = document.getElementById("fileInput");
     const fileList = document.getElementById("fileList");
+
+    const addform = document.getElementById("addnewform");
+    const resultBox = document.querySelector(".namesdisplay");
 
     let selectedFiles = [];
 
@@ -308,9 +313,24 @@
 
       }
    }
-
-
-
+    const RegistrationTable = async() => {
+        let res = await FetchAuthenticate('@Url.Action("GetRegistrationNo", "Patrol")', {});
+        if (res && res.Success) {
+            regisTable = res.Data;
+        }
+    }
+    const PopulateComboxInspector = async () => {
+        Resetforms();
+        let res = await FetchAuthenticate('@Url.Action("GetInspectorsByAdd", "Patrol")', {});
+        if (res && res.Success) {
+            loadData = res.Data;
+        }
+    }
+    const Getuserinfo = async () => {
+        const accessToken = localStorage.getItem('accessToken');
+        const result = await FetchAuthenticate('/User/GetUserInformation', { accessToken });
+        EmpID = result.Employee_ID;
+    }
     // ================= OPEN MODAL ======================
     let buttonselect;
     const table = document.getElementById("recipientTable");
@@ -349,6 +369,100 @@
     });
 
 
+    addform.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // Validate Excel file type before sending
+        let fileInput = document.querySelector('#ExcelFile');
+        let file = fileInput.files[0];
+        if (file) {
+            if (!/\.(xls|xlsx)$/i.test(file.name)) {
+                Swal.fire({
+                    icon: "error",
+                    text: "Only Excel files (.xls, .xlsx) are allowed",
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+                return;
+            }
+        }
+
+        // Append form data
+        let strfind = findingsJson(e.target);
+        let finalformData = new FormData(e.target);
+        finalformData.append('FindJson', strfind);
+
+        // ✅ Add Sender and CC values
+        let toEmails = document.querySelector("#selectedEmails").value;
+        let ccEmails = document.querySelector("#selectedCC").value;
+
+
+        finalformData.append("Senders", toEmails);
+        finalformData.append("CC", ccEmails);
+
+        // ✅ Add multiple attachments
+        selectedFiles.forEach(file => {
+            finalformData.append("Attachments", file);
+        });
+
+        // For registration validation, read RegNo from form data
+        const finaldata = Object.fromEntries(finalformData);
+
+
+        let reg = "P1SA-" + finaldata.RegNo;
+
+
+        if (formValidation(reg)) {
+            Swal.fire({
+                icon: "error",
+                text: "Registration No is already inserted",
+                timer: 1500,
+                showConfirmButton: false
+            });
+
+            $("#errorvalid").show();
+            $("#labelguide").hide();
+            $("#RegNo").css("border", "1px solid red");
+            return;
+        }
+
+
+        if (CheckAccountName()) {
+            Swal.fire({
+                icon: "error",
+                text: "The name you entered was not found in the database.",
+                timer: 1500,
+                showConfirmButton: false
+            });
+            return;
+        }
+
+
+
+        const savebtn = document.querySelector("#btnSave");
+        savebtn.innerHTML = " <div class='buttonloading'></div> Generating PDF Please wait...";
+
+        // Send form data with file to controller
+        let res = await postData('@Url.Action("AddRegistration", "Patrol")', finalformData);
+        console.log(res);
+        //if (res.StatusCode === 201) {
+        //    Swal.fire({
+        //        title: "Success",
+        //        text: res.Message,
+        //        icon: "success",
+        //        showConfirmButton: false,
+        //        timer: 1500
+        //    }).then(() => {
+        //        setTimeout(() => {
+        //            window.location.href = "/PC/Patrol/PatrolReport";
+        //        }, 3000);
+        //    });
+        //}
+
+        //Resetforms();
+    });
+
+   
 
     // =================== MULTIPLE UPLOAD FILES ==============================
     fileInput.addEventListener("change", function () {
@@ -383,6 +497,99 @@
 
 
 
+    // ================== FORM CONTROLS INPUT ==================================
+    const Resetforms = () => {
+        $("#RegNo").css("border", "1px solid #A5A1AA");
+        $("#errorvalid").hide();
+        $("#labelguide").show();
+    };
+
+    const formValidation = (regno) => {
+        const checkexist = regisTable.find(n => n.RegNo === regno);
+        return checkexist;
+    };
+    function triggerDatePicker() {
+        document.getElementById("hiddenDatePicker").click();
+    }
+    function formatAndDisplayDate(value) {
+        if (!value) return;
+        const date = new Date(value);
+        const yy = String(date.getFullYear()).slice(-2);
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        document.getElementById('RegNo').value = `${yy}${mm}${dd}`;
+    }
+    // CHECKS IF THE USER HAS A ACCOUNT TO THE SYSTEM
+    const CheckAccountName = () => {
+        let gettext = $("#EmployeeSearch").val();
+        var exists = loadData.some(u => u.Fullname === gettext);
+
+        if (!exists) {   // means no match found
+            return true;
+        }
+        return false;
+    }
+
+    const findingsJson = (e) => {
+        let formData = new FormData(e);
+        const data = Object.fromEntries(formData);
+
+        const findings = [];
+
+        for (let i = 1; i <= 6; i++) {
+            findings.push({
+                RegNo: data.RegNo,
+                FindID: data[`Find${i}`],
+                FindDescription: data[`Inpects${i}`],
+                Countermeasure: data[`counter${i}`]
+            });
+        }
+
+        return JSON.stringify(findings);
+    };
+
+
+    // ============== INPUT SEARCH EMPLOYEE NAME WHEN TYPE =======================
+    $("#EmployeeSearch").keyup(function () {
+        let result = [];
+        let input = this.value;
+
+        if (input.length > 0) {
+            result = loadData.filter((item) => {
+                return item.Fullname?.toLowerCase().includes(input.toLowerCase()) ||
+                    (item.Employee_ID?.toLowerCase() || '').includes(input.toLowerCase());
+            });
+
+            if (result.length > 0) {
+                resultBox.style.display = 'block';
+                display(result); // assumes display() handles array of objects
+            } else {
+                resultBox.style.display = 'block';
+                resultBox.innerHTML = '<div style="padding: 5px; color: #999;">No search found</div>';
+            }
+        } else {
+            resultBox.style.display = 'none';
+            resultBox.innerHTML = ''; // clear the previous results or message
+        }
+    });
+
+    function display(result) {
+        const content = result.map((list) => {
+            return `<li onclick="selectinput(this)" data-id="${list.Employee_ID}">${list.Fullname}</li>`;
+        });
+
+        resultBox.innerHTML = "<ul>" + content.join('') + "</ul>";
+    }
+
+    function selectinput(list) {
+        const employeeId = list.getAttribute("data-id");
+        employeeID = employeeId;
+        console.log(employeeID);
+        $("#Employee_ID").val(employeeId);
+        $("#EmployeeSearch").val(list.innerHTML);
+        resultBox.innerHTML = '';
+        resultBox.style.display = 'none';
+    }
 
 
 
@@ -393,8 +600,11 @@
             //$("#errorvalid").hide();
             //$("#currentdatetime").text(Month + "  " + currentYear);
 
-            const [emp] = await Promise.all([
-                EmailsTablelist()
+            const [email, Account, Register, User] = await Promise.all([
+                EmailsTablelist(),
+                PopulateComboxInspector(),
+                RegistrationTable(),
+                Getuserinfo()
             ]);
 
         } catch (error) {

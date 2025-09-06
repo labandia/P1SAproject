@@ -56,6 +56,11 @@
             this.ReelID_error = new System.Windows.Forms.Label();
             this.InputInText = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.selectedLocal = new System.Windows.Forms.ComboBox();
+            this.Upper = new System.Windows.Forms.RadioButton();
+            this.Lower = new System.Windows.Forms.RadioButton();
+            this.LocalError = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel5.SuspendLayout();
@@ -117,7 +122,7 @@
             this.panel5.Controls.Add(this.updatebtn);
             this.panel5.Controls.Add(this.cancelbtn);
             this.panel5.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel5.Location = new System.Drawing.Point(0, 374);
+            this.panel5.Location = new System.Drawing.Point(0, 426);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(734, 95);
             this.panel5.TabIndex = 97;
@@ -274,7 +279,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(39, 323);
+            this.label1.Location = new System.Drawing.Point(39, 374);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(168, 18);
             this.label1.TabIndex = 116;
@@ -285,7 +290,7 @@
             this.RemainText.AutoSize = true;
             this.RemainText.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RemainText.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.RemainText.Location = new System.Drawing.Point(213, 323);
+            this.RemainText.Location = new System.Drawing.Point(213, 374);
             this.RemainText.Name = "RemainText";
             this.RemainText.Size = new System.Drawing.Size(14, 18);
             this.RemainText.TabIndex = 117;
@@ -323,7 +328,7 @@
             this.InputInText.AutoSize = true;
             this.InputInText.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.InputInText.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.InputInText.Location = new System.Drawing.Point(437, 323);
+            this.InputInText.Location = new System.Drawing.Point(437, 374);
             this.InputInText.Name = "InputInText";
             this.InputInText.Size = new System.Drawing.Size(14, 18);
             this.InputInText.TabIndex = 121;
@@ -333,18 +338,88 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(360, 323);
+            this.label5.Location = new System.Drawing.Point(360, 374);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(69, 18);
             this.label5.TabIndex = 120;
             this.label5.Text = "Name  : ";
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(39, 280);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(88, 18);
+            this.label4.TabIndex = 122;
+            this.label4.Text = "Location  : ";
+            // 
+            // selectedLocal
+            // 
+            this.selectedLocal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.selectedLocal.Font = new System.Drawing.Font("Segoe UI", 11.25F);
+            this.selectedLocal.FormattingEnabled = true;
+            this.selectedLocal.Items.AddRange(new object[] {
+            "--Select location--",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6"});
+            this.selectedLocal.Location = new System.Drawing.Point(40, 315);
+            this.selectedLocal.Name = "selectedLocal";
+            this.selectedLocal.Size = new System.Drawing.Size(153, 28);
+            this.selectedLocal.TabIndex = 123;
+            this.selectedLocal.Text = "--Select location--";
+            // 
+            // Upper
+            // 
+            this.Upper.AutoSize = true;
+            this.Upper.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold);
+            this.Upper.Location = new System.Drawing.Point(238, 321);
+            this.Upper.Name = "Upper";
+            this.Upper.Size = new System.Drawing.Size(71, 22);
+            this.Upper.TabIndex = 124;
+            this.Upper.TabStop = true;
+            this.Upper.Text = "Upper";
+            this.Upper.UseVisualStyleBackColor = true;
+            // 
+            // Lower
+            // 
+            this.Lower.AutoSize = true;
+            this.Lower.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold);
+            this.Lower.Location = new System.Drawing.Point(336, 321);
+            this.Lower.Name = "Lower";
+            this.Lower.Size = new System.Drawing.Size(70, 22);
+            this.Lower.TabIndex = 125;
+            this.Lower.TabStop = true;
+            this.Lower.Text = "Lower";
+            this.Lower.UseVisualStyleBackColor = true;
+            // 
+            // LocalError
+            // 
+            this.LocalError.AutoSize = true;
+            this.LocalError.Font = new System.Drawing.Font("Century Gothic", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LocalError.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.LocalError.Location = new System.Drawing.Point(155, 283);
+            this.LocalError.Name = "LocalError";
+            this.LocalError.Size = new System.Drawing.Size(143, 15);
+            this.LocalError.TabIndex = 126;
+            this.LocalError.Text = "Select Location required*";
+            this.LocalError.Visible = false;
+            // 
             // ComponentsOut
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(734, 469);
+            this.ClientSize = new System.Drawing.Size(734, 521);
             this.ControlBox = false;
+            this.Controls.Add(this.LocalError);
+            this.Controls.Add(this.Lower);
+            this.Controls.Add(this.Upper);
+            this.Controls.Add(this.selectedLocal);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.InputInText);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.ReelID_error);
@@ -402,5 +477,10 @@
         private System.Windows.Forms.Label ReelID_error;
         private System.Windows.Forms.Label InputInText;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ComboBox selectedLocal;
+        private System.Windows.Forms.RadioButton Upper;
+        private System.Windows.Forms.RadioButton Lower;
+        private System.Windows.Forms.Label LocalError;
     }
 }

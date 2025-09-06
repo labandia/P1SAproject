@@ -139,6 +139,8 @@ namespace MSDMonitoring
                     InputIn = c.InputIn
                 }).ToList();
 
+
+            TotalDisplay.Text = "Total Components: " + _cardDataCache.Count;    
             BuildCards();
         }
 
@@ -303,11 +305,14 @@ namespace MSDMonitoring
         // ---------------------------
         // Build Cards (Responsive Width)
         // ---------------------------
-        private void BuildCards()
+        private void BuildCards(List<MSDCardModel> data = null)
         {
             flowLayoutPanel1.Controls.Clear();
 
-            if (_cardDataCache.Count == 0)
+            var source = data ?? _cardDataCache;
+
+
+            if (source.Count == 0)
                 return;
 
             int panelWidth = flowLayoutPanel1.ClientSize.Width;
@@ -323,7 +328,7 @@ namespace MSDMonitoring
             int totalSpacing = flowLayoutPanel1.Padding.Left + flowLayoutPanel1.Padding.Right + (columns * 20);
             int cardWidth = (panelWidth - totalSpacing) / columns;
 
-            foreach (var card in _cardDataCache)
+            foreach (var card in source)
             {
                 AddCardReelID(card.RecordID, card.ReelID, card.DateIn, card.Line, card.QuantityIN, card.TimeIn, cardWidth, card.InputIn);
             }
@@ -665,6 +670,22 @@ namespace MSDMonitoring
         private async void NewEntryBtn_Click_1(object sender, EventArgs e)
         {
             await ComponentsDataEntry();
+        }
+
+        private void FilterLine_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string selected = FilterLine.SelectedItem?.ToString();
+
+            if (string.IsNullOrEmpty(selected) || selected == "All")
+            {
+                BuildCards(_cardDataCache);
+            }
+            else
+            {
+                int line = int.Parse(selected.Replace("Line ", ""));
+                var filtered = _cardDataCache.Where(c => c.Line == line).ToList();
+                BuildCards(filtered);
+            }
         }
     }
 }

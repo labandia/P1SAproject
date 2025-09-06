@@ -2,8 +2,49 @@
 @{
     ViewBag.Title = "PatrolReportDetails";
     var regno = Request.QueryString["Regno"];
-    Layout = "~/Areas/PC/Views/Shared/_PatrolLayout.cshtml";
+    Layout = "";
 }
+
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/x-icon" href="@Url.Content("~/Content/Images/patrol .ico")">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title</title>
+    <link rel="preload" href="~/Content/fonts/Poppins-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+
+
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+
+
+    @Styles.Render("~/Content/shared-css")
+    @Styles.Render("~/Content/patrol-css")
+
+    @Scripts.Render("~/bundles/shared-js")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+
+
+<header class="Formheader flex_align">
+    <div class="flex_align">
+        <button type="button" id="OpenSenders">To</button>
+        <input type="text" id="selectedEmails" placeholder="Selected emails will appear here">
+        <button type="button" id="OpenCC">CC</button>
+        <input type="text" id="selectedCC" placeholder="Selected emails will appear here">
+        <button>Send</button>
+    </div>
+</header>
+
+<label>Attachments : </label>
+<section class="flex_align">
+    <input type="file" id="fileInput" multiple>
+
+    <ul id="fileList" class="file-list flex_align"></ul>
+
+    <div id="fileContainer"></div>
+</section>
+
+
 
 <form method="post" enctype="multipart/form-data" class="formcontainer" id="addnewform" autocomplete="off">
     <div class="row">
@@ -44,10 +85,10 @@
                 <div class="col">
                     <label>Input Inspectors <small style="color: #a81818; font-weight: 600;">*</small> </label>
                     @*<div class="select-container">
-                    <select id="Employee_ID" name="Employee_ID">
-                        <option>-- Select Inspector --</option>
-                    </select>
-                </div>*@
+                            <select id="Employee_ID" name="Employee_ID">
+                                <option>-- Select Inspector --</option>
+                            </select>
+                        </div>*@
                     <div class="flex_align">
                         <div class="search-box" style="width: 70%;">
                             <input type="hidden" name="Employee_ID" id="Employee_ID">
@@ -200,10 +241,8 @@
         <div class="col-12 col-sm-12 col-lg-6">
             <label>Upload Counter Measures file</label> <br />
             <input type="file" name="ExcelFile" id="ExcelFile" accept=".xlsx,.xls" class="form-control" />
-            <small class="text-muted">Only .xlsx or .xls files are allowed</small>
         </div>
     </div>
-    <input type="file" id="excelFileupload" name="filetoupload" accept=".xlsx, .xls, .csv" multiple />
 
     <hr />
 
@@ -241,7 +280,6 @@
                         </tr>
                     </thead>
                     <tbody id="recipientTable">
-                       
                     </tbody>
                 </table>
 
@@ -271,7 +309,7 @@
 
     const table = document.getElementById("recipientTable");
     const btnOk = document.getElementById("btnOk");
-    
+
 
 
     const resultBox = document.querySelector(".namesdisplay");
@@ -287,6 +325,9 @@
      }
     const ReportsDetails = async () => {
         let res = await FetchAuthenticate('@Url.Action("GetRegistrationNoByID", "Patrol")', { Regno: strRegno });
+
+        console.log(res);
+
         if (res && res.Success) {
                 let RegisterData = res.Data.Register;
                 let FindingData = res.Data.Finding;
@@ -314,6 +355,37 @@
                     $(`#Inpects${item.FindID}`).val(item.FindDescription);
                     $(`#counter${item.FindID}`).val(item.Countermeasure);
                 });
+
+                let patrolPath = RegisterData[0].PatrolPath;
+
+
+                if (patrolPath) {
+                    let files = patrolPath.split(';');
+                    let fileHtml = "";
+
+                    files.forEach(f => {
+                        if (f.trim() !== "") {
+                            fileHtml += `
+                                    <div class="pdf-container">
+                                        <p><strong>${f}</strong></p>
+                                         <button class="open-pdf-btn" data-pdf-url="/Patrol/ViewPDF?strfilepath=${f}">
+                                            <i class="fa-solid fa-file-pdf"></i> Open
+                                        </button>
+                                    </div>
+                                `;
+                        }
+                    });
+
+                    document.getElementById("fileContainer").innerHTML = fileHtml;
+
+                    // Attach click event
+                    document.querySelectorAll(".open-pdf-btn").forEach(btn => {
+                        btn.addEventListener("click", function () {
+                            let pdfUrl = this.getAttribute("data-pdf-url");
+                            window.open(pdfUrl, "_blank"); // Open in new tab
+                        });
+                    });
+                }
 
                 //$("#Inpects1").val(FindingData[0]);
         }
@@ -412,7 +484,7 @@
             });
 
 
-           
+
        }
     }
 

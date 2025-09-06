@@ -375,7 +375,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> AddRegistration(HttpPostedFileBase ExcelFile)
+        public async Task<ActionResult> AddRegistration(HttpPostedFileBase[] Attachments)
         {
             // Get Department Name
             int departmentID = await _ins.GetEmployeeByDepartment(Request.Form["Employee_ID"]);
@@ -391,25 +391,38 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             string outputPdfPath = newFileName.Replace(".xlsx", ".pdf");
 
 
-            // Set File Name for Countermeasures Excel File
-            string strExcelname = null;
+            List<string> MultipleAttachments = new List<string>();
+
+            foreach (string fileKey in Request.Files)
+            {
+                var file = Request.Files[fileKey];
+                if (file != null && file.ContentLength > 0 && fileKey == "Attachments")
+                {
+                    string fileName = $"PF_{Request.Form["RegNo"]}_{DateTime.Now:yyyyMMdd_HHmmssfff}{Path.GetExtension(file.FileName)}";
+                    ExportFiler.SaveFileasExcel(file, fileName);
+                    MultipleAttachments.Add(fileName);
+                }
+            }
+
+            // Join all file names into PatrolPath string
+            string patrolPath = string.Join(";", MultipleAttachments);
 
             // Default template path For Registration PDF
             string templatePath = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Uploads/PGFY-00031FORM_1.xlsx");
 
             // If user uploaded an Excel file, save it and use as template
-            if (ExcelFile != null && ExcelFile.ContentLength > 0)
-            {
-                string uploadedFileName = Path.GetFileNameWithoutExtension(ExcelFile.FileName);
-                string fileExtension = Path.GetExtension(ExcelFile.FileName);
-                string savedFileName = $"CM_{Request.Form["RegNo"]}_{DateTime.Now:yyyyMMdd_HHmmss}{fileExtension}";
+            //if (ExcelFile != null && ExcelFile.ContentLength > 0)
+            //{
+            //    string uploadedFileName = Path.GetFileNameWithoutExtension(ExcelFile.FileName);
+            //    string fileExtension = Path.GetExtension(ExcelFile.FileName);
+            //    string savedFileName = $"CM_{Request.Form["RegNo"]}_{DateTime.Now:yyyyMMdd_HHmmss}{fileExtension}";
 
-                strExcelname = savedFileName;
+            //    strExcelname = savedFileName;
 
-                // Export the file Network Folder
-                ExportFiler.SaveFileasExcel(ExcelFile, savedFileName);
+            //    // Export the file Network Folder
+            //    ExportFiler.SaveFileasExcel(ExcelFile, savedFileName);
 
-            }
+            //}
 
             string finalprefix = "P1SA-" + Request.Form["RegNo"];
 
@@ -424,12 +437,13 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 FilePath = outputPdfPath,
                 Manager = Request.Form["Manager"],
                 Manager_Comments = Request.Form["Manager_Comments"],
-                PatrolPath = strExcelname,
+                PatrolPath = patrolPath,  
                 IsSigned = isSign
             };
 
             string findJson = Request.Form["FindJson"];
-            string IsSend = Request.Form["Sendto"];
+            string IsSend = Request.Form["Senders"];
+            string CCSend = Request.Form["CC"];
 
             bool result = await _ins.AddRegistration(obj, findJson);
 
@@ -437,31 +451,34 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             {
                 CacheHelper.Remove("Registration");
 
-                string creatbody = EmailService.CreateAEmailBody(
-                    "JUAN DELA CRUZ",
-                    "This is a sample email body used for testing purposes. Please disregard."
-                );
+                // Convert the string sender to a array list
 
-                var SendEmail = new SentEmailModel
-                {
-                    Subject = "Patrol Inspection",
-                    Sender = strSender,
-                    BCC = "",
-                    Body = creatbody,
-                    Recipient = IsSend
-                };
+
+                //string creatbody = EmailService.CreateAEmailBody(
+                //        "JUAN DELA CRUZ",
+                //        "This is a sample email body used for testing purposes. Please disregard."
+                //    );
+
+                //var SendEmail = new SentEmailModel
+                //{
+                //    Subject = "Patrol Inspection",
+                //    Sender = strSender,
+                //    BCC = CCSend,
+                //    Body = creatbody,
+                //    Recipient = IsSend
+                //};
 
                 // GENERATE A PDF FILE AND SAVE TO THE NETWORK FILE
                 await ExportFiler.SaveFileasPDF(obj, findJson, departmentName, newFileName, templatePath, isSign);
 
                 // EMAIL SAVE TO THE DATABASE
-                await EmailService.SendEmailViaSqlDatabase(SendEmail);
+                //await EmailService.SendEmailViaSqlDatabase(SendEmail);
 
             }
             if (result == false)
                 return JsonError("Problem during saving Data.");
 
-            return JsonCreated(result, $@"Registration No : {finalprefix} is Add  successfully");
+            return JsonCreated(obj, $@"Registration No : {finalprefix} is Add  successfully");
 
         }
         [HttpPost]
@@ -656,13 +673,34 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         public ActionResult ViewPDF(string strfilepath)
         {
             // Map your RegNo to a file path or file bytes
-            var filePath = $"\\\\SDP010F6C\\Users\\USER\\Pictures\\Access\\Excel\\Patrol_Registration\\" + strfilepath;
+            if (string.IsNullOrEmpty(strfilepath))
+                return HttpNotFound();
+
+            string basePath;
+
+            if (strfilepath.StartsWith("CM", StringComparison.OrdinalIgnoreCase))
+            {
+                basePath = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\Patrol_Countermeasure\";
+            }
+            else if (strfilepath.StartsWith("PM", StringComparison.OrdinalIgnoreCase)
+                  || strfilepath.StartsWith("RN", StringComparison.OrdinalIgnoreCase))
+            {
+                basePath = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\Patrol_Countermeasure\";
+            }
+            else
+            {
+                basePath = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\Patrol_Registration\";
+            }
+
+            var filePath = Path.Combine(basePath, strfilepath);
 
             if (!System.IO.File.Exists(filePath))
                 return HttpNotFound();
 
             return File(filePath, "application/pdf");
         }
+
+
 
         public ActionResult ViewExcel(string strfilepath)
         {

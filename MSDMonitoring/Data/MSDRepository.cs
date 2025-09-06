@@ -98,7 +98,8 @@ namespace MSDMonitoring.Data
         {
 
             string strinsert = $@"UPDATE MSD_MonitorList SET DateOut =@DateOut, INputOut =@INputOut, QuantityOut =@QuantityOut, 
-                                  RemainFloor =@RemainFloor, IsStats =@IsStats, PlanQty =@PlanQty
+                                  RemainFloor =@RemainFloor, IsStats =@IsStats, PlanQty =@PlanQty, Storelocation =@Storelocation, 
+                                  Position =@Position
                                   WHERE RecordID =@RecordID";
 
             bool result = await SqlDataAccess.UpdateInsertQuery(strinsert, msd);

@@ -45,7 +45,7 @@ namespace MSDMonitoring
             //MonitorTable.Columns[0].Width = 200;
             //MonitorTable.Columns[1].Width = 200;
 
-            MonitorTable.Columns["Print"].DisplayIndex = 20;
+            MonitorTable.Columns["Print"].DisplayIndex = 22;
             MonitorTable.Columns["Print"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
             MonitorTable.Columns["Print"].Width = 70;
         }
@@ -234,6 +234,10 @@ namespace MSDMonitoring
 
             if (e.ColumnIndex == 0)
             {
+
+                Debug.WriteLine("4" + MonitorTable.Rows[e.RowIndex].Cells[21].Value.ToString());
+                Debug.WriteLine("5" + MonitorTable.Rows[e.RowIndex].Cells[22].Value.ToString());
+
                 var obj = new PrintLabelModel
                 {
                     ReelID = MonitorTable.Rows[e.RowIndex].Cells[2].Value.ToString(),
@@ -273,7 +277,7 @@ namespace MSDMonitoring
                 worksheet.Range["C9"].Value = obj.Date_IN;
                 worksheet.Range["C10"].Value = obj.Quantity_IN;
                 worksheet.Range["C11"].Value =  MonitorTable.Rows[e.RowIndex].Cells[18].Value.ToString();
-
+                worksheet.Range["C12"].Value = MonitorTable.Rows[e.RowIndex].Cells[21].Value.ToString() + "-" + MonitorTable.Rows[e.RowIndex].Cells[22].Value.ToString();
                 // Show print dialog
                 worksheet.PrintPreview();
 

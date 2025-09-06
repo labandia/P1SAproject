@@ -159,7 +159,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
         }
         public Task<List<DieMoldToolingModelDisplay>> GetMoldToolingData()
         {
-            string strquery = $@"SELECT t.RegNo, t.PartNo, p.DimensionQuality, 
+            string strquery = $@"SELECT t.RecordID, t.RegNo, t.PartNo, p.DimensionQuality, 
                                 t.Item, t.DetailsModify, t.ShotRelease,
                                 FORMAT(t.DateArrived, 'MM/dd/yy') as DateArrived,
                                 FORMAT(t.DateRepair, 'MM/dd/yy') as DateRepair,

@@ -68,6 +68,7 @@ namespace MSDMonitoring
         private async void updatebtn_Click(object sender, EventArgs e)
         {
             DateTime selectedDate = DateTime.Now;
+
             DateTime startTime = DateTime.ParseExact(
                 strTimeIN,
                 "MM/dd/yyyy HH:mm:ss",
@@ -77,13 +78,30 @@ namespace MSDMonitoring
             string strEndTime  = selectedDate.ToString("yyyy-MM-dd HH:mm:ss.fff");
             DateTime endTime = DateTime.ParseExact(strEndTime, "yyyy-MM-dd HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture);
 
+
+           
+            
+            
             decimal elapsedHours = (decimal)(endTime - startTime).TotalSeconds / 3600m;
 
-
+            
 
             if (FormValidation())
             {
+                int selectedCase = 0;
+
                 int getQuan = Convert.ToInt32(QuantityInput.Text);
+                int selectLocal = Convert.ToInt32(selectedLocal.Text);
+
+                if (Upper.Checked)
+                {
+                    selectedCase = 0;
+                }
+                else if (Lower.Checked)
+                {
+                    selectedCase = 1;
+                }
+
                 if (getQuan == 0) getFloorlife = 0;
 
                 int remainQuan = setQuantity - Convert.ToInt32(QuantityInput.Text);
@@ -100,7 +118,9 @@ namespace MSDMonitoring
                     INputOut =  String.IsNullOrEmpty(NameInput.Text) ? "" : NameInput.Text,
                     RemainFloor = getFloorlife,
                     IsStats = 1, 
-                    PlanQty = remainQuan
+                    PlanQty = remainQuan,
+                    Storelocation = selectLocal,
+                    Position = selectedCase
                 };
 
 
@@ -159,11 +179,16 @@ namespace MSDMonitoring
 
         public bool FormValidation()
         {
-            if (string.IsNullOrEmpty(NameInput.Text))
+
+            if (string.IsNullOrEmpty(NameInput.Text) || selectedLocal.SelectedIndex == 0)
             {
                 ReelID_error.Visible = string.IsNullOrEmpty(NameInput.Text) ? true : false;
+                LocalError.Visible = (selectedLocal.SelectedIndex == 0) ? true : false;
                 return false;
             }
+
+           
+
             int remainQuan = setQuantity - Convert.ToInt32(QuantityInput.Text);
 
             if(remainQuan < 0)
@@ -172,6 +197,7 @@ namespace MSDMonitoring
                 return false;
             }
 
+           
             return true;
         }
         private void cancelbtn_Click(object sender, EventArgs e)

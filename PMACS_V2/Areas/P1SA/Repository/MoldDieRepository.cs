@@ -4,9 +4,11 @@ using PMACS_V2.Helper;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO.Ports;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web.UI.WebControls.WebParts;
 
 namespace PMACS_V2.Areas.P1SA.Repository
 {
@@ -97,6 +99,17 @@ namespace PMACS_V2.Areas.P1SA.Repository
                               GROUP BY No,  PreviousCount, DieLife";
             return SqlDataAccess.GetData<DieMoldSetNotal>(strquery, null);
         }
+
+        public Task<List<DieMoldProcess>> GetMoldProcess()
+        {
+            return SqlDataAccess.GetData<DieMoldProcess>("SELECT * FROM DieMoldProcessName WHERE ProcessID IN ('M001', 'M002', 'M003', 'M004', 'M005')");
+        }
+
+        public Task<List<DieProcessDescription>> GetMoldPartDescription()
+        {
+            return SqlDataAccess.GetData<DieProcessDescription>("SELECT * FROM DieMoldDescription");
+        }
+
         public Task<List<DieMoldSummaryProcess>> GetMoldDieSummary(string process)
         {
             // filter by   WHERE p.ProcessID = 'M003' 
@@ -218,6 +231,98 @@ namespace PMACS_V2.Areas.P1SA.Repository
                 Remarks = mold.Remarks
             };
             return SqlDataAccess.UpdateInsertQuery(insertquery, parameter, "MoldTooling");
+        }
+
+
+        public async Task<bool> AddNewMoldDie(AddDieMoldingDataInput mold)
+        {
+            // 1. Check and Insert A new Partnumber
+            string partinsertquery = $@"INSERT INTO DieMoldParts(PartNo, PartDescriptionID, DimensionQuality, Cavity)
+                                        SELECT @PartNo, @PartDescriptionID, @DimensionQuality, @Cavity
+                                        WHERE NOT EXISTS(
+	                                        SELECT 1 FROM DieMoldParts WHERE PartNo =@PartNo
+                                        );";
+            var insertparams = new
+            {
+                PartNo = mold.AddPartno,
+                PartDescriptionID = mold.PartDescriptionID,
+                DimensionQuality = mold.DimensionQual,
+                Cavity = mold.AddCavity
+            };
+
+            // 2. Checks and Insert to a new Process and partnumber
+            string processinsertquery = $@"INSERT INTO DieMoldProcesses(No, ProcessID, PartNo, DieNumber, DieSerial)
+                                        SELECT @No, @ProcessID, @PartNo, @DieNumber, @DieSerial
+                                        WHERE NOT EXISTS(
+	                                        SELECT 1 FROM DieMoldProcesses WHERE (No =@No AND PartNo =@PartNo) AND ProcessID =@ProcessID
+                                        );";
+
+
+            //var processparams = new
+            //{
+            //    No = mold.AddNo,
+            //    ProcessID = mold.AddSelectProcess,
+            //    PartNo = mold.AddPartno,
+            //    DieNumber = mold.AddDienum,
+            //    DieSerial = mold.AddSerial
+            //};
+
+
+            bool result = await SqlDataAccess.UpdateInsertQuery(partinsertquery, insertparams);
+
+            //var addpart = SqlDataAccess.UpdateInsertQuery(partinsertquery, insertparams);
+            //var addprocess = SqlDataAccess.UpdateInsertQuery(processinsertquery, processparams);
+
+            //bool[] results = await Task.WhenAll(addpart, addprocess);
+
+            //return results.All(r => r);
+
+            return result;
+
+
+            //string partQuery = $@"SELECT COUNT(*) FROM DieMoldParts WHERE PartNo =@PartNo";
+
+            //bool checkpartExist = await SqlDataAccess.Checkdata(partQuery, new { PartNo = mold.AddPartno });
+
+            //// 1. Checks if the partnumber is Exist
+            //if (!checkpartExist)
+            //{
+            //    //  Insert a new partnumber
+            //    string strInserquery = $@"INSERT INTO DieMoldParts(PartNo, PartDescriptionID, DimensionQuality, Cavity)
+            //                             VALUES(@PartNo, @PartDescriptionID, @DimensionQuality, @Cavity)";
+            //    var insertparams = new { PartNo = mold.AddPartno, 
+            //                                PartDescriptionID = mold.PartDescriptionID, 
+            //                                DimensionQuality = mold.DimensionQual, 
+            //                                Cavity = mold.AddCavity 
+            //                            };
+            //    await SqlDataAccess.UpdateInsertQuery(strInserquery, insertparams);
+            //}
+
+
+            // 2. Insert the Last Table Data
+            //string strprocessQuery = $@"INSERT INTO DieMoldProcesses(No, PartDescriptionID, DimensionQuality, Cavity)
+            //                             VALUES(@PartNo, PartDescriptionID, DimensionQuality, Cavity)";
+
+
+            throw new NotImplementedException();
+        }
+        public async Task<bool> UpdateMoldDie(DieMoldingDataInput mold)
+        {
+            string updateprocessQuery = $@"UPDATE DieMoldProcesses SET  DieNumber =@DieNumber,  DieSerial =@DieSerial
+                                       WHERE RecordID =@RecordID";
+            var parameter = new { DieNumber = mold.EditDie, DieSerial = mold.EditSerial, RecordID = mold.RecordID };
+
+
+            string updatepartsQuery = $@"UPDATE DieMoldParts SET  Cavity =@Cavity
+                                       WHERE PartNo =@PartNo";
+
+            // Run both queries in parallel
+            var updateProcess = SqlDataAccess.UpdateInsertQuery(updateprocessQuery, parameter);
+            var updateParts =  SqlDataAccess.UpdateInsertQuery(updatepartsQuery, new { Cavity = mold.EditCavity, PartNo  = mold.EditPartNo});
+
+            bool[] results = await Task.WhenAll(updateProcess, updateParts);
+
+            return results.All(r => r);
         }
 
         // ===========================================================

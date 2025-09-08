@@ -117,6 +117,19 @@ namespace PMACS_V2.Areas.P1SA.Models
         }
     }
 
+    public class DieMoldProcess
+    {
+        public string ProcessID { get; set; }
+        public string ProcessName { get; set; }
+    }
+
+    public class DieProcessDescription
+    {
+        public int PartDescriptionID { get; set; }
+        public string Description { get; set; }
+    }
+
+
     public class DieMoldToolingModel
     {
         private int _RecordID;
@@ -201,6 +214,29 @@ namespace PMACS_V2.Areas.P1SA.Models
         }
     }
 
+
+    public class AddDieMoldingDataInput
+    {
+        public int AddNo { get; set; }
+        public string AddPartno { get; set; }
+        public string DimensionQual { get; set; }
+        public int AddDienum { get; set; }
+        public string AddSerial { get; set; }
+        public int AddCavity { get; set; }
+        public string AddSelectProcess { get; set; }
+        public int PartDescriptionID { get; set; }
+    }
+
+
+    public class DieMoldingDataInput
+    {
+        public int RecordID { get; set; }
+        public int EditNo { get; set; }
+        public string EditPartNo { get; set; }  
+        public int EditDie {  get; set; }   
+        public string EditSerial { get; set; }  
+        public int EditCavity   { get; set; }
+    }
 
 
     public class FinalMoldDieSummary

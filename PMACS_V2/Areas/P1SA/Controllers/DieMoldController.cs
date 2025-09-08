@@ -91,7 +91,27 @@ namespace PMACS_V2.Areas.P1SA.Controllers
 
             return JsonSuccess(data);
         }
+        [JwtAuthorize]
+        public async Task<ActionResult> GetMoldieDropDownlist()
+        {
+            try
+            {
+                var proccessData = await _die.GetMoldProcess() ?? new List<DieMoldProcess>();
+                var partsData = await _die.GetMoldPartDescription() ?? new List<DieProcessDescription>();
+                var multidata = new Dictionary<string, IEnumerable<object>>
+                {
+                    { "Process", proccessData },
+                    { "MoldParts", partsData }
+                };
 
+                return JsonMultipleData(multidata);
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message);
+            }
+
+        }
 
         [HttpPost]
         public async Task<ActionResult> AddUpdateMoldDieMonitor(MoldInputModel add)
@@ -107,6 +127,23 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             if (!update) return JsonValidationError();
 
             return JsonCreated(add, "Add Data Successfully");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> AddMoldDieData(AddDieMoldingDataInput edit)
+        {
+            bool update = await _die.AddNewMoldDie(edit);
+            if (!update) return JsonValidationError();
+            return JsonCreated(edit, "Add Data Successfully");
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> UpdateMoldDieData(DieMoldingDataInput edit)
+        {
+            bool update = await _die.UpdateMoldDie(edit);
+            if (!update) return JsonValidationError();
+            return JsonCreated(edit, "Edit Data Successfully");
         }
         // ===========================================================
         // ==================== PRESS MOLD DIE DATA  ==================

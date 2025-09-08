@@ -19,11 +19,16 @@ namespace PMACS_V2.Areas.P1SA.Interface
         Task<List<DieMoldSummaryProcess>> GetMoldDieSummary(string process);
         Task<List<DieMoldTotalPartnum>> GetMoldDieMonthInput(int month, int year, string process);
         Task<List<DieMoldToolingModelDisplay>> GetMoldToolingData();
+
+        Task<List<DieMoldProcess>> GetMoldProcess();
+        Task<List<DieProcessDescription>> GetMoldPartDescription();
         // ===============================================
 
         Task<bool> AddUpdateMoldie(MoldInputModel mold);
         Task<bool> AddMoldieTooling(DieMoldToolingModel mold);
 
+        Task<bool> AddNewMoldDie(AddDieMoldingDataInput mold);
+        Task<bool> UpdateMoldDie(DieMoldingDataInput mold);
         // PRESS
         // ===============================================
         Task<List<PressDieSummary>> GetPressSummary();

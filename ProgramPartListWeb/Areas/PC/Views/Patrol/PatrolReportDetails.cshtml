@@ -54,27 +54,11 @@
                     <a href="/PC/Patrol/PatrolReport"><i class="fa-solid fa-arrow-left"></i></a>
                     <h5 class="mb-0 fw-bold">Details Information  <input type="hidden" id="Regno" value="@regno" />  </h5>
                 </div>
-
-
             </div>
 
-            <div class="flex_align">
-                <button type="button" id="OpenSenders">To</button>
-                <input type="text" id="selectedEmails" placeholder="Selected emails will appear here">
-                <button type="button" id="OpenCC">CC</button>
-                <input type="text" id="selectedCC" placeholder="Selected emails will appear here">
-                <button>Send</button>
-            </div>
-
-
+       
             <hr />
-            <label>Attachments : </label> <br />
-            <input type="file" id="fileInput" multiple>
-
-            <ul id="fileList" class="file-list"></ul>
-
-
-
+           
             <div class="row">
                 <div class="col">
                     <label>Registration No.  </label> <br />
@@ -305,14 +289,13 @@
     const fileInput = document.getElementById("fileInput");
     const fileList = document.getElementById("fileList");
 
-    let selectedFiles = [];
-
     const table = document.getElementById("recipientTable");
     const btnOk = document.getElementById("btnOk");
 
-
-
     const resultBox = document.querySelector(".namesdisplay");
+
+    let selectedFiles = [];
+
 
     const editform = document.getElementById("addnewform");
     let strRegno = $("#Regno").val();
@@ -584,9 +567,24 @@
           let finalformData = new FormData(e.target);
           finalformData.append('FindJson', strfind);
 
+
+          // ✅ Add Sender and CC values
+          let toEmails = document.querySelector("#selectedEmails").value;
+          let ccEmails = document.querySelector("#selectedCC").value;
+
+          finalformData.append("Senders", toEmails);
+          finalformData.append("CC", ccEmails);
+
+          // ✅ Add multiple attachments
+          selectedFiles.forEach(file => {
+              finalformData.append("Attachments", file);
+          });
+
           const finaldata = Object.fromEntries(finalformData);
 
-          let res = await postData('@Url.Action("EditRegistration", "Patrol")', finalformData);
+          console.log(finaldata);
+
+          @*let res = await postData('@Url.Action("EditRegistration", "Patrol")', finalformData);
           if (res.StatusCode === 201 && res.Success) {
               Swal.fire({
                   title: "Success",
@@ -603,7 +601,7 @@
           }
 
           //Resets the Form
-          Resetforms();
+          Resetforms();*@
       });
 
     // INPUT SEARCH EMPLOYEE NAME WHEN TYPE

@@ -40,7 +40,7 @@ namespace PMACS_V2.Helper
 
             LogConnectionChoice(host, Hostname, connectionKey);
 
-            return AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings["LiveDevelopment"].ConnectionString);
+            return AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings[connectionKey].ConnectionString);
         }
 
         // CHECK CONNECTION 
@@ -171,6 +171,7 @@ namespace PMACS_V2.Helper
             }
             catch (Exception ex)
             {
+                Debug.WriteLine("Error Message: " + ex.Message);
                 Logger.Error(ex, $"SQL Exception : {ex.Message}");
                 return false;
             }

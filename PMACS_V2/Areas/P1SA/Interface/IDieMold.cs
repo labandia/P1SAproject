@@ -29,6 +29,7 @@ namespace PMACS_V2.Areas.P1SA.Interface
 
         Task<bool> AddNewMoldDie(AddDieMoldingDataInput mold);
         Task<bool> UpdateMoldDie(DieMoldingDataInput mold);
+        Task<bool> DeleteMoldDie(int Id, string partnum = "");
         // PRESS
         // ===============================================
         Task<List<PressDieSummary>> GetPressSummary();

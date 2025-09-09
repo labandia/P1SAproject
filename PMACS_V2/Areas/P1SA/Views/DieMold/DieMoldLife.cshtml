@@ -181,6 +181,7 @@
                                 <th>Date Repair</th>
                                 <th>Incharge</th>
                                 <th>Remarks</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody id="DieMoldToolist">
@@ -245,7 +246,7 @@
 
                         <div class="form_group col-4 col-lg-4 col-sm-12">
                             <label for="">Dimension/ Quality</label>
-                            <input type="text" name="DimensionQual" id="DimensionQual" placeholder="Enter Dimensional Quality"  required>
+                            <input type="text" name="DimensionQual" id="DimensionQual" placeholder="Enter Dimensional Quality" required>
                         </div>
                     </div>
 
@@ -286,7 +287,7 @@
                         </div>
                     </div>
 
-                    
+
 
 
                     <div class="flex_space" id="editsdisplay">
@@ -304,7 +305,7 @@
     </div>
 </div>
 <!--########################## EDIT DIE MOLD DATA #############################-->
-<div class="modal fade modal-lg" id="Editooling" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+<div class="modal fade modal-lg" id="EditMoldDie" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-body modalwrap">
@@ -358,7 +359,7 @@
 
                     </div>
 
-                    <div class="flex_space" id="editsdisplay">
+                    <div class="flex_end" id="editsdisplay">
                         <button type="submit" class="primary_button_color">
                             <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
                         </button>
@@ -512,7 +513,105 @@
 </div>
 
 
+<!--########################## Edit Tooling  DATA #############################-->
+<div class="modal fade modal-xl" id="EditTooling" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Edit Tooling Data</h5>
 
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <form id="AddToolforms" class="addformcontainer" autocomplete="off">
+                    <div class="row">
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Registration <small style="color: #a81818; font-weight: 600;">*</small></label>
+                            <input type="text" name="EditRegNo" id="EditRegNo" placeholder="Enter Registration No." required>
+                        </div>
+
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Part number <small style="color: #a81818; font-weight: 600;">*</small></label>
+                            @*<input type="text" name="PartNo" id="PartNo" placeholder="Enter Part number" required>*@
+                            <div class="search-box">
+                                <input type="text" placeholder="Type Part number" name="EditParNoSearch" id="EditParNoSearch" required>
+                            </div>
+                        </div>
+
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Item # 1</label>
+                            <input type="text" name="EditItem" id="EditItem" placeholder="Enter Items 1" onkeypress='return restrictChars(event)' required>
+                        </div>
+                    </div>
+
+
+
+                    <div class="row">
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Release(Shot Cycle test)</label>
+                            <input type="text" name="ShotRelease" id="ShotRelease" placeholder="Enter Cycle Shot" onkeypress='return restrictChars(event)' required>
+                        </div>
+
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Date Arrived</label>
+                            <input type="date" name="DateArrived" id="DateArrived" required>
+                        </div>
+
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Details of Modification</label>
+                            <input type="text" name="DetailsModify" id="DetailsModify" placeholder="Enter Details" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Date Repair</label>
+                            <input type="date" name="DateRepair" id="DateRepair" required>
+                        </div>
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Incharge</label>
+                            <input type="text" name="Incharge" id="Incharge" placeholder="Enter the name of Incharged" required>
+                        </div>
+
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Item # 2</label>
+                            <input type="text" name="Item2" id="Item2" placeholder="Enter No of Items" onkeypress='return restrictChars(event)' required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form_group col-8 col-lg-8 col-sm-12">
+                            <label for="">Remarks</label>
+                            <textarea placeholder="Write something here..." name="Remarks" id="Remarks" rows="3" cols="50" required></textarea>
+                        </div>
+
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Details of Modification</label>
+                            <input type="text" name="DetailsModify2" id="DetailsModify2" placeholder="Enter Details" required>
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="flex_space " id="editsdisplay">
+                        <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                        <button type="submit" class="primary_button_color">
+                            <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
+                        </button>
+                    </div>
+                </form>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
 
 
 <script type="text/javascript">
@@ -666,39 +765,38 @@
 
 
     $("#AddMoldforms").on('submit', async function (e) {
+                icon: "success",
         e.preventDefault();
         let formData = new FormData(e.target);
         const data = Object.fromEntries(formData);
-        console.log(data);
+        //console.log(data);
         let res = await postData('@Url.Action("AddMoldDieData", "DieMold")', data);
-        console.log(res);
-        //if (res && res.Success) {
-        //    Swal.fire({
-        //        title: "Success",
-        //        text: res.Message,
-        //        icon: "success",
-        //        confirmButtonColor: "#0d97c9",
-        //        timer: 1500
-        //    }).then(() => {
-        //        GetMoldDieTooling();
-        //        $("#AddToolforms")[0].reset();
-        //        $("#AddTooling").modal("hide");
-        //    });
-        //} else {
-        //    Swal.fire({
-        //        icon: "error",
-        //        text: data.ToolNo + " is already Exist",
-        //        timer: 1500,
-        //        showConfirmButton: false
-        //    });
-        //}
+
+        if (res && res.Success) {
+            Swal.fire({
+                title: "Success",
+                text: res.Message,
+                confirmButtonColor: "#0d97c9",
+                timer: 1500
+            }).then(() => {
+                GetMoldDieMonth();
+                $("#AddMoldforms")[0].reset();
+                $("#AddMoldModal").modal("hide");
+            });
+        } else {
+            Swal.fire({
+                icon: "error",
+                text: data.ToolNo + " is already Exist",
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }
     });
 
     $("#editMoldDie").on('submit', async function (e) {
         e.preventDefault();
         let formData = new FormData(e.target);
         const data = Object.fromEntries(formData);
-        console.log(data);
         let res = await postData('@Url.Action("UpdateMoldDieData", "DieMold")', data);
         if (res && res.Success) {
             Swal.fire({
@@ -861,7 +959,7 @@
 
     }
     const GetMoldDieMonth = async (month = setMonth, year = currentYear, process = $("#ProcessID").val()) => {
-        const id = loadingDisplay(1, 6);
+        const id = loadingDisplay(1, 8);
         Loadingsteps(id, async () => {
              let formData = new FormData();
              // Where value of month is around 1 - 12
@@ -963,7 +1061,7 @@
         $("#DieMoldToolist").empty();
 
         dataArray.forEach((row, index) => {
-            var setdata = `<tr class= 'EditClick row_${row.RecordID}' id='editButton_${row.RecordID}'>
+            var setdata = `<tr >
              <td>${row.RegNo}</td>
              <td style='font-weight: 600;'>${row.PartNo} / ${row.DimensionQuality}</td>
              <td>${row.Item}</td>
@@ -973,6 +1071,13 @@
              <td>${row.DateRepair}</td>
              <td>${row.Incharge}</td>
              <td>${row.Remarks}</td>
+             <td>
+                <button type='button' class='btn actionicon text-primary EditToolClick' id='editButton_${row.RecordID}' >
+                   <i class='fa-regular fa-pen-to-square action_btn'></i>
+                </button>
+
+                
+             </td>
          </tr>;`
 
             $("#DieMoldToolist").append(setdata);
@@ -980,12 +1085,27 @@
 
 
         // Handle click event for edit button
-        $(document).on('click', '.EditClick', function (e) {
+        $(document).on('click', '.EditToolClick', function (e) {
             e.stopPropagation();
             const buttonId = $(this).attr('id');
             const rowIndex = buttonId.split('_')[1];
             console.log("Row Selected : " + rowIndex);
-            $("#Editooling").modal("show");
+            var filterData = DieTooling.find(res => res.RecordID === rowIndex);
+
+            if (filterData) {
+
+            }
+
+            $("#EditTooling").modal("show");
+        });
+
+        // Handle click event for edit button
+        $(document).on('click', '.ToolDeleteClick', function (e) {
+            e.stopPropagation();
+            const buttonId = $(this).attr('id');
+            const rowIndex = buttonId.split('_')[1];
+            console.log("Row Selected : " + rowIndex);
+            $("#EditTooling").modal("show");
         });
     }
     function displaySummaryPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 10, visibleButtons = 5) {
@@ -1338,7 +1458,33 @@
             e.stopPropagation();
             const buttonId = $(this).attr('id');
             const rowIndex = buttonId.split('_')[1];
-            console.log("DELETE HRERE");
+
+            const filterData = TableData.find(p => p.RecordID == rowIndex);
+             Swal.fire({
+                 text: "Do you want to Delete this Partnumber?",
+                 icon: "warning",
+                 showCancelButton: true,
+                 confirmButtonColor: "#3085d6",
+                 cancelButtonColor: "#d33",
+                 confirmButtonText: "Yes, delete it!"
+             }).then( async (result) => {
+                 if (result.isConfirmed) {
+
+                     var formData = new FormData();
+                     formData.append('RecordID', rowIndex);
+                     formData.append('PartNo', filterData.PartNo);
+                     const data = Object.fromEntries(formData);
+                     let res = await postData('@Url.Action("DeleteMoldDieData", "DieMold")', data);
+
+                     if (res && res.Success) {
+                         alert("Delete Successfully");
+                         GetMoldDieMonth();
+                     }
+
+                     console.log(res);
+
+                 }
+             });
         });
 
          // Initialize table and pagination

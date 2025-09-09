@@ -481,7 +481,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
         }
         [HttpPost]
-        public async Task<ActionResult> EditRegistration(HttpPostedFileBase ExcelFile)
+        public async Task<ActionResult> EditRegistration(HttpPostedFileBase[] Attachments)
         {
             var data = await _ins.GetEmployee() ?? new List<Employee>();
             int Department = Convert.ToInt32(data.FirstOrDefault(p => p.EmployeeID == Request.Form["Employee_ID"])?.Department_ID);
@@ -490,7 +490,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
             // Step 1:  Get existing record to get old Countermeasures Excel file path if needed
             var regData = await _ins.GetRegistrationData();
-            string oldCounterPath = regData.SingleOrDefault(res => res.RegNo == Request.Form["RegNo"]).PatrolPath;
+            string oldPatrolPath = regData.SingleOrDefault(res => res.RegNo == Request.Form["RegNo"]).PatrolPath;
 
               // Prepare new file names
             string newFileName = $"RN_{Request.Form["RegNo"]}_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
@@ -503,39 +503,29 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             string templatePath = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Uploads/PGFY-00031FORM_1.xlsx");
 
             // Step 2: Checks If a new Excel file is uploaded
-            if (ExcelFile != null && ExcelFile.ContentLength > 0)
+            List<string> newAttachements = new List<string>();
+            if(Attachments != null && Attachments.Length > 0)
             {
-                string fileExtension = Path.GetExtension(ExcelFile.FileName);
-                string savedFileName = $"CM_{Request.Form["RegNo"]}_{DateTime.Now:yyyyMMdd_HHmmss}{fileExtension}";
-                newCounterPath = savedFileName;
-
-                // Save new Excel file
-                ExportFiler.SaveFileasExcel(ExcelFile, savedFileName);
-
-                // Delete old Countermeasures Excel file if exists and different
-                if (!string.IsNullOrEmpty(oldCounterPath))
+                foreach (var file in Attachments)
                 {
-                    string exportFolder = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\";
-                    string oldFullPath = Path.Combine(exportFolder, oldCounterPath);
-
-                    if (System.IO.File.Exists(oldFullPath))
+                    if (file != null && file.ContentLength > 0)
                     {
-                        try
-                        {
-                            System.IO.File.Delete(oldFullPath);
-                        }
-                        catch (Exception ex)
-                        {
-                            // Log error but don't fail edit
-                            Debug.WriteLine("Failed to delete old Excel file: " + ex.Message);
-                        }
+                        string fileName = $"CM_{Request.Form["RegNo"]}_{DateTime.Now:yyyyMMdd_HHmmss}{Path.GetExtension(file.FileName)}";
+                        ExportFiler.SaveFileasExcel(file, fileName);
+                        newAttachements.Add(fileName);
                     }
                 }
             }
-            else
+
+            // if there is a new File upload, append them to the old/current PatrolPaths 
+            string newpatrolPaths = oldPatrolPath;
+            // If there is a file
+            if(newAttachements.Count > 0)
             {
-                // No new file uploaded, keep old CounterPath
-                newCounterPath = oldCounterPath;
+                if (!string.IsNullOrEmpty(newpatrolPaths))
+                    newpatrolPaths += ";" + string.Join(";", newAttachements);
+                else
+                    newpatrolPaths = string.Join(";", newAttachements);
             }
 
 
@@ -550,7 +540,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 FilePath = outputPdfPath,
                 Manager = Request.Form["Manager"],
                 Manager_Comments = Request.Form["Manager_Comments"],
-                PatrolPath = newCounterPath,
+                PatrolPath = newpatrolPaths,
                 IsSigned = isSign
             };
 

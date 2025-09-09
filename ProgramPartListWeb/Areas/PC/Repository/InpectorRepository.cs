@@ -97,13 +97,22 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                 RegNo = reg.RegNo,
                 DateConduct = reg.DateConduct,
                 Employee_ID = reg.Employee_ID,
-                FilePath = reg.FilePath,
                 PIC = reg.PIC,
                 PIC_Comments = reg.PIC_Comments,
                 Manager = reg.Manager,
-                CounterPath = reg.PatrolPath,
                 Manager_Comments = reg.Manager_Comments
             });
+
+            bool resultfiles = await SqlDataAccess.UpdateInsertQuery("EditPatrolFiles", new
+            {
+                FilePath = reg.FilePath,
+                PatrolPath = reg.PatrolPath,
+                RegNo = reg.RegNo
+            });
+
+
+
+
 
             // INSERT FINDING AND COUNTERMEASURE PROCESS
             // Deserialize findings

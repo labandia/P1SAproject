@@ -145,6 +145,13 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             if (!update) return JsonValidationError();
             return JsonCreated(edit, "Edit Data Successfully");
         }
+        [HttpPost]
+        public async Task<ActionResult> DeleteMoldDieData(int RecordID, string PartNo)
+        {          
+            bool update = await _die.DeleteMoldDie(RecordID, PartNo);
+            if (!update) return JsonValidationError();
+            return JsonCreated(update, "Delete Data Successfully");
+        }
         // ===========================================================
         // ==================== PRESS MOLD DIE DATA  ==================
         // ===========================================================

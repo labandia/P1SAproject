@@ -1,0 +1,330 @@
+﻿    /*========== VARIABLES CSS ==========*/
+    :root {
+        --header-height: 4rem;
+        --nav-width: 250px;
+        /*========== Colors ==========*/
+        --primary-color: hsl(169, 86%, 32%);
+        --primary-hover: hsl(169, 84%, 27%);
+        --primary-alt-color: #F4F0FA;
+        --first-color-light: #F4F0FA;
+        --title-color: #010202;
+        --text-color: #58555E;
+        --text-color-light: #A5A1AA;
+        --body-color: #F9F6FD;
+        --container-color: #FFFFFF;
+        /*========== Font and typography ==========*/
+        --body-font: 'poppins-regular', sans-serif;
+    }
+
+    body {
+        font-family: var(--body-font) !important;
+        background: #f5f5f5;
+    }
+
+
+    .FormMainheader {
+        width: 100%;
+        height: var(--header-height);
+        position: fixed;
+        padding: .9rem 0;
+        color: #fff;
+        background: hsl(210, 29%, 9%);
+        border-bottom: 1px solid hsl(169, 86%, 32%);
+        z-index: 999;
+    }
+    .Attachmentcontainer{
+        padding: 1em 0;
+    }
+    .CustomContainer, .Attachmentcontainer {
+        max-width: 90em;
+        width: 90%;
+        margin-inline: auto;
+    }
+
+    .HeadTitle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .HeadTitle__action {
+        display: flex;
+        align-items: center;
+        gap: 1em;
+    }
+    .HeadTitle__action button{
+        padding: .2em .7em;
+    }
+    .pdf-container{
+        display: flex;
+        align-items: center;
+    }
+
+    #sendEmail{
+        background: var(--primary-color);
+        color: #fff;
+    }
+
+
+    #btnSave {
+/*        width: 60px;
+        height: 60px;
+        border-radius: 50%;*/
+        position: fixed;
+        bottom: 3em;
+        right: 3em;
+        background: var(--primary-color);
+        color: #fff;
+        font-size: 1.2rem;
+    }
+
+    #btnSave i{
+        font-size: 1.2rem;
+    }
+
+
+    .modalwrap{
+        padding: 2em 1.5em !important;
+    }
+
+
+     .custom_modal_header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: .5em;
+    }
+    .custom_modal__icon {
+        display: flex;
+        align-items: center;
+        gap: 1em;
+    }
+
+     .custom_icon_container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        padding: 1em;
+        background: hsl(209, 84%, 88%);
+        color: hsl(209, 80%, 50%);
+    }
+
+    .custom_icon_container i {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        font-size: 3rem !important;
+        transform: translate(-50%, -50%);
+    }
+
+     .custom_modal_header h5 { font-weight: 600; }
+    .formcontainer {
+        max-width: 90em;
+        width: 90%;
+        margin-inline: auto;
+
+        margin: 0 auto;
+        background: var(--container-color);
+        padding: 2em;
+        border-radius: .5em;
+        margin-bottom: 3em;
+        margin-inline: auto;
+        box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    }
+    .addformcontainer { padding: .5em; }
+    .formcontainer h5, .addformcontainer h5, .formcontainer label, .addformcontainer label {
+        font-weight: 500;
+        color: #222;
+    }
+    .formcontainer label, .addformcontainer label {
+        font-size: var(--small-font-size);
+    }
+    .formcontainer input, .formcontainer textarea, .addformcontainer input, .addformcontainer textarea {
+        width: 100%;
+        margin: .5em 0 1em 0;
+        border: 1px solid #A5A1AA;
+        padding: .6em 1em;
+        font-size: var(--small-font-size);
+        border-radius: .3em;
+    }
+    .formcontainer input[type='checkbox']{
+        width: auto;
+        margin: 0;
+        padding: 0;
+    }
+
+    .formcontainer textarea, .addformcontainer textarea {
+        width: 100%;
+        margin: .5em 0 1em 0;
+        border: 1px solid #A5A1AA;
+        padding: .6em;
+        font-size: var(--normal-font-size);
+    }
+    .formcontainer input:focus, .formcontainer textarea:focus, .addformcontainer input:focus, .addformcontainer textarea:focus {
+         outline: 1px solid var(--primary-color);
+    }
+
+    .HeadTitle__action input {
+        background: rgba(255, 255, 255, 0.1);
+        outline: none;
+        border: none;
+        color: hsl(211, 17%, 74%);
+        padding: .2em 1em;
+    }
+
+    #fileContainer{
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: .5em 0;
+    }
+
+    #fileContainer .fa-file-pdf{
+       color: red;
+    }
+
+    /* ========= CUSTOM INPUT WITH A PREFIX =========== */
+    .date-wrapper {
+          width: 100% !important;
+          display: flex;
+          align-items: center;
+          border: 1px solid #ccc;
+          padding: 0 1em;
+          border-radius: 6px;
+          font-family: Arial, sans-serif;
+          width: fit-content;
+          position: relative;
+     }
+    .prefix {
+      margin-right: 8px;
+      color: #555;
+      white-space: nowrap;
+      font-size: .8rem;
+    }
+    .styled-date {
+      border: none;
+      outline: none !important;
+      width: 80px;
+      background: transparent;
+      border: none !important;
+      margin-top: 1em !important;
+      padding: 0 !important;
+      font-weight: 500;
+    }
+
+    .calendar-icon-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px; /* increased */
+        height: 50px; /* increased */
+        margin-left: 10px;
+        cursor: pointer;
+    }
+    .calendar-icon {
+        font-size: 20px;
+        color: #555;
+        pointer-events: none; /* allow the input to receive clicks */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .real-date-input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0; /* invisible but still clickable */
+        cursor: pointer;
+        z-index: 1;
+        outline: none;
+    }
+
+    .ChangepassContainer{
+        width: 450px;
+        margin-top: 1em;
+    }
+
+    .ChangepassContainer input{
+        width: 100%;
+        padding: .5em 1em;
+        background: #f5f5f5;
+        margin: .5em 0;
+    }
+
+    .ChangepassContainer button{
+        margin-top: 1em;
+        color: #fff;
+    }
+
+    .change__group{
+        margin: 1em 0;
+    }
+
+    .Calendar_container{
+        margin-top: .5em;
+    }
+
+    .DateShow{
+        font-size: 1.1rem;
+    }
+
+
+
+
+
+
+
+
+
+   
+
+
+
+    .pdf-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+        padding: .5em 0;
+    }
+
+    .open-pdf-btn {
+        flex: 1;                 /* Take remaining space */
+        display: flex;
+        align-items: center;
+        overflow: hidden;         /* Hide overflow text */
+        white-space: nowrap;      /* Keep in one line */
+        text-overflow: ellipsis;  /* Show "..." for overflow */
+        padding: 5px 10px;
+        font-size: 14px;
+        cursor: pointer;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background-color: #f9f9f9;
+    }
+
+    .open-pdf-btn i {
+        margin-right: 0px;
+    }
+
+    .remove-btn {
+        margin-left: 0px;
+        background: transparent;
+        border: none;
+        color: red;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    #uploadBtn{
+        background: #fff;
+        border: 1px solid #222;
+        padding: .2em .8em;
+    }

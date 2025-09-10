@@ -497,7 +497,6 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             string outputPdfPath = newFileName.Replace(".xlsx", ".pdf");
 
 
-            string newCounterPath = null;
 
             // Default template path for PDF generation (keep your default or adjust if needed)
             string templatePath = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Uploads/PGFY-00031FORM_1.xlsx");

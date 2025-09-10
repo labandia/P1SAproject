@@ -1066,10 +1066,12 @@
         font-weight: 600;
     }
 /* ===================================================== */
+
+    
 /* ================= MEDIA QUERIES ===================== */
-    /* For small devices reduce search*/
-    @media screen and (max-width: 320px) {
-        .header__search {
+/* For small devices reduce search*/
+@media screen and (max-width: 320px) {
+    .header__search {
             width: 70%;
         }
     }

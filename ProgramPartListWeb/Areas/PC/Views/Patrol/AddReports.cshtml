@@ -3,7 +3,6 @@
     ViewBag.Title = "Production Patrol Inspection Report System";
     Layout = "";
 }
-
 <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/x-icon" href="@Url.Content("~/Content/Images/patrol .ico")">
@@ -13,220 +12,251 @@
 
 
     <script src="~/Scripts/bootstrap.bundle.min.js"></script>
-
+    <link href="~/Content/css/Patrolforms.css" rel="stylesheet" />
 
     @Styles.Render("~/Content/shared-css")
-    @Styles.Render("~/Content/patrol-css")
 
     @Scripts.Render("~/bundles/shared-js")
     @Scripts.Render("~/bundles/modernizr")
 </head>
 
 
-<header class="Formheader flex_align">
-    <div class="flex_align">
-        <button type="button" id="OpenSenders">To</button>
-        <input type="text" id="selectedEmails" placeholder="Selected emails will appear here">
-        <button type="button" id="OpenCC">CC</button>
-        <input type="text" id="selectedCC" placeholder="Selected emails will appear here">
-        <button>Send</button>
+<header class="FormMainheader">
+    <div class="CustomContainer">
+        <div class="HeadTitle">
+            <div class="flex_align">
+                <a href="/PC/Patrol/PatrolReport"><i class="fa-solid fa-arrow-left"></i>  </a>
+                <span>  Back</span>
+            </div>
+            <div class="HeadTitle__action">
+                <button type="button" id="OpenSenders"><i class="fa-regular fa-user"></i> To</button>
+                <input type="text" id="selectedEmails" placeholder="Recepients name ...">
+                <button type="button" id="OpenCC"><i class="fa-regular fa-user"></i> CC</button>
+                <input type="text" id="selectedCC" placeholder="CC ">
+                <button id="sendEmail"><i class="fa-regular fa-paper-plane"></i> Send</button>
+            </div>
+        </div>
     </div>
 </header>
 
-<label>Attachments : </label>
-<section class="flex_align">
-    <input type="file" id="fileInput" multiple>
 
-    <ul id="fileList" class="file-list flex_align"></ul>
+
+<section style="padding: 4rem 0;">
+    <div class="Attachmentcontainer">
+        <div class="flex_align">
+            <label class="mb-0 fw-bold">Attachments : </label>
+            <button type="button" id="uploadBtn"><i class="fa-solid fa-paperclip"></i> Upload Files</button>
+        </div>
+
+
+        <section class="flex_align">
+
+
+            <div id="fileContainer"></div>
+            <ul id="fileList" class="file-list flex_align"></ul>
+
+
+        </section>
+    </div>
+
+    <input type="file" id="fileInput" accept="application/pdf" multiple hidden>
+
+
+
+
+
+    <form method="post" enctype="multipart/form-data" class="formcontainer" id="addnewform" autocomplete="off">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex align-items-center gap-4">
+                    <a href="/PC/Patrol/PatrolReport"><i class="fa-solid fa-arrow-left"></i></a>
+                    <h5 class="mb-0 fw-bold">Details Information</h5>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-6">
+                        <label>Registration No. <small style="color: #a81818; font-weight: 600;">*</small> </label> <br />
+                        @*<input type="text" placeholder="Type Registration No." name="RegNo" id="RegNo" required />*@
+                        <div class="date-wrapper">
+                            <span class="prefix">P1SA-</span>
+                            <input name="RegNo" id="RegNo" class="styled-date" type="text" placeholder="YYMMDD" readonly required>
+
+                            <div class="calendar-icon-wrapper">
+                                <i class="fa-regular fa-calendar-days calendar-icon"></i>
+                                <input type="date" class="real-date-input" id="hiddenDatePicker" onchange="formatAndDisplayDate(this.value)">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-lg-6">
+                        <label>Input Inspectors <small style="color: #a81818; font-weight: 600;">*</small> </label>
+                        @*<div class="select-container">
+                                <select id="Employee_ID" name="Employee_ID">
+                                    <option>-- Select Inspector --</option>
+                                </select>
+                            </div>*@
+                        <div class="flex_align">
+                            <div class="search-box" style="width: 70%;">
+                                <input type="hidden" name="Employee_ID" id="Employee_ID">
+                                <input type="text" placeholder="Type Name or ID no." name="EmployeeSearch" id="EmployeeSearch" autocomplete="off">
+                                <div class="namesdisplay"></div>
+                            </div>
+                            <small>Include signature: </small>
+                            <input type="checkbox" name="IsSign" id="IsSign" />
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+                <h5 class="mb-4 mt-4 fw-bold">Inspection Criterion / Findings</h5>
+                <hr />
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-6">
+                        <label>1. Work Practice / Standard / Safety</label> <br />
+                        <input type="hidden" value="1" id="Find1" name="Find1" />
+                        <textarea placeholder="Type text here..." name="Inpects1" id="Inpects1" rows="3" cols="40" required></textarea>
+                    </div>
+
+                    <div class="col-12 col-sm-12 col-lg-6">
+                        <label>Countermeasures</label> <br />
+                        <textarea placeholder="Type text here..." name="counter1" id="counter1" rows="3" cols="40"></textarea>
+                    </div>
+                </div>
+
+
+
+
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-6">
+                        <label>2. Identification and status of the product or materials.</label> <br />
+                        <input type="hidden" value="2" id="Find2" name="Find2" required />
+                        <textarea placeholder="Type text here..." name="Inpects2" id="Inpects2" rows="3" cols="40"></textarea>
+                    </div>
+
+                    <div class="col-12 col-sm-12 col-lg-6 ">
+                        <label>Countermeasures</label> <br />
+                        <textarea placeholder="Type text here..." name="counter2" id="counter2" rows="3" cols="40"></textarea>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-6 ">
+                        <label>3. Condition and status of documents / records.</label> <br />
+                        <input type="hidden" value="3" id="Find3" name="Find3" required />
+                        <textarea placeholder="Type text here..." name="Inpects3" id="Inpects3" rows="3" cols="40"></textarea>
+                    </div>
+
+                    <div class="col-12 col-sm-12 col-lg-6 ">
+                        <label>Countermeasures</label> <br />
+                        <textarea placeholder="Type text here..." name="counter3" id="counter3" rows="3" cols="40"></textarea>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-6 ">
+                        <label>4. Record of ‘start-up process check’ and monthly inspection</label> <br />
+                        <input type="hidden" value="4" id="Find4" name="Find4" required />
+                        <textarea placeholder="Type text here..." name="Inpects4" id="Inpects4" rows="3" cols="40"></textarea>
+                    </div>
+
+                    <div class="col-12 col-sm-12 col-lg-6 ">
+                        <label>Countermeasures</label> <br />
+                        <textarea placeholder="Type text here..." name="counter4" id="counter4" rows="3" cols="40"></textarea>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-6 ">
+                        <label>5. Calibration of equipment and jigs used for measurement or inspection.</label> <br />
+                        <input type="hidden" value="5" id="Find5" name="Find5" required />
+                        <textarea placeholder="Type text here..." name="Inpects5" id="Inpects5" rows="3" cols="40"></textarea>
+                    </div>
+
+                    <div class="col-12 col-sm-12 col-lg-6 ">
+                        <label>Countermeasures</label> <br />
+                        <textarea placeholder="Type text here..." name="counter5" id="counter5" rows="3" cols="40"></textarea>
+                    </div>
+                </div>
+
+
+
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-6 ">
+                        <label>6. Countermeasure and implementation of previous quality and safety</label> <br />
+                        <input type="hidden" value="6" id="Find5" name="Find6" required />
+                        <textarea placeholder="Type text here..." name="Inpects6" id="Inpects6" rows="3" cols="40"></textarea>
+                    </div>
+
+                    <div class="col-12 col-sm-12 col-lg-6 ">
+                        <label>Countermeasures</label> <br />
+                        <textarea placeholder="Type text here..." name="counter6" id="counter6" rows="3" cols="40"></textarea>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-6 ">
+                        <div class="form_group col-12 col-sm-12 ">
+                            <label>Managers </label> <br />
+                            <div class="select-container">
+                                <select id="ManagerSelect" name="ManagerSelect">
+                                    <option value="">-- Manager Select --</option>
+                                </select>
+                            </div>
+                            <input type="text" placeholder="type person in charge" name="Manager" id="Manager" />
+                        </div>
+
+
+                        <div class="form_group col-12 col-sm-12 ">
+                            <label>Managers (Comments): </label> <br />
+                            <textarea placeholder="Type text here..." name="Manager_Comments" id="Manager_Comments" rows="9" cols="40"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-lg-6">
+                        <div class="form_group col-12 col-sm-12 ">
+                            <label>Date Conducted </label> <br />
+                            <input type="date" name="DateConduct" id="DateConduct" />
+                        </div>
+
+                        <div class="form_group col-12 col-sm-12 ">
+                            <label>Person In Charge </label> <br />
+                            <div class="select-container">
+                                <select id="PICselect" name="PICselect">
+                                    <option value="">-- PIC Select --</option>
+                                </select>
+                            </div>
+                            <input type="text" placeholder="type person in charge" name="PIC" id="PIC" />
+                        </div>
+
+
+                        <div class="form_group col-12 col-sm-12 ">
+                            <label>PIC (Comments): </label> <br />
+                            <textarea placeholder="Type text here..." name="PIC_Comments" id="PIC_Comments" rows="5" cols="40"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+
+   
+        <hr />
+
+        <div class="d-flex align-items-center justify-content-between">
+            <span id="errorvalid" class="text-danger">* Registration No is already inserted</span>
+            <span id="labelguide">All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</span>
+            <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> </button>
+        </div>
+    </form>
+
 </section>
 
 
 
-<form method="post" enctype="multipart/form-data" class="formcontainer" id="addnewform" autocomplete="off">
-    <div class="row">
-        <div class="col-12">
-            <div class="d-flex align-items-center gap-4">
-                <a href="/PC/Patrol/PatrolReport"><i class="fa-solid fa-arrow-left"></i></a>
-                <h5 class="mb-0 fw-bold">Details Information</h5>
-            </div>
-            <hr />
-            <div class="row">
-                <div class="col-12 col-sm-12 col-lg-6">
-                    <label>Registration No. <small style="color: #a81818; font-weight: 600;">*</small> </label> <br />
-                    @*<input type="text" placeholder="Type Registration No." name="RegNo" id="RegNo" required />*@
-                    <div class="date-wrapper">
-                        <span class="prefix">P1SA-</span>
-                        <input name="RegNo" id="RegNo" class="styled-date" type="text" placeholder="YYMMDD" readonly required>
 
-                        <div class="calendar-icon-wrapper">
-                            <i class="fa-regular fa-calendar-days calendar-icon"></i>
-                            <input type="date" class="real-date-input" id="hiddenDatePicker" onchange="formatAndDisplayDate(this.value)">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-12 col-lg-6">
-                    <label>Input Inspectors <small style="color: #a81818; font-weight: 600;">*</small> </label>
-                    @*<div class="select-container">
-                            <select id="Employee_ID" name="Employee_ID">
-                                <option>-- Select Inspector --</option>
-                            </select>
-                        </div>*@
-                    <div class="flex_align">
-                        <div class="search-box" style="width: 70%;">
-                            <input type="hidden" name="Employee_ID" id="Employee_ID">
-                            <input type="text" placeholder="Type Name or ID no." name="EmployeeSearch" id="EmployeeSearch" autocomplete="off">
-                            <div class="namesdisplay"></div>
-                        </div>
-                        <small>Include signature: </small>
-                        <input type="checkbox" name="IsSign" id="IsSign" />
-                    </div>
-
-                </div>
-            </div>
-
-
-
-            <h5 class="mb-4 mt-4 fw-bold">Inspection Criterion / Findings</h5>
-            <hr />
-            <div class="row">
-                <div class="col-12 col-sm-12 col-lg-6">
-                    <label>1. Work Practice / Standard / Safety</label> <br />
-                    <input type="hidden" value="1" id="Find1" name="Find1" />
-                    <textarea placeholder="Type text here..." name="Inpects1" id="Inpects1" rows="3" cols="40" required></textarea>
-                </div>
-
-                <div class="col-12 col-sm-12 col-lg-6">
-                    <label>Countermeasures</label> <br />
-                    <textarea placeholder="Type text here..." name="counter1" id="counter1" rows="3" cols="40"></textarea>
-                </div>
-            </div>
-
-
-
-
-            <div class="row">
-                <div class="col-12 col-sm-12 col-lg-6">
-                    <label>2. Identification and status of the product or materials.</label> <br />
-                    <input type="hidden" value="2" id="Find2" name="Find2" required />
-                    <textarea placeholder="Type text here..." name="Inpects2" id="Inpects2" rows="3" cols="40"></textarea>
-                </div>
-
-                <div class="col-12 col-sm-12 col-lg-6 ">
-                    <label>Countermeasures</label> <br />
-                    <textarea placeholder="Type text here..." name="counter2" id="counter2" rows="3" cols="40"></textarea>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-12 col-sm-12 col-lg-6 ">
-                    <label>3. Condition and status of documents / records.</label> <br />
-                    <input type="hidden" value="3" id="Find3" name="Find3" required />
-                    <textarea placeholder="Type text here..." name="Inpects3" id="Inpects3" rows="3" cols="40"></textarea>
-                </div>
-
-                <div class="col-12 col-sm-12 col-lg-6 ">
-                    <label>Countermeasures</label> <br />
-                    <textarea placeholder="Type text here..." name="counter3" id="counter3" rows="3" cols="40"></textarea>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-12 col-sm-12 col-lg-6 ">
-                    <label>4. Record of ‘start-up process check’ and monthly inspection</label> <br />
-                    <input type="hidden" value="4" id="Find4" name="Find4" required />
-                    <textarea placeholder="Type text here..." name="Inpects4" id="Inpects4" rows="3" cols="40"></textarea>
-                </div>
-
-                <div class="col-12 col-sm-12 col-lg-6 ">
-                    <label>Countermeasures</label> <br />
-                    <textarea placeholder="Type text here..." name="counter4" id="counter4" rows="3" cols="40"></textarea>
-                </div>
-            </div>
-
-
-            <div class="row">
-                <div class="col-12 col-sm-12 col-lg-6 ">
-                    <label>5. Calibration of equipment and jigs used for measurement or inspection.</label> <br />
-                    <input type="hidden" value="5" id="Find5" name="Find5" required />
-                    <textarea placeholder="Type text here..." name="Inpects5" id="Inpects5" rows="3" cols="40"></textarea>
-                </div>
-
-                <div class="col-12 col-sm-12 col-lg-6 ">
-                    <label>Countermeasures</label> <br />
-                    <textarea placeholder="Type text here..." name="counter5" id="counter5" rows="3" cols="40"></textarea>
-                </div>
-            </div>
-
-
-
-            <div class="row">
-                <div class="col-12 col-sm-12 col-lg-6 ">
-                    <label>6. Countermeasure and implementation of previous quality and safety</label> <br />
-                    <input type="hidden" value="6" id="Find5" name="Find6" required />
-                    <textarea placeholder="Type text here..." name="Inpects6" id="Inpects6" rows="3" cols="40"></textarea>
-                </div>
-
-                <div class="col-12 col-sm-12 col-lg-6 ">
-                    <label>Countermeasures</label> <br />
-                    <textarea placeholder="Type text here..." name="counter6" id="counter6" rows="3" cols="40"></textarea>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-12 col-sm-12 col-lg-6 ">
-                    <div class="form_group col-12 col-sm-12 ">
-                        <label>Managers </label> <br />
-                        <input type="text" placeholder="type person in charge" name="Manager" id="Manager" />
-                    </div>
-
-
-                    <div class="form_group col-12 col-sm-12 ">
-                        <label>Managers (Comments): </label> <br />
-                        <textarea placeholder="Type text here..." name="Manager_Comments" id="Manager_Comments" rows="9" cols="40"></textarea>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-12 col-lg-6">
-                    <div class="form_group col-12 col-sm-12 ">
-                        <label>Date Conducted </label> <br />
-                        <input type="date" name="DateConduct" id="DateConduct" />
-                    </div>
-
-                    <div class="form_group col-12 col-sm-12 ">
-                        <label>Person In Charge </label> <br />
-                        <input type="text" placeholder="type person in charge" name="PIC" id="PIC" />
-                    </div>
-
-
-                    <div class="form_group col-12 col-sm-12 ">
-                        <label>PIC (Comments): </label> <br />
-                        <textarea placeholder="Type text here..." name="PIC_Comments" id="PIC_Comments" rows="5" cols="40"></textarea>
-                    </div>
-                </div>
-            </div>
-
-
-
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-12 col-sm-12 col-lg-6">
-            <label>Upload Patrol Findings:</label> <br />
-            <input type="file" name="ExcelFile" id="ExcelFile" accept=".xlsx,.xls" class="form-control" />
-            <small class="text-muted">Only .xlsx or .xls files are allowed</small>
-        </div>
-
-
-    </div>
-
-    <hr />
-
-    <div class="d-flex align-items-center justify-content-between">
-        <span id="errorvalid" class="text-danger">* Registration No is already inserted</span>
-        <span id="labelguide">All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</span>
-        <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
-    </div>
-</form>
 
 
 @*=================================================================================*@
@@ -281,6 +311,9 @@
     const addform = document.getElementById("addnewform");
     const resultBox = document.querySelector(".namesdisplay");
 
+
+    const uploadBtn = document.getElementById("uploadBtn");
+
     let selectedFiles = [];
 
     // ================= LOAD DATA =======================
@@ -310,7 +343,14 @@
            });
 
 
-
+           // Add row click event
+           $("#recipientTable tr").click(function (e) {
+               // Prevent toggling when clicking directly on checkbox
+               if (e.target.type !== 'checkbox') {
+                   const checkbox = $(this).find(".emailCheck");
+                   checkbox.prop("checked", !checkbox.prop("checked"));
+               }
+           });
       }
    }
     const RegistrationTable = async() => {
@@ -373,19 +413,19 @@
         e.preventDefault();
 
         // Validate Excel file type before sending
-        let fileInput = document.querySelector('#ExcelFile');
-        let file = fileInput.files[0];
-        if (file) {
-            if (!/\.(xls|xlsx)$/i.test(file.name)) {
-                Swal.fire({
-                    icon: "error",
-                    text: "Only Excel files (.xls, .xlsx) are allowed",
-                    timer: 1500,
-                    showConfirmButton: false
-                });
-                return;
-            }
-        }
+        //let fileInput = document.querySelector('#ExcelFile');
+        //let file = fileInput.files[0];
+        //if (file) {
+        //    if (!/\.(xls|xlsx)$/i.test(file.name)) {
+        //        Swal.fire({
+        //            icon: "error",
+        //            text: "Only Excel files (.xls, .xlsx) are allowed",
+        //            timer: 1500,
+        //            showConfirmButton: false
+        //        });
+        //        return;
+        //    }
+        //}
 
         // Append form data
         let strfind = findingsJson(e.target);
@@ -436,15 +476,15 @@
             });
             return;
         }
-
+        console.log(finaldata);
 
 
         const savebtn = document.querySelector("#btnSave");
         savebtn.innerHTML = " <div class='buttonloading'></div> Generating PDF Please wait...";
 
         // Send form data with file to controller
-        let res = await postData('@Url.Action("AddRegistration", "Patrol")', finalformData);
-        console.log(res);
+        //let res = await postData('@Url.Action("AddRegistration", "Patrol")', finalformData);
+        //console.log(res);
         //if (res.StatusCode === 201) {
         //    Swal.fire({
         //        title: "Success",
@@ -462,8 +502,8 @@
         //Resetforms();
     });
 
-   
 
+    uploadBtn.addEventListener("click", () => fileInput.click());
     // =================== MULTIPLE UPLOAD FILES ==============================
     fileInput.addEventListener("change", function () {
         // Add new files to the array (avoid duplicates by name+size)
@@ -480,18 +520,28 @@
     function renderFileList() {
         fileList.innerHTML = "";
         selectedFiles.forEach((file, index) => {
-            let li = document.createElement("li");
-            li.textContent = file.name;
+            const div = document.createElement("div");
+            div.classList.add("pdf-container");
 
-            let removeBtn = document.createElement("button");
-            removeBtn.textContent = "Remove";
+            const pdfBtn = document.createElement("button");
+            pdfBtn.classList.add("open-pdf-btn");
+            pdfBtn.innerHTML = `<i class="fa-solid fa-file-pdf"></i> ${file.name}`;
+            pdfBtn.onclick = () => {
+                const fileURL = URL.createObjectURL(file);
+                window.open(fileURL, "_blank");
+            };
+
+            const removeBtn = document.createElement("button");
+            removeBtn.classList.add("remove-btn");
+            removeBtn.innerHTML = `<i class="fa-regular fa-circle-xmark"></i>`;
             removeBtn.onclick = () => {
                 selectedFiles.splice(index, 1);
                 renderFileList();
             };
 
-            li.appendChild(removeBtn);
-            fileList.appendChild(li);
+            div.appendChild(pdfBtn);
+            div.appendChild(removeBtn);
+            fileList.appendChild(div);
         });
     }
 

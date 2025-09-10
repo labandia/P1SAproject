@@ -92,7 +92,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
         public async Task<bool> EditRegistration(RegistrationModel reg, string json)
         {
             // INSERT MAIN REGISTRATION PROCESS
-            bool result = await SqlDataAccess.UpdateInsertQuery("UpdateRegistration", new
+            var regMain =  SqlDataAccess.UpdateInsertQuery("UpdateRegistration", new
             {
                 RegNo = reg.RegNo,
                 DateConduct = reg.DateConduct,
@@ -103,14 +103,15 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                 Manager_Comments = reg.Manager_Comments
             });
 
-            bool resultfiles = await SqlDataAccess.UpdateInsertQuery("EditPatrolFiles", new
+            var regFiles =  SqlDataAccess.UpdateInsertQuery("EditPatrolFiles", new
             {
                 FilePath = reg.FilePath,
                 PatrolPath = reg.PatrolPath,
                 RegNo = reg.RegNo
             });
 
-
+       
+            bool[] results = await Task.WhenAll(regMain, regFiles);
 
 
 
@@ -130,7 +131,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                 await SqlDataAccess.UpdateInsertQuery("UpdateFindings", findparams, "Registration");
             }
 
-            return result;
+            return results.All(r => r);
         }
         public async Task<bool> DeleteRegistration(string RegNo)
         {

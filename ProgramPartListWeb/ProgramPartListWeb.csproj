@@ -686,6 +686,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\css\Patrolforms.css" />
     <Content Include="Content\OpenExcelApp.exe" />
     <Content Include="Content\Shared\bootstrap-grid.css" />
     <Content Include="Content\Shared\bootstrap-grid.min.css" />

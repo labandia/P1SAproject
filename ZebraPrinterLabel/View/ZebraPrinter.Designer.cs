@@ -115,7 +115,7 @@
             this.Printbtn.ForeColor = System.Drawing.Color.White;
             this.Printbtn.Image = ((System.Drawing.Image)(resources.GetObject("Printbtn.Image")));
             this.Printbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Printbtn.Location = new System.Drawing.Point(247, 679);
+            this.Printbtn.Location = new System.Drawing.Point(249, 654);
             this.Printbtn.Name = "Printbtn";
             this.Printbtn.Padding = new System.Windows.Forms.Padding(50, 0, 45, 0);
             this.Printbtn.Size = new System.Drawing.Size(167, 50);
@@ -204,7 +204,7 @@
             this.Preview.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Preview.Image = ((System.Drawing.Image)(resources.GetObject("Preview.Image")));
             this.Preview.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Preview.Location = new System.Drawing.Point(46, 679);
+            this.Preview.Location = new System.Drawing.Point(47, 651);
             this.Preview.Name = "Preview";
             this.Preview.Padding = new System.Windows.Forms.Padding(120, 0, 130, 0);
             this.Preview.Size = new System.Drawing.Size(371, 50);
@@ -270,7 +270,7 @@
             this.Cancelbtn.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Cancelbtn.Image = ((System.Drawing.Image)(resources.GetObject("Cancelbtn.Image")));
             this.Cancelbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Cancelbtn.Location = new System.Drawing.Point(48, 679);
+            this.Cancelbtn.Location = new System.Drawing.Point(48, 651);
             this.Cancelbtn.Name = "Cancelbtn";
             this.Cancelbtn.Padding = new System.Windows.Forms.Padding(50, 0, 40, 0);
             this.Cancelbtn.Size = new System.Drawing.Size(179, 50);
@@ -436,8 +436,9 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1018, 777);
+            this.ClientSize = new System.Drawing.Size(1018, 749);
             this.ControlBox = false;
+            this.Controls.Add(this.Preview);
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel2);
@@ -450,7 +451,6 @@
             this.Controls.Add(this.Exitbtn);
             this.Controls.Add(this.Numb_error);
             this.Controls.Add(this.part_error);
-            this.Controls.Add(this.Preview);
             this.Controls.Add(this.Cancelbtn);
             this.Controls.Add(this.printerStats);
             this.Controls.Add(this.label6);

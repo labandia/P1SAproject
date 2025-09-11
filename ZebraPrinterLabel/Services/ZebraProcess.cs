@@ -202,8 +202,7 @@ namespace ZebraPrinterLabel
                         string port = printer["PortName"]?.ToString() ?? "";
                         bool isOffline = Convert.ToBoolean(printer["WorkOffline"] ?? false);
 
-                        // Check for exact name match and USB port, and ensure it's online
-                        if (name.Equals("ZDesigner ZD421-203dpi ZPL", StringComparison.OrdinalIgnoreCase)
+                        if (name.Equals("ZDesigner ZT421-203dpi ZPL", StringComparison.OrdinalIgnoreCase)
                             && port.StartsWith("USB", StringComparison.OrdinalIgnoreCase)
                             && !isOffline)
                         {

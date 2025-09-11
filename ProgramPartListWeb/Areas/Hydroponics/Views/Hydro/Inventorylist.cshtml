@@ -1,0 +1,505 @@
+﻿
+@{
+    ViewBag.Title = "Inventorylist";
+    Layout = "~/Areas/Hydroponics/Views/Shared/HydroPartsLayout.cshtml";
+}
+
+<header class="InspectHead flex_space">
+    <div class="flex_align">
+        <div class="Inputcontainer">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" placeholder="Search here ... " id="searchbox" autocomplete="off" />
+            <div class="line"></div>
+        </div>
+    </div>
+
+    <div class="flex_align" >
+        <div class="select-container">
+            <select id="Categoryselect">
+                <option value="0">-- Category --</option>
+            </select>
+        </div>
+        <button style="width: 100%;" id="ShowStocks" class="primarybtn" type="button"><i class="fa-solid fa-user-secret"></i> Add Quantity</button>
+        <button style="display: none;" id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-user-secret"></i> Add parts</button>
+    </div>
+</header>
+
+<div class="InspecTable">
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 15%; text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-user-secret"></i>  <span style="margin-left: .5em;">Part No.</span> </th>
+                <th style="width: 25%;"> <i class="fa-regular fa-calendar-days"></i> <span style="margin-left: .5em;">Part Name</span></th>
+                <th> <i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Supplier</span>  </th>
+                <th> <i class="fa-regular fa-square-check"></i> <span style="margin-left: .5em;">Current Qty</span>  </th>
+                <th style="width: 10%;"> <i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Status</span>  </th>
+            </tr>
+        </thead>
+        <tbody id="InventorylistData">
+        </tbody>
+    </table>
+</div>
+
+<div class="MasterlistWrap_footer ">
+    <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
+
+    <div id="MastertableContainer" class="paginationPartlocal flex_align"></div>
+</div>
+
+
+
+@*=================================================================================*@
+@*=========================== ADD PARTS CHAMBER ===================================*@
+@*=================================================================================*@
+<div class="modal fade modal-l" id="AddChamberModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Add Chamber Parts</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+
+                <form method="post" enctype="multipart/form-data" class="addformcontainer" id="addnewform" autocomplete="off">
+                    <div class="row">
+                        @*<div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
+                <label>Employee ID </label> <br />
+                <input type="text" placeholder="type Employee ID" name="Employee_ID" id="Employee_ID" required />
+                <small class="text-danger" id="Noemployee"></small>
+            </div>*@
+                        <div class="form_group col-12 col-sm-12 col-lg-12 mb-2">
+                            <label>Part no.  <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                            @*<input type="text" placeholder="N/A" name="Fullname" id="Fullname" />*@
+                            <div class="search-box">
+                                <input type="hidden" name="Employee_ID" id="Employee_ID">
+                                <input type="text" placeholder="Type Name or ID no." name="EmployeeSearch" id="EmployeeSearch" required>
+                                @*<div class="namesdisplay"></div>*@
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Part Name.  <small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <input type="text" placeholder="type Ojt registration No." name="OJTRegistration" id="OJTRegistration" required />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>Category <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                        <div class="select-container">
+                            <select id="addCategory">
+                                <option value="0">-- select Category --</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>Supplier <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                        <input type="text" placeholder="type Ojt registration No." name="OJTRegistration" id="OJTRegistration" required />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>Need Quantity <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                        <input type="text" placeholder="type Ojt registration No." name="OJTRegistration" id="OJTRegistration" required />
+                    </div>
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>Unit (ex. pcs, ml) <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                        <input type="text" placeholder="type Ojt registration No." name="OJTRegistration" id="OJTRegistration" required />
+                    </div>
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>PHP Cost <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                        <input type="text" placeholder="type Ojt registration No." name="OJTRegistration" id="OJTRegistration" required />
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div>
+                            <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                        </div>
+                        <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@*=================================================================================*@
+@*=========================== ADD QUANTITY STOCKS =================================*@
+@*=================================================================================*@
+<div class="modal fade modal-m" id="AddStocksModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Add Quantity</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <form id="AddQuantityform" class="addformcontainer">
+                    <div class="form_group col-12 col-sm-12 col-lg-12 mb-2">
+                        <label>Type Partname / Partno  <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                        @*<input type="text" placeholder="N/A" name="Fullname" id="Fullname" />*@
+                        <div class="search-box">
+                            <input type="hidden" name="AddPartID" id="AddPartID">
+                            <input type="text" placeholder="Type here ..." name="searchPartno" id="searchPartno" required>
+                            <div class="namesdisplay"></div>
+                        </div>
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label for="">Input Quantity <small style="color: #a81818; font-weight: 600;">*</small> </label>
+                        <input type="text" name="CurrentQty" id="CurrentQty" onkeypress="return restrictChars(event)" autocomplete="off">
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div>
+                            <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                        </div>
+                        <button type="submit"  class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                    </div>
+
+                   
+                </form>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script type="text/javascript">
+    let Inventlist = [];
+    let loadData = [];
+    let partsID;
+    let userRole;
+
+    // Modals
+    const addmodal = document.getElementById("Showadd");
+    const addquan = document.getElementById("ShowStocks");
+
+    // Forms
+    const addQuanforms = document.getElementById("AddQuantityform");
+
+    let TableDisplay = $("#InventorylistData");
+    const resultBox = document.querySelector(".namesdisplay");
+
+    const InventoryTable = async () => {
+        loadingDisplay();
+
+        Loadingsteps(async () => {
+            let res = await FetchAuthenticate('@Url.Action("GetHydroInventory", "Hydro")', {});
+            if (res && res.Success) {
+                Inventlist = res.Data;
+                TableDisplay.empty(); // Removing the Loading Display
+
+                console.log(Inventlist);
+                InventoryPagination(Inventlist, 'InventorylistData', 'MastertableContainer', 50, 5);
+            } else {
+                const loadData = `<tr>
+                  <td colspan='9'>
+                      🔍 ${res.Message}
+                  </td>
+              </tr>`;
+
+                TableDisplay.empty();
+                TableDisplay.append(loadData);
+
+            }
+        });
+    }
+
+    const GetCategoryDatalist = async () => {
+         let res = await FetchAuthenticate('@Url.Action("GetCategorylist", "Hydro")', {});
+
+          if (res && res.Success) {
+
+              $.each(res.Data, function (index, row) {
+                  $("#Categoryselect").append("<option value='" + row.CategoryID + "'>" + row.CategoryName + "</option>");
+              });
+
+              $.each(res.Data, function (index, row) {
+                  $("#addCategory").append("<option value='" + row.CategoryID + "'>" + row.CategoryName + "</option>");
+              });
+          }
+     };
+
+
+    const ActionRestrict = () => {
+        userRole = localStorage.getItem("UserRole");
+        if (userRole === "Leader" || userRole === "Users") {
+            return false;
+        }
+    }
+
+    function InventoryPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 7, visibleButtons = 5) {
+        let currentPage = 1;
+        let filteredData = [...dataArray];
+
+        const updatePaginationInfo = () => {
+            const totalRecords = filteredData.length;
+            const totalPages = Math.ceil(totalRecords / recordsPerPage);
+            $("#totalpageID").text(totalPages);
+            $("#DatalengthID").text(totalRecords);
+            return totalPages;
+        };
+
+        const renderTable = (page) => {
+            const totalPages = updatePaginationInfo();
+            const startIndex = (page - 1) * recordsPerPage;
+            const endIndex = Math.min(startIndex + recordsPerPage, filteredData.length);
+            const tableBody = document.getElementById(tableBodyId);
+            tableBody.innerHTML = '';
+
+            for (let i = startIndex; i < endIndex; i++) {
+                const rowData = filteredData[i];
+                const color = rowData.Color;
+
+
+
+
+                const rowHtml = `
+                    <tr class='rowClick' id='editButton_${rowData.PartID}'>
+                        <td style='font-weight: 600; text-align: left; padding-left: 1em; color: #0c382ce8; ' data-cell="PartNo">${rowData.PartNo}</td>
+                        <td data-cell="PartName">${rowData.PartName ? rowData.PartName : "-"}</td>
+                        <td data-cell="Supplier">${rowData.Supplier ? rowData.Supplier : "-"}</td>
+                        <td data-cell="CurrentQty">${rowData.CurrentQty}  ${rowData.Unit}</td>
+
+                        <td data-cell="Approval">
+                          <span class='${getStatusClass(rowData.Status)}'>
+                            ${rowData.Status}
+                          </span>
+                        </td>
+                    </tr>
+                `;
+                tableBody.innerHTML += rowHtml;
+            }
+
+            $('.dropdown-menu').removeClass('show').hide();
+            $("#pagecountID").text(currentPage);
+        };
+
+        const renderPagination = () => {
+            const totalPages = updatePaginationInfo();
+            const paginationContainer = document.getElementById(paginationId);
+            paginationContainer.innerHTML = '';
+
+            let startPage = Math.max(1, currentPage - Math.floor(visibleButtons / 2));
+            let endPage = Math.min(totalPages, startPage + visibleButtons - 1);
+
+            if (endPage > totalPages) {
+                endPage = totalPages;
+                startPage = Math.max(1, endPage - visibleButtons + 1);
+            }
+
+            if (totalPages <= visibleButtons) {
+                startPage = 1;
+                endPage = totalPages;
+            }
+
+            // Previous button
+            paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
+                <i class="fa-solid fa-backward"></i>
+            </button>`;
+
+            for (let i = startPage; i <= endPage; i++) {
+                paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+            }
+
+            // Next button
+            paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
+                <i class="fa-solid fa-forward"></i>
+            </button>`;
+        };
+
+        const changePage = (page) => {
+            if (page >= 1 && page <= updatePaginationInfo()) {
+                currentPage = page;
+                renderTable(currentPage);
+                renderPagination();
+            }
+        };
+
+
+
+
+
+        const searchTable = () => {
+            const query = $('#searchbox').val().toLowerCase() || '';
+            filteredData = dataArray.filter(item =>
+                item.PartName.toLowerCase().includes(query) || item.PartNo.toLowerCase().includes(query)
+            );
+            currentPage = 1;
+            renderTable(currentPage);
+            renderPagination();
+        };
+
+        $('#searchbox').on('input', searchTable);
+
+        window.changePage = changePage;
+        renderTable(currentPage);
+        renderPagination();
+    }
+
+
+    $("#searchPartno").keyup(function () {
+        let result = [];
+        let input = this.value;
+
+        if (input.length > 0) {
+            result = Inventlist.filter((item) => {
+                return item.PartNo.toLowerCase().includes(input.toLowerCase()) ||
+                    item.PartName.toLowerCase().includes(input.toLowerCase())
+            });
+            console.log(result);
+            if (result.length > 0) {
+                resultBox.style.display = 'block';
+                display(result); // assumes display() handles array of objects
+            } else {
+                resultBox.style.display = 'none';
+            }
+        } else {
+            resultBox.style.display = 'none';
+        }
+    });
+
+    addQuanforms.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        let forms = new FormData(e.target);
+        const data = Object.fromEntries(forms);
+
+        let res = await postData('@Url.Action("UpdateStocksQuantity", "Hydro")', forms);
+
+        if (res && res.Success) {
+             Swal.fire({
+                 title: "Success",
+                 text: res.Message,
+                 icon: "success",
+                 showConfirmButton: false,
+                 timer: 1500
+             }).then(() => {
+                 InventoryTable();
+                 $("#AddStocksModal").modal('hide');
+             });
+         }
+    });
+
+    $("#Categoryselect").on('change', function (e) {
+        e.preventDefault();
+        let filterdata = Inventlist.filter(item => item.CategoryID === parseInt(e.target.value));
+        if (parseInt(e.target.value) !== 0) {
+            InventoryPagination(filterdata, 'InventorylistData', 'MastertableContainer', 50, 5);
+        } else {
+            InventoryPagination(Inventlist, 'InventorylistData', 'MastertableContainer', 50, 5);
+        }
+    });
+
+
+    function display(result) {
+        const content = result.map((list) => {
+            return `<li onclick="selectinput(this)" data-id="${list.PartID}">${list.PartName}</li>`;
+        });
+
+        resultBox.innerHTML = "<ul>" + content.join('') + "</ul>";
+    }
+
+    function selectinput(list) {
+        const ID = list.getAttribute("data-id");
+        partsID = ID;
+        $("#AddPartID").val(ID);
+        $("#searchPartno").val(list.innerHTML);
+        resultBox.innerHTML = '';
+        resultBox.style.display = 'none';
+    }
+
+    const getStatusClass = (status) => {
+        switch (status) {
+            case "OK": return "StocksGood";
+            case "LOW STOCK": return "Low";
+            case "WARNING": return "Warning";
+            default: return "Incomplete";
+        }
+    };
+
+
+    addmodal.addEventListener('click', (e) => {
+        e.preventDefault();
+        $("#AddChamberModal").modal('show');
+    });
+
+    addquan.addEventListener('click', (e) => {
+        e.preventDefault();
+        $("#AddStocksModal").modal('show');
+    });
+
+
+    function loadingDisplay() {
+        TableDisplay.empty();
+        const loadData = `<tr>
+                            <td colspan='9'>
+                                <div class='Loadercontainer'>
+                                    <span class="loader"></span>
+                                    <p id="loadingStepText">Fetching data from the database..</p>
+                                </div>
+                            </td>
+                        </tr>`;
+        TableDisplay.append(loadData);
+    }
+    function Loadingsteps(callback) {
+        const steps = [
+            "Fetching data from the database...",
+            "Processing data...",
+            "Finalizing table view..."
+        ];
+
+        let stepIndex = 0;
+
+        const interval = setInterval(() => {
+            if (stepIndex < steps.length) {
+                const stepText = document.getElementById("loadingStepText");
+                if (stepText) stepText.innerText = steps[stepIndex];
+                stepIndex++;
+            } else {
+                clearInterval(interval);
+                if (typeof callback === "function") callback();
+            }
+        }, 800);
+    }
+
+
+
+    // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+    const LoadPageData = async () => {
+        try {
+            if (ActionRestrict() === false) {
+            }
+
+            const [invent, drop] = await Promise.all([
+                InventoryTable(),
+                GetCategoryDatalist()
+            ]);
+        } catch (error) {
+            console.error("Failed to load page data:", error);
+        } finally {
+            // Hide loading spinner whether success or failure
+            //$("#loadingSpinner").hide();
+        }
+    }
+
+    $(document).ready(() => {
+        LoadPageData();
+    });
+</script>

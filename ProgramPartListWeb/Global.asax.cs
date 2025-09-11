@@ -20,6 +20,8 @@ using System.Net.Http.Headers;
 using System.IO.Compression;
 using ProgramPartListWeb.Areas.Circuit.Interface;
 using ProgramPartListWeb.Areas.Circuit.Repository;
+using ProgramPartListWeb.Areas.Hydroponics.Interface;
+using ProgramPartListWeb.Areas.Hydroponics.Repository;
 
 namespace ProgramPartListWeb
 {
@@ -165,6 +167,7 @@ namespace ProgramPartListWeb
             container.RegisterType<INotification, NotificationRepository>();
             container.RegisterType<IAluminumProducts, PressRepository>();
             container.RegisterType<IInspector, InpectorRepository>();
+            container.RegisterType<IHyrdoParts, HydroPartsRepository>();
             container.RegisterType<ISupplier, SupplierRepository>();
 
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));

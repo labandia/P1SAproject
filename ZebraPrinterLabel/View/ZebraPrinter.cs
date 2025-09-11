@@ -43,7 +43,7 @@ namespace ZebraPrinterLabel
                 // Generate a ZPL code for the print page
                 string zplCode = ZebraProcess.GenerateMultiLabelZpl(labelData);
                 // Send to the printer
-                bool printed = ZebraProcess.SendZplToPrinter("ZDesigner ZD421-203dpi ZPL", zplCode);
+                bool printed = ZebraProcess.SendZplToPrinter("ZDesigner ZT421-203dpi ZPL", zplCode);
 
                 if (printed)
                 {
@@ -330,15 +330,22 @@ namespace ZebraPrinterLabel
 
         private async  void timer1_Tick(object sender, EventArgs e)
         {
-            if (await ZebraProcess.IsZebraPrinterConnectedAndOnline())
+            try
             {
-                printerStats.Text = "Zebra printer is Connected";
-                printerStats.ForeColor = Color.FromArgb(19, 211, 176);
+                if (await ZebraProcess.IsZebraPrinterConnectedAndOnline())
+                {
+                    printerStats.Text = "Zebra printer is Connected";
+                    printerStats.ForeColor = Color.FromArgb(19, 211, 176);
+                }
+                else
+                {
+                    printerStats.Text = "Zebra printer is not Connected";
+                    printerStats.ForeColor = Color.FromArgb(219, 36, 36);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                printerStats.Text = "Zebra printer is not Connected";
-                printerStats.ForeColor = Color.FromArgb(219, 36, 36);
+                Debug.WriteLine("Error " + ex.Message); 
             }
         }
 

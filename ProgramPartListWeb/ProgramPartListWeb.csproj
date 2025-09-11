@@ -619,7 +619,11 @@
     <Compile Include="Areas\Circuit\Repository\PartlistRepository.cs" />
     <Compile Include="Areas\Circuit\Repository\PartlistRepositoryV2.cs" />
     <Compile Include="Areas\Circuit\Repository\SupplierRepository.cs" />
+    <Compile Include="Areas\Hydroponics\Controllers\HydroController.cs" />
     <Compile Include="Areas\Hydroponics\HydroponicsAreaRegistration.cs" />
+    <Compile Include="Areas\Hydroponics\Interface\IHyrdoParts.cs" />
+    <Compile Include="Areas\Hydroponics\Models\HydropPartsModel.cs" />
+    <Compile Include="Areas\Hydroponics\Repository\HydroPartsRepository.cs" />
     <Compile Include="Areas\PC\Controllers\NotificationController.cs" />
     <Compile Include="Areas\PC\Controllers\PatrolController.cs" />
     <Compile Include="Areas\PC\Interface\IInspector.cs" />
@@ -733,6 +737,10 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Areas\Circuit\Views\ProgramPartList\PDAView.cshtml" />
     <Content Include="Areas\Hydroponics\Views\web.config" />
+    <Content Include="Areas\Hydroponics\Views\Shared\HydroPartsLayout.cshtml" />
+    <Content Include="Areas\Hydroponics\Views\Hydro\Inventorylist.cshtml" />
+    <Content Include="Areas\Hydroponics\Views\Hydro\Index.cshtml" />
+    <Content Include="Areas\Hydroponics\Views\Hydro\Orderpage.cshtml" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.1.js" />
     <Content Include="Scripts\jquery-3.7.1.min.js" />
@@ -929,9 +937,6 @@
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Views\Dashboard\" />
     <Folder Include="Areas\Admin\Views\Shared\" />
-    <Folder Include="Areas\Hydroponics\Controllers\" />
-    <Folder Include="Areas\Hydroponics\Data\" />
-    <Folder Include="Areas\Hydroponics\Views\Shared\" />
     <Folder Include="Areas\Press\Data\" />
   </ItemGroup>
   <ItemGroup>

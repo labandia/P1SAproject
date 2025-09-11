@@ -1147,3 +1147,37 @@
         }
     }
 /* ===================================================== */
+
+
+
+
+
+
+
+
+
+
+
+
+
+.StocksGood, .Low, .Warning {
+    font-weight: 600;
+    padding: .4em 1em;
+    border-radius: .2rem;
+    font-size: .8rem;
+}
+
+.Low {
+    background-color: rgba(170, 24, 14, 0.2);
+    color: rgb(100, 9, 9);
+}
+
+.StocksGood {
+    background-color: rgba(14, 170, 123, 0.2);
+    color: rgb(9, 100, 73);
+}
+
+.Warning {
+    background-color: rgba(154, 170, 14, 0.2);
+    color: rgb(68, 57, 5);
+}

@@ -328,3 +328,39 @@
         border: 1px solid #222;
         padding: .2em .8em;
     }
+
+
+    .select-container {
+        width: 100%;
+        position: relative;
+        display: inline-block;
+        margin: .5em 0;
+    }
+
+
+    .select-container select {
+        width: 100%;
+        padding: 7px 3em 7px 1em;
+        appearance: none;
+        border: 1px solid #A5A1AA;
+        border-radius: 4px;
+        background: white;
+        font-size: var(--normal-font-size);
+        position: relative;
+        outline: none;
+    }
+
+    .select-container::after {
+        content: '▼'; /* Unicode character for a down arrow */
+        font-size: var(--normal-font-size);
+        position: absolute;
+        top: 50%;
+        right: 15px;
+        transform: translateY(-50%);
+        pointer-events: none;
+        color: #999;
+    }
+
+    .select-container select::-ms-expand {
+        display: none; /* Hide the default dropdown arrow in IE */
+    }

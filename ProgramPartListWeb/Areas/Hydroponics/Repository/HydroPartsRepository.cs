@@ -32,6 +32,21 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
             return SqlDataAccess.GetData<HydropPartsModel>(strquery);
         }
+        public Task<List<ChamberTypePartsModel>> GetChamberTypePartsList(int chamberID)
+        {
+            string strquery = $@"SELECT 
+	                                i.PartID,
+	                                i.PartNo,
+	                                i.PartName,
+	                                i.Supplier,
+	                                i.Unit,
+	                                c.QuantityPerChamber as RequireQty
+                                FROM Hydro_ChamberParts c
+                                INNER JOIN Hydro_InventoryParts i ON c.PartID = i.PartID 
+                                WHERE c.ChamberID = @ChamberID";
+
+            return SqlDataAccess.GetData<ChamberTypePartsModel>(strquery, new { ChamberID = chamberID });
+        }
 
         public Task<bool> AddInventory(HydropPartsModel model)
         {
@@ -48,5 +63,9 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                                     CurrentQty = Quan 
                                                 });
         }
+
+        public Task<List<ChamberTypeList>> GetChambersType() => SqlDataAccess.GetData<ChamberTypeList>("SELECT ChamberID, ChamberName FROM Hydro_ChamberMasterlist");
+
+        
     }
 }

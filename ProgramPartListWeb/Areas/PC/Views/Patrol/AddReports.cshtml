@@ -88,22 +88,18 @@
                         </div>
                     </div>
                     <div class="col-12 col-sm-12 col-lg-6">
-                        <label>Input Inspectors <small style="color: #a81818; font-weight: 600;">*</small> </label>
-                        @*<div class="select-container">
-                                <select id="Employee_ID" name="Employee_ID">
-                                    <option>-- Select Inspector --</option>
-                                </select>
-                            </div>*@
-                        <div class="flex_align">
-                            <div class="search-box" style="width: 70%;">
-                                <input type="hidden" name="Employee_ID" id="Employee_ID">
-                                <input type="text" placeholder="Type Name or ID no." name="EmployeeSearch" id="EmployeeSearch" autocomplete="off">
-                                <div class="namesdisplay"></div>
-                            </div>
-                            <small>Include signature: </small>
-                            <input type="checkbox" name="IsSign" id="IsSign" />
+                        <label>Dept. /Section Inspected <small style="color: #a81818; font-weight: 600;">*</small> </label>
+                        <div class="select-container">
+                            <select id="DepartmentID" name="DepartmentID">
+                                <option>-- Select Department --</option>
+                                <option value="1">Molding</option>
+                                <option value="2">Press</option>
+                                <option value="3">Rotor</option>
+                                <option value="4">Winding</option>
+                                <option value="5">Circuit</option>
+                            </select>
                         </div>
-
+                       
                     </div>
                 </div>
 
@@ -201,10 +197,10 @@
                             <label>Managers </label> <br />
                             <div class="select-container">
                                 <select id="ManagerSelect" name="ManagerSelect">
-                                    <option value="">-- Manager Select --</option>
+                                    <option value="">-- Select Manager --</option>
                                 </select>
                             </div>
-                            <input type="text" placeholder="type person in charge" name="Manager" id="Manager" />
+                            <input type="hidden" placeholder="type person in charge" name="Manager" id="Manager" />
                         </div>
 
 
@@ -223,16 +219,22 @@
                             <label>Person In Charge </label> <br />
                             <div class="select-container">
                                 <select id="PICselect" name="PICselect">
-                                    <option value="">-- PIC Select --</option>
+                                    <option value="">-- Select PIC --</option>
                                 </select>
                             </div>
-                            <input type="text" placeholder="type person in charge" name="PIC" id="PIC" />
+                            <input type="hidden" placeholder="type person in charge" name="PIC" id="PIC" />
                         </div>
 
 
                         <div class="form_group col-12 col-sm-12 ">
                             <label>PIC (Comments): </label> <br />
                             <textarea placeholder="Type text here..." name="PIC_Comments" id="PIC_Comments" rows="5" cols="40"></textarea>
+                        </div>
+
+                        <div class="form_group col-12 col-sm-12">
+                            <label>Inspectors: </label> <br />
+                            <input type="hidden" value="Melojeane Miclat" id="InspectorName"  />
+                            <input type="text" placeholder="Input Inspectors" value="Melojeane Miclat"  disabled />
                         </div>
                     </div>
                 </div>
@@ -242,8 +244,27 @@
             </div>
         </div>
 
-   
+
         <hr />
+
+        <div class="col-12 col-sm-12 col-lg-6" style="display: none;">
+            <label>Input Inspectors <small style="color: #a81818; font-weight: 600;">*</small> </label>
+            @*<div class="select-container">
+                <select id="Employee_ID" name="Employee_ID">
+                    <option>-- Select Inspector --</option>
+                </select>
+            </div>*@
+            <div class="flex_align" >
+                <div class="search-box" style="width: 70%;">
+                    <input type="hidden" name="Employee_ID" id="Employee_ID">
+                    <input type="text" placeholder="Type Name or ID no." name="EmployeeSearch" id="EmployeeSearch" autocomplete="off">
+                    <div class="namesdisplay"></div>
+                </div>
+                <small>Include signature: </small>
+                <input type="checkbox" name="IsSign" id="IsSign" />
+            </div>
+
+        </div>
 
         <div class="d-flex align-items-center justify-content-between">
             <span id="errorvalid" class="text-danger">* Registration No is already inserted</span>
@@ -322,8 +343,8 @@
        if (res && res.Success) {
            let selectManager = $("#ManagerSelect");
            let selectPIC = $("#PICselect");
-           selectManager.empty();
-           selectPIC.empty();
+           //selectManager.empty();
+           //selectPIC.empty();
 
            emailTable = res.Data;
            var SetData = $("#recipientTable");
@@ -467,15 +488,15 @@
         }
 
 
-        if (CheckAccountName()) {
-            Swal.fire({
-                icon: "error",
-                text: "The name you entered was not found in the database.",
-                timer: 1500,
-                showConfirmButton: false
-            });
-            return;
-        }
+        //if (CheckAccountName()) {
+        //    Swal.fire({
+        //        icon: "error",
+        //        text: "The name you entered was not found in the database.",
+        //        timer: 1500,
+        //        showConfirmButton: false
+        //    });
+        //    return;
+        //}
         console.log(finaldata);
 
 
@@ -483,23 +504,23 @@
         savebtn.innerHTML = " <div class='buttonloading'></div> Generating PDF Please wait...";
 
         // Send form data with file to controller
-        //let res = await postData('@Url.Action("AddRegistration", "Patrol")', finalformData);
-        //console.log(res);
-        //if (res.StatusCode === 201) {
-        //    Swal.fire({
-        //        title: "Success",
-        //        text: res.Message,
-        //        icon: "success",
-        //        showConfirmButton: false,
-        //        timer: 1500
-        //    }).then(() => {
-        //        setTimeout(() => {
-        //            window.location.href = "/PC/Patrol/PatrolReport";
-        //        }, 3000);
-        //    });
-        //}
+        let res = await postData('@Url.Action("AddRegistration", "Patrol")', finalformData);
+        console.log(res);
+        if (res.StatusCode === 201) {
+            Swal.fire({
+                title: "Success",
+                text: res.Message,
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1500
+            }).then(() => {
+                setTimeout(() => {
+                    window.location.href = "/PC/Patrol/PatrolReport";
+                }, 3000);
+            });
+        }
 
-        //Resetforms();
+        Resetforms();
     });
 
 
@@ -634,7 +655,6 @@
     function selectinput(list) {
         const employeeId = list.getAttribute("data-id");
         employeeID = employeeId;
-        console.log(employeeID);
         $("#Employee_ID").val(employeeId);
         $("#EmployeeSearch").val(list.innerHTML);
         resultBox.innerHTML = '';

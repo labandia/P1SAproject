@@ -62,14 +62,21 @@ namespace ProgramPartListWeb.Areas.PC.Repository
         public async Task<bool> AddRegistration(RegistrationModel reg, string json)
         {
             //INSERT MAIN REGISTRATION PROCESS
-            bool result = await SqlDataAccess.UpdateInsertQuery("InsertRegistration", 
-                          new { RegNo = reg.RegNo, DateConduct = reg.DateConduct, Employee_ID = reg.Employee_ID,  
-                                PIC = reg.PIC, PIC_Comments = reg.PIC_Comments,
-                                Manager = reg.Manager, Manager_Comments = reg.Manager_Comments, IsSigned = reg.IsSigned
+            bool result = await SqlDataAccess.UpdateInsertQuery("InsertRegistration",
+                          new
+                          {
+                              RegNo = reg.RegNo,
+                              DateConduct = reg.DateConduct,
+                              Employee_ID = reg.Employee_ID,
+                              PIC = reg.PIC,
+                              PIC_Comments = reg.PIC_Comments,
+                              Manager = reg.Manager,
+                              Manager_Comments = reg.Manager_Comments,
+                              IsSigned = reg.IsSigned
                           });
 
             // INSERT FILES TO THE OTHER TABLES
-            await SqlDataAccess.UpdateInsertQuery("InserFiles", new { RegNo = reg.RegNo, FilePath  = reg.FilePath, PatrolPath = reg.PatrolPath});
+            await SqlDataAccess.UpdateInsertQuery("InserFiles", new { RegNo = reg.RegNo, FilePath = reg.FilePath, PatrolPath = reg.PatrolPath });
 
             // INSERT FINDING AND COUNTERMEASURE PROCESS
             // Make a Json format 
@@ -88,6 +95,36 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             }
 
             return result;
+
+
+
+            ////INSERT MAIN REGISTRATION PROCESS
+            //bool result = await SqlDataAccess.UpdateInsertQuery("InsertRegistration", 
+            //              new { RegNo = reg.RegNo, DateConduct = reg.DateConduct, Employee_ID = reg.Employee_ID,  
+            //                    PIC = reg.PIC, PIC_Comments = reg.PIC_Comments,
+            //                    Manager = reg.Manager, Manager_Comments = reg.Manager_Comments, IsSigned = reg.IsSigned
+            //              });
+
+            //// INSERT FILES TO THE OTHER TABLES
+            //await SqlDataAccess.UpdateInsertQuery("InserFiles", new { RegNo = reg.RegNo, FilePath  = reg.FilePath, PatrolPath = reg.PatrolPath});
+
+            //// INSERT FINDING AND COUNTERMEASURE PROCESS
+            //// Make a Json format 
+            //var findings = JsonConvert.DeserializeObject<List<FindingModel>>(json);
+
+            //foreach (var f in findings)
+            //{
+            //    var findparams = new
+            //    {
+            //        RegNo = "P1SA-" + f.RegNo,
+            //        FindID = f.FindID,
+            //        FindDescription = f.FindDescription,
+            //        Countermeasure = f.Countermeasure
+            //    };
+            //    await SqlDataAccess.UpdateInsertQuery("InsertFindings", findparams, "Registration");
+            //}
+
+            //return result;
         }
         public async Task<bool> EditRegistration(RegistrationModel reg, string json)
         {

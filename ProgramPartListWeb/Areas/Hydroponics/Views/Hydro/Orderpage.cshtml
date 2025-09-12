@@ -4,5 +4,190 @@
     Layout = "~/Areas/Hydroponics/Views/Shared/HydroPartsLayout.cshtml";
 }
 
-<h2>Orderpage</h2>
+<header class="InspectHead flex_space">
+    <div class="flex_align">
+        <div class="Inputcontainer">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" placeholder="Search here ... " id="searchbox" autocomplete="off" />
+            <div class="line"></div>
+        </div>
+    </div>
 
+    <div class="flex_align">
+
+        <button style="width: 100%;" id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-user-secret"></i> New Request</button>
+    </div>
+</header>
+
+<div class="InspecTable">
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 15%; text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-user-secret"></i>  <span style="margin-left: .5em;">Request ID</span> </th>
+                <th style="width: 25%;"> <i class="fa-regular fa-calendar-days"></i> <span style="margin-left: .5em;">Chamber Name </span></th>
+                <th> <i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Request by</span>  </th>
+                <th> <i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Quantity</span>  </th>
+                <th> <i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Target Date</span>  </th>
+                <th style="width: 10%;"> <i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Status</span>  </th>
+            </tr>
+        </thead>
+        <tbody id="OrderlistData">
+        </tbody>
+    </table>
+</div>
+
+<div class="MasterlistWrap_footer ">
+    <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
+
+    <div id="MastertableContainer" class="paginationPartlocal flex_align"></div>
+</div>
+
+
+
+@*=================================================================================*@
+@*=========================== ADD PARTS CHAMBER ===================================*@
+@*=================================================================================*@
+<div class="modal fade modal-xl" id="AddChamberModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>New Request Chamber</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+
+                <form method="post" enctype="multipart/form-data" class="addformcontainer" id="addnewform" autocomplete="off">
+                    <div class="flex_align">
+                        <div>
+                            <label>Select Chamber : </label>
+                            <div class="select-container">
+                                <select id="selectChamber">
+                                    <option value="0">-- select Chambers --</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="flex_align" >
+                            <label>Quantity : </label>
+                            <input type="number" value="1" min="0" style="width: 20%;" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form_group col-4 col-sm-12">
+                            <label for="">Target Date <small style="color: #a81818; font-weight: 600;">*</small> </label>
+                            <input type="date" name="TargetDate" id="TargetDate"autocomplete="off">
+                        </div>
+
+                        <div class="form_group col-4 col-sm-12">
+                            <label for="">Request By:  <small style="color: #a81818; font-weight: 600;">*</small> </label>
+                            <input type="text" name="TargetDate" id="TargetDate" autocomplete="off">
+                        </div>
+                    </div>
+
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th style="width: 15%; text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-user-secret"></i>  <span style="margin-left: .5em;">Part No.</span> </th>
+                                <th style="width: 25%;"> <i class="fa-regular fa-calendar-days"></i> <span style="margin-left: .5em;">Part Name</span></th>
+                                <th> <i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Supplier</span>  </th>
+                                <th> <i class="fa-regular fa-square-check"></i> <span style="margin-left: .5em;">Quantity parts needed</span>  </th>
+                            </tr>
+                        </thead>
+                        <tbody id="chamberTables">
+                        </tbody>
+                    </table>
+
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script type="text/javascript">
+    let Inventlist = [];
+    let PartsChamber = [];
+    // Modals
+    const addmodal = document.getElementById("Showadd");
+
+    addmodal.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        $("#AddChamberModal").modal('show');
+    });
+
+    const ChamberTable = async () => {
+         let res = await FetchAuthenticate('@Url.Action("GetChamberList", "Hydro")', {});
+         console.log(res);
+         if (res && res.Success) {
+             $.each(res.Data, function (index, row) {
+                 $("#selectChamber").append("<option value='" + row.ChamberID + "'>" + row.ChamberName + "</option>");
+             });
+         }
+    }
+
+    const InventoryTable = async () => {
+         let res = await FetchAuthenticate('@Url.Action("GetHydroInventory", "Hydro")', {});
+         if (res && res.Success) {
+             Inventlist = res.Data;
+         }
+    }
+
+
+    $("#selectChamber").on('change', async function (e) {
+        e.preventDefault();
+        let ID = parseInt(e.target.value);
+        let res = await FetchAuthenticate('@Url.Action("GetChamberTypeDataList", "Hydro")', { chamberID : ID });
+        if (res && res.Success) {
+            let TableDisplay = $("#chamberTables");
+            TableDisplay.empty();
+            PartsChamber = [];
+            PartsChamber = res.Data;
+
+            $.each(PartsChamber, function (index, row) {
+                const loadData = `
+                         <tr class='row_${index} rowClick' id='editButton_${row.PartID}'>
+                             <td data-cell="No">${index + 1}</td>
+                             <td data-cell="PartNo" style='font-weight: 600'>${row.PartNo ? row.PartNo : "-"}</td>
+                             <td data-cell="PartName">${row.PartName ? row.PartName : "-"}</td>
+                             <td data-cell="Supplier">${row.Supplier ? row.Supplier : "-"}</td>
+                             <td data-cell="RequireQty">${row.RequireQty ? row.RequireQty : "-"} ${row.Unit}</td>
+                         </tr>`;
+                TableDisplay.append(loadData);
+            });
+        }
+    });
+
+
+    // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+    const LoadPageData = async () => {
+        try {
+
+            const [invent, champ] = await Promise.all([
+                InventoryTable(),
+                ChamberTable()
+            ]);
+        } catch (error) {
+            console.error("Failed to load page data:", error);
+        } finally {
+            // Hide loading spinner whether success or failure
+            //$("#loadingSpinner").hide();
+        }
+    }
+
+    $(document).ready(() => {
+        LoadPageData();
+    });
+</script>

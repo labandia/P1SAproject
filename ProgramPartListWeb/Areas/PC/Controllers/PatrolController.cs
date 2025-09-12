@@ -28,6 +28,8 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         private readonly IInspector _ins;
         public static string strSender => ConfigurationManager.AppSettings["config:SMTPEmail"];
         string exePath = @"\\sdp01034s\SYSTEM EXECUTABLE\P1SA-PC_System\OpenExcel\OpenExcelApp.exe";
+        // Default template path for PDF generation 
+        string templatePath = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Uploads/PGFY-00031FORM_1.xlsx");
 
 
         public PatrolController(IInspector ins) => _ins = ins;
@@ -370,20 +372,15 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             var formdata = GlobalUtilities.GetMessageResponse(result, 1);
             return Json(formdata, JsonRequestBehavior.AllowGet);
         }
-
-
-
         [HttpPost]
         public async Task<ActionResult> AddRegistration(HttpPostedFileBase[] Attachments)
         {
             // Get Department Name
-            int departmentID = await _ins.GetEmployeeByDepartment(Request.Form["Employee_ID"]);
-            string departmentName = GlobalUtilities.DepartmentName(departmentID);
-            bool isSign = !string.IsNullOrEmpty(Request.Form["IsSign"]);
+            string departmentName = GlobalUtilities.DepartmentName(Convert.ToInt32(Request.Form["DepartmentID"]));
+            //bool isSign = !string.IsNullOrEmpty(Request.Form["IsSign"]);
 
             // Get Employee FullName
-            //var data = await _ins.GetEmployee() ?? new List<Employee>();
-            //string Fullname = data.FirstOrDefault(p => p.EmployeeID == Request.Form["Employee_ID"])?.Fullname;
+            string Fullname = Request.Form["InspectorName"];
 
             // Set File Name For Registration No. PDF file
             string newFileName = $"RN_{Request.Form["RegNo"]}_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.xlsx";
@@ -403,41 +400,24 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 }
             }
 
-            // Join all file names into PatrolPath string
+            // Join all file names into  string
             string patrolPath = string.Join(";", MultipleAttachments);
-
-            // Default template path For Registration PDF
-            string templatePath = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Uploads/PGFY-00031FORM_1.xlsx");
-
-            // If user uploaded an Excel file, save it and use as template
-            //if (ExcelFile != null && ExcelFile.ContentLength > 0)
-            //{
-            //    string uploadedFileName = Path.GetFileNameWithoutExtension(ExcelFile.FileName);
-            //    string fileExtension = Path.GetExtension(ExcelFile.FileName);
-            //    string savedFileName = $"CM_{Request.Form["RegNo"]}_{DateTime.Now:yyyyMMdd_HHmmss}{fileExtension}";
-
-            //    strExcelname = savedFileName;
-
-            //    // Export the file Network Folder
-            //    ExportFiler.SaveFileasExcel(ExcelFile, savedFileName);
-
-            //}
-
+            // Set a Fix Prefix for the Registration No
             string finalprefix = "P1SA-" + Request.Form["RegNo"];
 
             var obj = new RegistrationModel
             {
                 RegNo = finalprefix,
                 DateConduct = Request.Form["DateConduct"],
-                Employee_ID = Request.Form["Employee_ID"],
-                FullName = Request.Form["EmployeeSearch"],
+                Employee_ID = "",
+                FullName = Fullname,
                 PIC = Request.Form["PIC"],
                 PIC_Comments = Request.Form["PIC_Comments"],
                 FilePath = outputPdfPath,
                 Manager = Request.Form["Manager"],
                 Manager_Comments = Request.Form["Manager_Comments"],
-                PatrolPath = patrolPath,  
-                IsSigned = isSign
+                PatrolPath = patrolPath,
+                IsSigned = false
             };
 
             string findJson = Request.Form["FindJson"];
@@ -468,7 +448,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 //};
 
                 // GENERATE A PDF FILE AND SAVE TO THE NETWORK FILE
-                await ExportFiler.SaveFileasPDF(obj, findJson, departmentName, newFileName, templatePath, isSign);
+                await ExportFiler.SaveFileasPDF(obj, findJson, departmentName, newFileName, templatePath, false);
 
                 // EMAIL SAVE TO THE DATABASE
                 //await EmailService.SendEmailViaSqlDatabase(SendEmail);
@@ -480,6 +460,115 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             return JsonCreated(obj, $@"Registration No : {finalprefix} is Add  successfully");
 
         }
+
+
+        //[HttpPost]
+        //public async Task<ActionResult> AddRegistration(HttpPostedFileBase[] Attachments)
+        //{
+        //    // Get Department Name
+        //    int departmentID = await _ins.GetEmployeeByDepartment(Request.Form["Employee_ID"]);
+        //    string departmentName = GlobalUtilities.DepartmentName(departmentID);
+        //    bool isSign = !string.IsNullOrEmpty(Request.Form["IsSign"]);
+
+        //    // Get Employee FullName
+        //    //var data = await _ins.GetEmployee() ?? new List<Employee>();
+        //    //string Fullname = data.FirstOrDefault(p => p.EmployeeID == Request.Form["Employee_ID"])?.Fullname;
+
+        //    // Set File Name For Registration No. PDF file
+        //    string newFileName = $"RN_{Request.Form["RegNo"]}_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.xlsx";
+        //    string outputPdfPath = newFileName.Replace(".xlsx", ".pdf");
+
+
+        //    List<string> MultipleAttachments = new List<string>();
+
+        //    foreach (string fileKey in Request.Files)
+        //    {
+        //        var file = Request.Files[fileKey];
+        //        if (file != null && file.ContentLength > 0 && fileKey == "Attachments")
+        //        {
+        //            string fileName = $"PF_{Request.Form["RegNo"]}_{DateTime.Now:yyyyMMdd_HHmmssfff}{Path.GetExtension(file.FileName)}";
+        //            ExportFiler.SaveFileasExcel(file, fileName);
+        //            MultipleAttachments.Add(fileName);
+        //        }
+        //    }
+
+        //    // Join all file names into PatrolPath string
+        //    string patrolPath = string.Join(";", MultipleAttachments);
+
+        //    // Default template path For Registration PDF
+        //    string templatePath = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Uploads/PGFY-00031FORM_1.xlsx");
+
+        //    // If user uploaded an Excel file, save it and use as template
+        //    //if (ExcelFile != null && ExcelFile.ContentLength > 0)
+        //    //{
+        //    //    string uploadedFileName = Path.GetFileNameWithoutExtension(ExcelFile.FileName);
+        //    //    string fileExtension = Path.GetExtension(ExcelFile.FileName);
+        //    //    string savedFileName = $"CM_{Request.Form["RegNo"]}_{DateTime.Now:yyyyMMdd_HHmmss}{fileExtension}";
+
+        //    //    strExcelname = savedFileName;
+
+        //    //    // Export the file Network Folder
+        //    //    ExportFiler.SaveFileasExcel(ExcelFile, savedFileName);
+
+        //    //}
+
+        //    string finalprefix = "P1SA-" + Request.Form["RegNo"];
+
+        //    var obj = new RegistrationModel
+        //    {
+        //        RegNo = finalprefix,
+        //        DateConduct = Request.Form["DateConduct"],
+        //        Employee_ID = Request.Form["Employee_ID"],
+        //        FullName = Request.Form["EmployeeSearch"],
+        //        PIC = Request.Form["PIC"],
+        //        PIC_Comments = Request.Form["PIC_Comments"],
+        //        FilePath = outputPdfPath,
+        //        Manager = Request.Form["Manager"],
+        //        Manager_Comments = Request.Form["Manager_Comments"],
+        //        PatrolPath = patrolPath,  
+        //        IsSigned = isSign
+        //    };
+
+        //    string findJson = Request.Form["FindJson"];
+        //    string IsSend = Request.Form["Senders"];
+        //    string CCSend = Request.Form["CC"];
+
+        //    bool result = await _ins.AddRegistration(obj, findJson);
+
+        //    if (result)
+        //    {
+        //        CacheHelper.Remove("Registration");
+
+        //        // Convert the string sender to a array list
+
+
+        //        //string creatbody = EmailService.CreateAEmailBody(
+        //        //        "JUAN DELA CRUZ",
+        //        //        "This is a sample email body used for testing purposes. Please disregard."
+        //        //    );
+
+        //        //var SendEmail = new SentEmailModel
+        //        //{
+        //        //    Subject = "Patrol Inspection",
+        //        //    Sender = strSender,
+        //        //    BCC = CCSend,
+        //        //    Body = creatbody,
+        //        //    Recipient = IsSend
+        //        //};
+
+        //        // GENERATE A PDF FILE AND SAVE TO THE NETWORK FILE
+        //        await ExportFiler.SaveFileasPDF(obj, findJson, departmentName, newFileName, templatePath, isSign);
+
+        //        // EMAIL SAVE TO THE DATABASE
+        //        //await EmailService.SendEmailViaSqlDatabase(SendEmail);
+
+        //    }
+        //    if (result == false)
+        //        return JsonError("Problem during saving Data.");
+
+        //    return JsonCreated(obj, $@"Registration No : {finalprefix} is Add  successfully");
+
+        //}
         [HttpPost]
         public async Task<ActionResult> EditRegistration(HttpPostedFileBase[] Attachments)
         {
@@ -498,8 +587,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
 
 
-            // Default template path for PDF generation (keep your default or adjust if needed)
-            string templatePath = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Uploads/PGFY-00031FORM_1.xlsx");
+          
 
             // Step 2: Checks If a new Excel file is uploaded
             List<string> newAttachements = new List<string>();

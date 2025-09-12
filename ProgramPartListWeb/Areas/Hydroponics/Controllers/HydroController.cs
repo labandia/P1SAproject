@@ -5,6 +5,7 @@ using ProgramPartListWeb.Controllers;
 using ProgramPartListWeb.Helper;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -46,6 +47,33 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
 
             return JsonSuccess(filterdata, "No Category  List");
         }
+
+
+
+
+        //-----------------------------------------------------------------------------------------
+        //---------------------------- REQUEST CHAMBER PAGE ---------------------------------------
+        //-----------------------------------------------------------------------------------------
+        [JwtAuthorize]
+        public async Task<ActionResult> GetChamberList()
+        {
+            var data = await _hydro.GetChambersType() ?? new List<ChamberTypeList>();
+            if (data == null || !data.Any()) return JsonNotFound("No Chamber list Data.");
+
+            return JsonSuccess(data, "Load Chamber type List");
+        }
+        [JwtAuthorize]
+        public async Task<ActionResult> GetChamberTypeDataList(int chamberID)
+        {
+            Debug.WriteLine("Chamber ID : " + chamberID);
+
+            var data = await _hydro.GetChamberTypePartsList(chamberID) ?? new List<ChamberTypePartsModel>();
+            if (data == null || !data.Any()) return JsonNotFound("No Chamber list Data.");
+
+            return JsonSuccess(data, "Load Chamber type List");
+        }
+
+
 
 
         [HttpPost]

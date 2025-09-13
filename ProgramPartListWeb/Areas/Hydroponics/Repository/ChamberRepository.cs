@@ -14,7 +14,9 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
         public Task<List<ChamberModel>> GetChambersData(int chamber)
         {
             string strsql = $@"SELECT
-	                            c.PartID, 
+	                            c.PartID,
+	                            c.ChamberID,
+	                            cm.ChamberName,
 	                            i.PartNo,
 	                            i.PartName,
 	                            cp.CategoryName,
@@ -25,10 +27,11 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                             FROM Hydro_ChamberParts c
                             INNER JOIN Hydro_InventoryParts i ON c.PartID = i.PartID
                             INNER JOIN Hydro_CategoryParts cp ON cp.CategoryID = i.CategoryID
-                            WHERE c.ChamberID = @ChamberID";
+                            INNER JOIN Hydro_ChamberMasterlist cm ON cm.ChamberID = c.ChamberID
+                            WHERE c.ChamberID =@ChamberID";
             return SqlDataAccess.GetData<ChamberModel>(strsql, new { ChamberID = chamber });
         }
-
+        public Task<List<ChamberTypeList>> GetChamberTypes() => SqlDataAccess.GetData<ChamberTypeList>("SELECT ChamberID, ChamberName FROM Hydro_ChamberMasterlist");
         public Task<bool> AdditionalChambers()
         {
             throw new NotImplementedException();

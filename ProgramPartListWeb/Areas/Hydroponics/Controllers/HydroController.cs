@@ -16,16 +16,37 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
     {
         private readonly IHyrdoParts _hydro;
         private readonly IPartsList _partsList;
+        private readonly IChambers _chambers;
 
-        public HydroController(IHyrdoParts hydro, IPartsList partsList)
+        public HydroController(IHyrdoParts hydro, IPartsList partsList, IChambers chambers)
         {
             _hydro = hydro;
             _partsList = partsList;
+            _chambers = chambers;
+        }
+        //-----------------------------------------------------------------------------------------
+        //---------------------------- COMMON CONTROLLERS  ----------------------------------------
+        //-----------------------------------------------------------------------------------------
+        [JwtAuthorize]
+        public async Task<ActionResult> GetCategorylist()
+        {
+            var data = await _partsList.GetPartsMasterlist() ?? new List<MasterlistPartsModel>();
+
+            var filterdata = data.GroupBy(x => new { x.CategoryID, x.CategoryName })
+                .Select(g => new
+                {
+                    CategoryID = g.Key.CategoryID,
+                    CategoryName = g.Key.CategoryName
+                }).ToList();
+
+            if (filterdata == null || !filterdata.Any()) return JsonNotFound("No Category list Data.");
+
+            return JsonSuccess(filterdata, "No Category  List");
         }
 
 
         //-----------------------------------------------------------------------------------------
-        //---------------------------- MASTERLIST PART LIST PAGE ---------------------------------------
+        //---------------------------- MASTERLIST PART LIST PAGE ----------------------------------
         //-----------------------------------------------------------------------------------------
         [JwtAuthorize]
         public async Task<ActionResult> GetPartlistData()
@@ -36,14 +57,33 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
             return JsonSuccess(data, "Load parlist Masterlist");
         }
 
-
-
-
-
         //-----------------------------------------------------------------------------------------
-        //---------------------------- HYDRO INVENTORY PAGE ---------------------------------------
+        //----------------------------  CHAMBER LIST PAGE -----------------------------------------
         //-----------------------------------------------------------------------------------------
         [JwtAuthorize]
+        public async Task<ActionResult> GetAllChamberList(int chamber)
+        {
+            var data = await _chambers.GetChambersData(chamber) ?? new List<ChamberModel>();
+            if (data == null || !data.Any()) return JsonNotFound("No Chamber list Data.");
+
+            return JsonSuccess(data, "Load Chamber type List");
+        }
+
+        [JwtAuthorize]
+        public async Task<ActionResult> GetChamberDropDownList()
+        {
+            var data = await _chambers.GetChamberTypes() ?? new List<ChamberTypeList>();
+            if (data == null || !data.Any()) return JsonNotFound("No Chamber list Data.");
+
+            return JsonSuccess(data, "Load Chamber type List");
+        } 
+
+
+
+            //-----------------------------------------------------------------------------------------
+            //---------------------------- HYDRO INVENTORY PAGE ---------------------------------------
+            //-----------------------------------------------------------------------------------------
+            [JwtAuthorize]
         public async Task<ActionResult> GetHydroInventory()
         {
             var data = await _hydro.GetInventoryList() ?? new List<StockPartsModel>();
@@ -51,24 +91,9 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
 
             return JsonSuccess(data, "Load Inventory List");
         }
+      
 
 
-        [JwtAuthorize]
-        public async Task<ActionResult> GetCategorylist()
-        {
-            //var data = await _hydro.GetInventoryList() ?? new List<HydropPartsModel>();
-
-            //var filterdata = data.GroupBy(x => new { x.CategoryID, x.CategoryName })
-            //    .Select(g => new
-            //    {
-            //        CategoryID = g.Key.CategoryID,
-            //        CategoryName = g.Key.CategoryName
-            //    }).ToList();
-
-            //if (filterdata == null || !filterdata.Any()) return JsonNotFound("No Category list Data.");
-
-            return JsonSuccess("", "No Category  List");
-        }
 
 
 

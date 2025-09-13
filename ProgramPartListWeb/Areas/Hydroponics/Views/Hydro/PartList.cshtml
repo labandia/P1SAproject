@@ -143,7 +143,7 @@
     // Modals
     const addmodal = document.getElementById("Showadd");
 
-    let TableDisplay = $("#InventorylistData");
+    let TableDisplay = $("#PartlistData");
     const resultBox = document.querySelector(".namesdisplay");
 
     const PartlistTable = async () => {
@@ -171,8 +171,8 @@
     }
 
     const GetCategoryDatalist = async () => {
-         @*let res = await FetchAuthenticate('@Url.Action("GetCategorylist", "Hydro")', {});
-
+        let res = await FetchAuthenticate('@Url.Action("GetCategorylist", "Hydro")', {});
+        
           if (res && res.Success) {
 
               $.each(res.Data, function (index, row) {
@@ -182,7 +182,7 @@
               $.each(res.Data, function (index, row) {
                   $("#addCategory").append("<option value='" + row.CategoryID + "'>" + row.CategoryName + "</option>");
               });
-          }*@
+          }
      };
 
 
@@ -214,8 +214,7 @@
 
             for (let i = startIndex; i < endIndex; i++) {
                 const rowData = filteredData[i];
-                const color = rowData.Color;
-
+    
                 // Compute by USD dollar
                 let computeUSD = parseFloat(rowData.UnitCost_PHP) / 58;
                 // Round off to 2 decimals
@@ -327,11 +326,11 @@
 
     $("#Categoryselect").on('change', function (e) {
         e.preventDefault();
-        let filterdata = Inventlist.filter(item => item.CategoryID === parseInt(e.target.value));
+        let filterdata = partlistData.filter(item => item.CategoryID === parseInt(e.target.value));
         if (parseInt(e.target.value) !== 0) {
-            InventoryPagination(filterdata, 'InventorylistData', 'MastertableContainer', 50, 5);
+            InventoryPagination(filterdata, 'PartlistData', 'MastertableContainer', 50, 5);
         } else {
-            InventoryPagination(Inventlist, 'InventorylistData', 'MastertableContainer', 50, 5);
+            InventoryPagination(partlistData, 'PartlistData', 'MastertableContainer', 50, 5);
         }
     });
 

@@ -7,6 +7,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Interface
     public interface IChambers
     {
         Task<List<ChamberModel>> GetChambersData(int chamber);
+        Task<List<ChamberTypeList>> GetChamberTypes();
         Task<bool> AdditionalChambers();
         Task<bool> EditChambers();
         Task<bool> Deletechambers();

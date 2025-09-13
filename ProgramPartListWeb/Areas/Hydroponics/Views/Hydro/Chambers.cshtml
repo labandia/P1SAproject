@@ -16,8 +16,8 @@
 
     <div class="flex_align">
         <div class="select-container">
-            <select id="Categoryselect">
-                <option value="0">-- Category --</option>
+            <select id="chamberselect">
+               
             </select>
         </div>
         <button style="display: none;" id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-user-secret"></i> Add parts</button>
@@ -28,14 +28,19 @@
     <table>
         <thead>
             <tr>
+                <th><span style="margin-left: .5em;">No</span>  </th>
+                <th> <i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Image</span>  </th>
                 <th style="width: 15%; text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-user-secret"></i>  <span style="margin-left: .5em;">Part No.</span> </th>
                 <th style="width: 25%;"> <i class="fa-regular fa-calendar-days"></i> <span style="margin-left: .5em;">Part Name</span></th>
                 <th> <i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Supplier</span>  </th>
-                <th> <i class="fa-regular fa-square-check"></i> <span style="margin-left: .5em;">Stock Qty</span>  </th>
-                <th style="width: 10%;"> <i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Status</span>  </th>
+                <th> <i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Require Qty</span>  </th>
+                <th style="width: 10%;"> <span style="margin-left: .5em;">Unit Cost($)</span>  </th>
+                <th style="width: 10%;">  <span style="margin-left: .5em;">Unit Cost(₱)</span>  </th>
+                <th style="width: 10%;"> <span style="margin-left: .5em;">Total Cost($)</span>  </th>
+                <th style="width: 10%;">  <span style="margin-left: .5em;">Total Cost(₱)</span>  </th>
             </tr>
         </thead>
-        <tbody id="InventorylistData">
+        <tbody id="ChamberlistData">
         </tbody>
     </table>
 </div>
@@ -133,7 +138,7 @@
 
 
 <script type="text/javascript">
-    let Inventlist = [];
+    let chamberlist = [];
     let loadData = [];
     let partsID;
     let userRole;
@@ -144,20 +149,19 @@
     // Forms
     const addQuanforms = document.getElementById("AddQuantityform");
 
-    let TableDisplay = $("#InventorylistData");
+    let TableDisplay = $("#ChamberlistData");
     const resultBox = document.querySelector(".namesdisplay");
 
-    const InventoryTable = async () => {
+    const ChamberTable = async (ID) => {
         loadingDisplay();
 
         Loadingsteps(async () => {
-            let res = await FetchAuthenticate('@Url.Action("GetHydroInventory", "Hydro")', {});
+            let res = await FetchAuthenticate('@Url.Action("GetAllChamberList", "Hydro")', { chamber: ID });
             if (res && res.Success) {
-                Inventlist = res.Data;
+                chamberlist = res.Data;
                 TableDisplay.empty(); // Removing the Loading Display
 
-                console.log(Inventlist);
-                InventoryPagination(Inventlist, 'InventorylistData', 'MastertableContainer', 50, 5);
+                ChamberPagination(chamberlist, 'ChamberlistData', 'MastertableContainer', 50, 5);
             } else {
                 const loadData = `<tr>
                   <td colspan='9'>
@@ -172,17 +176,11 @@
         });
     }
 
-    const GetCategoryDatalist = async () => {
-         let res = await FetchAuthenticate('@Url.Action("GetCategorylist", "Hydro")', {});
-
+    const GetChamberDatalist = async () => {
+         let res = await FetchAuthenticate('@Url.Action("GetChamberDropDownList", "Hydro")', {});
           if (res && res.Success) {
-
               $.each(res.Data, function (index, row) {
-                  $("#Categoryselect").append("<option value='" + row.CategoryID + "'>" + row.CategoryName + "</option>");
-              });
-
-              $.each(res.Data, function (index, row) {
-                  $("#addCategory").append("<option value='" + row.CategoryID + "'>" + row.CategoryName + "</option>");
+                  $("#chamberselect").append("<option value='" + row.ChamberID + "'>" + row.ChamberName + "</option>");
               });
           }
      };
@@ -195,7 +193,7 @@
         }
     }
 
-    function InventoryPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 7, visibleButtons = 5) {
+    function ChamberPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 7, visibleButtons = 5) {
         let currentPage = 1;
         let filteredData = [...dataArray];
 
@@ -219,22 +217,26 @@
                 const color = rowData.Color;
 
 
+                // Compute by USD dollar
+                let computeUSD = parseFloat(rowData.UnitCost_PHP) / 58;
+                // Round off to 2 decimals
+                var roundedNum = parseFloat(computeUSD.toFixed(2));
 
 
                 const rowHtml = `
-                    <tr class='rowClick' id='editButton_${rowData.PartID}'>
-                        <td style='font-weight: 600; text-align: left; padding-left: 1em; color: #0c382ce8; ' data-cell="PartNo">${rowData.PartNo}</td>
-                        <td data-cell="PartName">${rowData.PartName ? rowData.PartName : "-"}</td>
-                        <td data-cell="Supplier">${rowData.Supplier ? rowData.Supplier : "-"}</td>
-                        <td data-cell="CurrentQty">${rowData.CurrentQty}  ${rowData.Unit}</td>
-
-                        <td data-cell="Approval">
-                          <span class='${getStatusClass(rowData.Status)}'>
-                            ${rowData.Status}
-                          </span>
-                        </td>
-                    </tr>
-                `;
+                        <tr class='rowClick' id='editButton_${rowData.PartID}'>
+                            <td data-cell="PartID">${rowData.PartID}</td>
+                            <td data-cell="Images">-</td>
+                            <td style='font-weight: 600; text-align: left; padding-left: 1em; color: #0c382ce8; ' data-cell="PartNo">${rowData.PartNo}</td>
+                            <td data-cell="PartName">${rowData.PartName ? rowData.PartName : "-"}</td>
+                            <td data-cell="Supplier">${rowData.Supplier ? rowData.Supplier : "-"}</td>
+                            <td data-cell="Supplier">${rowData.RequireQty ? rowData.RequireQty : "-"}</td>
+                            <td data-cell="UnitUSD">${roundedNum}</td>
+                            <td data-cell="UnitUSD">${rowData.UnitCost_PHP}</td>
+                            <td data-cell="UnitUSD">${roundedNum}</td>
+                            <td data-cell="UnitUSD">${rowData.TotalPHPCost}</td>
+                        </tr>
+                    `;
                 tableBody.innerHTML += rowHtml;
             }
 
@@ -328,14 +330,10 @@
 
 
 
-    $("#Categoryselect").on('change', function (e) {
+    $("#chamberselect").on('change', function (e) {
         e.preventDefault();
-        let filterdata = Inventlist.filter(item => item.CategoryID === parseInt(e.target.value));
-        if (parseInt(e.target.value) !== 0) {
-            InventoryPagination(filterdata, 'InventorylistData', 'MastertableContainer', 50, 5);
-        } else {
-            InventoryPagination(Inventlist, 'InventorylistData', 'MastertableContainer', 50, 5);
-        }
+        let ID = parseInt(e.target.value);
+        ChamberTable(ID);
     });
 
 
@@ -416,8 +414,8 @@
             }
 
             const [invent, drop] = await Promise.all([
-                InventoryTable(),
-                GetCategoryDatalist()
+                GetChamberDatalist(),
+                ChamberTable(1)
             ]);
         } catch (error) {
             console.error("Failed to load page data:", error);

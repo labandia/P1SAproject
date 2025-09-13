@@ -15,7 +15,29 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
     public class HydroController : ExtendController
     {
         private readonly IHyrdoParts _hydro;
-        public HydroController(IHyrdoParts hydro) => _hydro = hydro;
+        private readonly IPartsList _partsList;
+
+        public HydroController(IHyrdoParts hydro, IPartsList partsList)
+        {
+            _hydro = hydro;
+            _partsList = partsList;
+        }
+
+
+        //-----------------------------------------------------------------------------------------
+        //---------------------------- MASTERLIST PART LIST PAGE ---------------------------------------
+        //-----------------------------------------------------------------------------------------
+        [JwtAuthorize]
+        public async Task<ActionResult> GetPartlistData()
+        {
+            var data = await _partsList.GetPartsMasterlist() ?? new List<MasterlistPartsModel>();
+            if (data == null || !data.Any()) return JsonNotFound("No parlist Masterlist Data.");
+
+            return JsonSuccess(data, "Load parlist Masterlist");
+        }
+
+
+
 
 
         //-----------------------------------------------------------------------------------------
@@ -24,7 +46,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         [JwtAuthorize]
         public async Task<ActionResult> GetHydroInventory()
         {
-            var data = await _hydro.GetInventoryList() ?? new List<HydropPartsModel>();
+            var data = await _hydro.GetInventoryList() ?? new List<StockPartsModel>();
             if (data == null || !data.Any()) return JsonNotFound("No Hydro parlist Data.");
 
             return JsonSuccess(data, "Load Inventory List");
@@ -34,18 +56,18 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         [JwtAuthorize]
         public async Task<ActionResult> GetCategorylist()
         {
-            var data = await _hydro.GetInventoryList() ?? new List<HydropPartsModel>();
+            //var data = await _hydro.GetInventoryList() ?? new List<HydropPartsModel>();
 
-            var filterdata = data.GroupBy(x => new { x.CategoryID, x.CategoryName })
-                .Select(g => new
-                {
-                    CategoryID = g.Key.CategoryID,
-                    CategoryName = g.Key.CategoryName
-                }).ToList();
+            //var filterdata = data.GroupBy(x => new { x.CategoryID, x.CategoryName })
+            //    .Select(g => new
+            //    {
+            //        CategoryID = g.Key.CategoryID,
+            //        CategoryName = g.Key.CategoryName
+            //    }).ToList();
 
-            if (filterdata == null || !filterdata.Any()) return JsonNotFound("No Category list Data.");
+            //if (filterdata == null || !filterdata.Any()) return JsonNotFound("No Category list Data.");
 
-            return JsonSuccess(filterdata, "No Category  List");
+            return JsonSuccess("", "No Category  List");
         }
 
 
@@ -105,5 +127,10 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         public ActionResult Inventorylist() => View();
         // GET: Hydroponics/Orderpage
         public ActionResult Orderpage() => View();
+        // GET: Hydroponics/Chambers
+        public ActionResult Chambers() => View();
+
+        // GET: Hydroponics/PartList
+        public ActionResult PartList() => View();
     }
 }

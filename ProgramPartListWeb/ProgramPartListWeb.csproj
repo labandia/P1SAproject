@@ -621,9 +621,15 @@
     <Compile Include="Areas\Circuit\Repository\SupplierRepository.cs" />
     <Compile Include="Areas\Hydroponics\Controllers\HydroController.cs" />
     <Compile Include="Areas\Hydroponics\HydroponicsAreaRegistration.cs" />
+    <Compile Include="Areas\Hydroponics\Interface\IChambers.cs" />
     <Compile Include="Areas\Hydroponics\Interface\IHyrdoParts.cs" />
+    <Compile Include="Areas\Hydroponics\Interface\IPartsList.cs" />
+    <Compile Include="Areas\Hydroponics\Interface\IStocksparts.cs" />
     <Compile Include="Areas\Hydroponics\Models\HydropPartsModel.cs" />
+    <Compile Include="Areas\Hydroponics\Repository\ChamberRepository.cs" />
     <Compile Include="Areas\Hydroponics\Repository\HydroPartsRepository.cs" />
+    <Compile Include="Areas\Hydroponics\Repository\PartsMasterlistRepository.cs" />
+    <Compile Include="Areas\Hydroponics\Repository\StockpartsRepository.cs" />
     <Compile Include="Areas\PC\Controllers\NotificationController.cs" />
     <Compile Include="Areas\PC\Controllers\PatrolController.cs" />
     <Compile Include="Areas\PC\Interface\IInspector.cs" />
@@ -741,6 +747,8 @@
     <Content Include="Areas\Hydroponics\Views\Hydro\Inventorylist.cshtml" />
     <Content Include="Areas\Hydroponics\Views\Hydro\Index.cshtml" />
     <Content Include="Areas\Hydroponics\Views\Hydro\Orderpage.cshtml" />
+    <Content Include="Areas\Hydroponics\Views\Hydro\Chambers.cshtml" />
+    <Content Include="Areas\Hydroponics\Views\Hydro\PartList.cshtml" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.1.js" />
     <Content Include="Scripts\jquery-3.7.1.min.js" />

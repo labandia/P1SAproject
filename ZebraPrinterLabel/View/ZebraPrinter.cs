@@ -9,6 +9,7 @@ using ZebraPrinterLabel.Services;
 using ZebraPrinterLabel.View;
 using ZXing;
 using ZXing.Common;
+using System.Drawing.Printing;
 
 namespace ZebraPrinterLabel
 {
@@ -38,13 +39,15 @@ namespace ZebraPrinterLabel
         {
             try
             {
+                string defaultPrinter = new PrinterSettings().PrinterName;
                 var labelData = _labelPrint.Select(item => (item.SDP, item.Warehouse, item.Quantity)).ToList();
 
                 // Generate a ZPL code for the print page
-                string zplCode = ZebraProcess.GenerateMultiLabelZpl(labelData);
+                string zplCode = ZebraProcess.GenerateMultiLabelZplV2(labelData);
+                //string zplCode = ZebraProcess.GenerateMultiLabelZplV2(labelData, 60, 25);
                 // Send to the printer
                 bool printed = ZebraProcess.SendZplToPrinter("ZDesigner ZT421-203dpi ZPL", zplCode);
-
+                //bool printed = ZebraProcess.SendZplToPrinter(defaultPrinter, zplCode);
                 if (printed)
                 {
                     // Get the Ambasssador Partnumber 

@@ -170,6 +170,9 @@ namespace ProgramPartListWeb
             container.RegisterType<IHyrdoParts, HydroPartsRepository>();
             container.RegisterType<ISupplier, SupplierRepository>();
 
+            container.RegisterType<IChambers, ChamberRepository>();
+            container.RegisterType<IPartsList, PartsMasterlistRepository>();
+
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }
     }

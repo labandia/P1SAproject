@@ -1,14 +1,16 @@
 ﻿using ProgramPartListWeb.Areas.Hydroponics.Interface;
 using ProgramPartListWeb.Areas.Hydroponics.Models;
 using ProgramPartListWeb.Helper;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 {
-    public class HydroPartsRepository : IHyrdoParts
+    public class StockpartsRepository : IStocksparts
     {
-        public Task<List<StockPartsModel>> GetInventoryList()
+        
+        public Task<List<StockPartsModel>> GetStocksTracking()
         {
             string strquery = $@"SELECT
 	                                p.PartID, 
@@ -32,40 +34,27 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
             return SqlDataAccess.GetData<StockPartsModel>(strquery);
         }
-        public Task<List<ChamberTypePartsModel>> GetChamberTypePartsList(int chamberID)
-        {
-            string strquery = $@"SELECT 
-	                                i.PartID,
-	                                i.PartNo,
-	                                i.PartName,
-	                                i.Supplier,
-	                                i.Unit,
-	                                c.QuantityPerChamber as RequireQty
-                                FROM Hydro_ChamberParts c
-                                INNER JOIN Hydro_InventoryParts i ON c.PartID = i.PartID 
-                                WHERE c.ChamberID = @ChamberID";
 
-            return SqlDataAccess.GetData<ChamberTypePartsModel>(strquery, new { ChamberID = chamberID });
+        public Task<List<StockPartsModel>> GetTransactionStocks()
+        {
+            throw new NotImplementedException();
         }
 
-        public Task<bool> AddInventory(StockPartsModel model)
+        public Task<bool> AddStocks(StockPartsModel model)
         {
-            throw new System.NotImplementedException();
-        }
+            // 1. Updates the Stocks Quantity 
 
-        public Task<bool> UpdateStocks(int ID, int Quan)
-        {
+            
+            // 2. Insert Transaction Table
+
             return SqlDataAccess.UpdateInsertQuery($@"UPDATE Hydro_Stocks 
                                                 SET CurrentQty =@CurrentQty 
-                                                WHERE  PartID =@PartID", 
-                                                new { 
-                                                    PartID = ID, 
-                                                    CurrentQty = Quan 
-                                                });
+                                                WHERE  PartID =@PartID",
+                                             new
+                                             {
+                                                 PartID = 1,
+                                                 CurrentQty = 2
+                                             });
         }
-
-        public Task<List<ChamberTypeList>> GetChambersType() => SqlDataAccess.GetData<ChamberTypeList>("SELECT ChamberID, ChamberName FROM Hydro_ChamberMasterlist");
-
-        
     }
 }

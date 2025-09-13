@@ -1,0 +1,16 @@
+﻿using ProgramPartListWeb.Areas.Hydroponics.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ProgramPartListWeb.Areas.Hydroponics.Interface
+{
+    public interface IStocksparts
+    {
+        Task<List<StockPartsModel>> GetStocksTracking();
+        Task<List<StockPartsModel>> GetTransactionStocks();
+        Task<bool> AddStocks(StockPartsModel model);
+    }
+}

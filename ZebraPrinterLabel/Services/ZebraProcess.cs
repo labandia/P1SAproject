@@ -4,6 +4,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Management;
+using System.Drawing.Printing;
+using System.Diagnostics;
 
 namespace ZebraPrinterLabel
 {
@@ -86,35 +88,35 @@ namespace ZebraPrinterLabel
             {
                 // --- Label header ---
                 zpl.AppendLine("^CF0,15"); // Default font
-                zpl.AppendLine("^FO30,20^FD" + item.SDP + "^FS"); // Part number text
+                zpl.AppendLine("^FO210,80^FD*" + item.SDP + "*^FS"); // Part number text
 
                 // --- QR Code ---
-                zpl.AppendLine("^FO380,0");
-                zpl.AppendLine("^BQN,2,2");
+                zpl.AppendLine("^FO570,30");
+                zpl.AppendLine("^BQN,2,3");
                 zpl.AppendLine("^FDLA," + item.SDP + "^FS");
 
                 // --- Barcode (for SDP) ---
-                zpl.AppendLine("^FO30,40");
+                zpl.AppendLine("^FO210,100");
                 zpl.AppendLine("^BY1.2,2,10"); // Narrower barcode width (was ^BY2)
                 zpl.AppendLine("^BCN,50,N,N,N"); // HRI removed
                 zpl.AppendLine("^FD" + item.SDP + "^FS");
 
                 // --- Warehouse text ---
                 zpl.AppendLine("^CF0,15");
-                zpl.AppendLine("^FO30,110^FDSMT WH : " + item.Warehouse + "^FS");
+                zpl.AppendLine("^FO210,170^FDSMT WH : " + item.Warehouse + "^FS");
 
                 // --- Barcode (for warehouse) ---
-                zpl.AppendLine("^FO30,130");
+                zpl.AppendLine("^FO210,190");
                 zpl.AppendLine("^BY1.2,2,10"); // Default width retained for Warehouse
                 zpl.AppendLine("^B3N,N,50,N,N");
                 zpl.AppendLine("^FD" + item.Warehouse + "^FS");
 
                 // --- Quantity Text ---
                 zpl.AppendLine("^CF0,15");
-                zpl.AppendLine("^FO300,110^FDQty:0" + item.Quantity + "^FS");
+                zpl.AppendLine("^FO540,170^FDQty:*0" + item.Quantity + "*^FS");
 
                 // --- Quantity Barcode ---
-                zpl.AppendLine("^FO300,130");
+                zpl.AppendLine("^FO540,190");
                 zpl.AppendLine("^BY1,2,50");       // <== This line controls the barcode width
                 zpl.AppendLine("^BCN,50,N,N,N");
                 zpl.AppendLine("^FD0" + item.Quantity + "^FS");
@@ -127,6 +129,64 @@ namespace ZebraPrinterLabel
             zpl.AppendLine("^XZ"); // Final end
             return zpl.ToString();
         }
+        //public static string GenerateMultiLabelZplV2(List<(string SDP, string Warehouse, string Quantity)> labels, double labelWidthMm, double labelHeightMm)
+        //{
+        //    int widthDots = MmToDots(labelWidthMm);   // Convert mm → dots
+        //    int heightDots = MmToDots(labelHeightMm);
+
+        //    StringBuilder zpl = new StringBuilder();
+
+        //    foreach (var item in labels)
+        //    {
+        //        zpl.AppendLine("^XA");
+        //        zpl.AppendLine($"^PW{widthDots}");   // Label width in dots
+        //        zpl.AppendLine($"^LL{heightDots}");  // Label height in dots
+        //        zpl.AppendLine("^LS0");              // No left margin shift
+
+        //        // --- Label header ---
+        //        zpl.AppendLine("^CF0,10");
+        //        zpl.AppendLine("^FO1,80^FD*" + item.SDP + "*^FS");
+
+        //        // --- QR Code ---
+        //        zpl.AppendLine("^FO580,30");
+        //        zpl.AppendLine("^BQN,2,3");
+        //        zpl.AppendLine("^FDLA," + item.SDP + "^FS");
+
+        //        // --- Barcode (for SDP) ---
+        //        zpl.AppendLine("^FO1,120");
+        //        zpl.AppendLine("^BY2,2,50");
+        //        zpl.AppendLine("^BCN,50,N,N,N");
+        //        zpl.AppendLine("^FD" + item.SDP + "^FS");
+
+        //        // --- Warehouse text ---
+        //        zpl.AppendLine("^CF0,5");
+        //        zpl.AppendLine("^FO1,200^FDSMT WH : " + item.Warehouse + "^FS");
+
+        //        // --- Barcode (for warehouse) ---
+        //        zpl.AppendLine("^FO1,240");
+        //        zpl.AppendLine("^BY2,2,50");
+        //        zpl.AppendLine("^B3N,N,50,N,N");
+        //        zpl.AppendLine("^FD" + item.Warehouse + "^FS");
+
+        //        // --- Quantity Text ---
+        //        zpl.AppendLine("^CF0,25");
+        //        zpl.AppendLine("^FO550,200^FDQty:*0" + item.Quantity + "*^FS");
+
+        //        // --- Quantity Barcode ---
+        //        zpl.AppendLine("^FO550,240");
+        //        zpl.AppendLine("^BY2,2,50");
+        //        zpl.AppendLine("^BCN,50,N,N,N");
+        //        zpl.AppendLine("^FD0" + item.Quantity + "^FS");
+
+        //        zpl.AppendLine("^XZ"); // End label
+        //    }
+
+        //    return zpl.ToString();
+        //}
+
+
+
+
         public static string GenerateMultiLabelZpl(List<(string SDP, string Warehouse, string Quantity)> labels)
         {
             StringBuilder zpl = new StringBuilder();
@@ -192,6 +252,8 @@ namespace ZebraPrinterLabel
         // CHECKS IF THE ZEBRA PRINTER IS CONNECTED
         public async static Task<bool> IsZebraPrinterConnectedAndOnline()
         {
+            string defaultPrinter = new PrinterSettings().PrinterName;
+
             return await Task.Run(() =>
             {
                 using (var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_Printer"))
@@ -201,9 +263,11 @@ namespace ZebraPrinterLabel
                         string name = printer["Name"]?.ToString() ?? "";
                         string port = printer["PortName"]?.ToString() ?? "";
                         bool isOffline = Convert.ToBoolean(printer["WorkOffline"] ?? false);
-
-                        if (name.Equals("ZDesigner ZT421-203dpi ZPL", StringComparison.OrdinalIgnoreCase)
-                            && port.StartsWith("USB", StringComparison.OrdinalIgnoreCase)
+                        bool isDefault = Convert.ToBoolean(printer["Default"] ?? false);
+                        Debug.WriteLine(name);
+                        // Check only the default printer, and confirm it's Zebra
+                        if (isDefault
+                            && name.IndexOf("ZDesigner", StringComparison.OrdinalIgnoreCase) >= 0
                             && !isOffline)
                         {
                             return true;
@@ -212,6 +276,11 @@ namespace ZebraPrinterLabel
                 }
                 return false;
             });
+        }
+
+        public static int MmToDots(double mm, int dpi = 203)
+        {
+            return (int)Math.Round((mm / 25.4) * dpi);
         }
     }
 }

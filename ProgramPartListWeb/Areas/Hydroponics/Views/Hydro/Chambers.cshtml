@@ -1,8 +1,9 @@
 ﻿
 @{
-    ViewBag.Title = "Inventorylist";
+    ViewBag.Title = "Chambers";
     Layout = "~/Areas/Hydroponics/Views/Shared/HydroPartsLayout.cshtml";
 }
+
 
 <header class="InspectHead flex_space">
     <div class="flex_align">
@@ -13,13 +14,12 @@
         </div>
     </div>
 
-    <div class="flex_align" >
+    <div class="flex_align">
         <div class="select-container">
             <select id="Categoryselect">
                 <option value="0">-- Category --</option>
             </select>
         </div>
-        <button style="width: 100%;" id="ShowStocks" class="primarybtn" type="button"><i class="fa-solid fa-user-secret"></i> Add Stocks</button>
         <button style="display: none;" id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-user-secret"></i> Add parts</button>
     </div>
 </header>
@@ -68,10 +68,10 @@
                 <form method="post" enctype="multipart/form-data" class="addformcontainer" id="addnewform" autocomplete="off">
                     <div class="row">
                         @*<div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
-                <label>Employee ID </label> <br />
-                <input type="text" placeholder="type Employee ID" name="Employee_ID" id="Employee_ID" required />
-                <small class="text-danger" id="Noemployee"></small>
-            </div>*@
+                                <label>Employee ID </label> <br />
+                                <input type="text" placeholder="type Employee ID" name="Employee_ID" id="Employee_ID" required />
+                                <small class="text-danger" id="Noemployee"></small>
+                            </div>*@
                         <div class="form_group col-12 col-sm-12 col-lg-12 mb-2">
                             <label>Part no.  <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
                             @*<input type="text" placeholder="N/A" name="Fullname" id="Fullname" />*@
@@ -128,55 +128,6 @@
 </div>
 
 
-@*=================================================================================*@
-@*=========================== ADD QUANTITY STOCKS =================================*@
-@*=================================================================================*@
-<div class="modal fade modal-m" id="AddStocksModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-body modalwrap">
-                <div class="custom_modal_header">
-                    <h5>Add Quantity</h5>
-
-                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
-                        <span>&times;</span>
-                    </button>
-                </div>
-
-                <form id="AddQuantityform" class="addformcontainer">
-                    <div class="form_group col-12 col-sm-12 col-lg-12 mb-2">
-                        <label>Type Partname / Partno  <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
-                        @*<input type="text" placeholder="N/A" name="Fullname" id="Fullname" />*@
-                        <div class="search-box">
-                            <input type="hidden" name="AddPartID" id="AddPartID">
-                            <input type="text" placeholder="Type here ..." name="searchPartno" id="searchPartno" autocomplete="off" required>
-                            <div class="namesdisplay"></div>
-                        </div>
-                    </div>
-
-                    <div class="form_group col-12 col-sm-12">
-                        <label for="">Input Quantity <small style="color: #a81818; font-weight: 600;">*</small> </label>
-                        <input type="text" name="CurrentQty" id="CurrentQty" onkeypress="return restrictChars(event)" autocomplete="off">
-                    </div>
-
-                    <div class="d-flex justify-content-between align-items-center mt-4">
-                        <div>
-                            <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
-                        </div>
-                        <button type="submit"  class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
-                    </div>
-
-                   
-                </form>
-
-
-            </div>
-
-
-        </div>
-    </div>
-</div>
-
 
 
 
@@ -189,7 +140,6 @@
 
     // Modals
     const addmodal = document.getElementById("Showadd");
-    const addquan = document.getElementById("ShowStocks");
 
     // Forms
     const addQuanforms = document.getElementById("AddQuantityform");
@@ -376,26 +326,7 @@
         }
     });
 
-    addQuanforms.addEventListener('submit', async function (e) {
-        e.preventDefault();
-        let forms = new FormData(e.target);
-        const data = Object.fromEntries(forms);
 
-        let res = await postData('@Url.Action("UpdateStocksQuantity", "Hydro")', forms);
-
-        if (res && res.Success) {
-             Swal.fire({
-                 title: "Success",
-                 text: res.Message,
-                 icon: "success",
-                 showConfirmButton: false,
-                 timer: 1500
-             }).then(() => {
-                 InventoryTable();
-                 $("#AddStocksModal").modal('hide');
-             });
-         }
-    });
 
     $("#Categoryselect").on('change', function (e) {
         e.preventDefault();
@@ -440,10 +371,7 @@
         $("#AddChamberModal").modal('show');
     });
 
-    addquan.addEventListener('click', (e) => {
-        e.preventDefault();
-        $("#AddStocksModal").modal('show');
-    });
+  
 
 
     function loadingDisplay() {
@@ -503,3 +431,4 @@
         LoadPageData();
     });
 </script>
+

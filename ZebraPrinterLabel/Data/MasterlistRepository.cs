@@ -20,7 +20,7 @@ namespace ZebraPrinterLabel
             string strsql = $@"SELECT h.DateInput, h.ReelID, h.Partnum, p.WarehouseLocal, p.Qty
                             FROM  PartList_PrintLabelHistory h
                             INNER JOIN PartList_PrintLabelData p ON p.Partnum = h.Partnum
-                            ORDER BY h.RecordID";
+                            ORDER BY h.RecordID DESC";
             return SqlDataAccess.GetData<ReelIDHistory>(strsql, null);
         }
 

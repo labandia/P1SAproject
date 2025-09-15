@@ -1,0 +1,310 @@
+﻿
+@{
+    ViewBag.Title = "AddStocks";
+    Layout = "~/Areas/Hydroponics/Views/Shared/HydroPartsLayout.cshtml";
+}
+<a href="/Hydroponics/Hydro/Inventorylist"><i class="fa-solid fa-arrow-left"></i></a>
+<h5>Add new Stocks</h5>
+
+<div class="flex_align">
+    <div>
+        <label>Type Partname / Partno  <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+        @*<input type="text" placeholder="N/A" name="Fullname" id="Fullname" />*@
+        <div class="search-box">
+            <input type="hidden" name="PartID" id="PartID">
+            <input type="text" placeholder="Type here ..." name="searchPartno" id="searchPartno" autocomplete="off" required>
+            <div class="namesdisplay"></div>
+        </div>
+    </div>
+
+
+
+    <div >
+        <label>Input Quantity</label> <br />
+        <input type="text" id="Quantity" placeholder="Enter the Quantity" onkeypress="return restrictChars(event)" autocomplete="off" name="Quantity" required />
+    </div>
+    <button id="sampleSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Add</button>
+</div>
+
+
+
+
+<div class="InspecTable">
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 10%;"> <span style="margin-left: .5em;">Item #</span>  </th>
+                <th style="width: 20%; text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-screwdriver-wrench"></i>  <span style="margin-left: .5em;">Part No. / Partname</span> </th>
+                <th> <i class="fa-regular fa-rectangle-list"></i> <span style="margin-left: .5em;">Category</span>  </th>
+                <th> <i class="fa-regular fa-address-card"></i> <span style="margin-left: .5em;">Supplier</span>  </th>
+                <th style="width: 10%;"> <span style="margin-left: .5em;">Quantity</span>  </th>
+                <th style="width: 10%;"> <span style="margin-left: .5em;">Action</span>  </th>
+            </tr>
+        </thead>
+        <tbody id="AddStocksData">
+        </tbody>
+    </table>
+</div>
+
+<div class="flex_space mt-3">
+    <span><strong>Total price</strong>122</span>
+    <button id="SaveStocks" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+</div>
+
+
+<script type="text/javascript">
+    let additems = [];
+    let partlistData = [];
+    let partsID;
+    let counter = 0;
+    let totalprices = 0;
+    let TableData = $("#AddStocksData");
+    const resultBox = document.querySelector(".namesdisplay");
+
+    const PartlistTable = async () => {
+        let res = await FetchAuthenticate('@Url.Action("GetPartlistData", "Hydro")', {});
+        if (res && res.Success) {
+            partlistData = res.Data;
+
+            const loadData = `<tr>
+                <td colspan='6'>
+                    🔍 Add a New Stocks
+                </td>
+            </tr>`;
+
+            TableData.empty();
+            TableData.append(loadData);
+        }
+    }
+
+
+
+    $("#sampleSave").on('click', function (e) {
+        e.preventDefault();
+
+        let searchpart = $("#searchPartno").val();
+        let Quan = $("#Quantity").val();
+
+        // 1. Input Validation first
+        if (searchpart !== "" && Quan !== "") {
+
+            // 2. If the Array has a Data
+            if (additems.length == 0) {
+                // Render the Table is a New Stocks
+                TableData.empty();
+            }
+
+            // 3. Filter the Data
+            let filterData = partlistData.filter(res => res.PartID == parseInt($("#PartID").val()));
+
+            let AlreadyIn = additems.filter(res => res.PartID == parseInt($("#PartID").val()));
+
+            // Check if is already Insert to additems
+            if (AlreadyIn.length > 0) {
+                alert("Already Input");
+                return;
+            }
+
+
+            counter = counter + 1;
+            // set all values to a Object
+            let obj = {
+                item: counter,
+                PartID: $("#PartID").val(),
+                PartName: filterData[0].PartName,
+                PartNo: filterData[0].PartNo,
+                CategoryName: filterData[0].CategoryName,
+                Supplier: filterData[0].Supplier,
+                UnitCost_PHP: filterData[0].UnitCost_PHP,
+                Quantity: $("#Quantity").val()
+            };
+
+
+
+            additems.push(obj);
+            addstockDisplay(additems);
+
+
+
+            $("#Quantity").val("");
+            $("#searchPartno").val("");
+            $("#PartID").val("");
+        } else {
+            alert("Input Required");
+        }
+
+    });
+
+    $(document).on('click', '.AddQuan', function (e) {
+        e.stopPropagation(); // Prevent triggering the row click event
+        var rowId = $(this).attr('id');
+        var rowIndex = rowId.split('_')[1];
+        let addquantity = parseInt(additems[rowIndex].Quantity) + 1;
+        additems[rowIndex].Quantity = addquantity;
+        addstockDisplay(additems);
+    });
+
+    $(document).on('click', '.RemoveQuan', function (e) {
+        e.stopPropagation(); // Prevent triggering the row click event
+        var rowId = $(this).attr('id');
+        var rowIndex = rowId.split('_')[1];
+
+        let addquantity = parseInt(additems[rowIndex].Quantity) - 1;
+
+        if (addquantity > 0) {
+            additems[rowIndex].Quantity = addquantity;
+        } else {
+            additems.splice(rowIndex, 1);    
+        }
+
+        // if no items exist bring back to No Data 
+        if (additems.length == 0) {
+
+            const loadData = `<tr>
+                <td colspan='6'>
+                    🔍 Add a New Stocks
+                </td>
+            </tr>`;
+
+            TableData.empty();
+            TableData.append(loadData);
+
+            return;
+        }
+
+        addstockDisplay(additems);
+    });
+
+
+    //$(document).on('click', '.Editbtnbutton', function (e) {
+    //    e.stopPropagation(); // Prevent triggering the row click event
+    //    var rowId = $(this).attr('id');
+    //    var rowIndex = rowId.split('_')[1];
+    //    console.log("Edit item Index : " + rowIndex);
+    //});
+
+     $(document).on('click', '.deleteData',  function (e) {
+         e.stopPropagation();
+         const buttonId = $(this).attr('id');
+         const rowIndex = buttonId.split('_')[1];
+         additems.splice(rowIndex, 1); 
+         TableData.empty(); // clear table
+
+
+         if (additems.length == 0) {
+
+             const loadData = `<tr>
+                     <td colspan='6'>
+                         🔍 Add a New Stocks
+                     </td>
+                 </tr>`;
+
+             TableData.empty();
+             TableData.append(loadData);
+
+             return;
+         }
+
+         addstockDisplay(additems);
+    });
+
+
+
+    $("#SaveStocks").on('click',  async function (e) {
+        e.preventDefault();
+        let formData = new FormData();
+        formData.append("items", JSON.stringify(additems));
+
+
+        let res = await postData('@Url.Action("SaveStocks", "Hydro")', formData);
+        if (res && res.Success) {
+             Swal.fire({
+                 title: "Success",
+                 text: res.Message,
+                 icon: "success",
+                 showConfirmButton: false,
+                 timer: 1500
+             }).then(() => {
+                 setTimeout(() => {
+                     window.location.href = "/Hydroponics/Hydro/Inventorylist";
+                 }, 3000);
+             });
+         }
+    });
+
+    $("#searchPartno").keyup(function () {
+        let result = [];
+        let input = this.value;
+
+        if (input.length > 0) {
+            result = partlistData.filter((item) => {
+                return item.PartNo.toLowerCase().includes(input.toLowerCase()) ||
+                    item.PartName.toLowerCase().includes(input.toLowerCase())
+            });
+            if (result.length > 0) {
+                resultBox.style.display = 'block';
+                display(result); // assumes display() handles array of objects
+            } else {
+                resultBox.style.display = 'none';
+            }
+        } else {
+            resultBox.style.display = 'none';
+        }
+    });
+
+    function display(result) {
+        const content = result.map((list) => {
+            return `<li onclick="selectinput(this)" data-id="${list.PartID}">${list.PartName}</li>`;
+        });
+
+        resultBox.innerHTML = "<ul>" + content.join('') + "</ul>";
+    }
+
+    function selectinput(list) {
+        const ID = list.getAttribute("data-id");
+        partsID = ID;
+        $("#PartID").val(ID);
+        $("#searchPartno").val(list.innerHTML);
+        resultBox.innerHTML = '';
+        resultBox.style.display = 'none';
+        $("#Quantity").focus();
+    }
+
+    function addstockDisplay(array) {
+        TableData.empty();
+        $.each(array, function (index, row) {
+            const loadData = `<tr class='row_${index} Editbtnbutton' id='editButton_${index}'>
+                       <td>${index + 1}</td>
+                       <td style='text-align: left; padding-left: 1em;' data-cell="PartNo">
+                         <p style='color: #0c382ce8; font-weight: 600;'>${row.PartName}</p>
+                         <small>${row.PartNo}</small>
+                       </td>
+                       <td>${row.CategoryName}</td>
+                       <td>${row.Supplier}</td>
+                       <td>
+                             <div class='flex_center'>
+                                 <button  class='RemoveQuan text-danger bg-white' id='RemoveQuan_${index}' ">
+                                   <i class="fa-regular fa-trash-can"></i>
+                                </button>                         
+                                 <span> ${row.Quantity}</span>
+                                 <button  class='AddQuan text-danger bg-white' id='AddQuan_${index}' ">
+                                   <i class="fa-regular fa-trash-can"></i>
+                                </button>
+                             </div>
+                            
+                       </td>
+                       <td data-cell="Delete" >
+                                <div class='flex_center'>
+                                    <button  class='deleteData text-danger bg-white' id='deleteData_${index}' ">
+                                       <i class="fa-solid fa-xmark"></i>
+                                    </button>
+                                </div>
+                       </td>
+                  </tr>`;
+            TableData.append(loadData);
+        });
+    }
+
+
+    PartlistTable();
+</script>

@@ -143,6 +143,9 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         }
     }
 
+
+
+
     // ---------------------------
     //  STOCKS MANAGEMENT MODELS
     // ---------------------------
@@ -302,9 +305,18 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         private string _Status;
     }
 
-  
 
 
 
-    
+    public class StockItem
+    {
+        public int PartID { get; set; }
+        public string PartName { get; set; }
+        public string PartNo { get; set; }
+        public string CategoryName { get; set; }
+        public string Supplier { get; set; }
+        public decimal UnitCost_PHP { get; set; }
+        public double Quantity { get; set; }
+    }
+
 }

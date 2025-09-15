@@ -28,12 +28,13 @@
     <table>
         <thead>
             <tr>
-                <th> <i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Image</span>  </th>
-                <th style="width: 20%; text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-user-secret"></i>  <span style="margin-left: .5em;">Part No. / Partname</span> </th>
-                <th> <i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Category</span>  </th>
-                <th> <i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Supplier</span>  </th>
+                <th style="width: 10%;"> <i class="fa-regular fa-image"></i> <span style="margin-left: .5em;">Image</span>  </th>
+                <th style="width: 20%; text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-screwdriver-wrench"></i>  <span style="margin-left: .5em;">Part No. / Partname</span> </th>
+                <th> <i class="fa-regular fa-rectangle-list"></i> <span style="margin-left: .5em;">Category</span>  </th>
+                <th> <i class="fa-regular fa-address-card"></i> <span style="margin-left: .5em;">Supplier</span>  </th>
                 <th style="width: 10%;"> <span style="margin-left: .5em;">Unit Cost($)</span>  </th>
                 <th style="width: 10%;">  <span style="margin-left: .5em;">Unit Cost(₱)</span>  </th>
+                <th style="width: 10%;">  <span style="margin-left: .5em;">Action</span>  </th>
             </tr>
         </thead>
         <tbody id="PartlistData">
@@ -129,6 +130,83 @@
 </div>
 
 
+@*=================================================================================*@
+@*=========================== EDIT MASTERLIST PARTS =================================*@
+@*=================================================================================*@
+<div class="modal fade modal-lg" id="EditMasterModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Edit Parts List</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <form id="Editmasterform" class="addformcontainer">
+                   <div class="row">
+                       <div class="col-6">
+                           <div class="upload-container flex_center" id="upload-container">
+                               <div class="upload-icon">📷</div>
+                               <div class="file-info">Upload a photo of Parts.<br>Max file size: 1MB<br>png, jpg, jpeg, bmp, gif</div>
+                               <input type="file" id="partsimage" name="partsimage" accept=".png,.jpg,.jpeg" class="hidden">
+                               <button class="upload-btn" id="uploadBtn">Upload Photo</button>
+
+
+                           </div>
+                           <div class="preview-container" id="previewContainer">
+                               <img id="previewImage" class="preview-image" src="" alt="Image Preview">
+                           </div>
+                       </div>
+                       <div class="col-6">
+                           <div class="form_group col-12 col-sm-12 col-lg-12 mb-2">
+                               <label>Part No </label> <br />
+                               <input type="hidden" name="PartID" id="PartID" />
+                               <input type="text" placeholder="N/A" name="PartNo" id="PartNo" />
+
+                           </div>
+                           <div class="form_group col-12 col-sm-12">
+                               <label for="">Part Name  </label>
+                               <input type="text" name="PartName" id="PartName" autocomplete="off">
+                           </div>
+
+                           <div class="form_group col-12 col-sm-12">
+                               <div class="select-container">
+                                   <select id="CategoryID" name="CategoryID">
+                                       <option value="0">-- Category --</option>
+                                   </select>
+                               </div>
+                           </div>
+
+                           <div class="form_group col-12 col-sm-12">
+                               <label for="">Supplier  </label>
+                               <input type="text" name="Supplier" id="Supplier" autocomplete="off">
+                           </div>
+
+                           <div class="form_group col-12 col-sm-12">
+                               <label for="">Unit Cost(PHP)  </label>
+                               <input type="text" name="UnitCost_PHP" id="UnitCost_PHP" onkeypress="return restrictChars(event)" autocomplete="off">
+                           </div>
+
+                           <div class="flex_end mt-4">
+                               
+                               <button type="submit" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                           </div>
+                       </div>
+                   </div>
+
+
+                </form>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
 
 
 
@@ -141,6 +219,8 @@
 
     // Modals
     const addmodal = document.getElementById("Showadd");
+
+    const editform = document.getElementById("Editmasterform");
 
     let TableDisplay = $("#PartlistData");
     const resultBox = document.querySelector(".namesdisplay");
@@ -157,7 +237,7 @@
                 InventoryPagination(partlistData, 'PartlistData', 'MastertableContainer', 50, 5);
             } else {
                 const loadData = `<tr>
-                  <td colspan='7'>
+                  <td colspan='6'>
                       🔍 ${res.Message}
                   </td>
               </tr>`;
@@ -171,7 +251,7 @@
 
     const GetCategoryDatalist = async () => {
         let res = await FetchAuthenticate('@Url.Action("GetCategorylist", "Hydro")', {});
-        
+
           if (res && res.Success) {
 
               $.each(res.Data, function (index, row) {
@@ -180,6 +260,10 @@
 
               $.each(res.Data, function (index, row) {
                   $("#addCategory").append("<option value='" + row.CategoryID + "'>" + row.CategoryName + "</option>");
+              });
+
+              $.each(res.Data, function (index, row) {
+                  $("#CategoryID").append("<option value='" + row.CategoryID + "'>" + row.CategoryName + "</option>");
               });
           }
      };
@@ -213,15 +297,17 @@
 
             for (let i = startIndex; i < endIndex; i++) {
                 const rowData = filteredData[i];
-    
+
                 // Compute by USD dollar
                 let computeUSD = parseFloat(rowData.UnitCost_PHP) / 58;
                 // Round off to 2 decimals
                 var roundedNum = parseFloat(computeUSD.toFixed(2));
-
+                const noImagePath = '@Url.Content("~/Content/Images/no-image.png")';
                 const rowHtml = `
-                    <tr class='rowClick' id='editButton_${rowData.PartID}'>
-                        <td data-cell="Images">-</td>
+                    <tr  >
+                        <td data-cell="Images" style='display: flex; justify-content: center; align-items: center; border-top: 1px solid #dcdce2; border-bottom: none;'>
+                              <img class='NoImages' src="${noImagePath}" />
+                        </td>
                         <td style='text-align: left; padding-left: 1em;' data-cell="PartNo">
                             <p style='color: #0c382ce8; font-weight: 600;'>${rowData.PartName ? rowData.PartName : "-"}</p>
                             <small> ${rowData.PartNo}</small>
@@ -230,6 +316,12 @@
                         <td data-cell="Supplier">${rowData.Supplier ? rowData.Supplier : "-"}</td>
                         <td data-cell="UnitUSD">${roundedNum}</td>
                         <td data-cell="UnitUSD">${rowData.UnitCost_PHP}</td>
+                        <td data-cell="Delete" >
+                         <div class='flex_center'>
+                             <button  class='Editbtnbutton text-danger bg-white' id='editButton_${rowData.PartID}' ">
+                                <i class="fa-solid fa-xmark"></i>
+                             </button>
+                         </div>
                     </tr>
                 `;
                 tableBody.innerHTML += rowHtml;
@@ -280,8 +372,21 @@
             }
         };
 
+        $(document).on('click', '.Editbtnbutton', function (e) {
+            e.stopPropagation(); // Prevent triggering the row click event
+            var rowId = $(this).attr('id');
+            var rowIndex = rowId.split('_')[1];
+            var filterdata = partlistData.find(item => item.PartID === parseInt(rowIndex));
+            $("#PartID").val(filterdata.PartID);
+            $("#PartNo").val(filteredData.PartNo);
+            $("#PartName").val(filterdata.PartName);
+            $("#PartNo").val(filterdata.PartNo);
+            $("#Supplier").val(filterdata.Supplier);
+            $("#UnitCost_PHP").val(filterdata.UnitCost_PHP);
+            $("#CategoryID").val(filterdata.CategoryID);
 
-
+            $("#EditMasterModal").modal("show");
+        });
 
 
         const searchTable = () => {
@@ -311,7 +416,7 @@
                 return item.PartNo.toLowerCase().includes(input.toLowerCase()) ||
                     item.PartName.toLowerCase().includes(input.toLowerCase())
             });
-            console.log(result);
+
             if (result.length > 0) {
                 resultBox.style.display = 'block';
                 display(result); // assumes display() handles array of objects
@@ -323,7 +428,7 @@
         }
     });
 
- 
+
 
     $("#Categoryselect").on('change', function (e) {
         e.preventDefault();
@@ -368,7 +473,122 @@
         $("#AddChamberModal").modal('show');
     });
 
- 
+    editform.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        let formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+        let res = await postData('@Url.Action("EditPartslist", "Hydro")', formData);
+        console.log(data);
+        console.log(res);
+         //if (res && res.Success) {
+         //     Swal.fire({
+         //         title: "Success",
+         //         text: res.Message,
+         //         icon: "success",
+         //         showConfirmButton: false,
+         //         timer: 1500
+         //     }).then(() => {
+         //         setTimeout(() => {
+         //             window.location.href = "/Hydroponics/Hydro/Inventorylist";
+         //         }, 3000);
+         //     });
+         // }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const InputFile = document.getElementById('partsimage');
+        const uploadbtn = document.getElementById('uploadBtn');
+        //const savebtn = document.getElementById('saveBtn');
+
+        const previewContainer = document.getElementById('previewContainer');
+        const previewImage = document.getElementById('previewImage');
+
+        // Handle Upload button Click
+        uploadbtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            InputFile.click();
+        });
+
+        // Handle Functional of File Input Upload
+        InputFile.addEventListener('change', function (e) {
+            e.preventDefault();
+            //Check if the Image data exist
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+
+                // Check the file size (Max 1 MB)
+                if (file.size > 1024 * 1024) {
+                    alert('File size exceeds 1MB limit');
+                    return;
+                }
+                // Check file Type
+                const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/bmp', 'image/gif'];
+
+                if (!validTypes.includes(file.type)) {
+                    alert("Invalid file type, Please upload a png, jpeg, bmp or gif file");
+                    return;
+                }
+
+                //Create a Preview Image When the Upload the file
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewImage.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+
+        // handle save button click
+        //savebtn.addEventListener('click', function (e) {
+        //    e.preventDefault();
+
+        //    //validate the form
+        //    if (!InputFile.files || InputFile.files.length === 0) {
+        //        alert("Please upload an image of your signature before saving");
+        //        return;
+        //    }
+
+
+        //    const formData = new FormData();
+        //    formData.append('SignatureImage', InputFile.files[0]);
+        //    formData.append('UserID', UserID);
+
+        //    const data = Object.fromEntries(formData);
+
+        //    //$.ajax({
+        //    //    url: '/User/UploadSignature',
+        //    //    type: 'POST',
+        //    //    data: formData,
+        //    //    processData: false,
+        //    //    contentType: false,
+        //    //    success: function (res) {
+        //    //        if (res && res.success) {
+        //    //            InputFile.value = '';
+        //    //            previewImage.src = '';
+        //    //            previewContainer.style.display = 'none';
+        //    //            $("#uploadmodal").modal("hide");
+        //    //        }
+        //    //    },
+        //    //    error: function (xhr, status, error) {
+        //    //        //$('#signatureImageError').text('An error occurred: ' + error);
+        //    //    },
+        //    //    complete: function () {
+        //    //        //saveBtn.prop('disabled', false).text('Save');
+        //    //    }
+        //    //});
+
+        //    // Reset the form
+
+
+        //});
+    });
+
+
+
+
 
     function loadingDisplay() {
         TableDisplay.empty();
@@ -408,7 +628,7 @@
     // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
     const LoadPageData = async () => {
         try {
-          
+
             const [invent, drop] = await Promise.all([
                 PartlistTable(),
                 GetCategoryDatalist()

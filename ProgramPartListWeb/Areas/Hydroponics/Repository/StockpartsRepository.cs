@@ -3,6 +3,7 @@ using ProgramPartListWeb.Areas.Hydroponics.Models;
 using ProgramPartListWeb.Helper;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ProgramPartListWeb.Areas.Hydroponics.Repository
@@ -40,21 +41,26 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             throw new NotImplementedException();
         }
 
-        public Task<bool> AddStocks(StockPartsModel model)
+        public async Task<bool> AddStocks(int ID, double Quan)
         {
+            var data = await GetStocksTracking() ?? new List<StockPartsModel>();  
+            var filterdata = data.FirstOrDefault(x => x.PartID == ID);  
+
+            double latestQty = filterdata.CurrentQty + Quan;
+
             // 1. Updates the Stocks Quantity 
-
-            
-            // 2. Insert Transaction Table
-
-            return SqlDataAccess.UpdateInsertQuery($@"UPDATE Hydro_Stocks 
+            return await SqlDataAccess.UpdateInsertQuery($@"UPDATE Hydro_Stocks 
                                                 SET CurrentQty =@CurrentQty 
                                                 WHERE  PartID =@PartID",
                                              new
                                              {
-                                                 PartID = 1,
-                                                 CurrentQty = 2
+                                                 PartID = ID,
+                                                 CurrentQty = latestQty
                                              });
+
+            // 2. Insert Transaction Table
+
+
         }
     }
 }

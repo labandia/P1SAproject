@@ -6,8 +6,10 @@ using ProgramPartListWeb.Helper;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 
 namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
@@ -17,12 +19,14 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         private readonly IHyrdoParts _hydro;
         private readonly IPartsList _partsList;
         private readonly IChambers _chambers;
+        private readonly IStocksparts _stock;
 
-        public HydroController(IHyrdoParts hydro, IPartsList partsList, IChambers chambers)
+        public HydroController(IHyrdoParts hydro, IPartsList partsList, IChambers chambers, IStocksparts stock)
         {
             _hydro = hydro;
             _partsList = partsList;
             _chambers = chambers;
+            _stock = stock;
         }
         //-----------------------------------------------------------------------------------------
         //---------------------------- COMMON CONTROLLERS  ----------------------------------------
@@ -56,6 +60,49 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
 
             return JsonSuccess(data, "Load parlist Masterlist");
         }
+
+        [HttpPost]
+        public async  Task<ActionResult>EditPartslist(MasterlistPartsModel model, HttpPostedFileBase PartImage)
+        {
+            string fullnamefile = "";
+            Debug.WriteLine("HERRE" + PartImage);
+            if (PartImage != null && PartImage.ContentLength > 0)
+            {
+                string exportFolder = @"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\HydroParts\";
+
+                if (!Directory.Exists(exportFolder))
+                    Directory.CreateDirectory(exportFolder);
+
+                // Get the file name and extension and store to fullpath 
+                // Create unique file name
+                string fileName = Path.GetFileNameWithoutExtension(PartImage.FileName);
+                string extension = Path.GetExtension(PartImage.FileName);
+
+
+                // Create unique filename (avoid overwriting existing files)
+                fullnamefile = fileName + "_" + Guid.NewGuid().ToString("N").Substring(0, 6) + extension;
+
+                string fullPath = Path.Combine(exportFolder, fullnamefile);
+
+
+                Debug.WriteLine(fullPath);
+                // Save the uploaded file to disk
+                PartImage.SaveAs(fullPath);
+
+                model.ImageParts = fullnamefile;
+
+            }
+
+            // Overwrite the image path if there is a new image upload to MastelistPartModel
+
+            bool result = await  _partsList.EditMasterlistParts(model);
+            if (!result) return JsonPostError("Insert failed.", 500);
+
+            return JsonCreated(model, "Edit Masterlist Successfully");
+
+        }
+
+
 
         //-----------------------------------------------------------------------------------------
         //----------------------------  CHAMBER LIST PAGE -----------------------------------------
@@ -120,7 +167,28 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
             return JsonSuccess(data, "Load Chamber type List");
         }
 
+        [HttpPost]
+        public async Task<ActionResult> SaveStocks()
+        {
+            try
+            {
+                var json = Request.Form["items"];
 
+                var items = Newtonsoft.Json.JsonConvert.DeserializeObject<List<StockItem>>(json);
+
+                foreach (var item in items)
+                {
+                    await _stock.AddStocks(item.PartID, item.Quantity);
+                }
+
+                return JsonCreated(true, "Add Stocks Successfully");
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message, 500);
+            }
+
+        }
 
 
         [HttpPost]

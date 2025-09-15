@@ -11,6 +11,6 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Interface
     {
         Task<List<StockPartsModel>> GetStocksTracking();
         Task<List<StockPartsModel>> GetTransactionStocks();
-        Task<bool> AddStocks(StockPartsModel model);
+        Task<bool> AddStocks(int ID, double Quan);
     }
 }

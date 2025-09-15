@@ -697,6 +697,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\css\Patrolforms.css" />
+    <Content Include="Content\Images\no-image.png" />
     <Content Include="Content\OpenExcelApp.exe" />
     <Content Include="Content\Shared\bootstrap-grid.css" />
     <Content Include="Content\Shared\bootstrap-grid.min.css" />
@@ -749,6 +750,7 @@
     <Content Include="Areas\Hydroponics\Views\Hydro\Orderpage.cshtml" />
     <Content Include="Areas\Hydroponics\Views\Hydro\Chambers.cshtml" />
     <Content Include="Areas\Hydroponics\Views\Hydro\PartList.cshtml" />
+    <Content Include="Areas\Hydroponics\Views\Hydro\AddStocks.cshtml" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.1.js" />
     <Content Include="Scripts\jquery-3.7.1.min.js" />

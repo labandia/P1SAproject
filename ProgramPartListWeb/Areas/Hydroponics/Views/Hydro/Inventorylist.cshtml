@@ -28,10 +28,10 @@
     <table>
         <thead>
             <tr>
-                <th> <i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Image</span>  </th>
-                <th style="width: 20%; text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-user-secret"></i>  <span style="margin-left: .5em;">Part No. / Partname</span> </th>
-                <th> <i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Category</span>  </th>
-                <th> <i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Supplier</span>  </th>
+                <th> <i class="fa-regular fa-image"></i> <span style="margin-left: .5em;">Image</span>  </th>
+                <th style="width: 20%; text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-screwdriver-wrench"></i> <span style="margin-left: .5em;">Part No. / Partname</span> </th>
+                <th> <i class="fa-regular fa-rectangle-list"></i>  <span style="margin-left: .5em;">Category</span>  </th>
+                <th> <i class="fa-regular fa-address-card"></i> <span style="margin-left: .5em;">Supplier</span>  </th>
                 <th> <i class="fa-regular fa-square-check"></i> <span style="margin-left: .5em;">Stock Qty</span>  </th>
                 <th style="width: 10%;"> <i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Status</span>  </th>
             </tr>
@@ -207,7 +207,6 @@
                 Inventlist = res.Data;
                 TableDisplay.empty(); // Removing the Loading Display
 
-                console.log(Inventlist);
                 InventoryPagination(Inventlist, 'InventorylistData', 'MastertableContainer', 50, 5);
             } else {
                 const loadData = `<tr>
@@ -269,12 +268,14 @@
                 const rowData = filteredData[i];
                 const color = rowData.Color;
 
-
+                const noImagePath = '@Url.Content("~/Content/Images/no-image.png")';
 
 
                 const rowHtml = `
                     <tr class='rowClick' id='editButton_${rowData.PartID}'>
-                       <td data-cell="Images">-</td>
+                        <td data-cell="Images" style='display: flex; justify-content: center; align-items: center; border-top: 1px solid #dcdce2; border-bottom: none;'>
+                           <img class='NoImages' src="${noImagePath}" />
+                        </td>
                        <td style='text-align: left; padding-left: 1em;' data-cell="PartNo">
                             <p style='color: #0c382ce8; font-weight: 600;'>${rowData.PartName ? rowData.PartName : "-"}</p>
                             <small> ${rowData.PartNo}</small>
@@ -369,7 +370,6 @@
                 return item.PartNo.toLowerCase().includes(input.toLowerCase()) ||
                     item.PartName.toLowerCase().includes(input.toLowerCase())
             });
-            console.log(result);
             if (result.length > 0) {
                 resultBox.style.display = 'block';
                 display(result); // assumes display() handles array of objects
@@ -432,7 +432,7 @@
 
     const getStatusClass = (status) => {
         switch (status) {
-            case "OK": return "StocksGood";
+            case "GOOD": return "StocksGood";
             case "LOW STOCK": return "Low";
             case "WARNING": return "Warning";
             default: return "Incomplete";
@@ -443,6 +443,7 @@
     addmodal.addEventListener('click', (e) => {
         e.preventDefault();
         //$("#AddChamberModal").modal('show');
+        window.location.href = "/Hydroponics/Hydro/AddStocks";
     });
 
     addquan.addEventListener('click', (e) => {

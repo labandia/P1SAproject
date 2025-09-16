@@ -3,6 +3,7 @@ using ProgramPartListWeb.Areas.Hydroponics.Models;
 using ProgramPartListWeb.Helper;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -11,6 +12,77 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 {
     public class ChamberRepository : IChambers
     {
+        public Task<List<RequestChambersModel>> GetRequestList()
+        {
+            string strsql = $@"WITH OrdersCTE AS (
+                                SELECT 
+                                    o.OrderID,
+                                    m.ChamberName,
+                                    o.OrderDate,
+                                    o.TargetDate,
+                                    o.OrderedBy,
+                                    o.Quantity AS ChambersOrdered,
+                                    o.Status AS RequestStatus,
+                                    o.PIC
+                                FROM Hydro_Orders o
+                                INNER JOIN Hydro_ChamberMasterlist m 
+                                    ON m.ChamberID = o.ChamberID
+                            ),
+                            DetailsCTE AS (
+                                SELECT 
+                                    d.OrderID,
+                                    CASE 
+                                        WHEN SUM(d.QtyUsed) = SUM(d.RequiredQty) 
+                                            THEN 'Completed'
+                                        ELSE 'Not Completed'
+                                    END AS MaterialStatus,
+		                             CAST(
+                                        (CAST(SUM(d.QtyUsed) AS DECIMAL(18,2)) / 
+                                         NULLIF(SUM(d.RequiredQty),0)) * 100 AS DECIMAL(5,2)
+                                    ) AS CompletionPercent
+                                FROM Hydro_OrderDetails d
+                                GROUP BY d.OrderID
+                            )
+                            SELECT 
+                                o.OrderID,
+                                o.ChamberName,
+	                            FORMAT(o.OrderDate, 'MM/dd/yyyy') as OrderDate,
+                                FORMAT(o.TargetDate, 'MM/dd/yyyy') as TargetDate,
+                                o.OrderedBy,
+                                o.ChambersOrdered,
+                                o.RequestStatus,
+                                o.PIC,
+                                d.MaterialStatus,
+	                            d.CompletionPercent
+                            FROM OrdersCTE o
+                            LEFT JOIN DetailsCTE d 
+                                ON o.OrderID = d.OrderID ORDER BY o.OrderID DESC;";
+            return SqlDataAccess.GetData<RequestChambersModel>(strsql);
+        }
+
+        public Task<List<RequestChambersDetailsModel>> GetRequestDetailList(int order)
+        {
+            string strsql = $@"SELECT
+                                o.OrderDetailID,
+	                            i.PartNo,
+	                            i.PartName,
+	                            c.CategoryName,
+	                            o.QtyUsed,
+	                            o.RequiredQty,
+                                s.CurrentQty,
+	                            CASE 
+                                  WHEN o.QtyUsed = o.RequiredQty
+                                      THEN 'Completed'
+                                ELSE 'Not Completed'
+                              END AS MaterialStatus
+                            FROM Hydro_OrderDetails o
+                            INNER JOIN Hydro_InventoryParts i ON o.PartID = i.PartID
+                            INNER JOIN Hydro_CategoryParts c ON i.CategoryID = c.CategoryID
+                            INNER JOIN Hydro_Stocks s ON s.PartID = o.PartID
+                            WHERE o.OrderID = @OrderID";
+            return SqlDataAccess.GetData<RequestChambersDetailsModel>(strsql, new { OrderID = order });
+        }
+
         public Task<List<ChamberModel>> GetChambersData(int chamber)
         {
             string strsql = $@"SELECT
@@ -21,6 +93,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 	                            i.PartName,
 	                            cp.CategoryName,
 	                            i.Supplier,
+                                c.QuantityPerChamber,
 	                            CONCAT(c.QuantityPerChamber, ' ', i.Unit) as RequireQty,
 	                            i.UnitCost_PHP,
 	                            c.QuantityPerChamber * i.UnitCost_PHP as TotalPHPCost
@@ -47,6 +120,62 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             throw new NotImplementedException();
         }
 
-        
+        public async Task<bool> AddRequestChamber(RequestItem item)
+        {
+            string strsql = $@"INSERT INTO Hydro_Orders(ChamberID, OrderedBy, Quantity, PIC, TargetDate)
+                               VALUES(@ChamberID, @OrderedBy, @Quantity, @PIC, @TargetDate)";
+
+            bool result = await SqlDataAccess.UpdateInsertQuery(strsql, new
+            {
+                item.ChamberID,
+                item.OrderedBy,
+                item.Quantity,
+                item.PIC,
+                item.TargetDate
+            });
+
+            // If insert is Completed go the next process   
+            if (result)
+            {
+                // Get Chambers list parts based on the ChamberID 
+                var chamberParts = await GetChambersData(item.ChamberID);
+                int LastOrderID = await SqlDataAccess.GetCountData("SELECT MAX(OrderID) FROM  Hydro_Orders");
+
+                foreach (var cham in chamberParts)
+                {
+                    string insertDetails = $@"INSERT INTO Hydro_OrderDetails(OrderID, PartID, QtyUsed, RequiredQty)
+                               VALUES(@OrderID, @PartID, @QtyUsed, @RequiredQty)";
+
+                    await SqlDataAccess.UpdateInsertQuery(insertDetails, new
+                    {
+                        OrderID = LastOrderID,
+                        PartID = cham.PartID,
+                        QtyUsed = 0,
+                        RequiredQty = cham.QuantityPerChamber
+                    });
+                }
+
+            }
+
+            return result;
+        }
+
+        public async Task<bool> UpdatesRequestMaterials(int OrderDetailID, double UpdateQtyUsed, double inputvalue)
+        {
+            string strsql = $@"UPDATE Hydro_OrderDetails SET QtyUsed =@QtyUsed WHERE OrderDetailID =@OrderDetailID";
+
+            bool result = await SqlDataAccess.UpdateInsertQuery(strsql, new { OrderDetailID = OrderDetailID, QtyUsed = UpdateQtyUsed });
+
+            if (result)
+            {
+
+                // Updates the Current Stocks
+                string updateStocks = $@"UPDATE Hydro_Stocks SET CurrentQty = CurrentQty - @QtyUsed
+                                        WHERE PartID = (SELECT PartID FROM Hydro_OrderDetails WHERE OrderDetailID = @OrderDetailID)";
+                await SqlDataAccess.UpdateInsertQuery(updateStocks, new { OrderDetailID = OrderDetailID, QtyUsed = inputvalue });
+            }
+
+            return result;
+        }
     }
 }

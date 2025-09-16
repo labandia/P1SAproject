@@ -120,13 +120,21 @@ namespace ProgramPartListWeb.Helper
             }
         }
         // ############ GET THE TOTAL COUNT OF THE QUERY ########################
-        public static async Task<int> GetCountData(string query, object parameters)
+        public static async Task<int> GetCountData(string query, object parameters = null)
         {
             try
             {
                 using (IDbConnection con = GetSqlConnection(_connectionString()))
                 {
-                    int count = await con.ExecuteScalarAsync<int>(query, parameters, commandType: CommandType.StoredProcedure);
+                    // Check if the query is a stored procedure name (only word characters, no spaces/symbols)
+                    var isStoredProcedure = Regex.IsMatch(query, @"^\w+$");
+
+                    int count = await con.ExecuteScalarAsync<int>(
+                        query,
+                        parameters,
+                        commandType: isStoredProcedure ? CommandType.StoredProcedure : CommandType.Text
+                    );
+
                     return count;
                 }
             }
@@ -134,7 +142,7 @@ namespace ProgramPartListWeb.Helper
             {
                 Logger.Error(ex, $"SQL Exception while executing query. Query: {query}");
                 return 0;
-            }  
+            }
         }
 
         // ############ CHECKS IF THE ROW DATA IS EXIST ########################
@@ -165,25 +173,22 @@ namespace ProgramPartListWeb.Helper
             {
                 using (IDbConnection con = new SqlConnection(_connectionString()))
                 {
-                    int rowsAffected;
 
                     bool isStoredProcedure = Regex.IsMatch(strQuery, @"^\w+$");
                     CommandType commandType = isStoredProcedure ? CommandType.StoredProcedure : CommandType.Text;
 
-                    rowsAffected = await con.ExecuteAsync(strQuery, parameters, commandType: commandType);
+                    int rowsAffected = await con.ExecuteAsync(strQuery, parameters, commandType: commandType);
 
                     // If update was successful and a cache key is provided, remove it
-                    if (rowsAffected > 0 && !string.IsNullOrEmpty(cacheKeyToInvalidate))
-                    {
-                        CacheHelper.Remove(cacheKeyToInvalidate);
-                    }
+                    if (rowsAffected > 0 && !string.IsNullOrEmpty(cacheKeyToInvalidate)) CacheHelper.Remove(cacheKeyToInvalidate);
 
                     return rowsAffected > 0;
                 }
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, $"SQL Exception while executing query. Query: {strQuery}");
+                Debug.WriteLine("Error Message: " + ex.Message);
+                Logger.Error(ex, $"SQL Exception : {ex.Message}");
                 return false;
             }
         }

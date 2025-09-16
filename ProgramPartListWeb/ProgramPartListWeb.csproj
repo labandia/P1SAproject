@@ -751,6 +751,7 @@
     <Content Include="Areas\Hydroponics\Views\Hydro\Chambers.cshtml" />
     <Content Include="Areas\Hydroponics\Views\Hydro\PartList.cshtml" />
     <Content Include="Areas\Hydroponics\Views\Hydro\AddStocks.cshtml" />
+    <Content Include="Areas\Hydroponics\Views\Hydro\OrderpageDetails.cshtml" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.1.js" />
     <Content Include="Scripts\jquery-3.7.1.min.js" />

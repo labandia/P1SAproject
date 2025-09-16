@@ -1,0 +1,224 @@
+﻿
+@{
+    ViewBag.Title = "OrderpageDetails";
+    var ID = Request.QueryString["orderID"];
+    Layout = "~/Areas/Hydroponics/Views/Shared/HydroPartsLayout.cshtml";
+}
+<a href="/Hydroponics/Hydro/Orderpage"><i class="fa-solid fa-arrow-left"></i></a>
+
+<section>
+    <h5>Request ID: @ID</h5>
+    <input type="hidden" id="chambID" value="@ID" />
+    <div class="requestGroup">
+        <strong>Chamber Name:</strong><spam id="ChamberName"> </spam>
+    </div>
+
+    <div class="requestGroup">
+        <strong>Number of Chambers:</strong><spam id="ChambersOrdered"> </spam>
+    </div>
+
+    <div class="requestGroup">
+        <strong>TargetDate:</strong><spam id="TargetDate"> </spam>
+    </div>
+
+    <div class="requestGroup">
+        <strong>RequestStatus:</strong><spam id="RequestStatus"> </spam>
+    </div>
+
+
+    <div class="requestGroup">
+        <strong>Satus :</strong><spam id="MaterialStatus"> </spam>
+    </div>
+</section>
+
+
+<strong>Materials Parts : </strong>
+<table>
+    <thead>
+        <tr>
+            <th style="width: 20%; text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-screwdriver-wrench"></i>  <span style="margin-left: .5em;">Part No. / Partname</span> </th>
+            <th> <i class="fa-regular fa-rectangle-list"></i> <span style="margin-left: .5em;">Category</span>  </th>
+            <th style="width: 10%;"> <span style="margin-left: .5em;">Quantity Used</span>  </th>
+            <th style="width: 10%;">  <span style="margin-left: .5em;">Required Qty</span>  </th>
+            <th style="width: 10%;">  <span style="margin-left: .5em;">Status</span>  </th>
+        </tr>
+    </thead>
+    <tbody id="RequestWrapper">
+    </tbody>
+</table>
+
+<!--########################## INPUT DATA #############################-->
+<div class="modal fade modal-m" id="ChangeQuanModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Quantity Used</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <form id="InputQuantity" class="addformcontainer">
+                    <label for="">Material Parts : <span id="PartName">Black Coated Pipe</span> </label>
+                    <div class="form_group col-12 col-sm-12">
+                        <label for="">Used Quantity <small style="color: #a81818; font-weight: 600;">*</small> </label>
+                        <input type="hidden" name="OrderDetailID" id="OrderDetailID">
+                        <input type="number" name="QtyUsed" id="QtyUsed" onkeypress="return restrictChars(event)" autocomplete="off">
+                    </div>
+                    <label for="">Available Stocks : <span id="CurrentQty"></span> </label>
+                    <div class="flex_space" id="editsdisplay">
+                        <small>Input quantity is required.</small>
+                        <button type="submit" class="primary_button_color">
+                            <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
+                        </button>
+                    </div>
+                </form>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    let requestData = [];
+    let previousValue = 0;
+    let newValueQuan = 0;
+    let ID = parseInt($("#chambID").val());
+    let addQuanform = document.getElementById("InputQuantity");
+    const useInput = document.getElementById("QtyUsed");
+
+    const RequestMain = async () => {
+
+       let res = await FetchAuthenticate('@Url.Action("GetMainRequestList", "Hydro")', { orderID: ID });
+       if (res && res.Success) {
+           console.log(res);
+           $("#ChamberName").text(res.Data.ChamberName);
+           $("#ChambersOrdered").text(res.Data.ChambersOrdered);
+           $("#TargetDate").text(res.Data.TargetDate);
+           $("#RequestStatus").text(res.Data.RequestStatus);
+           $("#MaterialStatus").text(res.Data.MaterialStatus);
+       }
+    }
+
+    const RequesDataList = async () => {
+      let TableData = $("#RequestWrapper");
+
+       let res = await FetchAuthenticate('@Url.Action("GetRequestDetails", "Hydro")', { orderID: ID });
+       if (res && res.Success) {
+           requestData = res.Data;
+           TableData.empty();
+          $.each(requestData, function (index, row) {
+
+              const loadData = `<tr class='Editbtnbutton' id='editButton_${row.OrderDetailID}'>
+                                    <td style='text-align: left; padding-left: 1em;' data-cell="PartNo">
+                                        <p style='color: #0c382ce8; font-weight: 600;'>${row.PartName ? row.PartName : "-"}</p>
+                                        <small> ${row.PartNo}</small>
+                                    </td>
+                                    <td data-cell="Supplier">${row.CategoryName ? row.CategoryName : "-"}</td>
+                                    <td data-cell="Supplier">${row.QtyUsed ? row.QtyUsed : "-"}</td>
+                                    <td data-cell="UnitUSD">${row.RequiredQty ? row.RequiredQty : "-"}</td>
+                                    <td data-cell="UnitUSD">${row.MaterialStatus ? row.MaterialStatus : "-"}</td>
+                                </tr>`;
+              TableData.append(loadData);
+          });
+       }
+    }
+
+    $(document).on('click', '.Editbtnbutton', function (e) {
+        e.stopPropagation(); // Prevent triggering the row click event
+        var rowId = $(this).attr('id');
+        var rowIndex = rowId.split('_')[1];
+
+        var filterdata = requestData.find(item => item.OrderDetailID === parseInt(rowIndex));
+
+        if (filterdata) {
+            previousValue = 0;
+            newValueQuan = 0;
+            $("#PartName").text(filterdata.PartName);
+            $("#OrderDetailID").val(rowIndex);
+            $("#QtyUsed").val(filterdata.QtyUsed);
+            $("#CurrentQty").text(filterdata.CurrentQty);
+            previousValue = filterdata.QtyUsed;
+            $("#QtyUsed").attr("min", filterdata.QtyUsed);
+            $("#QtyUsed").attr("max", filterdata.CurrentQty);
+        }
+
+        $("#ChangeQuanModal").modal("show");
+    });
+
+    // Limits the input required
+    useInput.addEventListener("input", function () {
+        if (this.value !== "") {
+            let val = Number(this.value);
+            if (val < this.min) this.value = this.min;
+            if (val > this.max) this.value = this.max;
+        }
+
+        let newValue = Number(this.value || 0);
+        let diff = newValue - previousValue;
+
+        if (diff > 0) {
+            newValueQuan++;
+        } else if (diff < 0) {
+            newValueQuan--;
+        }
+
+       // previousValue = newValue; // update the last known value
+    });
+
+
+    addQuanform.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        let formData = new FormData(e.target);
+        formData.append('PreviousQuan', previousValue);
+        formData.append('NewUsedQuan', newValueQuan);
+        let data = Object.fromEntries(formData);
+        console.log(data);
+        let res = await postData('@Url.Action("UpdatesRequestMaterials", "Hydro")', formData);
+        console.log(res);
+
+        //if (res && res.Success) {
+        //     Swal.fire({
+        //         title: "Success",
+        //         text: res.Message,
+        //         icon: "success",
+        //         showConfirmButton: false,
+        //         timer: 1500
+        //     }).then(() => {
+        //         setTimeout(() => {
+        //             window.location.href = "/Hydroponics/Hydro/Inventorylist";
+        //         }, 3000);
+        //     });
+        // }
+        newValueQuan = 0;
+    });
+
+
+
+    // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+    const LoadPageData = async () => {
+        try {
+
+            const [main, req] = await Promise.all([
+                RequestMain(),
+                RequesDataList()
+            ]);
+        } catch (error) {
+            console.error("Failed to load page data:", error);
+        } finally {
+            // Hide loading spinner whether success or failure
+            //$("#loadingSpinner").hide();
+        }
+    }
+
+    $(document).ready(() => {
+        LoadPageData();
+    });
+</script>

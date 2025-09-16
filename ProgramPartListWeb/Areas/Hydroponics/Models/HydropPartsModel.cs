@@ -5,6 +5,131 @@ using System.Web.UI.WebControls;
 namespace ProgramPartListWeb.Areas.Hydroponics.Models
 {
     // ---------------------------
+    //  REQUEST CHAMBERS
+    // ---------------------------
+    public class RequestChambersModel
+    {
+        private int _OrderID;
+        private string _ChamberName;
+        private string _OrderDate;
+        private string _TargetDate;
+        private string _OrderedBy;
+        private int _ChambersOrdered;
+        private string _RequestStatus;
+        private string _PIC;
+        private string _MaterialStatus;
+        private double _CompletionPercent;
+
+
+        public int OrderID
+        {
+            get => _OrderID;
+            set => _OrderID = value;
+        }
+        public string ChamberName
+        {
+            get => _ChamberName;
+            set => _ChamberName = value;
+        }
+        public string OrderDate
+        {
+            get => _OrderDate;
+            set => _OrderDate = value;
+        }
+        public string TargetDate
+        {
+            get => _TargetDate;
+            set => _TargetDate = value;
+        }
+        public string OrderedBy
+        {
+            get => _OrderedBy;
+            set => _OrderedBy = value;
+        }
+        public int ChambersOrdered
+        {
+            get => _ChambersOrdered;
+            set => _ChambersOrdered = value;
+        }
+        public string RequestStatus
+        {
+            get => _RequestStatus;
+            set => _RequestStatus = value;
+        }
+        public string PIC
+        {
+            get => _PIC;
+            set => _PIC = value;
+        }
+
+        public string MaterialStatus
+        {
+            get => _MaterialStatus;
+            set => _MaterialStatus = value;
+        }
+        public double CompletionPercent
+        {
+            get => _CompletionPercent;
+            set => _CompletionPercent = value;
+        }
+        
+    }
+    public class RequestChambersDetailsModel
+    {
+        private int _OrderDetailID;
+        private string _PartNo;
+        private string _PartName;
+        private string _CategoryName;
+        private double _QtyUsed;
+        private double _RequiredQty;
+        private double _CurrentQty;
+        private string _MaterialStatus;
+
+
+        public int OrderDetailID
+        {
+            get => _OrderDetailID;
+            set => _OrderDetailID = value;
+        }
+        public string PartNo
+        {
+            get => _PartNo;
+            set => _PartNo = value;
+        }
+        public string PartName
+        {
+            get => _PartName;
+            set => _PartName = value;
+        }
+        public string CategoryName
+        {
+            get => _CategoryName;
+            set => _CategoryName = value;
+        }
+        public double QtyUsed
+        {
+            get => _QtyUsed;
+            set => _QtyUsed = value;
+        }
+        public double RequiredQty
+        {
+            get => _RequiredQty;
+            set => _RequiredQty = value;
+        }
+        
+        public double CurrentQty
+        {
+            get => _CurrentQty;
+            set => _CurrentQty = value;
+        }
+        public string MaterialStatus
+        {
+            get => _MaterialStatus;
+            set => _MaterialStatus = value;
+        }
+
+    }
+    // ---------------------------
     //  MAIN CHAMBERS (PRODUCTS)
     // ---------------------------
     public class ChamberModel
@@ -17,6 +142,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         private string _CategoryName;
         private string _Supplier;
         private string _RequireQty;
+        private double _QuantityPerChamber;
         private double _UnitCost_PHP;
         private double _TotalPHPCost;
 
@@ -67,7 +193,11 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
             get => _UnitCost_PHP;
             set => _UnitCost_PHP = value;
         }
-
+        public double QuantityPerChamber
+        {
+            get => _QuantityPerChamber;
+            set => _QuantityPerChamber = value;
+        }
         public double TotalPHPCost
         {
             get => _TotalPHPCost;
@@ -288,22 +418,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
             set => _RequireQty = value;
         }
     }
-    public class ChambersOrdersModel
-    {
-        private int _OrderID;
-        private string _OrderDate;
-        private string _OrderedBy;
-        private int _ChambersOrdered;
-        private string _OrderStatus;
-        private string _OrderDetailID;
-        private string _PartID;
-        private double _PartNo;
-        private double _PartName;
-        private int _RequiredQty;
-        private double _QtyUsed;
-        private double _WarningLevel;
-        private string _Status;
-    }
+  
 
 
 
@@ -318,5 +433,12 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         public decimal UnitCost_PHP { get; set; }
         public double Quantity { get; set; }
     }
-
+    public class RequestItem
+    {
+        public int ChamberID { get; set; }
+        public string PIC { get; set; }
+        public string OrderedBy { get; set; } = "Admin";
+        public int Quantity { get; set; }
+        public string TargetDate { get; set; }
+    }
 }

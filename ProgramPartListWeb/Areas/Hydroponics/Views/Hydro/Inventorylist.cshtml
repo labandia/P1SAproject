@@ -33,7 +33,7 @@
                 <th> <i class="fa-regular fa-rectangle-list"></i>  <span style="margin-left: .5em;">Category</span>  </th>
                 <th> <i class="fa-regular fa-address-card"></i> <span style="margin-left: .5em;">Supplier</span>  </th>
                 <th> <i class="fa-regular fa-square-check"></i> <span style="margin-left: .5em;">Stock Qty</span>  </th>
-                <th style="width: 10%;"> <i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Status</span>  </th>
+                <th style="width: 15%;"> <i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Status</span>  </th>
             </tr>
         </thead>
         <tbody id="InventorylistData">
@@ -432,9 +432,9 @@
 
     const getStatusClass = (status) => {
         switch (status) {
-            case "GOOD": return "StocksGood";
-            case "LOW STOCK": return "Low";
-            case "WARNING": return "Warning";
+            case "In-stock": return "StocksGood";
+            case "Out of stocks": return "Low";
+            case "Restock": return "Warning";
             default: return "Incomplete";
         }
     };

@@ -15,14 +15,14 @@
     </div>
 
     <div class="flex_align">
-        
+
         <button style="width: 100%;" id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-user-secret"></i> New Request</button>
     </div>
 </header>
 
 <div class="Mold_tabcontainer">
     <div class="Mold_tabs">
-        <button class="Mold_tab active" data-target="All">All</button>
+        <button class="Mold_tab active" data-target="All">Active Request</button>
         <button class="Mold_tab" data-target="Completed">Completed</button>
         <button class="Mold_tab" data-target="InProgress">In Progress</button>
         <button class="Mold_tab" data-target="Pending">Pending</button>
@@ -31,25 +31,8 @@
 
     <div class="Mold_contentbox">
         <div class="Mold_content show" id="All">
-             <div class="RequestWrapper" style="width: 100%;">
-                 <div class="RequestContainer" style="width: 100%; display: grid; grid-template-columns: 10% 1fr 1fr 1fr 1fr; ">
-                     <div class="RequestContent">
-                         <span>1sdad</span>
-                     </div>
-                     <div class="RequestContent">
-                         <span>1sdad</span>
-                     </div>
-                     <div class="RequestContent">
-                         <span>1sdad</span>
-                     </div>
-                     <div class="RequestContent">
-                         <span>1sdad</span>
-                     </div>
-                     <div class="RequestContent">
-                         <span>1sdad</span>
-                     </div>
-                 </div>
-             </div>
+            <div class="RequestWrapper" id="RequestWrapper">
+            </div>
         </div>
 
         <div class="Mold_content" id="Completed">
@@ -68,7 +51,73 @@
 </div>
 
 
+
+@*=================================================================================*@
+@*=========================== ADD PARTS CHAMBER ===================================*@
+@*=================================================================================*@
+<div class="modal fade modal-l" id="AddRequestModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>New Request Chamber</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+
+                <form method="post" enctype="multipart/form-data" class="addformcontainer" id="addnewform" autocomplete="off">
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>Select Chamber <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                        <div class="select-container">
+                            <select id="ChamberID" name="ChamberID">
+                                <option value="0">-- select Chambers --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>No. of Chambers <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                        <input type="number" value="1" placeholder="type Ojt registration No." name="Quantity" id="Quantity" required />
+                    </div>
+
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Target Date.  <small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <input type="date" placeholder="type Ojt registration No." name="TargetDate" id="TargetDate" required />
+                    </div>
+
+                   
+
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>Person In Charge :  </label> <br />
+                        <input type="hidden" value="Aldrin, Rommel" placeholder="type Ojt registration No." name="PIC" id="PIC" />
+                        <input type="text" value="Aldrin, Rommel" placeholder="type Ojt registration No." disabled />
+                    </div>
+
+
+                  
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div>
+                            <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                        </div>
+                        <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
 <script type="text/javascript">
+    let requestData = [];
+    const addforms = document.getElementById("addnewform");
 
 
     // Tabs Content
@@ -96,8 +145,119 @@
                 document.getElementById(target).classList.add("show");
             }, 50);
 
-           
-           
+
+
         });
+    });
+
+
+    const RequesDataList = async () => {
+        let TableData = $("#RequestWrapper");
+
+         let res = await FetchAuthenticate('@Url.Action("GetAllRequestList", "Hydro")', { });
+         if (res && res.Success) {
+             TableData.empty();
+             requestData = res.Data;
+             $.each(requestData, function (index, row) {
+                 let percent = parseFloat(row.CompletionPercent) || 0;
+                 let displayPercent = Math.round(percent); // show as 12 instead of 12.0
+
+                 // Decide color
+                 let colorClass = "red";
+                 if (percent >= 80) colorClass = "green";
+                 else if (percent >= 50) colorClass = "orange";
+
+                 const loadData = `<div class="RequestContainer" id='Details_${row.OrderID}'>
+                                         <div class="RequestContent">
+                                             <img class='NoImages' src="@Url.Content("~/Content/Images/no-image.png")" />
+                                         </div>
+                                         <div class="RequestContent">
+                                             <p style='color: #0c382ce8; font-weight: 600;'>${row.ChamberName}</p>
+                                             <span>Quantity : ${row.ChambersOrdered} </span> 
+                                             <span>${row.MaterialStatus}</span>
+                                         </div>
+                                         
+                                         <div class="RequestContent" style="font-size: .8rem;">
+                                             <p style='color: #222; font-weight: 600;'>Target Date : ${row.OrderDate}</p>
+                                             <p style='color: #222; font-weight: 600;'>Target Date : ${row.TargetDate}</p>
+                                         </div>
+                                         <div class="RequestContent">
+                                             <p style='color: #222; font-weight: 600;'>${row.PIC}</p>
+                                             <span>Assign to</span>
+                                         </div>
+                                         <div class="RequestContent" style='display: flex; align-items:center; justify-content: center; flex-direction: column;'>
+                                            <small>Completion rate %</small>
+                                            <div class="circular-progress" data-progress="${percent}">
+                                                <span class="value">${displayPercent}%</span>
+                                            </div>
+                                        </div>
+                                         <div class="RequestContent">
+                                             <span>${row.RequestStatus}</span>
+                                         </div>
+                                     </div>`;
+                 TableData.append(loadData);
+             });
+
+             $(".circular-progress").each(function () {
+                 let progress = parseFloat($(this).data("progress")) || 0;
+                 $(this).css("--progress", progress);
+             });
+         }
+    }
+
+    $(document).on('click', '.RequestContainer', function (e) {
+        e.stopPropagation(); // Prevent triggering the row click event
+        var rowId = $(this).attr('id');
+        var rowIndex = rowId.split('_')[1];
+        window.location.href = "/Hydroponics/Hydro/OrderpageDetails?orderID=" + rowIndex;
+    });
+    
+
+    const GetChamberDatalist = async () => {
+        let res = await FetchAuthenticate('@Url.Action("GetChamberDropDownList", "Hydro")', {});
+          if (res && res.Success) {
+              $.each(res.Data, function (index, row) {
+                  $("#ChamberID").append("<option value='" + row.ChamberID + "'>" + row.ChamberName + "</option>");
+              });
+          }
+     };
+
+
+    $("#Showadd").on('click', function (e) {
+        e.preventDefault();
+        $("#AddRequestModal").modal("show");
+    });
+
+    addforms.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        let formdata = new FormData(e.target);
+        const data = Object.fromEntries(formdata);
+        let res = await postData('@Url.Action("NewAddRequestData", "Hydro")', formdata);
+        if (res && res.Success) {
+            RequesDataList();
+            $("#AddRequestModal").modal("hide");
+        }
+    });
+
+
+
+    // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+    const LoadPageData = async () => {
+        try {
+
+            const [req, list] = await Promise.all([
+                RequesDataList(),
+                GetChamberDatalist()
+            ]);
+        } catch (error) {
+            console.error("Failed to load page data:", error);
+        } finally {
+            // Hide loading spinner whether success or failure
+            //$("#loadingSpinner").hide();
+        }
+    }
+
+    $(document).ready(() => {
+        LoadPageData();
     });
 </script>

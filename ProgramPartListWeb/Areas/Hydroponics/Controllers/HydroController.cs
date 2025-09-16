@@ -138,7 +138,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
 
             return JsonSuccess(data, "Load Inventory List");
         }
-      
+
 
 
 
@@ -148,6 +148,37 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         //-----------------------------------------------------------------------------------------
         //---------------------------- REQUEST CHAMBER PAGE ---------------------------------------
         //-----------------------------------------------------------------------------------------
+        [JwtAuthorize]
+        public async Task<ActionResult> GetAllRequestList()
+        {
+            var data = await _chambers.GetRequestList() ?? new List<RequestChambersModel>();
+            if (data == null || !data.Any()) return JsonNotFound("No Request list Data.");
+
+            return JsonSuccess(data, "Load Request List");
+        }
+
+        [JwtAuthorize]
+        public async Task<ActionResult> GetMainRequestList(int orderID)
+        {
+            var data = await _chambers.GetRequestList() ?? new List<RequestChambersModel>();
+
+            var filterdata = data.SingleOrDefault(res => res.OrderID == orderID);
+            if (filterdata == null) return JsonNotFound("No Request list Data.");
+
+            return JsonSuccess(filterdata, "Load Request List");
+        }
+
+        [JwtAuthorize]
+        public async Task<ActionResult> GetRequestDetails(int orderID)
+        {
+
+            var data = await _chambers.GetRequestDetailList(orderID) ?? new List<RequestChambersDetailsModel>();
+            if (data == null || !data.Any()) return JsonNotFound("No Request Details list Data.");
+
+            return JsonSuccess(data, "Load Request Details List");
+        }
+
+
         [JwtAuthorize]
         public async Task<ActionResult> GetChamberList()
         {
@@ -159,13 +190,51 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         [JwtAuthorize]
         public async Task<ActionResult> GetChamberTypeDataList(int chamberID)
         {
-            Debug.WriteLine("Chamber ID : " + chamberID);
 
             var data = await _hydro.GetChamberTypePartsList(chamberID) ?? new List<ChamberTypePartsModel>();
             if (data == null || !data.Any()) return JsonNotFound("No Chamber list Data.");
 
             return JsonSuccess(data, "Load Chamber type List");
         }
+
+
+        [HttpPost]
+        public async Task<ActionResult> NewAddRequestData(RequestItem item)
+        {
+            try
+            {
+                bool result = await _chambers.AddRequestChamber(item);
+                if (!result) return JsonPostError("Insert failed.", 500);
+
+
+                return JsonCreated(item, "Update Stocks Successfully");
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message, 500);
+            }
+
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> UpdatesRequestMaterials(double NewUsedQuan, int OrderDetailID, double QtyUsed, double PreviousQuan)
+        {
+            try
+            {
+                double TotalUsed = NewUsedQuan + QtyUsed;
+
+                bool result = await _chambers.UpdatesRequestMaterials(OrderDetailID, TotalUsed, PreviousQuan);
+                if (!result) return JsonPostError("Update failed.", 500);
+                return JsonCreated(result, "Update Stocks Successfully");
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message, 500);
+            }
+
+        }
+
+
 
         [HttpPost]
         public async Task<ActionResult> SaveStocks()
@@ -222,6 +291,8 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         public ActionResult AddStocks() => View();
         // GET: Hydroponics/Orderpage
         public ActionResult Orderpage() => View();
+        // GET: Hydroponics/OrderpageDetails
+        public ActionResult OrderpageDetails(int orderID) => View();
         // GET: Hydroponics/Chambers
         public ActionResult Chambers() => View();
 

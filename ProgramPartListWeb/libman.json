@@ -66,10 +66,6 @@
       ]
     },
     {
-      "library": "signalr.js@2.4.3",
-      "destination": "Scripts/signalr.js/"
-    },
-    {
       "library": "fullcalendar@6.1.15",
       "destination": "Scripts/fullcalendar/"
     },
@@ -80,6 +76,13 @@
         "jspdf.umd.min.js",
         "jspdf.umd.js",
         "jspdf.umd.js.map"
+      ]
+    },
+    {
+      "library": "signalr.js@2.4.3",
+      "destination": "Scripts/signalr.js/",
+      "files": [
+        "jquery.signalR.min.js"
       ]
     }
   ]

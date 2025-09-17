@@ -1,8 +1,11 @@
 ﻿
+using Microsoft.AspNet.SignalR;
 using ProgramPartListWeb.Areas.Hydroponics.Interface;
 using ProgramPartListWeb.Areas.Hydroponics.Models;
 using ProgramPartListWeb.Controllers;
 using ProgramPartListWeb.Helper;
+using ProgramPartListWeb.Hubs;
+using ProgramPartListWeb.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -28,6 +31,30 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
             _chambers = chambers;
             _stock = stock;
         }
+
+        // Example action to check stock and send alert
+        public ActionResult CheckStock()
+        {
+            // Simulate getting low-stock items
+            var lowStockItems = new[]
+            {
+                new { Name = "Part A", Quantity = 2 },
+                new { Name = "Part B", Quantity = 0 }
+            };
+
+            var context = GlobalHost.ConnectionManager.GetHubContext<StockHub>();
+
+            foreach (var item in lowStockItems)
+            {
+                if (item.Quantity <= 2) // threshold
+                {
+                    context.Clients.All.receiveStockAlert(item.Name, item.Quantity);
+                }
+            }
+
+            return Content("Stock alerts sent");
+        }
+
         //-----------------------------------------------------------------------------------------
         //---------------------------- COMMON CONTROLLERS  ----------------------------------------
         //-----------------------------------------------------------------------------------------
@@ -62,11 +89,11 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         }
 
         [HttpPost]
-        public async  Task<ActionResult>EditPartslist(MasterlistPartsModel model, HttpPostedFileBase PartImage)
+        public async  Task<ActionResult>EditPartslist(MasterlistPartsModel model, HttpPostedFileBase partsimage)
         {
             string fullnamefile = "";
-            Debug.WriteLine("HERRE" + PartImage);
-            if (PartImage != null && PartImage.ContentLength > 0)
+          
+            if (partsimage != null && partsimage.ContentLength > 0)
             {
                 string exportFolder = @"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\HydroParts\";
 
@@ -75,19 +102,19 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
 
                 // Get the file name and extension and store to fullpath 
                 // Create unique file name
-                string fileName = Path.GetFileNameWithoutExtension(PartImage.FileName);
-                string extension = Path.GetExtension(PartImage.FileName);
+                string fileName = Path.GetFileNameWithoutExtension(partsimage.FileName);
+                string extension = Path.GetExtension(partsimage.FileName);
 
 
                 // Create unique filename (avoid overwriting existing files)
                 fullnamefile = fileName + "_" + Guid.NewGuid().ToString("N").Substring(0, 6) + extension;
-
+                Debug.WriteLine(fullnamefile);
                 string fullPath = Path.Combine(exportFolder, fullnamefile);
 
 
                 Debug.WriteLine(fullPath);
                 // Save the uploaded file to disk
-                PartImage.SaveAs(fullPath);
+                partsimage.SaveAs(fullPath);
 
                 model.ImageParts = fullnamefile;
 
@@ -97,6 +124,8 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
 
             bool result = await  _partsList.EditMasterlistParts(model);
             if (!result) return JsonPostError("Insert failed.", 500);
+
+            CacheHelper.Remove("MaterialPartlist");
 
             return JsonCreated(model, "Edit Masterlist Successfully");
 
@@ -221,9 +250,9 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         {
             try
             {
-                double TotalUsed = NewUsedQuan + QtyUsed;
+                double TotalNewUsed = NewUsedQuan + PreviousQuan;
 
-                bool result = await _chambers.UpdatesRequestMaterials(OrderDetailID, TotalUsed, PreviousQuan);
+                bool result = await _chambers.UpdatesRequestMaterials(OrderDetailID, TotalNewUsed, NewUsedQuan);
                 if (!result) return JsonPostError("Update failed.", 500);
                 return JsonCreated(result, "Update Stocks Successfully");
             }
@@ -282,6 +311,21 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
 
         }
 
+        public ActionResult DisplaytheImage(string filename)
+        {
+            if (string.IsNullOrWhiteSpace(filename))
+                return HttpNotFound();
+
+            string folderPath = @"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\HydroParts\";
+            string fullPath = Path.Combine(folderPath, filename);
+
+            if (!System.IO.File.Exists(fullPath))
+                return File("~/Content/Images/bussiness-man.png", "image/png");
+
+            byte[] fileBytes = System.IO.File.ReadAllBytes(fullPath);
+            return File(fileBytes, "image/png"); // Change to "image/jpeg" if needed
+        }
+
 
         // GET: Hydroponics/Index
         public ActionResult Index() => View();
@@ -294,7 +338,10 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         // GET: Hydroponics/OrderpageDetails
         public ActionResult OrderpageDetails(int orderID) => View();
         // GET: Hydroponics/Chambers
-        public ActionResult Chambers() => View();
+        public ActionResult Chambers()
+        {
+            return View();
+        }
 
         // GET: Hydroponics/PartList
         public ActionResult PartList() => View();

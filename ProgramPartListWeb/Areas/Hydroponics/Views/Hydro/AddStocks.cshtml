@@ -212,6 +212,13 @@
 
     $("#SaveStocks").on('click',  async function (e) {
         e.preventDefault();
+
+        if (additems.length == 0) {
+            alert("Add Some Stocks first");
+            return;
+        }
+
+
         let formData = new FormData();
         formData.append("items", JSON.stringify(additems));
 

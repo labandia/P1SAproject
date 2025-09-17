@@ -24,13 +24,14 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 	                                s.ReorderLevel,
 	                                s.WarningLevel,
 	                                s.Status,
-	                                s.LastUpdated
+	                                s.LastUpdated,
+                                    p.ImageParts
                                 FROM Hydro_InventoryParts p
                                 LEFT JOIN Hydro_CategoryParts c ON c.CategoryID = p.CategoryID
                                 LEFT JOIN Hydro_Stocks s ON s.PartID = p.PartID
                                 ORDER BY p.PartID";
 
-            return SqlDataAccess.GetData<StockPartsModel>(strquery);
+            return SqlDataAccess.GetData<StockPartsModel>(strquery, null);
         }
         public Task<List<ChamberTypePartsModel>> GetChamberTypePartsList(int chamberID)
         {

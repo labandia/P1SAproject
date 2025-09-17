@@ -20,7 +20,7 @@
             <div class="HeadTitle">
                 <span>Production 1 Sub Assembly Web Portal</span>
                 <div class="HeadTitle__action">
-                    
+
                     <a href="#" data-pdf-url="/P1SAportalweb/ViewPDF?strfilepath=InstallDesktop.pdf" class="open-pdf-link">
                         <span>How to set as Desktop</span>
                         <i class="fa-solid fa-paperclip"></i>
@@ -30,7 +30,7 @@
             </div>
         </div>
     </header>
-    
+
     <section style="margin: 2em 0 5em;">
         <div class="CustomContainer">
             <div class="Maincontainer">
@@ -77,9 +77,16 @@
 
 
 <script src="~/Scripts/Utilities.js"></script>
-<script src="~/Scripts/jquery-3.7.1.min.js"></script>
+<script src="@Url.Content("~/Scripts/jquery-3.7.1.min.js")"></script>
+<script src="https://cdn.jsdelivr.net/npm/signalr@2.4.3/jquery.signalR.min.js"></script>
+<script src="@Url.Content("~/signalr/hubs")"></script>
 <script type="text/javascript">
-    const container = document.getElementById('Web_contain');
+
+
+
+
+
+    @*const container = document.getElementById('Web_contain');
 
     const getSelectedCategories = () => {
         return $('input[name="schedule"]:checked')
@@ -177,4 +184,37 @@
             }
         });
     });
+
+    fetch('/Hydroponics/Hydro/CheckStock')
+        .then(res => res.text())
+        .then(msg => console.log(msg))
+        .catch(err => console.error(err));*@
+
+
+
+    $(function () {
+        console.log("SignalR init...");
+
+        var stockHub = $.connection.stockHub; // proxy created by /signalr/hubs
+        console.log("StockHub:", stockHub);
+
+        if (!stockHub) {
+            console.error("❌ StockHub undefined – check Hub class name and script order");
+            return;
+        }
+
+        stockHub.client.receiveStockAlert = function (partName, quantity) {
+            console.log("Stock Alert:", partName, quantity);
+            // append to UI if needed
+            $("#stockAlerts").append("<li>" + partName + " is low: " + quantity + "</li>");
+        };
+
+        $.connection.hub.start().done(function () {
+            console.log("✅ SignalR connected.");
+        });
+    });
+
+
+
+
 </script>

@@ -20,7 +20,7 @@
             </select>
         </div>
         <button style="width: 100%; display: none;" id="ShowStocks" class="primarybtn" type="button"><i class="fa-solid fa-user-secret"></i> Add Stocks</button>
-        <button style="width: 100%;" id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-user-secret"></i> Add Stocks</button>
+        <button style="width: 100%;" id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-box-archive"></i> Add Stocks</button>
     </div>
 </header>
 
@@ -268,13 +268,18 @@
                 const rowData = filteredData[i];
                 const color = rowData.Color;
 
-                const noImagePath = '@Url.Content("~/Content/Images/no-image.png")';
+                  // Image Display
+              let imagePath = rowData.ImageParts
+                              ? `/Hydro/DisplaytheImage?filename=${encodeURIComponent(rowData.ImageParts)}`
+                              : '@Url.Content("~/Content/Images/no-image.png")';
 
 
                 const rowHtml = `
                     <tr class='rowClick' id='editButton_${rowData.PartID}'>
                         <td data-cell="Images" style='display: flex; justify-content: center; align-items: center; border-top: 1px solid #dcdce2; border-bottom: none;'>
-                           <img class='NoImages' src="${noImagePath}" />
+                           <img class="NoImages" src="${imagePath}"
+                                                loading="lazy"
+                                                onerror="this.src='@Url.Content("~/Content/Images/no-image.png")'" />
                         </td>
                        <td style='text-align: left; padding-left: 1em;' data-cell="PartNo">
                             <p style='color: #0c382ce8; font-weight: 600;'>${rowData.PartName ? rowData.PartName : "-"}</p>

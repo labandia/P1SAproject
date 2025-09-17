@@ -25,7 +25,7 @@
         <button class="Mold_tab active" data-target="All">Active Request</button>
         <button class="Mold_tab" data-target="Completed">Completed</button>
         <button class="Mold_tab" data-target="InProgress">In Progress</button>
-        <button class="Mold_tab" data-target="Pending">Pending</button>
+        <button class="Mold_tab" data-target="Pending">Transaction</button>
         <div class="Mold_slider"></div>
     </div>
 
@@ -183,7 +183,7 @@
                                          </div>
                                          <div class="RequestContent">
                                              <p style='color: #222; font-weight: 600;'>${row.PIC}</p>
-                                             <span>Assign to</span>
+                                             <span>Person In charge</span>
                                          </div>
                                          <div class="RequestContent" style='display: flex; align-items:center; justify-content: center; flex-direction: column;'>
                                             <small>Completion rate %</small>
@@ -192,7 +192,10 @@
                                             </div>
                                         </div>
                                          <div class="RequestContent">
-                                             <span>${row.RequestStatus}</span>
+                                             <div class='ProcessStat flex_align'>
+                                                 <span>${row.RequestStatus}</span>
+                                                 <div class='bilog'></div>
+                                             </div>
                                          </div>
                                      </div>`;
                  TableData.append(loadData);

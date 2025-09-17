@@ -301,13 +301,20 @@
 
                 // Compute by USD dollar
                 let computeUSD = parseFloat(rowData.UnitCost_PHP) / 58;
-                // Round off to 2 decimals
                 var roundedNum = parseFloat(computeUSD.toFixed(2));
-                const noImagePath = '@Url.Content("~/Content/Images/no-image.png")';
+
+
+                // Image Display
+                let imagePath = rowData.ImageParts
+                                ? `/Hydro/DisplaytheImage?filename=${encodeURIComponent(rowData.ImageParts)}`
+                                : '@Url.Content("~/Content/Images/no-image.png")';
+
                 const rowHtml = `
-                    <tr  >
+                    <tr>
                         <td data-cell="Images" style='display: flex; justify-content: center; align-items: center; border-top: 1px solid #dcdce2; border-bottom: none;'>
-                              <img class='NoImages' src="${noImagePath}" />
+                              <img class="NoImages" src="${imagePath}" 
+                                    loading="lazy"
+                                    onerror="this.src='@Url.Content("~/Content/Images/no-image.png")'" />
                         </td>
                         <td style='text-align: left; padding-left: 1em;' data-cell="PartNo">
                             <p style='color: #0c382ce8; font-weight: 600;'>${rowData.PartName ? rowData.PartName : "-"}</p>
@@ -319,8 +326,8 @@
                         <td data-cell="UnitUSD">${rowData.UnitCost_PHP}</td>
                         <td data-cell="Delete" >
                          <div class='flex_center'>
-                             <button  class='Editbtnbutton text-danger bg-white' id='editButton_${rowData.PartID}' ">
-                                <i class="fa-solid fa-xmark"></i>
+                             <button  class='Editbtnbutton text-primary bg-white' id='editButton_${rowData.PartID}' ">
+                                <i class="fa-solid fa-pen-to-square"></i>
                              </button>
                          </div>
                     </tr>
@@ -480,21 +487,22 @@
         let formData = new FormData(e.target);
         const data = Object.fromEntries(formData);
         let res = await postData('@Url.Action("EditPartslist", "Hydro")', formData);
-        console.log(data);
-        console.log(res);
-         //if (res && res.Success) {
-         //     Swal.fire({
-         //         title: "Success",
-         //         text: res.Message,
-         //         icon: "success",
-         //         showConfirmButton: false,
-         //         timer: 1500
-         //     }).then(() => {
-         //         setTimeout(() => {
-         //             window.location.href = "/Hydroponics/Hydro/Inventorylist";
-         //         }, 3000);
-         //     });
-         // }
+         if (res && res.Success) {
+              Swal.fire({
+                  title: "Success",
+                  text: res.Message,
+                  icon: "success",
+                  showConfirmButton: false,
+                  timer: 1500
+              }).then(() => {
+                  PartlistTable();
+                  e.target.reset();
+                  document.getElementById("partsimage").value = "";
+
+                  // Hide modal
+                  $("#EditMasterModal").modal("hide");
+              });
+          }
     });
 
     document.addEventListener('DOMContentLoaded', function () {

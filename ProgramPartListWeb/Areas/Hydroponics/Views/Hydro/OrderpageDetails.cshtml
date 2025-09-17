@@ -22,12 +22,21 @@
     </div>
 
     <div class="requestGroup">
-        <strong>RequestStatus:</strong><spam id="RequestStatus"> </spam>
+        <strong>RequestStatus:</strong>
+        <div class="select-container">
+            <select id="RequestStatus" name="RequestStatus">
+                <option value="ONGOING">ONGOING</option>
+                <option value="Completed">Completed</option>
+                <option value="Dispatched">Dispatched</option>
+            </select>
+        </div>
     </div>
 
 
     <div class="requestGroup">
-        <strong>Satus :</strong><spam id="MaterialStatus"> </spam>
+        <strong>Satus :</strong>
+        
+        <spam id="MaterialStatus"> </spam>
     </div>
 </section>
 
@@ -97,12 +106,11 @@
     const RequestMain = async () => {
 
        let res = await FetchAuthenticate('@Url.Action("GetMainRequestList", "Hydro")', { orderID: ID });
-       if (res && res.Success) {
-           console.log(res);
+        if (res && res.Success) {
            $("#ChamberName").text(res.Data.ChamberName);
            $("#ChambersOrdered").text(res.Data.ChambersOrdered);
            $("#TargetDate").text(res.Data.TargetDate);
-           $("#RequestStatus").text(res.Data.RequestStatus);
+           $("#RequestStatus").val(res.Data.RequestStatus);
            $("#MaterialStatus").text(res.Data.MaterialStatus);
        }
     }
@@ -147,10 +155,13 @@
             $("#CurrentQty").text(filterdata.CurrentQty);
             previousValue = filterdata.QtyUsed;
             $("#QtyUsed").attr("min", filterdata.QtyUsed);
-            $("#QtyUsed").attr("max", filterdata.CurrentQty);
+            $("#QtyUsed").attr("max", filterdata.RequiredQty);
+
+            if (filterdata.MaterialStatus !== "Completed") {
+                $("#ChangeQuanModal").modal("show");
+            }
         }
 
-        $("#ChangeQuanModal").modal("show");
     });
 
     // Limits the input required
@@ -182,22 +193,22 @@
         let data = Object.fromEntries(formData);
         console.log(data);
         let res = await postData('@Url.Action("UpdatesRequestMaterials", "Hydro")', formData);
-        console.log(res);
 
-        //if (res && res.Success) {
-        //     Swal.fire({
-        //         title: "Success",
-        //         text: res.Message,
-        //         icon: "success",
-        //         showConfirmButton: false,
-        //         timer: 1500
-        //     }).then(() => {
-        //         setTimeout(() => {
-        //             window.location.href = "/Hydroponics/Hydro/Inventorylist";
-        //         }, 3000);
-        //     });
-        // }
-        newValueQuan = 0;
+        if (res && res.Success) {
+             Swal.fire({
+                 title: "Success",
+                 text: res.Message,
+                 icon: "success",
+                 showConfirmButton: false,
+                 timer: 1500
+             }).then(() => {
+                 previousValue = 0;
+                 newValueQuan = 0;
+                 RequestMain();
+                 RequesDataList();
+                 $("#ChangeQuanModal").modal("hide");
+             });
+         }
     });
 
 

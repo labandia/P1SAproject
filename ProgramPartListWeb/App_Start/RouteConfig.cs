@@ -9,6 +9,7 @@ namespace ProgramPartListWeb
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+
             routes.MapRoute(
                name: "Press_Partslocator",
                url: "Press_Partslocator/{controller}/{action}/{id}",
@@ -21,6 +22,7 @@ namespace ProgramPartListWeb
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "P1SAportalweb", action = "Index", id = UrlParameter.Optional }
             );
+
         }
     }
 }

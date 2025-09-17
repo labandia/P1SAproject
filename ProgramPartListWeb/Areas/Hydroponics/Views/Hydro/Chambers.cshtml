@@ -18,7 +18,6 @@
     <div class="flex_align">
         <div class="select-container">
             <select id="chamberselect">
-               
             </select>
         </div>
         <button style="display: none;" id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-user-secret"></i> Add parts</button>
@@ -134,13 +133,12 @@
 
 
 
-
-
 <script type="text/javascript">
     let chamberlist = [];
     let loadData = [];
     let partsID;
     let userRole;
+
 
     // Modals
     const addmodal = document.getElementById("Showadd");
@@ -218,14 +216,20 @@
 
                 // Compute by USD dollar
                 let computeUSD = parseFloat(rowData.UnitCost_PHP) / 58;
-                // Round off to 2 decimals
                 var roundedNum = parseFloat(computeUSD.toFixed(2));
+
+                // Image Display
+                let imagePath = rowData.ImageParts
+                      ? `/Hydro/DisplaytheImage?filename=${encodeURIComponent(rowData.ImageParts)}`
+                      : '@Url.Content("~/Content/Images/no-image.png")';
 
 
                 const rowHtml = `
                         <tr class='rowClick' id='editButton_${rowData.PartID}'>
                            <td data-cell="Images" style='display: flex; justify-content: center; align-items: center; border-top: 1px solid #dcdce2; border-bottom: none;'>
-                                <img class='NoImages' src="~/Content/Images/no-image.png" />
+                                   <img class="NoImages" src="${imagePath}"
+                                             loading="lazy"
+                                             onerror="this.src='@Url.Content("~/Content/Images/no-image.png")'" />
                             </td>
                             <td style='text-align: left; padding-left: 1em;' data-cell="PartNo">
                                 <p style='color: #0c382ce8; font-weight: 600;'>${rowData.PartName ? rowData.PartName : "-"}</p>
@@ -371,7 +375,7 @@
         $("#AddChamberModal").modal('show');
     });
 
-  
+
 
 
     function loadingDisplay() {

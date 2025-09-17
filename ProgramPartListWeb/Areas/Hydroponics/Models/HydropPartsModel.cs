@@ -145,6 +145,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         private double _QuantityPerChamber;
         private double _UnitCost_PHP;
         private double _TotalPHPCost;
+        private string _ImageParts;
 
 
         public int PartID
@@ -202,6 +203,11 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         {
             get => _TotalPHPCost;
             set => _TotalPHPCost = value;
+        }
+        public string ImageParts
+        {
+            get => _ImageParts;
+            set => _ImageParts = value;
         }
     }
     public class ChamberTypeList
@@ -294,6 +300,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         private double _ReorderLevel;
         private double _WarningLevel;
         private string _Status;
+        private string _ImageParts;
 
         public int PartID
         {
@@ -367,7 +374,11 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
             set => _Status = value;
         }
 
-       
+        public string ImageParts
+        {
+            get => _ImageParts;
+            set => _ImageParts = value;
+        }
     }
 
 
@@ -440,5 +451,14 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         public string OrderedBy { get; set; } = "Admin";
         public int Quantity { get; set; }
         public string TargetDate { get; set; }
+    }
+
+
+    public class StockAlertItem
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int Quantity { get; set; }
+        public int ReorderLevel { get; set; }
     }
 }

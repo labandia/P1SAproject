@@ -64,6 +64,9 @@
     <Reference Include="EPPlus.System.Drawing, Version=7.5.0.0, Culture=neutral, PublicKeyToken=2308d35469c9bac0, processorArchitecture=MSIL">
       <HintPath>..\packages\EPPlus.System.Drawing.7.5.0\lib\net462\EPPlus.System.Drawing.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Client, Version=2.4.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Client.2.4.3\lib\net45\Microsoft.AspNet.SignalR.Client.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.4.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.4.3\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
     </Reference>
@@ -296,11 +299,11 @@
     <Reference Include="Microsoft.Net.Http.Headers, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Net.Http.Headers.2.2.0\lib\netstandard2.0\Microsoft.Net.Http.Headers.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.4.2.2\lib\net45\Microsoft.Owin.dll</HintPath>
+    <Reference Include="Microsoft.Owin, Version=4.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.4.2.3\lib\net45\Microsoft.Owin.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.2.1.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=4.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.4.2.3\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Security, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Security.4.2.2\lib\net45\Microsoft.Owin.Security.dll</HintPath>
@@ -646,13 +649,15 @@
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\ExtendController.cs" />
     <Compile Include="Controllers\P1SAportalwebController.cs" />
+    <Compile Include="Controllers\StockController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Hubs\StockHub.cs" />
     <Compile Include="Interfaces\IAuthRepository.cs" />
     <Compile Include="Interfaces\ICRUD_Repository.cs" />
+    <Compile Include="Interfaces\IStockClient.cs" />
     <Compile Include="Models\SignatureModel.cs" />
     <Compile Include="Repository\AuthRepository.cs" />
     <Compile Include="Repository\CRUD_Repository.cs" />
-    <Compile Include="Services\EmployeeHub.cs" />
     <Compile Include="Interfaces\IEmployee.cs" />
     <Compile Include="Areas\Circuit\Interface\ISeriesRepository.cs" />
     <Compile Include="Interfaces\IUserRepository.cs" />
@@ -914,6 +919,7 @@
     <Content Include="Scripts\Shared\Utilities.min.js">
       <DependentUpon>Utilities.js</DependentUpon>
     </Content>
+    <Content Include="Scripts\signalr.min.js" />
     <Content Include="Scripts\signature_pad.umd.min.js" />
     <Content Include="Scripts\sweetalert2.min.js" />
     <Content Include="Scripts\Utilities.js" />
@@ -949,6 +955,7 @@
     <Folder Include="Areas\Admin\Views\Dashboard\" />
     <Folder Include="Areas\Admin\Views\Shared\" />
     <Folder Include="Areas\Press\Data\" />
+    <Folder Include="Views\Stock\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

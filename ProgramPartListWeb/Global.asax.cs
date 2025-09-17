@@ -29,6 +29,7 @@ namespace ProgramPartListWeb
     {
         protected void Application_Start()
         {
+
             string homeMachineName = "DESKTOP-FC0UP1P";
             string currentMachine = Environment.MachineName.ToUpperInvariant();
 
@@ -40,6 +41,8 @@ namespace ProgramPartListWeb
             LogManager.Configuration.Variables["logDirectory"] = selectedPath;
             LogManager.ReconfigExistingLoggers(); // Apply change
 
+
+
             // DEPENDENCY INJECTION CONFIGURATION
             AreaRegistration.RegisterAllAreas();
             RegisterDependencyInjection(); 
@@ -48,6 +51,7 @@ namespace ProgramPartListWeb
             GlobalConfiguration.Configuration.Formatters.JsonFormatter.SupportedMediaTypes
                 .Add(new MediaTypeHeaderValue("application/problem+json"));
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
 

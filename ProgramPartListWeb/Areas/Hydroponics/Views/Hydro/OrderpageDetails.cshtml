@@ -4,57 +4,76 @@
     var ID = Request.QueryString["orderID"];
     Layout = "~/Areas/Hydroponics/Views/Shared/HydroPartsLayout.cshtml";
 }
-<a href="/Hydroponics/Hydro/Orderpage"><i class="fa-solid fa-arrow-left"></i></a>
 
-<section>
-    <h5>Request ID: @ID</h5>
-    <input type="hidden" id="chambID" value="@ID" />
-    <div class="requestGroup">
-        <strong>Chamber Name:</strong><spam id="ChamberName"> </spam>
-    </div>
-
-    <div class="requestGroup">
-        <strong>Number of Chambers:</strong><spam id="ChambersOrdered"> </spam>
-    </div>
-
-    <div class="requestGroup">
-        <strong>TargetDate:</strong><spam id="TargetDate"> </spam>
-    </div>
-
-    <div class="requestGroup">
-        <strong>RequestStatus:</strong>
-        <div class="select-container">
-            <select id="RequestStatus" name="RequestStatus">
-                <option value="ONGOING">ONGOING</option>
-                <option value="Completed">Completed</option>
-                <option value="Dispatched">Dispatched</option>
-            </select>
+<div class="row">
+    <div class="col-3">
+        <div class="flex_align">
+            <a href="/Hydroponics/Hydro/Orderpage"><i class="fa-solid fa-arrow-left"></i></a>
+            <h5 style="margin: 0;">Request ID: @ID</h5>
         </div>
+
+
+        <section>
+            <input type="hidden" id="chambID" value="@ID" />
+            <div class="requestGroup">
+                <strong>Chamber Name:</strong><spam id="ChamberName"> </spam>
+            </div>
+
+            <div class="requestGroup">
+                <strong>Number of Chambers:</strong><spam id="ChambersOrdered"> </spam>
+            </div>
+
+            <div class="requestGroup">
+                <strong>TargetDate:</strong><spam id="TargetDate"> </spam>
+            </div>
+
+            <div class="requestGroup">
+                <strong>RequestStatus:</strong>
+                <div class="select-container">
+                    <select id="RequestStatus" name="RequestStatus">
+                        <option value="ONGOING">ONGOING</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Dispatched">Dispatched</option>
+                    </select>
+                </div>
+            </div>
+
+        </section>
     </div>
 
+    <div class="col-9">
+        <div class="flex_space" style="margin-bottom: .5em;">
+            <strong>Chamber Parts : </strong>
 
-    <div class="requestGroup">
-        <strong>Satus :</strong>
-        
-        <spam id="MaterialStatus"> </spam>
+            <div class="requestGroup">
+                <strong>Status :</strong>
+
+                <spam id="MaterialStatus"> </spam>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 30%; text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-screwdriver-wrench"></i>  <span style="margin-left: .5em;">Part No. / Partname</span> </th>
+                    <th style="width: 20%;"> <i class="fa-regular fa-rectangle-list"></i> <span style="margin-left: .5em;">Category</span>  </th>
+                    <th style="width: 10%;"> <span style="margin-left: .5em;">Quantity Used</span>  </th>
+                    <th style="width: 10%;">  <span style="margin-left: .5em;">Required Qty</span>  </th>
+                    <th style="width: 10%;">  <span style="margin-left: .5em;">Status</span>  </th>
+                </tr>
+            </thead>
+            <tbody id="RequestWrapper">
+            </tbody>
+        </table>
     </div>
-</section>
+</div>
 
 
-<strong>Materials Parts : </strong>
-<table>
-    <thead>
-        <tr>
-            <th style="width: 20%; text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-screwdriver-wrench"></i>  <span style="margin-left: .5em;">Part No. / Partname</span> </th>
-            <th> <i class="fa-regular fa-rectangle-list"></i> <span style="margin-left: .5em;">Category</span>  </th>
-            <th style="width: 10%;"> <span style="margin-left: .5em;">Quantity Used</span>  </th>
-            <th style="width: 10%;">  <span style="margin-left: .5em;">Required Qty</span>  </th>
-            <th style="width: 10%;">  <span style="margin-left: .5em;">Status</span>  </th>
-        </tr>
-    </thead>
-    <tbody id="RequestWrapper">
-    </tbody>
-</table>
+
+
+
+
+
 
 <!--########################## INPUT DATA #############################-->
 <div class="modal fade modal-m" id="ChangeQuanModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
@@ -70,16 +89,17 @@
                 </div>
 
                 <form id="InputQuantity" class="addformcontainer">
-                    <label for="">Material Parts : <span id="PartName">Black Coated Pipe</span> </label>
+                    <label for="">Material Parts : <span id="PartName">Black Coated Pipe</span> </label> <br />
+                    <label for="">Available Stocks : <span id="CurrentQty"></span> </label>
+
                     <div class="form_group col-12 col-sm-12">
                         <label for="">Used Quantity <small style="color: #a81818; font-weight: 600;">*</small> </label>
                         <input type="hidden" name="OrderDetailID" id="OrderDetailID">
                         <input type="number" name="QtyUsed" id="QtyUsed" onkeypress="return restrictChars(event)" autocomplete="off">
                     </div>
-                    <label for="">Available Stocks : <span id="CurrentQty"></span> </label>
                     <div class="flex_space" id="editsdisplay">
                         <small>Input quantity is required.</small>
-                        <button type="submit" class="primary_button_color">
+                        <button type="submit" class="primarybtn">
                             <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
                         </button>
                     </div>

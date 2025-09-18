@@ -4,7 +4,6 @@ using ProgramPartListWeb.Areas.Hydroponics.Interface;
 using ProgramPartListWeb.Areas.Hydroponics.Models;
 using ProgramPartListWeb.Controllers;
 using ProgramPartListWeb.Helper;
-using ProgramPartListWeb.Hubs;
 using ProgramPartListWeb.Utilities;
 using System;
 using System.Collections.Generic;
@@ -32,28 +31,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
             _stock = stock;
         }
 
-        // Example action to check stock and send alert
-        public ActionResult CheckStock()
-        {
-            // Simulate getting low-stock items
-            var lowStockItems = new[]
-            {
-                new { Name = "Part A", Quantity = 2 },
-                new { Name = "Part B", Quantity = 0 }
-            };
-
-            var context = GlobalHost.ConnectionManager.GetHubContext<StockHub>();
-
-            foreach (var item in lowStockItems)
-            {
-                if (item.Quantity <= 2) // threshold
-                {
-                    context.Clients.All.receiveStockAlert(item.Name, item.Quantity);
-                }
-            }
-
-            return Content("Stock alerts sent");
-        }
+       
 
         //-----------------------------------------------------------------------------------------
         //---------------------------- COMMON CONTROLLERS  ----------------------------------------

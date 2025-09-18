@@ -95,8 +95,8 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 	                            i.Supplier,
                                 c.QuantityPerChamber,
 	                            CONCAT(c.QuantityPerChamber, ' ', i.Unit) as RequireQty,
-	                            i.UnitCost_PHP,
-	                            c.QuantityPerChamber * i.UnitCost_PHP as TotalPHPCost,
+	                            c.UnitCost_PHP,
+	                            c.QuantityPerChamber * c.UnitCost_PHP as TotalPHPCost,
                                 i.ImageParts
                             FROM Hydro_ChamberParts c
                             INNER JOIN Hydro_InventoryParts i ON c.PartID = i.PartID

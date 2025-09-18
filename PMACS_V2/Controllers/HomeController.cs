@@ -8,5 +8,11 @@ namespace PMACS_V2.Controllers
         {
             return RedirectToAction("Mainpage", "PMACS", new { area = "P1SA" });
         }
+
+
+        public ActionResult Chat()
+        {
+            return View();
+        }
     }
 }

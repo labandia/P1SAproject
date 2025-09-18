@@ -2,16 +2,16 @@
 using Owin;
 
 
-[assembly: OwinStartup(typeof(ProgramPartListWeb.App_Start.Startup))]
+[assembly: OwinStartup(typeof(ProgramPartListWeb.Startup))]
 
-namespace ProgramPartListWeb.App_Start
+namespace ProgramPartListWeb
 {
     public class Startup
     {
         public void Configuration(IAppBuilder app)
         {
             System.Diagnostics.Debug.WriteLine("🚀 OWIN Startup running");
-            app.MapSignalR();
+            app.MapSignalR();   // 🚀 registers /signalr/hubs and negotiate
         }
     }
 }

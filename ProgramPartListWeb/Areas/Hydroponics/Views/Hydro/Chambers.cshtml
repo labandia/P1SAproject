@@ -24,6 +24,11 @@
     </div>
 </header>
 
+<div>
+    <span id="TotalPH"></span>
+    <span id="TotalUSD"></span>
+</div>
+
 <div class="InspecTable">
     <table>
         <thead>
@@ -139,6 +144,8 @@
     let partsID;
     let userRole;
 
+    let totalUSD = 0.0;
+
 
     // Modals
     const addmodal = document.getElementById("Showadd");
@@ -154,11 +161,20 @@
 
         Loadingsteps(async () => {
             let res = await FetchAuthenticate('@Url.Action("GetAllChamberList", "Hydro")', { chamber: ID });
+            console.log(res);
             if (res && res.Success) {
                 chamberlist = res.Data;
                 TableDisplay.empty(); // Removing the Loading Display
 
+
+                let totalP = chamberlist.reduce((sum, item) => sum + item.TotalPHPCost, 0);
+
+                $("#TotalPH").text("Total PHP Cost: ₱" + totalP.toFixed(2) + "  |");
+
                 ChamberPagination(chamberlist, 'ChamberlistData', 'MastertableContainer', 50, 5);
+
+       
+
             } else {
                 const loadData = `<tr>
                   <td colspan='9'>
@@ -218,6 +234,8 @@
                 let computeUSD = parseFloat(rowData.UnitCost_PHP) / 58;
                 var roundedNum = parseFloat(computeUSD.toFixed(2));
 
+                totalUSD = totalUSD + roundedNum;
+
                 // Image Display
                 let imagePath = rowData.ImageParts
                       ? `/Hydro/DisplaytheImage?filename=${encodeURIComponent(rowData.ImageParts)}`
@@ -246,6 +264,8 @@
                 tableBody.innerHTML += rowHtml;
             }
 
+
+            $("#TotalUSD").text("Total USD Cost: $" + totalUSD.toFixed(2) + "  |");
             $('.dropdown-menu').removeClass('show').hide();
             $("#pagecountID").text(currentPage);
         };

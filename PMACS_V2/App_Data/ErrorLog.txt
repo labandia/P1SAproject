@@ -3377,3 +3377,564 @@ StackTrace:    at System.Web.Mvc.ActionDescriptor.ExtractParameterFromDictionary
    at System.Web.Mvc.Async.AsyncControllerActionInvoker.BeginInvokeActionMethodWithFilters(ControllerContext controllerContext, IList`1 filters, ActionDescriptor actionDescriptor, IDictionary`2 parameters, AsyncCallback callback, Object state)
    at System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass3_1.<BeginInvokeAction>b__0(AsyncCallback asyncCallback, Object asyncState)
 
+==== Exception ====
+Time: 18/09/2025 11:35:34 am
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 11:36:43 am
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:36:57 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:38:01 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:39:49 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:41:28 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:42:37 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:42:50 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:43:31 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:43:58 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:44:46 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:44:51 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:44:52 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:44:52 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:44:52 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:44:53 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:44:54 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:44:54 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:44:55 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:44:55 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:44:56 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:44:56 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:44:56 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:44:57 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:44:58 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:47:24 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:47:35 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:47:37 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:47:38 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:47:40 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:47:59 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:47:59 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:48:00 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:48:00 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:48:00 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:48:01 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:48:09 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:48:13 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:48:21 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:48:23 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:48:35 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:48:45 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:59:34 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:59:42 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:59:47 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:59:49 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 12:59:50 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 1:00:39 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 1:00:48 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 1:00:52 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+
+==== Exception ====
+Time: 18/09/2025 1:02:51 pm
+Message: The base stream is not writeable.
+Parameter name: stream
+StackTrace:    at System.IO.Compression.DeflateStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at System.IO.Compression.GZipStream..ctor(Stream stream, CompressionMode mode, Boolean leaveOpen)
+   at PMACS_V2.Utilities.CompressResponseAttribute.OnActionExecuting(ActionExecutingContext filterContext) in D:\AllSystems\P1saproject\PMACS_V2\Utilities\Compression\CompressResponseAttribute.cs:line 21
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionMethodFilter(IActionFilter filter, ActionExecutingContext preContext, Func`1 continuation)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeAction(ControllerContext controllerContext, String actionName)
+

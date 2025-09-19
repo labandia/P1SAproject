@@ -32,7 +32,19 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
             _stock = stock;
         }
 
-       
+        [HttpGet]
+        public async Task<JsonResult> GetStockAlerts()
+        {
+            var data = await _stock.GetStocksAlertList() ?? new List<StockAlertModel>();
+
+            return Json(new
+            {
+                Success = true,
+                Alerts = data,
+                LastCheck = DateTime.Now
+            }, JsonRequestBehavior.AllowGet);
+        }
+
 
         //-----------------------------------------------------------------------------------------
         //---------------------------- COMMON CONTROLLERS  ----------------------------------------

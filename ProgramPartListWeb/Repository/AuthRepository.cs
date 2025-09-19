@@ -13,7 +13,7 @@ namespace ProgramPartListWeb.Repository
 
         public Task<List<AuthModel>> GetByUsername(string username, int proj)
         {
-            string strquery = @"SELECT ua.User_ID, ua.Username, ua.Password, ua.Role_ID, u.Fullname
+            string strquery = $@"SELECT ua.User_ID, ua.Username, ua.Password, ua.Role_ID, u.Fullname
                                 FROM UserAccounts ua
                                 INNER JOIN Users u ON u.User_ID = ua.User_ID
                                 INNER JOIN ProjectList p ON p.Project_ID = ua.Project_ID

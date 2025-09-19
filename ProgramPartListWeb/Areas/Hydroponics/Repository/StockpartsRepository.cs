@@ -3,6 +3,7 @@ using ProgramPartListWeb.Areas.Hydroponics.Models;
 using ProgramPartListWeb.Helper;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,7 +11,29 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 {
     public class StockpartsRepository : IStocksparts
     {
-        
+        public Task<List<StockAlertModel>> GetStocksAlertList()
+        {
+            string strquery = $@"
+                            SELECT 
+                                i.PartID,
+                                i.PartNo,
+                                i.PartName,
+                                s.CurrentQty,
+                                s.ReorderLevel,
+                                s.WarningLevel,
+                                s.Status,
+                                s.LastUpdated
+                            FROM Hydro_Stocks s
+                            INNER JOIN Hydro_InventoryParts i ON s.PartID = i.PartID
+                            WHERE s.Status IN ('Out of stocks', 'Restock')
+                            ORDER BY s.LastUpdated DESC";
+
+           
+
+            return SqlDataAccess.GetData<StockAlertModel>(strquery);
+        }
+
+
         public Task<List<StockPartsModel>> GetStocksTracking()
         {
             string strquery = $@"SELECT
@@ -60,5 +83,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
 
         }
+
+        
     }
 }

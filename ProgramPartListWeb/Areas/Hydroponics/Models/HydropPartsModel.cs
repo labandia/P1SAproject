@@ -361,7 +361,17 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         }
     }
 
+    public class StockAlertModel
+    {
+        public int PartID { get; set; }
+        public string PartNo { get; set; }
+        public string PartName { get; set; }
+        public int CurrentQty { get; set; }
+        public string Status { get; set; }
 
+
+         public string PartUrl { get; set; }
+    }
 
 
 
@@ -436,9 +446,10 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
 
     public class StockAlertItem
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public int Quantity { get; set; }
-        public int ReorderLevel { get; set; }
+        public int PartID { get; set; }
+        public string PartNo { get; set; }
+        public string PartName { get; set; }
+        public int CurrentQty { get; set; }
+        public string Status { get; set; }  
     }
 }

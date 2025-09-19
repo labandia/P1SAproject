@@ -23,9 +23,49 @@
         <div class="header__container flex_space">
             <a href="#" class="header__logo">San Hydro Application</a>
             <div class="d-flex align-items-center gap-3">
-                <i class="fa-regular fa-bell"></i>
+                <div id="notificationBell" style="cursor:pointer; position: relative;">
+                    <i class="fa-regular fa-bell"></i>
+                    <span id="notificationBadge" style="
+                        position: absolute;
+                        top: -5px;
+                        right: -5px;
+                        background: red;
+                        color: white;
+                        font-size: 10px;
+                        width: 16px;
+                        height: 16px;
+                        display: none;
+                        border-radius: 50%;
+                        text-align: center;
+                        line-height: 16px;
+                    ">0</span>
+                </div>
+
+                
+
+            
                 <span id="UserFullname"></span>
                 <img src="~/Content/Images/bussiness-man.png" alt="" class="header__img" />
+
+
+                <!-- Notification Dropdown -->
+                <div id="notificationDropdown" style="
+                                                    display: none;
+                                                    position: absolute;
+                                                    top: 30px;
+                                                    right: 0;
+                                                    width: 300px;
+                                                    max-height: 400px;
+                                                    overflow-y: auto;
+                                                    background: white;
+                                                    box-shadow: 0px 2px 10px rgba(0,0,0,0.2);
+                                                    border-radius: 5px;
+                                                    z-index: 1000;
+                                                ">
+                    <ul id="stockAlerts" style="list-style:none; padding:0; margin:0;">
+                        <li style="padding:10px; text-align:center; color:gray;">No alerts</li>
+                    </ul>
+                </div>
             </div>
 
 
@@ -125,7 +165,7 @@
 
 
     <script type="text/javascript">
-      
+
 
 
         const GetNotification = async () => {
@@ -205,6 +245,66 @@
         });
 
 
+        $(document).ready(function () {
+            // Toggle dropdown
+            $("#notificationBell").click(function (e) {
+                $("#notificationDropdown").toggle();
+                // Clear badge when user opens
+                $("#notificationBadge").text('0').hide();
+            });
+
+
+            // Hide dropdown if clicking outside
+            $(document).click(function (e) {
+                if (!$(e.target).closest("#notificationBell, #notificationDropdown").length) {
+                    $("#notificationDropdown").hide();
+                }
+            });
+
+            let lastCheck = null;
+
+             // Polling function
+           async function pollStockAlerts() {
+                try {
+                    const response = await $.ajax({
+                        url: '@Url.Action("GetStockAlerts", "Hydro")',
+                        type: 'GET',
+                        dataType: 'json'
+                    });
+                    console.log(response);
+                    if (response.Success) {
+                        const container = $("#stockAlerts");
+                        container.empty();
+
+                        if (!response.Alerts || response.Alerts.length === 0) {
+                            container.append('<li style="padding:10px; text-align:center; color:gray;">No alerts</li>');
+                            $("#notificationBadge").hide();
+                        } else {
+                            response.Alerts.forEach(alert => {
+                                container.append(
+                                    `<li style="padding:10px; border-bottom:1px solid #eee; cursor:pointer;"
+                                         onclick="window.location='/Hydroponics/Hydro/Inventorylist'">
+                                        <strong>${alert.PartName}</strong> is low! (${alert.CurrentQty} left)
+                                    </li>`
+                                );
+                            });
+
+                            // Update badge count
+                            $("#notificationBadge").text(response.Alerts.length).show();
+                        }
+                    }
+                } catch (error) {
+                    console.warn("Error fetching stock alerts:", error);
+                }
+            }
+
+            // Start polling every 15 seconds
+            pollStockAlerts(); // initial load
+            setInterval(pollStockAlerts, 15000); // 15s interval
+        });
+
+
+
 
 
 
@@ -213,10 +313,10 @@
         //GetNotification();
 
         window.IsLoginUser({
-            storageKey: "isLoggedInPatrol",
-            redirectUrl: '/PC/Patrol/index',
+            storageKey: "isLoggedInHydro",
+            redirectUrl: '/Hydroponics/Hydro/Inventorylist',
             expectedValue: 'true',
-            expirationKey: 'PatrolTime',
+            expirationKey: 'HydroTime',
             maxHours: 24
         });
     </script>

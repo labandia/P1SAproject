@@ -675,7 +675,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="MyHub1.cs" />
+    <Compile Include="signalr\hubs\MyHub1.cs" />
     <Compile Include="Utilities\Common\ResultMessageResponce.cs" />
     <Compile Include="Utilities\Security\AesEncryption.cs" />
     <Compile Include="Utilities\Caching\CacheHelper.cs" />
@@ -895,9 +895,6 @@
     <Content Include="Scripts\jquery.signalR-2.4.3.min.js" />
     <Content Include="Scripts\live_w_locator.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Scripts\modernizr-2.8.3.min.js">
-      <DependentUpon>modernizr-2.8.3.js</DependentUpon>
-    </Content>
     <Content Include="Scripts\quagga.js" />
     <Content Include="Scripts\Quangga.min.js" />
     <Content Include="Scripts\Quanv2.js" />
@@ -952,6 +949,7 @@
     <Content Include="Scripts\Shared\jquery-3.7.1.slim.min.map" />
     <Content Include="Views\P1SAportalweb\SampleView.cshtml" />
     <Content Include="Views\P1SAportalweb\Chat.cshtml" />
+    <Content Include="Views\Stock\Chat.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -959,8 +957,6 @@
     <Folder Include="Areas\Admin\Views\Dashboard\" />
     <Folder Include="Areas\Admin\Views\Shared\" />
     <Folder Include="Areas\Press\Data\" />
-    <Folder Include="signalr\hubs\" />
-    <Folder Include="Views\Stock\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

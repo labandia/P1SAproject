@@ -9,6 +9,10 @@ namespace ProgramPartListWeb.Controllers
 {
     public class StockController : Controller
     {
-       
+        public ActionResult Chat()
+        {
+            return View();
+        }
+
     }
 }

@@ -658,7 +658,6 @@
     <Compile Include="Interfaces\ICRUD_Repository.cs" />
     <Compile Include="Interfaces\IStockClient.cs" />
     <Compile Include="Models\SignatureModel.cs" />
-    <Compile Include="MyHub1.cs" />
     <Compile Include="Repository\AuthRepository.cs" />
     <Compile Include="Repository\CRUD_Repository.cs" />
     <Compile Include="Interfaces\IEmployee.cs" />
@@ -676,6 +675,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="MyHub1.cs" />
     <Compile Include="Utilities\Common\ResultMessageResponce.cs" />
     <Compile Include="Utilities\Security\AesEncryption.cs" />
     <Compile Include="Utilities\Caching\CacheHelper.cs" />
@@ -959,6 +959,7 @@
     <Folder Include="Areas\Admin\Views\Dashboard\" />
     <Folder Include="Areas\Admin\Views\Shared\" />
     <Folder Include="Areas\Press\Data\" />
+    <Folder Include="signalr\hubs\" />
     <Folder Include="Views\Stock\" />
   </ItemGroup>
   <ItemGroup>

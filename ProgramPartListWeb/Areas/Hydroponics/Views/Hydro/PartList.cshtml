@@ -28,12 +28,10 @@
     <table>
         <thead>
             <tr>
-                <th style="width: 10%;"> <i class="fa-regular fa-image"></i> <span style="margin-left: .5em;">Image</span>  </th>
+                <th style="width: 15%;"> <i class="fa-regular fa-image"></i> <span style="margin-left: .5em;">Image</span>  </th>
                 <th style="width: 20%; text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-screwdriver-wrench"></i>  <span style="margin-left: .5em;">Part No. / Partname</span> </th>
                 <th> <i class="fa-regular fa-rectangle-list"></i> <span style="margin-left: .5em;">Category</span>  </th>
                 <th> <i class="fa-regular fa-address-card"></i> <span style="margin-left: .5em;">Supplier</span>  </th>
-                <th style="width: 10%;"> <span style="margin-left: .5em;">Unit Cost($)</span>  </th>
-                <th style="width: 10%;">  <span style="margin-left: .5em;">Unit Cost(₱)</span>  </th>
                 <th style="width: 10%;">  <span style="margin-left: .5em;">Action</span>  </th>
             </tr>
         </thead>
@@ -186,10 +184,7 @@
                                <input type="text" name="Supplier" id="Supplier" autocomplete="off">
                            </div>
 
-                           <div class="form_group col-12 col-sm-12">
-                               <label for="">Unit Cost(PHP)  </label>
-                               <input type="text" name="UnitCost_PHP" id="UnitCost_PHP" onkeypress="return restrictChars(event)" autocomplete="off">
-                           </div>
+                           
 
                            <div class="flex_end mt-4">
                                
@@ -209,7 +204,9 @@
     </div>
 </div>
 
-
+<div id="imageOverlay">
+    <img id="overlayImage" src="" />
+</div>
 
 
 <script type="text/javascript">
@@ -281,6 +278,15 @@
         let currentPage = 1;
         let filteredData = [...dataArray];
 
+        // === Overlay setup (once) ===
+        if (!document.getElementById("imageOverlay")) {
+            $("body").append(`
+            <div id="imageOverlay">
+                <img id="overlayImage" src="" />
+            </div>
+        `);
+        }
+
         const updatePaginationInfo = () => {
             const totalRecords = filteredData.length;
             const totalPages = Math.ceil(totalRecords / recordsPerPage);
@@ -299,11 +305,7 @@
             for (let i = startIndex; i < endIndex; i++) {
                 const rowData = filteredData[i];
 
-                // Compute by USD dollar
-                let computeUSD = parseFloat(rowData.UnitCost_PHP) / 58;
-                var roundedNum = parseFloat(computeUSD.toFixed(2));
-
-
+          
                 // Image Display
                 let imagePath = rowData.ImageParts
                                 ? `/Hydro/DisplaytheImage?filename=${encodeURIComponent(rowData.ImageParts)}`
@@ -322,8 +324,6 @@
                         </td>
                         <td data-cell="CategoryName">${rowData.CategoryName ? rowData.CategoryName : "-"}</td>
                         <td data-cell="Supplier">${rowData.Supplier ? rowData.Supplier : "-"}</td>
-                        <td data-cell="UnitUSD">${roundedNum}</td>
-                        <td data-cell="UnitUSD">${rowData.UnitCost_PHP}</td>
                         <td data-cell="Delete" >
                          <div class='flex_center'>
                              <button  class='Editbtnbutton text-primary bg-white' id='editButton_${rowData.PartID}' ">
@@ -380,6 +380,60 @@
             }
         };
 
+
+        // === CLICK HANDLER: Show overlay image ===
+        $(document).on('click', '.NoImages', function (e) {
+            e.stopPropagation();
+
+            let imgSrc = $(this).attr("src");
+            let $overlay = $("#imageOverlay");
+            let $overlayImg = $("#overlayImage");
+
+            // Get position of clicked image
+            let rect = this.getBoundingClientRect();
+
+            // Set overlay image src and start position
+            $overlayImg.attr("src", imgSrc).css({
+                top: rect.top + "px",
+                left: rect.left + "px",
+                width: rect.width + "px",
+                height: rect.height + "px"
+            });
+
+            // Show overlay
+            $overlay.show();
+
+            // Animate to center of screen
+            setTimeout(() => {
+                $overlayImg.css({
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: "80%",
+                    height: "auto"
+                });
+            }, 10);
+        });
+
+        // === Hide overlay on click ===
+        $(document).on("click", "#imageOverlay", function () {
+            let $overlayImg = $("#overlayImage");
+
+            // Animate back before hiding
+            $overlayImg.css({
+                transform: "scale(0)",
+                width: "0%",
+                height: "0",
+                top: "50%",
+                left: "50%"
+            });
+
+            setTimeout(() => {
+                $("#imageOverlay").hide();
+            }, 400); // match transition duration
+        });
+
+
         $(document).on('click', '.Editbtnbutton', function (e) {
             e.stopPropagation(); // Prevent triggering the row click event
             var rowId = $(this).attr('id');
@@ -390,7 +444,6 @@
             $("#PartName").val(filterdata.PartName);
             $("#PartNo").val(filterdata.PartNo);
             $("#Supplier").val(filterdata.Supplier);
-            $("#UnitCost_PHP").val(filterdata.UnitCost_PHP);
             $("#CategoryID").val(filterdata.CategoryID);
 
             $("#EditMasterModal").modal("show");

@@ -91,7 +91,7 @@ namespace ProgramPartListWeb.Controllers
         }
 
 
-      
+        public ActionResult Index() => View();
 
         // GET: GuideInstall
         public ActionResult GuideInstall() => View();

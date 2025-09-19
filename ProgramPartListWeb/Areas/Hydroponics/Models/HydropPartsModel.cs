@@ -215,6 +215,11 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         public int ChamberID;
         public string ChamberName;
     }
+    public class ChamberTotalPrice
+    {
+        public int  USDTotal;
+        public int PHPTotal;
+    }
     // ---------------------------
     //  PART LISTS (EQUIPMENTS)
     // ---------------------------
@@ -226,8 +231,6 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         private int _CategoryID;
         private string _CategoryName;
         private string _Supplier;
-        private double _UnitCost_PHP;
-        private double _TotalPHPCost;
         private string _ImageParts;
 
 
@@ -261,17 +264,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
             get => _Supplier;
             set => _Supplier = value;
         }
-        public double UnitCost_PHP
-        {
-            get => _UnitCost_PHP;
-            set => _UnitCost_PHP = value;
-        }
-
-        public double TotalPHPCost
-        {
-            get => _TotalPHPCost;
-            set => _TotalPHPCost = value;
-        }
+       
         public string ImageParts
         {
             get => _ImageParts;
@@ -294,8 +287,6 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         private string _CategoryName;
         private string _Supplier;
         private string _Unit;
-        private double _UnitCost_USD;
-        private double _UnitCost_PHP;
         private int _CurrentQty;
         private double _ReorderLevel;
         private double _WarningLevel;
@@ -340,17 +331,6 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
             set => _Unit = value;
         }
 
-        public double UnitCost_USD
-        {
-            get => _UnitCost_USD;
-            set => _UnitCost_USD = value;
-        }
-
-        public double UnitCost_PHP
-        {
-            get => _UnitCost_PHP;
-            set => _UnitCost_PHP = value;
-        }
         public int CurrentQty
         {
             get => _CurrentQty;

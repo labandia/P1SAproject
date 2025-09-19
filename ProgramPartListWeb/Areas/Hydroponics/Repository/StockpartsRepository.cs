@@ -21,8 +21,6 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 	                                c.CategoryName,
 	                                p.Supplier,
 	                                p.Unit,
-	                                p.UnitCost_USD,
-                                    p.UnitCost_PHP,
 	                                s.CurrentQty,
 	                                s.ReorderLevel,
 	                                s.WarningLevel,

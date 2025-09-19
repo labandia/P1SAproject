@@ -123,27 +123,9 @@
         @RenderBody()
     </main>
 
-    <script src="~/Scripts/jquery.signalR-2.4.3.min.js"></script>
-    <script src="@Url.Content("/signalr/hubs")"></script>
 
     <script type="text/javascript">
-        $(function () {
-            console.log("SignalR connected! 1");
-            var stockHub = $.connection.stockHub;
-            console.log(stockHub);
-            if (!stockHub) {
-                console.error("stockHub is undefined. Check that /signalr/hubs is loaded correctly.");
-                return;
-            }
-            stockHub.client.receiveStockAlert = function (partName, quantity) {
-                alert("Stock Alert: " + partName + " is low (" + quantity + " left)");
-                $("#stockAlerts").append("<li>" + partName + " is low: " + quantity + "</li>");
-            };
-
-            $.connection.hub.start().done(function () {
-                console.log("SignalR connected! 3");
-            });
-        });
+      
 
 
         const GetNotification = async () => {

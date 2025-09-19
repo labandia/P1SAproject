@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -115,6 +116,14 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         //----------------------------  CHAMBER LIST PAGE -----------------------------------------
         //-----------------------------------------------------------------------------------------
         [JwtAuthorize]
+        public async Task<ActionResult> GetTotalPriceChamber(int chamber)
+        {
+            var data = await _chambers.GetTotalPriceData(chamber);
+            if (data == null) return JsonNotFound("No Chamber list Data.");
+
+            return JsonSuccess(data, "Load Total Price");
+        }
+        [JwtAuthorize]
         public async Task<ActionResult> GetAllChamberList(int chamber)
         {
             var data = await _chambers.GetChambersData(chamber) ?? new List<ChamberModel>();
@@ -164,6 +173,8 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
             return JsonSuccess(data, "Load Request List");
         }
 
+    
+
         [JwtAuthorize]
         public async Task<ActionResult> GetMainRequestList(int orderID)
         {
@@ -202,6 +213,24 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
             if (data == null || !data.Any()) return JsonNotFound("No Chamber list Data.");
 
             return JsonSuccess(data, "Load Chamber type List");
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> ChangeStatusRequest(int OrderID, string RequestStatus)
+        {
+            try
+            {
+                bool result = await _chambers.UpdateRequestStatus(OrderID, RequestStatus);
+                if (!result) return JsonPostError("Update failed.", 500);
+
+
+                return JsonCreated(result, "Update Status Successfully");
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message, 500);
+            }
         }
 
 
@@ -314,7 +343,17 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         // GET: Hydroponics/Orderpage
         public ActionResult Orderpage() => View();
         // GET: Hydroponics/OrderpageDetails
-        public ActionResult OrderpageDetails(int orderID) => View();
+        public ActionResult OrderpageDetails(int?  orderID)
+        {
+            if(!orderID.HasValue || orderID == 0)
+            {
+                return RedirectToAction("Orderpage", "Hydro", new { area = "Hydroponics" });
+            }
+
+            int ID = Convert.ToInt32(orderID);
+
+            return View();
+        }
         // GET: Hydroponics/Chambers
         public ActionResult Chambers()
         {

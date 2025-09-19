@@ -82,7 +82,20 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                             WHERE o.OrderID = @OrderID";
             return SqlDataAccess.GetData<RequestChambersDetailsModel>(strsql, new { OrderID = order });
         }
+        public async Task<ChamberTotalPrice> GetTotalPriceData(int chamber)
+        {
+            string strsql = $@"SELECT 
+                                ROUND(SUM((c.UnitCost_PHP / 58) * c.QuantityPerChamber), 0) AS USDTotal,
+                                ROUND(SUM(c.QuantityPerChamber * c.UnitCost_PHP), 0) AS PHPTotal
+                            FROM Hydro_ChamberParts c
+                            INNER JOIN Hydro_InventoryParts i ON c.PartID = i.PartID
+                            INNER JOIN Hydro_CategoryParts cp ON cp.CategoryID = i.CategoryID
+                            INNER JOIN Hydro_ChamberMasterlist cm ON cm.ChamberID = c.ChamberID
+                            WHERE c.ChamberID = @ChamberID;";
+            var result = await SqlDataAccess.GetData<ChamberTotalPrice>(strsql, new { ChamberID = chamber });
 
+            return result.FirstOrDefault();
+        }
         public Task<List<ChamberModel>> GetChambersData(int chamber)
         {
             string strsql = $@"SELECT
@@ -106,6 +119,16 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             return SqlDataAccess.GetData<ChamberModel>(strsql, new { ChamberID = chamber });
         }
         public Task<List<ChamberTypeList>> GetChamberTypes() => SqlDataAccess.GetData<ChamberTypeList>("SELECT ChamberID, ChamberName FROM Hydro_ChamberMasterlist");
+
+
+        public Task<bool> UpdateRequestStatus(int OrderID, string RequestStatus)
+        {
+            string strsql = $@"UPDATE Hydro_Orders SET Status =@Status 
+                               WHERE OrderID =@OrderID";
+            return SqlDataAccess.UpdateInsertQuery(strsql, new { OrderID = OrderID, Status = RequestStatus });  
+        }
+
+
         public Task<bool> AdditionalChambers()
         {
             throw new NotImplementedException();
@@ -178,5 +201,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
             return result;
         }
+
+       
     }
 }

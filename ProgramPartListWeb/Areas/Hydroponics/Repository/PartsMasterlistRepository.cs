@@ -17,11 +17,10 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                 c.CategoryID,
 	                            c.CategoryName,
 	                            i.Supplier,
-	                            i.UnitCost_PHP,
 	                            i.ImageParts
                             FROM Hydro_InventoryParts i
                             INNER JOIN Hydro_CategoryParts c ON c.CategoryID = i.CategoryID";
-            return SqlDataAccess.GetData<MasterlistPartsModel>(strsql, null, "MaterialPartlist");
+            return SqlDataAccess.GetData<MasterlistPartsModel>(strsql, null);
         }
 
         public Task<bool> AddMasterlistParts(MasterlistPartsModel p)
@@ -38,7 +37,6 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                 PartName = p.PartName,
                 CategoryID = p.CategoryID,
                 Supplier = p.Supplier,
-                UnitCost_PHP = p.UnitCost_PHP,
                 ImageParts = p.ImageParts
             };
 
@@ -49,8 +47,8 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
         {
             // 1. Check and Insert A new Partnumber
             string partinsertquery = $@"UPDATE Hydro_InventoryParts 
-                                        SET PartNo =@PartNo, PartName =@PartName, CategoryID =@CategoryID, Supplier =@Supplier, 
-                                            UnitCost_PHP =@UnitCost_PHP, ImageParts =@ImageParts
+                                        SET PartNo =@PartNo, PartName =@PartName, CategoryID =@CategoryID, Supplier =@Supplier,
+                                            ImageParts =@ImageParts
                                         WHERE PartID =@PartID";
             var insertparams = new
             {
@@ -58,11 +56,11 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                 PartName = p.PartName,
                 CategoryID = p.CategoryID,
                 Supplier = p.Supplier,
-                UnitCost_PHP = p.UnitCost_PHP,
                 ImageParts = p.ImageParts,
                 PartID = p.PartID
             };
 
+            
             return SqlDataAccess.UpdateInsertQuery(partinsertquery, insertparams);
         }
 

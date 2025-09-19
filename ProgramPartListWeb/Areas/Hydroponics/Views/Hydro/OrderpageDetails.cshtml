@@ -32,8 +32,7 @@
                 <div class="select-container">
                     <select id="RequestStatus" name="RequestStatus">
                         <option value="ONGOING">ONGOING</option>
-                        <option value="Completed">Completed</option>
-                        <option value="Dispatched">Dispatched</option>
+                        <option value="COMPLETED">COMPLETED</option>
                     </select>
                 </div>
             </div>
@@ -206,12 +205,11 @@
 
 
     addQuanform.addEventListener('submit', async function (e) {
-        e.preventDefault();
+        e.preventDefault;
         let formData = new FormData(e.target);
         formData.append('PreviousQuan', previousValue);
         formData.append('NewUsedQuan', newValueQuan);
         let data = Object.fromEntries(formData);
-        console.log(data);
         let res = await postData('@Url.Action("UpdatesRequestMaterials", "Hydro")', formData);
 
         if (res && res.Success) {
@@ -231,6 +229,28 @@
          }
     });
 
+
+    $("#RequestStatus").on('change', async function (e) {
+        e.preventDefault();
+        let formData = new FormData();
+        formData.append('OrderID', ID);
+        formData.append('RequestStatus', e.target.value);
+
+        let data = Object.fromEntries(formData);
+        let res = await postData('@Url.Action("ChangeStatusRequest", "Hydro")', formData);
+        console.log(res);
+        if (res && res.Success) {
+             Swal.fire({
+                 title: "Success",
+                 text: res.Message,
+                 icon: "success",
+                 showConfirmButton: false,
+                 timer: 1500
+             }).then(() => {
+                 RequestMain();
+             });
+        }
+    });
 
 
     // ############## DISPLAY ALL THE DATA TO THE PAGE ########################

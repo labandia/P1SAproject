@@ -156,25 +156,24 @@
     let TableDisplay = $("#ChamberlistData");
     const resultBox = document.querySelector(".namesdisplay");
 
+    const GetTotalChamberPrice = async (ID) => {
+      let res = await FetchAuthenticate('@Url.Action("GetTotalPriceChamber", "Hydro")', { chamber: ID });
+      if (res && res.Success) {
+          $("#TotalPH").text("Total PHP Cost: ₱" + res.Data.PHPTotal.toLocaleString('en-US') + "  |");
+          $("#TotalUSD").text("Total USD Cost: $" + res.Data.USDTotal.toLocaleString('en-US') + "  |");
+      }
+    };
+
     const ChamberTable = async (ID) => {
         loadingDisplay();
 
         Loadingsteps(async () => {
             let res = await FetchAuthenticate('@Url.Action("GetAllChamberList", "Hydro")', { chamber: ID });
-            console.log(res);
             if (res && res.Success) {
                 chamberlist = res.Data;
                 TableDisplay.empty(); // Removing the Loading Display
 
-
-                let totalP = chamberlist.reduce((sum, item) => sum + item.TotalPHPCost, 0);
-
-                $("#TotalPH").text("Total PHP Cost: ₱" + totalP.toFixed(2) + "  |");
-
                 ChamberPagination(chamberlist, 'ChamberlistData', 'MastertableContainer', 50, 5);
-
-       
-
             } else {
                 const loadData = `<tr>
                   <td colspan='9'>
@@ -234,7 +233,7 @@
                 let computeUSD = parseFloat(rowData.UnitCost_PHP) / 58;
                 var roundedNum = parseFloat(computeUSD.toFixed(2));
 
-                totalUSD = totalUSD + roundedNum;
+                let totalUSDCost = roundedNum * rowData.QuantityPerChamber;
 
                 // Image Display
                 let imagePath = rowData.ImageParts
@@ -257,7 +256,7 @@
                             <td data-cell="Supplier">${rowData.RequireQty ? rowData.RequireQty : "-"}</td>
                             <td data-cell="UnitUSD">${roundedNum}</td>
                             <td data-cell="UnitUSD">${rowData.UnitCost_PHP}</td>
-                            <td data-cell="UnitUSD">${roundedNum}</td>
+                            <td data-cell="UnitUSD">${totalUSDCost.toFixed(2) }</td>
                             <td data-cell="UnitUSD">${rowData.TotalPHPCost}</td>
                         </tr>
                     `;
@@ -265,7 +264,6 @@
             }
 
 
-            $("#TotalUSD").text("Total USD Cost: $" + totalUSD.toFixed(2) + "  |");
             $('.dropdown-menu').removeClass('show').hide();
             $("#pagecountID").text(currentPage);
         };
@@ -359,6 +357,7 @@
     $("#chamberselect").on('change', function (e) {
         e.preventDefault();
         let ID = parseInt(e.target.value);
+        GetTotalChamberPrice(ID);
         ChamberTable(ID);
     });
 
@@ -439,7 +438,8 @@
             if (ActionRestrict() === false) {
             }
 
-            const [invent, drop] = await Promise.all([
+            const [total, invent, drop] = await Promise.all([
+                GetTotalChamberPrice(1),
                 GetChamberDatalist(),
                 ChamberTable(1)
             ]);

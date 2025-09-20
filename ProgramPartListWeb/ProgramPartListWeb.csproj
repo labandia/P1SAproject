@@ -704,6 +704,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\css\HydroDesign.css" />
+    <Content Include="Content\css\HydroDesign.min.css">
+      <DependentUpon>HydroDesign.css</DependentUpon>
+    </Content>
     <Content Include="Content\css\Patrolforms.css" />
     <Content Include="Content\Images\no-image.png" />
     <Content Include="Content\OpenExcelApp.exe" />
@@ -760,6 +764,8 @@
     <Content Include="Areas\Hydroponics\Views\Hydro\PartList.cshtml" />
     <Content Include="Areas\Hydroponics\Views\Hydro\AddStocks.cshtml" />
     <Content Include="Areas\Hydroponics\Views\Hydro\OrderpageDetails.cshtml" />
+    <Content Include="Content\fonts\Inter.ttf" />
+    <Content Include="Areas\Hydroponics\Views\Hydro\SampleLayout.cshtml" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.1.js" />
     <Content Include="Scripts\jquery-3.7.1.min.js" />
@@ -770,6 +776,9 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\modernizr-2.8.3.min.js">
+      <DependentUpon>modernizr-2.8.3.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\Popper.min.js" />
     <Content Include="Content\font-awesome\js\fontawesome.js" />
     <Content Include="Scripts\fontawesome.min.js" />

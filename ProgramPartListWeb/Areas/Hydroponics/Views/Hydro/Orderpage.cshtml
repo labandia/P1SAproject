@@ -4,9 +4,8 @@
     Layout = "~/Areas/Hydroponics/Views/Shared/HydroPartsLayout.cshtml";
 }
 
-<header class="InspectHead flex_space">
+<section class="InspectHead flex_space">
     <div class="flex_align">
-        <h5 style="font-weight: 600;">Request Chambers</h5>
         <div class="Inputcontainer" style="display: none;">
             <i class="fa-solid fa-magnifying-glass"></i>
             <input type="text" placeholder="Search here ... " id="searchbox" autocomplete="off" />
@@ -18,7 +17,7 @@
 
         <button style="width: 100%;" id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-user-secret"></i> New Request</button>
     </div>
-</header>
+</section>
 
 <div class="Mold_tabcontainer">
     <div class="Mold_tabs">
@@ -117,6 +116,18 @@
 
 <script type="text/javascript">
     let requestData = [];
+    // Get today's date
+    let today = new Date();
+
+    // Format to YYYY-MM-DD
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0
+    let yyyy = today.getFullYear();
+
+    let todayStr = yyyy + '-' + mm + '-' + dd;
+
+    document.getElementById("TargetDate").setAttribute("min", todayStr);
+
     const addforms = document.getElementById("addnewform");
 
 

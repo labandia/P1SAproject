@@ -5,7 +5,7 @@
 }
 
 
-<header class="InspectHead flex_space">
+<section class="InspectHead flex_space">
     <div class="flex_align">
         <div class="Inputcontainer">
             <i class="fa-solid fa-magnifying-glass"></i>
@@ -22,7 +22,7 @@
         </div>
         <button style="display: none;" id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-user-secret"></i> Add parts</button>
     </div>
-</header>
+</section>
 
 <div class="InspecTable">
     <table>
@@ -319,7 +319,7 @@
                                     onerror="this.src='@Url.Content("~/Content/Images/no-image.png")'" />
                         </td>
                         <td style='text-align: left; padding-left: 1em;' data-cell="PartNo">
-                            <p style='color: #0c382ce8; font-weight: 600;'>${rowData.PartName ? rowData.PartName : "-"}</p>
+                            <p style='color: #185d8b; font-weight: 600;'>${rowData.PartName ? rowData.PartName : "-"}</p>
                             <small> ${rowData.PartNo}</small>
                         </td>
                         <td data-cell="CategoryName">${rowData.CategoryName ? rowData.CategoryName : "-"}</td>

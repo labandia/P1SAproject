@@ -374,5 +374,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
 
         // GET: Hydroponics/PartList
         public ActionResult PartList() => View();
+        // GET: Hydroponics/PartList
+        public ActionResult SampleLayout() => View();
     }
 }

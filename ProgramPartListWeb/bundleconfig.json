@@ -56,5 +56,11 @@
     "inputFiles": [
       "Content/Shared/Site.css"
     ]
+  },
+  {
+    "outputFileName": "Content/css/HydroDesign.min.css",
+    "inputFiles": [
+      "Content/css/HydroDesign.css"
+    ]
   }
 ]

@@ -4,7 +4,7 @@
     Layout = "~/Areas/Hydroponics/Views/Shared/HydroPartsLayout.cshtml";
 }
 
-<header class="InspectHead flex_space">
+<section class="InspectHead flex_space">
     <div class="flex_align">
         <div class="Inputcontainer">
             <i class="fa-solid fa-magnifying-glass"></i>
@@ -22,7 +22,7 @@
         <button style="width: 100%; display: none;" id="ShowStocks" class="primarybtn" type="button"><i class="fa-solid fa-user-secret"></i> Add Stocks</button>
         <button style="width: 100%;" id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-box-archive"></i> Add Stocks</button>
     </div>
-</header>
+</section>
 
 <div class="InspecTable">
     <table>
@@ -282,17 +282,17 @@
                                                 onerror="this.src='@Url.Content("~/Content/Images/no-image.png")'" />
                         </td>
                        <td style='text-align: left; padding-left: 1em;' data-cell="PartNo">
-                            <p style='color: #0c382ce8; font-weight: 600;'>${rowData.PartName ? rowData.PartName : "-"}</p>
+                            <p style='color: #185d8b; font-weight: 600;'>${rowData.PartName ? rowData.PartName : "-"}</p>
                             <small> ${rowData.PartNo}</small>
                         </td>
                         <td data-cell="CategoryName">${rowData.CategoryName ? rowData.CategoryName : "-"}</td>
                         <td data-cell="Supplier">${rowData.Supplier ? rowData.Supplier : "-"}</td>
-                        <td data-cell="CurrentQty">${rowData.CurrentQty}  ${rowData.Unit}</td>
+                        <td data-cell="CurrentQty" style="font-weight: 600;">${rowData.CurrentQty}</td>
 
-                        <td data-cell="Approval">
-                          <span class='${getStatusClass(rowData.Status)}'>
+                        <td data-cell="Approval" >
+                          <div class='${getStatusClass(rowData.Status)}'>
                             ${rowData.Status}
-                          </span>
+                          </div>
                         </td>
                     </tr>
                 `;

@@ -5,9 +5,12 @@
 }
 
 
-<header class="InspectHead flex_space">
+<section class="InspectHead flex_space">
     <div class="flex_align">
-        <h5 style="font-weight: 600;">DFT Hydroponic Chamber</h5>
+        <div class="Pricedisplay">
+            <small style=" font-weight: 500;">Total PHP Cost:  </small><span id="TotalPH"></span> - 
+            <small style="font-weight: 500;">Total USD Cost:  </small><span id="TotalUSD"></span>
+        </div>
         <div class="Inputcontainer" style="display: none;">
             <i class="fa-solid fa-magnifying-glass"></i>
             <input type="text" placeholder="Search here ... " id="searchbox" autocomplete="off" />
@@ -22,18 +25,15 @@
         </div>
         <button style="display: none;" id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-user-secret"></i> Add parts</button>
     </div>
-</header>
+</section>
 
-<div>
-    <span id="TotalPH"></span>
-    <span id="TotalUSD"></span>
-</div>
+
 
 <div class="InspecTable">
     <table>
         <thead>
             <tr>
-                <th style="width: 10%;"> <i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Image</span>  </th>
+                <th style="width: 10%;"> <span style="margin-left: .5em;">Image</span>  </th>
                 <th style="width: 20%; text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-user-secret"></i>  <span style="margin-left: .5em;">Part No. / Partname</span> </th>
                 <th><i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Supplier</span>  </th>
                 <th><i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Require Qty</span>  </th>
@@ -159,8 +159,8 @@
     const GetTotalChamberPrice = async (ID) => {
       let res = await FetchAuthenticate('@Url.Action("GetTotalPriceChamber", "Hydro")', { chamber: ID });
       if (res && res.Success) {
-          $("#TotalPH").text("Total PHP Cost: ₱" + res.Data.PHPTotal.toLocaleString('en-US') + "  |");
-          $("#TotalUSD").text("Total USD Cost: $" + res.Data.USDTotal.toLocaleString('en-US') + "  |");
+          $("#TotalPH").text("$ " + res.Data.PHPTotal.toLocaleString('en-US'));
+          $("#TotalUSD").text("P " +res.Data.USDTotal.toLocaleString('en-US'));
       }
     };
 
@@ -249,7 +249,7 @@
                                              onerror="this.src='@Url.Content("~/Content/Images/no-image.png")'" />
                             </td>
                             <td style='text-align: left; padding-left: 1em;' data-cell="PartNo">
-                                <p style='color: #0c382ce8; font-weight: 600;'>${rowData.PartName ? rowData.PartName : "-"}</p>
+                                <p style='color: #195e8b; font-weight: 600;'>${rowData.PartName ? rowData.PartName : "-"}</p>
                                 <small> ${rowData.PartNo}</small>
                             </td>
                             <td data-cell="Supplier">${rowData.Supplier ? rowData.Supplier : "-"}</td>

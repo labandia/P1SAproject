@@ -12,196 +12,91 @@
     <script src="~/Scripts/Popper.min.js"></script>
 
     @Styles.Render("~/Content/shared-css")
-    @Styles.Render("~/Content/patrol-css")
+    @Styles.Render("~/Content/Hydro-css")
 
     @Scripts.Render("~/bundles/shared-js")
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <!--========== HEADER ==========-->
-    <header class="header">
-        <div class="header__container flex_space">
-            <a href="#" class="header__logo">San Hydro Application</a>
-            <div class="d-flex align-items-center gap-3">
-                <div id="notificationBell" style="cursor:pointer; position: relative;">
-                    <i class="fa-regular fa-bell"></i>
-                    <span id="notificationBadge" style="
-                        position: absolute;
-                        top: -5px;
-                        right: -5px;
-                        background: red;
-                        color: white;
-                        font-size: 10px;
-                        width: 16px;
-                        height: 16px;
-                        display: none;
-                        border-radius: 50%;
-                        text-align: center;
-                        line-height: 16px;
-                    ">0</span>
-                </div>
-
-                
-
-            
-                <span id="UserFullname"></span>
-                <img src="~/Content/Images/bussiness-man.png" alt="" class="header__img" />
-
-
-                <!-- Notification Dropdown -->
-                <div id="notificationDropdown" style="
-                                                    display: none;
-                                                    position: absolute;
-                                                    top: 30px;
-                                                    right: 0;
-                                                    width: 300px;
-                                                    max-height: 400px;
-                                                    overflow-y: auto;
-                                                    background: white;
-                                                    box-shadow: 0px 2px 10px rgba(0,0,0,0.2);
-                                                    border-radius: 5px;
-                                                    z-index: 1000;
-                                                ">
-                    <ul id="stockAlerts" style="list-style:none; padding:0; margin:0;">
-                        <li style="padding:10px; text-align:center; color:gray;">No alerts</li>
-                    </ul>
-                </div>
-            </div>
-
-
-            <div class="header__toggle">
-                <i class="fa-solid fa-location-crosshairs" id="header-toggle"></i>
-            </div>
+    <!--========== SIDEBAR ==========-->
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <div class="logo-text">San <span>Hydro</span> </div>
+            <p style="font-weight: 400; font-size: .8rem; margin: 0; margin-top: -.3em; opacity: .6;"><small>application system</small></p>
         </div>
-    </header>
 
-    <!--========== NAV ==========-->
-    <div class="sidebar" id="sidebar">
-        <nav class="sidebar__container">
-            <div>
-                <div class="sidebar__list">
-                    <div class="sidebar__items">
-                        <h3 class="sidebar__subtitle">Main Menu</h3>
-                        <a href="/Hydroponics/Hydro/Orderpage" class="sidebar__link">
-                            <i class="fa-regular fa-file-zipper sidebar__icon"></i>
-                            <span class="sidebar__name">Request</span>
-                        </a>
+        <div class="nav-menu">
+            <a href="/Hydroponics/Hydro/Orderpage" class="nav-item">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span class="nav-text">Request</span>
+            </a>
 
+            <a href="/Hydroponics/Hydro/Chambers" class="nav-item">
+                <i class="fas fa-chart-line"></i>
+                <span class="nav-text">Chambers</span>
+            </a>
+            <a href="/Hydroponics/Hydro/Inventorylist" class="nav-item">
+                <i class="fas fa-users"></i>
+                <span class="nav-text">Stocks</span>
+            </a>
+            <a href="/Hydroponics/Hydro/PartList" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span class="nav-text">Parts List</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-question-circle"></i>
+                <span class="nav-text">History</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-users"></i>
+                <span class="nav-text">Users</span>
+            </a>
+            <a id="logID" href="#" class="nav-item">
+                <i class="fas fa-sign-out-alt"></i>
+                <span class="nav-text">Logout</span>
+            </a>
+        </div>
+    </div>
 
-
-                        <a href="/Hydroponics/Hydro/Chambers" class="sidebar__link">
-                            <i class="fa-regular fa-object-group sidebar__icon"></i>
-                            <span class="sidebar__name">Chambers</span>
-                        </a>
-
-
-
-                        <div class="sidebar__dropdown">
-                            <a href="#" class="sidebar__link">
-                                <i class="fa-regular fa-circle-user sidebar__icon"></i>
-                                <span class="sidebar__name">Manage Parts  <i class="fa-solid fa-caret-down"></i> </span>
-                            </a>
-
-                            <div class="sidebar__dropdown-collapse">
-                                <div class="sidebar__dropdown-content">
-                                    <a href="/Hydroponics/Hydro/PartList" class="sidebar__dropdown-item">Masterlist</a>
-                                    <a href="/Hydroponics/Hydro/Inventorylist" class="sidebar__dropdown-item">Stocks</a>
-                                    <a href="/P1SA/DieMold/DiePressLife" class="sidebar__dropdown-item">Transaction</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <a href="#" class="sidebar__link">
-                            <i class="fa-solid fa-user sidebar__icon"></i>
-                            <span class="sidebar__name">Users</span>
-                        </a>
-
+    <!-- Main Content -->
+    <div class="main-content">
+        <header>
+            <h3 class="page-title" id="titlepage">Request Chambers</h3>
+            <div class="header-controls">
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="user-info">
+                    <div class="notification-bell" id="notificationBell">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge" id="notificationBadge">1</span>
                     </div>
+                    <div class="user-avatar">JD</div>
 
-                    <div class="sidebar__items">
-                        <h3 class="sidebar__subtitle">Others</h3>
-
-                        @*<div class="nav__dropdown">
-                                <a href="#" class="nav__link">
-                                    <i class='bx bx-bell nav__icon'></i>
-                                    <span class="nav__name">Notifications</span>
-                                    <i class='bx bx-chevron-down nav__icon nav__dropdown-icon'></i>
-                                </a>
-
-                                <div class="nav__dropdown-collapse">
-                                    <div class="nav__dropdown-content">
-                                        <a href="#" class="nav__dropdown-item">Blocked</a>
-                                        <a href="#" class="nav__dropdown-item">Silenced</a>
-                                        <a href="#" class="nav__dropdown-item">Publish</a>
-                                        <a href="#" class="nav__dropdown-item">Program</a>
-                                    </div>
-                                </div>
-
-                            </div>*@
-
-
-                        <a href="/PC/Patrol/Settings" class="sidebar__link">
-                            <i class="fa-solid fa-gear sidebar__icon"></i>
-                            <span class="sidebar__name">Settings</span>
-                        </a>
+                    <!-- Notification Dropdown -->
+                    <div id="notificationDropdown">
+                        <ul id="stockAlerts">
+                            <li style="padding:10px; text-align:center; color:gray;">No alerts</li>
+                        </ul>
                     </div>
                 </div>
             </div>
+        </header>
 
-            <a href="#" id="logID" class="sidebar__link sidebar__logout">
-                <i class="fa-solid fa-right-from-bracket sidebar__icon"></i>
-                <span class="sidebar__name">Log Out</span>
-            </a>
-        </nav>
-    </div>
-    <div id="stockAlertsContainer">
-        <ul id="stockAlerts"></ul>
+        <div class="content-wrapper">
+            <main>
+                @RenderBody()
+            </main>
+        </div>
     </div>
 
-    <!--========== CONTENTS ==========-->
-    <main>
-        @RenderBody()
-    </main>
 
 
     <script type="text/javascript">
 
-
-
-        const GetNotification = async () => {
-            let res = await FetchAuthenticate('@Url.Action("GetNotificationList", "Notification")', {});
-            if (res && res.Success) {
-
-            }
-        }
-        const GetFullname = async () => {
-            var x = localStorage.getItem("Fullname") || "Guest user";
-            $("#UserFullname").text(x);
-        };
-
-
-
-        const logbtn = document.getElementById("logID");
-
-        /*==================== SHOW NAVBAR ====================*/
-        const showMenu = (headerToggle, navbarId) => {
-            const toggleBtn = document.getElementById(headerToggle),
-                nav = document.getElementById(navbarId)
-
-            // Validate that variables exist
-            if (headerToggle && navbarId) {
-                toggleBtn.addEventListener('click', () => {
-                    // We add the show-menu class to the div tag with the nav__menu class
-                    nav.classList.toggle('show-menu')
-                    // change icon
-                    toggleBtn.classList.toggle('fa-solid')
-                })
-            }
-        }
-        showMenu('header-toggle', 'sidebar')
-
         /*==================== LINK ACTIVE ====================*/
-        const linkColor = document.querySelectorAll('.sidebar__link')
+        const linkColor = document.querySelectorAll('.nav-item')
 
         function colorLink() {
             linkColor.forEach(l => l.classList.remove('active'))
@@ -210,47 +105,74 @@
 
         linkColor.forEach(l => l.addEventListener('click', colorLink))
 
-
-
         document.addEventListener("DOMContentLoaded", function () {
             var currentUrl = window.location.pathname.toLowerCase();
-            document.querySelectorAll(".sidebar__link").forEach(function (link) {
+            document.querySelectorAll(".nav-item").forEach(function (link) {
                 if (link.getAttribute("href").toLowerCase() === currentUrl) {
                     link.classList.add("active");
+
+                    let actionpage = currentUrl.substring(currentUrl.lastIndexOf("/") + 1);
+                    console.log(actionpage);
+
+                    switch (actionpage) {
+                        case "orderpage":
+                            $("#titlepage").text("Request Chambers");
+                            break;
+                        case "chambers":
+                            $("#titlepage").text("DFT Hydroponic Chamber");
+                            break;
+                        case "inventorylist":
+                            $("#titlepage").text("Stock Management");
+                            break;
+                        case "partlist":
+                            $("#titlepage").text("Parts Masterlist");
+                            break;
+                    }
+
                 }
             });
         });
 
-
-        logbtn.addEventListener('click', function (e) {
-            e.preventDefault();
-            Swal.fire({
-                title: "Sign out ?",
-                text: "Are you sure you want to sign out?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#a3a3a3",
-                confirmButtonText: "Log out"
-            }).then((result) => {
-                /* Read more about isConfirmed, isDenied below */
-                if (result.isConfirmed) {
-                    localStorage.removeItem("Fullname");
-                    localStorage.removeItem("UserRole");
-                    localStorage.removeItem('accessToken');
-                    localStorage.removeItem('refreshToken');
-                    logout();
-                }
+        // Simple filter button functionality
+        document.querySelectorAll('.filter-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                this.classList.add('active');
             });
         });
 
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function () {
+            const sidebar = document.querySelector('.sidebar');
+            if (window.innerWidth <= 768) {
+                sidebar.style.display = sidebar.style.display === 'none' ? 'block' : 'none';
+            }
+        });
+
+        // Adjust sidebar on resize
+        window.addEventListener('resize', function () {
+            if (window.innerWidth > 768) {
+                document.querySelector('.sidebar').style.display = 'block';
+            } else {
+                document.querySelector('.sidebar').style.display = 'none';
+            }
+        });
+
+        // Initialize for mobile
+        if (window.innerWidth <= 768) {
+            document.querySelector('.sidebar').style.display = 'none';
+        }
 
         $(document).ready(function () {
+            let unseenCount = 0;
+
             // Toggle dropdown
-            $("#notificationBell").click(function (e) {
+            $("#notificationBell").click(function () {
                 $("#notificationDropdown").toggle();
-                // Clear badge when user opens
-                $("#notificationBadge").text('0').hide();
+                unseenCount = 0; // ✅ reset unseen count
+                $("#notificationBadge").hide();
             });
 
 
@@ -290,8 +212,16 @@
                             });
 
                             // Update badge count
-                            $("#notificationBadge").text(response.Alerts.length).show();
+                            //$("#notificationBadge").text(response.Alerts.length).show();
+                            unseenCount++; 
                         }
+                    }
+
+                    // Update badge
+                    if (unseenCount > 0) {
+                        $("#notificationBadge").text(unseenCount).show();
+                    } else {
+                        $("#notificationBadge").hide();
                     }
                 } catch (error) {
                     console.warn("Error fetching stock alerts:", error);
@@ -300,17 +230,33 @@
 
             // Start polling every 15 seconds
             pollStockAlerts(); // initial load
-            setInterval(pollStockAlerts, 15000); // 15s interval
+            setInterval(pollStockAlerts, 60000); // 15s interval
         });
 
+        const logbtn = document.getElementById("logID");
 
+        logbtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            Swal.fire({
+                title: "Sign out ?",
+                text: "Are you sure you want to sign out?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#a3a3a3",
+                confirmButtonText: "Log out"
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    localStorage.removeItem("Fullname");
+                    localStorage.removeItem("UserRole");
+                    localStorage.removeItem('accessToken');
+                    localStorage.removeItem('refreshToken');
+                    logout();
+                }
+            });
+        });
 
-
-
-
-
-        GetFullname();
-        //GetNotification();
 
         window.IsLoginUser({
             storageKey: "isLoggedInHydro",

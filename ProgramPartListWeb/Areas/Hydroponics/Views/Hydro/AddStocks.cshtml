@@ -3,8 +3,10 @@
     ViewBag.Title = "AddStocks";
     Layout = "~/Areas/Hydroponics/Views/Shared/HydroPartsLayout.cshtml";
 }
-<a href="/Hydroponics/Hydro/Inventorylist"><i class="fa-solid fa-arrow-left"></i></a>
-<h5>Add new Stocks</h5>
+<div class="flex_align">
+    <a href="/Hydroponics/Hydro/Inventorylist"><i class="fa-solid fa-arrow-left"></i></a>
+    <h5 style="margin: 0; font-weight: 600;">Add Stocks</h5>
+</div>
 
 <div class="flex_align">
     <div>
@@ -46,8 +48,7 @@
     </table>
 </div>
 
-<div class="flex_space mt-3">
-    <span><strong>Total price</strong>122</span>
+<div class="flex_end mt-3">
     <button id="SaveStocks" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
 </div>
 
@@ -84,6 +85,9 @@
 
         let searchpart = $("#searchPartno").val();
         let Quan = $("#Quantity").val();
+
+
+
 
         // 1. Input Validation first
         if (searchpart !== "" && Quan !== "") {

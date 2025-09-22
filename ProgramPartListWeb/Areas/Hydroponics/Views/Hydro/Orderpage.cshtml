@@ -6,6 +6,9 @@
 
 
 
+<button id="Showadd" class="floatBtn" type="button"><i class="fa-solid fa-file-circle-plus"></i></button>
+
+
 <div class="Mold_tabcontainer">
     <div class="Mold_tabs">
         <button class="Mold_tab active" data-target="All">Active Request</button>
@@ -28,7 +31,7 @@
             <h1>Tab 3</h1>
 
         </div>
-       
+
     </div>
 </div>
 
@@ -43,7 +46,6 @@
 
     <div class="flex_align">
 
-        <button style="width: 100%;" id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-user-secret"></i> New Request</button>
     </div>
 </section>
 
@@ -84,7 +86,7 @@
                         <input type="date" placeholder="type Ojt registration No." name="TargetDate" id="TargetDate" required />
                     </div>
 
-                   
+
 
                     <div class="form_group col-12 col-sm-12 ">
                         <label>Person In Charge :  </label> <br />
@@ -93,7 +95,7 @@
                     </div>
 
 
-                  
+
                     <div class="d-flex justify-content-between align-items-center mt-4">
                         <div>
                             <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
@@ -109,7 +111,7 @@
 
 
 
-
+<script src="~/Scripts/circularProgressBar.min.js"></script>
 <script type="text/javascript">
     let requestData = [];
     // Get today's date
@@ -161,59 +163,78 @@
     const RequesDataList = async () => {
         let TableData = $("#RequestWrapper");
 
-         let res = await FetchAuthenticate('@Url.Action("GetAllRequestList", "Hydro")', { });
-         if (res && res.Success) {
-             TableData.empty();
-             requestData = res.Data;
-             $.each(requestData, function (index, row) {
-                 let percent = parseFloat(row.CompletionPercent) || 0;
-                 let displayPercent = Math.round(percent); // show as 12 instead of 12.0
+        let res = await FetchAuthenticate('@Url.Action("GetAllRequestList", "Hydro")', {});
+        if (res && res.Success) {
+            TableData.empty();
+            requestData = res.Data;
 
-                 // Decide color
-                 let colorClass = "red";
-                 if (percent >= 80) colorClass = "green";
-                 else if (percent >= 50) colorClass = "orange";
+            $.each(requestData, function (index, row) {
+                let percent = parseFloat(row.CompletionPercent) || 0;
+                let displayPercent = Math.round(percent); // show as 12 instead of 12.0
 
-                 const loadData = `<div class="RequestContainer" id='Details_${row.OrderID}'>
-                                        
-                                         <div class="RequestContent">
-                                             <p style='color: #0c382ce8; font-weight: 600;'>${row.ChamberName}</p>
-                                             <span>Quantity : ${row.ChambersOrdered} </span> 
-                                             <span>${row.MaterialStatus}</span>
-                                         </div>
-                                         
-                                        
-                                         <div class="RequestContent">
-                                             <p style='color: #222; font-weight: 600;'>${row.PIC}</p>
-                                             <span>Person In charge</span>
-                                         </div>
+                const loadData = `
+                    <div class="RequestContainer" id='Details_${row.OrderID}'>
+                        <div class="RequestContent">
+                            <p style='color: #0c382ce8; font-weight: 600;'>${row.ChamberName}</p>
+                            <span>Quantity : ${row.ChambersOrdered}</span>
+                            <span>${row.MaterialStatus}</span>
+                        </div>
 
-                                          <div class="RequestContent" style="font-size: .8rem;">
-                                             <p style='color: #222; font-weight: 600;'>Start Date : ${row.OrderDate}</p>
-                                             <p style='color: #222; font-weight: 600;'>Target Date : ${row.TargetDate}</p>
-                                         </div>
-                                         <div class="RequestContent" style='display: flex; align-items:center; justify-content: center; flex-direction: column;'>
-                                            <small>Completion rate %</small>
-                                            <div class="circular-progress" data-progress="${percent}">
-                                                <span class="value">${displayPercent}%</span>
-                                            </div>
-                                        </div>
-                                         <div class="RequestContent">
-                                             <div class='ProcessStat flex_align'>
-                                                 <span>${row.RequestStatus}</span>
-                                                 <div class='bilog'></div>
-                                             </div>
-                                         </div>
-                                     </div>`;
-                 TableData.append(loadData);
-             });
+                        <div class="RequestContent">
+                            <p style='color: #222; font-weight: 600;'>${row.PIC}</p>
+                            <span>Person In charge</span>
+                        </div>
 
-             $(".circular-progress").each(function () {
-                 let progress = parseFloat($(this).data("progress")) || 0;
-                 $(this).css("--progress", progress);
-             });
-         }
+                        <div class="RequestContent" style="font-size: .8rem;">
+                            <p style='color: #222; font-weight: 600;'>Start Date : ${row.OrderDate}</p>
+                            <p style='color: #222; font-weight: 600;'>Target Date : ${row.TargetDate}</p>
+                        </div>
+
+                        <div class="RequestContent" style='display: flex; align-items:center; justify-content: center; flex-direction: column;'>
+                            <small>Completion rate %</small>
+                            <div class="circular-progress" data-progress="${percent}">
+                                <span class="value">${displayPercent}%</span>
+                            </div>
+                        </div>
+
+                        <div class="RequestContent">
+                            <div class='ProcessStat flex_align'>
+                                <span>${row.RequestStatus}</span>
+                                <div class='bilog'></div>
+                            </div>
+                        </div>
+                    </div>`;
+                TableData.append(loadData);
+            });
+
+            // Animate circular progress
+            $(".circular-progress").each(function () {
+                let $circle = $(this);
+                let progress = parseFloat($circle.data("progress")) || 0;
+
+                // decide color
+                let color = "#f44336"; // red
+                if (progress >= 80) color = "#4caf50";   // green
+                else if (progress >= 50) color = "#ff9800"; // orange
+
+                // animate from 0 → target
+                let current = 0;
+                let target = progress;
+                let step = () => {
+                    if (current <= target) {
+                        $circle.css({
+                            "--progress": current,   // FIX ✅ use raw percent (0–100)
+                            "--bar-color": color
+                        });
+                        current++;
+                        requestAnimationFrame(step);
+                    }
+                };
+                step();
+            });
+        }
     }
+
 
     $(document).on('click', '.RequestContainer', function (e) {
         e.stopPropagation(); // Prevent triggering the row click event
@@ -221,7 +242,7 @@
         var rowIndex = rowId.split('_')[1];
         window.location.href = "/Hydroponics/Hydro/OrderpageDetails?orderID=" + rowIndex;
     });
-    
+
 
     const GetChamberDatalist = async () => {
         let res = await FetchAuthenticate('@Url.Action("GetChamberDropDownList", "Hydro")', {});

@@ -767,6 +767,7 @@
     <Content Include="Content\fonts\Inter.ttf" />
     <Content Include="Areas\Hydroponics\Views\Hydro\SampleLayout.cshtml" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
+    <Content Include="Scripts\circularProgressBar.min.js" />
     <Content Include="Scripts\jquery-3.7.1.js" />
     <Content Include="Scripts\jquery-3.7.1.min.js" />
     <Content Include="Scripts\jquery-3.7.1.slim.js" />

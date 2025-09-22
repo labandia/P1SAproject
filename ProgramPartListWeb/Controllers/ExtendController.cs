@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -50,10 +51,10 @@ namespace ProgramPartListWeb.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
-        protected JsonResult JsonMultipleData(Dictionary<string, IEnumerable<object>> dataSets, string message = null)
+        protected JsonResult JsonMultipleData(Dictionary<string, object> dataSets, string message = null)
         {
             bool isEmpty = dataSets == null || dataSets.Count == 0 || dataSets.All(kvp =>
-                kvp.Value == null || !kvp.Value.Any());
+                kvp.Value == null || (kvp.Value is IEnumerable enumerable && !enumerable.Cast<object>().Any()));
 
             int statusCode = isEmpty ? 404 : 200;
             string responseMessage = message ?? (isEmpty ? "Data not found" : "Data retrieved successfully");
@@ -66,9 +67,17 @@ namespace ProgramPartListWeb.Controllers
             {
                 foreach (var kvp in dataSets)
                 {
-                    var list = kvp.Value?.ToList() ?? new List<object>();
-                    responseData[kvp.Key] = list;
-                    totalCount += list.Count;
+                    if (kvp.Value is IEnumerable enumerable && !(kvp.Value is string))
+                    {
+                        var list = enumerable.Cast<object>().ToList();
+                        responseData[kvp.Key] = list;
+                        totalCount += list.Count;
+                    }
+                    else
+                    {
+                        responseData[kvp.Key] = kvp.Value;
+                        totalCount += (kvp.Value != null ? 1 : 0);
+                    }
                 }
             }
 
@@ -87,6 +96,7 @@ namespace ProgramPartListWeb.Controllers
 
             return Json(response, JsonRequestBehavior.AllowGet);
         }
+
 
         protected JsonResult JsonError(string message = "An error occurred", int statusCode = 500)
         {

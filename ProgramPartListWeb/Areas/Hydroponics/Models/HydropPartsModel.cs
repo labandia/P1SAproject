@@ -134,6 +134,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
     // ---------------------------
     public class ChamberModel
     {
+        private int _ChamberPartID;
         private int _PartID;
         private int _ChamberID;
         private string _ChamberName;
@@ -147,6 +148,12 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         private double _TotalPHPCost;
         private string _ImageParts;
 
+
+        public int ChamberPartID
+        {
+            get => _ChamberPartID;
+            set => _ChamberPartID = value;
+        }
 
         public int PartID
         {
@@ -220,6 +227,14 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         public int  USDTotal;
         public int PHPTotal;
     }
+
+    public class ChambersProduce
+    {
+        public int ChamberID;
+        public string ChamberName;
+        public int MaxBuildableChambers;
+    }
+
     // ---------------------------
     //  PART LISTS (EQUIPMENTS)
     // ---------------------------
@@ -280,6 +295,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
     // ---------------------------
     public class StockPartsModel
     {
+        private int _StockID;
         private int _PartID;
         private string _PartNo;
         private string _PartName;
@@ -293,6 +309,11 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         private string _Status;
         private string _ImageParts;
 
+        public int StockID
+        {
+            get => _StockID;
+            set => _StockID = value;
+        }
         public int PartID
         {
             get => _PartID;

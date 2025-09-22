@@ -11,6 +11,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
         public Task<List<StockPartsModel>> GetInventoryList()
         {
             string strquery = $@"SELECT
+                                    s.StockID,
 	                                p.PartID, 
 	                                p.PartNo, 
 	                                p.PartName, 
@@ -65,6 +66,16 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
         public Task<List<ChamberTypeList>> GetChambersType() => SqlDataAccess.GetData<ChamberTypeList>("SELECT ChamberID, ChamberName FROM Hydro_ChamberMasterlist");
 
-        
+        public Task<bool> UpdateWarning(int StockID, double WarningLevel)
+        {
+            return SqlDataAccess.UpdateInsertQuery($@"UPDATE Hydro_Stocks 
+                                                SET WarningLevel =@WarningLevel 
+                                                WHERE  StockID =@StockID",
+                                                new
+                                                {
+                                                    StockID = StockID,
+                                                    WarningLevel = WarningLevel
+                                                });
+        }
     }
 }

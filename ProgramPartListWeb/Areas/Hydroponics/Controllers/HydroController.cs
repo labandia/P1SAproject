@@ -138,10 +138,31 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         [JwtAuthorize]
         public async Task<ActionResult> GetAllChamberList(int chamber)
         {
-            var data = await _chambers.GetChambersData(chamber) ?? new List<ChamberModel>();
-            if (data == null || !data.Any()) return JsonNotFound("No Chamber list Data.");
+            if (chamber <= 0)
+            {
+                return JsonMultipleData(null, "Invalid chamber .");
+            }
 
-            return JsonSuccess(data, "Load Chamber type List");
+            // Run tasks in parallel for better performance
+            var tableListTask = _chambers.GetChambersData(chamber);
+            var totalPriceTask = _chambers.GetTotalPriceData(chamber);
+            var produceTask = _chambers.GetTotalChamberProduce(chamber);
+
+            await Task.WhenAll(tableListTask, totalPriceTask, produceTask);
+
+            var tableList = tableListTask.Result ?? new List<ChamberModel>();
+            var totalPrice = totalPriceTask.Result;
+            var produce = produceTask.Result;
+
+            // All in One Display
+            var multiData = new Dictionary<string, object>
+            {
+                { "GetList", tableList },
+                { "TotalPrice", totalPrice },
+                { "Produce", produce }
+            };
+
+            return JsonMultipleData(multiData);
         }
 
         [JwtAuthorize]
@@ -151,14 +172,27 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
             if (data == null || !data.Any()) return JsonNotFound("No Chamber list Data.");
 
             return JsonSuccess(data, "Load Chamber type List");
-        } 
+        }
 
+        [HttpPost]
+        public async Task<ActionResult> ChangeCostChamber(int ChamberPartID, string UnitCost_PHP)
+        {
+            try
+            {
+                bool result = await _chambers.UpdateUnitCostChamber(ChamberPartID, UnitCost_PHP);
+                if (!result) return JsonPostError("Update failed.", 500);
+                return JsonCreated(result, "Update Unit Cost Successfully");
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message, 500);
+            }
+        }
 
-
-            //-----------------------------------------------------------------------------------------
-            //---------------------------- HYDRO INVENTORY PAGE ---------------------------------------
-            //-----------------------------------------------------------------------------------------
-            [JwtAuthorize]
+        //-----------------------------------------------------------------------------------------
+        //---------------------------- HYDRO INVENTORY PAGE ---------------------------------------
+        //-----------------------------------------------------------------------------------------
+        [JwtAuthorize]
         public async Task<ActionResult> GetHydroInventory()
         {
             var data = await _hydro.GetInventoryList() ?? new List<StockPartsModel>();
@@ -167,7 +201,20 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
             return JsonSuccess(data, "Load Inventory List");
         }
 
-
+        [HttpPost]
+        public async Task<ActionResult> UpdateWarningStock(int StockID, double WarningLevel)
+        {
+            try
+            {
+                bool result = await _hydro.UpdateWarning(StockID, WarningLevel);
+                if (!result) return JsonPostError("Update failed.", 500);
+                return JsonCreated(result, "Update Successfully");
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message, 500);
+            }
+        }
 
 
 
@@ -265,15 +312,14 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> UpdatesRequestMaterials(double NewUsedQuan, int OrderDetailID, double QtyUsed, double PreviousQuan)
+        public async Task<ActionResult> UpdatesRequestMaterials(int OrderDetailID, double NewUsedQuan)
         {
             try
             {
-                double TotalNewUsed = NewUsedQuan + PreviousQuan;
-
-                bool result = await _chambers.UpdatesRequestMaterials(OrderDetailID, TotalNewUsed, NewUsedQuan);
-                if (!result) return JsonPostError("Update failed.", 500);
-                return JsonCreated(result, "Update Stocks Successfully");
+                Debug.WriteLine("OrderDetailID: " + OrderDetailID + " Used Qty : " + NewUsedQuan);
+                //bool result = await _chambers.UpdatesRequestMaterials(OrderDetailID, NewUsedQuan);
+                //if (!result) return JsonPostError("Update failed.", 500);
+                return JsonCreated(true, "Update Stocks Successfully");
             }
             catch (Exception ex)
             {

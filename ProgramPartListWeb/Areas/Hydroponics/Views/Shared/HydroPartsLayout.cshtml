@@ -28,34 +28,31 @@
 
         <div class="nav-menu">
             <a href="/Hydroponics/Hydro/Orderpage" class="nav-item">
-                <i class="fas fa-file-invoice-dollar"></i>
+                <i class="fa-solid fa-file-invoice"></i>
                 <span class="nav-text">Request Chambers</span>
             </a>
 
             <a href="/Hydroponics/Hydro/Chambers" class="nav-item">
-                <i class="fas fa-chart-line"></i>
+                <i class="fa-solid fa-x-ray"></i>
                 <span class="nav-text">Hydroponics Chambers</span>
             </a>
             <a href="/Hydroponics/Hydro/Inventorylist" class="nav-item">
-                <i class="fas fa-users"></i>
+                <i class="fa-solid fa-boxes-packing"></i>
                 <span class="nav-text">Manage Stocks</span>
             </a>
             <a href="/Hydroponics/Hydro/PartList" class="nav-item">
-                <i class="fas fa-cog"></i>
+                <i class="fa-solid fa-table-list"></i>
                 <span class="nav-text">Parts List</span>
             </a>
             <a href="#" class="nav-item">
-                <i class="fas fa-question-circle"></i>
+                <i class="fa-solid fa-clock-rotate-left"></i>
                 <span class="nav-text">Transaction History</span>
             </a>
             <a href="#" class="nav-item">
                 <i class="fas fa-users"></i>
                 <span class="nav-text">Users</span>
             </a>
-            <a id="logID" href="#" class="nav-item">
-                <i class="fas fa-sign-out-alt"></i>
-                <span class="nav-text">Logout</span>
-            </a>
+           
         </div>
     </div>
 
@@ -72,7 +69,19 @@
                         <i class="fas fa-bell"></i>
                         <span class="notification-badge" id="notificationBadge">1</span>
                     </div>
-                    <div class="user-avatar">JD</div>
+                    <div class="user-avatar" id="user-avatar">JD</div>
+
+                    <div class="menu">
+                        <div class="menu_header">
+                            <p id="DisplayName"></p>
+                            <small id="role">Administrator</small>
+                        </div>
+                        <ul>
+                            <li><a href="#"><i class="ph-bold ph-user"></i> <i class="fa-solid fa-key"></i> Change Password</a></li>
+                            <li ><a id="logID" href="#"><i class="ph-bold ph-sign-out"></i><i class="fa-solid fa-door-open"></i>Sign Out</a></li>
+                        </ul>
+                    </div>
+
 
                     <!-- Notification Dropdown -->
                     <div id="notificationDropdown">
@@ -94,6 +103,13 @@
 
 
     <script type="text/javascript">
+        const GetFullname = async () => {
+            var x = localStorage.getItem("Fullname") || "Guest user";
+            let initials = getInitials(x);
+            $("#DisplayName").text(x);
+            $("#user-avatar").text(initials);
+        };
+
 
         /*==================== LINK ACTIVE ====================*/
         const linkColor = document.querySelectorAll('.nav-item')
@@ -112,20 +128,19 @@
                     link.classList.add("active");
 
                     let actionpage = currentUrl.substring(currentUrl.lastIndexOf("/") + 1);
-                    console.log(actionpage);
 
                     switch (actionpage) {
                         case "orderpage":
-                            $("#titlepage").html(`<i class="fas fa-file-invoice-dollar"></i> Request Chambers`);
+                            $("#titlepage").html(`<i class="fa-solid fa-file-invoice"></i> Request Chambers`);
                             break;
                         case "chambers":
-                            $("#titlepage").html(`DFT Hydroponic Chamber`);
+                            $("#titlepage").html(`<i class="fa-solid fa-x-ray"></i> DFT Hydroponic Chamber`);
                             break;
                         case "inventorylist":
-                            $("#titlepage").html(`Stock Management`);
+                            $("#titlepage").html(`<i class="fa-solid fa-boxes-packing"></i>  Stock Management`);
                             break;
                         case "partlist":
-                            $("#titlepage").html(`Parts Masterlist`);
+                            $("#titlepage").html(`<i class="fa-solid fa-table-list"></i> Parts Masterlist`);
                             break;
                     }
 
@@ -193,7 +208,7 @@
                         type: 'GET',
                         dataType: 'json'
                     });
-                    console.log(response);
+                    //console.log(response);
                     if (response.Success) {
                         const container = $("#stockAlerts");
                         container.empty();
@@ -233,6 +248,15 @@
             setInterval(pollStockAlerts, 60000); // 15s interval
         });
 
+
+        let profile = document.querySelector('.user-avatar');
+        let menu = document.querySelector('.menu');
+
+        profile.onclick = function () {
+            menu.classList.toggle('menuactive');
+        }
+
+
         const logbtn = document.getElementById("logID");
 
         logbtn.addEventListener('click', function (e) {
@@ -256,6 +280,17 @@
                 }
             });
         });
+
+
+        GetFullname();
+
+
+        function getInitials(name) {
+            return name
+                .split(" ")                // split into words
+                .map(word => word.charAt(0).toUpperCase()) // take first letter
+                .join("");                 // join together
+        }
 
 
         window.IsLoginUser({

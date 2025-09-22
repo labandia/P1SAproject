@@ -13,7 +13,7 @@
         </div>
     </div>
 
-    <div class="flex_align" >
+    <div class="flex_align">
         <div class="select-container">
             <select id="Categoryselect">
                 <option value="0">-- Category --</option>
@@ -71,10 +71,10 @@
                 <form method="post" enctype="multipart/form-data" class="addformcontainer" id="addnewform" autocomplete="off">
                     <div class="row">
                         @*<div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
-                <label>Employee ID </label> <br />
-                <input type="text" placeholder="type Employee ID" name="Employee_ID" id="Employee_ID" required />
-                <small class="text-danger" id="Noemployee"></small>
-            </div>*@
+                                <label>Employee ID </label> <br />
+                                <input type="text" placeholder="type Employee ID" name="Employee_ID" id="Employee_ID" required />
+                                <small class="text-danger" id="Noemployee"></small>
+                            </div>*@
                         <div class="form_group col-12 col-sm-12 col-lg-12 mb-2">
                             <label>Part no.  <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
                             @*<input type="text" placeholder="N/A" name="Fullname" id="Fullname" />*@
@@ -166,10 +166,10 @@
                         <div>
                             <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
                         </div>
-                        <button type="submit"  class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                        <button type="submit" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
                     </div>
 
-                   
+
                 </form>
 
 
@@ -181,6 +181,42 @@
 </div>
 
 
+@*=================================================================================*@
+@*=========================== CHANGE LEVEL WARNING ================================*@
+@*=================================================================================*@
+<div class="modal fade modal-m" id="ChangeCostModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Warning Level </h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <form id="changeWarning" class="addformcontainer">
+
+
+                    <div class="form_group col-12 col-sm-12">
+                        <input type="hidden" name="StockID" id="StockID">
+                        <input type="number" name="WarningLevel" id="WarningLevel" onkeypress="return restrictChars(event)" autocomplete="off">
+                    </div>
+                    <div class="flex_space" id="editsdisplay">
+                        <label for="">Available Stocks : <span id="CurrentQty"></span> </label>
+                        <button type="submit" class="primarybtn">
+                            <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
+                        </button>
+                    </div>
+                </form>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
 
 
 
@@ -196,6 +232,7 @@
 
     // Forms
     const addQuanforms = document.getElementById("AddQuantityform");
+    const changeWarn = document.getElementById("changeWarning");
 
     let TableDisplay = $("#InventorylistData");
     const resultBox = document.querySelector(".namesdisplay");
@@ -298,7 +335,7 @@
                         </td>
                         <td data-cell="Delete" >
                          <div class='flex_center'>
-                             <button  class='Editbtnbutton text-primary bg-white' id='editButton_${rowData.PartID}' ">
+                             <button  class='Editbtnbutton text-primary bg-white' id='editButton_${rowData.StockID}' ">
                                 <i class="fa-solid fa-pen-to-square"></i>
                              </button>
                          </div>
@@ -354,7 +391,20 @@
         };
 
 
+        $(document).on('click', '.Editbtnbutton', function (e) {
+            e.stopPropagation(); // Prevent triggering the row click event
+            var rowId = $(this).attr('id');
+            var rowIndex = rowId.split('_')[1];
 
+            var filterdata = Inventlist.find(item => item.StockID === parseInt(rowIndex));
+            if (filterdata) {
+                $("#StockID").val(rowIndex);
+                $("#WarningLevel").val(filterdata.WarningLevel);
+                $("#ChangeCostModal").modal("show");
+
+            }
+
+        });
 
 
         const searchTable = () => {
@@ -415,6 +465,26 @@
              });
          }
     });
+
+    changeWarn.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        let forms = new FormData(e.target);
+        let res = await postData('@Url.Action("updateWarningStock", "Hydro")', forms);
+         if (res && res.Success) {
+              Swal.fire({
+                  title: "Success",
+                  text: res.Message,
+                  icon: "success",
+                  showConfirmButton: false,
+                  timer: 1500
+              }).then(() => {
+                  InventoryTable();
+                  $("#ChangeCostModal").modal('hide');
+              });
+          }
+
+    });
+
 
     $("#Categoryselect").on('change', function (e) {
         e.preventDefault();

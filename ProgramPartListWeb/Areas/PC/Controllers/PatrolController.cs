@@ -94,7 +94,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 var filterdata = data.Where(p => p.RegNo == Regno).ToList();
                 //var res = CacheHelper.GetOrSet("Pressmasterlist", () => product, 15);
                 var find = await _ins.GetPatrolFindings(Regno) ?? new List<FindingModel>();
-                var multidata = new Dictionary<string, IEnumerable<object>>
+                var multidata = new Dictionary<string, object>
                 {
                     { "Register", filterdata },
                     { "Finding", find }

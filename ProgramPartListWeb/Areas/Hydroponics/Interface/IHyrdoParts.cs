@@ -11,6 +11,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Interface
         Task<List<ChamberTypeList>> GetChambersType();
         Task<bool>AddInventory(StockPartsModel model);
         Task<bool> UpdateStocks(int ID, int Quan);
+        Task<bool> UpdateWarning(int StockID, double WarningLevel);
     }
 
    

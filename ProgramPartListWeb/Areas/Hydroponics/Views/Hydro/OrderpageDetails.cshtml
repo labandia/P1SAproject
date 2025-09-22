@@ -33,6 +33,7 @@
                     <select id="RequestStatus" name="RequestStatus">
                         <option value="ONGOING">ONGOING</option>
                         <option value="COMPLETED">COMPLETED</option>
+                        <option value="SHIPPED">FOR SHIPPED</option>
                     </select>
                 </div>
             </div>
@@ -89,12 +90,13 @@
 
                 <form id="InputQuantity" class="addformcontainer">
                     <label for="">Material Parts : <span id="PartName">Black Coated Pipe</span> </label> <br />
-                  
+                    <label for="">Used Quantity: <span id="DisplayQtyUsed">-</span> </label> <br />
 
                     <div class="form_group col-12 col-sm-12">
-                        <label for="">Used Quantity <small style="color: #a81818; font-weight: 600;">*</small> </label>
+                        <label for="">Add Quantity </label>
                         <input type="hidden" name="OrderDetailID" id="OrderDetailID">
-                        <input type="number" name="QtyUsed" id="QtyUsed" onkeypress="return restrictChars(event)" autocomplete="off">
+                        <input type="text" name="QtyUsed" id="QtyUsed" onkeypress="return restrictChars(event)" autocomplete="off">
+
                     </div>
                     <div class="flex_space" id="editsdisplay">
                         <label for="">Available Stocks : <span id="CurrentQty"></span> </label>
@@ -116,6 +118,10 @@
 
 <script type="text/javascript">
     let requestData = [];
+    let min = 0, max = 0;
+    let usedQuantity = 0;
+    let currentQuantity = 0;
+
     let previousValue = 0;
     let inputvalue = 0;
     let newValueQuan = 0;
@@ -165,18 +171,21 @@
         var rowIndex = rowId.split('_')[1];
 
         var filterdata = requestData.find(item => item.OrderDetailID === parseInt(rowIndex));
-
+        console.log(filterdata);
         if (filterdata) {
-            previousValue = 0;
-            newValueQuan = 0;
+             currentQuantity = filterdata.QtyUsed;
+             newValueQuan = 0;
+
             $("#PartName").text(filterdata.PartName);
+            $("#DisplayQtyUsed").text(filterdata.QtyUsed + "/" + filterdata.RequiredQty);
             $("#OrderDetailID").val(rowIndex);
-            $("#QtyUsed").val(filterdata.QtyUsed);
             $("#CurrentQty").text(filterdata.CurrentQty);
-            previousValue = filterdata.QtyUsed;
-            inputvalue = filterdata.CurrentQty;
-            $("#QtyUsed").attr("min", filterdata.QtyUsed);
-            $("#QtyUsed").attr("max", filterdata.RequiredQty);
+            
+             // ✅ store min/max in dataset
+            $("#QtyUsed").attr("data-min", filterdata.QtyUsed);
+            $("#QtyUsed").attr("data-max", filterdata.RequiredQty);
+
+
 
             if (filterdata.MaterialStatus !== "Completed") {
                 $("#ChangeQuanModal").modal("show");
@@ -186,41 +195,39 @@
     });
 
     // Limits the input required
-    useInput.addEventListener("input", function () {
-        if (inputvalue < this.value) {
-            alert("No Stocks ssd");
-            return;
-            //$("#CurrentQty")
-        }
-        if (this.value !== "") {
-            let val = Number(this.value);
-            if (val < this.min) this.value = this.min;
-            if (val > this.max) this.value = this.max;
-        }
+    useInput.addEventListener("input", function (e) {
+        min = parseInt(this.dataset.min) || 0;
+        max = parseInt(this.dataset.max) || Infinity;
 
-        let newValue = Number(this.value || 0);
-        let diff = newValue - previousValue;
+        usedQuantity = parseInt(this.value) || 0;     
+        newValueQuan = usedQuantity - currentQuantity;
 
-        if (diff > 0) {
-            newValueQuan++;
-        } else if (diff < 0) {
-            newValueQuan--;
-        }
-
-        
-
-       // previousValue = newValue; // update the last known value
     });
 
 
     addQuanform.addEventListener('submit', async function (e) {
-        e.preventDefault;
+        e.preventDefault();
+
+        if (usedQuantity > max) {
+            alert("Input number are Higher");
+            return;
+        }
+        if (usedQuantity < min)
+        {
+            alert("Input number are Lower");
+            return;
+        }
+
+
         let formData = new FormData(e.target);
-        formData.append('PreviousQuan', previousValue);
         formData.append('NewUsedQuan', newValueQuan);
+
         let data = Object.fromEntries(formData);
         let res = await postData('@Url.Action("UpdatesRequestMaterials", "Hydro")', formData);
 
+        console.log(res);   
+
+        @*
         if (res && res.Success) {
              Swal.fire({
                  title: "Success",
@@ -229,13 +236,14 @@
                  showConfirmButton: false,
                  timer: 1500
              }).then(() => {
+                 // Reset tracking variables
                  previousValue = 0;
                  newValueQuan = 0;
                  RequestMain();
                  RequesDataList();
                  $("#ChangeQuanModal").modal("hide");
              });
-         }
+         }*@
     });
 
 

@@ -10,19 +10,19 @@
 
 <div class="StocksInput">
     <div class="StocksInput_group">
-        <label>Type Partname / Partno  <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+        <label>Type Partname / Partno : </label> <br />
         <div class="search-box">
             <input type="hidden" name="PartID" id="PartID">
-            <input type="text" placeholder="Type here ..." name="searchPartno" id="searchPartno" autocomplete="off" required>
+            <input style="width: 100%;" type="text" placeholder="Type Partno / Partname here ..." name="searchPartno" id="searchPartno" autocomplete="off">
             <div class="namesdisplay"></div>
         </div>
     </div>
     <div class="StocksInput_group">
-        <label>Input Quantity</label> <br />
-        <input type="text" id="Quantity" placeholder="Enter the Quantity" onkeypress="return restrictChars(event)" autocomplete="off" name="Quantity" required />
+        <label>Input Quantity :</label> <br />
+        <input style="width: 100%;" type="text" id="Quantity" placeholder="Enter the Quantity" onkeypress="return restrictChars(event)" autocomplete="off" name="Quantity" />
     </div>
     <div class="StocksInput_group">
-        <button id="sampleSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Add</button>
+        <button style="width: 100%;" id="sampleSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Add</button>
     </div>
 </div>
 
@@ -37,7 +37,7 @@
                     <th> <i class="fa-regular fa-rectangle-list"></i> <span style="margin-left: .5em;">Category</span>  </th>
                     <th> <i class="fa-regular fa-address-card"></i> <span style="margin-left: .5em;">Supplier</span>  </th>
                     <th style="width: 10%;"> <span style="margin-left: .5em;">Quantity</span>  </th>
-                    <th style="width: 10%;"> <span style="margin-left: .5em;">Action</span>  </th>
+                    <th style="width: 10%;"> <span style="margin-left: .5em;">Remove</span>  </th>
                 </tr>
             </thead>
             <tbody id="AddStocksData">

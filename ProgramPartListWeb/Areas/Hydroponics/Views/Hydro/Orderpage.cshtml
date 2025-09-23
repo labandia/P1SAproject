@@ -177,12 +177,11 @@
                         <div class="RequestContent">
                             <p style='color: #0c382ce8; font-weight: 600;'>${row.ChamberName}</p>
                             <span>Quantity : ${row.ChambersOrdered}</span>
-                            <span>${row.MaterialStatus}</span>
                         </div>
 
                         <div class="RequestContent">
                             <p style='color: #222; font-weight: 600;'>${row.PIC}</p>
-                            <span>Person In charge</span>
+                            <span style='font-size: .9rem;'>Person In charge</span>
                         </div>
 
                         <div class="RequestContent" style="font-size: .8rem;">
@@ -191,7 +190,6 @@
                         </div>
 
                         <div class="RequestContent" style='display: flex; align-items:center; justify-content: center; flex-direction: column;'>
-                            <small>Completion rate %</small>
                             <div class="circular-progress" data-progress="${percent}">
                                 <span class="value">${displayPercent}%</span>
                             </div>
@@ -199,7 +197,7 @@
 
                         <div class="RequestContent">
                             <div class='ProcessStat flex_align'>
-                                <span>${row.RequestStatus}</span>
+                                <span style='font-size: .7rem;'>${row.RequestStatus}</span>
                                 <div class='bilog'></div>
                             </div>
                         </div>

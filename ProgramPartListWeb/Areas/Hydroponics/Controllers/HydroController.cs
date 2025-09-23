@@ -237,12 +237,12 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         [JwtAuthorize]
         public async Task<ActionResult> GetMainRequestList(int orderID)
         {
-            var data = await _chambers.GetRequestList() ?? new List<RequestChambersModel>();
+            //var data = await _chambers.GetRequestList() ?? new List<RequestChambersModel>();
 
-            var filterdata = data.SingleOrDefault(res => res.OrderID == orderID);
-            if (filterdata == null) return JsonNotFound("No Request list Data.");
+            //var filterdata = data.SingleOrDefault(res => res.OrderID == orderID);
+            //if (filterdata == null) return JsonNotFound("No Request list Data.");
 
-            return JsonSuccess(filterdata, "Load Request List");
+            return JsonSuccess("", "Load Request List");
         }
 
         [JwtAuthorize]

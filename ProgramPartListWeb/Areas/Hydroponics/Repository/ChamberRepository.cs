@@ -168,11 +168,14 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
         public async Task<bool> AddRequestChamber(RequestItem item)
         {
-            string strsql = $@"INSERT INTO Hydro_Orders(ChamberID, OrderedBy, Quantity, PIC, TargetDate)
-                               VALUES(@ChamberID, @OrderedBy, @Quantity, @PIC, @TargetDate)";
+            string OrderID = GlobalUtilities.GenerateID("REQ");
+
+            string strsql = $@"INSERT INTO Hydro_Orders(OrderID, ChamberID, OrderedBy, Quantity, PIC, TargetDate)
+                               VALUES(@OrderID, @ChamberID, @OrderedBy, @Quantity, @PIC, @TargetDate)";
 
             bool result = await SqlDataAccess.UpdateInsertQuery(strsql, new
             {
+                OrderID,
                 item.ChamberID,
                 item.OrderedBy,
                 item.Quantity,
@@ -185,7 +188,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             {
                 // Get Chambers list parts based on the ChamberID 
                 var chamberParts = await GetChambersData(item.ChamberID);
-                int LastOrderID = await SqlDataAccess.GetCountData("SELECT MAX(OrderID) FROM  Hydro_Orders");
+                string LastOrderID = await SqlDataAccess.GetOneData("SELECT TOP 1 OrderID FROM  Hydro_Orders ORDER BY RecordID DESC", null);
 
                 foreach (var cham in chamberParts)
                 {

@@ -9,7 +9,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
     // ---------------------------
     public class RequestChambersModel
     {
-        private int _OrderID;
+        private string _OrderID;
         private string _ChamberName;
         private string _OrderDate;
         private string _TargetDate;
@@ -21,7 +21,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         private double _CompletionPercent;
 
 
-        public int OrderID
+        public string OrderID
         {
             get => _OrderID;
             set => _OrderID = value;

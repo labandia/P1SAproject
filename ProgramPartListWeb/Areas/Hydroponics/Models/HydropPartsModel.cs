@@ -77,11 +77,13 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
     public class RequestChambersDetailsModel
     {
         private int _OrderDetailID;
+        private int _PartID;
         private string _PartNo;
         private string _PartName;
         private string _CategoryName;
         private double _QtyUsed;
         private double _RequiredQty;
+        private double _RemainQty;
         private double _CurrentQty;
         private string _MaterialStatus;
 
@@ -90,6 +92,11 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         {
             get => _OrderDetailID;
             set => _OrderDetailID = value;
+        }
+        public int PartID
+        {
+            get => _PartID;
+            set => _PartID = value;
         }
         public string PartNo
         {
@@ -116,7 +123,12 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
             get => _RequiredQty;
             set => _RequiredQty = value;
         }
-        
+        public double RemainQty
+        {
+            get => _RemainQty;
+            set => _RemainQty = value;
+        }
+
         public double CurrentQty
         {
             get => _CurrentQty;
@@ -128,6 +140,31 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
             set => _MaterialStatus = value;
         }
 
+    }
+
+    public class AllocationRequest
+    {
+        private int _OrderID;
+        private int _PartID;
+        private int _allocated;
+
+        public int OrderID
+        {
+            get => _OrderID;
+            set => _OrderID = value;
+        }
+
+        public int PartID
+        {
+            get => _PartID;
+            set => _PartID = value;
+        }
+
+        public int allocated
+        {
+            get => _allocated;
+            set => _allocated = value;
+        }
     }
     // ---------------------------
     //  MAIN CHAMBERS (PRODUCTS)

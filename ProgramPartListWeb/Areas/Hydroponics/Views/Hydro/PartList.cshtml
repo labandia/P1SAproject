@@ -306,7 +306,7 @@
             for (let i = startIndex; i < endIndex; i++) {
                 const rowData = filteredData[i];
 
-          
+
                 // Image Display
                 let imagePath = rowData.ImageParts
                                 ? `/Hydro/DisplaytheImage?filename=${encodeURIComponent(rowData.ImageParts)}`
@@ -315,9 +315,11 @@
                 const rowHtml = `
                     <tr>
                         <td data-cell="Images" style='display: flex; justify-content: center; align-items: center; border-top: 1px solid #dcdce2; border-bottom: none;'>
-                              <img class="NoImages" src="${imagePath}" 
-                                    loading="lazy"
-                                    onerror="this.src='@Url.Content("~/Content/Images/no-image.png")'" />
+                               <img class="NoImages lazy"
+                                     src='@Url.Content("~/Content/Images/no-image.png")'
+                                     data-src="${imagePath}"
+                                     loading="lazy"
+                                     onerror="this.src='@Url.Content("~/Content/Images/no-image.png")'" />
                         </td>
                         <td style='text-align: left; padding-left: 1em;' data-cell="PartNo">
                             <p style='color: #185d8b; font-weight: 600;'>${rowData.PartName ? rowData.PartName : "-"}</p>
@@ -336,6 +338,16 @@
                 `;
                 tableBody.innerHTML += rowHtml;
             }
+
+            // Attach blur-up effect
+            const lazyImages = document.querySelectorAll("img.lazy[data-src]");
+            lazyImages.forEach(img => {
+                const realSrc = img.getAttribute("data-src");
+                img.onload = () => img.classList.add("loaded"); // smooth transition
+                img.setAttribute("src", realSrc);
+                img.removeAttribute("data-src");
+            });
+
 
             $('.dropdown-menu').removeClass('show').hide();
             $("#pagecountID").text(currentPage);
@@ -386,53 +398,33 @@
         // === CLICK HANDLER: Show overlay image ===
         $(document).on('click', '.NoImages', function (e) {
             e.stopPropagation();
-
-            let imgSrc = $(this).attr("src");
+          
+            let imgSrc = $(this).attr("src") || $(this).attr("data-src"); 
+            console.log(imgSrc);
             let $overlay = $("#imageOverlay");
             let $overlayImg = $("#overlayImage");
 
-            // Get position of clicked image
-            let rect = this.getBoundingClientRect();
+            // force load if only data-src exists
+            if ($overlayImg.attr("src") !== imgSrc) {
+                $overlayImg.attr("src", imgSrc);
+            }
 
-            // Set overlay image src and start position
-            $overlayImg.attr("src", imgSrc).css({
-                top: rect.top + "px",
-                left: rect.left + "px",
-                width: rect.width + "px",
-                height: rect.height + "px"
+            $overlay.show(0, function () {
+                $overlay.addClass("show");
             });
-
-            // Show overlay
-            $overlay.show();
-
-            // Animate to center of screen
-            setTimeout(() => {
-                $overlayImg.css({
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    width: "80%",
-                    height: "auto"
-                });
-            }, 10);
         });
 
         // === Hide overlay on click ===
         $(document).on("click", "#imageOverlay", function () {
-            let $overlayImg = $("#overlayImage");
+            let $overlay = $(this);
 
-            // Animate back before hiding
-            $overlayImg.css({
-                transform: "scale(0)",
-                width: "0%",
-                height: "0",
-                top: "50%",
-                left: "50%"
-            });
+            // Remove .show → triggers scale-down + fade-out
+            $overlay.removeClass("show");
 
+            // Wait until transition ends, then hide
             setTimeout(() => {
-                $("#imageOverlay").hide();
-            }, 400); // match transition duration
+                $overlay.hide();
+            }, 400); // match CSS transition
         });
 
 

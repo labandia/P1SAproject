@@ -1008,12 +1008,46 @@ th {
 
 
 
+    .NoImages {
+        width: 40px; /* adjust to your needs */
+        height: 40px;
+        display: block;
+        transform: scale(0);
+        opacity: 0;
+        transition: transform 0.5s ease, opacity 0.5s ease;
+    }
+
+    .NoImages.loaded {
+       transform: scale(1);
+      opacity: 1;
+    }
 
 
 
+    .OrderDetailHeader {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+        background: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 999;
+        height: 4rem;
+        transition: left 0.3s ease;
+        background: #2c3e50;
+        color: #fff;
+    }
 
-
-
+    .OrderDetailHeader .page-title {
+        font-size: 18px;
+        color: #fff;
+        font-weight: 500;
+        margin: 0;
+    }
 
 
 .pie {
@@ -1022,4 +1056,159 @@ th {
     justify-content: center;
     height: 180px;
     margin: auto;
+}
+
+
+
+
+/* =============== ORDER DETAILS DESIGN ====================== */
+    .parts-fulfillment {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        margin-bottom: 30px;
+    }
+
+    
+        .btn-remove {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .btn-remove:hover {
+            background-color: #c0392b;
+        }
+
+        .btn-increment {
+            background-color: #2ecc71;
+            color: white;
+        }
+
+        .btn-increment:hover {
+            background-color: #27ae60;
+        }
+
+        .btn-decrement {
+            background-color: #f39c12;
+            color: white;
+        }
+
+        .btn-decrement:hover {
+            background-color: #d35400;
+        }
+
+    .controls {
+  
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin: 30px 0;
+    }
+
+    .requiredTable_Wrapper{
+        overflow-y: auto;
+        height: 50vh;
+    }
+
+    .table-container {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .table-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+
+        .count-badge {
+            background: #3498db;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        #requiredTable tr {
+            cursor: pointer;
+        }
+
+        #requiredTable tr:hover {
+            background-color: #f0f8ff;
+            transform: translateY(-1px);
+        }
+
+        #requiredTable tr.allocated {
+            opacity: 0.6;
+            background-color: #f9f9f9;
+        }
+
+        #requiredTable tr.fully-allocated {
+            opacity: 0.4;
+            background-color: #e8f5e9;
+        }
+
+        #requiredTable tr.shortage {
+            background-color: #ffeaa7;
+        }
+
+        #requiredTable tr.critical-shortage {
+            background-color: #ffcccc;
+        }
+
+.progress-bar-container {
+    height: 20px;
+    background-color: #ecf0f1;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #2ecc71, #1abc9c);
+    width: 0%;
+    transition: width 0.5s ease;
+}
+
+
+#imageOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+#imageOverlay.show {
+  display: flex;
+
+  opacity: 1;
+}
+
+#overlayImage {
+  max-width: 80%;
+  max-height: 80%;
+  border-radius: 10px;
+  transform:  scale(0.5);
+  margin: 0 auto;
+  top: 50%;
+  opacity: 0;
+  transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
+}
+
+#imageOverlay.show #overlayImage {
+  transform: scale(1);
+  opacity: 1;
 }

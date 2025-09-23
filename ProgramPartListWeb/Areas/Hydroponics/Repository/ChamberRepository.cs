@@ -65,17 +65,15 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
         {
             string strsql = $@"SELECT
                                 o.OrderDetailID,
+                                i.PartID,
 	                            i.PartNo,
 	                            i.PartName,
 	                            c.CategoryName,
 	                            o.QtyUsed,
 	                            o.RequiredQty,
                                 s.CurrentQty,
-	                            CASE 
-                                  WHEN o.QtyUsed = o.RequiredQty
-                                      THEN 'Completed'
-                                ELSE 'Not Completed'
-                              END AS MaterialStatus
+                                o.RequiredQty - o.QtyUsed as RemainQty,
+	                            o.Status as MaterialStatus
                             FROM Hydro_OrderDetails o
                             INNER JOIN Hydro_InventoryParts i ON o.PartID = i.PartID
                             INNER JOIN Hydro_CategoryParts c ON i.CategoryID = c.CategoryID
@@ -208,7 +206,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             return result;
         }
 
-        public async Task<bool> UpdatesRequestMaterials(int OrderDetailID, double usedQuantity)
+        public async Task<bool> UpdatesRequestMaterials(int OrderID, int PartID, int allocated)
         {
             string strsql = $@"UPDATE Hydro_OrderDetails
                                     SET QtyUsed = 
@@ -216,9 +214,9 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                             WHEN QtyUsed + @QtyUsed > RequiredQty THEN RequiredQty
                                             ELSE QtyUsed + @QtyUsed
                                         END
-                                    WHERE OrderDetailID = @OrderDetailID;";
+                                    WHERE OrderID = @OrderID AND PartID =@PartID;";
 
-            bool result = await SqlDataAccess.UpdateInsertQuery(strsql, new { OrderDetailID = OrderDetailID, QtyUsed = usedQuantity });
+            bool result = await SqlDataAccess.UpdateInsertQuery(strsql, new { OrderID = OrderID, PartID = PartID, QtyUsed = allocated });
 
             if (result)
             {
@@ -231,13 +229,9 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                         WHEN CurrentQty - @QtyUsed < 0 THEN 0
                                         ELSE CurrentQty - @QtyUsed
                                     END
-                                WHERE PartID = (
-                                    SELECT PartID 
-                                    FROM Hydro_OrderDetails 
-                                    WHERE OrderDetailID = @OrderDetailID
-                                )";
+                                WHERE PartID =@PartID";
 
-                await SqlDataAccess.UpdateInsertQuery(updateStocks, new { OrderDetailID = OrderDetailID, QtyUsed = usedQuantity });
+                await SqlDataAccess.UpdateInsertQuery(updateStocks, new { PartID = PartID, QtyUsed = allocated });
             }
 
             return result;

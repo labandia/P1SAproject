@@ -38,7 +38,7 @@ namespace ProgramPartListWeb.Helper
                                           : "TestDevelopment";
             }
 
-            LogConnectionChoice(host, Hostname, connectionKey);
+            //LogConnectionChoice(host, Hostname, connectionKey);
 
             return AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings[connectionKey].ConnectionString);
         }

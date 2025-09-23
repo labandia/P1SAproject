@@ -316,7 +316,6 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         {
             try
             {
-                Debug.WriteLine("OrderDetailID: " + OrderDetailID + " Used Qty : " + NewUsedQuan);
                 //bool result = await _chambers.UpdatesRequestMaterials(OrderDetailID, NewUsedQuan);
                 //if (!result) return JsonPostError("Update failed.", 500);
                 return JsonCreated(true, "Update Stocks Successfully");
@@ -324,6 +323,26 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
             catch (Exception ex)
             {
                 return JsonError(ex.Message, 500);
+            }
+
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> UpdatesRequestMaterialsV2([System.Web.Http.FromBody]  List<AllocationRequest> allo)
+        {
+            try
+            {
+                foreach (var item in allo)
+                {
+                    Debug.WriteLine($"Order ID : {item.OrderID} - PartID : {item.PartID} - Allocation {item.allocated}");
+                    await _chambers.UpdatesRequestMaterials(item.OrderID, item.PartID, item.allocated);
+                }
+
+                return Json(new { Success = true, Message = "Allocations saved successfully" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Success = false, Message = ex.Message });
             }
 
         }

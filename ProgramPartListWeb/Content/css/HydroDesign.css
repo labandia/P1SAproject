@@ -5,6 +5,13 @@
         font-style: normal;
     }
 
+    @font-face {
+        font-family: 'Manrope';
+        src: url('/Content/fonts/Manrope-Regular.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+    }
+
     /*========== VARIABLES CSS ==========*/
     :root {
         --header-height: 3.5rem;
@@ -20,7 +27,7 @@
         --body-color: #F9F6FD;
         --container-color: #FFFFFF;
         /*========== Font and typography ==========*/
-        --custom-body-font: 'Inter', sans-serif;
+        --custom-body-font: 'Manrope', sans-serif;
 
         --custom-normal-font-size: 13px;
         --custom-small-font-size: 11px;
@@ -769,26 +776,41 @@ th {
       display: block;
     }
 
-     .RequestWrapper{
+    .RequestWrapper{
         width: 100%;
     }
 
-    .RequestContainer {
+    .RequestContainer{
+        margin-bottom: .7em;
+        box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    }
+
+    .RequestGrid {
         width: 100%;
         display: grid;
         grid-template-columns: 20% 20% 20% 20% 20%;
         align-items: center;
         justify-content: center;
-        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-        margin-bottom: 1em;
         cursor: pointer;
+        background: #fff;
+        padding:  .7em;
+    }
+    .RequestContainer_header{
+        padding: .2em 1em; 
+        background: #ddd;
+        border-radius: .2em .2em 0 0;
+    }
+    .RequestContainer_header span{
+        font-size: .8rem;
+        font-weight: 600;
+        color: #222;
     }
     .RequestContent{
         display: flex;
         align-items: flex-start;
         justify-content: center;
         flex-direction: column;
-        padding-left: 2em;
+        padding-left: 1em;
     }
 
     .ProcessStat {
@@ -1021,158 +1043,48 @@ th {
       opacity: 1;
     }
 
-
-
-    .OrderDetailHeader {
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 20px;
-        background: white;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 999;
-        height: 4rem;
-        transition: left 0.3s ease;
-        background: #2c3e50;
-        color: #fff;
+    .headcontainer {
+        max-width: 1500px;
+        width: 90%;
+        margin: 0 auto;
     }
 
-    .OrderDetailHeader .page-title {
-        font-size: 18px;
-        color: #fff;
-        font-weight: 500;
-        margin: 0;
+    .headcontainer #titlepage{
+        color: #222;
+        font-weight: 700;
+        font-size: 1.5rem;
     }
-
-
-.pie {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 180px;
-    margin: auto;
-}
-
-
-
-
-/* =============== ORDER DETAILS DESIGN ====================== */
-    .parts-fulfillment {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 30px;
-        margin-bottom: 30px;
-    }
-
-    
-        .btn-remove {
-            background-color: #e74c3c;
-            color: white;
-        }
-
-        .btn-remove:hover {
-            background-color: #c0392b;
-        }
-
-        .btn-increment {
-            background-color: #2ecc71;
-            color: white;
-        }
-
-        .btn-increment:hover {
-            background-color: #27ae60;
-        }
-
-        .btn-decrement {
-            background-color: #f39c12;
-            color: white;
-        }
-
-        .btn-decrement:hover {
-            background-color: #d35400;
-        }
-
-    .controls {
+        
   
+
+
+    .pie {
         display: flex;
-        justify-content: center;
-        gap: 15px;
-        margin: 30px 0;
-    }
-
-    .requiredTable_Wrapper{
-        overflow-y: auto;
-        height: 50vh;
-    }
-
-    .table-container {
-        background: white;
-        border-radius: 10px;
-        padding: 20px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    }
-
-    .table-header {
-        display: flex;
-        justify-content: space-between;
         align-items: center;
-        margin-bottom: 20px;
-        padding-bottom: 10px;
-        border-bottom: 2px solid #f0f0f0;
+        justify-content: center;
+        height: 180px;
+        margin: auto;
     }
 
 
-        .count-badge {
-            background: #3498db;
-            color: white;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-weight: bold;
-        }
-        #requiredTable tr {
-            cursor: pointer;
-        }
 
-        #requiredTable tr:hover {
-            background-color: #f0f8ff;
-            transform: translateY(-1px);
-        }
+   .progress-bar-container {
+        height: 10px; /* height of container */
+        width: 100px !important;
+        background-color: #ecf0f1; /* light gray background */
+        border-radius: 10px;
+        overflow: hidden;
+        margin-top: .2em;
+    }
 
-        #requiredTable tr.allocated {
-            opacity: 0.6;
-            background-color: #f9f9f9;
-        }
+    .progress-bar {
+        height: 100%; /* make the bar fill container height */
+        width: 0%; /* default, overwritten by inline width */
+        transition: width 0.5s ease;
+        border-radius: 10px 0 0 10px;
+    }
 
-        #requiredTable tr.fully-allocated {
-            opacity: 0.4;
-            background-color: #e8f5e9;
-        }
-
-        #requiredTable tr.shortage {
-            background-color: #ffeaa7;
-        }
-
-        #requiredTable tr.critical-shortage {
-            background-color: #ffcccc;
-        }
-
-.progress-bar-container {
-    height: 20px;
-    background-color: #ecf0f1;
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.progress-bar {
-    height: 100%;
-    background: linear-gradient(90deg, #2ecc71, #1abc9c);
-    width: 0%;
-    transition: width 0.5s ease;
-}
+   
 
 
 #imageOverlay {

@@ -144,11 +144,11 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
 
     public class AllocationRequest
     {
-        private int _OrderID;
+        private string _OrderID;
         private int _PartID;
         private int _allocated;
 
-        public int OrderID
+        public string OrderID
         {
             get => _OrderID;
             set => _OrderID = value;

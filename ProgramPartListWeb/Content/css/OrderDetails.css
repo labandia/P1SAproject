@@ -1,0 +1,299 @@
+﻿    @font-face {
+        font-family: 'Inter';
+        src: url('/Content/fonts/Inter.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    @font-face {
+        font-family: 'Manrope';
+        src: url('/Content/fonts/Manrope-Regular.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    /*========== VARIABLES CSS ==========*/
+    :root {
+        --header-height: 3.5rem;
+        --nav-width: 250px;
+        /*========== Colors ==========*/
+        --primary-color: hsl(204, 70%, 53%);
+        --primary-hover: hsl(204, 70%, 32%);
+        --primary-alt-color: #F4F0FA;
+        --first-color-light: #F4F0FA;
+        --title-color: #010202;
+        --text-color: #58555E;
+        --text-color-light: #A5A1AA;
+        --body-color: #F9F6FD;
+        --container-color: #FFFFFF;
+        /*========== Font and typography ==========*/
+        --custom-body-font: 'Manrope', sans-serif;
+        --custom-normal-font-size: 13px;
+        --custom-small-font-size: 11px;
+        --custom-smaller-font-size: 9px;
+    }
+
+    @media screen and (min-width: 1024px) {
+        :root {
+            --custom-normal-font-size: 14px;
+            --custom-small-font-size: 12px;
+            --custom-smaller-font-size: 10px;
+        }
+
+        .floatBtn {
+            bottom: 4em !important;
+            right: 4em !important;
+        }
+    }
+
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: var(--custom-body-font) !important;
+    }
+
+    body {
+        background-color: #f5f7f9;
+        color: #333;
+        line-height: 1.6;
+    }
+
+    .OrderDetailHeader{
+        padding: 1.5em 0  0;
+    }
+
+    .Customcontainer {
+        max-width: 1500px;
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    .OrderDetailHeader  #titlepage {
+        color: #222;
+        font-weight: 700;
+        font-size: 1.5rem;
+    }
+
+/* ============= PROGRESS BAR =================== */
+    .progress-bar-container {
+        height: 10px; /* height of container */
+        width: 100%;
+        background-color: #ecf0f1; /* light gray background */
+        border-radius: 10px;
+        overflow: hidden;
+        margin-top: .2em;
+    }
+
+    .progress-bar {
+        height: 100%; /* make the bar fill container height */
+        width: 0%; /* default, overwritten by inline width */
+        transition: width 0.5s ease;
+        border-radius: 10px 0 0 10px;
+    }
+
+    #RequestStatus {
+        padding: 4px 5px;
+        border: none;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: bold;
+        cursor: pointer;
+        outline: none;
+    }
+
+       /* Default background */
+    .default {
+       background-color: #3498db; /* Blue */
+    }
+    .COMPLETED {
+       background-color: rgba(14, 76, 170, 0.2);
+       color: rgb(9, 18, 100);
+    }
+    .ONGOING {
+       background-color: rgba(170, 24, 14, 0.2);
+       color: rgb(100, 9, 9);
+    }
+    .SHIPPED {
+      background-color: #f39c12; /* Orange */
+    }
+
+    /* Keep dropdown list options white */
+    option {
+      background-color: white;
+      color: black;
+      border: none;
+    }
+
+
+    /* ================ TABS DESIGN =========================== */
+    .Mold_tabs {
+        display: flex;
+        position: relative;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .Mold_tabs button {
+      width: 150px;
+      background: none;
+      border: none;
+      padding: 1rem;
+      cursor: pointer;
+      font-weight: 600;
+      color: #222;
+      font-size: var(--small-font-size);
+      transition: color 0.3s;
+      position: relative;
+      z-index: 1;
+    }
+
+    .Mold_tabs button.active {
+      color: var(--primary-color);
+    }
+
+    .Mold_slider {
+      position: absolute;
+      bottom: 0;
+      height: 2px;
+      width: 150px;
+      background: var(--primary-color);
+      transition: transform 0.3s ease;
+    }
+
+    .Mold_contentbox {
+      position: relative;
+      min-height: 100px;
+    }
+
+    .Mold_content {
+      opacity: 0;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      top: 0;
+      left: 0;
+      display: none;
+      padding: 1em 0 0;
+    }
+
+    .Mold_content.show {
+      opacity: 1;
+      transform: translateX(0);
+      display: block;
+    }
+/* ================= ORDER DETAILS LAYOUT  ========================== */
+        .parts-fulfillment {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+    
+        .btn-remove {
+            background-color: #e74c3c !important;
+            color: white !important;
+        }
+
+        .btn-remove:hover {
+            background-color: #c0392b !important;
+        }
+
+        .btn-increment {
+            background-color: #2ecc71 !important;
+            color: white !important;
+        }
+
+        .btn-increment:hover {
+            background-color: #27ae60 !important;
+        }
+
+        .btn-decrement {
+            background-color: #f39c12 !important;
+            color: white !important;
+        }
+
+        .btn-decrement:hover {
+            background-color: #d35400 !important;
+        }
+
+        .controls {
+  
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .requiredTable_Wrapper{
+            overflow-y: auto;
+            height: 50vh;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: .5em;
+            box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+
+        .count-badge {
+            background: #3498db;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        #requiredTable tr {
+            cursor: pointer;
+        }
+
+        #requiredTable tr:hover {
+            background-color: #f0f8ff;
+            transform: translateY(-1px);
+        }
+
+        #requiredTable tr.allocated {
+            opacity: 0.6;
+            background-color: #f9f9f9;
+        }
+
+        #requiredTable tr.fully-allocated {
+            opacity: 0.4;
+            background-color: #e8f5e9;
+        }
+
+        #requiredTable tr.shortage {
+            background-color: #ffeaa7;
+        }
+
+        #requiredTable tr.critical-shortage {
+            background-color: #ffcccc;
+        }
+
+
+        /* Wrapper with scroll */
+        .requiredTable_Wrapper,
+        .allocatedTable_Wrapper {
+            max-height: 300px; /* adjust height as needed */
+            overflow-y: auto;
+            border: 1px solid #ddd;
+        }
+        /* Make thead fixed */
+        #requiredTable thead th,
+        #allocatedTable thead th {
+            position: sticky;
+            top: 0;
+            background-color: #f5f7f9; /* keep it visible */
+            z-index: 2; /* ensure above rows */
+            text-align: center;
+            font-weight: 600;
+            padding: 10px;
+        }

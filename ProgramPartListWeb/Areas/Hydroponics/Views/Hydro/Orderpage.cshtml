@@ -20,6 +20,7 @@
     <div class="Mold_contentbox">
         <div class="Mold_content show" id="All">
             <div class="RequestWrapper" id="RequestWrapper">
+
             </div>
         </div>
 
@@ -111,7 +112,6 @@
 
 
 
-<script src="~/Scripts/circularProgressBar.min.js"></script>
 <script type="text/javascript">
     let requestData = [];
     // Get today's date
@@ -172,37 +172,58 @@
                 let percent = parseFloat(row.CompletionPercent) || 0;
                 let displayPercent = Math.round(percent); // show as 12 instead of 12.0
 
+
+                // Decide color
+                let barColor = "linear-gradient(90deg, #e74c3c, #c0392b)"; // red
+                if (percent >= 70) barColor = "linear-gradient(90deg, #2ecc71, #27ae60)"; // green
+                else if (percent >= 40) barColor = "linear-gradient(90deg, #f1c40f, #f39c12)"; // yellow
+
+
                 const loadData = `
-                    <div class="RequestContainer" id='Details_${row.OrderID}'>
-                        <div class="RequestContent">
-                            <p style='color: #0c382ce8; font-weight: 600;'>${row.ChamberName}</p>
-                            <span>Quantity : ${row.ChambersOrdered}</span>
-                        </div>
+                     <div class="RequestContainer"  id='Details_${row.OrderID}'>
+                         <div class="RequestContainer_header">
+                             <span>Req No #: ${row.OrderID}</span>
+                         </div>
 
-                        <div class="RequestContent">
-                            <p style='color: #222; font-weight: 600;'>${row.PIC}</p>
-                            <span style='font-size: .9rem;'>Person In charge</span>
-                        </div>
+                         <div class="RequestGrid">
+                             <div class="RequestContent">
+                                 <p style='color: #2c3e50; font-weight: 600; '>${row.ChamberName}</p>
+                                 <span style='font-size: .8rem; font-weight: 500; color: #808080;'>${row.ChambersOrdered} Unit Quantity</span>
+                             </div>
 
-                        <div class="RequestContent" style="font-size: .8rem;">
-                            <p style='color: #222; font-weight: 600;'>Start Date : ${row.OrderDate}</p>
-                            <p style='color: #222; font-weight: 600;'>Target Date : ${row.TargetDate}</p>
-                        </div>
+                             <div class="RequestContent">
+                                 <p style='color: #222; font-weight: 600; font-size: .9rem;'>${row.PIC}</p>
+                                 <span style='font-size: .8rem; font-weight: 500; color: #808080;'>Person In charge</span>
+                             </div>
 
-                        <div class="RequestContent" style='display: flex; align-items:center; justify-content: center; flex-direction: column;'>
-                            <div class="circular-progress" data-progress="${percent}">
-                                <span class="value">${displayPercent}%</span>
+                             <div class="RequestContent" style="font-size: .8rem;">
+                                 <p style='color: #222; font-weight: 600;'>Start Date : ${row.OrderDate}</p>
+                                 <p style='color: #222; font-weight: 600;'>Target Date : ${row.TargetDate}</p>
+                             </div>
+
+                              <div class="RequestContent" style='display: flex; align-items:center; justify-content: center; flex-direction: column;'>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar"></div>
+                                </div>
+                                 <span style="font-size:.75rem; margin-top:4px;">Completion rate: ${displayPercent}%</span>
                             </div>
-                        </div>
 
-                        <div class="RequestContent">
-                            <div class='ProcessStat flex_align'>
-                                <span style='font-size: .7rem;'>${row.RequestStatus}</span>
-                                <div class='bilog'></div>
-                            </div>
-                        </div>
-                    </div>`;
+                             <div class="RequestContent " style='padding-left: 2em;'>
+                                 <div class='ProcessStat flex_align'>
+                                     <span style='font-size: .8rem;'>${row.RequestStatus}</span>
+                                     <div class='bilog'></div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>`;
                 TableData.append(loadData);
+
+                // Animate the bar after appending
+                const $bar = TableData.find(".progress-bar").last();
+                $bar.css("background", barColor); // set color
+                setTimeout(() => {
+                    $bar.css("width", `${percent}%`); // animate width
+                }, 50); // small delay to trigger transition
             });
 
             // Animate circular progress
@@ -237,7 +258,7 @@
     $(document).on('click', '.RequestContainer', function (e) {
         e.stopPropagation(); // Prevent triggering the row click event
         var rowId = $(this).attr('id');
-        var rowIndex = rowId.split('_')[1];
+        var rowIndex = rowId.split('_').slice(1).join('_'); 
         window.location.href = "/Hydroponics/Hydro/OrderpageDetails?orderID=" + rowIndex;
     });
 

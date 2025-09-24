@@ -61,7 +61,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             return SqlDataAccess.GetData<RequestChambersModel>(strsql);
         }
 
-        public Task<List<RequestChambersDetailsModel>> GetRequestDetailList(int order)
+        public Task<List<RequestChambersDetailsModel>> GetRequestDetailList(string order)
         {
             string strsql = $@"SELECT
                                 o.OrderDetailID,
@@ -168,6 +168,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
         public async Task<bool> AddRequestChamber(RequestItem item)
         {
+            // GENERATE A UNIQUE ID FOR THE ORDER
             string OrderID = GlobalUtilities.GenerateID("REQ");
 
             string strsql = $@"INSERT INTO Hydro_Orders(OrderID, ChamberID, OrderedBy, Quantity, PIC, TargetDate)
@@ -188,7 +189,6 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             {
                 // Get Chambers list parts based on the ChamberID 
                 var chamberParts = await GetChambersData(item.ChamberID);
-                string LastOrderID = await SqlDataAccess.GetOneData("SELECT TOP 1 OrderID FROM  Hydro_Orders ORDER BY RecordID DESC", null);
 
                 foreach (var cham in chamberParts)
                 {
@@ -197,7 +197,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
                     await SqlDataAccess.UpdateInsertQuery(insertDetails, new
                     {
-                        OrderID = LastOrderID,
+                        OrderID = OrderID,
                         PartID = cham.PartID,
                         QtyUsed = 0,
                         RequiredQty = item.Quantity > 1 ? cham.QuantityPerChamber * item.Quantity : cham.QuantityPerChamber
@@ -209,7 +209,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             return result;
         }
 
-        public async Task<bool> UpdatesRequestMaterials(int OrderID, int PartID, int allocated)
+        public async Task<bool> UpdatesRequestMaterials(string OrderID, int PartID, int allocated)
         {
             string strsql = $@"UPDATE Hydro_OrderDetails
                                     SET QtyUsed = 

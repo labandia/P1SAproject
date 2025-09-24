@@ -8,7 +8,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Interface
     {
         Task<List<RequestChambersModel>> GetRequestList();
 
-        Task<List<RequestChambersDetailsModel>> GetRequestDetailList(int order);
+        Task<List<RequestChambersDetailsModel>> GetRequestDetailList(string order);
 
         Task<ChamberTotalPrice> GetTotalPriceData(int chamber);
         Task<ChambersProduce> GetTotalChamberProduce(int chamber);
@@ -23,7 +23,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Interface
         Task<bool> AddRequestChamber(RequestItem item);
 
       
-        Task<bool> UpdatesRequestMaterials(int OrderID, int PartID, int allocated);
+        Task<bool> UpdatesRequestMaterials(string OrderID, int PartID, int allocated);
 
 
         Task<bool> AdditionalChambers();

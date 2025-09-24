@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+﻿
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -14,6 +14,7 @@ using System.Xml;
 using System.Xml.Linq;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using System.Net.NetworkInformation;
 
 namespace PracticeC_
 {
@@ -94,7 +95,10 @@ namespace PracticeC_
             //Console.WriteLine($"Original: {machineName}");
             //Console.WriteLine(VerifyPassword("ErcXN5O+LcsWG5/cMOMWOg==:cZs22bq4HkpRKxiubSnaRQ0U4NIhfn7xUHi3De8cXWw=", "sdp1234a*"));
             //samplehash();
-            ConvertstringtoBase64();
+
+            PingComputer("172.29.1.121");
+
+            //ConvertstringtoBase64();
 
             Console.ReadKey();
         }
@@ -248,64 +252,64 @@ namespace PracticeC_
             }
         }
 
-        public static void samplehash()
-        {
-            byte[] salt = new byte[16];
-            using (var rng = new RNGCryptoServiceProvider())
-            {
-                rng.GetBytes(salt);
-            }
+        //public static void samplehash()
+        //{
+        //    byte[] salt = new byte[16];
+        //    using (var rng = new RNGCryptoServiceProvider())
+        //    {
+        //        rng.GetBytes(salt);
+        //    }
 
-            byte[] hash = KeyDerivation.Pbkdf2(
-                password: "admin1234",
-                salt: salt,
-                prf: KeyDerivationPrf.HMACSHA256,
-                iterationCount: 10000,
-                numBytesRequested: 32);
+        //    byte[] hash = KeyDerivation.Pbkdf2(
+        //        password: "admin1234",
+        //        salt: salt,
+        //        prf: KeyDerivationPrf.HMACSHA256,
+        //        iterationCount: 10000,
+        //        numBytesRequested: 32);
 
-            Console.WriteLine($"{Convert.ToBase64String(salt)}:{Convert.ToBase64String(hash)}");
-        }
+        //    Console.WriteLine($"{Convert.ToBase64String(salt)}:{Convert.ToBase64String(hash)}");
+        //}
 
-         public static string Hashpassword(string pass)
-        {
-            // Generate a 128-bit salt using a cryptographically strong random number generator
-            byte[] salt = new byte[16];
-            using (var rng = new RNGCryptoServiceProvider())
-            {
-                rng.GetBytes(salt);
-            }
+        // public static string Hashpassword(string pass)
+        //{
+        //    // Generate a 128-bit salt using a cryptographically strong random number generator
+        //    byte[] salt = new byte[16];
+        //    using (var rng = new RNGCryptoServiceProvider())
+        //    {
+        //        rng.GetBytes(salt);
+        //    }
 
-            // Hash the password with the salt using PBKDF2 and HMACSHA256
-            string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                password: pass,
-                salt: salt,
-                prf: KeyDerivationPrf.HMACSHA256,
-                iterationCount: 10000,
-                numBytesRequested: 32));
+        //    // Hash the password with the salt using PBKDF2 and HMACSHA256
+        //    string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+        //        password: pass,
+        //        salt: salt,
+        //        prf: KeyDerivationPrf.HMACSHA256,
+        //        iterationCount: 10000,
+        //        numBytesRequested: 32));
 
-            // Return the salt and the hash separated by a colon
-            return $"{Convert.ToBase64String(salt)}:{hashed}";
-        }
+        //    // Return the salt and the hash separated by a colon
+        //    return $"{Convert.ToBase64String(salt)}:{hashed}";
+        //}
 
-        public static bool VerifyPassword(string hash, string password)
-        {
-            // Split the stored hash into salt and hash components
-            var parts = hash.Split(':');
-            byte[] salt = Convert.FromBase64String(parts[0]);
-            string storedHash = parts[1];
+        //public static bool VerifyPassword(string hash, string password)
+        //{
+        //    // Split the stored hash into salt and hash components
+        //    var parts = hash.Split(':');
+        //    byte[] salt = Convert.FromBase64String(parts[0]);
+        //    string storedHash = parts[1];
 
-            // Hash the password with the stored salt
-            string testHash = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                password: password,
-                salt: salt,
-                prf: KeyDerivationPrf.HMACSHA256,
-                iterationCount: 10000,
-                numBytesRequested: 32));
+        //    // Hash the password with the stored salt
+        //    string testHash = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+        //        password: password,
+        //        salt: salt,
+        //        prf: KeyDerivationPrf.HMACSHA256,
+        //        iterationCount: 10000,
+        //        numBytesRequested: 32));
 
 
-            // Compare the stored hash with the newly computed hash
-            return storedHash == testHash;
-        }
+        //    // Compare the stored hash with the newly computed hash
+        //    return storedHash == testHash;
+        //}
 
 
         public async static void OutlooksendingEmail2()
@@ -430,6 +434,31 @@ namespace PracticeC_
 
         }
 
+        public static void PingComputer(string ipAddress)
+        {
+            Ping pingSender = new Ping();
+
+            try
+            {
+                PingReply reply = pingSender.Send(ipAddress, 1000); // 1000 ms timeout
+                if (reply.Status == IPStatus.Success)
+                {
+                    Console.WriteLine($"Ping to {ipAddress} successful:");
+                    Console.WriteLine($"  Address: {reply.Address}");
+                    Console.WriteLine($"  RoundTrip time: {reply.RoundtripTime}ms");
+                    Console.WriteLine($"  TTL (Time to live): {reply.Options.Ttl}");
+                    Console.WriteLine($"  Buffer size: {reply.Buffer.Length}");
+                }
+                else
+                {
+                    Console.WriteLine($"Ping failed: {reply.Status}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+        }
 
         public static void Samplelog()
         {

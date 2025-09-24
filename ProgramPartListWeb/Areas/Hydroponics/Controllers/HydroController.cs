@@ -235,18 +235,18 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
     
 
         [JwtAuthorize]
-        public async Task<ActionResult> GetMainRequestList(int orderID)
+        public async Task<ActionResult> GetMainRequestList(string orderID)
         {
-            //var data = await _chambers.GetRequestList() ?? new List<RequestChambersModel>();
+            var data = await _chambers.GetRequestList() ?? new List<RequestChambersModel>();
 
-            //var filterdata = data.SingleOrDefault(res => res.OrderID == orderID);
-            //if (filterdata == null) return JsonNotFound("No Request list Data.");
+            var filterdata = data.SingleOrDefault(res => res.OrderID == orderID);
+            if (filterdata == null) return JsonNotFound("No Request list Data.");
 
-            return JsonSuccess("", "Load Request List");
+            return JsonSuccess(filterdata, "Load Request List");
         }
 
         [JwtAuthorize]
-        public async Task<ActionResult> GetRequestDetails(int orderID)
+        public async Task<ActionResult> GetRequestDetails(string orderID)
         {
 
             var data = await _chambers.GetRequestDetailList(orderID) ?? new List<RequestChambersDetailsModel>();
@@ -334,7 +334,6 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
             {
                 foreach (var item in allo)
                 {
-                    Debug.WriteLine($"Order ID : {item.OrderID} - PartID : {item.PartID} - Allocation {item.allocated}");
                     await _chambers.UpdatesRequestMaterials(item.OrderID, item.PartID, item.allocated);
                 }
 
@@ -420,15 +419,12 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         // GET: Hydroponics/Orderpage
         public ActionResult Orderpage() => View();
         // GET: Hydroponics/OrderpageDetails
-        public ActionResult OrderpageDetails(int?  orderID)
+        public ActionResult OrderpageDetails(string orderID)
         {
-            if(!orderID.HasValue || orderID == 0)
+            if(orderID == "")
             {
                 return RedirectToAction("Orderpage", "Hydro", new { area = "Hydroponics" });
             }
-
-            int ID = Convert.ToInt32(orderID);
-
             return View();
         }
         // GET: Hydroponics/Chambers

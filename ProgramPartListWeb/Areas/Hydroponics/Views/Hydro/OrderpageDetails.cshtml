@@ -10,8 +10,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@ViewBag.Title</title>
     <link rel="preload" href="~/Content/fonts/Inter.ttf" as="font" type="font/ttf" crossorigin="anonymous">
-    <link href="~/Content/css/HydroDesign.css" rel="stylesheet" />
     <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+    <link href="~/Content/css/OrderDetails.css" rel="stylesheet" />
 
 
     @Styles.Render("~/Content/shared-css")
@@ -25,127 +25,136 @@
 
 
 <section class="OrderDetailHeader">
-    <div class="flex_align" style="gap: 15px;">
-        <a style="color: #fff;" href="/Hydroponics/Hydro/Orderpage"><i class="fa-solid fa-arrow-left"></i></a>
-        <div>
-            <h3 class="page-title" id="titlepage">Request # : @ID</h3>
-            <p>Chamber Name:  <spam id="ChamberName"> </spam></p>
+    <div class="Customcontainer">
+        <div class="flex_space">
+            <div class="flex_align" style="gap: 15px;">
+                <a style="color: #222;" href="/Hydroponics/Hydro/Orderpage"><i class="fa-solid fa-arrow-left"></i></a>
+                <div>
+                    <h1 class="page-title" id="titlepage">@ID</h1>
+                    <div class="flex_align" style="margin-top: .3em;">
+                        <span id="ChamberName"> </span>
+                        <div class="select-container">
+                            <select id="RequestStatus" name="RequestStatus" class="default" >
+                                <option value="ONGOING" selected>ONGOING</option>
+                                <option value="COMPLETED">COMPLETED</option>
+                                <option value="SHIPPED">FOR SHIPPED</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="">
+                <div class="flex_align">
+                    <p style="font-weight: 600; margin: 0;">TargetDate: </p><spam id="TargetDate">
+                </div>
+                <label>Completion rate : <span id="completeRate"></span> </label>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="">
-        <p>TargetDate: <spam id="TargetDate"></p>
     </div>
 </section>
 
 
 <div class="Mold_tabcontainer">
-    <div class="Mold_tabs">
-        <button class="Mold_tab active" data-target="All">Allocation </button>
-        <button class="Mold_tab" data-target="Completed">Completed Parts</button>
-        <div class="Mold_slider"></div>
-    </div>
+    <div class="Customcontainer">
+        <div class="Mold_tabs">
+            <button class="Mold_tab active" data-target="All">Allocation </button>
+            <button class="Mold_tab" data-target="Completed">Completed Parts</button>
+            <div class="Mold_slider"></div>
+        </div>
+        <div class="Mold_contentbox">
+            <div class="Mold_content show" id="All">
+                
 
-    <div class="Mold_contentbox">
-        <div class="Mold_content show" id="All">
-            <section class="flex_align">
-                <div class="requestGroup">
-                    <strong>RequestStatus:</strong>
-                    <div class="select-container">
-                        <select id="RequestStatus" name="RequestStatus">
-                            <option value="ONGOING">ONGOING</option>
-                            <option value="COMPLETED">COMPLETED</option>
-                            <option value="SHIPPED">FOR SHIPPED</option>
-                        </select>
+                <div class="parts-fulfillment">
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h5 style="margin: 0; font-size: 1rem; font-weight: 600;">Required Parts</h5>
+                            <div>
+                                <input type="text" id="searchRequired" placeholder="Search parts list" />
+                            </div>
+                        </div>
+                       
+                        <div class="requiredTable_Wrapper">
+                            <table id="requiredTable">
+                                <thead>
+                                    <tr>
+                                        <th style="padding-left: 1.5em;">Partno</th>
+                                        <th>PartName</th>
+                                        <th class="qty-cell">Required</th>
+                                        <th class="qty-cell">Available</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Rows will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
+
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h5 style="margin: 0; font-size: 1rem; font-weight: 600;">Allocated Parts</h5>
+                            <div>
+                                <input type="text" id="searchAllocated" placeholder="Search parts list" />
+                            </div>
+                        </div>
+
+                        <div class="allocatedTable_Wrapper">
+                            <table id="allocatedTable">
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Partno</th>
+                                        <th class="qty-cell">Allocated</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Rows will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                            
+                     </div>
                 </div>
 
-                <div class="requestGroup">
-                    <label>Completion rate : </label>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar" id="progressBar"></div>
-                    </div>
-                </div>
-            </section>
 
 
-            <div class="parts-fulfillment">
-                <div class="table-container">
-                    <div class="table-header">
-                        <h5 style="margin: 0;">Required Parts</h5>
-                        <div class="count-badge" id="requiredCount">8</div>
-                    </div>
-                    <div>
-                        <input type="text" id="searchparts" placeholder="Search parts list" />
-                    </div>
-                    <div class="requiredTable_Wrapper">
-                        <table id="requiredTable">
-                            <thead>
-                                <tr>
-                                    <th>Partno</th>
-                                    <th>PartName</th>
-                                    <th class="qty-cell">Required</th>
-                                    <th class="qty-cell">Available</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Rows will be populated by JavaScript -->
-                            </tbody>
-                        </table>
-                    </div>
+
+
+                <div class="controls">
+                    <button class="btn-primary" id="autoFillBtn">Auto-Fill All Available</button>
+                    <button class="btn-primary" id="clearAllBtn">Clear All Allocations</button>
+                    <button class="btn-primary" id="completeOrderBtn">Save Details</button>
                 </div>
 
-                <div class="table-container">
-                    <div class="table-header">
-                        <h5 style="margin: 0;">Allocated Parts</h5>
-                        <div class="count-badge" id="allocatedCount">0</div>
-                    </div>
-                    <table id="allocatedTable">
-                        <thead>
-                            <tr>
-                                <th>No.</th>
-                                <th>Partno</th>
-                                <th>PartName</th>
-                                <th class="qty-cell">Allocated</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Rows will be populated by JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
+
             </div>
 
+            <div class="Mold_content" id="Completed">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 30%; text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-screwdriver-wrench"></i>  <span style="margin-left: .5em;">Part No. / Partname</span> </th>
+                            <th style="width: 20%;"> <i class="fa-regular fa-rectangle-list"></i> <span style="margin-left: .5em;">Category</span>  </th>
+                            <th style="width: 10%;"> <span style="margin-left: .5em;">Quantity Used</span>  </th>
+                            <th style="width: 10%;">  <span style="margin-left: .5em;">Required Qty</span>  </th>
+                            <th style="width: 10%;">  <span style="margin-left: .5em;">Status</span>  </th>
+                        </tr>
+                    </thead>
+                    <tbody id="RequestWrapper">
+                    </tbody>
+                </table>
 
-
-
-
-            <div class="controls">
-                <button class="btn-primary" id="autoFillBtn">Auto-Fill All Available</button>
-                <button class="btn-primary" id="clearAllBtn">Clear All Allocations</button>
-                <button class="btn-primary" id="completeOrderBtn">Save Details</button>
             </div>
-
-
-        </div>
-
-        <div class="Mold_content" id="Completed">
-            <table>
-                <thead>
-                    <tr>
-                        <th style="width: 30%; text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-screwdriver-wrench"></i>  <span style="margin-left: .5em;">Part No. / Partname</span> </th>
-                        <th style="width: 20%;"> <i class="fa-regular fa-rectangle-list"></i> <span style="margin-left: .5em;">Category</span>  </th>
-                        <th style="width: 10%;"> <span style="margin-left: .5em;">Quantity Used</span>  </th>
-                        <th style="width: 10%;">  <span style="margin-left: .5em;">Required Qty</span>  </th>
-                        <th style="width: 10%;">  <span style="margin-left: .5em;">Status</span>  </th>
-                    </tr>
-                </thead>
-                <tbody id="RequestWrapper">
-                </tbody>
-            </table>
-
         </div>
     </div>
+
+       
 </div>
 
 
@@ -159,19 +168,21 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-<script type="text/javascript">
-    const ID = parseInt($("#chambID").val());
+    <script type="text/javascript">
+    const select = document.getElementById("RequestStatus");
+    const ID = $("#chambID").val();
     let requestData = [];
+
+    // Set initial style
+    select.classList.remove("default");
+    select.classList.add(select.value);
+
+    select.addEventListener("change", function () {
+        // Reset classes
+        select.classList.remove("COMPLETED", "ONGOING", "SHIPPED", "default");
+        // Apply class based on value
+        select.classList.add(this.value);
+    });
 
 
     // Tabs Content
@@ -223,15 +234,30 @@
     });
 
     const RequestMain = async () => {
-
         let res = await FetchAuthenticate('@Url.Action("GetMainRequestList", "Hydro")', { orderID: ID });
-        console.log(res);
         if (res && res.Success) {
-           $("#ChamberName").text(res.Data.ChamberName);
+           $("#ChamberName").text(`Chamber selected : ${res.Data.ChamberName}`);
            $("#ChambersOrdered").text(res.Data.ChambersOrdered);
            $("#TargetDate").text(res.Data.TargetDate);
            $("#RequestStatus").val(res.Data.RequestStatus);
            $("#MaterialStatus").text(res.Data.MaterialStatus);
+
+
+            const percent = res.Data.CompletionPercent || 0;
+            const progressBar = document.getElementById('progressBar');
+
+            // Set width
+            progressBar.style.width = `${percent}%`;
+            $("#completeRate").text(`${percent}%`);
+
+            // Change color dynamically
+            if (percent < 40) {
+                progressBar.style.background = "linear-gradient(90deg, #e74c3c, #c0392b)"; // red tones
+            } else if (percent < 70) {
+                progressBar.style.background = "linear-gradient(90deg, #f1c40f, #f39c12)"; // yellow tones
+            } else {
+                progressBar.style.background = "linear-gradient(90deg, #2ecc71, #27ae60)"; // green tones
+            }
        }
     }
 
@@ -242,7 +268,6 @@
        let res = await FetchAuthenticate('@Url.Action("GetRequestDetails", "Hydro")', { orderID: ID });
        if (res && res.Success) {
            requestData = res.Data;
-           console.log(requestData);
            // FROM COMPLETE DATAW
            let CompletedData = requestData.filter(res => res.MaterialStatus === "COMPLETED");
            let NotCompletedData = requestData.filter(res => res.MaterialStatus === "INCOMPLETED");
@@ -283,7 +308,7 @@
                }
 
                row.innerHTML = `
-                 <td style='font-weight: 600;'>${part.PartNo}</td>
+                 <td style='font-weight: 600; text-align: left;'>${part.PartNo}</td>
                  <td>${part.PartName}</td>
                  <td class="qty-cell">${part.QtyUsed} / ${part.RequiredQty}</td>
                  <td class="qty-cell">${part.CurrentQty}</td>
@@ -356,7 +381,6 @@
                 row.innerHTML = `
                         <td>${partData.PartID}</td>
                         <td>${partData.PartNo}</td>
-                        <td>${partData.PartName}</td>
                         <td class="qty-cell">${allocatedParts[ID]}</td>
                         <td>
                             <div class="action-buttons">
@@ -424,7 +448,7 @@
         //document.getElementById('progressText').textContent = `20%`;
     }
 
-   
+
     // Action functions for allocated parts
     function removePart(partNumber) {
         delete allocatedParts[partNumber];
@@ -510,6 +534,7 @@
             }).then(() => {
                 allocatedParts = {};
                 populateRequiredTable();
+                RequestMain();
                 updateAllocatedTable();
             });
         }
@@ -544,6 +569,28 @@
         //}
     }
 
+        // Generic table search
+        function addTableSearch(inputId, tableId) {
+            const input = document.getElementById(inputId);
+            const table = document.getElementById(tableId);
+            const tbody = table.querySelector("tbody");
+
+            input.addEventListener("input", function () {
+                const filter = this.value.toLowerCase();
+                const rows = tbody.querySelectorAll("tr");
+
+                rows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    row.style.display = text.includes(filter) ? "" : "none";
+                });
+            });
+        }
+
+        // Apply to both tables
+        document.addEventListener("DOMContentLoaded", () => {
+            addTableSearch("searchRequired", "requiredTable");
+            addTableSearch("searchAllocated", "allocatedTable");
+        });
 
 
     function getAllocatedPartsFromTable() {
@@ -561,4 +608,4 @@
 
         return result;
     }
-</script>
+    </script>

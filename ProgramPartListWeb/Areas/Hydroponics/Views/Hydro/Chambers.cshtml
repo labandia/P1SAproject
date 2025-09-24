@@ -12,7 +12,7 @@
             <small style=" font-weight: 500;">Total PHP Cost:  </small><span id="TotalPH">$ 0.00</span> -
             <small style="font-weight: 500;">Total USD Cost:  </small><span id="TotalUSD">₱ 0.00</span>
         </div>
-        <p>No. Chamber available : <span id="chamberproduce">-</span></p>
+        <p>Chamber Produce #: <span id="chamberproduce">-</span></p>
         <div class="Inputcontainer" style="display: none;">
             <i class="fa-solid fa-magnifying-glass"></i>
             <input type="text" placeholder="Search here ... " id="searchbox" autocomplete="off" />
@@ -38,8 +38,7 @@
     <table>
         <thead>
             <tr>
-                <th style="width: 10%;"> <span style="margin-left: .5em;">Image</span>  </th>
-                <th style="width: 20%; text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-user-secret"></i>  <span style="margin-left: .5em;">Part No. / Partname</span> </th>
+                <th style="width: 20%; text-align: left; padding-left: 1.5em;"> <span style="margin-left: .5em;">Part No. / Partname</span> </th>
                 <th><i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Supplier</span>  </th>
                 <th><i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Require Qty</span>  </th>
                 <th> <span style="margin-left: .5em;">Unit Cost</span>  </th>
@@ -265,7 +264,7 @@
         const updatePaginationInfo = () => {
             const totalRecords = filteredData.length;
             const totalPages = Math.ceil(totalRecords / recordsPerPage);
-            $("#totalpageID").text(totalPages);
+            $("#totalpageID").text(totalPages); 
             $("#DatalengthID").text(totalRecords);
             return totalPages;
         };
@@ -296,24 +295,27 @@
 
                 const rowHtml = `
                         <tr class='rowClick' id='editButton_${rowData.PartID}'>
-                           <td data-cell="Images" style='display: flex; justify-content: center; align-items: center; border-top: 1px solid #dcdce2; border-bottom: none;'>
-                                   <img class="NoImages lazy"
+                           <td data-cell="Images" style='display: flex;  text-align: left; border-top: 1px solid #dcdce2; border-bottom: none;'>
+                                   <div class="flex_align" style='padding-left: 1.5em; gap: 15px;'>
+                                     <img class="NoImages lazy"
                                          src='@Url.Content("~/Content/Images/no-image.png")'
                                          data-src="${imagePath}"
                                          loading="lazy"
                                          onerror="this.src='@Url.Content("~/Content/Images/no-image.png")'" />
+                                     <div>
+                                         <p style='color: #185d8b; font-weight: 600; '>${rowData.PartName ? rowData.PartName : "-"}</p>
+                                         <small> ${rowData.PartNo}</small>
+                                     </div>
+                                 </div>
                             </td>
-                            <td style='text-align: left; padding-left: 1em;' data-cell="PartNo">
-                                <p style='color: #195e8b; font-weight: 600;'>${rowData.PartName ? rowData.PartName : "-"}</p>
-                                <small> ${rowData.PartNo}</small>
-                            </td>
+                         
                             <td data-cell="Supplier">${rowData.Supplier ? rowData.Supplier : "-"}</td>
                             <td data-cell="Supplier" style='font-weight: 600;'>${rowData.RequireQty ? rowData.RequireQty : "-"}</td>
-                            <td data-cell="UnitUSD" style='text-align: left;'>
+                            <td data-cell="UnitUSD" style='text-align: center; '>
                                 <p>Dollar ($): <strong> ${roundedNum}</strong>  </p>
                                 <p>Pesos (₱): <strong> ${rowData.UnitCost_PHP}</strong>  </p>
                              </td>
-                            <td data-cell="UnitUSD" style='text-align: left;'>
+                            <td data-cell="UnitUSD" style='text-align: center;'>
                                 <p>Dollar ($): <strong> ${totalUSDCost.toFixed(2) }</strong>  </p>
                                 <p>Pesos (₱):  <strong> ${rowData.TotalPHPCost}</strong>  </p>
                             </td>

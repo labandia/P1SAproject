@@ -32,6 +32,7 @@ namespace MSDMonitoring.Data
                                     FROM LineLimited
                                     WHERE 
                                         (Line IN (9, 11) AND rn <= 4)      -- 4 records for line 9 and 11
+                                         OR (Line = 10 AND rn <= 3) 
                                         OR (Line NOT IN (9, 11) AND rn <= 2) -- 2 records for all other lines
                                     ORDER BY Line, DateCheck DESC;";
             return SqlDataAccess.GetData<MSDCardModel>(strquery);

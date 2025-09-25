@@ -1,0 +1,47 @@
+﻿
+@{
+    ViewBag.Title = "TransactionHistory";
+    Layout = "~/Areas/Hydroponics/Views/Shared/HydroPartsLayout.cshtml";
+}
+
+<section class="InspectHead flex_space">
+    <div class="flex_align">
+        <div class="Inputcontainer">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" placeholder="Search here ... " id="searchbox" autocomplete="off" />
+            <div class="line"></div>
+        </div>
+    </div>
+
+    <div class="flex_align">
+        <div class="select-container">
+            <select id="Categoryselect">
+                <option value="0">-- Category --</option>
+            </select>
+        </div>
+        <button style="display: none;" id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-user-secret"></i> Add parts</button>
+    </div>
+</section>
+<hr />
+<div class="InspecTable">
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 15%;"> <i class="fa-regular fa-image"></i> <span style="margin-left: .5em;">Image</span>  </th>
+                <th style="width: 20%; text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-screwdriver-wrench"></i>  <span style="margin-left: .5em;">Part No. / Partname</span> </th>
+                <th> <i class="fa-regular fa-rectangle-list"></i> <span style="margin-left: .5em;">Category</span>  </th>
+                <th> <i class="fa-regular fa-address-card"></i> <span style="margin-left: .5em;">Supplier</span>  </th>
+                <th style="width: 10%;">  <span style="margin-left: .5em;">Action</span>  </th>
+            </tr>
+        </thead>
+        <tbody id="PartlistData">
+        </tbody>
+    </table>
+</div>
+
+<div class="MasterlistWrap_footer ">
+    <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
+
+    <div id="MastertableContainer" class="paginationPartlocal flex_align"></div>
+</div>
+

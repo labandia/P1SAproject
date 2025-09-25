@@ -334,6 +334,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
             {
                 foreach (var item in allo)
                 {
+                    Debug.WriteLine($"Order ID : {item.OrderID} - Part ID : {item.PartID} - Allocated :  {item.allocated}");
                     await _chambers.UpdatesRequestMaterials(item.OrderID, item.PartID, item.allocated);
                 }
 

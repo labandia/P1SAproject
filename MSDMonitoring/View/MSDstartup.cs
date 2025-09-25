@@ -425,7 +425,13 @@ namespace MSDMonitoring
             int selectedLine = Convert.ToInt32(LineSelect.Text);
 
             // ✅ Different record limits depending on line
-            int maxAllowed = (selectedLine == 9 || selectedLine == 11) ? 4 : 2;
+            int maxAllowed;
+            if (selectedLine == 9 || selectedLine == 11)
+                maxAllowed = 4;
+            else if (selectedLine == 10)
+                maxAllowed = 3;
+            else
+                maxAllowed = 2;
 
             int lineCount = data.Count(res => res.Line == selectedLine);
 

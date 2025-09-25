@@ -9,7 +9,7 @@
     <link rel="icon" type="image/x-icon" href="@Url.Content("~/Content/Images/patrol .ico")">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@ViewBag.Title</title>
-    <link rel="preload" href="~/Content/fonts/Inter.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+    <link rel="preload" href="~/Content/fonts/Manrope-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
     <script src="~/Scripts/bootstrap.bundle.min.js"></script>
     <link href="~/Content/css/OrderDetails.css" rel="stylesheet" />
 
@@ -21,154 +21,133 @@
 </head>
 
 <input type="hidden" id="chambID" value="@ID" />
+@*<p style="font-weight: 600; margin: 0;">TargetDate: </p><spam id="TargetDate">*@
+
+<nav class="customnav">
+    <div class="customnav_title">
+        <a href="/Hydroponics/Hydro/Orderpage">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+        <div>
+            <span style="font-size: 1rem; font-weight: 500;">@ID</span>
+            <p id="ChamberName" style="opacity: .6;">Chamber selected : NUPON</p>
+        </div>
+        <div class="select-container">
+            <select id="RequestStatus" name="RequestStatus" class="default">
+                <option value="ONGOING" selected>ONGOING</option>
+                <option value="COMPLETED">COMPLETED</option>
+                <option value="SHIPPED">FOR SHIPPED</option>
+            </select>
+        </div>
+    </div>
+    <div class="customnav_Progress">
+        <label>Completion rate : <span id="completeRate"></span> </label>
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+    </div>
+</nav>
+
+<div class="ChamberWrapper">
+    <div class="Chamber_container">
+        <div class="ChamberMain">
+            <div class="Chamber_Details">
+                <div class="Mold_tabcontainer">
+                    <div class="Customcontainer">
+                        <div class="Mold_tabs">
+                            <button class="Mold_tab active" data-target="All">Required <span id="RequireCounts"></span></button>
+                            <button class="Mold_tab" data-target="Allocated">Allocated <span id="Counts"></span></button>
+                            <button class="Mold_tab" data-target="Completed">Completed <span id="CompleteCounts"></span></button>
+                            <div class="Mold_slider"></div>
+                        </div>
+                        <div class="Mold_contentbox">
+                            <div class="Mold_content show" id="All">
+                                <div class="search-container">
+                                    <input type="text" class="search-input" id="requiredSearch" placeholder="Search by Number or Partno...">
+                                    <span class="search-info" id="requiredSearchInfo">Showing all items</span>
+                                </div>
+
+                                <div class="requiredTable_Wrapper">
+                                    <table id="requiredTable">
+                                        <thead>
+                                            <tr>
+                                                <th class="qty-cell">Partno / Partname</th>
+                                                <th class="qty-cell">Required</th>
+                                                <th class="qty-cell">Available</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
 
 
+                            </div>
+                            <div class="Mold_content" id="Allocated">
+                                <div class="search-container">
+                                    <input type="text" class="search-input" id="allocatedSearch" placeholder="Search by Number or Partno...">
+                                    <span class="search-info" id="allocatedSearchInfo">Showing all items</span>
+                                </div>
 
-<section class="OrderDetailHeader">
-    <div class="Customcontainer">
-        <div class="flex_space">
-            <div class="flex_align" style="gap: 15px;">
-                <a style="color: #222;" href="/Hydroponics/Hydro/Orderpage"><i class="fa-solid fa-arrow-left"></i></a>
-                <div>
-                    <h1 class="page-title" id="titlepage">@ID</h1>
-                    <div class="flex_align" style="margin-top: .3em;">
-                        <span id="ChamberName"> </span>
-                        <div class="select-container">
-                            <select id="RequestStatus" name="RequestStatus" class="default" >
-                                <option value="ONGOING" selected>ONGOING</option>
-                                <option value="COMPLETED">COMPLETED</option>
-                                <option value="SHIPPED">FOR SHIPPED</option>
-                            </select>
+                                <div class="allocatedTable_Wrapper">
+                                    <table id="allocatedTable">
+                                        <thead>
+                                            <tr>
+                                                <th>No.</th>
+                                                <th>Partno</th>
+                                                <th class="qty-cell">Allocated</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="controls">
+                                    <button class="btn-primary" id="autoFillBtn">Auto-Fill All Available</button>
+                                    <button class="btn-primary" id="clearAllBtn">Clear All Allocations</button>
+                                    <button class="btn-primary" id="completeOrderBtn">Save Details</button>
+                                </div>
+                            </div>
+                            <div class="Mold_content" id="Completed">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 30%; text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-screwdriver-wrench"></i>  <span style="margin-left: .5em;">Part No. / Partname</span> </th>
+                                            <th style="width: 20%;"> <i class="fa-regular fa-rectangle-list"></i> <span style="margin-left: .5em;">Category</span>  </th>
+                                            <th style="width: 10%;"> <span style="margin-left: .5em;">Quantity Used</span>  </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="RequestWrapper">
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="">
-                <div class="flex_align">
-                    <p style="font-weight: 600; margin: 0;">TargetDate: </p><spam id="TargetDate">
+            <div class="Chamber_Images">
+                <label style="font-weight: 600; font-size: 1.1rem;">Chamber Guide:</label>
+                <div class="Chamber_preview">
+                    <img loading="lazy" src="~/Content/Images/HydroChamber.png" alt="ChamberDisplay" />
                 </div>
-                <label>Completion rate : <span id="completeRate"></span> </label>
-                <div class="progress-bar-container">
-                    <div class="progress-bar" id="progressBar"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 
-
-<div class="Mold_tabcontainer">
-    <div class="Customcontainer">
-        <div class="Mold_tabs">
-            <button class="Mold_tab active" data-target="All">Allocation </button>
-            <button class="Mold_tab" data-target="Completed">Completed Parts</button>
-            <div class="Mold_slider"></div>
-        </div>
-        <div class="Mold_contentbox">
-            <div class="Mold_content show" id="All">
-                
-
-                <div class="parts-fulfillment">
-                    <div class="table-container">
-                        <div class="table-header">
-                            <h5 style="margin: 0; font-size: 1rem; font-weight: 600;">Required Parts</h5>
-                            <div>
-                                <input type="text" id="searchRequired" placeholder="Search parts list" />
-                            </div>
-                        </div>
-                       
-                        <div class="requiredTable_Wrapper">
-                            <table id="requiredTable">
-                                <thead>
-                                    <tr>
-                                        <th style="padding-left: 1.5em;">Partno</th>
-                                        <th>PartName</th>
-                                        <th class="qty-cell">Required</th>
-                                        <th class="qty-cell">Available</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- Rows will be populated by JavaScript -->
-                                </tbody>
-                            </table>
-                        </div>
+                <div class="Chamber_Images_selector">
+                    <div class="Chamber_Images_container">
+                        <img loading="lazy" src="~/Content/Images/HydroChamber.png" alt="Chamber Section A" />
+                        <img loading="lazy" src="~/Content/Images/HydrochamberPart2.png" alt="Chamber Section B" />
+                        <img loading="lazy" src="~/Content/Images/Electrical.png"  alt="Chamber Section C" />
                     </div>
-
-                    <div class="table-container">
-                        <div class="table-header">
-                            <h5 style="margin: 0; font-size: 1rem; font-weight: 600;">Allocated Parts</h5>
-                            <div>
-                                <input type="text" id="searchAllocated" placeholder="Search parts list" />
-                            </div>
-                        </div>
-
-                        <div class="allocatedTable_Wrapper">
-                            <table id="allocatedTable">
-                                <thead>
-                                    <tr>
-                                        <th>No.</th>
-                                        <th>Partno</th>
-                                        <th class="qty-cell">Allocated</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- Rows will be populated by JavaScript -->
-                                </tbody>
-                            </table>
-                        </div>
-
-                            
-                     </div>
                 </div>
-
-
-
-
-
-                <div class="controls">
-                    <button class="btn-primary" id="autoFillBtn">Auto-Fill All Available</button>
-                    <button class="btn-primary" id="clearAllBtn">Clear All Allocations</button>
-                    <button class="btn-primary" id="completeOrderBtn">Save Details</button>
-                </div>
-
-
-            </div>
-
-            <div class="Mold_content" id="Completed">
-                <table>
-                    <thead>
-                        <tr>
-                            <th style="width: 30%; text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-screwdriver-wrench"></i>  <span style="margin-left: .5em;">Part No. / Partname</span> </th>
-                            <th style="width: 20%;"> <i class="fa-regular fa-rectangle-list"></i> <span style="margin-left: .5em;">Category</span>  </th>
-                            <th style="width: 10%;"> <span style="margin-left: .5em;">Quantity Used</span>  </th>
-                            <th style="width: 10%;">  <span style="margin-left: .5em;">Required Qty</span>  </th>
-                            <th style="width: 10%;">  <span style="margin-left: .5em;">Status</span>  </th>
-                        </tr>
-                    </thead>
-                    <tbody id="RequestWrapper">
-                    </tbody>
-                </table>
-
             </div>
         </div>
     </div>
-
-       
 </div>
 
 
 
-
-
-
-
-
-
-
-
-
-    <script type="text/javascript">
+<script type="text/javascript">
     const select = document.getElementById("RequestStatus");
     const ID = $("#chambID").val();
     let requestData = [];
@@ -213,8 +192,6 @@
         });
     });
 
-
-
     // Track allocated parts
     let allocatedParts = {};
 
@@ -222,7 +199,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         populateRequiredTable();
         RequestMain();
-        updateProgress();
+        //updateProgress();
         //updateCounts();
         //updateProgress();
 
@@ -233,14 +210,14 @@
         document.getElementById('completeOrderBtn').addEventListener('click', completeOrder);
     });
 
+
     const RequestMain = async () => {
         let res = await FetchAuthenticate('@Url.Action("GetMainRequestList", "Hydro")', { orderID: ID });
         if (res && res.Success) {
-           $("#ChamberName").text(`Chamber selected : ${res.Data.ChamberName}`);
-           $("#ChambersOrdered").text(res.Data.ChambersOrdered);
-           $("#TargetDate").text(res.Data.TargetDate);
-           $("#RequestStatus").val(res.Data.RequestStatus);
-           $("#MaterialStatus").text(res.Data.MaterialStatus);
+            $("#ChamberName").text(`Chamber selected : ${res.Data.ChamberName}`);
+            //$("#TargetDate").text(res.Data.TargetDate);
+            $("#RequestStatus").val(res.Data.RequestStatus);
+            $("#MaterialStatus").text(res.Data.MaterialStatus);
 
 
             const percent = res.Data.CompletionPercent || 0;
@@ -258,68 +235,82 @@
             } else {
                 progressBar.style.background = "linear-gradient(90deg, #2ecc71, #27ae60)"; // green tones
             }
-       }
+        }
     }
-
 
     // Populate the required parts table
-    const populateRequiredTable = async () => {
+     const populateRequiredTable = async () => {
 
-       let res = await FetchAuthenticate('@Url.Action("GetRequestDetails", "Hydro")', { orderID: ID });
-       if (res && res.Success) {
-           requestData = res.Data;
-           // FROM COMPLETE DATAW
-           let CompletedData = requestData.filter(res => res.MaterialStatus === "COMPLETED");
-           let NotCompletedData = requestData.filter(res => res.MaterialStatus === "INCOMPLETED");
+        let res = await FetchAuthenticate('@Url.Action("GetRequestDetails", "Hydro")', { orderID: ID });
+        if (res && res.Success) {
+            requestData = res.Data;
+            // FROM COMPLETE DATAW
+            let CompletedData = requestData.filter(res => res.MaterialStatus === "COMPLETED");
+            let NotCompletedData = requestData.filter(res => res.MaterialStatus === "INCOMPLETED");
+            $("#RequireCounts").text(`(${NotCompletedData.length})`);
+            $("#CompleteCounts").text(`(${CompletedData.length})`);
 
-           let TableData = $("#RequestWrapper");
-           TableData.empty();
-           $.each(CompletedData, function (index, row) {
+            let TableData = $("#RequestWrapper");
+            TableData.empty();
+            $.each(CompletedData, function (index, row) {
 
-               const loadData = `<tr class='Editbtnbutton' id='editButton_${row.OrderDetailID}'>
-                                    <td style='text-align: left; padding-left: 1em;' data-cell="PartNo">
-                                        <p style='color: #0c382ce8; font-weight: 600;'>${row.PartName ? row.PartName : "-"}</p>
-                                        <small> ${row.PartNo}</small>
-                                    </td>
-                                    <td data-cell="Supplier">${row.CategoryName ? row.CategoryName : "-"}</td>
-                                    <td data-cell="Supplier">${row.QtyUsed ? row.QtyUsed : "-"}</td>
-                                    <td data-cell="UnitUSD">${row.RequiredQty ? row.RequiredQty : "-"}</td>
-                                    <td data-cell="UnitUSD">${row.MaterialStatus ? row.MaterialStatus : "-"}</td>
-                                </tr>`;
-               TableData.append(loadData);
-           });
+                const loadData = `<tr class='Editbtnbutton' id='editButton_${row.OrderDetailID}'>
+                                     <td style='text-align: left; padding-left: 1em;' data-cell="PartNo">
+                                         <p style='color: #0c382ce8; font-weight: 600;'>${row.PartName ? row.PartName : "-"}</p>
+                                         <small> ${row.PartNo}</small>
+                                     </td>
+                                     <td data-cell="Supplier">${row.CategoryName ? row.CategoryName : "-"}</td>
+                                     <td data-cell="Supplier">${row.QtyUsed ? row.QtyUsed : "-"}</td>
+                                 </tr>`;
+                TableData.append(loadData);
+            });
 
-           const tbody = document.querySelector('#requiredTable tbody');
-           tbody.innerHTML = '';
+            const tbody = document.querySelector('#requiredTable tbody');
+            tbody.innerHTML = '';
 
-           NotCompletedData.forEach(part => {
-               const row = document.createElement('tr');
-               row.setAttribute('data-ID', part.PartID);
-               row.setAttribute('data-part', part.PartNo);
-               row.setAttribute('data-remain', part.RemainQty);
-               row.setAttribute('data-required', part.RequiredQty);
-               row.setAttribute('data-available', part.CurrentQty);
+            NotCompletedData.forEach(part => {
+                const row = document.createElement('tr');
+                row.setAttribute('data-ID', part.PartID);
+                row.setAttribute('data-part', part.PartNo);
+                row.setAttribute('data-remain', part.RemainQty);
+                row.setAttribute('data-required', part.RequiredQty);
+                row.setAttribute('data-available', part.CurrentQty);
 
-               // Apply status classes based on availability
-               if (part.CurrentQty === 0) {
-                   row.classList.add('critical-shortage');
-               } else if (part.CurrentQty < part.RequiredQty) {
-                   row.classList.add('shortage');
-               }
+                // Apply status classes based on availability
+                if (part.CurrentQty === 0) {
+                    row.classList.add('critical-shortage');
+                } else if (part.CurrentQty < part.RequiredQty) {
+                    row.classList.add('shortage');
+                }
 
-               row.innerHTML = `
-                 <td style='font-weight: 600; text-align: left;'>${part.PartNo}</td>
-                 <td>${part.PartName}</td>
-                 <td class="qty-cell">${part.QtyUsed} / ${part.RequiredQty}</td>
-                 <td class="qty-cell">${part.CurrentQty}</td>
-             `;
+                row.innerHTML = `
+                  <td style='font-weight: 600; text-align: left;'>
+                    <div>
+                        <p style='color: #185d8b; font-weight: 600;'>${part.PartName ? part.PartName : "-"}</p>
+                        <small> ${part.PartNo}</small>
+                    </div>
+                  </td>
+                  <td class="qty-cell">${part.QtyUsed} / ${part.RequiredQty}</td>
+                  <td class="qty-cell">${part.CurrentQty}</td>
+              `;
 
-               tbody.appendChild(row);
-           });
-       }
-    }
+                tbody.appendChild(row);
+            });
+        }
+     }
 
 
+
+    // Image selector functionality
+    const thumbnails = document.querySelectorAll('.Chamber_Images_container img');
+    const mainImage = document.querySelector('.Chamber_preview img');
+
+    thumbnails.forEach(thumb => {
+        thumb.addEventListener('click', function () {
+            mainImage.src = this.src;
+            mainImage.alt = this.alt;
+        });
+    });
 
     // Handle clicks on the required table
     function handleRequiredTableClick(e) {
@@ -340,8 +331,6 @@
 
         allocatePart(partID, partNumber, required, available, remainTable);
     }
-
-
     // Allocate a part to the order
     function allocatePart(ID, partNumber, required, available, remainTable) {
 
@@ -357,6 +346,7 @@
         if (allocatedParts[ID] < remainTable && allocatedParts[ID] < available) {
             allocatedParts[ID]++;
 
+
             updateAllocatedTable();
             updateRequiredTableStyles();
             //updateCounts();
@@ -369,6 +359,10 @@
 
     // Update the allocated parts table
     function updateAllocatedTable() {
+        // Count only parts with allocation > 0
+        let allocatedCount = Object.values(allocatedParts).filter(qty => qty > 0).length;
+        $("#Counts").text(`(${allocatedCount})`);
+
         const tbody = document.querySelector('#allocatedTable tbody');
         tbody.innerHTML = '';
 
@@ -379,17 +373,17 @@
 
 
                 row.innerHTML = `
-                        <td>${partData.PartID}</td>
-                        <td>${partData.PartNo}</td>
-                        <td class="qty-cell">${allocatedParts[ID]}</td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-remove" onclick="removePart('${ID}')">Remove</button>
-                                <button class="btn btn-increment" onclick="incrementPart('${ID}')">+</button>
-                                <button class="btn btn-decrement" onclick="decrementPart('${ID}')">-</button>
-                            </div>
-                        </td>
-                    `;
+                     <td>${partData.PartID}</td>
+                     <td>${partData.PartNo}</td>
+                     <td class="qty-cell">${allocatedParts[ID]}</td>
+                     <td>
+                         <div class="action-buttons">
+                             <button class="btn btn-remove" onclick="removePart('${ID}')">Remove</button>
+                             <button class="btn btn-increment" onclick="incrementPart('${ID}')">+</button>
+                             <button class="btn btn-decrement" onclick="decrementPart('${ID}')">-</button>
+                         </div>
+                     </td>
+                 `;
 
                 tbody.appendChild(row);
             }
@@ -422,176 +416,166 @@
     }
 
 
-    // Update the count badges
-    function updateCounts() {
-        const requiredCount = partsData.length;
-        const allocatedCount = Object.keys(allocatedParts).filter(p => allocatedParts[p] > 0).length;
 
-        document.getElementById('requiredCount').textContent = requiredCount;
-        document.getElementById('allocatedCount').textContent = allocatedCount;
-    }
+     // Update the count badges
+     function updateCounts() {
+         const requiredCount = partsData.length;
+         const allocatedCount = Object.keys(allocatedParts).filter(p => allocatedParts[p] > 0).length;
 
-
-    // Update the progress bar
-    function updateProgress() {
-        //let totalRequired = 0;
-        //let totalAllocated = 0;
-
-        //partsData.forEach(part => {
-        //    totalRequired += part.required;
-        //    totalAllocated += allocatedParts[part.partNumber] || 0;
-        //});
-
-        //const progress = totalRequired > 0 ? (totalAllocated / totalRequired) * 100 : 0;
-
-        document.getElementById('progressBar').style.width = `20%`;
-        //document.getElementById('progressText').textContent = `20%`;
-    }
+         document.getElementById('requiredCount').textContent = requiredCount;
+         document.getElementById('allocatedCount').textContent = allocatedCount;
+     }
 
 
-    // Action functions for allocated parts
-    function removePart(partNumber) {
-        delete allocatedParts[partNumber];
-        updateAllocatedTable();
-        updateRequiredTableStyles();
-        //updateCounts();
-        //updateProgress();
-    }
+     // Update the progress bar
+     function updateProgress() {
+         //let totalRequired = 0;
+         //let totalAllocated = 0;
 
-    function incrementPart(ID) {
-        const partData = requestData.find(p => p.PartID === parseInt(ID));
-        if (!partData) return;
+         //partsData.forEach(part => {
+         //    totalRequired += part.required;
+         //    totalAllocated += allocatedParts[part.partNumber] || 0;
+         //});
 
-        const remain = partData.RemainQty;
-        const available = partData.CurrentQty;
-        const allocated = allocatedParts[ID] || 0;
-        if (allocated < remain && allocated < available) {
-            allocatedParts[ID]++;
-            updateAllocatedTable();
-            updateRequiredTableStyles();
-            //updateCounts();
-            //updateProgress();
-        } else {
-            alert(`Cannot allocate more of ${partData.PartNo}. Maximum: ${Math.min(remain, available)}`);
-        }
-    }
+         //const progress = totalRequired > 0 ? (totalAllocated / totalRequired) * 100 : 0;
 
-    function decrementPart(ID) {
-        if (allocatedParts[ID] > 1) {
-            allocatedParts[ID]--;
-            updateAllocatedTable();
-            updateRequiredTableStyles();
-            //updateCounts();
-            //updateProgress();
-        } else {
-            removePart(ID);
-        }
-    }
-
-    // Auto-fill all available parts
-    function autoFillAllAvailable() {
-        requestData.forEach(part => {
-            const maxToAllocate = Math.min(part.RequiredQty, part.CurrentQty);
-            allocatedParts[parseInt(part.PartID)] = maxToAllocate;
-        });
-
-        updateAllocatedTable();
-        updateRequiredTableStyles();
-        //updateCounts();
-        //updateProgress();
-    }
-
-    function clearAllAllocations() {
-        if (Object.keys(allocatedParts).length === 0) return;
-
-        if (confirm('Are you sure you want to clear all allocations?')) {
-            allocatedParts = {};
-            updateAllocatedTable();
-            updateRequiredTableStyles();
-            //updateCounts();
-            //updateProgress();
-        }
-    }
+         document.getElementById('progressBar').style.width = `20%`;
+         //document.getElementById('progressText').textContent = `20%`;
+     }
 
 
-    async function completeOrder() {
-        const allocations = getAllocatedPartsFromTable();
+     // Action functions for allocated parts
+     function removePart(partNumber) {
+         delete allocatedParts[partNumber];
+         updateAllocatedTable();
+         updateRequiredTableStyles();
+         //updateCounts();
+         //updateProgress();
+     }
 
-        let result = await fetch('@Url.Action("UpdatesRequestMaterialsV2", "Hydro")', {
-            method: "POST",
-            headers: { "Content-Type": "application/json; charset=utf-8" },
-            body: JSON.stringify(allocations)
-        });
+     function incrementPart(ID) {
+         const partData = requestData.find(p => p.PartID === parseInt(ID));
+         if (!partData) return;
 
-        let res = await result.json();
-        if (res && res.Success) {
-            Swal.fire({
-                title: "Success",
-                text: res.Message,
-                icon: "success",
-                showConfirmButton: false,
-                timer: 1500
-            }).then(() => {
-                allocatedParts = {};
-                populateRequiredTable();
-                RequestMain();
-                updateAllocatedTable();
-            });
-        }
+         const remain = partData.RemainQty;
+         const available = partData.CurrentQty;
+         const allocated = allocatedParts[ID] || 0;
+         if (allocated < remain && allocated < available) {
+             allocatedParts[ID]++;
 
-        //const allocatedCount = Object.keys(allocatedParts).filter(p => allocatedParts[p] > 0).length;
+             updateAllocatedTable();
+             updateRequiredTableStyles();
+             //updateCounts();
+             //updateProgress();
+         } else {
+             alert(`Cannot allocate more of ${partData.PartNo}. Maximum: ${Math.min(remain, available)}`);
+         }
+     }
 
-        //if (allocatedCount === 0) {
-        //    alert('No parts have been allocated. Please allocate parts before completing the order.');
-        //    return;
-        //}
+     function decrementPart(ID) {
+         if (allocatedParts[ID] > 1) {
+             allocatedParts[ID]--;
+             updateAllocatedTable();
+             updateRequiredTableStyles();
+             //updateCounts();
+             //updateProgress();
+         } else {
+             removePart(ID);
+         }
+     }
+     // Get lengths for all orders
+     function getAllAllocationLengths() {
+         let lengths = {};
 
-        //// Check if all required parts are fully allocated
-        //let allFullyAllocated = true;
-        //let message = '';
+         for (let orderID in allocatedParts) {
+             if (allocatedParts.hasOwnProperty(orderID)) {
+                 lengths[orderID] = allocatedParts[orderID].length;
+             }
+         }
 
-        //requestData.forEach(part => {
-        //    const allocated = allocatedParts[part.partID] || 0;
-        //    if (allocated < part.RequiredQty) {
-        //        allFullyAllocated = false;
-        //        message += `• ${part.partNumber}: ${allocated}/${part.RequiredQty} allocated\n`;
-        //    }
-        //});
+         return lengths;
+     }
 
-        //if (allFullyAllocated) {
-        //    alert('Order completed successfully! All parts have been fully allocated.');
-        //    // In a real app, you would submit the order here
-        //} else {
-        //    if (confirm(`Some parts are not fully allocated. Proceed anyway?\n\n${message}`)) {
-        //        alert('Order completed with partial allocation.');
-        //        // In a real app, you would submit the order here
-        //    }
-        //}
-    }
 
-        // Generic table search
-        function addTableSearch(inputId, tableId) {
-            const input = document.getElementById(inputId);
-            const table = document.getElementById(tableId);
-            const tbody = table.querySelector("tbody");
+     // Auto-fill all available parts
+     function autoFillAllAvailable() {
+         requestData.forEach(part => {
+             const maxToAllocate = Math.min(part.RequiredQty, part.CurrentQty);
+             allocatedParts[parseInt(part.PartID)] = maxToAllocate;
+         });
 
-            input.addEventListener("input", function () {
-                const filter = this.value.toLowerCase();
-                const rows = tbody.querySelectorAll("tr");
+         updateAllocatedTable();
+         updateRequiredTableStyles();
+         //updateCounts();
+         //updateProgress();
+     }
 
-                rows.forEach(row => {
-                    const text = row.textContent.toLowerCase();
-                    row.style.display = text.includes(filter) ? "" : "none";
-                });
-            });
-        }
+     function clearAllAllocations() {
+         if (Object.keys(allocatedParts).length === 0) return;
 
-        // Apply to both tables
-        document.addEventListener("DOMContentLoaded", () => {
-            addTableSearch("searchRequired", "requiredTable");
-            addTableSearch("searchAllocated", "allocatedTable");
-        });
+         if (confirm('Are you sure you want to clear all allocations?')) {
+             allocatedParts = {};
+             updateAllocatedTable();
+             updateRequiredTableStyles();
+             //updateCounts();
+             //updateProgress();
+         }
+     }
 
+
+     async function completeOrder() {
+         const allocations = getAllocatedPartsFromTable();
+         let result = await fetch('@Url.Action("UpdatesRequestMaterialsV2", "Hydro")', {
+             method: "POST",
+             headers: { "Content-Type": "application/json; charset=utf-8" },
+             body: JSON.stringify(allocations)
+         });
+
+         let res = await result.json();
+         if (res && res.Success) {
+             Swal.fire({
+                 title: "Success",
+                 text: res.Message,
+                 icon: "success",
+                 showConfirmButton: false,
+                 timer: 1500
+             }).then(() => {
+                 allocatedParts = {};
+                 populateRequiredTable();
+                 RequestMain();
+                 updateAllocatedTable();
+             });
+         }
+
+         //const allocatedCount = Object.keys(allocatedParts).filter(p => allocatedParts[p] > 0).length;
+
+         //if (allocatedCount === 0) {
+         //    alert('No parts have been allocated. Please allocate parts before completing the order.');
+         //    return;
+         //}
+
+         //// Check if all required parts are fully allocated
+         //let allFullyAllocated = true;
+         //let message = '';
+
+         //requestData.forEach(part => {
+         //    const allocated = allocatedParts[part.partID] || 0;
+         //    if (allocated < part.RequiredQty) {
+         //        allFullyAllocated = false;
+         //        message += `• ${part.partNumber}: ${allocated}/${part.RequiredQty} allocated\n`;
+         //    }
+         //});
+
+         //if (allFullyAllocated) {
+         //    alert('Order completed successfully! All parts have been fully allocated.');
+         //    // In a real app, you would submit the order here
+         //} else {
+         //    if (confirm(`Some parts are not fully allocated. Proceed anyway?\n\n${message}`)) {
+         //        alert('Order completed with partial allocation.');
+         //        // In a real app, you would submit the order here
+         //    }
+         //}
+     }
 
     function getAllocatedPartsFromTable() {
         const rows = document.querySelectorAll('#allocatedTable tbody tr');
@@ -602,10 +586,32 @@
             result.push({
                 OrderID: ID,
                 PartID: parseInt(cells[0].textContent.trim()),
-                allocated: parseInt(cells[3].textContent.trim(), 10)
+                allocated: parseInt(cells[2].textContent.trim(), 10)
             });
         });
 
         return result;
     }
-    </script>
+
+      $("#RequestStatus").on('change', async function (e) {
+     e.preventDefault();
+     let formData = new FormData();
+     formData.append('OrderID', ID);
+     formData.append('RequestStatus', e.target.value);
+
+     let data = Object.fromEntries(formData);
+     let res = await postData('@Url.Action("ChangeStatusRequest", "Hydro")', formData);
+     console.log(res);
+     if (res && res.Success) {
+          Swal.fire({
+              title: "Success",
+              text: res.Message,
+              icon: "success",
+              showConfirmButton: false,
+              timer: 1500
+          }).then(() => {
+              RequestMain();
+          });
+     }
+ });
+</script>

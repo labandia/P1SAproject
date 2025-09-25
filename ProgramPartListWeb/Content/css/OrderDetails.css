@@ -1,133 +1,191 @@
-﻿    @font-face {
-        font-family: 'Inter';
-        src: url('/Content/fonts/Inter.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-    }
+﻿@font-face {
+    font-family: 'Inter';
+    src: url('/Content/fonts/Inter.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
 
-    @font-face {
-        font-family: 'Manrope';
-        src: url('/Content/fonts/Manrope-Regular.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-    }
+@font-face {
+    font-family: 'Manrope';
+    src: url('/Content/fonts/Manrope-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
 
-    /*========== VARIABLES CSS ==========*/
+/*========== VARIABLES CSS ==========*/
+:root {
+    --header-height: 3.5rem;
+    --nav-width: 250px;
+    /*========== Colors ==========*/
+    --primary-color: hsl(204, 70%, 53%);
+    --primary-hover: hsl(204, 70%, 32%);
+    --primary-alt-color: #F4F0FA;
+    --first-color-light: #F4F0FA;
+    --title-color: #010202;
+    --text-color: #58555E;
+    --text-color-light: #A5A1AA;
+    --body-color: #F9F6FD;
+    --container-color: #FFFFFF;
+    /*========== Font and typography ==========*/
+    --custom-body-font: 'Manrope', sans-serif;
+    --custom-normal-font-size: 13px;
+    --custom-small-font-size: 11px;
+    --custom-smaller-font-size: 9px;
+}
+
+
+@media screen and (min-width: 1024px) {
     :root {
-        --header-height: 3.5rem;
-        --nav-width: 250px;
-        /*========== Colors ==========*/
-        --primary-color: hsl(204, 70%, 53%);
-        --primary-hover: hsl(204, 70%, 32%);
-        --primary-alt-color: #F4F0FA;
-        --first-color-light: #F4F0FA;
-        --title-color: #010202;
-        --text-color: #58555E;
-        --text-color-light: #A5A1AA;
-        --body-color: #F9F6FD;
-        --container-color: #FFFFFF;
-        /*========== Font and typography ==========*/
-        --custom-body-font: 'Manrope', sans-serif;
-        --custom-normal-font-size: 13px;
-        --custom-small-font-size: 11px;
-        --custom-smaller-font-size: 9px;
+        --custom-normal-font-size: 14px;
+        --custom-small-font-size: 12px;
+        --custom-smaller-font-size: 10px;
     }
 
-    @media screen and (min-width: 1024px) {
-        :root {
-            --custom-normal-font-size: 14px;
-            --custom-small-font-size: 12px;
-            --custom-smaller-font-size: 10px;
-        }
-
-        .floatBtn {
-            bottom: 4em !important;
-            right: 4em !important;
-        }
+    .floatBtn {
+        bottom: 4em !important;
+        right: 4em !important;
     }
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--custom-body-font) !important;
+    height: 100vh;
+    overflow-x: hidden;
+    background-color: #f9f9f9;
+}
 
 
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: var(--custom-body-font) !important;
-    }
-
-    body {
-        background-color: #f5f7f9;
-        color: #333;
-        line-height: 1.6;
-    }
-
-    .OrderDetailHeader{
-        padding: 1.5em 0  0;
-    }
-
-    .Customcontainer {
-        max-width: 1500px;
-        width: 90%;
-        margin: 0 auto;
-    }
-
-    .OrderDetailHeader  #titlepage {
-        color: #222;
-        font-weight: 700;
-        font-size: 1.5rem;
-    }
-
-/* ============= PROGRESS BAR =================== */
-    .progress-bar-container {
-        height: 10px; /* height of container */
+/*  ################ NAVIGATION TOP ######################### */
+    .customnav {
         width: 100%;
-        background-color: #ecf0f1; /* light gray background */
-        border-radius: 10px;
-        overflow: hidden;
-        margin-top: .2em;
+        height: auto;
+        min-height: 5rem;
+        position: fixed;
+        display: flex;
+        flex-wrap: wrap;
+        top: 0;
+        z-index: 100;
+        background: #f5f5f5;
+        color: #fff;
+        box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
     }
 
-    .progress-bar {
-        height: 100%; /* make the bar fill container height */
-        width: 0%; /* default, overwritten by inline width */
-        transition: width 0.5s ease;
-        border-radius: 10px 0 0 10px;
+    .customnav .customnav_title {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 1em;
+        background: hsl(208, 30%, 11%);
+        padding: 20px 1.5em;
+        clip-path: polygon(0 0, 100% 0%, 95% 100%, 0% 100%);
     }
 
-    #RequestStatus {
-        padding: 4px 5px;
-        border: none;
-        border-radius: 6px;
-        font-size: 12px;
-        font-weight: bold;
-        cursor: pointer;
-        outline: none;
+    .customnav .customnav_title a {
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
     }
 
-       /* Default background */
-    .default {
-       background-color: #3498db; /* Blue */
-    }
-    .COMPLETED {
-       background-color: rgba(14, 76, 170, 0.2);
-       color: rgb(9, 18, 100);
-    }
-    .ONGOING {
-       background-color: rgba(170, 24, 14, 0.2);
-       color: rgb(100, 9, 9);
-    }
-    .SHIPPED {
-      background-color: #f39c12; /* Orange */
+    .customnav_Progress {
+        width: 100%;
+        display: flex;
+        padding: 20px 1.5em;
+        align-items: flex-start;
+        flex-direction: column;
+        color: #222;
+        font-weight: 600;
     }
 
-    /* Keep dropdown list options white */
-    option {
-      background-color: white;
-      color: black;
-      border: none;
-    }
+.progress-bar-container {
+    height: 10px;
+    width: 100%;
+    max-width: 200px;
+    background-color: #ecf0f1;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: .5em;
+}
 
+.progress-bar {
+    height: 100%;
+    width: 12%;
+    transition: width 0.5s ease;
+    border-radius: 10px 0 0 10px;
+    background: red;
+}
 
-    /* ================ TABS DESIGN =========================== */
+#RequestStatus {
+    padding: 4px 5px;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    outline: none;
+}
+
+/* Default background */
+.default {
+    background-color: #3498db;
+}
+
+.COMPLETED {
+    background-color: rgba(14, 76, 170, 0.2);
+    color: rgb(9, 18, 100);
+}
+
+.ONGOING {
+    background-color: rgba(170, 24, 14, 0.2);
+    color: rgb(100, 9, 9);
+}
+
+.SHIPPED {
+    background-color: #f39c12;
+}
+
+/* Keep dropdown list options white */
+option {
+    background-color: white;
+    color: black;
+    border: none;
+}
+
+/*  ######################################### */
+
+.ChamberWrapper {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    height: calc(100vh - 5rem);
+    top: 5rem;
+    overflow-y: auto;
+}
+
+.Chamber_container {
+    max-width: 1800px;
+    width: 95%;
+    margin: 0 auto;
+    padding: .5rem 0;
+}
+
+.ChamberMain {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+    align-items:flex-start;
+}
+
+/* ================ TABS DESIGN =========================== */
     .Mold_tabs {
         display: flex;
         position: relative;
@@ -180,120 +238,291 @@
       transform: translateX(0);
       display: block;
     }
-/* ================= ORDER DETAILS LAYOUT  ========================== */
-        .parts-fulfillment {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 30px;
+
+    /* Search Container */
+    .search-container {
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .search-input {
+        flex: 1;
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+    }
+
+    .search-info {
+        font-size: 12px;
+        color: #666;
+    }
+
+/*  ######################################### */
+ /* ################# CHAMBER IMAGES ################ */
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
         }
 
-    
-        .btn-remove {
-            background-color: #e74c3c !important;
-            color: white !important;
+        .Chamber_Details, .Chamber_Images {
+            position: relative;
+            padding: 1em 0;
         }
 
-        .btn-remove:hover {
-            background-color: #c0392b !important;
-        }
-
-        .btn-increment {
-            background-color: #2ecc71 !important;
-            color: white !important;
-        }
-
-        .btn-increment:hover {
-            background-color: #27ae60 !important;
-        }
-
-        .btn-decrement {
-            background-color: #f39c12 !important;
-            color: white !important;
-        }
-
-        .btn-decrement:hover {
-            background-color: #d35400 !important;
-        }
-
-        .controls {
-  
+        .Chamber_Images_selector {
+            position: relative;
+            margin-top: 1rem;
             display: flex;
             justify-content: center;
-            gap: 15px;
-            margin: 30px 0;
         }
 
-        .requiredTable_Wrapper{
-            overflow-y: auto;
-            height: 50vh;
-        }
-
-        .table-container {
-            background: white;
-            border-radius: .5em;
-            box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
-        }
-
-        .table-header {
+        .Chamber_Images_container {
+            position: relative;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 15px 20px;
-            border-bottom: 2px solid #f0f0f0;
+            gap: 1em;
+            padding: 1em;
+            border-radius: .5em;
+            overflow-x: auto;
+            max-width: 100%;
         }
 
-
-        .count-badge {
-            background: #3498db;
-            color: white;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-weight: bold;
+        .Chamber_Images_container::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            background: #222;
+            height: 100%;
+            inset: 0;
+            z-index: -1;
+            opacity: .6;
+            border-radius: .5em;
         }
-        #requiredTable tr {
+
+        .Chamber_Images_container img {
+            cursor: pointer;
+            width: 80px;
+            height: 60px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .Chamber_preview {
+            margin-top: 1em;
+            width: 100%;
+            height: 100%;
+            min-height: 300px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+
+            .Chamber_preview img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                transition: opacity 0.3s ease-in-out;
+                opacity: 1;
+            }
+
+                .Chamber_preview img.fade-out {
+                    opacity: 0;
+                }
+
+
+
+        /*  ######################################### */
+
+        /* #################### TABLES DESIGN ################ */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th, table td {
+            padding: .75em 0.5em;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #f5f7f9;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            font-weight: 600;
+        }
+
+        .requiredTable_Wrapper {
+            overflow-y: auto;
+            max-height: 50vh;
+            border: 1px solid #ddd;
+        }
+
+        #requiredTable tr, #allocatedTable tr {
             cursor: pointer;
         }
 
-        #requiredTable tr:hover {
+        #requiredTable tr:hover, #allocatedTable tr:hover {
             background-color: #f0f8ff;
-            transform: translateY(-1px);
         }
 
-        #requiredTable tr.allocated {
+        #requiredTable tr.allocated, #allocatedTable tr.allocated {
             opacity: 0.6;
             background-color: #f9f9f9;
         }
 
-        #requiredTable tr.fully-allocated {
+        #requiredTable tr.fully-allocated, #allocatedTable tr.fully-allocated {
             opacity: 0.4;
             background-color: #e8f5e9;
         }
 
-        #requiredTable tr.shortage {
+        #requiredTable tr.shortage, #allocatedTable tr.shortage {
             background-color: #ffeaa7;
         }
 
-        #requiredTable tr.critical-shortage {
+        #requiredTable tr.critical-shortage, #allocatedTable tr.critical-shortage {
             background-color: #ffcccc;
         }
 
-
-        /* Wrapper with scroll */
-        .requiredTable_Wrapper,
-        .allocatedTable_Wrapper {
-            max-height: 300px; /* adjust height as needed */
-            overflow-y: auto;
-            border: 1px solid #ddd;
-        }
-        /* Make thead fixed */
-        #requiredTable thead th,
-        #allocatedTable thead th {
-            position: sticky;
-            top: 0;
-            background-color: #f5f7f9; /* keep it visible */
-            z-index: 2; /* ensure above rows */
-            text-align: center;
+        .number-cell {
+            width: 50px;
             font-weight: 600;
-            padding: 10px;
+            color: #555;
         }
+
+    .controls{
+            display: flex;
+            align-items:center;
+    }
+/* Responsive adjustments */
+@media (min-width: 768px) {
+    .customnav {
+        flex-wrap: nowrap;
+        height: 5rem;
+    }
+
+    .customnav .customnav_title {
+        width: 70%;
+        padding: 20px 0 20px 3em;
+        clip-path: polygon(0 0, 100% 0%, 90% 100%, 0% 100%);
+    }
+
+    .customnav_Progress {
+        width: 30%;
+        padding: 20px 3em 20px 0;
+        align-items: flex-end;
+    }
+
+    .ChamberMain {
+        grid-template-columns: 1fr 1fr;
+        height: calc(100vh - 7rem);
+    }
+
+    .Mold_tabs button {
+        width: 150px;
+        padding: 1rem;
+    }
+
+    .Mold_slider {
+        width: 150px;
+    }
+
+    .Chamber_Images_selector {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .Chamber_Images_container {
+        gap: 2em;
+        padding: 1em 1.5em;
+    }
+
+    .Chamber_Images {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .Chamber_preview {
+        flex-grow: 1;
+        min-height: auto;
+    }
+}
+
+@media (min-width: 1200px) {
+    .customnav .customnav_title {
+        width: 80%;
+    }
+
+    .customnav_Progress {
+        width: 20%;
+    }
+}
+
+@media (max-width: 480px) {
+    .customnav .customnav_title {
+        clip-path: polygon(0 0, 100% 0%, 100% 100%, 0% 100%);
+        padding: 15px 1em;
+    }
+
+    .customnav_Progress {
+        padding: 15px 1em;
+    }
+
+    .Chamber_container {
+        width: 100%;
+        padding: 0.5rem;
+    }
+
+    .Mold_tabs button {
+        min-width: 100px;
+        padding: 0.75rem 0.25rem;
+        font-size: 0.8rem;
+    }
+
+    .Chamber_preview {
+        height: 250px;
+    }
+
+    .Chamber_Images_container img {
+        width: 60px;
+        height: 45px;
+    }
+
+    table th, table td {
+        padding: 0.5em 0.25em;
+        font-size: 0.85rem;
+    }
+
+    .qty-cell {
+        width: 20%;
+    }
+
+    .number-cell {
+        width: 40px;
+    }
+
+    .search-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .search-input {
+        width: 100%;
+    }
+}

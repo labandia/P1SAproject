@@ -710,6 +710,9 @@
     </Content>
     <Content Include="Content\css\OrderDetails.css" />
     <Content Include="Content\css\Patrolforms.css" />
+    <Content Include="Content\Images\Electrical.png" />
+    <Content Include="Content\Images\HydroChamber.png" />
+    <Content Include="Content\Images\HydrochamberPart2.png" />
     <Content Include="Content\Images\no-image.png" />
     <Content Include="Content\OpenExcelApp.exe" />
     <Content Include="Content\Shared\bootstrap-grid.css" />
@@ -769,6 +772,9 @@
     <Content Include="Areas\Hydroponics\Views\Hydro\SampleLayout.cshtml" />
     <Content Include="Content\fonts\Manrope-Regular.ttf" />
     <Content Include="Content\fonts\Manrope-SemiBold.ttf" />
+    <Content Include="Areas\Hydroponics\Views\Hydro\UserManage.cshtml" />
+    <Content Include="Areas\Hydroponics\Views\Hydro\TransactionHistory.cshtml" />
+    <None Include="Content\Images\.editorconfig" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\circularProgressBar.min.js" />
     <Content Include="Scripts\jquery-3.7.1.js" />

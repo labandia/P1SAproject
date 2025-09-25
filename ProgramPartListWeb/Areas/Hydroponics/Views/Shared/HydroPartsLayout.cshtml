@@ -44,11 +44,11 @@
                 <i class="fa-solid fa-table-list"></i>
                 <span class="nav-text">Parts List</span>
             </a>
-            <a href="#" class="nav-item">
+            <a href="/Hydroponics/Hydro/TransactionHistory" class="nav-item">
                 <i class="fa-solid fa-clock-rotate-left"></i>
                 <span class="nav-text">Transaction History</span>
             </a>
-            <a href="#" class="nav-item">
+            <a href="/Hydroponics/Hydro/UserManage" class="nav-item">
                 <i class="fas fa-users"></i>
                 <span class="nav-text">Users</span>
             </a>
@@ -128,7 +128,7 @@
                     link.classList.add("active");
 
                     let actionpage = currentUrl.substring(currentUrl.lastIndexOf("/") + 1);
-
+                    console.log(actionpage);
                     switch (actionpage) {
                         case "orderpage":
                             $("#titlepage").html(`<i class="fa-solid fa-file-invoice"></i> Request Chambers`);
@@ -141,6 +141,12 @@
                             break;
                         case "partlist":
                             $("#titlepage").html(`<i class="fa-solid fa-table-list"></i> Parts Masterlist`);
+                            break;
+                        case "transactionhistory":
+                            $("#titlepage").html(`<i class="fa-solid fa-clock-rotate-left"></i> Transaction History`);
+                            break;
+                        case "usermanage":
+                            $("#titlepage").html(`<i class="fas fa-users"></i>  User Management`);
                             break;
                     }
 

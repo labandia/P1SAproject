@@ -732,7 +732,7 @@ th {
       width: 150px;
       background: none;
       border: none;
-      padding: 1rem;
+      padding: .2rem 1rem;
       cursor: pointer;
       font-weight: 600;
       color: #222;

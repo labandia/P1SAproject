@@ -28,8 +28,7 @@
     <table>
         <thead>
             <tr>
-                <th style="width: 15%;"> <i class="fa-regular fa-image"></i> <span style="margin-left: .5em;">Image</span>  </th>
-                <th style="width: 20%; text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-screwdriver-wrench"></i>  <span style="margin-left: .5em;">Part No. / Partname</span> </th>
+                <th style="width: 25%; text-align: left; padding-left: 1.5em !important;"><span style="margin-left: .5em;">Part No. / Partname</span> </th>
                 <th> <i class="fa-regular fa-rectangle-list"></i> <span style="margin-left: .5em;">Category</span>  </th>
                 <th> <i class="fa-regular fa-address-card"></i> <span style="margin-left: .5em;">Supplier</span>  </th>
                 <th style="width: 10%;">  <span style="margin-left: .5em;">Action</span>  </th>
@@ -314,17 +313,19 @@
 
                 const rowHtml = `
                     <tr>
-                        <td data-cell="Images" style='display: flex; justify-content: center; align-items: center; border-top: 1px solid #dcdce2; border-bottom: none;'>
-                               <img class="NoImages lazy"
-                                     src='@Url.Content("~/Content/Images/no-image.png")'
-                                     data-src="${imagePath}"
-                                     loading="lazy"
-                                     onerror="this.src='@Url.Content("~/Content/Images/no-image.png")'" />
-                        </td>
-                        <td style='text-align: left; padding-left: 1em;' data-cell="PartNo">
-                            <p style='color: #185d8b; font-weight: 600;'>${rowData.PartName ? rowData.PartName : "-"}</p>
-                            <small> ${rowData.PartNo}</small>
-                        </td>
+                         <td style='text-align: left; padding-left: 1.5em;' data-cell="PartNo">
+                          <div class="flex_align" style='padding-left: 1.5em; gap: 15px;'>
+                              <img class="NoImages lazy"
+                                  src='@Url.Content("~/Content/Images/no-image.png")'
+                                  data-src="${imagePath}"
+                                  loading="lazy"
+                                  onerror="this.src='@Url.Content("~/Content/Images/no-image.png")'" />
+                              <div>
+                                  <p style='color: #185d8b; font-weight: 600;'>${rowData.PartName ? rowData.PartName : "-"}</p>
+                                  <small> ${rowData.PartNo}</small>
+                              </div>
+                          </div>
+                      </td>
                         <td data-cell="CategoryName">${rowData.CategoryName ? rowData.CategoryName : "-"}</td>
                         <td data-cell="Supplier">${rowData.Supplier ? rowData.Supplier : "-"}</td>
                         <td data-cell="Delete" >
@@ -398,8 +399,8 @@
         // === CLICK HANDLER: Show overlay image ===
         $(document).on('click', '.NoImages', function (e) {
             e.stopPropagation();
-          
-            let imgSrc = $(this).attr("src") || $(this).attr("data-src"); 
+
+            let imgSrc = $(this).attr("src") || $(this).attr("data-src");
             console.log(imgSrc);
             let $overlay = $("#imageOverlay");
             let $overlayImg = $("#overlayImage");

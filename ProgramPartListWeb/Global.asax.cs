@@ -176,6 +176,7 @@ namespace ProgramPartListWeb
             container.RegisterType<IChambers, ChamberRepository>();
             container.RegisterType<IPartsList, PartsMasterlistRepository>();
             container.RegisterType<IStocksparts, StockpartsRepository>();
+            container.RegisterType<IStockAlertService, StockAlertService>();
 
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }

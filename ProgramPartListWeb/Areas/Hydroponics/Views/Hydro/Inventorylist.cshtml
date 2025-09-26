@@ -49,137 +49,6 @@
 </div>
 
 
-
-@*=================================================================================*@
-@*=========================== ADD PARTS CHAMBER ===================================*@
-@*=================================================================================*@
-<div class="modal fade modal-l" id="AddChamberModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-
-            <div class="modal-body modalwrap">
-                <div class="custom_modal_header">
-                    <h5>Add Chamber Parts</h5>
-
-                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
-                        <span>&times;</span>
-                    </button>
-                </div>
-
-
-                <form method="post" enctype="multipart/form-data" class="addformcontainer" id="addnewform" autocomplete="off">
-                    <div class="row">
-                        @*<div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
-                                <label>Employee ID </label> <br />
-                                <input type="text" placeholder="type Employee ID" name="Employee_ID" id="Employee_ID" required />
-                                <small class="text-danger" id="Noemployee"></small>
-                            </div>*@
-                        <div class="form_group col-12 col-sm-12 col-lg-12 mb-2">
-                            <label>Part no.  <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
-                            @*<input type="text" placeholder="N/A" name="Fullname" id="Fullname" />*@
-                            <div class="search-box">
-                                <input type="hidden" name="Employee_ID" id="Employee_ID">
-                                <input type="text" placeholder="Type Name or ID no." name="EmployeeSearch" id="EmployeeSearch" required>
-                                @*<div class="namesdisplay"></div>*@
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form_group col-12 col-sm-12">
-                        <label>Part Name.  <small style="color: #a81818; font-weight: 600;">*</small></label>
-                        <input type="text" placeholder="type Ojt registration No." name="OJTRegistration" id="OJTRegistration" required />
-                    </div>
-
-                    <div class="form_group col-12 col-sm-12 ">
-                        <label>Category <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
-                        <div class="select-container">
-                            <select id="addCategory">
-                                <option value="0">-- select Category --</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form_group col-12 col-sm-12 ">
-                        <label>Supplier <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
-                        <input type="text" placeholder="type Ojt registration No." name="OJTRegistration" id="OJTRegistration" required />
-                    </div>
-
-                    <div class="form_group col-12 col-sm-12 ">
-                        <label>Need Quantity <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
-                        <input type="text" placeholder="type Ojt registration No." name="OJTRegistration" id="OJTRegistration" required />
-                    </div>
-                    <div class="form_group col-12 col-sm-12 ">
-                        <label>Unit (ex. pcs, ml) <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
-                        <input type="text" placeholder="type Ojt registration No." name="OJTRegistration" id="OJTRegistration" required />
-                    </div>
-                    <div class="form_group col-12 col-sm-12 ">
-                        <label>PHP Cost <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
-                        <input type="text" placeholder="type Ojt registration No." name="OJTRegistration" id="OJTRegistration" required />
-                    </div>
-
-                    <div class="d-flex justify-content-between align-items-center mt-4">
-                        <div>
-                            <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
-                        </div>
-                        <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
-                    </div>
-                </form>
-            </div>
-
-        </div>
-    </div>
-</div>
-
-
-@*=================================================================================*@
-@*=========================== ADD QUANTITY STOCKS =================================*@
-@*=================================================================================*@
-<div class="modal fade modal-m" id="AddStocksModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-body modalwrap">
-                <div class="custom_modal_header">
-                    <h5>Add Quantity</h5>
-
-                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
-                        <span>&times;</span>
-                    </button>
-                </div>
-
-                <form id="AddQuantityform" class="addformcontainer">
-                    <div class="form_group col-12 col-sm-12 col-lg-12 mb-2">
-                        <label>Type Partname / Partno  <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
-                        @*<input type="text" placeholder="N/A" name="Fullname" id="Fullname" />*@
-                        <div class="search-box">
-                            <input type="hidden" name="AddPartID" id="AddPartID">
-                            <input type="text" placeholder="Type here ..." name="searchPartno" id="searchPartno" autocomplete="off" required>
-                            <div class="namesdisplay"></div>
-                        </div>
-                    </div>
-
-                    <div class="form_group col-12 col-sm-12">
-                        <label for="">Input Quantity <small style="color: #a81818; font-weight: 600;">*</small> </label>
-                        <input type="text" name="CurrentQty" id="CurrentQty" onkeypress="return restrictChars(event)" autocomplete="off">
-                    </div>
-
-                    <div class="d-flex justify-content-between align-items-center mt-4">
-                        <div>
-                            <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
-                        </div>
-                        <button type="submit" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
-                    </div>
-
-
-                </form>
-
-
-            </div>
-
-
-        </div>
-    </div>
-</div>
-
-
 @*=================================================================================*@
 @*=========================== CHANGE LEVEL WARNING ================================*@
 @*=================================================================================*@
@@ -222,12 +91,10 @@
 <script type="text/javascript">
     let Inventlist = [];
     let loadData = [];
-    let partsID;
     let userRole;
 
     // Modals
     const addmodal = document.getElementById("Showadd");
-    const addquan = document.getElementById("ShowStocks");
 
     // Forms
     const addQuanforms = document.getElementById("AddQuantityform");
@@ -241,12 +108,11 @@
 
         Loadingsteps(async () => {
             let res = await FetchAuthenticate('@Url.Action("GetHydroInventory", "Hydro")', {});
-            console.log(res);
             if (res && res.Success) {
                 Inventlist = res.Data;
                 TableDisplay.empty(); // Removing the Loading Display
 
-                InventoryPagination(Inventlist, 'InventorylistData', 'MastertableContainer', 50, 5);
+                InventoryPagination(Inventlist, 'InventorylistData');
             } else {
                 const loadData = `<tr>
                   <td colspan='9'>
@@ -284,124 +150,105 @@
         }
     }
 
-    function InventoryPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 7, visibleButtons = 5) {
-        let currentPage = 1;
+    function InventoryPagination(dataArray, tableBodyId) {
         let filteredData = [...dataArray];
 
-        const updatePaginationInfo = () => {
-            const totalRecords = filteredData.length;
-            const totalPages = Math.ceil(totalRecords / recordsPerPage);
-            $("#totalpageID").text(totalPages);
-            $("#DatalengthID").text(totalRecords);
-            return totalPages;
-        };
+        // === Overlay setup (once) ===
+        if (!document.getElementById("imageOverlay")) {
+            $("body").append(`
+             <div id="imageOverlay">
+                 <img id="overlayImage" src="" />
+             </div>
+         `);
+        }
 
-        const renderTable = (page) => {
-            const totalPages = updatePaginationInfo();
-            const startIndex = (page - 1) * recordsPerPage;
-            const endIndex = Math.min(startIndex + recordsPerPage, filteredData.length);
+        const renderTable = () => {
             const tableBody = document.getElementById(tableBodyId);
-            tableBody.innerHTML = '';
+            tableBody.innerHTML = "";
 
-            for (let i = startIndex; i < endIndex; i++) {
-                const rowData = filteredData[i];
-                const color = rowData.Color;
+            $.each(filteredData, function (index, row) {
+                    // Image Display
+                let imagePath = row.ImageParts
+                                    ? `/Hydro/DisplaytheImage?filename=${encodeURIComponent(row.ImageParts)}`
+                                    : '@Url.Content("~/Content/Images/no-image.png")';
+                   const rowHtml = `
+                                     <tr class='rowClick' id='editButton_${row.PartID}'>
 
-                  // Image Display
-              let imagePath = rowData.ImageParts
-                              ? `/Hydro/DisplaytheImage?filename=${encodeURIComponent(rowData.ImageParts)}`
-                              : '@Url.Content("~/Content/Images/no-image.png")';
+                                        <td style='text-align: left; padding-left: 1.5em;' data-cell="PartNo">
+                                             <div class="flex_align" style='padding-left: 1.5em; gap: 15px;'>
+                                                 <img class="NoImages lazy"
+                                                     src='@Url.Content("~/Content/Images/no-image.png")'
+                                                     data-src="${imagePath}"
+                                                     loading="lazy"
+                                                     onerror="this.src='@Url.Content("~/Content/Images/no-image.png")'" />
+                                                 <div>
+                                                     <p style='color: #185d8b; font-weight: 600;'>${row.PartName ? row.PartName : "-"}</p>
+                                                     <small> ${row.PartNo}</small>
+                                                 </div>
+                                             </div>
+                                         </td>
+                                         <td data-cell="Supplier">${row.Supplier ? row.Supplier : "-"}</td>
+                                         <td data-cell="CurrentQty" style="font-weight: 600;">${row.CurrentQty} </td>
+                                         <td data-cell="WarningLevel" style="font-weight: 600;">${row.WarningLevel}</td>
+                                         <td data-cell="Approval" >
+                                           <div class='${getStatusClass(row.Status)}'>
+                                             ${row.Status}
+                                           </div>
+                                         </td>
+                                         <td data-cell="Delete" >
+                                          <div class='flex_center'>
+                                              <button  class='Editbtnbutton text-primary bg-white' id='editButton_${row.StockID}' ">
+                                                 <i class="fa-solid fa-pen-to-square"></i>
+                                              </button>
+                                          </div>
+                                          </td>
+                                     </tr>
+                                 `;
+                tableBody.insertAdjacentHTML("beforeend", rowHtml);
 
-
-                const rowHtml = `
-                    <tr class='rowClick' id='editButton_${rowData.PartID}'>
-                        
-                       <td style='text-align: left; padding-left: 1.5em;' data-cell="PartNo">
-                            <div class="flex_align" style='padding-left: 1.5em; gap: 15px;'>
-                                <img class="NoImages lazy"
-                                    src='@Url.Content("~/Content/Images/no-image.png")'
-                                    data-src="${imagePath}"
-                                    loading="lazy"
-                                    onerror="this.src='@Url.Content("~/Content/Images/no-image.png")'" />
-                                <div>
-                                    <p style='color: #185d8b; font-weight: 600;'>${rowData.PartName ? rowData.PartName : "-"}</p>
-                                    <small> ${rowData.PartNo}</small>
-                                </div>
-                            </div>
-                        </td>
-                        <td data-cell="Supplier">${rowData.Supplier ? rowData.Supplier : "-"}</td>
-                        <td data-cell="CurrentQty" style="font-weight: 600;">${rowData.CurrentQty} </td>
-                        <td data-cell="WarningLevel" style="font-weight: 600;">${rowData.WarningLevel}</td>
-                        <td data-cell="Approval" >
-                          <div class='${getStatusClass(rowData.Status)}'>
-                            ${rowData.Status}
-                          </div>
-                        </td>
-                        <td data-cell="Delete" >
-                         <div class='flex_center'>
-                             <button  class='Editbtnbutton text-primary bg-white' id='editButton_${rowData.StockID}' ">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                             </button>
-                         </div>
-                         </td>
-                    </tr>
-                `;
-                tableBody.innerHTML += rowHtml;
-            }
-
-
-            const lazyImages = document.querySelectorAll("img.lazy[data-src]");
-            lazyImages.forEach(img => {
-                const realSrc = img.getAttribute("data-src");
-                img.onload = () => img.classList.add("loaded"); // smooth transition
-                img.setAttribute("src", realSrc);
-                img.removeAttribute("data-src");
+                // Attach blur-up effect
+                const lazyImages = document.querySelectorAll("img.lazy[data-src]");
+                lazyImages.forEach(img => {
+                    const realSrc = img.getAttribute("data-src");
+                    img.onload = () => img.classList.add("loaded"); // smooth transition
+                    img.setAttribute("src", realSrc);
+                    img.removeAttribute("data-src");
+                });
             });
 
-            $('.dropdown-menu').removeClass('show').hide();
-            $("#pagecountID").text(currentPage);
         };
 
-        const renderPagination = () => {
-            const totalPages = updatePaginationInfo();
-            const paginationContainer = document.getElementById(paginationId);
-            paginationContainer.innerHTML = '';
+        // === CLICK HANDLER: Show overlay image ===
+        $(document).on('click', '.NoImages', function (e) {
+            e.stopPropagation();
 
-            let startPage = Math.max(1, currentPage - Math.floor(visibleButtons / 2));
-            let endPage = Math.min(totalPages, startPage + visibleButtons - 1);
+            let imgSrc = $(this).attr("src") || $(this).attr("data-src");
+            let $overlay = $("#imageOverlay");
+            let $overlayImg = $("#overlayImage");
 
-            if (endPage > totalPages) {
-                endPage = totalPages;
-                startPage = Math.max(1, endPage - visibleButtons + 1);
+            // force load if only data-src exists
+            if ($overlayImg.attr("src") !== imgSrc) {
+                $overlayImg.attr("src", imgSrc);
             }
 
-            if (totalPages <= visibleButtons) {
-                startPage = 1;
-                endPage = totalPages;
-            }
+            $overlay.show(0, function () {
+                $overlay.addClass("show");
+            });
+        });
 
-            // Previous button
-            paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
-                <i class="fa-solid fa-backward"></i>
-            </button>`;
+        // === Hide overlay on click ===
+        $(document).on("click", "#imageOverlay", function () {
+            let $overlay = $(this);
 
-            for (let i = startPage; i <= endPage; i++) {
-                paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
-            }
+            // Remove .show → triggers scale-down + fade-out
+            $overlay.removeClass("show");
 
-            // Next button
-            paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
-                <i class="fa-solid fa-forward"></i>
-            </button>`;
-        };
+            // Wait until transition ends, then hide
+            setTimeout(() => {
+                $overlay.hide();
+            }, 400); // match CSS transition
+        });
 
-        const changePage = (page) => {
-            if (page >= 1 && page <= updatePaginationInfo()) {
-                currentPage = page;
-                renderTable(currentPage);
-                renderPagination();
-            }
-        };
 
 
         $(document).on('click', '.Editbtnbutton', function (e) {
@@ -425,59 +272,29 @@
             filteredData = dataArray.filter(item =>
                 item.PartName.toLowerCase().includes(query) || item.PartNo.toLowerCase().includes(query)
             );
-            currentPage = 1;
-            renderTable(currentPage);
-            renderPagination();
+
+            if (filteredData.length == 0) {
+                TableDisplay.empty();
+                const loadData = `<tr>
+                             <td colspan='4'>
+                                 <p id="loadingStepText">🔍 No Search found ..</p>
+                             </td>
+                         </tr>`;
+                TableDisplay.append(loadData);
+
+                return;
+            }
+            renderTable();
         };
 
         $('#searchbox').on('input', searchTable);
 
-        window.changePage = changePage;
-        renderTable(currentPage);
-        renderPagination();
+        renderTable();
     }
 
 
-    $("#searchPartno").keyup(function () {
-        let result = [];
-        let input = this.value;
 
-        if (input.length > 0) {
-            result = Inventlist.filter((item) => {
-                return item.PartNo.toLowerCase().includes(input.toLowerCase()) ||
-                    item.PartName.toLowerCase().includes(input.toLowerCase())
-            });
-            if (result.length > 0) {
-                resultBox.style.display = 'block';
-                display(result); // assumes display() handles array of objects
-            } else {
-                resultBox.style.display = 'none';
-            }
-        } else {
-            resultBox.style.display = 'none';
-        }
-    });
-
-    addQuanforms.addEventListener('submit', async function (e) {
-        e.preventDefault();
-        let forms = new FormData(e.target);
-        const data = Object.fromEntries(forms);
-
-        let res = await postData('@Url.Action("UpdateStocksQuantity", "Hydro")', forms);
-
-        if (res && res.Success) {
-             Swal.fire({
-                 title: "Success",
-                 text: res.Message,
-                 icon: "success",
-                 showConfirmButton: false,
-                 timer: 1500
-             }).then(() => {
-                 InventoryTable();
-                 $("#AddStocksModal").modal('hide');
-             });
-         }
-    });
+ 
 
     changeWarn.addEventListener('submit', async function (e) {
         e.preventDefault();
@@ -510,22 +327,6 @@
     });
 
 
-    function display(result) {
-        const content = result.map((list) => {
-            return `<li onclick="selectinput(this)" data-id="${list.PartID}">${list.PartName}</li>`;
-        });
-
-        resultBox.innerHTML = "<ul>" + content.join('') + "</ul>";
-    }
-
-    function selectinput(list) {
-        const ID = list.getAttribute("data-id");
-        partsID = ID;
-        $("#AddPartID").val(ID);
-        $("#searchPartno").val(list.innerHTML);
-        resultBox.innerHTML = '';
-        resultBox.style.display = 'none';
-    }
 
     const getStatusClass = (status) => {
         switch (status) {
@@ -543,12 +344,7 @@
         window.location.href = "/Hydroponics/Hydro/AddStocks";
     });
 
-    addquan.addEventListener('click', (e) => {
-        e.preventDefault();
-        $("#AddStocksModal").modal('show');
-    });
-
-
+  
     function loadingDisplay() {
         TableDisplay.empty();
         const loadData = `<tr>

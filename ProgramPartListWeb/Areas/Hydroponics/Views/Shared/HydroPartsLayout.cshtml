@@ -78,17 +78,35 @@
                         </div>
                         <ul>
                             <li><a href="#"><i class="ph-bold ph-user"></i> <i class="fa-solid fa-key"></i> Change Password</a></li>
-                            <li ><a id="logID" href="#"><i class="ph-bold ph-sign-out"></i><i class="fa-solid fa-door-open"></i>Sign Out</a></li>
+                            <li><a id="logID" href="#"><i class="ph-bold ph-sign-out"></i><i class="fa-solid fa-door-open"></i>Sign Out</a></li>
                         </ul>
                     </div>
 
 
                     <!-- Notification Dropdown -->
-                    <div id="notificationDropdown">
+                    @*<div id="notificationDropdown">
                         <ul id="stockAlerts">
                             <li style="padding:10px; text-align:center; color:gray;">No alerts</li>
                         </ul>
+                    </div>*@
+
+                    <div class="notification-dropdown dd" id="notificationDropdown">
+                        <div class="arrow-up"></div>
+                        <div class="header">
+                            <div class="Cuscontainer">
+                                <div class="text fl">Notifications</div>
+                                <div class="notify-count common-count count2 fl" count="0">
+                                    <div class="value">0</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="items" id="stockAlerts">
+
+                        </div>
                     </div>
+
+
+
                 </div>
             </div>
         </header>
@@ -128,7 +146,6 @@
                     link.classList.add("active");
 
                     let actionpage = currentUrl.substring(currentUrl.lastIndexOf("/") + 1);
-                    console.log(actionpage);
                     switch (actionpage) {
                         case "orderpage":
                             $("#titlepage").html(`<i class="fa-solid fa-file-invoice"></i> Request Chambers`);
@@ -210,11 +227,11 @@
            async function pollStockAlerts() {
                 try {
                     const response = await $.ajax({
-                        url: '@Url.Action("GetStockAlerts", "Hydro")',
+                        url: '@Url.Action("GetStockAlerts", "Stock")',
                         type: 'GET',
                         dataType: 'json'
                     });
-                    //console.log(response);
+                    console.log(response);
                     if (response.Success) {
                         const container = $("#stockAlerts");
                         container.empty();
@@ -225,16 +242,16 @@
                         } else {
                             response.Alerts.forEach(alert => {
                                 container.append(
-                                    `<li style="padding:10px; border-bottom:1px solid #eee; cursor:pointer;"
-                                         onclick="window.location='/Hydroponics/Hydro/Inventorylist'">
-                                        <strong>${alert.PartName}</strong> is low! (${alert.CurrentQty} left)
-                                    </li>`
+                                    `<div class="list-item noti">
+                                            <p>${alert.PartName}</p>
+                                            <div class="text fl">${alert.Message}</div>
+                                        </div>`
                                 );
                             });
 
                             // Update badge count
                             //$("#notificationBadge").text(response.Alerts.length).show();
-                            unseenCount++; 
+                            unseenCount++;
                         }
                     }
 
@@ -297,6 +314,20 @@
                 .map(word => word.charAt(0).toUpperCase()) // take first letter
                 .join("");                 // join together
         }
+
+
+        $(document).ready(function() {
+            $.ajax({
+                url: '@Url.Action("StocksAlertEmailNotification", "Stock")',
+                type: 'POST',
+                success: function (response) {
+                    console.log("Stock alert email sent successfully.");
+                },
+                error: function (xhr, status, error) {
+                    console.log("Failed to send stock alert email: " + error);
+                }
+            });
+        });
 
 
         window.IsLoginUser({

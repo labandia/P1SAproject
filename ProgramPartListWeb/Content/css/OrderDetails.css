@@ -76,15 +76,15 @@ body {
         box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
     }
 
-    .customnav .customnav_title {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        gap: 1em;
-        background: hsl(208, 30%, 11%);
-        padding: 20px 1.5em;
-        clip-path: polygon(0 0, 100% 0%, 95% 100%, 0% 100%);
-    }
+        .customnav .customnav_title {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 1em;
+            background-image: repeating-linear-gradient(90deg, hsla(15,0%,62%,0.05) 0px, hsla(15,0%,62%,0.05) 1px,transparent 1px, transparent 104px),repeating-linear-gradient(0deg, hsla(15,0%,62%,0.05) 0px, hsla(15,0%,62%,0.05) 1px,transparent 1px, transparent 104px),repeating-linear-gradient(0deg, hsla(15,0%,62%,0.07) 0px, hsla(15,0%,62%,0.07) 1px,transparent 1px, transparent 52px),repeating-linear-gradient(90deg, hsla(15,0%,62%,0.07) 0px, hsla(15,0%,62%,0.07) 1px,transparent 1px, transparent 52px),linear-gradient(0deg, rgb(20,29,36),rgb(20,29,36));
+            padding: 20px 1.5em;
+            clip-path: polygon(0 0, 100% 0%, 95% 100%, 0% 100%);
+        }
 
     .customnav .customnav_title a {
             color: #fff;
@@ -127,7 +127,6 @@ body {
     border: none;
     border-radius: 6px;
     font-size: 13px;
-    font-weight: bold;
     cursor: pointer;
     outline: none;
 }
@@ -138,17 +137,18 @@ body {
 }
 
 .COMPLETED {
-    background-color: rgba(14, 76, 170, 0.2);
-    color: rgb(9, 18, 100);
+    background-color: rgba(14, 170, 79, 0.2);
+    color: rgba(255, 255, 255, 0.6);
 }
 
-.ONGOING {
+.PENDING {
     background-color: rgba(170, 24, 14, 0.2);
-    color: rgb(100, 9, 9);
+    color: rgba(255, 255, 255, 0.6);
 }
 
 .SHIPPED {
-    background-color: #f39c12;
+    background-color: rgba(243, 156, 18, 0.2);
+    color: rgba(255, 255, 255, 0.6);
 }
 
 /* Keep dropdown list options white */
@@ -365,7 +365,7 @@ option {
             font-weight: 600;
         }
 
-        .requiredTable_Wrapper {
+        .requiredTable_Wrapper, .allocatedTable_Wrapper  {
             overflow-y: auto;
             max-height: 50vh;
             border: 1px solid #ddd;
@@ -465,6 +465,10 @@ option {
 }
 
 @media (min-width: 1200px) {
+    .requiredTable_Wrapper, .allocatedTable_Wrapper {
+        max-height: 70vh;
+    }
+
     .customnav .customnav_title {
         width: 80%;
     }
@@ -526,3 +530,6 @@ option {
         width: 100%;
     }
 }
+
+
+

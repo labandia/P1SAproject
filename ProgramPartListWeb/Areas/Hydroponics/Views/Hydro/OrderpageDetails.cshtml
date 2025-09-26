@@ -34,7 +34,7 @@
         </div>
         <div class="select-container">
             <select id="RequestStatus" name="RequestStatus" class="default">
-                <option value="ONGOING" selected>ONGOING</option>
+                <option value="PENDING" selected>ONGOING</option>
                 <option value="COMPLETED">COMPLETED</option>
                 <option value="SHIPPED">FOR SHIPPED</option>
             </select>
@@ -99,45 +99,47 @@
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody id="allocatedData">
                                         </tbody>
                                     </table>
                                 </div>
 
                                 <div class="controls">
-                                    <button class="btn-primary" id="autoFillBtn">Auto-Fill All Available</button>
-                                    <button class="btn-primary" id="clearAllBtn">Clear All Allocations</button>
                                     <button class="btn-primary" id="completeOrderBtn">Save Details</button>
                                 </div>
                             </div>
-                            <div class="Mold_content" id="Completed">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 30%; text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-screwdriver-wrench"></i>  <span style="margin-left: .5em;">Part No. / Partname</span> </th>
-                                            <th style="width: 20%;"> <i class="fa-regular fa-rectangle-list"></i> <span style="margin-left: .5em;">Category</span>  </th>
-                                            <th style="width: 10%;"> <span style="margin-left: .5em;">Quantity Used</span>  </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="RequestWrapper">
-                                    </tbody>
-                                </table>
+                                <div class="Mold_content" id="Completed">
+                                    <div class="allocatedTable_Wrapper">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 30%; text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-screwdriver-wrench"></i>  <span style="margin-left: .5em;">Part No. / Partname</span> </th>
+                                                    <th style="width: 20%;"> <i class="fa-regular fa-rectangle-list"></i> <span style="margin-left: .5em;">Category</span>  </th>
+                                                    <th style="width: 10%;"> <span style="margin-left: .5em;">Quantity Used</span>  </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="RequestWrapper">
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    
+                                </div>
                             </div>
-                        </div>
                     </div>
                 </div>
             </div>
             <div class="Chamber_Images">
-                <label style="font-weight: 600; font-size: 1.1rem;">Chamber Guide:</label>
+                <label style="font-weight: 600; font-size: 1.1rem;">Materials Partlist:</label>
                 <div class="Chamber_preview">
-                    <img loading="lazy" src="~/Content/Images/HydroChamber.png" alt="ChamberDisplay" />
+                    @*<img loading="lazy" src="~/Content/Images/HydroChamber.png" alt="ChamberDisplay" />*@
                 </div>
 
                 <div class="Chamber_Images_selector">
                     <div class="Chamber_Images_container">
-                        <img loading="lazy" src="~/Content/Images/HydroChamber.png" alt="Chamber Section A" />
+                        @*<img loading="lazy" src="~/Content/Images/HydroChamber.png" alt="Chamber Section A" />
                         <img loading="lazy" src="~/Content/Images/HydrochamberPart2.png" alt="Chamber Section B" />
-                        <img loading="lazy" src="~/Content/Images/Electrical.png"  alt="Chamber Section C" />
+                        <img loading="lazy" src="~/Content/Images/Electrical.png"  alt="Chamber Section C" />*@
                     </div>
                 </div>
             </div>
@@ -148,6 +150,7 @@
 
 
 <script type="text/javascript">
+    let TableDisplay = $("#allocatedData");
     const select = document.getElementById("RequestStatus");
     const ID = $("#chambID").val();
     let requestData = [];
@@ -158,7 +161,7 @@
 
     select.addEventListener("change", function () {
         // Reset classes
-        select.classList.remove("COMPLETED", "ONGOING", "SHIPPED", "default");
+        select.classList.remove("COMPLETED", "PENDING", "SHIPPED", "default");
         // Apply class based on value
         select.classList.add(this.value);
     });
@@ -197,6 +200,16 @@
 
     // Initialize the tables
     document.addEventListener('DOMContentLoaded', function () {
+        const loadData = `<tr>
+              <td colspan='4'>
+                  🔍 No Allocated Data
+              </td>
+          </tr>`;
+
+        TableDisplay.empty();
+        TableDisplay.append(loadData);
+
+
         populateRequiredTable();
         RequestMain();
         //updateProgress();
@@ -205,8 +218,6 @@
 
         // Add event listeners
         document.getElementById('requiredTable').addEventListener('click', handleRequiredTableClick);
-        document.getElementById('autoFillBtn').addEventListener('click', autoFillAllAvailable);
-        document.getElementById('clearAllBtn').addEventListener('click', clearAllAllocations);
         document.getElementById('completeOrderBtn').addEventListener('click', completeOrder);
     });
 
@@ -215,26 +226,33 @@
         let res = await FetchAuthenticate('@Url.Action("GetMainRequestList", "Hydro")', { orderID: ID });
         if (res && res.Success) {
             $("#ChamberName").text(`Chamber selected : ${res.Data.ChamberName}`);
-            //$("#TargetDate").text(res.Data.TargetDate);
             $("#RequestStatus").val(res.Data.RequestStatus);
             $("#MaterialStatus").text(res.Data.MaterialStatus);
 
 
-            const percent = res.Data.CompletionPercent || 0;
+            const percent = parseFloat(res.Data.CompletionPercent) || 0;
+            let displaypercent = Math.round(percent);
+
+            let barColor = "linear-gradient(90deg, #e74c3c, #c0392b)"; // red
+            if (percent >= 70) barColor = "linear-gradient(90deg, #2ecc71, #27ae60)"; // green
+            else if (percent >= 40) barColor = "linear-gradient(90deg, #f1c40f, #f39c12)"; // yellow
+
             const progressBar = document.getElementById('progressBar');
+            // Reset animation
+            progressBar.style.transition = "none";
+            progressBar.style.width = "0%";
 
-            // Set width
+            // Force reflow so browser applies reset before animating
+            progressBar.offsetHeight; 
+
+            // Animate the bar after appending
+            progressBar.style.background = barColor;
+            progressBar.style.transition = "width 1s ease";
             progressBar.style.width = `${percent}%`;
-            $("#completeRate").text(`${percent}%`);
 
-            // Change color dynamically
-            if (percent < 40) {
-                progressBar.style.background = "linear-gradient(90deg, #e74c3c, #c0392b)"; // red tones
-            } else if (percent < 70) {
-                progressBar.style.background = "linear-gradient(90deg, #f1c40f, #f39c12)"; // yellow tones
-            } else {
-                progressBar.style.background = "linear-gradient(90deg, #2ecc71, #27ae60)"; // green tones
-            }
+            //Show the percentage
+            $("#completeRate").text(`${percent}%`);
+           
         }
     }
 
@@ -287,7 +305,6 @@
                   <td style='font-weight: 600; text-align: left;'>
                     <div>
                         <p style='color: #185d8b; font-weight: 600;'>${part.PartName ? part.PartName : "-"}</p>
-                        <small> ${part.PartNo}</small>
                     </div>
                   </td>
                   <td class="qty-cell">${part.QtyUsed} / ${part.RequiredQty}</td>
@@ -447,10 +464,19 @@
      // Action functions for allocated parts
      function removePart(partNumber) {
          delete allocatedParts[partNumber];
+
          updateAllocatedTable();
          updateRequiredTableStyles();
          //updateCounts();
          //updateProgress();
+         const loadData = `<tr>
+           <td colspan='4'>
+               🔍 No Allocated Data
+           </td>
+       </tr>`;
+
+         TableDisplay.empty();
+         TableDisplay.append(loadData);
      }
 
      function incrementPart(ID) {
@@ -494,32 +520,6 @@
          }
 
          return lengths;
-     }
-
-
-     // Auto-fill all available parts
-     function autoFillAllAvailable() {
-         requestData.forEach(part => {
-             const maxToAllocate = Math.min(part.RequiredQty, part.CurrentQty);
-             allocatedParts[parseInt(part.PartID)] = maxToAllocate;
-         });
-
-         updateAllocatedTable();
-         updateRequiredTableStyles();
-         //updateCounts();
-         //updateProgress();
-     }
-
-     function clearAllAllocations() {
-         if (Object.keys(allocatedParts).length === 0) return;
-
-         if (confirm('Are you sure you want to clear all allocations?')) {
-             allocatedParts = {};
-             updateAllocatedTable();
-             updateRequiredTableStyles();
-             //updateCounts();
-             //updateProgress();
-         }
      }
 
 
@@ -594,24 +594,23 @@
     }
 
       $("#RequestStatus").on('change', async function (e) {
-     e.preventDefault();
-     let formData = new FormData();
-     formData.append('OrderID', ID);
-     formData.append('RequestStatus', e.target.value);
+         e.preventDefault();
+         let formData = new FormData();
+         formData.append('OrderID', ID);
+         formData.append('RequestStatus', e.target.value);
 
-     let data = Object.fromEntries(formData);
-     let res = await postData('@Url.Action("ChangeStatusRequest", "Hydro")', formData);
-     console.log(res);
-     if (res && res.Success) {
-          Swal.fire({
-              title: "Success",
-              text: res.Message,
-              icon: "success",
-              showConfirmButton: false,
-              timer: 1500
-          }).then(() => {
-              RequestMain();
-          });
-     }
+         let data = Object.fromEntries(formData);
+         let res = await postData('@Url.Action("ChangeStatusRequest", "Hydro")', formData);
+         if (res && res.Success) {
+              Swal.fire({
+                  title: "Success",
+                  text: res.Message,
+                  icon: "success",
+                  showConfirmButton: false,
+                  timer: 1500
+              }).then(() => {
+                  RequestMain();
+              });
+         }
  });
 </script>

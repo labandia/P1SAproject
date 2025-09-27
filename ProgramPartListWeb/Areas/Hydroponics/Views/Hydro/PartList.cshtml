@@ -31,6 +31,7 @@
                 <th style="width: 25%; text-align: left; padding-left: 1.5em !important;"><span style="margin-left: .5em;">Part No. / Partname</span> </th>
                 <th> <i class="fa-regular fa-rectangle-list"></i> <span style="margin-left: .5em;">Category</span>  </th>
                 <th> <i class="fa-regular fa-address-card"></i> <span style="margin-left: .5em;">Supplier</span>  </th>
+                <th> <i class="fa-regular fa-address-card"></i> <span style="margin-left: .5em;">Unit Used</span>  </th>
                 <th style="width: 10%;">  <span style="margin-left: .5em;">Action</span>  </th>
             </tr>
         </thead>
@@ -226,6 +227,7 @@
                            </td>
                              <td data-cell="CategoryName">${row.CategoryName ? row.CategoryName : "-"}</td>
                              <td data-cell="Supplier">${row.Supplier ? row.Supplier : "-"}</td>
+                             <td data-cell="Unit">${row.Unit ? row.Unit : "-"}</td>
                              <td data-cell="Delete" >
                               <div class='flex_center'>
                                   <button  class='Editbtnbutton text-primary bg-white' id='editButton_${row.PartID}' ">

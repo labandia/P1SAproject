@@ -141,9 +141,9 @@ window.PullUserInformation = function () {
 // Login check logic (unchanged, only arrow removed)
 window.IsLoginUser = function (options) {
     options = options || {};
-    var storageKey = options.storageKey || 'isLoggedInPatrol';
-    var expectedValue = options.expectedValue || 'true';
-    var redirectUrl = options.redirectUrl || '/PC/Patrol/index';
+    var storageKey = options.storageKey;
+    var expectedValue = options.expectedValue;
+    var redirectUrl = options.redirectUrl;
     var redirectIfLoggedInUrl = options.redirectIfLoggedInUrl || null;
     var expirationKey = options.expirationKey || null;
     var maxHours = options.maxHours || null;

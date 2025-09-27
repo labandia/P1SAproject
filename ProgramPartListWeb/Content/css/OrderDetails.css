@@ -185,12 +185,32 @@ option {
     align-items:flex-start;
 }
 
+
+
+#completeOrderBtn {
+    background: linear-gradient(90deg, #4a00e0, #8e2de2);
+    color: white;
+    border: none;
+    padding: 5px 30px;
+    border-radius: .5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(74, 0, 224, 0.3);
+}
+#completeOrderBtn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(74, 0, 224, 0.4);
+}
+
+
 /* ================ TABS DESIGN =========================== */
-    .Mold_tabs {
-        display: flex;
-        position: relative;
-        border-bottom: 1px solid #ddd;
-    }
+.Mold_tabs {
+    display: flex;
+    position: relative;
+    border-bottom: 1px solid #ddd;
+}
 
     .Mold_tabs button {
       width: 150px;
@@ -352,9 +372,10 @@ option {
         }
 
         table th, table td {
-            padding: .75em 0.5em;
+            padding: .2em 0.5em;
             text-align: center;
             border-bottom: 1px solid #ddd;
+            font-weight: 600;
         }
 
         table th {
@@ -405,8 +426,89 @@ option {
 
     .controls{
             display: flex;
+            justify-content:center;
             align-items:center;
+            padding: 1em 0;
     }
+
+
+      .btn-remove {
+            background-color: #e74c3c !important;
+            color: white !important;
+        }
+
+        .btn-remove:hover {
+            background-color: #c0392b !important;
+        }
+
+        .btn-increment {
+            background-color: #2ecc71 !important;
+            color: white !important;
+        }
+
+        .btn-increment:hover {
+            background-color: #27ae60 !important;
+        }
+
+        .btn-decrement {
+            background-color: #f39c12 !important;
+            color: white !important;
+        }
+
+        .btn-decrement:hover {
+            background-color: #d35400 !important;
+        }
+        .NoImages {
+            width: 40px; /* adjust to your needs */
+            height: 40px;
+            display: block;
+            transform: scale(0);
+            opacity: 0;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+        }
+
+        .NoImages.loaded {
+           transform: scale(1);
+          opacity: 1;
+        }
+
+            /* Loader overlay */
+    .loader-overlay {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(3px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s ease;
+      z-index: 99999;
+    }
+    .loader-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .loader-box {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: rgba(255,255,255,0.1);
+      padding: 20px;
+      border-radius: 12px;
+      color: #fff;
+    }
+    .spinner {
+      width: 40px; height: 40px;
+      border: 4px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+
 /* Responsive adjustments */
 @media (min-width: 768px) {
     .customnav {

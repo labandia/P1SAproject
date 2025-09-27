@@ -86,7 +86,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         private double _RemainQty;
         private double _CurrentQty;
         private string _MaterialStatus;
-
+        private string _ImageParts;
 
         public int OrderDetailID
         {
@@ -139,7 +139,11 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
             get => _MaterialStatus;
             set => _MaterialStatus = value;
         }
-
+        public string ImageParts
+        {
+            get => _ImageParts;
+            set => _ImageParts = value;
+        }
     }
 
     public class AllocationRequest
@@ -284,6 +288,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         private string _CategoryName;
         private string _Supplier;
         private string _ImageParts;
+        private string _Unit;
 
 
         public int PartID
@@ -321,6 +326,11 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         {
             get => _ImageParts;
             set => _ImageParts = value;
+        }
+        public string Unit
+        {
+            get => _Unit;
+            set => _Unit = value;
         }
     }
 

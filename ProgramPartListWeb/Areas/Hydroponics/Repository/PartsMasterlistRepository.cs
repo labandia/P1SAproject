@@ -17,7 +17,8 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                 c.CategoryID,
 	                            c.CategoryName,
 	                            i.Supplier,
-	                            i.ImageParts
+	                            i.ImageParts,
+                                i.Unit
                             FROM Hydro_InventoryParts i
                             INNER JOIN Hydro_CategoryParts c ON c.CategoryID = i.CategoryID";
             return SqlDataAccess.GetData<MasterlistPartsModel>(strsql, null);

@@ -73,7 +73,8 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 	                            o.RequiredQty,
                                 s.CurrentQty,
                                 o.RequiredQty - o.QtyUsed as RemainQty,
-	                            o.Status as MaterialStatus
+	                            o.Status as MaterialStatus,
+                                i.ImageParts
                             FROM Hydro_OrderDetails o
                             INNER JOIN Hydro_InventoryParts i ON o.PartID = i.PartID
                             INNER JOIN Hydro_CategoryParts c ON i.CategoryID = c.CategoryID

@@ -4,6 +4,7 @@ using ProgramPartListWeb.Controllers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -40,7 +41,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         public async Task<ActionResult> StocksAlertEmailNotification()
         {
             bool sent = await _stock.SendEmailNotificationStocks();
-
+            Debug.WriteLine("SDSa" + sent);
             if (!sent) return JsonPostError("Update failed.", 500);
             return JsonCreated(sent, "Update Successfully");
         }

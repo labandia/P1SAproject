@@ -56,7 +56,6 @@
                     <div class="Customcontainer">
                         <div class="Mold_tabs">
                             <button class="Mold_tab active" data-target="All">Required <span id="RequireCounts"></span></button>
-                            <button class="Mold_tab" data-target="Allocated">Allocated <span id="Counts"></span></button>
                             <button class="Mold_tab" data-target="Completed">Completed <span id="CompleteCounts"></span></button>
                             <div class="Mold_slider"></div>
                         </div>
@@ -71,7 +70,7 @@
                                     <table id="requiredTable">
                                         <thead>
                                             <tr>
-                                                <th class="qty-cell">Partno / Partname</th>
+                                                <th class="qty-cell" style="text-align: left; padding-left: 1em;  width: 40%;">Partno / Partname</th>
                                                 <th class="qty-cell">Required</th>
                                                 <th class="qty-cell">Available</th>
                                             </tr>
@@ -83,73 +82,88 @@
 
 
                             </div>
-                            <div class="Mold_content" id="Allocated">
-                                <div class="search-container">
-                                    <input type="text" class="search-input" id="allocatedSearch" placeholder="Search by Number or Partno...">
-                                    <span class="search-info" id="allocatedSearchInfo">Showing all items</span>
-                                </div>
 
+                            <div class="Mold_content" id="Completed">
                                 <div class="allocatedTable_Wrapper">
-                                    <table id="allocatedTable">
+                                    <table>
                                         <thead>
                                             <tr>
-                                                <th>No.</th>
-                                                <th>Partno</th>
-                                                <th class="qty-cell">Allocated</th>
-                                                <th>Actions</th>
+                                                <th style="width: 30%; text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-screwdriver-wrench"></i>  <span style="margin-left: .5em;">Part No. / Partname</span> </th>
+                                                <th style="width: 20%;"> <i class="fa-regular fa-rectangle-list"></i> <span style="margin-left: .5em;">Category</span>  </th>
+                                                <th style="width: 10%;"> <span style="margin-left: .5em;">Quantity Used</span>  </th>
                                             </tr>
                                         </thead>
-                                        <tbody id="allocatedData">
+                                        <tbody id="RequestWrapper">
                                         </tbody>
                                     </table>
                                 </div>
 
-                                <div class="controls">
-                                    <button class="btn-primary" id="completeOrderBtn">Save Details</button>
-                                </div>
-                            </div>
-                                <div class="Mold_content" id="Completed">
-                                    <div class="allocatedTable_Wrapper">
-                                        <table>
-                                            <thead>
-                                                <tr>
-                                                    <th style="width: 30%; text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-screwdriver-wrench"></i>  <span style="margin-left: .5em;">Part No. / Partname</span> </th>
-                                                    <th style="width: 20%;"> <i class="fa-regular fa-rectangle-list"></i> <span style="margin-left: .5em;">Category</span>  </th>
-                                                    <th style="width: 10%;"> <span style="margin-left: .5em;">Quantity Used</span>  </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="RequestWrapper">
-                                            </tbody>
-                                        </table>
-                                    </div>
 
-                                    
-                                </div>
                             </div>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="Chamber_Images">
-                <label style="font-weight: 600; font-size: 1.1rem;">Materials Partlist:</label>
-                <div class="Chamber_preview">
-                    @*<img loading="lazy" src="~/Content/Images/HydroChamber.png" alt="ChamberDisplay" />*@
+                <label style="font-weight: 600; font-size: 1.1rem; margin-bottom: .5em;">Allocated Items: <span id="Counts"></span></label>
+
+                <div class="search-container">
+                    <input type="text" class="search-input" id="allocatedSearch" placeholder="Search by Number or Partno...">
+                    <span class="search-info" id="allocatedSearchInfo">Showing all items</span>
                 </div>
 
-                <div class="Chamber_Images_selector">
-                    <div class="Chamber_Images_container">
-                        @*<img loading="lazy" src="~/Content/Images/HydroChamber.png" alt="Chamber Section A" />
-                        <img loading="lazy" src="~/Content/Images/HydrochamberPart2.png" alt="Chamber Section B" />
-                        <img loading="lazy" src="~/Content/Images/Electrical.png"  alt="Chamber Section C" />*@
-                    </div>
+                <div class="allocatedTable_Wrapper">
+                    <table id="allocatedTable">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Partno</th>
+                                <th class="qty-cell">Allocated</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="allocatedData">
+                        </tbody>
+                    </table>
                 </div>
+
+                <div class="controls">
+                    <button class="btn-primary" id="completeOrderBtn">Save Details</button>
+                </div>
+
+
+
+                @*<label style="font-weight: 600; font-size: 1.1rem;">Materials Partlist:</label>
+                    <div class="Chamber_preview">
+                        <img loading="lazy" src="~/Content/Images/HydroChamber.png" alt="ChamberDisplay" />
+                    </div>
+
+                    <div class="Chamber_Images_selector">
+                        <div class="Chamber_Images_container">
+                            <img loading="lazy" src="~/Content/Images/HydroChamber.png" alt="Chamber Section A" />
+                    <img loading="lazy" src="~/Content/Images/HydrochamberPart2.png" alt="Chamber Section B" />
+                    <img loading="lazy" src="~/Content/Images/Electrical.png"  alt="Chamber Section C" />
+                        </div>
+                    </div>*@
             </div>
         </div>
     </div>
 </div>
 
 
+<!-- Loader -->
+<div id="loader" class="loader-overlay show">
+    <div class="loader-box">
+        <div class="spinner"></div>
+      
+    </div>
+</div>
+
+
+
 
 <script type="text/javascript">
+    const loader = document.getElementById('loader');
     let TableDisplay = $("#allocatedData");
     const select = document.getElementById("RequestStatus");
     const ID = $("#chambID").val();
@@ -200,25 +214,32 @@
 
     // Initialize the tables
     document.addEventListener('DOMContentLoaded', function () {
-        const loadData = `<tr>
-              <td colspan='4'>
-                  🔍 No Allocated Data
-              </td>
-          </tr>`;
 
-        TableDisplay.empty();
-        TableDisplay.append(loadData);
+        loader.classList.add('show');
+
+        setTimeout(() => {
+                    const loadData = `<tr>
+                       <td colspan='4'>
+                           🔍 No Allocated Data
+                       </td>
+                   </tr>`;
+
+                    TableDisplay.empty();
+                    TableDisplay.append(loadData);
 
 
-        populateRequiredTable();
-        RequestMain();
-        //updateProgress();
-        //updateCounts();
-        //updateProgress();
+                    populateRequiredTable();
+                    RequestMain();
+                    //updateProgress();
+                    //updateCounts();
+                    //updateProgress();
 
-        // Add event listeners
-        document.getElementById('requiredTable').addEventListener('click', handleRequiredTableClick);
-        document.getElementById('completeOrderBtn').addEventListener('click', completeOrder);
+                    // Add event listeners
+                    document.getElementById('requiredTable').addEventListener('click', handleRequiredTableClick);
+                    document.getElementById('completeOrderBtn').addEventListener('click', completeOrder);
+                    loader.classList.remove('show');
+        }, 2000);
+
     });
 
 
@@ -243,7 +264,7 @@
             progressBar.style.width = "0%";
 
             // Force reflow so browser applies reset before animating
-            progressBar.offsetHeight; 
+            progressBar.offsetHeight;
 
             // Animate the bar after appending
             progressBar.style.background = barColor;
@@ -252,7 +273,7 @@
 
             //Show the percentage
             $("#completeRate").text(`${percent}%`);
-           
+
         }
     }
 
@@ -285,7 +306,7 @@
 
             const tbody = document.querySelector('#requiredTable tbody');
             tbody.innerHTML = '';
-
+            console.log(NotCompletedData);
             NotCompletedData.forEach(part => {
                 const row = document.createElement('tr');
                 row.setAttribute('data-ID', part.PartID);
@@ -301,10 +322,23 @@
                     row.classList.add('shortage');
                 }
 
+                let imagePath = part.ImageParts
+                    ? `/Hydro/DisplaytheImage?filename=${encodeURIComponent(part.ImageParts)}`
+                    : '@Url.Content("~/Content/Images/no-image.png")';
+
+
                 row.innerHTML = `
                   <td style='font-weight: 600; text-align: left;'>
-                    <div>
-                        <p style='color: #185d8b; font-weight: 600;'>${part.PartName ? part.PartName : "-"}</p>
+                    <div class='flex_align'>
+                          <img class="NoImages lazy"
+                          src='@Url.Content("~/Content/Images/no-image.png")'
+                          data-src="${imagePath}"
+                          loading="lazy"
+                          onerror="this.src='@Url.Content("~/Content/Images/no-image.png")'" />
+                          <div>
+                            <p style='color: #185d8b; font-weight: 600;'>${part.PartName ? part.PartName : "-"}</p>
+                            <small> ${part.PartNo}</small>
+                         </div>
                     </div>
                   </td>
                   <td class="qty-cell">${part.QtyUsed} / ${part.RequiredQty}</td>
@@ -312,6 +346,15 @@
               `;
 
                 tbody.appendChild(row);
+
+                // Attach blur-up effect
+                const lazyImages = document.querySelectorAll("img.lazy[data-src]");
+                lazyImages.forEach(img => {
+                    const realSrc = img.getAttribute("data-src");
+                    img.onload = () => img.classList.add("loaded"); // smooth transition
+                    img.setAttribute("src", realSrc);
+                    img.removeAttribute("data-src");
+                });
             });
         }
      }
@@ -319,15 +362,15 @@
 
 
     // Image selector functionality
-    const thumbnails = document.querySelectorAll('.Chamber_Images_container img');
-    const mainImage = document.querySelector('.Chamber_preview img');
+    //const thumbnails = document.querySelectorAll('.Chamber_Images_container img');
+    //const mainImage = document.querySelector('.Chamber_preview img');
 
-    thumbnails.forEach(thumb => {
-        thumb.addEventListener('click', function () {
-            mainImage.src = this.src;
-            mainImage.alt = this.alt;
-        });
-    });
+    //thumbnails.forEach(thumb => {
+    //    thumb.addEventListener('click', function () {
+    //        mainImage.src = this.src;
+    //        mainImage.alt = this.alt;
+    //    });
+    //});
 
     // Handle clicks on the required table
     function handleRequiredTableClick(e) {

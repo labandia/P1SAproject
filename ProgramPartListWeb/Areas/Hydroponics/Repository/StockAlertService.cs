@@ -2,16 +2,22 @@
 using ProgramPartListWeb.Areas.Hydroponics.Interface;
 using ProgramPartListWeb.Areas.Hydroponics.Models;
 using ProgramPartListWeb.Helper;
+using ProgramPartListWeb.Models;
+using ProgramPartListWeb.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 {
     public class StockAlertService : IStockAlertService
     {
+        public static string strSender => ConfigurationManager.AppSettings["config:SMTPEmail"];
+
         List<string> recipientslist = new List<string>
         {
             "jaye.labandia@sanyodenki.com",
@@ -137,73 +143,145 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
         public async Task<bool> SendEmailNotificationStocks()
         {
-            string currentShift = GlobalUtilities.GetTheShiftSchedule();
-            if (string.IsNullOrEmpty(currentShift)) return false;
-
             var emailCount = await GetStockSendEmailLogs();
-
+            bool anySent = false;
 
             foreach (var recepient in recipientslist)
             {
-                // Count emails sent today for this shift
-                int shiftEmailCount = emailCount.FindAll(e =>
-                  e.EmailSent == recepient &&
-                  e.Shift == currentShift &&
-                  e.SentAt.Date == DateTime.Now.Date // compare date part only
-              ).Count;
+                var latestLog = emailCount
+                     .Where(res =>
+                         res.EmailSent == recepient)
+                     .OrderByDescending(res => res.StockLogId)
+                     .FirstOrDefault();
 
-                Debug.WriteLine($"Emails sent today for {currentShift}: {shiftEmailCount}");
+                //int shiftEmailCount = latestLog?.Sequence ?? 0;
+                DateTime? lastSentAt = latestLog?.SentAt;
 
-                if(shiftEmailCount == 0)
+                // strict 4-hour rule 
+                // it skips when its not in the 4hours pass
+                if (lastSentAt != null && DateTime.Now < lastSentAt.Value.AddHours(4))
                 {
-                    await SqlDataAccess.UpdateInsertQuery($@"INSERT INTO Hydro_StockAlertLog 
-                                                            (EmailSent, Shift, SentAt, Sequence) 
-                                                            VALUES (@EmailSent, @Shift, @Sequence)",
+                    //Debug.WriteLine($"[{recepient}] Last email sent at {lastSentAt}, not yet 4 hours. Skipping...");
+                    continue;
+                }
+
+                //Debug.WriteLine($"[{recepient}] Sending email...");
+                // check active alerts
+                var activeAlerts = await GetActiveAlertsAsync();
+                if (!activeAlerts.Any())
+                {
+                    break;
+                }
+
+                string htmlBody = CreateEmailBody(activeAlerts);
+
+                var SendEmail = new SentEmailModel
+                {
+                    Subject = "Stock Alert Notification",
+                    Sender = strSender,
+                    BCC = "",
+                    Body = htmlBody,
+                    Recipient = recepient
+                };
+
+                // send email here...
+                // EMAIL SAVE TO THE DATABASE
+                //await EmailService.SendEmailViaSqlDatabase(SendEmail);
+
+              
+
+                // first log today
+                if (latestLog == null)
+                {
+                    Debug.WriteLine("INSERT THE Email logs");
+                    await SqlDataAccess.UpdateInsertQuery(@"
+                    INSERT INTO Hydro_StockAlertLog (EmailSent, Sequence)
+                    VALUES (@EmailSent, @Sequence)",
                         new
                         {
                             EmailSent = recepient,
-                            Shift = currentShift,
                             Sequence = 1
                         });
-                    return true;
+                }
+                else
+                {
+                    Debug.WriteLine("UPDATES THE Email logs");
+                    // update existing log with incremented sequence
+                    await SqlDataAccess.UpdateInsertQuery(@"
+                                UPDATE Hydro_StockAlertLog
+                                SET SentAt = GETDATE(), Sequence = Sequence + 1
+                                WHERE StockLogId = @StockLogId",
+                        new
+                        {
+                            StockLogId = latestLog.StockLogId
+                        });
                 }
 
-
-                if (shiftEmailCount >= 2)
-                    return false; // Limit reached for this shift
-
-
-                Debug.WriteLine($"Sending Email Proccess ....");
-                // Get active alerts
-                var activeAlerts = await GetActiveAlertsAsync();
-
-                if (!activeAlerts.Any())
-                    return false; // No alerts, do not send email
-
-                // Prepare email body
-                // SENDING emails to the recepients
-
-
-                var updatelogs = new StockSendLogs
-                {
-                    EmailSent = recepient,
-                    Shift = currentShift,
-                    SentAt = DateTime.Now,
-                    Sequence = shiftEmailCount + 1
-                };
-
-
-
-
+                anySent = true;
             }
 
-            return true;
+            return anySent;
         }
+
+
         public Task<List<StockSendLogs>> GetStockSendEmailLogs()
         {
-            string strsql = $@"SELECT StockLogId, EmailSent, Shift, Sequence, SentAt FROM Hydro_StockAlertLog";
+            string strsql = $@"SELECT StockLogId, EmailSent, SentAt FROM Hydro_StockAlertLog";
             return SqlDataAccess.GetData<StockSendLogs>(strsql, null);
 
         }
+
+
+
+        public  string CreateEmailBody(List<StockAlert> items)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("<!DOCTYPE html>");
+            sb.AppendLine("<html>");
+            sb.AppendLine("<head>");
+            sb.AppendLine("<meta charset='UTF-8'>");
+            sb.AppendLine("<title>Stock Alert Notification</title>");
+            sb.AppendLine("</head>");
+            sb.AppendLine("<body style='font-family: Arial, sans-serif; color: #333;'>");
+
+            sb.AppendLine("<h2 style='color:#2E86C1;'>Stock Alert Notification</h2>");
+            sb.AppendLine("<p>Dear Team,</p>");
+            sb.AppendLine("<p>The following items require your attention:</p>");
+
+            // Table header
+            sb.AppendLine("<table style='border-collapse: collapse; width: 100%;'>");
+            sb.AppendLine("<thead>");
+            sb.AppendLine("<tr>");
+            sb.AppendLine("<th style='border: 1px solid #ccc; padding: 8px; background-color:#f2f2f2;'>Part No</th>");
+            sb.AppendLine("<th style='border: 1px solid #ccc; padding: 8px; background-color:#f2f2f2;'>Part Name</th>");
+            sb.AppendLine("<th style='border: 1px solid #ccc; padding: 8px; background-color:#f2f2f2;'>Message</th>");
+            sb.AppendLine("<th style='border: 1px solid #ccc; padding: 8px; background-color:#f2f2f2;'>Status</th>");
+            sb.AppendLine("</tr>");
+            sb.AppendLine("</thead>");
+            sb.AppendLine("<tbody>");
+
+            // Table rows
+            foreach (var item in items)
+            {
+                sb.AppendLine("<tr>");
+                sb.AppendLine($"<td style='border: 1px solid #ccc; padding: 8px;'>{item.PartNo}</td>");
+                sb.AppendLine($"<td style='border: 1px solid #ccc; padding: 8px;'>{item.PartName}</td>");
+                sb.AppendLine($"<td style='border: 1px solid #ccc; padding: 8px; text-align:center;'>{item.Message}</td>");
+                sb.AppendLine($"<td style='border: 1px solid #ccc; padding: 8px; text-align:center;'>{item.Status}</td>");
+                sb.AppendLine("</tr>");
+            }
+
+            sb.AppendLine("</tbody>");
+            sb.AppendLine("</table>");
+
+            sb.AppendLine("<p style='margin-top:20px;'>Please take the necessary action.</p>");
+            sb.AppendLine("<p>Best regards,<br/>Inventory System</p>");
+            sb.AppendLine("</body>");
+            sb.AppendLine("</html>");
+
+            return sb.ToString();
+        }
+
+
     }
 }

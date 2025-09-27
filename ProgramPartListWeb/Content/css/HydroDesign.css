@@ -732,7 +732,7 @@ th {
       width: 150px;
       background: none;
       border: none;
-      padding: .2rem 1rem;
+      padding: 0 1rem 1rem 1rem;
       cursor: pointer;
       font-weight: 600;
       color: #222;
@@ -889,6 +889,12 @@ th {
         background: #fff;
         border: 1px solid #bebfca;
     }
+
+
+   
+
+
+
 
 /* Responsive styles */
 @media (max-width: 992px) {
@@ -1143,13 +1149,13 @@ th {
     align-items:center;
     width: 115px;
     margin: 0px auto;
-    padding-top: 12px;
+    padding-top: 8px;
 }
 
 .notification-dropdown .items{
     background: #E9EFF2;
     width: 100%;
-    max-height: 256px;
+    max-height: 50vh;
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
     overflow-y: auto;
@@ -1160,8 +1166,8 @@ th {
     font-size: 13px;
     line-height: 18px;
     border-bottom: 1px solid #D5DFE4;
-    height: 35px;
     cursor: pointer;
+    font-weight: 600;
 }
 
 .notification-dropdown .items .list-item:hover{
@@ -1209,7 +1215,13 @@ th {
 }
 
 header .count2 {
-    width: 17px;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    left: 13px;
+    /*    width: 17px;
     font-size: 12px;
     height: 17px;
     padding-top: 1px;
@@ -1218,16 +1230,14 @@ header .count2 {
     margin-left: 3px;
     margin-top: -2px;
     padding-right: 1px;
-    padding-bottom: 1px;
+    padding-bottom: 1px;*/
 }
 
 
 .common-count {
     background: #18B5B5;
     color: #ffffff;
-    -webkit-border-radius: 30px;
-    -moz-border-radius: 30px;
-    border-radius: 30px;
+    border-radius: 50%;
     text-align: center;
     border: 1px solid #fff;
 }

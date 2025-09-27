@@ -20,9 +20,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
     {
         public int StockLogId { get; set; }
         public string EmailSent { get; set; }
-        public string Shift { get; set; }
         public DateTime SentAt { get; set; }
-        public int Sequence { get; set; }
 
     }
 }

@@ -32,45 +32,27 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
             return SqlDataAccess.GetData<StockPartsModel>(strquery, null);
         }
-        public Task<List<ChamberTypePartsModel>> GetChamberTypePartsList(int chamberID)
-        {
-            string strquery = $@"SELECT 
-	                                i.PartID,
-	                                i.PartNo,
-	                                i.PartName,
-	                                i.Supplier,
-	                                i.Unit,
-	                                c.QuantityPerChamber as RequireQty
-                                FROM Hydro_ChamberParts c
-                                INNER JOIN Hydro_InventoryParts i ON c.PartID = i.PartID 
-                                WHERE c.ChamberID = @ChamberID";
-
-            return SqlDataAccess.GetData<ChamberTypePartsModel>(strquery, new { ChamberID = chamberID });
-        }
-
-        public Task<bool> AddInventory(StockPartsModel model)
-        {
-            throw new System.NotImplementedException();
-        }
-
+     
+   
         public Task<bool> UpdateStocks(int ID, int Quan)
         {
-            return SqlDataAccess.UpdateInsertQuery($@"UPDATE Hydro_Stocks 
-                                                SET CurrentQty =@CurrentQty 
-                                                WHERE  PartID =@PartID", 
-                                                new { 
+            string strsql = $@"UPDATE Hydro_Stocks SET CurrentQty =@CurrentQty 
+                               WHERE  PartID =@PartID";
+
+            return SqlDataAccess.UpdateInsertQuery(strsql, new { 
                                                     PartID = ID, 
                                                     CurrentQty = Quan 
                                                 });
         }
 
-        public Task<List<ChamberTypeList>> GetChambersType() => SqlDataAccess.GetData<ChamberTypeList>("SELECT ChamberID, ChamberName FROM Hydro_ChamberMasterlist");
 
         public Task<bool> UpdateWarning(int StockID, double WarningLevel)
         {
-            return SqlDataAccess.UpdateInsertQuery($@"UPDATE Hydro_Stocks 
-                                                SET WarningLevel =@WarningLevel 
-                                                WHERE  StockID =@StockID",
+            string strsql = $@"UPDATE Hydro_Stocks 
+                               SET WarningLevel =@WarningLevel 
+                               WHERE  StockID =@StockID";
+
+            return SqlDataAccess.UpdateInsertQuery(strsql,
                                                 new
                                                 {
                                                     StockID = StockID,

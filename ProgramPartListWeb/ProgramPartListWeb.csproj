@@ -631,6 +631,7 @@
     <Compile Include="Areas\Hydroponics\Interface\IChambers.cs" />
     <Compile Include="Areas\Hydroponics\Interface\IHyrdoParts.cs" />
     <Compile Include="Areas\Hydroponics\Interface\IPartsList.cs" />
+    <Compile Include="Areas\Hydroponics\Interface\IRequestChamber.cs" />
     <Compile Include="Areas\Hydroponics\Interface\IStockAlertService.cs" />
     <Compile Include="Areas\Hydroponics\Interface\IStocksparts.cs" />
     <Compile Include="Areas\Hydroponics\Models\HydropPartsModel.cs" />

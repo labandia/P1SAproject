@@ -1,13 +1,10 @@
 ﻿using ProgramPartListWeb.Areas.Hydroponics.Interface;
 using ProgramPartListWeb.Areas.Hydroponics.Models;
 using ProgramPartListWeb.Helper;
-using Spire.Xls;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 {
@@ -152,20 +149,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                WHERE ChamberPartID =@ChamberPartID";
             return SqlDataAccess.UpdateInsertQuery(strsql, new { ChamberPartID = ChamberPartID, UnitCost_PHP = UnitCost_PHP });
         }
-        public Task<bool> AdditionalChambers()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> Deletechambers()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> EditChambers()
-        {
-            throw new NotImplementedException();
-        }
+    
 
         public async Task<bool> AddRequestChamber(RequestItem item)
         {
@@ -241,6 +225,19 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             return result;
         }
 
-       
+        public Task<bool> AdditionalChambers()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> Deletechambers()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> EditChambers()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

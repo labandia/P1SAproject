@@ -3,7 +3,6 @@ using ProgramPartListWeb.Areas.Hydroponics.Models;
 using ProgramPartListWeb.Helper;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 

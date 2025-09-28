@@ -36,14 +36,15 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
 
 
         //-----------------------------------------------------------------------------------------
-        //---------------------------- COMMON CONTROLLERS  ----------------------------------------
+        //---------------------------- COMMON METHODS  ----------------------------------------
         //-----------------------------------------------------------------------------------------
         [JwtAuthorize]
         public async Task<ActionResult> GetCategorylist()
         {
             var data = await _partsList.GetPartsMasterlist() ?? new List<MasterlistPartsModel>();
 
-            var filterdata = data.GroupBy(x => new { x.CategoryID, x.CategoryName })
+            var filterdata = data.
+                GroupBy(x => new { x.CategoryID, x.CategoryName })
                 .Select(g => new
                 {
                     CategoryID = g.Key.CategoryID,
@@ -54,7 +55,20 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
 
             return JsonSuccess(filterdata, "No Category  List");
         }
+        public ActionResult DisplaytheImage(string filename)
+        {
+            if (string.IsNullOrWhiteSpace(filename))
+                return HttpNotFound();
 
+            string folderPath = @"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\HydroParts\";
+            string fullPath = Path.Combine(folderPath, filename);
+
+            if (!System.IO.File.Exists(fullPath))
+                return File("~/Content/Images/bussiness-man.png", "image/png");
+
+            byte[] fileBytes = System.IO.File.ReadAllBytes(fullPath);
+            return File(fileBytes, "image/png"); // Change to "image/jpeg" if needed
+        }
 
         //-----------------------------------------------------------------------------------------
         //---------------------------- MASTERLIST PART LIST PAGE ----------------------------------
@@ -115,15 +129,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
 
         //-----------------------------------------------------------------------------------------
         //----------------------------  CHAMBER LIST PAGE -----------------------------------------
-        //-----------------------------------------------------------------------------------------
-        [JwtAuthorize]
-        public async Task<ActionResult> GetTotalPriceChamber(int chamber)
-        {
-            var data = await _chambers.GetTotalPriceData(chamber);
-            if (data == null) return JsonNotFound("No Chamber list Data.");
-
-            return JsonSuccess(data, "Load Total Price");
-        }
+        //----------------------------------------------------------------------------------------- 
         [JwtAuthorize]
         public async Task<ActionResult> GetAllChamberList(int chamber)
         {
@@ -153,7 +159,14 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
 
             return JsonMultipleData(multiData);
         }
+        [JwtAuthorize]
+        public async Task<ActionResult> GetChamberList()
+        {
+            var data = await _chambers.GetChamberTypes() ?? new List<ChamberTypeList>();
+            if (data == null || !data.Any()) return JsonNotFound("No Chamber list Data.");
 
+            return JsonSuccess(data, "Load Chamber type List");
+        }
         [JwtAuthorize]
         public async Task<ActionResult> GetChamberDropDownList()
         {
@@ -179,7 +192,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         }
 
         //-----------------------------------------------------------------------------------------
-        //---------------------------- HYDRO INVENTORY PAGE ---------------------------------------
+        //---------------------------- HYDRO STOCk INVENTORY PAGE ---------------------------------------
         //-----------------------------------------------------------------------------------------
         [JwtAuthorize]
         public async Task<ActionResult> GetHydroInventory()
@@ -205,7 +218,28 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<ActionResult> SaveStocks()
+        {
+            try
+            {
+                var json = Request.Form["items"];
 
+                var items = Newtonsoft.Json.JsonConvert.DeserializeObject<List<StockItem>>(json);
+
+                foreach (var item in items)
+                {
+                    await _stock.AddStocks(item.PartID, item.Quantity);
+                }
+
+                return JsonCreated(true, "Add Stocks Successfully");
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message, 500);
+            }
+
+        }
 
 
 
@@ -243,16 +277,6 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
 
             return JsonSuccess(data, "Load Request Details List");
         }
-
-
-        [JwtAuthorize]
-        public async Task<ActionResult> GetChamberList()
-        {
-            var data = await _hydro.GetChambersType() ?? new List<ChamberTypeList>();
-            if (data == null || !data.Any()) return JsonNotFound("No Chamber list Data.");
-
-            return JsonSuccess(data, "Load Chamber type List");
-        }
         [JwtAuthorize]
         public async Task<ActionResult> GetChamberTypeDataList(int chamberID)
         {
@@ -261,6 +285,44 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
             if (data == null || !data.Any()) return JsonNotFound("No Chamber list Data.");
 
             return JsonSuccess(data, "Load Chamber type List");
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> NewAddRequestData(RequestItem item)
+        {
+            try
+            {
+                bool result = await _chambers.AddRequestChamber(item);
+                if (!result) return JsonPostError("Insert failed.", 500);
+
+
+                return JsonCreated(item, "Update Stocks Successfully");
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message, 500);
+            }
+
+        }
+        [HttpPost]
+        public async Task<ActionResult> UpdatesRequestMaterialsV2([System.Web.Http.FromBody] List<AllocationRequest> allo)
+        {
+            try
+            {
+                foreach (var item in allo)
+                {
+                    Debug.WriteLine($"Order ID : {item.OrderID} - Part ID : {item.PartID} - Allocated :  {item.allocated}");
+                    await _chambers.UpdatesRequestMaterials(item.OrderID, item.PartID, item.allocated);
+                }
+
+                return Json(new { Success = true, Message = "Allocations saved successfully" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Success = false, Message = ex.Message });
+            }
+
         }
 
 
@@ -282,122 +344,12 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         }
 
 
-        [HttpPost]
-        public async Task<ActionResult> NewAddRequestData(RequestItem item)
-        {
-            try
-            {
-                bool result = await _chambers.AddRequestChamber(item);
-                if (!result) return JsonPostError("Insert failed.", 500);
 
-
-                return JsonCreated(item, "Update Stocks Successfully");
-            }
-            catch (Exception ex)
-            {
-                return JsonError(ex.Message, 500);
-            }
-
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> UpdatesRequestMaterials(int OrderDetailID, double NewUsedQuan)
-        {
-            try
-            {
-                //bool result = await _chambers.UpdatesRequestMaterials(OrderDetailID, NewUsedQuan);
-                //if (!result) return JsonPostError("Update failed.", 500);
-                return JsonCreated(true, "Update Stocks Successfully");
-            }
-            catch (Exception ex)
-            {
-                return JsonError(ex.Message, 500);
-            }
-
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> UpdatesRequestMaterialsV2([System.Web.Http.FromBody]  List<AllocationRequest> allo)
-        {
-            try
-            {
-                foreach (var item in allo)
-                {
-                    Debug.WriteLine($"Order ID : {item.OrderID} - Part ID : {item.PartID} - Allocated :  {item.allocated}");
-                    await _chambers.UpdatesRequestMaterials(item.OrderID, item.PartID, item.allocated);
-                }
-
-                return Json(new { Success = true, Message = "Allocations saved successfully" });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { Success = false, Message = ex.Message });
-            }
-
-        }
+       
 
 
 
-        [HttpPost]
-        public async Task<ActionResult> SaveStocks()
-        {
-            try
-            {
-                var json = Request.Form["items"];
-
-                var items = Newtonsoft.Json.JsonConvert.DeserializeObject<List<StockItem>>(json);
-
-                foreach (var item in items)
-                {
-                    await _stock.AddStocks(item.PartID, item.Quantity);
-                }
-
-                return JsonCreated(true, "Add Stocks Successfully");
-            }
-            catch (Exception ex)
-            {
-                return JsonError(ex.Message, 500);
-            }
-
-        }
-
-
-        [HttpPost]
-        public async Task<ActionResult> UpdateStocksQuantity()
-        {
-            try
-            {
-                int PartID = Convert.ToInt32(Request.Form["AddPartID"]);
-                int CurrentQty = Convert.ToInt32(Request.Form["CurrentQty"]);
-
-                bool result = await _hydro.UpdateStocks(PartID, CurrentQty);
-
-                if (!result) return JsonPostError("Insert failed.", 500);
-
-                //CacheHelper.Remove("Inspectors");
-                return JsonCreated(result, "Update Stocks Successfully");
-            }
-            catch (Exception ex)
-            {
-                return JsonError(ex.Message, 500);
-            }
-
-        }
-
-        public ActionResult DisplaytheImage(string filename)
-        {
-            if (string.IsNullOrWhiteSpace(filename))
-                return HttpNotFound();
-
-            string folderPath = @"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\HydroParts\";
-            string fullPath = Path.Combine(folderPath, filename);
-
-            if (!System.IO.File.Exists(fullPath))
-                return File("~/Content/Images/bussiness-man.png", "image/png");
-
-            byte[] fileBytes = System.IO.File.ReadAllBytes(fullPath);
-            return File(fileBytes, "image/png"); // Change to "image/jpeg" if needed
-        }
+       
 
 
         // GET: Hydroponics/Index
@@ -418,11 +370,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
             return View();
         }
         // GET: Hydroponics/Chambers
-        public ActionResult Chambers()
-        {
-            return View();
-        }
-
+        public ActionResult Chambers() =>  View();
         // GET: Hydroponics/PartList
         public ActionResult PartList() => View();
         // GET: Hydroponics/UserManage

@@ -202,6 +202,7 @@
 
         Loadingsteps(async () => {
             let res = await FetchAuthenticate('@Url.Action("GetAllChamberList", "Hydro")', { chamber: ID });
+            console.log(res);
             if (res && res.Success) {
                 let priceobj = res.Data.TotalPrice;
 

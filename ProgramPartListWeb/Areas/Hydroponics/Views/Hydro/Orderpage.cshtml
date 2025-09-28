@@ -12,7 +12,7 @@
     <div class="Mold_tabs">
         <button class="Mold_tab active" data-target="All">Active Request</button>
         <button class="Mold_tab" data-target="Completed">Completed</button>
-        <button class="Mold_tab" data-target="InProgress">In Progress</button>
+        <button class="Mold_tab" data-target="InProgress">For Shipping</button>
         <div class="Mold_slider"></div>
     </div>
 
@@ -24,7 +24,7 @@
         </div>
 
         <div class="Mold_content" id="Completed">
-            <div class="search-bar">
+            <div class="search-bar  flex_space">
                 <div class="date-range">
                     <input type="date" value="2023-04-04">
                     <span>-</span>
@@ -33,7 +33,7 @@
 
                 <div class="search-input">
                     <i>🔍</i>
-                    <input type="text" placeholder="Search border member">
+                    <input type="text" placeholder="Search Chambers">
                 </div>
             </div>
 
@@ -104,7 +104,7 @@
         </div>
 
         <div class="Mold_content" id="InProgress">
-            <div class="search-bar">
+            <div class="search-bar  flex_space">
                 <div class="date-range">
                     <input type="date" value="2023-04-04">
                     <span>-</span>
@@ -113,9 +113,9 @@
 
                 <div class="search-input">
                     <i>🔍</i>
-                    <input type="text" placeholder="Search border member">
+                    <input type="text" placeholder="Search Chambers">
                 </div>
-            </div>
+            </div>  
 
 
             <div class="table-container">
@@ -415,7 +415,7 @@
 
 
     const GetChamberDatalist = async () => {
-        let res = await FetchAuthenticate('@Url.Action("GetChamberDropDownList", "Hydro")', {});
+        let res = await FetchAuthenticate('@Url.Action("GetCategorylist", "Hydro")', {});
           if (res && res.Success) {
               $.each(res.Data, function (index, row) {
                   $("#ChamberID").append("<option value='" + row.ChamberID + "'>" + row.ChamberName + "</option>");

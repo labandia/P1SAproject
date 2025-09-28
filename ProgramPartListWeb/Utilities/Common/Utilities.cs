@@ -154,7 +154,8 @@ namespace ProgramPartListWeb.Helper
             }
         }
 
-
+        // GENERATE A UNIQUE ID 
+        // example : REQ_09272025_1134
         public static string GenerateID(string prefix)
         {
             string datePart = DateTime.Now.ToString("MMddyyyy");
@@ -162,21 +163,20 @@ namespace ProgramPartListWeb.Helper
             return $"{prefix}_{datePart}_{timePart}";
         }
 
-
         public static string UserRolesname(int roleint)
         {
             switch (roleint)
             {
                 case 1:
-                    return "SuperAdmin"; 
+                    return "SuperAdmin"; // ull system access (can manage everything, including other admins).
                 case 2:
-                    return "Admin";
+                    return "Administrator"; // Manages users, roles, permissions, and overall system settings.
                 case 3:
-                    return "Manager";
-                case 4:
-                    return "Supervisor";
+                    return "Manager / Supervisor"; // Oversees team operations, approves/rejects requests, can view reports.
                 case 5:
-                    return "Leader";
+                    return "Editor / Contributor"; // Can create, edit, and update content/data, but not manage users.
+                case 6:
+                    return "Staff"; // Basic access, can view and use system features assigned to them.
                 default:
                     return "Users";
             }

@@ -6,7 +6,7 @@ namespace ProgramPartListWeb.Interfaces
 {
     public interface IUserRepository
     {
-        Task<List<UsersModel>> GetAllusers();
+        Task<IEnumerable<UsersModel>> GetAllusers();
         Task<UsersModel> GetUserById(int userId);
 
 

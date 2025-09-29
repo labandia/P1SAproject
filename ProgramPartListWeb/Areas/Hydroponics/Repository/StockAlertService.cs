@@ -1,6 +1,8 @@
-﻿using Aspose.Cells.Pivot;
+﻿using Aspose.Cells.Charts;
+using Aspose.Cells.Pivot;
 using ProgramPartListWeb.Areas.Hydroponics.Interface;
 using ProgramPartListWeb.Areas.Hydroponics.Models;
+using ProgramPartListWeb.Areas.PC.Models;
 using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Models;
 using ProgramPartListWeb.Utilities;
@@ -57,6 +59,94 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
             return SqlDataAccess.GetData<StockPartsModel>(strsql, null);
         }
+
+        public async Task<int> GenerateStockNotification(List<int> userIds, int hoursInterval = 6)
+        {
+            int notifiResult = 0;
+
+            try
+            {
+                // Step 1: Get the last notification
+                string lastSql = @"SELECT TOP 1 CreatedDate 
+                       FROM Hyrdo_StockNotifications
+                       ORDER BY CreatedDate DESC";
+
+
+
+                var lastCreatedList = await SqlDataAccess.GetData<DateTime>(lastSql, null);
+                DateTime? lastCreated = lastCreatedList.FirstOrDefault();
+
+                if (!lastCreated.HasValue)
+                {
+                    lastCreated = DateTime.Now.AddHours(-6); // ensures new notification is generated immediately
+                }
+
+                // Check if at least 6 hours have passed since the last notification
+                if (DateTime.Now >= lastCreated.Value.AddHours(6))
+                {
+                    // Step 2: get Latest the Data of a Stocks Alerts
+                    var StockalertList = await GetAllStockAlertsAsync();
+
+                    // Step 3: if no data List Acquired return 0
+                    if (StockalertList == null || !StockalertList.Any())
+                        return 0;  // ❌ Nothing to notify
+
+
+                    // If has A Stock Alert Data 
+                    // Step 4: Insert the Main or the Header First
+                    string Mainsql = @"INSERT INTO Hyrdo_StockNotifications(Title)
+                                VALUES (@Title);
+                                SELECT CAST(SCOPE_IDENTITY() as int);";
+
+                    notifiResult = await SqlDataAccess.GetCountData(Mainsql, new { Title = "Low / Critical Stock Alert" });
+
+
+
+                    // Step 5: Insert Notification Details
+                    foreach (var item in StockalertList)
+                    {
+
+                        string insertDetails = @"
+                        INSERT INTO Hyrdo_StockNotificationDetails (NotificationId, PartID, CurrentQty, ReorderLevel, WarningLevel, Status)
+                        VALUES(@NotificationId, @PartID, @CurrentQty, @ReorderLevel, @WarningLevel, @Status)";
+                        var parameter = new
+                        {
+                            NotificationId = notifiResult,
+                            PartID = item.PartID,
+                            CurrentQty = item.CurrentQty,
+                            ReorderLevel = item.ReorderLevel,
+                            WarningLevel = item.WarningLevel,
+                            Status = item.Status
+                        };
+
+                        await SqlDataAccess.UpdateInsertQuery(insertDetails, parameter);
+                    }
+
+
+                    // Step 6. Assign Notification to Users
+                    string insertUsers = @"INSERT INTO Hyrdo_StockNotificationUsers(NotificationId, User_ID)
+                                  VALUES (@NotificationId, @User_ID);";
+
+                    foreach (var userId in userIds)
+                    {
+                        await SqlDataAccess.UpdateInsertQuery(insertUsers, new { NotificationId = notifiResult, User_ID = userId });
+                    }
+
+
+                }
+            }
+            catch(Exception e)
+            {
+                // 🔴 Log the error, but don’t throw
+                Console.WriteLine($"[GenerateStockNotification ERROR]: {e.Message}");
+                return 0; // return safe default
+            }
+
+        
+            return notifiResult;
+        }
+
+
 
         public async  Task CheckStockLevelsAsync()
         {
@@ -282,6 +372,32 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             return sb.ToString();
         }
 
+        public async Task<IEnumerable<StockNotification>> GetLowStockNotificationList(int userId)
+        {
+            return await SqlDataAccess.GetData<StockNotification>($@"SELECT n.NotificationId, n.Title, n.CreatedDate, u.IsRead
+                            FROM Hyrdo_StockNotifications n
+                            JOIN Hyrdo_StockNotificationUsers u ON n.NotificationId = u.NotificationId
+                            WHERE u.User_ID = @User_ID
+                            ORDER BY n.CreatedDate DESC;", new { User_ID = userId });
+        }
 
+        public async Task<IEnumerable<StockNotificationDetail>> GetNotificationDetails(int Id, int userID)
+        {
+            string sql = $@"UPDATE Hyrdo_StockNotificationUsers 
+                            SET IsRead = 1, ReadDate = GETDATE()
+                            WHERE NotificationId = @NotificationId AND User_ID =@User_ID;";
+            await SqlDataAccess.UpdateInsertQuery(sql, new { NotificationId = Id, User_ID  = userID });
+
+            return await SqlDataAccess.GetData<StockNotificationDetail>($@"SELECT 
+	                                                                        i.PartNo,
+	                                                                        i.PartName,
+	                                                                        d.CurrentQty, 
+	                                                                        d.ReorderLevel, 
+	                                                                        d.WarningLevel, 
+	                                                                        d.Status
+                                                                        FROM Hyrdo_StockNotificationDetails d
+                                                                        INNER JOIN Hydro_InventoryParts i ON i.PartID = d.PartID
+                                                                        WHERE d.NotificationId = @NotificationId;", new { NotificationId = Id });
+        }
     }
 }

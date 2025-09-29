@@ -638,6 +638,7 @@
     <Compile Include="Areas\Hydroponics\Models\StockAlertModel.cs" />
     <Compile Include="Areas\Hydroponics\Repository\ChamberRepository.cs" />
     <Compile Include="Areas\Hydroponics\Repository\HydroPartsRepository.cs" />
+    <Compile Include="Areas\Hydroponics\Repository\NotificationRepository.cs" />
     <Compile Include="Areas\Hydroponics\Repository\PartsMasterlistRepository.cs" />
     <Compile Include="Areas\Hydroponics\Repository\StockAlertService.cs" />
     <Compile Include="Areas\Hydroponics\Repository\StockpartsRepository.cs" />
@@ -713,6 +714,7 @@
     <Content Include="Content\css\HydroDesign.min.css">
       <DependentUpon>HydroDesign.css</DependentUpon>
     </Content>
+    <Content Include="Content\css\HydroLogin.css" />
     <Content Include="Content\css\OrderDetails.css" />
     <Content Include="Content\css\Patrolforms.css" />
     <Content Include="Content\Images\Electrical.png" />

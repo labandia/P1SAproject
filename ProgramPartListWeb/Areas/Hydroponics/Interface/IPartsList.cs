@@ -7,7 +7,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Interface
 {
     public interface IPartsList
     {
-        Task<List<MasterlistPartsModel>> GetPartsMasterlist();
+        Task<IEnumerable<MasterlistPartsModel>> GetPartsMasterlist();
         Task<bool> AddMasterlistParts(MasterlistPartsModel p);
         Task<bool> EditMasterlistParts(MasterlistPartsModel p);
     }

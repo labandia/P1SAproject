@@ -128,10 +128,14 @@
             <div class="modal-content">
 
                 <div class="modal-body modalwrap">
-                    
+                    <div class="flex_end">
+                        <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                            <span>&times;</span>
+                        </button>
+                    </div>
 
 
-                    <table width="100%" cellpadding="0" cellspacing="0" border="0" align="center" style="max-width:700px; background:#ffffff; border:1px solid #ddd;">
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0" align="center" background:#ffffff; border:1px solid #ddd;">
                         <tr>
                             <td style="padding:20px;">
                                 <h2 style="margin:0; font-size:20px; color:#333333;">📦 Stock Alert Summary</h2>
@@ -140,35 +144,18 @@
                                 </p>
 
                                 <table width="100%" cellpadding="5" cellspacing="0" border="1" style="border-collapse:collapse; font-size:14px;">
-                                    <tr style="background-color:#007bff; color:#ffffff; text-align:left;">
-                                        <th align="left">Product</th>
+                                    <tr style="background-color:#f5f5f5; color:#333333; font-weight: 600 !important; text-align:left;">
+                                        <th align="left">PartNo/PartName</th>
                                         <th align="left">Current Stock</th>
                                         <th align="left">Minimum Stock</th>
                                         <th align="left">Status</th>
                                     </tr>
-                                    <tr>
-                                        <td>Item A</td>
-                                        <td>5</td>
-                                        <td>10</td>
-                                        <td style="background-color:#fff3cd; color:#856404;">Low ⚠️</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Item B</td>
-                                        <td>1</td>
-                                        <td>8</td>
-                                        <td style="background-color:#f8d7da; color:#721c24;">Critical 🚨</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Item C</td>
-                                        <td>0</td>
-                                        <td>5</td>
-                                        <td style="background-color:#dc3545; color:#ffffff;">Out of Stock ❌</td>
-                                    </tr>
+                                    <tbody id="NotificationBody">
+                                    </tbody>
                                 </table>
 
                                 <p style="margin-top:20px; font-size:12px; color:#777777;">
                                     ⚠️ Please review inventory and take necessary actions.<br>
-                                    This is an automated message from the Stock Monitoring System.
                                 </p>
                             </td>
                         </tr>
@@ -275,7 +262,6 @@
             $("#notificationBell").click(function () {
                 $("#notificationDropdown").toggle();
                 unseenCount = 0; // ✅ reset unseen count
-                $("#notificationBadge").hide();
             });
 
 
@@ -296,52 +282,140 @@
                         type: 'GET',
                         dataType: 'json'
                     });
-                    if (response.Success) {
-                        const container = $("#stockAlerts");
-                        container.empty();
-                        $("#countinside").text(response.Alerts.length);
-                        $("#notificationBadge").text(response.Alerts.length);
 
-                        if (!response.Alerts || response.Alerts.length === 0) {
-                            container.append('<li style="padding:10px; text-align:center; color:gray;">No alerts</li>');
-                            $("#notificationBadge").hide();
-                        } else {
-                            response.Alerts.forEach(alert => {
-                                container.append(
-                                    `<div class="list-item"  id='Details_${alert.AlertId}'>
-                                            <p>${alert.PartName}</p>
-                                            <div class="text fl">${alert.Message}</div>
-                                        </div>`
-                                );
-                            });
+                    console.log(response.Success);
 
-                            // Update badge count
-                            //$("#notificationBadge").text(response.Alerts.length).show();
-                            unseenCount++;
-                        }
-                    }
+                    //if (response.Success) {
+                    //    const container = $("#stockAlerts");
+                    //    container.empty();
+                    //    $("#countinside").text(response.Alerts.length);
+                    //    $("#notificationBadge").text(response.Alerts.length);
 
-                    // Update badge
-                    if (unseenCount > 0) {
+                    //    if (!response.Alerts || response.Alerts.length === 0) {
+                    //        container.append('<li style="padding:10px; text-align:center; color:gray;">No alerts</li>');
+                    //        $("#notificationBadge").hide();
+                    //    } else {
+                    //        response.Alerts.forEach(alert => {
+                    //            container.append(
+                    //                `<div class="list-item"  id='Details_${alert.AlertId}'>
+                    //                        <p>${alert.PartName}</p>
+                    //                        <div class="text fl">${alert.Message}</div>
+                    //                    </div>`
+                    //            );
+                    //        });
 
-                    } else {
-                        $("#notificationBadge").hide();
-                    }
+                    //        // Update badge count
+                    //        //$("#notificationBadge").text(response.Alerts.length).show();
+                    //        unseenCount++;
+                    //    }
+                    //}
+
+                    //// Update badge
+                    //if (unseenCount > 0) {
+
+                    //} else {
+                    //    $("#notificationBadge").hide();
+                    //}
                 } catch (error) {
                     console.warn("Error fetching stock alerts:", error);
                 }
             }
 
+            async function GetNotification() {
+                let ID = parseInt(localStorage.getItem("UserID"));
+
+                  const response = await $.ajax({
+                      url: '@Url.Action("GetNoficationDisplay", "Stock")',
+                      data: { userID: ID },
+                      type: 'GET',
+                      dataType: 'json'
+                  });
+
+                if (response.Success) {
+                    const container = $("#stockAlerts");
+                    container.empty();
+
+                    const countUnread = response.Data.filter(item => item.IsRead === false).length;
+                    if (countUnread !== 0) {
+                        $("#countinside").text(countUnread);
+                        $("#notificationBadge").text(countUnread);
+
+                        $("#notificationBadge").show();
+                    } else {
+                        $("#notificationBadge").hide();
+                    }
+
+                  
+
+                    if (!response.Data || response.Data.length === 0) {
+                        container.append('<li style="padding:10px; text-align:center; color:gray;">No alerts</li>');
+                    } else {
+                        response.Data.forEach(alert => {
+                            container.append(
+                                `<div class="list-item"  id='Details_${alert.NotificationId}'>
+                                        <p>${alert.Title}</p>
+                                        <small>${alert.CreatedDate}</small>
+                                    </div>`
+                            );
+                        });
+
+
+                    }
+                }
+
+
+            }
+
+
+
             // Start polling every 15 seconds
             pollStockAlerts(); // initial load
-            setInterval(pollStockAlerts, 60000); // 15s interval
+            GetNotification();
+            //setInterval(pollStockAlerts, 60000); // 15s interval
         });
 
-        $(document).on('click', '.list-item', function (e) {
+        $(document).on('click', '.list-item', async function (e) {
             e.stopPropagation(); // Prevent triggering the row click event
             var rowId = $(this).attr('id');
             var rowIndex = rowId.split('_').slice(1).join('_');
-            console.log(rowIndex);
+
+            let ID = parseInt(localStorage.getItem("UserID"));
+
+           const response = await $.ajax({
+              url: '@Url.Action("GetNoficationDetailsDisplay", "Stock")',
+              data: { Notify: rowIndex, userID: ID },
+              type: 'GET',
+              dataType: 'json'
+           });
+
+
+            if (response.Success) {
+                $("#countinside").text("0");
+                $("#notificationBadge").hide();
+                $("#notificationDropdown").hide();
+                const container = $("#NotificationBody");
+                container.empty();
+
+
+                response.Data.forEach(res => {
+                    container.append(
+                        `<tr>
+                           <td style='text-align: left; padding-left: 1.5em !important;'>
+                                <div>
+                                    <p style='color: #185d8b; font-weight: 600;'>${res.PartName ? res.PartName : "-"}</p>
+                                    <small> ${res.PartNo}</small>
+                                </div>
+                           </td>
+                           <td>${res.CurrentQty}</td>
+                           <td>${res.ReorderLevel}</td>
+                           <td style="background-color:#fff3cd; color:#856404;">${res.Status}</td>
+                       </tr>`
+                    );
+                });
+            }
+
+
+
             $("#NotificationModal").modal("show");
         });
 
@@ -392,7 +466,7 @@
 
 
         $(document).ready(function() {
-            $.ajax({
+            @*$.ajax({
                 url: '@Url.Action("StocksAlertEmailNotification", "Stock")',
                 type: 'POST',
                 success: function (response) {
@@ -401,7 +475,7 @@
                 error: function (xhr, status, error) {
                     console.log("Failed to send stock alert email: " + error);
                 }
-            });
+            });*@
         });
 
 

@@ -173,9 +173,9 @@ namespace ProgramPartListWeb.Helper
                     return "Administrator"; // Manages users, roles, permissions, and overall system settings.
                 case 3:
                     return "Manager / Supervisor"; // Oversees team operations, approves/rejects requests, can view reports.
-                case 5:
+                case 4:
                     return "Editor / Contributor"; // Can create, edit, and update content/data, but not manage users.
-                case 6:
+                case 5:
                     return "Staff"; // Basic access, can view and use system features assigned to them.
                 default:
                     return "Users";

@@ -14,13 +14,8 @@
     </div>
 
     <div class="flex_align">
-        <div class="select-container">
-            <select id="Categoryselect">
-                <option value="0">-- Category --</option>
-            </select>
-        </div>
-        <button style="width: 100%; display: none;" id="ShowStocks" class="primarybtn" type="button"><i class="fa-solid fa-user-secret"></i> Add Stocks</button>
-        <button style="width: 100%;" id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-box-archive"></i> Add Stocks</button>
+
+        <button style="width: 100%;" id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-user-plus"></i> Add Users</button>
     </div>
 </section>
 <hr />
@@ -37,13 +32,316 @@
 
             </tr>
         </thead>
-        <tbody id="InventorylistData">
+        <tbody id="UserslistData">
         </tbody>
     </table>
 </div>
 
-<div class="MasterlistWrap_footer ">
-    <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
 
-    <div id="MastertableContainer" class="paginationPartlocal flex_align"></div>
+
+@*=================================================================================*@
+@*=========================== ADD NEW USERS      ==================================*@
+@*=================================================================================*@
+<div class="modal fade modal-l" id="AddNewUserModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Add Users</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+
+                <form method="post" class="addformcontainer" id="addnewform" autocomplete="off">
+                    <div class="row">
+                        <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
+                            <label>Employee ID <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                            <input type="text" name="Employee_ID" id="Employee_ID" placeholder="Enter Employee ID" autocomplete="off" required />
+                        </div>
+                        <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
+                            <label>Full Name <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                            <input type="text" name="FullName" id="FullName" placeholder="Enter Full Name" autocomplete="off" required />
+                        </div>
+                    </div>
+
+
+                    <div class="form_group col-12 col-sm-12 ">
+                        <div class="flex_space">
+                            <label>Email Address </label>
+                            <small>(Only if you have an email)</small>
+                        </div>
+                        <input type="text" name="Email" id="Email" placeholder="Enter Email Address" autocomplete="off" />
+                    </div>
+
+
+                    <div class="form_group col-12 col-sm-12 ">
+                        <div class="flex_space">
+                            <label>Set Roles </label>
+                        </div>
+                        <div class="select-container mt-2">
+                            <select id="Roles_ID" style="padding: .7em 1em;">
+                                <option value="2">Administrator</option>
+                                <option value="3">Manager / Supervisor</option>
+                                <option value="4">Editor / Contributor</option>
+                                <option value="5">Staff</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div>
+                            <small id="Errormessage"> All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                        </div>
+                        <button type="submit" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Submit</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
 </div>
+
+
+
+<script type="text/javascript">
+    let userData = [];
+    let loadData = [];
+    let partsID;
+    let userRole;
+
+    let TableDisplay = $("#UserslistData");
+
+    const UserListTable = async () => {
+        loadingDisplay();
+
+        Loadingsteps(async () => {
+            let res = await FetchAuthenticate('@Url.Action("GetUsersData", "Hydro")', {});
+            if (res && res.Success) {
+                userData = res.Data;
+                TableDisplay.empty(); // Removing the Loading Display
+
+                UserManagePagination(userData, 'UserslistData');
+            } else {
+                const loadData = `<tr>
+                  <td colspan='6'>
+                      🔍 ${res.Message}
+                  </td>
+              </tr>`;
+
+                TableDisplay.empty();
+                TableDisplay.append(loadData);
+
+            }
+        });
+    }
+
+
+
+    const ActionRestrict = () => {
+        userRole = localStorage.getItem("UserRole");
+        if (userRole === "Leader" || userRole === "Users") {
+            return false;
+        }
+    }
+
+    function UserManagePagination(dataArray, tableBodyId) {
+        let filteredData = [...dataArray];  // For Filter Functionality
+
+
+
+        // === Render Table ===
+        const renderTable = () => {
+            const tableBody = document.getElementById(tableBodyId);
+            tableBody.innerHTML = "";
+
+            $.each(filteredData, function (index, row) {
+                // Image Display
+
+
+                  const rowHtml = `
+                         <tr>
+                             <td data-cell="Fullname" style='text-align: left; padding-left: 2em !important; font-weight: 600;'>${row.Fullname ? row.Fullname : "-"}</td>
+                             <td style='font-weight: 600;' data-cell="Employee_ID">${row.Employee_ID ? row.Employee_ID : "-"}</td>
+                             <td data-cell="Employee_ID">${row.Email ? row.Email : "-"}</td>
+                             <td data-cell="Employee_ID">${row.Role_ID ? row.Role_ID : "-"}</td>
+                             <td data-cell="Employee_ID">${row.IsActive ? row.IsActive : "-"}</td>
+                             <td data-cell="Delete" >
+                                 <div class='flex_center'>
+                                     <button  class='Editbtnbutton text-primary bg-white' id='editButton_${row.PartID}' ">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                     </button>
+                                 </div>
+                             </td>
+                         </tr>
+                     `;
+                tableBody.insertAdjacentHTML("beforeend", rowHtml);
+
+                // Attach blur-up effect
+                const lazyImages = document.querySelectorAll("img.lazy[data-src]");
+                lazyImages.forEach(img => {
+                    const realSrc = img.getAttribute("data-src");
+                    img.onload = () => img.classList.add("loaded"); // smooth transition
+                    img.setAttribute("src", realSrc);
+                    img.removeAttribute("data-src");
+                });
+            });
+        };
+
+        // === CLICK HANDLER: Show overlay image ===
+        $(document).on("click", ".NoImages", function (e) {
+            e.stopPropagation();
+            let imgSrc = $(this).attr("src") || $(this).attr("data-src");
+            let $overlay = $("#imageOverlay");
+            let $overlayImg = $("#overlayImage");
+
+            $overlayImg.attr("src", imgSrc);
+            $overlay.show(0, function () {
+                $overlay.addClass("show");
+            });
+        });
+
+        // === Show Details ===
+        $(document).on("click", ".Editbtnbutton", function (e) {
+            e.stopPropagation();
+            var rowId = $(this).attr("id");
+            var rowIndex = rowId.split("_")[1];
+            var selected = filteredData.find(item => item.PartID === parseInt(rowIndex));
+
+            if (selected) {
+                $("#PartID").val(selected.PartID);
+                $("#PartNo").val(selected.PartNo);
+                $("#PartName").val(selected.PartName);
+                $("#Supplier").val(selected.Supplier);
+                $("#CategoryID").val(selected.CategoryID);
+
+                $("#EditMasterModal").modal("show");
+            }
+        });
+
+
+        // === Hide overlay when clicked ===
+        $(document).on("click", "#imageOverlay", function () {
+            let $overlay = $(this);
+            $overlay.removeClass("show");
+            setTimeout(() => {
+                $overlay.hide();
+            }, 400); // match CSS transition
+        });
+
+
+        // === Show Details ===
+        const showDetails = (e) => {
+            e.stopPropagation();
+
+            var rowId = $(this).attr('id');
+            var rowIndex = rowId.split('_')[1];
+            var filterdata = partlistData.find(item => item.PartID === parseInt(rowIndex));
+            $("#PartID").val(filterdata.PartID);
+            $("#PartNo").val(filteredData.PartNo);
+            $("#PartName").val(filterdata.PartName);
+            $("#PartNo").val(filterdata.PartNo);
+            $("#Supplier").val(filterdata.Supplier);
+            $("#CategoryID").val(filterdata.CategoryID);
+
+            $("#EditMasterModal").modal("show");
+        }
+
+
+
+        // === Search ===
+        const searchTable = () => {
+            const query = $('#searchbox').val().toLowerCase() || '';
+            filteredData = dataArray.filter(item =>
+                item.PartName.toLowerCase().includes(query) || item.PartNo.toLowerCase().includes(query)
+            );
+
+            if (filteredData.length == 0) {
+                TableDisplay.empty();
+                const loadData = `<tr>
+                     <td colspan='4'>
+                         <p id="loadingStepText">🔍 No Search found ..</p>
+                     </td>
+                 </tr>`;
+                TableDisplay.append(loadData);
+
+                return;
+            }
+
+
+            renderTable();
+        };
+
+
+
+        $('#searchbox').on('input', searchTable);
+
+
+        // Initial render
+        renderTable();
+    }
+
+    $("#Showadd").on('click', function (e) {
+        e.preventDefault();
+        $("#AddNewUserModal").modal("show");
+    });
+
+
+    function loadingDisplay() {
+        TableDisplay.empty();
+        const loadData = `<tr>
+                            <td colspan='7'>
+                                <div class='Loadercontainer'>
+                                    <span class="loader"></span>
+                                    <p id="loadingStepText">Fetching data from the database..</p>
+                                </div>
+                            </td>
+                        </tr>`;
+        TableDisplay.append(loadData);
+    }
+    function Loadingsteps(callback) {
+        const steps = [
+            "Fetching data from the database...",
+            "Processing data...",
+            "Finalizing table view..."
+        ];
+
+        let stepIndex = 0;
+
+        const interval = setInterval(() => {
+            if (stepIndex < steps.length) {
+                const stepText = document.getElementById("loadingStepText");
+                if (stepText) stepText.innerText = steps[stepIndex];
+                stepIndex++;
+            } else {
+                clearInterval(interval);
+                if (typeof callback === "function") callback();
+            }
+        }, 800);
+    }
+
+
+
+    // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+    const LoadPageData = async () => {
+        try {
+
+            const [users] = await Promise.all([
+                UserListTable()
+            ]);
+        } catch (error) {
+            console.error("Failed to load page data:", error);
+        } finally {
+            // Hide loading spinner whether success or failure
+            //$("#loadingSpinner").hide();
+        }
+    }
+
+    $(document).ready(() => {
+        LoadPageData();
+    });
+</script>

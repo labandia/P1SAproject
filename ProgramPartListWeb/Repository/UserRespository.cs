@@ -13,15 +13,16 @@ namespace ProgramPartListWeb.Data
 {
     public class UserRespository : IUserRepository
     {
-        public Task<List<UsersModel>> GetAllusers()
+        public async Task<IEnumerable<UsersModel>> GetAllusers()
         {
             string strquery = $@"SELECT ua.User_ID, ua.Username, u.Employee_ID,
-                                ua.Password, u.Fullname, ua.Role_ID, u.Signature, u.Email
+                                ua.Password, u.Fullname, ua.Role_ID, u.Signature, u.Email,
+                                p.Project_ID, ua.IsActive
                                 FROM UserAccounts ua
                                 INNER JOIN Users u ON u.User_ID = ua.User_ID
                                 INNER JOIN ProjectList p ON p.Project_ID = ua.Project_ID
                                 WHERE IsActive = 1";
-            return UsersAccess.UserGetData<UsersModel>(strquery);
+            return await UsersAccess.UserGetData<UsersModel>(strquery);
         }
         public async Task<UsersModel> GetUserById(int userId)
         {

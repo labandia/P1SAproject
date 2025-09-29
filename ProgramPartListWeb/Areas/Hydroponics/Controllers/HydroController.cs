@@ -4,7 +4,10 @@ using ProgramPartListWeb.Areas.Hydroponics.Interface;
 using ProgramPartListWeb.Areas.Hydroponics.Models;
 using ProgramPartListWeb.Controllers;
 using ProgramPartListWeb.Helper;
+using ProgramPartListWeb.Interfaces;
+using ProgramPartListWeb.Models;
 using ProgramPartListWeb.Utilities;
+using ProgramPartListWeb.Utilities.Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -23,16 +26,30 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         private readonly IPartsList _partsList;
         private readonly IChambers _chambers;
         private readonly IStocksparts _stock;
+        private readonly IUserRepository _user;
 
-        public HydroController(IHyrdoParts hydro, IPartsList partsList, IChambers chambers, IStocksparts stock)
+        public HydroController(IHyrdoParts hydro, IPartsList partsList, IChambers chambers, IStocksparts stock, IUserRepository user)
         {
             _hydro = hydro;
             _partsList = partsList;
             _chambers = chambers;
             _stock = stock;
+            _user = user;
         }
+        //-----------------------------------------------------------------------------------------
+        //---------------------------- USERS DATA  ------------------------------------------------
+        //-----------------------------------------------------------------------------------------
+        // GET: GetEmployeeLIST
+        public async Task<ActionResult> GetUsersData()
+        {
+            var data = await _user.GetAllusers() ?? new List<UsersModel>();
 
-        
+            var filterbyProj = data.Where(res => res.Project_ID == 10);
+            if (filterbyProj == null || !filterbyProj.Any())
+                return Json(ResultMessageResponce.JsonError("No Data Found", 404, "No Employee data found"), JsonRequestBehavior.AllowGet);
+
+            return Json(ResultMessageResponce.JsonSuccess(filterbyProj), JsonRequestBehavior.AllowGet);
+        }
 
 
         //-----------------------------------------------------------------------------------------
@@ -277,16 +294,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
 
             return JsonSuccess(data, "Load Request Details List");
         }
-        [JwtAuthorize]
-        public async Task<ActionResult> GetChamberTypeDataList(int chamberID)
-        {
-
-            var data = await _hydro.GetChamberTypePartsList(chamberID) ?? new List<ChamberTypePartsModel>();
-            if (data == null || !data.Any()) return JsonNotFound("No Chamber list Data.");
-
-            return JsonSuccess(data, "Load Chamber type List");
-        }
-
+      
 
         [HttpPost]
         public async Task<ActionResult> NewAddRequestData(RequestItem item)

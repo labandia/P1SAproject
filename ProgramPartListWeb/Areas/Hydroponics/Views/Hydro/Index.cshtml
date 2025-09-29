@@ -10,44 +10,49 @@
     <link rel="icon" type="image/x-icon" href="@Url.Content("~/Content/Images/patrol .ico")">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@ViewBag.Title</title>
-    <link rel="preload" href="~/Content/fonts/Poppins-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+    <link rel="preload" href="~/Content/fonts/Manrope-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 
 
     <script src="~/Scripts/bootstrap.bundle.min.js"></script>
-
+    <link href="~/Content/css/HydroLogin.css" rel="stylesheet" />
 
     @Styles.Render("~/Content/shared-css")
-    @Styles.Render("~/Content/patrol-css")
 
     @Scripts.Render("~/bundles/shared-js")
     @Scripts.Render("~/bundles/modernizr")
 </head>
 
-<div class="PatrolDesign">
-    <div class="PatrolDesign_wrapper" id="logshow">
-        <form method="post" id="logincredentials">
-            <h3>San Hydro Application System</h3>
-            <div class="PatrolDesign_input">
-                <i class="fa-solid fa-user"></i>
-                <input type="text" name="username" id="username" placeholder="Enter Username" autocomplete="off" required />
-            </div>
-            <div class="PatrolDesign_input">
-                <i class="fa-solid fa-unlock-keyhole"></i>
-                <input type="password" name="password" id="password" placeholder="Enter Password" autocomplete="new-password" required />
-            </div>
-            <p class="forgetbtn" id="changebtn">Change Password</p>
 
-            <div class="flex_center">
-                <button type="submit" id="loginbtn" class="primarybtn"><i class="fa-solid fa-right-to-bracket"></i> Login</button>
-            </div>
+<div class="bg-animated"></div>
+
+<div class="center">
+    <div class="cardCustom">
+        <h2>San Hydro App System</h2>
+        <form id="logincredentials" method="post">
+            <label>Username</label>
+            <input type="text" name="username" id="username" placeholder="Enter Username" autocomplete="off" required />
+            <label>Password</label>
+            <input type="password" name="password" id="password" placeholder="Enter Password" autocomplete="new-password" required />
+            <button type="submit">Sign in</button>
         </form>
+        <p class="forgetbtn" id="changebtn">Change Password</p>
         <p class="selectreg" id="forgetbtn">Doesnt have an Account ?</p>
     </div>
 </div>
 
-<footer class="Copyrights">
-    © 2025 P1SA-Process Control All rights reserved.
-</footer>
+
+<!-- Loader -->
+<div id="loader" class="loader-overlay">
+    <div class="loader-box">
+        <div class="spinner"></div>
+        <div>
+            <div>Signing you in…</div>
+            <small>Please wait while we load the admin panel.</small>
+        </div>
+    </div>
+</div>
+
+
 
 
 
@@ -170,6 +175,7 @@
 </div>
 
 <script type="text/javascript">
+    const loader = document.getElementById('loader');
     const logform = document.getElementById('logincredentials');
     const regform = document.getElementById('addnewform');
     const changeform = document.getElementById('changenewform');
@@ -191,8 +197,9 @@
     logform.addEventListener('submit', async (e) => {
         e.preventDefault();
         console.clear();
-        const savebtn = document.querySelector("#loginbtn");
-        savebtn.innerHTML = " <div class='buttonloading'></div>";
+        //const savebtn = document.querySelector("#loginbtn");
+        //savebtn.innerHTML = " <div class='buttonloading'></div>";
+        loader.classList.add('show');
 
         let formData = new FormData(e.target);
         formData.append("proj", 9);
@@ -201,14 +208,10 @@
         let res = await postrawData('/Auth/Authenticate', data);
 
         if (res && res.StatusCode === 200) {
-            Swal.fire({
-                title: "Success",
-                text: res.Message,
-                icon: "success",
-                showConfirmButton: false,
-                timer: 1500
-            }).then(() => {
-                savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-solid fa-right-to-bracket'></i>  Login</span>"
+            setTimeout(() => {
+                console.log(res);
+                //savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-solid fa-right-to-bracket'></i>  Login</span>"
+                localStorage.setItem("UserID", res.Data.User_ID)
                 localStorage.setItem('Logout', "/Hydroponics/Hydro/index");
                 // For Info of the user
                 localStorage.setItem('UserRole', res.Data.role);
@@ -223,8 +226,9 @@
                 localStorage.setItem('isLoggedInHydro', 'true');
 
                 window.location.href = "/Hydroponics/Hydro/Inventorylist";
-            });
+            }, 2000);
         } else {
+            loader.classList.remove('show');
             Swal.fire({
                 icon: "error",
                 text: res.Message,
@@ -232,7 +236,6 @@
                 showConfirmButton: false
             });
 
-            savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-solid fa-right-to-bracket'></i>  Login</span>"
         };
     });
     regform.addEventListener('submit', async (e) => {
@@ -242,8 +245,8 @@
 
         const data = Object.fromEntries(formData);
         if (!RegisterValidationForm()) {
-              //const savebtn = document.querySelector("#Regisbtn");
-              //savebtn.innerHTML = " <div class='buttonloading'></div>";
+            //const savebtn = document.querySelector("#Regisbtn");
+            //savebtn.innerHTML = " <div class='buttonloading'></div>";
             let res = await postData('/User/CreateNewUser', formData);
             if (res && res.Success) {
                 Swal.fire({
@@ -346,7 +349,7 @@
 
 
     window.IsLoginUser({
-        storageKey: "isLoggedInPatrol",
+        storageKey: "isLoggedInHydro",
         redirectUrl: '/Hydroponics/Hydro/index',
         expectedValue: 'true',
         redirectIfLoggedInUrl: '/Hydroponics/Hydro/Inventorylist',

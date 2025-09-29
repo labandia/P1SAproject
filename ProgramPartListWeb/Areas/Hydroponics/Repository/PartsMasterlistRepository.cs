@@ -8,7 +8,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 {
     public class PartsMasterlistRepository : IPartsList
     {
-        public Task<List<MasterlistPartsModel>> GetPartsMasterlist()
+        public async Task<IEnumerable<MasterlistPartsModel>> GetPartsMasterlist()
         {
             string strsql = $@"SELECT 
 	                            i.PartID,
@@ -21,7 +21,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                 i.Unit
                             FROM Hydro_InventoryParts i
                             INNER JOIN Hydro_CategoryParts c ON c.CategoryID = i.CategoryID";
-            return SqlDataAccess.GetData<MasterlistPartsModel>(strsql, null);
+            return await SqlDataAccess.GetData<MasterlistPartsModel>(strsql, null);
         }
 
         public Task<bool> AddMasterlistParts(MasterlistPartsModel p)

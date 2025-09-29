@@ -19,6 +19,8 @@ namespace ProgramPartListWeb.Models
         public string Signature { get; set; }
         public string Email { get; set; }
         public int Role_ID { get; set; }
+        public int Project_ID { get; set; }
+        public int IsActive { get; set; }
     }
     public class AuthModel
     {

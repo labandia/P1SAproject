@@ -13,48 +13,63 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
         public Task<List<RequestChambersModel>> GetRequestList()
         {
             string strsql = $@"WITH OrdersCTE AS (
+                                    SELECT 
+                                        o.OrderID,
+                                        m.ChamberName,
+                                        o.OrderDate,
+                                        o.TargetDate,
+                                        o.OrderedBy,
+                                        o.Quantity AS ChambersOrdered,
+                                        o.Status AS RequestStatus,
+                                        o.PIC,
+                                        o.ChamberID
+                                    FROM Hydro_Orders o
+                                    INNER JOIN Hydro_ChamberMasterlist m 
+                                        ON m.ChamberID = o.ChamberID
+                                ),
+                                DetailsCTE AS (
+                                    SELECT 
+                                        d.OrderID,
+                                        CASE 
+                                            WHEN SUM(d.QtyUsed) = SUM(d.RequiredQty) 
+                                                THEN 'Completed'
+                                            ELSE 'Not Completed'
+                                        END AS MaterialStatus,
+                                        CAST(
+                                            (CAST(SUM(d.QtyUsed) AS DECIMAL(18,2)) / 
+                                             NULLIF(SUM(d.RequiredQty),0)) * 100 AS DECIMAL(6,2)
+                                        ) AS CompletionPercent
+                                    FROM Hydro_OrderDetails d
+                                    GROUP BY d.OrderID
+                                ),
+                                ComputeTotal AS (
+                                    SELECT 
+                                        c.ChamberID,
+                                        ROUND(SUM((c.UnitCost_PHP / 58) * c.QuantityPerChamber), 0) AS USDTotal,
+                                        ROUND(SUM(c.QuantityPerChamber * c.UnitCost_PHP), 0) AS PHPTotal
+                                    FROM Hydro_ChamberParts c
+                                    INNER JOIN Hydro_InventoryParts i ON c.PartID = i.PartID
+                                    INNER JOIN Hydro_CategoryParts cp ON cp.CategoryID = i.CategoryID
+                                    INNER JOIN Hydro_ChamberMasterlist cm ON cm.ChamberID = c.ChamberID
+                                    GROUP BY c.ChamberID
+                                )
                                 SELECT 
                                     o.OrderID,
-                                    m.ChamberName,
-                                    o.OrderDate,
-                                    o.TargetDate,
+                                    o.ChamberName,
+                                    FORMAT(o.OrderDate, 'MM/dd/yyyy') as OrderDate,
+                                    FORMAT(o.TargetDate, 'MM/dd/yyyy') as TargetDate,
                                     o.OrderedBy,
-                                    o.Quantity AS ChambersOrdered,
-                                    o.Status AS RequestStatus,
-                                    o.PIC
-                                FROM Hydro_Orders o
-                                INNER JOIN Hydro_ChamberMasterlist m 
-                                    ON m.ChamberID = o.ChamberID
-                            ),
-                            DetailsCTE AS (
-                                SELECT 
-                                    d.OrderID,
-                                    CASE 
-                                        WHEN SUM(d.QtyUsed) = SUM(d.RequiredQty) 
-                                            THEN 'Completed'
-                                        ELSE 'Not Completed'
-                                    END AS MaterialStatus,
-		                             CAST(
-                                        (CAST(SUM(d.QtyUsed) AS DECIMAL(18,2)) / 
-                                         NULLIF(SUM(d.RequiredQty),0)) * 100 AS DECIMAL(5,2)
-                                    ) AS CompletionPercent
-                                FROM Hydro_OrderDetails d
-                                GROUP BY d.OrderID
-                            )
-                            SELECT 
-                                o.OrderID,
-                                o.ChamberName,
-	                            FORMAT(o.OrderDate, 'MM/dd/yyyy') as OrderDate,
-                                FORMAT(o.TargetDate, 'MM/dd/yyyy') as TargetDate,
-                                o.OrderedBy,
-                                o.ChambersOrdered,
-                                o.RequestStatus,
-                                o.PIC,
-                                d.MaterialStatus,
-	                            d.CompletionPercent
-                            FROM OrdersCTE o
-                            LEFT JOIN DetailsCTE d 
-                                ON o.OrderID = d.OrderID ORDER BY o.OrderID DESC;";
+                                    o.ChambersOrdered,
+                                    o.RequestStatus,
+                                    o.PIC,
+                                    d.MaterialStatus,
+                                    d.CompletionPercent,
+                                    ct.PHPTotal * o.ChambersOrdered AS TotalPrice
+                                FROM OrdersCTE o
+                                LEFT JOIN DetailsCTE d ON o.OrderID = d.OrderID
+                                LEFT JOIN ComputeTotal ct ON o.ChamberID = ct.ChamberID
+                                ORDER BY o.OrderID DESC;
+                                ";
             return SqlDataAccess.GetData<RequestChambersModel>(strsql);
         }
 
@@ -136,7 +151,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
         public Task<List<ChamberTypeList>> GetChamberTypes() => SqlDataAccess.GetData<ChamberTypeList>("SELECT ChamberID, ChamberName FROM Hydro_ChamberMasterlist");
 
 
-        public Task<bool> UpdateRequestStatus(int OrderID, string RequestStatus)
+        public Task<bool> UpdateRequestStatus(string OrderID, string RequestStatus)
         {
             string strsql = $@"UPDATE Hydro_Orders SET Status =@Status 
                                WHERE OrderID =@OrderID";
@@ -194,7 +209,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             return result;
         }
 
-        public async Task<bool> UpdatesRequestMaterials(string OrderID, int PartID, int allocated)
+        public async Task<bool> UpdatesRequestMaterials(string OrderID, int PartID, double allocated)
         {
             string strsql = $@"UPDATE Hydro_OrderDetails
                                     SET QtyUsed = 
@@ -214,7 +229,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                 UPDATE Hydro_Stocks
                                 SET CurrentQty = 
                                     CASE 
-                                        WHEN CurrentQty - @QtyUsed < 0 THEN 0
+                                        WHEN CurrentQty - @QtyUsed < 0 THEN 0.0
                                         ELSE CurrentQty - @QtyUsed
                                     END
                                 WHERE PartID =@PartID";

@@ -3,49 +3,77 @@
     ViewBag.Title = "AddStocks";
     Layout = "~/Areas/Hydroponics/Views/Shared/HydroPartsLayout.cshtml";
 }
-<div class="flex_align">
-    <a href="/Hydroponics/Hydro/Inventorylist"><i class="fa-solid fa-arrow-left"></i></a>
-    <h5 style="margin: 0; font-weight: 600;">Add Stocks</h5>
-</div>
 
-<div class="StocksInput">
-    <div class="StocksInput_group">
-        <label>Type Partname / Partno : </label> <br />
-        <div class="search-box">
-            <input type="hidden" name="PartID" id="PartID">
-            <input style="width: 100%;" type="text" placeholder="Type Partno / Partname here ..." name="searchPartno" id="searchPartno" autocomplete="off">
-            <div class="namesdisplay"></div>
+
+
+<div class="StockContent">
+    <div class="addformStocks">
+        <div class="flex_align">
+            <a href="/Hydroponics/Hydro/Inventorylist"><i class="fa-solid fa-arrow-left"></i></a><h5 style="margin: 0; font-weight: 700;"> Add New Stock</h5>
+        </div>
+        <hr />
+        <div id="stockForm">
+            <div class="stockGroup">
+                <label for="productName">Partname / Partno </label>
+                <div class="search-box">
+                    <input type="hidden" name="PartID" id="PartID">
+                    <input style="width: 100%;" type="text" placeholder="Type Partno / Partname here ..." name="searchPartno" id="searchPartno" autocomplete="off">
+                    <div class="namesdisplay"></div>
+                </div>
+            </div>
+
+
+            <div class="stockGroup">
+                <label for="quantity">Quantity</label>
+                <input style="width: 100%;" type="text" id="Quantity" placeholder="Enter the Quantity" onkeypress="return restrictChars(event)" autocomplete="off" name="Quantity" />
+            </div>
+            <hr />
+            <button style="width: 100%;" id="sampleSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Add Data</button>
         </div>
     </div>
-    <div class="StocksInput_group">
-        <label>Input Quantity :</label> <br />
-        <input style="width: 100%;" type="text" id="Quantity" placeholder="Enter the Quantity" onkeypress="return restrictChars(event)" autocomplete="off" name="Quantity" />
-    </div>
-    <div class="StocksInput_group">
-        <button style="width: 100%;" id="sampleSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Add</button>
+
+    <div class="table-container">
+        <div class="flex_space">
+            <div class="Inputcontainer">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" placeholder="Search here ... " id="searchbox" autocomplete="off" />
+                <div class="line"></div>
+            </div>
+            <button id="SaveStocks" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Add Stock Item</button>
+        </div>
+
+        <div class="InspecTable">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 10%;"> <span style="margin-left: .5em;">Item #</span>  </th>
+                        <th style="width: 20%; text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-screwdriver-wrench"></i>  <span style="margin-left: .5em;">Part No. / Partname</span> </th>
+                        <th style="width: 10%;"> <span style="margin-left: .5em;">Quantity</span>  </th>
+                        <th style="width: 10%;"> <span style="margin-left: .5em;">Remove</span>  </th>
+                    </tr>
+                </thead>
+                <tbody id="AddStocksData">
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
 
 
-    <div class="InspecTable">
-        <table>
-            <thead>
-                <tr>
-                    <th style="width: 10%;"> <span style="margin-left: .5em;">Item #</span>  </th>
-                    <th style="width: 20%; text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-screwdriver-wrench"></i>  <span style="margin-left: .5em;">Part No. / Partname</span> </th>
-                    <th> <i class="fa-regular fa-rectangle-list"></i> <span style="margin-left: .5em;">Category</span>  </th>
-                    <th> <i class="fa-regular fa-address-card"></i> <span style="margin-left: .5em;">Supplier</span>  </th>
-                    <th style="width: 10%;"> <span style="margin-left: .5em;">Quantity</span>  </th>
-                    <th style="width: 10%;"> <span style="margin-left: .5em;">Remove</span>  </th>
-                </tr>
-            </thead>
-            <tbody id="AddStocksData">
-            </tbody>
-        </table>
-    </div>
 
-   <button id="SaveStocks" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+
+
+
+
+
+
+
+
+
+
+    
+
 
 
     <script type="text/javascript">
@@ -260,7 +288,10 @@
 
     function display(result) {
         const content = result.map((list) => {
-            return `<li onclick="selectinput(this)" data-id="${list.PartID}">${list.PartName}</li>`;
+            return `<li onclick="selectinput(this)" data-id="${list.PartID}">
+                 <p style='color: #222; font-weight: 600;' id='textselected'>${list.PartName ? list.PartName : "-"}</p>
+                 <small> ${list.PartNo}</small>
+               </li>`;
         });
 
         resultBox.innerHTML = "<ul>" + content.join('') + "</ul>";
@@ -268,9 +299,10 @@
 
     function selectinput(list) {
         const ID = list.getAttribute("data-id");
+        let text = $("#textselected").text();
         partsID = ID;
         $("#PartID").val(ID);
-        $("#searchPartno").val(list.innerHTML);
+        $("#searchPartno").val(text);
         resultBox.innerHTML = '';
         resultBox.style.display = 'none';
         $("#Quantity").focus();
@@ -285,8 +317,6 @@
                          <p style='color: #0c382ce8; font-weight: 600;'>${row.PartName}</p>
                          <small>${row.PartNo}</small>
                        </td>
-                       <td>${row.CategoryName}</td>
-                       <td>${row.Supplier}</td>
                        <td>
                              <div class='flex_center'>
                                  <button  class='RemoveQuan text-primary bg-white' id='RemoveQuan_${index}' ">

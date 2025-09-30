@@ -21,11 +21,11 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Interface
 
 
 
-        Task<bool> UpdateRequestStatus(int OrderID, string RequestStatus);
+        Task<bool> UpdateRequestStatus(string OrderID, string RequestStatus);
         Task<bool> AddRequestChamber(RequestItem item);
 
       
-        Task<bool> UpdatesRequestMaterials(string OrderID, int PartID, int allocated);
+        Task<bool> UpdatesRequestMaterials(string OrderID, int PartID, double allocated);
 
 
         Task<bool> AdditionalChambers();

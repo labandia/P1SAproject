@@ -12,12 +12,14 @@
     <div class="Mold_tabs">
         <button class="Mold_tab active" data-target="All">Active Request</button>
         <button class="Mold_tab" data-target="Completed">Completed</button>
-        <button class="Mold_tab" data-target="InProgress">For Shipping</button>
         <div class="Mold_slider"></div>
     </div>
 
     <div class="Mold_contentbox">
         <div class="Mold_content show" id="All">
+            <div style="margin-bottom: .5em;">
+                <strong>Total Request : <span id="RequestCount"></span></strong>
+            </div>
             <div class="RequestWrapper" id="RequestWrapper">
 
             </div>
@@ -26,9 +28,9 @@
         <div class="Mold_content" id="Completed">
             <div class="search-bar  flex_space">
                 <div class="date-range">
-                    <input type="date" value="2023-04-04">
-                    <span>-</span>
-                    <input type="date" value="2023-04-05">
+                    <input type="date" >
+                        <span>-</span>
+                        <input type="date" >
 
                     <select>
                         <option value="0">Status</option>
@@ -37,10 +39,7 @@
                     </select>
                 </div>
 
-                <div class="search-input">
-                    <i>🔍</i>
-                    <input type="text" placeholder="Search Chambers">
-                </div>
+               
             </div>
 
 
@@ -48,67 +47,17 @@
                 <table>
                     <thead>
                         <tr>
+                          
                             <th>Request Order</th>
-                            <th>PiC</th>
-                            <th>Target Date</th>
-                            <th>Build Completion</th>
+                            <th>Quantity</th>
+                            <th>Date</th>
                             <th>Unit Product</th>
                             <th>Total Price</th>
                             <th>Status</th>
+                            <th width="5%"></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <div class="order-number"> REQ_09232025_0956</div>
-                            </td>
-                            <td class="quantity">Aldrin, Rommel</td>
-                            <td class="price">
-                                <p style='color: #222; font-weight: 600;'><i class="fa-regular fa-calendar-days"></i> Start Date : </p>
-                                <p style='color: #222; font-weight: 600;'><i class="fa-regular fa-calendar-days"></i> Target Date : </p>
-                            </td>
-                            <td><span class="status pending">Need to be sent Before 8 June 2023</span></td>
-                            <td><div class="product-name">Titillartono</div></td>
-                            <td class="delivery-service">Kappo</td>
-                            <td class="delivery-service">--</td>
-                            <td class="delivery-service">--</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="order-number">REQ_09232025_0956</div>
-                            </td>
-                            <td class="quantity">x6</td>
-                            <td class="price">$580</td>
-                            <td><span class="status pending">Need to be sent Before 8 June 2023</span></td>
-                            <td><div class="product-name">Titillartono</div></td>
-                            <td class="delivery-service">Kappo</td>
-                            <td class="delivery-service">--</td>
-                            <td class="delivery-service">--</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="order-number">REQ_09232025_0956</div>
-                            </td>
-                            <td class="quantity">x6</td>
-                            <td class="price">$580</td>
-                            <td><span class="status pending">Need to be sent Before 8 June 2023</span></td>
-                            <td><div class="product-name">Titillartono</div></td>
-                            <td class="delivery-service">Kappo</td>
-                            <td class="delivery-service">--</td>
-                            <td class="delivery-service">--</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="order-number">REQ_09232025_0956</div>
-                            </td>
-                            <td class="quantity">x6</td>
-                            <td class="price">$580</td>
-                            <td><span class="status pending">Need to be sent Before 8 June 2023</span></td>
-                            <td><div class="product-name">Titillartono</div></td>
-                            <td class="delivery-service">Kappo</td>
-                            <td class="delivery-service">--</td>
-                            <td class="delivery-service">--</td>
-                        </tr>
+                    <tbody id="CompleteTables">
                     </tbody>
                 </table>
             </div>
@@ -116,86 +65,6 @@
 
 
         </div>
-
-        <div class="Mold_content" id="InProgress">
-            <div class="search-bar  flex_space">
-                <div class="date-range">
-                    <input type="date" value="2023-04-04">
-                    <span>-</span>
-                    <input type="date" value="2023-04-05">
-                </div>
-
-                <div class="search-input">
-                    <i>🔍</i>
-                    <input type="text" placeholder="Search Chambers">
-                </div>
-            </div>  
-
-
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th>Quantity</th>
-                            <th>Total Price</th>
-                            <th>Status</th>
-                            <th>All Delivery Services</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <div class="product-name">Titillartono</div>
-                                <div class="order-number">No. Order 2052507044/NY</div>
-                            </td>
-                            <td class="quantity">x6</td>
-                            <td class="price">$580</td>
-                            <td><span class="status pending">Need to be sent Before 8 June 2023</span></td>
-                            <td class="delivery-service">Kappo</td>
-                            <td class="action">Anzinger Delivery</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="product-name">Total Hartono</div>
-                                <div class="order-number">No. Order 2053507074X2AY</div>
-                            </td>
-                            <td class="quantity">x4</td>
-                            <td class="price">$280</td>
-                            <td><span class="status pending">Need to be sent Before 12 June 2023</span></td>
-                            <td class="delivery-service">Kappo</td>
-                            <td class="action">Anzinger Delivery</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="product-name">FundsdScaffler</div>
-                                <div class="order-number">No. Order 2054507364X5YY</div>
-                            </td>
-                            <td class="quantity">x12</td>
-                            <td class="price">$420</td>
-                            <td><span class="status pending">Need to be sent Before 14 June 2023</span></td>
-                            <td class="delivery-service">Kappo</td>
-                            <td class="action">Anzinger Delivery</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="product-name">Vincent Hanno</div>
-                                <div class="order-number">No. Order 2054504564A1Y</div>
-                            </td>
-                            <td class="quantity">x6</td>
-                            <td class="price">$640</td>
-                            <td><span class="status pending">Need to be sent Before 14 June 2023</span></td>
-                            <td class="delivery-service">Kappo</td>
-                            <td class="action">Anzinger Delivery</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-        </div>
-
-
 
 
     </div>
@@ -276,9 +145,19 @@
 </div>
 
 
+@*<div class="ExportContainer">
+    <button>X</button>
+    <div class="ExportGrid">
+        <div class="btnclass">Selected: 5</div>
+        <div class="btnclass"><i class="fa-solid fa-download"></i> Export</div>
+        <div class="btnclass"><i class="fa-solid fa-print"></i>  Print</div>
+    </div>
+</div>*@
+
 
 <script type="text/javascript">
     let requestData = [];
+    let completeData = [];
     // Get today's date
     let today = new Date();
 
@@ -319,7 +198,12 @@
                 document.getElementById(target).classList.add("show");
             }, 50);
 
-
+            if (index == 1) {
+                CompleteTableDisplay(completeData);
+                $("#Showadd").hide();
+            } else {
+                $("#Showadd").show();
+            }
 
         });
     });
@@ -331,7 +215,11 @@
         let res = await FetchAuthenticate('@Url.Action("GetAllRequestList", "Hydro")', {});
         if (res && res.Success) {
             TableData.empty();
-            requestData = res.Data;
+            requestData = res.Data.filter(item => item.RequestStatus === "ONGOING");
+
+            $("#RequestCount").text(requestData.length);
+            completeData = res.Data.filter(item => item.RequestStatus === "COMPLETED");
+
 
             $.each(requestData, function (index, row) {
                 let percent = parseFloat(row.CompletionPercent) || 0;
@@ -347,12 +235,12 @@
                 const loadData = `
                      <div class="RequestContainer"  id='Details_${row.OrderID}'>
                          <div class="RequestContainer_header">
-                             <span>Req No : ${row.OrderID}</span>
+                             <span>${row.OrderID}</span>
                          </div>
 
                          <div class="RequestGrid">
                              <div class="RequestContent">
-                                 <p style='color: #2c3e50; font-weight: 600; '>${row.ChamberName}</p>
+                                 <p style='font-size: .8rem; color: #2c3e50; font-weight: 600; '>${row.ChamberName}</p>
                                  <span style='font-size: .8rem; font-weight: 500; color: #808080;'>${row.ChambersOrdered} Unit Quantity</span>
                              </div>
 
@@ -420,16 +308,42 @@
     }
 
 
+    function CompleteTableDisplay(array) {
+        let tableDisplay = $("#CompleteTables");
+        tableDisplay.empty();
+        $.each(array, function (index, row) {
+              const rowHtml = `
+                  <tr>
+                    
+                      <td>
+                          <div class="order-number" style='font-weight: 600;'>${row.OrderID}</div>
+                      </td>
+                      <td style='font-weight: 600;'>${row.ChambersOrdered} X</td>
+                      <td class="price">
+                          <p style='color: #222;'>${row.TargetDate}</p>
+                      </td>
+                      <td><span class="status pending">${row.ChamberName}</span></td>
+                      <td><div class="product-name" style='color: #27ae60; font-weight: 600;'>₱ ${row.TotalPrice.toLocaleString('en-US')}</div></td>
+                      <td class="delivery-service" style='font-weight: 600;'>${row.RequestStatus}</td>
+                      <td class="delivery-service"><i class="fa-solid fa-ellipsis-vertical"></i></td>
+                  </tr>
+             `;
+            tableDisplay.append(rowHtml);
+        });
+
+    }
+
+
     $(document).on('click', '.RequestContainer', function (e) {
         e.stopPropagation(); // Prevent triggering the row click event
         var rowId = $(this).attr('id');
-        var rowIndex = rowId.split('_').slice(1).join('_'); 
+        var rowIndex = rowId.split('_').slice(1).join('_');
         window.location.href = "/Hydroponics/Hydro/OrderpageDetails?orderID=" + rowIndex;
     });
 
 
     const GetChamberDatalist = async () => {
-        let res = await FetchAuthenticate('@Url.Action("GetCategorylist", "Hydro")', {});
+        let res = await FetchAuthenticate('@Url.Action("GetChamberList", "Hydro")', {});
           if (res && res.Success) {
               $.each(res.Data, function (index, row) {
                   $("#ChamberID").append("<option value='" + row.ChamberID + "'>" + row.ChamberName + "</option>");
@@ -450,6 +364,7 @@
         let res = await postData('@Url.Action("NewAddRequestData", "Hydro")', formdata);
         if (res && res.Success) {
             RequesDataList();
+            e.target.reset();
             $("#AddRequestModal").modal("hide");
         }
     });

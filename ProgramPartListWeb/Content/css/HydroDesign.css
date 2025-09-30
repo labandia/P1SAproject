@@ -359,8 +359,8 @@ th, td {
 
 th {
     padding: .8em 0 !important;
-    color: #222;
-    font-weight: 600;
+    color: #6c757d;
+    font-weight: 600 !important;
     font-size: 14px;
 }
 
@@ -668,9 +668,9 @@ th {
     }
 
     .StocksGood, .Low, .Warning {
-        width: 100px;
+        width: 105px;
         font-weight: 600;
-        padding: .2em .5em;
+        padding: .2em .8em;
         border-radius: .2rem;
         font-size: .8rem;
         margin: 0 auto;
@@ -682,8 +682,8 @@ th {
     }
 
     .StocksGood {
-        background-color: rgba(14, 76, 170, 0.2);
-        color: rgb(9, 18, 100);
+       background-color: rgba(14, 170, 79, 0.2);
+       color: rgb(9, 100, 47);
     }
 
     .Warning {
@@ -873,11 +873,7 @@ th {
         border-radius: .5em;
     }
 
-    #SaveStocks{
-        position: absolute;
-        bottom: 2em;
-        right: 2em;
-    }
+  
 
     .StocksInput_group label{
         font-weight: 600;
@@ -890,11 +886,47 @@ th {
         border: 1px solid #bebfca;
     }
 
+    .date-range input{
+        background: #fff;
+        border: 1px solid #bebfca;
+        padding: .2em .5em;
+    }
+    .date-range select {
+        border: 1px solid #bebfca;
+        padding: .2em .5em;
+    }
 
-   
 
+   .ExportContainer{
+       position: absolute;
+       display: flex;
+       align-items:center;
+       gap: 10px;
+       bottom: 10px;
+       left: 50%;
+       transform: translateX(-10%);
+       
+   }
 
+    .ExportGrid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        justify-content: center;
+        text-align: center;
+        gap: 15px;
+        background: #222;
+        color: #fff;
+    }
 
+    .ExportContainer button {
+        background: #222;
+        padding: .5em;
+        color: #fff;
+    }
+
+    .btnclass{
+        padding: .5em;
+    }
 
 /* Responsive styles */
 @media (max-width: 992px) {
@@ -1240,4 +1272,66 @@ header .count2 {
     border-radius: 50%;
     text-align: center;
     border: 1px solid #fff;
+}
+
+
+
+
+/* ================ ADD STOCK =====================  */
+
+.StockContent {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 30px;
+}
+
+@media (max-width: 900px) {
+    .StockContent {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+.addformStocks {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    border: 1px solid #bebfca;
+}
+
+.faddformStocks h2 {
+    margin-bottom: 20px;
+    color: #2c3e50;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.addformStocks h2 i {
+    color: #3498db;
+}
+
+.addformStocks .form-group {
+    margin-bottom: 20px;
+}
+
+.addformStocks input, select {
+    width: 100%;
+    margin: .5em 0 1em 0;
+    border: 1px solid #A5A1AA;
+    padding: .6em 1em;
+    font-size: var(--small-font-size);
+    border-radius: .3em;
+}
+.addformStocks input:focus, select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.stockGroup label{
+    font-weight: 600;
+    font-size: var(--small-font-size);
 }

@@ -32,13 +32,18 @@
             <span style="font-size: 1rem; font-weight: 500;">@ID</span>
             <p id="ChamberName" style="opacity: .6;">Chamber selected : NUPON</p>
         </div>
-        <div class="select-container">
+
+        <div class="" id="RequestStatus">
+            ONGOING
+        </div>
+
+        @*<div class="select-container">
             <select id="RequestStatus" name="RequestStatus" class="default">
                 <option value="PENDING" selected>ONGOING</option>
                 <option value="COMPLETED">COMPLETED</option>
                 <option value="SHIPPED">FOR SHIPPED</option>
             </select>
-        </div>
+        </div>*@
     </div>
     <div class="customnav_Progress">
         <label>Completion rate : <span id="completeRate"></span> </label>
@@ -63,7 +68,7 @@
                             <div class="Mold_content show" id="All">
                                 <div class="search-container">
                                     <input type="text" class="search-input" id="requiredSearch" placeholder="Search by Number or Partno...">
-                                    <span class="search-info" id="requiredSearchInfo">Showing all items</span>
+                                    <span class="search-info" id="requiredSearchInfo"><i class="fa-solid fa-magnifying-glass"></i></span>
                                 </div>
 
                                 <div class="requiredTable_Wrapper">
@@ -72,7 +77,7 @@
                                             <tr>
                                                 <th class="qty-cell" style="text-align: left; padding-left: 1em;  width: 40%;">Partno / Partname</th>
                                                 <th class="qty-cell">Required</th>
-                                                <th class="qty-cell">Available</th>
+                                                <th class="qty-cell">Available Stocks</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -109,7 +114,7 @@
 
                 <div class="search-container">
                     <input type="text" class="search-input" id="allocatedSearch" placeholder="Search by Number or Partno...">
-                    <span class="search-info" id="allocatedSearchInfo">Showing all items</span>
+                    <span class="search-info" id="allocatedSearchInfo"><i class="fa-solid fa-magnifying-glass"></i></span>
                 </div>
 
                 <div class="allocatedTable_Wrapper">
@@ -117,7 +122,7 @@
                         <thead>
                             <tr>
                                 <th>No.</th>
-                                <th>Partno</th>
+                                <th style="text-align: left; padding-left: 1.5em;">Partno</th>
                                 <th class="qty-cell">Allocated</th>
                                 <th>Actions</th>
                             </tr>
@@ -128,7 +133,8 @@
                 </div>
 
                 <div class="controls">
-                    <button class="btn-primary" id="completeOrderBtn">Save Details</button>
+                    <button class="btn-primary" id="autoAllocateBtn"><i class="fa-solid fa-arrows-left-right"></i> Auto Allocate</button>
+                    <button class="btn-primary" id="completeOrderBtn"> <i class="fa-solid fa-floppy-disk"></i> Save Details</button>
                 </div>
 
 
@@ -165,20 +171,20 @@
 <script type="text/javascript">
     const loader = document.getElementById('loader');
     let TableDisplay = $("#allocatedData");
-    const select = document.getElementById("RequestStatus");
+    //const select = document.getElementById("RequestStatus");
     const ID = $("#chambID").val();
     let requestData = [];
 
     // Set initial style
-    select.classList.remove("default");
-    select.classList.add(select.value);
+    //select.classList.remove("default");
+    //select.classList.add(select.value);
 
-    select.addEventListener("change", function () {
-        // Reset classes
-        select.classList.remove("COMPLETED", "PENDING", "SHIPPED", "default");
-        // Apply class based on value
-        select.classList.add(this.value);
-    });
+    //select.addEventListener("change", function () {
+    //    // Reset classes
+    //    select.classList.remove("COMPLETED", "PENDING", "SHIPPED", "default");
+    //    // Apply class based on value
+    //    select.classList.add(this.value);
+    //});
 
 
     // Tabs Content
@@ -246,8 +252,12 @@
     const RequestMain = async () => {
         let res = await FetchAuthenticate('@Url.Action("GetMainRequestList", "Hydro")', { orderID: ID });
         if (res && res.Success) {
+            let status = res.Data.RequestStatus;
             $("#ChamberName").text(`Chamber selected : ${res.Data.ChamberName}`);
-            $("#RequestStatus").val(res.Data.RequestStatus);
+            $("#RequestStatus")
+                .removeClass("COMPLETED ONGOING")
+                .addClass(status)
+                .text(status);
             $("#MaterialStatus").text(res.Data.MaterialStatus);
 
 
@@ -306,7 +316,6 @@
 
             const tbody = document.querySelector('#requiredTable tbody');
             tbody.innerHTML = '';
-            console.log(NotCompletedData);
             NotCompletedData.forEach(part => {
                 const row = document.createElement('tr');
                 row.setAttribute('data-ID', part.PartID);
@@ -379,9 +388,9 @@
 
         const partID = row.getAttribute('data-ID');
         const partNumber = row.getAttribute('data-part');
-        const required = parseInt(row.getAttribute('data-required'));
-        const available = parseInt(row.getAttribute('data-available'));
-        const remainTable = parseInt(row.getAttribute('data-remain'));
+        const required = parseFloat(row.getAttribute('data-required'));
+        const available = parseFloat(row.getAttribute('data-available'));
+        const remainTable = parseFloat(row.getAttribute('data-remain'));
 
         // Check if part can be allocated
         if (available === 0) {
@@ -402,11 +411,17 @@
             allocatedParts[ID] = 0;
         }
 
+
+        // Parse as float (supports decimals like 0.25, 1.5, etc.)
+        const requiredQty = parseFloat(required);
+        const remainQty = parseFloat(remainTable);
+        const availableQty = parseFloat(available);
+
+        // Max allocatable = min(remaining need, available stock)
+        const maxAllocatable = Math.min(remainQty, availableQty);
         // Check if we can allocate more
-        if (allocatedParts[ID] < remainTable && allocatedParts[ID] < available) {
-            allocatedParts[ID]++;
-
-
+        if (maxAllocatable > 0) {
+            allocatedParts[ID] = roundToStep(maxAllocatable);
             updateAllocatedTable();
             updateRequiredTableStyles();
             //updateCounts();
@@ -433,14 +448,28 @@
 
 
                 row.innerHTML = `
-                     <td>${partData.PartID}</td>
-                     <td>${partData.PartNo}</td>
-                     <td class="qty-cell">${allocatedParts[ID]}</td>
+                      <td>${partData.PartID}</td>
+                     <td style='text-align: left; padding-left: 1.5em;'>
+                       
+                        <p style="
+                              color: #185d8b;
+                              font-weight: 600;
+                              max-width: 200px;   /* set your limit */
+                              white-space: nowrap;
+                              overflow: hidden;
+                              text-overflow: ellipsis;
+                            " title="${partData.PartName}">
+                              ${partData.PartName ? partData.PartName : "-"}
+                            </p>
+                        <small> ${partData.PartNo}</small>
+                     </td>
+                     <td  class="qty-cell">${allocatedParts[ID]}</td>
                      <td>
                          <div class="action-buttons">
-                             <button class="btn btn-remove" onclick="removePart('${ID}')">Remove</button>
-                             <button class="btn btn-increment" onclick="incrementPart('${ID}')">+</button>
-                             <button class="btn btn-decrement" onclick="decrementPart('${ID}')">-</button>
+                             <button class="btn btn-remove" onclick="removePart('${ID}')"><i class="fa-regular fa-circle-xmark"></i></button>
+                             <button class="btn btn-decrement" onclick="decrementPart('${ID}')"><i class="fa-solid fa-minus"></i></button>
+                             <button class="btn btn-increment" onclick="incrementPart('${ID}')"><i class="fa-solid fa-plus"></i></button>
+
                          </div>
                      </td>
                  `;
@@ -510,8 +539,7 @@
 
          updateAllocatedTable();
          updateRequiredTableStyles();
-         //updateCounts();
-         //updateProgress();
+
          const loadData = `<tr>
            <td colspan='4'>
                🔍 No Allocated Data
@@ -568,6 +596,18 @@
 
      async function completeOrder() {
          const allocations = getAllocatedPartsFromTable();
+
+         // ✅ Check if no allocations exist
+         //if (!allocations.length || allocations.every(a => !a.allocated || a.allocated <= 0)) {
+         //    Swal.fire({
+         //        title: "No Allocations",
+         //        text: "Please allocate parts before Saving the details.",
+         //        icon: "warning",
+         //        confirmButtonText: "OK"
+         //    });
+         //    return;
+         //}
+
          let result = await fetch('@Url.Action("UpdatesRequestMaterialsV2", "Hydro")', {
              method: "POST",
              headers: { "Content-Type": "application/json; charset=utf-8" },
@@ -587,6 +627,15 @@
                  populateRequiredTable();
                  RequestMain();
                  updateAllocatedTable();
+
+                 const loadData = `<tr>
+                    <td colspan='4'>
+                        🔍 No Allocated Data
+                    </td>
+                </tr>`;
+
+                 TableDisplay.empty();
+                 TableDisplay.append(loadData);
              });
          }
 
@@ -618,7 +667,70 @@
          //        // In a real app, you would submit the order here
          //    }
          //}
-     }
+    }
+
+    // Generic table search function
+    function searchTable(inputId, tableId, infoId) {
+        const input = document.getElementById(inputId);
+        const filter = input.value.toLowerCase();
+        const table = document.getElementById(tableId);
+        const rows = table.getElementsByTagName("tr");
+        let visibleCount = 0;
+
+        for (let i = 0; i < rows.length; i++) {
+            const cells = rows[i].getElementsByTagName("td");
+            if (cells.length > 0) {
+                const rowText = rows[i].innerText.toLowerCase();
+                if (rowText.includes(filter)) {
+                    rows[i].style.display = "";
+                    visibleCount++;
+                } else {
+                    rows[i].style.display = "none";
+                }
+            }
+        }
+
+        // Update search info
+        const info = document.getElementById(infoId);
+        if (filter === "") {
+            info.textContent = "Showing all items";
+        } else {
+            info.textContent = `Showing ${visibleCount} matching result(s)`;
+        }
+    }
+
+    // Attach listeners for Required search
+    document.getElementById("requiredSearch").addEventListener("keyup", function () {
+        searchTable("requiredSearch", "requiredTable", "requiredSearchInfo");
+    });
+
+    // Attach listeners for Allocated search
+    document.getElementById("allocatedSearch").addEventListener("keyup", function () {
+        searchTable("allocatedSearch", "allocatedTable", "allocatedSearchInfo");
+    });
+
+
+
+
+    document.getElementById("autoAllocateBtn").addEventListener("click", function () {
+        const rows = document.querySelectorAll("#requiredTable tbody tr");
+
+        rows.forEach(row => {
+            const partID = row.getAttribute('data-ID');
+            const partNumber = row.getAttribute('data-part');
+            const required = parseFloat(row.getAttribute('data-required'));
+            const available = parseFloat(row.getAttribute('data-available'));
+            const remainTable = parseFloat(row.getAttribute('data-remain'));
+
+            if (available > 0 && remainTable > 0) {
+                allocatePart(partID, partNumber, required, available, remainTable);
+            }
+        });
+
+    });
+    function roundToStep(val) {
+        return Math.round(val * 100) / 100;
+    }
 
     function getAllocatedPartsFromTable() {
         const rows = document.querySelectorAll('#allocatedTable tbody tr');
@@ -626,11 +738,17 @@
 
         rows.forEach(row => {
             const cells = row.querySelectorAll('td');
-            result.push({
-                OrderID: ID,
-                PartID: parseInt(cells[0].textContent.trim()),
-                allocated: parseInt(cells[2].textContent.trim(), 10)
-            });
+            // ✅ Ensure at least 3 cells exist
+            if (cells.length >= 3) {
+                const partId = parseInt(cells[0].textContent.trim(), 10) || 0;
+                const allocated = parseFloat(cells[2].textContent.trim()) || 0;
+
+                result.push({
+                    OrderID: ID,
+                    PartID: partId,
+                    allocated: allocated
+                });
+            }
         });
 
         return result;

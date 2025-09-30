@@ -19,6 +19,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         private string _PIC;
         private string _MaterialStatus;
         private double _CompletionPercent;
+        private int _TotalPrice;
 
 
         public string OrderID
@@ -72,7 +73,11 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
             get => _CompletionPercent;
             set => _CompletionPercent = value;
         }
-        
+        public int TotalPrice
+        {
+            get => _TotalPrice;
+            set => _TotalPrice = value;
+        }
     }
     public class RequestChambersDetailsModel
     {
@@ -150,7 +155,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
     {
         private string _OrderID;
         private int _PartID;
-        private int _allocated;
+        private double _allocated;
 
         public string OrderID
         {
@@ -164,7 +169,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
             set => _PartID = value;
         }
 
-        public int allocated
+        public double allocated
         {
             get => _allocated;
             set => _allocated = value;

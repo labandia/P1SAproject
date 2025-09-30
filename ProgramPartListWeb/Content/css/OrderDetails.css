@@ -59,7 +59,11 @@ body {
     overflow-x: hidden;
     background-color: #f9f9f9;
 }
-
+th {
+    color: #6c757d;
+    font-weight: 600 !important;
+    font-size: 14px;
+}
 
 /*  ################ NAVIGATION TOP ######################### */
     .customnav {
@@ -123,11 +127,10 @@ body {
 }
 
 #RequestStatus {
-    padding: 4px 5px;
+    padding: 4px 10px;
     border: none;
     border-radius: 6px;
     font-size: 13px;
-    cursor: pointer;
     outline: none;
 }
 
@@ -141,7 +144,7 @@ body {
     color: rgba(255, 255, 255, 0.6);
 }
 
-.PENDING {
+.ONGOING {
     background-color: rgba(170, 24, 14, 0.2);
     color: rgba(255, 255, 255, 0.6);
 }
@@ -188,7 +191,8 @@ option {
 
 
 #completeOrderBtn {
-    background: linear-gradient(90deg, #4a00e0, #8e2de2);
+    background: rgb(0,71,171);
+    background: linear-gradient(159deg, rgba(0,71,171,1) 0%, rgba(28,169,201,1) 100%);
     color: white;
     border: none;
     padding: 5px 30px;
@@ -429,6 +433,7 @@ option {
             justify-content:center;
             align-items:center;
             padding: 1em 0;
+            gap: 1em;
     }
 
 

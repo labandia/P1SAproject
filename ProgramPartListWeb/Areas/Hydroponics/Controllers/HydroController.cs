@@ -8,6 +8,7 @@ using ProgramPartListWeb.Interfaces;
 using ProgramPartListWeb.Models;
 using ProgramPartListWeb.Utilities;
 using ProgramPartListWeb.Utilities.Common;
+using Spire.Xls;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -318,11 +319,22 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         {
             try
             {
+                string ID = "";
+
                 foreach (var item in allo)
                 {
-                    Debug.WriteLine($"Order ID : {item.OrderID} - Part ID : {item.PartID} - Allocated :  {item.allocated}");
                     await _chambers.UpdatesRequestMaterials(item.OrderID, item.PartID, item.allocated);
+                    ID = item.OrderID;
                 }
+
+                var data = await _chambers.GetRequestList() ?? new List<RequestChambersModel>();
+                double completionrate = data.SingleOrDefault(res => res.OrderID == ID).CompletionPercent;
+
+                if(completionrate == 100)
+                {
+                    await _chambers.UpdateRequestStatus(ID, "COMPLETED");
+                } 
+
 
                 return Json(new { Success = true, Message = "Allocations saved successfully" });
             }
@@ -339,7 +351,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         {
             try
             {
-                bool result = await _chambers.UpdateRequestStatus(OrderID, RequestStatus);
+                bool result = await _chambers.UpdateRequestStatus("asdad", RequestStatus);
                 if (!result) return JsonPostError("Update failed.", 500);
 
 

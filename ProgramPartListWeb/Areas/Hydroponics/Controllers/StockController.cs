@@ -102,7 +102,6 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         public async Task<ActionResult> StocksAlertEmailNotification()
         {
             bool sent = await _stock.SendEmailNotificationStocks();
-            Debug.WriteLine("SDSa" + sent);
             if (!sent) return JsonPostError("Update failed.", 500);
             return JsonCreated(sent, "Update Successfully");
         }

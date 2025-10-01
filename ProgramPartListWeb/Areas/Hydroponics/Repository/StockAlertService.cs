@@ -20,12 +20,17 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
     {
         public static string strSender => ConfigurationManager.AppSettings["config:SMTPEmail"];
 
-        List<string> recipientslist = new List<string>
+        //List<string> recipientslist = new List<string>
+        //{
+        //    "jaye.labandia@sanyodenki.com",
+        //    "person2@example.com",
+        //    "person3@example.com"
+        //};
+
+        public Task<List<string>> GetAllRecepients()
         {
-            "jaye.labandia@sanyodenki.com",
-            "person2@example.com",
-            "person3@example.com"
-        };
+            return SqlDataAccess.GetData<string>("SELECT Email FROM Hydro_StockAlertRecipients", null);
+        }
 
 
 
@@ -236,6 +241,9 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
         {
             var emailCount = await GetStockSendEmailLogs();
             bool anySent = false;
+
+            var recipientslist = await GetAllRecepients();
+
 
             foreach (var recepient in recipientslist)
             {

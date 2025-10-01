@@ -9,7 +9,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
     public class StockNotification
     {
         public int NotificationId { get; set; }
-        public DateTime CreatedDate { get; set; }
+        public string CreatedDate { get; set; }
         public string Title { get; set; }
         public string Shift { get; set; }
         public int Sequence { get; set; }

@@ -44,13 +44,13 @@
                 <i class="fa-solid fa-table-list"></i>
                 <span class="nav-text">Parts List</span>
             </a>
-            <a href="/Hydroponics/Hydro/TransactionHistory" class="nav-item">
+            @*<a href="/Hydroponics/Hydro/TransactionHistory" class="nav-item">
                 <i class="fa-solid fa-clock-rotate-left"></i>
                 <span class="nav-text">Transaction History</span>
-            </a>
+            </a>*@
             <a href="/Hydroponics/Hydro/UserManage" class="nav-item">
                 <i class="fas fa-users"></i>
-                <span class="nav-text">Users</span>
+                <span class="nav-text">Manage Users</span>
             </a>
 
         </div>
@@ -123,25 +123,27 @@
     @*=================================================================================*@
     @*=========================== SEE THE NOTIFICATION ================================*@
     @*=================================================================================*@
-    <div class="modal fade modal-lg" id="NotificationModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal fade modal-xl" id="NotificationModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
 
                 <div class="modal-body modalwrap">
-                    <div class="flex_end">
-                        <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
-                            <span>&times;</span>
-                        </button>
-                    </div>
-
-
-                    <table width="100%" cellpadding="0" cellspacing="0" border="0" align="center" background:#ffffff; border:1px solid #ddd;">
+                    
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0" align="left" background:#ffffff; border:1px solid #ddd;">
                         <tr>
                             <td style="padding:20px;">
-                                <h2 style="margin:0; font-size:20px; color:#333333;">📦 Stock Alert Summary</h2>
-                                <p style="font-size:14px; color:#555555; margin:10px 0 20px 0;">
-                                    Below are the items with Low, Critical, or Out of Stock levels:
-                                </p>
+                                <div class="flex_space">
+                                    <div>
+                                        <h2 style="margin:0; font-size:20px; color:#333333;">📦 Stock Alert Summary</h2>
+                                        <p style="font-size:14px; color:#555555; margin:10px 0 20px 0;">
+                                            Below are the items with Low, Critical, or Out of Stock levels:
+                                        </p>
+                                    </div>
+
+                                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                                        <span>&times;</span>
+                                    </button>
+                                </div>
 
                                 <table width="100%" cellpadding="5" cellspacing="0" border="1" style="border-collapse:collapse; font-size:14px;">
                                     <tr style="background-color:#f5f5f5; color:#333333; font-weight: 600 !important; text-align:left;">

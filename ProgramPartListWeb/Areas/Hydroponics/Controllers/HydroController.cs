@@ -52,7 +52,37 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
             return Json(ResultMessageResponce.JsonSuccess(filterbyProj), JsonRequestBehavior.AllowGet);
         }
 
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<ActionResult> AddNewUsers()
+        {
+            try
+            {
+                var obj = new RegisterModel
+                {
+                    Project_ID = Convert.ToInt32(Request.Form["ProjectID"]),
+                    Username = Request.Form["RegUsername"],
+                    Password = PasswordHasher.Hashpassword(Request.Form["RegPassword"]),
+                    Email = Request.Form["Email"],
+                    Role_ID = 2,
+                    FullName = Request.Form["FullName"],
+                    Employee_ID = Request.Form["Employee_ID"]
+                };
 
+                // Checks if the user Exist 
+                bool IsExist = await _user.CheckAccountsTable(obj);
+                if (IsExist) return JsonError("Username is already created", 500);
+
+                // Insert in the Database
+                await _user.CreateNewAccount(obj);
+
+                return JsonCreated(obj, "New Account Created Successfully");
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message, 500);
+            }
+        }
         //-----------------------------------------------------------------------------------------
         //---------------------------- COMMON METHODS  ----------------------------------------
         //-----------------------------------------------------------------------------------------

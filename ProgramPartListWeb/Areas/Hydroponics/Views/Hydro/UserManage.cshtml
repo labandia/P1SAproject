@@ -57,6 +57,8 @@
 
 
                 <form method="post" class="addformcontainer" id="addnewform" autocomplete="off">
+                    <input type="hidden" name="RegPassword" id="RegPassword" value="abc12345" />
+                    <input type="hidden" name="RegUsername" id="RegUsername" value="abc12345" />
                     <div class="row">
                         <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
                             <label>Employee ID <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
@@ -83,7 +85,7 @@
                             <label>Set Roles </label>
                         </div>
                         <div class="select-container mt-2">
-                            <select id="Roles_ID" style="padding: .7em 1em;">
+                            <select id="Roles_ID" name="Roles_ID" style="padding: .7em 1em;">
                                 <option value="2">Administrator</option>
                                 <option value="3">Manager / Supervisor</option>
                                 <option value="4">Editor / Contributor</option>
@@ -106,7 +108,84 @@
     </div>
 </div>
 
+@*=================================================================================*@
+@*=========================== EDIT  USERS      ==================================*@
+@*=================================================================================*@
+<div class="modal fade modal-l" id="EditUserModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
 
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Edit Users</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+
+                <form method="post" class="addformcontainer" id="Editnewform" autocomplete="off">
+                    <div class="row">
+                        <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
+                            <label>Employee ID <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                            <input type="text" name="EditEmployee_ID" id="EditEmployee_ID" placeholder="Enter Employee ID" autocomplete="off" required />
+                        </div>
+                        <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
+                            <label>Full Name <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                            <input type="text" name="EditFullName" id="EditFullName" placeholder="Enter Full Name" autocomplete="off" required />
+                        </div>
+                    </div>
+
+
+                    <div class="form_group col-12 col-sm-12 ">
+                        <div class="flex_space">
+                            <label>Email Address </label>
+                            <small>(Only if you have an email)</small>
+                        </div>
+                        <input type="text" name="EditEmail" id="EditEmail" placeholder="Enter Email Address" autocomplete="off" />
+                    </div>
+
+
+                    <div class="form_group col-12 col-sm-12 ">
+                        <div class="flex_space">
+                            <label>Set Roles </label>
+                        </div>
+                        <div class="select-container mt-2">
+                            <select id="EditRoles_ID" name="EditRoles_ID" style="padding: .7em 1em;">
+                                <option value="2">Administrator</option>
+                                <option value="3">Manager / Supervisor</option>
+                                <option value="4">Editor / Contributor</option>
+                                <option value="5">Staff</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="form_group col-12 col-sm-12 " style="margin-top: 1em;">
+                        <div class="flex_space">
+                            <label>Status </label>
+                        </div>
+                        <div class="select-container mt-2">
+                            <select id="Status" name="Status" style="padding: .7em 1em;">
+                                <option value="1">Active</option>
+                                <option value="0">Deactivate</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div>
+                            <small id="Errormessage"> All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                        </div>
+                        <button type="submit" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Submit</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript">
     let userData = [];
@@ -114,6 +193,7 @@
     let partsID;
     let userRole;
 
+    const regform = document.getElementById('addnewform');
     let TableDisplay = $("#UserslistData");
 
     const UserListTable = async () => {
@@ -141,6 +221,39 @@
     }
 
 
+    regform.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        let formData = new FormData(e.target);
+        formData.append('ProjectID', 10);
+
+        const data = Object.fromEntries(formData);
+        let res = await postData('/User/CreateNewUser', formData);
+        if (res && res.Success) {
+            Swal.fire({
+                title: "Success",
+                text: res.Message,
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1500
+            }).then(() => {
+                UserListTable();
+                $("#AddNewUserModal").modal("hide");
+                regform.reset();
+
+            });
+
+            //savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-regular fa-floppy-disk'></i>  Registered</span>"
+        } else {
+            Swal.fire({
+                icon: "error",
+                text: res.Message,
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }
+
+    });
+
 
     const ActionRestrict = () => {
         userRole = localStorage.getItem("UserRole");
@@ -152,6 +265,7 @@
     function UserManagePagination(dataArray, tableBodyId) {
         let filteredData = [...dataArray];  // For Filter Functionality
 
+        console.log(dataArray);
 
 
         // === Render Table ===
@@ -164,15 +278,15 @@
 
 
                   const rowHtml = `
-                         <tr>
+                         <tr class=''>
                              <td data-cell="Fullname" style='text-align: left; padding-left: 2em !important; font-weight: 600;'>${row.Fullname ? row.Fullname : "-"}</td>
                              <td style='font-weight: 600;' data-cell="Employee_ID">${row.Employee_ID ? row.Employee_ID : "-"}</td>
                              <td data-cell="Employee_ID">${row.Email ? row.Email : "-"}</td>
-                             <td data-cell="Employee_ID">${row.Role_ID ? row.Role_ID : "-"}</td>
-                             <td data-cell="Employee_ID">${row.IsActive ? row.IsActive : "-"}</td>
+                             <td data-cell="Employee_ID">${GetRoleName(row.Role_ID ? row.Role_ID : 0)}</td>
+                             <td data-cell="Employee_ID">${row.IsActive === 1 ? "Active " : "No Active"}</td>
                              <td data-cell="Delete" >
                                  <div class='flex_center'>
-                                     <button  class='Editbtnbutton text-primary bg-white' id='editButton_${row.PartID}' ">
+                                     <button  class='Editbtnbutton text-primary bg-white' id='editButton_${row.User_ID}' ">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                      </button>
                                  </div>
@@ -210,16 +324,15 @@
             e.stopPropagation();
             var rowId = $(this).attr("id");
             var rowIndex = rowId.split("_")[1];
-            var selected = filteredData.find(item => item.PartID === parseInt(rowIndex));
-
+            var selected = userData.find(item => item.User_ID === parseInt(rowIndex));
+            console.log(selected);
             if (selected) {
-                $("#PartID").val(selected.PartID);
-                $("#PartNo").val(selected.PartNo);
-                $("#PartName").val(selected.PartName);
-                $("#Supplier").val(selected.Supplier);
-                $("#CategoryID").val(selected.CategoryID);
-
-                $("#EditMasterModal").modal("show");
+                $("#EditEmployee_ID").val(selected.Employee_ID);
+                $("#EditFullName").val(selected.Fullname);
+                $("#EditEmail").val(selected.Email);
+                $("#EditRoles_ID").val(selected.Role_ID);
+                $("#Status").val(selected.IsActive);
+                $("#EditUserModal").modal("show");
             }
         });
 
@@ -290,6 +403,29 @@
         $("#AddNewUserModal").modal("show");
     });
 
+    function GetRoleName(role) {
+        switch (role) {
+            case 1:
+                return "Administrator"; // ull system access (can manage everything, including other admins).
+                break;
+            case 2:
+                return "Administrator"; // Manages users, roles, permissions, and overall system settings.
+                break;
+            case 3:
+                return "Manager / Supervisor"; // Oversees team operations, approves/rejects requests, can view reports.
+                break;
+            case 4:
+                return "Editor / Contributor"; // Can create, edit, and update content/data, but not manage users.
+                break;
+            case 5:
+                return "Staff"; // Basic access, can view and use system features assigned to them.
+                break;
+            default:
+                return "Users";
+                break;
+        }
+    }
+
 
     function loadingDisplay() {
         TableDisplay.empty();
@@ -324,7 +460,11 @@
         }, 800);
     }
 
-
+    $(document).ready(function () {
+        $("#Employee_ID").on("input", function () {
+            $("#RegUsername").val($(this).val());
+        });
+    });
 
     // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
     const LoadPageData = async () => {

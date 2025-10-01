@@ -374,7 +374,12 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
         public async Task<IEnumerable<StockNotification>> GetLowStockNotificationList(int userId)
         {
-            return await SqlDataAccess.GetData<StockNotification>($@"SELECT n.NotificationId, n.Title, n.CreatedDate, u.IsRead
+            return await SqlDataAccess.GetData<StockNotification>($@"
+                            SELECT 
+	                            n.NotificationId, 
+	                            n.Title, 
+	                            u.IsRead,
+	                            FORMAT(n.CreatedDate, 'MM/dd/yyyy - hh:mm tt') as CreatedDate
                             FROM Hyrdo_StockNotifications n
                             JOIN Hyrdo_StockNotificationUsers u ON n.NotificationId = u.NotificationId
                             WHERE u.User_ID = @User_ID

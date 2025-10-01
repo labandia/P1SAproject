@@ -28,6 +28,9 @@ namespace ProgramPartListWeb.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateNewUser()
         {
+            var roleIdValue = Request.Form["Roles_ID"];
+            int roleId = string.IsNullOrEmpty(roleIdValue) ? 2 : Convert.ToInt32(roleIdValue);
+
             try
             {
                 var obj = new RegisterModel
@@ -35,7 +38,8 @@ namespace ProgramPartListWeb.Controllers
                     Project_ID = Convert.ToInt32(Request.Form["ProjectID"]),
                     Username = Request.Form["RegUsername"],
                     Password = PasswordHasher.Hashpassword(Request.Form["RegPassword"]),
-                    Role_ID = 2,
+                    Email = Request.Form["Email"],
+                    Role_ID = roleId,
                     FullName = Request.Form["FullName"],
                     Employee_ID = Request.Form["Employee_ID"]
                 };

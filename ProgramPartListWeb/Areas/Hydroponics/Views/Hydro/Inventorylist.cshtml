@@ -11,6 +11,8 @@
             <input type="text" placeholder="Search here ... " id="searchbox" autocomplete="off" />
             <div class="line"></div>
         </div>
+        
+      
     </div>
 
     <div class="flex_align">
@@ -24,6 +26,20 @@
     </div>
 </section>
 <hr />
+
+<div class="flex_space">
+    <div>
+        <input type="checkbox" id="chkCheck" value="check" />
+        &#9989 <span>check</span>
+
+        <input type="checkbox" id="chkRestock" value="Restock" />
+        ⚠️ <span>Restock</span>
+
+        <input type="checkbox" id="chkOut" value="Out of stocks" />
+        🛑 <span>Out of Stocks</span>
+    </div>
+    <span>Total Parts: <span id="Countlist"></span> </span>
+</div>
 
 <div class="InspecTable">
     <table>
@@ -51,7 +67,7 @@
         <div class="modal-content">
             <div class="modal-body modalwrap">
                 <div class="custom_modal_header">
-                    <h5>Warning Level </h5>
+                    <h5>Change Stock Alert</h5>
 
                     <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
                         <span>&times;</span>
@@ -104,6 +120,7 @@
             let res = await FetchAuthenticate('@Url.Action("GetHydroInventory", "Hydro")', {});
             if (res && res.Success) {
                 Inventlist = res.Data;
+                $("#Countlist").text(Inventlist.length);
                 TableDisplay.empty(); // Removing the Loading Display
 
                 InventoryPagination(Inventlist, 'InventorylistData');
@@ -325,6 +342,36 @@
         }
     });
 
+    function applyFilters() {
+        let query = $('#searchbox').val().toLowerCase() || '';
+        let selectedCategory = parseInt($('#Categoryselect').val());
+
+        // Get selected status filters
+        let selectedStatuses = [];
+        if ($("#chkCheck").is(":checked")) selectedStatuses.push("check");
+        if ($("#chkRestock").is(":checked")) selectedStatuses.push("Restock");
+        if ($("#chkOut").is(":checked")) selectedStatuses.push("Out of stocks");
+
+        let filtered = Inventlist.filter(item => {
+            let matchesSearch =
+                item.PartName.toLowerCase().includes(query) ||
+                item.PartNo.toLowerCase().includes(query);
+
+            let matchesCategory = (selectedCategory === 0 || item.CategoryID === selectedCategory);
+
+            let matchesStatus = (selectedStatuses.length === 0 || selectedStatuses.includes(item.Status));
+
+            return matchesSearch && matchesCategory && matchesStatus;
+        });
+
+        if (filtered.length === 0) {
+            TableDisplay.empty();
+            TableDisplay.append(`<tr><td colspan='5'>🔍 No results found..</td></tr>`);
+            return;
+        }
+
+        InventoryPagination(filtered, 'InventorylistData');
+    }
 
 
     const getStatusClass = (status) => {
@@ -410,5 +457,11 @@
 
     $(document).ready(() => {
         LoadPageData();
+
+
+        $('#searchbox').on('input', applyFilters);
+        $('#Categoryselect').on('change', applyFilters);
+        $('#chkCheck, #chkRestock, #chkOut').on('change', applyFilters);
+
     });
 </script>

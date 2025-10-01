@@ -188,7 +188,7 @@
               
 
                    const rowHtml = `
-                                     <tr class='rowClick' id='editButton_${row.PartID}'>
+                                     <tr data-id="${row.PartID}" data-category="${row.CategoryID}" class='rowClick' id='editButton_${row.PartID}'>
 
                                         <td style='text-align: left; padding-left: 1.5em;' data-cell="PartNo">
                                              <div class="flex_align" style='padding-left: 1.5em; gap: 15px;'>
@@ -283,25 +283,20 @@
         });
 
 
-        const searchTable = () => {
-            const query = $('#searchbox').val().toLowerCase() || '';
-            filteredData = dataArray.filter(item =>
-                item.PartName.toLowerCase().includes(query) || item.PartNo.toLowerCase().includes(query)
-            );
+        const searchTable = debounce(() => {
+            const query = $('#searchbox').val().toLowerCase();
+            $("#PartlistData tr").each(function () {
+                const partName = $(this).find("p").text().toLowerCase();
+                const partNo = $(this).find("small").text().toLowerCase();
 
-            if (filteredData.length == 0) {
-                TableDisplay.empty();
-                const loadData = `<tr>
-                             <td colspan='4'>
-                                 <p id="loadingStepText">🔍 No Search found ..</p>
-                             </td>
-                         </tr>`;
-                TableDisplay.append(loadData);
+                if (partName.includes(query) || partNo.includes(query)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }, 300);
 
-                return;
-            }
-            renderTable();
-        };
 
         $('#searchbox').on('input', searchTable);
 
@@ -332,14 +327,27 @@
     });
 
 
-    $("#Categoryselect").on('change', function (e) {
-        e.preventDefault();
-        let filterdata = Inventlist.filter(item => item.CategoryID === parseInt(e.target.value));
-        if (parseInt(e.target.value) !== 0) {
-            InventoryPagination(filterdata, 'InventorylistData', 'MastertableContainer', 50, 5);
-        } else {
-            InventoryPagination(Inventlist, 'InventorylistData', 'MastertableContainer', 50, 5);
-        }
+    //$("#Categoryselect").on('change', function (e) {
+    //    e.preventDefault();
+    //    let filterdata = Inventlist.filter(item => item.CategoryID === parseInt(e.target.value));
+    //    if (parseInt(e.target.value) !== 0) {
+    //        InventoryPagination(filterdata, 'InventorylistData', 'MastertableContainer', 50, 5);
+    //    } else {
+    //        InventoryPagination(Inventlist, 'InventorylistData', 'MastertableContainer', 50, 5);
+    //    }
+    //});
+
+    // ======= FiLTER BY CATEGORY ===============
+    $("#Categoryselect").on('change', function () {
+        const selected = parseInt(this.value);
+        $("#InventorylistData tr").each(function () {
+            const rowCategory = parseInt($(this).data("category"));
+            if (selected === 0 || rowCategory === selected) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
     });
 
     function applyFilters() {
@@ -433,7 +441,14 @@
         }, 800);
     }
 
-
+    // 🔄 Debounce helper
+    function debounce(func, delay) {
+        let timeout;
+        return function (...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), delay);
+        };
+    }
 
     // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
     const LoadPageData = async () => {

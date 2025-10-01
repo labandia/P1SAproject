@@ -159,8 +159,8 @@ namespace ProgramPartListWeb.Helper
         public static string GenerateID(string prefix)
         {
             string datePart = DateTime.Now.ToString("MMddyyyy");
-            string timePart = DateTime.Now.ToString("HHmm");
-            return $"{prefix}_{datePart}_{timePart}";
+            string timePart = DateTime.Now.ToString("mmssfff");
+            return $"{prefix}_{datePart}{timePart}";
         }
 
         public static string UserRolesname(int roleint)

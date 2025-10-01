@@ -61,7 +61,6 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
                                     .Where(res => res.Project_ID == 10)
                                     .Select(res => res.User_ID)
                                     .ToList();
-
                 int result = await _stock.GenerateStockNotification(userIDs);
 
                 if (result == 0)

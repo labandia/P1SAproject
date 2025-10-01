@@ -28,18 +28,17 @@
         <div class="Mold_content" id="Completed">
             <div class="search-bar  flex_space">
                 <div class="date-range">
-                    <input type="date" >
-                        <span>-</span>
-                        <input type="date" >
+                    <input type="date" id="startDate">
+                    <span>-</span>
+                    <input type="date" id="endDate">
 
-                    <select>
+                    @*<select>
                         <option value="0">Status</option>
                         <option value="0">Shipped</option>
                         <option value="0">Ongoing</option>
-                    </select>
+                    </select>*@
                 </div>
 
-               
             </div>
 
 
@@ -199,7 +198,7 @@
             }, 50);
 
             if (index == 1) {
-                CompleteTableDisplay(completeData);
+                filterByDateRange();
                 $("#Showadd").hide();
             } else {
                 $("#Showadd").show();
@@ -311,23 +310,28 @@
     function CompleteTableDisplay(array) {
         let tableDisplay = $("#CompleteTables");
         tableDisplay.empty();
+
+        if (array.length === 0) {
+            tableDisplay.append(`
+            <tr>
+                <td colspan="7" style="text-align:center; color:#888;">No completed requests found</td>
+            </tr>
+        `);
+            return;
+        }
+
         $.each(array, function (index, row) {
-              const rowHtml = `
-                  <tr>
-                    
-                      <td>
-                          <div class="order-number" style='font-weight: 600;'>${row.OrderID}</div>
-                      </td>
-                      <td style='font-weight: 600;'>${row.ChambersOrdered} X</td>
-                      <td class="price">
-                          <p style='color: #222;'>${row.TargetDate}</p>
-                      </td>
-                      <td><span class="status pending">${row.ChamberName}</span></td>
-                      <td><div class="product-name" style='color: #27ae60; font-weight: 600;'>₱ ${row.TotalPrice.toLocaleString('en-US')}</div></td>
-                      <td class="delivery-service" style='font-weight: 600;'>${row.RequestStatus}</td>
-                      <td class="delivery-service"><i class="fa-solid fa-ellipsis-vertical"></i></td>
-                  </tr>
-             `;
+            const rowHtml = `
+            <tr>
+                <td><div class="order-number" style='font-weight: 600;'>${row.OrderID}</div></td>
+                <td style='font-weight: 600;'>${row.ChambersOrdered} X</td>
+                <td class="price"><p style='color: #222;'>${row.TargetDate}</p></td>
+                <td><span class="status pending">${row.ChamberName}</span></td>
+                <td><div class="product-name" style='color: #27ae60; font-weight: 600;'>₱ ${row.TotalPrice.toLocaleString('en-US')}</div></td>
+                <td class="delivery-service" style='font-weight: 600;'>${row.RequestStatus}</td>
+                <td class="delivery-service"><i class="fa-solid fa-ellipsis-vertical"></i></td>
+            </tr>
+        `;
             tableDisplay.append(rowHtml);
         });
 
@@ -369,6 +373,34 @@
         }
     });
 
+    // Function to filter completeData based on date range
+    function filterByDateRange() {
+        let start = $("#startDate").val(); // e.g. 2025-10-20
+        let end = $("#endDate").val();     // e.g. 2025-10-30
+
+        if (!start && !end) {
+            CompleteTableDisplay(completeData);
+            return;
+        }
+
+        let filtered = completeData.filter(row => {
+            // Convert row.TargetDate "10/25/2025" → Date object
+            let parts = row.TargetDate.split("/");
+            let rowDate = new Date(parts[2], parts[0] - 1, parts[1]);
+
+            if (start && rowDate < new Date(start)) return false;
+            if (end && rowDate > new Date(end)) return false;
+            return true;
+        });
+
+        CompleteTableDisplay(filtered);
+    }
+
+
+    // Attach events
+    $("#startDate, #endDate").on("change", function () {
+        filterByDateRange();
+    });
 
 
     // ############## DISPLAY ALL THE DATA TO THE PAGE ########################

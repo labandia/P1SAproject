@@ -14,7 +14,7 @@
     <script src="~/Scripts/all.min.js"></script>
 </head>
 <body>
-    v
+
     <header>
         <div class="CustomContainer">
             <div class="HeadTitle">
@@ -83,18 +83,12 @@
     <ul id="discussion"></ul>
 </div>
 
-<script type="text/javascript">
-    console.log("GOOD");
-</script>
-
-
-
 
 <script src="~/Scripts/Utilities.js"></script>
 <script src="~/Scripts/jquery-3.7.1.min.js"></script>
-<script src="~/Scripts/jquery.signalR-2.4.3.min.js"></script>
+@*<script src="~/Scripts/jquery.signalR-2.4.3.min.js"></script>*@
 
-<script src="/signalr/hubs"></script>
+@*<script src="/signalr/hubs"></script>*@
 
 <script type="text/javascript">
 
@@ -102,7 +96,7 @@
 
 
 
-    @*const container = document.getElementById('Web_contain');
+    const container = document.getElementById('Web_contain');
 
     const getSelectedCategories = () => {
         return $('input[name="schedule"]:checked')
@@ -201,12 +195,7 @@
         });
     });
 
-    fetch('/Hydroponics/Hydro/CheckStock')
-        .then(res => res.text())
-        .then(msg => console.log(msg))
-        .catch(err => console.error(err));*@
-
-
+   
 
     //$(function () {
     //    console.log("SignalR init...");
@@ -231,23 +220,23 @@
     //});
 
 
-    $(function () {
-        // Reference the auto-generated proxy for the hub.
-        try {
-            console.log("HERE");
-            var chat = $.connection.myHub1;
-            console.log(chat);
-        } catch (e) {
-            console.log(e);
-        }
+    //$(function () {
+    //    // Reference the auto-generated proxy for the hub.
+    //    try {
+    //        console.log("HERE");
+    //        var chat = $.connection.myHub1;
+    //        console.log(chat);
+    //    } catch (e) {
+    //        console.log(e);
+    //    }
 
-    });
+    //});
 
-    // This optional function html-encodes messages for display in the page.
-    function htmlEncode(value) {
-        var encodedValue = $('<div />').text(value).html();
-        return encodedValue;
-    }
+    //// This optional function html-encodes messages for display in the page.
+    //function htmlEncode(value) {
+    //    var encodedValue = $('<div />').text(value).html();
+    //    return encodedValue;
+    //}
 
 </script>
 

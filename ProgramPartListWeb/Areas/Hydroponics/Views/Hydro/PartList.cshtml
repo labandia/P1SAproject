@@ -211,7 +211,7 @@
 
 
                   const rowHtml = `
-                         <tr>
+                         <tr data-id="${row.PartID}" data-category="${row.CategoryID}">
                               <td style='text-align: left; padding-left: 1.5em;' data-cell="PartNo">
                                <div class="flex_align" style='padding-left: 1.5em; gap: 15px;'>
                                    <img class="NoImages lazy"
@@ -312,46 +312,47 @@
 
 
         // === Search ===
-        const searchTable = () => {
-            const query = $('#searchbox').val().toLowerCase() || '';
-            filteredData = dataArray.filter(item =>
-                item.PartName.toLowerCase().includes(query) || item.PartNo.toLowerCase().includes(query)
-            );
+        const searchTable = debounce(() => {
+            const query = $('#searchbox').val().toLowerCase();
+            $("#PartlistData tr").each(function () {
+                const partName = $(this).find("p").text().toLowerCase();
+                const partNo = $(this).find("small").text().toLowerCase();
 
-            if (filteredData.length == 0) {
-                TableDisplay.empty();
-                const loadData = `<tr>
-                     <td colspan='4'>
-                         <p id="loadingStepText">🔍 No Search found ..</p>
-                     </td>
-                 </tr>`;
-                TableDisplay.append(loadData);
-
-                return;
-            }
-           
-
-            renderTable();
-        };
+                if (partName.includes(query) || partNo.includes(query)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }, 300);
 
 
 
         $('#searchbox').on('input', searchTable);
 
-
+        // 🔄 Debounce helper
+        function debounce(func, delay) {
+            let timeout;
+            return function (...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), delay);
+            };
+        }
         // Initial render
         renderTable();
     }
 
     // ======= FiLTER BY CATEGORY ===============
-    $("#Categoryselect").on('change', function (e) {
-        e.preventDefault();
-        let filterdata = partlistData.filter(item => item.CategoryID === parseInt(e.target.value));
-        if (parseInt(e.target.value) !== 0) {
-            InventoryPagination(filterdata, 'PartlistData');
-        } else {
-            InventoryPagination(partlistData, 'PartlistData');
-        }
+    $("#Categoryselect").on('change', function () {
+        const selected = parseInt(this.value);
+        $("#PartlistData tr").each(function () {
+            const rowCategory = parseInt($(this).data("category"));
+            if (selected === 0 || rowCategory === selected) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
     });
 
 
@@ -472,6 +473,7 @@
     });
 
 
+   
 
 
 

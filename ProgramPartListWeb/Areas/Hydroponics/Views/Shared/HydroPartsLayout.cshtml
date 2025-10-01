@@ -333,6 +333,8 @@
                       dataType: 'json'
                   });
 
+                console.log(response);
+
                 if (response.Success) {
                     const container = $("#stockAlerts");
                     container.empty();
@@ -400,18 +402,27 @@
 
 
                 response.Data.forEach(res => {
+                    let stats = res.Status;
+                    let backolor;
+
+                    if (stats === 'Restock') {
+                        backolor = 'background-color:#fff3cd; color:#856404;';
+                    } else {
+                        backolor = 'background-color:#dc3545; color:#ffffff;';
+                    }
+
                     container.append(
                         `<tr>
-                           <td style='text-align: left; padding-left: 1.5em !important;'>
-                                <div>
-                                    <p style='color: #185d8b; font-weight: 600;'>${res.PartName ? res.PartName : "-"}</p>
-                                    <small> ${res.PartNo}</small>
-                                </div>
-                           </td>
-                           <td>${res.CurrentQty}</td>
-                           <td>${res.ReorderLevel}</td>
-                           <td style="background-color:#fff3cd; color:#856404;">${res.Status}</td>
-                       </tr>`
+                    <td style='text-align: left; padding-left: 1.5em !important;'>
+                        <div>
+                            <p style='color: #185d8b; font-weight: 600;'>${res.PartName ? res.PartName : "-"}</p>
+                            <small>${res.PartNo}</small>
+                        </div>
+                    </td>
+                    <td>${res.CurrentQty}</td>
+                    <td>${res.ReorderLevel}</td>
+                    <td style="${backolor}">${res.Status}</td>
+                </tr>`
                     );
                 });
             }

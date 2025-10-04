@@ -15,6 +15,15 @@
 </head>
 <body>
 
+    @*<a href="@Url.Action("OpenExcel", "P1SAportalweb")" class="btn btn-primary">
+        Open Patrol Countermeasure Excel
+    </a>
+    <p>
+        <button onclick="openExcel()" style="padding:10px 20px; font-size:16px;">
+            Open Excel File
+        </button>
+    </p>*@
+
     <header>
         <div class="CustomContainer">
             <div class="HeadTitle">
@@ -91,7 +100,20 @@
 @*<script src="/signalr/hubs"></script>*@
 
 <script type="text/javascript">
+    //function openExcel() {
+    //    try {
+    //        // Create Excel ActiveX object
+    //        var excel = new ActiveXObject("Excel.Application");
+    //        excel.Visible = true; // make Excel visible
 
+    //        // Open the network Excel file (UNC path)
+    //        var filePath = "\\\\SDP010F6C\\Users\\USER\\Pictures\\Access\\Excel\\Patrol_Countermeasure\\CM_250812_20250812_171539.xlsx";
+    //        excel.Workbooks.Open(filePath);
+
+    //    } catch (e) {
+    //        alert("Could not open Excel. Make sure you are using Internet Explorer / Edge IE Mode and ActiveX is enabled.\n\nError: " + e.message);
+    //    }
+    //}
 
 
 

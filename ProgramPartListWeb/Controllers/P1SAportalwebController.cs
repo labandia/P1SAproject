@@ -90,6 +90,27 @@ namespace ProgramPartListWeb.Controllers
             }
         }
 
+        public ActionResult OpenExcel()
+        {
+            // UNC path to the Excel file
+            string filePath = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\Patrol_Countermeasure\CM_250812_20250812_171539.xlsx";
+
+            if (!System.IO.File.Exists(filePath))
+            {
+                return HttpNotFound("Excel file not found in network folder.");
+            }
+
+            byte[] fileBytes = System.IO.File.ReadAllBytes(filePath);
+
+            // Use the Excel MIME type for .xlsx
+            string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+            // inline = open directly (if Excel is installed and registered with the browser)
+            Response.AppendHeader("Content-Disposition", "inline; filename=CM_250812_20250812_171539.xlsx");
+
+            return File(fileBytes, contentType);
+        }
+
 
         public ActionResult Index() => View();
 

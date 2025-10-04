@@ -718,9 +718,12 @@
     <Content Include="Content\css\OrderDetails.css" />
     <Content Include="Content\css\Patrolforms.css" />
     <Content Include="Content\Images\Electrical.png" />
+    <Content Include="Content\Images\FrontImage.png" />
     <Content Include="Content\Images\HydroChamber.png" />
     <Content Include="Content\Images\HydrochamberPart2.png" />
+    <Content Include="Content\Images\HydroPhonics.png" />
     <Content Include="Content\Images\no-image.png" />
+    <Content Include="Content\Images\SideImage.png" />
     <Content Include="Content\OpenExcelApp.exe" />
     <Content Include="Content\Shared\bootstrap-grid.css" />
     <Content Include="Content\Shared\bootstrap-grid.min.css" />

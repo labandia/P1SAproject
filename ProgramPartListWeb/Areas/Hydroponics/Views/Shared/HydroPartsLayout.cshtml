@@ -287,37 +287,6 @@
 
                     console.log(response.Success);
 
-                    //if (response.Success) {
-                    //    const container = $("#stockAlerts");
-                    //    container.empty();
-                    //    $("#countinside").text(response.Alerts.length);
-                    //    $("#notificationBadge").text(response.Alerts.length);
-
-                    //    if (!response.Alerts || response.Alerts.length === 0) {
-                    //        container.append('<li style="padding:10px; text-align:center; color:gray;">No alerts</li>');
-                    //        $("#notificationBadge").hide();
-                    //    } else {
-                    //        response.Alerts.forEach(alert => {
-                    //            container.append(
-                    //                `<div class="list-item"  id='Details_${alert.AlertId}'>
-                    //                        <p>${alert.PartName}</p>
-                    //                        <div class="text fl">${alert.Message}</div>
-                    //                    </div>`
-                    //            );
-                    //        });
-
-                    //        // Update badge count
-                    //        //$("#notificationBadge").text(response.Alerts.length).show();
-                    //        unseenCount++;
-                    //    }
-                    //}
-
-                    //// Update badge
-                    //if (unseenCount > 0) {
-
-                    //} else {
-                    //    $("#notificationBadge").hide();
-                    //}
                 } catch (error) {
                     console.warn("Error fetching stock alerts:", error);
                 }
@@ -349,7 +318,7 @@
                         $("#notificationBadge").hide();
                     }
 
-                  
+
 
                     if (!response.Data || response.Data.length === 0) {
                         container.append('<li style="padding:10px; text-align:center; color:gray;">No alerts</li>');
@@ -478,17 +447,23 @@
         }
 
 
-        $(document).ready(function() {
-            @*$.ajax({
-                url: '@Url.Action("StocksAlertEmailNotification", "Stock")',
-                type: 'POST',
-                success: function (response) {
-                    console.log("Stock alert email sent successfully.");
-                },
-                error: function (xhr, status, error) {
-                    console.log("Failed to send stock alert email: " + error);
-                }
-            });*@
+        $(document).ready(function () {
+
+            // For  sending email notification for stock alert
+            try {
+                $.ajax({
+                    url: '@Url.Action("StocksAlertEmailNotification", "Stock")',
+                    type: 'POST',
+                    success: function (response) {
+                        console.log("Stock alert email sent successfully.");
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Failed to send stock alert email: " + error);
+                    }
+                });
+            } catch (e) {
+                console.warn("Error fetching stock alerts:", e);
+            }
         });
 
 

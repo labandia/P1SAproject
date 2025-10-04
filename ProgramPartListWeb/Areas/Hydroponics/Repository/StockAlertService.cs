@@ -3,6 +3,7 @@ using Aspose.Cells.Pivot;
 using ProgramPartListWeb.Areas.Hydroponics.Interface;
 using ProgramPartListWeb.Areas.Hydroponics.Models;
 using ProgramPartListWeb.Areas.PC.Models;
+using ProgramPartListWeb.Data;
 using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Models;
 using ProgramPartListWeb.Utilities;
@@ -19,6 +20,13 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
     public class StockAlertService : IStockAlertService
     {
         public static string strSender => ConfigurationManager.AppSettings["config:SMTPEmail"];
+        private readonly UserRespository _user;
+
+        public StockAlertService(UserRespository user)
+        {
+            _user = user;
+        }
+
 
         //List<string> recipientslist = new List<string>
         //{
@@ -27,9 +35,15 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
         //    "person3@example.com"
         //};
 
-        public Task<List<string>> GetAllRecepients()
+        public async Task<List<string>> GetAllRecepients()
         {
-            return SqlDataAccess.GetData<string>("SELECT Email FROM Hydro_StockAlertRecipients", null);
+            var data = await _user.GetAllusers() ?? new List<UsersModel>();
+
+            var filterbyProj = data
+                .Where(res => res.Project_ID == 10 && !string.IsNullOrEmpty(res.Email))
+                .Select(sel => sel.Email).ToList();
+
+            return filterbyProj;
         }
 
 
@@ -239,87 +253,102 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
         public async Task<bool> SendEmailNotificationStocks()
         {
-            var emailCount = await GetStockSendEmailLogs();
-            bool anySent = false;
-
-            var recipientslist = await GetAllRecepients();
-
-
-            foreach (var recepient in recipientslist)
+           try
             {
-                var latestLog = emailCount
-                     .Where(res =>
-                         res.EmailSent == recepient)
-                     .OrderByDescending(res => res.StockLogId)
-                     .FirstOrDefault();
+                var emailCount = await GetStockSendEmailLogs();
+                bool anySent = false;
 
-                //int shiftEmailCount = latestLog?.Sequence ?? 0;
-                DateTime? lastSentAt = latestLog?.SentAt;
 
-                // strict 4-hour rule 
-                // it skips when its not in the 4hours pass
-                if (lastSentAt != null && DateTime.Now < lastSentAt.Value.AddHours(4))
+                // Gets the list of Recepients from the Database
+                var recipientslist = await GetAllRecepients();
+
+
+                // loop all recipients 
+                foreach (var recepient in recipientslist)
                 {
-                    //Debug.WriteLine($"[{recepient}] Last email sent at {lastSentAt}, not yet 4 hours. Skipping...");
-                    continue;
-                }
+                    Debug.WriteLine(recepient);
+                    // get the latest log send email
+                    var latestLog = emailCount
+                         .Where(res =>
+                             res.EmailSent == recepient)
+                         .OrderByDescending(res => res.StockLogId)
+                         .FirstOrDefault();
 
-                //Debug.WriteLine($"[{recepient}] Sending email...");
-                // check active alerts
-                var activeAlerts = await GetActiveAlertsAsync();
-                if (!activeAlerts.Any())
-                {
-                    break;
-                }
+                    
 
-                string htmlBody = CreateEmailBody(activeAlerts);
 
-                var SendEmail = new SentEmailModel
-                {
-                    Subject = "Stock Alert Notification",
-                    Sender = strSender,
-                    BCC = "",
-                    Body = htmlBody,
-                    Recipient = recepient
-                };
 
-                // send email here...
-                // EMAIL SAVE TO THE DATABASE
-                //await EmailService.SendEmailViaSqlDatabase(SendEmail);
+                    // Gets the last sent date 
+                    DateTime? lastSentAt = latestLog?.SentAt;
 
-              
+                    // strict 4-hour rule 
+                    // it skips when its not in the 4 hours pass
+                    if (lastSentAt != null && DateTime.Now < lastSentAt.Value.AddHours(4))
+                    {
+                        continue;
+                    }
 
-                // first log today
-                if (latestLog == null)
-                {
-                    Debug.WriteLine("INSERT THE Email logs");
-                    await SqlDataAccess.UpdateInsertQuery(@"
-                    INSERT INTO Hydro_StockAlertLog (EmailSent, Sequence)
-                    VALUES (@EmailSent, @Sequence)",
-                        new
-                        {
-                            EmailSent = recepient,
-                            Sequence = 1
-                        });
-                }
-                else
-                {
-                    Debug.WriteLine("UPDATES THE Email logs");
-                    // update existing log with incremented sequence
-                    await SqlDataAccess.UpdateInsertQuery(@"
+                    //Debug.WriteLine($"[{recepient}] Sending email...");
+                    // check active alerts
+                    var activeAlerts = await GetAllStockAlertsAsync();
+                    if (!activeAlerts.Any())
+                    {
+                        break;
+                    }
+
+
+
+                    string htmlBody = CreateEmailBody(activeAlerts);
+
+                    var SendEmail = new SentEmailModel
+                    {
+                        Subject = "Stock Alert Notification",
+                        Sender = strSender,
+                        BCC = "",
+                        Body = htmlBody,
+                        Recipient = recepient
+                    };
+                    // send email here...
+                    // EMAIL SAVE TO THE DATABASE
+                    await EmailService.SendEmailViaSqlDatabase(SendEmail);
+
+                    // first log today
+                    if (latestLog == null)
+                    {
+                        await SqlDataAccess.UpdateInsertQuery(@"
+                            INSERT INTO Hydro_StockAlertLog(EmailSent, Sequence)
+                            VALUES (@EmailSent, @Sequence)",
+                            new
+                            {
+                                EmailSent = recepient,
+                                Sequence = 1
+                            });
+                    }
+                    else
+                    {
+                        // update existing log with incremented sequence
+                        await SqlDataAccess.UpdateInsertQuery(@"
                                 UPDATE Hydro_StockAlertLog
                                 SET SentAt = GETDATE(), Sequence = Sequence + 1
                                 WHERE StockLogId = @StockLogId",
-                        new
-                        {
-                            StockLogId = latestLog.StockLogId
-                        });
+                            new
+                            {
+                                StockLogId = latestLog.StockLogId
+                            });
+                    }
+
+
+
+                    anySent = true;
                 }
 
-                anySent = true;
+                return anySent;
             }
-
-            return anySent;
+            catch(Exception e)
+            {
+                Debug.WriteLine(e.Message);
+                return false;
+            }
         }
 
 
@@ -332,7 +361,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
 
 
-        public  string CreateEmailBody(List<StockAlert> items)
+        public  string CreateEmailBody(List<StockPartsModel> items)
         {
             var sb = new StringBuilder();
             sb.AppendLine("<!DOCTYPE html>");
@@ -344,16 +373,16 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             sb.AppendLine("<body style='font-family: Arial, sans-serif; color: #333;'>");
 
             sb.AppendLine("<h2 style='color:#2E86C1;'>Stock Alert Notification</h2>");
-            sb.AppendLine("<p>Dear Team,</p>");
+            sb.AppendLine("<p>Dear Users,</p>");
             sb.AppendLine("<p>The following items require your attention:</p>");
 
             // Table header
             sb.AppendLine("<table style='border-collapse: collapse; width: 100%;'>");
             sb.AppendLine("<thead>");
             sb.AppendLine("<tr>");
-            sb.AppendLine("<th style='border: 1px solid #ccc; padding: 8px; background-color:#f2f2f2;'>Part No</th>");
-            sb.AppendLine("<th style='border: 1px solid #ccc; padding: 8px; background-color:#f2f2f2;'>Part Name</th>");
-            sb.AppendLine("<th style='border: 1px solid #ccc; padding: 8px; background-color:#f2f2f2;'>Message</th>");
+            sb.AppendLine("<th style='border: 1px solid #ccc; padding: 8px; background-color:#f2f2f2; text-align: left;'>PartNo/PartName</th>");
+            sb.AppendLine("<th style='border: 1px solid #ccc; padding: 8px; background-color:#f2f2f2;'>Current Stock</th>");
+            sb.AppendLine("<th style='border: 1px solid #ccc; padding: 8px; background-color:#f2f2f2;'>Minimum Stock</th>");
             sb.AppendLine("<th style='border: 1px solid #ccc; padding: 8px; background-color:#f2f2f2;'>Status</th>");
             sb.AppendLine("</tr>");
             sb.AppendLine("</thead>");
@@ -362,19 +391,35 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             // Table rows
             foreach (var item in items)
             {
+                string backolor;
+
+                if (item.Status == "Restock")
+                {
+                    backolor = "background-color:#fff3cd; color:#856404; text-align: center;";
+                }
+                else
+                {
+                    backolor = "background-color:#dc3545; color:#ffffff; text-align: center;";
+                }
+
+
                 sb.AppendLine("<tr>");
-                sb.AppendLine($"<td style='border: 1px solid #ccc; padding: 8px;'>{item.PartNo}</td>");
-                sb.AppendLine($"<td style='border: 1px solid #ccc; padding: 8px;'>{item.PartName}</td>");
-                sb.AppendLine($"<td style='border: 1px solid #ccc; padding: 8px; text-align:center;'>{item.Message}</td>");
-                sb.AppendLine($"<td style='border: 1px solid #ccc; padding: 8px; text-align:center;'>{item.Status}</td>");
+                sb.AppendLine($@"<td style='border: 1px solid #ccc; padding: 8px;'>
+                                  <p style='color: #185d8b; font-weight: 600; margin: 0;'>{item.PartName}</p>
+                                  <small>{item.PartNo}</small>
+                              </td>");
+                sb.AppendLine($"<td style='border: 1px solid #ccc; padding: 8px; text-align: center;'>{item.CurrentQty}</td>");
+                sb.AppendLine($"<td style='border: 1px solid #ccc; padding: 8px; text-align: center;'>{item.ReorderLevel}</td>");
+                sb.AppendLine($"<td style='{backolor}'>{item.Status}</td>");
                 sb.AppendLine("</tr>");
             }
 
             sb.AppendLine("</tbody>");
             sb.AppendLine("</table>");
 
+
             sb.AppendLine("<p style='margin-top:20px;'>Please take the necessary action.</p>");
-            sb.AppendLine("<p>Best regards,<br/>Inventory System</p>");
+            sb.AppendLine("<p style='margin-top:20px;'>This is an auto system-generated email. Do not reply to this email.</p>");
             sb.AppendLine("</body>");
             sb.AppendLine("</html>");
 

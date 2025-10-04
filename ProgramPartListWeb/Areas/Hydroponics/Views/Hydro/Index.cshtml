@@ -26,18 +26,76 @@
 <div class="bg-animated"></div>
 
 <div class="center">
-    <div class="cardCustom">
-        <h2>San Hydro App System</h2>
-        <form id="logincredentials" method="post">
-            <label>Username</label>
-            <input type="text" name="username" id="username" placeholder="Enter Username" autocomplete="off" required />
-            <label>Password</label>
-            <input type="password" name="password" id="password" placeholder="Enter Password" autocomplete="new-password" required />
-            <button type="submit">Sign in</button>
-        </form>
-        <p class="forgetbtn" id="changebtn">Change Password</p>
-        <p class="selectreg" id="forgetbtn">Doesnt have an Account ?</p>
+    @*<div class="cardCustom">
+            <h2>San Hydro App System</h2>
+            <form id="logincredentials" method="post">
+                <label>Username</label>
+                <input type="text" name="username" id="username" placeholder="Enter Username" autocomplete="off" required />
+                <label>Password</label>
+                <input type="password" name="password" id="password" placeholder="Enter Password" autocomplete="new-password" required />
+                <button type="submit">Sign in</button>
+            </form>
+            <p class="forgetbtn" id="changebtn">Change Password</p>
+            <p class="selectreg" id="forgetbtn">Doesnt have an Account ?</p>
+        </div>*@
+
+    <div class="Wrapcontainer">
+        <div class="carousel-container">
+            <div class="hydrocenter">
+                @*<img src="~/Content/Images/HydroPhonics.png" />*@
+
+                <div class="slider">
+                    <div class="slide">
+                        <img src="~/Content/Images/HydroPhonics.png" />
+                    </div>
+                    <div class="slide">
+                        <img style="width: 95%;" src="~/Content/Images/FrontImage.png" />
+                    </div>
+                    <div class="slide">
+                        <img style="width: 95%;" src="~/Content/Images/SideImage.png" />
+                    </div>
+                </div>
+
+
+                <div class="controls">
+                    <div class="control-btn" data-index="0"></div>
+                    <div class="control-btn" data-index="1"></div>
+                    <div class="control-btn" data-index="2"></div>
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="login-container">
+            <div class="formwrapper">
+                <div class="logo">
+                    <div class="logo-text">San <span>Hydro</span> </div>
+                    <p style="font-weight: 400; margin: 0; margin-top: -.3em; opacity: .6;"><small>application system</small></p>
+                </div>
+
+                <form id="logincredentials" method="post">
+                    <div class="form-group">
+                        <label for="Username">Username :</label>
+                        <input type="text" name="username" id="username" placeholder="Enter Username" autocomplete="off" required >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password : </label>
+                        <input type="password" name="password" id="password" placeholder="Enter Password" autocomplete="new-password" required>
+
+                    </div>
+
+
+
+                    <button type="submit" style="margin-top: 1em; padding: .5em 1em;" class="sign-in-btn"><i class="fa-solid fa-right-to-bracket"></i> Sign in</button>
+                    <p class="forgetbtn" id="changebtn" style="text-align: center; margin-top: .5em;">Change Password</p>
+
+                </form>
+            </div>
+        </div>
     </div>
+
+
 </div>
 
 
@@ -47,7 +105,7 @@
         <div class="spinner"></div>
         <div>
             <div>Signing you in…</div>
-            <small>Please wait while we load the admin panel.</small>
+            <small>Please wait while we load the Page.</small>
         </div>
     </div>
 </div>
@@ -173,6 +231,8 @@
         </div>
     </div>
 </div>
+
+
 
 <script type="text/javascript">
     const loader = document.getElementById('loader');
@@ -346,6 +406,54 @@
 
 
     $("#logshow").show();
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const slides = document.querySelectorAll(".slide");
+        const controls = document.querySelectorAll(".control-btn");
+        let current = 0;
+        let interval;
+
+        function goToSlide(index) {
+            slides[current].classList.remove("Slideactive");
+            controls[current].classList.remove("Slideactive");
+
+            current = index;
+
+            slides[current].classList.add("Slideactive");
+            controls[current].classList.add("Slideactive");
+        }
+
+        function nextSlide() {
+            let next = (current + 1) % slides.length;
+            goToSlide(next);
+        }
+
+        function startAutoPlay() {
+            interval = setInterval(nextSlide, 5000); // autoplay speed
+        }
+
+        function stopAutoPlay() {
+            clearInterval(interval);
+        }
+
+        // init first slide
+        slides[0].classList.add("active");
+        controls[0].classList.add("active");
+
+        // controls click
+        controls.forEach((btn, i) => {
+            btn.addEventListener("click", () => {
+                goToSlide(i);
+                stopAutoPlay();
+                startAutoPlay(); // restart autoplay after manual click
+            });
+        });
+
+        // autoplay start
+        startAutoPlay();
+    });
+
 
 
     window.IsLoginUser({

@@ -101,9 +101,16 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         [HttpPost]
         public async Task<ActionResult> StocksAlertEmailNotification()
         {
-            bool sent = await _stock.SendEmailNotificationStocks();
-            if (!sent) return JsonPostError("Update failed.", 500);
-            return JsonCreated(sent, "Update Successfully");
+            try
+            {
+                bool sent = await _stock.SendEmailNotificationStocks();
+                if (!sent) return JsonPostError("Update failed.", 500);
+                return JsonCreated(sent, "Update Successfully");
+            }catch(Exception e)
+            {
+                Debug.WriteLine(e.Message); 
+                return JsonPostError("Update failed.", 500);
+            }
         }
 
     }

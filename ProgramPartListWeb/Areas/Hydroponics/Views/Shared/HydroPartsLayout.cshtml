@@ -28,7 +28,7 @@
 
         <div class="nav-menu">
             <a href="/Hydroponics/Hydro/Orderpage" class="nav-item">
-                <i class="fa-solid fa-file-invoice"></i>
+                <i class="fas fa-box"></i>
                 <span class="nav-text">Request Chambers</span>
             </a>
 
@@ -37,7 +37,7 @@
                 <span class="nav-text">Hydroponics Chambers</span>
             </a>
             <a href="/Hydroponics/Hydro/Inventorylist" class="nav-item">
-                <i class="fa-solid fa-boxes-packing"></i>
+                <i class="fas fa-warehouse"></i>
                 <span class="nav-text">Manage Stocks</span>
             </a>
             <a href="/Hydroponics/Hydro/PartList" class="nav-item">
@@ -175,14 +175,7 @@
 
 
     <script type="text/javascript">
-        const GetFullname = async () => {
-            var x = localStorage.getItem("Fullname") || "Guest user";
-            let initials = getInitials(x);
-            $("#DisplayName").text(x);
-            $("#user-avatar").text(initials);
-        };
-
-
+       
         /*==================== LINK ACTIVE ====================*/
         const linkColor = document.querySelectorAll('.nav-item')
 
@@ -294,6 +287,7 @@
 
             async function GetNotification() {
                 let ID = parseInt(localStorage.getItem("UserID"));
+                $("#notificationBadge").hide();
 
                   const response = await $.ajax({
                       url: '@Url.Action("GetNoficationDisplay", "Stock")',
@@ -302,7 +296,6 @@
                       dataType: 'json'
                   });
 
-                console.log(response);
 
                 if (response.Success) {
                     const container = $("#stockAlerts");
@@ -404,9 +397,9 @@
 
 
         let profile = document.querySelector('.user-avatar');
-        let menu = document.querySelector('.menu');
 
         profile.onclick = function () {
+            let menu = document.querySelector('.menu');
             menu.classList.toggle('menuactive');
         }
 
@@ -436,8 +429,12 @@
         });
 
 
-        GetFullname();
-
+        const GetFullname = async () => {
+            var x = localStorage.getItem("Fullname") || "Guest user";
+            let initials = getInitials(x);
+            $("#DisplayName").text(x);
+            $("#user-avatar").text(initials);
+        };
 
         function getInitials(name) {
             return name
@@ -473,6 +470,25 @@
             expectedValue: 'true',
             expirationKey: 'HydroTime',
             maxHours: 24
+        });
+
+
+        // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+        const LayoutLoadData = async () => {
+            try {
+
+                const [user] = await Promise.all([
+                    GetFullname()
+                ]);
+            } catch (error) {
+                console.error("Failed to load page data:", error);
+            } finally {
+                //$("#loadingSpinner").hide();
+            }
+        }
+
+        $(document).ready(() => {
+            LayoutLoadData();
         });
     </script>
 

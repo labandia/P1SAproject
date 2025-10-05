@@ -108,8 +108,13 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
                 return JsonCreated(sent, "Update Successfully");
             }catch(Exception e)
             {
-                Debug.WriteLine(e.Message); 
-                return JsonPostError("Update failed.", 500);
+                return Json(new
+                {
+                    Success = false,
+                    Message = "Error while sending Email stock alerts",
+                    Error = e.Message,
+                    LastCheck = DateTime.Now
+                }, JsonRequestBehavior.AllowGet);
             }
         }
 

@@ -212,6 +212,7 @@
         let TableData = $("#RequestWrapper");
 
         let res = await FetchAuthenticate('@Url.Action("GetAllRequestList", "Hydro")', {});
+        console.log(res);
         if (res && res.Success) {
             TableData.empty();
             requestData = res.Data.filter(item => item.RequestStatus === "ONGOING");

@@ -3,6 +3,7 @@ using ProgramPartListWeb.Areas.Hydroponics.Models;
 using ProgramPartListWeb.Helper;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -36,7 +37,6 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
         public Task<List<StockPartsModel>> GetStocksTracking()
         {
             string strquery = $@"SELECT
-	                                p.PartID, 
 	                                p.PartNo, 
 	                                p.PartName, 
 	                                c.CategoryID,
@@ -50,8 +50,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 	                                s.LastUpdated
                                 FROM Hydro_InventoryParts p
                                 LEFT JOIN Hydro_CategoryParts c ON c.CategoryID = p.CategoryID
-                                LEFT JOIN Hydro_Stocks s ON s.PartID = p.PartID
-                                ORDER BY p.PartID";
+                                LEFT JOIN Hydro_Stocks s ON s.PartNo = p.PartNo";
 
             return SqlDataAccess.GetData<StockPartsModel>(strquery);
         }
@@ -61,25 +60,25 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             throw new NotImplementedException();
         }
 
-        public async Task<bool> AddStocks(int ID, double Quan)
+        public async Task<bool> AddStocks(string partno, double Quan)
         {
-            var data = await GetStocksTracking() ?? new List<StockPartsModel>();  
-            var filterdata = data.FirstOrDefault(x => x.PartID == ID);  
+
+            var data = await GetStocksTracking() ?? new List<StockPartsModel>();
+            var filterdata = data.FirstOrDefault(x => x.PartNo == partno);
 
             double latestQty = filterdata.CurrentQty + Quan;
 
             // 1. Updates the Stocks Quantity 
             return await SqlDataAccess.UpdateInsertQuery($@"UPDATE Hydro_Stocks 
                                                 SET CurrentQty =@CurrentQty 
-                                                WHERE  PartID =@PartID",
+                                                WHERE  PartNo =@PartNo",
                                              new
                                              {
-                                                 PartID = ID,
+                                                 PartNo = partno,
                                                  CurrentQty = latestQty
                                              });
 
             // 2. Insert Transaction Table
-
 
         }
 

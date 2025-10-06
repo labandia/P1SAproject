@@ -784,6 +784,7 @@
     <Content Include="Content\fonts\Manrope-SemiBold.ttf" />
     <Content Include="Areas\Hydroponics\Views\Hydro\UserManage.cshtml" />
     <Content Include="Areas\Hydroponics\Views\Hydro\TransactionHistory.cshtml" />
+    <Content Include="Areas\Hydroponics\Views\Hydro\ChambersDetails.cshtml" />
     <None Include="Content\Images\.editorconfig" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\circularProgressBar.min.js" />

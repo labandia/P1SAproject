@@ -16,7 +16,7 @@
             <div class="stockGroup">
                 <label for="productName">Partname / Partno </label>
                 <div class="search-box">
-                    <input type="hidden" name="PartID" id="PartID">
+                    <input type="hidden" name="PartNo" id="PartNo">
                     <input style="width: 100%;" type="text" placeholder="Type Partno / Partname here ..." name="searchPartno" id="searchPartno" autocomplete="off">
                     <div class="namesdisplay"></div>
                 </div>
@@ -122,9 +122,9 @@
             }
 
             // 3. Filter the Data
-            let filterData = partlistData.filter(res => res.PartID == parseInt($("#PartID").val()));
+            let filterData = partlistData.filter(res => res.PartNo == $("#PartNo").val());
 
-            let AlreadyIn = additems.filter(res => res.PartID == parseInt($("#PartID").val()));
+            let AlreadyIn = additems.filter(res => res.PartNo == $("#PartNo").val());
 
             // Check if is already Insert to additems
             if (AlreadyIn.length > 0) {
@@ -137,7 +137,6 @@
             // set all values to a Object
             let obj = {
                 item: counter,
-                PartID: $("#PartID").val(),
                 PartName: filterData[0].PartName,
                 PartNo: filterData[0].PartNo,
                 CategoryName: filterData[0].CategoryName,
@@ -155,7 +154,7 @@
 
             $("#Quantity").val("");
             $("#searchPartno").val("");
-            $("#PartID").val("");
+            $("#PartNo").val("");
         } else {
             alert("Input Required");
         }
@@ -288,7 +287,7 @@
 
     function display(result) {
         const content = result.map((list) => {
-            return `<li onclick="selectinput(this)" data-id="${list.PartID}">
+            return `<li onclick="selectinput(this)" data-id="${list.PartNo}">
                  <p style='color: #222; font-weight: 600;' id='textselected'>${list.PartName ? list.PartName : "-"}</p>
                  <small> ${list.PartNo}</small>
                </li>`;
@@ -301,7 +300,7 @@
         const ID = list.getAttribute("data-id");
         let text = $("#textselected").text();
         partsID = ID;
-        $("#PartID").val(ID);
+        $("#PartNo").val(ID);
         $("#searchPartno").val(text);
         resultBox.innerHTML = '';
         resultBox.style.display = 'none';

@@ -176,6 +176,16 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         //----------------------------  CHAMBER LIST PAGE -----------------------------------------
         //----------------------------------------------------------------------------------------- 
         [JwtAuthorize]
+        public async Task<ActionResult> GetAllChambers()
+        {
+            var data = await _chambers.GetAllChambersDisplay() ?? new List<ChamberslistModel>();
+            if (data == null || !data.Any()) return JsonNotFound("No Chamber Data.");
+
+            return JsonSuccess(data, "Load Chamber List");
+        }
+
+
+        [JwtAuthorize]
         public async Task<ActionResult> GetAllChamberList(int chamber)
         {
             if (chamber <= 0)
@@ -274,7 +284,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
 
                 foreach (var item in items)
                 {
-                    await _stock.AddStocks(item.PartID, item.Quantity);
+                    await _stock.AddStocks(item.PartNo, item.Quantity);
                 }
 
                 return JsonCreated(true, "Add Stocks Successfully");
@@ -418,6 +428,15 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         }
         // GET: Hydroponics/Chambers
         public ActionResult Chambers() =>  View();
+        // GET: Hydroponics/OrderpageDetails
+        public ActionResult ChambersDetails(int chamberID)
+        {
+            if (chamberID == 0)
+            {
+                return RedirectToAction("Chambers", "Hydro", new { area = "Hydroponics" });
+            }
+            return View();
+        }
         // GET: Hydroponics/PartList
         public ActionResult PartList() => View();
         // GET: Hydroponics/UserManage

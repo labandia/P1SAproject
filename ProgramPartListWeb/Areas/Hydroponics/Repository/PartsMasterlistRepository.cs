@@ -2,6 +2,7 @@
 using ProgramPartListWeb.Areas.Hydroponics.Models;
 using ProgramPartListWeb.Helper;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace ProgramPartListWeb.Areas.Hydroponics.Repository
@@ -11,7 +12,6 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
         public async Task<IEnumerable<MasterlistPartsModel>> GetPartsMasterlist()
         {
             string strsql = $@"SELECT 
-	                            i.PartID,
 	                            i.PartNo,
 	                            i.PartName,
                                 c.CategoryID,
@@ -48,17 +48,18 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
         {
             // 1. Check and Insert A new Partnumber
             string partinsertquery = $@"UPDATE Hydro_InventoryParts 
-                                        SET PartNo =@PartNo, PartName =@PartName, CategoryID =@CategoryID, Supplier =@Supplier,
+                                        SET  PartName =@PartName, CategoryID =@CategoryID, Supplier =@Supplier,
                                             ImageParts =@ImageParts
-                                        WHERE PartID =@PartID";
+                                        WHERE PartNo =@PartNo";
+
+            Debug.WriteLine($@"Part-No : {p.PartNo} - Part Name : {p.PartName}");
             var insertparams = new
             {
                 PartNo = p.PartNo,
                 PartName = p.PartName,
                 CategoryID = p.CategoryID,
                 Supplier = p.Supplier,
-                ImageParts = p.ImageParts,
-                PartID = p.PartID
+                ImageParts = p.ImageParts
             };
 
             

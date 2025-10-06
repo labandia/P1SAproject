@@ -95,6 +95,25 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             return SqlDataAccess.GetData<RequestChambersDetailsModel>(strsql, new { OrderID = order });
         }
 
+        public async Task<IEnumerable<ChamberslistModel>> GetAllChambersDisplay()
+        {
+            string strsql = $@"SELECT 
+	                            cm.ChamberID,
+	                            cm.ChamberName,
+                                ROUND(SUM((c.UnitCost_PHP / 58) * c.QuantityPerChamber), 0) AS UnitCost_PHP,
+                                ROUND(SUM(c.QuantityPerChamber * c.UnitCost_PHP), 0) AS TotalPHPCost, 
+	                            MIN(FLOOR(ISNULL(s.CurrentQty,0) / c.QuantityPerChamber)) AS MaxBuildableChambers
+                            FROM Hydro_ChamberParts c
+                            INNER JOIN Hydro_InventoryParts i ON c.PartNo = i.PartNo
+                            INNER JOIN Hydro_CategoryParts cp ON cp.CategoryID = i.CategoryID
+                            INNER JOIN Hydro_ChamberMasterlist cm ON cm.ChamberID = c.ChamberID
+                            LEFT JOIN Hydro_Stocks s ON c.PartNo = s.PartNo
+                            GROUP BY cm.ChamberID, cm.ChamberID, cm.ChamberName";
+            return await SqlDataAccess.GetData<ChamberslistModel>(strsql, null);
+        }
+
+
+
         public async Task<ChambersProduce> GetTotalChamberProduce(int chamber)
         {
             string strsql = $@"SELECT 
@@ -103,7 +122,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                 MIN(FLOOR(ISNULL(s.CurrentQty,0) / cp.QuantityPerChamber)) AS MaxBuildableChambers
                             FROM Hydro_ChamberParts cp
                             INNER JOIN Hydro_ChamberMasterlist c ON cp.ChamberID = c.ChamberID
-                            LEFT JOIN Hydro_Stocks s ON cp.PartID = s.PartID
+                            LEFT JOIN Hydro_Stocks s ON cp.PartNo = s.PartNo
                             WHERE cp.ChamberID = @ChamberID
                             GROUP BY cp.ChamberID, c.ChamberName;";
             var result = await SqlDataAccess.GetData<ChambersProduce>(strsql, new { ChamberID = chamber });
@@ -117,7 +136,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                 ROUND(SUM((c.UnitCost_PHP / 58) * c.QuantityPerChamber), 0) AS USDTotal,
                                 ROUND(SUM(c.QuantityPerChamber * c.UnitCost_PHP), 0) AS PHPTotal
                             FROM Hydro_ChamberParts c
-                            INNER JOIN Hydro_InventoryParts i ON c.PartID = i.PartID
+                            INNER JOIN Hydro_InventoryParts i ON c.PartNo = i.PartNo
                             INNER JOIN Hydro_CategoryParts cp ON cp.CategoryID = i.CategoryID
                             INNER JOIN Hydro_ChamberMasterlist cm ON cm.ChamberID = c.ChamberID
                             WHERE c.ChamberID = @ChamberID;";
@@ -129,7 +148,6 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
         {
             string strsql = $@"SELECT
                                 c.ChamberPartID,
-	                            c.PartID,
 	                            c.ChamberID,
 	                            cm.ChamberName,
 	                            i.PartNo,
@@ -142,7 +160,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 	                            c.QuantityPerChamber * c.UnitCost_PHP as TotalPHPCost,
                                 i.ImageParts
                             FROM Hydro_ChamberParts c
-                            INNER JOIN Hydro_InventoryParts i ON c.PartID = i.PartID
+                            INNER JOIN Hydro_InventoryParts i ON c.PartNo = i.PartNo
                             INNER JOIN Hydro_CategoryParts cp ON cp.CategoryID = i.CategoryID
                             INNER JOIN Hydro_ChamberMasterlist cm ON cm.ChamberID = c.ChamberID
                             WHERE c.ChamberID =@ChamberID";
@@ -169,7 +187,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
         public async Task<bool> AddRequestChamber(RequestItem item)
         {
             // GENERATE A UNIQUE ID FOR THE ORDER
-            string OrderID = GlobalUtilities.GenerateID("REQ");
+            string OrderID = GlobalUtilities.GenerateID();
 
             string strsql = $@"INSERT INTO Hydro_Orders(OrderID, ChamberID, OrderedBy, Quantity, PIC, TargetDate)
                                VALUES(@OrderID, @ChamberID, @OrderedBy, @Quantity, @PIC, @TargetDate)";
@@ -254,5 +272,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
         {
             throw new NotImplementedException();
         }
+
+     
     }
 }

@@ -23,7 +23,7 @@
     <div class="sidebar">
         <div class="logo">
             <div class="logo-text">San <span>Hydro</span> </div>
-            <p style="font-weight: 400; font-size: .8rem; margin: 0; margin-top: -.3em; opacity: .6;"><small>application system</small></p>
+            <p style="font-weight: 400; font-size: .8rem; margin: 0; margin-top: -.3em; opacity: .6;"><small>Appliance system</small></p>
         </div>
 
         <div class="nav-menu">
@@ -198,7 +198,7 @@
                             $("#titlepage").html(`<i class="fa-solid fa-file-invoice"></i> Request Chambers`);
                             break;
                         case "chambers":
-                            $("#titlepage").html(`<i class="fa-solid fa-x-ray"></i> DFT Hydroponic Chamber`);
+                            $("#titlepage").html(`<i class="fa-solid fa-x-ray"></i>  Hydroponic Chamber`);
                             break;
                         case "inventorylist":
                             $("#titlepage").html(`<i class="fa-solid fa-boxes-packing"></i>  Stock Management`);
@@ -277,9 +277,6 @@
                         type: 'GET',
                         dataType: 'json'
                     });
-
-                    console.log(response.Success);
-
                 } catch (error) {
                     console.warn("Error fetching stock alerts:", error);
                 }
@@ -455,7 +452,7 @@
                         console.log("Stock alert email sent successfully.");
                     },
                     error: function (xhr, status, error) {
-                        console.log("Failed to send stock alert email: " + error);
+                        //console.log("Failed to send stock alert email: " + error);
                     }
                 });
             } catch (e) {

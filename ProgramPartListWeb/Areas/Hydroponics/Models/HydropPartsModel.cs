@@ -178,6 +178,44 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
     // ---------------------------
     //  MAIN CHAMBERS (PRODUCTS)
     // ---------------------------
+    public class ChamberslistModel
+    {
+        private int _ChamberID;
+        private string _ChamberName;
+        private double _UnitCost_PHP;
+        private double _TotalPHPCost;
+        private int _MaxBuildableChambers;
+
+        public int ChamberID
+        {
+            get => _ChamberID;
+            set => _ChamberID = value;
+        }
+        public string ChamberName
+        {
+            get => _ChamberName;
+            set => _ChamberName = value;
+        }
+
+        public double UnitCost_PHP
+        {
+            get => _UnitCost_PHP;
+            set => _UnitCost_PHP = value;
+        }
+        
+        public double TotalPHPCost
+        {
+            get => _TotalPHPCost;
+            set => _TotalPHPCost = value;
+        }
+
+        public int MaxBuildableChambers
+        {
+            get => _MaxBuildableChambers;
+            set => _MaxBuildableChambers = value;
+        }
+    }
+
     public class ChamberModel
     {
         private int _ChamberPartID;
@@ -286,7 +324,6 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
     // ---------------------------
     public class MasterlistPartsModel
     {
-        private int _PartID;
         private string _PartNo;
         private string _PartName;
         private int _CategoryID;
@@ -296,11 +333,6 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         private string _Unit;
 
 
-        public int PartID
-        {
-            get => _PartID;
-            set => _PartID = value;
-        }
         public string PartNo
         {
             get => _PartNo;
@@ -348,7 +380,6 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
     public class StockPartsModel
     {
         private int _StockID;
-        private int _PartID;
         private string _PartNo;
         private string _PartName;
         private int _CategoryID;
@@ -366,11 +397,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
             get => _StockID;
             set => _StockID = value;
         }
-        public int PartID
-        {
-            get => _PartID;
-            set => _PartID = value;
-        }
+       
         public string PartNo
         {
             get => _PartNo;
@@ -499,7 +526,6 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
 
     public class StockItem
     {
-        public int PartID { get; set; }
         public string PartName { get; set; }
         public string PartNo { get; set; }
         public string CategoryName { get; set; }

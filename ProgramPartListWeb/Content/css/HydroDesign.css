@@ -329,27 +329,27 @@
             border-bottom: none;
     }
 
-/* Content area */
-.content-wrapper {
-    padding: 20px;
-    min-height: calc(100vh - 4rem);
-}
+    /* Content area */
+    .content-wrapper {
+        padding: 20px;
+        min-height: calc(100vh - 4rem);
+    }
 
-/* Card styles */
-.card {
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    padding: 20px;
-    margin-bottom: 30px;
-}
+    /* Card styles */
+    .card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        padding: 20px;
+        margin-bottom: 30px;
+    }
 
-/* Table styles */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-}
+    /* Table styles */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
 
     th, td {
         padding: .5em 0 !important;
@@ -1379,4 +1379,90 @@ header .count2 {
 .stockGroup label{
     font-weight: 600;
     font-size: var(--small-font-size);
+}
+
+
+.chambercontain {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.chambercard {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.chambercard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+}
+        
+.route {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #2c3e50;
+}
+
+.annotation {
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.annotation-label {
+    color: #7f8c8d;
+}
+
+.annotation-value {
+    font-weight: bold;
+}
+
+
+.divider {
+    height: 1px;
+    background-color: #ecf0f1;
+    margin: 15px 0;
+}
+
+.shipment-number, .track {
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+
+.label {
+    color: #7f8c8d;
+    display: inline-block;
+    width: 120px;
+}
+
+.value {
+    font-weight: 600;
+}
+
+.chamberImage {
+    width: 70px;
+    height: 70px;
+}
+
+
+
+.breadcrumb {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.breadcrumb a {
+        color: #3498db;
+        text-decoration: none;
+}
+
+.breadcrumb a:hover {
+      text-decoration: underline;
 }

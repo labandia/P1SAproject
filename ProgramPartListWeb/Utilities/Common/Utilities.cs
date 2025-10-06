@@ -155,12 +155,12 @@ namespace ProgramPartListWeb.Helper
         }
 
         // GENERATE A UNIQUE ID 
-        // example : REQ_09272025_1134
-        public static string GenerateID(string prefix)
+        // example : 09272025_1134
+        public static string GenerateID()
         {
-            string datePart = DateTime.Now.ToString("MMddyyyy");
-            string timePart = DateTime.Now.ToString("mmssfff");
-            return $"{prefix}_{datePart}{timePart}";
+            string datePart = DateTime.Now.ToString("MMddyy");
+            string timePart = DateTime.Now.ToString("mmss");
+            return $"{datePart}{timePart}";
         }
 
         public static string UserRolesname(int roleint)

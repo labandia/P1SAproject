@@ -11,6 +11,9 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Interface
         Task<List<RequestChambersDetailsModel>> GetRequestDetailList(string order);
 
         // chambers part
+        Task<IEnumerable<ChamberslistModel>> GetAllChambersDisplay();
+
+
 
         Task<ChamberTotalPrice> GetTotalPriceData(int chamber);
         Task<ChambersProduce> GetTotalChamberProduce(int chamber);

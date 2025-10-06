@@ -5,175 +5,16 @@
 }
 
 
-<section class="InspectHead flex_space">
-    <div>
-        <h5 style="font-weight: 600;" id="ChamberNames">-</h5>
-        <div class="Pricedisplay">
-            <small style=" font-weight: 500;">Total PHP Cost:  </small><span id="TotalPH">$ 0.00</span> -
-            <small style="font-weight: 500;">Total USD Cost:  </small><span id="TotalUSD">₱ 0.00</span>
-        </div>
-        <p>Chamber Produce #: <span id="chamberproduce">-</span></p>
-        <div class="Inputcontainer" style="display: none;">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" placeholder="Search here ... " id="searchbox" autocomplete="off" />
-            <div class="line"></div>
-        </div>
-    </div>
+<section style="padding: 1em 0;">
+    <div class="chambercontain" id="chambercontain">
 
-    <div class="flex_align">
-        <div class="select-container">
-            <select id="chamberselect">
-            </select>
-        </div>
-        <button style="display: none;" id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-user-secret"></i> Add parts</button>
     </div>
 </section>
 
-<hr />
-<div class="flex_space">
-    <small>Part list Material :</small>
-</div>
-
-<div class="InspecTable">
-    <table>
-        <thead>
-            <tr>
-                <th style="width: 20%; text-align: left; padding-left: 1.5em;"> <span style="margin-left: .5em;">Part No. / Partname</span> </th>
-                <th><i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Supplier</span>  </th>
-                <th><i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Require Qty</span>  </th>
-                <th> <span style="margin-left: .5em;">Unit Cost</span>  </th>
-                <th> <span style="margin-left: .5em;">Total Cost</span>  </th>
-                <th> <span style="margin-left: .5em;">Action</span>  </th>
-            </tr>
-        </thead>
-        <tbody id="ChamberlistData">
-        </tbody>
-    </table>
-</div>
 
 
 
-@*=================================================================================*@
-@*=========================== ADD PARTS CHAMBER ===================================*@
-@*=================================================================================*@
-<div class="modal fade modal-l" id="AddChamberModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
 
-            <div class="modal-body modalwrap">
-                <div class="custom_modal_header">
-                    <h5>Add Chamber Parts</h5>
-
-                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
-                        <span>&times;</span>
-                    </button>
-                </div>
-
-
-                <form method="post" enctype="multipart/form-data" class="addformcontainer" id="addnewform" autocomplete="off">
-                    <div class="row">
-                        @*<div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
-                                <label>Employee ID </label> <br />
-                                <input type="text" placeholder="type Employee ID" name="Employee_ID" id="Employee_ID" required />
-                                <small class="text-danger" id="Noemployee"></small>
-                            </div>*@
-                        <div class="form_group col-12 col-sm-12 col-lg-12 mb-2">
-                            <label>Part no.  <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
-                            @*<input type="text" placeholder="N/A" name="Fullname" id="Fullname" />*@
-                            <div class="search-box">
-                                <input type="hidden" name="Employee_ID" id="Employee_ID">
-                                <input type="text" placeholder="Type Name or ID no." name="EmployeeSearch" id="EmployeeSearch" required>
-                                @*<div class="namesdisplay"></div>*@
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form_group col-12 col-sm-12">
-                        <label>Part Name.  <small style="color: #a81818; font-weight: 600;">*</small></label>
-                        <input type="text" placeholder="type Ojt registration No." name="OJTRegistration" id="OJTRegistration" required />
-                    </div>
-
-                    <div class="form_group col-12 col-sm-12 ">
-                        <label>Category <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
-                        <div class="select-container">
-                            <select id="addCategory">
-                                <option value="0">-- select Category --</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form_group col-12 col-sm-12 ">
-                        <label>Supplier <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
-                        <input type="text" placeholder="type Ojt registration No." name="OJTRegistration" id="OJTRegistration" required />
-                    </div>
-
-                    <div class="form_group col-12 col-sm-12 ">
-                        <label>Need Quantity <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
-                        <input type="text" placeholder="type Ojt registration No." name="OJTRegistration" id="OJTRegistration" required />
-                    </div>
-                    <div class="form_group col-12 col-sm-12 ">
-                        <label>Unit (ex. pcs, ml) <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
-                        <input type="text" placeholder="type Ojt registration No." name="OJTRegistration" id="OJTRegistration" required />
-                    </div>
-                    <div class="form_group col-12 col-sm-12 ">
-                        <label>PHP Cost <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
-                        <input type="text" placeholder="type Ojt registration No." name="OJTRegistration" id="OJTRegistration" required />
-                    </div>
-
-                    <div class="d-flex justify-content-between align-items-center mt-4">
-                        <div>
-                            <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
-                        </div>
-                        <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
-                    </div>
-                </form>
-            </div>
-
-        </div>
-    </div>
-</div>
-
-@*=================================================================================*@
-@*=========================== CHANGE UNIT COST  ===================================*@
-@*=================================================================================*@
-<div class="modal fade modal-m" id="ChangeCostModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-body modalwrap">
-                <div class="custom_modal_header">
-                    <div>
-                        <p id="disPartname" style='color: #195e8b; font-weight: 600;'>PartName :</p>
-                        <small id="disPartno">Partno: </small>
-                    </div>
-
-                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
-                        <span>&times;</span>
-                    </button>
-                </div>
-
-                <form id="changeCostform" class="addformcontainer">
-
-                    
-
-                    <p>Unit Dollar ($): <strong id="disUSD"></strong>  </p>
-
-                    <div class="form_group col-12 col-sm-12">
-                        <label for="">Unit Cost Pesos (₱) :  </label>
-                        <input type="hidden" name="ChamberPartID" id="ChamberPartID">
-                        <input type="text" name="UnitCost_PHP" id="UnitCost_PHP" onkeypress="return restrictChars(event)" autocomplete="off">
-                    </div>
-                    <div class="flex_end" id="editsdisplay">
-                        <button type="submit" class="primarybtn">
-                            <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
-                        </button>
-                    </div>
-                </form>
-
-
-            </div>
-
-        </div>
-    </div>
-</div>
 
 
 
@@ -182,69 +23,59 @@
 
 <script type="text/javascript">
     let chamberlist = [];
-    let loadData = [];
-    let partsID;
-    let userRole;
 
-    let totalUSD = 0.0;
+    const ChambercardDisplay = async () => {
+        let res = await FetchAuthenticate('@Url.Action("GetAllChambers", "Hydro")', {});
+        $("#chambercontain").empty();
 
-
-    // Modals
-    const addmodal = document.getElementById("Showadd");
-
-    // Forms
-    const addQuanforms = document.getElementById("AddQuantityform");
-    const changeCost = document.getElementById("changeCostform");
-
-    let TableDisplay = $("#ChamberlistData");
-    const resultBox = document.querySelector(".namesdisplay");
+        if (res && res.Success) {
+            chamberlist = res.Data;
+            //let priceobj = res.Data.TotalPrice;
+            $.each(chamberlist, function (index, row) {
+                  const imageUrl = '@Url.Content("~/Content/Images/HydroPhonics.png")';
 
 
-    const ChamberTable = async (ID) => {
-        loadingDisplay();
+                const cardHTML = `<div class="chambercard" id='editButton_${row.ChamberID}'>
+                                        <div class='flex_space'>
+                                            <div>
+                                                 <div class="route">${row.ChamberName}</div>
 
-        Loadingsteps(async () => {
-            let res = await FetchAuthenticate('@Url.Action("GetAllChamberList", "Hydro")', { chamber: ID });
-            if (res && res.Success) {
-                let priceobj = res.Data.TotalPrice;
+                                                 <div class="annotation">
+                                                     <span class="annotation-label">No# of Chamber Produce: </span>
+                                                     <span class="annotation-value">${row.MaxBuildableChambers}</span>
+                                                 </div>
+                                            </div>
+                                            <div class='chamberImage'>
+                                                   <img src="${imageUrl}" alt="Chamber Image" />
+                                            </div>
+                                        </div>
 
+                                        <div class="divider"></div>
 
-                // Renders the TableData
-                chamberlist = res.Data.GetList;
-                TableDisplay.empty(); // Removing the Loading Display
-                ChamberPagination(chamberlist, 'ChamberlistData');
+                                        <div class="shipment-number">
+                                            <span class="label">Total PHP Cost : </span>
+                                            <span class="value"> ₱ <strong style='font-size: 16px;'>${row.TotalPHPCost.toLocaleString('en-US') }</strong></span>
+                                        </div>
 
-
-                // Display total price
-                $("#TotalPH").text("$ " + priceobj.PHPTotal.toLocaleString('en-US'));
-                $("#TotalUSD").text("₱ " + priceobj.USDTotal.toLocaleString('en-US'));
-
-                // Display Produce Chambers
-                $("#chamberproduce").text(res.Data.Produce.MaxBuildableChambers);
-
-            } else {
-                const loadData = `<tr>
-                  <td colspan='9'>
-                      🔍 ${res.Message}
-                  </td>
-              </tr>`;
-
-                TableDisplay.empty();
-                TableDisplay.append(loadData);
-
-            }
-        });
+                                        <div class="track">
+                                            <span class="label">Total USD Cost :</span>
+                                            <span class="value">$ <strong style='font-size: 16px;'>${row.UnitCost_PHP.toLocaleString('en-US') }</strong></span>
+                                        </div>
+                                    </div>`
+                $("#chambercontain").append(cardHTML);
+            });
+        }
     }
 
-    const GetChamberDatalist = async () => {
-         let res = await FetchAuthenticate('@Url.Action("GetChamberDropDownList", "Hydro")', {});
-          if (res && res.Success) {
-              $("#ChamberNames").text(res.Data[0].ChamberName);
-              $.each(res.Data, function (index, row) {
-                  $("#chamberselect").append("<option value='" + row.ChamberID + "'>" + row.ChamberName + "</option>");
-              });
-          }
-     };
+    $(document).on('click', '.chambercard', function (e) {
+        e.stopPropagation(); // Prevent triggering the row click event
+        var rowId = $(this).attr('id');
+        var rowIndex = rowId.split('_').slice(1).join('_');
+        window.location.href = "/Hydroponics/Hydro/ChambersDetails?chamberID=" + rowIndex;
+    });
+
+
+
 
 
     const ActionRestrict = () => {
@@ -254,208 +85,7 @@
         }
     }
 
-    function ChamberPagination(dataArray, tableBodyId) {
-        let filteredData = [...dataArray];
 
-        // === Overlay setup (once) ===
-        if (!document.getElementById("imageOverlay")) {
-            $("body").append(`
-                 <div id="imageOverlay">
-                     <img id="overlayImage" src="" />
-                 </div>
-             `);
-        }
-
-
-        const renderTable = () => {
-            const tableBody = document.getElementById(tableBodyId);
-            tableBody.innerHTML = "";
-
-            $.each(filteredData, function (index, row) {
-                // Compute by USD dollar
-                let computeUSD = parseFloat(row.UnitCost_PHP) / 58;
-                var roundedNum = parseFloat(computeUSD.toFixed(2));
-                let totalUSDCost = roundedNum * row.QuantityPerChamber;
-
-                   // Image Display
-                 let imagePath = row.ImageParts
-                     ? `/Hydro/DisplaytheImage?filename=${encodeURIComponent(row.ImageParts)}`
-                    : '@Url.Content("~/Content/Images/no-image.png")';
-
-                 const rowHtml = `
-                         <tr class='rowClick' id='editButton_${row.PartID}'>
-                            <td data-cell="Images" style='display: flex;  text-align: left; border-top: 1px solid #dcdce2; border-bottom: none;'>
-                                    <div class="flex_align" style='padding-left: 1.5em; gap: 15px;'>
-                                      <img class="NoImages lazy"
-                                          src='@Url.Content("~/Content/Images/no-image.png")'
-                                          data-src="${imagePath}"
-                                          loading="lazy"
-                                          onerror="this.src='@Url.Content("~/Content/Images/no-image.png")'" />
-                                      <div>
-                                          <p style='color: #185d8b; font-weight: 600; '>${row.PartName ? row.PartName : "-"}</p>
-                                          <small> ${row.PartNo}</small>
-                                      </div>
-                                  </div>
-                             </td>
-
-                             <td data-cell="Supplier">${row.Supplier ? row.Supplier : "-"}</td>
-                             <td data-cell="Supplier" style='font-weight: 600;'>${row.RequireQty ? row.RequireQty : "-"}</td>
-                             <td data-cell="UnitUSD" style='text-align: center; '>
-                                 <p>Dollar ($): <strong> ${roundedNum}</strong>  </p>
-                                 <p>Pesos (₱): <strong> ${row.UnitCost_PHP}</strong>  </p>
-                              </td>
-                             <td data-cell="UnitUSD" style='text-align: center;'>
-                                 <p>Dollar ($): <strong> ${totalUSDCost.toFixed(2) }</strong>  </p>
-                                 <p>Pesos (₱):  <strong> ${row.TotalPHPCost}</strong>  </p>
-                             </td>
-                             <td data-cell="Delete" >
-                                  <div class='flex_center'>
-                                      <button  class='Editbtnbutton text-primary bg-white' id='editButton_${row.ChamberPartID}' ">
-                                         <i class="fa-solid fa-pen-to-square"></i>
-                                      </button>
-                                  </div>
-                             </td>
-                         </tr>
-                     `;
-                tableBody.insertAdjacentHTML("beforeend", rowHtml);
-
-                // Attach blur-up effect
-                const lazyImages = document.querySelectorAll("img.lazy[data-src]");
-                lazyImages.forEach(img => {
-                    const realSrc = img.getAttribute("data-src");
-                    img.onload = () => img.classList.add("loaded"); // smooth transition
-                    img.setAttribute("src", realSrc);
-                    img.removeAttribute("data-src");
-                });
-            });
-
-        };
-        // === CLICK HANDLER: Show overlay image ===
-        $(document).on("click", ".NoImages", function (e) {
-            e.stopPropagation();
-            let imgSrc = $(this).attr("src") || $(this).attr("data-src");
-            let $overlay = $("#imageOverlay");
-            let $overlayImg = $("#overlayImage");
-
-            $overlayImg.attr("src", imgSrc);
-            $overlay.show(0, function () {
-                $overlay.addClass("show");
-            });
-        });
-
-        // === Hide overlay when clicked ===
-        $(document).on("click", "#imageOverlay", function () {
-            let $overlay = $(this);
-            $overlay.removeClass("show");
-            setTimeout(() => {
-                $overlay.hide();
-            }, 400); // match CSS transition
-        });
-
-        // === Show Details ===
-        $(document).on('click', '.Editbtnbutton', function (e) {
-            e.stopPropagation(); // Prevent triggering the row click event
-            var rowId = $(this).attr('id');
-            var rowIndex = rowId.split('_')[1];
-            var filterdata = chamberlist.find(item => item.PartID === parseInt(rowIndex));
-
-            if (filterdata) {
-                // Compute by USD dollar
-                let computeUSD = parseFloat(filterdata.UnitCost_PHP) / 58;
-                var roundedNum = parseFloat(computeUSD.toFixed(2));
-
-
-                //UnitCost_PHP
-                $("#ChamberPartID").val(rowIndex);
-                $("#disPartname").text(filterdata.PartName);
-                $("#disPartno").text(filterdata.PartNo);
-                $("#disUSD").text(roundedNum.toFixed(2));
-                $("#UnitCost_PHP").val(filterdata.UnitCost_PHP);
-                $("#ChangeCostModal").modal("show");
-
-            }
-        });
-
-
-   
-        const searchTable = () => {
-            const query = $('#searchbox').val().toLowerCase() || '';
-            filteredData = dataArray.filter(item =>
-                item.PartName.toLowerCase().includes(query) || item.PartNo.toLowerCase().includes(query)
-            );
-
-            if (filteredData.length == 0) {
-                TableDisplay.empty();
-                const loadData = `<tr>
-                              <td colspan='4'>
-                                  <p id="loadingStepText">🔍 No Search found ..</p>
-                              </td>
-                          </tr>`;
-                TableDisplay.append(loadData);
-
-                return;
-            }
-
-
-            renderTable();
-        };
-
-        $('#searchbox').on('input', searchTable);
-
-        // Initial render
-        renderTable();
-    }
-
-
-   
-    const exchangeRate = 58; // 1 USD = 58.25 PHP
-
-    $("#UnitCost_PHP").on("input", function () {
-        let pesoValue = parseFloat($(this).val()) || 0;
-        let usdValue = pesoValue / exchangeRate;
-
-        $("#disUSD").text(usdValue.toFixed(2)); // show in dollars
-    });
-
-    $("#chamberselect").on('change', function (e) {
-        e.preventDefault();
-        $("#TotalPH").text("$ 0.00");
-        $("#TotalUSD").text("₱ 0.00");
-        $("#chamberproduce").text("-");
-
-        let ID = parseInt(e.target.value);
-        let Name = $(this).find("option:selected").text();
-        $("#ChamberNames").text(Name);
-        ChamberTable(ID);
-    });
-
-    const getStatusClass = (status) => {
-        switch (status) {
-            case "OK": return "StocksGood";
-            case "LOW STOCK": return "Low";
-            case "WARNING": return "Warning";
-            default: return "Incomplete";
-        }
-    };
-
-    addmodal.addEventListener('click', (e) => {
-        e.preventDefault();
-        $("#AddChamberModal").modal('show');
-    });
-
-    changeCost.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        let formData = new FormData(e.target);
-
-        let res = await postData('@Url.Action("ChangeCostChamber", "Hydro")', formData);
-        if (res && res.Success) {
-            let ID = parseInt($("#chamberselect").val());
-            ChamberTable(ID);
-            $("#ChangeCostModal").modal("hide");
-        }
-
-    });
 
 
     function loadingDisplay() {
@@ -499,9 +129,8 @@
             if (ActionRestrict() === false) {
             }
 
-            const [invent, drop] = await Promise.all([
-                GetChamberDatalist(),
-                ChamberTable(1)
+            const [card, invent, drop] = await Promise.all([
+                ChambercardDisplay()
             ]);
         } catch (error) {
             console.error("Failed to load page data:", error);

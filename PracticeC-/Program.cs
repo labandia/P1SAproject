@@ -96,11 +96,21 @@ namespace PracticeC_
             //Console.WriteLine(VerifyPassword("ErcXN5O+LcsWG5/cMOMWOg==:cZs22bq4HkpRKxiubSnaRQ0U4NIhfn7xUHi3De8cXWw=", "sdp1234a*"));
             //samplehash();
 
-            PingComputer("172.29.1.121");
+            //PingComputer("172.29.1.121");
+
+            Console.WriteLine("Generate ID : " + GenerateID(""));
+
 
             //ConvertstringtoBase64();
 
             Console.ReadKey();
+        }
+
+        public static string GenerateID(string prefix)
+        {
+            string datePart = DateTime.Now.ToString("MMddyy");
+            string timePart = DateTime.Now.ToString("mmss");
+            return $"{datePart}{timePart}";
         }
 
 

@@ -75,8 +75,8 @@
                        <div class="col-6">
                            <div class="form_group col-12 col-sm-12 col-lg-12 mb-2">
                                <label>Part No </label> <br />
-                               <input type="hidden" name="PartID" id="PartID" />
-                               <input type="text" placeholder="N/A" name="PartNo" id="PartNo" />
+                               <input type="hidden" name="PartNo" id="PartNo" />
+                               <input type="text" placeholder="N/A" name="PartNoDisplay" id="PartNoDisplay" disabled />
 
                            </div>
                            <div class="form_group col-12 col-sm-12">
@@ -143,7 +143,6 @@
             if (res && res.Success) {
                 partlistData = res.Data;
                 TableDisplay.empty(); // Removing the Loading Display
-
                 InventoryPagination(partlistData, 'PartlistData');
             } else {
                 const loadData = `<tr>
@@ -210,8 +209,8 @@
                     : '@Url.Content("~/Content/Images/no-image.png")';
 
 
-                  const rowHtml = `
-                         <tr data-id="${row.PartID}" data-category="${row.CategoryID}">
+                const rowHtml = `
+                         <tr data-id="${row.PartNo}" data-category="${row.CategoryID}">
                               <td style='text-align: left; padding-left: 1.5em;' data-cell="PartNo">
                                <div class="flex_align" style='padding-left: 1.5em; gap: 15px;'>
                                    <img class="NoImages lazy"
@@ -230,7 +229,7 @@
                              <td data-cell="Unit">${row.Unit ? row.Unit : "-"}</td>
                              <td data-cell="Delete" >
                               <div class='flex_center'>
-                                  <button  class='Editbtnbutton text-primary bg-white' id='editButton_${row.PartID}' ">
+                                  <button  class='Editbtnbutton text-primary bg-white' id='editButton_${row.PartNo}' ">
                                      <i class="fa-solid fa-pen-to-square"></i>
                                   </button>
                               </div>
@@ -268,10 +267,10 @@
             e.stopPropagation();
             var rowId = $(this).attr("id");
             var rowIndex = rowId.split("_")[1];
-            var selected = filteredData.find(item => item.PartID === parseInt(rowIndex));
+            var selected = filteredData.find(item => item.PartNo === rowIndex);
 
             if (selected) {
-                $("#PartID").val(selected.PartID);
+                $("#PartNoDisplay").val(selected.PartNo);
                 $("#PartNo").val(selected.PartNo);
                 $("#PartName").val(selected.PartName);
                 $("#Supplier").val(selected.Supplier);
@@ -363,6 +362,7 @@
 
         let formData = new FormData(e.target);
         const data = Object.fromEntries(formData);
+        console.log(data);
         let res = await postData('@Url.Action("EditPartslist", "Hydro")', formData);
          if (res && res.Success) {
               Swal.fire({

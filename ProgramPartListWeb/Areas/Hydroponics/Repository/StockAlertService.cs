@@ -132,7 +132,6 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                         var parameter = new
                         {
                             NotificationId = notifiResult,
-                            PartID = item.PartID,
                             CurrentQty = item.CurrentQty,
                             ReorderLevel = item.ReorderLevel,
                             WarningLevel = item.WarningLevel,

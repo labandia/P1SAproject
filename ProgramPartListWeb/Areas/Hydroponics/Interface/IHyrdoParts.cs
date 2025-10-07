@@ -7,6 +7,11 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Interface
     public interface IHyrdoParts
     {
         Task<List<StockPartsModel>> GetInventoryList();
+
+        Task<bool> AddInventory(AddInventoryModel model);
+
+        Task<bool> EditInventory(AddInventoryModel model, string partno);
+
         Task<bool> UpdateStocks(int ID, int Quan);
         Task<bool> UpdateWarning(int StockID, double WarningLevel);
     }

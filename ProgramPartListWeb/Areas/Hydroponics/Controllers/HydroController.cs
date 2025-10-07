@@ -246,9 +246,150 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<ActionResult> AddChamberparts(AddPartsChamberModel add)
+        {
+            try
+            {
+                bool result = await _chambers.AdditionalChambers(add);
+                if (!result) return JsonPostError("INSERT failed.", 500);
+                return JsonCreated(result, "INSERT new Parts Successfully");
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message, 500);
+            }
+        }
+
         //-----------------------------------------------------------------------------------------
-        //---------------------------- HYDRO STOCk INVENTORY PAGE ---------------------------------------
+        //---------------------------- HYDRO STOCk INVENTORY PAGE ---------------------------------
         //-----------------------------------------------------------------------------------------
+        [HttpPost]
+        public async Task<ActionResult> AddInventoryParts(AddInventoryModel model, HttpPostedFileBase partsimage)
+        {
+            string fullnamefile = "";
+
+            if (partsimage != null && partsimage.ContentLength > 0)
+            {
+                string exportFolder = @"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\HydroParts\";
+
+                if (!Directory.Exists(exportFolder))
+                    Directory.CreateDirectory(exportFolder);
+
+                // Get the file name and extension and store to fullpath 
+                // Create unique file name
+                string fileName = Path.GetFileNameWithoutExtension(partsimage.FileName);
+                string extension = Path.GetExtension(partsimage.FileName);
+
+
+                // Create unique filename (avoid overwriting existing files)
+                fullnamefile = fileName + "_" + Guid.NewGuid().ToString("N").Substring(0, 6) + extension;
+                Debug.WriteLine(fullnamefile);
+                string fullPath = Path.Combine(exportFolder, fullnamefile);
+
+
+                Debug.WriteLine(fullPath);
+                // Save the uploaded file to disk
+                partsimage.SaveAs(fullPath);
+
+                model.ImageParts = fullnamefile;
+
+            }
+
+            // Overwrite the image path if there is a new image upload to MastelistPartModel
+
+            bool result = await _hydro.AddInventory(model);
+            if (!result) return JsonPostError("Insert failed.", 500);
+
+            CacheHelper.Remove("MaterialPartlist");
+
+            return JsonCreated(model, "Edit Masterlist Successfully");
+
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> EditInventoryParts(HttpPostedFileBase Editpartsimage)
+        {
+            string fullnamefile = "";
+            string exportFolder = @"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\HydroParts\";
+
+            // Get existing image name from hidden field (if available)
+            string existingImage = Request.Form["ExistingImageParts"];
+            string Partno = Request.Form["TempPartno"];
+
+            // CASE 1: If a new image is uploaded
+            if (Editpartsimage != null && Editpartsimage.ContentLength > 0)
+            {
+
+                if (!Directory.Exists(exportFolder))
+                    Directory.CreateDirectory(exportFolder);
+
+            
+                string fileName = Path.GetFileNameWithoutExtension(Editpartsimage.FileName);
+                string extension = Path.GetExtension(Editpartsimage.FileName);
+
+
+                // Create unique filename (avoid overwriting existing files)
+                fullnamefile = fileName + "_" + Guid.NewGuid().ToString("N").Substring(0, 6) + extension;
+                string fullPath = Path.Combine(exportFolder, fullnamefile);
+
+
+                // Save the uploaded file to disk
+                Editpartsimage.SaveAs(fullPath);
+
+
+                if (!string.IsNullOrEmpty(existingImage))
+                {
+                    string oldFilePath = Path.Combine(exportFolder, existingImage);
+                    if (System.IO.File.Exists(oldFilePath))
+                    {
+                        try
+                        {
+                            System.IO.File.Delete(oldFilePath);
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine("Error deleting old image: " + ex.Message);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // If the item previously had an image, keep it
+                if (!string.IsNullOrEmpty(existingImage))
+                {
+                    fullnamefile = existingImage;
+                }
+                else
+                {
+                    // Otherwise, no image is available
+                    fullnamefile = "";
+                }
+            }
+
+
+
+            var editmodel = new AddInventoryModel
+            {
+                PartNo = Request.Form["EditPartNo"],
+                PartName = Request.Form["EditPartName"],
+                CategoryID = Convert.ToInt32(Request.Form["EditCategoryID"]),
+                Supplier = Request.Form["EditSupplier"],
+                Unit = Request.Form["EditUnit"],
+                Unit_Price = Convert.ToDouble(Request.Form["EditUnit_Price"]),
+                ImageParts = fullnamefile   // Save new or existing filename
+            };
+
+            bool result = await _hydro.EditInventory(editmodel, Partno);
+            if (!result) return JsonPostError("Insert failed.", 500);
+
+            CacheHelper.Remove("MaterialPartlist");
+
+            return JsonCreated(editmodel, "Edit Masterlist Successfully");
+
+        }
+
         [JwtAuthorize]
         public async Task<ActionResult> GetHydroInventory()
         {
@@ -360,7 +501,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
 
                 foreach (var item in allo)
                 {
-                    await _chambers.UpdatesRequestMaterials(item.OrderID, item.PartID, item.allocated);
+                    await _chambers.UpdatesRequestMaterials(item.OrderID, item.PartNo, item.allocated);
                     ID = item.OrderID;
                 }
 
@@ -439,6 +580,8 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         }
         // GET: Hydroponics/PartList
         public ActionResult PartList() => View();
+        // GET: Hydroponics/RequestStock
+        public ActionResult RequestStock() => View();
         // GET: Hydroponics/UserManage
         public ActionResult TransactionHistory() => View();
         // GET: Hydroponics/UserManage

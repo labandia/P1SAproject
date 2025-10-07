@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.UI.WebControls.WebParts;
 
 namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 {
@@ -48,7 +49,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                         ROUND(SUM((c.UnitCost_PHP / 58) * c.QuantityPerChamber), 0) AS USDTotal,
                                         ROUND(SUM(c.QuantityPerChamber * c.UnitCost_PHP), 0) AS PHPTotal
                                     FROM Hydro_ChamberParts c
-                                    INNER JOIN Hydro_InventoryParts i ON c.PartID = i.PartID
+                                    INNER JOIN Hydro_InventoryParts i ON c.PartNo = i.PartNo
                                     INNER JOIN Hydro_CategoryParts cp ON cp.CategoryID = i.CategoryID
                                     INNER JOIN Hydro_ChamberMasterlist cm ON cm.ChamberID = c.ChamberID
                                     GROUP BY c.ChamberID
@@ -77,7 +78,6 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
         {
             string strsql = $@"SELECT
                                 o.OrderDetailID,
-                                i.PartID,
 	                            i.PartNo,
 	                            i.PartName,
 	                            c.CategoryName,
@@ -88,9 +88,9 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 	                            o.Status as MaterialStatus,
                                 i.ImageParts
                             FROM Hydro_OrderDetails o
-                            INNER JOIN Hydro_InventoryParts i ON o.PartID = i.PartID
+                            INNER JOIN Hydro_InventoryParts i ON o.PartNo = i.PartNo
                             INNER JOIN Hydro_CategoryParts c ON i.CategoryID = c.CategoryID
-                            INNER JOIN Hydro_Stocks s ON s.PartID = o.PartID
+                            INNER JOIN Hydro_Stocks s ON s.PartNo = o.PartNo
                             WHERE o.OrderID = @OrderID";
             return SqlDataAccess.GetData<RequestChambersDetailsModel>(strsql, new { OrderID = order });
         }
@@ -100,8 +100,8 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             string strsql = $@"SELECT 
 	                            cm.ChamberID,
 	                            cm.ChamberName,
-                                ROUND(SUM((c.UnitCost_PHP / 58) * c.QuantityPerChamber), 0) AS UnitCost_PHP,
-                                ROUND(SUM(c.QuantityPerChamber * c.UnitCost_PHP), 0) AS TotalPHPCost, 
+                                ROUND(SUM((i.Unit_Price) * c.QuantityPerChamber), 0) AS UnitCost_PHP,
+                                ROUND(SUM(c.QuantityPerChamber * (i.Unit_Price * 58)), 0) AS TotalPHPCost, 
 	                            MIN(FLOOR(ISNULL(s.CurrentQty,0) / c.QuantityPerChamber)) AS MaxBuildableChambers
                             FROM Hydro_ChamberParts c
                             INNER JOIN Hydro_InventoryParts i ON c.PartNo = i.PartNo
@@ -133,8 +133,8 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
         public async Task<ChamberTotalPrice> GetTotalPriceData(int chamber)
         {
             string strsql = $@"SELECT 
-                                ROUND(SUM((c.UnitCost_PHP / 58) * c.QuantityPerChamber), 0) AS USDTotal,
-                                ROUND(SUM(c.QuantityPerChamber * c.UnitCost_PHP), 0) AS PHPTotal
+                                ROUND(SUM(i.Unit_Price * c.QuantityPerChamber), 0) AS USDTotal,
+                                ROUND(SUM(c.QuantityPerChamber * (i.Unit_Price * 58)), 0) AS PHPTotal
                             FROM Hydro_ChamberParts c
                             INNER JOIN Hydro_InventoryParts i ON c.PartNo = i.PartNo
                             INNER JOIN Hydro_CategoryParts cp ON cp.CategoryID = i.CategoryID
@@ -156,8 +156,8 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 	                            i.Supplier,
                                 c.QuantityPerChamber,
 	                            CONCAT(CAST(ROUND(c.QuantityPerChamber, 0) AS INT), ' ', i.Unit) AS RequireQty,
-	                            c.UnitCost_PHP,
-	                            c.QuantityPerChamber * c.UnitCost_PHP as TotalPHPCost,
+	                            i.Unit_Price as UnitCost_PHP,
+	                            c.QuantityPerChamber * (i.Unit_Price * 58) as TotalPHPCost,
                                 i.ImageParts
                             FROM Hydro_ChamberParts c
                             INNER JOIN Hydro_InventoryParts i ON c.PartNo = i.PartNo
@@ -210,13 +210,13 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
                 foreach (var cham in chamberParts)
                 {
-                    string insertDetails = $@"INSERT INTO Hydro_OrderDetails(OrderID, PartID, QtyUsed, RequiredQty)
-                               VALUES(@OrderID, @PartID, @QtyUsed, @RequiredQty)";
+                    string insertDetails = $@"INSERT INTO Hydro_OrderDetails(OrderID, PartNo, QtyUsed, RequiredQty)
+                               VALUES(@OrderID, @PartNo, @QtyUsed, @RequiredQty)";
 
                     await SqlDataAccess.UpdateInsertQuery(insertDetails, new
                     {
                         OrderID = OrderID,
-                        PartID = cham.PartID,
+                        PartNo = cham.PartNo,
                         QtyUsed = 0,
                         RequiredQty = item.Quantity > 1 ? cham.QuantityPerChamber * item.Quantity : cham.QuantityPerChamber
                     });
@@ -227,7 +227,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             return result;
         }
 
-        public async Task<bool> UpdatesRequestMaterials(string OrderID, int PartID, double allocated)
+        public async Task<bool> UpdatesRequestMaterials(string OrderID, string partno, double allocated)
         {
             string strsql = $@"UPDATE Hydro_OrderDetails
                                     SET QtyUsed = 
@@ -235,9 +235,9 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                             WHEN QtyUsed + @QtyUsed > RequiredQty THEN RequiredQty
                                             ELSE QtyUsed + @QtyUsed
                                         END
-                                    WHERE OrderID = @OrderID AND PartID =@PartID;";
+                                    WHERE OrderID = @OrderID AND PartNo =@PartNo;";
 
-            bool result = await SqlDataAccess.UpdateInsertQuery(strsql, new { OrderID = OrderID, PartID = PartID, QtyUsed = allocated });
+            bool result = await SqlDataAccess.UpdateInsertQuery(strsql, new { OrderID = OrderID, PartNo = partno, QtyUsed = allocated });
 
             if (result)
             {
@@ -250,17 +250,29 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                         WHEN CurrentQty - @QtyUsed < 0 THEN 0.0
                                         ELSE CurrentQty - @QtyUsed
                                     END
-                                WHERE PartID =@PartID";
+                                WHERE PartNo =@PartNo";
 
-                await SqlDataAccess.UpdateInsertQuery(updateStocks, new { PartID = PartID, QtyUsed = allocated });
+                await SqlDataAccess.UpdateInsertQuery(updateStocks, new { PartNo = partno, QtyUsed = allocated });
             }
 
             return result;
         }
 
-        public Task<bool> AdditionalChambers()
+        public Task<bool> AdditionalChambers(AddPartsChamberModel add)
         {
-            throw new NotImplementedException();
+            string insertStockQuery = $@"INSERT INTO Hydro_ChamberParts 
+                                         (ChamberID, PartNo, QuantityPerChamber, UnitCost_PHP) 
+                                         VALUES 
+                                         (@ChamberID, @PartNo, @QuantityPerChamber, @UnitCost_PHP)";
+            var stockPramers = new
+            {
+                add.PartNo,
+                add.QuantityPerChamber,
+                add.UnitCost_PHP,
+                add.ChamberID
+            };
+
+            return SqlDataAccess.UpdateInsertQuery(insertStockQuery, stockPramers);
         }
 
         public Task<bool> Deletechambers()

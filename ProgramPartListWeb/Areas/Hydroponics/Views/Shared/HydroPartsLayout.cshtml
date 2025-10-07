@@ -38,16 +38,20 @@
             </a>
             <a href="/Hydroponics/Hydro/Inventorylist" class="nav-item">
                 <i class="fas fa-warehouse"></i>
-                <span class="nav-text">Manage Stocks</span>
+                <span class="nav-text">Inventory</span>
             </a>
-            <a href="/Hydroponics/Hydro/PartList" class="nav-item">
-                <i class="fa-solid fa-table-list"></i>
-                <span class="nav-text">Parts List</span>
+            <a href="/Hydroponics/Hydro/RequestStock" class="nav-item">
+                <i class="fas fa-clipboard-list"></i>
+                <span class="nav-text">Request Stocks</span>
             </a>
+            @*<a href="/Hydroponics/Hydro/PartList" class="nav-item">
+            <i class="fa-solid fa-table-list"></i>
+            <span class="nav-text">Parts List</span>
+        </a>*@
             @*<a href="/Hydroponics/Hydro/TransactionHistory" class="nav-item">
-                <i class="fa-solid fa-clock-rotate-left"></i>
-                <span class="nav-text">Transaction History</span>
-            </a>*@
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <span class="nav-text">Transaction History</span>
+        </a>*@
             <a href="/Hydroponics/Hydro/UserManage" class="nav-item">
                 <i class="fas fa-users"></i>
                 <span class="nav-text">Manage Users</span>
@@ -201,10 +205,13 @@
                             $("#titlepage").html(`<i class="fa-solid fa-x-ray"></i>  Hydroponic Chamber`);
                             break;
                         case "inventorylist":
-                            $("#titlepage").html(`<i class="fa-solid fa-boxes-packing"></i>  Stock Management`);
+                            $("#titlepage").html(`<i class="fa-solid fa-boxes-packing"></i>  Inventory Management`);
                             break;
                         case "partlist":
                             $("#titlepage").html(`<i class="fa-solid fa-table-list"></i> Parts Masterlist`);
+                            break;
+                        case "RequestStock":
+                            $("#titlepage").html(`<i class="fas fa-clipboard-list"></i> Stock Requests`);
                             break;
                         case "transactionhistory":
                             $("#titlepage").html(`<i class="fa-solid fa-clock-rotate-left"></i> Transaction History`);
@@ -213,7 +220,7 @@
                             $("#titlepage").html(`<i class="fas fa-users"></i>  User Management`);
                             break;
                     }
-
+                    
                 }
             });
         });

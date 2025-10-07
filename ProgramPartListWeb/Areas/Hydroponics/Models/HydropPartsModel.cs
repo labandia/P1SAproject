@@ -154,7 +154,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
     public class AllocationRequest
     {
         private string _OrderID;
-        private int _PartID;
+        private string _PartNo;
         private double _allocated;
 
         public string OrderID
@@ -163,10 +163,10 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
             set => _OrderID = value;
         }
 
-        public int PartID
+        public string PartNo
         {
-            get => _PartID;
-            set => _PartID = value;
+            get => _PartNo;
+            set => _PartNo = value;
         }
 
         public double allocated
@@ -219,7 +219,6 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
     public class ChamberModel
     {
         private int _ChamberPartID;
-        private int _PartID;
         private int _ChamberID;
         private string _ChamberName;
         private string _PartNo;
@@ -239,11 +238,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
             set => _ChamberPartID = value;
         }
 
-        public int PartID
-        {
-            get => _PartID;
-            set => _PartID = value;
-        }
+       
         public int ChamberID
         {
             get => _ChamberID;
@@ -391,6 +386,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         private double _WarningLevel;
         private string _Status;
         private string _ImageParts;
+        private double _Unit_Price;
 
         public int StockID
         {
@@ -458,6 +454,11 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         {
             get => _ImageParts;
             set => _ImageParts = value;
+        }
+        public double Unit_Price
+        {
+            get => _Unit_Price;
+            set => _Unit_Price = value;
         }
     }
 

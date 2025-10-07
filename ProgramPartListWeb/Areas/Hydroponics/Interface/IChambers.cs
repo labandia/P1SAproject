@@ -28,10 +28,10 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Interface
         Task<bool> AddRequestChamber(RequestItem item);
 
       
-        Task<bool> UpdatesRequestMaterials(string OrderID, int PartID, double allocated);
+        Task<bool> UpdatesRequestMaterials(string OrderID, string partno, double allocated);
 
 
-        Task<bool> AdditionalChambers();
+        Task<bool> AdditionalChambers(AddPartsChamberModel add);
         Task<bool> EditChambers();
         Task<bool> Deletechambers();
     }

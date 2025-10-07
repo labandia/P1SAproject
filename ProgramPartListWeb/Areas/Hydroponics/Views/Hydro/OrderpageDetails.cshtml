@@ -290,7 +290,7 @@
     // Populate the required parts table
      const populateRequiredTable = async () => {
 
-        let res = await FetchAuthenticate('@Url.Action("GetRequestDetails", "Hydro")', { orderID: ID });
+       let res = await FetchAuthenticate('@Url.Action("GetRequestDetails", "Hydro")', { orderID: ID });
         if (res && res.Success) {
             requestData = res.Data;
             // FROM COMPLETE DATAW
@@ -318,7 +318,6 @@
             tbody.innerHTML = '';
             NotCompletedData.forEach(part => {
                 const row = document.createElement('tr');
-                row.setAttribute('data-ID', part.PartID);
                 row.setAttribute('data-part', part.PartNo);
                 row.setAttribute('data-remain', part.RemainQty);
                 row.setAttribute('data-required', part.RequiredQty);
@@ -386,7 +385,6 @@
         const row = e.target.closest('tr');
         if (!row) return;
 
-        const partID = row.getAttribute('data-ID');
         const partNumber = row.getAttribute('data-part');
         const required = parseFloat(row.getAttribute('data-required'));
         const available = parseFloat(row.getAttribute('data-available'));
@@ -398,17 +396,17 @@
             return;
         }
 
-        allocatePart(partID, partNumber, required, available, remainTable);
+        allocatePart(partNumber, required, available, remainTable);
     }
     // Allocate a part to the order
-    function allocatePart(ID, partNumber, required, available, remainTable) {
+    function allocatePart(partNumber, required, available, remainTable) {
 
-        const partData = requestData.find(p => p.PartID === parseInt(ID));
+        const partData = requestData.find(p => p.PartNo === partNumber);
         if (!partData) return;
 
         // Initialize if not already allocated
-        if (!allocatedParts[ID]) {
-            allocatedParts[ID] = 0;
+        if (!allocatedParts[partNumber]) {
+            allocatedParts[partNumber] = 0;
         }
 
 
@@ -421,7 +419,7 @@
         const maxAllocatable = Math.min(remainQty, availableQty);
         // Check if we can allocate more
         if (maxAllocatable > 0) {
-            allocatedParts[ID] = roundToStep(maxAllocatable);
+            allocatedParts[partNumber] = roundToStep(maxAllocatable);
             updateAllocatedTable();
             updateRequiredTableStyles();
             //updateCounts();
@@ -441,34 +439,23 @@
         const tbody = document.querySelector('#allocatedTable tbody');
         tbody.innerHTML = '';
 
-        for (const ID in allocatedParts) {
-            if (allocatedParts[ID] > 0) {
-                const partData = requestData.find(p => p.PartID === parseInt(ID));
+        for (const partNumber in allocatedParts) {
+            if (allocatedParts[partNumber] > 0) {
+                const partData = requestData.find(p => p.PartNo === partNumber);
                 const row = document.createElement('tr');
 
 
                 row.innerHTML = `
-                      <td>${partData.PartID}</td>
-                     <td style='text-align: left; padding-left: 1.5em;'>
-                       
-                        <p style="
-                              color: #185d8b;
-                              font-weight: 600;
-                              max-width: 200px;   /* set your limit */
-                              white-space: nowrap;
-                              overflow: hidden;
-                              text-overflow: ellipsis;
-                            " title="${partData.PartName}">
-                              ${partData.PartName ? partData.PartName : "-"}
-                            </p>
-                        <small> ${partData.PartNo}</small>
+                      <td>0</td>
+                     <td style='text-align: left;'>
+                        ${partData.PartNo}
                      </td>
-                     <td  class="qty-cell">${allocatedParts[ID]}</td>
+                     <td  class="qty-cell">${allocatedParts[partNumber]}</td>
                      <td>
                          <div class="action-buttons">
-                             <button class="btn btn-remove" onclick="removePart('${ID}')"><i class="fa-regular fa-circle-xmark"></i></button>
-                             <button class="btn btn-decrement" onclick="decrementPart('${ID}')"><i class="fa-solid fa-minus"></i></button>
-                             <button class="btn btn-increment" onclick="incrementPart('${ID}')"><i class="fa-solid fa-plus"></i></button>
+                             <button class="btn btn-remove" onclick="removePart('${partNumber}')"><i class="fa-regular fa-circle-xmark"></i></button>
+                             <button class="btn btn-decrement" onclick="decrementPart('${partNumber}')"><i class="fa-solid fa-minus"></i></button>
+                             <button class="btn btn-increment" onclick="incrementPart('${partNumber}')"><i class="fa-solid fa-plus"></i></button>
 
                          </div>
                      </td>
@@ -550,15 +537,15 @@
          TableDisplay.append(loadData);
      }
 
-     function incrementPart(ID) {
-         const partData = requestData.find(p => p.PartID === parseInt(ID));
+    function incrementPart(partnum) {
+        const partData = requestData.find(p => p.PartNo === partnum);
          if (!partData) return;
 
          const remain = partData.RemainQty;
          const available = partData.CurrentQty;
-         const allocated = allocatedParts[ID] || 0;
+         const allocated = allocatedParts[partnum] || 0;
          if (allocated < remain && allocated < available) {
-             allocatedParts[ID]++;
+             allocatedParts[partnum]++;
 
              updateAllocatedTable();
              updateRequiredTableStyles();
@@ -569,15 +556,15 @@
          }
      }
 
-     function decrementPart(ID) {
-         if (allocatedParts[ID] > 1) {
-             allocatedParts[ID]--;
+    function decrementPart(partnum) {
+        if (allocatedParts[partnum] > 1) {
+            allocatedParts[partnum]--;
              updateAllocatedTable();
              updateRequiredTableStyles();
              //updateCounts();
              //updateProgress();
          } else {
-             removePart(ID);
+            removePart(partnum);
          }
      }
      // Get lengths for all orders
@@ -596,17 +583,6 @@
 
      async function completeOrder() {
          const allocations = getAllocatedPartsFromTable();
-
-         // ✅ Check if no allocations exist
-         //if (!allocations.length || allocations.every(a => !a.allocated || a.allocated <= 0)) {
-         //    Swal.fire({
-         //        title: "No Allocations",
-         //        text: "Please allocate parts before Saving the details.",
-         //        icon: "warning",
-         //        confirmButtonText: "OK"
-         //    });
-         //    return;
-         //}
 
          let result = await fetch('@Url.Action("UpdatesRequestMaterialsV2", "Hydro")', {
              method: "POST",
@@ -639,34 +615,6 @@
              });
          }
 
-         //const allocatedCount = Object.keys(allocatedParts).filter(p => allocatedParts[p] > 0).length;
-
-         //if (allocatedCount === 0) {
-         //    alert('No parts have been allocated. Please allocate parts before completing the order.');
-         //    return;
-         //}
-
-         //// Check if all required parts are fully allocated
-         //let allFullyAllocated = true;
-         //let message = '';
-
-         //requestData.forEach(part => {
-         //    const allocated = allocatedParts[part.partID] || 0;
-         //    if (allocated < part.RequiredQty) {
-         //        allFullyAllocated = false;
-         //        message += `• ${part.partNumber}: ${allocated}/${part.RequiredQty} allocated\n`;
-         //    }
-         //});
-
-         //if (allFullyAllocated) {
-         //    alert('Order completed successfully! All parts have been fully allocated.');
-         //    // In a real app, you would submit the order here
-         //} else {
-         //    if (confirm(`Some parts are not fully allocated. Proceed anyway?\n\n${message}`)) {
-         //        alert('Order completed with partial allocation.');
-         //        // In a real app, you would submit the order here
-         //    }
-         //}
     }
 
     // Generic table search function
@@ -716,16 +664,20 @@
         const rows = document.querySelectorAll("#requiredTable tbody tr");
 
         rows.forEach(row => {
-            const partID = row.getAttribute('data-ID');
             const partNumber = row.getAttribute('data-part');
             const required = parseFloat(row.getAttribute('data-required'));
             const available = parseFloat(row.getAttribute('data-available'));
             const remainTable = parseFloat(row.getAttribute('data-remain'));
 
             if (available > 0 && remainTable > 0) {
-                allocatePart(partID, partNumber, required, available, remainTable);
+                allocatePart(partNumber, required, available, remainTable);
             }
         });
+
+
+
+
+
 
     });
     function roundToStep(val) {
@@ -740,12 +692,12 @@
             const cells = row.querySelectorAll('td');
             // ✅ Ensure at least 3 cells exist
             if (cells.length >= 3) {
-                const partId = parseInt(cells[0].textContent.trim(), 10) || 0;
+                const PartNo = cells[1].textContent.trim() || '';
                 const allocated = parseFloat(cells[2].textContent.trim()) || 0;
 
                 result.push({
                     OrderID: ID,
-                    PartID: partId,
+                    PartNo: PartNo,
                     allocated: allocated
                 });
             }

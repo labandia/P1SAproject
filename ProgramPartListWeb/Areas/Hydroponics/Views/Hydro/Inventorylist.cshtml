@@ -11,8 +11,8 @@
             <input type="text" placeholder="Search here ... " id="searchbox" autocomplete="off" />
             <div class="line"></div>
         </div>
-        
-      
+
+
     </div>
 
     <div class="flex_align">
@@ -21,8 +21,8 @@
                 <option value="0">-- Category --</option>
             </select>
         </div>
-        <button style="width: 100%; display: none;" id="ShowStocks" class="primarybtn" type="button"><i class="fa-solid fa-user-secret"></i> Add Stocks</button>
-        <button style="width: 100%;" id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-box-archive"></i> Add Stocks</button>
+        <button style="width: 100%; display: none;" id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-box-archive"></i> Add Stocks</button>
+        <button style="width: 100%;" id="AddItem" class="primarybtn" type="button"><i class="fa-solid fa-box-archive"></i>Add Parts</button>
     </div>
 </section>
 <hr />
@@ -50,12 +50,248 @@
                 <th> <i class="fa-solid fa-box-open"></i>  <span style="margin-left: .5em;">Current Stock</span>  </th>
                 <th> <i class="fa-regular fa-square-check"></i> <span style="margin-left: .5em;">Mininum Stock</span>  </th>
                 <th style="width: 15%;"> <i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Status</span>  </th>
-              
+
             </tr>
         </thead>
         <tbody id="InventorylistData">
         </tbody>
     </table>
+</div>
+
+@*=================================================================================*@
+@*=========================== Add NEW INVENTORY PARTS =============================*@
+@*=================================================================================*@
+<div class="modal fade modal-xl" id="AddnewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Add new Inventory Parts</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <form id="addinventform" class="addformcontainer">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="upload-container flex_center" id="upload-container">
+                                <div class="upload-icon">📷</div>
+                                <div class="file-info">Upload a photo of Parts.<br>Max file size: 1MB<br>png, jpg, jpeg, bmp, gif</div>
+                                <input type="file" id="partsimage" name="partsimage" accept=".png,.jpg,.jpeg" class="hidden">
+                                <button class="upload-btn" id="uploadBtn">Upload Photo</button>
+
+
+                            </div>
+                            <p>Image Preview : </p>
+                            <div class="preview-container" id="previewContainer">
+                                <img id="previewImage" class="preview-image" src="" alt="Image Preview">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form_group col-12 col-sm-12 col-lg-12 mb-2">
+                                <label>Part Number </label> <br />
+                                <input type="text" name="PartNo" id="PartNo" placeholder="Enter Part number " required />
+
+                            </div>
+                            <div class="form_group col-12 col-sm-12">
+                                <label for="">Part Name  </label>
+                                <input type="text" name="PartName" id="PartName" autocomplete="off" required>
+                            </div>
+
+                            <div class="form_group col-12 col-sm-12">
+                                <label for="">Category  </label>
+                                <div class="select-container">
+                                    <select id="CategoryID" name="CategoryID">
+                                        <option value="0">-- Category --</option>
+                                        <option value="1">
+                                            Enclosure Parts
+                                        </option>
+                                        <option value="2">
+                                            Electrical Parts
+
+                                        </option>
+                                        <option value="3">
+                                            Sanyo Denki
+                                        </option>
+                                        <option value="4">
+                                            Other Parts
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form_group col-12 col-sm-12">
+                                <label>Unit *</label>
+                                <select id="Unit" name="Unit" required>
+                                    <option value="pc">Piece (pc)</option>
+                                    <option value="m">Meter (m)</option>
+                                    <option value="liters">Liters</option>
+                                    <option value="ml">Milliliters (ml)</option>
+                                    <option value="pack">Pack</option>
+                                    <option value="set">Set</option>
+                                </select>
+                            </div>
+
+                            <div class="form_group col-12 col-sm-12">
+                                <label for="">Supplier  </label>
+                                <input type="text" name="Supplier" id="Supplier" autocomplete="off" required>
+                            </div>
+
+                            <div class="form_group col-12 col-sm-12">
+                                <label>Reorder Level</label>
+                                <input type="number" id="ReorderLevel" name="ReorderLevel" step="0.01" min="0" value="5">
+                            </div>
+
+                            <div class="form_group col-12 col-sm-12">
+                                <label>Initial Stock *</label>
+                                <input type="number" id="CurrentQty" name="CurrentQty" step="0.01" min="0" required>
+                            </div>
+
+                            <div class="form_group col-12 col-sm-12">
+                                <label>Warning Level</label>
+                                <input type="number" id="WarningLevel" name="WarningLevel" step="0.01" min="0" value="10">
+                            </div>
+
+                            <div class="form_group col-12 col-sm-12">
+                                <label>Unit Price</label>
+                                <input type="number" id="Unit_Price" name="Unit_Price" step="0.01" min="0" value="10">
+                            </div>
+
+
+                            <div class="flex_end mt-4">
+
+                                <button type="submit" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </form>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@*=================================================================================*@
+@*=========================== EDIT INVENTORY PARTS ================================*@
+@*=================================================================================*@
+<div class="modal fade modal-xl" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Update Stock Level</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <form id="EditInventform" class="addformcontainer">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="upload-container flex_center" id="upload-container">
+                                <div class="upload-icon">📷</div>
+                                <div class="file-info">Upload a photo of Parts.<br>Max file size: 1MB<br>png, jpg, jpeg, bmp, gif</div>
+                                <input type="file" id="Editpartsimage" name="Editpartsimage" accept=".png,.jpg,.jpeg" class="hidden">
+                                <button class="Editupload-btn" id="EdituploadBtn">Upload Photo</button>
+
+
+                            </div>
+                            <p>Image Preview : </p>
+                            <div class="Editpreview-container" id="EditpreviewContainer">
+                                <img id="EditpreviewImage" class="Editpreview-image" src="" alt="Image Preview">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form_group col-12 col-sm-12 col-lg-12 mb-2">
+                                <label>Part Number </label> <br />
+                                <input type="hidden" name="ExistingImageParts" id="ExistingImageParts" />
+                                <input type="hidden" name="TempPartno" id="TempPartno" />
+                                <input type="text" name="EditPartNo" id="EditPartNo" placeholder="Enter Part number " />
+
+                            </div>
+                            <div class="form_group col-12 col-sm-12">
+                                <label for="">Part Name  </label>
+                                <input type="text" name="EditPartName" id="EditPartName" autocomplete="off">
+                            </div>
+
+                            <div class="form_group col-12 col-sm-12">
+                                <label for="">Category  </label>
+                                <div class="select-container">
+                                    <select id="EditCategoryID" name="EditCategoryID">
+                                        <option value="0">-- Category --</option>
+                                        <option value="1">
+                                            Enclosure Parts
+                                        </option>
+                                        <option value="2">
+                                            Electrical Parts
+
+                                        </option>
+                                        <option value="3">
+                                            Sanyo Denki
+                                        </option>
+                                        <option value="4">
+                                            Other Parts
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form_group col-12 col-sm-12">
+                                <label>Unit *</label>
+                                <select id="Unit" name="EditUnit" required>
+                                    <option value="pc">Piece (pc)</option>
+                                    <option value="m">Meter (m)</option>
+                                    <option value="liters">Liters</option>
+                                    <option value="ml">Milliliters (ml)</option>
+                                    <option value="pack">Pack</option>
+                                    <option value="set">Set</option>
+                                </select>
+                            </div>
+
+                            <div class="form_group col-12 col-sm-12">
+                                <label for="">Supplier  </label>
+                                <input type="text" name="EditSupplier" id="EditSupplier" autocomplete="off">
+                            </div>
+
+                            <div class="form_group col-12 col-sm-12">
+                                <label>Reorder Level</label>
+                                <input type="number" id="EditReorderLevel" name="ReorderLevel" step="0.01" min="0" value="5">
+                            </div>
+
+
+                            <div class="form_group col-12 col-sm-12">
+                                <label>Warning Level</label>
+                                <input type="number" id="EditWarningLevel" name="WarningLevel" step="0.01" min="0" value="10">
+                            </div>
+
+                            <div class="form_group col-12 col-sm-12">
+                                <label>Unit Price</label>
+                                <input type="number" id="EditUnit_Price" name="EditUnit_Price" step="0.01" min="0" >
+                            </div>
+
+                            <div class="flex_end mt-4">
+
+                                <button type="submit" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </form>
+
+
+            </div>
+
+        </div>
+    </div>
 </div>
 
 
@@ -107,6 +343,8 @@
     const addmodal = document.getElementById("Showadd");
 
     // Forms
+    const addparts = document.getElementById("addinventform");
+    const editparts = document.getElementById("EditInventform");
     const addQuanforms = document.getElementById("AddQuantityform");
     const changeWarn = document.getElementById("changeWarning");
 
@@ -184,8 +422,8 @@
                     : '@Url.Content("~/Content/Images/no-image.png")';
 
 
-                    
-              
+
+
 
                    const rowHtml = `
                                      <tr data-id="${row.PartID}" data-category="${row.CategoryID}" class='rowClick' id='editButton_${row.PartID}'>
@@ -274,9 +512,34 @@
 
             var filterdata = Inventlist.find(item => item.StockID === parseInt(rowIndex));
             if (filterdata) {
-                $("#StockID").val(rowIndex);
-                $("#WarningLevel").val(filterdata.WarningLevel);
-                $("#ChangeCostModal").modal("show");
+                let imagePath = filterdata.ImageParts
+                    ? `/Hydro/DisplaytheImage?filename=${encodeURIComponent(filterdata.ImageParts)}`
+                     : '@Url.Content("~/Content/Images/no-image.png")';
+
+
+                $("#TempPartno").val(filterdata.PartNo);
+                $("#EditPartNo").val(filterdata.PartNo);
+                $("#EditPartName").val(filterdata.PartName);
+                $("#EditCategoryID").val(filterdata.CategoryID);
+                $("#EditUnit").val(filterdata.Unit);
+                $("#EditSupplier").val(filterdata.Supplier);
+                $("#EditReorderLevel").val(filterdata.ReorderLevel);
+                $("#EditWarningLevel").val(filterdata.WarningLevel);
+                $("#ExistingImageParts").val(filterdata.ImageParts);
+                $("#EditUnit_Price").val(filterdata.Unit_Price);
+
+                // ✅ Update the preview image
+                $("#EditpreviewImage").attr("src", imagePath);
+
+
+                // ✅ Optional: If you want to handle broken images gracefully
+                $("#EditpreviewImage").on("error", function() {
+                    $(this).attr("src", '@Url.Content("~/Content/Images/no-image.png")');
+                });
+
+                $("#EditModal").modal("show");
+
+
 
             }
 
@@ -305,7 +568,7 @@
 
 
 
- 
+
 
     changeWarn.addEventListener('submit', async function (e) {
         e.preventDefault();
@@ -326,6 +589,51 @@
 
     });
 
+
+    addparts.addEventListener('submit', async function (e) {
+        e.preventDefault();
+         let formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+        let res = await postData('@Url.Action("AddInventoryParts", "Hydro")', formData);
+          if (res && res.Success) {
+               Swal.fire({
+                   title: "Success",
+                   text: res.Message,
+                   icon: "success",
+                   showConfirmButton: false,
+                   timer: 1500
+               }).then(() => {
+                   InventoryTable();
+                   e.target.reset();
+                   document.getElementById("partsimage").value = "";
+
+                   // Hide modal
+                   $("#AddnewModal").modal("hide");
+               });
+           }
+    });
+
+
+    editparts.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        let formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+
+        let res = await postData('@Url.Action("EditInventoryParts", "Hydro")', formData);
+        if (res && res.Success) {
+            Swal.fire({
+                title: "Success",
+                text: res.Message,
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1500
+            }).then(() => {
+                InventoryTable();
+                $("#EditModal").modal('hide');
+            });
+        }
+
+    });
 
     //$("#Categoryselect").on('change', function (e) {
     //    e.preventDefault();
@@ -381,6 +689,145 @@
         InventoryPagination(filtered, 'InventorylistData');
     }
 
+    document.addEventListener('DOMContentLoaded', function () {
+        const InputFile = document.getElementById('partsimage');
+        const uploadbtn = document.getElementById('uploadBtn');
+        //const savebtn = document.getElementById('saveBtn');
+
+        const previewContainer = document.getElementById('previewContainer');
+        const previewImage = document.getElementById('previewImage');
+
+        // Handle Upload button Click
+        uploadbtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            InputFile.click();
+        });
+
+        // Handle Functional of File Input Upload
+        InputFile.addEventListener('change', function (e) {
+            e.preventDefault();
+            //Check if the Image data exist
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+
+                // Check the file size (Max 1 MB)
+                if (file.size > 1024 * 1024) {
+                    alert('File size exceeds 1MB limit');
+                    return;
+                }
+                // Check file Type
+                const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/bmp', 'image/gif'];
+
+                if (!validTypes.includes(file.type)) {
+                    alert("Invalid file type, Please upload a png, jpeg, bmp or gif file");
+                    return;
+                }
+
+                //Create a Preview Image When the Upload the file
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewImage.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+
+        // handle save button click
+        //savebtn.addEventListener('click', function (e) {
+        //    e.preventDefault();
+
+        //    //validate the form
+        //    if (!InputFile.files || InputFile.files.length === 0) {
+        //        alert("Please upload an image of your signature before saving");
+        //        return;
+        //    }
+
+
+        //    const formData = new FormData();
+        //    formData.append('SignatureImage', InputFile.files[0]);
+        //    formData.append('UserID', UserID);
+
+        //    const data = Object.fromEntries(formData);
+
+        //    //$.ajax({
+        //    //    url: '/User/UploadSignature',
+        //    //    type: 'POST',
+        //    //    data: formData,
+        //    //    processData: false,
+        //    //    contentType: false,
+        //    //    success: function (res) {
+        //    //        if (res && res.success) {
+        //    //            InputFile.value = '';
+        //    //            previewImage.src = '';
+        //    //            previewContainer.style.display = 'none';
+        //    //            $("#uploadmodal").modal("hide");
+        //    //        }
+        //    //    },
+        //    //    error: function (xhr, status, error) {
+        //    //        //$('#signatureImageError').text('An error occurred: ' + error);
+        //    //    },
+        //    //    complete: function () {
+        //    //        //saveBtn.prop('disabled', false).text('Save');
+        //    //    }
+        //    //});
+
+        //    // Reset the form
+
+
+        //});
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const InputFile = document.getElementById('Editpartsimage');
+        const uploadbtn = document.getElementById('EdituploadBtn');
+        //const savebtn = document.getElementById('saveBtn');
+
+        const previewContainer = document.getElementById('EditpreviewContainer');
+        const previewImage = document.getElementById('EditpreviewImage');
+
+        // Handle Upload button Click
+        uploadbtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            InputFile.click();
+        });
+
+        // Handle Functional of File Input Upload
+        InputFile.addEventListener('change', function (e) {
+            e.preventDefault();
+            //Check if the Image data exist
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+
+                // Check the file size (Max 1 MB)
+                if (file.size > 1024 * 1024) {
+                    alert('File size exceeds 1MB limit');
+                    return;
+                }
+                // Check file Type
+                const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/bmp', 'image/gif'];
+
+                if (!validTypes.includes(file.type)) {
+                    alert("Invalid file type, Please upload a png, jpeg, bmp or gif file");
+                    return;
+                }
+
+                //Create a Preview Image When the Upload the file
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewImage.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+
+
+    });
+
+
 
     const getStatusClass = (status) => {
         switch (status) {
@@ -407,7 +854,12 @@
         window.location.href = "/Hydroponics/Hydro/AddStocks";
     });
 
-  
+    $("#AddItem").on('click', function (e) {
+        e.preventDefault();
+        $("#AddnewModal").modal("show");
+    });
+
+
     function loadingDisplay() {
         TableDisplay.empty();
         const loadData = `<tr>

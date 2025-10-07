@@ -446,7 +446,7 @@
                                          <td data-cell="WarningLevel" style="font-weight: 600;">${row.WarningLevel}</td>
                                          <td data-cell="Approval" >
                                            <div class='${getStatusClass(row.Status)}'>
-                                            ${getIconStatus(row.Status)} ${row.Status}
+                                             ${row.Status}
                                            </div>
                                          </td>
                                          <td data-cell="Delete" >
@@ -831,21 +831,14 @@
 
     const getStatusClass = (status) => {
         switch (status) {
-            case "check": return "StocksGood";
+            case "Sufficient": return "StocksGood";
             case "Out of stocks": return "Low";
             case "Restock": return "Warning";
             default: return "Incomplete";
         }
     };
 
-    const getIconStatus = (status) => {
-        switch (status) {
-            case "check": return "&#9989";
-            case "Out of stocks": return "🛑";
-            case "Restock": return "⚠️";
-            default: return "Incomplete";
-        }
-    };
+   
 
 
     addmodal.addEventListener('click', (e) => {

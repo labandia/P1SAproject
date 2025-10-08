@@ -9,7 +9,7 @@
 @*<button id="Showadd" class="floatBtn" type="button"><i class="fa-solid fa-file-circle-plus"></i></button>*@
 
 <div class="flex_end mb-2">
-    <button id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-file-circle-plus"></i> New Chamber Request</button>
+  
 </div>
 
 
@@ -40,16 +40,22 @@
 
 
     <div class="filter-group">
-        <label>Search Request:</label><br />
-        <input type="text" id="inventorySearch" placeholder="Search Request..." onkeyup="filterInventory()">
+        <div class="Inputcontainer">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" placeholder="Search Request..." id="inventorySearch" autocomplete="off" onkeyup="filterInventory()"/>
+            <div class="line"></div>
+        </div>
+
     </div>
 
     <div class="filter-group">
-        <strong>Total Request : <span id="RequestCount"></span></strong>
+        <button id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-file-circle-plus"></i> New Request</button>
     </div>
 </div>
 
-
+<div class="filter-group">
+    <strong>Total Request : <span id="RequestCount"></span></strong>
+</div>
 
 <table id="chamberOrdersTable">
     <thead>
@@ -388,8 +394,9 @@
     const RequesDataList = async () => {
         let res = await FetchAuthenticate('@Url.Action("GetAllRequestList", "Hydro")', {});
         if (res && res.Success) {
-            requestData = res.Data.filter(item => item.RequestStatus === "ONGOING");
-            completeData = res.Data.filter(item => item.RequestStatus === "COMPLETED");
+            requestData = res.Data;
+            //requestData = res.Data.filter(item => item.RequestStatus === "ONGOING");
+            //completeData = res.Data.filter(item => item.RequestStatus === "COMPLETED");
             $("#RequestCount").text(requestData.length);
             renderFilteredData();
         }
@@ -458,7 +465,7 @@
                   <td>${row.OrderDate ?? "-"}</td>
                   <td>${row.TargetDate ?? "-"}</td>
                   <td>${row.PIC ?? "-"}</td>
-                  <td style='text-align:center;'>
+                  <td style='text-align:center; display: flex; justify-content: center; flex-direction: column; align-items: center;'>
                       <div class="progress-bar-container">
                           <div class="progress-bar"></div>
                       </div>

@@ -27,16 +27,47 @@
 </section>
 <hr />
 
+<div class="summary-cards">
+    <div class="card">
+        <div class="card-icon total-items">
+            <i class="fas fa-boxes"></i>
+        </div>
+        <div class="card-content">
+            <h3 id="totalItems">0</h3>
+            <p>Total Items</p>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-icon low-stock">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div class="card-content">
+            <h3 id="lowStockItems">0</h3>
+            <p>Low Stock</p>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-icon out-of-stock">
+            <i class="fas fa-times-circle"></i>
+        </div>
+        <div class="card-content">
+            <h3 id="outOfStockItems">0</h3>
+            <p>Out of Stock</p>
+        </div>
+    </div>
+
+</div>
+
 <div class="flex_space">
     <div>
         <input type="checkbox" id="chkCheck" value="check" />
         <span>Sufficient</span>
 
         <input type="checkbox" id="chkRestock" value="Restock" />
-         <span>Restock</span>
+        <span>Restock</span>
 
         <input type="checkbox" id="chkOut" value="Out of stocks" />
-         <span>Out of Stocks</span>
+        <span>Out of Stocks</span>
     </div>
     <span>Total Parts: <span id="Countlist"></span> </span>
 </div>
@@ -274,7 +305,7 @@
 
                             <div class="form_group col-12 col-sm-12">
                                 <label>Unit Price</label>
-                                <input type="number" id="EditUnit_Price" name="EditUnit_Price" step="0.01" min="0" >
+                                <input type="number" id="EditUnit_Price" name="EditUnit_Price" step="0.01" min="0">
                             </div>
 
                             <div class="flex_end mt-4">
@@ -838,7 +869,7 @@
         }
     };
 
-   
+
 
 
     addmodal.addEventListener('click', (e) => {

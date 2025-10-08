@@ -156,11 +156,11 @@ namespace ProgramPartListWeb.Helper
 
         // GENERATE A UNIQUE ID 
         // example : 09272025_1134
-        public static string GenerateID()
+        public static string GenerateID(string prefix = "OR")
         {
             string datePart = DateTime.Now.ToString("MMddyy");
             string timePart = DateTime.Now.ToString("mmss");
-            return $"{datePart}{timePart}";
+            return $"{prefix}-{datePart}{timePart}";
         }
 
         public static string UserRolesname(int roleint)

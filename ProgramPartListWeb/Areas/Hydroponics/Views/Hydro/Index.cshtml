@@ -70,7 +70,7 @@
             <div class="formwrapper">
                 <div class="logo">
                     <div class="logo-text">San <span>Hydro</span> </div>
-                    <p style="font-weight: 400; margin: 0; margin-top: -.3em; opacity: .6;"><small>application system</small></p>
+                    <p style="font-weight: 400; margin: 0; margin-top: -.3em; opacity: .6;"><small>Appliances system</small></p>
                 </div>
 
                 <form id="logincredentials" method="post">
@@ -430,29 +430,28 @@
         }
 
         function startAutoPlay() {
-            interval = setInterval(nextSlide, 5000); // autoplay speed
+            interval = setInterval(nextSlide, 5000);
         }
 
         function stopAutoPlay() {
             clearInterval(interval);
         }
 
-        // init first slide
-        slides[0].classList.add("active");
-        controls[0].classList.add("active");
+        // ✅ Correct initialization
+        slides[0].classList.add("Slideactive");
+        controls[0].classList.add("Slideactive");
 
-        // controls click
         controls.forEach((btn, i) => {
             btn.addEventListener("click", () => {
                 goToSlide(i);
                 stopAutoPlay();
-                startAutoPlay(); // restart autoplay after manual click
+                startAutoPlay();
             });
         });
 
-        // autoplay start
         startAutoPlay();
     });
+
 
 
 

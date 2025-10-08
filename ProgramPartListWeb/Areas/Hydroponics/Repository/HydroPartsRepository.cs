@@ -52,6 +52,56 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             return result;
         }
 
+        public async Task<bool> AddStockItem(List<AddStocksItem> stocks, string RequestedBy, string Purpose)
+        {
+            bool result = false;    
+            string RequestNo = GlobalUtilities.GenerateID("SR");
+            
+            // Insert the Hydro_StockRequests table
+            string insertStockRequestQuery = $@"INSERT INTO Hydro_StockRequests 
+                                                (RequestNo, RequestedBy, Purpose) 
+                                                VALUES (@RequestNo, @RequestedBy, @Purpose);
+                                                SELECT CAST(SCOPE_IDENTITY() as int)";
+            var parameters = new
+            {
+                RequestNo,
+                RequestedBy,
+                Purpose
+            };
+
+            int RequestID = await SqlDataAccess.GetCountData(insertStockRequestQuery, parameters);
+
+            if (RequestID == 0) return false;
+
+            foreach (var item in stocks)
+            {
+                string insertStockRequestItemQuery = $@"INSERT INTO Hydro_StockRequestItems 
+                                                        (RequestID, PartNo, QuantityRequested) 
+                                                        VALUES (@RequestID, @PartNo, @quantity)";
+                var itemParameters = new
+                {
+                    RequestID,
+                    item.PartNo,
+                    item.quantity
+                };
+
+                result = await SqlDataAccess.UpdateInsertQuery(insertStockRequestItemQuery, itemParameters);
+
+                string strsql = $@"UPDATE Hydro_Stocks SET CurrentQty = CurrentQty + @CurrentQty 
+                               WHERE  PartNo =@PartNo";
+
+                await SqlDataAccess.UpdateInsertQuery(strsql, new
+                {
+                    PartNo = item.PartNo,
+                    CurrentQty = item.quantity
+                });
+
+
+            }
+
+            return result;
+        }
+
         public async Task<bool> EditInventory(AddInventoryModel model, string partno)
         {
             bool result = false;    
@@ -99,8 +149,34 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             return result;
         }
 
+        public async Task<IEnumerable<StockAddDetailsModel>> GetAddStocksDetails(int ID)
+        {
+            string strquery = $@"SELECT
+	                            s.PartNo, 
+	                            i.PartName,
+	                            s.QuantityRequested,
+	                            i.Unit
+                            FROM Hydro_StockRequestItems s 
+                            INNER JOIN Hydro_InventoryParts i ON i.PartNo = s.PartNo
+                            WHERE s.RequestID = @RequestID";
 
+            return await SqlDataAccess.GetData<StockAddDetailsModel>(strquery, new { RequestID  = ID });
+        }
 
+        public async Task<IEnumerable<StockAddModel>> GetAddStocksList()
+        {
+            string strquery = $@"SELECT
+	                            s.RequestID,
+	                            s.RequestNo,
+	                            s.RequestedBy,
+                                s.Purpose,
+	                            FORMAT(s.RequestDate, 'MM/dd/yyyy') as RequestDate,
+	                            (SELECT COUNT(*) FROM Hydro_StockRequestItems WHERE RequestID = s.RequestID) as NoItems
+                            FROM Hydro_StockRequests s
+                            ORDER BY RequestID DESC";
+
+            return await SqlDataAccess.GetData<StockAddModel>(strquery, null);
+        }
 
         public Task<List<StockPartsModel>> GetInventoryList()
         {

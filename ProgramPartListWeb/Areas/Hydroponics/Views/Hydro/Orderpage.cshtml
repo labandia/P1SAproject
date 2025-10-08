@@ -6,82 +6,76 @@
 
 
 
-<button id="Showadd" class="floatBtn" type="button"><i class="fa-solid fa-file-circle-plus"></i></button>
+@*<button id="Showadd" class="floatBtn" type="button"><i class="fa-solid fa-file-circle-plus"></i></button>*@
 
-<div class="Mold_tabcontainer">
-    <div class="Mold_tabs">
-        <button class="Mold_tab active" data-target="All">Active Request</button>
-        <button class="Mold_tab" data-target="Completed">Completed</button>
-        <div class="Mold_slider"></div>
+<div class="flex_end mb-2">
+    <button id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-file-circle-plus"></i> New Chamber Request</button>
+</div>
+
+
+<div class="filters">
+    <div class="filter-group">
+        <label>Chamber Type:</label> <br />
+        <select id="categoryFilter">
+            <option value="all">All Types</option>
+            <option value="SHIBAKAWA">SHIBAKAWA</option>
+            <option value="NUPON">NUPON</option>
+            <option value="SLIM TYPE">Mechanical</option>
+        </select>
+    </div>
+    <div class="filter-group">
+        <label>Status:</label><br />
+        <select id="stockStatusFilter">
+            <option value="all">All Status</option>
+            <option value="ONGOING">ONGOING</option>
+            <option value="COMPLETED">COMPLETED</option>
+        </select>
     </div>
 
-    <div class="Mold_contentbox">
-        <div class="Mold_content show" id="All">
-            <div style="margin-bottom: .5em;">
-                <strong>Total Request : <span id="RequestCount"></span></strong>
-            </div>
-            <div class="RequestWrapper" id="RequestWrapper">
-
-            </div>
-        </div>
-
-        <div class="Mold_content" id="Completed">
-            <div class="search-bar  flex_space">
-                <div class="date-range">
-                    <input type="date" id="startDate">
-                    <span>-</span>
-                    <input type="date" id="endDate">
-
-                    @*<select>
-                        <option value="0">Status</option>
-                        <option value="0">Shipped</option>
-                        <option value="0">Ongoing</option>
-                    </select>*@
-                </div>
-
-            </div>
+    <div class="filter-group">
+        <label>Date Range:</label><br />
+        <input type="date" id="startDate" onchange="filterRequests()">
+        <input type="date" id="endDate" onchange="filterRequests()">
+    </div>
 
 
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                          
-                            <th>Request Order</th>
-                            <th>Quantity</th>
-                            <th>Date</th>
-                            <th>Unit Product</th>
-                            <th>Total Price</th>
-                            <th>Status</th>
-                            <th width="5%"></th>
-                        </tr>
-                    </thead>
-                    <tbody id="CompleteTables">
-                    </tbody>
-                </table>
-            </div>
+    <div class="filter-group">
+        <label>Search Request:</label><br />
+        <input type="text" id="inventorySearch" placeholder="Search Request..." onkeyup="filterInventory()">
+    </div>
 
-
-
-        </div>
-
-
+    <div class="filter-group">
+        <strong>Total Request : <span id="RequestCount"></span></strong>
     </div>
 </div>
 
-<section class="InspectHead flex_space">
-    <div class="flex_align">
-        <div class="Inputcontainer" style="display: none;">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" placeholder="Search here ... " id="searchbox" autocomplete="off" />
-            <div class="line"></div>
-        </div>
-    </div>
 
-    <div class="flex_align">
 
-    </div>
-</section>
+<table id="chamberOrdersTable">
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Chamber Type</th>
+            <th>Quantity</th>
+            <th>Order Date</th>
+            <th>Target Date</th>
+            <th>PIC</th>
+            <th>Progress </th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody id="chamberOrdersTableBody">
+        <!-- Dynamic content -->
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
 
 @*=================================================================================*@
 @*=========================== ADD PARTS CHAMBER ===================================*@
@@ -101,7 +95,7 @@
 
 
                 <form method="post" enctype="multipart/form-data" class="addformcontainer" id="addnewform" autocomplete="off">
-                    <div class="form_group col-12 col-sm-12 ">
+                    <div class="form_group col-12 col-sm-12 mb-2">
                         <label>Select Chamber <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
                         <div class="select-container">
                             <select id="ChamberID" name="ChamberID">
@@ -116,7 +110,7 @@
 
 
                     <div class="form_group col-12 col-sm-12">
-                        <label>Target Date.  <small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <label>Target Completion Date <small style="color: #a81818; font-weight: 600;">*</small></label>
                         <input type="date" placeholder="type Ojt registration No." name="TargetDate" id="TargetDate" required />
                     </div>
 
@@ -145,216 +139,403 @@
 
 
 @*<div class="ExportContainer">
-    <button>X</button>
-    <div class="ExportGrid">
-        <div class="btnclass">Selected: 5</div>
-        <div class="btnclass"><i class="fa-solid fa-download"></i> Export</div>
-        <div class="btnclass"><i class="fa-solid fa-print"></i>  Print</div>
-    </div>
-</div>*@
+        <button>X</button>
+        <div class="ExportGrid">
+            <div class="btnclass">Selected: 5</div>
+            <div class="btnclass"><i class="fa-solid fa-download"></i> Export</div>
+            <div class="btnclass"><i class="fa-solid fa-print"></i>  Print</div>
+        </div>
+    </div>*@
+
+
+@*<script type="text/javascript">
+        let requestData = [];
+        let completeData = [];
+        // Get today's date
+        let today = new Date();
+
+        // Format to YYYY-MM-DD
+        let dd = String(today.getDate()).padStart(2, '0');
+        let mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0
+        let yyyy = today.getFullYear();
+
+        let todayStr = yyyy + '-' + mm + '-' + dd;
+
+        document.getElementById("TargetDate").setAttribute("min", todayStr);
+
+        const addforms = document.getElementById("addnewform");
+
+
+
+
+        const RequesDataList = async () => {
+            let TableData = $("#chamberOrdersTableBody");
+
+            let res = await FetchAuthenticate('@Url.Action("GetAllRequestList", "Hydro")', {});
+            if (res && res.Success) {
+                TableData.empty();
+                requestData = res.Data.filter(item => item.RequestStatus === "ONGOING");
+                console.log(requestData);
+                $("#RequestCount").text(requestData.length);
+                completeData = res.Data.filter(item => item.RequestStatus === "COMPLETED");
+
+
+                $.each(requestData, function (index, row) {
+                    let percent = parseFloat(row.CompletionPercent) || 0;
+                    let displayPercent = Math.round(percent); // show as 12 instead of 12.0
+
+
+                    // Decide color
+                    let barColor = "linear-gradient(90deg, #e74c3c, #c0392b)"; // red
+                    if (percent >= 70) barColor = "linear-gradient(90deg, #2ecc71, #27ae60)"; // green
+                    else if (percent >= 40) barColor = "linear-gradient(90deg, #f1c40f, #f39c12)"; // yellow
+
+
+                    const loadData = `
+                      <tr  class='RequestRow' id='Details_${row.OrderID}'>
+                          <td data-cell="OrderID"><strong>${row.OrderID ? row.OrderID : "-"}</strong></td>
+                          <td data-cell="ChamberName">${row.ChamberName ? row.ChamberName : "-"} </td>
+                          <td data-cell="ChambersOrdered">${row.ChambersOrdered ? row.ChambersOrdered : 0} unit(s)</td>
+                          <td data-cell="OrderDate">${row.OrderDate ? row.OrderDate : 0}</td>
+                          <td data-cell="TargetDate">${row.TargetDate ? row.TargetDate : '-'}</td>
+                          <td data-cell="PIC">${row.PIC ? row.PIC : '-'}</td>
+                          <td data-cell="CompletionPercent" style='text-align: center;'>
+                                 <div class="progress-bar-container">
+                                        <div class="progress-bar"></div>
+                                    </div>
+                                     <span style="font-size:.75rem; margin-top:4px;">Completion rate: ${displayPercent}%</span>
+                                </td>
+                          <td data-cell="RequestStatus">${row.RequestStatus ? row.RequestStatus : 0}</td>
+
+                      </tr>
+                  `;
+                    TableData.append(loadData);
+
+                    // Animate the bar after appending
+                    const $bar = TableData.find(".progress-bar").last();
+                    $bar.css("background", barColor); // set color
+                    setTimeout(() => {
+                        $bar.css("width", `${percent}%`); // animate width
+                    }, 50); // small delay to trigger transition
+                });
+
+                // Animate circular progress
+                $(".circular-progress").each(function () {
+                    let $circle = $(this);
+                    let progress = parseFloat($circle.data("progress")) || 0;
+
+                    // decide color
+                    let color = "#f44336"; // red
+                    if (progress >= 80) color = "#4caf50";   // green
+                    else if (progress >= 50) color = "#ff9800"; // orange
+
+                    // animate from 0 → target
+                    let current = 0;
+                    let target = progress;
+                    let step = () => {
+                        if (current <= target) {
+                            $circle.css({
+                                "--progress": current,   // FIX ✅ use raw percent (0–100)
+                                "--bar-color": color
+                            });
+                            current++;
+                            requestAnimationFrame(step);
+                        }
+                    };
+                    step();
+                });
+            }
+        }
+
+
+        function CompleteTableDisplay(array) {
+            let tableDisplay = $("#CompleteTables");
+            tableDisplay.empty();
+
+            if (array.length === 0) {
+                tableDisplay.append(`
+                <tr>
+                    <td colspan="7" style="text-align:center; color:#888;">No completed requests found</td>
+                </tr>
+            `);
+                return;
+            }
+
+            $.each(array, function (index, row) {
+                const rowHtml = `
+                <tr>
+                    <td><div class="order-number" style='font-weight: 600;'>${row.OrderID}</div></td>
+                    <td style='font-weight: 600;'>${row.ChambersOrdered} X</td>
+                    <td class="price"><p style='color: #222;'>${row.TargetDate}</p></td>
+                    <td><span class="status pending">${row.ChamberName}</span></td>
+                    <td><div class="product-name" style='color: #27ae60; font-weight: 600;'>₱ ${row.TotalPrice.toLocaleString('en-US')}</div></td>
+                    <td class="delivery-service" style='font-weight: 600;'>${row.RequestStatus}</td>
+                    <td class="delivery-service"><i class="fa-solid fa-ellipsis-vertical"></i></td>
+                </tr>
+            `;
+                tableDisplay.append(rowHtml);
+            });
+
+        }
+
+
+        $(document).on('click', '.RequestRow', function (e) {
+            e.stopPropagation(); // Prevent triggering the row click event
+            var rowId = $(this).attr('id');
+            var rowIndex = rowId.split('_').slice(1).join('_');
+            window.location.href = "/Hydroponics/Hydro/OrderpageDetails?orderID=" + rowIndex;
+        });
+
+
+        const GetChamberDatalist = async () => {
+            let res = await FetchAuthenticate('@Url.Action("GetChamberList", "Hydro")', {});
+              if (res && res.Success) {
+                  $.each(res.Data, function (index, row) {
+                      $("#ChamberID").append("<option value='" + row.ChamberID + "'>" + row.ChamberName + "</option>");
+                  });
+              }
+         };
+
+
+        $("#Showadd").on('click', function (e) {
+            e.preventDefault();
+            $("#AddRequestModal").modal("show");
+        });
+
+        addforms.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            let formdata = new FormData(e.target);
+            const data = Object.fromEntries(formdata);
+            let res = await postData('@Url.Action("NewAddRequestData", "Hydro")', formdata);
+            if (res && res.Success) {
+                RequesDataList();
+                e.target.reset();
+                $("#AddRequestModal").modal("hide");
+            }
+        });
+
+        // Function to filter completeData based on date range
+        function filterByDateRange() {
+            let start = $("#startDate").val(); // e.g. 2025-10-20
+            let end = $("#endDate").val();     // e.g. 2025-10-30
+
+            if (!start && !end) {
+                CompleteTableDisplay(completeData);
+                return;
+            }
+
+            let filtered = completeData.filter(row => {
+                // Convert row.TargetDate "10/25/2025" → Date object
+                let parts = row.TargetDate.split("/");
+                let rowDate = new Date(parts[2], parts[0] - 1, parts[1]);
+
+                if (start && rowDate < new Date(start)) return false;
+                if (end && rowDate > new Date(end)) return false;
+                return true;
+            });
+
+            CompleteTableDisplay(filtered);
+        }
+
+
+        // Attach events
+        $("#startDate, #endDate").on("change", function () {
+            filterByDateRange();
+        });
+
+
+        // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+        const LoadPageData = async () => {
+            try {
+
+                const [req, list] = await Promise.all([
+                    RequesDataList(),
+                    GetChamberDatalist()
+                ]);
+            } catch (error) {
+                console.error("Failed to load page data:", error);
+            } finally {
+                // Hide loading spinner whether success or failure
+                //$("#loadingSpinner").hide();
+            }
+        }
+
+        $(document).ready(() => {
+            LoadPageData();
+        });
+    </script>*@
+
+
+<div id="paginationV2" class="pagination-container"></div>
 
 
 <script type="text/javascript">
     let requestData = [];
     let completeData = [];
-    // Get today's date
+    let currentPage = 1;
+    const rowsPerPage = 10;
+
     let today = new Date();
-
-    // Format to YYYY-MM-DD
     let dd = String(today.getDate()).padStart(2, '0');
-    let mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0
+    let mm = String(today.getMonth() + 1).padStart(2, '0');
     let yyyy = today.getFullYear();
-
-    let todayStr = yyyy + '-' + mm + '-' + dd;
-
+    let todayStr = `${yyyy}-${mm}-${dd}`;
     document.getElementById("TargetDate").setAttribute("min", todayStr);
 
     const addforms = document.getElementById("addnewform");
 
-
-    // Tabs Content
-    const tabs = document.querySelectorAll(".Mold_tab");
-    const slider = document.querySelector(".Mold_slider");
-    const contents = document.querySelectorAll(".Mold_content");
-
-    tabs.forEach((tab, index) => {
-        tab.addEventListener("click", () => {
-            // Handle tab active class
-            document.querySelector(".Mold_tab.active").classList.remove("active");
-            tab.classList.add("active");
-
-            // Move slider
-            slider.style.transform = `translateX(${index * 100}%)`;
-
-            // Switch content
-            const target = tab.getAttribute("data-target");
-            contents.forEach((content) => {
-                content.classList.remove("show");
-            });
-
-            // Add show class with slight delay
-            setTimeout(() => {
-                document.getElementById(target).classList.add("show");
-            }, 50);
-
-            if (index == 1) {
-                filterByDateRange();
-                $("#Showadd").hide();
-            } else {
-                $("#Showadd").show();
-            }
-
-        });
-    });
-
-
+    // ========================== LOAD REQUEST DATA ==============================
     const RequesDataList = async () => {
-        let TableData = $("#RequestWrapper");
-
         let res = await FetchAuthenticate('@Url.Action("GetAllRequestList", "Hydro")', {});
         if (res && res.Success) {
-            TableData.empty();
             requestData = res.Data.filter(item => item.RequestStatus === "ONGOING");
-
-            $("#RequestCount").text(requestData.length);
             completeData = res.Data.filter(item => item.RequestStatus === "COMPLETED");
-
-
-            $.each(requestData, function (index, row) {
-                let percent = parseFloat(row.CompletionPercent) || 0;
-                let displayPercent = Math.round(percent); // show as 12 instead of 12.0
-
-
-                // Decide color
-                let barColor = "linear-gradient(90deg, #e74c3c, #c0392b)"; // red
-                if (percent >= 70) barColor = "linear-gradient(90deg, #2ecc71, #27ae60)"; // green
-                else if (percent >= 40) barColor = "linear-gradient(90deg, #f1c40f, #f39c12)"; // yellow
-
-
-                const loadData = `
-                     <div class="RequestContainer"  id='Details_${row.OrderID}'>
-                         <div class="RequestContainer_header">
-                             <span>${row.OrderID}</span>
-                         </div>
-
-                         <div class="RequestGrid">
-                             <div class="RequestContent">
-                                 <p style='font-size: .8rem; color: #2c3e50; font-weight: 600; '>${row.ChamberName}</p>
-                                 <span style='font-size: .8rem; font-weight: 500; color: #808080;'>${row.ChambersOrdered} Unit Quantity</span>
-                             </div>
-
-                             <div class="RequestContent">
-                                 <p style='color: #222; font-weight: 600; font-size: .9rem;'>${row.PIC}</p>
-                                 <span style='font-size: .8rem; font-weight: 500; color: #808080;'><i class="fa-regular fa-user"></i>  Person In charge</span>
-                             </div>
-
-                             <div class="RequestContent" style="font-size: .8rem;">
-                                 <p style='color: #222; font-weight: 600;'><i class="fa-regular fa-calendar-days"></i> Start Date : ${row.OrderDate}</p>
-                                 <p style='color: #222; font-weight: 600;'><i class="fa-regular fa-calendar-days"></i> Target Date : ${row.TargetDate}</p>
-                             </div>
-
-                              <div class="RequestContent" style='display: flex; align-items:center; justify-content: center; flex-direction: column;'>
-                                <div class="progress-bar-container">
-                                    <div class="progress-bar"></div>
-                                </div>
-                                 <span style="font-size:.75rem; margin-top:4px;">Completion rate: ${displayPercent}%</span>
-                            </div>
-
-                             <div class="RequestContent " style='padding-left: 2em;'>
-                                 <div class='ProcessStat flex_align'>
-                                     <span style='font-size: .8rem;'>${row.RequestStatus}</span>
-                                     <div class='bilog'></div>
-                                 </div>
-                             </div>
-                         </div>
-                     </div>`;
-                TableData.append(loadData);
-
-                // Animate the bar after appending
-                const $bar = TableData.find(".progress-bar").last();
-                $bar.css("background", barColor); // set color
-                setTimeout(() => {
-                    $bar.css("width", `${percent}%`); // animate width
-                }, 50); // small delay to trigger transition
-            });
-
-            // Animate circular progress
-            $(".circular-progress").each(function () {
-                let $circle = $(this);
-                let progress = parseFloat($circle.data("progress")) || 0;
-
-                // decide color
-                let color = "#f44336"; // red
-                if (progress >= 80) color = "#4caf50";   // green
-                else if (progress >= 50) color = "#ff9800"; // orange
-
-                // animate from 0 → target
-                let current = 0;
-                let target = progress;
-                let step = () => {
-                    if (current <= target) {
-                        $circle.css({
-                            "--progress": current,   // FIX ✅ use raw percent (0–100)
-                            "--bar-color": color
-                        });
-                        current++;
-                        requestAnimationFrame(step);
-                    }
-                };
-                step();
-            });
+            $("#RequestCount").text(requestData.length);
+            renderFilteredData();
         }
-    }
+    };
 
+    // ========================== RENDER TABLE + PAGINATION ======================
+    function renderFilteredData() {
+        let TableData = $("#chamberOrdersTableBody");
+        TableData.empty();
 
-    function CompleteTableDisplay(array) {
-        let tableDisplay = $("#CompleteTables");
-        tableDisplay.empty();
+        const selectedType = $("#categoryFilter").val();
+        const selectedStatus = $("#stockStatusFilter").val();
+        const searchQuery = $("#inventorySearch").val().toLowerCase();
+        const start = $("#startDate").val();
+        const end = $("#endDate").val();
 
-        if (array.length === 0) {
-            tableDisplay.append(`
-            <tr>
-                <td colspan="7" style="text-align:center; color:#888;">No completed requests found</td>
-            </tr>
-        `);
+        // Apply filters
+        let filtered = requestData.filter(row => {
+            if (selectedType !== "all" && row.ChamberName !== selectedType) return false;
+            if (selectedStatus !== "all" && row.RequestStatus !== selectedStatus) return false;
+
+            if (start || end) {
+                let parts = row.OrderDate.split("/");
+                let rowDate = new Date(parts[2], parts[0] - 1, parts[1]);
+                if (start && rowDate < new Date(start)) return false;
+                if (end && rowDate > new Date(end)) return false;
+            }
+
+            if (searchQuery && !(
+                (row.OrderID && row.OrderID.toString().includes(searchQuery)) ||
+                (row.ChamberName && row.ChamberName.toLowerCase().includes(searchQuery)) ||
+                (row.PIC && row.PIC.toLowerCase().includes(searchQuery))
+            )) return false;
+
+            return true;
+        });
+
+        $("#RequestCount").text(filtered.length);
+
+        if (filtered.length === 0) {
+            TableData.append(`<tr><td colspan="8" style="text-align:center; color:#888;">No matching records found</td></tr>`);
+            $("#paginationV2").html("");
             return;
         }
 
-        $.each(array, function (index, row) {
-            const rowHtml = `
-            <tr>
-                <td><div class="order-number" style='font-weight: 600;'>${row.OrderID}</div></td>
-                <td style='font-weight: 600;'>${row.ChambersOrdered} X</td>
-                <td class="price"><p style='color: #222;'>${row.TargetDate}</p></td>
-                <td><span class="status pending">${row.ChamberName}</span></td>
-                <td><div class="product-name" style='color: #27ae60; font-weight: 600;'>₱ ${row.TotalPrice.toLocaleString('en-US')}</div></td>
-                <td class="delivery-service" style='font-weight: 600;'>${row.RequestStatus}</td>
-                <td class="delivery-service"><i class="fa-solid fa-ellipsis-vertical"></i></td>
-            </tr>
-        `;
-            tableDisplay.append(rowHtml);
+        // Pagination logic
+        const totalPages = Math.ceil(filtered.length / rowsPerPage);
+        if (currentPage > totalPages) currentPage = 1;
+
+        const startIdx = (currentPage - 1) * rowsPerPage;
+        const paginatedData = filtered.slice(startIdx, startIdx + rowsPerPage);
+
+        // Render rows
+        $.each(paginatedData, function (index, row) {
+            let percent = parseFloat(row.CompletionPercent) || 0;
+            let displayPercent = Math.round(percent);
+            let barColor = "linear-gradient(90deg, #e74c3c, #c0392b)";
+            if (percent >= 70) barColor = "linear-gradient(90deg, #2ecc71, #27ae60)";
+            else if (percent >= 40) barColor = "linear-gradient(90deg, #f1c40f, #f39c12)";
+
+            const loadData = `
+              <tr class='RequestRow' id='Details_${row.OrderID}'>
+                  <td><strong>${row.OrderID ?? "-"}</strong></td>
+                  <td>${row.ChamberName ?? "-"}</td>
+                  <td>${row.ChambersOrdered ?? 0} unit(s)</td>
+                  <td>${row.OrderDate ?? "-"}</td>
+                  <td>${row.TargetDate ?? "-"}</td>
+                  <td>${row.PIC ?? "-"}</td>
+                  <td style='text-align:center;'>
+                      <div class="progress-bar-container">
+                          <div class="progress-bar"></div>
+                      </div>
+                      <span style="font-size:.75rem; margin-top:4px;">Completion rate: ${displayPercent}%</span>
+                  </td>
+                  <td>${row.RequestStatus ?? "-"}</td>
+              </tr>
+            `;
+            TableData.append(loadData);
+
+            const $bar = TableData.find(".progress-bar").last();
+            $bar.css("background", barColor);
+            setTimeout(() => $bar.css("width", `${percent}%`), 50);
         });
 
+        // Render pagination controls
+        renderPagination(totalPages);
     }
 
+    // ========================== PAGINATION CONTROLS ============================
+    function renderPagination(totalPages) {
+        let pagination = $("#paginationV2");
+        pagination.empty();
 
-    $(document).on('click', '.RequestContainer', function (e) {
-        e.stopPropagation(); // Prevent triggering the row click event
-        var rowId = $(this).attr('id');
-        var rowIndex = rowId.split('_').slice(1).join('_');
-        window.location.href = "/Hydroponics/Hydro/OrderpageDetails?orderID=" + rowIndex;
+        if (totalPages <= 1) return;
+
+        let html = `
+            <button class="page-btn" data-page="${currentPage - 1}" ${currentPage === 1 ? "disabled" : ""}>Prev</button>
+        `;
+
+        for (let i = 1; i <= totalPages; i++) {
+            html += `<button class="page-btn ${i === currentPage ? "active" : ""}" data-page="${i}">${i}</button>`;
+        }
+
+        html += `
+            <button class="page-btn" data-page="${currentPage + 1}" ${currentPage === totalPages ? "disabled" : ""}>Next</button>
+        `;
+
+        pagination.html(html);
+    }
+
+    // Pagination click handler
+    $(document).on("click", ".page-btn", function () {
+        const newPage = parseInt($(this).data("page"));
+        if (!isNaN(newPage)) {
+            currentPage = newPage;
+            renderFilteredData();
+        }
     });
 
+    // ========================== FILTER EVENTS ================================
+    $("#categoryFilter, #stockStatusFilter, #startDate, #endDate").on("change", function () {
+        currentPage = 1;
+        renderFilteredData();
+    });
 
+    $("#inventorySearch").on("keyup", function () {
+        currentPage = 1;
+        renderFilteredData();
+    });
+
+    // ========================== ROW CLICK EVENT ==============================
+    $(document).on('click', '.RequestRow', function (e) {
+        e.stopPropagation();
+        const rowId = $(this).attr('id').split('_')[1];
+        window.location.href = `/Hydroponics/Hydro/OrderpageDetails?orderID=${rowId}`;
+    });
+
+    // ========================== ADD REQUEST ==============================
     const GetChamberDatalist = async () => {
         let res = await FetchAuthenticate('@Url.Action("GetChamberList", "Hydro")', {});
-          if (res && res.Success) {
-              $.each(res.Data, function (index, row) {
-                  $("#ChamberID").append("<option value='" + row.ChamberID + "'>" + row.ChamberName + "</option>");
-              });
-          }
-     };
-
+        if (res && res.Success) {
+            $.each(res.Data, function (index, row) {
+                $("#ChamberID").append(`<option value='${row.ChamberID}'>${row.ChamberName}</option>`);
+            });
+        }
+    };
 
     $("#Showadd").on('click', function (e) {
         e.preventDefault();
@@ -364,7 +545,6 @@
     addforms.addEventListener('submit', async function (e) {
         e.preventDefault();
         let formdata = new FormData(e.target);
-        const data = Object.fromEntries(formdata);
         let res = await postData('@Url.Action("NewAddRequestData", "Hydro")', formdata);
         if (res && res.Success) {
             RequesDataList();
@@ -373,51 +553,14 @@
         }
     });
 
-    // Function to filter completeData based on date range
-    function filterByDateRange() {
-        let start = $("#startDate").val(); // e.g. 2025-10-20
-        let end = $("#endDate").val();     // e.g. 2025-10-30
-
-        if (!start && !end) {
-            CompleteTableDisplay(completeData);
-            return;
-        }
-
-        let filtered = completeData.filter(row => {
-            // Convert row.TargetDate "10/25/2025" → Date object
-            let parts = row.TargetDate.split("/");
-            let rowDate = new Date(parts[2], parts[0] - 1, parts[1]);
-
-            if (start && rowDate < new Date(start)) return false;
-            if (end && rowDate > new Date(end)) return false;
-            return true;
-        });
-
-        CompleteTableDisplay(filtered);
-    }
-
-
-    // Attach events
-    $("#startDate, #endDate").on("change", function () {
-        filterByDateRange();
-    });
-
-
-    // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+    // ========================== INITIAL LOAD ==============================
     const LoadPageData = async () => {
         try {
-
-            const [req, list] = await Promise.all([
-                RequesDataList(),
-                GetChamberDatalist()
-            ]);
+            await Promise.all([RequesDataList(), GetChamberDatalist()]);
         } catch (error) {
             console.error("Failed to load page data:", error);
-        } finally {
-            // Hide loading spinner whether success or failure
-            //$("#loadingSpinner").hide();
         }
-    }
+    };
 
     $(document).ready(() => {
         LoadPageData();

@@ -399,6 +399,27 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
             return JsonSuccess(data, "Load Inventory List");
         }
 
+        [JwtAuthorize]
+        public async Task<ActionResult> GetAddStockList()
+        {
+            var data = await _hydro.GetAddStocksList() ?? new List<StockAddModel>();
+            if (data == null || !data.Any()) return JsonNotFound("No Hydro parlist Data.");
+
+            return JsonSuccess(data, "Load Inventory List");
+        }
+
+
+        [JwtAuthorize]
+        public async Task<ActionResult> GetAddDetailsList(int ID)
+        {
+            var data = await _hydro.GetAddStocksDetails(ID) ?? new List<StockAddDetailsModel>();
+            if (data == null || !data.Any()) return JsonNotFound("No Hydro parlist Data.");
+
+            return JsonSuccess(data, "Load Inventory List");
+        }
+
+
+
         [HttpPost]
         public async Task<ActionResult> UpdateWarningStock(int StockID, double WarningLevel)
         {
@@ -429,6 +450,31 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
                 }
 
                 return JsonCreated(true, "Add Stocks Successfully");
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message, 500);
+            }
+
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> AddNewStocks()
+        {
+            try
+            {
+                string requestedBy = Request.Form["RequestBy"];   
+                string remarks = Request.Form["Purpose"];
+                var json = Request.Form["items"];
+
+                var items = Newtonsoft.Json.JsonConvert.DeserializeObject<List<AddStocksItem>>(json);
+
+                bool result = await _hydro.AddStockItem(items, requestedBy, remarks);
+
+                if (!result) return JsonPostError("Insert failed.", 500);
+
+                return JsonCreated(result, "Add Stocks Successfully");
             }
             catch (Exception ex)
             {

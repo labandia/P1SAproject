@@ -62,6 +62,27 @@
     }
 
     .primarybtn {
+        background: rgb(0,71,171);
+        background: linear-gradient(159deg, rgba(0,71,171,1) 0%, rgba(28,169,201,1) 100%);
+        color: white;
+        border: none;
+        padding: 5px 30px;
+        border-radius: .5rem;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(74, 0, 224, 0.3);
+    }
+
+   .primarybtn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(74, 0, 224, 0.4);
+    }
+
+/* 
+
+    .primarybtn {
         transition: .5s ease-in-out;
         background: var(--primary-color) !important;
         border-radius: .2em;
@@ -75,7 +96,7 @@
 
     .primarybtn:disabled {
         background: #A5A1AA;
-    }
+    }*/
 
     .floatBtn{
         position: fixed;
@@ -1452,6 +1473,14 @@ header .count2 {
 
 
 
+
+.items-section h4 {
+    margin-bottom: 1rem;
+    color: #2c3e50;
+    font-size: .9rem;
+}
+
+
 .breadcrumb {
     font-size: 14px;
     color: #666;
@@ -1465,4 +1494,12 @@ header .count2 {
 
 .breadcrumb a:hover {
       text-decoration: underline;
+}
+
+
+.add-item-row{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 15px;
+    align-items: center;
 }

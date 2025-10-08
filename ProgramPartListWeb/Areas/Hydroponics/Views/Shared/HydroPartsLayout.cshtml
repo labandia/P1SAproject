@@ -42,7 +42,7 @@
             </a>
             <a href="/Hydroponics/Hydro/RequestStock" class="nav-item">
                 <i class="fas fa-clipboard-list"></i>
-                <span class="nav-text">Request Stocks</span>
+                <span class="nav-text">Add Stocks</span>
             </a>
             @*<a href="/Hydroponics/Hydro/PartList" class="nav-item">
             <i class="fa-solid fa-table-list"></i>
@@ -197,6 +197,9 @@
                     link.classList.add("active");
 
                     let actionpage = currentUrl.substring(currentUrl.lastIndexOf("/") + 1);
+
+                    console.log(actionpage);
+
                     switch (actionpage) {
                         case "orderpage":
                             $("#titlepage").html(`<i class="fa-solid fa-file-invoice"></i> Request Chambers`);
@@ -210,8 +213,8 @@
                         case "partlist":
                             $("#titlepage").html(`<i class="fa-solid fa-table-list"></i> Parts Masterlist`);
                             break;
-                        case "RequestStock":
-                            $("#titlepage").html(`<i class="fas fa-clipboard-list"></i> Stock Requests`);
+                        case "requeststock":
+                            $("#titlepage").html(`<i class="fas fa-clipboard-list"></i> Add Stocks`);
                             break;
                         case "transactionhistory":
                             $("#titlepage").html(`<i class="fa-solid fa-clock-rotate-left"></i> Transaction History`);

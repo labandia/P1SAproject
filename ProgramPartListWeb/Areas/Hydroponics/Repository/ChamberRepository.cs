@@ -187,7 +187,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
         public async Task<bool> AddRequestChamber(RequestItem item)
         {
             // GENERATE A UNIQUE ID FOR THE ORDER
-            string OrderID = GlobalUtilities.GenerateID();
+            string OrderID = GlobalUtilities.GenerateID("CR");
 
             string strsql = $@"INSERT INTO Hydro_Orders(OrderID, ChamberID, OrderedBy, Quantity, PIC, TargetDate)
                                VALUES(@OrderID, @ChamberID, @OrderedBy, @Quantity, @PIC, @TargetDate)";

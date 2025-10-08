@@ -462,6 +462,27 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         }
     }
 
+
+    public class StockAddModel
+    {
+        public int RequestID { get; set; }
+        public string RequestNo { get; set; }
+        public string RequestedBy { get; set; }
+        public string RequestDate { get; set; }
+        public string Purpose { get; set; }
+        public int NoItems { get; set; }
+    }
+
+    public class StockAddDetailsModel
+    {
+        public string PartNo { get; set; }
+        public string PartName { get; set; }
+        public string Unit { get; set; }
+        public double QuantityRequested { get; set; }
+    }
+
+
+
     public class StockAlertModel
     {
         public int PartID { get; set; }

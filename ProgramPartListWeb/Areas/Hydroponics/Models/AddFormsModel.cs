@@ -28,4 +28,14 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         public int QuantityPerChamber { get; set; }
         public double UnitCost_PHP { get; set; }
     }
+
+
+    public class AddStocksItem
+    {
+        public string PartNo { get; set; }
+        public string PartName { get; set; }
+        public double quantity { get; set; }
+        public string unit { get; set; }
+        public int availableStock { get; set; }
+    }
 }

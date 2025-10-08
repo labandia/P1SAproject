@@ -4,5 +4,498 @@
     Layout = "~/Areas/Hydroponics/Views/Shared/HydroPartsLayout.cshtml";
 }
 
-<h2>RequestStock</h2>
+<div class="section-header flex_space">
+    <div class="filter-group">
+        <label>Date Range:</label>
+        <input type="date" id="startDate">
+        <input type="date" id="endDate">
+    </div>
 
+    <button class="primarybtn" id="addStockbtn">
+        <i class="fas fa-plus"></i> Add Stocks
+    </button>
+</div>
+
+
+<div class="table-container">
+    <table id="requestsTable">
+        <thead>
+            <tr>
+                <th>Request No.</th>
+                <th>Input By</th>
+                <th>Date Input</th>
+                <th>No.Items</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="requestsTableBody">
+            <!-- Dynamic content -->
+        </tbody>
+    </table>
+</div>
+
+
+
+@*=================================================================================*@
+@*=========================== ADD STOCKS MODAL  ===================================*@
+@*=================================================================================*@
+<div class="modal fade modal-lg" id="AddRequestModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Add new stocks</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+
+                <form method="post" enctype="multipart/form-data" class="addformcontainer" id="addnewform" autocomplete="off">
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>Requested By :  </label> <br />
+                        <input type="text" id="RequestedBy" placeholder="" />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>Purpose</label>
+                        <textarea id="Purpose" rows="3" placeholder="Describe the purpose of this request..."></textarea>
+                    </div>
+
+
+
+                    <!-- Request Items -->
+                    <div class="items-section">
+                        <h4>Request Items</h4>
+                        <div class="add-item-row">
+                            <div class="select-container">
+                                <select id="partSelect">
+                                    <option value="">Select Part</option>
+                                </select>
+                            </div>       
+                            <input type="number" id="quantity" placeholder="Qty" step="0.01" min="0.01">
+                            <button type="button" class="btn btn-secondary" onclick="addItem()">
+                                <i class="fas fa-plus"></i> Add Item
+                            </button>
+                        </div>
+
+                        <div class="table-container">
+                            <table id="itemsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Part No.</th>
+                                        <th>Part Name</th>
+                                        <th>Quantity</th>
+                                        <th>Unit</th>
+                                        <th>Current Stock</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="itemsTableBody">
+                                    <!-- Dynamic items -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="flex_end mt-4">
+
+                        <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@*=================================================================================*@
+@*=========================== DETAILS STOCK MODAL  ===================================*@
+@*=================================================================================*@
+<div class="modal fade modal-lg" id="DetailsRequestModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Stock Request Details - <span id="RequestNoText">SR-2024-001</span></h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <div class="row">
+                    <div class="form_group col-6 col-sm-6 ">
+                        <label>Requested By :  </label> <br />
+                        <input type="text" id="RequestedByText" placeholder="" />
+                    </div>
+
+                    <div class="form_group col-6 col-sm-6 ">
+                        <label>Date Input</label> <br />
+                        <input type="text" id="DateInputText" placeholder="" />
+                    </div>
+                </div>
+
+                <div class="form_group col-12 col-sm-12 ">
+                    <label>Purpose</label><br />
+                    <textarea style="width: 100%;" id="PurposeText" rows="3" placeholder="Describe the purpose of this request..."></textarea>
+                </div>
+
+                <!-- Request Items -->
+                <div class="items-section">
+                    <h4>Request Items (<span id="countreq"></span>)</h4>
+
+                    <div class="table-container">
+                        <table id="itemsTable">
+                            <thead>
+                                <tr>
+                                    <th>Part No.</th>
+                                    <th>Part Name</th>
+                                    <th>Add Quantity</th>
+                                    <th>Unit</th>
+                                </tr>
+                            </thead>
+                            <tbody id="itemsDetailsTableBody">
+                                <!-- Dynamic items -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    let requestItems = [];
+    let InventItems = [];
+    let StockItems = [];
+
+    let TableDisplay = $("#requestsTableBody");
+
+   const AddStockTable = async () => {
+      loadingDisplay();
+
+      Loadingsteps(async () => {
+          let res = await FetchAuthenticate('@Url.Action("GetAddStockList", "Hydro")', {});
+          if (res && res.Success) {
+              StockItems = res.Data;
+              TableDisplay.empty(); // Removing the Loading Display
+              InventoryPagination(StockItems, 'requestsTableBody');
+          } else {
+              const loadData = `<tr>
+                <td colspan='5'>
+                    🔍 ${res.Message}
+                </td>
+            </tr>`;
+
+              TableDisplay.empty();
+              TableDisplay.append(loadData);
+
+          }
+      });
+  }
+
+
+
+     const InventoryTable = async () => {
+        let res = await FetchAuthenticate('@Url.Action("GetHydroInventory", "Hydro")', {});
+        if (res && res.Success) {
+            InventItems = res.Data;
+            $.each(InventItems, function (index, row) {
+                $("#partSelect").append("<option value='" + row.PartNo + "'>" + row.PartName + "</option>");
+            });
+        }
+     }
+
+
+function InventoryPagination(dataArray, tableBodyId) {
+    let filteredData = [...dataArray];  // For Filter Functionality
+
+    // === Render Table ===
+    const renderTable = () => {
+        const tableBody = document.getElementById(tableBodyId);
+        tableBody.innerHTML = "";
+
+        $.each(filteredData, function (index, row) {
+
+            const rowHtml = `
+                     <tr data-id="${row.RequestID}">
+                         <td data-cell="RequestNo">${row.RequestNo ? row.RequestNo : "-"}</td>
+                         <td data-cell="RequestedBy">${row.RequestedBy ? row.RequestedBy : "-"}</td>
+                         <td data-cell="RequestDate">${row.RequestDate ? row.RequestDate : "-"}</td>
+                         <td data-cell="NoItems">${row.NoItems ? row.NoItems : "-"}</td>
+                         <td data-cell="Delete" >
+                          <div class='flex_center'>
+                              <button  class='Editbtnbutton text-primary bg-white' id='editButton_${row.RequestID}' ">
+                                  <i class="fas fa-eye"></i>
+                              </button>
+                          </div>
+                          </td>
+                     </tr>
+                 `;
+            tableBody.insertAdjacentHTML("beforeend", rowHtml);
+
+
+        });
+    };
+
+
+    // === Show Details ===
+    $(document).on("click", ".Editbtnbutton",  async function (e) {
+        e.stopPropagation();
+        var rowId = $(this).attr("id");
+        var rowIndex = rowId.split("_")[1];
+
+        var selected = StockItems.find(item => item.RequestID === parseInt(rowIndex));
+
+        if (selected) {
+
+            $("#RequestNoText").text(selected.RequestNo);
+            $("#RequestedByText").val(selected.RequestedBy);
+            $("#PurposeText").text(selected.Purpose);
+            $("#DateInputText").val(selected.RequestDate);
+
+                  let res = await FetchAuthenticate('@Url.Action("GetAddDetailsList", "Hydro")', { ID: rowIndex });
+                  let detailsTable = $("#itemsDetailsTableBody");
+                  detailsTable.empty();
+                  if (res && res.Success) {
+
+                      $("#countreq").text(res.Data.length);
+
+                      $.each(res.Data, function (index, row) {
+
+                          const rowHtml = `
+                             <tr data-id="${row.PartNo}">
+                               <td data-cell="PartNo">${row.PartNo ? row.PartNo : "-"}</td>
+                               <td data-cell="PartName">${row.PartName ? row.PartName : "-"}</td>
+                               <td data-cell="QuantityRequested">${row.QuantityRequested ? row.QuantityRequested : 0}</td>
+                               <td data-cell="Unit">${row.Unit ? row.Unit : "-"}</td>
+                           </tr>
+                        `;
+                          detailsTable.append(rowHtml);
+
+
+                      });
+
+                      $("#DetailsRequestModal").modal('show');
+                  }
+        }
+
+
+
+    });
+
+
+
+
+    // === Search ===
+    //const searchTable = debounce(() => {
+    //    const query = $('#searchbox').val().toLowerCase();
+    //    $("#PartlistData tr").each(function () {
+    //        const partName = $(this).find("p").text().toLowerCase();
+    //        const partNo = $(this).find("small").text().toLowerCase();
+
+    //        if (partName.includes(query) || partNo.includes(query)) {
+    //            $(this).show();
+    //        } else {
+    //            $(this).hide();
+    //        }
+    //    });
+    //}, 300);
+
+
+
+    //$('#searchbox').on('input', searchTable);
+
+    // 🔄 Debounce helper
+    //function debounce(func, delay) {
+    //    let timeout;
+    //    return function (...args) {
+    //        clearTimeout(timeout);
+    //        timeout = setTimeout(() => func.apply(this, args), delay);
+    //    };
+    //}
+    // Initial render
+    renderTable();
+}
+
+
+
+
+    $("#addStockbtn").on('click', function (e) {
+        e.preventDefault();
+        let TableDisplay = $("#itemsTableBody");
+        const loadData = `<tr>
+            <td colspan='6'>
+                🔍 No Data Added
+            </td>
+        </tr>`;
+
+        TableDisplay.empty();
+        TableDisplay.append(loadData);
+
+
+        $("#AddRequestModal").modal('show');
+    });
+
+    function addItem() {
+        const partSelect = document.getElementById('partSelect');
+        const quantityInput = document.getElementById('quantity');
+
+        const selectedPart = partSelect.options[partSelect.selectedIndex];
+        const partNo = partSelect.value;
+        const quantity = parseFloat(quantityInput.value);
+
+        if (!partNo || !quantity || quantity <= 0) {
+            alert('Please select a part and enter a valid quantity');
+            return;
+        }
+
+        const partName = selectedPart.text;
+
+
+        // Check if item is already exist
+        // Find and get the index of the current data
+        const existingItemIndex = requestItems.findIndex(item => item.partNo === partNo);
+        const unit = InventItems.find(item => item.PartNo === partNo)?.Unit;
+        const availableStock = InventItems.find(item => item.PartNo === partNo)?.CurrentQty;
+
+        if (existingItemIndex > -1) {
+            // Updates the current push data
+            requestItems[existingItemIndex].quantity += quantity;
+        } else {
+            // Insert a new data
+            requestItems.push({
+                partNo,
+                partName,
+                quantity,
+                unit,
+                availableStock
+            });
+        }
+
+        updateItemsTable();
+
+        partSelect.selectedIndex = 0;
+        quantityInput.value = '';
+    }
+
+
+    function removeItem(partNo) {
+        requestItems = requestItems.filter(item => item.partNo !== partNo);
+        updateItemsTable();
+    }
+
+    function updateItemsTable() {
+        const tbody = document.getElementById('itemsTableBody');
+        tbody.innerHTML = '';
+
+        requestItems.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+            <td>${item.partNo}</td>
+            <td>${item.partName}</td>
+            <td>${item.quantity}</td>
+            <td>${item.unit}</td>
+            <td>${item.availableStock}</td>
+            <td>
+                <button class="btn btn-sm btn-danger" onclick="removeItem('${item.partNo}')">
+                    <i class="fas fa-trash"></i> Remove
+                </button>
+            </td>
+        `;
+            tbody.appendChild(row);
+        });
+    }
+
+
+
+    $("#btnSave").on('click', async function (e) {
+        e.preventDefault();
+        let formData = new FormData();
+        formData.append('RequestBy', $("#RequestedBy").val());
+        formData.append('Purpose', $("#Purpose").val());
+        formData.append('Items', JSON.stringify(requestItems));
+
+        const data = Object.fromEntries(formData);
+        let res = await postData('@Url.Action("AddNewStocks", "Hydro")', formData);
+        if (res && res.Success) {
+            Swal.fire({
+                title: "Success",
+                text: res.Message,
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1500
+            }).then(() => {
+                AddStockTable();
+                $("#AddRequestModal").modal('hide');
+            });
+
+           
+        }
+    });
+
+    function loadingDisplay() {
+        TableDisplay.empty();
+        const loadData = `<tr>
+                         <td colspan='5'>
+                             <div class='Loadercontainer'>
+                                 <span class="loader"></span>
+                                 <p id="loadingStepText">Fetching data from the database..</p>
+                             </div>
+                         </td>
+                     </tr>`;
+        TableDisplay.append(loadData);
+    }
+    function Loadingsteps(callback) {
+        const steps = [
+            "Fetching data from the database...",
+            "Processing data...",
+            "Finalizing table view..."
+        ];
+
+        let stepIndex = 0;
+
+        const interval = setInterval(() => {
+            if (stepIndex < steps.length) {
+                const stepText = document.getElementById("loadingStepText");
+                if (stepText) stepText.innerText = steps[stepIndex];
+                stepIndex++;
+            } else {
+                clearInterval(interval);
+                if (typeof callback === "function") callback();
+            }
+        }, 800);
+    }
+
+
+
+    // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+    const LoadPageData = async () => {
+        try {
+
+            const [invent, drop] = await Promise.all([
+                AddStockTable(),
+                InventoryTable()
+            ]);
+        } catch (error) {
+            console.error("Failed to load page data:", error);
+        } finally {
+            // Hide loading spinner whether success or failure
+            //$("#loadingSpinner").hide();
+        }
+    }
+
+    $(document).ready(() => {
+        LoadPageData();
+    });
+</script>

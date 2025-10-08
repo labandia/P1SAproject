@@ -14,5 +14,12 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Interface
 
         Task<bool> UpdateStocks(int ID, int Quan);
         Task<bool> UpdateWarning(int StockID, double WarningLevel);
+
+
+
+
+        Task<IEnumerable<StockAddModel>> GetAddStocksList();
+        Task<IEnumerable<StockAddDetailsModel>> GetAddStocksDetails(int ID);
+        Task<bool> AddStockItem(List<AddStocksItem> stocks, string request, string remarks);
     }
 }

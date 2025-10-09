@@ -5,10 +5,6 @@
 }
 
 
-<div class="flex_space mb-3">
-    <h5 style="font-weight: 600; margin: 0;"><i class="fas fa-clipboard-list"></i> Manage Chamber Request</h5>
-    <button id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-file-circle-plus"></i> New Request</button>
-</div>
 
 
 
@@ -46,16 +42,20 @@
     </div>
 
 
+    @*<div class="filter-group">
+            <div class="Inputcontainer">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" placeholder="Search Request..." id="inventorySearch" autocomplete="off" />
+                <div class="line"></div>
+            </div>
+
+        </div>*@
+
     <div class="filter-group">
-        <div class="Inputcontainer">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" placeholder="Search Request..." id="inventorySearch" autocomplete="off" />
-            <div class="line"></div>
-        </div>
-
+        <button id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-file-circle-plus"></i> New Request</button>
     </div>
-
   
+
 </div>
 
 
@@ -449,7 +449,7 @@
     const RequesDataList = async () => {
         const chamberType = $("#categoryFilter").val() || "all";
         const status = $("#stockStatusFilter").val() || "all";
-        const search = $("#inventorySearch").val() || "";
+        //const search = $("#inventorySearch").val() || "";
         const startdate = $("#startDate").val() || "";
         const endDate = $("#endDate").val() || "";
 
@@ -457,7 +457,6 @@
             let res = await FetchAuthenticate('@Url.Action("GetAllRequestList", "Hydro")', {
                 chamberType: chamberType,
                 status: status,
-                search: search,
                 startDate: startDate,
                 endDate: endDate,
                 page: currentPage,
@@ -471,11 +470,15 @@
                 renderPagination(total);
                 //$("#RequestCount").text(requestData.length);
                 //renderFilteredData();
+            } else {
+                $("#chamberOrdersTableBody").html(`
+                    <tr><td colspan="9" style="text-align:center; color:#888;">No matching records</td></tr>
+                 `);
             }
         } catch (err) {
             console.error("Error fetching data:", err);
             $("#chamberOrdersTableBody").html(`
-                    <tr><td colspan="8" style="text-align:center; color:red;">Failed to load data</td></tr>
+                    <tr><td colspan="9" style="text-align:center; color:red;">Failed to load data</td></tr>
                 `);
         }
     };
@@ -583,10 +586,10 @@
         RequesDataList();
     });
 
-    $("#inventorySearch").on("keyup", function () {
-        currentPage = 1;
-        RequesDataList();
-    });
+    //$("#inventorySearch").on("keyup", function () {
+    //    currentPage = 1;
+    //    RequesDataList();
+    //});
 
     // ========================== ROW CLICK EVENT ==============================
     $(document).on('click', '.RequestRow', function (e) {

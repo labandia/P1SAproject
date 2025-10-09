@@ -493,7 +493,6 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         public async Task<ActionResult> GetAllRequestList(
                     string chamberType = "all",
                     string status = "all",
-                    string search = "",
                     string startDate = "",
                     string endDate = "",
                     int page = 1,
@@ -510,10 +509,10 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
             if (!string.IsNullOrEmpty(status) && status != "all")
                 filtered = filtered.Where(x => x.RequestStatus == status);
             // filter by Search 
-            if (!string.IsNullOrEmpty(search))
-                filtered = filtered.Where(x => x.ChamberName.Contains(search) ||
-                                               x.OrderID.ToString().Contains(search) ||
-                                               x.PIC.Contains(search));
+            //if (!string.IsNullOrEmpty(search))
+            //    filtered = filtered.Where(x => x.ChamberName.Contains(search) ||
+            //                                   x.OrderID.ToString().Contains(search) ||
+            //                                   x.PIC.Contains(search));
             // filter by StartDate 
             if (DateTime.TryParse(startDate, out var sDate))
                 filtered = filtered.Where(x => DateTime.Parse(x.OrderDate) >= sDate);

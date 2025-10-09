@@ -179,7 +179,8 @@
 
 
     <script type="text/javascript">
-       
+        const isDev = window.location.hostname === "localhost";
+
         /*==================== LINK ACTIVE ====================*/
         const linkColor = document.querySelectorAll('.nav-item')
 
@@ -198,11 +199,10 @@
 
                     let actionpage = currentUrl.substring(currentUrl.lastIndexOf("/") + 1);
 
-                    console.log(actionpage);
 
                     switch (actionpage) {
                         case "orderpage":
-                            $("#titlepage").html(`<i class="fa-solid fa-file-invoice"></i> Request Chambers`);
+                            $("#titlepage").html(`<i class="fas fa-clipboard-list"></i> Manage Chamber Request`);
                             break;
                         case "chambers":
                             $("#titlepage").html(`<i class="fa-solid fa-x-ray"></i>  Hydroponic Chamber`);
@@ -223,7 +223,7 @@
                             $("#titlepage").html(`<i class="fas fa-users"></i>  User Management`);
                             break;
                     }
-                    
+
                 }
             });
         });
@@ -260,92 +260,83 @@
             document.querySelector('.sidebar').style.display = 'none';
         }
 
-        $(document).ready(function () {
-            let unseenCount = 0;
+ let unseenCount = 0;
 
-            // Toggle dropdown
-            $("#notificationBell").click(function () {
-                $("#notificationDropdown").toggle();
-                unseenCount = 0; // ✅ reset unseen count
-            });
-
-
-            // Hide dropdown if clicking outside
-            $(document).click(function (e) {
-                if (!$(e.target).closest("#notificationBell, #notificationDropdown").length) {
-                    $("#notificationDropdown").hide();
-                }
-            });
-
-            let lastCheck = null;
-
-             // Polling function
-           async function pollStockAlerts() {
-                try {
-                    const response = await $.ajax({
-                        url: '@Url.Action("GetStockAlerts", "Stock")',
-                        type: 'GET',
-                        dataType: 'json'
-                    });
-                } catch (error) {
-                    console.warn("Error fetching stock alerts:", error);
-                }
-            }
-
-            async function GetNotification() {
-                let ID = parseInt(localStorage.getItem("UserID"));
-                $("#notificationBadge").hide();
-
-                  const response = await $.ajax({
-                      url: '@Url.Action("GetNoficationDisplay", "Stock")',
-                      data: { userID: ID },
-                      type: 'GET',
-                      dataType: 'json'
-                  });
+ // Toggle dropdown
+ $("#notificationBell").click(function () {
+     $("#notificationDropdown").toggle();
+     unseenCount = 0; // ✅ reset unseen count
+ });
 
 
-                if (response.Success) {
-                    const container = $("#stockAlerts");
-                    container.empty();
+ // Hide dropdown if clicking outside
+ $(document).click(function (e) {
+     if (!$(e.target).closest("#notificationBell, #notificationDropdown").length) {
+         $("#notificationDropdown").hide();
+     }
+ });
 
-                    const countUnread = response.Data.filter(item => item.IsRead === false).length;
-                    if (countUnread !== 0) {
-                        $("#countinside").text(countUnread);
-                        $("#notificationBadge").text(countUnread);
+ let lastCheck = null;
 
-                        $("#notificationBadge").show();
-                    } else {
-                        $("#notificationBadge").hide();
-                    }
+  // Polling function
+async function pollStockAlerts() {
+     try {
+         const response = await $.ajax({
+             url: '@Url.Action("GetStockAlerts", "Stock")',
+             type: 'GET',
+             dataType: 'json'
+         });
+     } catch (error) {
+         console.warn("Error fetching stock alerts:", error);
+     }
+ }
 
+ async function GetNotification() {
+     let ID = parseInt(localStorage.getItem("UserID"));
+     $("#notificationBadge").hide();
 
-
-                    if (!response.Data || response.Data.length === 0) {
-                        container.append('<li style="padding:10px; text-align:center; color:gray;">No alerts</li>');
-                    } else {
-                        response.Data.forEach(alert => {
-                            container.append(
-                                `<div class="list-item"  id='Details_${alert.NotificationId}'>
-                                        <p>${alert.Title}</p>
-                                        <small>${alert.CreatedDate}</small>
-                                    </div>`
-                            );
-                        });
-
-
-                    }
-                }
+       const response = await $.ajax({
+           url: '@Url.Action("GetNoficationDisplay", "Stock")',
+           data: { userID: ID },
+           type: 'GET',
+           dataType: 'json'
+       });
 
 
-            }
+     if (response.Success) {
+         const container = $("#stockAlerts");
+         container.empty();
+
+         const countUnread = response.Data.filter(item => item.IsRead === false).length;
+         if (countUnread !== 0) {
+             $("#countinside").text(countUnread);
+             $("#notificationBadge").text(countUnread);
+
+             $("#notificationBadge").show();
+         } else {
+             $("#notificationBadge").hide();
+         }
 
 
 
-            // Start polling every 15 seconds
-            pollStockAlerts(); // initial load
-            GetNotification();
-            //setInterval(pollStockAlerts, 60000); // 15s interval
-        });
+         if (!response.Data || response.Data.length === 0) {
+             container.append('<li style="padding:10px; text-align:center; color:gray;">No alerts</li>');
+         } else {
+             response.Data.forEach(alert => {
+                 container.append(
+                     `<div class="list-item"  id='Details_${alert.NotificationId}'>
+                             <p>${alert.Title}</p>
+                             <small>${alert.CreatedDate}</small>
+                         </div>`
+                 );
+             });
+
+
+         }
+     }
+
+
+ }
 
         $(document).on('click', '.list-item', async function (e) {
             e.stopPropagation(); // Prevent triggering the row click event
@@ -459,14 +450,16 @@
                     url: '@Url.Action("StocksAlertEmailNotification", "Stock")',
                     type: 'POST',
                     success: function (response) {
-                        console.log("Stock alert email sent successfully.");
+                        if (response.Success && response.StatusCode === 200) {
+                            console.log("Stock alert email sent successfully.");
+                        }
                     },
                     error: function (xhr, status, error) {
-                        //console.log("Failed to send stock alert email: " + error);
+                        if (isDev) console.error("Failed to send stock alert email:", error);
                     }
                 });
             } catch (e) {
-                console.warn("Error fetching stock alerts:", e);
+                 if (isDev) console.warn("Error fetching stock alerts:", e);
             }
         });
 
@@ -480,22 +473,10 @@
         });
 
 
-        // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
-        const LayoutLoadData = async () => {
-            try {
 
-                const [user] = await Promise.all([
-                    GetFullname()
-                ]);
-            } catch (error) {
-                console.error("Failed to load page data:", error);
-            } finally {
-                //$("#loadingSpinner").hide();
-            }
-        }
-
-        $(document).ready(() => {
-            LayoutLoadData();
+        // ========================== INITIAL LOAD ==============================
+        $(document).ready(async () => {
+            await Promise.all([GetFullname(), pollStockAlerts(), GetNotification()]);
         });
     </script>
 

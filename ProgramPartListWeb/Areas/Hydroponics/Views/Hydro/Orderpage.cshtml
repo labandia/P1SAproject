@@ -5,57 +5,59 @@
 }
 
 
+<div class="flex_space mb-3">
+    <h5 style="font-weight: 600; margin: 0;"><i class="fas fa-clipboard-list"></i> Manage Chamber Request</h5>
+    <button id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-file-circle-plus"></i> New Request</button>
+</div>
+
+
 
 @*<button id="Showadd" class="floatBtn" type="button"><i class="fa-solid fa-file-circle-plus"></i></button>*@
-
-<div class="flex_end mb-2">
-  
-</div>
 
 
 <div class="filters">
     <div class="filter-group">
-        <label>Chamber Type:</label> <br />
-        <select id="categoryFilter">
-            <option value="all">All Types</option>
-            <option value="SHIBAKAWA">SHIBAKAWA</option>
-            <option value="NUPON">NUPON</option>
-            <option value="SLIM TYPE">Mechanical</option>
-        </select>
+        <div class="select-container">
+            <select id="categoryFilter">
+                <option value="all">All Types</option>
+                <option value="SHIBAKAWA">SHIBAKAWA</option>
+                <option value="NUPON">NUPON</option>
+                <option value="SLIM TYPE">SLIM TYPE</option>
+            </select>
+        </div>
+
+
+
     </div>
     <div class="filter-group">
-        <label>Status:</label><br />
-        <select id="stockStatusFilter">
-            <option value="all">All Status</option>
-            <option value="ONGOING">ONGOING</option>
-            <option value="COMPLETED">COMPLETED</option>
-        </select>
+        <div class="select-container">
+            <select id="stockStatusFilter">
+                <option value="all">All Status</option>
+                <option value="Ongoing">Ongoing</option>
+                <option value="Completed">Completed</option>
+                <option value="For Shipped">For Shipping</option>
+            </select>
+        </div>
     </div>
 
     <div class="filter-group">
-        <label>Date Range:</label><br />
-        <input type="date" id="startDate" onchange="filterRequests()">
-        <input type="date" id="endDate" onchange="filterRequests()">
+        <input type="date" id="startDate">
+        <input type="date" id="endDate">
     </div>
 
 
     <div class="filter-group">
         <div class="Inputcontainer">
             <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" placeholder="Search Request..." id="inventorySearch" autocomplete="off" onkeyup="filterInventory()"/>
+            <input type="text" placeholder="Search Request..." id="inventorySearch" autocomplete="off" />
             <div class="line"></div>
         </div>
 
     </div>
 
-    <div class="filter-group">
-        <button id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-file-circle-plus"></i> New Request</button>
-    </div>
+  
 </div>
 
-<div class="filter-group">
-    <strong>Total Request : <span id="RequestCount"></span></strong>
-</div>
 
 <table id="chamberOrdersTable">
     <thead>
@@ -68,6 +70,7 @@
             <th>PIC</th>
             <th>Progress </th>
             <th>Status</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody id="chamberOrdersTableBody">
@@ -76,8 +79,8 @@
 </table>
 
 
-
-
+<div id="paginationV2" class="pagination-container">
+</div>
 
 
 
@@ -101,8 +104,8 @@
 
 
                 <form method="post" enctype="multipart/form-data" class="addformcontainer" id="addnewform" autocomplete="off">
-                    <div class="form_group col-12 col-sm-12 mb-2">
-                        <label>Select Chamber <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                    <div class="form_group col-12 col-sm-12 mb-3">
+                        <label class="mb-2">Select Chamber <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
                         <div class="select-container">
                             <select id="ChamberID" name="ChamberID">
                                 <option value="0">-- select Chambers --</option>
@@ -142,6 +145,57 @@
         </div>
     </div>
 </div>
+
+
+
+
+<div class="modal fade modal-l" id="StatusUpdateModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Update  Status</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+
+                <form method="post"  class="addformcontainer" id="Statusnewform" autocomplete="off">
+                    <div class="form_group col-12 col-sm-12 mb-3">
+                        <input type="hidden" id="OrderID" name="OrderID">
+                        <label>Current Status</label>
+                        <input type="text" id="currentOrderStatus" readonly>
+                    </div>
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>New Status *</label>
+                        <div class="select-container">
+                            <select id="Status" name="Status" required>
+                                <option value="">Select Status</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Ongoing">Ongoing</option>
+                                <option value="For Shipped">For Shipped</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                   
+
+                    <div class="flex_end mt-4">
+                        
+                        <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
 
 
 @*<div class="ExportContainer">
@@ -372,7 +426,6 @@
     </script>*@
 
 
-<div id="paginationV2" class="pagination-container"></div>
 
 
 <script type="text/javascript">
@@ -380,6 +433,7 @@
     let completeData = [];
     let currentPage = 1;
     const rowsPerPage = 10;
+    const pageSize = 10;
 
     let today = new Date();
     let dd = String(today.getDate()).padStart(2, '0');
@@ -389,120 +443,127 @@
     document.getElementById("TargetDate").setAttribute("min", todayStr);
 
     const addforms = document.getElementById("addnewform");
+    const changeforms = document.getElementById("Statusnewform");
 
     // ========================== LOAD REQUEST DATA ==============================
     const RequesDataList = async () => {
-        let res = await FetchAuthenticate('@Url.Action("GetAllRequestList", "Hydro")', {});
-        if (res && res.Success) {
-            requestData = res.Data;
-            //requestData = res.Data.filter(item => item.RequestStatus === "ONGOING");
-            //completeData = res.Data.filter(item => item.RequestStatus === "COMPLETED");
-            $("#RequestCount").text(requestData.length);
-            renderFilteredData();
+        const chamberType = $("#categoryFilter").val() || "all";
+        const status = $("#stockStatusFilter").val() || "all";
+        const search = $("#inventorySearch").val() || "";
+        const startdate = $("#startDate").val() || "";
+        const endDate = $("#endDate").val() || "";
+
+        try {
+            let res = await FetchAuthenticate('@Url.Action("GetAllRequestList", "Hydro")', {
+                chamberType: chamberType,
+                status: status,
+                search: search,
+                startDate: startDate,
+                endDate: endDate,
+                page: currentPage,
+                pageSize: pageSize
+            });
+
+            if (res && res.Success) {
+                requestData = res.Data.Data || res.Data || [];
+                const total = res.Data?.Total ?? requestData.length;
+                renderTable(requestData);
+                renderPagination(total);
+                //$("#RequestCount").text(requestData.length);
+                //renderFilteredData();
+            }
+        } catch (err) {
+            console.error("Error fetching data:", err);
+            $("#chamberOrdersTableBody").html(`
+                    <tr><td colspan="8" style="text-align:center; color:red;">Failed to load data</td></tr>
+                `);
         }
     };
 
     // ========================== RENDER TABLE + PAGINATION ======================
-    function renderFilteredData() {
-        let TableData = $("#chamberOrdersTableBody");
+    function renderTable(data) {
+        const TableData = $("#chamberOrdersTableBody");
         TableData.empty();
 
-        const selectedType = $("#categoryFilter").val();
-        const selectedStatus = $("#stockStatusFilter").val();
-        const searchQuery = $("#inventorySearch").val().toLowerCase();
-        const start = $("#startDate").val();
-        const end = $("#endDate").val();
-
-        // Apply filters
-        let filtered = requestData.filter(row => {
-            if (selectedType !== "all" && row.ChamberName !== selectedType) return false;
-            if (selectedStatus !== "all" && row.RequestStatus !== selectedStatus) return false;
-
-            if (start || end) {
-                let parts = row.OrderDate.split("/");
-                let rowDate = new Date(parts[2], parts[0] - 1, parts[1]);
-                if (start && rowDate < new Date(start)) return false;
-                if (end && rowDate > new Date(end)) return false;
-            }
-
-            if (searchQuery && !(
-                (row.OrderID && row.OrderID.toString().includes(searchQuery)) ||
-                (row.ChamberName && row.ChamberName.toLowerCase().includes(searchQuery)) ||
-                (row.PIC && row.PIC.toLowerCase().includes(searchQuery))
-            )) return false;
-
-            return true;
-        });
-
-        $("#RequestCount").text(filtered.length);
-
-        if (filtered.length === 0) {
-            TableData.append(`<tr><td colspan="8" style="text-align:center; color:#888;">No matching records found</td></tr>`);
-            $("#paginationV2").html("");
+        // If no Data found
+        if (!data.length) {
+            TableData.append(`<tr><td colspan="8" style="text-align:center; color:#888;">No matching records</td></tr>`);
             return;
         }
 
-        // Pagination logic
-        const totalPages = Math.ceil(filtered.length / rowsPerPage);
-        if (currentPage > totalPages) currentPage = 1;
+        $.each(data, function (_, row) {
+            const percent = Math.round(parseFloat(row.CompletionPercent) || 0);
+            let barColor = "#e74c3c"; // red
+            if (percent >= 70) barColor = "#27ae60"; // green
+            else if (percent >= 40) barColor = "#f39c12"; // yellow
 
-        const startIdx = (currentPage - 1) * rowsPerPage;
-        const paginatedData = filtered.slice(startIdx, startIdx + rowsPerPage);
+            let statsCss = "";
 
-        // Render rows
-        $.each(paginatedData, function (index, row) {
-            let percent = parseFloat(row.CompletionPercent) || 0;
-            let displayPercent = Math.round(percent);
-            let barColor = "linear-gradient(90deg, #e74c3c, #c0392b)";
-            if (percent >= 70) barColor = "linear-gradient(90deg, #2ecc71, #27ae60)";
-            else if (percent >= 40) barColor = "linear-gradient(90deg, #f1c40f, #f39c12)";
+            if (row.RequestStatus == 'Completed') {
+                statsCss = 'readiness-ready'
+            } else if (row.RequestStatus == 'For Shipped') {
+                statsCss = 'readiness-warning'
+            } else {
+                statsCss = 'readiness-not-ready'
+            }
 
-            const loadData = `
-              <tr class='RequestRow' id='Details_${row.OrderID}'>
-                  <td><strong>${row.OrderID ?? "-"}</strong></td>
-                  <td>${row.ChamberName ?? "-"}</td>
-                  <td>${row.ChambersOrdered ?? 0} unit(s)</td>
-                  <td>${row.OrderDate ?? "-"}</td>
-                  <td>${row.TargetDate ?? "-"}</td>
-                  <td>${row.PIC ?? "-"}</td>
-                  <td style='text-align:center; display: flex; justify-content: center; flex-direction: column; align-items: center;'>
-                      <div class="progress-bar-container">
-                          <div class="progress-bar"></div>
-                      </div>
-                      <span style="font-size:.75rem; margin-top:4px;">Completion rate: ${displayPercent}%</span>
-                  </td>
-                  <td>${row.RequestStatus ?? "-"}</td>
-              </tr>
-            `;
-            TableData.append(loadData);
+            TableData.append(`
+                <tr >
+                    <td><strong>${row.OrderID ?? "-"}</strong></td>
+                    <td>${row.ChamberName ?? "-"}</td>
+                    <td>${row.ChambersOrdered ?? 0} unit(s)</td>
+                    <td>${row.OrderDate ?? "-"}</td>
+                    <td>${row.TargetDate ?? "-"}</td>
+                    <td>${row.PIC ?? "-"}</td>
+                    <td style="text-align:center;  display: flex; justify-content: center; flex-direction: column; align-items: center;">
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" style="width:0; background:${barColor};"></div>
+                        </div>
+                        <span style="font-size:.75rem;">${percent}% Complete</span>
+                    </td>
+                    <td>
+                        <span class='readiness-badge ${statsCss}'>
+                            ${row.RequestStatus ?? "-"}
+                        </span>
+                    </td>
+                    <td class="order-actions">
+                        <button class="RequestRow btn btn-sm btn-secondary" id="Details_${row.OrderID}">
+                            <i class="fas fa-eye"></i>
+                        </button>
+
+                        <button class="EditRow btn btn-sm btn-primary" id="Details_${row.OrderID}" >
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </td>
+                </tr>
+            `);
 
             const $bar = TableData.find(".progress-bar").last();
-            $bar.css("background", barColor);
-            setTimeout(() => $bar.css("width", `${percent}%`), 50);
+            setTimeout(() => $bar.css("width", `${percent}%`), 100);
         });
-
-        // Render pagination controls
-        renderPagination(totalPages);
     }
 
     // ========================== PAGINATION CONTROLS ============================
-    function renderPagination(totalPages) {
-        let pagination = $("#paginationV2");
+    function renderPagination(totalItems) {
+        const totalPages = Math.ceil(totalItems / pageSize);
+        const pagination = $("#paginationV2");
         pagination.empty();
 
-        if (totalPages <= 1) return;
 
-        let html = `
-            <button class="page-btn" data-page="${currentPage - 1}" ${currentPage === 1 ? "disabled" : ""}>Prev</button>
-        `;
+
+        let html = '';
+
+        if (totalPages > 1) {
+            html += `<button class="page-btn" data-page="${currentPage - 1}" ${currentPage === 1 ? "disabled" : ""}>Prev</button>`;
+        }
 
         for (let i = 1; i <= totalPages; i++) {
             html += `<button class="page-btn ${i === currentPage ? "active" : ""}" data-page="${i}">${i}</button>`;
         }
 
-        html += `
-            <button class="page-btn" data-page="${currentPage + 1}" ${currentPage === totalPages ? "disabled" : ""}>Next</button>
-        `;
+        if (totalPages > 1) {
+            html += `<button class="page-btn" data-page="${currentPage + 1}" ${currentPage === totalPages ? "disabled" : ""}>Next</button>`;
+        }
 
         pagination.html(html);
     }
@@ -512,19 +573,19 @@
         const newPage = parseInt($(this).data("page"));
         if (!isNaN(newPage)) {
             currentPage = newPage;
-            renderFilteredData();
+            RequesDataList();
         }
     });
 
     // ========================== FILTER EVENTS ================================
     $("#categoryFilter, #stockStatusFilter, #startDate, #endDate").on("change", function () {
         currentPage = 1;
-        renderFilteredData();
+        RequesDataList();
     });
 
     $("#inventorySearch").on("keyup", function () {
         currentPage = 1;
-        renderFilteredData();
+        RequesDataList();
     });
 
     // ========================== ROW CLICK EVENT ==============================
@@ -534,12 +595,25 @@
         window.location.href = `/Hydroponics/Hydro/OrderpageDetails?orderID=${rowId}`;
     });
 
+    $(document).on('click', '.EditRow', function (e) {
+        e.stopPropagation();
+        const rowId = $(this).attr('id').split('_')[1];
+        var getStats = requestData.filter(res => res.OrderID === rowId);
+
+        if (getStats) {
+            $("#currentOrderStatus").val(getStats[0].RequestStatus);
+            $("#OrderID").val(getStats[0].OrderID);
+            $("#StatusUpdateModal").modal('show');
+        }
+    });
+
     // ========================== ADD REQUEST ==============================
     const GetChamberDatalist = async () => {
         let res = await FetchAuthenticate('@Url.Action("GetChamberList", "Hydro")', {});
         if (res && res.Success) {
-            $.each(res.Data, function (index, row) {
-                $("#ChamberID").append(`<option value='${row.ChamberID}'>${row.ChamberName}</option>`);
+            const select = $("#ChamberID").empty().append(`<option value="0">-- select Chamber --</option>`);
+            res.Data.forEach(row => {
+                select.append(`<option value="${row.ChamberID}">${row.ChamberName}</option>`);
             });
         }
     };
@@ -560,16 +634,20 @@
         }
     });
 
-    // ========================== INITIAL LOAD ==============================
-    const LoadPageData = async () => {
-        try {
-            await Promise.all([RequesDataList(), GetChamberDatalist()]);
-        } catch (error) {
-            console.error("Failed to load page data:", error);
+    changeforms.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        let formdata = new FormData(e.target);
+        const data = Object.fromEntries(formdata);
+        let res = await postData('@Url.Action("ChangeStatusRequest", "Hydro")', formdata);
+        if (res && res.Success) {
+            RequesDataList();
+            e.target.reset();
+            $("#StatusUpdateModal").modal("hide");
         }
-    };
+    });
 
-    $(document).ready(() => {
-        LoadPageData();
+    // ========================== INITIAL LOAD ==============================
+    $(document).ready(async () => {
+        await Promise.all([RequesDataList(), GetChamberDatalist()]);
     });
 </script>

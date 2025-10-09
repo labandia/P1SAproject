@@ -99,7 +99,6 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
             try
             {
                 bool sent = await _stock.SendEmailNotificationStocks();
-                if (!sent) return JsonPostError("Update failed.", 500);
                 return JsonCreated(sent, "Update Successfully");
             }catch(Exception e)
             {

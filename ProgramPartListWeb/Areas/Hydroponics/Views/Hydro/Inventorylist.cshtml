@@ -12,7 +12,16 @@
             <div class="line"></div>
         </div>
 
+        <div>
+            <input type="checkbox" id="chkCheck" value="check" />
+            <span>Sufficient</span>
 
+            <input type="checkbox" id="chkRestock" value="Restock" />
+            <span>Restock</span>
+
+            <input type="checkbox" id="chkOut" value="Out of stocks" />
+            <span>Out of Stocks</span>
+        </div>
     </div>
 
     <div class="flex_align">
@@ -28,16 +37,16 @@
 <hr />
 
 <div class="summary-cards">
-    <div class="card">
+    <div class="cardStock">
         <div class="card-icon total-items">
             <i class="fas fa-boxes"></i>
         </div>
         <div class="card-content">
-            <h3 id="totalItems">0</h3>
+            <h3 id="Countlist">0</h3>
             <p>Total Items</p>
         </div>
     </div>
-    <div class="card">
+    <div class="cardStock">
         <div class="card-icon low-stock">
             <i class="fas fa-exclamation-triangle"></i>
         </div>
@@ -46,7 +55,7 @@
             <p>Low Stock</p>
         </div>
     </div>
-    <div class="card">
+    <div class="cardStock">
         <div class="card-icon out-of-stock">
             <i class="fas fa-times-circle"></i>
         </div>
@@ -58,19 +67,7 @@
 
 </div>
 
-<div class="flex_space">
-    <div>
-        <input type="checkbox" id="chkCheck" value="check" />
-        <span>Sufficient</span>
 
-        <input type="checkbox" id="chkRestock" value="Restock" />
-        <span>Restock</span>
-
-        <input type="checkbox" id="chkOut" value="Out of stocks" />
-        <span>Out of Stocks</span>
-    </div>
-    <span>Total Parts: <span id="Countlist"></span> </span>
-</div>
 
 <div class="InspecTable">
     <table>
@@ -80,7 +77,7 @@
                 <th> <i class="fa-regular fa-address-card"></i> <span style="margin-left: .5em;">Supplier</span>  </th>
                 <th> <i class="fa-solid fa-box-open"></i>  <span style="margin-left: .5em;">Current Stock</span>  </th>
                 <th> <i class="fa-regular fa-square-check"></i> <span style="margin-left: .5em;">Mininum Stock</span>  </th>
-                <th style="width: 15%;"> <i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Status</span>  </th>
+                <th style="width: 15%;"> <i class="fa-solid fa-database"></i> <span style="margin-left: .5em;">Status</span>  </th>
 
             </tr>
         </thead>
@@ -106,7 +103,7 @@
 
                 <form id="addinventform" class="addformcontainer">
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-5">
                             <div class="upload-container flex_center" id="upload-container">
                                 <div class="upload-icon">📷</div>
                                 <div class="file-info">Upload a photo of Parts.<br>Max file size: 1MB<br>png, jpg, jpeg, bmp, gif</div>
@@ -120,75 +117,96 @@
                                 <img id="previewImage" class="preview-image" src="" alt="Image Preview">
                             </div>
                         </div>
-                        <div class="col-6">
-                            <div class="form_group col-12 col-sm-12 col-lg-12 mb-2">
-                                <label>Part Number </label> <br />
-                                <input type="text" name="PartNo" id="PartNo" placeholder="Enter Part number " required />
+                        <div class="col-7">
+                            <div class="row mb-1">
+                                <div class="form_group col-6 col-sm-6 col-lg-6 ">
+                                    <label>Part Number </label> <br />
+                                    <input type="text" name="PartNo" id="PartNo" placeholder="Enter Part number " autocomplete="off" required />
 
-                            </div>
-                            <div class="form_group col-12 col-sm-12">
-                                <label for="">Part Name  </label>
-                                <input type="text" name="PartName" id="PartName" autocomplete="off" required>
-                            </div>
-
-                            <div class="form_group col-12 col-sm-12">
-                                <label for="">Category  </label>
-                                <div class="select-container">
-                                    <select id="CategoryID" name="CategoryID">
-                                        <option value="0">-- Category --</option>
-                                        <option value="1">
-                                            Enclosure Parts
-                                        </option>
-                                        <option value="2">
-                                            Electrical Parts
-
-                                        </option>
-                                        <option value="3">
-                                            Sanyo Denki
-                                        </option>
-                                        <option value="4">
-                                            Other Parts
-                                        </option>
-                                    </select>
+                                </div>
+                                <div class="form_group col-6 col-sm-6">
+                                    <label for="">Part Name  </label>
+                                    <input type="text" name="PartName" id="PartName"   placeholder="Enter Part Name " autocomplete="off" required>
                                 </div>
                             </div>
 
-                            <div class="form_group col-12 col-sm-12">
-                                <label>Unit *</label>
-                                <select id="Unit" name="Unit" required>
-                                    <option value="pc">Piece (pc)</option>
-                                    <option value="m">Meter (m)</option>
-                                    <option value="liters">Liters</option>
-                                    <option value="ml">Milliliters (ml)</option>
-                                    <option value="pack">Pack</option>
-                                    <option value="set">Set</option>
-                                </select>
+                            <div class="row mb-2">
+                                <div class="form_group col-6 col-sm-6 col-lg-6">
+                                    <label for="" class="mb-2">Category  </label> 
+                                    <div class="select-container">
+                                        <select id="CategoryID" name="CategoryID">
+                                            <option value="0">-- Category --</option>
+                                            <option value="1">
+                                                Enclosure Parts
+                                            </option>
+                                            <option value="2">
+                                                Electrical Parts
+
+                                            </option>
+                                            <option value="3">
+                                                Sanyo Denki
+                                            </option>
+                                            <option value="4">
+                                                Other Parts
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form_group col-6 col-sm-6 col-lg-6">
+                                    <label class="mb-2">Unit *</label>
+                                    <div class="select-container">
+                                        <select id="Unit" name="Unit" required>
+                                            <option value="pc">Piece (pc)</option>
+                                            <option value="m">Meter (m)</option>
+                                            <option value="liters">Liters</option>
+                                            <option value="ml">Milliliters (ml)</option>
+                                            <option value="pack">Pack</option>
+                                            <option value="set">Set</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+
                             </div>
 
-                            <div class="form_group col-12 col-sm-12">
-                                <label for="">Supplier  </label>
-                                <input type="text" name="Supplier" id="Supplier" autocomplete="off" required>
+                            <div class="row mb-2">
+                                <div class="form_group col-6 col-sm-6">
+                                    <label for="">Supplier  </label> 
+                                    <input type="text" name="Supplier" id="Supplier" autocomplete="off" required>
+                                </div>
+
+                                <div class="form_group col-6 col-sm-6">
+                                    <label>Reorder Level</label>
+                                    <input type="number" id="ReorderLevel" name="ReorderLevel" step="0.01" min="0" required>
+                                </div>
                             </div>
 
-                            <div class="form_group col-12 col-sm-12">
-                                <label>Reorder Level</label>
-                                <input type="number" id="ReorderLevel" name="ReorderLevel" step="0.01" min="0" value="5">
+                            <div class="row mb-2">
+                                <div class="form_group col-6 col-sm-6">
+                                    <label>Initial Stock *</label>
+                                    <input type="number" id="CurrentQty" name="CurrentQty" step="0.01" min="0" required>
+                                </div>
+
+                                <div class="form_group col-6 col-sm-6">
+                                    <label>Warning Level</label>
+                                    <input type="number" id="WarningLevel" name="WarningLevel" step="0.01" min="0" required>
+                                </div>
                             </div>
 
-                            <div class="form_group col-12 col-sm-12">
-                                <label>Initial Stock *</label>
-                                <input type="number" id="CurrentQty" name="CurrentQty" step="0.01" min="0" required>
+                            <div class="row">
+                                <div class="form_group col-6 col-sm-6">
+                                    <label>Unit Price</label>
+                                    <input type="number" id="Unit_Price" name="Unit_Price" step="0.01" min="0" required>
+                                </div>
                             </div>
 
-                            <div class="form_group col-12 col-sm-12">
-                                <label>Warning Level</label>
-                                <input type="number" id="WarningLevel" name="WarningLevel" step="0.01" min="0" value="10">
-                            </div>
 
-                            <div class="form_group col-12 col-sm-12">
-                                <label>Unit Price</label>
-                                <input type="number" id="Unit_Price" name="Unit_Price" step="0.01" min="0" value="10">
-                            </div>
+                            
+
+                            
+
+                            
 
 
                             <div class="flex_end mt-4">
@@ -196,7 +214,7 @@
                                 <button type="submit" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
                             </div>
                         </div>
-                    </div>
+                        </div>
 
 
                 </form>
@@ -226,7 +244,7 @@
 
                 <form id="EditInventform" class="addformcontainer">
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-5">
                             <div class="upload-container flex_center" id="upload-container">
                                 <div class="upload-icon">📷</div>
                                 <div class="file-info">Upload a photo of Parts.<br>Max file size: 1MB<br>png, jpg, jpeg, bmp, gif</div>
@@ -240,74 +258,85 @@
                                 <img id="EditpreviewImage" class="Editpreview-image" src="" alt="Image Preview">
                             </div>
                         </div>
-                        <div class="col-6">
-                            <div class="form_group col-12 col-sm-12 col-lg-12 mb-2">
-                                <label>Part Number </label> <br />
-                                <input type="hidden" name="ExistingImageParts" id="ExistingImageParts" />
-                                <input type="hidden" name="TempPartno" id="TempPartno" />
-                                <input type="text" name="EditPartNo" id="EditPartNo" placeholder="Enter Part number " />
-
-                            </div>
-                            <div class="form_group col-12 col-sm-12">
-                                <label for="">Part Name  </label>
-                                <input type="text" name="EditPartName" id="EditPartName" autocomplete="off">
-                            </div>
-
-                            <div class="form_group col-12 col-sm-12">
-                                <label for="">Category  </label>
-                                <div class="select-container">
-                                    <select id="EditCategoryID" name="EditCategoryID">
-                                        <option value="0">-- Category --</option>
-                                        <option value="1">
-                                            Enclosure Parts
-                                        </option>
-                                        <option value="2">
-                                            Electrical Parts
-
-                                        </option>
-                                        <option value="3">
-                                            Sanyo Denki
-                                        </option>
-                                        <option value="4">
-                                            Other Parts
-                                        </option>
-                                    </select>
+                        <div class="col-7">
+                            <div class="row mb-1">
+                                <div class="form_group col-6 col-sm-6 col-lg-6 ">
+                                    <label>Part Number </label> <br />
+                                    <input type="hidden" name="ExistingImageParts" id="ExistingImageParts" />
+                                    <input type="hidden" name="TempPartno" id="TempPartno" />
+                                    <input type="text" name="EditPartNo" id="EditPartNo" placeholder="Enter Part number " />
+                                </div>
+                                <div class="form_group col-6 col-sm-6">
+                                    <label for="">Part Name  </label>
+                                    <input type="text" name="EditPartName" id="EditPartName" autocomplete="off">
                                 </div>
                             </div>
 
-                            <div class="form_group col-12 col-sm-12">
-                                <label>Unit *</label>
-                                <select id="Unit" name="EditUnit" required>
-                                    <option value="pc">Piece (pc)</option>
-                                    <option value="m">Meter (m)</option>
-                                    <option value="liters">Liters</option>
-                                    <option value="ml">Milliliters (ml)</option>
-                                    <option value="pack">Pack</option>
-                                    <option value="set">Set</option>
-                                </select>
+                            <div class="row mb-2">
+                                <div class="form_group col-6 col-sm-6 col-lg-6">
+                                    <label for="" class="mb-2">Category  </label>
+                                    <div class="select-container">
+                                        <select id="EditCategoryID" name="EditCategoryID">
+                                            <option value="0">-- Category --</option>
+                                            <option value="1">
+                                                Enclosure Parts
+                                            </option>
+                                            <option value="2">
+                                                Electrical Parts
+
+                                            </option>
+                                            <option value="3">
+                                                Sanyo Denki
+                                            </option>
+                                            <option value="4">
+                                                Other Parts
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form_group col-6 col-sm-6 col-lg-6">
+                                    <label class="mb-2">Unit *</label>
+
+                                    <div class="select-container">
+                                        <select id="Unit" name="EditUnit" required>
+                                            <option value="pc">Piece (pc)</option>
+                                            <option value="m">Meter (m)</option>
+                                            <option value="liters">Liters</option>
+                                            <option value="ml">Milliliters (ml)</option>
+                                            <option value="pack">Pack</option>
+                                            <option value="set">Set</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="form_group col-12 col-sm-12">
-                                <label for="">Supplier  </label>
-                                <input type="text" name="EditSupplier" id="EditSupplier" autocomplete="off">
+                            <div class="row mb-2">
+                                <div class="form_group col-6 col-sm-6">
+                                    <label for="">Supplier  </label>
+                                    <input type="text" name="EditSupplier" id="EditSupplier" autocomplete="off">
+                                </div>
+
+                                <div class="form_group col-6 col-sm-6">
+                                    <label>Reorder Level</label>
+                                    <input type="number" id="EditReorderLevel" name="ReorderLevel" step="0.01" min="0" value="5">
+                                </div>
                             </div>
 
-                            <div class="form_group col-12 col-sm-12">
-                                <label>Reorder Level</label>
-                                <input type="number" id="EditReorderLevel" name="ReorderLevel" step="0.01" min="0" value="5">
+                            <div class="row mb-2">
+                                <div class="form_group col-6 col-sm-6">
+                                    <label>Warning Level</label>
+                                    <input type="number" id="EditWarningLevel" name="WarningLevel" step="0.01" min="0" value="10">
+                                </div>
+
+                                <div class="form_group col-6 col-sm-6">
+                                    <label>Unit Price</label>
+                                    <input type="number" id="EditUnit_Price" name="EditUnit_Price" step="0.01" min="0">
+                                </div>
                             </div>
 
-
-                            <div class="form_group col-12 col-sm-12">
-                                <label>Warning Level</label>
-                                <input type="number" id="EditWarningLevel" name="WarningLevel" step="0.01" min="0" value="10">
-                            </div>
-
-                            <div class="form_group col-12 col-sm-12">
-                                <label>Unit Price</label>
-                                <input type="number" id="EditUnit_Price" name="EditUnit_Price" step="0.01" min="0">
-                            </div>
-
+                           
+               
                             <div class="flex_end mt-4">
 
                                 <button type="submit" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
@@ -389,7 +418,14 @@
             let res = await FetchAuthenticate('@Url.Action("GetHydroInventory", "Hydro")', {});
             if (res && res.Success) {
                 Inventlist = res.Data;
+             
+                const lowStockCount = Inventlist.filter(item => item.Status === "Out of stocks").length;
+                const OutStockCount = Inventlist.filter(item => item.Status === "Restock").length;
+
                 $("#Countlist").text(Inventlist.length);
+                $("#lowStockItems").text(lowStockCount);
+                $("#outOfStockItems").text(OutStockCount);
+
                 TableDisplay.empty(); // Removing the Loading Display
 
                 InventoryPagination(Inventlist, 'InventorylistData');

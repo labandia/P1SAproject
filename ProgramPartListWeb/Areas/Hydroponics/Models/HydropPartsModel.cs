@@ -185,6 +185,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         private double _UnitCost_PHP;
         private double _TotalPHPCost;
         private int _MaxBuildableChambers;
+        private int _TotalParts;
 
         public int ChamberID
         {
@@ -213,6 +214,11 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         {
             get => _MaxBuildableChambers;
             set => _MaxBuildableChambers = value;
+        }
+        public int TotalParts
+        {
+            get => _TotalParts;
+            set => _TotalParts = value;
         }
     }
 

@@ -102,7 +102,9 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 	                            cm.ChamberName,
                                 ROUND(SUM((i.Unit_Price) * c.QuantityPerChamber), 0) AS UnitCost_PHP,
                                 ROUND(SUM(c.QuantityPerChamber * (i.Unit_Price * 58)), 0) AS TotalPHPCost, 
-	                            MIN(FLOOR(ISNULL(s.CurrentQty,0) / c.QuantityPerChamber)) AS MaxBuildableChambers
+	                            MIN(FLOOR(ISNULL(s.CurrentQty,0) / c.QuantityPerChamber)) AS MaxBuildableChambers,
+                                (SELECT COUNT(*) FROM Hydro_ChamberParts p
+	                            WHERE p.ChamberID = cm.ChamberID) as TotalParts
                             FROM Hydro_ChamberParts c
                             INNER JOIN Hydro_InventoryParts i ON c.PartNo = i.PartNo
                             INNER JOIN Hydro_CategoryParts cp ON cp.CategoryID = i.CategoryID

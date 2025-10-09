@@ -126,14 +126,13 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
             // Step 2: Update Hydro_Stocks table
             var updateStockQuery = $@"UPDATE Hydro_Stocks SET
-                                 PartNo =@PartNo, CurrentQty =@CurrentQty, ReorderLevel =@ReorderLevel, WarningLevel =@WarningLevel, 
+                                 PartNo =@PartNo, ReorderLevel =@ReorderLevel, WarningLevel =@WarningLevel, 
                                  Unit =@Unit
                                  WHERE PartNo =@TempPart;";
 
             var stocksparams = new
             {
                 model.PartNo,
-                model.CurrentQty,
                 model.ReorderLevel,
                 model.WarningLevel,
                 model.Unit,

@@ -1,4 +1,5 @@
 ﻿
+using Aspose.Cells.Drawing;
 using ProgramPartListWeb.Areas.Hydroponics.Interface;
 using ProgramPartListWeb.Areas.Hydroponics.Models;
 using ProgramPartListWeb.Controllers;
@@ -489,12 +490,53 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         //---------------------------- REQUEST CHAMBER PAGE ---------------------------------------
         //-----------------------------------------------------------------------------------------
         [JwtAuthorize]
-        public async Task<ActionResult> GetAllRequestList()
+        public async Task<ActionResult> GetAllRequestList(
+                    string chamberType = "all",
+                    string status = "all",
+                    string search = "",
+                    string startDate = "",
+                    string endDate = "",
+                    int page = 1,
+                    int pageSize = 10)
         {
-            var data = await _chambers.GetRequestList() ?? new List<RequestChambersModel>();
-            if (data == null || !data.Any()) return JsonNotFound("No Request list Data.");
+            var allData = await _chambers.GetRequestList() ?? new List<RequestChambersModel>();
 
-            return JsonSuccess(data, "Load Request List");
+            var filtered = allData.AsQueryable();
+
+            // filter by ChamberType
+            if (!string.IsNullOrEmpty(chamberType) && chamberType != "all")
+                filtered = filtered.Where(x => x.ChamberName == chamberType);
+            // filter by Status
+            if (!string.IsNullOrEmpty(status) && status != "all")
+                filtered = filtered.Where(x => x.RequestStatus == status);
+            // filter by Search 
+            if (!string.IsNullOrEmpty(search))
+                filtered = filtered.Where(x => x.ChamberName.Contains(search) ||
+                                               x.OrderID.ToString().Contains(search) ||
+                                               x.PIC.Contains(search));
+            // filter by StartDate 
+            if (DateTime.TryParse(startDate, out var sDate))
+                filtered = filtered.Where(x => DateTime.Parse(x.OrderDate) >= sDate);
+            // filter by EndDate 
+            if (DateTime.TryParse(endDate, out var eDate))
+                filtered = filtered.Where(x => DateTime.Parse(x.TargetDate) <= eDate);
+
+
+
+            var total = filtered.Count();
+            var paged = filtered
+                        .Skip((page - 1) * pageSize)
+                        .Take(pageSize)
+                        .ToList();
+
+
+            if (paged == null || !paged.Any()) return JsonNotFound("No Request list Data.");
+
+            return JsonSuccess(new
+            {
+                Data = paged,
+                Total = total
+            }, "Load Request List");
         }
 
     
@@ -556,7 +598,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
 
                 if(completionrate == 100)
                 {
-                    await _chambers.UpdateRequestStatus(ID, "COMPLETED");
+                    await _chambers.UpdateRequestStatus(ID, "Completed");
                 } 
 
 
@@ -571,11 +613,11 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> ChangeStatusRequest(int OrderID, string RequestStatus)
+        public async Task<ActionResult> ChangeStatusRequest(string OrderID, string Status)
         {
             try
             {
-                bool result = await _chambers.UpdateRequestStatus("asdad", RequestStatus);
+                bool result = await _chambers.UpdateRequestStatus(OrderID, Status);
                 if (!result) return JsonPostError("Update failed.", 500);
 
 

@@ -61,7 +61,7 @@
         padding-top: 4rem;
     }
 
-    .primarybtn {
+/*    .primarybtn {
         background: rgb(0,71,171);
         background: linear-gradient(159deg, rgba(0,71,171,1) 0%, rgba(28,169,201,1) 100%);
         color: white;
@@ -78,9 +78,9 @@
    .primarybtn:hover {
         transform: translateY(-3px);
         box-shadow: 0 8px 20px rgba(74, 0, 224, 0.4);
-    }
+    }*/
 
-/* 
+ 
 
     .primarybtn {
         transition: .5s ease-in-out;
@@ -96,7 +96,7 @@
 
     .primarybtn:disabled {
         background: #A5A1AA;
-    }*/
+    }
 
     .floatBtn{
         position: fixed;
@@ -363,6 +363,7 @@
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         padding: 20px;
         margin-bottom: 30px;
+
     }
 
     /* Table styles */
@@ -470,6 +471,12 @@
         padding: .6em;
         font-size: var(--normal-font-size);
     }
+
+    .form_group label{
+        font-weight: 600;
+    }
+
+
     .formcontainer input:focus, .formcontainer textarea:focus, .addformcontainer input:focus, .addformcontainer textarea:focus {
          outline: 1px solid var(--primary-color);
     }
@@ -664,6 +671,13 @@
         border: 1px solid #bebfca;
     }
 
+    input[type='date'] {
+        padding: 5px 1.5em 5px 1em;
+        border: 1px solid #bebfca;
+        font-size: var(--normal-font-size);
+        background: #fff;
+    }
+
     .Inputcontainer input {
         border-radius: .2em;
         outline: none;
@@ -706,8 +720,8 @@
     }
 
     .StocksGood {
-       background-color: rgba(14, 170, 79, 0.2);
-       color: rgb(9, 100, 47);
+        background: #d1edff;
+        color: #0c5460;
     }
 
     .Warning {
@@ -1524,7 +1538,7 @@ header .count2 {
     margin-bottom: 2rem;
 }
 
-.card {
+.cardStock {
     background: white;
     border-radius: 10px;
     padding: 1.5rem;
@@ -1535,7 +1549,7 @@ header .count2 {
     transition: transform 0.3s ease;
 }
 
-.card:hover {
+.cardStock:hover {
     transform: translateY(-5px);
 }
 
@@ -1551,15 +1565,16 @@ header .count2 {
 }
 
 .card-icon.total-items {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+/*     background: linear-gradient(159deg, rgba(0,71,171,1) 0%, rgba(28,169,201,1) 100%);*/
+ background: #176ca5;
 }
 
 .card-icon.low-stock {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    background: linear-gradient(135deg, #fbd193 0%, #f5dd57 100%);
 }
 
 .card-icon.out-of-stock {
-    background: linear-gradient(135deg, #fd746c 0%, #ff9068 100%);
+    background: linear-gradient(135deg, #fd6c6c 0%, #ff6868 100%);
 }
 
 .card-icon.total-value {
@@ -1579,4 +1594,62 @@ header .count2 {
 .card-content p {
     color: #7f8c8d;
     font-size: 0.9rem;
+}
+
+
+
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+    gap: 5px;
+}
+
+.page-btn {
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.2s;
+}
+
+    .page-btn:hover {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    .page-btn.active {
+        background-color: #007bff;
+        color: #fff;
+        font-weight: bold;
+    }
+
+    .page-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+
+
+.readiness-badge {
+    padding: 4px 12px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.readiness-ready {
+    background: #d4edda;
+    color: #155724;
+}
+
+.readiness-warning {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.readiness-not-ready {
+    background: #f8d7da;
+    color: #721c24;
 }

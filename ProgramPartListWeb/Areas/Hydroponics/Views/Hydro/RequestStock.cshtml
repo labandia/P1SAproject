@@ -229,7 +229,9 @@ function InventoryPagination(dataArray, tableBodyId) {
 
             const rowHtml = `
                      <tr data-id="${row.RequestID}">
-                         <td data-cell="RequestNo">${row.RequestNo ? row.RequestNo : "-"}</td>
+                         <td data-cell="RequestNo">
+                            <strong>${row.RequestNo ? row.RequestNo : "-"}</strong>
+                         </td>
                          <td data-cell="RequestedBy">${row.RequestedBy ? row.RequestedBy : "-"}</td>
                          <td data-cell="RequestDate">${row.RequestDate ? row.RequestDate : "-"}</td>
                          <td data-cell="NoItems">${row.NoItems ? row.NoItems : "-"}</td>

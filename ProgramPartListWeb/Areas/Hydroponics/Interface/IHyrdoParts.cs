@@ -20,6 +20,6 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Interface
 
         Task<IEnumerable<StockAddModel>> GetAddStocksList();
         Task<IEnumerable<StockAddDetailsModel>> GetAddStocksDetails(int ID);
-        Task<bool> AddStockItem(List<AddStocksItem> stocks, string request, string remarks);
+        Task<bool> AddStockItem(List<AddStocksItem> stocks);
     }
 }

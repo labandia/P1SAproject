@@ -52,7 +52,6 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
         {
             string strsql = $@"SELECT
                                     s.StockID,
-	                                p.PartID, 
 	                                p.PartNo, 
 	                                p.PartName, 
 	                                c.CategoryID,
@@ -67,7 +66,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                     p.ImageParts
                                 FROM Hydro_InventoryParts p
                                 LEFT JOIN Hydro_CategoryParts c ON c.CategoryID = p.CategoryID
-                                LEFT JOIN Hydro_Stocks s ON s.PartID = p.PartID
+                                LEFT JOIN Hydro_Stocks s ON s.PartNo = p.PartNo
 								WHERE s.Status IN ('Restock', 'Out of stocks')
                                ORDER BY 
 								CASE s.Status

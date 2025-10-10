@@ -11,38 +11,39 @@
 @*<button id="Showadd" class="floatBtn" type="button"><i class="fa-solid fa-file-circle-plus"></i></button>*@
 
 
-<div class="filters">
-    <div class="filter-group">
-        <div class="select-container">
-            <select id="categoryFilter">
-                <option value="all">All Types</option>
-                <option value="SHIBAKAWA">SHIBAKAWA</option>
-                <option value="NUPON">NUPON</option>
-                <option value="SLIM TYPE">SLIM TYPE</option>
-            </select>
+<div class="filters flex_space">
+    <div class="flex_align">
+        <div class="filter-group">
+            <div class="select-container">
+                <select id="categoryFilter">
+                    <option value="all">All Types</option>
+                    <option value="SHIBAKAWA">SHIBAKAWA</option>
+                    <option value="NUPON">NUPON</option>
+                    <option value="SLIM TYPE">SLIM TYPE</option>
+                </select>
+            </div>
+
+
+
+        </div>
+        <div class="filter-group">
+            <div class="select-container">
+                <select id="stockStatusFilter">
+                    <option value="all">All Status</option>
+                    <option value="Ongoing">Ongoing</option>
+                    <option value="Completed">Completed</option>
+                    <option value="For Shipped">For Shipping</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="filter-group">
+            <input type="date" id="startDate">
+            <input type="date" id="endDate">
         </div>
 
 
-
-    </div>
-    <div class="filter-group">
-        <div class="select-container">
-            <select id="stockStatusFilter">
-                <option value="all">All Status</option>
-                <option value="Ongoing">Ongoing</option>
-                <option value="Completed">Completed</option>
-                <option value="For Shipped">For Shipping</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="filter-group">
-        <input type="date" id="startDate">
-        <input type="date" id="endDate">
-    </div>
-
-
-    @*<div class="filter-group">
+        @*<div class="filter-group">
             <div class="Inputcontainer">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <input type="text" placeholder="Search Request..." id="inventorySearch" autocomplete="off" />
@@ -50,6 +51,7 @@
             </div>
 
         </div>*@
+    </div>
 
     <div class="filter-group">
         <button id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-file-circle-plus"></i> New Request</button>
@@ -79,10 +81,14 @@
 </table>
 
 
-<div id="paginationV2" class="pagination-container">
+@*<div id="paginationV2" class="pagination-container">
+</div>*@
+
+<div class="MasterlistWrap_footer ">
+    <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
+
+    <div id="MastertableContainer" class="paginationPartlocal flex_align"></div>
 </div>
-
-
 
 
 
@@ -466,14 +472,14 @@
             if (res && res.Success) {
                 requestData = res.Data.Data || res.Data || [];
                 const total = res.Data?.Total ?? requestData.length;
-                renderTable(requestData);
-                renderPagination(total);
-                //$("#RequestCount").text(requestData.length);
-                //renderFilteredData();
+
+                if (total > 0) {
+                    console.clear();
+                    renderTable(requestData);
+                    renderPagination(total);
+                }
             } else {
-                $("#chamberOrdersTableBody").html(`
-                    <tr><td colspan="9" style="text-align:center; color:#888;">No matching records</td></tr>
-                 `);
+                $("#chamberOrdersTableBody").html(`<tr><td colspan="9" style="text-align:center; color:#888;">⚠️ No matching records</td></tr>`);
             }
         } catch (err) {
             console.error("Error fetching data:", err);
@@ -490,7 +496,7 @@
 
         // If no Data found
         if (!data.length) {
-            TableData.append(`<tr><td colspan="8" style="text-align:center; color:#888;">No matching records</td></tr>`);
+            TableData.append(`<tr><td colspan="8" style="text-align:center; color:#888;">⚠️ No matching records</td></tr>`);
             return;
         }
 
@@ -530,13 +536,16 @@
                         </span>
                     </td>
                     <td class="order-actions">
-                        <button class="RequestRow btn btn-sm btn-secondary" id="Details_${row.OrderID}">
-                            <i class="fas fa-eye"></i>
-                        </button>
+                        <div class="flex_align">
+                            <button class="RequestRow text-secondary bg-white" id="Details_${row.OrderID}">
+                                <i class="fas fa-eye"></i>
+                            </button>
 
-                        <button class="EditRow btn btn-sm btn-primary" id="Details_${row.OrderID}" >
-                            <i class="fas fa-edit"></i>
-                        </button>
+                 
+                            <button  class='EditRow text-primary bg-white' id="Details_${row.OrderID}">
+                               <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                        </div>
                     </td>
                 </tr>
             `);
@@ -549,26 +558,41 @@
     // ========================== PAGINATION CONTROLS ============================
     function renderPagination(totalItems) {
         const totalPages = Math.ceil(totalItems / pageSize);
-        const pagination = $("#paginationV2");
+        const pagination = $("#MastertableContainer");
         pagination.empty();
 
+        // Calculate "from" and "to" item numbers
+        const startItem = (currentPage - 1) * pageSize + 1;
+        const endItem = Math.min(currentPage * pageSize, totalItems);
 
+        // Update text info
+        $("#pagecountID").text(startItem > totalItems ? 0 : startItem);
+        $("#totalpageID").text(endItem);
+        $("#DatalengthID").text(totalItems);
 
+        // Always render pagination, even if only 1 page
         let html = '';
 
-        if (totalPages > 1) {
-            html += `<button class="page-btn" data-page="${currentPage - 1}" ${currentPage === 1 ? "disabled" : ""}>Prev</button>`;
-        }
+        // Prev button
+        html += `<button class="page-btn" data-page="${currentPage - 1}" ${currentPage === 1 ? "disabled" : ""}>Prev</button>`;
 
+        // Page numbers
         for (let i = 1; i <= totalPages; i++) {
             html += `<button class="page-btn ${i === currentPage ? "active" : ""}" data-page="${i}">${i}</button>`;
         }
 
-        if (totalPages > 1) {
-            html += `<button class="page-btn" data-page="${currentPage + 1}" ${currentPage === totalPages ? "disabled" : ""}>Next</button>`;
-        }
+        // Next button
+        html += `<button class="page-btn" data-page="${currentPage + 1}" ${currentPage === totalPages ? "disabled" : ""}>Next</button>`;
 
         pagination.html(html);
+
+        // If no items, show a disabled state
+        if (totalItems === 0) {
+            pagination.html(`<button class="page-btn" disabled>No data</button>`);
+            $("#pagecountID").text(0);
+            $("#totalpageID").text(0);
+            $("#DatalengthID").text(0);
+        }
     }
 
     // Pagination click handler

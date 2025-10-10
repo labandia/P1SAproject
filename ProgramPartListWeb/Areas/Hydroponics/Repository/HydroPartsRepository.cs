@@ -52,40 +52,40 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             return result;
         }
 
-        public async Task<bool> AddStockItem(List<AddStocksItem> stocks, string RequestedBy, string Purpose)
+        public async Task<bool> AddStockItem(List<AddStocksItem> stocks)
         {
             bool result = false;    
-            string RequestNo = GlobalUtilities.GenerateID("SR");
-            
-            // Insert the Hydro_StockRequests table
-            string insertStockRequestQuery = $@"INSERT INTO Hydro_StockRequests 
-                                                (RequestNo, RequestedBy, Purpose) 
-                                                VALUES (@RequestNo, @RequestedBy, @Purpose);
-                                                SELECT CAST(SCOPE_IDENTITY() as int)";
-            var parameters = new
-            {
-                RequestNo,
-                RequestedBy,
-                Purpose
-            };
+            //string RequestNo = GlobalUtilities.GenerateID("SR");
 
-            int RequestID = await SqlDataAccess.GetCountData(insertStockRequestQuery, parameters);
+            //// Insert the Hydro_StockRequests table
+            //string insertStockRequestQuery = $@"INSERT INTO Hydro_StockRequests 
+            //                                    (RequestNo, RequestedBy, Purpose) 
+            //                                    VALUES (@RequestNo, @RequestedBy, @Purpose);
+            //                                    SELECT CAST(SCOPE_IDENTITY() as int)";
+            //var parameters = new
+            //{
+            //    RequestNo,
+            //    RequestedBy,
+            //    Purpose
+            //};
 
-            if (RequestID == 0) return false;
+            //int RequestID = await SqlDataAccess.GetCountData(insertStockRequestQuery, parameters);
+
+            //if (RequestID == 0) return false;
 
             foreach (var item in stocks)
             {
-                string insertStockRequestItemQuery = $@"INSERT INTO Hydro_StockRequestItems 
-                                                        (RequestID, PartNo, QuantityRequested) 
-                                                        VALUES (@RequestID, @PartNo, @quantity)";
-                var itemParameters = new
-                {
-                    RequestID,
-                    item.PartNo,
-                    item.quantity
-                };
+                //string insertStockRequestItemQuery = $@"INSERT INTO Hydro_StockRequestItems 
+                //                                        (RequestID, PartNo, QuantityRequested) 
+                //                                        VALUES (@RequestID, @PartNo, @quantity)";
+                //var itemParameters = new
+                //{
+                //    RequestID,
+                //    item.PartNo,
+                //    item.quantity
+                //};
 
-                result = await SqlDataAccess.UpdateInsertQuery(insertStockRequestItemQuery, itemParameters);
+                //result = await SqlDataAccess.UpdateInsertQuery(insertStockRequestItemQuery, itemParameters);
 
                 string strsql = $@"UPDATE Hydro_Stocks SET CurrentQty = CurrentQty + @CurrentQty 
                                WHERE  PartNo =@PartNo";
@@ -96,7 +96,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                     CurrentQty = item.quantity
                 });
 
-
+                result = true;
             }
 
             return result;

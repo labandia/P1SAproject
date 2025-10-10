@@ -110,7 +110,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
             string fullPath = Path.Combine(folderPath, filename);
 
             if (!System.IO.File.Exists(fullPath))
-                return File("~/Content/Images/bussiness-man.png", "image/png");
+                return File("~/Content/Images/no-image.png", "image/png");
 
             byte[] fileBytes = System.IO.File.ReadAllBytes(fullPath);
             return File(fileBytes, "image/png"); // Change to "image/jpeg" if needed
@@ -465,13 +465,13 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         {
             try
             {
-                string requestedBy = Request.Form["RequestBy"];   
-                string remarks = Request.Form["Purpose"];
+                //string requestedBy = Request.Form["RequestBy"];   
+                //string remarks = Request.Form["Purpose"];
                 var json = Request.Form["items"];
 
                 var items = Newtonsoft.Json.JsonConvert.DeserializeObject<List<AddStocksItem>>(json);
 
-                bool result = await _hydro.AddStockItem(items, requestedBy, remarks);
+                bool result = await _hydro.AddStockItem(items);
 
                 if (!result) return JsonPostError("Insert failed.", 500);
 

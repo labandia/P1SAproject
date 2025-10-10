@@ -450,7 +450,7 @@
     .formcontainer label, .addformcontainer label {
         font-size: var(--small-font-size);
     }
-    .formcontainer input, .formcontainer textarea, .addformcontainer input, .addformcontainer textarea {
+    .formcontainer input, .formcontainer textarea, .addformcontainer input, .addformcontainer textarea, .RequestedByText, .DateInputText, .PurposeText {
         width: 100%;
         margin: .5em 0 1em 0;
         border: 1px solid #A5A1AA;
@@ -458,6 +458,9 @@
         font-size: var(--small-font-size);
         border-radius: .3em;
     }
+
+
+
     .formcontainer input[type='checkbox']{
         width: auto;
         margin: 0;
@@ -521,12 +524,7 @@
         margin-bottom: 20px;
     }
 
-    .preview-image {
-        max-width: 100%;
-        max-height: 200px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-    }
+ 
 
     .hidden {
         display: none;
@@ -600,9 +598,6 @@
     }
 
 .filters {
-    display: flex;
-    gap: 15px;
-    align-items: center;
     margin-bottom: 20px;
     flex-wrap: wrap;
 }
@@ -1355,7 +1350,24 @@ header .count2 {
     border: 1px solid #fff;
 }
 
+.MasterlistWrap_footer {
+    width: 100%;
+    position: absolute;
+    background: #fff;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .8rem 3rem .8rem 17rem;
+    font-weight: 500;
+    font-size: .9rem;
+    border-top: 1px solid #d4d3d3;
+}
 
+    .MasterlistWrap_footer span, .paginationPartlocal {
+        color: #222;
+    }
 
 
 /* ================ ADD STOCK =====================  */
@@ -1652,4 +1664,40 @@ header .count2 {
 .readiness-not-ready {
     background: #f8d7da;
     color: #721c24;
+}
+
+
+
+/* Image Preview Design */
+.preview-container {
+    display: none;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.preview-title {
+    font-size: 16px;
+    color: #4a5568;
+    margin-bottom: 12px;
+    text-align: left;
+}
+
+.image-preview {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.preview-image {
+    max-width: 100%;
+    max-height: 200px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.file-info {
+    font-size: 14px;
+    color: #718096;
+    margin-top: 8px;
 }

@@ -6,31 +6,33 @@
 
 <section class="InspectHead flex_space">
     <div class="flex_align">
-        <div class="Inputcontainer">
+        <div class="Inputcontainer ">
             <i class="fa-solid fa-magnifying-glass"></i>
             <input type="text" placeholder="Search here ... " id="searchbox" autocomplete="off" />
             <div class="line"></div>
         </div>
 
-        <div>
-            <input type="checkbox" id="chkCheck" value="check" />
-            <span>Sufficient</span>
 
-            <input type="checkbox" id="chkRestock" value="Restock" />
-            <span>Restock</span>
 
-            <input type="checkbox" id="chkOut" value="Out of stocks" />
-            <span>Out of Stocks</span>
-        </div>
+
+
     </div>
 
     <div class="flex_align">
+        <div class="select-container">
+            <select id="StockStatusID">
+                <option value="">-- Select Status --</option>
+                <option value="Sufficient">Sufficient</option>
+                <option value="Restock">Restock</option>
+                <option value="Out of stocks">Out of Stocks</option>
+            </select>
+        </div>
         <div class="select-container">
             <select id="Categoryselect">
                 <option value="0">-- Category --</option>
             </select>
         </div>
-        <button style="width: 100%; display: none;" id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-box-archive"></i> Add Stocks</button>
+        <button style="width: 100%; " id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-box-archive"></i> Add Stocks</button>
         <button style="width: 100%;" id="AddItem" class="primarybtn" type="button"><i class="fa-solid fa-box-archive"></i>Add Parts</button>
     </div>
 </section>
@@ -73,7 +75,7 @@
     <table>
         <thead>
             <tr>
-                <th style="width: 25%; text-align: left; padding-left: 1.5em !important;"><span style="margin-left: .5em;">Part No. / Partname</span> </th>
+                <th style="width: 25%; text-align: left; padding-left: 1.5em !important;"><span style="margin-left: .5em;"><i class="fa-solid fa-screwdriver-wrench"></i>  Part No. / Partname</span> </th>
                 <th> <i class="fa-regular fa-address-card"></i> <span style="margin-left: .5em;">Supplier</span>  </th>
                 <th> <i class="fa-solid fa-box-open"></i>  <span style="margin-left: .5em;">Current Stock</span>  </th>
                 <th> <i class="fa-regular fa-square-check"></i> <span style="margin-left: .5em;">Mininum Stock</span>  </th>
@@ -85,6 +87,75 @@
         </tbody>
     </table>
 </div>
+
+
+@*=================================================================================*@
+@*=========================== ADD STOCKS MODAL  ===================================*@
+@*=================================================================================*@
+<div class="modal fade modal-lg" id="AddRequestModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Add new stocks</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+
+                <form method="post"  class="addformcontainer" id="stockaddnewform" autocomplete="off">
+                
+
+                    <!-- Request Items -->
+                    <div class="items-section">
+                        <div class="add-item-row">
+                            <div class="select-container">
+                                <select id="partSelect" style="padding: .6em 1em; margin: .5em 0 1em 0; ">
+                                    <option value="">Select Part</option>
+                                </select>
+                            </div>
+                            <input type="number" id="quantity" placeholder="Qty" step="0.01" min="0.01">
+                            <button type="button" class="btn btn-secondary" style=" margin: .5em 0 1em 0;" onclick="addItem()">
+                                <i class="fas fa-plus"></i> Add Item
+                            </button>
+                        </div>
+
+                        <div class="table-container">
+                            <table id="itemsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Part No.</th>
+                                        <th>Part Name</th>
+                                        <th>Quantity</th>
+                                        <th>Unit</th>
+                                        <th>Current Stock</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="itemsTableBody">
+                                    <!-- Dynamic items -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="flex_end mt-4">
+
+                        <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
 
 @*=================================================================================*@
 @*=========================== Add NEW INVENTORY PARTS =============================*@
@@ -105,36 +176,40 @@
                     <div class="row">
                         <div class="col-5">
                             <div class="upload-container flex_center" id="upload-container">
-                                <div class="upload-icon">📷</div>
+                                <div class="upload-icon">📁</div>
                                 <div class="file-info">Upload a photo of Parts.<br>Max file size: 1MB<br>png, jpg, jpeg, bmp, gif</div>
                                 <input type="file" id="partsimage" name="partsimage" accept=".png,.jpg,.jpeg" class="hidden">
                                 <button class="upload-btn" id="uploadBtn">Upload Photo</button>
 
 
                             </div>
-                            <p>Image Preview : </p>
-                            <div class="preview-container" id="previewContainer">
+                            <div class="preview-container" id="preview-container">
+                                <p class="preview-title">Image Preview:</p>
                                 <img id="previewImage" class="preview-image" src="" alt="Image Preview">
+                                <p class="file-info" id="file-info"></p>
                             </div>
+
+
+
                         </div>
                         <div class="col-7">
                             <div class="row mb-1">
                                 <div class="form_group col-6 col-sm-6 col-lg-6 ">
-                                    <label>Part Number </label> <br />
+                                    <label>Part Number  <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
                                     <input type="text" name="PartNo" id="PartNo" placeholder="Enter Part number " autocomplete="off" required />
 
                                 </div>
                                 <div class="form_group col-6 col-sm-6">
-                                    <label for="">Part Name  </label>
-                                    <input type="text" name="PartName" id="PartName"   placeholder="Enter Part Name " autocomplete="off" required>
+                                    <label for="">Part Name   <small style="color: #a81818; font-weight: 600;">*</small></label>
+                                    <input type="text" name="PartName" id="PartName" placeholder="Enter Part Name " autocomplete="off" required>
                                 </div>
                             </div>
 
-                            <div class="row mb-2">
+                            <div class="row mb-3">
                                 <div class="form_group col-6 col-sm-6 col-lg-6">
-                                    <label for="" class="mb-2">Category  </label> 
+                                    <label for="" class="mb-2">Category <small style="color: #a81818; font-weight: 600;">*</small> </label>
                                     <div class="select-container">
-                                        <select id="CategoryID" name="CategoryID">
+                                        <select id="CategoryID" name="CategoryID" required>
                                             <option value="0">-- Category --</option>
                                             <option value="1">
                                                 Enclosure Parts
@@ -172,7 +247,7 @@
 
                             <div class="row mb-2">
                                 <div class="form_group col-6 col-sm-6">
-                                    <label for="">Supplier  </label> 
+                                    <label for="">Supplier  </label>
                                     <input type="text" name="Supplier" id="Supplier" autocomplete="off" required>
                                 </div>
 
@@ -184,42 +259,28 @@
 
                             <div class="row mb-2">
                                 <div class="form_group col-6 col-sm-6">
-                                    <label>Initial Stock *</label>
+                                    <label>Initial Stock  <small style="color: #a81818; font-weight: 600;">*</small></label>
                                     <input type="number" id="CurrentQty" name="CurrentQty" step="0.01" min="0" required>
                                 </div>
 
                                 <div class="form_group col-6 col-sm-6">
-                                    <label>Warning Level</label>
+                                    <label>Warning Level <small style="color: #a81818; font-weight: 600;">*</small></label>
                                     <input type="number" id="WarningLevel" name="WarningLevel" step="0.01" min="0" required>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="form_group col-6 col-sm-6">
-                                    <label>Unit Price</label>
+                                    <label>Unit Price <small style="color: #a81818; font-weight: 600;">*</small></label>
                                     <input type="number" id="Unit_Price" name="Unit_Price" step="0.01" min="0" required>
                                 </div>
                             </div>
-
-
-                            
-
-                            
-
-                            
-
-
                             <div class="flex_end mt-4">
-
                                 <button type="submit" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
                             </div>
                         </div>
-                        </div>
-
-
+                    </div>
                 </form>
-
-
             </div>
 
         </div>
@@ -235,7 +296,7 @@
         <div class="modal-content">
             <div class="modal-body modalwrap">
                 <div class="custom_modal_header">
-                    <h5>Update Stock Level</h5>
+                    <h5>Update Details</h5>
 
                     <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
                         <span>&times;</span>
@@ -246,17 +307,22 @@
                     <div class="row">
                         <div class="col-5">
                             <div class="upload-container flex_center" id="upload-container">
-                                <div class="upload-icon">📷</div>
+                                <div class="upload-icon">📁</div>
                                 <div class="file-info">Upload a photo of Parts.<br>Max file size: 1MB<br>png, jpg, jpeg, bmp, gif</div>
                                 <input type="file" id="Editpartsimage" name="Editpartsimage" accept=".png,.jpg,.jpeg" class="hidden">
                                 <button class="Editupload-btn" id="EdituploadBtn">Upload Photo</button>
 
 
                             </div>
-                            <p>Image Preview : </p>
+
                             <div class="Editpreview-container" id="EditpreviewContainer">
+                                <p class="preview-title">Image Preview:</p>
                                 <img id="EditpreviewImage" class="Editpreview-image" src="" alt="Image Preview">
+                                <p class="Editfile-info" id="Editfile-info"></p>
                             </div>
+
+
+
                         </div>
                         <div class="col-7">
                             <div class="row mb-1">
@@ -264,7 +330,7 @@
                                     <label>Part Number </label> <br />
                                     <input type="hidden" name="ExistingImageParts" id="ExistingImageParts" />
                                     <input type="hidden" name="TempPartno" id="TempPartno" />
-                                    <input type="text" name="EditPartNo" id="EditPartNo" placeholder="Enter Part number " />
+                                    <input type="text" name="EditPartNo" id="EditPartNo" placeholder="Enter Part number " readonly />
                                 </div>
                                 <div class="form_group col-6 col-sm-6">
                                     <label for="">Part Name  </label>
@@ -335,8 +401,8 @@
                                 </div>
                             </div>
 
-                           
-               
+
+
                             <div class="flex_end mt-4">
 
                                 <button type="submit" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
@@ -412,15 +478,19 @@
     const resultBox = document.querySelector(".namesdisplay");
 
     const InventoryTable = async () => {
+        $("#Countlist").text("0");
+        $("#lowStockItems").text("0");
+        $("#outOfStockItems").text("0");
+
         loadingDisplay();
 
         Loadingsteps(async () => {
             let res = await FetchAuthenticate('@Url.Action("GetHydroInventory", "Hydro")', {});
             if (res && res.Success) {
                 Inventlist = res.Data;
-             
-                const lowStockCount = Inventlist.filter(item => item.Status === "Out of stocks").length;
-                const OutStockCount = Inventlist.filter(item => item.Status === "Restock").length;
+
+                const lowStockCount = Inventlist.filter(item => item.Status === "Restock").length;
+                const OutStockCount = Inventlist.filter(item => item.Status === "Out of stocks").length;
 
                 $("#Countlist").text(Inventlist.length);
                 $("#lowStockItems").text(lowStockCount);
@@ -429,6 +499,8 @@
                 TableDisplay.empty(); // Removing the Loading Display
 
                 InventoryPagination(Inventlist, 'InventorylistData');
+
+                
             } else {
                 const loadData = `<tr>
                   <td colspan='9'>
@@ -577,6 +649,8 @@
             var rowId = $(this).attr('id');
             var rowIndex = rowId.split('_')[1];
 
+
+
             var filterdata = Inventlist.find(item => item.StockID === parseInt(rowIndex));
             if (filterdata) {
                 let imagePath = filterdata.ImageParts
@@ -595,14 +669,25 @@
                 $("#ExistingImageParts").val(filterdata.ImageParts);
                 $("#EditUnit_Price").val(filterdata.Unit_Price);
 
-                // ✅ Update the preview image
-                $("#EditpreviewImage").attr("src", imagePath);
+
+                const previewContainer = document.getElementById('EditpreviewContainer');
+                console.log(filterdata.ImageParts);
+                if (filterdata.ImageParts !== null) {
+                    previewContainer.style.display = 'block';
+                    // ✅ Update the preview image
+                    $("#EditpreviewImage").attr("src", imagePath);
 
 
-                // ✅ Optional: If you want to handle broken images gracefully
-                $("#EditpreviewImage").on("error", function() {
-                    $(this).attr("src", '@Url.Content("~/Content/Images/no-image.png")');
-                });
+                    // ✅ Optional: If you want to handle broken images gracefully
+                    $("#EditpreviewImage").on("error", function () {
+                        $(this).attr("src", '@Url.Content("~/Content/Images/no-image.png")');
+                    });
+                } else {
+                    previewContainer.style.display = 'None';
+                }
+
+
+
 
                 $("#EditModal").modal("show");
 
@@ -659,8 +744,19 @@
 
     addparts.addEventListener('submit', async function (e) {
         e.preventDefault();
-         let formData = new FormData(e.target);
+        let formData = new FormData(e.target);
         const data = Object.fromEntries(formData);
+
+        if (Inventlist.some(res => res.PartNo === data.PartNo)) {
+            Swal.fire({
+                icon: "error",
+                text: "Part no is already exist",
+                timer: 1500,
+                showConfirmButton: false
+            });
+            return;
+        }
+
         let res = await postData('@Url.Action("AddInventoryParts", "Hydro")', formData);
           if (res && res.Success) {
                Swal.fire({
@@ -679,8 +775,6 @@
                });
            }
     });
-
-
     editparts.addEventListener('submit', async function (e) {
         e.preventDefault();
         let formData = new FormData(e.target);
@@ -701,6 +795,30 @@
         }
 
     });
+
+     $("#btnSave").on('click', async function (e) {
+         e.preventDefault();
+         let formData = new FormData();
+         formData.append('Items', JSON.stringify(requestItems));
+
+         const data = Object.fromEntries(formData);
+         let res = await postData('@Url.Action("AddNewStocks", "Hydro")', formData);
+         if (res && res.Success) {
+             Swal.fire({
+                 title: "Success",
+                 text: res.Message,
+                 icon: "success",
+                 showConfirmButton: false,
+                 timer: 1500
+             }).then(() => {
+                 InventoryTable();
+                 $("#AddRequestModal").modal('hide');
+             });
+
+
+         }
+     });
+
 
     //$("#Categoryselect").on('change', function (e) {
     //    e.preventDefault();
@@ -727,29 +845,24 @@
 
     function applyFilters() {
         let query = $('#searchbox').val().toLowerCase() || '';
-        let selectedCategory = parseInt($('#Categoryselect').val());
-
-        // Get selected status filters
-        let selectedStatuses = [];
-        if ($("#chkCheck").is(":checked")) selectedStatuses.push("check");
-        if ($("#chkRestock").is(":checked")) selectedStatuses.push("Restock");
-        if ($("#chkOut").is(":checked")) selectedStatuses.push("Out of stocks");
+        const selectedCategory = parseInt($('#Categoryselect').val());
+        const selectedStatus = $('#StockStatusID').val(); // <-- from dropdown
 
         let filtered = Inventlist.filter(item => {
-            let matchesSearch =
+            const matchesSearch =
                 item.PartName.toLowerCase().includes(query) ||
                 item.PartNo.toLowerCase().includes(query);
 
-            let matchesCategory = (selectedCategory === 0 || item.CategoryID === selectedCategory);
+            const matchesCategory = (selectedCategory === 0 || item.CategoryID === selectedCategory);
 
-            let matchesStatus = (selectedStatuses.length === 0 || selectedStatuses.includes(item.Status));
+            const matchesStatus = (selectedStatus === '' || item.Status === selectedStatus);
 
             return matchesSearch && matchesCategory && matchesStatus;
         });
 
         if (filtered.length === 0) {
             TableDisplay.empty();
-            TableDisplay.append(`<tr><td colspan='5'>🔍 No results found..</td></tr>`);
+            TableDisplay.append(`<tr><td colspan='5'>🔍 No results found.</td></tr>`);
             return;
         }
 
@@ -761,8 +874,9 @@
         const uploadbtn = document.getElementById('uploadBtn');
         //const savebtn = document.getElementById('saveBtn');
 
-        const previewContainer = document.getElementById('previewContainer');
+        const previewContainer = document.getElementById('preview-container');
         const previewImage = document.getElementById('previewImage');
+        const fileInfo = document.getElementById('file-info');
 
         // Handle Upload button Click
         uploadbtn.addEventListener('click', function (e) {
@@ -789,6 +903,11 @@
                     alert("Invalid file type, Please upload a png, jpeg, bmp or gif file");
                     return;
                 }
+
+                // Display file info
+                const fileSize = (file.size / 1024 / 1024).toFixed(2);
+                fileInfo.textContent = `${file.name} (${fileSize} MB)`;
+
 
                 //Create a Preview Image When the Upload the file
                 const reader = new FileReader();
@@ -853,6 +972,7 @@
 
         const previewContainer = document.getElementById('EditpreviewContainer');
         const previewImage = document.getElementById('EditpreviewImage');
+        const fileInfo = document.getElementById('Editfile-info');
 
         // Handle Upload button Click
         uploadbtn.addEventListener('click', function (e) {
@@ -880,6 +1000,10 @@
                     return;
                 }
 
+                // Display file info
+                const fileSize = (file.size / 1024 / 1024).toFixed(2);
+                fileInfo.textContent = `${file.name} (${fileSize} MB)`;
+
                 //Create a Preview Image When the Upload the file
                 const reader = new FileReader();
                 reader.onload = function (e) {
@@ -893,6 +1017,82 @@
 
 
     });
+
+    // ==================================================================================
+    // ====================== ADD STOCK FUNCTIONALITY ===================================
+    // ==================================================================================
+    let requestItems = [];
+
+    function addItem() {
+        const partSelect = document.getElementById('partSelect');
+        const quantityInput = document.getElementById('quantity');
+
+        const selectedPart = partSelect.options[partSelect.selectedIndex];
+        const partNo = partSelect.value;
+        const quantity = parseFloat(quantityInput.value);
+
+        if (!partNo || !quantity || quantity <= 0) {
+            alert('Please select a part and enter a valid quantity');
+            return;
+        }
+
+        const partName = selectedPart.text;
+
+
+        // Check if item is already exist
+        // Find and get the index of the current data
+        const existingItemIndex = requestItems.findIndex(item => item.partNo === partNo);
+        const unit = Inventlist.find(item => item.PartNo === partNo)?.Unit;
+        const availableStock = Inventlist.find(item => item.PartNo === partNo)?.CurrentQty;
+
+        if (existingItemIndex > -1) {
+            // Updates the current push data
+            requestItems[existingItemIndex].quantity += quantity;
+        } else {
+            // Insert a new data
+            requestItems.push({
+                partNo,
+                partName,
+                quantity,
+                unit,
+                availableStock
+            });
+        }
+
+        updateItemsTable();
+
+        partSelect.selectedIndex = 0;
+        quantityInput.value = '';
+    }
+
+    function updateItemsTable() {
+        const tbody = document.getElementById('itemsTableBody');
+        tbody.innerHTML = '';
+
+        requestItems.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+         <td>${item.partNo}</td>
+         <td>${item.partName}</td>
+         <td>${item.quantity}</td>
+         <td>${item.unit}</td>
+         <td>${item.availableStock}</td>
+         <td>
+             <button class="btn btn-sm btn-danger" onclick="removeItem('${item.partNo}')">
+                 <i class="fas fa-trash"></i> Remove
+             </button>
+         </td>
+     `;
+            tbody.appendChild(row);
+        });
+    }
+
+    function removeItem(partNo) {
+        requestItems = requestItems.filter(item => item.partNo !== partNo);
+        updateItemsTable();
+    }
+    // ===================================================================================
+
 
 
 
@@ -910,14 +1110,32 @@
 
     addmodal.addEventListener('click', (e) => {
         e.preventDefault();
-        //$("#AddChamberModal").modal('show');
-        window.location.href = "/Hydroponics/Hydro/AddStocks";
+        let TableDisplay = $("#itemsTableBody");
+        const loadData = `<tr>
+                           <td colspan='6'>
+                               🔍 No Data Added
+                           </td>
+                       </tr>`;
+
+        TableDisplay.empty();
+        TableDisplay.append(loadData);
+
+        Inventlist.sort((a, b) => a.PartName.localeCompare(b.PartName, 'en', { sensitivity: 'base' }));
+
+
+        $.each(Inventlist, function (index, row) {
+            $("#partSelect").append("<option value='" + row.PartNo + "'>" + row.PartName + "</option>");
+        });
+
+        $("#AddRequestModal").modal("show");
     });
 
     $("#AddItem").on('click', function (e) {
         e.preventDefault();
         $("#AddnewModal").modal("show");
     });
+
+
 
 
     function loadingDisplay() {
@@ -988,7 +1206,7 @@
 
         $('#searchbox').on('input', applyFilters);
         $('#Categoryselect').on('change', applyFilters);
-        $('#chkCheck, #chkRestock, #chkOut').on('change', applyFilters);
+        $('#StockStatusID').on('change', applyFilters);
 
     });
 </script>

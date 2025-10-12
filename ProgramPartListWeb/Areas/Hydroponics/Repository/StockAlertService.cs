@@ -126,11 +126,12 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                     {
 
                         string insertDetails = @"
-                        INSERT INTO Hyrdo_StockNotificationDetails (NotificationId, PartID, CurrentQty, ReorderLevel, WarningLevel, Status)
-                        VALUES(@NotificationId, @PartID, @CurrentQty, @ReorderLevel, @WarningLevel, @Status)";
+                        INSERT INTO Hyrdo_StockNotificationDetails (NotificationId, PartNo, CurrentQty, ReorderLevel, WarningLevel, Status)
+                        VALUES(@NotificationId, @PartNo, @CurrentQty, @ReorderLevel, @WarningLevel, @Status)";
                         var parameter = new
                         {
                             NotificationId = notifiResult,
+                            PartNo = item.PartNo,
                             CurrentQty = item.CurrentQty,
                             ReorderLevel = item.ReorderLevel,
                             WarningLevel = item.WarningLevel,
@@ -264,7 +265,6 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                 // loop all recipients 
                 foreach (var recepient in recipientslist)
                 {
-                    Debug.WriteLine(recepient);
                     // get the latest log send email
                     var latestLog = emailCount
                          .Where(res =>
@@ -453,7 +453,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 	                                                                        d.WarningLevel, 
 	                                                                        d.Status
                                                                         FROM Hyrdo_StockNotificationDetails d
-                                                                        INNER JOIN Hydro_InventoryParts i ON i.PartID = d.PartID
+                                                                        INNER JOIN Hydro_InventoryParts i ON i.PartNo = d.PartNo
                                                                         WHERE d.NotificationId = @NotificationId;", new { NotificationId = Id });
         }
     }

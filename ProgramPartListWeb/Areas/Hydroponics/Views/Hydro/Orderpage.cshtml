@@ -14,6 +14,7 @@
 <div class="filters flex_space">
     <div class="flex_align">
         <div class="filter-group">
+            <strong>Chamber Type :</strong>
             <div class="select-container">
                 <select id="categoryFilter">
                     <option value="all">All Types</option>
@@ -27,6 +28,7 @@
 
         </div>
         <div class="filter-group">
+            <strong>Status :</strong>
             <div class="select-container">
                 <select id="stockStatusFilter">
                     <option value="all">All Status</option>
@@ -38,8 +40,11 @@
         </div>
 
         <div class="filter-group">
-            <input type="date" id="startDate">
-            <input type="date" id="endDate">
+            <strong>Date Range :</strong>
+            <div class="flex_align">
+                <input type="date" id="startDate">
+                <input type="date" id="endDate">
+            </div>
         </div>
 
 
@@ -181,7 +186,6 @@
                             <select id="Status" name="Status" required>
                                 <option value="">Select Status</option>
                                 <option value="Completed">Completed</option>
-                                <option value="Ongoing">Ongoing</option>
                                 <option value="For Shipped">For Shipped</option>
                             </select>
                         </div>
@@ -201,235 +205,6 @@
     </div>
 </div>
 
-
-
-
-@*<div class="ExportContainer">
-        <button>X</button>
-        <div class="ExportGrid">
-            <div class="btnclass">Selected: 5</div>
-            <div class="btnclass"><i class="fa-solid fa-download"></i> Export</div>
-            <div class="btnclass"><i class="fa-solid fa-print"></i>  Print</div>
-        </div>
-    </div>*@
-
-
-@*<script type="text/javascript">
-        let requestData = [];
-        let completeData = [];
-        // Get today's date
-        let today = new Date();
-
-        // Format to YYYY-MM-DD
-        let dd = String(today.getDate()).padStart(2, '0');
-        let mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0
-        let yyyy = today.getFullYear();
-
-        let todayStr = yyyy + '-' + mm + '-' + dd;
-
-        document.getElementById("TargetDate").setAttribute("min", todayStr);
-
-        const addforms = document.getElementById("addnewform");
-
-
-
-
-        const RequesDataList = async () => {
-            let TableData = $("#chamberOrdersTableBody");
-
-            let res = await FetchAuthenticate('@Url.Action("GetAllRequestList", "Hydro")', {});
-            if (res && res.Success) {
-                TableData.empty();
-                requestData = res.Data.filter(item => item.RequestStatus === "ONGOING");
-                console.log(requestData);
-                $("#RequestCount").text(requestData.length);
-                completeData = res.Data.filter(item => item.RequestStatus === "COMPLETED");
-
-
-                $.each(requestData, function (index, row) {
-                    let percent = parseFloat(row.CompletionPercent) || 0;
-                    let displayPercent = Math.round(percent); // show as 12 instead of 12.0
-
-
-                    // Decide color
-                    let barColor = "linear-gradient(90deg, #e74c3c, #c0392b)"; // red
-                    if (percent >= 70) barColor = "linear-gradient(90deg, #2ecc71, #27ae60)"; // green
-                    else if (percent >= 40) barColor = "linear-gradient(90deg, #f1c40f, #f39c12)"; // yellow
-
-
-                    const loadData = `
-                      <tr  class='RequestRow' id='Details_${row.OrderID}'>
-                          <td data-cell="OrderID"><strong>${row.OrderID ? row.OrderID : "-"}</strong></td>
-                          <td data-cell="ChamberName">${row.ChamberName ? row.ChamberName : "-"} </td>
-                          <td data-cell="ChambersOrdered">${row.ChambersOrdered ? row.ChambersOrdered : 0} unit(s)</td>
-                          <td data-cell="OrderDate">${row.OrderDate ? row.OrderDate : 0}</td>
-                          <td data-cell="TargetDate">${row.TargetDate ? row.TargetDate : '-'}</td>
-                          <td data-cell="PIC">${row.PIC ? row.PIC : '-'}</td>
-                          <td data-cell="CompletionPercent" style='text-align: center;'>
-                                 <div class="progress-bar-container">
-                                        <div class="progress-bar"></div>
-                                    </div>
-                                     <span style="font-size:.75rem; margin-top:4px;">Completion rate: ${displayPercent}%</span>
-                                </td>
-                          <td data-cell="RequestStatus">${row.RequestStatus ? row.RequestStatus : 0}</td>
-
-                      </tr>
-                  `;
-                    TableData.append(loadData);
-
-                    // Animate the bar after appending
-                    const $bar = TableData.find(".progress-bar").last();
-                    $bar.css("background", barColor); // set color
-                    setTimeout(() => {
-                        $bar.css("width", `${percent}%`); // animate width
-                    }, 50); // small delay to trigger transition
-                });
-
-                // Animate circular progress
-                $(".circular-progress").each(function () {
-                    let $circle = $(this);
-                    let progress = parseFloat($circle.data("progress")) || 0;
-
-                    // decide color
-                    let color = "#f44336"; // red
-                    if (progress >= 80) color = "#4caf50";   // green
-                    else if (progress >= 50) color = "#ff9800"; // orange
-
-                    // animate from 0 → target
-                    let current = 0;
-                    let target = progress;
-                    let step = () => {
-                        if (current <= target) {
-                            $circle.css({
-                                "--progress": current,   // FIX ✅ use raw percent (0–100)
-                                "--bar-color": color
-                            });
-                            current++;
-                            requestAnimationFrame(step);
-                        }
-                    };
-                    step();
-                });
-            }
-        }
-
-
-        function CompleteTableDisplay(array) {
-            let tableDisplay = $("#CompleteTables");
-            tableDisplay.empty();
-
-            if (array.length === 0) {
-                tableDisplay.append(`
-                <tr>
-                    <td colspan="7" style="text-align:center; color:#888;">No completed requests found</td>
-                </tr>
-            `);
-                return;
-            }
-
-            $.each(array, function (index, row) {
-                const rowHtml = `
-                <tr>
-                    <td><div class="order-number" style='font-weight: 600;'>${row.OrderID}</div></td>
-                    <td style='font-weight: 600;'>${row.ChambersOrdered} X</td>
-                    <td class="price"><p style='color: #222;'>${row.TargetDate}</p></td>
-                    <td><span class="status pending">${row.ChamberName}</span></td>
-                    <td><div class="product-name" style='color: #27ae60; font-weight: 600;'>₱ ${row.TotalPrice.toLocaleString('en-US')}</div></td>
-                    <td class="delivery-service" style='font-weight: 600;'>${row.RequestStatus}</td>
-                    <td class="delivery-service"><i class="fa-solid fa-ellipsis-vertical"></i></td>
-                </tr>
-            `;
-                tableDisplay.append(rowHtml);
-            });
-
-        }
-
-
-        $(document).on('click', '.RequestRow', function (e) {
-            e.stopPropagation(); // Prevent triggering the row click event
-            var rowId = $(this).attr('id');
-            var rowIndex = rowId.split('_').slice(1).join('_');
-            window.location.href = "/Hydroponics/Hydro/OrderpageDetails?orderID=" + rowIndex;
-        });
-
-
-        const GetChamberDatalist = async () => {
-            let res = await FetchAuthenticate('@Url.Action("GetChamberList", "Hydro")', {});
-              if (res && res.Success) {
-                  $.each(res.Data, function (index, row) {
-                      $("#ChamberID").append("<option value='" + row.ChamberID + "'>" + row.ChamberName + "</option>");
-                  });
-              }
-         };
-
-
-        $("#Showadd").on('click', function (e) {
-            e.preventDefault();
-            $("#AddRequestModal").modal("show");
-        });
-
-        addforms.addEventListener('submit', async function (e) {
-            e.preventDefault();
-            let formdata = new FormData(e.target);
-            const data = Object.fromEntries(formdata);
-            let res = await postData('@Url.Action("NewAddRequestData", "Hydro")', formdata);
-            if (res && res.Success) {
-                RequesDataList();
-                e.target.reset();
-                $("#AddRequestModal").modal("hide");
-            }
-        });
-
-        // Function to filter completeData based on date range
-        function filterByDateRange() {
-            let start = $("#startDate").val(); // e.g. 2025-10-20
-            let end = $("#endDate").val();     // e.g. 2025-10-30
-
-            if (!start && !end) {
-                CompleteTableDisplay(completeData);
-                return;
-            }
-
-            let filtered = completeData.filter(row => {
-                // Convert row.TargetDate "10/25/2025" → Date object
-                let parts = row.TargetDate.split("/");
-                let rowDate = new Date(parts[2], parts[0] - 1, parts[1]);
-
-                if (start && rowDate < new Date(start)) return false;
-                if (end && rowDate > new Date(end)) return false;
-                return true;
-            });
-
-            CompleteTableDisplay(filtered);
-        }
-
-
-        // Attach events
-        $("#startDate, #endDate").on("change", function () {
-            filterByDateRange();
-        });
-
-
-        // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
-        const LoadPageData = async () => {
-            try {
-
-                const [req, list] = await Promise.all([
-                    RequesDataList(),
-                    GetChamberDatalist()
-                ]);
-            } catch (error) {
-                console.error("Failed to load page data:", error);
-            } finally {
-                // Hide loading spinner whether success or failure
-                //$("#loadingSpinner").hide();
-            }
-        }
-
-        $(document).ready(() => {
-            LoadPageData();
-        });
-    </script>*@
 
 
 
@@ -516,13 +291,21 @@
                 statsCss = 'readiness-not-ready'
             }
 
+            const daysRemaining = calculateDaysRemaining(row.TargetDate);
+
+            console.log(daysRemaining);
+
             TableData.append(`
                 <tr >
                     <td><strong>${row.OrderID ?? "-"}</strong></td>
                     <td>${row.ChamberName ?? "-"}</td>
                     <td>${row.ChambersOrdered ?? 0} unit(s)</td>
                     <td>${row.OrderDate ?? "-"}</td>
-                    <td>${row.TargetDate ?? "-"}</td>
+                    <td>
+                        ${row.TargetDate ?? "-"}
+                        ${daysRemaining < 0 && row.RequestStatus === 'Ongoing' ? '<br><small style="color: #dc3545;">Overdue</small>' :
+                          daysRemaining < 7 && row.RequestStatus === 'Ongoing' ? '<br><small style="color: #ffc107;">Due soon</small>' : ''}
+                    </td>
                     <td>${row.PIC ?? "-"}</td>
                     <td style="text-align:center;  display: flex; justify-content: center; flex-direction: column; align-items: center;">
                         <div class="progress-bar-container">
@@ -672,6 +455,19 @@
             $("#StatusUpdateModal").modal("hide");
         }
     });
+
+
+
+    // Calculate the Remaining Days
+    function calculateDaysRemaining(targetDate) {
+        const target = new Date(targetDate);
+        const today = new Date();
+        const diffTime = target - today;
+        return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    }
+
+
+
 
     // ========================== INITIAL LOAD ==============================
     $(document).ready(async () => {

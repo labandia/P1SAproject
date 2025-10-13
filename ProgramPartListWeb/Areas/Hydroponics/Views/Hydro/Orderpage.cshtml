@@ -293,7 +293,6 @@
 
             const daysRemaining = calculateDaysRemaining(row.TargetDate);
 
-            console.log(daysRemaining);
 
             TableData.append(`
                 <tr >
@@ -304,7 +303,7 @@
                     <td>
                         ${row.TargetDate ?? "-"}
                         ${daysRemaining < 0 && row.RequestStatus === 'Ongoing' ? '<br><small style="color: #dc3545;">Overdue</small>' :
-                          daysRemaining < 7 && row.RequestStatus === 'Ongoing' ? '<br><small style="color: #ffc107;">Due soon</small>' : ''}
+                        daysRemaining < 7 && row.RequestStatus === 'Ongoing' ? '<br><strong style="color: #b45721; font-size: .735rem;">Due soon</strong>' : ''}
                     </td>
                     <td>${row.PIC ?? "-"}</td>
                     <td style="text-align:center;  display: flex; justify-content: center; flex-direction: column; align-items: center;">

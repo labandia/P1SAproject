@@ -94,8 +94,9 @@ namespace NCR_system.Models
         private string _Details;
         private string _RegNo;
         private string _CustomerName;
-        private string _SIC;
-        private int _Status;
+        private int _SectionID;
+        private string _Status;
+        private string _Process;
 
 
         public int RecordID
@@ -139,12 +140,12 @@ namespace NCR_system.Models
             set => _CustomerName = value;
         }
 
-        public string SIC
+        public int SectionID
         {
-            get => _SIC;
-            set => _SIC = value;
+            get => _SectionID;
+            set => _SectionID = value;
         } 
-        public int Status
+        public string Status
         {
             get => _Status;
             set => _Status = value;
@@ -163,7 +164,7 @@ namespace NCR_system.Models
         private int _NGQty;
         private string _ProcEncounter;
         private string _cause;
-        private int _section;
+        private int _SectionID;
         private string _Invest;
         private int _Status;
         private string _P1saStatus;
@@ -225,10 +226,10 @@ namespace NCR_system.Models
             get => _cause;
             set => _cause = value;
         }
-        public int section
+        public int SectionID
         {
-            get => _section;
-            set => _section = value;
+            get => _SectionID;
+            set => _SectionID = value;
         }
 
         public string Invest
@@ -261,7 +262,7 @@ namespace NCR_system.Models
         private string _RegNo;
         private string _Category;
         private string _IssueGroup;
-        private string _MainCharge;
+        private int _SectionID;
         private string _ModelNo;
         private int _Quantity;
         private string _Contents;
@@ -295,10 +296,10 @@ namespace NCR_system.Models
             get => _IssueGroup;
             set => _IssueGroup = value;
         }
-        public string MainCharge
+        public int SectionID
         {
-            get => _MainCharge;
-            set => _MainCharge = value;
+            get => _SectionID;
+            set => _SectionID = value;
         }
         public string ModelNo
         {

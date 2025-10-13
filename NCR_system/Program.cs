@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using NCR_system.Interface;
+using NCR_system.Repository;
+using NCR_system.View.Module;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,6 +12,7 @@ namespace NCR_system
 {
     internal static class Program
     {
+        public static IServiceProvider ServiceProvider { get; private set; }
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -16,7 +21,23 @@ namespace NCR_system
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Mainpage());
+
+            var services = new ServiceCollection();
+            services.AddSingleton<ICustomerComplaint, CustomerRepository>();
+            services.AddSingleton<IShipRejected, RejectShipRepository>();
+
+            // Import Modules Usercontrols
+            services.AddSingleton<Mainpage>();
+
+            services.AddTransient<Customer_Complaint_user>();
+            services.AddTransient<Inprocess_control>();
+            services.AddTransient<NCR_control>();
+            services.AddTransient<Rejected>();
+            services.AddTransient<ShipRejected>();
+
+            ServiceProvider = services.BuildServiceProvider();
+            var mainForm = ServiceProvider.GetRequiredService<Mainpage>();
+            Application.Run(mainForm);
         }
     }
 }

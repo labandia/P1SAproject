@@ -497,7 +497,6 @@
         //    });
         //    return;
         //}
-        console.log(finaldata);
 
 
         const savebtn = document.querySelector("#btnSave");
@@ -505,7 +504,6 @@
 
         // Send form data with file to controller
         let res = await postData('@Url.Action("AddRegistration", "Patrol")', finalformData);
-        console.log(res);
         if (res.StatusCode === 201) {
             Swal.fire({
                 title: "Success",

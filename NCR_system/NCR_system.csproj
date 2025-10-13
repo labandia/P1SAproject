@@ -33,8 +33,27 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.2.1.66\lib\net461\Dapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=9.0.0.9, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.9.0.9\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=9.0.0.9, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.9.0.9\lib\net462\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=9.0.0.9, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.9.0.9\lib\net462\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -46,6 +65,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\AesEncryption.cs" />
+    <Compile Include="Data\SqlDataAccess.cs" />
+    <Compile Include="Interface\ICustomerComplaint.cs" />
+    <Compile Include="Interface\IInprocess.cs" />
+    <Compile Include="Interface\INCR.cs" />
+    <Compile Include="Interface\IShipRejected.cs" />
     <Compile Include="Mainpage.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -55,6 +80,39 @@
     <Compile Include="Models\NCRModels.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\CustomerRepository.cs" />
+    <Compile Include="Repository\InprocessRepository.cs" />
+    <Compile Include="Repository\RejectShipRepository.cs" />
+    <Compile Include="View\Module\Customer_Complaint_user.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\Module\Customer_Complaint_user.Designer.cs">
+      <DependentUpon>Customer_Complaint_user.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Module\Inprocess_control.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\Module\Inprocess_control.Designer.cs">
+      <DependentUpon>Inprocess_control.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Module\NCR_control.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\Module\NCR_control.Designer.cs">
+      <DependentUpon>NCR_control.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Module\Rejected.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\Module\Rejected.Designer.cs">
+      <DependentUpon>Rejected.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Module\ShipRejected.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\Module\ShipRejected.Designer.cs">
+      <DependentUpon>ShipRejected.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Mainpage.resx">
       <DependentUpon>Mainpage.cs</DependentUpon>
     </EmbeddedResource>
@@ -67,6 +125,22 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="View\Module\Customer_Complaint_user.resx">
+      <DependentUpon>Customer_Complaint_user.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Module\Inprocess_control.resx">
+      <DependentUpon>Inprocess_control.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Module\NCR_control.resx">
+      <DependentUpon>NCR_control.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Module\Rejected.resx">
+      <DependentUpon>Rejected.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Module\ShipRejected.resx">
+      <DependentUpon>ShipRejected.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -80,5 +154,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

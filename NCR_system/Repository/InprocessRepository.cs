@@ -20,8 +20,9 @@ namespace NCR_system.Repository
                                   ,NGQty,ProcEncounter
                                   ,cause,Invest
                                   ,Status,P1saStatus
-                                  ,Remarks,SectionID
-                              FROM PC_Inprocess";
+                                  ,Remarks,SectionDep
+                              FROM PC_Inprocess
+                              WHERE SectionID =@SectionID";
             return await SqlDataAccess.GetData<InprocessModel>(query, new { SectionID = section });
         }
 

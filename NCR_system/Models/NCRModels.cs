@@ -17,15 +17,26 @@ namespace NCR_system.Models
         private string _ModelNo;
         private int _Quantity;
         private string _Contents;
-        private int _CircularStatus;
+        private string _CircularStatus;
         private string _DateCloseReg;
         private int _Status;
+        private int _SectionID;
+        private string _FilePath;
+        private string _TargetDate;
+        private int _Process;
+        private string _DateRegist;
 
 
         public int RecordID
         {
             get => _RecordID;
             set => _RecordID = value;
+        }
+
+        public int SectionID
+        {
+            get => _SectionID;
+            set => _SectionID = value;
         }
         public string DateIssued
         {
@@ -67,7 +78,7 @@ namespace NCR_system.Models
             get => _Contents;
             set => _Contents = value;
         }
-        public int CircularStatus
+        public string CircularStatus
         {
             get => _CircularStatus;
             set => _CircularStatus = value;
@@ -81,6 +92,26 @@ namespace NCR_system.Models
         {
             get => _Status;
             set => _Status = value;
+        }
+        public string FilePath
+        {
+            get => _FilePath;
+            set => _FilePath = value;
+        }
+        public int Process
+        {
+            get => _Process;
+            set => _Process = value;
+        }
+        public string TargetDate
+        {
+            get => _TargetDate;
+            set => _TargetDate = value;
+        }
+        public string DateRegist
+        {
+            get => _DateRegist;
+            set => _DateRegist = value;
         }
     }
 
@@ -164,11 +195,12 @@ namespace NCR_system.Models
         private int _NGQty;
         private string _ProcEncounter;
         private string _cause;
-        private int _SectionID;
+        private string _SectionDep;
         private string _Invest;
         private int _Status;
         private string _P1saStatus;
         private string _Remarks;
+        private int _SectionID;
 
         public int RecordID
         {
@@ -226,10 +258,10 @@ namespace NCR_system.Models
             get => _cause;
             set => _cause = value;
         }
-        public int SectionID
+        public string SectionDep
         {
-            get => _SectionID;
-            set => _SectionID = value;
+            get => _SectionDep;
+            set => _SectionDep = value;
         }
 
         public string Invest
@@ -252,6 +284,11 @@ namespace NCR_system.Models
         {
             get => _Status;
             set => _Status = value;
+        }
+        public int SectionID
+        {
+            get => _SectionID;
+            set => _SectionID = value;
         }
     }
 

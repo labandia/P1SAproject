@@ -82,6 +82,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\CustomerRepository.cs" />
     <Compile Include="Repository\InprocessRepository.cs" />
+    <Compile Include="Repository\NCR_Repository.cs" />
     <Compile Include="Repository\RejectShipRepository.cs" />
     <Compile Include="View\Module\Customer_Complaint_user.cs">
       <SubType>UserControl</SubType>

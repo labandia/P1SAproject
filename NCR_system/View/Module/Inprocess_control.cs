@@ -16,7 +16,7 @@ namespace NCR_system.View.Module
         private readonly IInprocess _inp;
 
 
-        public DataGridView Inprocessgrid { get { return InprocessGrid; } }
+        public DataGridView InprocessgridV2 { get { return InprocessGrid; } }
 
         public Inprocess_control(IInprocess inp)
         {

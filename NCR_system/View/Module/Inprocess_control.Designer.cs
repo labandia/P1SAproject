@@ -40,7 +40,7 @@
             this.projectitle.AutoSize = true;
             this.projectitle.Font = new System.Drawing.Font("Century Gothic", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.projectitle.ForeColor = System.Drawing.Color.Black;
-            this.projectitle.Location = new System.Drawing.Point(76, 76);
+            this.projectitle.Location = new System.Drawing.Point(50, 58);
             this.projectitle.Name = "projectitle";
             this.projectitle.Size = new System.Drawing.Size(124, 28);
             this.projectitle.TabIndex = 5;
@@ -51,10 +51,10 @@
             this.InprocessGrid.AllowUserToAddRows = false;
             this.InprocessGrid.AllowUserToDeleteRows = false;
             this.InprocessGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.InprocessGrid.Location = new System.Drawing.Point(60, 147);
+            this.InprocessGrid.Location = new System.Drawing.Point(55, 135);
             this.InprocessGrid.Name = "InprocessGrid";
             this.InprocessGrid.ReadOnly = true;
-            this.InprocessGrid.Size = new System.Drawing.Size(585, 520);
+            this.InprocessGrid.Size = new System.Drawing.Size(585, 373);
             this.InprocessGrid.TabIndex = 6;
             // 
             // SummaryInprocess
@@ -87,7 +87,7 @@
         #endregion
 
         private System.Windows.Forms.Label projectitle;
-        private System.Windows.Forms.DataGridView InprocessGrid;
         private System.Windows.Forms.DataGridView SummaryInprocess;
+        public System.Windows.Forms.DataGridView InprocessGrid;
     }
 }

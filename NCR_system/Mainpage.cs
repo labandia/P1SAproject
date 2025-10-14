@@ -54,19 +54,22 @@ namespace NCR_system
             await _cc.DisplayCustomer();
         }
 
-        private void Customerbtn_Click(object sender, EventArgs e)
+        private async void Customerbtn_Click(object sender, EventArgs e)
         {
             _cc.BringToFront();
+            await _cc.DisplayCustomer();
         }
 
-        private void processbtn_Click(object sender, EventArgs e)
+        private async void processbtn_Click(object sender, EventArgs e)
         {
             _proc.BringToFront();
+            await _proc.DisplayRejected();
         }
 
-        private void ncrbtn_Click(object sender, EventArgs e)
+        private async void ncrbtn_Click(object sender, EventArgs e)
         {
             _ncr.BringToFront();
+            await _ncr.DisplayNCR();
         }
 
         private async void Rejectedbtn_Click(object sender, EventArgs e)
@@ -79,6 +82,11 @@ namespace NCR_system
         {
             _ship.BringToFront();
             await _ship.DisplayRejected();
+        }
+
+        private void panelContainer_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

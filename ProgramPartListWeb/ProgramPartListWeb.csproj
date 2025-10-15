@@ -625,6 +625,24 @@
     <Compile Include="Areas\Circuit\Repository\PartlistRepository.cs" />
     <Compile Include="Areas\Circuit\Repository\PartlistRepositoryV2.cs" />
     <Compile Include="Areas\Circuit\Repository\SupplierRepository.cs" />
+    <Compile Include="Areas\Hydroponics\Controllers\HydroController.cs" />
+    <Compile Include="Areas\Hydroponics\Controllers\StockController.cs" />
+    <Compile Include="Areas\Hydroponics\HydroponicsAreaRegistration.cs" />
+    <Compile Include="Areas\Hydroponics\Interface\IChambers.cs" />
+    <Compile Include="Areas\Hydroponics\Interface\IHyrdoParts.cs" />
+    <Compile Include="Areas\Hydroponics\Interface\IPartsList.cs" />
+    <Compile Include="Areas\Hydroponics\Interface\IRequestChamber.cs" />
+    <Compile Include="Areas\Hydroponics\Interface\IStockAlertService.cs" />
+    <Compile Include="Areas\Hydroponics\Interface\IStocksparts.cs" />
+    <Compile Include="Areas\Hydroponics\Models\AddFormsModel.cs" />
+    <Compile Include="Areas\Hydroponics\Models\HydropPartsModel.cs" />
+    <Compile Include="Areas\Hydroponics\Models\StockAlertModel.cs" />
+    <Compile Include="Areas\Hydroponics\Repository\ChamberRepository.cs" />
+    <Compile Include="Areas\Hydroponics\Repository\HydroPartsRepository.cs" />
+    <Compile Include="Areas\Hydroponics\Repository\NotificationRepository.cs" />
+    <Compile Include="Areas\Hydroponics\Repository\PartsMasterlistRepository.cs" />
+    <Compile Include="Areas\Hydroponics\Repository\StockAlertService.cs" />
+    <Compile Include="Areas\Hydroponics\Repository\StockpartsRepository.cs" />
     <Compile Include="Areas\PC\Controllers\NotificationController.cs" />
     <Compile Include="Areas\PC\Controllers\PatrolController.cs" />
     <Compile Include="Areas\PC\Interface\IInspector.cs" />
@@ -752,9 +770,23 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Areas\Circuit\Views\ProgramPartList\PDAView.cshtml" />
+    <Content Include="Areas\Hydroponics\Views\web.config" />
+    <Content Include="Areas\Hydroponics\Views\Shared\HydroPartsLayout.cshtml" />
+    <Content Include="Areas\Hydroponics\Views\Hydro\Inventorylist.cshtml" />
+    <Content Include="Areas\Hydroponics\Views\Hydro\Index.cshtml" />
+    <Content Include="Areas\Hydroponics\Views\Hydro\Orderpage.cshtml" />
+    <Content Include="Areas\Hydroponics\Views\Hydro\Chambers.cshtml" />
+    <Content Include="Areas\Hydroponics\Views\Hydro\PartList.cshtml" />
+    <Content Include="Areas\Hydroponics\Views\Hydro\AddStocks.cshtml" />
+    <Content Include="Areas\Hydroponics\Views\Hydro\OrderpageDetails.cshtml" />
     <Content Include="Content\fonts\Inter.ttf" />
+    <Content Include="Areas\Hydroponics\Views\Hydro\SampleLayout.cshtml" />
     <Content Include="Content\fonts\Manrope-Regular.ttf" />
     <Content Include="Content\fonts\Manrope-SemiBold.ttf" />
+    <Content Include="Areas\Hydroponics\Views\Hydro\UserManage.cshtml" />
+    <Content Include="Areas\Hydroponics\Views\Hydro\TransactionHistory.cshtml" />
+    <Content Include="Areas\Hydroponics\Views\Hydro\ChambersDetails.cshtml" />
+    <Content Include="Areas\Hydroponics\Views\Hydro\RequestStock.cshtml" />
     <None Include="Content\Images\.editorconfig" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\circularProgressBar.min.js" />
@@ -957,6 +989,7 @@
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Views\Dashboard\" />
     <Folder Include="Areas\Admin\Views\Shared\" />
+    <Folder Include="Areas\Hydroponics\Views\Stock\" />
     <Folder Include="Areas\Press\Data\" />
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,151 @@
+﻿
+@{
+    ViewBag.Title = "Chambers";
+    Layout = "~/Areas/Hydroponics/Views/Shared/HydroPartsLayout.cshtml";
+}
+
+
+<section style="padding: 1em 0;">
+    <div class="chambercontain" id="chambercontain">
+
+    </div>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+    let chamberlist = [];
+
+    const ChambercardDisplay = async () => {
+        let res = await FetchAuthenticate('@Url.Action("GetAllChambers", "Hydro")', {});
+        $("#chambercontain").empty();
+
+        if (res && res.Success) {
+            chamberlist = res.Data;
+            //let priceobj = res.Data.TotalPrice;
+            $.each(chamberlist, function (index, row) {
+                  const imageUrl = '@Url.Content("~/Content/Images/HydroPhonics.png")';
+
+
+                const cardHTML = `<div class="chambercard" id='editButton_${row.ChamberID}'>
+                                        <div class='flex_space'>
+                                            <div>
+                                                 <div class="route">${row.ChamberName}</div>
+
+                                                 <div class="annotation">
+                                                     <span class="annotation-label">No# of Chamber Produce: </span>
+                                                     <span class="annotation-value">${row.MaxBuildableChambers}</span>
+                                                 </div>
+                                                 <div class="annotation">
+                                                    <span class="annotation-label">Total Part: </span>
+                                                    <span class="annotation-value">${row.TotalParts}</span>
+                                                </div>
+                                            </div>
+                                            <div class='chamberImage'>
+                                                   <img src="${imageUrl}" alt="Chamber Image" />
+                                            </div>
+                                        </div>
+
+                                        <div class="divider"></div>
+
+                                        <div class="shipment-number">
+                                            <span class="label">Total PHP Cost : </span>
+                                            <span class="value"> ₱ <strong style='font-size: 16px;'>${row.TotalPHPCost.toLocaleString('en-US') }</strong></span>
+                                        </div>
+
+                                        <div class="track">
+                                            <span class="label">Total USD Cost :</span>
+                                            <span class="value">$ <strong style='font-size: 16px;'>${row.UnitCost_PHP.toLocaleString('en-US') }</strong></span>
+                                        </div>
+                                    </div>`
+                $("#chambercontain").append(cardHTML);
+            });
+        }
+    }
+
+    $(document).on('click', '.chambercard', function (e) {
+        e.stopPropagation(); // Prevent triggering the row click event
+        var rowId = $(this).attr('id');
+        var rowIndex = rowId.split('_').slice(1).join('_');
+        window.location.href = "/Hydroponics/Hydro/ChambersDetails?chamberID=" + rowIndex;
+    });
+
+
+
+
+
+    const ActionRestrict = () => {
+        userRole = localStorage.getItem("UserRole");
+        if (userRole === "Leader" || userRole === "Users") {
+            return false;
+        }
+    }
+
+
+
+
+    function loadingDisplay() {
+        TableDisplay.empty();
+        const loadData = `<tr>
+                            <td colspan='9'>
+                                <div class='Loadercontainer'>
+                                    <span class="loader"></span>
+                                    <p id="loadingStepText">Fetching data from the database..</p>
+                                </div>
+                            </td>
+                        </tr>`;
+        TableDisplay.append(loadData);
+    }
+    function Loadingsteps(callback) {
+        const steps = [
+            "Fetching data from the database...",
+            "Processing data...",
+            "Finalizing table view..."
+        ];
+
+        let stepIndex = 0;
+
+        const interval = setInterval(() => {
+            if (stepIndex < steps.length) {
+                const stepText = document.getElementById("loadingStepText");
+                if (stepText) stepText.innerText = steps[stepIndex];
+                stepIndex++;
+            } else {
+                clearInterval(interval);
+                if (typeof callback === "function") callback();
+            }
+        }, 800);
+    }
+
+
+
+    // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+    const LoadPageData = async () => {
+        try {
+            if (ActionRestrict() === false) {
+            }
+
+            const [card, invent, drop] = await Promise.all([
+                ChambercardDisplay()
+            ]);
+        } catch (error) {
+            console.error("Failed to load page data:", error);
+        } finally {
+            // Hide loading spinner whether success or failure
+            //$("#loadingSpinner").hide();
+        }
+    }
+
+    $(document).ready(() => {
+        LoadPageData();
+    });
+</script>
+

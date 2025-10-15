@@ -1,0 +1,517 @@
+﻿
+@{
+    ViewBag.Title = "ChambersDetails";
+    var ID = Request.QueryString["chamberID"];
+    Layout = "~/Areas/Hydroponics/Views/Shared/HydroPartsLayout.cshtml";
+}
+<input type="hidden" id="chambID" value="@ID" />
+
+<div>
+    <div class="breadcrumb">
+        <a href="/Hydroponics/Hydro/Chambers">Hydroponic Chamber</a>  > <span id="breadname"></span>
+    </div>
+</div>
+
+
+<section class="InspectHead flex_space">
+    <div>
+        <h5 style="font-weight: 600;" id="ChamberNames">-</h5>
+        <div class="Pricedisplay">
+            <small style=" font-weight: 500;">Total PHP Cost:  </small><span id="TotalPH">$ 0.00</span> -
+            <small style="font-weight: 500;">Total USD Cost:  </small><span id="TotalUSD">₱ 0.00</span>
+        </div>
+        <p>Chamber Produce #: <span id="chamberproduce">-</span></p>
+        <div class="Inputcontainer" style="display: none;">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" placeholder="Search here ... " id="searchbox" autocomplete="off" />
+            <div class="line"></div>
+        </div>
+    </div>
+
+    <button id="AddItem" class="primarybtn" type="button"><i class="fa-solid fa-box-archive"></i>Add Parts</button>
+</section>
+
+<hr />
+<div class="flex_space">
+    <small>Part list Material :</small>
+</div>
+
+<div class="InspecTable">
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%; text-align: left; padding-left: 1.5em !important;"><i class="fa-solid fa-screwdriver-wrench"></i> <span style="margin-left: .5em;">Part No. / Partname</span> </th>
+                <th><i class="fa-regular fa-user"></i> <span style="margin-left: .5em;">Supplier</span>  </th>
+                <th><i class="fa-solid fa-database"></i> <span style="margin-left: .5em;">Require Qty</span>  </th>
+                <th><i class="fa-regular fa-money-bill-1"></i> <span style="margin-left: .5em;">Unit Cost</span>  </th>
+                <th><i class="fa-regular fa-money-bill-1"></i> <span style="margin-left: .5em;">Total Cost</span>  </th>
+                <th> <span style="margin-left: .5em;">Action</span>  </th>
+            </tr>
+        </thead>
+        <tbody id="ChamberlistData">
+        </tbody>
+    </table>
+</div>
+
+
+
+@*=================================================================================*@
+@*=========================== ADD PARTS CHAMBER ===================================*@
+@*=================================================================================*@
+<div class="modal fade modal-l" id="AddChamberModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Add Chamber Parts</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+
+                <form method="post"  class="addformcontainer" id="addnewform" autocomplete="off">
+                    <div class="row">
+               
+                        <div class="form_group col-12 col-sm-12 col-lg-12 mb-2">
+                            <label>Select Inventory Parts.  <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                            <div class="select-container">
+                                <select id="addPartNo" name="PartNo">
+                                    <option value="0">-- select Category --</option>
+                                </select>
+                            </div>
+                           
+                        </div>
+                    </div>
+                   
+
+
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>Require Qty:  <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                        <input type="number" placeholder="type Required Quantity" name="QuantityPerChamber" id="QuantityPerChamber" step="0.01" min="0"  required />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>Unit Cost:  <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                        <input type="number" placeholder="type Unit Cost" name="UnitCost_PHP" id="UnitCost_PHP" step="0.01" min="0" required />
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div>
+                            <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                        </div>
+                        <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@*=================================================================================*@
+@*=========================== CHANGE UNIT COST  ===================================*@
+@*=================================================================================*@
+<div class="modal fade modal-m" id="ChangeCostModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <div>
+                        <p id="disPartname" style='color: #195e8b; font-weight: 600;'>PartName :</p>
+                        <small id="disPartno">Partno: </small>
+                    </div>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <form id="changeCostform" class="addformcontainer">
+
+
+
+                    <p>Unit Dollar ($): <strong id="disUSD"></strong>  </p>
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label for="">Unit Cost Pesos (₱) :  </label>
+                        <input type="hidden" name="ChamberPartID" id="ChamberPartID">
+                        <input type="text" name="UnitCost_PHP" id="UnitCost_PHP" onkeypress="return restrictChars(event)" autocomplete="off">
+                    </div>
+                    <div class="flex_end" id="editsdisplay">
+                        <button type="submit" class="primarybtn">
+                            <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
+                        </button>
+                    </div>
+                </form>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<script type="text/javascript">
+    const ID = $("#chambID").val();
+    let chamberlist = [];
+    let loadData = [];
+    let partsID;
+    let userRole;
+
+    let totalUSD = 0.0;
+
+
+    // Forms
+    const addparts = document.getElementById("addnewform");
+    const addQuanforms = document.getElementById("AddQuantityform");
+    const changeCost = document.getElementById("changeCostform");
+
+    let TableDisplay = $("#ChamberlistData");
+    const resultBox = document.querySelector(".namesdisplay");
+
+
+
+
+
+    const ChamberTable = async (ID) => {
+        loadingDisplay();
+
+        Loadingsteps(async () => {
+            let res = await FetchAuthenticate('@Url.Action("GetAllChamberList", "Hydro")', { chamber: ID });
+            console.log(res);
+            if (res && res.Success) {
+                let priceobj = res.Data.TotalPrice;
+
+
+                // Renders the TableData
+                chamberlist = res.Data.GetList;
+                TableDisplay.empty(); // Removing the Loading Display
+                ChamberPagination(chamberlist, 'ChamberlistData');
+
+                $("#ChamberNames").text(res.Data.Produce.ChamberName);
+                $("#breadname").text(res.Data.Produce.ChamberName);
+
+                // Display total price
+                $("#TotalPH").text("$ " + priceobj.PHPTotal.toLocaleString('en-US'));
+                $("#TotalUSD").text("₱ " + priceobj.USDTotal.toLocaleString('en-US'));
+
+                // Display Produce Chambers
+                $("#chamberproduce").text(res.Data.Produce.MaxBuildableChambers);
+
+            } else {
+                const loadData = `<tr>
+                  <td colspan='9'>
+                      🔍 ${res.Message}
+                  </td>
+              </tr>`;
+
+                TableDisplay.empty();
+                TableDisplay.append(loadData);
+
+            }
+        });
+    }
+
+    const PartlistTable = async () => {
+        $("#addPartNo").empty();
+      let res = await FetchAuthenticate('@Url.Action("GetPartlistData", "Hydro")', {});
+        if (res && res.Success) {
+            const filteredParts = res.Data.filter(part =>
+                !chamberlist.some(chamber => chamber.PartNo === part.PartNo)
+            );
+
+            $.each(filteredParts, function (index, row) {
+               $("#addPartNo").append("<option value='" + row.PartNo + "'>" + row.PartName + "</option>");
+           });
+      }
+    }
+
+    const ActionRestrict = () => {
+        userRole = localStorage.getItem("UserRole");
+        if (userRole === "Leader" || userRole === "Users") {
+            return false;
+        }
+    }
+
+    function ChamberPagination(dataArray, tableBodyId) {
+        let filteredData = [...dataArray];
+
+        // === Overlay setup (once) ===
+        if (!document.getElementById("imageOverlay")) {
+            $("body").append(`
+                 <div id="imageOverlay">
+                     <img id="overlayImage" src="" />
+                 </div>
+             `);
+        }
+
+
+        const renderTable = () => {
+            const tableBody = document.getElementById(tableBodyId);
+            tableBody.innerHTML = "";
+            $.each(filteredData, function (index, row) {
+                // Compute by USD dollar
+                let computePHP = parseFloat(row.UnitCost_PHP) * 58;
+                var roundedNum = parseFloat(computePHP.toFixed(2));
+                let totalPHPCost = roundedNum * row.QuantityPerChamber;
+
+                   // Image Display
+                 let imagePath = row.ImageParts
+                     ? `/Hydro/DisplaytheImage?filename=${encodeURIComponent(row.ImageParts)}`
+                    : '@Url.Content("~/Content/Images/no-image.png")';
+
+                const rowHtml = `
+                         <tr class='rowClick' id='editButton_${row.PartNo}'>
+                            <td data-cell="Images" style='display: flex;  text-align: left; border-top: 1px solid #dcdce2; border-bottom: none;'>
+                                    <div class="flex_align" style='padding-left: 1.5em; gap: 15px;'>
+                                      <img class="NoImages lazy"
+                                          src='@Url.Content("~/Content/Images/no-image.png")'
+                                          data-src="${imagePath}"
+                                          loading="lazy"
+                                          onerror="this.src='@Url.Content("~/Content/Images/no-image.png")'" />
+                                      <div>
+                                          <p style='color: #185d8b; font-weight: 600; '>${row.PartName ? row.PartName : "-"}</p>
+                                          <small> ${row.PartNo}</small>
+                                      </div>
+                                  </div>
+                             </td>
+
+                             <td data-cell="Supplier">${row.Supplier ? row.Supplier : "-"}</td>
+                             <td data-cell="Supplier" style='font-weight: 600;'>${row.RequireQty ? row.RequireQty : "-"}</td>
+                             <td data-cell="UnitUSD" style='text-align: center; '>
+                                 <p>Dollar ($): <strong> ${row.UnitCost_PHP }</strong>  </p>
+                                 <p>Pesos (₱): <strong> ${roundedNum}</strong>  </p>
+                              </td>
+                             <td data-cell="UnitUSD" style='text-align: center;'>
+                                 <p>Dollar ($): <strong> ${row.TotalPHPCost}</strong>  </p>
+                                 <p>Pesos (₱):  <strong> ${totalPHPCost.toFixed(2)}</strong>  </p>
+                             </td>
+                             <td data-cell="Delete" >
+                                  <div class='flex_center'>
+                                      <button  class='Editbtnbutton text-primary bg-white' id='editButton_${row.ChamberPartID}' ">
+                                         <i class="fa-solid fa-pen-to-square"></i>
+                                      </button>
+                                  </div>
+                             </td>
+                         </tr>
+                     `;
+                tableBody.insertAdjacentHTML("beforeend", rowHtml);
+
+                // Attach blur-up effect
+                const lazyImages = document.querySelectorAll("img.lazy[data-src]");
+                lazyImages.forEach(img => {
+                    const realSrc = img.getAttribute("data-src");
+                    img.onload = () => img.classList.add("loaded"); // smooth transition
+                    img.setAttribute("src", realSrc);
+                    img.removeAttribute("data-src");
+                });
+            });
+
+        };
+        // === CLICK HANDLER: Show overlay image ===
+        $(document).on("click", ".NoImages", function (e) {
+            e.stopPropagation();
+            let imgSrc = $(this).attr("src") || $(this).attr("data-src");
+            let $overlay = $("#imageOverlay");
+            let $overlayImg = $("#overlayImage");
+
+            $overlayImg.attr("src", imgSrc);
+            $overlay.show(0, function () {
+                $overlay.addClass("show");
+            });
+        });
+
+        // === Hide overlay when clicked ===
+        $(document).on("click", "#imageOverlay", function () {
+            let $overlay = $(this);
+            $overlay.removeClass("show");
+            setTimeout(() => {
+                $overlay.hide();
+            }, 400); // match CSS transition
+        });
+
+        // === Show Details ===
+        $(document).on('click', '.Editbtnbutton', function (e) {
+            e.stopPropagation(); // Prevent triggering the row click event
+            var rowId = $(this).attr('id');
+            var rowIndex = rowId.split('_')[1];
+            var filterdata = chamberlist.find(item => item.ChamberPartID === parseInt(rowIndex));
+
+            if (filterdata) {
+                // Compute by USD dollar
+                let computeUSD = parseFloat(filterdata.UnitCost_PHP) / 58;
+                var roundedNum = parseFloat(computeUSD.toFixed(2));
+
+
+                //UnitCost_PHP
+                $("#ChamberPartID").val(rowIndex);
+                $("#disPartname").text(filterdata.PartName);
+                $("#disPartno").text(filterdata.PartNo);
+                $("#disUSD").text(roundedNum.toFixed(2));
+                $("#UnitCost_PHP").val(filterdata.UnitCost_PHP);
+                $("#ChangeCostModal").modal("show");
+
+            }
+        });
+
+
+
+        const searchTable = () => {
+            const query = $('#searchbox').val().toLowerCase() || '';
+            filteredData = dataArray.filter(item =>
+                item.PartName.toLowerCase().includes(query) || item.PartNo.toLowerCase().includes(query)
+            );
+
+            if (filteredData.length == 0) {
+                TableDisplay.empty();
+                const loadData = `<tr>
+                              <td colspan='4'>
+                                  <p id="loadingStepText">🔍 No Search found ..</p>
+                              </td>
+                          </tr>`;
+                TableDisplay.append(loadData);
+
+                return;
+            }
+
+
+            renderTable();
+        };
+
+        $('#searchbox').on('input', searchTable);
+
+        // Initial render
+        renderTable();
+    }
+
+
+
+    const exchangeRate = 58; // 1 USD = 58.25 PHP
+
+    $("#UnitCost_PHP").on("input", function () {
+        let pesoValue = parseFloat($(this).val()) || 0;
+        let usdValue = pesoValue / exchangeRate;
+
+        $("#disUSD").text(usdValue.toFixed(2)); // show in dollars
+    });
+
+    $("#chamberselect").on('change', function (e) {
+        e.preventDefault();
+        $("#TotalPH").text("$ 0.00");
+        $("#TotalUSD").text("₱ 0.00");
+        $("#chamberproduce").text("-");
+
+        let ID = parseInt(e.target.value);
+        let Name = $(this).find("option:selected").text();
+        $("#ChamberNames").text(Name);
+        ChamberTable(ID);
+    });
+
+    $("#AddItem").on('click', function (e) {
+        e.preventDefault();
+        PartlistTable();
+        $("#AddChamberModal").modal('show');
+    });
+
+    addparts.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        let formData = new FormData(e.target);
+        formData.append('ChamberID', ID);
+        const data = Object.fromEntries(formData);
+          let res = await postData('@Url.Action("AddChamberparts", "Hydro")', formData);
+            if (res && res.Success) {
+                 Swal.fire({
+                     title: "Success",
+                     text: res.Message,
+                     icon: "success",
+                     showConfirmButton: false,
+                     timer: 1500
+                 }).then(() => {
+                     ChamberTable(ID);
+                     e.target.reset();
+
+                     // Hide modal
+                     $("#AddChamberModal").modal("hide");
+                 });
+             }
+    });
+
+    changeCost.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        let formData = new FormData(e.target);
+
+        let res = await postData('@Url.Action("ChangeCostChamber", "Hydro")', formData);
+        if (res && res.Success) {
+            ChamberTable(ID);
+            $("#ChangeCostModal").modal("hide");
+        }
+
+    });
+
+
+    function loadingDisplay() {
+        TableDisplay.empty();
+        const loadData = `<tr>
+                            <td colspan='9'>
+                                <div class='Loadercontainer'>
+                                    <span class="loader"></span>
+                                    <p id="loadingStepText">Fetching data from the database..</p>
+                                </div>
+                            </td>
+                        </tr>`;
+        TableDisplay.append(loadData);
+    }
+    function Loadingsteps(callback) {
+        const steps = [
+            "Fetching data from the database...",
+            "Processing data...",
+            "Finalizing table view..."
+        ];
+
+        let stepIndex = 0;
+
+        const interval = setInterval(() => {
+            if (stepIndex < steps.length) {
+                const stepText = document.getElementById("loadingStepText");
+                if (stepText) stepText.innerText = steps[stepIndex];
+                stepIndex++;
+            } else {
+                clearInterval(interval);
+                if (typeof callback === "function") callback();
+            }
+        }, 800);
+    }
+
+
+
+    // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+    const LoadPageData = async () => {
+        try {
+            if (ActionRestrict() === false) {
+            }
+
+            const [card, invent, drop] = await Promise.all([
+                ChamberTable(ID)
+            ]);
+        } catch (error) {
+            console.error("Failed to load page data:", error);
+        } finally {
+            // Hide loading spinner whether success or failure
+            //$("#loadingSpinner").hide();
+        }
+    }
+
+    $(document).ready(() => {
+        LoadPageData();
+    });
+</script>
+

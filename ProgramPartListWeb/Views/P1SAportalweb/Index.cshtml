@@ -93,6 +93,175 @@
 </div>
 
 
+<script src="~/Scripts/Utilities.js"></script>
+<script src="~/Scripts/jquery-3.7.1.min.js"></script>
+@*<script src="~/Scripts/jquery.signalR-2.4.3.min.js"></script>*@
+
+@*<script src="/signalr/hubs"></script>*@
+
+<script type="text/javascript">
+    //function openExcel() {
+    //    try {
+    //        // Create Excel ActiveX object
+    //        var excel = new ActiveXObject("Excel.Application");
+    //        excel.Visible = true; // make Excel visible
+
+    //        // Open the network Excel file (UNC path)
+    //        var filePath = "\\\\SDP010F6C\\Users\\USER\\Pictures\\Access\\Excel\\Patrol_Countermeasure\\CM_250812_20250812_171539.xlsx";
+    //        excel.Workbooks.Open(filePath);
+
+    //    } catch (e) {
+    //        alert("Could not open Excel. Make sure you are using Internet Explorer / Edge IE Mode and ActiveX is enabled.\n\nError: " + e.message);
+    //    }
+    //}
+
+
+
+
+    const container = document.getElementById('Web_contain');
+
+    const getSelectedCategories = () => {
+        return $('input[name="schedule"]:checked')
+            .map(function () { return parseInt($(this).val()); })
+            .get();
+    };
+
+    const loadProjectList = async (projectList = [], searchText = "") => {
+        var SetData = $("#Web_contain");
+        SetData.empty();
+
+        let res = await fetchData('@Url.Action("GetProjectList", "P1SAportalweb")', {});
+        if (res && res.Success) {
+            let filteredData = res.Data;
+
+            if (projectList.length > 0 && !projectList.includes(0)) {
+                filteredData = filteredData.filter(project => projectList.includes(project.DepartmentID));
+            }
+
+            if (searchText) {
+                const lowerSearch = searchText.toLowerCase();
+                filteredData = filteredData.filter(project =>
+                    project.Project_Name.toLowerCase().includes(lowerSearch)
+                );
+            }
+
+            if (filteredData.length === 0) {
+                SetData.html("<p>No projects found.</p>");
+                return;
+            }
+
+            $.each(filteredData, function (index, res) {
+                var imageUrl = `/P1SAportalweb/Get?fileName=${res.SystemImage || 'No_Data.png'}`;
+
+                const card = `
+                   <div class="Web__card">
+                       <div class="Web__back"></div>
+                       <img src='${imageUrl}' alt="" />
+                       <div class="Web__details">
+                           <h1 >${res.Project_Name}</h1>
+                       </div>
+                       <span class="fs-850 fw-bold"> v${res.Version} </span>
+                        <a href="${res.Links}"><i class="fa-regular fa-eye"></i> Select</a>
+                   </div>`;
+                   SetData.append(card);
+                });
+        } else {
+            SetData.html("<p>Failed to load projects.</p>");
+        }
+    };
+
+    // Checkbox logic
+    $(document).ready(function () {
+        const $all = $('#allCheckbox');
+        const $children = $('.childCheckbox');
+
+        const handleCheckboxFilter = () => {
+            const categories = getSelectedCategories();
+            const searchText = $('.Webs_search input').val();
+            loadProjectList(categories, searchText);
+        };
+
+        $all.on('change', function () {
+            if (this.checked) {
+                $children.prop('checked', true);
+            }
+            handleCheckboxFilter();
+        });
+
+        $children.on('change', function () {
+            if (!this.checked) {
+                $all.prop('checked', false);
+            } else if ($children.filter(':checked').length === $children.length) {
+                $all.prop('checked', true);
+            }
+            handleCheckboxFilter();
+        });
+
+        $('.Webs_search input').on('input', function () {
+            handleCheckboxFilter();
+        });
+
+        // Initial load
+        handleCheckboxFilter();
+    });
+
+
+
+    document.querySelectorAll(".open-pdf-link").forEach(link => {
+        link.addEventListener("click", function (e) {
+            e.preventDefault(); // prevent href="#" from scrolling
+            const pdfUrl = this.getAttribute("data-pdf-url");
+            if (pdfUrl) {
+                window.open(pdfUrl, "_blank"); // open in new tab
+            }
+        });
+    });
+
+   
+
+    //$(function () {
+    //    console.log("SignalR init...");
+
+    //    var stockHub = $.connection.stockHub; // proxy created by /signalr/hubs
+    //    console.log("StockHub:", stockHub);
+
+    //    if (!stockHub) {
+    //        console.error("❌ StockHub undefined – check Hub class name and script order");
+    //        return;
+    //    }
+
+    //    stockHub.client.receiveStockAlert = function (partName, quantity) {
+    //        console.log("Stock Alert:", partName, quantity);
+    //        // append to UI if needed
+    //        $("#stockAlerts").append("<li>" + partName + " is low: " + quantity + "</li>");
+    //    };
+
+    //    $.connection.hub.start().done(function () {
+    //        console.log("✅ SignalR connected.");
+    //    });
+    //});
+
+
+    //$(function () {
+    //    // Reference the auto-generated proxy for the hub.
+    //    try {
+    //        console.log("HERE");
+    //        var chat = $.connection.myHub1;
+    //        console.log(chat);
+    //    } catch (e) {
+    //        console.log(e);
+    //    }
+
+    //});
+
+    //// This optional function html-encodes messages for display in the page.
+    //function htmlEncode(value) {
+    //    var encodedValue = $('<div />').text(value).html();
+    //    return encodedValue;
+    //}
+
+</script>
+
 
 
 

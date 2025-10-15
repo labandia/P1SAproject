@@ -1,0 +1,87 @@
+﻿using ProgramPartListWeb.Areas.Hydroponics.Interface;
+using ProgramPartListWeb.Areas.Hydroponics.Models;
+using ProgramPartListWeb.Helper;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace ProgramPartListWeb.Areas.Hydroponics.Repository
+{
+    public class StockpartsRepository : IStocksparts
+    {
+        public Task<List<StockAlertModel>> GetStocksAlertList()
+        {
+            string strquery = $@"
+                            SELECT 
+                                i.PartID,
+                                i.PartNo,
+                                i.PartName,
+                                s.CurrentQty,
+                                s.ReorderLevel,
+                                s.WarningLevel,
+                                s.Status,
+                                s.LastUpdated
+                            FROM Hydro_Stocks s
+                            INNER JOIN Hydro_InventoryParts i ON s.PartID = i.PartID
+                            WHERE s.Status IN ('Out of stocks', 'Restock')
+                            ORDER BY s.LastUpdated DESC";
+
+           
+
+            return SqlDataAccess.GetData<StockAlertModel>(strquery);
+        }
+
+
+        public Task<List<StockPartsModel>> GetStocksTracking()
+        {
+            string strquery = $@"SELECT
+	                                p.PartNo, 
+	                                p.PartName, 
+	                                c.CategoryID,
+	                                c.CategoryName,
+	                                p.Supplier,
+	                                p.Unit,
+	                                s.CurrentQty,
+	                                s.ReorderLevel,
+	                                s.WarningLevel,
+	                                s.Status,
+	                                s.LastUpdated
+                                FROM Hydro_InventoryParts p
+                                LEFT JOIN Hydro_CategoryParts c ON c.CategoryID = p.CategoryID
+                                LEFT JOIN Hydro_Stocks s ON s.PartNo = p.PartNo";
+
+            return SqlDataAccess.GetData<StockPartsModel>(strquery);
+        }
+
+        public Task<List<StockPartsModel>> GetTransactionStocks()
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> AddStocks(string partno, double Quan)
+        {
+
+            var data = await GetStocksTracking() ?? new List<StockPartsModel>();
+            var filterdata = data.FirstOrDefault(x => x.PartNo == partno);
+
+            double latestQty = filterdata.CurrentQty + Quan;
+
+            // 1. Updates the Stocks Quantity 
+            return await SqlDataAccess.UpdateInsertQuery($@"UPDATE Hydro_Stocks 
+                                                SET CurrentQty =@CurrentQty 
+                                                WHERE  PartNo =@PartNo",
+                                             new
+                                             {
+                                                 PartNo = partno,
+                                                 CurrentQty = latestQty
+                                             });
+
+            // 2. Insert Transaction Table
+
+        }
+
+        
+    }
+}

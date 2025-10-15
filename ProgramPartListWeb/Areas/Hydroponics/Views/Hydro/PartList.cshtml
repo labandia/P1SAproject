@@ -1,0 +1,534 @@
+﻿
+@{
+    ViewBag.Title = "PartList";
+    Layout = "~/Areas/Hydroponics/Views/Shared/HydroPartsLayout.cshtml";
+}
+
+
+<section class="InspectHead flex_space">
+    <div class="flex_align">
+        <div class="Inputcontainer">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" placeholder="Search here ... " id="searchbox" autocomplete="off" />
+            <div class="line"></div>
+        </div>
+    </div>
+
+    <div class="flex_align">
+        <div class="select-container">
+            <select id="Categoryselect">
+                <option value="0">-- Category --</option>
+            </select>
+        </div>
+        <button style="display: none;" id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-user-secret"></i> Add parts</button>
+    </div>
+</section>
+<hr />
+<div class="InspecTable">
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%; text-align: left; padding-left: 1.5em !important;"><span style="margin-left: .5em;">Part No. / Partname</span> </th>
+                <th> <i class="fa-regular fa-rectangle-list"></i> <span style="margin-left: .5em;">Category</span>  </th>
+                <th> <i class="fa-regular fa-address-card"></i> <span style="margin-left: .5em;">Supplier</span>  </th>
+                <th> <i class="fa-regular fa-address-card"></i> <span style="margin-left: .5em;">Unit Used</span>  </th>
+                <th style="width: 10%;">  <span style="margin-left: .5em;">Action</span>  </th>
+            </tr>
+        </thead>
+        <tbody id="PartlistData">
+        </tbody>
+    </table>
+</div>
+
+
+@*=================================================================================*@
+@*=========================== EDIT MASTERLIST PARTS =================================*@
+@*=================================================================================*@
+<div class="modal fade modal-xl" id="EditMasterModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Edit Parts List</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <form id="Editmasterform" class="addformcontainer">
+                   <div class="row">
+                       <div class="col-6">
+                           <div class="upload-container flex_center" id="upload-container">
+                               <div class="upload-icon">📷</div>
+                               <div class="file-info">Upload a photo of Parts.<br>Max file size: 1MB<br>png, jpg, jpeg, bmp, gif</div>
+                               <input type="file" id="partsimage" name="partsimage" accept=".png,.jpg,.jpeg" class="hidden">
+                               <button class="upload-btn" id="uploadBtn">Upload Photo</button>
+
+
+                           </div>
+                           <p>Image Preview : </p>
+                           <div class="preview-container" id="previewContainer">
+                               <img id="previewImage" class="preview-image" src="" alt="Image Preview">
+                           </div>
+                       </div>
+                       <div class="col-6">
+                           <div class="form_group col-12 col-sm-12 col-lg-12 mb-2">
+                               <label>Part No </label> <br />
+                               <input type="hidden" name="PartNo" id="PartNo" />
+                               <input type="text" placeholder="N/A" name="PartNoDisplay" id="PartNoDisplay" disabled />
+
+                           </div>
+                           <div class="form_group col-12 col-sm-12">
+                               <label for="">Part Name  </label>
+                               <input type="text" name="PartName" id="PartName" autocomplete="off">
+                           </div>
+
+                           <div class="form_group col-12 col-sm-12">
+                               <label for="">Category  </label>
+                               <div class="select-container">
+                                   <select id="CategoryID" name="CategoryID">
+                                       <option value="0">-- Category --</option>
+                                   </select>
+                               </div>
+                           </div>
+
+                           <div class="form_group col-12 col-sm-12">
+                               <label for="">Supplier  </label>
+                               <input type="text" name="Supplier" id="Supplier" autocomplete="off">
+                           </div>
+
+                           
+
+                           <div class="flex_end mt-4">
+                               
+                               <button type="submit" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                           </div>
+                       </div>
+                   </div>
+
+
+                </form>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div id="imageOverlay">
+    <img id="overlayImage" src="" />
+</div>
+
+
+<script type="text/javascript">
+    let partlistData = [];
+    let loadData = [];
+    let partsID;
+    let userRole;
+
+    // Modals
+    const editform = document.getElementById("Editmasterform");
+
+    let TableDisplay = $("#PartlistData");
+    const resultBox = document.querySelector(".namesdisplay");
+
+    const PartlistTable = async () => {
+        loadingDisplay();
+
+        Loadingsteps(async () => {
+            let res = await FetchAuthenticate('@Url.Action("GetPartlistData", "Hydro")', {});
+            if (res && res.Success) {
+                partlistData = res.Data;
+                TableDisplay.empty(); // Removing the Loading Display
+                InventoryPagination(partlistData, 'PartlistData');
+            } else {
+                const loadData = `<tr>
+                  <td colspan='6'>
+                      🔍 ${res.Message}
+                  </td>
+              </tr>`;
+
+                TableDisplay.empty();
+                TableDisplay.append(loadData);
+
+            }
+        });
+    }
+
+    const GetCategoryDatalist = async () => {
+        let res = await FetchAuthenticate('@Url.Action("GetCategorylist", "Hydro")', {});
+
+          if (res && res.Success) {
+
+              $.each(res.Data, function (index, row) {
+                  $("#Categoryselect").append("<option value='" + row.CategoryID + "'>" + row.CategoryName + "</option>");
+              });
+
+              $.each(res.Data, function (index, row) {
+                  $("#addCategory").append("<option value='" + row.CategoryID + "'>" + row.CategoryName + "</option>");
+              });
+
+              $.each(res.Data, function (index, row) {
+                  $("#CategoryID").append("<option value='" + row.CategoryID + "'>" + row.CategoryName + "</option>");
+              });
+          }
+     };
+
+
+    const ActionRestrict = () => {
+        userRole = localStorage.getItem("UserRole");
+        if (userRole === "Leader" || userRole === "Users") {
+            return false;
+        }
+    }
+
+    function InventoryPagination(dataArray, tableBodyId) {
+        let filteredData = [...dataArray];  // For Filter Functionality
+
+        // === Overlay setup (once) ===
+        if (!document.getElementById("imageOverlay")) {
+            $("body").append(`
+            <div id="imageOverlay">
+                <img id="overlayImage" src="" />
+            </div>
+        `);
+        }
+
+        // === Render Table ===
+        const renderTable = () => {
+            const tableBody = document.getElementById(tableBodyId);
+            tableBody.innerHTML = "";
+
+            $.each(filteredData, function (index, row) {
+                // Image Display
+                let imagePath = row.ImageParts
+                    ? `/Hydro/DisplaytheImage?filename=${encodeURIComponent(row.ImageParts)}`
+                    : '@Url.Content("~/Content/Images/no-image.png")';
+
+
+                const rowHtml = `
+                         <tr data-id="${row.PartNo}" data-category="${row.CategoryID}">
+                              <td style='text-align: left; padding-left: 1.5em;' data-cell="PartNo">
+                               <div class="flex_align" style='padding-left: 1.5em; gap: 15px;'>
+                                   <img class="NoImages lazy"
+                                       src='@Url.Content("~/Content/Images/no-image.png")'
+                                       data-src="${imagePath}"
+                                       loading="lazy"
+                                       onerror="this.src='@Url.Content("~/Content/Images/no-image.png")'" />
+                                   <div>
+                                       <p style='color: #185d8b; font-weight: 600;'>${row.PartName ? row.PartName : "-"}</p>
+                                       <small> ${row.PartNo}</small>
+                                   </div>
+                               </div>
+                           </td>
+                             <td data-cell="CategoryName">${row.CategoryName ? row.CategoryName : "-"}</td>
+                             <td data-cell="Supplier">${row.Supplier ? row.Supplier : "-"}</td>
+                             <td data-cell="Unit">${row.Unit ? row.Unit : "-"}</td>
+                             <td data-cell="Delete" >
+                              <div class='flex_center'>
+                                  <button  class='Editbtnbutton text-primary bg-white' id='editButton_${row.PartNo}' ">
+                                     <i class="fa-solid fa-pen-to-square"></i>
+                                  </button>
+                              </div>
+                              </td>
+                         </tr>
+                     `;
+                tableBody.insertAdjacentHTML("beforeend", rowHtml);
+
+                // Attach blur-up effect
+                const lazyImages = document.querySelectorAll("img.lazy[data-src]");
+                lazyImages.forEach(img => {
+                    const realSrc = img.getAttribute("data-src");
+                    img.onload = () => img.classList.add("loaded"); // smooth transition
+                    img.setAttribute("src", realSrc);
+                    img.removeAttribute("data-src");
+                });
+            });
+        };
+
+        // === CLICK HANDLER: Show overlay image ===
+        $(document).on("click", ".NoImages", function (e) {
+            e.stopPropagation();
+            let imgSrc = $(this).attr("src") || $(this).attr("data-src");
+            let $overlay = $("#imageOverlay");
+            let $overlayImg = $("#overlayImage");
+
+            $overlayImg.attr("src", imgSrc);
+            $overlay.show(0, function () {
+                $overlay.addClass("show");
+            });
+        });
+
+        // === Show Details ===
+        $(document).on("click", ".Editbtnbutton", function (e) {
+            e.stopPropagation();
+            var rowId = $(this).attr("id");
+            var rowIndex = rowId.split("_")[1];
+            var selected = filteredData.find(item => item.PartNo === rowIndex);
+
+            if (selected) {
+                $("#PartNoDisplay").val(selected.PartNo);
+                $("#PartNo").val(selected.PartNo);
+                $("#PartName").val(selected.PartName);
+                $("#Supplier").val(selected.Supplier);
+                $("#CategoryID").val(selected.CategoryID);
+
+                $("#EditMasterModal").modal("show");
+            }
+        });
+
+
+        // === Hide overlay when clicked ===
+        $(document).on("click", "#imageOverlay", function () {
+            let $overlay = $(this);
+            $overlay.removeClass("show");
+            setTimeout(() => {
+                $overlay.hide();
+            }, 400); // match CSS transition
+        });
+
+   
+        // === Show Details ===
+        const showDetails = (e) => {
+            e.stopPropagation(); 
+
+            var rowId = $(this).attr('id');
+            var rowIndex = rowId.split('_')[1];
+            var filterdata = partlistData.find(item => item.PartID === parseInt(rowIndex));
+            $("#PartID").val(filterdata.PartID);
+            $("#PartNo").val(filteredData.PartNo);
+            $("#PartName").val(filterdata.PartName);
+            $("#PartNo").val(filterdata.PartNo);
+            $("#Supplier").val(filterdata.Supplier);
+            $("#CategoryID").val(filterdata.CategoryID);
+
+            $("#EditMasterModal").modal("show");
+        }
+
+
+
+        // === Search ===
+        const searchTable = debounce(() => {
+            const query = $('#searchbox').val().toLowerCase();
+            $("#PartlistData tr").each(function () {
+                const partName = $(this).find("p").text().toLowerCase();
+                const partNo = $(this).find("small").text().toLowerCase();
+
+                if (partName.includes(query) || partNo.includes(query)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }, 300);
+
+
+
+        $('#searchbox').on('input', searchTable);
+
+        // 🔄 Debounce helper
+        function debounce(func, delay) {
+            let timeout;
+            return function (...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), delay);
+            };
+        }
+        // Initial render
+        renderTable();
+    }
+
+    // ======= FiLTER BY CATEGORY ===============
+    $("#Categoryselect").on('change', function () {
+        const selected = parseInt(this.value);
+        $("#PartlistData tr").each(function () {
+            const rowCategory = parseInt($(this).data("category"));
+            if (selected === 0 || rowCategory === selected) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    });
+
+
+
+
+    editform.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        let formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+        console.log(data);
+        let res = await postData('@Url.Action("EditPartslist", "Hydro")', formData);
+         if (res && res.Success) {
+              Swal.fire({
+                  title: "Success",
+                  text: res.Message,
+                  icon: "success",
+                  showConfirmButton: false,
+                  timer: 1500
+              }).then(() => {
+                  PartlistTable();
+                  e.target.reset();
+                  document.getElementById("partsimage").value = "";
+
+                  // Hide modal
+                  $("#EditMasterModal").modal("hide");
+              });
+          }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const InputFile = document.getElementById('partsimage');
+        const uploadbtn = document.getElementById('uploadBtn');
+        //const savebtn = document.getElementById('saveBtn');
+
+        const previewContainer = document.getElementById('previewContainer');
+        const previewImage = document.getElementById('previewImage');
+
+        // Handle Upload button Click
+        uploadbtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            InputFile.click();
+        });
+
+        // Handle Functional of File Input Upload
+        InputFile.addEventListener('change', function (e) {
+            e.preventDefault();
+            //Check if the Image data exist
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+
+                // Check the file size (Max 1 MB)
+                if (file.size > 1024 * 1024) {
+                    alert('File size exceeds 1MB limit');
+                    return;
+                }
+                // Check file Type
+                const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/bmp', 'image/gif'];
+
+                if (!validTypes.includes(file.type)) {
+                    alert("Invalid file type, Please upload a png, jpeg, bmp or gif file");
+                    return;
+                }
+
+                //Create a Preview Image When the Upload the file
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewImage.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+
+        // handle save button click
+        //savebtn.addEventListener('click', function (e) {
+        //    e.preventDefault();
+
+        //    //validate the form
+        //    if (!InputFile.files || InputFile.files.length === 0) {
+        //        alert("Please upload an image of your signature before saving");
+        //        return;
+        //    }
+
+
+        //    const formData = new FormData();
+        //    formData.append('SignatureImage', InputFile.files[0]);
+        //    formData.append('UserID', UserID);
+
+        //    const data = Object.fromEntries(formData);
+
+        //    //$.ajax({
+        //    //    url: '/User/UploadSignature',
+        //    //    type: 'POST',
+        //    //    data: formData,
+        //    //    processData: false,
+        //    //    contentType: false,
+        //    //    success: function (res) {
+        //    //        if (res && res.success) {
+        //    //            InputFile.value = '';
+        //    //            previewImage.src = '';
+        //    //            previewContainer.style.display = 'none';
+        //    //            $("#uploadmodal").modal("hide");
+        //    //        }
+        //    //    },
+        //    //    error: function (xhr, status, error) {
+        //    //        //$('#signatureImageError').text('An error occurred: ' + error);
+        //    //    },
+        //    //    complete: function () {
+        //    //        //saveBtn.prop('disabled', false).text('Save');
+        //    //    }
+        //    //});
+
+        //    // Reset the form
+
+
+        //});
+    });
+
+
+   
+
+
+
+    function loadingDisplay() {
+        TableDisplay.empty();
+        const loadData = `<tr>
+                            <td colspan='7'>
+                                <div class='Loadercontainer'>
+                                    <span class="loader"></span>
+                                    <p id="loadingStepText">Fetching data from the database..</p>
+                                </div>
+                            </td>
+                        </tr>`;
+        TableDisplay.append(loadData);
+    }
+    function Loadingsteps(callback) {
+        const steps = [
+            "Fetching data from the database...",
+            "Processing data...",
+            "Finalizing table view..."
+        ];
+
+        let stepIndex = 0;
+
+        const interval = setInterval(() => {
+            if (stepIndex < steps.length) {
+                const stepText = document.getElementById("loadingStepText");
+                if (stepText) stepText.innerText = steps[stepIndex];
+                stepIndex++;
+            } else {
+                clearInterval(interval);
+                if (typeof callback === "function") callback();
+            }
+        }, 800);
+    }
+
+
+
+    // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+    const LoadPageData = async () => {
+        try {
+
+            const [invent, drop] = await Promise.all([
+                PartlistTable(),
+                GetCategoryDatalist()
+            ]);
+        } catch (error) {
+            console.error("Failed to load page data:", error);
+        } finally {
+            // Hide loading spinner whether success or failure
+            //$("#loadingSpinner").hide();
+        }
+    }
+
+    $(document).ready(() => {
+        LoadPageData();
+    });
+</script>

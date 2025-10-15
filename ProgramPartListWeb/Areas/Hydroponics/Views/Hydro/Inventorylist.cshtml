@@ -1,0 +1,1212 @@
+﻿
+@{
+    ViewBag.Title = "Inventorylist";
+    Layout = "~/Areas/Hydroponics/Views/Shared/HydroPartsLayout.cshtml";
+}
+
+<section class="InspectHead flex_space">
+    <div class="flex_align">
+        <div class="Inputcontainer ">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" placeholder="Search here ... " id="searchbox" autocomplete="off" />
+            <div class="line"></div>
+        </div>
+
+
+
+
+
+    </div>
+
+    <div class="flex_align">
+        <div class="select-container">
+            <select id="StockStatusID">
+                <option value="">-- Select Status --</option>
+                <option value="Sufficient">Sufficient</option>
+                <option value="Restock">Restock</option>
+                <option value="Out of stocks">Out of Stocks</option>
+            </select>
+        </div>
+        <div class="select-container">
+            <select id="Categoryselect">
+                <option value="0">-- Category --</option>
+            </select>
+        </div>
+        <button style="width: 100%; " id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-box-archive"></i> Add Stocks</button>
+        <button style="width: 100%;" id="AddItem" class="primarybtn" type="button"><i class="fa-solid fa-box-archive"></i>Add Parts</button>
+    </div>
+</section>
+<hr />
+
+<div class="summary-cards">
+    <div class="cardStock">
+        <div class="card-icon total-items">
+            <i class="fas fa-boxes"></i>
+        </div>
+        <div class="card-content">
+            <h3 id="Countlist">0</h3>
+            <p>Total Items</p>
+        </div>
+    </div>
+    <div class="cardStock">
+        <div class="card-icon low-stock">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div class="card-content">
+            <h3 id="lowStockItems">0</h3>
+            <p>Low Stock</p>
+        </div>
+    </div>
+    <div class="cardStock">
+        <div class="card-icon out-of-stock">
+            <i class="fas fa-times-circle"></i>
+        </div>
+        <div class="card-content">
+            <h3 id="outOfStockItems">0</h3>
+            <p>Out of Stock</p>
+        </div>
+    </div>
+
+</div>
+
+
+
+<div class="InspecTable">
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%; text-align: left; padding-left: 1.5em !important;"><span style="margin-left: .5em;"><i class="fa-solid fa-screwdriver-wrench"></i>  Part No. / Partname</span> </th>
+                <th> <i class="fa-regular fa-address-card"></i> <span style="margin-left: .5em;">Supplier</span>  </th>
+                <th> <i class="fa-solid fa-box-open"></i>  <span style="margin-left: .5em;">Current Stock</span>  </th>
+                <th> <i class="fa-regular fa-square-check"></i> <span style="margin-left: .5em;">Mininum Stock</span>  </th>
+                <th style="width: 15%;"> <i class="fa-solid fa-database"></i> <span style="margin-left: .5em;">Status</span>  </th>
+
+            </tr>
+        </thead>
+        <tbody id="InventorylistData">
+        </tbody>
+    </table>
+</div>
+
+
+@*=================================================================================*@
+@*=========================== ADD STOCKS MODAL  ===================================*@
+@*=================================================================================*@
+<div class="modal fade modal-lg" id="AddRequestModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Add new stocks</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+
+                <form method="post"  class="addformcontainer" id="stockaddnewform" autocomplete="off">
+                
+
+                    <!-- Request Items -->
+                    <div class="items-section">
+                        <div class="add-item-row">
+                            <div class="select-container">
+                                <select id="partSelect" style="padding: .6em 1em; margin: .5em 0 1em 0; ">
+                                    <option value="">Select Part</option>
+                                </select>
+                            </div>
+                            <input type="number" id="quantity" placeholder="Qty" step="0.01" min="0.01">
+                            <button type="button" class="btn btn-secondary" style=" margin: .5em 0 1em 0;" onclick="addItem()">
+                                <i class="fas fa-plus"></i> Add Item
+                            </button>
+                        </div>
+
+                        <div class="table-container">
+                            <table id="itemsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Part No.</th>
+                                        <th>Part Name</th>
+                                        <th>Quantity</th>
+                                        <th>Unit</th>
+                                        <th>Current Stock</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="itemsTableBody">
+                                    <!-- Dynamic items -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="flex_end mt-4">
+
+                        <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@*=================================================================================*@
+@*=========================== Add NEW INVENTORY PARTS =============================*@
+@*=================================================================================*@
+<div class="modal fade modal-xl" id="AddnewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Add new Inventory Parts</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <form id="addinventform" class="addformcontainer">
+                    <div class="row">
+                        <div class="col-5">
+                            <div class="upload-container flex_center" id="upload-container">
+                                <div class="upload-icon">📁</div>
+                                <div class="file-info">Upload a photo of Parts.<br>Max file size: 1MB<br>png, jpg, jpeg, bmp, gif</div>
+                                <input type="file" id="partsimage" name="partsimage" accept=".png,.jpg,.jpeg" class="hidden">
+                                <button class="upload-btn" id="uploadBtn">Upload Photo</button>
+
+
+                            </div>
+                            <div class="preview-container" id="preview-container">
+                                <p class="preview-title">Image Preview:</p>
+                                <img id="previewImage" class="preview-image" src="" alt="Image Preview">
+                                <p class="file-info" id="file-info"></p>
+                            </div>
+
+
+
+                        </div>
+                        <div class="col-7">
+                            <div class="row mb-1">
+                                <div class="form_group col-6 col-sm-6 col-lg-6 ">
+                                    <label>Part Number  <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                                    <input type="text" name="PartNo" id="PartNo" placeholder="Enter Part number " autocomplete="off" required />
+
+                                </div>
+                                <div class="form_group col-6 col-sm-6">
+                                    <label for="">Part Name   <small style="color: #a81818; font-weight: 600;">*</small></label>
+                                    <input type="text" name="PartName" id="PartName" placeholder="Enter Part Name " autocomplete="off" required>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="form_group col-6 col-sm-6 col-lg-6">
+                                    <label for="" class="mb-2">Category <small style="color: #a81818; font-weight: 600;">*</small> </label>
+                                    <div class="select-container">
+                                        <select id="CategoryID" name="CategoryID" required>
+                                            <option value="0">-- Category --</option>
+                                            <option value="1">
+                                                Enclosure Parts
+                                            </option>
+                                            <option value="2">
+                                                Electrical Parts
+
+                                            </option>
+                                            <option value="3">
+                                                Sanyo Denki
+                                            </option>
+                                            <option value="4">
+                                                Other Parts
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form_group col-6 col-sm-6 col-lg-6">
+                                    <label class="mb-2">Unit *</label>
+                                    <div class="select-container">
+                                        <select id="Unit" name="Unit" required>
+                                            <option value="pc">Piece (pc)</option>
+                                            <option value="m">Meter (m)</option>
+                                            <option value="liters">Liters</option>
+                                            <option value="ml">Milliliters (ml)</option>
+                                            <option value="pack">Pack</option>
+                                            <option value="set">Set</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <div class="row mb-2">
+                                <div class="form_group col-6 col-sm-6">
+                                    <label for="">Supplier  </label>
+                                    <input type="text" name="Supplier" id="Supplier" autocomplete="off" required>
+                                </div>
+
+                                <div class="form_group col-6 col-sm-6">
+                                    <label>Reorder Level</label>
+                                    <input type="number" id="ReorderLevel" name="ReorderLevel" step="0.01" min="0" required>
+                                </div>
+                            </div>
+
+                            <div class="row mb-2">
+                                <div class="form_group col-6 col-sm-6">
+                                    <label>Initial Stock  <small style="color: #a81818; font-weight: 600;">*</small></label>
+                                    <input type="number" id="CurrentQty" name="CurrentQty" step="0.01" min="0" required>
+                                </div>
+
+                                <div class="form_group col-6 col-sm-6">
+                                    <label>Warning Level <small style="color: #a81818; font-weight: 600;">*</small></label>
+                                    <input type="number" id="WarningLevel" name="WarningLevel" step="0.01" min="0" required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form_group col-6 col-sm-6">
+                                    <label>Unit Price <small style="color: #a81818; font-weight: 600;">*</small></label>
+                                    <input type="number" id="Unit_Price" name="Unit_Price" step="0.01" min="0" required>
+                                </div>
+                            </div>
+                            <div class="flex_end mt-4">
+                                <button type="submit" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@*=================================================================================*@
+@*=========================== EDIT INVENTORY PARTS ================================*@
+@*=================================================================================*@
+<div class="modal fade modal-xl" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Update Details</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <form id="EditInventform" class="addformcontainer">
+                    <div class="row">
+                        <div class="col-5">
+                            <div class="upload-container flex_center" id="upload-container">
+                                <div class="upload-icon">📁</div>
+                                <div class="file-info">Upload a photo of Parts.<br>Max file size: 1MB<br>png, jpg, jpeg, bmp, gif</div>
+                                <input type="file" id="Editpartsimage" name="Editpartsimage" accept=".png,.jpg,.jpeg" class="hidden">
+                                <button class="Editupload-btn" id="EdituploadBtn">Upload Photo</button>
+
+
+                            </div>
+
+                            <div class="Editpreview-container" id="EditpreviewContainer">
+                                <p class="preview-title">Image Preview:</p>
+                                <img id="EditpreviewImage" class="Editpreview-image" src="" alt="Image Preview">
+                                <p class="Editfile-info" id="Editfile-info"></p>
+                            </div>
+
+
+
+                        </div>
+                        <div class="col-7">
+                            <div class="row mb-1">
+                                <div class="form_group col-6 col-sm-6 col-lg-6 ">
+                                    <label>Part Number </label> <br />
+                                    <input type="hidden" name="ExistingImageParts" id="ExistingImageParts" />
+                                    <input type="hidden" name="TempPartno" id="TempPartno" />
+                                    <input type="text" name="EditPartNo" id="EditPartNo" placeholder="Enter Part number " readonly />
+                                </div>
+                                <div class="form_group col-6 col-sm-6">
+                                    <label for="">Part Name  </label>
+                                    <input type="text" name="EditPartName" id="EditPartName" autocomplete="off">
+                                </div>
+                            </div>
+
+                            <div class="row mb-2">
+                                <div class="form_group col-6 col-sm-6 col-lg-6">
+                                    <label for="" class="mb-2">Category  </label>
+                                    <div class="select-container">
+                                        <select id="EditCategoryID" name="EditCategoryID">
+                                            <option value="0">-- Category --</option>
+                                            <option value="1">
+                                                Enclosure Parts
+                                            </option>
+                                            <option value="2">
+                                                Electrical Parts
+
+                                            </option>
+                                            <option value="3">
+                                                Sanyo Denki
+                                            </option>
+                                            <option value="4">
+                                                Other Parts
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form_group col-6 col-sm-6 col-lg-6">
+                                    <label class="mb-2">Unit *</label>
+
+                                    <div class="select-container">
+                                        <select id="Unit" name="EditUnit" required>
+                                            <option value="pc">Piece (pc)</option>
+                                            <option value="m">Meter (m)</option>
+                                            <option value="liters">Liters</option>
+                                            <option value="ml">Milliliters (ml)</option>
+                                            <option value="pack">Pack</option>
+                                            <option value="set">Set</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-2">
+                                <div class="form_group col-6 col-sm-6">
+                                    <label for="">Supplier  </label>
+                                    <input type="text" name="EditSupplier" id="EditSupplier" autocomplete="off">
+                                </div>
+
+                                <div class="form_group col-6 col-sm-6">
+                                    <label>Reorder Level</label>
+                                    <input type="number" id="EditReorderLevel" name="ReorderLevel" step="0.01" min="0" value="5">
+                                </div>
+                            </div>
+
+                            <div class="row mb-2">
+                                <div class="form_group col-6 col-sm-6">
+                                    <label>Warning Level</label>
+                                    <input type="number" id="EditWarningLevel" name="WarningLevel" step="0.01" min="0" value="10">
+                                </div>
+
+                                <div class="form_group col-6 col-sm-6">
+                                    <label>Unit Price</label>
+                                    <input type="number" id="EditUnit_Price" name="EditUnit_Price" step="0.01" min="0">
+                                </div>
+                            </div>
+
+
+
+                            <div class="flex_end mt-4">
+
+                                <button type="submit" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </form>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@*=================================================================================*@
+@*=========================== CHANGE LEVEL WARNING ================================*@
+@*=================================================================================*@
+<div class="modal fade modal-m" id="ChangeCostModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Change Stock Alert</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <form id="changeWarning" class="addformcontainer">
+
+
+                    <div class="form_group col-12 col-sm-12">
+                        <input type="hidden" name="StockID" id="StockID">
+                        <input type="number" name="WarningLevel" id="WarningLevel" onkeypress="return restrictChars(event)" autocomplete="off">
+                    </div>
+                    <div class="flex_space" id="editsdisplay">
+                        <label for="">Available Stocks : <span id="CurrentQty"></span> </label>
+                        <button type="submit" class="primarybtn">
+                            <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
+                        </button>
+                    </div>
+                </form>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    let Inventlist = [];
+    let loadData = [];
+    let userRole;
+
+    // Modals
+    const addmodal = document.getElementById("Showadd");
+
+    // Forms
+    const addparts = document.getElementById("addinventform");
+    const editparts = document.getElementById("EditInventform");
+    const addQuanforms = document.getElementById("AddQuantityform");
+    const changeWarn = document.getElementById("changeWarning");
+
+    let TableDisplay = $("#InventorylistData");
+    const resultBox = document.querySelector(".namesdisplay");
+
+    const InventoryTable = async () => {
+        $("#Countlist").text("0");
+        $("#lowStockItems").text("0");
+        $("#outOfStockItems").text("0");
+
+        loadingDisplay();
+
+        Loadingsteps(async () => {
+            let res = await FetchAuthenticate('@Url.Action("GetHydroInventory", "Hydro")', {});
+            if (res && res.Success) {
+                Inventlist = res.Data;
+
+                const lowStockCount = Inventlist.filter(item => item.Status === "Restock").length;
+                const OutStockCount = Inventlist.filter(item => item.Status === "Out of stocks").length;
+
+                $("#Countlist").text(Inventlist.length);
+                $("#lowStockItems").text(lowStockCount);
+                $("#outOfStockItems").text(OutStockCount);
+
+                TableDisplay.empty(); // Removing the Loading Display
+
+                InventoryPagination(Inventlist, 'InventorylistData');
+
+                
+            } else {
+                const loadData = `<tr>
+                  <td colspan='9'>
+                      🔍 ${res.Message}
+                  </td>
+              </tr>`;
+
+                TableDisplay.empty();
+                TableDisplay.append(loadData);
+
+            }
+        });
+    }
+
+    const GetCategoryDatalist = async () => {
+         let res = await FetchAuthenticate('@Url.Action("GetCategorylist", "Hydro")', {});
+
+          if (res && res.Success) {
+
+              $.each(res.Data, function (index, row) {
+                  $("#Categoryselect").append("<option value='" + row.CategoryID + "'>" + row.CategoryName + "</option>");
+              });
+
+              $.each(res.Data, function (index, row) {
+                  $("#addCategory").append("<option value='" + row.CategoryID + "'>" + row.CategoryName + "</option>");
+              });
+          }
+     };
+
+
+    const ActionRestrict = () => {
+        userRole = localStorage.getItem("UserRole");
+        if (userRole === "Leader" || userRole === "Users") {
+            return false;
+        }
+    }
+
+    function InventoryPagination(dataArray, tableBodyId) {
+        let filteredData = [...dataArray];
+
+        // === Overlay setup (once) ===
+        if (!document.getElementById("imageOverlay")) {
+            $("body").append(`
+             <div id="imageOverlay">
+                 <img id="overlayImage" src="" />
+             </div>
+         `);
+        }
+
+        const renderTable = () => {
+            const tableBody = document.getElementById(tableBodyId);
+            tableBody.innerHTML = "";
+
+            $.each(filteredData, function (index, row) {
+                    // Image Display
+                let imagePath = row.ImageParts
+                                    ? `/Hydro/DisplaytheImage?filename=${encodeURIComponent(row.ImageParts)}`
+                    : '@Url.Content("~/Content/Images/no-image.png")';
+
+
+
+
+
+                   const rowHtml = `
+                                     <tr data-id="${row.PartID}" data-category="${row.CategoryID}" class='rowClick' id='editButton_${row.PartID}'>
+
+                                        <td style='text-align: left; padding-left: 1.5em;' data-cell="PartNo">
+                                             <div class="flex_align" style='padding-left: 1.5em; gap: 15px;'>
+                                                 <img class="NoImages lazy"
+                                                     src='@Url.Content("~/Content/Images/no-image.png")'
+                                                     data-src="${imagePath}"
+                                                     loading="lazy"
+                                                     onerror="this.src='@Url.Content("~/Content/Images/no-image.png")'" />
+                                                 <div>
+                                                     <p style='color: #222; font-weight: 600;'>${row.PartName ? row.PartName : "-"}</p>
+                                                     <small> ${row.PartNo}</small>
+                                                 </div>
+                                             </div>
+                                         </td>
+                                         <td data-cell="Supplier">${row.Supplier ? row.Supplier : "-"}</td>
+                                         <td data-cell="CurrentQty" style="font-weight: 600; color: #185d8b;">${row.CurrentQty} </td>
+                                         <td data-cell="WarningLevel" style="font-weight: 600;">${row.WarningLevel}</td>
+                                         <td data-cell="Approval" >
+                                           <div class='${getStatusClass(row.Status)}'>
+                                             ${row.Status}
+                                           </div>
+                                         </td>
+                                         <td data-cell="Delete" >
+                                          <div class='flex_center'>
+                                              <button  class='Editbtnbutton text-primary bg-white' id='editButton_${row.StockID}' ">
+                                                 <i class="fa-solid fa-pen-to-square"></i>
+                                              </button>
+                                          </div>
+                                          </td>
+                                     </tr>
+                                 `;
+                tableBody.insertAdjacentHTML("beforeend", rowHtml);
+
+                // Attach blur-up effect
+                const lazyImages = document.querySelectorAll("img.lazy[data-src]");
+                lazyImages.forEach(img => {
+                    const realSrc = img.getAttribute("data-src");
+                    img.onload = () => img.classList.add("loaded"); // smooth transition
+                    img.setAttribute("src", realSrc);
+                    img.removeAttribute("data-src");
+                });
+            });
+
+        };
+
+        // === CLICK HANDLER: Show overlay image ===
+        $(document).on('click', '.NoImages', function (e) {
+            e.stopPropagation();
+
+            let imgSrc = $(this).attr("src") || $(this).attr("data-src");
+            let $overlay = $("#imageOverlay");
+            let $overlayImg = $("#overlayImage");
+
+            // force load if only data-src exists
+            if ($overlayImg.attr("src") !== imgSrc) {
+                $overlayImg.attr("src", imgSrc);
+            }
+
+            $overlay.show(0, function () {
+                $overlay.addClass("show");
+            });
+        });
+
+        // === Hide overlay on click ===
+        $(document).on("click", "#imageOverlay", function () {
+            let $overlay = $(this);
+
+            // Remove .show → triggers scale-down + fade-out
+            $overlay.removeClass("show");
+
+            // Wait until transition ends, then hide
+            setTimeout(() => {
+                $overlay.hide();
+            }, 400); // match CSS transition
+        });
+
+
+
+        $(document).on('click', '.Editbtnbutton', function (e) {
+            e.stopPropagation(); // Prevent triggering the row click event
+            var rowId = $(this).attr('id');
+            var rowIndex = rowId.split('_')[1];
+
+
+
+            var filterdata = Inventlist.find(item => item.StockID === parseInt(rowIndex));
+            if (filterdata) {
+                let imagePath = filterdata.ImageParts
+                    ? `/Hydro/DisplaytheImage?filename=${encodeURIComponent(filterdata.ImageParts)}`
+                     : '@Url.Content("~/Content/Images/no-image.png")';
+
+
+                $("#TempPartno").val(filterdata.PartNo);
+                $("#EditPartNo").val(filterdata.PartNo);
+                $("#EditPartName").val(filterdata.PartName);
+                $("#EditCategoryID").val(filterdata.CategoryID);
+                $("#EditUnit").val(filterdata.Unit);
+                $("#EditSupplier").val(filterdata.Supplier);
+                $("#EditReorderLevel").val(filterdata.ReorderLevel);
+                $("#EditWarningLevel").val(filterdata.WarningLevel);
+                $("#ExistingImageParts").val(filterdata.ImageParts);
+                $("#EditUnit_Price").val(filterdata.Unit_Price);
+
+
+                const previewContainer = document.getElementById('EditpreviewContainer');
+                console.log(filterdata.ImageParts);
+                if (filterdata.ImageParts !== null) {
+                    previewContainer.style.display = 'block';
+                    // ✅ Update the preview image
+                    $("#EditpreviewImage").attr("src", imagePath);
+
+
+                    // ✅ Optional: If you want to handle broken images gracefully
+                    $("#EditpreviewImage").on("error", function () {
+                        $(this).attr("src", '@Url.Content("~/Content/Images/no-image.png")');
+                    });
+                } else {
+                    previewContainer.style.display = 'None';
+                }
+
+
+
+
+                $("#EditModal").modal("show");
+
+
+
+            }
+
+        });
+
+
+        const searchTable = debounce(() => {
+            const query = $('#searchbox').val().toLowerCase();
+            $("#PartlistData tr").each(function () {
+                const partName = $(this).find("p").text().toLowerCase();
+                const partNo = $(this).find("small").text().toLowerCase();
+
+                if (partName.includes(query) || partNo.includes(query)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }, 300);
+
+
+        $('#searchbox').on('input', searchTable);
+
+        renderTable();
+    }
+
+
+
+
+
+    changeWarn.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        let forms = new FormData(e.target);
+        let res = await postData('@Url.Action("updateWarningStock", "Hydro")', forms);
+         if (res && res.Success) {
+              Swal.fire({
+                  title: "Success",
+                  text: res.Message,
+                  icon: "success",
+                  showConfirmButton: false,
+                  timer: 1500
+              }).then(() => {
+                  InventoryTable();
+                  $("#ChangeCostModal").modal('hide');
+              });
+          }
+
+    });
+
+
+    addparts.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        let formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+
+        if (Inventlist.some(res => res.PartNo === data.PartNo)) {
+            Swal.fire({
+                icon: "error",
+                text: "Part no is already exist",
+                timer: 1500,
+                showConfirmButton: false
+            });
+            return;
+        }
+
+        let res = await postData('@Url.Action("AddInventoryParts", "Hydro")', formData);
+          if (res && res.Success) {
+               Swal.fire({
+                   title: "Success",
+                   text: res.Message,
+                   icon: "success",
+                   showConfirmButton: false,
+                   timer: 1500
+               }).then(() => {
+                   InventoryTable();
+                   e.target.reset();
+                   document.getElementById("partsimage").value = "";
+
+                   // Hide modal
+                   $("#AddnewModal").modal("hide");
+               });
+           }
+    });
+    editparts.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        let formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+
+        let res = await postData('@Url.Action("EditInventoryParts", "Hydro")', formData);
+        if (res && res.Success) {
+            Swal.fire({
+                title: "Success",
+                text: res.Message,
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1500
+            }).then(() => {
+                InventoryTable();
+                $("#EditModal").modal('hide');
+            });
+        }
+
+    });
+
+     $("#btnSave").on('click', async function (e) {
+         e.preventDefault();
+         let formData = new FormData();
+         formData.append('Items', JSON.stringify(requestItems));
+
+         const data = Object.fromEntries(formData);
+         let res = await postData('@Url.Action("AddNewStocks", "Hydro")', formData);
+         if (res && res.Success) {
+             Swal.fire({
+                 title: "Success",
+                 text: res.Message,
+                 icon: "success",
+                 showConfirmButton: false,
+                 timer: 1500
+             }).then(() => {
+                 InventoryTable();
+                 $("#AddRequestModal").modal('hide');
+             });
+
+
+         }
+     });
+
+
+    //$("#Categoryselect").on('change', function (e) {
+    //    e.preventDefault();
+    //    let filterdata = Inventlist.filter(item => item.CategoryID === parseInt(e.target.value));
+    //    if (parseInt(e.target.value) !== 0) {
+    //        InventoryPagination(filterdata, 'InventorylistData', 'MastertableContainer', 50, 5);
+    //    } else {
+    //        InventoryPagination(Inventlist, 'InventorylistData', 'MastertableContainer', 50, 5);
+    //    }
+    //});
+
+    // ======= FiLTER BY CATEGORY ===============
+    $("#Categoryselect").on('change', function () {
+        const selected = parseInt(this.value);
+        $("#InventorylistData tr").each(function () {
+            const rowCategory = parseInt($(this).data("category"));
+            if (selected === 0 || rowCategory === selected) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    });
+
+    function applyFilters() {
+        let query = $('#searchbox').val().toLowerCase() || '';
+        const selectedCategory = parseInt($('#Categoryselect').val());
+        const selectedStatus = $('#StockStatusID').val(); // <-- from dropdown
+
+        let filtered = Inventlist.filter(item => {
+            const matchesSearch =
+                item.PartName.toLowerCase().includes(query) ||
+                item.PartNo.toLowerCase().includes(query);
+
+            const matchesCategory = (selectedCategory === 0 || item.CategoryID === selectedCategory);
+
+            const matchesStatus = (selectedStatus === '' || item.Status === selectedStatus);
+
+            return matchesSearch && matchesCategory && matchesStatus;
+        });
+
+        if (filtered.length === 0) {
+            TableDisplay.empty();
+            TableDisplay.append(`<tr><td colspan='5'>🔍 No results found.</td></tr>`);
+            return;
+        }
+
+        InventoryPagination(filtered, 'InventorylistData');
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const InputFile = document.getElementById('partsimage');
+        const uploadbtn = document.getElementById('uploadBtn');
+        //const savebtn = document.getElementById('saveBtn');
+
+        const previewContainer = document.getElementById('preview-container');
+        const previewImage = document.getElementById('previewImage');
+        const fileInfo = document.getElementById('file-info');
+
+        // Handle Upload button Click
+        uploadbtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            InputFile.click();
+        });
+
+        // Handle Functional of File Input Upload
+        InputFile.addEventListener('change', function (e) {
+            e.preventDefault();
+            //Check if the Image data exist
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+
+                // Check the file size (Max 1 MB)
+                if (file.size > 1024 * 1024) {
+                    alert('File size exceeds 1MB limit');
+                    return;
+                }
+                // Check file Type
+                const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/bmp', 'image/gif'];
+
+                if (!validTypes.includes(file.type)) {
+                    alert("Invalid file type, Please upload a png, jpeg, bmp or gif file");
+                    return;
+                }
+
+                // Display file info
+                const fileSize = (file.size / 1024 / 1024).toFixed(2);
+                fileInfo.textContent = `${file.name} (${fileSize} MB)`;
+
+
+                //Create a Preview Image When the Upload the file
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewImage.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+
+        // handle save button click
+        //savebtn.addEventListener('click', function (e) {
+        //    e.preventDefault();
+
+        //    //validate the form
+        //    if (!InputFile.files || InputFile.files.length === 0) {
+        //        alert("Please upload an image of your signature before saving");
+        //        return;
+        //    }
+
+
+        //    const formData = new FormData();
+        //    formData.append('SignatureImage', InputFile.files[0]);
+        //    formData.append('UserID', UserID);
+
+        //    const data = Object.fromEntries(formData);
+
+        //    //$.ajax({
+        //    //    url: '/User/UploadSignature',
+        //    //    type: 'POST',
+        //    //    data: formData,
+        //    //    processData: false,
+        //    //    contentType: false,
+        //    //    success: function (res) {
+        //    //        if (res && res.success) {
+        //    //            InputFile.value = '';
+        //    //            previewImage.src = '';
+        //    //            previewContainer.style.display = 'none';
+        //    //            $("#uploadmodal").modal("hide");
+        //    //        }
+        //    //    },
+        //    //    error: function (xhr, status, error) {
+        //    //        //$('#signatureImageError').text('An error occurred: ' + error);
+        //    //    },
+        //    //    complete: function () {
+        //    //        //saveBtn.prop('disabled', false).text('Save');
+        //    //    }
+        //    //});
+
+        //    // Reset the form
+
+
+        //});
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const InputFile = document.getElementById('Editpartsimage');
+        const uploadbtn = document.getElementById('EdituploadBtn');
+        //const savebtn = document.getElementById('saveBtn');
+
+        const previewContainer = document.getElementById('EditpreviewContainer');
+        const previewImage = document.getElementById('EditpreviewImage');
+        const fileInfo = document.getElementById('Editfile-info');
+
+        // Handle Upload button Click
+        uploadbtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            InputFile.click();
+        });
+
+        // Handle Functional of File Input Upload
+        InputFile.addEventListener('change', function (e) {
+            e.preventDefault();
+            //Check if the Image data exist
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+
+                // Check the file size (Max 1 MB)
+                if (file.size > 1024 * 1024) {
+                    alert('File size exceeds 1MB limit');
+                    return;
+                }
+                // Check file Type
+                const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/bmp', 'image/gif'];
+
+                if (!validTypes.includes(file.type)) {
+                    alert("Invalid file type, Please upload a png, jpeg, bmp or gif file");
+                    return;
+                }
+
+                // Display file info
+                const fileSize = (file.size / 1024 / 1024).toFixed(2);
+                fileInfo.textContent = `${file.name} (${fileSize} MB)`;
+
+                //Create a Preview Image When the Upload the file
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewImage.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+
+
+    });
+
+    // ==================================================================================
+    // ====================== ADD STOCK FUNCTIONALITY ===================================
+    // ==================================================================================
+    let requestItems = [];
+
+    function addItem() {
+        const partSelect = document.getElementById('partSelect');
+        const quantityInput = document.getElementById('quantity');
+
+        const selectedPart = partSelect.options[partSelect.selectedIndex];
+        const partNo = partSelect.value;
+        const quantity = parseFloat(quantityInput.value);
+
+        if (!partNo || !quantity || quantity <= 0) {
+            alert('Please select a part and enter a valid quantity');
+            return;
+        }
+
+        const partName = selectedPart.text;
+
+
+        // Check if item is already exist
+        // Find and get the index of the current data
+        const existingItemIndex = requestItems.findIndex(item => item.partNo === partNo);
+        const unit = Inventlist.find(item => item.PartNo === partNo)?.Unit;
+        const availableStock = Inventlist.find(item => item.PartNo === partNo)?.CurrentQty;
+
+        if (existingItemIndex > -1) {
+            // Updates the current push data
+            requestItems[existingItemIndex].quantity += quantity;
+        } else {
+            // Insert a new data
+            requestItems.push({
+                partNo,
+                partName,
+                quantity,
+                unit,
+                availableStock
+            });
+        }
+
+        updateItemsTable();
+
+        partSelect.selectedIndex = 0;
+        quantityInput.value = '';
+    }
+
+    function updateItemsTable() {
+        const tbody = document.getElementById('itemsTableBody');
+        tbody.innerHTML = '';
+
+        requestItems.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+         <td>${item.partNo}</td>
+         <td>${item.partName}</td>
+         <td>${item.quantity}</td>
+         <td>${item.unit}</td>
+         <td>${item.availableStock}</td>
+         <td>
+             <button class="btn btn-sm btn-danger" onclick="removeItem('${item.partNo}')">
+                 <i class="fas fa-trash"></i> Remove
+             </button>
+         </td>
+     `;
+            tbody.appendChild(row);
+        });
+    }
+
+    function removeItem(partNo) {
+        requestItems = requestItems.filter(item => item.partNo !== partNo);
+        updateItemsTable();
+    }
+    // ===================================================================================
+
+
+
+
+    const getStatusClass = (status) => {
+        switch (status) {
+            case "Sufficient": return "StocksGood";
+            case "Out of stocks": return "Low";
+            case "Restock": return "Warning";
+            default: return "Incomplete";
+        }
+    };
+
+
+
+
+    addmodal.addEventListener('click', (e) => {
+        e.preventDefault();
+        let TableDisplay = $("#itemsTableBody");
+        const loadData = `<tr>
+                           <td colspan='6'>
+                               🔍 No Data Added
+                           </td>
+                       </tr>`;
+
+        TableDisplay.empty();
+        TableDisplay.append(loadData);
+
+        Inventlist.sort((a, b) => a.PartName.localeCompare(b.PartName, 'en', { sensitivity: 'base' }));
+
+
+        $.each(Inventlist, function (index, row) {
+            $("#partSelect").append("<option value='" + row.PartNo + "'>" + row.PartName + "</option>");
+        });
+
+        $("#AddRequestModal").modal("show");
+    });
+
+    $("#AddItem").on('click', function (e) {
+        e.preventDefault();
+        $("#AddnewModal").modal("show");
+    });
+
+
+
+
+    function loadingDisplay() {
+        TableDisplay.empty();
+        const loadData = `<tr>
+                            <td colspan='6'>
+                                <div class='Loadercontainer'>
+                                    <span class="loader"></span>
+                                    <p id="loadingStepText">Fetching data from the database..</p>
+                                </div>
+                            </td>
+                        </tr>`;
+        TableDisplay.append(loadData);
+    }
+    function Loadingsteps(callback) {
+        const steps = [
+            "Fetching data from the database...",
+            "Processing data...",
+            "Finalizing table view..."
+        ];
+
+        let stepIndex = 0;
+
+        const interval = setInterval(() => {
+            if (stepIndex < steps.length) {
+                const stepText = document.getElementById("loadingStepText");
+                if (stepText) stepText.innerText = steps[stepIndex];
+                stepIndex++;
+            } else {
+                clearInterval(interval);
+                if (typeof callback === "function") callback();
+            }
+        }, 800);
+    }
+
+    // 🔄 Debounce helper
+    function debounce(func, delay) {
+        let timeout;
+        return function (...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), delay);
+        };
+    }
+
+    // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+    const LoadPageData = async () => {
+        try {
+            if (ActionRestrict() === false) {
+            }
+
+            const [invent, drop] = await Promise.all([
+                InventoryTable(),
+                GetCategoryDatalist()
+            ]);
+        } catch (error) {
+            console.error("Failed to load page data:", error);
+        } finally {
+            // Hide loading spinner whether success or failure
+            //$("#loadingSpinner").hide();
+        }
+    }
+
+
+
+    $(document).ready(() => {
+        LoadPageData();
+
+
+        $('#searchbox').on('input', applyFilters);
+        $('#Categoryselect').on('change', applyFilters);
+        $('#StockStatusID').on('change', applyFilters);
+
+    });
+</script>

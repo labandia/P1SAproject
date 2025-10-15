@@ -15,7 +15,6 @@ using System.Xml.Linq;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using System.Net.NetworkInformation;
-using System.Collections;
 
 namespace PracticeC_
 {
@@ -26,28 +25,9 @@ namespace PracticeC_
 
         static void Main(string[] args)
         {
-
-            Hashtable ht = new Hashtable();
-            ht.Add("Name", "Jaye");
-            ht.Add("Age", 25);
-            ht.Add("Country", "Philippines");
-
-
-            ICollection keys = ht.Keys;
-
-            foreach (var key in keys)
-            {
-                Console.WriteLine($"Key: {key}, Value: {ht[key]}");
-            }   
-
-            Console.WriteLine(ht.ContainsValue("Jaye"));
-
-
-
-
             //samplemethod(i: 1);
 
-            //string strReelID = "SDP00287327-01 505113353";
+            string strReelID = "SDP00287327-01 505113353";
 
             //Console.WriteLine("Number of String : " +  strReelID.Length);
 
@@ -118,7 +98,7 @@ namespace PracticeC_
 
             //PingComputer("172.29.1.121");
 
-            //Console.WriteLine("Generate ID : " + GenerateID(""));
+            Console.WriteLine("Generate ID : " + GenerateID(""));
 
 
             //ConvertstringtoBase64();

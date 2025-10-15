@@ -36,6 +36,14 @@
         <div class="" id="RequestStatus">
             ONGOING
         </div>
+
+        @*<div class="select-container">
+            <select id="RequestStatus" name="RequestStatus" class="default">
+                <option value="PENDING" selected>ONGOING</option>
+                <option value="COMPLETED">COMPLETED</option>
+                <option value="SHIPPED">FOR SHIPPED</option>
+            </select>
+        </div>*@
     </div>
     <div class="customnav_Progress">
         <label>Completion rate : <span id="completeRate"></span> </label>
@@ -114,7 +122,7 @@
                         <thead>
                             <tr>
                                 <th>No.</th>
-                                <th style="text-align: left; padding-left: 1.5em; width: 40%;">Partno</th>
+                                <th style="text-align: left; padding-left: 1.5em;">Partno</th>
                                 <th class="qty-cell">Allocated</th>
                                 <th>Actions</th>
                             </tr>
@@ -125,7 +133,7 @@
                 </div>
 
                 <div class="controls">
-                    <button class="btn-primary" id="autoAllocateBtn"><i class="fa-solid fa-arrows-left-right"></i> Auto Fill items</button>
+                    <button class="btn-primary" id="autoAllocateBtn"><i class="fa-solid fa-arrows-left-right"></i> Auto Allocate</button>
                     <button class="btn-primary" id="completeOrderBtn"> <i class="fa-solid fa-floppy-disk"></i> Save Details</button>
                 </div>
 
@@ -218,7 +226,7 @@
         setTimeout(() => {
                     const loadData = `<tr>
                        <td colspan='4'>
-                           🔍 No Use Data
+                           🔍 No Allocated Data
                        </td>
                    </tr>`;
 
@@ -425,7 +433,6 @@
     // Update the allocated parts table
     function updateAllocatedTable() {
         // Count only parts with allocation > 0
-        let counter = 0;
         let allocatedCount = Object.values(allocatedParts).filter(qty => qty > 0).length;
         $("#Counts").text(`(${allocatedCount})`);
 
@@ -434,13 +441,12 @@
 
         for (const partNumber in allocatedParts) {
             if (allocatedParts[partNumber] > 0) {
-                counter++;
                 const partData = requestData.find(p => p.PartNo === partNumber);
                 const row = document.createElement('tr');
 
 
                 row.innerHTML = `
-                      <td>${counter}</td>
+                      <td>0</td>
                      <td style='text-align: left;'>
                         ${partData.PartNo}
                      </td>

@@ -58,7 +58,7 @@
 
                 <form method="post" class="addformcontainer" id="addnewform" autocomplete="off">
                     <input type="hidden" name="RegPassword" id="RegPassword" value="abc12345" />
-                    <input type="hidden" name="RegUsername" id="RegUsername" value="ab12c345" />
+                    <input type="hidden" name="RegUsername" id="RegUsername" value="abc12345" />
                     <div class="row">
                         <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
                             <label>Employee ID <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
@@ -264,6 +264,8 @@
 
     function UserManagePagination(dataArray, tableBodyId) {
         let filteredData = [...dataArray];  // For Filter Functionality
+
+        console.log(dataArray);
 
 
         // === Render Table ===

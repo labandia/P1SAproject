@@ -459,9 +459,7 @@
         border-radius: .3em;
     }
 
-    .filter-group strong{
-        font-size: .8rem !important;
-    }
+
 
     .formcontainer input[type='checkbox']{
         width: auto;

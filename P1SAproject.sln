@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProgramPartListWeb", "ProgramPartListWeb\ProgramPartListWeb.csproj", "{83F78258-1DAB-4EC8-901F-3417C42AD76D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PMACS_V2", "PMACS_V2\PMACS_V2.csproj", "{DA2C686B-57CA-4416-83EC-C832D9B9826F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parts_locator", "Parts_locator\Parts_locator.csproj", "{DD1D25EF-4381-469F-AEEA-401D069642DD}"
@@ -35,22 +33,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{83F78258-1DAB-4EC8-901F-3417C42AD76D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{83F78258-1DAB-4EC8-901F-3417C42AD76D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{83F78258-1DAB-4EC8-901F-3417C42AD76D}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{83F78258-1DAB-4EC8-901F-3417C42AD76D}.Debug|ARM.Build.0 = Debug|Any CPU
-		{83F78258-1DAB-4EC8-901F-3417C42AD76D}.Debug|ARM64.ActiveCfg = Debug|Any CPU
-		{83F78258-1DAB-4EC8-901F-3417C42AD76D}.Debug|ARM64.Build.0 = Debug|Any CPU
-		{83F78258-1DAB-4EC8-901F-3417C42AD76D}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{83F78258-1DAB-4EC8-901F-3417C42AD76D}.Debug|x86.Build.0 = Debug|Any CPU
-		{83F78258-1DAB-4EC8-901F-3417C42AD76D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{83F78258-1DAB-4EC8-901F-3417C42AD76D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{83F78258-1DAB-4EC8-901F-3417C42AD76D}.Release|ARM.ActiveCfg = Release|Any CPU
-		{83F78258-1DAB-4EC8-901F-3417C42AD76D}.Release|ARM.Build.0 = Release|Any CPU
-		{83F78258-1DAB-4EC8-901F-3417C42AD76D}.Release|ARM64.ActiveCfg = Release|Any CPU
-		{83F78258-1DAB-4EC8-901F-3417C42AD76D}.Release|ARM64.Build.0 = Release|Any CPU
-		{83F78258-1DAB-4EC8-901F-3417C42AD76D}.Release|x86.ActiveCfg = Release|Any CPU
-		{83F78258-1DAB-4EC8-901F-3417C42AD76D}.Release|x86.Build.0 = Release|Any CPU
 		{DA2C686B-57CA-4416-83EC-C832D9B9826F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DA2C686B-57CA-4416-83EC-C832D9B9826F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA2C686B-57CA-4416-83EC-C832D9B9826F}.Debug|ARM.ActiveCfg = Debug|Any CPU

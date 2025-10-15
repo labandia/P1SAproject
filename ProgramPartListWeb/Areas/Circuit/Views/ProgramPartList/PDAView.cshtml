@@ -1,0 +1,385 @@
+﻿
+@{
+    ViewBag.Title = "PDAView";
+    Layout = "~/Areas/Circuit/Views/Shared/_LayoutPartlist.cshtml";
+}
+
+
+<div class="PDAWrapper">
+    <div class="PDA_header">
+        <h5>Program partlist</h5>
+    </div>
+
+    <div class="PDA_content">
+        <label>Plan Schedule : </label>
+        <br />
+        <input type="text" placeholder="Search Plan Schedule" id="searchReelID" autocomplete="off" />
+        <br />
+
+        <label>Scan Reel ID : </label>
+        <br />
+        <input type="text" placeholder="Input ReelID" id="searchpartnum" autocomplete="off" />
+
+        <br />
+        <label>Location: </label>
+        <br />
+        <input type="text" placeholder="Warehouse Location" id="locationText" autocomplete="off" />
+
+        <div class="row">
+            <div class=" col-12 col-sm-12 col-lg-6 mb-2">
+                <label>Quantity: </label>
+                <input type="text" placeholder="Scan the Quantity" id="ActualQuantity" />
+            </div>
+
+            <div class=" col-12 col-sm-12 col-lg-6 mb-2">
+                <label>Lot No : </label>
+                <input type="text" placeholder="Enter the Lot No." id="LotNo" autocomplete="off" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class=" col-12 col-sm-12 col-lg-6 mb-2">
+                <label>Select Supplier : </label><br />
+                <div class="select-container">
+                    <select id="Supplierselect" name="Supplierselect">
+                        <option value="">-- Supplier Select --</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class=" col-12 col-sm-12 col-lg-6 mb-2">
+                <label>Code : </label>
+                <input type="text" placeholder="Supplier Code" name="SupCode" id="SupCode" autocomplete="off" required />
+            </div>
+        </div>
+
+        <hr />
+        <input type="hidden" placeholder="Enter Series" name="Visual_add" id="Quantext" />
+        <input type="hidden" placeholder="Enter Set no" name="Series_add" id="SetText" autocomplete="off" />
+        <div class="flex_align">
+            <button type="button" style="width: 100%" id="resetbtn"><i class="fa-regular fa-floppy-disk"></i>  Reset</button>
+            <button id="btnSave" style="width: 100%"><i class="fa-regular fa-floppy-disk"></i>  Save</button>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+<script src="~/Scripts/html5-qrcode.min.js"></script>
+<script type="text/javascript">
+    const searchID = document.getElementById("searchReelID");
+    const searchpart = document.getElementById("searchpartnum");
+    const QuanEvent = document.getElementById("ActualQuantity");
+    const resetButton = document.getElementById("resetbtn");
+
+    const selectSupply = document.getElementById("Supplierselect");
+
+    const sumbtn = document.getElementById("btnSave");
+
+    let plandata = [];
+    let partlistTemp = [];
+    let summarylistTemp = [];
+    let supplierTemp = [];
+
+    let strReelID;
+    let seriesID;
+    let seriesNo;
+    let finalReel;
+    let strpartnum;
+    let machserial;
+
+    // =================== LOADS THE DATA FOR SEARCHING ===================================
+    const SeriesDataTable = async () => {
+        let res = await fetchData('@Url.Action("GetScheduleSeries", "ProgramPartList")', {});
+        if (res && res.Success) {
+            plandata = res.Data;
+        }
+    };
+    // =================== LOAD THE COMPONENTS PART LIST DATA =============================
+    const LoadComponentsPartlist = async (params) => {
+        let res = await FetchAuthenticate('@Url.Action("GetparlistData", "ProgramPartList")', { intval: params });
+
+        if (res && res.Success) {
+            partlistTemp = res.Data;
+        }
+    }
+    // =================== LOADS THE COMPONENTS SUMMARY LIST ==============================
+    const SummaryComponentsdetails = async (params) => {
+        console.log("Series ID :" + params);
+      summarylistTemp = [];
+
+      let res = await FetchAuthenticate('@Url.Action("GetSummmaryComponentlist", "ProgramPartList")', { intval: params });
+      if (res && res.Success) {
+          let data = res.Data;
+          //console.log("EHRE");
+          if (data.length === 0) return;
+
+          summarylistTemp = data;
+          console.log(summarylistTemp);
+
+      }
+   }
+
+    // =================== LOAD THE SUPPLER LIST ===========================================
+    const LoadSupplierList = async (partnum) => {
+        let res = await FetchAuthenticate('@Url.Action("GetSupplierListID", "ProgramPartList")', { partText: partnum });
+
+         if (res && res.Success) {
+             let select = $("#Supplierselect");
+             select.empty();
+             supplierTemp = res.Data;
+
+             let arrayData = res.Data;
+             console.log(arrayData);
+             $("#locationText").val(arrayData.Location);
+             select.append('<option value="' + arrayData.AbassadorPartnum + '">' + arrayData.Supplier + '</option>');
+             $("#SupCode").val(arrayData.Code);
+             //$.each(arrayData, function (index, rowData) {
+             //    select.append('<option value="' + rowData.SupID + '">' + rowData.Supplier + '</option>');
+             //});
+
+             //$("#SupCode").val(arrayData[0].Code);
+
+             //selectSupply.addEventListener('change', (e) => {
+             //    var supply = supplierTemp.find(p => p.SupID === parseInt(e.target.value));
+             //    $("#SupCode").val(supply.Code);
+             //});
+         }
+      }
+
+
+    // =================== SEARCH PLAN SCHEDULE ===================================
+    searchID.addEventListener('keydown', function (e) {
+        if (e.key === "Enter" || e.keyCode === 13) {
+            e.preventDefault();
+
+            // 1. Checks the plan schedule if exist in the database 
+            var filter = plandata.filter(res => res.Series_no === e.target.value);
+
+            if (filter.length === 0 || filter[0].Ongoing === 0) {
+                alert("No Plan Schedule Found or Already Completed");
+                this.value = "";
+                return;
+            }
+
+            // 2. Store the Value to the variable for reference 
+            // for the Forms Input 
+            seriesID = filter[0].Series_ID;
+            machserial = filter[0].MachineSerial;
+            seriesNo = filter[0].Series_no;
+
+            document.getElementById("searchReelID").readOnly = true;
+
+            // 3. Loads the Components Summary list
+            LoadComponentsPartlist(seriesID);
+
+            // 4. loads the Plan Schedule Details
+            SummaryComponentsdetails(seriesID);
+
+            // 5. When All the process is done set focus to the other input 
+            $("#searchpartnum").focus();
+
+        }
+    });
+    searchpart.addEventListener('keydown', function (e) {
+        // 1 . SCAN Process for the REEL ID 
+        if (e.key === "Enter" || e.keyCode === 13) {
+            e.preventDefault();
+            SDP_ScanText(e.target.value);
+
+        }
+    });
+    //----------- BARCODE PROCESS -------------------- //
+    function SDP_ScanText(scan) {
+        // 2. Store the string input
+        let input = scan;
+
+        // 3.  Split the string into 3 parts ex:  SDP00715310-01 410210268
+        let strSDP = input.substring(0, 3); // "SDP"
+        strpartnum = input.substring(3, 14); // "00715310-01"
+        strReelID = input.substring(14);
+        finalReel = strReelID.split(' ')[1].trim();  // "410210268"
+
+        // 4. CHECKS THE REEL ID IF IS ALREADY INPUT THE COMPONENTS SUMMARY
+        if (summarylistTemp.some(res => String(res.LotID).trim() === finalReel)) {
+            showInvalidData("Reel ID is already Inserted in the Components Summary");
+            return;
+        }
+
+        // 5. Gets Components Partlist based on the Given Partnum from the Reel ID
+        var product = partlistTemp.find(p => p.AbassadorPartnum == strpartnum);
+
+        // 6. Checks the Data For Safetly Execution
+        if (product != undefined) {
+
+            $("#SetText").val(product.SetNo ?? "");
+            $("#Quantext").val(product.Prepared_Quantity ?? "");
+
+            // 7. Loads the Supplier Data 
+            LoadSupplierList(strpartnum);
+            // 8. Set focus next to the input
+            $("#ActualQuantity").focus();
+
+        } else {
+            Swal.fire({
+                title: "Invalid input",
+                text: "Wrong Partnumber input",
+                icon: "error",
+                showConfirmButton: false,
+                timer: 1500
+            }).then(() => {
+                $("#partnumText").css("border", "");
+            });
+        }
+
+    }
+
+
+    // ----- BARCODE SCAN FOR THE QUANTITY INPUT -----------
+    QuanEvent.addEventListener('keydown', function (e)
+    {
+        if (e.key === "Enter") {
+            e.preventDefault();
+
+            // 1. set the text to a variable
+            let text = QuanEvent.value.trim();
+
+            // 2. Checks the length and the Text Inputed if is Empty
+            if (text.length > 0 && !isNaN(text)) {
+                // removes leading zeros ex: 0002, 0200, 
+                QuanEvent.value = parseInt(text, 10).toString();
+            } else {
+                // Value to zero if the input is not a number
+                QuanEvent.value = "0";
+            }
+
+
+            $("#LotNo").focus();
+        }
+    });
+    sumbtn.addEventListener('click', (e) => {
+        e.preventDefault();
+
+         let reelID = $("#searchpartnum").val();
+
+         var formData = new FormData();
+         formData.append("SeriesID", seriesID);
+         formData.append("ComponentName", reelID);
+
+         formData.append("QuantityInput", parseInt($("#ActualQuantity").val()));
+         formData.append("LotID", finalReel ?? "");
+         formData.append("LotNo", $("#LotNo").val());
+         formData.append("Partnum", strpartnum);
+         formData.append("PreparedQuan", parseInt($("#Quantext").val()));
+         formData.append("Machine", machserial);
+         formData.append("SetNo", parseInt($("#SetText").val()));
+         formData.append("Series_no", seriesNo);
+         formData.append("Supplierselect", $("#Supplierselect").val());
+        let data = Object.fromEntries(formData);
+
+         $.ajax({
+         url: '@Url.Action("AddSummaryComponents", "ProgramPartList")',
+         type: 'POST',
+         data: formData,
+         processData: false, // Don't process the data (jQuery does this automatically)
+         contentType: false, // Don't set content type as multipart/form-data
+         success: function (res) {
+
+             if (res.StatusCode === 200) {
+                 Swal.fire({
+                     title: "Add success",
+                     text: res.Message,
+                     icon: "success",
+                     showConfirmButton: false,
+                     timer: 1500
+                 }).then(() => {
+                     console.log(res.Message);
+                     let select = document.getElementById("Supplierselect");
+                     select.innerHTML = '<option value="">-- Supplier Select --</option>';
+
+                     $("#searchpartnum").val("");
+
+                     $("#locationText").val("");
+                     $("#ActualQuantity").val("");
+                     $("#LotNo").val("");
+                     $("#SupCode").val("");
+
+                     $("#searchpartnum").focus();
+
+                     SummaryComponentsdetails(seriesID);
+                 });
+             } else {
+                 Swal.fire({
+                     title: "Invalid Data",
+                     text: res.Message,
+                     icon: "error",
+                     showConfirmButton: false,
+                     timer: 1500
+                 }).then(() => {
+                 });
+             }
+         },
+         error: function (error) {
+             console.error("Error creating product:", error);
+         }
+     });
+
+
+    });
+    resetButton.addEventListener('click', function (e) {
+        e.preventDefault();
+        let select = document.getElementById("Supplierselect");
+
+        document.getElementById("searchReelID").readOnly = false;
+        document.getElementById("searchReelID").value = "";
+
+        select.innerHTML = '<option value="">-- Supplier Select --</option>';
+
+        $("#searchpartnum").val("");
+        $("#locationText").val("");
+        $("#ActualQuantity").val("");
+        $("#LotNo").val("");
+        $("#SupCode").val("");
+
+        $("#searchReelID").focus();
+    });
+
+   
+
+
+
+
+    // Global Show to Error Message
+    function showInvalidData(message) {
+        Swal.fire({
+            title: "Invalid Data",
+            text: message,
+            icon: "error",
+            showConfirmButton: false,
+            timer: 1500
+        }).then(() => {
+
+        });
+    }
+
+
+    // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+    const LoadPageData = async () => {
+        try {
+
+            const [inspect] = await Promise.all([
+                SeriesDataTable()
+            ]);
+        } catch (error) {
+            console.error("Failed to load page data:", error);
+        } finally {
+        }
+    }
+
+    $(document).ready(() => {
+        LoadPageData();
+    });
+</script>

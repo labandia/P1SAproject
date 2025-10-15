@@ -1,0 +1,1201 @@
+﻿
+@{
+    ViewBag.Title = "PlanScheduleDetails";
+    Layout = "~/Areas/Circuit/Views/Shared/_LayoutPartlist.cshtml";
+}
+
+
+<div class="flex_space">
+    <div class="d-flex align-items-start gap-3">
+        <a class="Backbtn" href="/Circuit/ProgramPartList/PlanSchedule"><i class="fa-solid fa-arrow-left"></i></a>
+        <div class="">
+            <h4 class="header_title m-0" ><span id="seriesID"></span></h4>
+            <p style="margin: 0;">Total Components Part list: <span id="Countnum" style="font-weight: 600"></span></p>
+        </div>
+    </div>
+
+    <div class="d-flex align-items-center gap-4">
+        @*SEARCH FOR SUMMARY COMPONENTS*@
+        <div class="SearchInputbox">
+            <input type="text" name="searchbox" id="searchbox" placeholder="Search here... " />
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+        @*SEARCH FOR PARTS SUMMARY*@
+        <div class="SearchPartbox">
+            <input type="text" name="Partbox" id="Partbox" placeholder="Search here... " />
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+        <button class="btn btn-secondary" id="OpenScanner"><i class="fa-solid fa-expand"></i>  Scanner</button>
+    </div>
+</div>
+
+
+<div class="tabs mt-4">
+    <div class="tabs__header d-flex gap-2">
+        <div class="active">Summary Components In</div>
+        <div>Parts summary</div>
+        <div>Components partlist</div>
+    </div>
+
+    <div class="tabs__body">
+        <div class="active" style="width: 100%;">
+            <div class="MainTable">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Set No.</th>
+                            <th style="width: 30px;">Comp/Ambassador</th>
+                            <th>Reel ID</th>
+                            <th>Lot ID</th>
+                            <th>Supplier partname</th>
+                            <th>Supplier Code</th>
+                            <th>Input Qty</th>
+                            <th>Total input</th>
+                            <th>Needed qty</th>
+                            <th>Status</th>
+                            @*<th>Action</th>*@
+                        </tr>
+                    </thead>
+                    <tbody id="dataSearching">
+                    </tbody>
+                </table>
+
+                <div class="tableseriesNoData">
+                    <p>No Data Found</p>
+                </div>
+            </div>
+
+
+
+
+
+        </div>
+        <div>
+            <table class="SeriesTable">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Ambassador</th>
+                        <th>Supplier</th>
+                        <th>Warehouse Location</th>
+                        <th>Feeder Type</th>
+                        <th>Supplier Code</th>
+                        <th>Prepared Qty</th>
+                        <th>Warehouse Qty</th>
+                        <th>Return Qty</th>
+                    </tr>
+                </thead>
+                <tbody id="WarehouselistTable">
+                </tbody>
+            </table>
+
+
+
+        </div>
+        <div style="width: 100%;">
+            <table class="SeriesTable">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Ambassador</th>
+                        <th>Supplier</th>
+                        <th>Warehouse Location</th>
+                        <th>Feeder Type</th>
+                        <th>Machine</th>
+                        <th>Prepared Qty</th>
+                    </tr>
+                </thead>
+                <tbody id="partlistTable">
+                </tbody>
+            </table>
+
+            <div id="partlistTableContainer" class="pagination"></div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="MasterlistWrap_footer">
+    <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
+
+    <div id="PaginationContainer" class="paginationPartlocal"></div>
+</div>
+
+<div class="MasterlistWrap_footer">
+    <span>Showing  <span id="WarepagecountID">-</span> to <span id="WaretotalpageID">-</span> of  <span id="WareDatalengthID">-</span> Entries</span>
+
+    <div id="WarehouseContainer" class="paginationPartlocal"></div>
+</div>
+
+
+@*<div class="MasterlistWrap_footer">
+        <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
+
+        <div id="PaginationContainer" class="paginationPartlocal"></div>
+    </div>*@
+
+
+
+
+
+@*modal-fullscreen*@
+<div class="modal fade modal-lg" id="scanmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" data-bs-backdrop="static">
+    <div class="modal-dialog  modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <div class="custom_modal_header">
+                    <div class="custom_modal__icon">
+                        <div class="custom_icon_container">
+                            <i class="fa-solid fa-expand"></i>
+                        </div>
+                        <span>Scan Input Data</span>
+                    </div>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal" aria-label="Close">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <div class="barcodecontainer mt-4">
+                    @*================ BARCODE SCANNER =======================*@
+                    <div style="width: 100%" id="reader"></div>
+                    @*========================================================*@
+                    <p id="scanreads"></p>
+                    <div class="Scaninputbox">
+                        <input type="text" placeholder="Partnumber name" id="partnumText" />
+                        <button class="btnscan" onclick="SearchbyList()"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    </div>
+
+                    @*<div class="d-flex align-items-center justify-content-between">
+                            <p id="scanStatustext"></p>
+                            <p id="sampledisplay"></p>
+                        </div>*@
+
+                    <div class="row">
+                        <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
+                            <label>Set no: </label>
+                            <input placeholder="Enter Set no" disabled name="Series_add" id="SetText" />
+                        </div>
+
+                        <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
+                            <label>AbassadorPartnum : </label>
+                            <input name="Line_add" id="PartText" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
+                            <label>Partname : </label>
+                            <input name="Time_add" id="PartnameText" />
+                        </div>
+
+                        <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
+                            <label>Check point: </label>
+                            <input name="Created_add" id="Checksum" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
+                            <label>Warehouse : </label>
+                            <input name="Remark_add" id="locationText" />
+                        </div>
+
+                        <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
+                            <label>FeederType : </label>
+                            <input placeholder="Enter Series" name="Navi_add" id="Feedtext" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
+                            <label>Model Machine No : </label>
+                            <input placeholder="Enter Series" name="Machine_add" id="MachineText" />
+                        </div>
+                        <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
+                            <label>Prepared Quantity : </label>
+                            <input placeholder="Enter Series" name="Visual_add" id="Quantext" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
+                            <label>Scan quantity : </label>
+                            <input type="number" placeholder="Enter or Scan Quantity" name="Visual_add" id="AmountText" />
+                        </div>
+
+                        <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
+                            <label>Lot No : </label>
+                            <input type="text" placeholder="Enter or Scan Lot ID" name="LotNo" id="LotNo" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
+                            <label>Select Supplier : </label>
+                            <select id="Supplierselect" name="Supplierselect">
+                                <option value="">-- Supplier Select --</option>
+                            </select>
+                        </div>
+
+                        <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
+                            <label>Code : </label>
+                            <input type="text" placeholder="Supplier Code" name="SupCode" id="SupCode" required />
+                        </div>
+                    </div>
+
+
+                    <div class=" mt-4">
+                        <button id="btnSave" style="width: 100%; display: flex; align-items: center; justify-content: center;"><i class="fa-regular fa-floppy-disk"></i>  Save</button>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script src="~/Scripts/html5-qrcode.min.js"></script>
+<script type="text/javascript">
+    let params = "@ViewBag.SeriesNo";
+    const sumbtn = document.getElementById("btnSave");
+    const scanbtn = document.getElementById("AmountText");
+
+
+    const partnumAction = document.getElementById("partnumText");
+    //const addsummaryform = document.getElementById("Partlistform");
+    const selectSupply = document.getElementById("Supplierselect");
+    //const openSupplybtn = document.getElementById('opensupplier');
+
+    //const lotnum = document.getElementById("LotIDText");
+    const lotID = document.getElementById("LotNo");
+
+    let html5QrcodeScanner;
+    var components = "";
+    var scanstatus = 0;
+    var detailsData;
+    let partlistTemp = [];
+    let Warehouse = [];
+    let summarylistTemp = [];
+    let supplierTemp = [];
+    let strReelID;
+
+    let seriesID;
+
+    // LOADS OF THE COMPONENTS PART LIST SUMMARY
+    const SummaryComponentsdetails = async() => {
+        summarylistTemp = [];
+
+        let res = await FetchAuthenticate('@Url.Action("GetSummmaryComponentlist", "ProgramPartList")', { intval: params });
+        if (res && res.Success) {
+            let data = res.Data;
+            summarylistTemp = data;
+
+            $("#dataSearching").empty();
+            ComponentsSummaryPagination(data, 'dataSearching', 'PaginationContainer', 50, 5);
+            $(".tableseriesNoData").hide();
+        } else {
+            $(".tableseriesNoData").show();
+        }
+     }
+    // LOAD THE COMPONENTS PART LIST DATA
+    const LoadComponentsPartlist = async() => {
+        let res = await FetchAuthenticate('@Url.Action("GetparlistData", "ProgramPartList")', { intval: params });
+
+        if (res && res.Success) {
+            //let partdata = result.Data;
+            partlistTemp = res.Data;
+
+            $("#partlistTable").empty();
+            PartlistPagination(partlistTemp, 'partlistTable', 'partlistTableContainer', 20, 5);
+            $("#Countnum").text(partlistTemp.length);
+        }
+    }
+    // LOAD THE COMPONENTS PART LIST DATA
+    const LoadPrepareWarehouseList = async() => {
+        var params = "@ViewBag.SeriesNo";
+        let res = await FetchAuthenticate('@Url.Action("GetPreparedWarehouseList", "ProgramPartList")', { intval: params });
+
+        if (res && res.Success) {
+            //let partdata = result.Data;
+            Warehouse = res.Data;
+            $("#WarehouselistTable").empty();
+            WarehousePagination(Warehouse, 'WarehouselistTable', 'WarehouseContainer', 20, 5);
+        }
+     }
+    const LoadSupplierList = async (partnum) => {
+        let res = await FetchAuthenticate('@Url.Action("GetSupplierDatalist", "ProgramPartList")', { partText: partnum });
+
+        if (res && res.Success) {
+            let select = $("#Supplierselect");
+            select.empty();
+            supplierTemp = res.Data;
+
+            let arrayData = res.Data;
+            $.each(arrayData, function (index, rowData) {
+                select.append('<option value="' + rowData.SupID + '">' + rowData.Supplier + '</option>');
+            });
+
+            $("#SupCode").val(arrayData[0].Code);
+
+            selectSupply.addEventListener('change', (e) => {
+                var supply = supplierTemp.find(p => p.SupID === parseInt(e.target.value));
+                $("#SupCode").val(supply.Code);
+            });
+        }
+     }
+    // GET DATA FROM THE DATABASE
+    // LOADS THE SERIES DETAILS
+    const LoadDetails = async() => {
+        let res = await FetchAuthenticate('@Url.Action("GetSeriesDetails", "ProgramPartList")', { seriesID: params });
+
+        detailsData = res.Data;
+        $("#seriesID").text(detailsData.Series_no);
+    }
+
+
+    partnumAction.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            if (e.target.value == "") {
+                $("#partnumText").css("border", "2px solid red");
+                setTimeout(() => {
+                    $("#partnumText").css("border", "");
+                }, 2000);
+                return;
+            }
+            SearchbyScan(e.target.value);
+        }
+    });
+    scanbtn.addEventListener('keydown', (e) => {
+        if (e.key === "Enter") {
+            lotID.focus();
+        }
+    });
+
+
+
+
+    //openSupplybtn.addEventListener('click', (e) => {
+    //    e.preventDefault();
+    //    window.open('/Series/RegisterSupplier', '_blank');
+    //});
+
+
+    sumbtn.addEventListener('click', (e) => {
+      e.preventDefault();
+        var params = "@ViewBag.SeriesNo";
+
+           components = "SDP" + $("#PartText").val() + " " + strReelID;
+
+           var formData = new FormData();
+           formData.append("SeriesID", params);
+           formData.append("ComponentName", components);
+           formData.append("QuantityInput", parseInt($("#AmountText").val()));
+           formData.append("LotID", strReelID ?? "");
+           formData.append("LotIDText", $("#LotIDText").val());
+           formData.append("LotNo", $("#LotNo").val());
+           formData.append("Partnum", $("#PartText").val());
+           formData.append("PreparedQuan", parseInt($("#Quantext").val()));
+           formData.append("Machine", detailsData.MachineSerial);
+           formData.append("SetNo", parseInt($("#SetText").val()));
+           formData.append("Series_no", detailsData.Series_no);
+           formData.append("Supplierselect", $("#Supplierselect").val());
+        var data = Object.fromEntries(formData);
+
+        console.log(data);
+
+        //CHECKS THE SUPPLIERS INPUT
+        if (summarylistTemp.some(res =>
+            parseInt(res.SupID) === parseInt($("#Supplierselect").val()) && res.AbassadorPartnum === $("#PartText").val())) {
+            Swal.fire({
+                title: "This supplier has already used ",
+                text: "Select another supplier or keep this supplier code?",
+                showCancelButton: true,
+                confirmButtonText: "Confirm"
+            }).then((result) => {
+                // IF the user select the confirm button or else cancel the save
+                if (result.isConfirmed) {
+                    var supply = supplierTemp.find(p => p.SupID === parseInt($("#Supplierselect").val()));
+                    $("#SupCode").val(supply.Code);
+
+                    $.ajax({
+                                    url: '@Url.Action("AddSummaryComponents", "ProgramPartList")',
+                                    type: 'POST',
+                                    data: formData,
+                                    processData: false, // Don't process the data (jQuery does this automatically)
+                                    contentType: false, // Don't set content type as multipart/form-data
+                                    success: function (res) {
+
+                                        if (res.StatusCode === 200) {
+                                            Swal.fire({
+                                                title: "Add success",
+                                                text: res.Message,
+                                                icon: "success",
+                                                showConfirmButton: false,
+                                                timer: 1500
+                                            }).then(() => {
+                                                //console.log(res.Message);
+                                                SummaryComponentsdetails();
+                                                //addsummaryform.reset();
+                                                scanstatus = 0;
+
+                                                $("#SetText").val("");
+                                                $("#PartText").val("");
+                                                $("#PartnameText").val("");
+                                                $("#Checksum").val("");
+                                                $("#locationText").val("");
+                                                $("#Feedtext").val("");
+                                                $("#MachineText").val("");
+                                                $("#Quantext").val("");
+                                                $("#AmountText").val("");
+                                                //$("#LotIDText").val("");
+                                                $("#LotNo").val("");
+                                                $("#SupCode").val("");
+                                                $("#partnumText").val("");
+
+                                                $("#Supplierselect").empty();
+
+                                                $("#partnumText").focus();
+                                            });
+                                        } else if (res.StatusCode == 422) {
+                                            Swal.fire({
+                                                title: "Invalid Data",
+                                                text: res.Message,
+                                                icon: "error",
+                                                showConfirmButton: false,
+                                                timer: 1500
+                                            }).then(() => {
+                                            });
+                                        }
+                                    },
+                                    error: function (error) {
+                                        console.error("Error creating product:", error);
+                                    }
+                                });
+
+
+                } else if (result.isDismissed) {
+                    return;
+                }
+            });
+
+        } else {
+              $.ajax({
+                      url: '@Url.Action("AddSummaryComponents", "ProgramPartList")',
+                      type: 'POST',
+                      data: formData,
+                      processData: false, // Don't process the data (jQuery does this automatically)
+                      contentType: false, // Don't set content type as multipart/form-data
+                      success: function (res) {
+
+                          if (res.StatusCode === 200) {
+                              Swal.fire({
+                                  title: "Add success",
+                                  text: res.Message,
+                                  icon: "success",
+                                  showConfirmButton: false,
+                                  timer: 1500
+                              }).then(() => {
+                                  //console.log(res.Message);
+                                  SummaryComponentsdetails();
+                                  //addsummaryform.reset();
+                                  scanstatus = 0;
+
+                                  $("#SetText").val("");
+                                  $("#PartText").val("");
+                                  $("#PartnameText").val("");
+                                  $("#Checksum").val("");
+                                  $("#locationText").val("");
+                                  $("#Feedtext").val("");
+                                  $("#MachineText").val("");
+                                  $("#Quantext").val("");
+                                  $("#AmountText").val("");
+                                  //$("#LotIDText").val("");
+                                  $("#LotNo").val("");
+                                  $("#SupCode").val("");
+                                  $("#partnumText").val("");
+
+                                  $("#Supplierselect").empty();
+
+                                  $("#partnumText").focus();
+                              });
+                          } else if (res.StatusCode == 422) {
+                              Swal.fire({
+                                  title: "Invalid Data",
+                                  text: res.Message,
+                                  icon: "error",
+                                  showConfirmButton: false,
+                                  timer: 1500
+                              }).then(() => {
+                              });
+                          }
+                      },
+                      error: function (error) {
+                          console.error("Error creating product:", error);
+                      }
+                  });
+        }
+
+
+
+
+
+  });
+
+    //----------- BAR CODE SCANNING PROCESS -------------------- //
+    function SearchbyScan(partText) {
+        let input = partText;
+
+        // Split the string into 3 parts
+        let strSDP = input.substring(0, 3); // "SDP"
+        let strpartnum = input.substring(3, 14); // "00715310-01"
+        strReelID = input.substring(14); // "410210268"
+
+        const lotID = strReelID.split(' ')[1].trim();
+
+        //CHECKS THE REEL ID FISRST
+        if (summarylistTemp.some(res => String(res.LotID).trim() === lotID)) {
+            showInvalidData("Reel ID is already Inserted in the Components Summary");
+            return;
+        }
+
+        // Check if the string contains 'SDP'
+        if (input.toLowerCase().includes("sdp")) {
+            var product = partlistTemp.find(p => p.AbassadorPartnum == strpartnum);
+
+            if (product != undefined) {
+                $("#partnumText").css("border", "2px solid green");
+                setTimeout(() => {
+                    $("#partnumText").css("border", "");
+                }, 2000);
+
+                $("#SetText").val(product.SetNo ?? "");
+                $("#PartText").val(product.AbassadorPartnum ?? "");
+                $("#PartnameText").val(product.Partname ?? "");
+                $("#Feedtext").val(product.FeederType ?? "");
+                $("#Quantext").val(product.Prepared_Quantity ?? "");
+                $("#locationText").val(product.Locations ?? "");
+
+                let mach = product.Machno ?? "";
+                $("#MachineText").val("YSM_" + mach);
+
+                LoadSupplierList(strpartnum);
+                $("#AmountText").focus();
+            } else {
+                Swal.fire({
+                    title: "Invalid Data",
+                    text: "Wrong Part number input",
+                    icon: "error",
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
+                    $("#partnumText").css("border", "");
+                });
+            }
+        } else {
+            var product = partlistTemp.find(p => p.AbassadorPartnum === partText);
+
+            if (product !== undefined) {
+                $("#partnumText").css("border", "2px solid green");
+                setTimeout(() => {
+                    $("#partnumText").css("border", "");
+                }, 2000);
+
+                // $("#scanStatustext").text("Part number list found").fadeIn().delay(1500).fadeOut();
+                $("#SetText").val(product.SetNo ?? "");
+                $("#PartText").val(product.AbassadorPartnum ?? "");
+                $("#PartnameText").val(product.Partname ?? "");
+                $("#Feedtext").val(product.FeederType ?? "");
+                $("#Quantext").val(product.Prepared_Quantity ?? "");
+                $("#locationText").val(product.Locations ?? "");
+                $("#MachineText").val("YSM_" + product.Machno ?? "");
+                $("#AmountText").Focus();
+                LoadSupplierList(strpartnum);
+                scanstatus = 1;
+            }
+            else {
+                //$("#scanStatustext").text("Part not found").fadeIn().delay(1500).fadeOut();
+                $("#partnumText").css("border", "2px solid red");
+                setTimeout(() => {
+                    $("#partnumText").css("border", "");
+                }, 2000);
+                $("#partnumText").val("");
+                $("#partnumText").focus();
+            }
+        }
+    }
+    // PART OF THE SCANNING PROCESS
+    function onScanSuccess(decodedText, decodedResult) {
+        let barcodestr = decodedText;
+        SearchbyScan(decodedText);
+    }
+    // OPENS THE MODAL SCANNER
+    $("#OpenScanner").on('click', function () {
+        $("#partnumText").val("");
+        $("#partnumText").focus();
+        $("#scanmodal").modal("show");
+
+        // Check if an instance already exists and clear it
+        if (html5QrcodeScanner) {
+            html5QrcodeScanner.clear().then(() => {
+                //console.log("Cleared previous scanner instance");
+                initializeScanner();
+            }).catch((error) => {
+                //console.error("Failed to clear previous scanner instance", error);
+                initializeScanner(); // Initialize anyway if clearing fails
+            });
+        } else {
+            initializeScanner();
+        }
+    });
+    // CLOSE THE MODAL SCANNER AND CLEAR THE CAMERA SET UP
+    $("#scanmodal").on('hidden.bs.modal', function () {
+        if (html5QrcodeScanner) {
+            html5QrcodeScanner.clear().then(() => {
+                console.log("Scanner cleared on modal close");
+            }).catch((error) => {
+                console.error("Error clearing scanner on modal close", error);
+            });
+        }
+        $("#reader").empty(); // Ensure the DOM element is reset
+    });
+    // OPENS THE CAMERA OF THE DEVICE
+    function initializeScanner() {
+        //const config = {
+        //    fps: 10,
+        //    qrbox: { width: 400, height: 150 },
+        //    facingMode: "environment",
+        //    supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA],
+        //    experimentalFeatures: {
+        //        useBarCodeDetectorIfSupported: true
+        //    }
+        //};
+
+        // Older version
+        //if (!html5QrcodeScanner) {
+        //    html5QrcodeScanner = new Html5QrcodeScanner("reader", {
+        //        fps: 5,
+        //        qrbox: { width: 400, height: 100 }
+        //    }, false);
+        //}
+
+        // New version
+        if (!html5QrcodeScanner) {
+            html5QrcodeScanner = new Html5QrcodeScanner("reader", {
+                fps: 5,
+                qrbox: { width: 400, height: 400 }
+            }, false);
+        }
+
+        html5QrcodeScanner.render(onScanSuccess);
+    }
+
+    //-----------------------------------------------------------//
+
+
+    // -------------- TAB CONTROLS ------------------------------ //
+    document.addEventListener("DOMContentLoaded", function () {
+     const tabs = document.querySelector(".tabs");
+     const tabHeaders = tabs.querySelectorAll(".tabs__header > div");
+     const tabBodies = tabs.querySelectorAll(".tabs__body > div");
+
+     tabHeaders.forEach((tabHeader, index) => {
+         tabHeader.addEventListener("click", () => {
+             // Check if the clicked tab is already active
+             if (tabHeader.classList.contains("active")) return;
+
+             // Remove active class from all headers and bodies
+             tabHeaders.forEach(header => header.classList.remove("active"));
+             tabBodies.forEach(body => body.classList.remove("active"));
+
+             // Add active class to the clicked header and its corresponding body
+             tabHeader.classList.add("active");
+             tabBodies[index].classList.add("active");
+
+             // Perform additional logic based on the selected tab
+             if (index == 0) {
+                 $(".SearchInputbox").show();
+                 $(".SearchPartbox").hide();
+                 SummaryComponentsdetails();
+             } else if (index == 1) {
+                 // LoadComponentsPartlist();
+                 $(".SearchInputbox").hide();
+                 $(".SearchPartbox").show();
+                 LoadPrepareWarehouseList();
+             } else {
+                 LoadComponentsPartlist();
+             }
+         });
+     });
+
+
+     let modal = document.getElementById("scanmodal");
+     let input = document.getElementById("partnumText");
+
+     modal.addEventListener("shown.bs.modal", function () {
+         input.focus();
+     });
+ });
+
+    //------------------------------------------------------------//
+
+
+    function ComponentsSummaryPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 7, visibleButtons = 5) {
+        let currentPage = 1;
+        let filteredData = [...dataArray]; // Make a copy for filtering
+
+        const updatePaginationInfo = () => {
+            const totalRecords = filteredData.length;
+            const totalPages = Math.ceil(totalRecords / recordsPerPage);
+
+            $("#totalpageID").text(totalPages);
+            $("#DatalengthID").text(totalRecords);
+
+            return totalPages;
+        };
+
+        const renderTable = (page) => {
+            const totalPages = updatePaginationInfo();
+            const startIndex = (page - 1) * recordsPerPage;
+            const endIndex = Math.min(startIndex + recordsPerPage, filteredData.length);
+            const tableBody = document.getElementById(tableBodyId);
+            tableBody.innerHTML = '';
+
+            for (let i = startIndex; i < endIndex; i++) {
+                const rowData = filteredData[i];
+                //<td data-cell='action'>
+                //    <button type='button' class='DeleteButton text-danger bg-white' id='DeleteButton_${rowData.AbassadorPartnum}' >
+                //        <i class="fa-regular fa-square-minus"></i>
+                //    </button>
+                //</td>
+                const rowHtml = `
+                   <tr>
+                      <td data-cell='Date'>${rowData.DateInput}</td>
+                       <td data-cell='SetNo'>${rowData.SetNo} </td>
+                      <td style="width: 30px;" data-cell='ComponentName'>${rowData.ComponentName}</td>
+                      <td data-cell='ReelID'>${rowData.LotID }</td>
+                      <td data-cell='Lot ID'>${rowData.ReelID ?? "N/A"}</td>
+                      <td data-cell='Partname'>${rowData.Partname}</td>
+                      <td data-cell='Code'>${rowData.Code}</td>
+
+                      <td data-cell='Needed qty'>${rowData.QuantityInput} </td>
+                      <td data-cell='Code'>${rowData.gtotal}</td>
+                      <td data-cell='Quantity'>${rowData.Quantity}</td>
+
+                      <td data-cell='Status'>
+                         <span class='${parseInt(rowData.Status) === 1 ? "Complete" : "Incomplete"}'>
+                             ${parseInt(rowData.Status) === 1 ? "Complete" : "Incomplete"}
+                         </span>
+                      </td>
+
+
+
+                   </tr>`;
+
+                tableBody.innerHTML += rowHtml;
+            }
+
+            $("#pagecountID").text(currentPage);
+        };
+
+        const renderPagination = () => {
+            const totalPages = updatePaginationInfo();
+            const paginationContainer = document.getElementById(paginationId);
+            paginationContainer.innerHTML = '';
+
+            let startPage = Math.max(1, currentPage - Math.floor(visibleButtons / 2));
+            let endPage = Math.min(totalPages, startPage + visibleButtons - 1);
+
+            if (endPage > totalPages) {
+                endPage = totalPages;
+                startPage = Math.max(1, endPage - visibleButtons + 1);
+            }
+
+            if (totalPages <= visibleButtons) {
+                startPage = 1;
+                endPage = totalPages;
+            }
+
+            // Previous button
+            paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
+                                        <i class="fa-solid fa-backward"></i>
+                                    </button>`;
+
+            for (let i = startPage; i <= endPage; i++) {
+                paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+            }
+
+            // Next button
+            paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
+                                        <i class="fa-solid fa-forward"></i>
+                                    </button>`;
+        };
+
+        const changePage = (page) => {
+            if (page >= 1 && page <= updatePaginationInfo()) {
+                currentPage = page;
+                renderTable(currentPage);
+                renderPagination();
+            }
+        };
+
+        // 🔍 Search functionality
+        const searchTable = () => {
+            const query = $('#searchbox').val().toLowerCase();
+
+            filteredData = dataArray.filter(item =>
+                item.AbassadorPartnum.toLowerCase().includes(query) ||
+                item.LotID.toLowerCase().includes(query)
+            );
+
+            currentPage = 1;
+            renderTable(currentPage);
+            renderPagination();
+        };
+
+        // Add event listener for search input
+        $('#searchbox').on('input', searchTable);
+
+
+        // Handle click event for edit button
+        @*$(document).on('click', '.DeleteButton',  function(e) {
+            e.stopPropagation();
+            const buttonId = $(this).attr('id');
+            const rowIndex = buttonId.split('_')[1];
+
+            Swal.fire({
+                title: "Are you sure?",
+                text: "Delete this " + rowIndex + " in the Table" ,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Confirm"
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    let formData = new FormData();
+                    formData.append('partnum', rowIndex);
+
+                    let res = await postData('@Url.Action("DeleteSummaryComponents", "Series")', formData);
+                    if (res.StatusCode === 200) {
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: res.Message,
+                            icon: "success"
+                        });
+
+                        SummaryComponentsdetails();
+
+                    }
+
+                }
+            });
+
+        });*@
+
+
+        // Initialize table and pagination
+        window.changePage = changePage;
+        renderTable(currentPage);
+        renderPagination();
+    }
+    function PartlistPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 10, visibleButtons = 5) {
+        let currentPage = 1;
+        const totalRecords = dataArray.length;
+        const totalPages = Math.ceil(totalRecords / recordsPerPage);
+
+        const renderTable2 = (page) => {
+            const startIndex = (page - 1) * recordsPerPage;
+            const endIndex = Math.min(startIndex + recordsPerPage, totalRecords);
+            var tableBody = document.getElementById(tableBodyId);
+            tableBody.innerHTML = '';
+
+            for (let i = startIndex; i < endIndex; i++) {
+                const rowData = dataArray[i];
+                let getdata = '';
+
+                getdata = `
+                     <tr>
+                        <td data-cell='SetNo'>${rowData.SetNo}</td>
+                        <td data-cell='Abassador Part no.'><span style='font-weight: 600;'>${rowData.AbassadorPartnum}</span></td>
+                        <td data-cell='Partname/Supplier'>${rowData.Partname}</td>
+                        <td data-cell='Warehouse Location'>${rowData.Locations}</td>
+                        <td data-cell='Feeder Type'>${rowData.FeederType}</td>
+                        <td data-cell='Feeder Type'>${rowData.Machno}</td>
+                        <td data-cell='Prepared Quantity'>${rowData.Prepared_Quantity} </td>
+                     </tr>`;
+
+
+                tableBody.innerHTML += getdata;
+            }
+        };
+
+        const renderPagination2 = () => {
+            const paginationContainer = document.getElementById(paginationId);
+            paginationContainer.innerHTML = '';
+
+            // Calculate visible button range
+            let startPage = Math.max(1, currentPage - Math.floor(visibleButtons / 2));
+            let endPage = Math.min(totalPages, startPage + visibleButtons - 1);
+
+            if (endPage > totalPages) {
+                endPage = totalPages;
+                startPage = Math.max(1, endPage - visibleButtons + 1);
+            }
+
+            if (totalPages <= visibleButtons) {
+                startPage = 1;
+                endPage = totalPages;
+            }
+
+            // Always render "Previous" button
+            paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})"><i class='fa-solid fa-backward'></i></button>`;
+
+            // Render pagination number buttons
+            for (let i = startPage; i <= endPage; i++) {
+                paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}"  onclick="changePage(${i})">${i}</button>`;
+            }
+
+            // Always render "Next" button
+            paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})"><i class='fa-solid fa-forward'></i></button>`;
+        };
+
+        const changePage = (page) => {
+
+            if (page >= 1 && page <= totalPages) {
+                currentPage = page;
+                renderTable2(currentPage);
+                renderPagination2();
+            }
+        };
+
+        window.changePage = changePage;
+
+        renderTable2(currentPage);
+        renderPagination2();
+    }
+    function WarehousePagination(dataArray, tableBodyId, paginationId, recordsPerPage = 10, visibleButtons = 5) {
+         let currentPage = 1;
+         let filteredData = [...dataArray]; // Make a copy for filtering
+
+         const updatePaginationInfo = () => {
+             const totalRecords = filteredData.length;
+             const totalPages = Math.ceil(totalRecords / recordsPerPage);
+
+             $("#WaretotalpageID").text(totalPages);
+             $("#WareDatalengthID").text(totalRecords);
+
+             return totalPages;
+         };
+
+         const renderTable = (page) => {
+             const totalPages = updatePaginationInfo();
+             const startIndex = (page - 1) * recordsPerPage;
+             const endIndex = Math.min(startIndex + recordsPerPage, filteredData.length);
+             const tableBody = document.getElementById(tableBodyId);
+             tableBody.innerHTML = '';
+
+             for (let i = startIndex; i < endIndex; i++) {
+                 const rowData = filteredData[i];
+
+                 var diffColor = rowData.WarehouseUse < 0 ? 'color:red;' : '';
+
+                 const rowHtml = `
+                               <tr>
+                                  <td data-cell='SetNo'>${rowData.SetNo}</td>
+                                  <td data-cell='Abassador Part no.'><span style='font-weight: 600;'>${rowData.AbassadorPartnum}</span></td>
+                                  <td data-cell='Partname/Supplier'>${rowData.Partname}</td>
+                                  <td data-cell='Warehouse Location'>${rowData.Locations}</td>
+                                  <td data-cell='Feeder Type'>${rowData.FeederType}</td>
+                                  <td data-cell='Code'>${rowData.Code}</td>
+                                  <td data-cell='Prepared Quantity'>${rowData.Prepared_Quantity} </td>
+                                  <td data-cell='Quantity'>${rowData.Quantity} </td>
+                                  <td data-cell='WarehouseUse'><span style="${diffColor}">${rowData.WarehouseUse}</span></td>
+                               </tr>`;
+
+                 tableBody.innerHTML += rowHtml;
+             }
+
+             $("#WarepagecountID").text(currentPage);
+         };
+
+         const renderPagination = () => {
+             const totalPages = updatePaginationInfo();
+             const paginationContainer = document.getElementById(paginationId);
+             paginationContainer.innerHTML = '';
+
+             let startPage = Math.max(1, currentPage - Math.floor(visibleButtons / 2));
+             let endPage = Math.min(totalPages, startPage + visibleButtons - 1);
+
+             if (endPage > totalPages) {
+                 endPage = totalPages;
+                 startPage = Math.max(1, endPage - visibleButtons + 1);
+             }
+
+             if (totalPages <= visibleButtons) {
+                 startPage = 1;
+                 endPage = totalPages;
+             }
+
+             // Previous button
+             paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
+                                         <i class="fa-solid fa-backward"></i>
+                                     </button>`;
+
+             for (let i = startPage; i <= endPage; i++) {
+                 paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+             }
+
+             // Next button
+             paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
+                                         <i class="fa-solid fa-forward"></i>
+                                     </button>`;
+        };
+
+        // 🔍 Search functionality
+        const searchTable = () => {
+            const query = $('#Partbox').val().toLowerCase();
+
+            filteredData = dataArray.filter(item =>
+                item.AbassadorPartnum.toLowerCase().includes(query) ||
+                item.Partname.toLowerCase().includes(query)
+            );
+
+            currentPage = 1;
+            renderTable(currentPage);
+            renderPagination();
+        };
+
+        // Add event listener for search input
+        $('#Partbox').on('input', searchTable);
+
+
+         const changePage = (page) => {
+             if (page >= 1 && page <= updatePaginationInfo()) {
+                 currentPage = page;
+                 renderTable(currentPage);
+                 renderPagination();
+             }
+         };
+
+
+         // Initialize table and pagination
+         window.changePage = changePage;
+         renderTable(currentPage);
+         renderPagination();
+    }
+
+
+
+
+    // ----------------- OTHER FUNCTION ------------------------ //
+    function isNumeric(value) {
+        return /^-?\d+(\.\d+)?$/.test(value);
+    }
+
+    // ------------- OPTON BUTTON SEARCH BAR CODE SCAN ---------- //
+    function SearchbyList() {
+        let part = $("#partnumText").val();
+        SearchbyScan(part);
+
+
+        //if (scanstatus == 0) {
+        //    var partText = '00473115-01';
+
+        //    var product = partlistTemp.find(p => p.AbassadorPartnum == partText);
+        //    if (product != null) {
+        //        $("#scanStatustext").text("Part number list found").fadeIn().delay(1500).fadeOut();
+        //        $("#SetText").val(product.SetNo ?? "");
+        //        $("#PartText").val(product.AbassadorPartnum ?? "");
+        //        $("#PartnameText").val(product.Partname ?? "");
+        //        $("#Feedtext").val(product.FeederType ?? "");
+        //        $("#Quantext").val(product.Prepared_Quantity ?? "");
+        //        $("#locationText").val(product.Locations ?? "");
+
+        //        let mach = product.Machno ?? "";
+        //        $("#MachineText").val("YSM_" + mach);
+
+        //        // Show a non-blocking success message
+        //        $("#scanStatustext").text("Part number list found").fadeIn().delay(1500).fadeOut();
+
+        //        scanstatus = 1;
+        //    }
+        //    else {
+        //        $("#scanStatustext").text("Part not found").fadeIn().delay(1500).fadeOut();
+        //        alert("HERE FOUND !!!");
+        //    }
+        //} else {
+        //    //let quan = parseInt(decodedText);
+
+        //    $("#AmountText").val("2232");
+        //    // Show a non-blocking success message
+        //    $("#scanStatustext").text("Good integer scanned").fadeIn().delay(1500).fadeOut();
+        //    scanstatus = 0;
+        //}
+
+
+
+
+        //var input = document.getElementById("partnumText").value;
+        //const str = "SDP00839762-01 411280070";
+        //const regex = /SDP\d{8}-\d{2}/; // Adjust the pattern to match your expected SDP format
+        //SearchbyScan('00839762-01');
+
+        //f (regex.test(str)) {
+        //alert("The string contains an SDP value.");
+        //SearchbyScan(input);
+        //} else {
+        //alert("1sdsadas");
+        //}
+    }
+
+
+
+    function showInvalidData(message) {
+        Swal.fire({
+            title: "Invalid Data",
+            text: message,
+            icon: "error",
+            showConfirmButton: false,
+            timer: 1500
+        }).then(() => {
+            $("#partnumText").val("");
+            $("#partnumText").focus();
+            //addsummaryform.reset();
+        });
+    }
+
+
+
+    // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+    const LoadPageData = async () => {
+        try {
+            $(".SearchInputbox").show();
+            $(".SearchPartbox").hide();
+
+            const [inspect, employ] = await Promise.all([
+                LoadDetails(),
+                SummaryComponentsdetails(),
+                LoadPrepareWarehouseList(),
+                LoadComponentsPartlist(),
+            ]);
+        } catch (error) {
+            console.error("Failed to load page data:", error);
+        } finally {
+            // Hide loading spinner whether success or failure
+            //$("#loadingSpinner").hide();
+        }
+    }
+
+    $(document).ready(() => {
+        LoadPageData();
+    });
+</script>

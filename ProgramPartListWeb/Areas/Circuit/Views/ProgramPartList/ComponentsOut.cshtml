@@ -1,0 +1,335 @@
+﻿
+@{
+    ViewBag.Title = "ComponentsOut";
+    Layout = "~/Areas/Circuit/Views/Shared/_LayoutPartlist.cshtml";
+}
+
+<header class="MainHeader">
+    <h4>Components Partlist Out</h4>
+    <div class="header__action flex_align">
+        <button id="Excelbtn" class="primarybtn"><i class="fa-solid fa-upload"></i>  Upload Components Out</button>
+        <div class="searchinputContainer">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" placeholder="Search something " id="searchbox" />
+            <div class="line"></div>
+        </div>
+    </div>
+</header>
+
+
+
+<div class="MainTable">
+    <table>
+        <thead>
+            <tr>
+                <th style="text-align: left; padding-left: 2em;">Component Name</th>
+                <th>Quantity</th>
+                <th>Parts Code</th>
+                <th>Ambassador</th>
+                <th>Reel ID</th>
+            </tr>
+        </thead>
+        <tbody id="ComponentsData">
+        </tbody>
+    </table>
+
+    <div class="tableseriesNoData">
+        <p>No Data Found</p>
+    </div>
+</div>
+
+<div class="MasterlistWrap_footer">
+    <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
+    <div id="PaginationContainer" class="paginationPartlocal"></div>
+</div>
+
+
+
+<!--########################## UPLOAD DATA #############################-->
+<div class="modal fade modal-lg " id="uploadmodal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog"
+     data-bs-backdrop="static"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="custom_modal_header">
+                    <div class="custom_modal__icon">
+                        <div class="custom_icon_container">
+                            <i class="fa-solid fa-file-import"></i>
+                        </div>
+                        <div class="custom_modal_title">
+                            <span>Update Components Out Data</span>
+                            <p id="procname">Upload Excel File Only</p>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+
+                <div class="custom_modal_body">
+                    <form method="post" enctype="multipart/form-data" id="ImportExcel">
+                        <div class="upload-container" id="upload-container">
+                            <p>Drag and drop an Excel file here</p>
+                            <input type="file" id="file-input" name="file-input" accept=".xlsx, .xls, .csv" hidden>
+                        </div>
+                        <progress id="progress-bar" value="0" max="100" style="width: 100%; display: none;"></progress>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<script src="~/Scripts/Utilities.js"></script>
+<script src="~/Scripts/sweetalert2.min.js"></script>
+<script src="~/Scripts/jquery-3.7.1.min.js"></script>
+<script type="text/javascript">
+    const excelbtn = document.getElementById("Excelbtn");
+
+    excelbtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        $("#uploadmodal").modal("show");
+    });
+  
+
+    const DisplayComponentsOut = async() => {
+        let res = await FetchAuthenticate('@Url.Action("GetComponentOutList", "ProgramPartList")', {});
+
+        if (res && res.Success) {
+            var setData = $("#ComponentsData");
+            setData.empty();
+
+            TablePagination(res.Data, 'ComponentsData', 'PaginationContainer', 100, 5);
+           
+            $(".tableseriesNoData").hide();
+        } else {
+            $(".tableseriesNoData").show();
+        }
+    }
+
+    function TablePagination(dataArray, tableBodyId, paginationId, recordsPerPage = 7, visibleButtons = 5) {
+        let currentPage = 1;
+        let filteredData = [...dataArray]; // Make a copy for filtering
+
+        const updatePaginationInfo = () => {
+            const totalRecords = filteredData.length;
+            const totalPages = Math.ceil(totalRecords / recordsPerPage);
+
+            $("#totalpageID").text(totalPages);
+            $("#DatalengthID").text(totalRecords);
+
+            return totalPages;
+        };
+
+        const renderTable = (page) => {
+            const totalPages = updatePaginationInfo();
+            const startIndex = (page - 1) * recordsPerPage;
+            const endIndex = Math.min(startIndex + recordsPerPage, filteredData.length);
+            const tableBody = document.getElementById(tableBodyId);
+            tableBody.innerHTML = '';
+
+            for (let i = startIndex; i < endIndex; i++) {
+                const rowData = filteredData[i];
+    
+                const rowHtml = `
+                 <tr class='row_${i} rowClick' id='editButton_${i}'>
+                     <td data-cell="ComponentsName" style="text-align: left; padding-left: 2em; font-weight: 600;">${rowData.ComponentsName}</td>
+                     <td data-cell="Quantity">${rowData.Quantity}</td>
+                     <td data-cell="ItemCode">${rowData.ItemCode}</td>
+                     <td data-cell="Ambassador">${rowData.Ambassador}</td>
+                     <td data-cell="Reel_ID" >${rowData.Reel_ID}</td>
+                 </tr>`;
+
+            
+                tableBody.innerHTML += rowHtml;
+            }
+
+            $("#pagecountID").text(currentPage);
+        };
+
+        const renderPagination = () => {
+            const totalPages = updatePaginationInfo();
+            const paginationContainer = document.getElementById(paginationId);
+            paginationContainer.innerHTML = '';
+
+            let startPage = Math.max(1, currentPage - Math.floor(visibleButtons / 2));
+            let endPage = Math.min(totalPages, startPage + visibleButtons - 1);
+
+            if (endPage > totalPages) {
+                endPage = totalPages;
+                startPage = Math.max(1, endPage - visibleButtons + 1);
+            }
+
+            if (totalPages <= visibleButtons) {
+                startPage = 1;
+                endPage = totalPages;
+            }
+
+            // Previous button
+            paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
+                                       <i class="fa-solid fa-backward"></i>
+                                   </button>`;
+
+            for (let i = startPage; i <= endPage; i++) {
+                paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+            }
+
+            // Next button
+            paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
+                                       <i class="fa-solid fa-forward"></i>
+                                   </button>`;
+        };
+
+        const changePage = (page) => {
+            if (page >= 1 && page <= updatePaginationInfo()) {
+                currentPage = page;
+                renderTable(currentPage);
+                renderPagination();
+            }
+        };
+
+        // 🔍 Search functionality
+        const searchTable = () => {
+            const query = $('#searchbox').val().toLowerCase();
+
+            filteredData = dataArray.filter(item =>
+                (item.ComponentsName != null && item.ComponentsName.toLowerCase().includes(query)) ||
+                (item.Ambassador != null && item.Ambassador.toLowerCase().includes(query))
+            );
+
+            currentPage = 1;
+            renderTable(currentPage);
+            renderPagination();
+        };
+
+        // Add event listener for search input
+        $('#searchbox').on('input', searchTable);
+
+        // Handle click event for edit button
+        $(document).on('click', '.editButton', function (e) {
+            e.stopPropagation();
+            const buttonId = $(this).attr('id');
+            const rowIndex = buttonId.split('_')[1];
+
+            const result = supplyarray.find(p => p.SupID == rowIndex);
+
+            if (result) {
+                $(".SupID").val(result.SupID);
+                $(".AbassadorPartnum").val(result.AbassadorPartnum);
+                $(".Partname").val(result.Partname);
+                $(".Supplier").val(result.Supplier);
+                $(".Code").val(result.Code);
+                $("#editRequestmodal").modal("show");
+            }
+        });
+
+        // Initialize table and pagination
+        window.changePage = changePage;
+        renderTable(currentPage);
+        renderPagination();
+    }
+
+    //-------------------  UPLOAD EXCEL FILE ------------------------------
+    document.addEventListener('DOMContentLoaded', () => {
+        const uploadContainer = document.getElementById('upload-container');
+        const fileInput = document.getElementById('file-input');
+
+        uploadContainer.addEventListener('click', () => fileInput.click());
+
+        uploadContainer.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            uploadContainer.classList.add('dragover');
+        });
+
+        uploadContainer.addEventListener('dragleave', () => {
+            uploadContainer.classList.remove('dragover');
+        });
+
+        uploadContainer.addEventListener('drop', (event) => {
+            event.preventDefault();
+            uploadContainer.classList.remove('dragover');
+            handleFiles(event.dataTransfer.files);
+        });
+
+        fileInput.addEventListener('change', (event) => {
+            handleFiles(event.target.files);
+        });
+
+        function handleFiles(files) {
+            if (files.length === 0) return;
+            const file = files[0];
+            if (!file.name.endsWith('.xlsx') && !file.name.endsWith('.xls') && !file.name.endsWith('.csv')) {
+                alert('Please upload a valid Excel file.');
+                return;
+            }
+            const formData = new FormData();
+            formData.append('excelfile', file);
+
+            const data = Object.fromEntries(formData);
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '@Url.Action("UploadComponentsOut", "ProgramPartList")', true);
+
+            xhr.upload.addEventListener('progress', function (e) {
+                if (e.lengthComputable) {
+                    const percentComplete = (e.loaded / e.total) * 100;
+                    const progressBar = document.getElementById('progress-bar');
+                    progressBar.style.display = 'block';
+                    progressBar.value = percentComplete;
+                }
+            });
+
+            xhr.addEventListener('load', function () {
+
+                if (xhr.status === 200) {
+                    const res = JSON.parse(xhr.responseText);
+                    console.log(res);
+                    if (res.StatusCode === 200) {
+                        Swal.fire({
+                            title: "Success",
+                            text: "UPLOAD COMPLETE",
+                            icon: "success",
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => {
+                            DisplayComponentsOut();
+                        });
+                    } else {
+                        Swal.fire({
+                            title: "Invalid Upload File",
+                            text: res.Message,
+                            icon: "error",
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => {
+
+                        });
+                    }
+
+
+                } else {
+                    console.log('Upload failed!');
+                }
+            });
+
+            xhr.addEventListener('error', function () {
+                alert('An error occurred while uploading the file.');
+            });
+
+
+            xhr.send(formData);
+
+
+        }
+
+    });
+
+    DisplayComponentsOut();
+
+</script>

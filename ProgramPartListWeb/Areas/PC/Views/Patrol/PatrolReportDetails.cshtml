@@ -1,0 +1,720 @@
+﻿
+@{
+    ViewBag.Title = "PatrolReportDetails";
+    var regno = Request.QueryString["Regno"];
+    Layout = "";
+}
+
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/x-icon" href="@Url.Content("~/Content/Images/patrol .ico")">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title</title>
+    <link rel="preload" href="~/Content/fonts/Poppins-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+
+    <link href="~/Content/css/Patrolforms.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+
+
+    @Styles.Render("~/Content/shared-css")
+
+    @Scripts.Render("~/bundles/shared-js")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+
+
+<header class="FormMainheader">
+    <div class="CustomContainer">
+        <div class="HeadTitle">
+            <div class="flex_align">
+                <a href="/PC/Patrol/PatrolReport"><i class="fa-solid fa-arrow-left"></i>  </a>
+                <span>  Registration No : @regno</span>
+            </div>
+            <div class="HeadTitle__action">
+                <button type="button" id="OpenSenders"><i class="fa-regular fa-user"></i> To</button>
+                <input type="text" id="selectedEmails" placeholder="Recepients name ...">
+                <button type="button" id="OpenCC">CC</button>
+                <input type="text" id="selectedCC" placeholder="CC ">
+                <button id="sendEmail"><i class="fa-regular fa-paper-plane"></i> Send</button>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+
+<section style="padding: 4rem 0;">
+
+    <div class="Attachmentcontainer">
+        <div class="flex_align">
+            <label class="mb-0 fw-bold">Attachments : </label>
+            <button type="button" id="uploadBtn"><i class="fa-solid fa-paperclip"></i> Upload Files</button>
+        </div>
+
+        <section class="flex_align">
+
+
+            <div id="fileContainer"></div>
+            <ul id="fileList" class="file-list flex_align"></ul>
+
+
+        </section>
+    </div>
+
+    <input type="file" id="fileInput" accept="application/pdf" multiple hidden>
+
+
+    <form method="post" enctype="multipart/form-data" class="formcontainer" id="addnewform" autocomplete="off">
+        <div class="row">
+            <div class="col-12">
+                <div class="flex_space">
+                    <div class="flex_align">
+
+                        <h5 class="mb-0 fw-bold">Details Information  <input type="hidden" id="Regno" value="@regno" />  </h5>
+                    </div>
+                </div>
+
+
+                <hr />
+
+                <div class="row">
+                    <div class="col">
+                        <label>Registration No.  </label> <br />
+                        <input type="text" placeholder="Type Registration No." name="TempRegno" id="TempRegno" disabled />
+                        <input type="hidden" name="RegNo" id="RegNo" />
+                        <input type="hidden" name="Filepath" id="Filepath" />
+                    </div>
+                    <div class="col">
+                        <label>Input Inspectors <small style="color: #a81818; font-weight: 600;">*</small> </label>
+                        @*<div class="select-container">
+                                <select id="Employee_ID" name="Employee_ID">
+                                    <option>-- Select Inspector --</option>
+                                </select>
+                            </div>*@
+                        <div class="flex_align">
+                            <div class="search-box" style="width: 70%;">
+                                <input type="hidden" name="Employee_ID" id="Employee_ID">
+                                <input type="text" placeholder="Type Name or ID no." name="EmployeeSearch" id="EmployeeSearch">
+                                <div class="namesdisplay"></div>
+                            </div>
+                            <small>Include signature: </small>
+                            <input type="checkbox" name="IsSign" id="IsSign" />
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+                <h5 class="mb-4 mt-4 fw-bold">Inspection Criterion / Findings</h5>
+                <hr />
+                <div class="row">
+                    <div class="col ">
+                        <label>1. Work Practice / Standard / Safety</label> <br />
+                        <input type="hidden" value="1" id="Find1" name="Find1" />
+                        <textarea placeholder="Type text here..." name="Inpects1" id="Inpects1" rows="3" cols="40" required></textarea>
+                    </div>
+
+                    <div class="col ">
+                        <label>Countermeasures</label> <br />
+                        <textarea placeholder="Type text here..." name="counter1" id="counter1" rows="3" cols="40"></textarea>
+                    </div>
+                </div>
+
+
+
+
+                <div class="row">
+                    <div class="col ">
+                        <label>2. Identification and status of the product or materials.</label> <br />
+                        <input type="hidden" value="2" id="Find2" name="Find2" required />
+                        <textarea placeholder="Type text here..." name="Inpects2" id="Inpects2" rows="3" cols="40"></textarea>
+                    </div>
+
+                    <div class="col ">
+                        <label>Countermeasures</label> <br />
+                        <textarea placeholder="Type text here..." name="counter2" id="counter2" rows="3" cols="40"></textarea>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col ">
+                        <label>3. Condition and status of documents / records.</label> <br />
+                        <input type="hidden" value="3" id="Find3" name="Find3" required />
+                        <textarea placeholder="Type text here..." name="Inpects3" id="Inpects3" rows="3" cols="40"></textarea>
+                    </div>
+
+                    <div class="col ">
+                        <label>Countermeasures</label> <br />
+                        <textarea placeholder="Type text here..." name="counter3" id="counter3" rows="3" cols="40"></textarea>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col ">
+                        <label>4. Record of ‘start-up process check’ and monthly inspection</label> <br />
+                        <input type="hidden" value="4" id="Find4" name="Find4" required />
+                        <textarea placeholder="Type text here..." name="Inpects4" id="Inpects4" rows="3" cols="40"></textarea>
+                    </div>
+
+                    <div class="col ">
+                        <label>Countermeasures</label> <br />
+                        <textarea placeholder="Type text here..." name="counter4" id="counter4" rows="3" cols="40"></textarea>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col ">
+                        <label>5. Calibration of equipment and jigs used for measurement or inspection.</label> <br />
+                        <input type="hidden" value="5" id="Find5" name="Find5" required />
+                        <textarea placeholder="Type text here..." name="Inpects5" id="Inpects5" rows="3" cols="40"></textarea>
+                    </div>
+
+                    <div class="col ">
+                        <label>Countermeasures</label> <br />
+                        <textarea placeholder="Type text here..." name="counter5" id="counter5" rows="3" cols="40"></textarea>
+                    </div>
+                </div>
+
+
+
+                <div class="row">
+                    <div class="col ">
+                        <label>6. Countermeasure and implementation of previous quality and safety</label> <br />
+                        <input type="hidden" value="6" id="Find5" name="Find6" required />
+                        <textarea placeholder="Type text here..." name="Inpects6" id="Inpects6" rows="3" cols="40"></textarea>
+                    </div>
+
+                    <div class="col ">
+                        <label>Countermeasures</label> <br />
+                        <textarea placeholder="Type text here..." name="counter6" id="counter6" rows="3" cols="40"></textarea>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col ">
+                        <div class="form_group col-12 col-sm-12 ">
+                            <label>Managers </label> <br />
+                            <div class="select-container">
+                                <select id="ManagerSelect" name="ManagerSelect">
+                                    <option value="">-- Manager Select --</option>
+                                </select>
+                            </div>
+                            <input type="text" placeholder="type person in charge" name="Manager" id="Manager" />
+                        </div>
+
+
+                        <div class="form_group col-12 col-sm-12 ">
+                            <label>Managers (Comments): </label> <br />
+                            <textarea placeholder="Type text here..." name="Manager_Comments" id="Manager_Comments" rows="9" cols="40"></textarea>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form_group col-12 col-sm-12 ">
+                            <label>Date Conducted </label> <br />
+                            <input type="date" name="DateConduct" id="DateConduct" />
+                        </div>
+
+                        <div class="form_group col-12 col-sm-12 ">
+                            <label>Person In Charge </label> <br />
+                            <div class="select-container">
+                                <select id="PICselect" name="PICselect">
+                                    <option value="">-- PIC Select --</option>
+                                </select>
+                            </div>
+                            <input type="text" placeholder="type person in charge" name="PIC" id="PIC" />
+                        </div>
+
+
+                        <div class="form_group col-12 col-sm-12 ">
+                            <label>PIC (Comments): </label> <br />
+                            <textarea placeholder="Type text here..." name="PIC_Comments" id="PIC_Comments" rows="5" cols="40"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+
+
+
+        <hr />
+
+        <div class="d-flex align-items-center justify-content-between">
+            <span>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</span>
+            <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i></button>
+        </div>
+    </form>
+
+
+
+</section>
+
+
+@*=================================================================================*@
+@*=========================== OPEN SENDER LIST ==================================*@
+@*=================================================================================*@
+<div class="modal fade modal-lg" id="OpenSenderModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Select Recepient</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:50px;">Select</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email Address</th>
+                            <th style="width:60px;">Local</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recipientTable">
+                    </tbody>
+                </table>
+
+
+                <div class="modal-footer">
+                    <button class="btn-ok" id="btnOk">OK</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+    let regisTable = [];
+    let emailTable = [];
+    let loadData = [];
+
+    const fileInput = document.getElementById("fileInput");
+    const fileList = document.getElementById("fileList");
+
+    const table = document.getElementById("recipientTable");
+    const btnOk = document.getElementById("btnOk");
+
+    const resultBox = document.querySelector(".namesdisplay");
+
+    const uploadBtn = document.getElementById("uploadBtn");
+
+
+
+    let selectedFiles = [];
+
+
+    const editform = document.getElementById("addnewform");
+    let strRegno = $("#Regno").val();
+
+    const PopulateComboxInspector = async (Employee_ID) => {
+       let res = await FetchAuthenticate('@Url.Action("GetInspectorsByAdd", "Patrol")', {});
+        if (res && res.Success) {
+            loadData = res.Data;
+        }
+     }
+    const ReportsDetails = async () => {
+        let res = await FetchAuthenticate('@Url.Action("GetRegistrationNoByID", "Patrol")', { Regno: strRegno });
+
+        console.log(res);
+
+        if (res && res.Success) {
+                let RegisterData = res.Data.Register;
+                let FindingData = res.Data.Finding;
+
+                let strDate = changeformatDate(RegisterData[0].DateConduct);
+                $("#RegNo").val(RegisterData[0].RegNo);
+                $("#TempRegno").val(RegisterData[0].RegNo);
+                $("#Manager").val(RegisterData[0].Manager);
+                $("#Manager_Comments").val(RegisterData[0].Manager_Comments);
+                $("#PIC").val(RegisterData[0].PIC);
+                $("#Filepath").val(RegisterData[0].Filepath);
+                $("#PIC_Comments").val(RegisterData[0].PIC_Comments);
+                $("#DateConduct").val(strDate);
+
+                $("#Employee_ID").val(RegisterData[0].Employee_ID);
+                $("#EmployeeSearch").val(RegisterData[0].FullName);
+
+                if (RegisterData[0].IsSigned) {
+                    $('#IsSign').prop('checked', true);
+                }
+
+                PopulateComboxInspector(RegisterData[0].Employee_ID);
+
+                FindingData.forEach(item => {
+                    $(`#Inpects${item.FindID}`).val(item.FindDescription);
+                    $(`#counter${item.FindID}`).val(item.Countermeasure);
+                });
+
+                let patrolPath = RegisterData[0].PatrolPath;
+
+
+                if (patrolPath) {
+                    let files = patrolPath.split(';');
+                    let fileHtml = "";
+
+                    files.forEach(f => {
+                        if (f.trim() !== "") {
+                            let filenameonly = f.replace(/\.pdf$/i, "");
+
+                            fileHtml += `
+                                    <div class="pdf-container">
+                                         <button class="open-pdf-btn" data-pdf-url="/Patrol/ViewPDF?strfilepath=${f}">
+                                            <i class="fa-solid fa-file-pdf"></i> ${filenameonly}
+                                        </button>
+                                    </div>
+                                `;
+                        }
+                    });
+
+                    document.getElementById("fileContainer").innerHTML = fileHtml;
+
+                    // Attach click event
+                    document.querySelectorAll(".open-pdf-btn").forEach(btn => {
+                        btn.addEventListener("click", function () {
+                            let pdfUrl = this.getAttribute("data-pdf-url");
+                            window.open(pdfUrl, "_blank"); // Open in new tab
+                        });
+                    });
+                }
+
+                //$("#Inpects1").val(FindingData[0]);
+        }
+
+        //if (res && res.Success) {
+        //    let RegisterData = res.Data.Register;
+        //    let FindingData = res.Data.Finding;
+
+        //    let strDate = changeformatDate(RegisterData[0].DateConduct);
+        //    $("#RegNo").val(RegisterData[0].RegNo);
+        //    $("#TempRegno").val(RegisterData[0].RegNo);
+        //    $("#Manager").val(RegisterData[0].Manager);
+        //    $("#Manager_Comments").val(RegisterData[0].Manager_Comments);
+        //    $("#PIC").val(RegisterData[0].PIC);
+        //    $("#Filepath").val(RegisterData[0].Filepath);
+        //    $("#PIC_Comments").val(RegisterData[0].PIC_Comments);
+        //    $("#DateConduct").val(strDate);
+
+        //    $("#Employee_ID").val(RegisterData[0].Employee_ID);
+        //    $("#EmployeeSearch").val(RegisterData[0].FullName);
+
+        //    PopulateComboxInspector(RegisterData[0].Employee_ID);
+
+        //    FindingData.forEach(item => {
+        //        $(`#Inpects${item.FindID}`).val(item.FindDescription);
+        //        $(`#counter${item.FindID}`).val(item.Countermeasure);
+        //    });
+
+        //    //$("#Inpects1").val(FindingData[0]);
+        //}
+    }
+    // when button is clicked, open the file dialog
+    uploadBtn.addEventListener("click", () => fileInput.click());
+
+    fileInput.addEventListener("change", function () {
+        // Add new files to the array (avoid duplicates by name+size)
+        for (let file of fileInput.files) {
+            let exists = selectedFiles.some(f => f.name === file.name && f.size === file.size);
+            if (!exists) {
+                selectedFiles.push(file);
+            }
+        }
+        renderFileList();
+        fileInput.value = ""; // reset input to allow re-upload of same file
+    });
+
+    function renderFileList() {
+        fileList.innerHTML = "";
+        selectedFiles.forEach((file, index) => {
+            let li = document.createElement("li");
+            li.textContent = file.name;
+
+            let removeBtn = document.createElement("button");
+            removeBtn.textContent = "Remove";
+            removeBtn.onclick = () => {
+                selectedFiles.splice(index, 1);
+                renderFileList();
+            };
+
+            li.appendChild(removeBtn);
+            fileList.appendChild(li);
+        });
+    }
+
+
+
+
+    const RegistrationTable = async () => {
+          let res = await FetchAuthenticate('@Url.Action("GetRegistrationNo", "Patrol")', {});
+        if (res && res.Success) {
+              regisTable = res.Data;
+          }
+    }
+
+    const EmailsTablelist = async () => {
+       let res = await FetchAuthenticate('@Url.Action("GetEmailList", "Patrol")', {});
+        if (res && res.Success) {
+            let selectManager = $("#ManagerSelect");
+            let selectPIC = $("#PICselect");
+            selectManager.empty();
+            selectPIC.empty();
+
+            emailTable = res.Data;
+            var SetData = $("#recipientTable");
+
+            $.each(emailTable, function (index, res) {
+                var getdata = `<tr>
+                                <td><input type="checkbox" class="emailCheck" value="${res.Email}"></td>
+                                <td>${res.FirstName}</td>
+                                <td>${res.LastName}</td>
+                                <td>${res.Email}</td>
+                                <td>${res.Local}</td>
+                            </tr>`;
+                SetData.append(getdata);
+
+                selectManager.append('<option value="' + res.Email + '">' + res.FirstName + '</option>');
+                selectPIC.append('<option value="' + res.Email + '">' + res.FirstName + '</option>');
+            });
+
+
+
+       }
+    }
+
+    let buttonselect;
+
+    btnOk.addEventListener("click", function () {
+        const selectedEmails = document.getElementById("selectedEmails");
+        const selectedCC = document.getElementById("selectedCC");
+        let checked = document.querySelectorAll(".emailCheck:checked");
+        let emails = [];
+        checked.forEach(cb => emails.push(cb.value));
+
+        if (buttonselect === "OpenSenders") {
+            selectedEmails.value = emails.join("; ");
+        } else if (buttonselect === "OpenCC") {
+            selectedCC.value = emails.join("; ");
+        }
+
+        // ✅ Clear all checkboxes after OK
+        document.querySelectorAll(".emailCheck").forEach(cb => cb.checked = false);
+
+
+        $("#OpenSenderModal").modal('hide');
+    });
+
+
+
+    $("#OpenSenders").on('click', function (e) {
+        e.preventDefault();
+        buttonselect = this.id;
+        $("#OpenSenderModal").modal('show');
+    });
+    $("#OpenCC").on('click', function (e) {
+        e.preventDefault();
+        buttonselect = this.id;
+        $("#OpenSenderModal").modal('show');
+    });
+
+
+
+      // RESETS FORM
+      const Resetforms = () => {
+          //Resets the Form
+          $("#RegNo").css("border", "1px solid #A5A1AA");
+          $("#errorvalid").hide();
+          $("#labelguide").show();
+      };
+
+      // CHECKS IF THE REGISTRATION NUMBER EXIST
+      const formValidation = (regno) => {
+          const checkexist = regisTable.find(n => n.RegNo === regno);
+          return checkexist;
+      };
+
+      const findingsJson = (e) => {
+          let formData = new FormData(e);
+          const data = Object.fromEntries(formData);
+
+          const findings = [];
+
+          for (let i = 1; i <= 6; i++) {
+              findings.push({
+                  RegNo: data.RegNo,
+                  FindID: data[`Find${i}`],
+                  FindDescription: data[`Inpects${i}`],
+                  Countermeasure: data[`counter${i}`]
+              });
+          }
+
+          return JSON.stringify(findings);
+      };
+
+
+      editform.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const savebtn = document.querySelector("#btnSave");
+          savebtn.innerHTML = " <div class='buttonloading'></div> Generating PDF Please wait...";
+
+          // Optional: Validate Excel file input before sending
+          //let fileInput = document.querySelector('#ExcelFile');
+          //let file = fileInput?.files[0];
+          //if (file) {
+          //    if (!/\.(xls|xlsx)$/i.test(file.name)) {
+          //        Swal.fire({
+          //            icon: "error",
+          //            text: "Only Excel files (.xls, .xlsx) are allowed",
+          //            timer: 1500,
+          //            showConfirmButton: false
+          //        });
+          //        savebtn.innerHTML = "Save";
+          //        return;
+          //    }
+          //}
+
+
+          let strfind = findingsJson(e.target);
+          let finalformData = new FormData(e.target);
+          finalformData.append('FindJson', strfind);
+
+
+          // ✅ Add Sender and CC values
+          let toEmails = document.querySelector("#selectedEmails").value;
+          let ccEmails = document.querySelector("#selectedCC").value;
+
+          finalformData.append("Senders", toEmails);
+          finalformData.append("CC", ccEmails);
+
+          // ✅ Add multiple attachments
+          selectedFiles.forEach(file => {
+              finalformData.append("Attachments", file);
+          });
+
+          const finaldata = Object.fromEntries(finalformData);
+
+          console.log(finaldata);
+
+          let res = await postData('@Url.Action("EditRegistration", "Patrol")', finalformData);
+          if (res.StatusCode === 201 && res.Success) {
+              Swal.fire({
+                  title: "Success",
+                  text: res.Message,
+                  icon: "success",
+                  showConfirmButton: false,
+                  timer: 1500
+              }).then(() => {
+                  setTimeout(() => {
+                      editform.reset();
+                      window.location.href = "/PC/Patrol/PatrolReport";
+                  }, 3000);
+              });
+          }
+
+          //Resets the Form
+          Resetforms();
+      });
+
+    // INPUT SEARCH EMPLOYEE NAME WHEN TYPE
+    $("#EmployeeSearch").keyup(function () {
+        let result = [];
+        let input = this.value;
+
+        if (input.length > 0) {
+            result = loadData.filter((item) => {
+                return item.FullName.toLowerCase().includes(input.toLowerCase()) ||
+                    item.Employee_ID.toLowerCase().includes(input.toLowerCase());
+            });
+
+            if (result.length > 0) {
+                resultBox.style.display = 'block';
+                display(result); // assumes display() handles array of objects
+            } else {
+                resultBox.style.display = 'block';
+                resultBox.innerHTML = '<div style="padding: 5px; color: #999;">No search found</div>';
+            }
+        } else {
+            resultBox.style.display = 'none';
+            resultBox.innerHTML = ''; // clear the previous results or message
+        }
+    });
+
+    function changeformatDate(change) {
+        let parts = change.split("/"); // ["02", "18", "2024"]
+        // Convert to YYYY-MM-DD
+        let formattedDate = `${parts[2]}-${parts[0]}-${parts[1]}`;
+        return formattedDate;
+    }
+
+    function changeFormat(change) {
+        // Convert to Date object
+        const [datePart, timePart, meridian] = change.split(' ');
+        const [day, month, year] = datePart.split('/');
+
+        const formattedInput = `${month}/${day}/${year} ${timePart} ${meridian}`;
+        const dateObj = new Date(formattedInput);
+
+        // Format to YYYY-MM-DD
+        const formattedDate = dateObj.toISOString().split('T')[0];
+
+        return formattedDate;
+    }
+
+    function display(result) {
+        const content = result.map((list) => {
+            return `<li onclick="selectinput(this)" data-id="${list.Employee_ID}">${list.FullName}</li>`;
+        });
+
+        resultBox.innerHTML = "<ul>" + content.join('') + "</ul>";
+    }
+
+    function selectinput(list) {
+        const employeeId = list.getAttribute("data-id");
+        employeeID = employeeId;
+        $("#Employee_ID").val(employeeId);
+        $("#EmployeeSearch").val(list.innerHTML);
+        resultBox.innerHTML = '';
+        resultBox.style.display = 'none';
+    }
+
+
+
+    // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+    const LoadPageData = async () => {
+        try {
+            //$("#errorvalid").hide();
+            //$("#currentdatetime").text(Month + "  " + currentYear);
+
+            const [combo, regis, emp] = await Promise.all([
+                ReportsDetails(),
+                RegistrationTable(),
+                EmailsTablelist()
+            ]);
+
+        } catch (error) {
+            console.error("Failed to load page data:", error);
+        } finally {
+            // Hide loading spinner whether success or failure
+            //$("#loadingSpinner").hide();
+        }
+    }
+
+    $(document).ready(() => {
+        LoadPageData();
+    });
+</script>

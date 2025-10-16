@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using NCR_system.Models;
 using static System.Collections.Specialized.BitVector32;
 
 namespace NCR_system.View.AddForms
@@ -20,11 +21,11 @@ namespace NCR_system.View.AddForms
 
         private void Save_btn_Click(object sender, EventArgs e)
         {
-            var obj = new
+            var obj = new CustomerModel
             {
                 ModelNo = ModelText.Text,
                 LotNo = LotText.Text,
-                NGQty = NGText.Text,
+                NGQty = Convert.ToInt32(NGText.Text),
                 Details = ProblemText.Text,
                 SectionID  = selectDepart.SelectedIndex + 1,
                 CCtype = 1

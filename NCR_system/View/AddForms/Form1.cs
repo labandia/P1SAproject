@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using NCR_system.Models;
 
 namespace NCR_system.View.AddForms
 {
@@ -12,11 +13,13 @@ namespace NCR_system.View.AddForms
 
         private void Save_btn_Click(object sender, EventArgs e)
         {
-            var obj = new
+            var obj = new CustomerModel
             {
+                RegNo = RegNo.Text,
+                CustomerName = CustomerText.Text,
                 ModelNo = ModelText.Text,
                 LotNo = LotText.Text,
-                NGQty = NGText.Text,
+                NGQty = Convert.ToInt32(NGText.Text),
                 Details = ProblemText.Text,
                 SectionID = selectDepart.SelectedIndex + 1,
                 CCtype = 1

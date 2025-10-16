@@ -42,9 +42,9 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.CustomerText = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.RegNo = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -192,15 +192,15 @@
             this.label1.TabIndex = 81;
             this.label1.Text = "Add External Customer Complaint ";
             // 
-            // textBox1
+            // CustomerText
             // 
-            this.textBox1.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBox1.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(366, 158);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(267, 41);
-            this.textBox1.TabIndex = 97;
+            this.CustomerText.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.CustomerText.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CustomerText.Location = new System.Drawing.Point(366, 158);
+            this.CustomerText.Multiline = true;
+            this.CustomerText.Name = "CustomerText";
+            this.CustomerText.Size = new System.Drawing.Size(267, 41);
+            this.CustomerText.TabIndex = 97;
             // 
             // label7
             // 
@@ -212,15 +212,15 @@
             this.label7.TabIndex = 96;
             this.label7.Text = "Customer Name:";
             // 
-            // textBox2
+            // RegNo
             // 
-            this.textBox2.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBox2.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox2.Location = new System.Drawing.Point(63, 158);
-            this.textBox2.Multiline = true;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(267, 41);
-            this.textBox2.TabIndex = 95;
+            this.RegNo.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.RegNo.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RegNo.Location = new System.Drawing.Point(63, 158);
+            this.RegNo.Multiline = true;
+            this.RegNo.Name = "RegNo";
+            this.RegNo.Size = new System.Drawing.Size(267, 41);
+            this.RegNo.TabIndex = 95;
             // 
             // label8
             // 
@@ -236,10 +236,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(725, 761);
-            this.Controls.Add(this.textBox1);
+            this.ClientSize = new System.Drawing.Size(725, 749);
+            this.Controls.Add(this.CustomerText);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.RegNo);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.selectDepart);
             this.Controls.Add(this.Save_btn);
@@ -276,9 +276,9 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox CustomerText;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox RegNo;
         private System.Windows.Forms.Label label8;
     }
 }

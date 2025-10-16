@@ -114,7 +114,6 @@ namespace NCR_system.Models
             set => _DateRegist = value;
         }
     }
-
     public class CustomerModel
     {
         private int _RecordID;
@@ -296,7 +295,6 @@ namespace NCR_system.Models
             set => _SectionID = value;
         }
     }
-
     public class RejectShipmentModel
     {
         private int _RecordID;

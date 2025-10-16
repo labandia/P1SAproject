@@ -389,16 +389,20 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
             List<string> MultipleAttachments = new List<string>();
 
-            foreach (string fileKey in Request.Files)
+            if (Attachments != null && Attachments.Length > 0)
             {
-                var file = Request.Files[fileKey];
-                if (file != null && file.ContentLength > 0 && fileKey == "Attachments")
+                foreach (string fileKey in Request.Files)
                 {
-                    string fileName = $"PF_{Request.Form["RegNo"]}_{DateTime.Now:yyyyMMdd_HHmmssfff}{Path.GetExtension(file.FileName)}";
-                    ExportFiler.SaveFileasExcel(file, fileName);
-                    MultipleAttachments.Add(fileName);
+                    var file = Request.Files[fileKey];
+                    if (file != null && file.ContentLength > 0 && fileKey == "Attachments")
+                    {
+                        string fileName = $"PF_{Request.Form["RegNo"]}_{DateTime.Now:yyyyMMdd_HHmmssfff}{Path.GetExtension(file.FileName)}";
+                        ExportFiler.SaveFileasExcel(file, fileName);
+                        MultipleAttachments.Add(fileName);
+                    }
                 }
             }
+           
 
             // Join all file names into  string
             string patrolPath = string.Join(";", MultipleAttachments);
@@ -424,38 +428,38 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             string IsSend = Request.Form["Senders"];
             string CCSend = Request.Form["CC"];
 
-            bool result = await _ins.AddRegistration(obj, findJson);
+            //bool result = await _ins.AddRegistration(obj, findJson);
 
-            if (result)
-            {
-                CacheHelper.Remove("Registration");
+            //if (result)
+            //{
+            //    CacheHelper.Remove("Registration");
 
-                // Convert the string sender to a array list
+            //    // Convert the string sender to a array list
 
 
-                //string creatbody = EmailService.CreateAEmailBody(
-                //        "JUAN DELA CRUZ",
-                //        "This is a sample email body used for testing purposes. Please disregard."
-                //    );
+            //    //string creatbody = EmailService.CreateAEmailBody(
+            //    //        "JUAN DELA CRUZ",
+            //    //        "This is a sample email body used for testing purposes. Please disregard."
+            //    //    );
 
-                //var SendEmail = new SentEmailModel
-                //{
-                //    Subject = "Patrol Inspection",
-                //    Sender = strSender,
-                //    BCC = CCSend,
-                //    Body = creatbody,
-                //    Recipient = IsSend
-                //};
+            //    //var SendEmail = new SentEmailModel
+            //    //{
+            //    //    Subject = "Patrol Inspection",  
+            //    //    Sender = strSender,
+            //    //    BCC = CCSend,
+            //    //    Body = creatbody,
+            //    //    Recipient = IsSend
+            //    //};
 
-                // GENERATE A PDF FILE AND SAVE TO THE NETWORK FILE
-                await ExportFiler.SaveFileasPDF(obj, findJson, departmentName, newFileName, templatePath, false);
+            //    // GENERATE A PDF FILE AND SAVE TO THE NETWORK FILE
+            //    //await ExportFiler.SaveFileasPDF(obj, findJson, departmentName, newFileName, templatePath, false);
 
-                // EMAIL SAVE TO THE DATABASE
-                //await EmailService.SendEmailViaSqlDatabase(SendEmail);
+            //    // EMAIL SAVE TO THE DATABASE
+            //    //await EmailService.SendEmailViaSqlDatabase(SendEmail);
 
-            }
-            if (result == false)
-                return JsonError("Problem during saving Data.");
+            //}
+            //if (result == false)
+            //    return JsonError("Problem during saving Data.");
 
             return JsonCreated(obj, $@"Registration No : {finalprefix} is Add  successfully");
 
@@ -669,6 +673,64 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
             var formData = GlobalUtilities.GetMessageResponse(result, 3, "Delete successful");
             return Json(formData, JsonRequestBehavior.AllowGet);    
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> SendingEmails(string Senders, string CC)
+        {
+  
+            try
+            {
+                Debug.WriteLine("Senders : " + Senders);
+                Debug.WriteLine("CC : " + CC);
+
+                // Step 1: Split and clean Senders + CC
+                var senderList = Senders?
+                    .Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(s => s.Trim().ToLower())
+                    .Distinct()
+                    .ToList() ?? new List<string>();
+
+                var ccListOriginal = CC?
+                  .Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                  .Select(s => s.Trim().ToLower())
+                  .Distinct()
+                  .ToList() ?? new List<string>();
+
+
+
+                foreach (var sender in senderList)
+                {
+                    string creatbody = EmailService.CreateAEmailBody(
+                            "JUAN DELA CRUZ",
+                            "This is a sample email body used for testing purposes. Please disregard."
+                        );
+
+                    var SendEmail = new SentEmailModel
+                    {
+                        Subject = "Patrol Inspection",
+                        Sender = strSender,
+                        BCC = CC,
+                        Body = creatbody,
+                        Recipient = sender
+                    };
+
+
+                    await EmailService.SendEmailViaSqlDatabase(SendEmail);
+                }
+
+                return Json(new { success = true, message = "Email sent and saved successfully!" });
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return Json(new { success = false, message = ex.Message });
+            }
+
+
+        
+
         }
 
 
@@ -902,6 +964,9 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         // GET: PC/AddReports
         [CompressResponse]
         public ActionResult AddReports() => View();
+        // GET: PC/AddReports
+        [CompressResponse]
+        public ActionResult ReviewRegistration() => View();
         // GET: PC/PatrolReport
         [CompressResponse]
         public ActionResult PatrolReportDetails(string Regno) => View();

@@ -249,6 +249,10 @@
         cursor: pointer;
     }
 
+
+    .filter-group strong{
+        font-size: .8rem;
+    }
     
     .menu {
         position: absolute;
@@ -1352,7 +1356,7 @@ header .count2 {
 
 .MasterlistWrap_footer {
     width: 100%;
-    position: absolute;
+    position: fixed;
     background: #fff;
     bottom: 0;
     left: 0;

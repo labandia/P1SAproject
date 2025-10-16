@@ -144,6 +144,14 @@ namespace ProgramPartListWeb.Utilities
         {
             string exportFolder = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\Patrol_Countermeasure\";
             string saveFilePath = $@"{exportFolder}{FilenameExtension}";
+
+            // Check if file already exists, then delete it
+            if (System.IO.File.Exists(saveFilePath))
+            {
+                System.IO.File.Delete(saveFilePath);
+            }
+
+            // Save the File
             ExcelFile.SaveAs(saveFilePath);
         }
 

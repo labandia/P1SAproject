@@ -208,6 +208,24 @@
                             <label>Managers (Comments): </label> <br />
                             <textarea placeholder="Type text here..." name="Manager_Comments" id="Manager_Comments" rows="9" cols="40"></textarea>
                         </div>
+
+
+                        <div class="form_group col-12 col-sm-12 ">
+                            <label>Approval Process Owner: </label> <br />
+                            <div class="select-container">
+                                <select id="ProcessID" name="ProcessID">
+                                    <option>-- Select Department --</option>
+                                    <option value="1">Molding</option>
+                                    <option value="2">Press</option>
+                                    <option value="3">Rotor</option>
+                                    <option value="4">Winding</option>
+                                    <option value="5">Circuit</option>
+                                </select>
+                            </div>
+                        </div>
+
+                     
+
                     </div>
                     <div class="col-12 col-sm-12 col-lg-6">
                         <div class="form_group col-12 col-sm-12 ">
@@ -265,6 +283,11 @@
             </div>
 
         </div>
+
+
+
+
+
 
         <div class="d-flex align-items-center justify-content-between">
             <span id="errorvalid" class="text-danger">* Registration No is already inserted</span>
@@ -504,21 +527,50 @@
 
         // Send form data with file to controller
         let res = await postData('@Url.Action("AddRegistration", "Patrol")', finalformData);
-        if (res.StatusCode === 201) {
-            Swal.fire({
-                title: "Success",
-                text: res.Message,
-                icon: "success",
-                showConfirmButton: false,
-                timer: 1500
-            }).then(() => {
-                setTimeout(() => {
-                    window.location.href = "/PC/Patrol/PatrolReport";
-                }, 3000);
-            });
-        }
+        console.log(res);
+        //if (res.StatusCode === 201) {
+        //    Swal.fire({
+        //        title: "Success",
+        //        text: res.Message,
+        //        icon: "success",
+        //        showConfirmButton: false,
+        //        timer: 1500
+        //    }).then(() => {
+        //        setTimeout(() => {
+        //            window.location.href = "/PC/Patrol/PatrolReport";
+        //        }, 3000);
+        //    });
+        //}
 
         Resetforms();
+    });
+
+
+    $("#sendEmail").on('click', async function (e) {
+        e.preventDefault();
+        // ✅ Add Sender and CC values
+        let toEmails = document.querySelector("#selectedEmails").value;
+        let ccEmails = document.querySelector("#selectedCC").value;
+
+        if (toEmails === "" && ccEmails === "") {
+            alert("Select A Recepient or CC ");
+            return;
+        }
+
+
+
+        let finalformData = new FormData();
+     
+
+
+        finalformData.append("Senders", toEmails);
+        finalformData.append("CC", ccEmails);
+
+        const data = Object.fromEntries(finalformData);
+
+        let res = await postData('@Url.Action("SendingEmails", "Patrol")', finalformData);
+        console.log(res);
+
     });
 
 

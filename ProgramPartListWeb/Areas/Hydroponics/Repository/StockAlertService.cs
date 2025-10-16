@@ -264,7 +264,6 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                 // loop all recipients 
                 foreach (var recepient in recipientslist)
                 {
-                    Debug.WriteLine(recepient);
                     // get the latest log send email
                     var latestLog = emailCount
                          .Where(res =>
@@ -453,7 +452,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 	                                                                        d.WarningLevel, 
 	                                                                        d.Status
                                                                         FROM Hyrdo_StockNotificationDetails d
-                                                                        INNER JOIN Hydro_InventoryParts i ON i.PartID = d.PartID
+                                                                        INNER JOIN Hydro_InventoryParts i ON i.PartNo = d.PartNo
                                                                         WHERE d.NotificationId = @NotificationId;", new { NotificationId = Id });
         }
     }

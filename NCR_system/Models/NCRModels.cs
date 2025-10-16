@@ -127,7 +127,7 @@ namespace NCR_system.Models
         private string _CustomerName;
         private int _SectionID;
         private string _Status;
-        private string _Process;
+        private int _CCtype;
 
 
         public int RecordID
@@ -180,6 +180,11 @@ namespace NCR_system.Models
         {
             get => _Status;
             set => _Status = value;
+        }
+        public int CCtype
+        {
+            get => _CCtype;
+            set => _CCtype = value;
         }
     }
     public class InprocessModel

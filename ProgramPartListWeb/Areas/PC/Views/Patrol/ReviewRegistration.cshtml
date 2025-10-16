@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewBag.Title = "Production Patrol Inspection Report System";
+    Layout = "";
+}
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/x-icon" href="@Url.Content("~/Content/Images/patrol .ico")">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title</title>
+    <link rel="preload" href="~/Content/fonts/Poppins-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+
+
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+    <link href="~/Content/css/Patrolforms.css" rel="stylesheet" />
+
+    @Styles.Render("~/Content/shared-css")
+
+    @Scripts.Render("~/bundles/shared-js")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+
+<header class="FormMainheader">
+    <div class="CustomContainer">
+        <div class="HeadTitle">
+            <div class="flex_align">
+                <span>Reg-102938202 </span>
+            </div>
+            <div class="HeadTitle__action">
+                <div class="select-container">
+                    <select id="ApproveID" name="ApproveID">
+                        <option>--  --</option>
+                        <option value="1">FOR APPROVAL</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

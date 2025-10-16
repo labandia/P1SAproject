@@ -787,6 +787,7 @@
     <Content Include="Areas\Hydroponics\Views\Hydro\TransactionHistory.cshtml" />
     <Content Include="Areas\Hydroponics\Views\Hydro\ChambersDetails.cshtml" />
     <Content Include="Areas\Hydroponics\Views\Hydro\RequestStock.cshtml" />
+    <Content Include="Areas\PC\Views\Patrol\ReviewRegistration.cshtml" />
     <None Include="Content\Images\.editorconfig" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\circularProgressBar.min.js" />

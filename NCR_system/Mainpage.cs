@@ -51,13 +51,13 @@ namespace NCR_system
         private async void Mainpage_Load(object sender, EventArgs e)
         {
             _cc.BringToFront();
-            await _cc.DisplayCustomer();
+            await _cc.DisplayCustomer(0);
         }
 
         private async void Customerbtn_Click(object sender, EventArgs e)
         {
             _cc.BringToFront();
-            await _cc.DisplayCustomer();
+            await _cc.DisplayCustomer(0);
         }
 
         private async void processbtn_Click(object sender, EventArgs e)

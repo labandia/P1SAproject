@@ -84,6 +84,18 @@
     <Compile Include="Repository\InprocessRepository.cs" />
     <Compile Include="Repository\NCR_Repository.cs" />
     <Compile Include="Repository\RejectShipRepository.cs" />
+    <Compile Include="View\AddForms\AddCustomerComplaint.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\AddForms\AddCustomerComplaint.Designer.cs">
+      <DependentUpon>AddCustomerComplaint.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\AddForms\Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\AddForms\Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\Module\Customer_Complaint_user.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -126,6 +138,12 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="View\AddForms\AddCustomerComplaint.resx">
+      <DependentUpon>AddCustomerComplaint.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\AddForms\Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\Module\Customer_Complaint_user.resx">
       <DependentUpon>Customer_Complaint_user.cs</DependentUpon>
     </EmbeddedResource>

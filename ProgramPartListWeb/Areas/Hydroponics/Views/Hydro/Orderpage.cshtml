@@ -14,6 +14,7 @@
 <div class="filters flex_space">
     <div class="flex_align">
         <div class="filter-group">
+            <strong>Chamber type: </strong>
             <div class="select-container">
                 <select id="categoryFilter">
                     <option value="all">All Types</option>
@@ -27,6 +28,7 @@
 
         </div>
         <div class="filter-group">
+            <strong>Status : </strong>
             <div class="select-container">
                 <select id="stockStatusFilter">
                     <option value="all">All Status</option>
@@ -38,8 +40,11 @@
         </div>
 
         <div class="filter-group">
-            <input type="date" id="startDate">
-            <input type="date" id="endDate">
+            <strong>Date Range: </strong>
+            <div class="flex_align">
+                <input type="date" id="startDate">
+                <input type="date" id="endDate">
+            </div>
         </div>
 
 
@@ -113,14 +118,14 @@
                     <div class="form_group col-12 col-sm-12 mb-3">
                         <label class="mb-2">Select Chamber <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
                         <div class="select-container">
-                            <select id="ChamberID" name="ChamberID">
+                            <select id="ChamberID" name="ChamberID" required>
                                 <option value="0">-- select Chambers --</option>
                             </select>
                         </div>
                     </div>
                     <div class="form_group col-12 col-sm-12 ">
                         <label>No. of Chambers <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
-                        <input type="number" value="1" placeholder="type Ojt registration No." name="Quantity" id="Quantity" required />
+                        <input type="number" value="1" placeholder="type Ojt registration No." name="Quantity" id="Quantity" min="1" required />
                     </div>
 
 

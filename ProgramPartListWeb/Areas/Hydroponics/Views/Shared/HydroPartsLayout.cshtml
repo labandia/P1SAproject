@@ -473,7 +473,7 @@ async function pollStockAlerts() {
 
         // ========================== INITIAL LOAD ==============================
         $(document).ready(async () => {
-            await Promise.all([GetFullname(), pollStockAlerts(), GetNotification()]);
+            await Promise.all([GetFullname(), GetNotification(), pollStockAlerts()]);
         });
     </script>
 

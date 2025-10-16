@@ -1,5 +1,6 @@
 ﻿using NCR_system.Interface;
 using NCR_system.Models;
+using NCR_system.View.AddForms;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,6 +23,7 @@ namespace NCR_system.View.Module
         public DataGridView Customgrid { get { return CustomDatagrid; } }
 
 
+
         public Customer_Complaint_user(ICustomerComplaint cust)
         {
             InitializeComponent();
@@ -29,14 +31,30 @@ namespace NCR_system.View.Module
         }
 
 
-        public async Task DisplayCustomer()
+        public async Task DisplayCustomer(int proc)
         {
             try
             {
                 // For Displaying Customer
                 CustomDatagrid.DataSource = null;
-                cuslist = (await _cust.GetCustomerData(0)).ToList();
+                var getdata = (await _cust.GetCustomerData(proc)).ToList();
+                cuslist = getdata;
+
+             
                 CustomDatagrid.DataSource = cuslist;
+                if (proc == 0)
+                {
+                    CustomDatagrid.Columns["RecordID"].Visible = false;
+                    CustomDatagrid.Columns["CustomerName"].Visible = true;
+                    CustomDatagrid.Columns["CCtype"].Visible = false;
+                }
+                else
+                {
+                    CustomDatagrid.Columns["RecordID"].Visible = false;
+                    CustomDatagrid.Columns["RegNo"].Visible = false;
+                    CustomDatagrid.Columns["CustomerName"].Visible = false;
+                    CustomDatagrid.Columns["CCtype"].Visible = false;        
+                }
 
 
 
@@ -123,6 +141,29 @@ namespace NCR_system.View.Module
 
                 e.FormattingApplied = true;
             }
+        }
+
+        private void OpenCC_Click(object sender, EventArgs e)
+        {
+            var add = new AddCustomerComplaint();
+            add.ShowDialog();
+        }
+
+        private void Customer_Complaint_user_Load(object sender, EventArgs e)
+        {
+            SelectedProcess.SelectedIndex = 0;
+
+        }
+
+        private async void SelectedProcess_SelectedIndexChanged(object sender, EventArgs e)
+        {
+           await DisplayCustomer(SelectedProcess.SelectedIndex);
+        }
+
+        private void Externalbtn_Click(object sender, EventArgs e)
+        {
+            var add = new Form1();
+            add.ShowDialog();
         }
     }
 }

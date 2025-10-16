@@ -111,6 +111,14 @@ namespace ProgramPartListWeb.Controllers
             return File(fileBytes, contentType);
         }
 
+        public ActionResult DownloadConsoleApp()
+        {
+            string filePath = Server.MapPath("~/Content/OpenExcelApp.exe");
+            string fileName = Path.GetFileName(filePath);
+
+            return File(filePath, "application/octet-stream", fileName);
+        }
+
 
         public ActionResult Index() => View();
 

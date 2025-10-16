@@ -12,7 +12,20 @@
     <input type="hidden" id="displayname" />
     <ul id="discussion"></ul>
 </div>
+<button onclick="runConsoleApp()">Run Console App</button>
 
+
+<script type="text/javascript">
+    function runConsoleApp() {
+    // Timeout to fallback to download if app/protocol not installed
+    let timeout = setTimeout(() => {
+        window.location.href = '@Url.Action("DownloadConsoleApp", "P1SAportalweb")';
+    }, 2000); // wait 2 seconds
+
+    // Attempt to open existing console app via custom protocol
+    window.location.href = "myconsole://run";
+}
+</script>
 
 
 <!-- Script references. -->

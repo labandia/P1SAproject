@@ -67,7 +67,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                           {
                               RegNo = reg.RegNo,
                               DateConduct = reg.DateConduct,
-                              Employee_ID = reg.Employee_ID,
+                              Employee_ID = "24050006",
                               PIC = reg.PIC,
                               PIC_Comments = reg.PIC_Comments,
                               Manager = reg.Manager,

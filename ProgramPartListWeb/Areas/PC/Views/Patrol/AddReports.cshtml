@@ -27,6 +27,8 @@
             <div class="flex_align">
                 <a href="/PC/Patrol/PatrolReport"><i class="fa-solid fa-arrow-left"></i>  </a>
                 <span>  Back</span>
+                <button type="button" id="OpenSenders"><i class="fa-regular fa-user"></i> Save Draft</button>
+                <button type="button" id="OpenSenders"><i class="fa-regular fa-user"></i> Approve</button>
             </div>
             <div class="HeadTitle__action">
                 <button type="button" id="OpenSenders"><i class="fa-regular fa-user"></i> To</button>
@@ -527,20 +529,19 @@
 
         // Send form data with file to controller
         let res = await postData('@Url.Action("AddRegistration", "Patrol")', finalformData);
-        console.log(res);
-        //if (res.StatusCode === 201) {
-        //    Swal.fire({
-        //        title: "Success",
-        //        text: res.Message,
-        //        icon: "success",
-        //        showConfirmButton: false,
-        //        timer: 1500
-        //    }).then(() => {
-        //        setTimeout(() => {
-        //            window.location.href = "/PC/Patrol/PatrolReport";
-        //        }, 3000);
-        //    });
-        //}
+        if (res.StatusCode === 201) {
+            Swal.fire({
+                title: "Success",
+                text: res.Message,
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1500
+            }).then(() => {
+                setTimeout(() => {
+                    window.location.href = "/PC/Patrol/PatrolReport";
+                }, 3000);
+            });
+        }
 
         Resetforms();
     });

@@ -42,11 +42,16 @@ namespace NCR_system.View.Module
 
              
                 CustomDatagrid.DataSource = cuslist;
+               
+
+
                 if (proc == 0)
                 {
                     CustomDatagrid.Columns["RecordID"].Visible = false;
                     CustomDatagrid.Columns["CustomerName"].Visible = true;
                     CustomDatagrid.Columns["CCtype"].Visible = false;
+                    CustomDatagrid.Columns["Status"].DisplayIndex = 8;
+                    CustomDatagrid.Columns["Action"].DisplayIndex = 9;
                 }
                 else
                 {
@@ -71,7 +76,7 @@ namespace NCR_system.View.Module
 
                 // 🔹 Group existing open items
                 var openCounts = cuslist
-                    .Where(c => c.Status == "True")
+                    .Where(c => c.Status == 1)
                     .GroupBy(c => c.SectionID)
                     .ToDictionary(g => g.Key, g => g.Count());
 
@@ -86,6 +91,8 @@ namespace NCR_system.View.Module
 
                 // 🔹 Display summary
                 CustSummaryGrid.DataSource = summary;
+
+
             }
             catch (Exception ex)
             {
@@ -126,18 +133,18 @@ namespace NCR_system.View.Module
             }
             else if (CustomDatagrid.Columns[e.ColumnIndex].Name == "Status")
             {
-                switch (e.Value.ToString())
+                string checkstats = e.Value.ToString() == "1" ? "Open" : "Close";
+                e.Value = checkstats;
+
+                if (checkstats == "Open")
                 {
-                    case "True":
-                        e.Value = "Open";
-                        break;
-                    case "False":
-                        e.Value = "Close / Completed";
-                        break;
-                    default:
-                        e.Value = "Unknown Status";
-                        break;
+                    e.CellStyle.ForeColor = Color.Green;
                 }
+                else
+                {
+                    e.CellStyle.ForeColor = Color.Red;
+                }
+
 
                 e.FormattingApplied = true;
             }
@@ -145,7 +152,7 @@ namespace NCR_system.View.Module
 
         private void OpenCC_Click(object sender, EventArgs e)
         {
-            var add = new AddCustomerComplaint();
+            var add = new AddCustomerComplaint(_cust);
             add.ShowDialog();
         }
 
@@ -162,7 +169,7 @@ namespace NCR_system.View.Module
 
         private void Externalbtn_Click(object sender, EventArgs e)
         {
-            var add = new Form1();
+            var add = new Form1(_cust);
             add.ShowDialog();
         }
     }

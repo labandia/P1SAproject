@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NCR_system.Interface;
 using NCR_system.Repository;
+using NCR_system.View.AddForms;
 using NCR_system.View.Module;
 using System;
 using System.Collections.Generic;
@@ -30,6 +31,8 @@ namespace NCR_system
 
             // Import Modules Usercontrols
             services.AddSingleton<Mainpage>();
+            services.AddSingleton<AddCustomerComplaint>();
+            services.AddSingleton<Form1>();
 
             services.AddTransient<Customer_Complaint_user>();
             services.AddTransient<Inprocess_control>();

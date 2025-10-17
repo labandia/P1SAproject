@@ -22,14 +22,45 @@ namespace NCR_system.Repository
             return await SqlDataAccess.GetData<CustomerModel>(strsql, new { CCtype  = type});
         }
 
-        public Task<bool> InsertCustomerData(CustomerModel customer)
+        public async Task<bool> InsertCustomerData(CustomerModel customer)
         {
-            throw new NotImplementedException();
+            string strsql = $@"INSERT INTO PC_CustomerConplaint(ModelNo,LotNo,NGQty,Details,Status,SectionID,RegNo,CustomerName,CCtype)
+                               VALUES(@ModelNo, @LotNo, @NGQty, @Details, @Status, @SectionID, @RegNo, @CustomerName, @CCtype)";
+            var parameter = new
+            {
+                customer.ModelNo,
+                customer.LotNo,
+                customer.NGQty,
+                customer.Details,
+                customer.Status,
+                customer.SectionID,
+                customer.RegNo,
+                customer.CustomerName,
+                customer.CCtype
+            };
+            return await SqlDataAccess.UpdateInsertQuery(strsql, parameter);
         }
 
         public Task<bool> UpdateCustomerData(CustomerModel customer)
         {
-            throw new NotImplementedException();
+            string strsql = $@"UPDATE PC_CustomerConplaint SET ModelNo =@ModelNo, LotNo =@LotNo ,NGQty =@NGQty,
+                             Details =@Details,Status =@Status,SectionID =@SectionID,RegNo =@RegNo,CustomerName =@CustomerName
+                             WHERE RecordID = @RecordID ";
+
+            var parameter = new
+            {
+                customer.RecordID,
+                customer.ModelNo,
+                customer.LotNo,
+                customer.NGQty,
+                customer.Details,
+                customer.Status,
+                customer.SectionID,
+                customer.RegNo,
+                customer.CustomerName,
+                customer.CCtype
+            };
+            return SqlDataAccess.UpdateInsertQuery(strsql, parameter);
         }
     }
 }

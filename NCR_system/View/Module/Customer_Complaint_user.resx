@@ -147,34 +147,22 @@
   <metadata name="Status.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
-  <metadata name="RecordID.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <metadata name="Action.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
-  <metadata name="DateCreated.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="SectionID.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="ModelNo.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="LotNo.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="NGQty.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="Details.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="RegNo.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="CustomerName.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="Status.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="Action.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAA
+        gwAAAIMBYu+7WgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAGtSURBVEhLrZU/
+        S8NAGIev0EHBxVXR1UEHdReai3YUBLs42OQb6CbYK9FFyLUFnVxtcy04uQg66RdwcBTERVC7qLS96yAa
+        uZJIcuRtk+ADL4X+7p7f5U8pQv8IPhPTOuMXOuMv8nOtxafUNalZrfdnNcafMONuYC7VdanRGnwdM/4V
+        LhAddV1i5Mlxk+8j181gJgrhkt4tsiwra5JKySD0wSD0fcRcBeX5lpjBjD9KmebwU1miO2LTK2lrjc4c
+        Mol9YBDqxpoSvYuS++OXYEdsaM3u/GBhkdBnublYsvNbe0eTwwYhNyP3AA90MDrjh4GLRMg/XejLIUSd
+        PDDtXL27ENqQpCCxXBK3IJVcEqcgtVwSp0C+zxHigfzvbYEYVZC7cbOYcRElD57cIPRa/Z34wfAC1lsc
+        JZeAHjDwwM2eGRB/Y8bvo24L6AEDDynDjtjRG/2V3Lk7oeY+oAcMEgJ6wCAhoAcMEgJ6wCAhoAcMEgJ6
+        DGK/yWCbVJfULC6mZS97Ba9qhoplu+aFPxH/YHFH7pWOqupHhd3auFGunBiEfvqXmWI+TEKPDcsaU/2/
+        42ZT43J6AXIAAAAASUVORK5CYII=
+</value>
+  </data>
 </root>

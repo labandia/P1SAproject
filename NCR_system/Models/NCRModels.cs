@@ -125,7 +125,7 @@ namespace NCR_system.Models
         private string _RegNo;
         private string _CustomerName;
         private int _SectionID;
-        private string _Status;
+        private int _Status;
         private int _CCtype;
 
 
@@ -175,7 +175,7 @@ namespace NCR_system.Models
             get => _SectionID;
             set => _SectionID = value;
         } 
-        public string Status
+        public int Status
         {
             get => _Status;
             set => _Status = value;

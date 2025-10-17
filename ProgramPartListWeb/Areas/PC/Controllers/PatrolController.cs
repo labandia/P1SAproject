@@ -428,38 +428,38 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             string IsSend = Request.Form["Senders"];
             string CCSend = Request.Form["CC"];
 
-            //bool result = await _ins.AddRegistration(obj, findJson);
+            bool result = await _ins.AddRegistration(obj, findJson);
 
-            //if (result)
-            //{
-            //    CacheHelper.Remove("Registration");
+            if (result)
+            {
+                CacheHelper.Remove("Registration");
 
-            //    // Convert the string sender to a array list
+                // Convert the string sender to a array list
 
 
-            //    //string creatbody = EmailService.CreateAEmailBody(
-            //    //        "JUAN DELA CRUZ",
-            //    //        "This is a sample email body used for testing purposes. Please disregard."
-            //    //    );
+                //string creatbody = EmailService.CreateAEmailBody(
+                //        "JUAN DELA CRUZ",
+                //        "This is a sample email body used for testing purposes. Please disregard."
+                //    );
 
-            //    //var SendEmail = new SentEmailModel
-            //    //{
-            //    //    Subject = "Patrol Inspection",  
-            //    //    Sender = strSender,
-            //    //    BCC = CCSend,
-            //    //    Body = creatbody,
-            //    //    Recipient = IsSend
-            //    //};
+                //var SendEmail = new SentEmailModel
+                //{
+                //    Subject = "Patrol Inspection",  
+                //    Sender = strSender,
+                //    BCC = CCSend,
+                //    Body = creatbody,
+                //    Recipient = IsSend
+                //};
 
-            //    // GENERATE A PDF FILE AND SAVE TO THE NETWORK FILE
-            //    //await ExportFiler.SaveFileasPDF(obj, findJson, departmentName, newFileName, templatePath, false);
+                // GENERATE A PDF FILE AND SAVE TO THE NETWORK FILE
+                await ExportFiler.SaveFileasPDF(obj, findJson, departmentName, newFileName, templatePath, false);
 
-            //    // EMAIL SAVE TO THE DATABASE
-            //    //await EmailService.SendEmailViaSqlDatabase(SendEmail);
+                // EMAIL SAVE TO THE DATABASE
+                //await EmailService.SendEmailViaSqlDatabase(SendEmail);
 
-            //}
-            //if (result == false)
-            //    return JsonError("Problem during saving Data.");
+            }
+            if (result == false)
+                return JsonError("Problem during saving Data.");
 
             return JsonCreated(obj, $@"Registration No : {finalprefix} is Add  successfully");
 
@@ -820,8 +820,8 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             {
                 basePath = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\Patrol_Countermeasure\";
             }
-            else if (strfilepath.StartsWith("PM", StringComparison.OrdinalIgnoreCase)
-                  || strfilepath.StartsWith("RN", StringComparison.OrdinalIgnoreCase))
+            else if (strfilepath.StartsWith("PF", StringComparison.OrdinalIgnoreCase)
+                  || strfilepath.StartsWith("RF", StringComparison.OrdinalIgnoreCase))
             {
                 basePath = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\Patrol_Countermeasure\";
             }

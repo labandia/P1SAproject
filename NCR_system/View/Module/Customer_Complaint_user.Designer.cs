@@ -28,8 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Customer_Complaint_user));
             this.projectitle = new System.Windows.Forms.Label();
             this.CustomDatagrid = new System.Windows.Forms.DataGridView();
+            this.CustSummaryGrid = new System.Windows.Forms.DataGridView();
+            this.OpenCC = new System.Windows.Forms.Button();
+            this.SelectedProcess = new System.Windows.Forms.ComboBox();
+            this.Externalbtn = new System.Windows.Forms.Button();
             this.RecordID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DateCreated = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SectionID = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -40,10 +45,7 @@
             this.RegNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CustomerName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CustSummaryGrid = new System.Windows.Forms.DataGridView();
-            this.OpenCC = new System.Windows.Forms.Button();
-            this.SelectedProcess = new System.Windows.Forms.ComboBox();
-            this.Externalbtn = new System.Windows.Forms.Button();
+            this.Action = new System.Windows.Forms.DataGridViewImageColumn();
             ((System.ComponentModel.ISupportInitialize)(this.CustomDatagrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CustSummaryGrid)).BeginInit();
             this.SuspendLayout();
@@ -75,7 +77,8 @@
             this.Details,
             this.RegNo,
             this.CustomerName,
-            this.Status});
+            this.Status,
+            this.Action});
             this.CustomDatagrid.Location = new System.Drawing.Point(48, 191);
             this.CustomDatagrid.Name = "CustomDatagrid";
             this.CustomDatagrid.ReadOnly = true;
@@ -83,6 +86,51 @@
             this.CustomDatagrid.Size = new System.Drawing.Size(1233, 489);
             this.CustomDatagrid.TabIndex = 4;
             this.CustomDatagrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.CustomDatagrid_CellFormatting);
+            // 
+            // CustSummaryGrid
+            // 
+            this.CustSummaryGrid.AllowUserToAddRows = false;
+            this.CustSummaryGrid.AllowUserToDeleteRows = false;
+            this.CustSummaryGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.CustSummaryGrid.Location = new System.Drawing.Point(905, 24);
+            this.CustSummaryGrid.Name = "CustSummaryGrid";
+            this.CustSummaryGrid.ReadOnly = true;
+            this.CustSummaryGrid.Size = new System.Drawing.Size(376, 148);
+            this.CustSummaryGrid.TabIndex = 5;
+            // 
+            // OpenCC
+            // 
+            this.OpenCC.Location = new System.Drawing.Point(634, 80);
+            this.OpenCC.Name = "OpenCC";
+            this.OpenCC.Size = new System.Drawing.Size(75, 23);
+            this.OpenCC.TabIndex = 6;
+            this.OpenCC.Text = "OpenCC";
+            this.OpenCC.UseVisualStyleBackColor = true;
+            this.OpenCC.Click += new System.EventHandler(this.OpenCC_Click);
+            // 
+            // SelectedProcess
+            // 
+            this.SelectedProcess.DisplayMember = "External";
+            this.SelectedProcess.FormattingEnabled = true;
+            this.SelectedProcess.Items.AddRange(new object[] {
+            "External",
+            "SDC"});
+            this.SelectedProcess.Location = new System.Drawing.Point(732, 80);
+            this.SelectedProcess.Name = "SelectedProcess";
+            this.SelectedProcess.Size = new System.Drawing.Size(121, 21);
+            this.SelectedProcess.TabIndex = 7;
+            this.SelectedProcess.ValueMember = "External";
+            this.SelectedProcess.SelectedIndexChanged += new System.EventHandler(this.SelectedProcess_SelectedIndexChanged);
+            // 
+            // Externalbtn
+            // 
+            this.Externalbtn.Location = new System.Drawing.Point(653, 136);
+            this.Externalbtn.Name = "Externalbtn";
+            this.Externalbtn.Size = new System.Drawing.Size(75, 23);
+            this.Externalbtn.TabIndex = 8;
+            this.Externalbtn.Text = "Externalbtn";
+            this.Externalbtn.UseVisualStyleBackColor = true;
+            this.Externalbtn.Click += new System.EventHandler(this.Externalbtn_Click);
             // 
             // RecordID
             // 
@@ -155,50 +203,13 @@
             this.Status.Name = "Status";
             this.Status.ReadOnly = true;
             // 
-            // CustSummaryGrid
+            // Action
             // 
-            this.CustSummaryGrid.AllowUserToAddRows = false;
-            this.CustSummaryGrid.AllowUserToDeleteRows = false;
-            this.CustSummaryGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.CustSummaryGrid.Location = new System.Drawing.Point(905, 24);
-            this.CustSummaryGrid.Name = "CustSummaryGrid";
-            this.CustSummaryGrid.ReadOnly = true;
-            this.CustSummaryGrid.Size = new System.Drawing.Size(376, 148);
-            this.CustSummaryGrid.TabIndex = 5;
-            // 
-            // OpenCC
-            // 
-            this.OpenCC.Location = new System.Drawing.Point(634, 80);
-            this.OpenCC.Name = "OpenCC";
-            this.OpenCC.Size = new System.Drawing.Size(75, 23);
-            this.OpenCC.TabIndex = 6;
-            this.OpenCC.Text = "OpenCC";
-            this.OpenCC.UseVisualStyleBackColor = true;
-            this.OpenCC.Click += new System.EventHandler(this.OpenCC_Click);
-            // 
-            // SelectedProcess
-            // 
-            this.SelectedProcess.DisplayMember = "External";
-            this.SelectedProcess.FormattingEnabled = true;
-            this.SelectedProcess.Items.AddRange(new object[] {
-            "External",
-            "SDC"});
-            this.SelectedProcess.Location = new System.Drawing.Point(732, 80);
-            this.SelectedProcess.Name = "SelectedProcess";
-            this.SelectedProcess.Size = new System.Drawing.Size(121, 21);
-            this.SelectedProcess.TabIndex = 7;
-            this.SelectedProcess.ValueMember = "External";
-            this.SelectedProcess.SelectedIndexChanged += new System.EventHandler(this.SelectedProcess_SelectedIndexChanged);
-            // 
-            // Externalbtn
-            // 
-            this.Externalbtn.Location = new System.Drawing.Point(653, 136);
-            this.Externalbtn.Name = "Externalbtn";
-            this.Externalbtn.Size = new System.Drawing.Size(75, 23);
-            this.Externalbtn.TabIndex = 8;
-            this.Externalbtn.Text = "Externalbtn";
-            this.Externalbtn.UseVisualStyleBackColor = true;
-            this.Externalbtn.Click += new System.EventHandler(this.Externalbtn_Click);
+            this.Action.DataPropertyName = "Action";
+            this.Action.HeaderText = "Action";
+            this.Action.Image = ((System.Drawing.Image)(resources.GetObject("Action.Image")));
+            this.Action.Name = "Action";
+            this.Action.ReadOnly = true;
             // 
             // Customer_Complaint_user
             // 
@@ -227,6 +238,7 @@
         public System.Windows.Forms.DataGridView CustSummaryGrid;
         private System.Windows.Forms.Button OpenCC;
         private System.Windows.Forms.ComboBox SelectedProcess;
+        private System.Windows.Forms.Button Externalbtn;
         private System.Windows.Forms.DataGridViewTextBoxColumn RecordID;
         private System.Windows.Forms.DataGridViewTextBoxColumn DateCreated;
         private System.Windows.Forms.DataGridViewTextBoxColumn SectionID;
@@ -237,6 +249,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn RegNo;
         private System.Windows.Forms.DataGridViewTextBoxColumn CustomerName;
         private System.Windows.Forms.DataGridViewTextBoxColumn Status;
-        private System.Windows.Forms.Button Externalbtn;
+        private System.Windows.Forms.DataGridViewImageColumn Action;
     }
 }

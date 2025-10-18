@@ -71,7 +71,7 @@ namespace Parts_locator
 
 
             ServiceProvider = services.BuildServiceProvider();
-            var mainForm = ServiceProvider.GetRequiredService<Startup>();
+            var mainForm = ServiceProvider.GetRequiredService<Mainlayout>();
             Application.Run(mainForm);
             //// Dynamically choose which form to run
             //Form mainForm = null;

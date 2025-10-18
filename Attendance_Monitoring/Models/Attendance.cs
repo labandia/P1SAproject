@@ -132,7 +132,7 @@ namespace Attendance_Monitoring.Models
         private double _Gtotal;
         private double _Overtime;
         private string _LateTime;
-        private string _Shifts;
+        private int _Shifts;
 
 
         public int RecordID
@@ -190,10 +190,16 @@ namespace Attendance_Monitoring.Models
             set => _LateTime = value;
         }
 
-        public string Shifts
-        {
-            get => _Shifts;
-            set => _Shifts = value;
-        }
+        public ShiftType Shifts { get; set; }  // enum instead of int
+    }
+
+
+
+
+
+    public enum ShiftType
+    {
+        Dayshift = 0,
+        Nightshift = 1
     }
 }

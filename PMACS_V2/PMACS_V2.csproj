@@ -383,6 +383,14 @@
     <Compile Include="Areas\P1SA\Repository\ManpowerRepository.cs" />
     <Compile Include="Areas\P1SA\Repository\MoldDieRepository.cs" />
     <Compile Include="Areas\P1SA\Repository\UpdateRepository.cs" />
+    <Compile Include="Areas\PartsLocal\Controllers\PartsLocatorController.cs" />
+    <Compile Include="Areas\PartsLocal\Interface\IProducts.cs" />
+    <Compile Include="Areas\PartsLocal\Interface\IShopOrderIn.cs" />
+    <Compile Include="Areas\PartsLocal\Interface\IShopOrderOut.cs" />
+    <Compile Include="Areas\PartsLocal\Model\RotorProductModel.cs" />
+    <Compile Include="Areas\PartsLocal\PartsLocalAreaRegistration.cs" />
+    <Compile Include="Areas\PartsLocal\Repository\RotorProductRepository.cs" />
+    <Compile Include="Areas\PartsLocal\Repository\RotorSummaryRepository.cs" />
     <Compile Include="Areas\Planning\Controllers\PlanController.cs" />
     <Compile Include="Areas\Planning\Interface\IPlanning.cs" />
     <Compile Include="Areas\Planning\Model\PlanningModel.cs" />
@@ -571,6 +579,12 @@
     <Content Include="Content\fonts\Figtree.ttf" />
     <Content Include="Content\fonts\Quicksand.ttf" />
     <Content Include="Areas\P1SA\Views\DieMold\DiePressMonitorDetails.cshtml" />
+    <Content Include="Areas\PartsLocal\Views\web.config" />
+    <Content Include="Areas\PartsLocal\Views\Shared\_PartlocalLayout.cshtml" />
+    <Content Include="Areas\PartsLocal\Views\PartsLocator\Masterlist.cshtml" />
+    <Content Include="Areas\PartsLocal\Views\PartsLocator\SummaryShopOrderIn.cshtml" />
+    <Content Include="Areas\PartsLocal\Views\PartsLocator\SummaryShopOrderOut.cshtml" />
+    <Content Include="Areas\PartsLocal\Views\PartsLocator\Index.cshtml" />
     <None Include="bundleconfig.json" />
     <None Include="Scripts\Shared\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\chart.js" />

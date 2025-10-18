@@ -301,7 +301,8 @@ namespace PMACS_V2.Areas.Planning.Repository
         {
             var strquery = "UPDATE M1_Monthly_Table SET EndTotalOrders = @EndTotalOrders, EndRemainOrders = @EndRemainOrders, " +
                           "CurrentTotalOrders = @CurrentTotalOrders, CurrentRemains = @CurrentRemains WHERE RecordID = @RecordID";
-            var parameter = new { EndTotalOrders = end.EndTotalOrdersEdit, EndRemainOrders = end.EndRemainOrdersEdit, CurrentTotalOrders = end.CurrentTotalOrdersEdit, 
+            var parameter = new { EndTotalOrders = end.EndTotalOrdersEdit, EndRemainOrders = end.EndRemainOrdersEdit, 
+                                  CurrentTotalOrders = end.CurrentTotalOrdersEdit, 
                                   CurrentRemains = end.CurrentRemainsEdit, RecordID = end.RecordID };
             var result = await SqlDataAccess.UpdateInsertQuery(strquery, parameter);
             return result;

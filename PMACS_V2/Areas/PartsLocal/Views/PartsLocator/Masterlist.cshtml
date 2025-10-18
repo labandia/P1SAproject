@@ -1,0 +1,109 @@
+﻿
+@{
+    ViewBag.Title = "Masterlist";
+    Layout = "~/Areas/PartsLocal/Views/Shared/_PartlocalLayout.cshtml";
+}
+
+<section>
+    <header class="MainHeader">
+        <div class="MoldTitle">
+            <h4>Parts Locator Inventory </h4>
+            <small>Manage rotor partnumber</small>
+        </div>
+        <div class="Mold__actions">
+            @* MOLD MOnitoring *@
+            <div id="MoldMonitor">
+                <button class="primary_button_color" id="addmodal"><i class="fa-solid fa-plus"></i> Add Data</button>
+            </div>
+
+        </div>
+    </header>
+
+    <div class="Mold_tabcontainer">
+        <div class="Mold_tabs">
+            <button class="Mold_tab active" data-target="Summary">Inventory</button>
+            <button class="Mold_tab" data-target="Monitoring">Masterlist</button>
+            <div class="Mold_slider"></div>
+        </div>
+
+        <div class="Mold_contentbox">
+            <div class="Mold_content show" id="Summary">
+                <div class="DieMainTable" id="DieWrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Front Image</th>
+                                <th>Back Image</th>
+                                <th>Part Number</th>
+                                <th>Model Name</th>
+                                <th>Area location</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody id="DiePressMonitoringlistV2">
+                        </tbody>
+                    </table>
+
+
+                </div>
+            </div>
+            <div class="Mold_content" id="Monitoring">
+                <div class="DieMainTable" id="DieWrapper">
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Front Image</th>
+                                <th>Back Image</th>
+                                <th>Part Number</th>
+                                <th>Model Name</th>
+                            </tr>
+                        </thead>
+                        <tbody id="DiePressMonitoringlist">
+                        </tbody>
+                    </table>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</section>
+
+
+<script type="text/javascript">
+
+
+    // Tabs Content
+    const tabs = document.querySelectorAll(".Mold_tab");
+    const slider = document.querySelector(".Mold_slider");
+    const contents = document.querySelectorAll(".Mold_content");
+
+    tabs.forEach((tab, index) => {
+        tab.addEventListener("click", () => {
+            // Handle tab active class
+            document.querySelector(".Mold_tab.active").classList.remove("active");
+            tab.classList.add("active");
+
+            // Move slider
+            slider.style.transform = `translateX(${index * 100}%)`;
+
+            // Switch content
+            const target = tab.getAttribute("data-target");
+            contents.forEach((content) => {
+                content.classList.remove("show");
+            });
+
+            // Add show class with slight delay
+            setTimeout(() => {
+                document.getElementById(target).classList.add("show");
+            }, 50);
+
+
+
+        });
+    });
+</script>
+

@@ -27,8 +27,8 @@
             <div class="flex_align">
                 <a href="/PC/Patrol/PatrolReport"><i class="fa-solid fa-arrow-left"></i>  </a>
                 <span>  Back</span>
-                <button type="button" id="OpenSenders"><i class="fa-regular fa-user"></i> Save Draft</button>
-                <button type="button" id="OpenSenders"><i class="fa-regular fa-user"></i> Approve</button>
+                <button type="button" id="OpenSenders2"><i class="fa-regular fa-user"></i> Save Draft</button>
+                <button type="button" id="OpenSenders2"><i class="fa-regular fa-user"></i> Approve</button>
             </div>
             <div class="HeadTitle__action">
                 <button type="button" id="OpenSenders"><i class="fa-regular fa-user"></i> To</button>
@@ -196,61 +196,13 @@
                 <div class="row">
                     <div class="col-12 col-sm-12 col-lg-6 ">
                         <div class="form_group col-12 col-sm-12 ">
-                            <label>Managers </label> <br />
-                            <div class="select-container">
-                                <select id="ManagerSelect" name="ManagerSelect">
-                                    <option value="">-- Select Manager --</option>
-                                </select>
-                            </div>
-                            <input type="hidden" placeholder="type person in charge" name="Manager" id="Manager" />
-                        </div>
-
-
-                        <div class="form_group col-12 col-sm-12 ">
-                            <label>Managers (Comments): </label> <br />
-                            <textarea placeholder="Type text here..." name="Manager_Comments" id="Manager_Comments" rows="9" cols="40"></textarea>
-                        </div>
-
-
-                        <div class="form_group col-12 col-sm-12 ">
-                            <label>Approval Process Owner: </label> <br />
-                            <div class="select-container">
-                                <select id="ProcessID" name="ProcessID">
-                                    <option>-- Select Department --</option>
-                                    <option value="1">Molding</option>
-                                    <option value="2">Press</option>
-                                    <option value="3">Rotor</option>
-                                    <option value="4">Winding</option>
-                                    <option value="5">Circuit</option>
-                                </select>
-                            </div>
-                        </div>
-
-                     
-
-                    </div>
-                    <div class="col-12 col-sm-12 col-lg-6">
-                        <div class="form_group col-12 col-sm-12 ">
                             <label>Date Conducted </label> <br />
                             <input type="date" name="DateConduct" id="DateConduct" />
                         </div>
 
-                        <div class="form_group col-12 col-sm-12 ">
-                            <label>Person In Charge </label> <br />
-                            <div class="select-container">
-                                <select id="PICselect" name="PICselect">
-                                    <option value="">-- Select PIC --</option>
-                                </select>
-                            </div>
-                            <input type="hidden" placeholder="type person in charge" name="PIC" id="PIC" />
-                        </div>
-
-
-                        <div class="form_group col-12 col-sm-12 ">
-                            <label>PIC (Comments): </label> <br />
-                            <textarea placeholder="Type text here..." name="PIC_Comments" id="PIC_Comments" rows="5" cols="40"></textarea>
-                        </div>
-
+                    </div>
+                    <div class="col-12 col-sm-12 col-lg-6">
+               
                         <div class="form_group col-12 col-sm-12">
                             <label>Inspectors: </label> <br />
                             <input type="hidden" value="Melojeane Miclat" id="InspectorName"  />
@@ -292,9 +244,23 @@
 
 
         <div class="d-flex align-items-center justify-content-between">
-            <span id="errorvalid" class="text-danger">* Registration No is already inserted</span>
-            <span id="labelguide">All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</span>
-            <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> </button>
+            <div class="">
+
+                <div class="form_group col-12 col-sm-12 ">
+                    <label>Process Owner: </label> <br />
+                    <div class="select-container">
+                        <select id="ProcessID" name="ProcessID">
+                            <option>-- Select Department --</option>
+                            <option value="1">Molding</option>
+                            <option value="2">Press</option>
+                            <option value="3">Rotor</option>
+                            <option value="4">Winding</option>
+                            <option value="5">Circuit</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </form>
 

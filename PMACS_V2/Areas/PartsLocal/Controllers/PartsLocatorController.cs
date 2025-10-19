@@ -1,10 +1,47 @@
-﻿using PMACS_V2.Utilities;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
+using PMACS_V2.Areas.P1SA.Models;
+using PMACS_V2.Areas.PartsLocal.Interface;
+using PMACS_V2.Areas.PartsLocal.Model;
+using PMACS_V2.Controllers;
+using PMACS_V2.Utilities;
+using ProgramPartListWeb.Helper;
 
 namespace PMACS_V2.Areas.PartsLocal.Controllers
 {
-    public class PartsLocatorController : Controller
+    public class PartsLocatorController : ExtendController
     {
+        private readonly IProducts _prod;
+        public PartsLocatorController(IProducts prod) {
+            _prod = prod;
+        }
+
+        [JwtAuthorize]
+        public async Task<ActionResult> GetProductMasterlist()
+        {
+            var data = await _prod.GetRotorMasterlist() ?? new List<RotorProductModel>();
+            if (data == null)
+                return JsonNotFound("No Rotor data found");
+
+            return JsonSuccess(data);
+        }
+        [JwtAuthorize]
+        public async Task<ActionResult> GetProductDetails(string partnum, int area)
+        {
+            var data = await _prod.GetRotorMasterlist() ?? new List<RotorProductModel>();
+
+            var filteredData = data.SingleOrDefault(d => d.Partnumber == partnum && d.Area == area);
+
+            if (filteredData == null)
+                return JsonNotFound("No Rotor data found");
+
+            return JsonSuccess(data);
+        }
+
+
+
 
 
         // GET: PartsLocal/Masterlist

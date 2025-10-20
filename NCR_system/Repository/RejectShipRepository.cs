@@ -24,12 +24,47 @@ namespace NCR_system.Repository
             return await SqlDataAccess.GetData<RejectShipmentModel>(strsql, new { Process = proc });
         }
 
-        public Task<bool> InsertNCRData(RejectShipmentModel ncr)
+        public async Task<bool> InsertNCRData(RejectShipmentModel ncr, int proc)
         {
-            throw new NotImplementedException();
+            bool result = false;
+
+            if (proc == 0)
+            {
+                string strsql = $@"INSERT INTO PC_RejectShip(RegNo, IssueGroup, SectionID, ModelNo, CustomerName, Quantity, Process)
+                               VALUES(@RegNo, @IssueGroup, @SectionID, @ModelNo, @CustomerName, @Quantity, @Process)";
+                //var parameter = new
+                //{
+                //    customer.ModelNo,
+                //    customer.LotNo,
+                //    customer.NGQty,
+                //    customer.Details,
+                //    customer.SectionID,
+                //    customer.RegNo,
+                //    customer.CustomerName,
+                //    customer.CCtype
+                //};
+                //result = await SqlDataAccess.UpdateInsertQuery(strsql, parameter);
+            }
+            else
+            {
+                //string strsql = $@"INSERT INTO PC_CustomerConplaint(ModelNo,LotNo,NGQty,Details,SectionID,CCtype)
+                //               VALUES(@ModelNo, @LotNo, @NGQty, @Details, @SectionID, @CCtype)";
+                //var parameter = new
+                //{
+                //    customer.ModelNo,
+                //    customer.LotNo,
+                //    customer.NGQty,
+                //    customer.Details,
+                //    customer.SectionID,
+                //    customer.CCtype
+                //};
+                //result = await SqlDataAccess.UpdateInsertQuery(strsql, parameter);
+            }
+
+            return result;
         }
 
-        public Task<bool> UpdateNCRData(RejectShipmentModel ncr)
+        public Task<bool> UpdateNCRData(RejectShipmentModel ncr, int proc)
         {
             throw new NotImplementedException();
         }

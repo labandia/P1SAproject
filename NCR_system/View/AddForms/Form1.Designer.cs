@@ -74,7 +74,7 @@
             this.Save_btn.ForeColor = System.Drawing.Color.White;
             this.Save_btn.Image = ((System.Drawing.Image)(resources.GetObject("Save_btn.Image")));
             this.Save_btn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Save_btn.Location = new System.Drawing.Point(353, 700);
+            this.Save_btn.Location = new System.Drawing.Point(366, 662);
             this.Save_btn.Name = "Save_btn";
             this.Save_btn.Padding = new System.Windows.Forms.Padding(45, 0, 50, 0);
             this.Save_btn.Size = new System.Drawing.Size(180, 43);
@@ -88,7 +88,7 @@
             // 
             this.Cancel_btn.Cursor = System.Windows.Forms.Cursors.Hand;
             this.Cancel_btn.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Cancel_btn.Location = new System.Drawing.Point(148, 700);
+            this.Cancel_btn.Location = new System.Drawing.Point(161, 662);
             this.Cancel_btn.Name = "Cancel_btn";
             this.Cancel_btn.Size = new System.Drawing.Size(178, 43);
             this.Cancel_btn.TabIndex = 91;
@@ -259,7 +259,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(725, 793);
+            this.ClientSize = new System.Drawing.Size(725, 749);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.CustomerText);

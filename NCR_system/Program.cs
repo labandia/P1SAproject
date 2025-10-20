@@ -2,6 +2,7 @@
 using NCR_system.Interface;
 using NCR_system.Repository;
 using NCR_system.View.AddForms;
+using NCR_system.View.EditForms;
 using NCR_system.View.Module;
 using System;
 using System.Collections.Generic;
@@ -32,6 +33,7 @@ namespace NCR_system
             // Import Modules Usercontrols
             services.AddSingleton<Mainpage>();
             services.AddSingleton<AddCustomerComplaint>();
+            services.AddSingleton<EditCC_External>();
             services.AddSingleton<Form1>();
 
             services.AddTransient<Customer_Complaint_user>();

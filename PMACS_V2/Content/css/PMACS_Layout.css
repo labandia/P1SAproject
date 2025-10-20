@@ -2956,3 +2956,31 @@
     }
 }
 /*------------------------------------------------------------------------------- */
+
+
+
+
+
+
+
+.alphabet-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+}
+
+.storage-block {
+    padding: 40px;
+    text-align: center;
+    background: #d3d3d3;
+    border-radius: 8px;
+    font-size: 24px;
+    font-weight: bold;
+    transition: 0.3s ease-in-out;
+}
+
+    .storage-block.active {
+        background: #4CAF50; /* highlight color */
+        color: white;
+        transform: scale(1.05);
+    }

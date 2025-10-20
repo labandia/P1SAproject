@@ -47,11 +47,21 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
         public async Task<IEnumerable<RotorProductModel>> GetRotorMasterlist()
         {
             string strsql = $@"SELECT
-                               m.Partnumber, m.ModelName, l.Area, l.Quantity,
+                               m.Partnumber, m.ModelName,
                                m.FrontImage, m.BackImage
-                            FROM PartsLocatorRotor_Masterlist m
-                            INNER JOIN PartsLocatorRotor_Location l 
-                            ON m.Partnumber = m.Partnumber";
+                            FROM PartsLocatorRotor_Masterlist m";
+            return await SqlDataAccess.GetData<RotorProductModel>(strsql, null);
+        }
+
+        public async Task<IEnumerable<RotorProductModel>> GetRotorStorage()
+        {
+            string strsql = $@"SELECT
+                                l.RecordID, 
+	                            m.Partnumber, m.ModelName, l.Area, l.Quantity,
+	                            m.FrontImage, m.BackImage
+                            FROM PartsLocatorRotor_Location l
+                            INNER JOIN PartsLocatorRotor_Masterlist m
+                            ON m.Partnumber = l.Partnumber";
             return await SqlDataAccess.GetData<RotorProductModel>(strsql, null);
         }
 

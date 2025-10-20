@@ -172,12 +172,12 @@
             this.Cancel_btn.TabIndex = 78;
             this.Cancel_btn.Text = "Cancel";
             this.Cancel_btn.UseVisualStyleBackColor = true;
+            this.Cancel_btn.Click += new System.EventHandler(this.Cancel_btn_Click);
             // 
             // selectDepart
             // 
             this.selectDepart.FormattingEnabled = true;
             this.selectDepart.Items.AddRange(new object[] {
-            "Select Section",
             "Molding",
             "Press",
             "Rotor",

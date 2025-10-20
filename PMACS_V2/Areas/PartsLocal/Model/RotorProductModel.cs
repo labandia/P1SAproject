@@ -3,12 +3,19 @@ namespace PMACS_V2.Areas.PartsLocal.Model
 {
     public class RotorProductModel
     {
+        private int _RecordID;
         private string _Partnumber;
         private string _ModelName;
         private int _Area;
         private int _Quantity;
         private string _FrontImage;
         private string _BackImage;
+
+        public int RecordID
+        {
+            get => _RecordID;
+            set => _RecordID = value;
+        }
 
 
         public string Partnumber

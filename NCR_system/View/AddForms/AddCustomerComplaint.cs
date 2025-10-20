@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using NCR_system.Interface;
 using NCR_system.Models;
+using NCR_system.View.Module;
 using static System.Collections.Specialized.BitVector32;
 
 namespace NCR_system.View.AddForms
@@ -17,11 +18,14 @@ namespace NCR_system.View.AddForms
     public partial class AddCustomerComplaint : Form
     {
         private readonly ICustomerComplaint _cus;
+        private readonly Customer_Complaint_user _user;
 
-        public AddCustomerComplaint(ICustomerComplaint cus)
+
+        public AddCustomerComplaint(ICustomerComplaint cus, Customer_Complaint_user user)
         {
             InitializeComponent();
             _cus = cus;
+            _user = user;
         }
 
         private async void Save_btn_Click(object sender, EventArgs e)
@@ -33,15 +37,16 @@ namespace NCR_system.View.AddForms
                 NGQty = Convert.ToInt32(NGText.Text),
                 Status = 1,
                 Details = ProblemText.Text,
-                SectionID  = selectDepart.SelectedIndex,
+                SectionID  = selectDepart.SelectedIndex + 1,
                 CCtype = 1
             };
 
-            bool result = await _cus.InsertCustomerData(obj);
+            bool result = await _cus.InsertCustomerData(obj, 1);
 
             if (result)
             {
                 MessageBox.Show("Data saved successfully.");
+                await _user.DisplayCustomer(1);
                 this.Close();
             }
             else
@@ -49,6 +54,11 @@ namespace NCR_system.View.AddForms
                 MessageBox.Show("Failed to save data.");
             }
 
+        }
+
+        private void Cancel_btn_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

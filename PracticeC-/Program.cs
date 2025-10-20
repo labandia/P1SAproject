@@ -98,10 +98,10 @@ namespace PracticeC_
 
             //PingComputer("172.29.1.121");
 
-            Console.WriteLine("Generate ID : " + GenerateID(""));
+            //Console.WriteLine("Generate ID : " + GenerateID(""));
 
 
-            //ConvertstringtoBase64();
+            ConvertstringtoBase64();
 
             Console.ReadKey();
         }
@@ -142,14 +142,14 @@ namespace PracticeC_
             //string connectionString = "server=172.29.3.139;User ID=p1sa;password=p1sa1234a*;database=PMACS_LIVE;Pooling=True;Min Pool Size=50;Max Pool Size=100;";
             //string connectionString = "server=SDP0706ES; User ID = p1sa; password=p1sa1234a*; database=PMACS_LIVE; Pooling=True; Min Pool Size=50; Max Pool Size=100;";
             //string connectionString = "server=DESKTOP-FC0UP1P;User ID=PCsystem;password=p1saprocess;database=P1sa;Pooling=True;Min Pool Size=50;Max Pool Size=100;";
-            string connectionString = "server=DESKTOP-FC0UP1P\\SQLEXPRESS;database=P1sa;Integrated Security=True;";
-            string base64ConnectionString = Convert.ToBase64String(Encoding.UTF8.GetBytes(connectionString));
+            //string connectionString = "server=DESKTOP-FC0UP1P\\SQLEXPRESS;database=P1sa;Integrated Security=True;";
+            //string base64ConnectionString = Convert.ToBase64String(Encoding.UTF8.GetBytes(connectionString));
 
             // Print the encoded connection string
-            Console.WriteLine($"Base64 Encoded Connection String: {base64ConnectionString}");
+            //Console.WriteLine($"Base64 Encoded Connection String: {base64ConnectionString}");
             // Print the encoded connection string
-            //string a = DecodeBase64ToString("c2VydmVyPVNEUDA3MDZFUztVc2VyIElEPXAxc2E7cGFzc3dvcmQ9cDFzYTEyMzRhKjtkYXRhYmFzZT1QTUFDU19URVNUO1Bvb2xpbmc9VHJ1ZTtNaW4gUG9vbCBTaXplPTUwO01heCBQb29sIFNpemU9MTAwOw==");
-            //Console.WriteLine($"Base64 Decrypted {a}");
+            string a = DecodeBase64ToString("c2VydmVyPVNEUDA3MDZFUzsgVXNlciBJRCA9IHAxc2E7IHBhc3N3b3JkPXAxc2ExMjM0YSo7IGRhdGFiYXNlPVBNQUNTX0xJVkU7IFBvb2xpbmc9VHJ1ZTsgTWluIFBvb2wgU2l6ZT01MDsgTWF4IFBvb2wgU2l6ZT0xMDA7");
+            Console.WriteLine($"Base64 Decrypted {a}");
             Console.ReadKey();
         }
 

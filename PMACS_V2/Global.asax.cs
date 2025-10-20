@@ -17,6 +17,8 @@ using System.Web.Security;
 using PMACS_V2.Areas.Planning.Interface;
 using PMACS_V2.Areas.Planning.Repository;
 using System.IO.Compression;
+using PMACS_V2.Areas.PartsLocal.Interface;
+using PMACS_V2.Areas.PartsLocal.Repository;
 
 namespace PMACS_V2
 {
@@ -153,6 +155,7 @@ namespace PMACS_V2
 
             // Register Repository Interface with Implementation
             container.RegisterType<IUserRepository, UserRespository>();
+            container.RegisterType<IProducts, RotorProductRepository>();
             container.RegisterType<IPlanning, PlanningRepository>();
             container.RegisterType<IManpower, ManpowerRepository>();
             container.RegisterType<ICapacity, CapacityRepository>();

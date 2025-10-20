@@ -96,6 +96,18 @@
     <Compile Include="View\AddForms\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\EditForms\EditCC_External.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\EditForms\EditCC_External.Designer.cs">
+      <DependentUpon>EditCC_External.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\EditForms\EditCC_SDC.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\EditForms\EditCC_SDC.Designer.cs">
+      <DependentUpon>EditCC_SDC.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\Module\Customer_Complaint_user.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -143,6 +155,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\AddForms\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\EditForms\EditCC_External.resx">
+      <DependentUpon>EditCC_External.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\EditForms\EditCC_SDC.resx">
+      <DependentUpon>EditCC_SDC.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\Module\Customer_Complaint_user.resx">
       <DependentUpon>Customer_Complaint_user.cs</DependentUpon>

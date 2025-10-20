@@ -126,12 +126,13 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                     {
 
                         string insertDetails = @"
-                        INSERT INTO Hyrdo_StockNotificationDetails (NotificationId, PartID, CurrentQty, ReorderLevel, WarningLevel, Status)
-                        VALUES(@NotificationId, @PartID, @CurrentQty, @ReorderLevel, @WarningLevel, @Status)";
+                        INSERT INTO Hyrdo_StockNotificationDetails (NotificationId, PartNo, CurrentQty, ReorderLevel, WarningLevel, Status)
+                        VALUES(@NotificationId, @PartNo, @CurrentQty, @ReorderLevel, @WarningLevel, @Status)";
                         var parameter = new
                         {
                             NotificationId = notifiResult,
                             CurrentQty = item.CurrentQty,
+                            PartNo = item.PartNo,
                             ReorderLevel = item.ReorderLevel,
                             WarningLevel = item.WarningLevel,
                             Status = item.Status
@@ -232,7 +233,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 	                        a.Status
                         FROM Hydro_StockAlerts a
                         INNER JOIN Hydro_Stocks s ON s.StockID = a.StockID
-                        INNER JOIN Hydro_InventoryParts i ON i.PartID = s.PartID
+                        INNER JOIN Hydro_InventoryParts i ON i.PartNo = s.PartNo
                         WHERE a.IsRead = 0";
 
             return SqlDataAccess.GetData<StockAlert>(sql, null);

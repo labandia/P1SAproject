@@ -45,7 +45,9 @@
             this.RegNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CustomerName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Action = new System.Windows.Forms.DataGridViewImageColumn();
+            this.CCtype = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Edit = new System.Windows.Forms.DataGridViewImageColumn();
+            this.Delete = new System.Windows.Forms.DataGridViewImageColumn();
             ((System.ComponentModel.ISupportInitialize)(this.CustomDatagrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CustSummaryGrid)).BeginInit();
             this.SuspendLayout();
@@ -78,13 +80,16 @@
             this.RegNo,
             this.CustomerName,
             this.Status,
-            this.Action});
+            this.CCtype,
+            this.Edit,
+            this.Delete});
             this.CustomDatagrid.Location = new System.Drawing.Point(48, 191);
             this.CustomDatagrid.Name = "CustomDatagrid";
             this.CustomDatagrid.ReadOnly = true;
             this.CustomDatagrid.RowHeadersVisible = false;
             this.CustomDatagrid.Size = new System.Drawing.Size(1233, 489);
             this.CustomDatagrid.TabIndex = 4;
+            this.CustomDatagrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.CustomDatagrid_CellClick);
             this.CustomDatagrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.CustomDatagrid_CellFormatting);
             // 
             // CustSummaryGrid
@@ -203,13 +208,28 @@
             this.Status.Name = "Status";
             this.Status.ReadOnly = true;
             // 
-            // Action
+            // CCtype
             // 
-            this.Action.DataPropertyName = "Action";
-            this.Action.HeaderText = "Action";
-            this.Action.Image = ((System.Drawing.Image)(resources.GetObject("Action.Image")));
-            this.Action.Name = "Action";
-            this.Action.ReadOnly = true;
+            this.CCtype.DataPropertyName = "CCtype";
+            this.CCtype.HeaderText = "CCtype";
+            this.CCtype.Name = "CCtype";
+            this.CCtype.ReadOnly = true;
+            this.CCtype.Visible = false;
+            // 
+            // Edit
+            // 
+            this.Edit.DataPropertyName = "Edit";
+            this.Edit.HeaderText = "Edit";
+            this.Edit.Image = ((System.Drawing.Image)(resources.GetObject("Edit.Image")));
+            this.Edit.Name = "Edit";
+            this.Edit.ReadOnly = true;
+            // 
+            // Delete
+            // 
+            this.Delete.DataPropertyName = "Delete";
+            this.Delete.HeaderText = "Delete";
+            this.Delete.Name = "Delete";
+            this.Delete.ReadOnly = true;
             // 
             // Customer_Complaint_user
             // 
@@ -249,6 +269,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn RegNo;
         private System.Windows.Forms.DataGridViewTextBoxColumn CustomerName;
         private System.Windows.Forms.DataGridViewTextBoxColumn Status;
-        private System.Windows.Forms.DataGridViewImageColumn Action;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CCtype;
+        private System.Windows.Forms.DataGridViewImageColumn Edit;
+        private System.Windows.Forms.DataGridViewImageColumn Delete;
     }
 }

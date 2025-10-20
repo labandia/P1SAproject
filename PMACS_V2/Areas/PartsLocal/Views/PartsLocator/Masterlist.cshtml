@@ -105,5 +105,28 @@
 
         });
     });
+
+
+      const GetMasterlist = async () => {
+             let res = await FetchAuthenticate('@Url.Action("GetProductMasterlist", "PartsLocator")', {});
+          console.log(res);
+          //if (res && res.Success) {
+                
+             //} else {
+             //    const loadData = `<tr>
+             //      <td colspan='9'>
+             //          🔍 ${res.Message}
+             //      </td>
+             //  </tr>`;
+
+             //    ToolingDisplay.empty();
+             //    ToolingDisplay.append(loadData);
+
+             //}
+      }
+
+
+
+    GetMasterlist();
 </script>
 

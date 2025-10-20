@@ -1,0 +1,164 @@
+﻿
+@{
+    ViewBag.Title = "TrackParts";
+    Layout = "~/Areas/PartsLocal/Views/Shared/_PartlocalLayout.cshtml";
+}
+
+<header class="MainHeader">
+    <div class="MoldTitle">
+        <h4>Parts Locator Inventory </h4>
+        <small>Manage rotor partnumber</small>
+    </div>
+    <div class="Mold__actions">
+        @* MOLD MOnitoring *@
+        <div class="masterlistInput">
+            <input type="text" placeholder="Search by Part number ... " id="searchpartnum" />
+            <div class="line"></div>
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+    </div>
+</header>
+
+<br />
+
+<div id="alphabetContainer" class="alphabet-grid"></div>
+
+
+
+
+
+
+<script type="text/javascript">
+     let StorageList = [];
+     let Masterlist = [];
+
+
+    const alphabetData = Array.from({ length: 21 }, (_, i) => ({
+        Letter: i + 1,
+        Alphabet: String.fromCharCode(65 + i), // A-Z
+        Partnumber: "", // Will match part numbers starting with this letter
+        IsActive: 0,
+        RecordIDs: [] // Store record IDs for this storage area
+    }));
+
+
+    function highlightStorageBox(partNumber) {
+        if (!partNumber) return;
+
+        const firstLetter = partNumber.charAt(0).toUpperCase(); // Extract first letter
+
+        alphabetData.forEach(item => {
+            item.IsActive = (item.Alphabet === firstLetter) ? 1 : 0; // Set active status
+        });
+
+        renderAlphabetBlocks(); // Re-render UI
+    }
+
+    function renderAlphabetBlocks() {
+        const container = document.getElementById("alphabetContainer");
+        container.innerHTML = ""; // Clear
+
+        alphabetData.forEach(item => {
+            const div = document.createElement("div");
+            div.className = `storage-block ${item.IsActive ? "active" : ""}`;
+            div.textContent = item.Alphabet;
+
+            // Store the alphabet and record IDs as data attributes
+            div.setAttribute('data-alphabet', item.Alphabet);
+            div.setAttribute('data-record-ids', JSON.stringify(item.RecordID));
+
+            // Add click event listener
+            div.addEventListener('click', () => handleStorageBoxClick(item.Alphabet, item.RecordIDs));
+
+            container.appendChild(div);
+        });
+    }
+
+    // Handle storage box click
+    function handleStorageBoxClick(alphabet, recordIDs) {
+        console.log(`Clicked storage box: ${alphabet}`);
+        console.log(`Record IDs in this area:`, recordIDs);
+
+        // Get details for the selected storage area
+        const areaDetails = getStorageAreaDetails(alphabet, recordIDs);
+
+        // Display the details (you can modify this to show in modal, sidebar, etc.)
+        //displayStorageAreaDetails(areaDetails, alphabet);
+    }
+
+    // Get details for storage area
+    function getStorageAreaDetails(alphabet, recordIDs) {
+        if (recordIDs && recordIDs.length > 0) {
+            // If we have specific record IDs, filter by them
+            return StorageList.filter(item =>
+                recordIDs.includes(item.StorageID || item.ID)
+            );
+        } else {
+            // Otherwise filter by area/alphabet
+            return StorageList.filter(item => {
+                const itemArea = String.fromCharCode(64 + (item.Area || item.StorageArea || 1));
+                return itemArea === alphabet;
+            });
+        }
+    }
+
+      const GetStorageData = async () => {
+          let res = await FetchAuthenticate('@Url.Action("GetStorageData", "PartsLocator")', {});
+          console.log(res);
+          if (res && res.Success) {
+              StorageList = res.Data;
+
+        
+          } else {
+               //  const loadData = `<tr>
+               //    <td colspan='9'>
+               //        🔍 ${res.Message}
+               //    </td>
+               //</tr>`;
+
+               //  ToolingDisplay.empty();
+               //  ToolingDisplay.append(loadData);
+
+         }
+      }
+
+
+    $("#searchpartnum").on('keydown', (e) => {
+        if (e.key === "Enter" || e.keyCode === 13) {
+            e.preventDefault();
+            console.log("HAdhasds");
+            searchPart(e.target.value);
+        }
+    });
+
+
+    function searchPart(partNumber) {
+        const matches = StorageList.filter(item =>
+            item.Partnumber.toUpperCase() === partNumber.toUpperCase()
+        );
+
+        // Reset all highlights first
+        alphabetData.forEach(a => a.IsActive = 0);
+
+        // If nothing found, just render and exit
+        if (matches.length === 0) {
+            renderAlphabetBlocks();
+            return;
+        }
+
+        // Loop through all matches to highlight each related area
+        matches.forEach(part => {
+            // Convert Area to Letter (if Area is numeric)
+            const areaLetter = String.fromCharCode(64 + part.Area);
+            // If Area is already a letter, use part.Area.toUpperCase()
+
+            const areaBlock = alphabetData.find(a => a.Alphabet === areaLetter);
+            if (areaBlock) areaBlock.IsActive = 1;
+        });
+
+        renderAlphabetBlocks();
+    }
+
+    renderAlphabetBlocks();
+    GetStorageData();
+</script>

@@ -585,6 +585,7 @@
     <Content Include="Areas\PartsLocal\Views\PartsLocator\SummaryShopOrderIn.cshtml" />
     <Content Include="Areas\PartsLocal\Views\PartsLocator\SummaryShopOrderOut.cshtml" />
     <Content Include="Areas\PartsLocal\Views\PartsLocator\Index.cshtml" />
+    <Content Include="Areas\PartsLocal\Views\PartsLocator\TrackParts.cshtml" />
     <None Include="bundleconfig.json" />
     <None Include="Scripts\Shared\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\chart.js" />

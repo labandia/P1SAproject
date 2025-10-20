@@ -1,6 +1,7 @@
 ﻿using NCR_system.Interface;
 using NCR_system.Models;
 using NCR_system.View.AddForms;
+using NCR_system.View.EditForms;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -51,7 +52,7 @@ namespace NCR_system.View.Module
                     CustomDatagrid.Columns["CustomerName"].Visible = true;
                     CustomDatagrid.Columns["CCtype"].Visible = false;
                     CustomDatagrid.Columns["Status"].DisplayIndex = 8;
-                    CustomDatagrid.Columns["Action"].DisplayIndex = 9;
+                    CustomDatagrid.Columns["Edit"].DisplayIndex = 9;
                 }
                 else
                 {
@@ -152,7 +153,7 @@ namespace NCR_system.View.Module
 
         private void OpenCC_Click(object sender, EventArgs e)
         {
-            var add = new AddCustomerComplaint(_cust);
+            var add = new AddCustomerComplaint(_cust, this);
             add.ShowDialog();
         }
 
@@ -169,8 +170,54 @@ namespace NCR_system.View.Module
 
         private void Externalbtn_Click(object sender, EventArgs e)
         {
-            var add = new Form1(_cust);
+            var add = new Form1(_cust, this);
             add.ShowDialog();
+        }
+
+        private void CustomDatagrid_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // Make sure user clicked on a valid row (not header)
+            if (e.RowIndex < 0)
+                return;
+
+            // Get the clicked column
+            var column = CustomDatagrid.Columns[e.ColumnIndex];
+
+            // Get the clicked row
+            var row = CustomDatagrid.Rows[e.RowIndex];
+
+            // Assume you have a column named "RecordID"
+            var recordID = row.Cells["RecordID"].Value;
+            var type = row.Cells["CCtype"].Value;   
+
+            if (column.Name == "Edit")
+            {
+                int CCtype = Convert.ToInt32(type);
+                // Handle Edit image click
+                MessageBox.Show($"Edit clicked on row {e.RowIndex} - Record ID selected:  {recordID}");
+                // You can get the row data like this:
+                if (CCtype == 0)
+                {
+                    var openedit = new EditCC_External(_cust, Convert.ToInt32(recordID), Convert.ToInt32(type), this);
+                    openedit.ShowDialog();
+                }
+                else
+                {
+                    var openedit = new EditCC_SDC(_cust, Convert.ToInt32(recordID), Convert.ToInt32(type), this);
+                    openedit.ShowDialog();
+                }
+          
+            }
+            else if (column.Name == "Delete")
+            {
+                // Handle Delete image click
+                DialogResult result = MessageBox.Show("Are you sure you want to delete?", "Confirm Delete", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                    // Remove the row or perform deletion
+                    MessageBox.Show($"Delete clicked on row {e.RowIndex} - Record ID selected:  {recordID}");
+                }
+            }
         }
     }
 }

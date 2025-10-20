@@ -65,10 +65,9 @@
 </html>
 
 
-
-<script src="~/Scripts/Utilities.js"></script>
-<script src="~/Scripts/sweetalert2.min.js"></script>
-<script src="~/Scripts/jquery-3.7.1.min.js"></script>
+<script src="~/Scripts/Shared/Utilities.min.js"></script>
+<script src="~/Scripts/Shared/sweetalert2.min.js"></script>
+<script src="~/Scripts/Shared/jquery-3.7.1.min.js"></script>
 <script type="text/javascript">
   const logform = document.getElementById('logincredentials');
   const regform = document.getElementById('Registerform');
@@ -121,7 +120,7 @@
                           localStorage.setItem('accessToken', res.Data.access_token);
                           localStorage.setItem('refreshToken', res.Data.refresh_token);
                           //localStorage.setItem('tempID', res.Data.userID);
-                          window.location.href = "/Press/PartsLocator/StorageLocation";
+                          window.location.href = "/PartsLocal/PartsLocator/Masterlist";
                       });
                   } else {
                       Swal.fire({

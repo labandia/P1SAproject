@@ -4,14 +4,89 @@
     Layout = "~/Areas/PartsLocal/Views/Shared/_PartlocalLayout.cshtml";
 }
 
-<header class="MainHeader">
+
+
+<div class="container">
+    <h2>Parts Locator Inventory</h2>
+
+    <input type="text" id="searchInput" placeholder="Enter Partnumber">
+    <button onclick="highlightArea()">🔍</button>
+
+    <div class="gridV2" id="areaGrid"></div>
+
+    <!-- Result Table -->
+    <div id="results" style="margin-top:20px;"></div>
+</div>
+
+<script type="text/javascript">
+    // Example storage data: each part belongs to a specific area
+    const storageList = [
+        { partnumber: "002886060-01", area: "E", recordId: 101 },
+        { partnumber: "123450000-A", area: "B", recordId: 102 },
+        { partnumber: "998877665-X", area: "M", recordId: 103 },
+        { partnumber: "556677889-Y", area: "E", recordId: 104 },
+    ];
+
+    const areaGrid = document.getElementById("areaGrid");
+    const resultsDiv = document.getElementById("results");
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+
+    // Generate A-Z buttons
+    letters.forEach(letter => {
+        const div = document.createElement("div");
+        div.classList.add("box");
+        div.textContent = letter;
+        div.setAttribute("data-area", letter);
+
+        // On click -> Get data by area
+        div.addEventListener("click", () => {
+            showDataByArea(letter);
+            highlightBoxOnly(letter);
+        });
+
+        areaGrid.appendChild(div);
+    });
+
+    // Highlight ONLY clicked letter
+    function highlightBoxOnly(selectedArea) {
+        document.querySelectorAll(".box").forEach(box => {
+            box.classList.toggle("active", box.getAttribute("data-area") === selectedArea);
+        });
+    }
+
+    // Show data for clicked area
+    function showDataByArea(area) {
+        const filteredData = storageList.filter(item => item.area === area);
+
+        if (filteredData.length > 0) {
+            let html = `<h3>Storage Area: ${area}</h3><table border="1" style="margin:auto;">
+                        <tr><th>RecordID</th><th>Partnumber</th></tr>`;
+
+            filteredData.forEach(item => {
+                html += `<tr>
+                        <td>${item.recordId}</td>
+                        <td>${item.partnumber}</td>
+                    </tr>`;
+            });
+
+            html += `</table>`;
+            resultsDiv.innerHTML = html;
+        } else {
+            resultsDiv.innerHTML = `<h3>No records found for area ${area}</h3>`;
+        }
+    }
+
+
+</script>
+
+<!--<header class="MainHeader">
     <div class="MoldTitle">
         <h4>Parts Locator Inventory </h4>
         <small>Manage rotor partnumber</small>
     </div>
-    <div class="Mold__actions">
+    <div class="Mold__actions">-->
         @* MOLD MOnitoring *@
-        <div class="masterlistInput">
+        <!--<div class="masterlistInput">
             <input type="text" placeholder="Search by Part number ... " id="searchpartnum" />
             <div class="line"></div>
             <i class="fa-solid fa-magnifying-glass"></i>
@@ -27,138 +102,130 @@
 
 
 
-
 <script type="text/javascript">
-     let StorageList = [];
-     let Masterlist = [];
-
-
-    const alphabetData = Array.from({ length: 21 }, (_, i) => ({
+    let StorageList = [];
+    let alphabetData = Array.from({ length: 21 }, (_, i) => ({
         Letter: i + 1,
-        Alphabet: String.fromCharCode(65 + i), // A-Z
-        Partnumber: "", // Will match part numbers starting with this letter
+        Alphabet: String.fromCharCode(65 + i), // A-U (21 letters)
         IsActive: 0,
-        RecordIDs: [] // Store record IDs for this storage area
+        RecordIDs: [] // Store RecordIDs for this alphabet
     }));
 
+    // Fetch storage data from server
+    const GetStorageData = async () => {
+        let res = await FetchAuthenticate('@Url.Action("GetStorageData", "PartsLocator")', {});
+        console.log(res);
+        if (res && res.Success) {
+            StorageList = res.Data;
+            mapRecordIDsToAlphabets(); // Populate alphabetData.RecordIDs
+            renderAlphabetBlocks();
+        } else {
+            renderAlphabetBlocks();
+        }
+    };
 
+    // Map RecordIDs from StorageList to alphabetData
+    function mapRecordIDsToAlphabets() {
+        // Clear previous
+        alphabetData.forEach(a => a.RecordIDs = []);
+
+        StorageList.forEach(item => {
+            const areaLetter = String.fromCharCode(64 + (item.Area || 1)); // Convert numeric Area to letter
+            const alphabetBlock = alphabetData.find(a => a.Alphabet === areaLetter);
+            if (alphabetBlock) {
+                alphabetBlock.RecordIDs.push(item.RecordID);
+            }
+        });
+
+        console.log(alphabetData);
+    }
+
+    // Highlight storage box based on part number
     function highlightStorageBox(partNumber) {
         if (!partNumber) return;
 
-        const firstLetter = partNumber.charAt(0).toUpperCase(); // Extract first letter
-
+        const firstLetter = partNumber.charAt(0).toUpperCase();
         alphabetData.forEach(item => {
-            item.IsActive = (item.Alphabet === firstLetter) ? 1 : 0; // Set active status
+            item.IsActive = (item.Alphabet === firstLetter) ? 1 : 0;
         });
 
-        renderAlphabetBlocks(); // Re-render UI
+        renderAlphabetBlocks();
     }
 
+    // Render the alphabet blocks
     function renderAlphabetBlocks() {
         const container = document.getElementById("alphabetContainer");
-        container.innerHTML = ""; // Clear
+        container.innerHTML = "";
 
         alphabetData.forEach(item => {
             const div = document.createElement("div");
             div.className = `storage-block ${item.IsActive ? "active" : ""}`;
             div.textContent = item.Alphabet;
 
-            // Store the alphabet and record IDs as data attributes
-            div.setAttribute('data-alphabet', item.Alphabet);
-            div.setAttribute('data-record-ids', JSON.stringify(item.RecordID));
+            // Store RecordIDs as data attribute
+            div.setAttribute('data-record-ids', JSON.stringify(item.RecordIDs));
 
-            // Add click event listener
             div.addEventListener('click', () => handleStorageBoxClick(item.Alphabet, item.RecordIDs));
-
             container.appendChild(div);
         });
     }
 
-    // Handle storage box click
+    // Handle click on storage box
     function handleStorageBoxClick(alphabet, recordIDs) {
         console.log(`Clicked storage box: ${alphabet}`);
         console.log(`Record IDs in this area:`, recordIDs);
 
-        // Get details for the selected storage area
         const areaDetails = getStorageAreaDetails(alphabet, recordIDs);
-
-        // Display the details (you can modify this to show in modal, sidebar, etc.)
-        //displayStorageAreaDetails(areaDetails, alphabet);
+        console.log("Details for this area:", areaDetails);
+        // You can display areaDetails in a modal or sidebar here
     }
 
-    // Get details for storage area
+    // Get details for a storage area
     function getStorageAreaDetails(alphabet, recordIDs) {
         if (recordIDs && recordIDs.length > 0) {
-            // If we have specific record IDs, filter by them
-            return StorageList.filter(item =>
-                recordIDs.includes(item.StorageID || item.ID)
-            );
+            return StorageList.filter(item => recordIDs.includes(item.RecordID));
         } else {
-            // Otherwise filter by area/alphabet
             return StorageList.filter(item => {
-                const itemArea = String.fromCharCode(64 + (item.Area || item.StorageArea || 1));
+                const itemArea = String.fromCharCode(64 + (item.Area || 1));
                 return itemArea === alphabet;
             });
         }
     }
 
-      const GetStorageData = async () => {
-          let res = await FetchAuthenticate('@Url.Action("GetStorageData", "PartsLocator")', {});
-          console.log(res);
-          if (res && res.Success) {
-              StorageList = res.Data;
-
-        
-          } else {
-               //  const loadData = `<tr>
-               //    <td colspan='9'>
-               //        🔍 ${res.Message}
-               //    </td>
-               //</tr>`;
-
-               //  ToolingDisplay.empty();
-               //  ToolingDisplay.append(loadData);
-
-         }
-      }
-
-
-    $("#searchpartnum").on('keydown', (e) => {
-        if (e.key === "Enter" || e.keyCode === 13) {
-            e.preventDefault();
-            console.log("HAdhasds");
-            searchPart(e.target.value);
-        }
-    });
-
-
+    // Search part by Partnumber
     function searchPart(partNumber) {
         const matches = StorageList.filter(item =>
             item.Partnumber.toUpperCase() === partNumber.toUpperCase()
         );
-
-        // Reset all highlights first
+        // Reset all highlights
         alphabetData.forEach(a => a.IsActive = 0);
 
-        // If nothing found, just render and exit
         if (matches.length === 0) {
             renderAlphabetBlocks();
             return;
         }
 
-        // Loop through all matches to highlight each related area
+        // Highlight matching alphabet blocks and set RecordIDs
         matches.forEach(part => {
-            // Convert Area to Letter (if Area is numeric)
-            const areaLetter = String.fromCharCode(64 + part.Area);
-            // If Area is already a letter, use part.Area.toUpperCase()
-
+            const areaLetter = String.fromCharCode(64 + (part.Area || 1));
             const areaBlock = alphabetData.find(a => a.Alphabet === areaLetter);
-            if (areaBlock) areaBlock.IsActive = 1;
+            if (areaBlock) {
+                areaBlock.IsActive = 1;
+            }
         });
 
         renderAlphabetBlocks();
     }
 
+    // Trigger search on Enter key
+    $("#searchpartnum").on('keydown', (e) => {
+        if (e.key === "Enter" || e.keyCode === 13) {
+            e.preventDefault();
+            searchPart(e.target.value);
+        }
+    });
+
+    // Initialize
     renderAlphabetBlocks();
     GetStorageData();
-</script>
+</script>-->

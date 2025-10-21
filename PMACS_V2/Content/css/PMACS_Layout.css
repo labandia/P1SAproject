@@ -2984,3 +2984,35 @@
         color: white;
         transform: scale(1.05);
     }
+
+
+
+
+
+
+.gridV2 {
+    display: grid;
+    grid-template-columns: repeat(7, 100px);
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.boxV2 {
+    width: 100px;
+    height: 80px;
+    background: #d3d3d3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    font-size: 22px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+    .boxV2.active {
+        background: #2ecc71; /* GREEN */
+        color: white;
+        font-weight: bold;
+    }

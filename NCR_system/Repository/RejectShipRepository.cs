@@ -24,49 +24,45 @@ namespace NCR_system.Repository
             return await SqlDataAccess.GetData<RejectShipmentModel>(strsql, new { Process = proc });
         }
 
-        public async Task<bool> InsertNCRData(RejectShipmentModel ncr, int proc)
+        public  Task<bool> InsertNCRData(RejectShipmentModel ncr, int proc)
         {
-            bool result = false;
 
-            if (proc == 0)
+            string strsql = $@"INSERT INTO PC_RejectShip(RegNo, DateIssued,  IssueGroup, SectionID, ModelNo, Quantity, Contents, DateCloseReg, Process)
+                               VALUES(@RegNo, @DateIssued,  @IssueGroup, @SectionID, @ModelNo, @Quantity, @Contents, @DateCloseReg, @Process)";
+            var parameter = new
             {
-                string strsql = $@"INSERT INTO PC_RejectShip(RegNo, IssueGroup, SectionID, ModelNo, CustomerName, Quantity, Process)
-                               VALUES(@RegNo, @IssueGroup, @SectionID, @ModelNo, @CustomerName, @Quantity, @Process)";
-                //var parameter = new
-                //{
-                //    customer.ModelNo,
-                //    customer.LotNo,
-                //    customer.NGQty,
-                //    customer.Details,
-                //    customer.SectionID,
-                //    customer.RegNo,
-                //    customer.CustomerName,
-                //    customer.CCtype
-                //};
-                //result = await SqlDataAccess.UpdateInsertQuery(strsql, parameter);
-            }
-            else
-            {
-                //string strsql = $@"INSERT INTO PC_CustomerConplaint(ModelNo,LotNo,NGQty,Details,SectionID,CCtype)
-                //               VALUES(@ModelNo, @LotNo, @NGQty, @Details, @SectionID, @CCtype)";
-                //var parameter = new
-                //{
-                //    customer.ModelNo,
-                //    customer.LotNo,
-                //    customer.NGQty,
-                //    customer.Details,
-                //    customer.SectionID,
-                //    customer.CCtype
-                //};
-                //result = await SqlDataAccess.UpdateInsertQuery(strsql, parameter);
-            }
-
-            return result;
+                ncr.RegNo,
+                ncr.DateIssued,
+                ncr.IssueGroup,
+                ncr.SectionID,
+                ncr.ModelNo,
+                ncr.Quantity,
+                ncr.Contents,
+                ncr.DateCloseReg,
+                proc,
+            };
+            return SqlDataAccess.UpdateInsertQuery(strsql, parameter);
         }
 
         public Task<bool> UpdateNCRData(RejectShipmentModel ncr, int proc)
         {
-            throw new NotImplementedException();
+            string strsql = $@"UPDATE PC_RejectShip SET RegNo =@RegNo, DateIssued =@DateIssued , IssueGroup =@IssueGroup,
+                             SectionID =@SectionID, Status =@Status, ModelNo =@ModelNo, Quantity =@Quantity, Contents =@Contents, DateCloseReg =@DateCloseReg
+                             WHERE RecordID = @RecordID";
+
+            var parameter = new
+            {
+                ncr.RecordID, 
+                ncr.DateIssued,
+                ncr.IssueGroup,
+                ncr.SectionID,
+                ncr.Status,
+                ncr.ModelNo,
+                ncr.Quantity,
+                ncr.Contents,
+                ncr.DateCloseReg
+            };
+            return SqlDataAccess.UpdateInsertQuery(strsql, parameter);
         }
     }
 }

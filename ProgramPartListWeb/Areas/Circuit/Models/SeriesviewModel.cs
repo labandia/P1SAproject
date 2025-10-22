@@ -24,6 +24,8 @@ namespace ProgramPartListWeb.Models
         public int TotalCount { get; set; }
         public int Planstatus { get; set; }
         public string DateCreated { get; set; }
+
+        public List<SummaryHistory> Data { get; set; }
     }
     public class SeriesviewModelAdd
     {

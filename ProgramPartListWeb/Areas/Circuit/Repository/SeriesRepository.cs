@@ -422,6 +422,12 @@ namespace ProgramPartListWeb.Data
             return await SqlDataAccess.UpdateInsertQuery(strquery, obj);
         }
 
-       
+        public async Task<WarehouselocationModel> GetWarehouselocationData(string partnum)
+        {
+            string strquery = $@"SELECT Partnum, Description, WHLocation 
+                             FROM PartList_WarehouseLocation WHERE Partnum =@Partnum";
+            var filterdata =  await SqlDataAccess.GetData<WarehouselocationModel>(strquery, new { Partnum = partnum });
+            return filterdata.SingleOrDefault();    
+        }
     }
 }

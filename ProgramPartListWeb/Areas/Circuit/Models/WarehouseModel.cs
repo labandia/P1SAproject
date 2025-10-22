@@ -41,4 +41,13 @@ namespace ProgramPartListWeb.Models
         public string Request_Quantity { get; set; }
 
     }
+
+
+    public class WarehouselocationModel
+    {
+        public string Partnum { get; set; }
+        public string Description { get; set; }
+        public string WHLocation { get; set; }
+
+    }
 }

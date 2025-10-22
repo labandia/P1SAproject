@@ -18,6 +18,9 @@ namespace ProgramPartListWeb.Interfaces
         Task<List<SummaryHistory>> GetHistoryTransactionData();
         Task<List<SupplierModel>> GetSupplierData();
 
+
+        Task<WarehouselocationModel> GetWarehouselocationData(string partnum);
+
         Task<bool> CheckComponentsOutData(int ID);
        
         Task<int> GetTotalQuantity(string partnum, int seriesID);

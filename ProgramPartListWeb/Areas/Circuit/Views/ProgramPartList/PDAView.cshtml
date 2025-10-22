@@ -108,7 +108,7 @@
     }
     // =================== LOADS THE COMPONENTS SUMMARY LIST ==============================
     const SummaryComponentsdetails = async (params) => {
-        console.log("Series ID :" + params);
+      console.log("Series ID :" + params);
       summarylistTemp = [];
 
       let res = await FetchAuthenticate('@Url.Action("GetSummmaryComponentlist", "ProgramPartList")', { intval: params });
@@ -133,22 +133,13 @@
              supplierTemp = res.Data;
 
              let arrayData = res.Data;
-             console.log(arrayData);
-             $("#locationText").val(arrayData.Location);
              select.append('<option value="' + arrayData.AbassadorPartnum + '">' + arrayData.Supplier + '</option>');
              $("#SupCode").val(arrayData.Code);
-             //$.each(arrayData, function (index, rowData) {
-             //    select.append('<option value="' + rowData.SupID + '">' + rowData.Supplier + '</option>');
-             //});
 
-             //$("#SupCode").val(arrayData[0].Code);
-
-             //selectSupply.addEventListener('change', (e) => {
-             //    var supply = supplierTemp.find(p => p.SupID === parseInt(e.target.value));
-             //    $("#SupCode").val(supply.Code);
-             //});
          }
-      }
+    }
+
+    
 
 
     // =================== SEARCH PLAN SCHEDULE ===================================
@@ -156,7 +147,7 @@
         if (e.key === "Enter" || e.keyCode === 13) {
             e.preventDefault();
 
-            // 1. Checks the plan schedule if exist in the database 
+            // 1. Checks the plan schedule if exist in the database
             var filter = plandata.filter(res => res.Series_no === e.target.value);
 
             if (filter.length === 0 || filter[0].Ongoing === 0) {
@@ -165,8 +156,8 @@
                 return;
             }
 
-            // 2. Store the Value to the variable for reference 
-            // for the Forms Input 
+            // 2. Store the Value to the variable for reference
+            // for the Forms Input
             seriesID = filter[0].Series_ID;
             machserial = filter[0].MachineSerial;
             seriesNo = filter[0].Series_no;
@@ -179,13 +170,13 @@
             // 4. loads the Plan Schedule Details
             SummaryComponentsdetails(seriesID);
 
-            // 5. When All the process is done set focus to the other input 
+            // 5. When All the process is done set focus to the other input
             $("#searchpartnum").focus();
 
         }
     });
     searchpart.addEventListener('keydown', function (e) {
-        // 1 . SCAN Process for the REEL ID 
+        // 1 . SCAN Process for the REEL ID
         if (e.key === "Enter" || e.keyCode === 13) {
             e.preventDefault();
             SDP_ScanText(e.target.value);
@@ -211,14 +202,13 @@
 
         // 5. Gets Components Partlist based on the Given Partnum from the Reel ID
         var product = partlistTemp.find(p => p.AbassadorPartnum == strpartnum);
-
         // 6. Checks the Data For Safetly Execution
         if (product != undefined) {
 
             $("#SetText").val(product.SetNo ?? "");
             $("#Quantext").val(product.Prepared_Quantity ?? "");
-
-            // 7. Loads the Supplier Data 
+            $("#locationText").val(product.Locations);
+            // 7. Loads the Supplier Data
             LoadSupplierList(strpartnum);
             // 8. Set focus next to the input
             $("#ActualQuantity").focus();
@@ -249,7 +239,7 @@
 
             // 2. Checks the length and the Text Inputed if is Empty
             if (text.length > 0 && !isNaN(text)) {
-                // removes leading zeros ex: 0002, 0200, 
+                // removes leading zeros ex: 0002, 0200,
                 QuanEvent.value = parseInt(text, 10).toString();
             } else {
                 // Value to zero if the input is not a number
@@ -279,52 +269,51 @@
          formData.append("Series_no", seriesNo);
          formData.append("Supplierselect", $("#Supplierselect").val());
         let data = Object.fromEntries(formData);
-
          $.ajax({
-         url: '@Url.Action("AddSummaryComponents", "ProgramPartList")',
-         type: 'POST',
-         data: formData,
-         processData: false, // Don't process the data (jQuery does this automatically)
-         contentType: false, // Don't set content type as multipart/form-data
-         success: function (res) {
+             url: '@Url.Action("AddSummaryComponents", "ProgramPartList")',
+             type: 'POST',
+             data: formData,
+             processData: false, // Don't process the data (jQuery does this automatically)
+             contentType: false, // Don't set content type as multipart/form-data
+             success: function (res) {
 
-             if (res.StatusCode === 200) {
-                 Swal.fire({
-                     title: "Add success",
-                     text: res.Message,
-                     icon: "success",
-                     showConfirmButton: false,
-                     timer: 1500
-                 }).then(() => {
-                     console.log(res.Message);
-                     let select = document.getElementById("Supplierselect");
-                     select.innerHTML = '<option value="">-- Supplier Select --</option>';
+                 if (res.StatusCode === 200) {
+                     Swal.fire({
+                         title: "Add success",
+                         text: res.Message,
+                         icon: "success",
+                         showConfirmButton: false,
+                         timer: 1500
+                     }).then(() => {
+                         console.log(res.Message);
+                         let select = document.getElementById("Supplierselect");
+                         select.innerHTML = '<option value="">-- Supplier Select --</option>';
 
-                     $("#searchpartnum").val("");
+                         $("#searchpartnum").val("");
 
-                     $("#locationText").val("");
-                     $("#ActualQuantity").val("");
-                     $("#LotNo").val("");
-                     $("#SupCode").val("");
+                         $("#locationText").val("");
+                         $("#ActualQuantity").val("");
+                         $("#LotNo").val("");
+                         $("#SupCode").val("");
 
-                     $("#searchpartnum").focus();
+                         $("#searchpartnum").focus();
 
-                     SummaryComponentsdetails(seriesID);
-                 });
-             } else {
-                 Swal.fire({
-                     title: "Invalid Data",
-                     text: res.Message,
-                     icon: "error",
-                     showConfirmButton: false,
-                     timer: 1500
-                 }).then(() => {
-                 });
+                         SummaryComponentsdetails(seriesID);
+                     });
+                 } else {
+                     Swal.fire({
+                         title: "Invalid Data",
+                         text: res.Message,
+                         icon: "error",
+                         showConfirmButton: false,
+                         timer: 1500
+                     }).then(() => {
+                     });
+                 }
+             },
+             error: function (error) {
+                 console.error("Error creating product:", error);
              }
-         },
-         error: function (error) {
-             console.error("Error creating product:", error);
-         }
      });
 
 
@@ -347,7 +336,7 @@
         $("#searchReelID").focus();
     });
 
-   
+
 
 
 

@@ -1012,10 +1012,10 @@
                                <tr>
                                   <td data-cell='SetNo'>${rowData.SetNo}</td>
                                   <td data-cell='Abassador Part no.'><span style='font-weight: 600;'>${rowData.AbassadorPartnum}</span></td>
-                                  <td data-cell='Partname/Supplier'>${rowData.Partname}</td>
+                                  <td data-cell='Partname/Supplier'>${rowData.Supplier ?? '-'}</td>
                                   <td data-cell='Warehouse Location'>${rowData.Locations}</td>
                                   <td data-cell='Feeder Type'>${rowData.FeederType}</td>
-                                  <td data-cell='Code'>${rowData.Code}</td>
+                                  <td data-cell='Code'>${rowData.Code ?? '-'}</td>
                                   <td data-cell='Prepared Quantity'>${rowData.Prepared_Quantity} </td>
                                   <td data-cell='Quantity'>${rowData.Quantity} </td>
                                   <td data-cell='WarehouseUse'><span style="${diffColor}">${rowData.WarehouseUse}</span></td>

@@ -17,7 +17,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
         }
         public Task<SupplerList> GetSuppliersById(string partnum)
         {
-            return GetDataListById($@"SELECT AbassadorPartnum,Partname,Location,Supplier,Code
+            return GetDataListById($@"SELECT SupID, AbassadorPartnum,Partname,Location,Supplier,Code
                                 FROM PartList_SuppliersList WHERE AbassadorPartnum =@AbassadorPartnum", 
                                 new { AbassadorPartnum = partnum });
         }

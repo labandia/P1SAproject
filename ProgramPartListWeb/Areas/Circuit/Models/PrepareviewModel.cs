@@ -49,6 +49,7 @@ namespace ProgramPartListWeb.Models
         public string FeederType { get; set; }
         public int Prepared_Quantity { get; set; }
         public string Code { get; set; }
+        public string Supplier { get; set; }
         public int Quantity { get; set; }
         public int WarehouseUse { get; set; }
     }

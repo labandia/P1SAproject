@@ -655,6 +655,16 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
         //------------------------------------------------------------------------------
         //--------------------- WAREHOUSE PULL DATA ------------------------------------
         //------------------------------------------------------------------------------
+        public async Task<ActionResult> GetWarehouseLocation(string partnum)
+        {
+            var data = await _series2.GetWarehouselocationData(partnum);
+            if (data == null)
+                return JsonNotFound("No Warehouse Partnumber data found");
+
+            return JsonSuccess(data);
+        }
+
+
         public async Task<ActionResult> GetWarePartnumberDetails(string partnum)
         {
             var data = await _ware.Warehousepartnumber(partnum) ?? new List<WarehouseModel>();

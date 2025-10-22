@@ -90,6 +90,24 @@
     <Compile Include="View\AddForms\AddCustomerComplaint.Designer.cs">
       <DependentUpon>AddCustomerComplaint.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\AddForms\AddMainRegistration.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\AddForms\AddMainRegistration.Designer.cs">
+      <DependentUpon>AddMainRegistration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\AddForms\AddRecurrence.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\AddForms\AddRecurrence.Designer.cs">
+      <DependentUpon>AddRecurrence.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\AddForms\AddShipment.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\AddForms\AddShipment.Designer.cs">
+      <DependentUpon>AddShipment.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\AddForms\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -152,6 +170,15 @@
     </Compile>
     <EmbeddedResource Include="View\AddForms\AddCustomerComplaint.resx">
       <DependentUpon>AddCustomerComplaint.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\AddForms\AddMainRegistration.resx">
+      <DependentUpon>AddMainRegistration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\AddForms\AddRecurrence.resx">
+      <DependentUpon>AddRecurrence.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\AddForms\AddShipment.resx">
+      <DependentUpon>AddShipment.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\AddForms\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

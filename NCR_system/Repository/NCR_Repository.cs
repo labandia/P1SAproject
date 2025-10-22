@@ -3,8 +3,6 @@ using NCR_system.Interface;
 using NCR_system.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace NCR_system.Repository
@@ -13,7 +11,8 @@ namespace NCR_system.Repository
     {
         public async Task<IEnumerable<NCRModels>> GetNCRData(int type)
         {
-            string strsql = $@"SELECT RecordID,DateIssued ,RegNo,Category
+            string strsql = $@"SELECT 
+                              RecordID,DateIssued ,RegNo,Category
                               ,IssueGroup,SectionID,ModelNo
                               ,Quantity,Contents
                               ,Status,CircularStatus

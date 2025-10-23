@@ -1,6 +1,7 @@
 ﻿using MSDMonitoring.Data;
 using NCR_system.Interface;
 using NCR_system.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -21,27 +22,28 @@ namespace NCR_system.Repository
             return await SqlDataAccess.GetData<RejectShipmentModel>(strsql, new { Process = proc });
         }
 
-        public  Task<bool> InsertNCRData(RejectShipmentModel ncr, int proc)
+        public  Task<bool> InsertShipRejectData(RejectShipmentModel ncr, int Process)
         {
 
-            string strsql = $@"INSERT INTO PC_RejectShip(RegNo, DateIssued,  IssueGroup, SectionID, ModelNo, Quantity, Contents, DateCloseReg, Process)
-                               VALUES(@RegNo, @DateIssued,  @IssueGroup, @SectionID, @ModelNo, @Quantity, @Contents, @DateCloseReg, @Process)";
+            string strsql = $@"INSERT INTO PC_RejectShip(RegNo, DateIssued,  IssueGroup, SectionID, ModelNo, Quantity, Contents, DateCloseReg, Status,  Process)
+                               VALUES(@RegNo, @DateIssued,  @IssueGroup, @SectionID, @ModelNo, @Quantity, @Contents, @DateCloseReg, @Status, @Process)";
             var parameter = new
             {
                 ncr.RegNo,
-                ncr.DateIssued,
+                DateIssued = Convert.ToDateTime(ncr.DateIssued),
                 ncr.IssueGroup,
                 ncr.SectionID,
                 ncr.ModelNo,
                 ncr.Quantity,
                 ncr.Contents,
-                ncr.DateCloseReg,
-                proc,
+                DateCloseReg = Convert.ToDateTime(ncr.DateCloseReg),
+                ncr.Status,
+                Process,
             };
             return SqlDataAccess.UpdateInsertQuery(strsql, parameter);
         }
 
-        public Task<bool> UpdateNCRData(RejectShipmentModel ncr, int proc)
+        public Task<bool> UpdateShipRejectData(RejectShipmentModel ncr)
         {
             string strsql = $@"UPDATE PC_RejectShip SET RegNo =@RegNo, DateIssued =@DateIssued , IssueGroup =@IssueGroup,
                              SectionID =@SectionID, Status =@Status, ModelNo =@ModelNo, Quantity =@Quantity, Contents =@Contents, DateCloseReg =@DateCloseReg
@@ -50,14 +52,15 @@ namespace NCR_system.Repository
             var parameter = new
             {
                 ncr.RecordID, 
-                ncr.DateIssued,
+                ncr.RegNo,
+                DateIssued = Convert.ToDateTime(ncr.DateIssued),
                 ncr.IssueGroup,
                 ncr.SectionID,
                 ncr.Status,
                 ncr.ModelNo,
                 ncr.Quantity,
                 ncr.Contents,
-                ncr.DateCloseReg
+                DateCloseReg = Convert.ToDateTime(ncr.DateCloseReg),
             };
             return SqlDataAccess.UpdateInsertQuery(strsql, parameter);
         }

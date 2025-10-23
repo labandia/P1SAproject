@@ -33,8 +33,11 @@ namespace NCR_system
             // Import Modules Usercontrols
             services.AddSingleton<Mainpage>();
             services.AddSingleton<AddCustomerComplaint>();
+            services.AddSingleton<AddShipment>();
+
             services.AddSingleton<EditCC_External>();
-            services.AddSingleton<Form1>();
+            services.AddSingleton<EditShipments>();
+            services.AddSingleton<EditRejected>();
 
             services.AddTransient<Customer_Complaint_user>();
             services.AddTransient<Inprocess_control>();

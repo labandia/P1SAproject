@@ -1,4 +1,6 @@
 ﻿using NCR_system.Interface;
+using NCR_system.View.AddForms;
+using NCR_system.View.EditForms;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,6 +16,7 @@ namespace NCR_system.View.Module
     public partial class ShipRejected : UserControl
     {
         private readonly IShipRejected _ship;
+        private readonly Rejected _rej;
 
         public DataGridView Customgrid { get { return RejectedGrid; } }
 
@@ -23,13 +26,13 @@ namespace NCR_system.View.Module
             _ship = ship;
         }
 
-        public async Task DisplayRejected()
+        public async Task DisplayRejected(int proc)
         {
             try
             {
                 // For Displaying Customer
                 RejectedGrid.DataSource = null;
-                var ShipList = (await _ship.GetRejectedShipData(1)).ToList();
+                var ShipList = (await _ship.GetRejectedShipData(proc)).ToList();
                 RejectedGrid.DataSource = ShipList;
 
 
@@ -123,6 +126,50 @@ namespace NCR_system.View.Module
                 }
 
                 e.FormattingApplied = true;
+            }
+        }
+
+        private void OpenShip_Click(object sender, EventArgs e)
+        {
+            var openmodel = new AddShipment(_ship, this, _rej);
+            openmodel.ShowDialog();
+        }
+
+        private void RejectedGrid_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // Make sure user clicked on a valid row (not header)
+            if (e.RowIndex < 0)
+                return;
+
+
+            // Get the clicked column
+            var column = RejectedGrid.Columns[e.ColumnIndex];
+
+            // Get the clicked row
+            var row = RejectedGrid.Rows[e.RowIndex];
+
+            var recordID = row.Cells["RecordID"].Value;
+            var type = row.Cells["Process"].Value;
+
+            if (column.Name == "Edit")
+            {
+                int processtype = Convert.ToInt32(type);
+                // Handle Edit image click
+                MessageBox.Show($"Edit clicked on row {e.RowIndex} - Record ID selected:  {recordID}");
+                // You can get the row data like this:
+                var openedit = new EditShipments(_ship, this, Convert.ToInt32(recordID), processtype);
+                openedit.ShowDialog();
+
+            }
+            else if (column.Name == "Delete")
+            {
+                // Handle Delete image click
+                DialogResult result = MessageBox.Show("Are you sure you want to delete?", "Confirm Delete", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                    // Remove the row or perform deletion
+                    MessageBox.Show($"Delete clicked on row {e.RowIndex} - Record ID selected:  {recordID}");
+                }
             }
         }
     }

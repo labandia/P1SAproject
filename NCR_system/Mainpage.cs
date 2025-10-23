@@ -75,13 +75,13 @@ namespace NCR_system
         private async void Rejectedbtn_Click(object sender, EventArgs e)
         {
             _rej.BringToFront();
-            await _rej.DisplayRejected();
+            await _rej.DisplayRejected(0);
         }
 
         private async void Shipmentbtn_Click(object sender, EventArgs e)
         {
             _ship.BringToFront();
-            await _ship.DisplayRejected();
+            await _ship.DisplayRejected(1);
         }
 
         private void panelContainer_Paint(object sender, PaintEventArgs e)

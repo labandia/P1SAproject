@@ -12,6 +12,23 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>true</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <MinimumRequiredVersion>1.0.0.0</MinimumRequiredVersion>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <CreateDesktopShortcut>true</CreateDesktopShortcut>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -28,9 +45,18 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -90,6 +116,12 @@
     <Compile Include="View\AddForms\AddCustomerComplaint.Designer.cs">
       <DependentUpon>AddCustomerComplaint.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\AddForms\AddInprocess.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\AddForms\AddInprocess.Designer.cs">
+      <DependentUpon>AddInprocess.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\AddForms\AddMainRegistration.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -108,12 +140,6 @@
     <Compile Include="View\AddForms\AddShipment.Designer.cs">
       <DependentUpon>AddShipment.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\AddForms\Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="View\AddForms\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
     <Compile Include="View\EditForms\EditCC_External.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -125,6 +151,36 @@
     </Compile>
     <Compile Include="View\EditForms\EditCC_SDC.Designer.cs">
       <DependentUpon>EditCC_SDC.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\EditForms\EditInprocess.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\EditForms\EditInprocess.Designer.cs">
+      <DependentUpon>EditInprocess.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\EditForms\EditMainRegistration.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\EditForms\EditMainRegistration.Designer.cs">
+      <DependentUpon>EditMainRegistration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\EditForms\EditRecurrence.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\EditForms\EditRecurrence.Designer.cs">
+      <DependentUpon>EditRecurrence.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\EditForms\EditRejected.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\EditForms\EditRejected.Designer.cs">
+      <DependentUpon>EditRejected.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\EditForms\EditShipments.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\EditForms\EditShipments.Designer.cs">
+      <DependentUpon>EditShipments.cs</DependentUpon>
     </Compile>
     <Compile Include="View\Module\Customer_Complaint_user.cs">
       <SubType>UserControl</SubType>
@@ -171,6 +227,9 @@
     <EmbeddedResource Include="View\AddForms\AddCustomerComplaint.resx">
       <DependentUpon>AddCustomerComplaint.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\AddForms\AddInprocess.resx">
+      <DependentUpon>AddInprocess.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\AddForms\AddMainRegistration.resx">
       <DependentUpon>AddMainRegistration.cs</DependentUpon>
     </EmbeddedResource>
@@ -180,14 +239,26 @@
     <EmbeddedResource Include="View\AddForms\AddShipment.resx">
       <DependentUpon>AddShipment.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="View\AddForms\Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="View\EditForms\EditCC_External.resx">
       <DependentUpon>EditCC_External.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\EditForms\EditCC_SDC.resx">
       <DependentUpon>EditCC_SDC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\EditForms\EditInprocess.resx">
+      <DependentUpon>EditInprocess.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\EditForms\EditMainRegistration.resx">
+      <DependentUpon>EditMainRegistration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\EditForms\EditRecurrence.resx">
+      <DependentUpon>EditRecurrence.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\EditForms\EditRejected.resx">
+      <DependentUpon>EditRejected.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\EditForms\EditShipments.resx">
+      <DependentUpon>EditShipments.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\Module\Customer_Complaint_user.resx">
       <DependentUpon>Customer_Complaint_user.cs</DependentUpon>
@@ -205,6 +276,7 @@
       <DependentUpon>ShipRejected.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
+    <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -218,6 +290,17 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.8">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.8 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

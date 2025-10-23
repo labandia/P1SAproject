@@ -42,10 +42,7 @@ namespace NCR_system.View.EditForms
             }
         }
 
-        private void Cancel_btn_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
+        private void Cancel_btn_Click(object sender, EventArgs e) => this.Close();
 
         private async void Save_btn_Click(object sender, EventArgs e)
         {

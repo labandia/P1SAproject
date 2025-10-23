@@ -48,6 +48,8 @@
             this.Save_btn = new System.Windows.Forms.Button();
             this.Cancel_btn = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
+            this.StatsText = new System.Windows.Forms.ComboBox();
+            this.label10 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // RegNoText
@@ -135,11 +137,9 @@
             // 
             this.Issuedbox.FormattingEnabled = true;
             this.Issuedbox.Items.AddRange(new object[] {
-            "Molding",
-            "Press",
-            "Rotor",
-            "Winding",
-            "Circuit"});
+            "PCI-PLANNING",
+            "PC1",
+            "P1FA"});
             this.Issuedbox.Location = new System.Drawing.Point(48, 251);
             this.Issuedbox.Name = "Issuedbox";
             this.Issuedbox.Size = new System.Drawing.Size(267, 21);
@@ -164,6 +164,7 @@
             this.QuanText.Name = "QuanText";
             this.QuanText.Size = new System.Drawing.Size(267, 41);
             this.QuanText.TabIndex = 86;
+            this.QuanText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.QuanText_KeyPress);
             // 
             // label6
             // 
@@ -252,11 +253,36 @@
             this.label9.TabIndex = 93;
             this.label9.Text = "Shipment Delay";
             // 
+            // StatsText
+            // 
+            this.StatsText.FormattingEnabled = true;
+            this.StatsText.Items.AddRange(new object[] {
+            "OPEN",
+            "CLOSED",
+            "Report OK",
+            "For Circulation"});
+            this.StatsText.Location = new System.Drawing.Point(400, 429);
+            this.StatsText.Name = "StatsText";
+            this.StatsText.Size = new System.Drawing.Size(267, 21);
+            this.StatsText.TabIndex = 95;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.Location = new System.Drawing.Point(397, 392);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(57, 18);
+            this.label10.TabIndex = 94;
+            this.label10.Text = "Status :";
+            // 
             // AddShipment
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(727, 760);
+            this.Controls.Add(this.StatsText);
+            this.Controls.Add(this.label10);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.Save_btn);
             this.Controls.Add(this.Cancel_btn);
@@ -278,6 +304,7 @@
             this.Controls.Add(this.label5);
             this.Name = "AddShipment";
             this.Text = "AddShipment";
+            this.Load += new System.EventHandler(this.AddShipment_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -304,5 +331,7 @@
         private System.Windows.Forms.Button Save_btn;
         private System.Windows.Forms.Button Cancel_btn;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.ComboBox StatsText;
+        private System.Windows.Forms.Label label10;
     }
 }

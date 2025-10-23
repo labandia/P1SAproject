@@ -300,7 +300,6 @@ namespace NCR_system.Models
         private int _RecordID;
         private string _DateIssued;
         private string _RegNo;
-        private string _Category;
         private string _IssueGroup;
         private int _SectionID;
         private string _ModelNo;
@@ -326,11 +325,7 @@ namespace NCR_system.Models
             get => _RegNo;
             set => _RegNo = value;
         }
-        public string Category
-        {
-            get => _Category;
-            set => _Category = value;
-        }
+       
         public string IssueGroup
         {
             get => _IssueGroup;

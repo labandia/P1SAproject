@@ -170,8 +170,6 @@ namespace NCR_system.View.Module
 
         private void Externalbtn_Click(object sender, EventArgs e)
         {
-            var add = new Form1(_cust, this);
-            add.ShowDialog();
         }
 
         private void CustomDatagrid_CellClick(object sender, DataGridViewCellEventArgs e)

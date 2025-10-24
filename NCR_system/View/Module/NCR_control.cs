@@ -17,14 +17,15 @@ namespace NCR_system.View.Module
             _ncr = ncr;
         }
 
-        public async Task DisplayNCR()
+        public async Task DisplayNCR(int procs)
         {
             try
             {
                 // For Displaying Customer
-                NCRGrid.DataSource = null;
-                var inprocesslist = (await _ncr.GetNCRData(1)).ToList();
+                //NCRGrid.DataSource = null;
+                var inprocesslist = (await _ncr.GetNCRData(procs)).ToList();
                 NCRGrid.DataSource = inprocesslist;
+                CountDisplay.Text = "Records number : " + inprocesslist.Count.ToString(); 
 
 
                 // 🔹 Define all known sections
@@ -98,10 +99,10 @@ namespace NCR_system.View.Module
             {
                 switch (e.Value.ToString())
                 {
-                    case "True":
+                    case "1":
                         e.Value = "Open";
                         break;
-                    case "False":
+                    case "0":
                         e.Value = "Close / Completed";
                         break;
                     default:
@@ -110,6 +111,34 @@ namespace NCR_system.View.Module
                 }
 
                 e.FormattingApplied = true;
+            }
+        }
+
+        private void NCR_control_Load(object sender, EventArgs e)
+        {
+            SelectedProcess.SelectedIndex = 0;
+        }
+
+        private async void SelectedProcess_SelectedIndexChanged(object sender, EventArgs e)
+        {
+             await DisplayNCR(SelectedProcess.SelectedIndex);
+        }
+
+        private void NCRGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+            if (e.RowIndex >= 0 && NCRGrid.Columns[e.ColumnIndex].Name == "FilePath")
+            {
+                string filePath = NCRGrid.Rows[e.RowIndex].Cells["FilePath"].Value?.ToString();
+
+                if (!string.IsNullOrEmpty(filePath) && System.IO.File.Exists(filePath))
+                {
+                    System.Diagnostics.Process.Start(filePath);
+                }
+                else
+                {
+                    MessageBox.Show("File not found:\n" + filePath);
+                }
             }
         }
     }

@@ -13,7 +13,6 @@ namespace NCR_system.Models
         private string _RegNo;
         private string _Category;
         private string _IssueGroup;
-        private string _MainCharge;
         private string _ModelNo;
         private int _Quantity;
         private string _Contents;
@@ -58,11 +57,7 @@ namespace NCR_system.Models
             get => _IssueGroup;
             set => _IssueGroup = value;
         }
-        public string MainCharge
-        {
-            get => _MainCharge;
-            set => _MainCharge = value;
-        }
+     
         public string ModelNo
         {
             get => _ModelNo;

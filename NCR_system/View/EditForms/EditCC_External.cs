@@ -65,7 +65,8 @@ namespace NCR_system.View.EditForms
             if (result)
             {
                 MessageBox.Show("Edit Successfully");
-                await _user.DisplayCustomer(0); 
+                await _user.DisplayCustomer(0);
+                this.Close();
             }
         }
 

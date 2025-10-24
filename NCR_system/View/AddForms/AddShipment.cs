@@ -13,13 +13,15 @@ namespace NCR_system.View.AddForms
         private readonly ShipRejected _shipcontrol;
         private readonly Rejected _rej;
 
+        public int _proc;
 
-        public AddShipment(IShipRejected ship, ShipRejected shipcontrol = null, Rejected rej = null)
+        public AddShipment(IShipRejected ship, int proc,  ShipRejected shipcontrol = null, Rejected rej = null)
         {
             InitializeComponent();
             _ship = ship;
             _shipcontrol = shipcontrol;
             _rej = rej;
+            _proc = proc;
         }
 
         private void Cancel_btn_Click(object sender, EventArgs e)
@@ -43,25 +45,33 @@ namespace NCR_system.View.AddForms
             };
             bool result = false;
 
-            if (_shipcontrol != null)
-            {
-                Debug.WriteLine("Shipment " + _shipcontrol);
-                result = await _ship.InsertShipRejectData(obj, 1);
-            }
-
-            if (_rej != null)
+            if(_proc == 0)
             {
                 Debug.WriteLine("Rejected " + _rej);
                 result = await _ship.InsertShipRejectData(obj, 0);
+
+                if (result)
+                {
+                    MessageBox.Show("Data saved successfully.");
+                    await _rej.DisplayRejected(0);
+                    this.Close();
+                }
             }
-
-
-            if (result)
+            else
             {
-                MessageBox.Show("Data saved successfully.");
-                await _shipcontrol.DisplayRejected(1);
-                this.Close();
+                Debug.WriteLine("Shipment " + _shipcontrol);
+                result = await _ship.InsertShipRejectData(obj, 1);
+                if (result)
+                {
+                    MessageBox.Show("Data saved successfully.");
+                    await _shipcontrol.DisplayRejected(1);
+                    this.Close();
+                }
+
             }
+
+
+
 
         }
 

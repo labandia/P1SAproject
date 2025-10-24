@@ -17,7 +17,6 @@ namespace NCR_system.View.Module
     public partial class Rejected : UserControl
     {
         private readonly IShipRejected _ship;
-        private readonly ShipRejected _shipcontrol;
 
         public DataGridView Customgrid { get { return RejectedGrid; } }
 
@@ -32,9 +31,22 @@ namespace NCR_system.View.Module
             try
             {
                 // For Displaying Customer
-                RejectedGrid.DataSource = null;
                 var rejectlist = (await _ship.GetRejectedShipData(proc)).ToList();
                 RejectedGrid.DataSource = rejectlist;
+
+
+                RejectedGrid.Columns["RegNo"].DisplayIndex = 0;
+                RejectedGrid.Columns["DateIssued"].DisplayIndex = 1;
+                RejectedGrid.Columns["IssueGroup"].DisplayIndex = 2;
+                RejectedGrid.Columns["SectionID"].DisplayIndex = 3;
+                RejectedGrid.Columns["ModelNo"].DisplayIndex = 4;
+                RejectedGrid.Columns["Quantity"].DisplayIndex = 5;
+                RejectedGrid.Columns["Contents"].DisplayIndex = 6;
+                RejectedGrid.Columns["DateCloseReg"].DisplayIndex = 7;
+                RejectedGrid.Columns["Status"].DisplayIndex = 8;
+                RejectedGrid.Columns["Edit"].DisplayIndex = 9;
+                RejectedGrid.Columns["Delete"].DisplayIndex = 10;
+
 
 
                 // 🔹 Define all known sections
@@ -131,7 +143,10 @@ namespace NCR_system.View.Module
 
         private void OpenReject_Click(object sender, EventArgs e)
         {
-            var addmodel = new AddShipment(_ship, _shipcontrol, this);
+            var _shipcontrol = new ShipRejected(_ship);
+
+
+            var addmodel = new AddShipment(_ship, 0,  _shipcontrol, this);
             addmodel.ShowDialog();
         }
 

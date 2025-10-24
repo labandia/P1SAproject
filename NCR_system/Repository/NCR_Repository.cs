@@ -19,7 +19,7 @@ namespace NCR_system.Repository
                               ,DateCloseReg,FilePath
                               ,Remarkstat,Process
                               ,TargetDate,Reviewer,DateRegist
-                          FROM PC_NCR";
+                          FROM PC_NCR WHERE Process =@Type";
             return await SqlDataAccess.GetData<NCRModels>(strsql, new { Type = type });
         }
 

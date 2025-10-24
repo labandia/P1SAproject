@@ -16,7 +16,6 @@ namespace NCR_system.View.Module
     public partial class ShipRejected : UserControl
     {
         private readonly IShipRejected _ship;
-        private readonly Rejected _rej;
 
         public DataGridView Customgrid { get { return RejectedGrid; } }
 
@@ -31,9 +30,22 @@ namespace NCR_system.View.Module
             try
             {
                 // For Displaying Customer
-                RejectedGrid.DataSource = null;
                 var ShipList = (await _ship.GetRejectedShipData(proc)).ToList();
                 RejectedGrid.DataSource = ShipList;
+
+
+                RejectedGrid.Columns["RegNo"].DisplayIndex = 0;
+                RejectedGrid.Columns["DateIssued"].DisplayIndex = 1;
+                RejectedGrid.Columns["IssueGroup"].DisplayIndex = 2;
+                RejectedGrid.Columns["SectionID"].DisplayIndex = 3;
+                RejectedGrid.Columns["ModelNo"].DisplayIndex = 4;
+                RejectedGrid.Columns["Quantity"].DisplayIndex = 5;
+                RejectedGrid.Columns["Contents"].DisplayIndex = 6;
+                RejectedGrid.Columns["DateCloseReg"].DisplayIndex = 7;
+                RejectedGrid.Columns["Status"].DisplayIndex = 8;
+                RejectedGrid.Columns["Edit"].DisplayIndex = 9;
+                RejectedGrid.Columns["Delete"].DisplayIndex = 10;
+
 
 
                 // 🔹 Define all known sections
@@ -131,7 +143,9 @@ namespace NCR_system.View.Module
 
         private void OpenShip_Click(object sender, EventArgs e)
         {
-            var openmodel = new AddShipment(_ship, this, _rej);
+            var rej = new Rejected(_ship);
+
+            var openmodel = new AddShipment(_ship, 1,  this, rej);
             openmodel.ShowDialog();
         }
 
@@ -154,8 +168,6 @@ namespace NCR_system.View.Module
             if (column.Name == "Edit")
             {
                 int processtype = Convert.ToInt32(type);
-                // Handle Edit image click
-                MessageBox.Show($"Edit clicked on row {e.RowIndex} - Record ID selected:  {recordID}");
                 // You can get the row data like this:
                 var openedit = new EditShipments(_ship, this, Convert.ToInt32(recordID), processtype);
                 openedit.ShowDialog();

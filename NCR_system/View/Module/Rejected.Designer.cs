@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Rejected));
             this.projectitle = new System.Windows.Forms.Label();
             this.SummaryRejected = new System.Windows.Forms.DataGridView();
             this.OpenReject = new System.Windows.Forms.Button();
@@ -180,11 +181,13 @@
             // Edit
             // 
             this.Edit.HeaderText = "Edit";
+            this.Edit.Image = ((System.Drawing.Image)(resources.GetObject("Edit.Image")));
             this.Edit.Name = "Edit";
             // 
             // Delete
             // 
             this.Delete.HeaderText = "Delete";
+            this.Delete.Image = ((System.Drawing.Image)(resources.GetObject("Delete.Image")));
             this.Delete.Name = "Delete";
             // 
             // Rejected

@@ -69,7 +69,7 @@ namespace NCR_system
         private async void ncrbtn_Click(object sender, EventArgs e)
         {
             _ncr.BringToFront();
-            await _ncr.DisplayNCR();
+            await _ncr.DisplayNCR(0);
         }
 
         private async void Rejectedbtn_Click(object sender, EventArgs e)

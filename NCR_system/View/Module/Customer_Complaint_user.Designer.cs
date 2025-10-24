@@ -148,7 +148,7 @@
             // DateCreated
             // 
             this.DateCreated.DataPropertyName = "DateCreated";
-            this.DateCreated.HeaderText = "DateCreated";
+            this.DateCreated.HeaderText = "Date";
             this.DateCreated.Name = "DateCreated";
             this.DateCreated.ReadOnly = true;
             // 
@@ -183,21 +183,21 @@
             // Details
             // 
             this.Details.DataPropertyName = "Details";
-            this.Details.HeaderText = "Details";
+            this.Details.HeaderText = "Details of Problem";
             this.Details.Name = "Details";
             this.Details.ReadOnly = true;
             // 
             // RegNo
             // 
             this.RegNo.DataPropertyName = "RegNo";
-            this.RegNo.HeaderText = "RegNo";
+            this.RegNo.HeaderText = "Registration No.";
             this.RegNo.Name = "RegNo";
             this.RegNo.ReadOnly = true;
             // 
             // CustomerName
             // 
             this.CustomerName.DataPropertyName = "CustomerName";
-            this.CustomerName.HeaderText = "CustomerName";
+            this.CustomerName.HeaderText = "Customer Name";
             this.CustomerName.Name = "CustomerName";
             this.CustomerName.ReadOnly = true;
             // 

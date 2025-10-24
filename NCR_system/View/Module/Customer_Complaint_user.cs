@@ -37,7 +37,6 @@ namespace NCR_system.View.Module
             try
             {
                 // For Displaying Customer
-                CustomDatagrid.DataSource = null;
                 var getdata = (await _cust.GetCustomerData(proc)).ToList();
                 cuslist = getdata;
 
@@ -48,18 +47,40 @@ namespace NCR_system.View.Module
 
                 if (proc == 0)
                 {
+                    
                     CustomDatagrid.Columns["RecordID"].Visible = false;
                     CustomDatagrid.Columns["CustomerName"].Visible = true;
                     CustomDatagrid.Columns["CCtype"].Visible = false;
+
+                    CustomDatagrid.Columns["DateCreated"].DisplayIndex = 0;
+                    CustomDatagrid.Columns["RegNo"].DisplayIndex = 1;
+                    CustomDatagrid.Columns["CustomerName"].DisplayIndex = 2;
+                    CustomDatagrid.Columns["SectionID"].DisplayIndex = 3;
+                    CustomDatagrid.Columns["ModelNo"].DisplayIndex = 4;
+                    CustomDatagrid.Columns["LotNo"].DisplayIndex = 5;
+                    CustomDatagrid.Columns["NGQty"].DisplayIndex = 6;
+                    CustomDatagrid.Columns["Details"].DisplayIndex = 7;
                     CustomDatagrid.Columns["Status"].DisplayIndex = 8;
                     CustomDatagrid.Columns["Edit"].DisplayIndex = 9;
+                    CustomDatagrid.Columns["Delete"].DisplayIndex = 10;
                 }
                 else
                 {
                     CustomDatagrid.Columns["RecordID"].Visible = false;
                     CustomDatagrid.Columns["RegNo"].Visible = false;
                     CustomDatagrid.Columns["CustomerName"].Visible = false;
-                    CustomDatagrid.Columns["CCtype"].Visible = false;        
+                    CustomDatagrid.Columns["CCtype"].Visible = false;
+
+                    CustomDatagrid.Columns["DateCreated"].DisplayIndex = 1;
+                    CustomDatagrid.Columns["SectionID"].DisplayIndex = 2;
+                    CustomDatagrid.Columns["ModelNo"].DisplayIndex = 3;
+                    CustomDatagrid.Columns["LotNo"].DisplayIndex = 4;
+                    CustomDatagrid.Columns["NGQty"].DisplayIndex = 5;
+                    CustomDatagrid.Columns["Details"].DisplayIndex = 6;
+
+                    CustomDatagrid.Columns["Status"].DisplayIndex = 7;
+                    CustomDatagrid.Columns["Edit"].DisplayIndex = 8;
+                    CustomDatagrid.Columns["Delete"].DisplayIndex = 9;
                 }
 
 
@@ -191,8 +212,6 @@ namespace NCR_system.View.Module
             if (column.Name == "Edit")
             {
                 int CCtype = Convert.ToInt32(type);
-                // Handle Edit image click
-                MessageBox.Show($"Edit clicked on row {e.RowIndex} - Record ID selected:  {recordID}");
                 // You can get the row data like this:
                 if (CCtype == 0)
                 {

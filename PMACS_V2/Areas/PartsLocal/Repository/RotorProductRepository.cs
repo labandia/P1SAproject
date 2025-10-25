@@ -52,7 +52,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
             return await SqlDataAccess.GetData<RotorProductModel>(strsql, null);
         }
 
-        public async Task<IEnumerable<RotorProductModel>> GetRotorStorage()
+        public async Task<List<RotorProductModel>> GetRotorStorage()
         {
             string strsql = $@"SELECT
                                 l.RecordID, 
@@ -60,7 +60,8 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
 	                            m.FrontImage, m.BackImage
                             FROM PartsLocatorRotor_Location l
                             INNER JOIN PartsLocatorRotor_Masterlist m
-                            ON m.Partnumber = l.Partnumber";
+                            ON m.Partnumber = l.Partnumber
+                            ORDER BY l.RecordID DESC";
             return await SqlDataAccess.GetData<RotorProductModel>(strsql, null);
         }
 

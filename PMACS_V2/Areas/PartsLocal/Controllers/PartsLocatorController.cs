@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -30,6 +31,12 @@ namespace PMACS_V2.Areas.PartsLocal.Controllers
         {
             var data = await _prod.GetRotorStorage() ?? new List<RotorProductModel>();
 
+            foreach (var item in data)
+            {
+                Debug.WriteLine($@"Record ID : {item.RecordID} - Partnumber : {item.Partnumber}");
+            }
+
+
             if (data == null && data.Any()) return JsonNotFound("No Storage Data.");
 
             return JsonSuccess(data);
@@ -37,16 +44,16 @@ namespace PMACS_V2.Areas.PartsLocal.Controllers
 
 
         [JwtAuthorize]
-        public async Task<ActionResult> GetProductDetails(string partnum, int area)
+        public async Task<ActionResult> GetProductDetails(int RecordID)
         {
-            var data = await _prod.GetRotorMasterlist() ?? new List<RotorProductModel>();
+            var data = await _prod.GetRotorStorage() ?? new List<RotorProductModel>();
 
-            var filteredData = data.SingleOrDefault(d => d.Partnumber == partnum && d.Area == area);
+            var filteredData = data.SingleOrDefault(d => d.RecordID == RecordID);
 
             if (filteredData == null)
                 return JsonNotFound("No Rotor data found");
 
-            return JsonSuccess(data);
+            return JsonSuccess(filteredData);
         }
 
 

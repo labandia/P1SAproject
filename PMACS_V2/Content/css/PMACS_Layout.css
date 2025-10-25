@@ -3080,12 +3080,10 @@
 }
 
 .search-section {
-    background: linear-gradient(to right, #4a6ee0, #6a89cc);
-    padding: 20px;
     border-radius: 10px;
     margin-bottom: 25px;
     color: white;
-    box-shadow: 0 4px 15px rgba(74, 110, 224, 0.3);
+    margin-top: 2em;
 }
 
 .search-container {
@@ -3103,7 +3101,6 @@
         flex-grow: 1;
         min-width: 250px;
         font-size: 16px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
 
     .search-container button {
@@ -3296,4 +3293,143 @@
     .grid-container {
         grid-template-columns: repeat(2, 1fr);
     }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.ProductDetails {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    width: 100%;
+    max-width: 1200px;
+    width: 90%;
+    margin: 0 auto;
+}
+
+.ProductDetails__content {
+    display: flex;
+    align-items: center;
+    gap: 2em;
+    padding: 1.5em;
+}
+
+    .ProductDetails__content p {
+        font-weight: 600;
+        margin-top: .5em;
+        font-size: 1.2rem;
+    }
+
+    .ProductDetails__content img {
+        width: 70px;
+    }
+
+
+.ProductsActions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    gap: 2em;
+    max-width: 1200px;
+    width: 90%;
+    margin: 0 auto;
+}
+
+.ProductionsForms, .ProductionsImage {
+    padding: 1.5em 1em;
+}
+
+.ProductionsImage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+    .ProductionsImage label {
+        text-align: left;
+    }
+
+    .ProductionsImage img {
+        width: 60%;
+    }
+
+
+
+    .ProductionsForms label, .ProductionsImage label {
+        font-weight: 600;
+        margin: .5em 0;
+    }
+
+.ProductionsForms input {
+    width: 100%;
+    background: #ccc;
+    padding: .8em 1em;
+    border-radius: .2em;
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.ProductionsForms__status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ccc;
+    padding: 1em;
+    gap: 1em;
+    border: 1px solid hsl(210, 29%, 9%);
+}
+
+.TransactionWrap button{
+    width: 100%;
+    border: 1px solid #222;
+    padding: 1.5em 1.5em;
+    transition: .5s ease-in-out ;
+}
+
+.TransactionWrap button:disabled{
+    border: none;
+}
+
+.PartslistAction {
+    display: grid;
+    grid-template-columns: 1fr 40%;
+    flex-wrap: wrap;
+}
+
+.MainVerifyContainer label{
+    margin-bottom: 1em;
+    font-weight: 600;
+}
+
+
+.ImagepartsContainer {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.ImagepartsContainer img{
+    width: 500px;
+}
+
+.VerifyContainer{
+    display: flex;
+    align-items:center;
+    justify-content: center;
+    background: #A5A1AA;
+    width: 100%;
+    height: 80px;
 }

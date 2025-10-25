@@ -6,8 +6,7 @@
 
 
 <header>
-    <h1>Parts Locator Inventory</h1>
-    <p class="subtitle">Manage rotor part numbers</p>
+    <h3>Parts Locator Inventory</h3>
 </header>
 
 
@@ -53,6 +52,42 @@
 </div>
 
 
+@*=================================================================================*@
+@*=========================== EDIT MASTERLIST PARTS ===============================*@
+@*=================================================================================*@
+<div class="modal fade modal-xl" id="OpenStorageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Palete <span id="letterdisplay"></span></h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <table width="100%" cellpadding="5" cellspacing="0" border="1" style="border-collapse:collapse; font-size:14px;">
+                    <tr style="background-color:#f5f5f5; color:#333333; font-weight: 600 !important; text-align:left;">
+                        <th align="left">PartNo</th>
+                        <th align="left">PartName</th>
+                        <th align="left">Quantity</th>
+                        <th align="left">Front Image</th>
+                        <th align="left">Back Image</th>
+                    </tr>
+                    <tbody id="StorageBody">
+                    </tbody>
+                </table>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
 <script>
     const gridContainer = document.getElementById('partsGrid');
     const searchInput = document.getElementById('searchInput');
@@ -63,15 +98,42 @@
     const resultsBody = document.getElementById('resultsBody');
     const resultsTitle = document.getElementById('resultsTitle');
 
+    let storageList = [];
 
-    const storageList = [
-        { partnumber: "002886060-01", area: "E", recordId: 101 },
-        { partnumber: "123450000-A", area: "B", recordId: 102 },
-        { partnumber: "998877665-X", area: "M", recordId: 103 },
-        { partnumber: "556677889-Y", area: "E", recordId: 104 },
-        { partnumber: "002886060-01", area: "A", recordId: 202 },
-        { partnumber: "002886060-01", area: "H", recordId: 303 },
-    ];
+    //const storageList = [
+    //    { partnumber: "002886060-01", area: "E", recordId: 101 },
+    //    { partnumber: "123450000-A", area: "B", recordId: 102 },
+    //    { partnumber: "998877665-X", area: "M", recordId: 103 },
+    //    { partnumber: "556677889-Y", area: "E", recordId: 104 },
+    //    { partnumber: "002886060-01", area: "A", recordId: 202 },
+    //    { partnumber: "002886060-01", area: "H", recordId: 303 },
+    //];
+
+
+    const partlocationStorageList = async () => {
+        let res = await FetchAuthenticate('@Url.Action("GetStorageData", "PartsLocator")', {});
+        if (res && res.Success) {
+            //let matchData = res.Data.filter(res => res.Partnumber === "01013699-01");
+            //console.log(matchData);
+            //storageList = res.Data;
+            storageList = res.Data.map(item => ({
+                ...item,
+                Area: customAreaMapping(item.Area)
+            }));
+
+        }
+    };
+
+    const customAreaMapping = (areaNumber) => {
+        const mapping = {
+            1: 'A', 2: 'B', 3: 'C', 4: 'D', 5: 'E',
+            6: 'F', 7: 'G', 8: 'H', 9: 'I', 10: 'J',
+            11: 'K', 12: 'L', 13: 'M', 14: 'N', 15: 'O',
+            16: 'P', 17: 'Q', 18: 'R', 19: 'S', 20: 'T',
+            6: 'U'
+        };
+        return mapping[areaNumber] || areaNumber;
+    };
 
     // Create grid cells A-U
     const labels = "ABCDEFGHIJKLMNOPQRSTU".split("");
@@ -89,13 +151,13 @@
         labelElement.textContent = letter;
 
         // Find part numbers for this area
-        const areaItems = storageList.filter(item => item.area === letter);
-        const partNumbers = [...new Set(areaItems.map(item => item.partnumber))];
+        const areaItems = storageList.filter(item => item.Area === letter);
+        const partNumbers = [...new Set(areaItems.map(item => item.Partnumber))];
 
         const partNumberElement = document.createElement('div');
         partNumberElement.className = 'part-number';
         partNumberElement.id = `part-${letter}`;
-        partNumberElement.textContent = partNumbers.length > 0 ? partNumbers.join(', ') : 'Empty';
+        partNumberElement.textContent = partNumbers.length > 0 ? partNumbers.join(', ') : '-';
 
         cell.appendChild(labelElement);
         cell.appendChild(partNumberElement);
@@ -108,16 +170,45 @@
                 console.log("✅ Selected RecordID:", selectedRecordId);
 
                 // Show alert with selected record ID
-                alert("Selected RecordID: " + selectedRecordId);
 
                 // Example: send to backend or details page
-                // window.location.href = '/Parts/GetDetails?recordId=' + selectedRecordId;
+                window.location.href = "/PartsLocal/PartsLocator/ProductDetails?StorageID=" + selectedRecordId;
+            } else {
+                $("#letterdisplay").text(letter);
+                var letterStorage = storageList.filter(res => res.Area === letter);
+
+                const container = $("#StorageBody");
+                container.empty();
+
+                letterStorage.forEach(res => {
+                    container.append(
+                        `<tr class='Editbtnbutton' id='editButton_${res.RecordID}' >
+                            <td>${res.Partnumber}</td>
+                            <td>${res.ModelName}</td>
+                            <td>${res.Quantity}</td>
+                            <td>${res.FrontImage}</td>
+                            <td>${res.BackImage}</td>
+                        </tr>`
+                    );
+                });
+
+                $("#OpenStorageModal").modal("show");
             }
 
             // Highlight only the selected box
             highlightBoxOnly(letter);
         });
     });
+
+    // === Show Details ===
+    $(document).on("click", ".Editbtnbutton", function (e) {
+        e.stopPropagation();
+        var rowId = $(this).attr("id");
+        var rowIndex = rowId.split("_")[1];
+        window.location.href = "/PartsLocal/PartsLocator/ProductDetails?StorageID=" + rowIndex;
+    });
+
+
 
     // Highlight ALL areas found
     function highlightMatchingAreas(matchAreas) {
@@ -155,11 +246,12 @@
         }
 
         const matchedItems = storageList.filter(item =>
-            item.partnumber.toUpperCase().includes(searchValue)
+            item.Partnumber.toUpperCase().includes(searchValue)
         );
 
+
         if (matchedItems.length > 0) {
-            const matchedAreas = [...new Set(matchedItems.map(item => item.area))];
+            const matchedAreas = [...new Set(matchedItems.map(item => item.Area))];
             highlightMatchingAreas(matchedAreas);
 
             // Show results info
@@ -173,9 +265,9 @@
             matchedItems.forEach(item => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                            <td>${item.area}</td>
-                            <td>${item.recordId}</td>
-                            <td>${item.partnumber}</td>
+                            <td>${item.Area}</td>
+                            <td>${item.RecordID}</td>
+                            <td>${item.Partnumber}</td>
                         `;
                 resultsBody.appendChild(row);
             });
@@ -211,7 +303,13 @@
 
     // ✅ Get only the FIRST RecordID of the selected letter
     function getRecordIdByArea(area) {
-        const areaItems = storageList.filter(item => item.area === area);
-        return areaItems.length > 0 ? areaItems[0].recordId : null;
+        const searchValue = document.getElementById('searchInput').value.trim().toUpperCase();
+        const areaItems = storageList.filter(item =>
+            item.Area === area && item.Partnumber.toUpperCase() === searchValue
+        );
+        return areaItems.length > 0 ? areaItems[0].RecordID : null;
     }
+
+
+    partlocationStorageList();
 </script>

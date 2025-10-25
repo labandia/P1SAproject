@@ -1,0 +1,260 @@
+﻿
+@{
+    ViewBag.Title = "ProductDetails";
+    var ID = Request.QueryString["StorageID"];
+    Layout = "~/Areas/PartsLocal/Views/Shared/_PartlocalLayout.cshtml";
+}
+
+<h2>Product Information</h2>
+
+<input type="hidden" id="RecordID" value="@ID" />
+
+
+<div class="MainDetails">
+    <div class="ProductDetails">
+        <div class="ProductDetails__content">
+            <div class="ProductDetails__Text">
+                <span>Part number :</span>
+                <p id="partText">--NA--</p>
+            </div>
+            @*<i class='bx bx-arrow-back'></i>*@
+            <img draggable="false" style="transform: scale(0.8)" src="~/Content/Images/hashtag (1).png" />
+        </div>
+
+        <div class="ProductDetails__content">
+            <div class="ProductDetails__Text">
+                <span>Model name :</span>
+                <p id="Model">--NA--</p>
+            </div>
+            @*<i class='bx bx-arrow-back'></i>*@
+            <img draggable="false" style="transform: scale(0.8)" src="~/Content/Images/hashtag (1).png" />
+        </div>
+        <div class="ProductDetails__content">
+            <div class="ProductDetails__Text">
+                <span>Location :</span>
+                <p id="localText">--NA--</p>
+            </div>
+            @*<i class='bx bx-arrow-back'></i>*@
+            <img draggable="false" style="transform: scale(0.8)" src="~/Content/Images/hashtag (1).png" />
+        </div>
+
+        <div class="ProductDetails__content">
+            <div class="ProductDetails__Text">
+                <span>Quantity :</span>
+                <p id="Quantity">--NA--</p>
+            </div>
+            @*<i class='bx bx-arrow-back'></i>*@
+            <img draggable="false" g src="~/Content/Images/boxes.png" />
+
+        </div>
+    </div>
+</div>
+
+
+
+
+@*=================================================================================*@
+@*=========================== SHOP ORDER IN =====================================*@
+@*=================================================================================*@
+<div class="modal fade modal-l" id="ShowShopOrderIN" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Edit DDDDDDDDDD</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+
+                <form method="post" enctype="multipart/form-data" class="addformcontainer" id="editnewform" autocomplete="off">
+                    <div class="row">
+                        <input type="hidden" name="EditInspectID" id="EditInspectID" />
+                        <input type="hidden" placeholder="type Employee ID" name="EditEmployee_ID" id="EditEmployee_ID" required />
+                        <div class="form_group col-12 col-sm-12 col-lg-12 mb-2">
+                            <label>Employee Name  </label> <br />
+                            <input type="text" placeholder="N/A" name="EditFullName" id="EditFullName" disabled />
+                        </div>
+                    </div>
+                    <div class="form_group col-12 col-sm-12">
+                        <label>OJT Registration No.  </label>
+                        <input type="text" placeholder="type Ojt registration No." name="EditOJTRegistration" id="EditOJTRegistration" required />
+                    </div>
+
+                 
+                    <div class="d-flex justify-content-end mt-4">
+                        <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@*=================================================================================*@
+@*=========================== SHOP ODER OUT =====================================*@
+@*=================================================================================*@
+<div class="modal fade modal-lg"  id="ShowShopOrderOut" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Edit asdsadasdasd</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+
+                <form id="DieToolForms" class="addformcontainer" autocomplete="off">
+                    <div class="row">
+                        <div class="form_group col-12 col-lg-6 col-sm-12">
+                            <label for="">Product Type</label>
+                            <input type="text" name="ToolNo" id="ToolNo" placeholder="Enter Product Type" required>
+                        </div>
+
+                        <div class="form_group col-12 col-lg-6 col-sm-12">
+                            <label for="">No# Stamp</label>
+                            <input type="text" name="Stamp" id="Stamp" placeholder="Enter Number Stamp" onkeypress='return restrictChars(event)' required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="form_group col-12 col-lg-6 col-sm-12">
+                            <label for="">Machine</label>
+                            <input type="text" name="Machine" id="Machine" placeholder="Enter Details of Modification" onkeypress='return restrictChars(event)' required>
+                        </div>
+                        <div class="form_group col-12 col-lg-6 col-sm-12">
+                            <label for="">Die Condition</label>
+                            <input type="text" name="DieCondition" id="DieCondition" placeholder="Enter Shot Cycle Shot" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form_group col-12 col-lg-6 col-sm-12">
+                            <label for="">Operator</label>
+                            <input type="text" name="Operator" id="Operator" placeholder="Enter Name of Operator" required>
+                        </div>
+                        <div class="form_group col-12 col-lg-6 col-sm-12">
+                            <label for="">Die Height</label>
+                            <input type="text" name="DieHeight" id="DieHeight" placeholder="Enter Die Height" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form_group col-12 col-lg-6 col-sm-12">
+                            <label for="">Leader Confirmation</label>
+                            <input type="text" name="LeaderCom" id="LeaderCom" placeholder="Enter In Charget name" required>
+                        </div>
+                        <div class="form_group col-12 col-lg-6 col-sm-12">
+                            <label for="">Gear(ALPHA)</label>
+                            <input type="text" name="Gear" id="Gear" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form_group col-12 col-lg-6 col-sm-12">
+                            <label for="">Pitch(MXM)</label>
+                            <input type="text" name="Pitch" id="Pitch" placeholder="Enter In Charget name" required>
+                        </div>
+                    </div>
+
+
+                    <div class="flex_end" id="editsdisplay">
+                        <button type="submit" class="primary_button_color">
+                            <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<div class="PartslistAction">
+    <div class="ImagepartsContainer">
+        <img src="~/Content/Images/background.png" />
+        <img src="~/Content/Images/background.png" />
+    </div>
+
+
+
+    <div class="MainVerifyContainer">
+        <label>Required Part number: </label><br />
+        <input type="text" class="form-control" id="RequireInput" placeholder="Enter the Required Partnumber" />
+        <br />
+        <label>Verify status : </label><br />
+        <div class="VerifyContainer">
+            <span id="VerifyStats"></span>
+        </div>
+        <label>Select a Transaction  : </label>
+        <hr />
+        <div class="flex_align TransactionWrap">
+            <button id="OpenOutbtn" disabled>Out (Issued)</button>
+            <button id="OpenInbtn" disabled>IN  (Receive)</button>
+        </div>
+    </div>
+
+
+</div>
+
+
+
+<script>
+    const ID = $("#RecordID").val();
+    let referpartnum;
+
+     const partlocationStorageList = async () => {
+         let res = await FetchAuthenticate('@Url.Action("GetProductDetails", "PartsLocator")', { RecordID : ID});
+         if (res && res.Success) {
+             console.log(res);
+             referpartnum = res.Data.Partnumber
+
+             $("#partText").text(referpartnum);
+             $("#Model").text(res.Data.ModelName);
+             $("#localText").text(res.Data.Area);
+             $("#Quantity").text(res.Data.Quantity);
+         }
+    };
+
+    $("#RequireInput").on('keyup', function (e) {
+        if (event.key === 'Enter') {
+            const val = e.target.value;
+
+            if (val === referpartnum) {
+                $("#VerifyStats").text("GOOD");
+                $("#OpenOutbtn").prop("disabled", false);
+                $("#OpenInbtn").prop("disabled", false);
+            } else {
+                $("#VerifyStats").text("NOT GOOD");
+                $("#OpenOutbtn").prop("disabled", true);
+                $("#OpenInbtn").prop("disabled", true);
+            }
+        }
+
+
+    });
+
+    $("#OpenOutbtn").on('click', function (e) {
+        e.preventDefault();
+        $("#ShowShopOrderOut").modal("show");
+    });
+
+
+    $("#OpenInbtn").on('click', function (e) {
+        e.preventDefault();
+        $("#ShowShopOrderIN").modal("show");
+    });
+
+    partlocationStorageList();
+</script>

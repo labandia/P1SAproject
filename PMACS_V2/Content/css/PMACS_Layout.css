@@ -3028,6 +3028,182 @@
 
 
 
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --success-color: #4cc9f0;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --border-radius: 8px;
+            --transition: all 0.3s ease;
+        }
+
+
+
+        .stepper {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .stepper-steps {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .stepper-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 25%;
+            right: 25%;
+            height: 4px;
+            background-color: #e9ecef;
+            z-index: 1;
+        }
+        
+        .stepper-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+            width: 50%;
+        }
+        
+        .stepper-step-indicator {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-bottom: 8px;
+            transition: var(--transition);
+            border: 3px solid #e9ecef;
+        }
+        
+        .stepper-step.active .stepper-step-indicator {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .stepper-step.completed .stepper-step-indicator {
+            background-color: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+        }
+        
+        .stepper-step-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #6c757d;
+        }
+        
+        .stepper-step.active .stepper-step-label {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .stepper-content {
+            position: relative;
+            min-height: 250px;
+        }
+        
+        .stepper-pane {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .stepper-pane.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .pane-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--dark-color);
+            font-weight: 600;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(67, 97, 238, 0.25);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            border-color: var(--success-color);
+        }
+        
+        .stepper-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .step-indicators {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .step-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            transition: var(--transition);
+        }
+        
+        .step-indicator.active {
+            background-color: var(--primary-color);
+            transform: scale(1.2);
+        }
+        
+        .completion-message {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .completion-icon {
+            font-size: 60px;
+            color: var(--success-color);
+            margin-bottom: 20px;
+        }
+        
+        .completion-message h3 {
+            color: var(--dark-color);
+            margin-bottom: 15px;
+        }
+
+
+
+
+
+
 
 
 

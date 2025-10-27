@@ -55,6 +55,11 @@
     .HeadTitle__action button{
         padding: .2em .7em;
     }
+
+    .submit-save{
+         padding: .2em .7em;
+    }
+
     .pdf-container{
         display: flex;
         align-items: center;

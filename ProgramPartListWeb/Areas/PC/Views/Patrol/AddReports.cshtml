@@ -27,8 +27,8 @@
             <div class="flex_align">
                 <a href="/PC/Patrol/PatrolReport"><i class="fa-solid fa-arrow-left"></i>  </a>
                 <span>  Back</span>
-                <button type="button" id="OpenSenders2"><i class="fa-regular fa-user"></i> Save Draft</button>
-                <button type="button" id="OpenSenders2"><i class="fa-regular fa-user"></i> Approve</button>
+                <button type="button" class="submit-save" id="OpenSenders2"><i class="fa-regular fa-user"></i> Save Draft</button>
+                <button type="button" class="submit-save" id="OpenSenders2"><i class="fa-regular fa-user"></i> Approve</button>
             </div>
             <div class="HeadTitle__action">
                 <button type="button" id="OpenSenders"><i class="fa-regular fa-user"></i> To</button>
@@ -71,8 +71,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="d-flex align-items-center gap-4">
-                    <a href="/PC/Patrol/PatrolReport"><i class="fa-solid fa-arrow-left"></i></a>
-                    <h5 class="mb-0 fw-bold">Details Information</h5>
+                    <h5 class="mb-0 fw-bold">Production Patrol Inspection Report</h5>
                 </div>
                 <hr />
                 <div class="row">
@@ -101,7 +100,7 @@
                                 <option value="5">Circuit</option>
                             </select>
                         </div>
-                       
+
                     </div>
                 </div>
 
@@ -202,11 +201,11 @@
 
                     </div>
                     <div class="col-12 col-sm-12 col-lg-6">
-               
+
                         <div class="form_group col-12 col-sm-12">
                             <label>Inspectors: </label> <br />
-                            <input type="hidden" value="Melojeane Miclat" id="InspectorName"  />
-                            <input type="text" placeholder="Input Inspectors" value="Melojeane Miclat"  disabled />
+                            <input type="hidden" value="Melojeane Miclat" id="InspectorName" />
+                            <input type="text" placeholder="Input Inspectors" value="Melojeane Miclat" disabled />
                         </div>
                     </div>
                 </div>
@@ -218,6 +217,10 @@
 
 
         <hr />
+        <div class="row">
+
+        </div>
+
 
         <div class="col-12 col-sm-12 col-lg-6" style="display: none;">
             <label>Input Inspectors <small style="color: #a81818; font-weight: 600;">*</small> </label>
@@ -226,7 +229,7 @@
                     <option>-- Select Inspector --</option>
                 </select>
             </div>*@
-            <div class="flex_align" >
+            <div class="flex_align">
                 <div class="search-box" style="width: 70%;">
                     <input type="hidden" name="Employee_ID" id="Employee_ID">
                     <input type="text" placeholder="Type Name or ID no." name="EmployeeSearch" id="EmployeeSearch" autocomplete="off">
@@ -240,28 +243,56 @@
 
 
 
-
-
-
-        <div class="d-flex align-items-center justify-content-between">
-            <div class="">
-
-                <div class="form_group col-12 col-sm-12 ">
-                    <label>Process Owner: </label> <br />
-                    <div class="select-container">
-                        <select id="ProcessID" name="ProcessID">
-                            <option>-- Select Department --</option>
-                            <option value="1">Molding</option>
-                            <option value="2">Press</option>
-                            <option value="3">Rotor</option>
-                            <option value="4">Winding</option>
-                            <option value="5">Circuit</option>
-                        </select>
-                    </div>
+        <div class="row">
+            <div class="col-12 col-sm-12 col-lg-3 ">
+                <label>Person In Charge : </label> <br />
+                <div class="select-container">
+                    <select id="ProcessID" name="ProcessID">
+                        <option>-- Select PIC --</option>
+                        <option value="1">Molding</option>
+                        <option value="2">Press</option>
+                        <option value="3">Rotor</option>
+                        <option value="4">Winding</option>
+                        <option value="5">Circuit</option>
+                    </select>
                 </div>
-
             </div>
+
+            <div class="col-12 col-sm-12 col-lg-3 ">
+                <label>Manager : </label> <br />
+                <div class="select-container">
+                    <select id="ProcessID" name="ProcessID">
+                        <option>-- Select Manager --</option>
+                        <option value="1">Molding</option>
+                        <option value="2">Press</option>
+                        <option value="3">Rotor</option>
+                        <option value="4">Winding</option>
+                        <option value="5">Circuit</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-12 col-lg-3 ">
+                <label>Inpectors : </label> <br />
+                <div class="select-container">
+                    <select id="ProcessID" name="ProcessID">
+                        <option>-- Select Inspector --</option>
+                        <option value="1">Molding</option>
+                        <option value="2">Press</option>
+                        <option value="3">Rotor</option>
+                        <option value="4">Winding</option>
+                        <option value="5">Circuit</option>
+                    </select>
+                </div>
+            </div>
+
+
         </div>
+
+     
+
+
+       
     </form>
 
 </section>

@@ -62,7 +62,7 @@
 
             <div class="modal-body modalwrap">
                 <div class="custom_modal_header">
-                    <h5>Edit DDDDDDDDDD</h5>
+                    <h5>Shop Order monitoring Details (IN)</h5>
 
                     <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
                         <span>&times;</span>
@@ -70,25 +70,60 @@
                 </div>
 
 
-                <form method="post" enctype="multipart/form-data" class="addformcontainer" id="editnewform" autocomplete="off">
-                    <div class="row">
-                        <input type="hidden" name="EditInspectID" id="EditInspectID" />
-                        <input type="hidden" placeholder="type Employee ID" name="EditEmployee_ID" id="EditEmployee_ID" required />
-                        <div class="form_group col-12 col-sm-12 col-lg-12 mb-2">
-                            <label>Employee Name  </label> <br />
-                            <input type="text" placeholder="N/A" name="EditFullName" id="EditFullName" disabled />
+                <div class="stepper" id="validationStepper">
+                    <ol class="stepper-steps">
+                        <li class="stepper-step active" data-step="1">
+                            <div class="stepper-step-indicator">1</div>
+                            <div class="stepper-step-label">Enter Quantity</div>
+                        </li>
+                        <li class="stepper-step" data-step="2">
+                            <div class="stepper-step-indicator">2</div>
+                            <div class="stepper-step-label">Shop Order(IN)</div>
+                        </li>
+                    </ol>
+
+
+
+
+                    <div class="stepper-content">
+                        <!-- Step 1: Account Information -->
+                        <div class="stepper-pane active" id="validation-step-1">
+                            <input type="text" class="form-control" id="QuantityIN" name="QuantityIN" required>
+                        </div>
+
+                        <!-- Step 2: Profile Information -->
+                        <div class="stepper-pane" id="validation-step-2">
+                            <form class="row g-3 mb-4" id="ShopOrderInForm">                          
+                                <div class="col-md-6">
+                                    <label for="validationLastName" class="form-label">Input by :</label>
+                                    <input type="text" class="form-control" name="Remarks_IN" id="validationLastName" required>
+                               
+                                </div>
+                                <div class="col-12">
+                                    <label for="validationPhone" class="form-label">Rotor Shop Order : </label>
+                                    <input type="text" class="form-control" name="RotorShop_IN" id="RotorShop_IN" required>
+                                
+                                </div>
+                            </form>
                         </div>
                     </div>
-                    <div class="form_group col-12 col-sm-12">
-                        <label>OJT Registration No.  </label>
-                        <input type="text" placeholder="type Ojt registration No." name="EditOJTRegistration" id="EditOJTRegistration" required />
-                    </div>
 
-                 
-                    <div class="d-flex justify-content-end mt-4">
-                        <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                    <div class="stepper-actions">
+                        <div class="step-indicators">
+                            <div class="step-indicator active" data-step="1"></div>
+                            <div class="step-indicator" data-step="2"></div>
+                        </div>
+                        <div>
+                            <button class="btn btn-secondary" id="prevBtn" disabled>Previous</button>
+                            <button class="btn btn-primary" id="nextBtn">Next</button>
+                        </div>
                     </div>
-                </form>
+                </div>
+
+
+
+
+               
             </div>
 
         </div>
@@ -214,10 +249,24 @@
     const ID = $("#RecordID").val();
     let referpartnum;
 
+    // Stepper elements
+    const stepperSteps = document.querySelectorAll('.stepper-step');
+    const stepperPanes = document.querySelectorAll('.stepper-pane');
+    const stepIndicators = document.querySelectorAll('.step-indicator');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    // Current step
+    let currentStep = 1;
+    const totalSteps = 2;
+
+    // Form elements
+    const shopForms = document.getElementById('ShopOrderInForm');
+
+
      const partlocationStorageList = async () => {
          let res = await FetchAuthenticate('@Url.Action("GetProductDetails", "PartsLocator")', { RecordID : ID});
          if (res && res.Success) {
-             console.log(res);
              referpartnum = res.Data.Partnumber
 
              $("#partText").text(referpartnum);
@@ -254,6 +303,146 @@
     $("#OpenInbtn").on('click', function (e) {
         e.preventDefault();
         $("#ShowShopOrderIN").modal("show");
+    }); 
+
+
+    // ============================== STEPPER ================================== //
+    // Reset stepper to initial state
+    function updateStepper() {
+        // Update step indicators
+        stepperSteps.forEach((step, index) => {
+            const stepNumber = index + 1;
+
+            if (stepNumber < currentStep) {
+                step.classList.remove('active');
+                step.classList.add('completed');
+            } else if (stepNumber === currentStep) {
+                step.classList.add('active');
+                step.classList.remove('completed');
+            } else {
+                step.classList.remove('active', 'completed');
+            }
+        });
+
+        // Update step panes
+        stepperPanes.forEach((pane, index) => {
+            const paneNumber = index + 1;
+
+            if (paneNumber === currentStep) {
+                pane.classList.add('active');
+            } else {
+                pane.classList.remove('active');
+            }
+        });
+
+        // Update step indicators
+        stepIndicators.forEach((indicator, index) => {
+            const indicatorNumber = index + 1;
+
+            if (indicatorNumber === currentStep) {
+                indicator.classList.add('active');
+            } else {
+                indicator.classList.remove('active');
+            }
+        });
+
+        // Update buttons
+        prevBtn.disabled = currentStep === 1;
+
+        if (currentStep === totalSteps) {
+            nextBtn.textContent = 'Finish';
+            nextBtn.classList.remove('btn-primary');
+            nextBtn.classList.add('btn-success');
+        } else {
+            nextBtn.textContent = 'Next';
+            nextBtn.classList.remove('btn-success');
+            nextBtn.classList.add('btn-primary');
+        }
+    }
+
+    // Update stepper UI based on current step
+    function updateStepper() {
+        // Update step indicators
+        stepperSteps.forEach((step, index) => {
+            const stepNumber = index + 1;
+
+            if (stepNumber < currentStep) {
+                step.classList.remove('active');
+                step.classList.add('completed');
+            } else if (stepNumber === currentStep) {
+                step.classList.add('active');
+                step.classList.remove('completed');
+            } else {
+                step.classList.remove('active', 'completed');
+            }
+        });
+
+        // Update step panes
+        stepperPanes.forEach((pane, index) => {
+            const paneNumber = index + 1;
+
+            if (paneNumber === currentStep) {
+                pane.classList.add('active');
+            } else {
+                pane.classList.remove('active');
+            }
+        });
+
+        // Update step indicators
+        stepIndicators.forEach((indicator, index) => {
+            const indicatorNumber = index + 1;
+
+            if (indicatorNumber === currentStep) {
+                indicator.classList.add('active');
+            } else {
+                indicator.classList.remove('active');
+            }
+        });
+
+        // Update buttons
+        prevBtn.disabled = currentStep === 1;
+
+        if (currentStep === totalSteps) {
+            nextBtn.textContent = 'Finish';
+            nextBtn.classList.remove('btn-primary');
+            nextBtn.classList.add('btn-success');
+        } else {
+            nextBtn.textContent = 'Next';
+            nextBtn.classList.remove('btn-success');
+            nextBtn.classList.add('btn-primary');
+        }
+    }
+
+    // Next button click
+    nextBtn.addEventListener('click', function () {
+        let checkQuan = document.getElementById("QuantityIN").value;
+
+        if (checkQuan !== "") {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                updateStepper();
+            } else {
+                // Finish button clicked
+                let formData = new FormData(shopForms);
+                formData.append("TransactionType", 0);
+                formData.append("Quantity", parseInt(checkQuan));
+                formData.append("TransactionType", 0);
+                formData.append("Partnumber", referpartnum);
+
+                const data = Object.fromEntries(formData);
+                console.log(data);
+                alert('Registration completed successfully!');
+                //closeModal();
+            }
+        }
+    });
+
+    // Previous button click
+    prevBtn.addEventListener('click', function () {
+        if (currentStep > 1) {
+            currentStep--;
+            updateStepper();
+        }
     });
 
     partlocationStorageList();

@@ -387,6 +387,7 @@
     <Compile Include="Areas\PartsLocal\Interface\IProducts.cs" />
     <Compile Include="Areas\PartsLocal\Interface\IShopOrderIn.cs" />
     <Compile Include="Areas\PartsLocal\Interface\IShopOrderOut.cs" />
+    <Compile Include="Areas\PartsLocal\Model\RotoFormsModel.cs" />
     <Compile Include="Areas\PartsLocal\Model\RotorProductModel.cs" />
     <Compile Include="Areas\PartsLocal\PartsLocalAreaRegistration.cs" />
     <Compile Include="Areas\PartsLocal\Repository\RotorProductRepository.cs" />

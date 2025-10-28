@@ -1,0 +1,338 @@
+﻿/*========== VARIABLES CSS ==========*/
+:root {
+    --header-height: 3.5rem;
+    --nav-width: 250px;
+    /*========== Colors ==========*/
+    --primary-color: hsl(248, 100%, 63%);
+    --primary-hover: hsl(248, 65%, 44%);
+    --primary-alt-color: hsl(209, 91%, 34%);
+    --primary-alt-color: #F4F0FA;
+    --first-color-light: #F4F0FA;
+    --title-color: #19181B;
+    --text-color: #58555E;
+    --text-color-light: #A5A1AA;
+    --body-color: #f5f5f5;
+    --container-color: #FFFFFF;
+    --nav-color: hsl(210, 29%, 9%);
+    /*========== Font and typography ==========*/
+    --body-font: 'poppins-regular', sans-serif;
+    --border-color: #a09e9e;
+}
+
+body {
+    font-family: var(--body-font) !important;
+}
+
+body, h1, h2, h3, h4, div, p, strong, small, button, select {
+    font-family: inherit;
+}
+
+label{
+    font-weight: 600 !important;
+    color: #222;
+}
+
+.MainWrapper {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.sidebar {
+    width: 280px;
+    background: linear-gradient(135deg, #4a6cf7 100%, #6a82fb 100%);
+    color: white;
+    padding: 30px 20px;
+    position: relative;
+}
+
+    .sidebar h2 {
+        margin-bottom: 30px;
+        font-weight: 600;
+        font-size: 22px;
+        display: flex;
+        align-items: center;
+    }
+
+        .sidebar h2 i {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+.step-list {
+    list-style: none;
+}
+
+.step-item {
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+    .step-item.active {
+        background: rgba(255, 255, 255, 0.2);
+        font-weight: 600;
+    }
+
+    .step-item.completed {
+        opacity: 0.8;
+    }
+
+        .step-item.completed::after {
+            content: "✓";
+            position: absolute;
+            right: 20px;
+            font-weight: bold;
+        }
+
+.step-number {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    margin-right: 12px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.step-item.active .step-number {
+    background: white;
+    color: #4a6cf7;
+}
+
+.step-item.completed .step-number {
+    background: #4cd964;
+    color: white;
+}
+
+
+
+.content {
+    flex: 1;
+    height: 100%;
+    max-height: 100vh;
+    padding: 25px 40px;
+    position: relative;
+    overflow-y: scroll;
+}
+
+.step-content {
+    display: none;
+    animation: fadeIn 0.5s ease;
+}
+
+    .step-content.active {
+        display: block;
+    }
+
+
+
+      @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        h3 {
+            margin-bottom: 25px;
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #4a5568;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #4a6cf7;
+            box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.1);
+        }
+
+        .upload-area {
+            border: 2px dashed #cbd5e0;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-area:hover {
+            border-color: #4a6cf7;
+            background-color: #f8faff;
+        }
+
+        .upload-area i {
+            font-size: 40px;
+            color: #a0aec0;
+            margin-bottom: 15px;
+        }
+
+        .upload-area p {
+            color: #718096;
+            margin-bottom: 10px;
+        }
+
+        .upload-area span {
+            color: #4a6cf7;
+            font-weight: 500;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-prev {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        .btn-prev:hover {
+            background: #e2e8f0;
+        }
+
+        .btn-next, .btn-submit {
+            background: #4a6cf7;
+            color: white;
+        }
+
+        .btn-next:hover, .btn-submit:hover {
+            background: #3a5ce5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(74, 108, 247, 0.3);
+        }
+
+        .btn-save {
+            background: #10b981;
+            color: white;
+            margin-right: 15px;
+        }
+
+        .btn-save:hover {
+            background: #0da271;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: #4a6cf7;
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+
+
+
+
+
+/* ========= CUSTOM INPUT WITH A PREFIX =========== */
+.date-wrapper {
+    width: 100% !important;
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    padding: 0 1em;
+    border-radius: 6px;
+    font-family: Arial, sans-serif;
+    width: fit-content;
+    position: relative;
+}
+
+.prefix {
+    margin-right: 8px;
+    color: #555;
+    white-space: nowrap;
+    font-size: .8rem;
+}
+
+.styled-date {
+    border: none;
+    outline: none !important;
+    width: 80px;
+    background: transparent;
+    border: none !important;
+    margin-top: 1em !important;
+    padding: 0 !important;
+    font-weight: 500;
+}
+
+.calendar-icon-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px; /* increased */
+    height: 50px; /* increased */
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.calendar-icon {
+    font-size: 20px;
+    color: #555;
+    pointer-events: none; /* allow the input to receive clicks */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.real-date-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0; /* invisible but still clickable */
+    cursor: pointer;
+    z-index: 1;
+    outline: none;
+}

@@ -140,6 +140,80 @@ namespace ProgramPartListWeb.Utilities
         }
 
 
+        public static async Task SaveFileasPDFV2(AddFormRegistrationModel reg, string json, string department, string outputfilename, string template, bool Sign)
+        {
+            try
+            {
+                string exportFolder = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\Patrol_Registration\";
+                string outputPdfPath = Path.Combine(exportFolder, Path.ChangeExtension(outputfilename, ".pdf"));
+                string tempPdfPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".pdf");
+
+                byte[] excelBytes;
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+                DateTime date = DateTime.ParseExact(reg.DateConduct, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                string formatted = date.ToString("MMMM dd, yyyy");
+
+                // Step 1: Generate Excel in memory
+                using (var package = new ExcelPackage(new FileInfo(template)))
+                {
+                    var worksheet = package.Workbook.Worksheets[0];
+
+                    worksheet.Cells["B2"].Value = "Registration No: " + reg.RegNo;
+                    worksheet.Cells["B4"].Value = "Dept. /Section Inspected: P1SA-" + department;
+
+                    var findings = JsonConvert.DeserializeObject<List<FindingModel>>(json);
+                    foreach (var f in findings)
+                    {
+                        switch (f.FindID)
+                        {
+                            case 1: worksheet.Cells["B7"].Value = f.FindDescription; break;
+                            case 2: worksheet.Cells["B13"].Value = f.FindDescription;  break;
+                            case 3: worksheet.Cells["B20"].Value = f.FindDescription;  break;
+                            case 4: worksheet.Cells["B27"].Value = f.FindDescription;  break;
+                            case 5: worksheet.Cells["B34"].Value = f.FindDescription;  break;
+                            default: worksheet.Cells["B42"].Value = f.FindDescription;  break;
+                        }
+                    }
+
+                    excelBytes = package.GetAsByteArray();
+                }
+
+                // Step 2: Convert to PDF using Spire.XLS
+                using (var excelStream = new MemoryStream(excelBytes))
+                {
+                    var workbook = new Spire.Xls.Workbook();
+                    workbook.LoadFromStream(excelStream, ExcelVersion.Version2013);
+                    var sheet = workbook.Worksheets[0];
+
+                    var affectedCells = new[] { "B42", "D41", "C41", "D42" };
+                    foreach (var cell in affectedCells)
+                    {
+                        var range = sheet.Range[cell];
+                        range.Style.VerticalAlignment = VerticalAlignType.Center;
+                        range.Style.WrapText = true;
+                    }
+
+                    sheet.SetRowHeight(41, 30);
+                    sheet.SetRowHeight(42, 30);
+
+                    
+                    workbook.SaveToFile(tempPdfPath, FileFormat.PDF);
+                }
+
+                File.Copy(tempPdfPath, outputPdfPath, overwrite: true);
+                File.Delete(tempPdfPath);
+
+                Debug.WriteLine($"✔ PDF successfully generated at: {outputPdfPath}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("❌ Error generating PDF: " + ex.Message);
+            }
+        }
+
+
+
         public static void SaveFileasExcel(HttpPostedFileBase ExcelFile, string FilenameExtension)
         {
             string exportFolder = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\Patrol_Countermeasure\";

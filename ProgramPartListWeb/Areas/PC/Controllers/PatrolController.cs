@@ -1,4 +1,5 @@
 ﻿
+using Newtonsoft.Json;
 using OfficeOpenXml;
 using ProgramPartListWeb.Areas.PC.Interface;
 using ProgramPartListWeb.Areas.PC.Models;
@@ -26,13 +27,19 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
     public class PatrolController : ExtendController
     {
         private readonly IInspector _ins;
+        private readonly IRegistration _reg;
+
         public static string strSender => ConfigurationManager.AppSettings["config:SMTPEmail"];
         string exePath = @"\\sdp01034s\SYSTEM EXECUTABLE\P1SA-PC_System\OpenExcel\OpenExcelApp.exe";
         // Default template path for PDF generation 
         string templatePath = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Uploads/PGFY-00031FORM_1.xlsx");
 
 
-        public PatrolController(IInspector ins) => _ins = ins;
+        public PatrolController(IInspector ins, IRegistration reg)
+        {
+            _ins = ins;
+            _reg = reg;
+        }
 
         //-----------------------------------------------------------------------------------------
         //---------------------------- USERS DATA  ------------------------------------------------
@@ -372,63 +379,127 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             var formdata = GlobalUtilities.GetMessageResponse(result, 1);
             return Json(formdata, JsonRequestBehavior.AllowGet);
         }
+        //[HttpPost]
+        //public async Task<ActionResult> AddRegistration(HttpPostedFileBase[] Attachments)
+        //{
+        //    // Get Department Name
+        //    string departmentName = GlobalUtilities.DepartmentName(Convert.ToInt32(Request.Form["DepartmentID"]));
+        //    //bool isSign = !string.IsNullOrEmpty(Request.Form["IsSign"]);
+
+        //    // Get Employee FullName
+        //    string Fullname = Request.Form["InspectorName"];
+
+        //    // Set File Name For Registration No. PDF file
+        //    string newFileName = $"RN_{Request.Form["RegNo"]}_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.xlsx";
+        //    string outputPdfPath = newFileName.Replace(".xlsx", ".pdf");
+
+
+        //    List<string> MultipleAttachments = new List<string>();
+
+        //    if (Attachments != null && Attachments.Length > 0)
+        //    {
+        //        foreach (string fileKey in Request.Files)
+        //        {
+        //            var file = Request.Files[fileKey];
+        //            if (file != null && file.ContentLength > 0 && fileKey == "Attachments")
+        //            {
+        //                string fileName = $"PF_{Request.Form["RegNo"]}_{DateTime.Now:yyyyMMdd_HHmmssfff}{Path.GetExtension(file.FileName)}";
+        //                ExportFiler.SaveFileasExcel(file, fileName);
+        //                MultipleAttachments.Add(fileName);
+        //            }
+        //        }
+        //    }
+           
+
+        //    // Join all file names into  string
+        //    string patrolPath = string.Join(";", MultipleAttachments);
+        //    // Set a Fix Prefix for the Registration No
+        //    string finalprefix = "P1SA-" + Request.Form["RegNo"];
+
+        //    var obj = new RegistrationModel
+        //    {
+        //        RegNo = finalprefix,
+        //        DateConduct = Request.Form["DateConduct"],
+        //        Employee_ID = "",
+        //        FullName = Fullname,
+        //        PIC = Request.Form["PIC"],
+        //        PIC_Comments = Request.Form["PIC_Comments"],
+        //        FilePath = outputPdfPath,
+        //        Manager = Request.Form["Manager"],
+        //        Manager_Comments = Request.Form["Manager_Comments"],
+        //        PatrolPath = patrolPath,
+        //        IsSigned = false
+        //    };
+
+        //    string findJson = Request.Form["FindJson"];
+        //    string IsSend = Request.Form["Senders"];
+        //    string CCSend = Request.Form["CC"];
+
+        //    bool result = await _ins.AddRegistration(obj, findJson);
+
+        //    if (result)
+        //    {
+        //        CacheHelper.Remove("Registration");
+
+        //        // Convert the string sender to a array list
+
+
+        //        //string creatbody = EmailService.CreateAEmailBody(
+        //        //        "JUAN DELA CRUZ",
+        //        //        "This is a sample email body used for testing purposes. Please disregard."
+        //        //    );
+
+        //        //var SendEmail = new SentEmailModel
+        //        //{
+        //        //    Subject = "Patrol Inspection",  
+        //        //    Sender = strSender,
+        //        //    BCC = CCSend,
+        //        //    Body = creatbody,
+        //        //    Recipient = IsSend
+        //        //};
+
+        //        // GENERATE A PDF FILE AND SAVE TO THE NETWORK FILE
+        //        await ExportFiler.SaveFileasPDF(obj, findJson, departmentName, newFileName, templatePath, false);
+
+        //        // EMAIL SAVE TO THE DATABASE
+        //        //await EmailService.SendEmailViaSqlDatabase(SendEmail);
+
+        //    }
+        //    if (result == false)
+        //        return JsonError("Problem during saving Data.");
+
+        //    return JsonCreated(obj, $@"Registration No : {finalprefix} is Add  successfully");
+
+        //}
+
+
+
         [HttpPost]
-        public async Task<ActionResult> AddRegistration(HttpPostedFileBase[] Attachments)
+        public async Task<ActionResult> AddRegistration()
         {
             // Get Department Name
             string departmentName = GlobalUtilities.DepartmentName(Convert.ToInt32(Request.Form["DepartmentID"]));
             //bool isSign = !string.IsNullOrEmpty(Request.Form["IsSign"]);
-
-            // Get Employee FullName
-            string Fullname = Request.Form["InspectorName"];
 
             // Set File Name For Registration No. PDF file
             string newFileName = $"RN_{Request.Form["RegNo"]}_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.xlsx";
             string outputPdfPath = newFileName.Replace(".xlsx", ".pdf");
 
 
-            List<string> MultipleAttachments = new List<string>();
-
-            if (Attachments != null && Attachments.Length > 0)
-            {
-                foreach (string fileKey in Request.Files)
-                {
-                    var file = Request.Files[fileKey];
-                    if (file != null && file.ContentLength > 0 && fileKey == "Attachments")
-                    {
-                        string fileName = $"PF_{Request.Form["RegNo"]}_{DateTime.Now:yyyyMMdd_HHmmssfff}{Path.GetExtension(file.FileName)}";
-                        ExportFiler.SaveFileasExcel(file, fileName);
-                        MultipleAttachments.Add(fileName);
-                    }
-                }
-            }
-           
-
-            // Join all file names into  string
-            string patrolPath = string.Join(";", MultipleAttachments);
             // Set a Fix Prefix for the Registration No
             string finalprefix = "P1SA-" + Request.Form["RegNo"];
 
-            var obj = new RegistrationModel
+            var obj = new AddFormRegistrationModel
             {
                 RegNo = finalprefix,
-                DateConduct = Request.Form["DateConduct"],
-                Employee_ID = "",
-                FullName = Fullname,
-                PIC = Request.Form["PIC"],
-                PIC_Comments = Request.Form["PIC_Comments"],
-                FilePath = outputPdfPath,
-                Manager = Request.Form["Manager"],
-                Manager_Comments = Request.Form["Manager_Comments"],
-                PatrolPath = patrolPath,
-                IsSigned = false
+                Department_ID = Convert.ToInt32(Request.Form["DepartmentID"]),
+                FilePath = outputPdfPath
             };
 
             string findJson = Request.Form["FindJson"];
-            string IsSend = Request.Form["Senders"];
-            string CCSend = Request.Form["CC"];
 
-            bool result = await _ins.AddRegistration(obj, findJson);
+
+            bool result = await _reg.AddRegistration(obj, findJson);
 
             if (result)
             {
@@ -452,7 +523,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 //};
 
                 // GENERATE A PDF FILE AND SAVE TO THE NETWORK FILE
-                await ExportFiler.SaveFileasPDF(obj, findJson, departmentName, newFileName, templatePath, false);
+                await ExportFiler.SaveFileasPDFV2(obj, findJson, departmentName, newFileName, templatePath, false);
 
                 // EMAIL SAVE TO THE DATABASE
                 //await EmailService.SendEmailViaSqlDatabase(SendEmail);
@@ -961,6 +1032,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         // GET: PC/PatrolReport
         [CompressResponse]
         public ActionResult PatrolSchedule() => View();
+       
         // GET: PC/AddReports
         [CompressResponse]
         public ActionResult AddReports() => View();
@@ -972,5 +1044,23 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         public ActionResult PatrolReportDetails(string Regno) => View();
         [CompressResponse]
         public ActionResult Settings() => View();
+
+
+        // =========== REGISTRATION FORM =====================
+        // GET: PC/AddReports
+        [CompressResponse]
+        public ActionResult RegistrionNoForms() => View();
+        // GET: PC/AddReports
+        [CompressResponse]
+        public ActionResult ProcessOwner() => View();
+        // GET: PC/AddReports
+        [CompressResponse]
+        public ActionResult InspectorsReview() => View();
+        // GET: PC/AddReports
+        [CompressResponse]
+        public ActionResult ManagerView() => View();
+        // GET: PC/AddReports
+        [CompressResponse]
+        public ActionResult DepartmentApproval() => View();
     }
 }

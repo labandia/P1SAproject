@@ -173,6 +173,8 @@ namespace ProgramPartListWeb
             container.RegisterType<IHyrdoParts, HydroPartsRepository>();
             container.RegisterType<ISupplier, SupplierRepository>();
 
+            container.RegisterType<IRegistration, RegistrationRepository>();
+
             container.RegisterType<IChambers, ChamberRepository>();
             container.RegisterType<IPartsList, PartsMasterlistRepository>();
             container.RegisterType<IStocksparts, StockpartsRepository>();

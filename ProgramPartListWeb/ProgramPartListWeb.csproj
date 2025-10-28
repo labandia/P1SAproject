@@ -647,11 +647,14 @@
     <Compile Include="Areas\PC\Controllers\PatrolController.cs" />
     <Compile Include="Areas\PC\Interface\IInspector.cs" />
     <Compile Include="Areas\PC\Interface\INotification.cs" />
+    <Compile Include="Areas\PC\Interface\IRegistration.cs" />
     <Compile Include="Areas\PC\Models\InspectorModel.cs" />
     <Compile Include="Areas\PC\Models\Notification.cs" />
+    <Compile Include="Areas\PC\Models\RegistrationModel.cs" />
     <Compile Include="Areas\PC\PCAreaRegistration.cs" />
     <Compile Include="Areas\PC\Repository\InpectorRepository.cs" />
     <Compile Include="Areas\PC\Repository\NotificationRepository.cs" />
+    <Compile Include="Areas\PC\Repository\RegistrationRepository.cs" />
     <Compile Include="Areas\Press\Controllers\PartsLocatorController.cs" />
     <Compile Include="Areas\Press\Interfaces\IAluminumProducts.cs" />
     <Compile Include="Areas\Press\PressAreaRegistration.cs" />
@@ -718,6 +721,7 @@
     <Content Include="Content\css\HydroLogin.css" />
     <Content Include="Content\css\OrderDetails.css" />
     <Content Include="Content\css\Patrolforms.css" />
+    <Content Include="Content\css\RegistrationUI.css" />
     <Content Include="Content\Images\Electrical.png" />
     <Content Include="Content\Images\FrontImage.png" />
     <Content Include="Content\Images\HydroChamber.png" />
@@ -788,6 +792,11 @@
     <Content Include="Areas\Hydroponics\Views\Hydro\ChambersDetails.cshtml" />
     <Content Include="Areas\Hydroponics\Views\Hydro\RequestStock.cshtml" />
     <Content Include="Areas\PC\Views\Patrol\ReviewRegistration.cshtml" />
+    <Content Include="Areas\PC\Views\Patrol\RegistrionNoForms.cshtml" />
+    <Content Include="Areas\PC\Views\Patrol\ProcessOwner.cshtml" />
+    <Content Include="Areas\PC\Views\Patrol\InspectorsReview.cshtml" />
+    <Content Include="Areas\PC\Views\Patrol\ManagerView.cshtml" />
+    <Content Include="Areas\PC\Views\Patrol\DepartmentApproval.cshtml" />
     <None Include="Content\Images\.editorconfig" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\circularProgressBar.min.js" />

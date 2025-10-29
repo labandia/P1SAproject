@@ -16,7 +16,6 @@ namespace ProgramPartListWeb.Controllers
 
 
         [AllowAnonymous]
-        [RateLimiting(5, 1)] // Limits the No of Request
         [HttpPost]
         public async Task<ActionResult> Authenticate(string username, string password, int proj = 1)
         {

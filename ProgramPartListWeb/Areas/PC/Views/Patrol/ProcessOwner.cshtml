@@ -57,122 +57,75 @@
 
             <!-- Step 1: Create New Document -->
             <div class="step-content active" id="step-1">
-                <h3 class="mb-4">Create New Registration No.</h3>
 
-                <div class="row mb-3">
-                    <div class="col-12 col-sm-12 col-lg-6">
-                        <label>Registration No. <small style="color: #a81818; font-weight: 600;">*</small> </label> <br />
-                        @*<input type="text" placeholder="Type Registration No." name="RegNo" id="RegNo" required />*@
-                        <div class="date-wrapper">
-                            <span class="prefix">P1SA-</span>
-                            <input name="RegNo" id="RegNo" class="styled-date" type="text" placeholder="YYMMDD" readonly required>
+            </div>
 
-                            <div class="calendar-icon-wrapper">
-                                <i class="fa-regular fa-calendar-days calendar-icon"></i>
-                                <input type="date" class="real-date-input" id="hiddenDatePicker" onchange="formatAndDisplayDate(this.value)">
-                            </div>
-                        </div>
+            <!-- Step 2: Person in Charge -->
+            <form method="post" enctype="multipart/form-data" class="step-content active" id="step-2" autocomplete="off">
+                <h3 class="mb-4">Person In Charge</h3>
+
+                <button>Comments</button>
+
+                <div class="Attachmentcontainer">
+                    <div class="flex_align">
+                        <label class="mb-0 fw-bold">Attachments : </label>
+                        <button type="button" id="uploadBtn"><i class="fa-solid fa-paperclip"></i> Upload Files</button>
                     </div>
-                    <div class="col-12 col-sm-12 col-lg-6">
-                        <label>Dept. /Section Inspected <small style="color: #a81818; font-weight: 600;">*</small> </label>
-                        <div class="select-container">
-                            <select id="DepartmentID" name="DepartmentID">
-                                <option>-- Select Department --</option>
-                                <option value="1">Molding</option>
-                                <option value="2">Press</option>
-                                <option value="3">Rotor</option>
-                                <option value="4">Winding</option>
-                                <option value="5">Circuit</option>
-                            </select>
-                        </div>
 
-                    </div>
+                    <section class="flex_align">
+                        <div id="fileContainer"></div>
+                        <ul id="fileList" class="file-list flex_align"></ul>
+                    </section>
                 </div>
+
+                <input type="file" id="fileInput" accept="application/pdf" multiple hidden>
+
+
 
 
                 <div class="col-12 col-sm-12 col-lg-12 mb-3">
                     <label>1. Work Practice / Standard / Safety</label> <br />
-                    <input type="hidden" value="1" id="Find1" name="Find1" />
-                    <textarea placeholder="Type text here..." name="Inpects1" id="Inpects1" rows="3" cols="40" required></textarea>
+                    <label>Countermeasures</label> <br />
+                    <textarea placeholder="Type text here..." name="counter1" id="counter1" rows="3" cols="40"></textarea>
                 </div>
 
                 <div class="col-12 col-sm-12 col-lg-12 mb-3">
                     <label>2. Identification and status of the product or materials.</label> <br />
-                    <input type="hidden" value="2" id="Find2" name="Find2" required />
-                    <textarea placeholder="Type text here..." name="Inpects2" id="Inpects2" rows="3" cols="40"></textarea>
+                    <label>Countermeasures</label> <br />
+                    <textarea placeholder="Type text here..." name="counter2" id="counter2" rows="3" cols="40"></textarea>
                 </div>
 
                 <div class="col-12 col-sm-12 col-lg-12 mb-3">
                     <label>3. Condition and status of documents / records.</label> <br />
-                    <input type="hidden" value="3" id="Find3" name="Find3" required />
-                    <textarea placeholder="Type text here..." name="Inpects3" id="Inpects3" rows="3" cols="40"></textarea>
+                    <label>Countermeasures</label> <br />
+                    <textarea placeholder="Type text here..." name="counter3" id="counter3" rows="3" cols="40"></textarea>
                 </div>
 
                 <div class="col-12 col-sm-12 col-lg-12 mb-3">
                     <label>4. Record of ‘start-up process check’ and monthly inspection</label> <br />
-                    <input type="hidden" value="4" id="Find4" name="Find4" required />
-                    <textarea placeholder="Type text here..." name="Inpects4" id="Inpects4" rows="3" cols="40"></textarea>
+                    <label>Countermeasures</label> <br />
+                    <textarea placeholder="Type text here..." name="counter4" id="counter4" rows="3" cols="40"></textarea>
                 </div>
 
                 <div class="col-12 col-sm-12 col-lg-12 mb-3">
                     <label>5. Calibration of equipment and jigs used for measurement or inspection.</label> <br />
-                    <input type="hidden" value="5" id="Find5" name="Find5" required />
-                    <textarea placeholder="Type text here..." name="Inpects5" id="Inpects5" rows="3" cols="40"></textarea>
+                    <label>Countermeasures</label> <br />
+                    <textarea placeholder="Type text here..." name="counter5" id="counter5" rows="3" cols="40"></textarea>
                 </div>
 
                 <div class="col-12 col-sm-12 col-lg-12 mb-3">
                     <label>6. Countermeasure and implementation of previous quality and safety</label> <br />
-                    <input type="hidden" value="6" id="Find5" name="Find6" required />
-                    <textarea placeholder="Type text here..." name="Inpects6" id="Inpects6" rows="3" cols="40"></textarea>
+                    <label>Countermeasures</label> <br />
+                    <textarea placeholder="Type text here..." name="counter6" id="counter6" rows="3" cols="40"></textarea>
                 </div>
 
-                <div class="col-12 col-sm-12 col-lg-3 ">
-                    <label>Person In Charge : </label> <br />
-                    <div class="select-container">
-                        <select id="ProcessID" name="ProcessID">
-                            <option>-- Select PIC --</option>
-                            <option value="1">Molding</option>
-                            <option value="2">Press</option>
-                            <option value="3">Rotor</option>
-                            <option value="4">Winding</option>
-                            <option value="5">Circuit</option>
-                        </select>
-                    </div>
-                </div>
+
 
                 <div class="button-group">
                     <div></div> <!-- Empty div for spacing -->
-                    <button class="btn-next" onclick="goToStep(2)">Next</button>
+                    <button class="btn-next" type="submit">Next</button>
                 </div>
-            </div>
-
-            <!-- Step 2: Person in Charge -->
-            <div class="step-content" id="step-2">
-                <h3>Person in Charge (PIC)</h3>
-                <div class="form-group">
-                    <label>Select PIC</label>
-                    <select>
-                        <option>Select person in charge</option>
-                        <option>John Smith (Manager)</option>
-                        <option>Sarah Johnson (Director)</option>
-                        <option>Michael Brown (Team Lead)</option>
-                        <option>Emily Davis (Coordinator)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Additional Approvers</label>
-                    <select multiple style="height: 120px;">
-                        <option>David Wilson</option>
-                        <option>Lisa Anderson</option>
-                        <option>Robert Taylor</option>
-                        <option>Jennifer Martinez</option>
-                    </select>
-                </div>
-                <div class="button-group">
-                    <button class="btn-prev" onclick="goToStep(1)">Previous</button>
-                    <button class="btn-next" onclick="goToStep(3)">Next</button>
-                </div>
-            </div>
+            </form>
 
             <!-- Step 3: Document Details -->
             <div class="step-content" id="step-3">
@@ -256,6 +209,8 @@
         let currentStep = 2;
         const totalSteps = 5;
 
+        const addform = document.getElementById("step-2");
+
         function goToStep(step) {
             // Update current step
             currentStep = step;
@@ -297,6 +252,76 @@
                     }
                 });
             });
+        });
+
+
+        const findingsJson = (e) => {
+            let formData = new FormData(e);
+            const data = Object.fromEntries(formData);
+
+            const findings = [];
+
+            for (let i = 1; i <= 6; i++) {
+                findings.push({
+                    RegNo: data.RegNo,
+                    FindID: data[`Find${i}`],
+                    FindCountermeasure: data[`counter${i}`]
+                });
+            }
+
+            return JSON.stringify(findings);
+        };
+
+
+        addform.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                // Append form data
+                let strfind = findingsJson(e.target);
+                let finalformData = new FormData(e.target);
+                finalformData.append('FindJson', strfind);
+
+                // For registration validation, read RegNo from form data
+                const finaldata = Object.fromEntries(finalformData);
+
+                let reg = "P1SA-" + finaldata.RegNo;
+                //console.log(finaldata);
+
+                //if (formValidation(reg)) {
+                //    Swal.fire({
+                //        icon: "error",
+                //        text: "Registration No is already inserted",
+                //        timer: 1500,
+                //        showConfirmButton: false
+                //    });
+
+                //    $("#errorvalid").show();
+                //    $("#labelguide").hide();
+                //    $("#RegNo").css("border", "1px solid red");
+                //    return;
+                //}
+
+
+                //const savebtn = document.querySelector("#btnSave");
+                //savebtn.innerHTML = " <div class='buttonloading'></div> Generating PDF Please wait...";
+
+                // Send form data with file to controller
+                let res = await postData('@Url.Action("AddRegistration", "Patrol")', finalformData);
+                console.log(res);
+                //if (res.StatusCode === 201) {
+                //    Swal.fire({
+                //        title: "Success",
+                //        text: res.Message,
+                //        icon: "success",
+                //        showConfirmButton: false,
+                //        timer: 1500
+                //    }).then(() => {
+                //        setTimeout(() => {
+                //            window.location.href = "/PC/Patrol/PatrolReport";
+                //        }, 3000);
+                //    });
+                //}
+
+                //Resetforms();
         });
     </script>
 </body>

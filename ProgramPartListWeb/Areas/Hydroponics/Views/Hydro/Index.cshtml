@@ -262,7 +262,7 @@
         loader.classList.add('show');
 
         let formData = new FormData(e.target);
-        formData.append("proj", 9);
+        formData.append("proj", 10);
 
         const data = Object.fromEntries(formData);
         let res = await postrawData('/Auth/Authenticate', data);

@@ -1126,7 +1126,7 @@
         $.each(Inventlist, function (index, row) {
             $("#partSelect").append("<option value='" + row.PartNo + "'>" + row.PartName + "</option>");
         });
-
+        requestItems = [];
         $("#AddRequestModal").modal("show");
     });
 

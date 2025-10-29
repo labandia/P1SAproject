@@ -21,6 +21,7 @@
 
 body {
     font-family: var(--body-font) !important;
+    font-size: .935rem;
 }
 
 body, h1, h2, h3, h4, div, p, strong, small, button, select {

@@ -15,6 +15,7 @@ using System.Xml.Linq;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using System.Net.NetworkInformation;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
 namespace PracticeC_
 {
@@ -94,14 +95,14 @@ namespace PracticeC_
             //string machineName = Environment.MachineName.ToLower();
             //Console.WriteLine($"Original: {machineName}");
             //Console.WriteLine(VerifyPassword("ErcXN5O+LcsWG5/cMOMWOg==:cZs22bq4HkpRKxiubSnaRQ0U4NIhfn7xUHi3De8cXWw=", "sdp1234a*"));
-            //samplehash();
+            samplehash();
 
             //PingComputer("172.29.1.121");
 
             //Console.WriteLine("Generate ID : " + GenerateID(""));
 
 
-            ConvertstringtoBase64();
+            //ConvertstringtoBase64();
 
             Console.ReadKey();
         }
@@ -262,44 +263,44 @@ namespace PracticeC_
             }
         }
 
-        //public static void samplehash()
-        //{
-        //    byte[] salt = new byte[16];
-        //    using (var rng = new RNGCryptoServiceProvider())
-        //    {
-        //        rng.GetBytes(salt);
-        //    }
+        public static void samplehash()
+        {
+            byte[] salt = new byte[16];
+            using (var rng = new RNGCryptoServiceProvider())
+            {
+                rng.GetBytes(salt);
+            }
 
-        //    byte[] hash = KeyDerivation.Pbkdf2(
-        //        password: "admin1234",
-        //        salt: salt,
-        //        prf: KeyDerivationPrf.HMACSHA256,
-        //        iterationCount: 10000,
-        //        numBytesRequested: 32);
+            byte[] hash = KeyDerivation.Pbkdf2(
+                password: "abc12345",
+                salt: salt,
+                prf: KeyDerivationPrf.HMACSHA256,
+                iterationCount: 10000,
+                numBytesRequested: 32);
 
-        //    Console.WriteLine($"{Convert.ToBase64String(salt)}:{Convert.ToBase64String(hash)}");
-        //}
+            Console.WriteLine($"{Convert.ToBase64String(salt)}:{Convert.ToBase64String(hash)}");
+        }
 
-        // public static string Hashpassword(string pass)
-        //{
-        //    // Generate a 128-bit salt using a cryptographically strong random number generator
-        //    byte[] salt = new byte[16];
-        //    using (var rng = new RNGCryptoServiceProvider())
-        //    {
-        //        rng.GetBytes(salt);
-        //    }
+        public static string Hashpassword(string pass)
+        {
+            // Generate a 128-bit salt using a cryptographically strong random number generator
+            byte[] salt = new byte[16];
+            using (var rng = new RNGCryptoServiceProvider())
+            {
+                rng.GetBytes(salt);
+            }
 
-        //    // Hash the password with the salt using PBKDF2 and HMACSHA256
-        //    string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-        //        password: pass,
-        //        salt: salt,
-        //        prf: KeyDerivationPrf.HMACSHA256,
-        //        iterationCount: 10000,
-        //        numBytesRequested: 32));
+            // Hash the password with the salt using PBKDF2 and HMACSHA256
+            string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: pass,
+                salt: salt,
+                prf: KeyDerivationPrf.HMACSHA256,
+                iterationCount: 10000,
+                numBytesRequested: 32));
 
-        //    // Return the salt and the hash separated by a colon
-        //    return $"{Convert.ToBase64String(salt)}:{hashed}";
-        //}
+            // Return the salt and the hash separated by a colon
+            return $"{Convert.ToBase64String(salt)}:{hashed}";
+        }
 
         //public static bool VerifyPassword(string hash, string password)
         //{

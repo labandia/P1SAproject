@@ -56,11 +56,11 @@
             </div>
 
             <!-- Step 1: Create New Document -->
-            <form method="post" enctype="multipart/form-data"  class="step-content active" id="step-1" autocomplete="off">>
+            <form method="post" enctype="multipart/form-data"  class="step-content active" id="step-1" autocomplete="off">
                 <h3 class="mb-4">Create New Registration No.</h3>
 
                 <div class="row mb-3">
-                    <div class="col-12 col-sm-12 col-lg-6">
+                    <div class="col-12 col-sm-12 col-lg-4">
                         <label>Registration No. <small style="color: #a81818; font-weight: 600;">*</small> </label> <br />
                         @*<input type="text" placeholder="Type Registration No." name="RegNo" id="RegNo" required />*@
                         <div class="date-wrapper">
@@ -73,10 +73,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-sm-12 col-lg-6">
+                    <div class="col-12 col-sm-12 col-lg-4">
                         <label>Dept. /Section Inspected <small style="color: #a81818; font-weight: 600;">*</small> </label>
                         <div class="select-container">
-                            <select id="DepartmentID" name="DepartmentID">
+                            <select id="DepartmentID" name="DepartmentID" required>
                                 <option>-- Select Department --</option>
                                 <option value="1">Molding</option>
                                 <option value="2">Press</option>
@@ -86,6 +86,20 @@
                             </select>
                         </div>
 
+                    </div>
+
+                    <div class="col-12 col-sm-12 col-lg-4 ">
+                        <label>Person In Charge : </label> <br />
+                        <div class="select-container">
+                            <select id="ProcessID" name="ProcessID">
+                                <option>-- Select PIC --</option>
+                                <option value="1">Molding</option>
+                                <option value="2">Press</option>
+                                <option value="3">Rotor</option>
+                                <option value="4">Winding</option>
+                                <option value="5">Circuit</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
@@ -126,19 +140,7 @@
                     <textarea placeholder="Type text here..." name="Inpects6" id="Inpects6" rows="3" cols="40"></textarea>
                 </div>
 
-                <div class="col-12 col-sm-12 col-lg-3 ">
-                    <label>Person In Charge : </label> <br />
-                    <div class="select-container">
-                        <select id="ProcessID" name="ProcessID">
-                            <option>-- Select PIC --</option>
-                            <option value="1">Molding</option>
-                            <option value="2">Press</option>
-                            <option value="3">Rotor</option>
-                            <option value="4">Winding</option>
-                            <option value="5">Circuit</option>
-                        </select>
-                    </div>
-                </div>
+               
 
                 <div class="button-group">
                     <div></div> <!-- Empty div for spacing -->

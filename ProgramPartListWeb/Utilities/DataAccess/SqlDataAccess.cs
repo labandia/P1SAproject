@@ -58,9 +58,6 @@ namespace ProgramPartListWeb.Helper
             return new SqlConnection(_connectionString());
         }
 
-
-
-
         public static SqlConnection GetSqlConnection(string connectionString) => new SqlConnection(connectionString);
       
         // ############ DYNAMIC FUNCTION LIST<T> GETDATA ########################

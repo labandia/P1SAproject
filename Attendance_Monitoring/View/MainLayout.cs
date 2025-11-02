@@ -59,7 +59,7 @@ namespace Attendance_Monitoring.View
             EmployeeMenu.BackColor = Color.Transparent;
             EmployeeMenu.ForeColor = Color.FromArgb(170, 176, 192);
             _attend.DepartmentID = _DepartmentID;
-            _attend.InitializePage();
+            //_attend.InitializePage();
             _attend.BringToFront();
         }
         private async void CRMonitor_Click(object sender, EventArgs e)

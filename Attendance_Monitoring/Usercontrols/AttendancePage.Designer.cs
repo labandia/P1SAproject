@@ -30,9 +30,9 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AttendancePage));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.Timeclock = new System.Windows.Forms.Label();
@@ -53,14 +53,18 @@
             this.EmployID = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.attendancetable = new System.Windows.Forms.DataGridView();
-            this.Employee_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Date_today = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.FullName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TimeIn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Shifts = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.LateTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
+            this.RecordID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Date_today = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Employee_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FullName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TimeOut = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Regular = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Gtotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Overtime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Shifts = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LateTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel5.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -324,8 +328,8 @@
             // 
             this.attendancetable.AllowUserToAddRows = false;
             this.attendancetable.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle7.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.attendancetable.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.attendancetable.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.attendancetable.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -334,31 +338,35 @@
             this.attendancetable.BackgroundColor = System.Drawing.Color.White;
             this.attendancetable.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.attendancetable.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle8.BackColor = System.Drawing.Color.Silver;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.Color.Silver;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.attendancetable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.Silver;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Silver;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.attendancetable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.attendancetable.ColumnHeadersHeight = 35;
             this.attendancetable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.attendancetable.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Employee_ID,
+            this.RecordID,
             this.Date_today,
+            this.Employee_ID,
             this.FullName,
-            this.TimeIn,
+            this.TimeOut,
+            this.Regular,
+            this.Gtotal,
+            this.Overtime,
             this.Shifts,
             this.LateTime});
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.attendancetable.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.attendancetable.DefaultCellStyle = dataGridViewCellStyle3;
             this.attendancetable.EnableHeadersVisualStyles = false;
             this.attendancetable.Location = new System.Drawing.Point(40, 300);
             this.attendancetable.Name = "attendancetable";
@@ -374,49 +382,6 @@
             this.attendancetable.TabIndex = 17;
             this.attendancetable.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.Attendancetable_CellFormatting);
             // 
-            // Employee_ID
-            // 
-            this.Employee_ID.DataPropertyName = "Employee_ID";
-            this.Employee_ID.HeaderText = "ID number";
-            this.Employee_ID.Name = "Employee_ID";
-            this.Employee_ID.ReadOnly = true;
-            // 
-            // Date_today
-            // 
-            this.Date_today.DataPropertyName = "Date_today";
-            this.Date_today.HeaderText = "Date_today";
-            this.Date_today.Name = "Date_today";
-            this.Date_today.ReadOnly = true;
-            this.Date_today.Visible = false;
-            // 
-            // FullName
-            // 
-            this.FullName.DataPropertyName = "FullName";
-            this.FullName.HeaderText = "Employee Name";
-            this.FullName.Name = "FullName";
-            this.FullName.ReadOnly = true;
-            // 
-            // TimeIn
-            // 
-            this.TimeIn.DataPropertyName = "TimeIn";
-            this.TimeIn.HeaderText = "Time check";
-            this.TimeIn.Name = "TimeIn";
-            this.TimeIn.ReadOnly = true;
-            // 
-            // Shifts
-            // 
-            this.Shifts.DataPropertyName = "Shifts";
-            this.Shifts.HeaderText = "Shifts";
-            this.Shifts.Name = "Shifts";
-            this.Shifts.ReadOnly = true;
-            // 
-            // LateTime
-            // 
-            this.LateTime.DataPropertyName = "LateTime";
-            this.LateTime.HeaderText = "Late Time";
-            this.LateTime.Name = "LateTime";
-            this.LateTime.ReadOnly = true;
-            // 
             // timer1
             // 
             this.timer1.Enabled = true;
@@ -431,6 +396,81 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1194, 190);
             this.panel1.TabIndex = 20;
+            // 
+            // RecordID
+            // 
+            this.RecordID.DataPropertyName = "RecordID";
+            this.RecordID.HeaderText = "RecordID";
+            this.RecordID.Name = "RecordID";
+            this.RecordID.ReadOnly = true;
+            this.RecordID.Visible = false;
+            // 
+            // Date_today
+            // 
+            this.Date_today.DataPropertyName = "TimeIn";
+            this.Date_today.HeaderText = "Date/Time In";
+            this.Date_today.Name = "Date_today";
+            this.Date_today.ReadOnly = true;
+            // 
+            // Employee_ID
+            // 
+            this.Employee_ID.DataPropertyName = "Employee_ID";
+            this.Employee_ID.HeaderText = "ID number";
+            this.Employee_ID.Name = "Employee_ID";
+            this.Employee_ID.ReadOnly = true;
+            // 
+            // FullName
+            // 
+            this.FullName.DataPropertyName = "FullName";
+            this.FullName.HeaderText = "Employee Name";
+            this.FullName.Name = "FullName";
+            this.FullName.ReadOnly = true;
+            // 
+            // TimeOut
+            // 
+            this.TimeOut.DataPropertyName = "TimeOut";
+            this.TimeOut.HeaderText = "TimeOut";
+            this.TimeOut.Name = "TimeOut";
+            this.TimeOut.ReadOnly = true;
+            this.TimeOut.Visible = false;
+            // 
+            // Regular
+            // 
+            this.Regular.DataPropertyName = "Regular";
+            this.Regular.HeaderText = "Regular";
+            this.Regular.Name = "Regular";
+            this.Regular.ReadOnly = true;
+            this.Regular.Visible = false;
+            // 
+            // Gtotal
+            // 
+            this.Gtotal.DataPropertyName = "Gtotal";
+            this.Gtotal.HeaderText = "Gtotal";
+            this.Gtotal.Name = "Gtotal";
+            this.Gtotal.ReadOnly = true;
+            this.Gtotal.Visible = false;
+            // 
+            // Overtime
+            // 
+            this.Overtime.DataPropertyName = "Overtime";
+            this.Overtime.HeaderText = "Overtime";
+            this.Overtime.Name = "Overtime";
+            this.Overtime.ReadOnly = true;
+            this.Overtime.Visible = false;
+            // 
+            // Shifts
+            // 
+            this.Shifts.DataPropertyName = "Shifts";
+            this.Shifts.HeaderText = "Shifts";
+            this.Shifts.Name = "Shifts";
+            this.Shifts.ReadOnly = true;
+            // 
+            // LateTime
+            // 
+            this.LateTime.DataPropertyName = "LateTime";
+            this.LateTime.HeaderText = "Late Time";
+            this.LateTime.Name = "LateTime";
+            this.LateTime.ReadOnly = true;
             // 
             // AttendancePage
             // 
@@ -485,13 +525,17 @@
         private System.Windows.Forms.TextBox EmployID;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.DataGridView attendancetable;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Employee_ID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Date_today;
-        private System.Windows.Forms.DataGridViewTextBoxColumn FullName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn TimeIn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Shifts;
-        private System.Windows.Forms.DataGridViewTextBoxColumn LateTime;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn RecordID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Date_today;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Employee_ID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn FullName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TimeOut;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Regular;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Gtotal;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Overtime;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Shifts;
+        private System.Windows.Forms.DataGridViewTextBoxColumn LateTime;
     }
 }

@@ -27,6 +27,8 @@ namespace Attendance_Monitoring
             services.AddSingleton<IAttendance, AttendanceRepository>();
             services.AddSingleton<IAttendanceV2, AttendanceV2Repository>();
 
+            services.AddSingleton<IAttendanceMonitor, AttendanceMonitorRepository>();
+
             services.AddSingleton<IEmployee, EmployeeRespositoryV2>();
 
             services.AddSingleton<Selection>();

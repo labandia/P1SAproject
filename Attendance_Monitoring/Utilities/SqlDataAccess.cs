@@ -10,17 +10,15 @@ using Dapper;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
 using ProgramPartListWeb.Utilities;
-
+    
 
 namespace Attendance_Monitoring.Utilities
 {
     public sealed class SqlDataAccess
     {
         private static readonly string _cons = ConfigurationManager.ConnectionStrings["live_connect"].ToString();
-        //private static readonly string _consV2 = AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings["LiveDevelopment"].ConnectionString);
-        //private static readonly string _cons = ConfigurationManager.ConnectionStrings["Myconnect"].ToString();
 
-        public static string ConnectionString()
+        public static string _connectionString()
         {
             try
             {
@@ -54,13 +52,10 @@ namespace Attendance_Monitoring.Utilities
         }
         public static SqlConnection CreateConnection()
         {
-            return new SqlConnection(ConnectionString());
+            return new SqlConnection(_connectionString());
         }
 
-        public static SqlConnection GetConnection(string connectionString)
-        {
-            return new SqlConnection(connectionString);
-        }
+        public static SqlConnection GetSqlConnection(string connectionString) => new SqlConnection(connectionString);
 
         // ############ DYNAMIC FUNCTION LIST<T> GETDATA ########################
         public static async Task<List<T>> GetData<T>(string query, object parameters = null)
@@ -68,19 +63,14 @@ namespace Attendance_Monitoring.Utilities
             //var resultData = new List<T>();
             try
             {
-                using (IDbConnection con = GetConnection(_cons))
+                using (IDbConnection con = GetSqlConnection(_connectionString()))
                 {
-                    // Checks if the string is one word
-                    if (Regex.IsMatch(query, @"^\w+$"))
-                    {
-                        // This code is a Procudure query
-                        return (await con.QueryAsync<T>(query, parameters, commandType: CommandType.StoredProcedure)).ToList();
-                    }
-                    else
-                    {
-                        // Ordinary Query string
-                        return (await con.QueryAsync<T>(query, parameters)).ToList();
-                    }
+                  
+                    bool IsStoreProd = Regex.IsMatch(query, @"^\w+$");
+                    var commandType = IsStoreProd ? CommandType.StoredProcedure : CommandType.Text;
+                    var result = await con.QueryAsync<T>(query, parameters, commandType: commandType);
+
+                    return result.ToList();
                     //return resultData;
                 }
             }
@@ -137,26 +127,27 @@ namespace Attendance_Monitoring.Utilities
 
 
         // ############ SELECTS ONLY ONE ROW DATA  ##############################
-        public static async Task<string> GetOneData(string query, object parameters)
+        public static async Task<T> GetOneData<T>(string query, object parameters)
         {
             try
             {
-                using (IDbConnection con = GetConnection(_cons))
+                using (IDbConnection con = GetSqlConnection(_connectionString()))
                 {
-                    return await con.QuerySingleOrDefaultAsync<string>(query, parameters);
+                    return await con.QuerySingleOrDefaultAsync<T>(query, parameters);
                 }
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                throw new Exception($"Database error: {ex.Message}");
             }
         }
+
         // ############ GET THE TOTAL COUNT OF THE QUERY ########################
         public static async Task<int> GetCountData(string query, object parameters)
         {
             try
             {
-                using (IDbConnection con = GetConnection(_cons))
+                using (IDbConnection con = GetSqlConnection(_connectionString()))
                 {
                     int count = 0;
 
@@ -184,25 +175,17 @@ namespace Attendance_Monitoring.Utilities
         {
             try
             {
-                using (IDbConnection con = GetConnection(_cons))
+                using (IDbConnection con = GetSqlConnection(_connectionString()))
                 {
-                    int count;
-                    // Checks if the string is one word
-                    if (Regex.IsMatch(query, @"^\w+$"))
-                    {
-                        // This code is a Procudure query
-                        count = await con.ExecuteScalarAsync<int>(query, parameters, commandType: CommandType.StoredProcedure);
-                    }
-                    else
-                    {
-                        count = await con.ExecuteScalarAsync<int>(query, parameters);
-                    }
+                    bool IsStoreprod = Regex.IsMatch(query, @"^\w+$");
+                    var commandType = IsStoreprod ? CommandType.StoredProcedure : CommandType.Text;
+
+                    int count = await con.ExecuteScalarAsync<int>(query, parameters, commandType: commandType);
                     return count > 0;
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("SQL Exception: " + ex.Message);
                 return false;
             }
 
@@ -212,19 +195,15 @@ namespace Attendance_Monitoring.Utilities
         {
             try
             {
-                using (IDbConnection con = GetConnection(_cons))
+                using (IDbConnection con = GetSqlConnection(_connectionString()))
                 {
-                    int rowsAffected;
 
-                    if (Regex.IsMatch(strQuery, @"^\w+$"))
-                    {
-                        // This code is a Procudure query
-                        rowsAffected = await con.ExecuteAsync(strQuery, parameters, commandType: CommandType.StoredProcedure);
-                    }
-                    else
-                    {
-                        rowsAffected = await con.ExecuteAsync(strQuery, parameters);
-                    }
+                    bool isStoredProcedure = Regex.IsMatch(strQuery, @"^\w+$");
+                    CommandType commandType = isStoredProcedure ? CommandType.StoredProcedure : CommandType.Text;
+
+                    int rowsAffected = await con.ExecuteAsync(strQuery, parameters, commandType: commandType);
+
+                    // If update was successful and a cache key is provided, remove it
                     return rowsAffected > 0;
                 }
             }
@@ -242,7 +221,7 @@ namespace Attendance_Monitoring.Utilities
 
             try
             {
-                using (IDbConnection con = GetConnection(_cons))
+                using (IDbConnection con = GetSqlConnection(_connectionString()))
                 {
                     IEnumerable<string> dataList;
 
@@ -270,7 +249,7 @@ namespace Attendance_Monitoring.Utilities
         {
             try
             {
-                using (IDbConnection con = GetConnection(_cons))
+                using (IDbConnection con = GetSqlConnection(_connectionString()))
                 {
                     int count;
                     if (Regex.IsMatch(query, @"^\w+$"))
@@ -299,7 +278,7 @@ namespace Attendance_Monitoring.Utilities
             var resultData = new DataTable();
             try
             {
-                using (IDbConnection con = GetConnection(_cons))
+                using (IDbConnection con = GetSqlConnection(_connectionString()))
                 {
                     // Execute the query using Dapper
                     var result = await con.QueryAsync(query, parameters);

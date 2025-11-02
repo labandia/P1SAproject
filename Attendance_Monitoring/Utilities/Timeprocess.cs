@@ -344,7 +344,28 @@ namespace Attendance_Monitoring.Global
             }
         }
 
+        public static int TimeIncheckAsIntV2(DateTime timetoCheck)
+        {
+            DateTime dayshiftStart = DateTime.Today.Add(new TimeSpan(3, 0, 0));
+            DateTime dayshiftEnd = DateTime.Today.Add(new TimeSpan(14, 30, 0));
+            DateTime nightshiftStart = DateTime.Today.Add(new TimeSpan(15, 0, 0));
+            DateTime nightshiftEnd = DateTime.Today.Add(new TimeSpan(2, 30, 0)).AddDays(1);
 
+            string currentTime = DateTime.Now.ToString("tt");
+
+            if (timetoCheck >= dayshiftStart && timetoCheck < dayshiftEnd)
+            {
+                return 0;
+            }
+            else if (timetoCheck >= nightshiftStart || timetoCheck < nightshiftEnd)
+            {
+                return 1;
+            }
+            else
+            {
+                return currentTime == "AM" ? 0 : 1;
+            }
+        }
 
         // CALCULATE THE LATE TIME
         public static string CalculateLateTime()
@@ -403,6 +424,24 @@ namespace Attendance_Monitoring.Global
             }
         }
 
+        public static double CalculateOTHoursV2(DateTime start, DateTime end)
+        {
+            if (end < start)
+                end = end.AddDays(1);
+
+            double totalHours = (end - start).TotalHours;
+
+            if (totalHours >= 3)
+                return 2.83;
+            else if (totalHours >= 2)
+                return 1.83;
+            else if (totalHours >= 1)
+                return 1;
+            else
+                return 0;
+        }
+
+
         // CALCULATE THE WORKING HOURS 7.67 is the default
         public static double CalculateWorkingHours(string startf, string stend)
         {
@@ -427,6 +466,22 @@ namespace Attendance_Monitoring.Global
                 throw new FormatException("Invalid time format.");
             }
         }
+
+        public static double CalculateWorkingHoursV2(DateTime startf, DateTime stend)
+        {
+            TimeSpan breakDuration = TimeSpan.FromHours(1); // 1 hour break
+            TimeSpan workDuration = stend - startf - breakDuration;
+
+            double result = workDuration.TotalHours - 0.33; // small offset
+            if (result < 0) result = 0; // prevent negative hours
+            if (result > 7.67) result = 7.67; // cap at 7.67
+
+            // Round to 2 decimal places for precision
+            result = Math.Round(result, 2, MidpointRounding.AwayFromZero);
+
+            return result;
+        }
+
 
 
         // CHECK THE TIME SHIFT SCHEDULE
@@ -454,7 +509,32 @@ namespace Attendance_Monitoring.Global
         }
 
 
-        
+        public static int TimeoutcheckV2(DateTime timetoCheck)
+        {
+            // Define shift boundaries
+            DateTime today = DateTime.Today;
+
+            DateTime dayshiftStart = today.AddHours(9.5);   // 9:30 AM
+            DateTime dayshiftEnd = today.AddHours(20);      // 8:00 PM
+
+            DateTime nightshiftStart = today.AddHours(21.5); // 9:30 PM
+            DateTime nightshiftEnd = today.AddDays(1).AddHours(9.5); // next day 9:30 AM
+
+            // Check which shift the given time belongs to
+            if (timetoCheck >= dayshiftStart && timetoCheck < dayshiftEnd)
+            {
+                return 0; // DAYSHIFT
+            }
+            else if (timetoCheck >= nightshiftStart || timetoCheck < nightshiftEnd)
+            {
+                return 1; // NIGHTSHIFT
+            }
+            else
+            {
+                // Fallback (should rarely happen)
+                return (timetoCheck.Hour < 12) ? 0 : 1;
+            }
+        }
 
     }
 }

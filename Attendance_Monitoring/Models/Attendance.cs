@@ -4,6 +4,21 @@ using System.Data;
 
 namespace Attendance_Monitoring.Models
 {
+    public class CheckBlankRecordTimeOut
+    {
+        public int RecordID { get; set; }
+        public DateTime TimeIn { get; set; }
+        public DateTime ShiftDate { get; set; }
+    }
+
+    public class PreventTimeIn
+    {
+        public DateTime TimeIn { get; set; }
+        public DateTime? TimeOut { get; set; }  // Nullable because TimeOut can be null
+        public int Shifts { get; set; }          // 0 = Day, 1 = Night
+    }
+
+
     public class AttendanceModel
     {
         private DateTime date_today;

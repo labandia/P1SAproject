@@ -1,14 +1,12 @@
-﻿using Attendance_Monitoring.Controller;
-using Attendance_Monitoring.Global;
+﻿using Attendance_Monitoring.Global;
 using Attendance_Monitoring.Interfaces;
 using Attendance_Monitoring.Models;
-using Attendance_Monitoring.Utilities;
+using Attendance_Monitoring.Repositories;
+using Attendance_Monitoring.View.V2;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.Drawing;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -18,36 +16,25 @@ namespace Attendance_Monitoring.Usercontrols
     public partial class AttendancePage : UserControl
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly IAttendanceV2 _attend;
         private readonly IAttendanceMonitor _monitor;
-        private readonly AdminController _admin;
-        //private static List<AttendanceModel> itemattends;
+        private readonly IEmployee _emp;
         private static List<P1SA_AttendanceModel> itemattends;
         private static List<Employee> emplist;
-
-
         private readonly Timer timer;
 
         // Share variable to all
-        //public int sec;
-        public string tb = "R_summary";
         public string tdate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-
-
         public int DepartmentID { get; set; }
 
-        public AttendancePage(IServiceProvider serviceProvider, IAttendanceV2 attend, IAttendanceMonitor monitor)
+        public AttendancePage(IServiceProvider serviceProvider, IAttendanceMonitor monitor, IEmployee emp)
         {
             InitializeComponent();
-            //sec = section;
-            //tb = tablename;
             timer = new Timer();
             timer.Interval = 1000;
             timer.Tick += Timer_Tick;
-            _admin = new AdminController();
-            _attend = attend;
             _monitor = monitor;
-            _serviceProvider =serviceProvider;
+            _emp = emp;
+            _serviceProvider = serviceProvider;
         }
 
         //  ####################  DISPLAY  THE TIME IN AND OUT  #################### //
@@ -58,8 +45,6 @@ namespace Attendance_Monitoring.Usercontrols
                 int Shift;
                 string timecheck;
                 string Timeout_date;
-
-
                 // TIME OUT NIGHT SHIFT DATE TIME
                 DateTime yesterday = DateTime.Today.AddDays(-1);
                 // Change format of the date and time
@@ -77,9 +62,7 @@ namespace Attendance_Monitoring.Usercontrols
                     timecheck = Timeout_date;
                 }
 
-                //itemattends = await _attend.GetAttendanceRecordsList(timecheck, Shift, selectime, DepartmentID);
                 var getdata = await _monitor.GetAttendanceRecordsList(timecheck, Shift, selectime, DepartmentID);
-                //DataTable dt = await connect.GetData(query);
                 itemattends = (getdata.Success) ? getdata.Payload.ToList() : new List<P1SA_AttendanceModel>();
                 attendancetable.DataSource = itemattends;
 
@@ -91,15 +74,10 @@ namespace Attendance_Monitoring.Usercontrols
                 MessageBox.Show("Error found at Retreiving Employee Data", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-
         private async void Selecttime_SelectedIndexChanged(object sender, EventArgs e)
         {
             await TimeAttendanceDisplay(selecttime.SelectedIndex);
         }
-
-
-
         //  ####################  PERFORMS THE TIME IN AND OUT  #################### //
         private async void EnterTime(object sender, KeyEventArgs e)
         {
@@ -156,7 +134,6 @@ namespace Attendance_Monitoring.Usercontrols
                         // Code to execute after the delay
                         Statustext.BackColor = Color.FromArgb(50, 181, 111);
                         Statustext.Text = Outresult.Message;
-                        //Statustext.Text = string.Empty;
                         timer.Interval = 1000; // 2000 milliseconds = 2 seconds
                         timer.Tick += TimerOut_Tick;
                         timer.Start();
@@ -173,9 +150,6 @@ namespace Attendance_Monitoring.Usercontrols
                 MessageBox.Show("Error Encounter During Time IN / OUT.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-    
-
 
         private void Timer_Tick(object sender, EventArgs e)
         {
@@ -199,22 +173,13 @@ namespace Attendance_Monitoring.Usercontrols
             TextName.Text = "";
             EmployID.Focus();
         }
-
-        public void InitializePage()
-        {
-            //MessageBox.Show("Running after set: " + DepartmentID);
-            // Now you can load employees, etc.
-        }
-
         private async void AttendancePage_Load(object sender, EventArgs e)
         {
             try
             {
                 selecttime.DropDownStyle = ComboBoxStyle.DropDownList;
                 Timeclock.Text = DateTime.Now.ToLongTimeString();
-                emplist = await _admin.GetAllEmployees();
-
-                
+                emplist = await _emp.GetEmployees();
             }
             catch (FormatException)
             {
@@ -241,7 +206,6 @@ namespace Attendance_Monitoring.Usercontrols
                 }
             }
         }
-
         private async void Searchinput(object sender, EventArgs e)
         {
             string filterText = textBox2.Text.ToLower();
@@ -262,10 +226,10 @@ namespace Attendance_Monitoring.Usercontrols
             DisplayTotal.Text = "Total Records: " + attendancetable.RowCount;
         }
 
-
-       
-
-       
-        
+        private void Summary_data_Click(object sender, EventArgs e)
+        {
+            SummaryV2 sm = new SummaryV2(DepartmentID, _monitor, _serviceProvider);
+            sm.Show();
+        }
     }
 }

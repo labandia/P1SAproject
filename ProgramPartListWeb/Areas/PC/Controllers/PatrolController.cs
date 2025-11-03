@@ -724,6 +724,132 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             return JsonCreated(result, "Updated successfully");
 
         }
+
+
+        // =================  SAVE AND SUBMIT BY PROCESS OWNER ===============================
+        [HttpPost]
+        public async Task<ActionResult> ProcessOwnerSubmission(HttpPostedFileBase[] Attachments)
+        {
+            // 1. Get the RegNo for the ID update
+            // 2. Fill up all the Field Inputs include the File attachmnets
+            // 3. Upate PIC_Comments, ReportStatus, Employee_ID(Inspector) in Patrol_Registration_Approvelist
+            // 4. Update Patrol_Findngs to the Specific RegNo
+            // 5. Update or Insert a File attachments if there is a new file uploaded
+            // 6. Update the Generated PDF File
+            // 7. After all the Updates are Done send email to assign Inspector include the Link page of the next process
+
+            var data = await _ins.GetEmployee() ?? new List<Employee>();
+            int Department = Convert.ToInt32(data.FirstOrDefault(p => p.EmployeeID == Request.Form["Employee_ID"])?.Department_ID);
+
+
+            // Step 1:  Get existing record to get 
+            var regData = await _ins.GetRegistrationData();
+            string oldPatrolPath = regData.SingleOrDefault(res => res.RegNo == Request.Form["RegNo"]).PatrolPath;
+
+            // Prepare new file names
+            string newFileName = $"RN_{Request.Form["RegNo"]}_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+            string outputPdfPath = newFileName.Replace(".xlsx", ".pdf");
+
+
+            // Step 2: Checks if a Upload Files added
+            List<string> newAttachements = new List<string>();
+            if (Attachments != null && Attachments.Length > 0)
+            {
+                foreach (var file in Attachments)
+                {
+                    if (file != null && file.ContentLength > 0)
+                    {
+                        string fileName = $"CM_{Request.Form["RegNo"]}_{DateTime.Now:yyyyMMdd_HHmmss}{Path.GetExtension(file.FileName)}";
+                        ExportFiler.SaveFileasExcel(file, fileName);
+                        newAttachements.Add(fileName);
+                    }
+                }
+            }
+
+            // if there is a new File upload, append them to the old/current PatrolPaths 
+            string newpatrolPaths = oldPatrolPath;
+            // If there is a file
+            if (newAttachements.Count > 0)
+            {
+                if (!string.IsNullOrEmpty(newpatrolPaths))
+                    newpatrolPaths += ";" + string.Join(";", newAttachements);
+                else
+                    newpatrolPaths = string.Join(";", newAttachements);
+            }
+
+
+            var processObj = new ProcessOwnerForms
+            {
+                RegNo = Request.Form["RegNo"],
+                Employee_ID = Request.Form["Employee_ID"],
+                PIC_Comments = Request.Form["PIC_Comments"],
+                CounterPath = newpatrolPaths
+            };
+
+            string findJson = Request.Form["FindJson"];
+
+
+            var obj = new RegistrationModel
+            {
+                RegNo = Request.Form["RegNo"],
+                DateConduct = Request.Form["DateConduct"],
+                Employee_ID = Request.Form["Employee_ID"],
+                FullName = Request.Form["EmployeeSearch"],
+                PIC = Request.Form["PIC"],
+                PIC_Comments = Request.Form["PIC_Comments"],
+                FilePath = outputPdfPath,
+                Manager = Request.Form["Manager"],
+                Manager_Comments = Request.Form["Manager_Comments"],
+                PatrolPath = newpatrolPaths
+            };
+
+
+
+            // Step 3: UPDATES the Information and PDF FILE
+            bool result = await _ins.EditRegistration(obj, findJson);
+
+            if (result)
+            {
+                CacheHelper.Remove("Registration");
+                //await ExportFiler.SaveFileasPDF(obj, findJson, GlobalUtilities.DepartmentName(Department), newFileName, templatePath, isSign);
+            }
+
+            if (!result) JsonValidationError();
+
+
+            return JsonCreated(result, "Updated successfully");
+
+        }
+        // =======================================================================
+        // ==============  INSPECTOR PROESSS BY APPROVED AND REVISE ==============
+        [HttpPost]
+        public async Task<ActionResult> InspectorAproveSubmit()
+        {
+            // 1. Get the RegNo for the ID update
+            // 2. Press the Approve Button to update the ReportStatus to Approved or Revise
+            // 3.  Send A email when Update is Done Approve or Revise
+            // Option add An Remarks on the Revise to Notify the Process Owner On what to revise
+
+
+            return JsonCreated("", "Updated successfully");
+
+        }
+        // =======================================================================
+        // ==============  MANAGER PROESS SAME WITH THE INSPECTORS ==============
+        [HttpPost]
+        public async Task<ActionResult> ManagerApproveSubmit()
+        {
+            // 1. Get the RegNo for the ID update
+            // 2. Press the Approve Button to update the ReportStatus to Approved or Revise
+            // 3.  Send A email when Update is Done Approve or Revise
+            // Option add An Remarks on the Revise to Notify the Process Owner On what to revise
+
+
+            return JsonCreated("", "Updated successfully");
+
+        }
+        // =======================================================================
+
         [HttpPost]
         public async Task<ActionResult> DeleteRegistration()
         {
@@ -1052,15 +1178,15 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         public ActionResult RegistrionNoForms() => View();
         // GET: PC/AddReports
         [CompressResponse]
-        public ActionResult ProcessOwner() => View();
+        public ActionResult ProcessOwner(string Regno) => View();
         // GET: PC/AddReports
         [CompressResponse]
-        public ActionResult InspectorsReview() => View();
+        public ActionResult InspectorsReview(string Regno) => View();
         // GET: PC/AddReports
         [CompressResponse]
-        public ActionResult ManagerView() => View();
+        public ActionResult ManagerView(string Regno) => View();
         // GET: PC/AddReports
         [CompressResponse]
-        public ActionResult DepartmentApproval() => View();
+        public ActionResult DepartmentApproval(string Regno) => View();
     }
 }

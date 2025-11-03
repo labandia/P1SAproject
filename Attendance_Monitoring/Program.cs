@@ -34,6 +34,7 @@ namespace Attendance_Monitoring
             services.AddSingleton<Selection>();
             services.AddSingleton<Mainpage>();
             services.AddSingleton<Summary>();
+            services.AddSingleton<SummaryV2>();
             services.AddSingleton<CRMainpage>();
             services.AddSingleton<CRMonitoringPage>();
             services.AddSingleton<Attendance>();

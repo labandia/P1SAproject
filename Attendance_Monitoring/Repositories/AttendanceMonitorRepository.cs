@@ -261,7 +261,6 @@ namespace Attendance_Monitoring.Repositories
                 };
             }
         }
-
         public async Task<ApiResponse<P1SA_AttendanceModel>> GetAttendanceRecordsList(string dDate, int shifts, int selectime, int depid)
         {
             string strquery = (selectime == 0) ? $@"SELECT
@@ -292,8 +291,6 @@ namespace Attendance_Monitoring.Repositories
             var IsRecord = await SqlDataAccess.GetData<P1SA_AttendanceModel>(strquery, parameters);
 
             bool hasRecords = IsRecord.Any();
-            Debug.WriteLine($@"hERE : {dDate} - {shifts} - {selectime} - {depid}");
-            Debug.WriteLine($"Records Found: {hasRecords}");
             return new ApiResponse<P1SA_AttendanceModel>
             {
                 Success = hasRecords,
@@ -302,9 +299,33 @@ namespace Attendance_Monitoring.Repositories
             };
         }
 
-        public Task<ApiResponse<P1SA_AttendanceModel>> GetAttendanceSummaryList(string startDate, string endDate, string search = "")
+        public async Task<ApiResponse<P1SA_AttendanceModel>> GetAttendanceSummaryList(string startDate, string endDate, int depid, string search = "")
         {
-            throw new NotImplementedException();
+            string strsql = $@"SELECT
+                        pc.RecordID,
+	                    FORMAT(pc.TimeIn, 'MM/dd/yy hh:mm:ss') as TimeIn, 
+	                    FORMAT(pc.TimeOut, 'hh:mm:ss') as TimeOut, 
+	                    pc.Employee_ID, 
+	                    e.FullName, pc.Regular, 
+	                    pc.Overtime, pc.Gtotal, 
+	                    pc.LateTime, pc.Shifts
+                    FROM P1SA_AttendanceMonitor pc 
+                    INNER JOIN Employee_tbl e ON e.Employee_ID = pc.Employee_ID
+                    WHERE  (pc.Employee_ID LIKE '%{search}%' OR e.FullName LIKE '%{search}%') 
+                    AND e.Department_ID = @depid    
+                    AND CAST(pc.TimeIn AS DATE) between @startDate AND @endDate";
+
+            var parameters = new { startDate = startDate, endDate = endDate, Department_ID = depid };
+
+            var IsRecord = await SqlDataAccess.GetData<P1SA_AttendanceModel>(strsql, parameters);
+            bool hasRecords = IsRecord.Any();
+
+            return new ApiResponse<P1SA_AttendanceModel>
+            {
+                Success = hasRecords,
+                Payload = hasRecords ? IsRecord : new List<P1SA_AttendanceModel> { },
+                Message = hasRecords ? "Retrieved Data Successfully" : "Failed to Load Data"
+            };
         }
     }
 }

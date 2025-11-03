@@ -60,7 +60,7 @@ namespace ProgramPartListWeb.Areas.PC.Models
     {
         public string RegNo { get; set; }
         public string DateConduct { get; set; }
-        public int Department_ID { get; set; }  
+        public int Department_ID { get; set; }
 
         public string Employee_ID { get; set; }
         public string PIC_ID { get; set; }
@@ -69,7 +69,7 @@ namespace ProgramPartListWeb.Areas.PC.Models
         public string DivManager_ID { get; set; }
 
 
-        public string FileName { get; set; }    
+        public string FileName { get; set; }
         public string FilePath { get; set; }
         public string CounterPath { get; set; }
 
@@ -92,6 +92,16 @@ namespace ProgramPartListWeb.Areas.PC.Models
 
         public int DivManager_IsSent { get; set; }
         public int DivManager_IsAproved { get; set; }
+
+    }
+
+
+    public class ProcessOwnerForms
+    {
+        public string RegNo { get; set; }
+        public string Employee_ID { get; set; }
+        public string PIC_Comments { get; set; }
+        public string CounterPath { get; set; }
 
     }
 

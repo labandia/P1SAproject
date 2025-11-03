@@ -53,8 +53,6 @@
             this.EmployID = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.attendancetable = new System.Windows.Forms.DataGridView();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.panel1 = new System.Windows.Forms.Panel();
             this.RecordID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Date_today = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Employee_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -65,6 +63,8 @@
             this.Overtime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Shifts = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.LateTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.panel1 = new System.Windows.Forms.Panel();
             this.panel5.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -195,6 +195,7 @@
             this.Summary_data.Text = "Summary ";
             this.Summary_data.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.Summary_data.UseVisualStyleBackColor = true;
+            this.Summary_data.Click += new System.EventHandler(this.Summary_data_Click);
             // 
             // panel4
             // 
@@ -382,21 +383,6 @@
             this.attendancetable.TabIndex = 17;
             this.attendancetable.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.Attendancetable_CellFormatting);
             // 
-            // timer1
-            // 
-            this.timer1.Enabled = true;
-            // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(9)))), ((int)(((byte)(13)))), ((int)(((byte)(37)))));
-            this.panel1.Controls.Add(this.tableLayoutPanel1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Margin = new System.Windows.Forms.Padding(5);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1194, 190);
-            this.panel1.TabIndex = 20;
-            // 
             // RecordID
             // 
             this.RecordID.DataPropertyName = "RecordID";
@@ -471,6 +457,21 @@
             this.LateTime.HeaderText = "Late Time";
             this.LateTime.Name = "LateTime";
             this.LateTime.ReadOnly = true;
+            // 
+            // timer1
+            // 
+            this.timer1.Enabled = true;
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(9)))), ((int)(((byte)(13)))), ((int)(((byte)(37)))));
+            this.panel1.Controls.Add(this.tableLayoutPanel1);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Margin = new System.Windows.Forms.Padding(5);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(1194, 190);
+            this.panel1.TabIndex = 20;
             // 
             // AttendancePage
             // 

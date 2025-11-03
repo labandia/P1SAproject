@@ -312,7 +312,7 @@ namespace Attendance_Monitoring.Repositories
                     FROM P1SA_AttendanceMonitor pc 
                     INNER JOIN Employee_tbl e ON e.Employee_ID = pc.Employee_ID
                     WHERE  (pc.Employee_ID LIKE '%{search}%' OR e.FullName LIKE '%{search}%') 
-                    AND e.Department_ID = @depid    
+                    AND e.Department_ID = @Department_ID    
                     AND CAST(pc.TimeIn AS DATE) between @startDate AND @endDate";
 
             var parameters = new { startDate = startDate, endDate = endDate, Department_ID = depid };

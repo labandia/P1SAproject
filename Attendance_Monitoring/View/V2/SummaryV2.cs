@@ -29,6 +29,7 @@ namespace Attendance_Monitoring.View.V2
         public SummaryV2(int section, IAttendanceMonitor monitor, IServiceProvider serviceProvider)
         {
             InitializeComponent();
+            MessageBox.Show($@"Section ID: {section}");
             sec = section;
             _monitor = monitor;
             _serviceProvider = serviceProvider;
@@ -42,7 +43,7 @@ namespace Attendance_Monitoring.View.V2
                 string newDateString = dstart.Value.ToString("yyyy-MM-dd");
                 var getRecord = await _monitor.GetAttendanceSummaryList(newDateString, newDateString, sec, "");
 
-                sumlist = (getRecord.Success) ? getRecord.Payload.ToList() : new List<P1SA_AttendanceModel>(); 
+                sumlist = (getRecord.Success) ? getRecord.Payload.ToList() : new List<P1SA_AttendanceModel>();
                 summarytable.DataSource = sumlist;
 
                 //summarytable.Columns["Date_today"].DisplayIndex = 0;

@@ -114,10 +114,11 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                 {
                     RegNo = f.RegNo,
                     FindID = f.FindID,
-                    FindDescription = f.FindDescription,
                     Countermeasure = f.Countermeasure
                 };
-                await SqlDataAccess.UpdateInsertQuery("UpdateCounterMeasure", findparams, "Registration");
+                await SqlDataAccess.UpdateInsertQuery(@" UPDATE Patrol_Findngs SET  
+                            Countermeasure =@Countermeasure
+                            WHERE RegNo =@RegNo AND FindID =@FindID", findparams, "Registration");
             }
 
             return results.All(r => r);

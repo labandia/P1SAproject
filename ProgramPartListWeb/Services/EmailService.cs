@@ -150,7 +150,46 @@ namespace ProgramPartListWeb.Utilities
                         </html>";
         }
 
+        public static string RegistrationEmailBody(string Fullname, string reg)
+        {
+            // Create the link with the registration number
+            string link = $"http://p1saportalweb.sdp.com/PC/Patrol/ProcessOwner?Regno={reg}";
 
+            // Create the email body with HTML formatting
+            string emailBody = $@"
+                <html>
+                <head>
+                    <style>
+                        body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                        .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+                        .header {{ background-color: #f8f9fa; padding: 15px; border-radius: 5px; }}
+                        .content {{ padding: 20px 0; }}
+                        .button {{ display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px; margin: 10px 0; }}
+                        .footer {{ margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #666; }}
+                    </style>
+                </head>
+                <body>
+                    <div class='container'>
+                        <div class='header'>
+                            <h2>Notification</h2>
+                        </div>
+                        <div class='content'>
+                            <p>Dear {Fullname},</p>
+                            <p>asdasdad</p>
+                            <p>Please click the link below to proceed:</p>
+                            <a href='{link}' class='button'>Click Here to Process</a>
+                            <p>Or copy and paste this URL in your browser:<br>
+                            <a href='{link}'>{link}</a></p>
+                        </div>
+                        <div class='footer'>
+                            <p>This is an automated message. Please do not reply to this email.</p>
+                        </div>
+                    </div>
+                </body>
+                </html>";
+
+            return emailBody;
+        }
     }
 
 }

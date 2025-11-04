@@ -85,36 +85,45 @@
 
                 <div class="col-12 col-sm-12 col-lg-12 mb-3">
                     <label>1. Work Practice / Standard / Safety</label> <br />
+
+                    <p id="Inpects1"></p>
+
+
                     <label>Countermeasures</label> <br />
                     <textarea placeholder="Type text here..." name="counter1" id="counter1" rows="3" cols="40"></textarea>
                 </div>
 
                 <div class="col-12 col-sm-12 col-lg-12 mb-3">
                     <label>2. Identification and status of the product or materials.</label> <br />
+                    <p id="Inpects2"></p>
                     <label>Countermeasures</label> <br />
                     <textarea placeholder="Type text here..." name="counter2" id="counter2" rows="3" cols="40"></textarea>
                 </div>
 
                 <div class="col-12 col-sm-12 col-lg-12 mb-3">
                     <label>3. Condition and status of documents / records.</label> <br />
+                    <p id="Inpects3"></p>
                     <label>Countermeasures</label> <br />
                     <textarea placeholder="Type text here..." name="counter3" id="counter3" rows="3" cols="40"></textarea>
                 </div>
 
                 <div class="col-12 col-sm-12 col-lg-12 mb-3">
                     <label>4. Record of ‘start-up process check’ and monthly inspection</label> <br />
+                    <p id="Inpects4"></p>
                     <label>Countermeasures</label> <br />
                     <textarea placeholder="Type text here..." name="counter4" id="counter4" rows="3" cols="40"></textarea>
                 </div>
 
                 <div class="col-12 col-sm-12 col-lg-12 mb-3">
                     <label>5. Calibration of equipment and jigs used for measurement or inspection.</label> <br />
+                    <p id="Inpects5"></p>
                     <label>Countermeasures</label> <br />
                     <textarea placeholder="Type text here..." name="counter5" id="counter5" rows="3" cols="40"></textarea>
                 </div>
 
                 <div class="col-12 col-sm-12 col-lg-12 mb-3">
                     <label>6. Countermeasure and implementation of previous quality and safety</label> <br />
+                    <p id="Inpects6"></p>
                     <label>Countermeasures</label> <br />
                     <textarea placeholder="Type text here..." name="counter6" id="counter6" rows="3" cols="40"></textarea>
                 </div>
@@ -220,7 +229,6 @@
         let selectedFiles = [];
 
         let strRegno = $("#Regno").val();
-        alert(strRegno);
 
         // =======  FOR UPLOADING FILES =======================
         const fileInput = document.getElementById("fileInput");
@@ -376,6 +384,20 @@
                 fileList.appendChild(div);
             });
         }
+
+
+        const GetRegistrationID = async () => {
+            let res = await FetchAuthenticate('@Url.Action("GetRegistrationFindings", "Patrol")', { Regno: strRegno });
+
+
+            if (res && res.Success) {
+                res.Data.forEach(item => {
+                    $(`#Inpects${item.FindID}`).text(item.FindDescription);
+                });
+            }
+        }
+
+        GetRegistrationID();
     </script>
 </body>
 

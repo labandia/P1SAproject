@@ -294,7 +294,7 @@ namespace Attendance_Monitoring.Repositories
             return new ApiResponse<P1SA_AttendanceModel>
             {
                 Success = hasRecords,
-                Payload = hasRecords ? IsRecord : new List<P1SA_AttendanceModel> { },
+                Payload = hasRecords ? IsRecord : new List<P1SA_AttendanceModel>(),
                 Message = hasRecords ? "Retrieved Data Successfully" : "Failed to Load Data"
             };
         }

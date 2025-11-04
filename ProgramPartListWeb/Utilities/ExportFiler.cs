@@ -140,7 +140,7 @@ namespace ProgramPartListWeb.Utilities
         }
 
 
-        public static async Task SaveFileasPDFV2(AddFormRegistrationModel reg, string json, string department, string outputfilename, string template, bool Sign)
+        public static async Task SaveFileasPDFV2(AddFormRegistrationModel reg, string json, string fullname,  string department, string outputfilename, string template, bool Sign)
         {
             try
             {
@@ -151,8 +151,8 @@ namespace ProgramPartListWeb.Utilities
                 byte[] excelBytes;
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
-                DateTime date = DateTime.ParseExact(reg.DateConduct, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                string formatted = date.ToString("MMMM dd, yyyy");
+                //DateTime date = DateTime.ParseExact(reg.DateConduct, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                //string formatted = date.ToString("MMMM dd, yyyy");
 
                 // Step 1: Generate Excel in memory
                 using (var package = new ExcelPackage(new FileInfo(template)))
@@ -161,6 +161,7 @@ namespace ProgramPartListWeb.Utilities
 
                     worksheet.Cells["B2"].Value = "Registration No: " + reg.RegNo;
                     worksheet.Cells["B4"].Value = "Dept. /Section Inspected: P1SA-" + department;
+                    worksheet.Cells["G53"].Value = fullname;
 
                     var findings = JsonConvert.DeserializeObject<List<FindingModel>>(json);
                     foreach (var f in findings)
@@ -211,6 +212,111 @@ namespace ProgramPartListWeb.Utilities
                 Debug.WriteLine("❌ Error generating PDF: " + ex.Message);
             }
         }
+
+
+        public static async Task UpdatePDFRegistration(PatrolRegistrationViewModel reg, List<FindingModel> find,  string json, string previousFile,  string outputfilename, string template)
+        {
+            try
+            {
+                string exportFolder = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\Patrol_Registration\";
+                string outputPdfPath = Path.Combine(exportFolder, Path.ChangeExtension(outputfilename, ".pdf"));
+                string tempPdfPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".pdf");
+
+                // 🧹 Step 0: Delete old file if exists
+                if (!string.IsNullOrEmpty(previousFile))
+                {
+                    string oldFilePath = Path.Combine(exportFolder, previousFile);
+
+                    if (File.Exists(oldFilePath))
+                    {
+                        try
+                        {
+                            File.Delete(oldFilePath);
+                            Debug.WriteLine($"🗑️ Deleted old file: {oldFilePath}");
+                        }
+                        catch (Exception delEx)
+                        {
+                            Debug.WriteLine($"⚠️ Could not delete old file: {delEx.Message}");
+                        }
+                    }
+                    else
+                    {
+                        Debug.WriteLine("ℹ️ No old file found to delete.");
+                    }
+                }
+
+
+
+                byte[] excelBytes;
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+                //DateTime date = DateTime.ParseExact(reg.DateConduct, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                //string formatted = date.ToString("MMMM dd, yyyy");
+
+                // Step 1: Generate Excel in memory
+                using (var package = new ExcelPackage(new FileInfo(template)))
+                {
+                    var worksheet = package.Workbook.Worksheets[0];
+
+                    worksheet.Cells["B2"].Value = "Registration No: " + reg.RegNo;
+                    worksheet.Cells["B4"].Value = "Dept. /Section Inspected: P1SA-" + reg.SectionName;
+                    worksheet.Cells["C48"].Value = reg.Manager_Comments;
+                    //worksheet.Cells["C53"].Value = "Manager: " + reg.Manager;
+                    //worksheet.Cells["D48"].Value = " Date Conducted: " + formatted;
+                    worksheet.Cells["D49"].Value = " Comment (Person In-Charge):  " + reg.PIC_ID;
+                    //worksheet.Cells["G53"].Value = reg.PIC;
+                    worksheet.Cells["D50"].Value = reg.PIC_Comments;
+                    //worksheet.Cells["E53"].Value = reg.FullName;
+
+                    foreach (var f in find)
+                    {
+                        switch (f.FindID)
+                        {
+                            case 1: worksheet.Cells["B7"].Value = f.FindDescription; worksheet.Cells["D6"].Value = f.Countermeasure; break;
+                            case 2: worksheet.Cells["B13"].Value = f.FindDescription; worksheet.Cells["D12"].Value = f.Countermeasure; break;
+                            case 3: worksheet.Cells["B20"].Value = f.FindDescription; worksheet.Cells["D19"].Value = f.Countermeasure; break;
+                            case 4: worksheet.Cells["B27"].Value = f.FindDescription; worksheet.Cells["D26"].Value = f.Countermeasure; break;
+                            case 5: worksheet.Cells["B34"].Value = f.FindDescription; worksheet.Cells["D33"].Value = f.Countermeasure; break;
+                            default: worksheet.Cells["B42"].Value = f.FindDescription; worksheet.Cells["D41"].Value = f.Countermeasure; break;
+                        }
+                    }
+
+                    excelBytes = package.GetAsByteArray();
+                }
+
+                // Step 2: Convert to PDF using Spire.XLS
+                using (var excelStream = new MemoryStream(excelBytes))
+                {
+                    var workbook = new Spire.Xls.Workbook();
+                    workbook.LoadFromStream(excelStream, ExcelVersion.Version2013);
+                    var sheet = workbook.Worksheets[0];
+
+                    var affectedCells = new[] { "B42", "D41", "C41", "D42" };
+                    foreach (var cell in affectedCells)
+                    {
+                        var range = sheet.Range[cell];
+                        range.Style.VerticalAlignment = VerticalAlignType.Center;
+                        range.Style.WrapText = true;
+                    }
+
+                    sheet.SetRowHeight(41, 30);
+                    sheet.SetRowHeight(42, 30);
+
+
+                    workbook.SaveToFile(tempPdfPath, FileFormat.PDF);
+                }
+
+                File.Copy(tempPdfPath, outputPdfPath, overwrite: true);
+                File.Delete(tempPdfPath);
+
+                Debug.WriteLine($"✔ PDF successfully generated at: {outputPdfPath}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("❌ Error generating PDF: " + ex.Message);
+            }
+        }
+
 
 
 

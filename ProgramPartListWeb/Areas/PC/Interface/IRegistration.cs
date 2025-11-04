@@ -6,7 +6,11 @@ namespace ProgramPartListWeb.Areas.PC.Interface
 {
     public interface IRegistration
     {
-        Task<List<PatrolRegistionModel>> GetRegistrationData();
+        Task<List<PatrolRegistrationViewModel>> GetRegistrationData();
+        Task<List<FindingModel>> GetRegisterFindings(string regNo);
+        Task<List<EmailModelV2>> PatrolEmailData();
+
         Task<bool> AddRegistration(AddFormRegistrationModel model, string json);
+        Task<bool> EditReg_ProcessOwner(ProcessOwnerForms model, string json);
     }
 }

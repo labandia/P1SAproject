@@ -63,11 +63,12 @@ namespace Attendance_Monitoring.Usercontrols
                 }
 
                 var getdata = await _monitor.GetAttendanceRecordsList(timecheck, Shift, selectime, DepartmentID);
-                itemattends = (getdata.Success) ? getdata.Payload.ToList() : new List<P1SA_AttendanceModel>();
-                attendancetable.DataSource = itemattends;
 
+                itemattends = (getdata.Success && getdata.Payload != null) ? getdata.Payload.ToList() : new List<P1SA_AttendanceModel>();
+                attendancetable.DataSource = itemattends;
                 DisplayTotal.Text = "Total Attendence: " + attendancetable.RowCount;
                 EmployID.Focus();
+
             }
             catch (FormatException)
             {

@@ -56,12 +56,23 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             return Json(ResultMessageResponce.JsonSuccess(data), JsonRequestBehavior.AllowGet);
         }
 
+        // GET: GetEmaiRegistration
+        public async Task<ActionResult> GetEmaiRegistration()
+        {
+            var data = await _reg.PatrolEmailData() ?? new List<EmailModelV2>();
+
+            if (data == null || !data.Any())
+                if (data == null || !data.Any()) return JsonNotFound("No Patrol Schedule today.");
+
+            return JsonSuccess(data, "Load Emails");
+        }
+
         // GET: GetEmailList
         public async Task<ActionResult> GetEmailList()
         {
             var data = await _ins.GetEmailsList() ?? new List<EmailRecepients>();
 
-            if(data == null || !data.Any())
+            if (data == null || !data.Any())
                 if (data == null || !data.Any()) return JsonNotFound("No Patrol Schedule today.");
 
             return JsonSuccess(data, "Load Emails");
@@ -86,11 +97,25 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         [JwtAuthorize]
         public async Task<ActionResult> GetRegistrationNo()
         {
-            var data = await _ins.GetRegistrationData() ?? new List<PatrolRegistionModel>();
+            //var data = await _ins.GetRegistrationData() ?? new List<PatrolRegistionModel>();
+            var data = await _reg.GetRegistrationData() ?? new List<PatrolRegistrationViewModel>();
             if (data == null || !data.Any()) return JsonNotFound("No registration data found");
 
             return JsonSuccess(data, "Load Registration No#");
         }
+        // GET: GetRegistrationNoByID
+        [JwtAuthorize]
+        public async Task<ActionResult> GetRegistrationFindings(string Regno)
+        {
+            //var data = await _ins.GetRegistrationData() ?? new List<PatrolRegistionModel>();
+            var data = await _reg.GetRegisterFindings(Regno) ?? new List<FindingModel>();
+            if (data == null || !data.Any()) return JsonNotFound("No Findings data found");
+
+            return JsonSuccess(data, "Load Registration No#");
+        }
+
+
+
         // GET: GetRegistrationNoByID
         [JwtAuthorize]
         public async Task<ActionResult> GetRegistrationNoByID(string Regno)
@@ -477,9 +502,10 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         [HttpPost]
         public async Task<ActionResult> AddRegistration()
         {
-            // Get Department Name
-            string departmentName = GlobalUtilities.DepartmentName(Convert.ToInt32(Request.Form["DepartmentID"]));
-            //bool isSign = !string.IsNullOrEmpty(Request.Form["IsSign"]);
+            var getID = await _reg.PatrolEmailData() ?? new List<EmailModelV2>();
+            var getEmail = getID.FirstOrDefault(p => p.Employee_ID == Request.Form["Employee_ID"]);
+          
+
 
             // Set File Name For Registration No. PDF file
             string newFileName = $"RN_{Request.Form["RegNo"]}_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.xlsx";
@@ -493,7 +519,8 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             {
                 RegNo = finalprefix,
                 Department_ID = Convert.ToInt32(Request.Form["DepartmentID"]),
-                FilePath = outputPdfPath
+                FilePath = outputPdfPath, 
+                PIC_ID = Request.Form["Employee_ID"]
             };
 
             string findJson = Request.Form["FindJson"];
@@ -508,25 +535,23 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 // Convert the string sender to a array list
 
 
-                //string creatbody = EmailService.CreateAEmailBody(
-                //        "JUAN DELA CRUZ",
-                //        "This is a sample email body used for testing purposes. Please disregard."
-                //    );
+                string creatbody = EmailService.RegistrationEmailBody(getEmail.FullName, finalprefix);
 
-                //var SendEmail = new SentEmailModel
-                //{
-                //    Subject = "Patrol Inspection",  
-                //    Sender = strSender,
-                //    BCC = CCSend,
-                //    Body = creatbody,
-                //    Recipient = IsSend
-                //};
+                var SendEmail = new SentEmailModel
+                {
+                    Subject = "Patrol Inspection",
+                    Sender = strSender,
+                    BCC = "",
+                    Body = creatbody,
+                    Recipient = getEmail.Email
+                };
+                string departmentName = GlobalUtilities.DepartmentName(Convert.ToInt32(Request.Form["DepartmentID"]));
 
                 // GENERATE A PDF FILE AND SAVE TO THE NETWORK FILE
-                await ExportFiler.SaveFileasPDFV2(obj, findJson, departmentName, newFileName, templatePath, false);
+                await ExportFiler.SaveFileasPDFV2(obj, findJson, getEmail.FullName, departmentName, newFileName, templatePath, false);
 
                 // EMAIL SAVE TO THE DATABASE
-                //await EmailService.SendEmailViaSqlDatabase(SendEmail);
+                await EmailService.SendEmailViaSqlDatabase(SendEmail);
 
             }
             if (result == false)
@@ -738,13 +763,12 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             // 6. Update the Generated PDF File
             // 7. After all the Updates are Done send email to assign Inspector include the Link page of the next process
 
-            var data = await _ins.GetEmployee() ?? new List<Employee>();
-            int Department = Convert.ToInt32(data.FirstOrDefault(p => p.EmployeeID == Request.Form["Employee_ID"])?.Department_ID);
 
 
             // Step 1:  Get existing record to get 
-            var regData = await _ins.GetRegistrationData();
-            string oldPatrolPath = regData.SingleOrDefault(res => res.RegNo == Request.Form["RegNo"]).PatrolPath;
+            var regData = await _reg.GetRegistrationData();
+            string oldPatrolPath = regData.SingleOrDefault(res => res.RegNo == Request.Form["RegNo"]).CounterPath;
+            string previousRegpath = regData.SingleOrDefault(res => res.RegNo == Request.Form["RegNo"]).Filepath;
 
             // Prepare new file names
             string newFileName = $"RN_{Request.Form["RegNo"]}_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
@@ -783,38 +807,29 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 RegNo = Request.Form["RegNo"],
                 Employee_ID = Request.Form["Employee_ID"],
                 PIC_Comments = Request.Form["PIC_Comments"],
-                CounterPath = newpatrolPaths
+                CounterPath = newpatrolPaths,
+                Filepath = outputPdfPath
             };
 
             string findJson = Request.Form["FindJson"];
 
 
-            var obj = new RegistrationModel
-            {
-                RegNo = Request.Form["RegNo"],
-                DateConduct = Request.Form["DateConduct"],
-                Employee_ID = Request.Form["Employee_ID"],
-                FullName = Request.Form["EmployeeSearch"],
-                PIC = Request.Form["PIC"],
-                PIC_Comments = Request.Form["PIC_Comments"],
-                FilePath = outputPdfPath,
-                Manager = Request.Form["Manager"],
-                Manager_Comments = Request.Form["Manager_Comments"],
-                PatrolPath = newpatrolPaths
-            };
+          
 
-
-
-            // Step 3: UPDATES the Information and PDF FILE
-            bool result = await _ins.EditRegistration(obj, findJson);
+            //// Step 3: UPDATES the Information and PDF FILE
+            bool result = await _reg.EditReg_ProcessOwner(processObj, findJson);
 
             if (result)
             {
                 CacheHelper.Remove("Registration");
-                //await ExportFiler.SaveFileasPDF(obj, findJson, GlobalUtilities.DepartmentName(Department), newFileName, templatePath, isSign);
+                var updatedRegData = await _reg.GetRegistrationData();
+                var filterupdatedReg = updatedRegData.SingleOrDefault(res => res.RegNo == Request.Form["RegNo"]);
+
+                var updatedFindings = await _reg.GetRegisterFindings(Request.Form["RegNo"]);
+                await ExportFiler.UpdatePDFRegistration(filterupdatedReg, updatedFindings, findJson, previousRegpath, newFileName, templatePath);
             }
 
-            if (!result) JsonValidationError();
+            //if (!result) JsonValidationError();
 
 
             return JsonCreated(result, "Updated successfully");

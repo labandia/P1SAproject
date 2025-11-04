@@ -91,13 +91,8 @@
                     <div class="col-12 col-sm-12 col-lg-4 ">
                         <label>Person In Charge : </label> <br />
                         <div class="select-container">
-                            <select id="ProcessID" name="ProcessID">
-                                <option>-- Select PIC --</option>
-                                <option value="1">Molding</option>
-                                <option value="2">Press</option>
-                                <option value="3">Rotor</option>
-                                <option value="4">Winding</option>
-                                <option value="5">Circuit</option>
+                            <select id="Employee_ID" name="Employee_ID">
+                               
                             </select>
                         </div>
                     </div>
@@ -258,6 +253,8 @@
         let currentStep = 1;
         const totalSteps = 5;
 
+        let regisTable = [];
+
         const addform = document.getElementById("step-1");
 
 
@@ -333,7 +330,7 @@
           addform.addEventListener('submit', async (e) => {
                   e.preventDefault();
 
-            
+
                   // Append form data
                   let strfind = findingsJson(e.target);
                   let finalformData = new FormData(e.target);
@@ -343,21 +340,20 @@
                   const finaldata = Object.fromEntries(finalformData);
 
                   let reg = "P1SA-" + finaldata.RegNo;
-                  //console.log(finaldata);
 
-                  //if (formValidation(reg)) {
-                  //    Swal.fire({
-                  //        icon: "error",
-                  //        text: "Registration No is already inserted",
-                  //        timer: 1500,
-                  //        showConfirmButton: false
-                  //    });
+                  if (formValidation(reg)) {
+                      Swal.fire({
+                          icon: "error",
+                          text: "Registration No is already inserted",
+                          timer: 1500,
+                          showConfirmButton: false
+                      });
 
-                  //    $("#errorvalid").show();
-                  //    $("#labelguide").hide();
-                  //    $("#RegNo").css("border", "1px solid red");
-                  //    return;
-                  //}
+                      $("#errorvalid").show();
+                      $("#labelguide").hide();
+                      $("#RegNo").css("border", "1px solid red");
+                      return;
+                  }
 
 
                   //const savebtn = document.querySelector("#btnSave");
@@ -365,20 +361,19 @@
 
                   // Send form data with file to controller
                   let res = await postData('@Url.Action("AddRegistration", "Patrol")', finalformData);
-                  console.log(res);
-                  //if (res.StatusCode === 201) {
-                  //    Swal.fire({
-                  //        title: "Success",
-                  //        text: res.Message,
-                  //        icon: "success",
-                  //        showConfirmButton: false,
-                  //        timer: 1500
-                  //    }).then(() => {
-                  //        setTimeout(() => {
-                  //            window.location.href = "/PC/Patrol/PatrolReport";
-                  //        }, 3000);
-                  //    });
-                  //}
+                  if (res.StatusCode === 201) {
+                      Swal.fire({
+                          title: "Success",
+                          text: res.Message,
+                          icon: "success",
+                          showConfirmButton: false,
+                          timer: 1500
+                      }).then(() => {
+                          setTimeout(() => {
+                              window.location.href = "/PC/Patrol/PatrolReport";
+                          }, 3000);
+                      });
+                  }
 
                   //Resetforms();
           });
@@ -386,7 +381,31 @@
             const formValidation = (regno) => {
                 const checkexist = regisTable.find(n => n.RegNo === regno);
                 return checkexist;
-            };
+        };
+
+
+        const RegistrationTable = async() => {
+            let res = await FetchAuthenticate('@Url.Action("GetRegistrationNo", "Patrol")', {});
+            if (res && res.Success) {
+                regisTable = res.Data;
+            }
+        }
+
+
+        const GetEmailList = async () => {
+            let res = await FetchAuthenticate('@Url.Action("GetEmaiRegistration", "Patrol")', {});
+            console.log(res);
+            if (res.Success) {
+                let select = $("#Employee_ID");
+                select.empty();
+
+                $.each(res.Data, function (index, rowData) {
+                    select.append('<option value="' + rowData.Employee_ID + '">' + rowData.FullName + '</option>');
+                });
+            }
+        };
+
+        GetEmailList();
     </script>
 </body>
 

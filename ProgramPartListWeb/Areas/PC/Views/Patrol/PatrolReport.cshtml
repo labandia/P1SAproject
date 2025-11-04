@@ -93,7 +93,7 @@
     addmodal.addEventListener('click', (e) => {
         e.preventDefault();
         //$("#AddProductModal").modal('show');
-        window.location.href = "/PC/Patrol/AddReports";
+        window.location.href = "/PC/Patrol/RegistrionNoForms";
     });
 
 
@@ -149,7 +149,7 @@
                      <td style='font-weight: 600; text-align: left; padding-left: 1.5em;' data-cell="RegNo">${rowData.RegNo}</td>
                      <td style='font-weight: 600; text-align: left; padding-left: 1.5em; color: #0c382ce8;' data-cell="Inspector">${rowData.FullName}</td>
                      <td data-cell="SectionName"><span class="Section">${rowData.SectionName}</span></td>
-                     <td data-cell="PIC">${rowData.PIC}</td>
+                     <td data-cell="PIC">${rowData.PIC_ID}</td>
                      <td data-cell="DateConduct">${rowData.DateConduct}</td>
                      <td data-cell="Filepath" >
                         <div class='flex_center'>

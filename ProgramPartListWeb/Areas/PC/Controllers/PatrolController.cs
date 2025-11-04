@@ -741,6 +741,8 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             {   
                 CacheHelper.Remove("Registration");
                 await ExportFiler.SaveFileasPDF(obj, findJson, GlobalUtilities.DepartmentName(Department), newFileName, templatePath, isSign);
+
+
             }
 
             if (!result) JsonValidationError();
@@ -827,6 +829,24 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
                 var updatedFindings = await _reg.GetRegisterFindings(Request.Form["RegNo"]);
                 await ExportFiler.UpdatePDFRegistration(filterupdatedReg, updatedFindings, findJson, previousRegpath, newFileName, templatePath);
+
+
+                string creatbody = EmailService.RegistrationEmailBody("", "");
+
+                var SendEmail = new SentEmailModel
+                {
+                    Subject = "Patrol Inspection",
+                    Sender = strSender,
+                    BCC = "",
+                    Body = creatbody,
+                    Recipient = ""
+                };
+                string departmentName = GlobalUtilities.DepartmentName(Convert.ToInt32(Request.Form["DepartmentID"]));
+
+                await ExportFiler.UpdatePDFRegistration(filterupdatedReg, updatedFindings, findJson, previousRegpath, newFileName, templatePath);
+
+                // EMAIL SAVE TO THE DATABASE
+                await EmailService.SendEmailViaSqlDatabase(SendEmail);
             }
 
             //if (!result) JsonValidationError();

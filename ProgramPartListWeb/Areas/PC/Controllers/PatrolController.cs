@@ -1,4 +1,16 @@
 ﻿
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Net.Mail;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.UI.WebControls;
+using Microsoft.IdentityModel.Logging;
 using Newtonsoft.Json;
 using OfficeOpenXml;
 using ProgramPartListWeb.Areas.PC.Interface;
@@ -10,16 +22,6 @@ using ProgramPartListWeb.Utilities;
 using ProgramPartListWeb.Utilities.Common;
 using ProgramPartListWeb.Utilities.Security;
 using Spire.Xls;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.UI.WebControls;
 
 namespace ProgramPartListWeb.Areas.PC.Controllers
 {
@@ -513,63 +515,79 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         [HttpPost]
         public async Task<ActionResult> AddRegistration()
         {
-            var getID = await _reg.PatrolEmailData() ?? new List<EmailModelV2>();
-            var getEmail = getID.FirstOrDefault(p => p.Employee_ID == Request.Form["Employee_ID"]);
-          
-
-
-            // Set File Name For Registration No. PDF file
-            string newFileName = $"RN_{Request.Form["RegNo"]}_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.xlsx";
-            string outputPdfPath = newFileName.Replace(".xlsx", ".pdf");
-
-
-            // Set a Fix Prefix for the Registration No
-            string finalprefix = "P1SA-" + Request.Form["RegNo"];
-
-            var obj = new AddFormRegistrationModel
+            try
             {
-                RegNo = finalprefix,
-                Department_ID = Convert.ToInt32(Request.Form["DepartmentID"]),
-                FilePath = outputPdfPath, 
-                PIC_ID = Request.Form["Employee_ID"]
-            };
+                // ===================== STEP 1: Extract Request Data =====================
+                string regNo = Request.Form["RegNo"];
+                string employeeId = Request.Form["Employee_ID"];
+                int departmentId = Convert.ToInt32(Request.Form["DepartmentID"]);
+                string findJson = Request.Form["FindJson"];
+                string finalPrefix = $"P1SA-{regNo}";
 
-            string findJson = Request.Form["FindJson"];
+                if (string.IsNullOrWhiteSpace(regNo) || string.IsNullOrWhiteSpace(employeeId))
+                    return JsonValidationError("Missing required fields: RegNo or Employee_ID.");
 
 
-            bool result = await _reg.AddRegistration(obj, findJson);
+                // ===================== STEP 2: Retrieve Required Data =====================
+                var emailList = await _reg.PatrolEmailData() ?? new List<EmailModelV2>();
+                var employeeEmail = emailList.FirstOrDefault(e => e.Employee_ID == employeeId);
 
-            if (result)
-            {
+
+                // ===================== STEP 3: Prepare File Paths =====================
+                string timestampFile = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+                string excelFileName = $"RN_{regNo}_{timestampFile}.xlsx";
+                string pdfOutputPath = excelFileName.Replace(".xlsx", ".pdf");
+
+
+                // ===================== STEP 4: Create Process Object =====================
+                var obj = new AddFormRegistrationModel
+                {
+                    RegNo = finalPrefix,
+                    Department_ID = departmentId,
+                    FilePath = pdfOutputPath,
+                    PIC_ID = employeeId
+                };
+
+
+                bool isUpdated = await _reg.AddRegistration(obj, findJson);
+
+                if (!isUpdated)
+                    return JsonValidationError("Failed to update process owner information.");
+
+
                 CacheHelper.Remove("Registration");
-                string link = $"http://p1saportalweb.sdp.com/PC/Patrol/ProcessOwner?Regno={finalprefix}";
-                // Convert the string sender to a array list
 
+                // ===================== STEP 5: Generate Updated PDF =====================
+                string departmentName = GlobalUtilities.DepartmentName(departmentId);
 
-                string creatbody = EmailService.RegistrationEmailBody(getEmail.FullName, finalprefix, link);
+                await ExportFiler.SaveFileasPDFV2(
+                    obj, findJson,
+                    employeeEmail.FullName,
+                    departmentName, pdfOutputPath,
+                    templatePath, false
+                );
 
-                var SendEmail = new SentEmailModel
+                // ===================== STEP 6: Send Notification Email =====================
+                string processLink = $"http://p1saportalweb.sdp.com/PC/Patrol/ProcessOwner?Regno={finalPrefix}";
+                string emailBody = EmailService.RegistrationEmailBody(employeeEmail.FullName, finalPrefix, processLink);
+
+                var sendEmail = new SentEmailModel
                 {
                     Subject = "Patrol Inspection",
                     Sender = strSender,
                     BCC = "",
-                    Body = creatbody,
-                    Recipient = getEmail.Email
+                    Body = emailBody,
+                    Recipient = employeeEmail.Email
                 };
-                string departmentName = GlobalUtilities.DepartmentName(Convert.ToInt32(Request.Form["DepartmentID"]));
 
-                // GENERATE A PDF FILE AND SAVE TO THE NETWORK FILE
-                await ExportFiler.SaveFileasPDFV2(obj, findJson, getEmail.FullName, departmentName, newFileName, templatePath, false);
+                await EmailService.SendEmailViaSqlDatabase(sendEmail);
 
-                // EMAIL SAVE TO THE DATABASE
-                await EmailService.SendEmailViaSqlDatabase(SendEmail);
-
+                return JsonCreated(true, "Updated successfully.");
             }
-            if (result == false)
-                return JsonError("Problem during saving Data.");
-
-            return JsonCreated(obj, $@"Registration No : {finalprefix} is Add  successfully");
-
+            catch (Exception ex)
+            {
+                return JsonValidationError("An unexpected error occurred while processing the request.");
+            }
         }
 
 
@@ -768,166 +786,184 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         [HttpPost]
         public async Task<ActionResult> ProcessOwnerSubmission(HttpPostedFileBase[] Attachments)
         {
-            // 1. Get the RegNo for the ID update
-            // 2. Fill up all the Field Inputs include the File attachmnets
-            // 3. Upate PIC_Comments, ReportStatus, Employee_ID(Inspector) in Patrol_Registration_Approvelist
-            // 4. Update Patrol_Findngs to the Specific RegNo
-            // 5. Update or Insert a File attachments if there is a new file uploaded
-            // 6. Update the Generated PDF File
-            // 7. After all the Updates are Done send email to assign Inspector include the Link page of the next process
-            var getID = await _reg.PatrolEmailData() ?? new List<EmailModelV2>();
-            var getEmail = getID.FirstOrDefault(p => p.Employee_ID == Request.Form["Employee_ID"]);
-            string finalprefix = "P1SA-" + Request.Form["RegNo"];
-
-            // Step 1:  Get existing record to get 
-            var regData = await _reg.GetRegistrationData();
-            string oldPatrolPath = regData.SingleOrDefault(res => res.RegNo == Request.Form["RegNo"]).CounterPath;
-            string previousRegpath = regData.SingleOrDefault(res => res.RegNo == Request.Form["RegNo"]).Filepath;
-
-            // Prepare new file names
-            string newFileName = $"RN_{Request.Form["RegNo"]}_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
-            string outputPdfPath = newFileName.Replace(".xlsx", ".pdf");
-
-
-            // Step 2: Checks if a Upload Files added
-            List<string> newAttachements = new List<string>();
-            if (Attachments != null && Attachments.Length > 0)
+            try
             {
-                foreach (var file in Attachments)
+                // ===================== STEP 1: Extract Request Data =====================
+                string regNo = Request.Form["RegNo"];
+                string findJson = Request.Form["FindJson"];
+                string finalprefix = $"P1SA-{regNo}";
+
+                // ===================== STEP 2: Retrieve Required Data =====================
+                var emailList = await _reg.PatrolEmailData() ?? new List<EmailModelV2>();
+                var employeeEmail = emailList.FirstOrDefault(p => p.Employee_ID == Request.Form["Employee_ID"]);
+
+                if (employeeEmail == null)
+                    return JsonValidationError("Employee email not found.");
+
+                var registrationData = await _reg.GetRegistrationData();
+                var existingReg = registrationData.SingleOrDefault(r => r.RegNo == regNo);
+
+                if (existingReg == null)
+                    return JsonValidationError($"Registration record not found for RegNo {regNo}.");
+
+                string oldAttachmentPaths = existingReg.CounterPath;
+                string previousPdfPath = existingReg.Filepath;
+
+
+                // ===================== STEP 3: Handle Attachments =====================
+                var newAttachments = new List<string>();
+
+                if (Attachments != null && Attachments.Any())
                 {
-                    if (file != null && file.ContentLength > 0)
+                    foreach (var file in Attachments)
                     {
-                        string fileName = $"CM_{Request.Form["RegNo"]}_{DateTime.Now:yyyyMMdd_HHmmss}{Path.GetExtension(file.FileName)}";
-                        ExportFiler.SaveFileasExcel(file, fileName);
-                        newAttachements.Add(fileName);
+                        if (file?.ContentLength > 0)
+                        {
+                            string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+                            string fileName = $"CM_{regNo}_{timestamp}{Path.GetExtension(file.FileName)}";
+
+                            ExportFiler.SaveFileasExcel(file, fileName);
+                            newAttachments.Add(fileName);
+                        }
                     }
                 }
-            }
 
-            // if there is a new File upload, append them to the old/current PatrolPaths 
-            string newpatrolPaths = oldPatrolPath;
-            // If there is a file
-            if (newAttachements.Count > 0)
-            {
-                if (!string.IsNullOrEmpty(newpatrolPaths))
-                    newpatrolPaths += ";" + string.Join(";", newAttachements);
-                else
-                    newpatrolPaths = string.Join(";", newAttachements);
-            }
+                // if there is a new File upload, append them to the old/current PatrolPaths 
+                string combinedAttachmentPaths = oldAttachmentPaths;
 
+                // If there is a file
+                if (newAttachments.Count > 0)
+                {
+                    combinedAttachmentPaths = string.IsNullOrEmpty(oldAttachmentPaths)
+                        ? string.Join(";", newAttachments)
+                        : $"{oldAttachmentPaths};{string.Join(";", newAttachments)}";
+                }
 
-            var processObj = new ProcessOwnerForms
-            {
-                RegNo = Request.Form["RegNo"],
-                Employee_ID = Request.Form["Employee_ID"],
-                PIC_Comments = Request.Form["PIC_Comments"],
-                CounterPath = newpatrolPaths,
-                Filepath = outputPdfPath
-            };
-
-            string findJson = Request.Form["FindJson"];
+                // ===================== STEP 4: Prepare File Paths =====================
+                string timestampFile = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+                string excelFileName = $"RN_{regNo}_{timestampFile}.xlsx";
+                string pdfOutputPath = excelFileName.Replace(".xlsx", ".pdf");
 
 
-          
+                // ===================== STEP 5: Create Process Object =====================
+                var processObj = new ProcessOwnerForms
+                {
+                    RegNo = Request.Form["RegNo"],
+                    Employee_ID = Request.Form["Employee_ID"],
+                    PIC_Comments = Request.Form["PIC_Comments"],
+                    CounterPath = combinedAttachmentPaths,
+                    Filepath = pdfOutputPath
+                };
+                // ===================== STEP 6: Update Records =====================
+                bool isUpdated = await _reg.EditReg_ProcessOwner(processObj, findJson);
+                if (!isUpdated)
+                    return JsonValidationError("Failed to update process owner information.");
 
-            //// Step 3: UPDATES the Information and PDF FILE
-            bool result = await _reg.EditReg_ProcessOwner(processObj, findJson);
 
-            if (result)
-            {
-                CacheHelper.Remove("Registration");
-                string link = $"http://p1saportalweb.sdp.com/PC/Patrol/InspectorsReview?Regno={finalprefix}";
 
+                // ===================== STEP 7: Generate Updated PDF =====================
                 var updatedRegData = await _reg.GetRegistrationData();
-                var filterupdatedReg = updatedRegData.SingleOrDefault(res => res.RegNo == Request.Form["RegNo"]);
+                var updatedReg = updatedRegData.SingleOrDefault(r => r.RegNo == regNo);
+                var updatedFindings = await _reg.GetRegisterFindings(regNo);
 
-                var updatedFindings = await _reg.GetRegisterFindings(Request.Form["RegNo"]);
-                //await ExportFiler.UpdatePDFRegistration(filterupdatedReg, updatedFindings, findJson, previousRegpath, newFileName, templatePath);
+                await ExportFiler.UpdatePDFRegistration(
+                   updatedReg,
+                   updatedFindings,
+                   emailList,
+                   previousPdfPath,
+                   excelFileName,
+                   templatePath
+               );
 
-
-                string creatbody = EmailService.RegistrationEmailBody(getEmail.FullName, finalprefix, link);
-
+                // ===================== STEP 8: Send Notification Email =====================
+                string processLink = $"http://p1saportalweb.sdp.com/PC/Patrol/InspectorsReview?Regno={finalprefix}";
+                string emailBody = EmailService.RegistrationEmailBody(employeeEmail.FullName, finalprefix, processLink);
 
                 var SendEmail = new SentEmailModel
                 {
                     Subject = "Patrol Inspection",
                     Sender = strSender,
                     BCC = "",
-                    Body = creatbody,
-                    Recipient = getEmail.Email
+                    Body = emailBody,
+                    Recipient = employeeEmail.Email
                 };
-                string departmentName = GlobalUtilities.DepartmentName(Convert.ToInt32(Request.Form["DepartmentID"]));
 
-                await ExportFiler.UpdatePDFRegistration(filterupdatedReg, updatedFindings, getID, previousRegpath, newFileName, templatePath);
-
-                // EMAIL SAVE TO THE DATABASE
                 await EmailService.SendEmailViaSqlDatabase(SendEmail);
+
+                return JsonCreated(true, "Updated successfully.");
             }
-
-            //if (!result) JsonValidationError();
-
-
-            return JsonCreated(result, "Updated successfully");
-
+            catch (Exception ex)
+            {
+                return JsonValidationError("An unexpected error occurred while processing the request.");
+            }
         }
         // =======================================================================
         // ==============  INSPECTOR PROESSS BY APPROVED AND REVISE ==============
         [HttpPost]
         public async Task<ActionResult> InspectorAproveSubmit(string Regno, string DateConduct)
         {
-            // 1. Get the RegNo for the ID update
-            // 2. Press the Approve Button to update the ReportStatus to Approved or Revise
-            // 3.  Send A email when Update is Done Approve or Revise
-            // Option add An Remarks on the Revise to Notify the Process Owner On what to revise
-            var getID = await _reg.PatrolEmailData() ?? new List<EmailModelV2>();
-            var getEmail = getID.FirstOrDefault(p => p.Employee_ID == "24050006");
-            string finalprefix = "P1SA-" + Regno;
-
-            var regData = await _reg.GetRegistrationData();
-            string previousRegpath = regData.SingleOrDefault(res => res.RegNo == Regno).Filepath;
-
-            // Prepare new file names
-            string newFileName = $"RN_{Regno}_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
-            string outputPdfPath = newFileName.Replace(".xlsx", ".pdf");
-
-            bool result = await _reg.ApproveByInspector(Regno, DateConduct, outputPdfPath);
-
-            if (result)
+            try
             {
-                string link = $"http://p1saportalweb.sdp.com/PC/Patrol/ManagerView?Regno={finalprefix}";
+                string finalprefix = "P1SA-" + Regno;
 
+                // ===================== STEP 1: Retrieve Required Data =====================
+                var emailList = await _reg.PatrolEmailData() ?? new List<EmailModelV2>();
+                var employeeEmail = emailList.FirstOrDefault(e => e.Employee_ID == "24050006");
+
+
+                if (employeeEmail == null)
+                    return JsonValidationError("Employee email not found.");
+
+
+                var registrationData = await _reg.GetRegistrationData();
+                string previousPdfPath = registrationData.SingleOrDefault(res => res.RegNo == Regno).Filepath;
+
+                // ===================== STEP 2: Prepare File Paths =====================
+                string timestampFile = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+                string excelFileName = $"RN_{Regno}_{timestampFile}.xlsx";
+                string pdfOutputPath = excelFileName.Replace(".xlsx", ".pdf");
+
+                bool isUpdated = await _reg.ApproveByInspector(Regno, DateConduct, pdfOutputPath);
+
+                if (!isUpdated)
+                    return JsonValidationError("Failed to update process owner information.");
+
+                CacheHelper.Remove("Registration");
+
+                // ===================== STEP 3: Generate Updated PDF =====================
                 var updatedRegData = await _reg.GetRegistrationData();
-                var filterupdatedReg = updatedRegData.SingleOrDefault(res => res.RegNo == Regno);
-
+                var updatedReg = updatedRegData.SingleOrDefault(r => r.RegNo == Regno);
                 var updatedFindings = await _reg.GetRegisterFindings(Regno);
-                //await ExportFiler.UpdatePDFRegistration(filterupdatedReg, updatedFindings, findJson, previousRegpath, newFileName, templatePath);
 
+                await ExportFiler.UpdatePDFRegistration(
+                    updatedReg,
+                    updatedFindings,
+                    emailList,
+                    previousPdfPath,
+                    excelFileName,
+                    templatePath
+                );
 
-                string creatbody = EmailService.RegistrationEmailBody(getEmail.FullName, finalprefix, link);
+                // ===================== STEP 4: Send Notification Email =====================
+                string processLink = $"http://p1saportalweb.sdp.com/PC/Patrol/ManagerView?Regno={finalprefix}";
+                string emailBody = EmailService.RegistrationEmailBody(employeeEmail.FullName, finalprefix, processLink);
 
-
-                var SendEmail = new SentEmailModel
+                var sendEmail = new SentEmailModel
                 {
                     Subject = "Patrol Inspection",
                     Sender = strSender,
                     BCC = "",
-                    Body = creatbody,
-                    Recipient = getEmail.Email
+                    Body = emailBody,
+                    Recipient = employeeEmail.Email
                 };
-           
 
-                await ExportFiler.UpdatePDFRegistration(filterupdatedReg, updatedFindings, getID, previousRegpath, newFileName, templatePath);
-
-                // EMAIL SAVE TO THE DATABASE
-                await EmailService.SendEmailViaSqlDatabase(SendEmail);
+                await EmailService.SendEmailViaSqlDatabase(sendEmail);
+                return JsonCreated(true, "Updated successfully.");
             }
-
-
-            if (result == false)
-                return JsonError("Problem during saving Data.");
-
-            return JsonCreated(result, $@"Inspection is Approved");
-
+            catch (Exception ex)
+            {
+                return JsonValidationError("An unexpected error occurred while processing the request.");
+            }
         }
         // =======================================================================
         // ==============  MANAGER PROESS SAME WITH THE INSPECTORS ==============

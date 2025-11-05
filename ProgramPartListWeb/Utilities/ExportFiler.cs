@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -214,13 +215,37 @@ namespace ProgramPartListWeb.Utilities
         }
 
 
-        public static async Task UpdatePDFRegistration(PatrolRegistrationViewModel reg, List<FindingModel> find,  string json, string previousFile,  string outputfilename, string template)
+        public static async Task UpdatePDFRegistration(
+                    PatrolRegistrationViewModel reg,
+                    List<FindingModel> find,
+                    List<EmailModelV2> processowner,
+                    string previousFile,
+                    string outputfilename,
+                    string template)
         {
             try
             {
+                // ✅ Step 1: Define paths
                 string exportFolder = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\Patrol_Registration\";
                 string outputPdfPath = Path.Combine(exportFolder, Path.ChangeExtension(outputfilename, ".pdf"));
                 string tempPdfPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".pdf");
+
+                // ✅ Step 2: Basic validations
+                if (reg == null)
+                    throw new ArgumentNullException(nameof(reg), "Registration data cannot be null.");
+
+                if (!File.Exists(template))
+                    throw new FileNotFoundException("Template file not found.", template);
+
+
+                // ✅ Step 3: Resolve names safely
+                string getFullname = processowner.SingleOrDefault(x => x.Employee_ID == reg.PIC_ID)?.FullName ?? "N/A";
+                string getFullnameInspect = processowner.SingleOrDefault(x => x.Employee_ID == reg.Inspect_ID)?.FullName ?? "N/A";
+
+                // ✅ Step 4: Format date safely
+              
+          
+
 
                 // 🧹 Step 0: Delete old file if exists
                 if (!string.IsNullOrEmpty(previousFile))
@@ -246,68 +271,121 @@ namespace ProgramPartListWeb.Utilities
                 }
 
 
-
-                byte[] excelBytes;
+                // ✅ Step 6: Prepare Excel using EPPlus
+                byte[] excelBytes = null;
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
-                //DateTime date = DateTime.ParseExact(reg.DateConduct, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                //string formatted = date.ToString("MMMM dd, yyyy");
 
-                // Step 1: Generate Excel in memory
-                using (var package = new ExcelPackage(new FileInfo(template)))
+                await Task.Run(() =>
                 {
-                    var worksheet = package.Workbook.Worksheets[0];
-
-                    worksheet.Cells["B2"].Value = "Registration No: " + reg.RegNo;
-                    worksheet.Cells["B4"].Value = "Dept. /Section Inspected: P1SA-" + reg.SectionName;
-                    worksheet.Cells["C48"].Value = reg.Manager_Comments;
-                    //worksheet.Cells["C53"].Value = "Manager: " + reg.Manager;
-                    //worksheet.Cells["D48"].Value = " Date Conducted: " + formatted;
-                    worksheet.Cells["D49"].Value = " Comment (Person In-Charge):  " + reg.PIC_ID;
-                    //worksheet.Cells["G53"].Value = reg.PIC;
-                    worksheet.Cells["D50"].Value = reg.PIC_Comments;
-                    //worksheet.Cells["E53"].Value = reg.FullName;
-
-                    foreach (var f in find)
+                    using (var package = new ExcelPackage(new FileInfo(template)))
                     {
-                        switch (f.FindID)
+                        var worksheet = package.Workbook.Worksheets[0];
+
+                        worksheet.Cells["B2"].Value = "Registration No: " + reg.RegNo;
+                        worksheet.Cells["B4"].Value = "Dept. /Section Inspected: P1SA-" + reg.SectionName;
+                        worksheet.Cells["C48"].Value = reg.Manager_Comments;
+                        worksheet.Cells["D48"].Value = "Date Conducted: " + (reg.DateConduct ?? "N/A");
+                        worksheet.Cells["D50"].Value = reg.PIC_Comments;
+                        worksheet.Cells["G53"].Value = getFullname;
+                        worksheet.Cells["E53"].Value = getFullnameInspect;
+
+                        // Fill findings safely
+                        if (find != null)
                         {
-                            case 1: worksheet.Cells["B7"].Value = f.FindDescription; worksheet.Cells["D6"].Value = f.Countermeasure; break;
-                            case 2: worksheet.Cells["B13"].Value = f.FindDescription; worksheet.Cells["D12"].Value = f.Countermeasure; break;
-                            case 3: worksheet.Cells["B20"].Value = f.FindDescription; worksheet.Cells["D19"].Value = f.Countermeasure; break;
-                            case 4: worksheet.Cells["B27"].Value = f.FindDescription; worksheet.Cells["D26"].Value = f.Countermeasure; break;
-                            case 5: worksheet.Cells["B34"].Value = f.FindDescription; worksheet.Cells["D33"].Value = f.Countermeasure; break;
-                            default: worksheet.Cells["B42"].Value = f.FindDescription; worksheet.Cells["D41"].Value = f.Countermeasure; break;
+                            foreach (var f in find)
+                            {
+                                string findCell;
+                                string counterCell;
+
+                                switch (f.FindID)
+                                {
+                                    case 1:
+                                        findCell = "B7"; counterCell = "D6";
+                                        break;
+                                    case 2:
+                                        findCell = "B13"; counterCell = "D12";
+                                        break;
+                                    case 3:
+                                        findCell = "B20"; counterCell = "D19";
+                                        break;
+                                    case 4:
+                                        findCell = "B27"; counterCell = "D26";
+                                        break;
+                                    case 5:
+                                        findCell = "B34"; counterCell = "D33";
+                                        break;
+                                    default:
+                                        findCell = "B42"; counterCell = "D41";
+                                        break;
+                                }
+
+                                worksheet.Cells[findCell].Value = f.FindDescription;
+                                worksheet.Cells[counterCell].Value = f.Countermeasure;
+                            }
                         }
+
+                        excelBytes = package.GetAsByteArray();
                     }
+                }); // end Task.Run for Excel generation
 
-                    excelBytes = package.GetAsByteArray();
-                }
-
-                // Step 2: Convert to PDF using Spire.XLS
-                using (var excelStream = new MemoryStream(excelBytes))
+                // Convert Excel to PDF using Spire.XLS (synchronous -> run on threadpool)
+                await Task.Run(() =>
                 {
-                    var workbook = new Spire.Xls.Workbook();
-                    workbook.LoadFromStream(excelStream, ExcelVersion.Version2013);
-                    var sheet = workbook.Worksheets[0];
-
-                    var affectedCells = new[] { "B42", "D41", "C41", "D42" };
-                    foreach (var cell in affectedCells)
+                    using (var excelStream = new MemoryStream(excelBytes))
                     {
-                        var range = sheet.Range[cell];
-                        range.Style.VerticalAlignment = VerticalAlignType.Center;
-                        range.Style.WrapText = true;
+                        var workbook = new Spire.Xls.Workbook();
+                        workbook.LoadFromStream(excelStream, ExcelVersion.Version2013);
+                        var sheet = workbook.Worksheets[0];
+
+                        // Apply some layout changes
+                        string[] affectedCells = { "B42", "D41", "C41", "D42" };
+                        foreach (var cell in affectedCells)
+                        {
+                            var range = sheet.Range[cell];
+                            if (range != null)
+                            {
+                                range.Style.VerticalAlignment = VerticalAlignType.Center;
+                                range.Style.WrapText = true;
+                            }
+                        }
+
+                        sheet.SetRowHeight(41, 30);
+                        sheet.SetRowHeight(42, 30);
+
+                        workbook.SaveToFile(tempPdfPath, FileFormat.PDF);
                     }
+                });
 
-                    sheet.SetRowHeight(41, 30);
-                    sheet.SetRowHeight(42, 30);
-
-
-                    workbook.SaveToFile(tempPdfPath, FileFormat.PDF);
+                // Async copy from tempPdfPath to outputPdfPath using streams (no await using)
+                // Ensure destination folder exists
+                try
+                {
+                    var destDir = Path.GetDirectoryName(outputPdfPath);
+                    if (!Directory.Exists(destDir))
+                        Directory.CreateDirectory(destDir);
+                }
+                catch (Exception dirEx)
+                {
+                    Debug.WriteLine($"⚠️ Could not create destination directory: {dirEx.Message}");
+                    // proceed — File.Create will throw if directory missing
                 }
 
-                File.Copy(tempPdfPath, outputPdfPath, overwrite: true);
-                File.Delete(tempPdfPath);
+                using (var sourceStream = new FileStream(tempPdfPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                using (var destinationStream = new FileStream(outputPdfPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                {
+                    await sourceStream.CopyToAsync(destinationStream);
+                }
+
+                // Delete temp file (run in background thread)
+                try
+                {
+                    await Task.Run(() => File.Delete(tempPdfPath));
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"⚠️ Could not delete temp file: {ex.Message}");
+                }
 
                 Debug.WriteLine($"✔ PDF successfully generated at: {outputPdfPath}");
             }

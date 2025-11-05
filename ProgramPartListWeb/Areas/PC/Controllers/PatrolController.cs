@@ -115,6 +115,17 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         }
 
 
+        
+        // GET: GetRegistrationNoByID
+        [JwtAuthorize]
+        public async Task<ActionResult> GetRegistrationAllFiles(string Regno)
+        {
+            var data = await _reg.GetRegisterFiles(Regno) ?? new List<RegistrationFiles>();
+            if (data == null || !data.Any()) return JsonNotFound("No Files data found");
+
+            return JsonSuccess(data, "Load Registration Files #");
+        }
+
 
         // GET: GetRegistrationNoByID
         [JwtAuthorize]
@@ -531,11 +542,11 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             if (result)
             {
                 CacheHelper.Remove("Registration");
-
+                string link = $"http://p1saportalweb.sdp.com/PC/Patrol/ProcessOwner?Regno={finalprefix}";
                 // Convert the string sender to a array list
 
 
-                string creatbody = EmailService.RegistrationEmailBody(getEmail.FullName, finalprefix);
+                string creatbody = EmailService.RegistrationEmailBody(getEmail.FullName, finalprefix, link);
 
                 var SendEmail = new SentEmailModel
                 {
@@ -764,8 +775,9 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             // 5. Update or Insert a File attachments if there is a new file uploaded
             // 6. Update the Generated PDF File
             // 7. After all the Updates are Done send email to assign Inspector include the Link page of the next process
-
-
+            var getID = await _reg.PatrolEmailData() ?? new List<EmailModelV2>();
+            var getEmail = getID.FirstOrDefault(p => p.Employee_ID == Request.Form["Employee_ID"]);
+            string finalprefix = "P1SA-" + Request.Form["RegNo"];
 
             // Step 1:  Get existing record to get 
             var regData = await _reg.GetRegistrationData();
@@ -824,14 +836,17 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             if (result)
             {
                 CacheHelper.Remove("Registration");
+                string link = $"http://p1saportalweb.sdp.com/PC/Patrol/InspectorsReview?Regno={finalprefix}";
+
                 var updatedRegData = await _reg.GetRegistrationData();
                 var filterupdatedReg = updatedRegData.SingleOrDefault(res => res.RegNo == Request.Form["RegNo"]);
 
                 var updatedFindings = await _reg.GetRegisterFindings(Request.Form["RegNo"]);
-                await ExportFiler.UpdatePDFRegistration(filterupdatedReg, updatedFindings, findJson, previousRegpath, newFileName, templatePath);
+                //await ExportFiler.UpdatePDFRegistration(filterupdatedReg, updatedFindings, findJson, previousRegpath, newFileName, templatePath);
 
 
-                string creatbody = EmailService.RegistrationEmailBody("", "");
+                string creatbody = EmailService.RegistrationEmailBody(getEmail.FullName, finalprefix, link);
+
 
                 var SendEmail = new SentEmailModel
                 {
@@ -839,11 +854,11 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                     Sender = strSender,
                     BCC = "",
                     Body = creatbody,
-                    Recipient = ""
+                    Recipient = getEmail.Email
                 };
                 string departmentName = GlobalUtilities.DepartmentName(Convert.ToInt32(Request.Form["DepartmentID"]));
 
-                await ExportFiler.UpdatePDFRegistration(filterupdatedReg, updatedFindings, findJson, previousRegpath, newFileName, templatePath);
+                await ExportFiler.UpdatePDFRegistration(filterupdatedReg, updatedFindings, getID, previousRegpath, newFileName, templatePath);
 
                 // EMAIL SAVE TO THE DATABASE
                 await EmailService.SendEmailViaSqlDatabase(SendEmail);
@@ -858,15 +873,60 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         // =======================================================================
         // ==============  INSPECTOR PROESSS BY APPROVED AND REVISE ==============
         [HttpPost]
-        public async Task<ActionResult> InspectorAproveSubmit()
+        public async Task<ActionResult> InspectorAproveSubmit(string Regno, string DateConduct)
         {
             // 1. Get the RegNo for the ID update
             // 2. Press the Approve Button to update the ReportStatus to Approved or Revise
             // 3.  Send A email when Update is Done Approve or Revise
             // Option add An Remarks on the Revise to Notify the Process Owner On what to revise
+            var getID = await _reg.PatrolEmailData() ?? new List<EmailModelV2>();
+            var getEmail = getID.FirstOrDefault(p => p.Employee_ID == "24050006");
+            string finalprefix = "P1SA-" + Regno;
+
+            var regData = await _reg.GetRegistrationData();
+            string previousRegpath = regData.SingleOrDefault(res => res.RegNo == Regno).Filepath;
+
+            // Prepare new file names
+            string newFileName = $"RN_{Regno}_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+            string outputPdfPath = newFileName.Replace(".xlsx", ".pdf");
+
+            bool result = await _reg.ApproveByInspector(Regno, DateConduct, outputPdfPath);
+
+            if (result)
+            {
+                string link = $"http://p1saportalweb.sdp.com/PC/Patrol/ManagerView?Regno={finalprefix}";
+
+                var updatedRegData = await _reg.GetRegistrationData();
+                var filterupdatedReg = updatedRegData.SingleOrDefault(res => res.RegNo == Regno);
+
+                var updatedFindings = await _reg.GetRegisterFindings(Regno);
+                //await ExportFiler.UpdatePDFRegistration(filterupdatedReg, updatedFindings, findJson, previousRegpath, newFileName, templatePath);
 
 
-            return JsonCreated("", "Updated successfully");
+                string creatbody = EmailService.RegistrationEmailBody(getEmail.FullName, finalprefix, link);
+
+
+                var SendEmail = new SentEmailModel
+                {
+                    Subject = "Patrol Inspection",
+                    Sender = strSender,
+                    BCC = "",
+                    Body = creatbody,
+                    Recipient = getEmail.Email
+                };
+           
+
+                await ExportFiler.UpdatePDFRegistration(filterupdatedReg, updatedFindings, getID, previousRegpath, newFileName, templatePath);
+
+                // EMAIL SAVE TO THE DATABASE
+                await EmailService.SendEmailViaSqlDatabase(SendEmail);
+            }
+
+
+            if (result == false)
+                return JsonError("Problem during saving Data.");
+
+            return JsonCreated(result, $@"Inspection is Approved");
 
         }
         // =======================================================================

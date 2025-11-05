@@ -65,6 +65,8 @@
             <!-- Step 2: Person in Charge -->
             <form method="post" enctype="multipart/form-data" class="step-content active" id="step-2" autocomplete="off">
                 <input type="hidden" id="Regno" value="@regno" name="Regno" />
+              
+
 
                 <div class="Attachmentcontainer">
                     <div class="flex_align">
@@ -134,8 +136,8 @@
 
                 <label>Select Inspectors</label> <br />
                 <select id="Employee_ID" name="Employee_ID" required>
-                    <option value="14080001">Melo jean </option>
-                    <option value="1222">Lionell Gomez</option>
+                    <option value="14120005">Melo jean </option>
+                    <option value="14030008">Lionell Gomez</option>
                 </select>
 
 
@@ -290,11 +292,12 @@
 
             for (let i = 1; i <= 6; i++) {
                 findings.push({
-                    RegNo: data.RegNo,
-                    FindID: data[`Find${i}`],
-                    FindCountermeasure: data[`counter${i}`]
+                    RegNo: strRegno,
+                    FindID: i,
+                    Countermeasure: data[`counter${i}`]
                 });
             }
+
 
             return JSON.stringify(findings);
         };

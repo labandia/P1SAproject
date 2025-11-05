@@ -150,10 +150,10 @@ namespace ProgramPartListWeb.Utilities
                         </html>";
         }
 
-        public static string RegistrationEmailBody(string Fullname, string reg)
+        public static string RegistrationEmailBody(string Fullname, string reg, string link)
         {
             // Create the link with the registration number
-            string link = $"http://p1saportalweb.sdp.com/PC/Patrol/ProcessOwner?Regno={reg}";
+    
 
             // Create the email body with HTML formatting
             string emailBody = $@"

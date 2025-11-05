@@ -379,6 +379,8 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
                 Supplier = Request.Form["EditSupplier"],
                 Unit = Request.Form["EditUnit"],
                 Unit_Price = Convert.ToDouble(Request.Form["EditUnit_Price"]),
+                WarningLevel = Convert.ToInt32(Request.Form["EditWarningLevel"]),
+                ReorderLevel = Convert.ToInt32(Request.Form["EditReorderLevel"]),
                 ImageParts = fullnamefile   // Save new or existing filename
             };
 

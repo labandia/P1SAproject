@@ -1,9 +1,11 @@
 ﻿using Newtonsoft.Json;
+using OfficeOpenXml.Core.Worksheet.Fill;
 using ProgramPartListWeb.Areas.PC.Interface;
 using ProgramPartListWeb.Areas.PC.Models;
 using ProgramPartListWeb.Helper;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -44,8 +46,11 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             return SqlDataAccess.GetData<PatrolRegistrationViewModel>(strsql);
         }
         public Task<List<FindingModel>> GetRegisterFindings(string regNo) => SqlDataAccess.GetData<FindingModel>("GetFindings", new { Regno = regNo });
-     
 
+        public Task<List<RegistrationFiles>> GetRegisterFiles(string regNo)
+        {
+             return SqlDataAccess.GetData<RegistrationFiles>($@"SELECT RegNo, FilePath, CounterPath FROM Patrol_Registration_Files WHERE RegNo =@RegNo ", new { RegNo = regNo });
+        }
 
         public async Task<bool> AddRegistration(AddFormRegistrationModel reg, string json)
         {
@@ -84,11 +89,17 @@ namespace ProgramPartListWeb.Areas.PC.Repository
         public async Task<bool> EditReg_ProcessOwner(ProcessOwnerForms reg, string json)
         {
             // UPDATE THE MAIN REGISTRATION TABLE
-            string mainsql = $@"UPDATE Patrol_Registration_Approvelist
+            string mainsql = $@"UPDATE Patrol_Registration
+                                SET ReportStatus = 2
+                                WHERE RegNo = @RegNo";
+            var regMain = SqlDataAccess.UpdateInsertQuery(mainsql, new { RegNo = reg.RegNo });
+
+
+            string appsql = $@"UPDATE Patrol_Registration_Approvelist
                                 SET PIC_Comments = @PIC_Comments, Inspect_ID = @Inspect_ID
                                 WHERE RegNo = @RegNo";
 
-            var regMain = SqlDataAccess.UpdateInsertQuery(mainsql, new
+            var regApp = SqlDataAccess.UpdateInsertQuery(appsql, new
             {
                 RegNo = reg.RegNo,
                 PIC_Comments = reg.PIC_Comments,
@@ -102,7 +113,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                 RegNo = reg.RegNo
             });
 
-            bool[] results = await Task.WhenAll(regMain, regFiles);
+            bool[] results = await Task.WhenAll(regMain, regApp, regFiles);
 
             // INSERT FINDING AND COUNTERMEASURE PROCESS
             // Deserialize findings
@@ -118,8 +129,30 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                 };
                 await SqlDataAccess.UpdateInsertQuery(@" UPDATE Patrol_Findngs SET  
                             Countermeasure =@Countermeasure
-                            WHERE RegNo =@RegNo AND FindID =@FindID", findparams, "Registration");
+                            WHERE RegNo =@RegNo AND FindID =@FindID", findparams);
             }
+
+            return results.All(r => r);
+        }
+
+        public async Task<bool> ApproveByInspector(string reg, string datecon, string newfilepath)
+        {
+            var regsql = SqlDataAccess.UpdateInsertQuery(@" UPDATE Patrol_Registration SET  
+                            ReportStatus = ReportStatus + 1, DateConduct = @DateConduct
+                            WHERE RegNo =@RegNo", new { RegNo = reg, DateConduct = datecon });
+
+            var revsql = SqlDataAccess.UpdateInsertQuery(@"UPDATE Patrol_Registration_Approvelist SET  
+                            Inspect_IsAproved =  1
+                            WHERE RegNo =@RegNo", new { RegNo = reg });
+
+            var regFiles = SqlDataAccess.UpdateInsertQuery(@"UPDATE Patrol_Registration_Files SET FilePath =@FilePath
+                            WHERE RegNo =@RegNo", new
+            {
+                FilePath = newfilepath, 
+                RegNo = reg
+            });
+
+            bool[] results = await Task.WhenAll(regsql, revsql, regFiles);
 
             return results.All(r => r);
         }
@@ -130,6 +163,6 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             return SqlDataAccess.GetData<EmailModelV2>(strsql);
         }
 
-       
+        
     }
 }

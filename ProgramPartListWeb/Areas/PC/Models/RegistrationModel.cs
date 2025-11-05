@@ -21,7 +21,7 @@ namespace ProgramPartListWeb.Areas.PC.Models
         public bool? ReportStatus { get; set; }
 
         // 🧑 Employee Info Or Inspector
-        public int Inspect_ID { get; set; }
+        public string Inspect_ID { get; set; }
         public string Inspect_Comments { get; set; }
         public bool? Inspect_IsAproved { get; set; }
         public bool? Inspect_IsSent { get; set; }
@@ -107,5 +107,10 @@ namespace ProgramPartListWeb.Areas.PC.Models
         public string Filepath { get; set; }
     }
 
-
+    public class RegistrationFiles
+    {
+        public string RegNo { get; set; }
+        public string FilePath { get; set; }
+        public string CounterPath { get; set; }
+    }
 }

@@ -385,14 +385,14 @@
 
                                 <div class="form_group col-6 col-sm-6">
                                     <label>Reorder Level</label>
-                                    <input type="number" id="EditReorderLevel" name="ReorderLevel" step="0.01" min="0" value="5">
+                                    <input type="number" id="EditReorderLevel" name="EditReorderLevel" step="0.01" min="0" value="5">
                                 </div>
                             </div>
 
                             <div class="row mb-2">
                                 <div class="form_group col-6 col-sm-6">
                                     <label>Warning Level</label>
-                                    <input type="number" id="EditWarningLevel" name="WarningLevel" step="0.01" min="0" value="10">
+                                    <input type="number" id="EditWarningLevel" name="EditWarningLevel" step="0.01" min="0" value="10">
                                 </div>
 
                                 <div class="form_group col-6 col-sm-6">
@@ -779,7 +779,6 @@
         e.preventDefault();
         let formData = new FormData(e.target);
         const data = Object.fromEntries(formData);
-
         let res = await postData('@Url.Action("EditInventoryParts", "Hydro")', formData);
         if (res && res.Success) {
             Swal.fire({

@@ -8,9 +8,13 @@ namespace ProgramPartListWeb.Areas.PC.Interface
     {
         Task<List<PatrolRegistrationViewModel>> GetRegistrationData();
         Task<List<FindingModel>> GetRegisterFindings(string regNo);
+        Task<List<RegistrationFiles>> GetRegisterFiles(string regNo);
+
+
         Task<List<EmailModelV2>> PatrolEmailData();
 
         Task<bool> AddRegistration(AddFormRegistrationModel model, string json);
         Task<bool> EditReg_ProcessOwner(ProcessOwnerForms model, string json);
+        Task<bool> ApproveByInspector(string RegNo, string Datecon, string newfilepath);
     }
 }

@@ -52,7 +52,7 @@
 
         <div class="content">
             <div class="progress-bar">
-                <div class="progress" style="width: 20%"></div>
+                <div class="progressV2" style="width: 20%"></div>
             </div>
 
             <!-- Step 1: Create New Document -->
@@ -145,110 +145,28 @@
 
             <!-- Step 2: Person in Charge -->
             <div class="step-content" id="step-2">
-                <h3>Person in Charge (PIC)</h3>
-                <div class="form-group">
-                    <label>Select PIC</label>
-                    <select>
-                        <option>Select person in charge</option>
-                        <option>John Smith (Manager)</option>
-                        <option>Sarah Johnson (Director)</option>
-                        <option>Michael Brown (Team Lead)</option>
-                        <option>Emily Davis (Coordinator)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Additional Approvers</label>
-                    <select multiple style="height: 120px;">
-                        <option>David Wilson</option>
-                        <option>Lisa Anderson</option>
-                        <option>Robert Taylor</option>
-                        <option>Jennifer Martinez</option>
-                    </select>
-                </div>
-                <div class="button-group">
-                    <button class="btn-prev" onclick="goToStep(1)">Previous</button>
-                    <button class="btn-next" onclick="goToStep(3)">Next</button>
-                </div>
+                
             </div>
 
             <!-- Step 3: Document Details -->
             <div class="step-content" id="step-3">
-                <h3>Document Details</h3>
-                <div class="form-group">
-                    <label>Document Title</label>
-                    <input type="text" placeholder="Enter document title">
-                </div>
-                <div class="form-group">
-                    <label>Description</label>
-                    <textarea rows="5" placeholder="Enter document description"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Priority</label>
-                    <select>
-                        <option>Low</option>
-                        <option selected>Medium</option>
-                        <option>High</option>
-                        <option>Urgent</option>
-                    </select>
-                </div>
-                <div class="button-group">
-                    <button class="btn-prev" onclick="goToStep(2)">Previous</button>
-                    <button class="btn-next" onclick="goToStep(4)">Next</button>
-                </div>
-            </div>
+             
 
             <!-- Step 4: Attachments -->
             <div class="step-content" id="step-4">
-                <h3>Attachments</h3>
-                <div class="form-group">
-                    <label>Upload Files</label>
-                    <div class="upload-area">
-                        <i>📎</i>
-                        <p>Click to upload files or drag and drop</p>
-                        <span>Supported formats: PDF, DOC, DOCX, JPG, PNG</span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Additional Notes</label>
-                    <textarea rows="3" placeholder="Add any additional notes about the attachments"></textarea>
-                </div>
-                <div class="button-group">
-                    <button class="btn-prev" onclick="goToStep(3)">Previous</button>
-                    <button class="btn-next" onclick="goToStep(5)">Next</button>
-                </div>
+                
             </div>
 
             <!-- Step 5: Review & Submit -->
             <div class="step-content" id="step-5">
-                <h3>Review & Submit</h3>
-                <div class="form-group">
-                    <label>Document Summary</label>
-                    <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin-top: 10px;">
-                        <p><strong>Document Type:</strong> Contract</p>
-                        <p><strong>Person in Charge:</strong> John Smith</p>
-                        <p><strong>Title:</strong> Quarterly Partnership Agreement</p>
-                        <p><strong>Priority:</strong> Medium</p>
-                        <p><strong>Attachments:</strong> 2 files</p>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Final Approval Notes</label>
-                    <textarea rows="3" placeholder="Add any final notes before submission"></textarea>
-                </div>
-                <div class="button-group">
-                    <button class="btn-prev" onclick="goToStep(4)">Previous</button>
-                    <div>
-                        <button class="btn-save">Save as Draft</button>
-                        <button class="btn-submit">Save & Send to Process Owner</button>
-                    </div>
-                </div>
+               
             </div>
         </div>
 
 
     </div>
 
-
+    </div>
     <script type="text/javascript">
         let currentStep = 1;
         const totalSteps = 5;
@@ -273,7 +191,7 @@
 
             // Update progress bar
             const progressPercentage = ((step - 1) / (totalSteps - 1)) * 100;
-            document.querySelector('.progress').style.width = `${progressPercentage}%`;
+            document.querySelector('.progressV2').style.width = `${progressPercentage}%`;
 
             // Update sidebar steps
             document.querySelectorAll('.step-item').forEach((item, index) => {
@@ -360,8 +278,8 @@
                   //savebtn.innerHTML = " <div class='buttonloading'></div> Generating PDF Please wait...";
 
                   // Send form data with file to controller
-              let res = await postData('@Url.Action("AddRegistration", "Patrol")', finalformData);
-              console.log(res);
+              @*let res = await postData('@Url.Action("AddRegistration", "Patrol")', finalformData);
+              console.log(res);*@
                   //if (res.StatusCode === 201) {
                   //    Swal.fire({
                   //        title: "Success",
@@ -381,21 +299,57 @@
 
             const formValidation = (regno) => {
                 const checkexist = regisTable.find(n => n.RegNo === regno);
+                console.log(checkexist);
                 return checkexist;
         };
 
 
         const RegistrationTable = async() => {
             let res = await FetchAuthenticate('@Url.Action("GetRegistrationNo", "Patrol")', {});
+            console.log(res);
             if (res && res.Success) {
                 regisTable = res.Data;
+                disableUsedDates(regisTable);
             }
         }
+        function convertRegNoToDate(regNo) {
+            if (!regNo || typeof regNo !== "string") return null;
+
+            const match = regNo.match(/P1SA-(\d{6})/);
+            if (!match) return null;
+
+            const [yy, mm, dd] = [match[1].slice(0, 2), match[1].slice(2, 4), match[1].slice(4, 6)];
+            const year = 2000 + parseInt(yy, 10);
+            return `${year}-${mm}-${dd}`;
+        }
+
+        function disableUsedDates(regList) {
+            // handle both object arrays and string arrays
+            const usedDates = regList
+                .map(x => convertRegNoToDate(x.RegNo || x)) // ✅ safe mapping
+                .filter(Boolean); // remove nulls
+
+            const dateInput = document.getElementById('hiddenDatePicker');
+            dateInput.addEventListener('change', (e) => {
+                const selectedDate = e.target.value;
+                if (usedDates.includes(selectedDate)) {
+                    Swal.fire({
+                        icon: "error",
+                        text: "Registration No is already inserted",
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                    e.target.value = '';
+                } else {
+                    formatAndDisplayDate(selectedDate);
+                }
+            });
+        }
+
 
 
         const GetEmailList = async () => {
             let res = await FetchAuthenticate('@Url.Action("GetEmaiRegistration", "Patrol")', {});
-            console.log(res);
             if (res.Success) {
                 let select = $("#Employee_ID");
                 select.empty();
@@ -407,6 +361,7 @@
         };
 
         GetEmailList();
+        RegistrationTable();
     </script>
 </body>
 

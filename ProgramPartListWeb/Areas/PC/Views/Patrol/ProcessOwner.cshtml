@@ -26,7 +26,7 @@
     <div class="MainWrapper">
 
         <div class="sidebar">
-            <h2><i>📄</i> Registration No. </h2>
+            <h2><i>📄</i>Patrol Inspection</h2>
             <ul class="step-list">
                 <li class="step-item active" data-step="1">
                     <span class="step-number">1</span>
@@ -34,7 +34,7 @@
                 </li>
                 <li class="step-item" data-step="2">
                     <span class="step-number">2</span>
-                    Person in Charge (PIC)
+                    Process Owner
                 </li>
                 <li class="step-item" data-step="3">
                     <span class="step-number">3</span>
@@ -53,7 +53,7 @@
 
         <div class="content">
             <div class="progress-bar">
-                <div class="progress" style="width: 20%"></div>
+                <div class="progressV2" style="width: 20%"></div>
 
             </div>
 
@@ -64,25 +64,22 @@
 
             <!-- Step 2: Person in Charge -->
             <form method="post" enctype="multipart/form-data" class="step-content active" id="step-2" autocomplete="off">
-                <input type="hidden" id="Regno" value="@regno" name="Regno" />
-              
+                
 
 
-                <div class="Attachmentcontainer">
-                    <div class="flex_align">
-                        <label class="mb-0 fw-bold">Attachments : </label>
-                        <button type="button" id="uploadBtn"><i class="fa-solid fa-paperclip"></i> Upload Files</button>
+                <div class="row mb-3">
+                    <div class="col">
+                        <label>Registration No.  </label> <br />
+                        <input type="text" id="Regno" value="@regno" name="Regno" readonly />
                     </div>
-
-                    <section class="flex_align">
-                        <div id="fileContainer"></div>
-                        <ul id="fileList" class="file-list flex_align"></ul>
-                    </section>
+                    <div class="col">
+                        <label>Department / Section  </label> <br />
+                        <input type="text" id="SectionName"  readonly />
+                    </div>
                 </div>
 
-                <input type="file" id="fileInput" accept="application/pdf" multiple hidden>
 
-
+                <hr />
 
 
                 <div class="col-12 col-sm-12 col-lg-12 mb-3">
@@ -91,54 +88,71 @@
                     <p id="Inpects1"></p>
 
 
-                    <label>Countermeasures</label> <br />
                     <textarea placeholder="Type text here..." name="counter1" id="counter1" rows="3" cols="40"></textarea>
                 </div>
 
                 <div class="col-12 col-sm-12 col-lg-12 mb-3">
                     <label>2. Identification and status of the product or materials.</label> <br />
                     <p id="Inpects2"></p>
-                    <label>Countermeasures</label> <br />
                     <textarea placeholder="Type text here..." name="counter2" id="counter2" rows="3" cols="40"></textarea>
                 </div>
 
                 <div class="col-12 col-sm-12 col-lg-12 mb-3">
                     <label>3. Condition and status of documents / records.</label> <br />
                     <p id="Inpects3"></p>
-                    <label>Countermeasures</label> <br />
                     <textarea placeholder="Type text here..." name="counter3" id="counter3" rows="3" cols="40"></textarea>
                 </div>
 
                 <div class="col-12 col-sm-12 col-lg-12 mb-3">
                     <label>4. Record of ‘start-up process check’ and monthly inspection</label> <br />
                     <p id="Inpects4"></p>
-                    <label>Countermeasures</label> <br />
                     <textarea placeholder="Type text here..." name="counter4" id="counter4" rows="3" cols="40"></textarea>
                 </div>
 
                 <div class="col-12 col-sm-12 col-lg-12 mb-3">
                     <label>5. Calibration of equipment and jigs used for measurement or inspection.</label> <br />
                     <p id="Inpects5"></p>
-                    <label>Countermeasures</label> <br />
                     <textarea placeholder="Type text here..." name="counter5" id="counter5" rows="3" cols="40"></textarea>
                 </div>
 
                 <div class="col-12 col-sm-12 col-lg-12 mb-3">
                     <label>6. Countermeasure and implementation of previous quality and safety</label> <br />
                     <p id="Inpects6"></p>
-                    <label>Countermeasures</label> <br />
                     <textarea placeholder="Type text here..." name="counter6" id="counter6" rows="3" cols="40"></textarea>
                 </div>
 
 
-                <label>PIC Comments</label>
-                <textarea placeholder="Type text here..." name="PIC_Comments" id="PIC_Comments" rows="3" cols="40"></textarea>
 
-                <label>Select Inspectors</label> <br />
-                <select id="Employee_ID" name="Employee_ID" required>
-                    <option value="14120005">Melo jean </option>
-                    <option value="14030008">Lionell Gomez</option>
-                </select>
+                <div class="row mb-3">
+                    <div class="col">
+                        <label>PIC Comments</label>
+                        <textarea placeholder="Type text here..." name="PIC_Comments" id="PIC_Comments" rows="3" cols="40"></textarea>
+                    </div>
+
+                    <div class="col">
+                        <label>Select Inspectors</label> <br />
+                        <select id="Employee_ID" name="Employee_ID" class="mt-2" required>
+                            <option value="14120005">Melo jean </option>
+                            <option value="14030008">Lionell Gomez</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="Attachmentcontainer col-12 col-sm-12 col-lg-12 mb-3">
+                    <label class="mb-2 mt-2 fw-bold">Attachments : </label><br />
+
+
+                    <div class="file-upload" id="file-upload-area">
+                        <p>Click to upload files or drag and drop</p>
+                        <input type="file" id="file-input" multiple style="display: none;">
+                    </div>
+
+                    <section class="flex_align mt-3">
+                        <div id="fileContainer"></div>
+                        <ul id="fileList" class="file-list"></ul>
+                    </section>
+                </div>
+
 
 
                 <div class="button-group">
@@ -233,9 +247,9 @@
         let strRegno = $("#Regno").val();
 
         // =======  FOR UPLOADING FILES =======================
-        const fileInput = document.getElementById("fileInput");
+        const fileUploadArea = document.getElementById("file-upload-area");
         const fileList = document.getElementById("fileList");
-        const uploadBtn = document.getElementById("uploadBtn");
+        const fileInput = document.getElementById("file-input");
         // ====================================================
 
         const addform = document.getElementById("step-2");
@@ -246,7 +260,7 @@
 
             // Update progress bar
             const progressPercentage = ((step - 1) / (totalSteps - 1)) * 100;
-            document.querySelector('.progress').style.width = `${progressPercentage}%`;
+            document.querySelector('.progressV2').style.width = `${progressPercentage}%`;
 
             // Update sidebar steps
             document.querySelectorAll('.step-item').forEach((item, index) => {
@@ -345,7 +359,7 @@
 
 
 
-        uploadBtn.addEventListener("click", () => fileInput.click());
+        fileUploadArea.addEventListener("click", () => fileInput.click());
         // =================== MULTIPLE UPLOAD FILES ==============================
         fileInput.addEventListener("change", function () {
             // Add new files to the array (avoid duplicates by name+size)
@@ -388,6 +402,12 @@
             });
         }
 
+        const GetRegistrationDetails = async () => {
+            let res = await FetchAuthenticate('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
+            if (res && res.Success) {
+                $("#SectionName").val("P1SA-" + res.Data.SectionName);
+            }
+        }
 
         const GetRegistrationID = async () => {
             let res = await FetchAuthenticate('@Url.Action("GetRegistrationFindings", "Patrol")', { Regno: strRegno });
@@ -395,11 +415,12 @@
 
             if (res && res.Success) {
                 res.Data.forEach(item => {
-                    $(`#Inpects${item.FindID}`).text(item.FindDescription);
+                    $(`#Inpects${item.FindID}`).text("- " + item.FindDescription);
                 });
             }
         }
 
+        GetRegistrationDetails();
         GetRegistrationID();
     </script>
 </body>

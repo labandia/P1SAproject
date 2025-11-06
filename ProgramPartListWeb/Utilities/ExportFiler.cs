@@ -241,10 +241,11 @@ namespace ProgramPartListWeb.Utilities
                 // ✅ Step 3: Resolve names safely
                 string getFullname = processowner.SingleOrDefault(x => x.Employee_ID == reg.PIC_ID)?.FullName ?? "N/A";
                 string getFullnameInspect = processowner.SingleOrDefault(x => x.Employee_ID == reg.Inspect_ID)?.FullName ?? "N/A";
+                string getManagersName = processowner.SingleOrDefault(x => x.Employee_ID == reg.Manager_ID)?.FullName ?? "N/A";
 
                 // ✅ Step 4: Format date safely
-              
-          
+
+
 
 
                 // 🧹 Step 0: Delete old file if exists
@@ -284,6 +285,7 @@ namespace ProgramPartListWeb.Utilities
 
                         worksheet.Cells["B2"].Value = "Registration No: " + reg.RegNo;
                         worksheet.Cells["B4"].Value = "Dept. /Section Inspected: P1SA-" + reg.SectionName;
+                        worksheet.Cells["C53"].Value = "Manager: " + getManagersName;
                         worksheet.Cells["C48"].Value = reg.Manager_Comments;
                         worksheet.Cells["D48"].Value = "Date Conducted: " + (reg.DateConduct ?? "N/A");
                         worksheet.Cells["D50"].Value = reg.PIC_Comments;

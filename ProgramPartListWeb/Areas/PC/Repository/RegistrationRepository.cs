@@ -45,6 +45,12 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                             ORDER BY DateCreated DESC";
             return SqlDataAccess.GetData<PatrolRegistrationViewModel>(strsql);
         }
+        public Task<List<EmailModelV2>> PatrolEmailData()
+        {
+            string strsql = "SELECT * FROM Patrol_UserEmail";
+            return SqlDataAccess.GetData<EmailModelV2>(strsql);
+        }
+
         public Task<List<FindingModel>> GetRegisterFindings(string regNo) => SqlDataAccess.GetData<FindingModel>("GetFindings", new { Regno = regNo });
 
         public Task<List<RegistrationFiles>> GetRegisterFiles(string regNo)
@@ -90,9 +96,9 @@ namespace ProgramPartListWeb.Areas.PC.Repository
         {
             // UPDATE THE MAIN REGISTRATION TABLE
             string mainsql = $@"UPDATE Patrol_Registration
-                                SET ReportStatus = 2
+                                SET ReportStatus = 2, Employee_ID = @Employee_ID
                                 WHERE RegNo = @RegNo";
-            var regMain = SqlDataAccess.UpdateInsertQuery(mainsql, new { RegNo = reg.RegNo });
+            var regMain = SqlDataAccess.UpdateInsertQuery(mainsql, new { RegNo = reg.RegNo, Employee_ID = reg.Employee_ID });
 
 
             string appsql = $@"UPDATE Patrol_Registration_Approvelist
@@ -135,20 +141,39 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             return results.All(r => r);
         }
 
-        public async Task<bool> ApproveByInspector(string reg, string datecon, string newfilepath)
+        public async Task<bool> ApproveByInspector(string reg, string datecon, string newfilepath, string ManagerID)
         {
             var regsql = SqlDataAccess.UpdateInsertQuery(@" UPDATE Patrol_Registration SET  
-                            ReportStatus = ReportStatus + 1, DateConduct = @DateConduct
-                            WHERE RegNo =@RegNo", new { RegNo = reg, DateConduct = datecon });
+                            ReportStatus = 3, DateConduct = @DateConduct, Manager_ID = @Manager_ID
+                            WHERE RegNo =@RegNo", new { RegNo = reg, DateConduct = datecon, Manager_ID = ManagerID });
 
             var revsql = SqlDataAccess.UpdateInsertQuery(@"UPDATE Patrol_Registration_Approvelist SET  
-                            Inspect_IsAproved =  1
-                            WHERE RegNo =@RegNo", new { RegNo = reg });
+                            Inspect_IsAproved =  1, Manager_ID = @Manager_ID
+                            WHERE RegNo =@RegNo", new { RegNo = reg, Manager_ID = ManagerID });
+
+            var regFiles = SqlDataAccess.UpdateInsertQuery(@"UPDATE Patrol_Registration_Files SET 
+                            FilePath =@FilePath
+                            WHERE RegNo =@RegNo", new { FilePath = newfilepath,  RegNo = reg });
+
+            bool[] results = await Task.WhenAll(regsql, revsql, regFiles);
+
+            return results.All(r => r);
+        }
+
+        public async Task<bool> ApproveByManager(string reg, string comments, string newfilepath, string DepManager)
+        {
+            var regsql = SqlDataAccess.UpdateInsertQuery(@" UPDATE Patrol_Registration SET  
+                            ReportStatus = 4, DepManager_ID =@DepManager_ID
+                            WHERE RegNo =@RegNo", new { RegNo = reg, DepManager_ID = DepManager });
+
+            var revsql = SqlDataAccess.UpdateInsertQuery(@"UPDATE Patrol_Registration_Approvelist SET  
+                            Inspect_IsAproved =  1, DepManager_IsAproved = 1,  Manager_Comments =@Manager_Comments, DepManager_ID =@DepManager_ID
+                            WHERE RegNo =@RegNo", new { RegNo = reg, Manager_Comments = comments, DepManager_ID = DepManager });
 
             var regFiles = SqlDataAccess.UpdateInsertQuery(@"UPDATE Patrol_Registration_Files SET FilePath =@FilePath
                             WHERE RegNo =@RegNo", new
             {
-                FilePath = newfilepath, 
+                FilePath = newfilepath,
                 RegNo = reg
             });
 
@@ -157,12 +182,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             return results.All(r => r);
         }
 
-        public Task<List<EmailModelV2>> PatrolEmailData()
-        {
-            string strsql = "SELECT * FROM Patrol_UserEmail";
-            return SqlDataAccess.GetData<EmailModelV2>(strsql);
-        }
-
-        
+       
+       
     }
 }

@@ -33,6 +33,14 @@ label{
     color: #222;
 }
 
+textarea{
+    margin-top: .5em !important;
+}
+
+form p{
+    margin: .5em 0;
+}
+
 .MainWrapper {
     display: flex;
     width: 100%;
@@ -163,7 +171,7 @@ label{
             color: #4a5568;
         }
 
-        input, select, textarea {
+        input, select, textarea, .DateConduct {
             width: 100%;
             padding: 12px 15px;
             border: 1px solid #e2e8f0;
@@ -172,7 +180,7 @@ label{
             transition: all 0.3s;
         }
 
-        input:focus, select:focus, textarea:focus {
+        input:focus, select:focus, textarea:focus, .DateConduct:focus {
             outline: none;
             border-color: #4a6cf7;
             box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.1);
@@ -262,7 +270,7 @@ label{
             overflow: hidden;
         }
 
-        .progress {
+        .progressV2 {
             height: 100%;
             background: #4a6cf7;
             border-radius: 3px;
@@ -297,10 +305,9 @@ label{
 .styled-date {
     border: none;
     outline: none !important;
-    width: 80px;
-    background: transparent;
+    width: 100%;
+    background: #fff !important;
     border: none !important;
-    margin-top: 1em !important;
     padding: 0 !important;
     font-weight: 500;
 }
@@ -336,4 +343,51 @@ label{
     cursor: pointer;
     z-index: 1;
     outline: none;
+}
+
+
+
+
+
+
+.file-upload {
+    border: 2px dashed #ddd;
+    border-radius: 4px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.3s;
+}
+
+.file-list {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: .5em 0;
+}
+
+.file-list .fa-file-pdf{
+   color: red;
+}
+
+.pdf-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-between;
+    width: 100%;
+    margin: 4px 0;
+}
+
+.open-pdf-btn {
+    flex: 1;
+    text-align: left;
+    white-space: nowrap; /* prevent wrapping */
+    overflow: hidden; /* hide overflow */
+    text-overflow: ellipsis; /* show "..." when text is cut */
+    padding: 6px 8px;
+    border: none;
+    background: #e2e8f0;
+    cursor: pointer;
+    font-size: 14px;
 }

@@ -34,7 +34,7 @@
                 </li>
                 <li class="step-item" data-step="2">
                     <span class="step-number">2</span>
-                    Person in Charge (PIC)
+                    Process Owner
                 </li>
                 <li class="step-item" data-step="3">
                     <span class="step-number">3</span>
@@ -46,14 +46,14 @@
                 </li>
                 <li class="step-item" data-step="5">
                     <span class="step-number">5</span>
-                    Review & Submit
+                    Depart Manager
                 </li>
             </ul>
         </div>
 
         <div class="content">
             <div class="progress-bar">
-                <div class="progress" style="width: 20%"></div>
+                <div class="progressV2" style="width: 20%"></div>
             </div>
 
             <!-- Step 1: Create New Document -->
@@ -72,44 +72,28 @@
                 <form method="post" enctype="multipart/form-data" class="formcontainer mt-4" id="addnewform" autocomplete="off">
                     <div class="row">
                         <div class="col-12">
-                            <div class="flex_space">
-                                <div class="flex_align">
-
-                                    <input type="hidden" id="Regno" value="@regno" name="Regno" />
-                                </div>
-                            </div>
-
-                            <div class="flex_space">
-                                <div>
-                                    <label>Registration No.  </label> <br />
-                                    <input type="text" placeholder="Type Registration No." name="TempRegno" id="TempRegno" value="@regno" disabled />
-                                    <input type="hidden" name="RegNo" id="RegNo" value="@regno" />
-                                    <input type="hidden" name="Filepath" id="Filepath" />
-                                </div>
-                                <div>
-                                    <input type="date" id="DateConduct"  class="DateConduct" />
-                                    <button>Return </button>
-                                    <button id="aproveID">Approved </button>
-                                </div>
-                            </div>
-
-                            <hr />
-
-
-                            <div class="Attachmentcontainer">
-                                <div class="flex_align">
-                                    <label class="mb-0 fw-bold">Attachments : </label>
-                                    <button type="button" id="uploadBtn"><i class="fa-solid fa-paperclip"></i> Upload Files</button>
-                                </div>
+                            <div class="Attachmentcontainer mb-3">
+                                <label class="mb-0 fw-bold">Attachments : </label>
 
                                 <section class="flex_align">
-                                    <div id="fileContainer"></div>
-                                    <ul id="fileList" class="file-list flex_align"></ul>
+                                    <div id="fileContainer"  style="width: 100%; display: flex; align-items:center; gap: 15px;"></div>
+                                    <ul id="fileList" class="file-list flex_align"  style="width: 100%;"></ul>
                                 </section>
                             </div>
 
 
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label>Registration No.  </label> <br />
+                                    <input type="text" id="Regno" value="@regno" name="Regno" readonly />
+                                    <input type="hidden" name="Filepath" id="Filepath" />
 
+                                </div>
+                                <div class="col">
+                                    <label>Department / Section  </label> <br />
+                                    <input type="text" id="SectionName" readonly />
+                                </div>
+                            </div>
 
 
 
@@ -201,19 +185,29 @@
                             </div>
 
 
+                            <div class="row">
+                                <div class="col">
+                                    <label>PIC Comments</label>
+                                    <textarea placeholder="Type text here..." name="PIC_Comments" id="PIC_Comments" rows="3" cols="40" readonly></textarea>
+                                </div>
+                                <div class="col">
+                                    <label>Date Conducted</label><br />
+                                    <input type="date" id="DateConduct" class="DateConduct" required />
+                                </div>
+                            </div>
 
 
+                            <div>
+                                
+                                <button>Return </button>
+                                <button id="aproveID">Approved </button>
+                            </div>
                         </div>
                     </div>
 
 
 
-                    <hr />
-
-                    <div class="d-flex align-items-center justify-content-between">
-                        <span>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</span>
-                        <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i></button>
-                    </div>
+                    
                 </form>
 
             </div>
@@ -282,7 +276,7 @@
 
             // Update progress bar
             const progressPercentage = ((step - 1) / (totalSteps - 1)) * 100;
-            document.querySelector('.progress').style.width = `${progressPercentage}%`;
+            document.querySelector('.progressV2').style.width = `${progressPercentage}%`;
 
             // Update sidebar steps
             document.querySelectorAll('.step-item').forEach((item, index) => {
@@ -321,12 +315,17 @@
 
         appBtn.addEventListener('click', async function (e) {
             e.preventDefault();
+            let strDate = $("#DateConduct").val();
+
             let fomdata = new FormData();
             fomdata.append("RegNo", strRegno);
             fomdata.append("DateConduct", $("#DateConduct").val());
+            if (strDate == "") {
+                alert("Date Conduct Required ... ");
+                return;
+            }
 
             let res = await postData('@Url.Action("InspectorAproveSubmit", "Patrol")', fomdata);
-            console.log(res);
             if (res.StatusCode === 201) {
                 Swal.fire({
                     title: "Success",
@@ -335,17 +334,24 @@
                     showConfirmButton: false,
                     timer: 1500
                 }).then(() => {
-                    
+
                 });
             }
         });
 
+        const GetRegistrationDetails = async () => {
+            let res = await FetchAuthenticate('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
+            if (res && res.Success) {
+                $("#SectionName").val("P1SA-" + res.Data.SectionName);
+                $("#PIC_Comments").val(res.Data.PIC_Comments);
+            }
+        }
 
 
-        const GetRegistrationID = async () => {
+
+        const GetRegistrationFindingsID = async () => {
             let res = await FetchAuthenticate('@Url.Action("GetRegistrationFindings", "Patrol")', { Regno: strRegno });
 
-            console.log(res);
             if (res && res.Success) {
                 res.Data.forEach(item => {
                     $(`#Inpects${item.FindID}`).val(item.FindDescription);
@@ -355,13 +361,49 @@
         }
 
         const GetRegistratioFiles = async () => {
+            let filesSelect = [];
             let res = await FetchAuthenticate('@Url.Action("GetRegistrationAllFiles", "Patrol")', { Regno: strRegno });
+            if (res.Success && res) {
+                filesSelect = res.Data;
 
-            console.log(res);
+                let UploadCounterPath = filesSelect[0].CounterPath;
+
+                if (UploadCounterPath) {
+                    let files = UploadCounterPath.split(';');
+                    let fileHtml = "";
+
+                    files.forEach(f => {
+                        if (f.trim() !== "") {
+                            let filenameonly = f.replace(/\.pdf$/i, "");
+
+                            fileHtml += `
+                     <div class="pdf-container">
+                          <button class="open-pdf-btn" data-pdf-url="/Patrol/ViewPDF?strfilepath=${f}">
+                             <i class="fa-solid fa-file-pdf"></i> ${filenameonly}
+                         </button>
+                     </div>
+                 `;
+                        }
+                    });
+
+                    document.getElementById("fileContainer").innerHTML = fileHtml;
+
+                    // Attach click event
+                    document.querySelectorAll(".open-pdf-btn").forEach(btn => {
+                        btn.addEventListener("click", function () {
+                            let pdfUrl = this.getAttribute("data-pdf-url");
+                            window.open(pdfUrl, "_blank"); // Open in new tab
+                        });
+                    });
+                }
+
+
+            }
 
         }
 
-        GetRegistrationID();
+        GetRegistrationDetails();
+        GetRegistrationFindingsID();
         GetRegistratioFiles();
     </script>
 </body>

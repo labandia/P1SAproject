@@ -458,7 +458,7 @@
 
     const RegistrationTable = async () => {
           let res = await FetchAuthenticate('@Url.Action("GetRegistrationNo", "Patrol")', {});
-        if (res && res.Success) {
+          if (res && res.Success) {
               regisTable = res.Data;
           }
     }

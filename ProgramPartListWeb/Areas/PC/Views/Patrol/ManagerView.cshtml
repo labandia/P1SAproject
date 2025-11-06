@@ -34,7 +34,7 @@
                 </li>
                 <li class="step-item" data-step="2">
                     <span class="step-number">2</span>
-                    Person in Charge (PIC)
+                    Process Owner
                 </li>
                 <li class="step-item" data-step="3">
                     <span class="step-number">3</span>
@@ -100,10 +100,8 @@
 
 
                             <div class="Attachmentcontainer">
-                                <div class="flex_align">
-                                    <label class="mb-0 fw-bold">Attachments : </label>
-                                    <button type="button" id="uploadBtn"><i class="fa-solid fa-paperclip"></i> Upload Files</button>
-                                </div>
+                            
+                                <label class="mb-0 fw-bold">Attachments : </label>
 
                                 <section class="flex_align">
                                     <div id="fileContainer"></div>
@@ -203,8 +201,13 @@
                                 </div>
                             </div>
 
+
+                            <label>PIC Comments</label>
+                            <textarea placeholder="Type text here..." name="PIC_Comments" id="PIC_Comments" rows="3" cols="40" readonly></textarea>
+
+
                             <label>Manager Comments</label>
-                            <textarea placeholder="Type text here..." name="PIC_Comments" id="PIC_Comments" rows="3" cols="40"></textarea>
+                            <textarea placeholder="Type text here..." name="Manager_Comments" id="Manager_Comments" rows="3" cols="40"></textarea>
 
 
                         </div>
@@ -234,6 +237,9 @@
     <script type="text/javascript">
         let currentStep = 4;
         const totalSteps = 5;
+
+        let appBtn = document.getElementById('aproveID');
+
         let strRegno = $("#Regno").val();
 
         function goToStep(step) {
@@ -279,12 +285,41 @@
             });
         });
 
+            appBtn.addEventListener('click', async function (e) {
+                e.preventDefault();
+
+                let fomdata = new FormData();
+                fomdata.append("RegNo", strRegno);
+                fomdata.append("Comments", $("#Manager_Comments").val());
+
+                let res = await postData('@Url.Action("ManagerApproveSubmit", "Patrol")', fomdata);
+                if (res.StatusCode === 201) {
+                    Swal.fire({
+                        title: "Success",
+                        text: res.Message,
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+
+                    });
+                }
+            });
 
 
-         const GetRegistrationID = async () => {
+
+          const GetRegistrationDetails = async () => {
+             let res = await FetchAuthenticate('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
+             if (res && res.Success) {
+                 $("#PIC_Comments").val(res.Data.PIC_Comments);
+             }
+         }
+
+
+
+         const GetRegistrationFindingsID = async () => {
              let res = await FetchAuthenticate('@Url.Action("GetRegistrationFindings", "Patrol")', { Regno: strRegno });
 
-             console.log(res);
              if (res && res.Success) {
                  res.Data.forEach(item => {
                      $(`#Inpects${item.FindID}`).val(item.FindDescription);
@@ -293,15 +328,51 @@
              }
          }
 
-             const GetRegistratioFiles = async () => {
-                 let res = await FetchAuthenticate('@Url.Action("GetRegistrationAllFiles", "Patrol")', { Regno: strRegno });
+         const GetRegistratioFiles = async () => {
+             let filesSelect = [];
+             let res = await FetchAuthenticate('@Url.Action("GetRegistrationAllFiles", "Patrol")', { Regno: strRegno });
+             if (res.Success && res) {
+                 filesSelect = res.Data;
 
-                 console.log(res);
+                 let UploadCounterPath = filesSelect[0].CounterPath;
+
+                 if (UploadCounterPath) {
+                     let files = UploadCounterPath.split(';');
+                     let fileHtml = "";
+
+                     files.forEach(f => {
+                         if (f.trim() !== "") {
+                             let filenameonly = f.replace(/\.pdf$/i, "");
+
+                             fileHtml += `
+                      <div class="pdf-container">
+                           <button class="open-pdf-btn" data-pdf-url="/Patrol/ViewPDF?strfilepath=${f}">
+                              <i class="fa-solid fa-file-pdf"></i> ${filenameonly}
+                          </button>
+                      </div>
+                  `;
+                         }
+                     });
+
+                     document.getElementById("fileContainer").innerHTML = fileHtml;
+
+                     // Attach click event
+                     document.querySelectorAll(".open-pdf-btn").forEach(btn => {
+                         btn.addEventListener("click", function () {
+                             let pdfUrl = this.getAttribute("data-pdf-url");
+                             window.open(pdfUrl, "_blank"); // Open in new tab
+                         });
+                     });
+                 }
+
 
              }
 
-             GetRegistrationID();
-             GetRegistratioFiles();
+         }
+
+         GetRegistrationDetails();
+         GetRegistrationFindingsID();
+         GetRegistratioFiles();
     </script>
 </body>
 

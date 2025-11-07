@@ -796,8 +796,15 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
         }
 
+        [HttpPost]
+        public async Task<ActionResult> ReturnEmailSubmit(string Regno, string Message, int ReportStatus)
+        {
+            return JsonCreated(Regno, "Updated successfully");
+        }
 
-        // =================  SAVE AND SUBMIT BY PROCESS OWNER ===============================
+        // =======================================================================
+        // =================  SAVE AND SUBMIT BY PROCESS OWNER ===================
+        // =======================================================================
         [HttpPost]
         public async Task<ActionResult> ProcessOwnerSubmission(HttpPostedFileBase[] Attachments)
         {
@@ -914,6 +921,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         }
         // =======================================================================
         // ==============  INSPECTOR PROESSS BY APPROVED AND REVISE ==============
+        // =======================================================================
         [HttpPost]
         public async Task<ActionResult> InspectorAproveSubmit(string Regno, string DateConduct)
         {
@@ -983,6 +991,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         }
         // =======================================================================
         // ==============  MANAGER PROESS SAME WITH THE INSPECTORS ==============
+        // =======================================================================
         [HttpPost]
         public async Task<ActionResult> ManagerApproveSubmit(string Regno, string Comments)
         {

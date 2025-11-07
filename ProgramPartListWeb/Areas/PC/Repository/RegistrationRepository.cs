@@ -182,7 +182,27 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             return results.All(r => r);
         }
 
-       
-       
+        public Task<bool> ApproveByDivManager(string RegNo, string comments, string newfilepath, string DivManagerID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> ReturnEmailMessage(string RegNo, string comments, int reportStats)
+        {
+            if(reportStats == 2) { 
+                // -- Updates status of the PIC
+            }else if(reportStats == 3)
+            {
+                // -- Updates status of the Inspector
+            }
+            else if(reportStats == 4)
+            {
+                // -- Updates status of the Manager
+            }
+
+
+
+            throw new NotImplementedException();
+        }
     }
 }

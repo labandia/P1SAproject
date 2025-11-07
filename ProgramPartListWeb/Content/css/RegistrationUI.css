@@ -46,31 +46,30 @@ form p{
     width: 100%;
     height: 100vh;
     background: white;
-    border-radius: 12px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
     overflow: hidden;
 }
 
-.sidebar {
-    width: 280px;
-    background: linear-gradient(135deg, #4a6cf7 100%, #6a82fb 100%);
-    color: white;
-    padding: 30px 20px;
-    position: relative;
-}
+    .sidebar {
+        width: 280px;
+        background: #1e3a48;
+        color: white;
+        padding: 30px 20px;
+        position: relative;
+    }
 
     .sidebar h2 {
         margin-bottom: 30px;
-        font-weight: 600;
+        font-weight: 500;
         font-size: 22px;
         display: flex;
         align-items: center;
     }
 
-        .sidebar h2 i {
-            margin-right: 10px;
-            font-size: 24px;
-        }
+    .sidebar h2 i {
+         margin-right: 10px;
+         font-size: 24px;
+    }
 
 .step-list {
     list-style: none;
@@ -89,7 +88,6 @@ form p{
 
     .step-item.active {
         background: rgba(255, 255, 255, 0.2);
-        font-weight: 600;
     }
 
     .step-item.completed {
@@ -146,7 +144,11 @@ form p{
         display: block;
     }
 
-
+.step-item.disabled {
+    opacity: 0.4;
+    pointer-events: none; /* prevents clicking */
+    cursor: not-allowed;
+}
 
       @keyframes fadeIn {
             from { opacity: 0; transform: translateX(20px); }
@@ -182,7 +184,7 @@ form p{
 
         input:focus, select:focus, textarea:focus, .DateConduct:focus {
             outline: none;
-            border-color: #4a6cf7;
+            border-color: #1e3a48;
             box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.1);
         }
 
@@ -383,12 +385,17 @@ form p{
 .open-pdf-btn {
     display: flex;
     align-items: center;
-    padding: 15px;
+    padding: .5em 1em .5em .5em;
+    border: 1px solid #ccc;
     background-color: #f8f9fa;
     transition: all 0.3s ease;
 }
 .open-pdf-btn:hover{
     background-color: #e2e8f0;
+}
+
+.file-name{
+    font-size: 13px;
 }
 
 .file-icon {
@@ -425,7 +432,26 @@ form p{
 
 
 
+/*------------------------ BUTTON LOADING ANIMATION ------------------- */
+.buttonloading {
+    width: 30px;
+    padding: 8px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #dcc9ff;
+    --_m: conic-gradient(#0000 10%,#000), linear-gradient(#000 0 0) content-box;
+    -webkit-mask: var(--_m);
+    mask: var(--_m);
+    -webkit-mask-composite: source-out;
+    mask-composite: subtract;
+    animation: l3 1s infinite linear;
+}
 
+@keyframes l3 {
+    to {
+        transform: rotate(1turn)
+    }
+}
 
 
 
@@ -460,7 +486,8 @@ form p{
 .comment-btn {
     width: 70px;
     height: 70px;
-    background: linear-gradient(135deg, #1a2a6c, #b21f1f);
+    background: #2A7B9B;
+    background: linear-gradient(90deg,rgba(42, 123, 155, 1) 0%, rgba(87, 199, 133, 1) 100%, rgba(83, 237, 116, 1) 100%);
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -576,7 +603,13 @@ form p{
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(244, 67, 54, 0.4);
         }
-
+        /* Disabled state */
+        .approve-btn:disabled,
+        .return-btn:disabled {
+            background-color: #ccc;       /* gray background */
+            cursor: not-allowed;          /* show not-allowed cursor */
+            opacity: 0.4;                 /* optional slight transparency */
+        }
 
          .notification {
             position: fixed;

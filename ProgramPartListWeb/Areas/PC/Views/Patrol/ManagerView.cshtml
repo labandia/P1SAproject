@@ -26,7 +26,7 @@
     <div class="MainWrapper">
 
         <div class="sidebar">
-            <h2><i>📄</i> Registration No. </h2>
+            <h2><i>📄</i><span id="regtext"></span></h2>
             <ul class="step-list">
                 <li class="step-item active" data-step="1">
                     <span class="step-number">1</span>
@@ -38,7 +38,7 @@
                 </li>
                 <li class="step-item" data-step="3">
                     <span class="step-number">3</span>
-                    Inspector
+                    Inspectors
                 </li>
                 <li class="step-item" data-step="4">
                     <span class="step-number">4</span>
@@ -46,8 +46,17 @@
                 </li>
                 <li class="step-item" data-step="5">
                     <span class="step-number">5</span>
-                    Review & Submit
+                    Department Manager
                 </li>
+                <li class="step-item" data-step="6">
+                    <span class="step-number">6</span>
+                    Division Manager
+                </li>
+                <li class="step-item" data-step="7">
+                    <span class="step-number">7</span>
+                    View Form
+                </li>
+            </ul>
             </ul>
         </div>
 
@@ -73,6 +82,13 @@
                 <form method="post" enctype="multipart/form-data" class="formcontainer mt-4" id="addnewform" autocomplete="off">
                     <div class="row">
                         <div class="col-12">
+                            <div class="Attachmentcontainer mb-3">
+
+                                <label class="mb-0 fw-bold">Attachments : </label>
+                                <div id="fileContainer"></div>
+
+                            </div>
+
 
                             <div class="row mb-3">
                                 <div class="col">
@@ -87,12 +103,7 @@
                                 </div>
                             </div>
 
-                            <div class="Attachmentcontainer">
 
-                                <label class="mb-0 fw-bold">Attachments : </label>
-                                <div id="fileContainer"></div>
-
-                            </div>
 
 
                             <h5 class="mb-4 mt-4 fw-bold">Inspection Criterion / Findings</h5>
@@ -181,6 +192,19 @@
                                 </div>
                             </div>
 
+                            <div class="row mb-3">
+                                <div class="col ">
+                                    <label>Inspector Name: </label> <br />
+                                    <input type="text" required />
+                                </div>
+
+                                <div class="col ">
+                                    <label>Date Conducted</label> <br />
+                                    <input type="text" required />
+                                </div>
+                            </div>
+                            <label>Person in charge </label> <br />
+                            <input type="text" required />
 
                             <label>PIC Comments</label>
                             <textarea placeholder="Type text here..." name="PIC_Comments" id="PIC_Comments" rows="3" cols="40" readonly></textarea>
@@ -261,15 +285,23 @@
             currentStep = step;
 
 
-            // Update sidebar steps
+            // Update sidebar step states
             document.querySelectorAll('.step-item').forEach((item, index) => {
-                if (index + 1 < step) {
+                const stepNumber = index + 1;
+
+                // Completed (previous steps)
+                if (stepNumber < step) {
                     item.classList.add('completed');
-                    item.classList.remove('active');
-                } else if (index + 1 === step) {
+                    item.classList.remove('active', 'disabled');
+                }
+                // Active (current step)
+                else if (stepNumber === step) {
                     item.classList.add('active');
-                    item.classList.remove('completed');
-                } else {
+                    item.classList.remove('completed', 'disabled');
+                }
+                // Locked (future steps)
+                else {
+                    item.classList.add('disabled');
                     item.classList.remove('active', 'completed');
                 }
             });
@@ -287,11 +319,9 @@
 
             // Add click event to sidebar steps
             document.querySelectorAll('.step-item').forEach(item => {
-                item.addEventListener('click', function () {
-                    const step = parseInt(this.getAttribute('data-step'));
-                    if (step < currentStep) {
-                        goToStep(step);
-                    }
+                item.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    return;
                 });
             });
         });
@@ -311,12 +341,30 @@
            // Approve action
        approveBtn.addEventListener('click', async (e) => {
            e.preventDefault();
+
+           // Get the ID of the save button and Store original text
+           const savebtn = document.querySelector("#approveBtn");
+           const originalText = savebtn.innerHTML;
+
+           // Create loading icon and message container
+           savebtn.disabled = true;
+           savebtn.innerHTML = `<div class='buttonloading'></div>`;
+
+
            let fomdata = new FormData();
-            fomdata.append("RegNo", strRegno);
-            fomdata.append("Comments", $("#Manager_Comments").val());
+           fomdata.append("RegNo", strRegno);
+           fomdata.append("Comments", $("#Manager_Comments").val());
+
+
+           // Step 1: Simulate "Saving data..."
+           await new Promise(resolve => setTimeout(resolve, 1200)); // 1.2s delay for animation
 
             let res = await postData('@Url.Action("ManagerApproveSubmit", "Patrol")', fomdata);
-            if (res.StatusCode === 201) {
+           if (res.StatusCode === 201) {
+               await new Promise(resolve => setTimeout(resolve, 1000));
+               savebtn.innerHTML = originalText;
+
+
                 // In a real application, you would send the approval to a server here
                 showNotification('approved successfully!', 'success');
 
@@ -327,6 +375,8 @@
                 // Close form
                 commentBtn.classList.remove('active');
                 formContainer.classList.remove('active');
+
+               GetRegistrationDetails();
             }
        });
 
@@ -390,10 +440,19 @@
 
 
           const GetRegistrationDetails = async () => {
-             let res = await FetchAuthenticate('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
+              let res = await FetchAuthenticate('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
               if (res && res.Success) {
+                 $("#regtext").text(strRegno);
                  $("#SectionName").val("P1SA-" + res.Data.SectionName);
                  $("#PIC_Comments").val(res.Data.PIC_Comments);
+                 $("#Manager_Comments").val(res.Data.Manager_Comments);                 
+
+                  if (res.Data.DepManager_IsAproved) {
+                      $("#returnBtn").prop("disabled", true);
+                      $("#approveBtn").prop("disabled", true);
+                      $("#Return_Comments").prop("disabled", true);
+                      $("#Manager_Comments").prop("readonly", true);
+                  }
              }
          }
 

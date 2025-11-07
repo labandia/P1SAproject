@@ -26,7 +26,7 @@
     <div class="MainWrapper">
 
         <div class="sidebar">
-            <h2><i>📄</i>Patrol Inspection</h2>
+            <h2><i>📄</i><span id="regtext"></span></h2>
             <ul class="step-list">
                 <li class="step-item active" data-step="1">
                     <span class="step-number">1</span>
@@ -38,7 +38,7 @@
                 </li>
                 <li class="step-item" data-step="3">
                     <span class="step-number">3</span>
-                    Inspector
+                    Inspectors
                 </li>
                 <li class="step-item" data-step="4">
                     <span class="step-number">4</span>
@@ -46,16 +46,22 @@
                 </li>
                 <li class="step-item" data-step="5">
                     <span class="step-number">5</span>
-                    Review & Submit
+                    Department Manager
                 </li>
+                <li class="step-item" data-step="6">
+                    <span class="step-number">6</span>
+                    Division Manager
+                </li>
+                <li class="step-item" data-step="7">
+                    <span class="step-number">7</span>
+                    View Form
+                </li>
+            </ul>
             </ul>
         </div>
 
         <div class="content">
-            <div class="progress-bar">
-                <div class="progressV2" style="width: 20%"></div>
-
-            </div>
+            
 
             <!-- Step 1: Create New Document -->
             <div class="step-content active" id="step-1">
@@ -63,14 +69,14 @@
             </div>
 
             <!-- Step 2: Person in Charge -->
-            <form method="post" enctype="multipart/form-data" class="step-content active" id="step-2" autocomplete="off">
+            <form method="post" enctype="multipart/form-data" class="step-content active" style="padding: 1.5em 0;" id="step-2" autocomplete="off">
                 
 
 
                 <div class="row mb-3">
                     <div class="col">
                         <label>Registration No.  </label> <br />
-                        <input type="text" id="Regno" value="@regno" name="Regno" readonly />
+                        <input type="text" id="RegNo" value="@regno" name="RegNo" readonly />
                     </div>
                     <div class="col">
                         <label>Department / Section  </label> <br />
@@ -153,85 +159,27 @@
                     </section>
                 </div>
 
-
+                <hr />
 
                 <div class="button-group">
                     <div></div> <!-- Empty div for spacing -->
-                    <button class="btn-next" type="submit">Next</button>
+                    <button class="btn-next" type="submit" id="btnSave">Save & Send</button>
                 </div>
             </form>
 
             <!-- Step 3: Document Details -->
             <div class="step-content" id="step-3">
-                <h3>Document Details</h3>
-                <div class="form-group">
-                    <label>Document Title</label>
-                    <input type="text" placeholder="Enter document title">
-                </div>
-                <div class="form-group">
-                    <label>Description</label>
-                    <textarea rows="5" placeholder="Enter document description"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Priority</label>
-                    <select>
-                        <option>Low</option>
-                        <option selected>Medium</option>
-                        <option>High</option>
-                        <option>Urgent</option>
-                    </select>
-                </div>
-                <div class="button-group">
-                    <button class="btn-prev" onclick="goToStep(2)">Previous</button>
-                    <button class="btn-next" onclick="goToStep(4)">Next</button>
-                </div>
+                
             </div>
 
             <!-- Step 4: Attachments -->
             <div class="step-content" id="step-4">
-                <h3>Attachments</h3>
-                <div class="form-group">
-                    <label>Upload Files</label>
-                    <div class="upload-area">
-                        <i>📎</i>
-                        <p>Click to upload files or drag and drop</p>
-                        <span>Supported formats: PDF, DOC, DOCX, JPG, PNG</span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Additional Notes</label>
-                    <textarea rows="3" placeholder="Add any additional notes about the attachments"></textarea>
-                </div>
-                <div class="button-group">
-                    <button class="btn-prev" onclick="goToStep(3)">Previous</button>
-                    <button class="btn-next" onclick="goToStep(5)">Next</button>
-                </div>
+               
             </div>
 
             <!-- Step 5: Review & Submit -->
             <div class="step-content" id="step-5">
-                <h3>Review & Submit</h3>
-                <div class="form-group">
-                    <label>Document Summary</label>
-                    <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin-top: 10px;">
-                        <p><strong>Document Type:</strong> Contract</p>
-                        <p><strong>Person in Charge:</strong> John Smith</p>
-                        <p><strong>Title:</strong> Quarterly Partnership Agreement</p>
-                        <p><strong>Priority:</strong> Medium</p>
-                        <p><strong>Attachments:</strong> 2 files</p>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Final Approval Notes</label>
-                    <textarea rows="3" placeholder="Add any final notes before submission"></textarea>
-                </div>
-                <div class="button-group">
-                    <button class="btn-prev" onclick="goToStep(4)">Previous</button>
-                    <div>
-                        <button class="btn-save">Save as Draft</button>
-                        <button class="btn-submit">Save & Send to Process Owner</button>
-                    </div>
-                </div>
+                
             </div>
         </div>
 
@@ -244,7 +192,7 @@
         const totalSteps = 5;
         let selectedFiles = [];
 
-        let strRegno = $("#Regno").val();
+        let strRegno = $("#RegNo").val();
 
         // =======  FOR UPLOADING FILES =======================
         const fileUploadArea = document.getElementById("file-upload-area");
@@ -258,22 +206,28 @@
             // Update current step
             currentStep = step;
 
-            // Update progress bar
-            const progressPercentage = ((step - 1) / (totalSteps - 1)) * 100;
-            document.querySelector('.progressV2').style.width = `${progressPercentage}%`;
 
-            // Update sidebar steps
+            // Update sidebar step states
             document.querySelectorAll('.step-item').forEach((item, index) => {
-                if (index + 1 < step) {
+                const stepNumber = index + 1;
+
+                // Completed (previous steps)
+                if (stepNumber < step) {
                     item.classList.add('completed');
-                    item.classList.remove('active');
-                } else if (index + 1 === step) {
+                    item.classList.remove('active', 'disabled');
+                }
+                // Active (current step)
+                else if (stepNumber === step) {
                     item.classList.add('active');
-                    item.classList.remove('completed');
-                } else {
+                    item.classList.remove('completed', 'disabled');
+                }
+                // Locked (future steps)
+                else {
+                    item.classList.add('disabled');
                     item.classList.remove('active', 'completed');
                 }
             });
+
 
             // Show/hide step content
             document.querySelectorAll('.step-content').forEach(content => {
@@ -288,11 +242,9 @@
 
             // Add click event to sidebar steps
             document.querySelectorAll('.step-item').forEach(item => {
-                item.addEventListener('click', function () {
-                    const step = parseInt(this.getAttribute('data-step'));
-                    if (step < currentStep) {
-                        goToStep(step);
-                    }
+                item.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    return;
                 });
             });
         });
@@ -317,45 +269,52 @@
         };
 
 
-        addform.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                // Append form data
-                let strfind = findingsJson(e.target);
-                let finalformData = new FormData(e.target);
-                finalformData.append('FindJson', strfind);
-                // ✅ Add multiple attachments
-                selectedFiles.forEach(file => {
-                    finalformData.append("Attachments", file);
-                });
+         addform.addEventListener('submit', async (e) => {
+             e.preventDefault();
 
-                // For registration validation, read RegNo from form data
-                const finaldata = Object.fromEntries(finalformData);
+                 // Get the ID of the save button and Store original text
+                 const savebtn = document.querySelector("#btnSave");
+                 const originalText = savebtn.innerHTML;
 
+                 // Create loading icon and message container
+                 savebtn.disabled = true;
+                 savebtn.innerHTML = `<div class='buttonloading'></div><span id='loadingSequence'>Saving data...</span>`;
 
-                console.log(finaldata);
+                 // Append form data
+                 let strfind = findingsJson(e.target);
+                 let finalformData = new FormData(e.target);
+                 finalformData.append('FindJson', strfind);
+                 // ✅ Add multiple attachments
+                 selectedFiles.forEach(file => {
+                     finalformData.append("Attachments", file);
+                 });
 
-                //const savebtn = document.querySelector("#btnSave");
-                //savebtn.innerHTML = " <div class='buttonloading'></div> Generating PDF Please wait...";
+                 // For registration validation, read RegNo from form data
+                 const finaldata = Object.fromEntries(finalformData);
 
-                // Send form data with file to controller
-                let res = await postData('@Url.Action("ProcessOwnerSubmission", "Patrol")', finalformData);
-                console.log(res);
-                //if (res.StatusCode === 201) {
-                //    Swal.fire({
-                //        title: "Success",
-                //        text: res.Message,
-                //        icon: "success",
-                //        showConfirmButton: false,
-                //        timer: 1500
-                //    }).then(() => {
-                //        setTimeout(() => {
-                //            window.location.href = "/PC/Patrol/PatrolReport";
-                //        }, 3000);
-                //    });
-                //}
+                 // Step 1: Simulate "Saving data..."
+                 await new Promise(resolve => setTimeout(resolve, 1200)); // 1.2s delay for animation
 
-                //Resetforms();
-        });
+                 // Step 2: Update loading text
+                 document.querySelector("#loadingSequence").textContent = "Sending email to the inspector...";
+                 await new Promise(resolve => setTimeout(resolve, 1200));
+
+                 // Step 3: Send data to the controller
+                 let res = await postData('@Url.Action("ProcessOwnerSubmission", "Patrol")', finalformData);
+
+                 if (res && res.Success) {
+                     document.querySelector("#loadingSequence").textContent = "Done ✅";
+                     await new Promise(resolve => setTimeout(resolve, 1000));
+                     savebtn.innerHTML = originalText;
+                 } else {
+                     // Reset button if failed
+                     document.querySelector("#loadingSequence").textContent = "Failed. Please try again.";
+                     await new Promise(resolve => setTimeout(resolve, 2000));
+                     savebtn.innerHTML = originalText;
+                     savebtn.disabled = false;
+                 }
+
+         });
 
 
 
@@ -405,6 +364,7 @@
         const GetRegistrationDetails = async () => {
             let res = await FetchAuthenticate('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
             if (res && res.Success) {
+                $("#regtext").text(strRegno);
                 $("#SectionName").val("P1SA-" + res.Data.SectionName);
             }
         }

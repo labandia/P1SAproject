@@ -280,8 +280,6 @@ form p{
 
 
 
-
-
 /* ========= CUSTOM INPUT WITH A PREFIX =========== */
 .date-wrapper {
     width: 100% !important;
@@ -370,24 +368,262 @@ form p{
    color: red;
 }
 
-.pdf-container {
+#fileContainer {
+    width: 100%;
     display: flex;
     align-items: center;
-    gap: 10px;
-    justify-content: space-between;
-    width: 100%;
-    margin: 4px 0;
+    gap: 15px;
+    margin-top: .5em;
 }
 
+
+
+
+
 .open-pdf-btn {
-    flex: 1;
-    text-align: left;
-    white-space: nowrap; /* prevent wrapping */
-    overflow: hidden; /* hide overflow */
-    text-overflow: ellipsis; /* show "..." when text is cut */
-    padding: 6px 8px;
-    border: none;
-    background: #e2e8f0;
-    cursor: pointer;
-    font-size: 14px;
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background-color: #f8f9fa;
+    transition: all 0.3s ease;
 }
+.open-pdf-btn:hover{
+    background-color: #e2e8f0;
+}
+
+.file-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    margin-right: 5px;
+    font-size: 20px;
+    color: white;
+}
+
+    .file-icon.pdf {
+        background-color: #e74c3c;
+    }
+
+    .file-icon.doc {
+        background-color: #3498db;
+    }
+
+    .file-icon.img {
+        background-color: #9b59b6;
+    }
+
+    .file-icon.zip {
+        background-color: #f39c12;
+    }
+
+    .file-icon.default {
+        background-color: #7f8c8d;
+    }
+
+
+
+
+
+
+
+
+
+
+
+.floating-comment-btn {
+    position: fixed;
+    bottom: 70px;
+    right: 100px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: #fff;
+}
+
+.comment-label {
+    background: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-weight: 600;
+    color: #1a2a6c;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transform: translateX(20px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.comment-btn {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #1a2a6c, #b21f1f);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1001;
+}
+
+    .comment-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+    }
+
+        .comment-btn:hover + .comment-label {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+    .comment-btn i {
+        font-size: 28px;
+        color: white;
+        transition: transform 0.3s ease;
+    }
+
+    .comment-btn.active i {
+        transform: rotate(135deg);
+    }
+
+
+  .float-container {
+    position: fixed;
+    bottom: 110px;
+    right: 30px;
+    width: 400px;
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transform: translateY(20px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s ease;
+    z-index: 1000;
+}
+
+    .float-container.active {
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+    }
+
+.float-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+    .float-header h2 {
+        color: #1a2a6c;
+        font-size: 22px;
+        font-weight: 600;
+    }
+
+    .close-btn {
+        background: none;
+        border: none;
+        font-size: 20px;
+        color: #888;
+        cursor: pointer;
+        transition: color 0.3s;
+    }
+
+    .close-btn:hover {
+        color: #333;
+    }
+    .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+    }
+
+     .approve-btn, .return-btn {
+            flex: 1;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .approve-btn {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+        }
+        
+        .approve-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+        
+        .return-btn {
+            background: linear-gradient(135deg, #f44336, #d32f2f);
+            color: white;
+        }
+        
+        .return-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(244, 67, 54, 0.4);
+        }
+
+
+         .notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transform: translateX(150%);
+            transition: transform 0.4s ease;
+            z-index: 1100;
+        }
+        
+        .notification.active {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .notification.error {
+            border-left: 4px solid #f44336;
+        }
+        
+        .notification.info {
+            border-left: 4px solid #2196F3;
+        }
+        
+        @media (max-width: 480px) {
+            .form-container {
+                width: calc(100vw - 60px);
+                right: 15px;
+                bottom: 100px;
+            }
+            
+            .floating-comment-btn {
+                right: 15px;
+                bottom: 15px;
+            }
+            
+            .comment-label {
+                display: none;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }

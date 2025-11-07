@@ -52,23 +52,20 @@
         </div>
 
         <div class="content">
-            <div class="progress-bar">
-                <div class="progress" style="width: 20%"></div>
-            </div>
-
+           
             <!-- Step 1: Create New Document -->
             <div class="step-content active" id="step-1">
-                
+
             </div>
 
             <!-- Step 2: Person in Charge -->
             <div class="step-content" id="step-2">
-             
+
             </div>
 
             <!-- Step 3: Document Details -->
             <div class="step-content" id="step-3">
-                    
+
             </div>
 
             <!-- Step 4: Attachments -->
@@ -76,43 +73,26 @@
                 <form method="post" enctype="multipart/form-data" class="formcontainer mt-4" id="addnewform" autocomplete="off">
                     <div class="row">
                         <div class="col-12">
-                            <div class="flex_space">
-                                <div class="flex_align">
 
-                                    <input type="hidden" id="Regno" value="@regno" name="Regno" />
-                                </div>
-                            </div>
-
-                            <div class="flex_space">
-                                <div>
+                            <div class="row mb-3">
+                                <div class="col">
                                     <label>Registration No.  </label> <br />
-                                    <input type="text" placeholder="Type Registration No." name="TempRegno" id="TempRegno" value="@regno" disabled />
-                                    <input type="hidden" name="RegNo" id="RegNo" value="@regno" />
+                                    <input type="text" id="Regno" value="@regno" name="Regno" readonly />
                                     <input type="hidden" name="Filepath" id="Filepath" />
+
                                 </div>
-                                <div>
-                                    <button>Return </button>
-                                    <button id="aproveID">Approved </button>
+                                <div class="col">
+                                    <label>Department / Section  </label> <br />
+                                    <input type="text" id="SectionName" readonly />
                                 </div>
                             </div>
-
-                            <hr />
-
 
                             <div class="Attachmentcontainer">
-                            
+
                                 <label class="mb-0 fw-bold">Attachments : </label>
+                                <div id="fileContainer"></div>
 
-                                <section class="flex_align">
-                                    <div id="fileContainer"></div>
-                                    <ul id="fileList" class="file-list flex_align"></ul>
-                                </section>
                             </div>
-
-
-
-
-
 
 
                             <h5 class="mb-4 mt-4 fw-bold">Inspection Criterion / Findings</h5>
@@ -206,39 +186,73 @@
                             <textarea placeholder="Type text here..." name="PIC_Comments" id="PIC_Comments" rows="3" cols="40" readonly></textarea>
 
 
-                            <label>Manager Comments</label>
-                            <textarea placeholder="Type text here..." name="Manager_Comments" id="Manager_Comments" rows="3" cols="40"></textarea>
-
-
                         </div>
                     </div>
 
 
-
-                    <hr />
-
-                    <div class="d-flex align-items-center justify-content-between">
-                        <span>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</span>
-                        <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i></button>
-                    </div>
                 </form>
             </div>
 
             <!-- Step 5: Review & Submit -->
             <div class="step-content" id="step-5">
-                
+
             </div>
         </div>
 
 
     </div>
 
+    <div class="floating-comment-btn">
+        <span class="comment-label">Moderate Comment</span>
+        <div class="comment-btn" id="commentBtn">
+            <i class="fa-regular fa-paper-plane"></i>
+        </div>
+    </div>
+
+
+    <div class="float-container" id="floatContainer">
+        <div class="float-header">
+            <h2>For Approval</h2>
+            <button class="close-btn" id="closeBtn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <form id="commentForm">
+
+            <div class="form-group">
+                <label>Manager Comments</label>
+                <textarea placeholder="Type text here..." name="Manager_Comments" id="Manager_Comments" rows="3" cols="40"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="moderation-notes">Comments for Return (Optional)</label>
+                <textarea rows="4" id="Return_Comments" name="Return_Comments" placeholder="Add notes for the author..."></textarea>
+            </div>
+
+            <div class="action-buttons">
+                <button type="button" class="return-btn" id="returnBtn">
+                    <i class="fas fa-undo"></i> Return
+                </button>
+                <button type="button" class="approve-btn" id="approveBtn">
+                    <i class="fas fa-check"></i> Approve
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="notification" id="notification"></div>
 
     <script type="text/javascript">
         let currentStep = 4;
         const totalSteps = 5;
 
-        let appBtn = document.getElementById('aproveID');
+
+        const commentBtn = document.getElementById('commentBtn');
+        const formContainer = document.getElementById('floatContainer');
+        const approveBtn = document.getElementById('approveBtn');
+        const returnBtn = document.getElementById('returnBtn');
+        const notification = document.getElementById('notification');
+
 
         let strRegno = $("#Regno").val();
 
@@ -246,9 +260,6 @@
             // Update current step
             currentStep = step;
 
-            // Update progress bar
-            const progressPercentage = ((step - 1) / (totalSteps - 1)) * 100;
-            document.querySelector('.progress').style.width = `${progressPercentage}%`;
 
             // Update sidebar steps
             document.querySelectorAll('.step-item').forEach((item, index) => {
@@ -285,32 +296,103 @@
             });
         });
 
-            appBtn.addEventListener('click', async function (e) {
-                e.preventDefault();
+        // Toggle form visibility
+        commentBtn.addEventListener('click', () => {
+            commentBtn.classList.toggle('active');
+            formContainer.classList.toggle('active');
+        });
 
-                let fomdata = new FormData();
-                fomdata.append("RegNo", strRegno);
-                fomdata.append("Comments", $("#Manager_Comments").val());
+        // Close form
+        closeBtn.addEventListener('click', () => {
+            commentBtn.classList.remove('active');
+            formContainer.classList.remove('active');
+        });
 
-                let res = await postData('@Url.Action("ManagerApproveSubmit", "Patrol")', fomdata);
-                if (res.StatusCode === 201) {
-                    Swal.fire({
-                        title: "Success",
-                        text: res.Message,
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 1500
-                    }).then(() => {
+           // Approve action
+       approveBtn.addEventListener('click', async (e) => {
+           e.preventDefault();
+           let fomdata = new FormData();
+            fomdata.append("RegNo", strRegno);
+            fomdata.append("Comments", $("#Manager_Comments").val());
 
-                    });
-                }
-            });
+            let res = await postData('@Url.Action("ManagerApproveSubmit", "Patrol")', fomdata);
+            if (res.StatusCode === 201) {
+                // In a real application, you would send the approval to a server here
+                showNotification('approved successfully!', 'success');
+
+                // Reset form
+                document.getElementById('Manager_Comments').value = '';
+                document.getElementById('Return_Comments').value = '';
+
+                // Close form
+                commentBtn.classList.remove('active');
+                formContainer.classList.remove('active');
+            }
+       });
+
+
+       // Return action
+       returnBtn.addEventListener('click', () => {
+           const notes = document.getElementById('moderation-notes').value;
+
+           if (!notes) {
+               showNotification('Please provide a reason for returning the comment', 'error');
+               return;
+           }
+
+           // In a real application, you would send the return action to a server here
+           showNotification('Comment returned to author with your notes', 'info');
+
+           // Reset form
+           document.getElementById('moderation-notes').value = '';
+
+           // Close form
+           commentBtn.classList.remove('active');
+           formContainer.classList.remove('active');
+
+           // In a real app, you would update the comment status in the UI
+           setTimeout(() => {
+               const pendingComment = document.querySelector('.comment.pending');
+               if (pendingComment) {
+                   pendingComment.classList.remove('pending');
+                   pendingComment.classList.add('returned');
+                   const statusSpan = pendingComment.querySelector('.comment-status');
+                   statusSpan.textContent = 'RETURNED';
+                   statusSpan.className = 'comment-status status-returned';
+               }
+           }, 500);
+       });
+
+
+        // Show notification
+        function showNotification(message, type) {
+            notification.textContent = message;
+            notification.className = 'notification active ' + type;
+
+            setTimeout(() => {
+                notification.classList.remove('active');
+            }, 3000);
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!formContainer.contains(e.target) &&
+                !commentBtn.contains(e.target) &&
+                formContainer.classList.contains('active')) {
+                commentBtn.classList.remove('active');
+                formContainer.classList.remove('active');
+            }
+        });
+
+
+
+
 
 
 
           const GetRegistrationDetails = async () => {
              let res = await FetchAuthenticate('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
-             if (res && res.Success) {
+              if (res && res.Success) {
+                 $("#SectionName").val("P1SA-" + res.Data.SectionName);
                  $("#PIC_Comments").val(res.Data.PIC_Comments);
              }
          }
@@ -344,13 +426,51 @@
                          if (f.trim() !== "") {
                              let filenameonly = f.replace(/\.pdf$/i, "");
 
+                             const fileExtension = f.split('.').pop().toLowerCase();
+
+                             let fileType = 'default';
+
+                             if (['pdf'].includes(fileExtension)) {
+                                 fileType = 'pdf';
+                             } else if (['doc', 'docx', 'txt'].includes(fileExtension)) {
+                                 fileType = 'doc';
+                             } else if (['jpg', 'jpeg', 'png', 'gif', 'svg'].includes(fileExtension)) {
+                                 fileType = 'img';
+                             } else if (['zip', 'rar', '7z'].includes(fileExtension)) {
+                                 fileType = 'zip';
+                             }
+
+                             const fileIconClass = `file-icon ${fileType}`;
+
+                             let fileIcon = '';
+
+                             switch (fileType) {
+                                 case 'pdf':
+                                     fileIcon = '<i class="far fa-file-pdf"></i>';
+                                     break;
+                                 case 'doc':
+                                     fileIcon = '<i class="far fa-file-word"></i>';
+                                     break;
+                                 case 'img':
+                                     fileIcon = '<i class="far fa-file-image"></i>';
+                                     break;
+                                 case 'zip':
+                                     fileIcon = '<i class="far fa-file-archive"></i>';
+                                     break;
+                                 default:
+                                     fileIcon = '<i class="far fa-file"></i>';
+                             }
+
                              fileHtml += `
-                      <div class="pdf-container">
-                           <button class="open-pdf-btn" data-pdf-url="/Patrol/ViewPDF?strfilepath=${f}">
-                              <i class="fa-solid fa-file-pdf"></i> ${filenameonly}
-                          </button>
-                      </div>
-                  `;
+                                   <button class="open-pdf-btn" data-pdf-url="/Patrol/ViewPDF?strfilepath=${f}">
+                                        <div class="${fileIconClass}">
+                                          <i class="far fa-file-pdf"></i>
+                                        </div>
+                                        <div class="file-info">
+                                            <div class="file-name">${filenameonly}</div>           
+                                        </div>
+                                 </button>
+                              `;
                          }
                      });
 

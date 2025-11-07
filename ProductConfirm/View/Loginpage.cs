@@ -8,6 +8,7 @@ using System;
 using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ProductConfirm
@@ -46,14 +47,14 @@ namespace ProductConfirm
 
         
 
-        private void password_KeyDown(object sender, KeyEventArgs e)
+        private async void password_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter) loginfunction();      
         }
 
 
 
-        public async void loginfunction()
+        public async Task loginfunction()
         {
             var logs = new AuthModel
             {
@@ -87,32 +88,32 @@ namespace ProductConfirm
 
 
 
-            //if (!validateform()) return;
+            if (!validateform()) return;
 
-            //var user = (await _user.LoginCredentials(username.Text.Trim())).FirstOrDefault();
-            //if (user == null)
-            //{
-            //    MessageBox.Show("Invalid credentials / Username Doesnt Exist", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //    return;
-            //}
-              
-            //    // CHECKS THE PASSWORD IF IS CORRECT
-            //if (!PasswordHasher.VerifyPassword(user.Password, password.Text.Trim()))
-            //{
-            //    MessageBox.Show("Invalid credentials / Password is incorrect", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //    return;    
-            //}
-               
+            var user = (await _user.LoginCredentials(username.Text.Trim())).FirstOrDefault();
+            if (user == null)
+            {
+                MessageBox.Show("Invalid credentials / Username Doesnt Exist", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
-            //MessageBox.Show("Login success", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            //var mainpage = _serviceProvider.GetRequiredService<Mainpage>();
+            // CHECKS THE PASSWORD IF IS CORRECT
+            if (!PasswordHasher.VerifyPassword(user.Password, password.Text.Trim()))
+            {
+                MessageBox.Show("Invalid credentials / Password is incorrect", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
-            //mainpage.userid = user.User_ID;
-            //mainpage.Fullname = user.Fullname;
-            //mainpage.roleId = user.Role_ID;
 
-            //mainpage.Show();
-            //this.Hide();  
+            MessageBox.Show("Login success", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            var mainpage = _serviceProvider.GetRequiredService<Mainpage>();
+
+            mainpage.userid = user.User_ID;
+            mainpage.Fullname = user.Fullname;
+            mainpage.roleId = user.Role_ID;
+
+            mainpage.Show();
+            this.Hide();
         }
 
         private void Loginpage_Load(object sender, EventArgs e)

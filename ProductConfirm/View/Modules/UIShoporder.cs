@@ -134,10 +134,23 @@ namespace ProductConfirm.Modules
                 shoporderstr = getshoporder;
                 partnumshop = shopordergrid.Rows[e.RowIndex].Cells["RotorAssy"].Value.ToString();
                 button1.Enabled = (confirm != "") ? false : true;
-                Checkbtn.Visible = (confirm != "") ? true : false;
-                prodConfirm = (confirm != "") ? 1 : 0;
+                if (confirm != "")
+                {
+                    Checkbtn.Visible = true;
+                    button1.Visible = false;
+                    Disablebtn.Visible = false;
+                    prodConfirm = 1;
+                }
+                else
+                {
+                    button1.Visible = true;
+                    Checkbtn.Visible = false;
+                    Disablebtn.Visible = false;
 
-                
+                    prodConfirm = 0;
+                }
+
+
 
                 // DiSPLY THE PRODUCT MEASUREMENT
                 var m = await _prod.GetProductsTools(getshoporder, shopID);

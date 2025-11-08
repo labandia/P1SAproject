@@ -5,6 +5,7 @@ using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Web;
@@ -537,7 +538,8 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 string employeeId = Request.Form["Employee_ID"];
                 int departmentId = Convert.ToInt32(Request.Form["DepartmentID"]);
                 string findJson = Request.Form["FindJson"];
-                string finalPrefix = $"P1SA-{regNo}";
+                string getprefix = GetPrefix();
+                string finalPrefix = $"{getprefix}-{regNo}";
 
                 if (string.IsNullOrWhiteSpace(regNo) || string.IsNullOrWhiteSpace(employeeId))
                     return JsonValidationError("Missing required fields: RegNo or Employee_ID.");
@@ -601,7 +603,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             }
             catch (Exception ex)
             {
-                return JsonValidationError("An unexpected error occurred while processing the request.");
+                return JsonValidationError("An unexpected error occurred while processing the request." + ex.Message);
             }
         }
 
@@ -813,7 +815,8 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 // ===================== STEP 1: Extract Request Data =====================
                 string regNo = Request.Form["RegNo"];
                 string findJson = Request.Form["FindJson"];
-                string finalprefix = $"P1SA-{regNo}";
+                string getprefix = GetPrefix();
+                string finalPrefix = $"{getprefix}-{regNo}";
 
                 // ===================== STEP 2: Retrieve Required Data =====================
                 var emailList = await _reg.PatrolEmailData() ?? new List<EmailModelV2>();
@@ -898,8 +901,8 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                );
 
                 // ===================== STEP 8: Send Notification Email =====================
-                string processLink = $"http://p1saportalweb.sdp.com/PC/Patrol/InspectorsReview?Regno={finalprefix}";
-                string emailBody = EmailService.RegistrationEmailBody(employeeEmail.FullName, finalprefix, processLink);
+                string processLink = $"http://p1saportalweb.sdp.com/PC/Patrol/InspectorsReview?Regno={finalPrefix}";
+                string emailBody = EmailService.RegistrationEmailBody(employeeEmail.FullName, finalPrefix, processLink);
 
                 var SendEmail = new SentEmailModel
                 {
@@ -916,7 +919,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             }
             catch (Exception ex)
             {
-                return JsonValidationError("An unexpected error occurred while processing the request.");
+                return JsonValidationError("An unexpected error occurred while processing the request." + ex.Message);
             }
         }
         // =======================================================================
@@ -927,7 +930,8 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         {
             try
             {
-                string finalprefix = "P1SA-" + Regno;
+                string getprefix = GetPrefix();
+                string finalPrefix = $"{getprefix}-{Regno}";
 
                 // ===================== STEP 1: Retrieve Required Data =====================
                 var emailList = await _reg.PatrolEmailData() ?? new List<EmailModelV2>();
@@ -969,8 +973,8 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
                 // ===================== STEP 4: Send Notification Email =====================
                 // Send Directly to the Manager
-                string processLink = $"http://p1saportalweb.sdp.com/PC/Patrol/ManagerView?Regno={finalprefix}";
-                string emailBody = EmailService.RegistrationEmailBody(employeeEmail.FullName, finalprefix, processLink);
+                string processLink = $"http://p1saportalweb.sdp.com/PC/Patrol/ManagerView?Regno={finalPrefix}";
+                string emailBody = EmailService.RegistrationEmailBody(employeeEmail.FullName, finalPrefix, processLink);
 
                 var sendEmail = new SentEmailModel
                 {
@@ -986,7 +990,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             }
             catch (Exception ex)
             {
-                return JsonValidationError("An unexpected error occurred while processing the request.");
+                return JsonValidationError("An unexpected error occurred while processing the request." + ex.Message);
             }
         }
         // =======================================================================
@@ -1001,7 +1005,8 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             // Option add An Remarks on the Revise to Notify the Process Owner On what to revise
             try
             {
-                string finalprefix = "P1SA-" + Regno;
+                string getprefix = GetPrefix();
+                string finalprefix = $"{getprefix}-{Regno}";
                 string DepmanagerID = "01020028";
 
                 // ===================== STEP 1: Retrieve Required Data =====================
@@ -1061,11 +1066,91 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             }
             catch (Exception ex)
             {
-                return JsonValidationError("An unexpected error occurred while processing the request.");
+                return JsonValidationError("An unexpected error occurred while processing the request." + ex.Message);
             }
 
         }
         // =======================================================================
+
+        // =======================================================================
+        // ==============  MANAGER PROESS SAME WITH THE INSPECTORS ==============
+        // =======================================================================
+        [HttpPost]
+        public async Task<ActionResult> DepartmentApproveSubmit(string Regno)
+        {
+            // 1. Get the RegNo for the ID update
+            // 2. Press the Approve Button to update the ReportStatus to Approved or Revise
+            // 3.  Send A email when Update is Done Approve or Revise
+            // Option add An Remarks on the Revise to Notify the Process Owner On what to revise
+            try
+            {
+                string getprefix = GetPrefix();
+                string finalprefix = $"{getprefix}-{Regno}";
+                string DepmanagerID = "01020028";
+
+                // ===================== STEP 1: Retrieve Required Data =====================
+                var emailList = await _reg.PatrolEmailData() ?? new List<EmailModelV2>();
+                var employeeEmail = emailList.FirstOrDefault(e => e.Employee_ID == DepmanagerID);
+
+
+                if (employeeEmail == null)
+                    return JsonValidationError("Employee email not found.");
+
+
+                var registrationData = await _reg.GetRegistrationData();
+                string previousPdfPath = registrationData.SingleOrDefault(res => res.RegNo == Regno).Filepath;
+
+                // ===================== STEP 2: Prepare File Paths =====================
+                string timestampFile = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+                string excelFileName = $"RN_{Regno}_{timestampFile}.xlsx";
+                string pdfOutputPath = excelFileName.Replace(".xlsx", ".pdf");
+
+                bool isUpdated = await _reg.ApproveByDivManager(Regno, pdfOutputPath, DepmanagerID); // -- ID for the Deparment Manager
+
+                if (!isUpdated)
+                    return JsonValidationError("Failed to update process owner information.");
+
+                CacheHelper.Remove("Registration");
+
+                // ===================== STEP 3: Generate Updated PDF =====================
+                var updatedRegData = await _reg.GetRegistrationData();
+                var updatedReg = updatedRegData.SingleOrDefault(r => r.RegNo == Regno);
+                var updatedFindings = await _reg.GetRegisterFindings(Regno);
+
+                await ExportFiler.UpdatePDFRegistration(
+                    updatedReg,
+                    updatedFindings,
+                    emailList,
+                    previousPdfPath,
+                    excelFileName,
+                    templatePath
+                );
+
+                // ===================== STEP 4: Send Notification Email =====================
+                string processLink = $"http://p1saportalweb.sdp.com/PC/Patrol/DepartmentApproval?Regno={finalprefix}";
+                string emailBody = EmailService.RegistrationEmailBody(employeeEmail.FullName, finalprefix, processLink);
+
+                var sendEmail = new SentEmailModel
+                {
+                    Subject = "Patrol Inspection",
+                    Sender = strSender,
+                    BCC = "",
+                    Body = emailBody,
+                    Recipient = employeeEmail.Email
+                };
+
+                await EmailService.SendEmailViaSqlDatabase(sendEmail);
+
+                return JsonCreated(true, "Updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                return JsonValidationError("An unexpected error occurred while processing the request." + ex.Message);
+            }
+
+        }
+        // =======================================================================
+
 
         [HttpPost]
         public async Task<ActionResult> DeleteRegistration()
@@ -1278,61 +1363,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         //}
 
 
-        [HttpPost]
-        public ActionResult OpenExcelApplication(string filename)
-        { 
-
-            try
-            {
-                // 1. OVERWRITE  THE TEXT FILE 
-                string textfilepath = @"\\sdp01034s\SYSTEM EXECUTABLE\P1SA-PC_System\OpenExcel\ExcelFile.txt";
-                string newContent = filename;
-                System.IO.File.WriteAllText(textfilepath, newContent);
-
-                // 2. OPEN THE EXCEL FILES AFTER
-                Process.Start(exePath); // Runs on server
-                return Json(new { success = true, message = "Console app started on server." });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = $"Failed to start: {ex.Message}" });
-            }
-        }
-
-
-
-        [HttpPost]
-        public ActionResult RunConsoleAppV2()
-        {
-            // Maps virtual path ~/Contents/OpenExcelApp.exe to physical path
-            string exePath = Server.MapPath("~/Content/OpenExcelApp.exe");
-
-            try
-            {
-                ProcessStartInfo psi = new ProcessStartInfo
-                {
-                    FileName = exePath,
-                    UseShellExecute = false,       // Required for IIS
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    CreateNoWindow = true          // Prevent server window
-                };
-
-                using (Process proc = Process.Start(psi))
-                {
-                    proc.WaitForExit(10000); // optional timeout
-                    string output = proc.StandardOutput.ReadToEnd();
-                    string errors = proc.StandardError.ReadToEnd();
-
-                    return Content($"Console app executed.\nOutput: {output}\nErrors: {errors}");
-                }
-            }
-            catch (Exception ex)
-            {
-                return Content($"Failed to run console app: {ex.Message}");
-            }
-        }
-
+      
         private System.Security.SecureString ConvertToSecureString(string password)
         {
             var secure = new System.Security.SecureString();
@@ -1371,7 +1402,23 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         // GET: PC/PatrolReport
         //[RoleAuthorize("Manager", "SuperAdmin")]
         [CompressResponse]
-        public ActionResult PatrolReport() => View();
+        public ActionResult PatrolReport()
+        {
+            // 1️⃣ Get the browser (client) IP
+            string clientIp = GetClientIpAddress(Request);
+
+            // 2️⃣ Extract the 3rd segment (e.g., "1" from 172.29.1.121)
+            string segment = GetSegment(clientIp, 3);
+
+
+            Debug.WriteLine("IpAddress: " + clientIp);
+            Debug.WriteLine("Third Segment: " + segment);
+
+            ViewBag.ServerIP = clientIp;
+            ViewBag.Segment = segment;
+
+            return View();  
+        }
         // GET: PC/PatrolReport
         [CompressResponse]
         public ActionResult PatrolSchedule() => View();
@@ -1392,18 +1439,93 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         // =========== REGISTRATION FORM =====================
         // GET: PC/AddReports
         [CompressResponse]
-        public ActionResult RegistrionNoForms() => View();
+        public ActionResult RegistrionNoForms()
+        {
+            // 1️⃣ Get the browser (client) IP
+            string clientIp = GetClientIpAddress(Request);
+
+            // 2️⃣ Extract the 3rd segment (e.g., "1" from 172.29.1.121)
+            string segment = GetSegment(clientIp, 3);
+
+
+            Debug.WriteLine("IpAddress: " + clientIp);
+            Debug.WriteLine("Third Segment: " + segment);
+
+            ViewBag.ServerIP = clientIp;
+            ViewBag.Segment = segment;
+
+            return View();  
+        }
         // GET: PC/AddReports
         [CompressResponse]
         public ActionResult ProcessOwner(string Regno) => View();
         // GET: PC/AddReports
         [CompressResponse]
-        public ActionResult InspectorsReview(string Regno) => View();
+        public  ActionResult InspectorsReview(string Regno) => View();
         // GET: PC/AddReports
         [CompressResponse]
         public ActionResult ManagerView(string Regno) => View();
         // GET: PC/AddReports
         [CompressResponse]
         public ActionResult DepartmentApproval(string Regno) => View();
+
+
+        private string GetClientIpAddress(HttpRequestBase request)
+        {
+            string ip = null;
+
+            try
+            {
+                // Check forwarded headers (used by proxies, load balancers, reverse proxies)
+                ip = request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+
+                if (!string.IsNullOrEmpty(ip))
+                {
+                    // Sometimes multiple IPs are returned (client, proxy1, proxy2)
+                    ip = ip.Split(',').First().Trim();
+                }
+
+                // Fallback if no proxy header is found
+                if (string.IsNullOrEmpty(ip))
+                    ip = request.ServerVariables["REMOTE_ADDR"];
+
+                // Convert IPv6 loopback (::1) to IPv4 localhost (127.0.0.1)
+                if (ip == "::1" || ip == "0:0:0:0:0:0:0:1")
+                    ip = "127.0.0.1";
+            }
+            catch
+            {
+                ip = "Unknown";
+            }
+
+            return ip;
+        }
+
+        private string GetSegment(string ip, int segmentIndex)
+        {
+            if (string.IsNullOrEmpty(ip))
+                return "0";
+
+            var segments = ip.Split('.');
+            if (segments.Length >= segmentIndex)
+                return segments[segmentIndex - 1]; // 1-based index
+
+            return "0";
+        }
+
+
+        private string GetPrefix()
+        {
+            // 1️⃣ Get the browser (client) IP
+            string clientIp = GetClientIpAddress(Request);
+
+            // 2️⃣ Extract the 3rd segment (e.g., "1" from 172.29.1.121)
+            string segment = GetSegment(clientIp, 3);
+
+            string prefix = (Convert.ToInt32(segment) == 2) ? "P1FA" : "P1SA";
+
+
+            return prefix;
+        }
     }
 }

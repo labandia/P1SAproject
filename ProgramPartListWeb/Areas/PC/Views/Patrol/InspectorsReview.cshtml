@@ -44,19 +44,18 @@
                     <span class="step-number">4</span>
                     Managers
                 </li>
+                @*<li class="step-item" data-step="5">
+            <span class="step-number">5</span>
+            Department Managerss
+        </li>*@
                 <li class="step-item" data-step="5">
                     <span class="step-number">5</span>
-                    Department Manager
+                    Division Manager
                 </li>
                 <li class="step-item" data-step="6">
                     <span class="step-number">6</span>
-                    Division Manager
-                </li>
-                <li class="step-item" data-step="7">
-                    <span class="step-number">7</span>
                     View Form
                 </li>
-            </ul>
             </ul>
         </div>
 
@@ -485,6 +484,8 @@
 
                             if (['pdf'].includes(fileExtension)) {
                                 fileType = 'pdf';
+                            } else if (['xlsx', 'xls', 'xlsm', 'csv'].includes(fileExtension)) {
+                                fileType = 'xlsx';
                             } else if (['doc', 'docx', 'txt'].includes(fileExtension)) {
                                 fileType = 'doc';
                             } else if (['jpg', 'jpeg', 'png', 'gif', 'svg'].includes(fileExtension)) {
@@ -511,6 +512,9 @@
                                 case 'zip':
                                     fileIcon = '<i class="far fa-file-archive"></i>';
                                     break;
+                                case 'xlsx':
+                                    fileIcon = '<i class="fa-regular fa-file-excel"></i>';
+                                    break;
                                 default:
                                     fileIcon = '<i class="far fa-file"></i>';
                             }
@@ -519,7 +523,7 @@
                             fileHtml += `
                                   <button class="open-pdf-btn" data-pdf-url="/Patrol/ViewPDF?strfilepath=${f}">
                                        <div class="${fileIconClass}">
-                                         <i class="far fa-file-pdf"></i>
+                                          ${fileIcon}
                                        </div>
                                        <div class="file-info">
                                            <div class="file-name">${filenameonly}</div>           

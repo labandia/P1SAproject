@@ -44,19 +44,18 @@
                     <span class="step-number">4</span>
                     Managers
                 </li>
+                @*<li class="step-item" data-step="5">
+                    <span class="step-number">5</span>
+                    Department Managerss
+                </li>*@
                 <li class="step-item" data-step="5">
                     <span class="step-number">5</span>
-                    Department Manager
+                    Division Manager
                 </li>
                 <li class="step-item" data-step="6">
                     <span class="step-number">6</span>
-                    Division Manager
-                </li>
-                <li class="step-item" data-step="7">
-                    <span class="step-number">7</span>
                     View Form
                 </li>
-            </ul>
             </ul>
         </div>
 
@@ -195,21 +194,25 @@
                             <div class="row mb-3">
                                 <div class="col ">
                                     <label>Inspector Name: </label> <br />
-                                    <input type="text" required />
+                                    <input type="text" id="InspectorName"  />
                                 </div>
 
                                 <div class="col ">
                                     <label>Date Conducted</label> <br />
-                                    <input type="text" required />
+                                    <input type="text" id="DateConduct"  />
                                 </div>
                             </div>
-                            <label>Person in charge </label> <br />
-                            <input type="text" required />
 
-                            <label>PIC Comments</label>
-                            <textarea placeholder="Type text here..." name="PIC_Comments" id="PIC_Comments" rows="3" cols="40" readonly></textarea>
+                            <div class="mb-3">
+                                <label>Person in charge </label> <br />
+                                <input type="text" id="PICName"  />
+                            </div>
 
-
+                            <div class="mb-3">
+                                <label>PIC Comments</label>
+                                <textarea placeholder="Type text here..." name="PIC_Comments" id="PIC_Comments" rows="3" cols="40" readonly></textarea>
+                            </div>
+                           
                         </div>
                     </div>
 
@@ -246,12 +249,12 @@
 
             <div class="form-group">
                 <label>Manager Comments</label>
-                <textarea placeholder="Type text here..." name="Manager_Comments" id="Manager_Comments" rows="3" cols="40"></textarea>
+                <textarea placeholder="Add Comments Here ..." name="Manager_Comments" id="Manager_Comments" rows="3" cols="40"></textarea>
             </div>
 
             <div class="form-group">
                 <label for="moderation-notes">Comments for Return (Optional)</label>
-                <textarea rows="4" id="Return_Comments" name="Return_Comments" placeholder="Add notes for the author..."></textarea>
+                <textarea rows="4" id="Return_Comments" name="Return_Comments" placeholder="Send Message back ..."></textarea>
             </div>
 
             <div class="action-buttons">
@@ -441,8 +444,12 @@
 
           const GetRegistrationDetails = async () => {
               let res = await FetchAuthenticate('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
+              console.log(res);
               if (res && res.Success) {
                  $("#regtext").text(strRegno);
+                 $("#InspectorName").val(res.Data.InspectName);
+                 $("#PICName").val(res.Data.PICName);
+                 $("#DateConduct").val(res.Data.DateConduct);
                  $("#SectionName").val("P1SA-" + res.Data.SectionName);
                  $("#PIC_Comments").val(res.Data.PIC_Comments);
                  $("#Manager_Comments").val(res.Data.Manager_Comments);                 
@@ -491,6 +498,8 @@
 
                              if (['pdf'].includes(fileExtension)) {
                                  fileType = 'pdf';
+                             } else if (['xlsx', 'xls', 'xlsm', 'csv'].includes(fileExtension)) {
+                                 fileType = 'xlsx';
                              } else if (['doc', 'docx', 'txt'].includes(fileExtension)) {
                                  fileType = 'doc';
                              } else if (['jpg', 'jpeg', 'png', 'gif', 'svg'].includes(fileExtension)) {
@@ -500,6 +509,7 @@
                              }
 
                              const fileIconClass = `file-icon ${fileType}`;
+
 
                              let fileIcon = '';
 
@@ -516,6 +526,9 @@
                                  case 'zip':
                                      fileIcon = '<i class="far fa-file-archive"></i>';
                                      break;
+                                 case 'xlsx':
+                                     fileIcon = '<i class="fa-regular fa-file-excel"></i>';
+                                     break;
                                  default:
                                      fileIcon = '<i class="far fa-file"></i>';
                              }
@@ -523,7 +536,7 @@
                              fileHtml += `
                                    <button class="open-pdf-btn" data-pdf-url="/Patrol/ViewPDF?strfilepath=${f}">
                                         <div class="${fileIconClass}">
-                                          <i class="far fa-file-pdf"></i>
+                                          ${fileIcon}
                                         </div>
                                         <div class="file-info">
                                             <div class="file-name">${filenameonly}</div>           

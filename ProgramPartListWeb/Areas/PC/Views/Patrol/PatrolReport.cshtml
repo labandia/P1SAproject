@@ -3,7 +3,24 @@
     ViewBag.Title = "PatrolReport";
     Layout = "~/Areas/PC/Views/Shared/_PatrolLayout.cshtml";
 }
+<div style="font-family:Segoe UI; padding:20px;">
+    <h2>Server Information</h2>
 
+    <table style="border-collapse: collapse; width: 400px;">
+        <tr>
+            <th style="text-align:left; border-bottom: 1px solid #ccc; padding: 8px;">Property</th>
+            <th style="text-align:left; border-bottom: 1px solid #ccc; padding: 8px;">Value</th>
+        </tr>
+        <tr>
+            <td style="padding: 8px;">Server IP</td>
+            <td style="padding: 8px;">@ViewBag.ServerIP</td>
+        </tr>
+        <tr>
+            <td style="padding: 8px;">Segment</td>
+            <td style="padding: 8px;">@ViewBag.Segment</td>
+        </tr>
+    </table>
+</div>
 
 <header class="InspectHead flex_space">
     <div class="flex_align">
@@ -22,9 +39,9 @@
             <small>No Attachement files</small>
         </div>
     </div>
-    
 
-   
+
+
     <button id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-file-circle-plus"></i> Add New</button>
 </header>
 
@@ -32,24 +49,49 @@
     <table>
         <thead>
             <tr>
-                <th><i class="fa-solid fa-file-contract"></i> <span style="margin-left: .5em;">Registration No.</span></th>
+                <th style="text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-file-contract"></i> <span style="margin-left: .5em;">Registration No.</span></th>
                 <th style="text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-user-secret"></i>  <span style="margin-left: .5em;">Inspector</span> </th>
                 <th><i class="fa-regular fa-building"></i> <span style="margin-left: .5em;">Section</span> </th>
                 <th><i class="fa-regular fa-user"></i> <span style="margin-left: .5em;">PIC</span></th>
                 <th><i class="fa-regular fa-calendar"></i> <span style="margin-left: .5em;">Date Conducted</span> </th>
-                <th> <i class="fa-regular fa-file-lines"></i> <span style="margin-left: .5em;">File Attached</span></th>
-                <th> <i class="fa-regular fa-file-lines"></i> <span style="margin-left: .5em;">CounterMeasure</span></th>
+                <th> <i class="fa-regular fa-file-lines"></i> <span style="margin-left: .5em;">Registration file</span></th>
+                <th> <i class="fa-regular fa-file-lines"></i> <span style="margin-left: .5em;">Attachments</span></th>
+                <th> Status Review</th>
                 <th id="hiddenColumn"> <i class="fa-solid fa-bolt"></i> <span style="margin-left: .5em;">Delete</span> </th>
+
             </tr>
         </thead>
         <tbody id="MasterlistData">
-           
         </tbody>
     </table>
 
     <div class="MasterlistWrap_footer">
         <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
         <div id="MastertableContainer" class="paginationPartlocal flex_align"></div>
+    </div>
+</div>
+
+
+@*=================================================================================*@
+@*=========================== OPEN ATTACHMENT FILES ==================================*@
+@*=================================================================================*@
+<div class="modal fade modal-l" id="OpenAttachment" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>File Attachments</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <div id="fileContainer"></div>
+            </div>
+
+        </div>
     </div>
 </div>
 
@@ -65,6 +107,7 @@
         loadingDisplay();
         Loadingsteps(async () => {
             let res = await FetchAuthenticate('@Url.Action("GetRegistrationNo", "Patrol")', {});
+            console.log(res);
             if (res && res.Success) {
                 regisTable = res.Data;
                 TableDisplay.empty();
@@ -132,35 +175,62 @@
                             </div>
                     </td>`;
 
-                let hasPDFfile = (rowData.Filepath != null && rowData.Filepath.trim() !== "") 
+                let hasPDFfile = (rowData.Filepath != null && rowData.Filepath.trim() !== "")
                             ? `<button class="open-pdf-btn" data-pdf-url="/Patrol/ViewPDF?strfilepath=${rowData.Filepath}">
                                   <i class="fa-solid fa-file-pdf"></i>
                                 </button>`
                             : `<i class="fa-solid fa-square-xmark text-danger"></i>`;
 
-                let hasExcelfile = (rowData.CounterPath != null && rowData.CounterPath.trim() !== "") 
-                            ? `<button class="open-pdf-btn" data-pdf-url="/Patrol/ViewExcel?strfilepath=${encodeURIComponent(rowData.CounterPath)}">
+                let hasExcelfile = (rowData.CounterPath != null && rowData.CounterPath.trim() !== "")
+                            ? `<button class="OpenAttach"  id='OpenAttach_${rowData.RegNo}'>
                                     <i class="fa-solid fa-file-excel text-success"></i>
                                 </button>`
-                            : `<i class="fa-solid fa-square-xmark text-danger"></i>`;
+                    : `<i class="fa-solid fa-square-xmark text-danger"></i>`;
+
+
+                let Stats = "";
+
+                switch (rowData.ReportStatus) {
+                    case 1:
+                        Stats = `<span id="reportStats">Process Owner</span>`;
+                        break;
+                    case 2:
+                        Stats = `<span id="reportStats">Inspection </span>`;
+                        break;
+                    case 3:
+                        Stats = `<span id="reportStats">Managers </span>`;
+                        break;
+                    case 4:
+                        Stats = `<span id="reportStats">Div Manager </span>`;
+                        break;
+                    case 6:
+                        Stats = `<span id="reportStats">Completed</span>`;
+                        break;
+                    default:
+                        Stats = `<span id="reportStats">Div Manager </span>`;
+                        break;
+                }
+
+
 
                 const rowHtml = `
                  <tr class='row_${i} editButton' id='editButton_${rowData.RegNo}'>
                      <td style='font-weight: 600; text-align: left; padding-left: 1.5em;' data-cell="RegNo">${rowData.RegNo}</td>
-                     <td style='font-weight: 600; text-align: left; padding-left: 1.5em; color: #0c382ce8;' data-cell="Inspector">${rowData.FullName}</td>
-                     <td data-cell="SectionName"><span class="Section">${rowData.SectionName}</span></td>
-                     <td data-cell="PIC">${rowData.PIC_ID}</td>
-                     <td data-cell="DateConduct">${rowData.DateConduct}</td>
+                     <td style='font-weight: 600; text-align: left; padding-left: 1.5em; color: #0c382ce8;' data-cell="Inspector">${rowData.InspectName ?? "N/A"}</td>
+                     <td data-cell="SectionName"><span class="Section">${rowData.SectionName ?? "N/A"}</span></td>
+                     <td data-cell="PIC">${rowData.PICName ?? "N/A"}</td>
+                     <td data-cell="DateConduct">${rowData.DateConduct ?? "N/A"}</td>
                      <td data-cell="Filepath" >
                         <div class='flex_center'>
                             ${hasPDFfile}
-                        </div>   
+                        </div>
                      </td>
                      <td data-cell="CounterPath" >
                        <div class='flex_center'>
                             ${hasExcelfile}
-                       </div>   
+                       </div>
                     </td>
+                    <td data-cell="ReportStatus">${Stats}</td>
                      ${usercontrol}
                  </tr>`;
 
@@ -212,11 +282,96 @@
         };
 
         // Handle click event for edit button
-        $(document).on('click', '.editButton', function (e) {
+        $(document).on('click', '.OpenAttach', function (e) {
             e.stopPropagation();
+
             const buttonId = $(this).attr('id');
             const rowIndex = buttonId.split('_')[1];
-            window.location.href = "/PC/Patrol/PatrolReportDetails?Regno=" + rowIndex;
+
+            const filter = regisTable.filter(res => res.RegNo === rowIndex);
+
+
+            if (filter.length > 0) {
+                let UploadCounterPath = filter[0].CounterPath;
+
+                if (UploadCounterPath) {
+                    let files = UploadCounterPath.split(';');
+                    let fileHtml = "";
+
+                    files.forEach(f => {
+                        if (f.trim() !== "") {
+                            let filenameonly = f.replace(/\.pdf$/i, "");
+
+                            const fileExtension = f.split('.').pop().toLowerCase();
+
+                            let fileType = 'default';
+
+                            if (['pdf'].includes(fileExtension)) {
+                                fileType = 'pdf';
+                            } else if (['xlsx', 'xls', 'xlsm', 'csv'].includes(fileExtension)) {
+                                fileType = 'xlsx';
+                            } else if (['doc', 'docx', 'txt'].includes(fileExtension)) {
+                                fileType = 'doc';
+                            } else if (['jpg', 'jpeg', 'png', 'gif', 'svg'].includes(fileExtension)) {
+                                fileType = 'img';
+                            } else if (['zip', 'rar', '7z'].includes(fileExtension)) {
+                                fileType = 'zip';
+                            }
+
+                            const fileIconClass = `file-icon ${fileType}`;
+
+
+                            let fileIcon = '';
+
+                            switch (fileType) {
+                                case 'pdf':
+                                    fileIcon = '<i class="far fa-file-pdf"></i>';
+                                    break;
+                                case 'doc':
+                                    fileIcon = '<i class="far fa-file-word"></i>';
+                                    break;
+                                case 'img':
+                                    fileIcon = '<i class="far fa-file-image"></i>';
+                                    break;
+                                case 'zip':
+                                    fileIcon = '<i class="far fa-file-archive"></i>';
+                                    break;
+                                case 'xlsx':
+                                    fileIcon = '<i class="fa-regular fa-file-excel"></i>';
+                                    break;
+                                default:
+                                    fileIcon = '<i class="far fa-file"></i>';
+                            }
+
+                            fileHtml += `
+                               <button class="open-pdf-btnV2" data-pdf-url="/Patrol/ViewPDF?strfilepath=${f}">
+                                    <div class="${fileIconClass}">
+                                      ${fileIcon}
+                                    </div>
+                                    <div class="file-info">
+                                        <div class="file-name">${filenameonly}</div>           
+                                    </div>
+                             </button>
+                          `;
+                        }
+                    });
+
+                    document.getElementById("fileContainer").innerHTML = fileHtml;
+
+                    // Attach click event
+                    document.querySelectorAll(".open-pdf-btnV2").forEach(btn => {
+                        btn.addEventListener("click", function () {
+                            let pdfUrl = this.getAttribute("data-pdf-url");
+                            window.open(pdfUrl, "_blank"); // Open in new tab
+                        });
+                    });
+                }
+            }
+
+
+
+            $("#OpenAttachment").modal("show");
+            //window.location.href = "/PC/Patrol/PatrolReportDetails?Regno=" + rowIndex;
         });
 
         // Open PDF file in new tab when the paperclip button is clicked
@@ -297,7 +452,7 @@
     function loadingDisplay() {
         TableDisplay.empty();
         var loadData = `<tr>
-                        <td colspan='8'>
+                        <td colspan='9'>
                             <div class='Loadercontainer'>
                                 <span class="loader"></span>
                                 <p id="loadingStepText">Fetching data from the database..</p>

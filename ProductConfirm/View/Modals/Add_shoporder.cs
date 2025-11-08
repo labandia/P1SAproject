@@ -277,62 +277,27 @@ namespace ProductConfirm.Modals
 
         public bool ValidationForm()
         {
-            bool check = true;
-            string shop = Shoptext.Text;
-            string part = PartText.Text;
-            string line = Line_text.Text;
-            string enter = EnterText.Text;
+            bool isValid = true;
 
-            if (string.IsNullOrEmpty(shop))
-            {
-                shop_error.Visible = true;
-                check = false;
-            }
-            else
-            {
-                shop_error.Visible = false;
-            }
+            // Validate all required fields in one place
+            isValid &= ValidateField(Shoptext.Text, shop_error);
+            isValid &= ValidateField(PartText.Text, part_error);
+            isValid &= ValidateField(Line_text.Text, Line_error);
+            isValid &= ValidateField(EnterText.Text, Input_error);
 
-            if (string.IsNullOrEmpty(part))
-            {
-                part_error.Visible = true;
-                check = false;
-            }
-            else
-            {
-                part_error.Visible = false;
-            }
+            return isValid;
+        }
 
-            if (string.IsNullOrEmpty(line))
-            {
-                Line_error.Visible = true;
-                check = false;
-            }
-            else
-            {
-                Line_error.Visible = false;
-            }
-
-            
-
-            
-
-            if (string.IsNullOrEmpty(enter))
-            {
-                Input_error.Visible = true;
-                check = false;
-            }
-            else
-            {
-                Input_error.Visible = false;
-            }
-
-            return check;
+        private bool ValidateField(string value, Control errorLabel)
+        {
+            bool hasValue = !string.IsNullOrWhiteSpace(value);
+            errorLabel.Visible = !hasValue;
+            return hasValue;
         }
 
         private void Add_shoporder_Load(object sender, EventArgs e)
         {
-
+            PartText.Focus();   
         }
 
         private void Productcombo_SelectedIndexChanged(object sender, EventArgs e)
@@ -360,6 +325,7 @@ namespace ProductConfirm.Modals
                         Productcombo.Items.Add(row[0].ToString());
                     }
                     Productcombo.SelectedIndex = 0;
+                    Shoptext.Focus();
                 }
                 else
                 {
@@ -371,13 +337,22 @@ namespace ProductConfirm.Modals
 
         private void PartText_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == (char)Keys.Enter || e.KeyChar == (char)13 || e.KeyChar == (char)10)
+            if (e.KeyChar == (char)Keys.Enter)
             {
-                e.Handled = true;
-
-                string scannedCode = PartText.Text.Trim();
-                PartText.Text = scannedCode;        
+                e.Handled = true; // Prevents the newline character
             }
+        }
+
+        private void PartText_TextChanged(object sender, EventArgs e)
+        {
+            string scannedCode = PartText.Text.Trim();
+
+            if (scannedCode.Length > 13)
+            {
+                PartText.Text = PartText.Text.Substring(0, 13);
+                PartText.SelectionStart = PartText.Text.Length;
+            }
+
         }
     }
 }

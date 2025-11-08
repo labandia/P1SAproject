@@ -26,7 +26,7 @@
     <div class="MainWrapper">
 
         <div class="sidebar">
-            <h2><i>📄</i> Registration No. </h2>
+            <h2><i>📄</i><span id="regtext"></span></h2>
             <ul class="step-list">
                 <li class="step-item active" data-step="1">
                     <span class="step-number">1</span>
@@ -34,46 +34,51 @@
                 </li>
                 <li class="step-item" data-step="2">
                     <span class="step-number">2</span>
-                    Person in Charge (PIC)
+                    Process Owner
                 </li>
                 <li class="step-item" data-step="3">
                     <span class="step-number">3</span>
-                    Inspector
+                    Inspectors
                 </li>
                 <li class="step-item" data-step="4">
                     <span class="step-number">4</span>
                     Managers
                 </li>
+                        @*<li class="step-item" data-step="5">
+                    <span class="step-number">5</span>
+                    Department Managerss
+                </li>*@
                 <li class="step-item" data-step="5">
                     <span class="step-number">5</span>
-                    Final View
+                    Division Manager
+                </li>
+                <li class="step-item" data-step="6">
+                    <span class="step-number">6</span>
+                    View Form
                 </li>
             </ul>
         </div>
 
         <div class="content">
-            <div class="progress-bar">
-                <div class="progress" style="width: 20%"></div>
-            </div>
-
+         
             <!-- Step 1: Create New Document -->
             <div class="step-content active" id="step-1">
-               
+
             </div>
 
             <!-- Step 2: Person in Charge -->
             <div class="step-content" id="step-2">
-              
+
             </div>
 
             <!-- Step 3: Document Details -->
             <div class="step-content" id="step-3">
-               
+
             </div>
 
             <!-- Step 4: Attachments -->
             <div class="step-content" id="step-4">
-             
+
             </div>
 
             <!-- Step 5: Review & Submit -->
@@ -81,36 +86,26 @@
                 <form method="post" enctype="multipart/form-data" class="formcontainer mt-4" id="addnewform" autocomplete="off">
                     <div class="row">
                         <div class="col-12">
-                            <div class="flex_space">
-                                <div class="flex_align">
-
-                                    <input type="hidden" id="Regno" value="@regno" name="Regno" />
-                                </div>
-                            </div>
-
-                            <div class="flex_space">
-                                <div>
-                                    <label>Registration No.  </label> <br />
-                                    <input type="text" placeholder="Type Registration No." name="TempRegno" id="TempRegno" value="@regno" disabled />
-                                    <input type="hidden" name="RegNo" id="RegNo" value="@regno" />
-                                    <input type="hidden" name="Filepath" id="Filepath" />
-                                </div>
-                                
-                            </div>
-
-                            <hr />
-
-
-                            <div class="Attachmentcontainer">
+                            <div class="Attachmentcontainer mb-3">
 
                                 <label class="mb-0 fw-bold">Attachments : </label>
+                                <div id="fileContainer"></div>
 
-                                <section class="flex_align">
-                                    <div id="fileContainer"></div>
-                                    <ul id="fileList" class="file-list flex_align"></ul>
-                                </section>
                             </div>
 
+
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label>Registration No.  </label> <br />
+                                    <input type="text" id="Regno" value="@regno" name="Regno" readonly />
+                                    <input type="hidden" name="Filepath" id="Filepath" />
+
+                                </div>
+                                <div class="col">
+                                    <label>Department / Section  </label> <br />
+                                    <input type="text" id="SectionName" readonly />
+                                </div>
+                            </div>
 
 
 
@@ -204,25 +199,38 @@
                             </div>
 
 
-                            <label>PIC Comments</label>
-                            <textarea placeholder="Type text here..." name="PIC_Comments" id="PIC_Comments" rows="3" cols="40" readonly></textarea>
+                            <div class="row mb-3">
+                                <div class="col ">
+                                    <label>Inspector Name: </label> <br />
+                                    <input type="text" id="InspectorName" readonly />
+                                </div>
 
+                                <div class="col ">
+                                    <label>Date Conducted</label> <br />
+                                    <input type="text" id="DateConduct" readonly />
+                                </div>
+                            </div>
 
-                            <label>Manager Comments</label>
-                            <textarea placeholder="Type text here..." name="Manager_Comments" id="Manager_Comments" rows="3" cols="40"></textarea>
+                            <div class="mb-3">
+                                <label>Person in charge </label> <br />
+                                <input type="text" id="PICName"  readonly/>
+                            </div>
 
+                            <div class="mb-3">
+                                <label>PIC Comments</label>
+                                <textarea placeholder="Type text here..." name="PIC_Comments" id="PIC_Comments" rows="3" cols="40" readonly></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label>Manager Comments</label>
+                                <textarea placeholder="Type text here..." name="Manager_Comments" id="Manager_Comments" rows="3" cols="40" readonly></textarea>
+                            </div>
 
                         </div>
                     </div>
 
 
 
-                    <hr />
-
-                    <div class="d-flex align-items-center justify-content-between">
-                        <span>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</span>
-                        <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i></button>
-                    </div>
+                  
                 </form>
             </div>
         </div>
@@ -231,29 +239,83 @@
     </div>
 
 
+    <div class="floating-comment-btn">
+        <span class="comment-label">Moderate Comment</span>
+        <div class="comment-btn" id="commentBtn">
+            <i class="fa-regular fa-paper-plane"></i>
+        </div>
+    </div>
+
+
+    <div class="float-container" id="floatContainer">
+        <div class="float-header">
+            <h2>For Approval</h2>
+            <button class="close-btn" id="closeBtn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <form id="commentForm">
+
+   
+            <div class="form-group">
+                <label for="moderation-notes">Comments for Return (Optional)</label>
+                <textarea rows="4" id="Return_Comments" name="Return_Comments" placeholder="Send Message Back ..."></textarea>
+            </div>
+
+            <div class="action-buttons">
+                <button type="button" class="return-btn" id="returnBtn">
+                    <i class="fas fa-undo"></i> Return
+                </button>
+                <button type="button" class="approve-btn" id="approveBtn">
+                    <i class="fas fa-check"></i> Approve
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="notification" id="notification"></div>
+
+
+
+
+
     <script type="text/javascript">
         let currentStep = 5;
         const totalSteps = 5;
 
+
+        const commentBtn = document.getElementById('commentBtn');
+        const formContainer = document.getElementById('floatContainer');
+        const approveBtn = document.getElementById('approveBtn');
+        const returnBtn = document.getElementById('returnBtn');
+        const notification = document.getElementById('notification');
+
         let strRegno = $("#Regno").val();
+
 
         function goToStep(step) {
             // Update current step
             currentStep = step;
 
-            // Update progress bar
-            const progressPercentage = ((step - 1) / (totalSteps - 1)) * 100;
-            document.querySelector('.progress').style.width = `${progressPercentage}%`;
+          
 
-            // Update sidebar steps
+            // Update sidebar step states
             document.querySelectorAll('.step-item').forEach((item, index) => {
-                if (index + 1 < step) {
+                const stepNumber = index + 1;
+
+                // Completed (previous steps)
+                if (stepNumber < step) {
                     item.classList.add('completed');
-                    item.classList.remove('active');
-                } else if (index + 1 === step) {
+                    item.classList.remove('active', 'disabled');
+                }
+                // Active (current step)
+                else if (stepNumber === step) {
                     item.classList.add('active');
-                    item.classList.remove('completed');
-                } else {
+                    item.classList.remove('completed', 'disabled');
+                }
+                // Locked (future steps)
+                else {
+                    item.classList.add('disabled');
                     item.classList.remove('active', 'completed');
                 }
             });
@@ -271,20 +333,132 @@
 
             // Add click event to sidebar steps
             document.querySelectorAll('.step-item').forEach(item => {
-                item.addEventListener('click', function () {
-                    const step = parseInt(this.getAttribute('data-step'));
-                    if (step < currentStep) {
-                        goToStep(step);
-                    }
+                item.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    return;
                 });
             });
         });
 
+        // Toggle form visibility
+        commentBtn.addEventListener('click', () => {
+            commentBtn.classList.toggle('active');
+            formContainer.classList.toggle('active');
+        });
+
+        // Close form
+        closeBtn.addEventListener('click', () => {
+            commentBtn.classList.remove('active');
+            formContainer.classList.remove('active');
+        });
+
+
+           // Approve action
+       approveBtn.addEventListener('click', async (e) => {
+           e.preventDefault();
+
+           // Get the ID of the save button and Store original text
+           const savebtn = document.querySelector("#approveBtn");
+           const originalText = savebtn.innerHTML;
+
+           // Create loading icon and message container
+           savebtn.disabled = true;
+           savebtn.innerHTML = `<div class='buttonloading'></div>`;
+
+
+           let fomdata = new FormData();
+           fomdata.append("RegNo", strRegno);
+           fomdata.append("Comments", $("#Manager_Comments").val());
+
+
+           // Step 1: Simulate "Saving data..."
+           await new Promise(resolve => setTimeout(resolve, 1200)); // 1.2s delay for animation
+
+            let res = await postData('@Url.Action("DepartmentApproveSubmit", "Patrol")', fomdata);
+           if (res.StatusCode === 201) {
+               await new Promise(resolve => setTimeout(resolve, 1000));
+               savebtn.innerHTML = originalText;
+
+
+                // In a real application, you would send the approval to a server here
+                showNotification('approved successfully!', 'success');
+
+                // Reset form
+                document.getElementById('Manager_Comments').value = '';
+                document.getElementById('Return_Comments').value = '';
+
+                // Close form
+                commentBtn.classList.remove('active');
+                formContainer.classList.remove('active');
+
+               GetRegistrationDetails();
+            }
+       });
+
+
+       // Return action
+       returnBtn.addEventListener('click', () => {
+           const notes = document.getElementById('moderation-notes').value;
+
+           if (!notes) {
+               showNotification('Please provide a reason for returning the comment', 'error');
+               return;
+           }
+
+           // In a real application, you would send the return action to a server here
+           showNotification('Comment returned to author with your notes', 'info');
+
+           // Reset form
+           document.getElementById('moderation-notes').value = '';
+
+           // Close form
+           commentBtn.classList.remove('active');
+           formContainer.classList.remove('active');
+
+           // In a real app, you would update the comment status in the UI
+           setTimeout(() => {
+               const pendingComment = document.querySelector('.comment.pending');
+               if (pendingComment) {
+                   pendingComment.classList.remove('pending');
+                   pendingComment.classList.add('returned');
+                   const statusSpan = pendingComment.querySelector('.comment-status');
+                   statusSpan.textContent = 'RETURNED';
+                   statusSpan.className = 'comment-status status-returned';
+               }
+           }, 500);
+       });
+
+
+        // Show notification
+        function showNotification(message, type) {
+            notification.textContent = message;
+            notification.className = 'notification active ' + type;
+
+            setTimeout(() => {
+                notification.classList.remove('active');
+            }, 3000);
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!formContainer.contains(e.target) &&
+                !commentBtn.contains(e.target) &&
+                formContainer.classList.contains('active')) {
+                commentBtn.classList.remove('active');
+                formContainer.classList.remove('active');
+            }
+        });
 
          const GetRegistrationDetails = async () => {
              let res = await FetchAuthenticate('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
              console.log(res);
                  if (res && res.Success) {
+                     $("#regtext").text(strRegno);
+                     $("#InspectorName").val(res.Data.InspectName);
+                     $("#PICName").val(res.Data.PICName);
+                     $("#DateConduct").val(res.Data.DateConduct);
+                     $("#SectionName").val("P1SA-" + res.Data.SectionName);
+
+
                      $("#PIC_Comments").val(res.Data.PIC_Comments);
                      $("#Manager_Comments").val(res.Data.Manager_Comments);
                  }
@@ -319,13 +493,57 @@
                              if (f.trim() !== "") {
                                  let filenameonly = f.replace(/\.pdf$/i, "");
 
+                                 const fileExtension = f.split('.').pop().toLowerCase();
+
+                                 let fileType = 'default';
+
+                                 if (['pdf'].includes(fileExtension)) {
+                                     fileType = 'pdf';
+                                 } else if (['xlsx', 'xls', 'xlsm', 'csv'].includes(fileExtension)) {
+                                     fileType = 'xlsx';
+                                 } else if (['doc', 'docx', 'txt'].includes(fileExtension)) {
+                                     fileType = 'doc';
+                                 } else if (['jpg', 'jpeg', 'png', 'gif', 'svg'].includes(fileExtension)) {
+                                     fileType = 'img';
+                                 } else if (['zip', 'rar', '7z'].includes(fileExtension)) {
+                                     fileType = 'zip';
+                                 }
+
+                                 const fileIconClass = `file-icon ${fileType}`;
+
+
+                                 let fileIcon = '';
+
+                                 switch (fileType) {
+                                     case 'pdf':
+                                         fileIcon = '<i class="far fa-file-pdf"></i>';
+                                         break;
+                                     case 'doc':
+                                         fileIcon = '<i class="far fa-file-word"></i>';
+                                         break;
+                                     case 'img':
+                                         fileIcon = '<i class="far fa-file-image"></i>';
+                                         break;
+                                     case 'zip':
+                                         fileIcon = '<i class="far fa-file-archive"></i>';
+                                         break;
+                                     case 'xlsx':
+                                         fileIcon = '<i class="fa-regular fa-file-excel"></i>';
+                                         break;
+                                     default:
+                                         fileIcon = '<i class="far fa-file"></i>';
+                                 }
+
                                  fileHtml += `
-                          <div class="pdf-container">
-                               <button class="open-pdf-btn" data-pdf-url="/Patrol/ViewPDF?strfilepath=${f}">
-                                  <i class="fa-solid fa-file-pdf"></i> ${filenameonly}
-                              </button>
-                          </div>
-                      `;
+                                      <button class="open-pdf-btn" data-pdf-url="/Patrol/ViewPDF?strfilepath=${f}">
+                                           <div class="${fileIconClass}">
+                                             ${fileIcon}
+                                           </div>
+                                           <div class="file-info">
+                                               <div class="file-name">${filenameonly}</div>           
+                                           </div>
+                                    </button>
+                                 `;
                              }
                          });
 

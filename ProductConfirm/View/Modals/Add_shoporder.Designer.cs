@@ -69,6 +69,7 @@
             this.PartText.Name = "PartText";
             this.PartText.Size = new System.Drawing.Size(245, 41);
             this.PartText.TabIndex = 22;
+            this.PartText.TextChanged += new System.EventHandler(this.PartText_TextChanged);
             this.PartText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.PartText_KeyDown);
             this.PartText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.PartText_KeyPress);
             // 

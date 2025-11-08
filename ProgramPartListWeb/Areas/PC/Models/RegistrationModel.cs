@@ -18,10 +18,12 @@ namespace ProgramPartListWeb.Areas.PC.Models
         // 📋 Approval Info
         public string Manager_ID { get; set; }
         public string Manager_Comments { get; set; }
-        public bool? ReportStatus { get; set; }
+        public int ReportStatus { get; set; }
 
         // 🧑 Employee Info Or Inspector
         public string Inspect_ID { get; set; }
+        public string InspectName { get; set; }
+        public string PICName { get; set; }
         public string Inspect_Comments { get; set; }
         public bool? Inspect_IsAproved { get; set; }
         public bool? Inspect_IsSent { get; set; }

@@ -33,7 +33,7 @@
                 </li>
                 <li class="step-item" data-step="2">
                     <span class="step-number">2</span>
-                    Person in Charge (PIC)
+                    Process Owner
                 </li>
                 <li class="step-item" data-step="3">
                     <span class="step-number">3</span>
@@ -43,16 +43,16 @@
                     <span class="step-number">4</span>
                     Managers
                 </li>
+                @*<li class="step-item" data-step="5">
+            <span class="step-number">5</span>
+            Department Managerss
+        </li>*@
                 <li class="step-item" data-step="5">
                     <span class="step-number">5</span>
-                    Department Manager
+                    Division Manager
                 </li>
                 <li class="step-item" data-step="6">
                     <span class="step-number">6</span>
-                    Division Manager
-                </li>
-                <li class="step-item" data-step="7">
-                    <span class="step-number">7</span>
                     View Form
                 </li>
             </ul>
@@ -65,14 +65,19 @@
 
             <!-- Step 1: Create New Document -->
             <form method="post" enctype="multipart/form-data"  class="step-content active" id="step-1" autocomplete="off">
-                <h3 class="mb-4">Create New Registration No.</h3>
+                <div class="flex_align mb-4">
+                    <a class="Backbtn" href="/PC/Patrol/PatrolReport"><i class="fa-solid fa-arrow-left"></i></a>
+                    <h3 class="mb-0">Create New Registration No.</h3>
+                </div>
+
+               
 
                 <div class="row mb-3">
                     <div class="col-12 col-sm-12 col-lg-4">
                         <label>Registration No. <small style="color: #a81818; font-weight: 600;">*</small> </label> <br />
                         @*<input type="text" placeholder="Type Registration No." name="RegNo" id="RegNo" required />*@
                         <div class="date-wrapper">
-                            <span class="prefix">P1SA-</span>
+                            <span class="prefix" id="prefix">P1SA-</span>
                             <input name="RegNo" id="RegNo" class="styled-date" type="text" placeholder="YYMMDD" readonly required>
 
                             <div class="calendar-icon-wrapper">
@@ -294,7 +299,7 @@
                   // Step 2: Update loading text
                   document.querySelector("#loadingSequence").textContent = "Sending email to the Process Owner...";
                   await new Promise(resolve => setTimeout(resolve, 1200));
-           
+
                   // Step 3: Send data to the controller
                   let res = await postData('@Url.Action("AddRegistration", "Patrol")', finalformData);
 
@@ -311,7 +316,7 @@
                       savebtn.disabled = false;
                   }
 
-                
+
           });
 
             const formValidation = (regno) => {
@@ -378,6 +383,15 @@
 
         GetEmailList();
         RegistrationTable();
+
+        let segment = @ViewBag.Segment;
+
+        if (segment == 2) {
+            $("#prefix").text("PIFA-");
+        } else {
+            $("#prefix").text("PISA-");
+        }
+
     </script>
 </body>
 

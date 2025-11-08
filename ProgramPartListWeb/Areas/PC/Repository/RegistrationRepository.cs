@@ -26,11 +26,12 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                                 f.CounterPath,
 
 	                             a.Inspect_ID, 
+                                 Emp.FullName AS InspectName,
 	                             a.Inspect_Comments, 
 	                             a.Inspect_IsAproved, 
 	                             a.Inspect_IsSent,
 
-	                            a.PIC_ID, a.PIC_Comments, a.PIC_IsSent, 
+	                            a.PIC_ID, PIC.FullName AS PICName, a.PIC_Comments, a.PIC_IsSent, 
 
 	                            a.Manager_ID, a.Manager_Comments, a.Manager_Isedit, a.Manager_IsSent, 
 
@@ -42,6 +43,10 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                             INNER JOIN P1SADepartment_tbl d ON d.DepartmentID = r.Department_ID
                             INNER JOIN Patrol_Registration_Files f ON f.RegNo = r.RegNo
                             INNER JOIN Patrol_Registration_Approvelist a ON a.RegNo = r.RegNo
+                            LEFT JOIN Patrol_UserEmail Emp 
+								ON r.Employee_ID = Emp.Employee_ID
+							LEFT JOIN Patrol_UserEmail PIC 
+								ON r.PIC_ID = PIC.Employee_ID
                             ORDER BY DateCreated DESC";
             return SqlDataAccess.GetData<PatrolRegistrationViewModel>(strsql);
         }
@@ -182,9 +187,26 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             return results.All(r => r);
         }
 
-        public Task<bool> ApproveByDivManager(string RegNo, string comments, string newfilepath, string DivManagerID)
+        public async Task<bool> ApproveByDivManager(string reg, string newfilepath, string DivManagerID)
         {
-            throw new NotImplementedException();
+            var regsql = SqlDataAccess.UpdateInsertQuery(@"UPDATE Patrol_Registration SET  
+                            ReportStatus = 5, DivManager_ID =@DivManager_ID
+                            WHERE RegNo =@RegNo", new { RegNo = reg, DivManager_ID = DivManagerID });
+
+            var revsql = SqlDataAccess.UpdateInsertQuery(@"UPDATE Patrol_Registration_Approvelist SET  
+                            Inspect_IsAproved =  1, DivManager_IsAproved = 1, DivManager_ID =@DivManager_ID
+                            WHERE RegNo =@RegNo", new { RegNo = reg, DivManager_ID = DivManagerID });
+
+            var regFiles = SqlDataAccess.UpdateInsertQuery(@"UPDATE Patrol_Registration_Files SET FilePath =@FilePath
+                            WHERE RegNo =@RegNo", new
+            {
+                FilePath = newfilepath,
+                RegNo = reg
+            });
+
+            bool[] results = await Task.WhenAll(regsql, revsql, regFiles);
+
+            return results.All(r => r);
         }
 
         public Task<bool> ReturnEmailMessage(string RegNo, string comments, int reportStats)

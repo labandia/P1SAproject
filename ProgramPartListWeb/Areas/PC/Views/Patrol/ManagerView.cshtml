@@ -393,6 +393,10 @@
                return;
            }
 
+           let formData = new FormData();
+           formData.append("Regno", "");
+           formData.append("Message", notes);
+
            // In a real application, you would send the return action to a server here
            showNotification('Comment returned to author with your notes', 'info');
 
@@ -452,7 +456,7 @@
                  $("#DateConduct").val(res.Data.DateConduct);
                  $("#SectionName").val("P1SA-" + res.Data.SectionName);
                  $("#PIC_Comments").val(res.Data.PIC_Comments);
-                 $("#Manager_Comments").val(res.Data.Manager_Comments);                 
+                 $("#Manager_Comments").val(res.Data.Manager_Comments);
 
                   if (res.Data.DepManager_IsAproved) {
                       $("#returnBtn").prop("disabled", true);
@@ -539,7 +543,7 @@
                                           ${fileIcon}
                                         </div>
                                         <div class="file-info">
-                                            <div class="file-name">${filenameonly}</div>           
+                                            <div class="file-name">${filenameonly}</div>
                                         </div>
                                  </button>
                               `;

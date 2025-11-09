@@ -801,7 +801,43 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         [HttpPost]
         public async Task<ActionResult> ReturnEmailSubmit(string Regno, string Message, int ReportStatus)
         {
-            return JsonCreated(Regno, "Updated successfully");
+            string regNo = Request.Form["RegNo"];
+            string Employee_ID = Request.Form["Employee_ID"];
+            string getprefix = GetPrefix();
+            string finalPrefix = $"{getprefix}-{regNo}";
+
+            var emailList = await _reg.PatrolEmailData() ?? new List<EmailModelV2>();
+            var employeeEmail = new EmailModelV2();
+            string processLink = "";
+
+
+            if (ReportStatus == 2)
+            {
+                processLink = $"http://p1saportalweb.sdp.com/PC/Patrol/InspectorsReview?Regno={finalPrefix}";
+                employeeEmail = emailList.FirstOrDefault(p => p.Employee_ID == Employee_ID);
+            }
+            else if(ReportStatus == 3)
+            {
+                employeeEmail = emailList.FirstOrDefault(p => p.Employee_ID == Employee_ID);
+            }
+
+
+            // ===================== STEP 8: Send Notification Email =====================
+          
+            string emailBody = EmailService.RegistrationEmailBody(employeeEmail.FullName, finalPrefix, processLink);
+
+            var SendEmail = new SentEmailModel
+            {
+                Subject = "Patrol Inspection",
+                Sender = strSender,
+                BCC = "",
+                Body = emailBody,
+                Recipient = employeeEmail.Email
+            };
+
+            await EmailService.SendEmailViaSqlDatabase(SendEmail);
+
+            return JsonCreated(true, "Updated successfully.");
         }
 
         // =======================================================================

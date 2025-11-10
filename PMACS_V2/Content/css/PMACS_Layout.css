@@ -3047,7 +3047,7 @@
         
         .stepper-steps {
             display: flex;
-            justify-content: center;
+            justify-content: flex-start !important;
             margin-bottom: 30px;
             position: relative;
         }

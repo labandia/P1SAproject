@@ -93,16 +93,16 @@
 
                         <!-- Step 2: Profile Information -->
                         <div class="stepper-pane" id="validation-step-2">
-                            <form class="row g-3 mb-4" id="ShopOrderInForm">                          
+                            <form class="row g-3 mb-4" id="ShopOrderInForm">
                                 <div class="col-md-6">
                                     <label for="validationLastName" class="form-label">Input by :</label>
                                     <input type="text" class="form-control" name="Remarks_IN" id="validationLastName" required>
-                               
+
                                 </div>
                                 <div class="col-12">
                                     <label for="validationPhone" class="form-label">Rotor Shop Order : </label>
                                     <input type="text" class="form-control" name="RotorShop_IN" id="RotorShop_IN" required>
-                                
+
                                 </div>
                             </form>
                         </div>
@@ -123,7 +123,7 @@
 
 
 
-               
+
             </div>
 
         </div>
@@ -131,15 +131,15 @@
 </div>
 
 @*=================================================================================*@
-@*=========================== SHOP ODER OUT =====================================*@
+@*=========================== SHOP ORDER OUT =====================================*@
 @*=================================================================================*@
-<div class="modal fade modal-lg"  id="ShowShopOrderOut" tabindex="-1" role="dialog" data-bs-backdrop="static">
+<div class="modal fade modal-lg" id="ShowShopOrderOut" tabindex="-1" role="dialog" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
 
             <div class="modal-body modalwrap">
                 <div class="custom_modal_header">
-                    <h5>Edit asdsadasdasd</h5>
+                    <h5>Shop Order monitoring Details (OUT)</h5>
 
                     <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
                         <span>&times;</span>
@@ -147,75 +147,99 @@
                 </div>
 
 
-                <form id="DieToolForms" class="addformcontainer" autocomplete="off">
-                    <div class="row">
-                        <div class="form_group col-12 col-lg-6 col-sm-12">
-                            <label for="">Product Type</label>
-                            <input type="text" name="ToolNo" id="ToolNo" placeholder="Enter Product Type" required>
+                <div class="stepper" id="validationStepperOut">
+                    <ol class="stepper-steps">
+                        <li class="stepper-step active" data-step="1">
+                            <div class="stepper-step-indicator">1</div>
+                            <div class="stepper-step-label">Enter Quantity</div>
+                        </li>
+                        <li class="stepper-step" data-step="2">
+                            <div class="stepper-step-indicator">2</div>
+                            <div class="stepper-step-label">Shop Order Details</div>
+                        </li>
+                    </ol>
+
+                    <div class="stepper-content">
+                        <!-- Step 1: Quantity Information -->
+                        <div class="stepper-pane active" id="validation-out-step-1">
+                            <div class="form-group">
+                                <label for="QuantityOUT" class="form-label">Quantity to Issue:</label>
+                                <input type="number" class="form-control" id="QuantityOUT" name="QuantityOUT" required>
+                            </div>
                         </div>
 
-                        <div class="form_group col-12 col-lg-6 col-sm-12">
-                            <label for="">No# Stamp</label>
-                            <input type="text" name="Stamp" id="Stamp" placeholder="Enter Number Stamp" onkeypress='return restrictChars(event)' required>
+                        <!-- Step 2: Shop Order Out Information -->
+                        <div class="stepper-pane" id="validation-out-step-2">
+                            <form class="row g-3 mb-4" id="ShopOrderOutForm">
+                                <div class="col-md-6">
+                                    <label for="PreparedBy" class="form-label">Prepared by:</label>
+                                    <input type="text" class="form-control" name="PreparedBy" id="PreparedBy" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="FAShopOrder" class="form-label">FA Shop Order:</label>
+                                    <input type="text" class="form-control" name="FAShopOrder" id="FAShopOrder" required>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="PlanQuantity" class="form-label">Plan Quantity:</label>
+                                    <input type="number" class="form-control" name="PlanQuantity" id="PlanQuantity" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="Status" class="form-label">Status:</label>
+                                    <select class="form-control" name="Status" id="Status" required>
+                                        <option value="">Select Status</option>
+                                        <option value="Pending">Pending</option>
+                                        <option value="In Progress">In Progress</option>
+                                        <option value="Completed">Completed</option>
+                                        <option value="On Hold">On Hold</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="RotorShopOrder" class="form-label">Rotor Shop Order:</label>
+                                    <input type="text" class="form-control" name="RotorShopOrder" id="RotorShopOrder" required>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="ModelBase" class="form-label">Model Base:</label>
+                                    <input type="text" class="form-control" name="ModelBase" id="ModelBase" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="PlanStart" class="form-label">Plan Start:</label>
+                                    <input type="date" class="form-control" name="PlanStart" id="PlanStart" required>
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="BushMaterial" class="form-label">Bush Material:</label>
+                                    <select class="form-control" name="BushMaterial" id="BushMaterial" required>
+                                        <option value="">Select Bush Material</option>
+                                        <option value="Bronze">Bronze</option>
+                                        <option value="Steel">Steel</option>
+                                        <option value="Aluminum">Aluminum</option>
+                                        <option value="Brass">Brass</option>
+                                        <option value="Copper">Copper</option>
+                                        <option value="None">None</option>
+                                    </select>
+                                </div>
+                            </form>
                         </div>
                     </div>
 
-                    <div class="row">
-
-                        <div class="form_group col-12 col-lg-6 col-sm-12">
-                            <label for="">Machine</label>
-                            <input type="text" name="Machine" id="Machine" placeholder="Enter Details of Modification" onkeypress='return restrictChars(event)' required>
+                    <div class="stepper-actions">
+                        <div class="step-indicators">
+                            <div class="step-indicator active" data-step="1"></div>
+                            <div class="step-indicator" data-step="2"></div>
                         </div>
-                        <div class="form_group col-12 col-lg-6 col-sm-12">
-                            <label for="">Die Condition</label>
-                            <input type="text" name="DieCondition" id="DieCondition" placeholder="Enter Shot Cycle Shot" required>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="form_group col-12 col-lg-6 col-sm-12">
-                            <label for="">Operator</label>
-                            <input type="text" name="Operator" id="Operator" placeholder="Enter Name of Operator" required>
-                        </div>
-                        <div class="form_group col-12 col-lg-6 col-sm-12">
-                            <label for="">Die Height</label>
-                            <input type="text" name="DieHeight" id="DieHeight" placeholder="Enter Die Height" required>
+                        <div>
+                            <button class="btn btn-secondary" id="prevBtnOut" disabled>Previous</button>
+                            <button class="btn btn-primary" id="nextBtnOut">Next</button>
                         </div>
                     </div>
-
-                    <div class="row">
-                        <div class="form_group col-12 col-lg-6 col-sm-12">
-                            <label for="">Leader Confirmation</label>
-                            <input type="text" name="LeaderCom" id="LeaderCom" placeholder="Enter In Charget name" required>
-                        </div>
-                        <div class="form_group col-12 col-lg-6 col-sm-12">
-                            <label for="">Gear(ALPHA)</label>
-                            <input type="text" name="Gear" id="Gear" required>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="form_group col-12 col-lg-6 col-sm-12">
-                            <label for="">Pitch(MXM)</label>
-                            <input type="text" name="Pitch" id="Pitch" placeholder="Enter In Charget name" required>
-                        </div>
-                    </div>
-
-
-                    <div class="flex_end" id="editsdisplay">
-                        <button type="submit" class="primary_button_color">
-                            <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
-                        </button>
-                    </div>
-                </form>
+                </div>
             </div>
-
         </div>
     </div>
 </div>
-
-
-
 <div class="PartslistAction">
     <div class="ImagepartsContainer">
         <img src="~/Content/Images/background.png" />
@@ -256,13 +280,22 @@
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
 
+    // Stepper elements for OUT
+    const stepperStepsOut = document.querySelectorAll('#validationStepperOut .stepper-step');
+    const stepperPanesOut = document.querySelectorAll('#validationStepperOut .stepper-pane');
+    const stepIndicatorsOut = document.querySelectorAll('#validationStepperOut .step-indicator');
+    const prevBtnOut = document.getElementById('prevBtnOut');
+    const nextBtnOut = document.getElementById('nextBtnOut');
+
+
     // Current step
     let currentStep = 1;
+    let currentStepOut = 1;
     const totalSteps = 2;
 
     // Form elements
     const shopForms = document.getElementById('ShopOrderInForm');
-
+    const shopFormsOut = document.getElementById('ShopOrderOutForm');
 
      const partlocationStorageList = async () => {
          let res = await FetchAuthenticate('@Url.Action("GetProductDetails", "PartsLocator")', { RecordID : ID});
@@ -303,11 +336,12 @@
     $("#OpenInbtn").on('click', function (e) {
         e.preventDefault();
         $("#ShowShopOrderIN").modal("show");
-    }); 
+    });
 
 
-    // ============================== STEPPER ================================== //
-    // Reset stepper to initial state
+    // ============================== STEPPER FUNCTIONS ================================== //
+
+    // Update stepper UI for IN
     function updateStepper() {
         // Update step indicators
         stepperSteps.forEach((step, index) => {
@@ -360,16 +394,16 @@
         }
     }
 
-    // Update stepper UI based on current step
-    function updateStepper() {
+    // Update stepper UI for OUT
+    function updateStepperOut() {
         // Update step indicators
-        stepperSteps.forEach((step, index) => {
+        stepperStepsOut.forEach((step, index) => {
             const stepNumber = index + 1;
 
-            if (stepNumber < currentStep) {
+            if (stepNumber < currentStepOut) {
                 step.classList.remove('active');
                 step.classList.add('completed');
-            } else if (stepNumber === currentStep) {
+            } else if (stepNumber === currentStepOut) {
                 step.classList.add('active');
                 step.classList.remove('completed');
             } else {
@@ -378,10 +412,10 @@
         });
 
         // Update step panes
-        stepperPanes.forEach((pane, index) => {
+        stepperPanesOut.forEach((pane, index) => {
             const paneNumber = index + 1;
 
-            if (paneNumber === currentStep) {
+            if (paneNumber === currentStepOut) {
                 pane.classList.add('active');
             } else {
                 pane.classList.remove('active');
@@ -389,10 +423,10 @@
         });
 
         // Update step indicators
-        stepIndicators.forEach((indicator, index) => {
+        stepIndicatorsOut.forEach((indicator, index) => {
             const indicatorNumber = index + 1;
 
-            if (indicatorNumber === currentStep) {
+            if (indicatorNumber === currentStepOut) {
                 indicator.classList.add('active');
             } else {
                 indicator.classList.remove('active');
@@ -400,20 +434,20 @@
         });
 
         // Update buttons
-        prevBtn.disabled = currentStep === 1;
+        prevBtnOut.disabled = currentStepOut === 1;
 
-        if (currentStep === totalSteps) {
-            nextBtn.textContent = 'Finish';
-            nextBtn.classList.remove('btn-primary');
-            nextBtn.classList.add('btn-success');
+        if (currentStepOut === totalSteps) {
+            nextBtnOut.textContent = 'Finish';
+            nextBtnOut.classList.remove('btn-primary');
+            nextBtnOut.classList.add('btn-success');
         } else {
-            nextBtn.textContent = 'Next';
-            nextBtn.classList.remove('btn-success');
-            nextBtn.classList.add('btn-primary');
+            nextBtnOut.textContent = 'Next';
+            nextBtnOut.classList.remove('btn-success');
+            nextBtnOut.classList.add('btn-primary');
         }
     }
 
-    // Next button click
+    // IN Stepper Event Listeners
     nextBtn.addEventListener('click', function () {
         let checkQuan = document.getElementById("QuantityIN").value;
 
@@ -424,26 +458,76 @@
             } else {
                 // Finish button clicked
                 let formData = new FormData(shopForms);
-                formData.append("TransactionType", 0);
                 formData.append("Quantity", parseInt(checkQuan));
                 formData.append("TransactionType", 0);
                 formData.append("Partnumber", referpartnum);
 
                 const data = Object.fromEntries(formData);
-                console.log(data);
-                alert('Registration completed successfully!');
-                //closeModal();
+                console.log("IN Data:", data);
+                alert('Shop Order IN completed successfully!');
+                $("#ShowShopOrderIN").modal("hide");
+                resetStepperIN();
             }
         }
     });
 
-    // Previous button click
     prevBtn.addEventListener('click', function () {
         if (currentStep > 1) {
             currentStep--;
             updateStepper();
         }
     });
+
+    // OUT Stepper Event Listeners
+    nextBtnOut.addEventListener('click', function () {
+        let checkQuan = document.getElementById("QuantityOUT").value;
+
+        if (checkQuan !== "") {
+            if (currentStepOut < totalSteps) {
+                currentStepOut++;
+                updateStepperOut();
+            } else {
+                // Finish button clicked
+                let formData = new FormData(shopFormsOut);
+                formData.append("Quantity", parseInt(checkQuan));
+                formData.append("TransactionType", 1); // 1 for OUT
+                formData.append("Partnumber", referpartnum);
+
+                const data = Object.fromEntries(formData);
+                console.log("OUT Data:", data);
+                alert('Shop Order OUT completed successfully!');
+                $("#ShowShopOrderOut").modal("hide");
+                resetStepperOUT();
+            }
+        }
+    });
+
+    prevBtnOut.addEventListener('click', function () {
+        if (currentStepOut > 1) {
+            currentStepOut--;
+            updateStepperOut();
+        }
+    });
+
+    // Reset stepper functions
+    function resetStepperIN() {
+        currentStep = 1;
+        document.getElementById("QuantityIN").value = "";
+        shopForms.reset();
+        updateStepper();
+    }
+
+    function resetStepperOUT() {
+        currentStepOut = 1;
+        document.getElementById("QuantityOUT").value = "";
+        shopFormsOut.reset();
+        updateStepperOut();
+    }
+
+    // Initialize both steppers
+    updateStepper();
+    updateStepperOut();
+
 
     partlocationStorageList();
 </script>

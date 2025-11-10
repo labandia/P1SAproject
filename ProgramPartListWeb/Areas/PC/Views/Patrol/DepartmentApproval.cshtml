@@ -54,7 +54,7 @@
                 </li>
                 <li class="step-item" data-step="6">
                     <span class="step-number">6</span>
-                    View Form
+                    Completed 
                 </li>
             </ul>
         </div>
@@ -239,7 +239,7 @@
     </div>
 
 
-    <div class="floating-comment-btn">
+    <div class="floating-comment-btn" style="@(ViewBag.Mode == 1 ? "" : "display:none")">
         <span class="comment-label">Moderate Comment</span>
         <div class="comment-btn" id="commentBtn">
             <i class="fa-regular fa-paper-plane"></i>
@@ -291,13 +291,13 @@
         const notification = document.getElementById('notification');
 
         let strRegno = $("#Regno").val();
-
+        let modeset = @ViewBag.Mode;
 
         function goToStep(step) {
             // Update current step
             currentStep = step;
 
-          
+
 
             // Update sidebar step states
             document.querySelectorAll('.step-item').forEach((item, index) => {
@@ -450,7 +450,6 @@
 
          const GetRegistrationDetails = async () => {
              let res = await FetchAuthenticate('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
-             console.log(res);
                  if (res && res.Success) {
                      $("#regtext").text(strRegno);
                      $("#InspectorName").val(res.Data.InspectName);
@@ -461,6 +460,8 @@
 
                      $("#PIC_Comments").val(res.Data.PIC_Comments);
                      $("#Manager_Comments").val(res.Data.Manager_Comments);
+
+                     RedirectPageView(res.Data.ReportStatus, strRegno);
                  }
              }
 
@@ -540,7 +541,7 @@
                                              ${fileIcon}
                                            </div>
                                            <div class="file-info">
-                                               <div class="file-name">${filenameonly}</div>           
+                                               <div class="file-name">${filenameonly}</div>
                                            </div>
                                     </button>
                                  `;
@@ -563,9 +564,53 @@
 
              }
 
-             GetRegistrationDetails();
-             GetRegistrationFindingsID();
-             GetRegistratioFiles();
+        const RedirectPageView = (stats, regno) => {
+
+            if (stats === 4 || stats === 5 || stats === 6) return;
+
+            // Use encodeURIComponent to avoid issues with special characters
+            const r = encodeURIComponent(regno);
+            const m = encodeURIComponent(mode);
+
+            switch (stats) {
+                case 1:
+                    window.location.href = `/PC/Patrol/ProcessOwner?Regno=${r}&mode=${m}`;
+                    break;
+                case 2:
+                    window.location.href = `/PC/Patrol/InspectorsReview?Regno=${r}&mode=${m}`;
+                    break;
+                case 3:
+                    window.location.href = `/PC/Patrol/ManagerView?Regno=${r}&mode=${m}`;
+                    break;
+                case 4:
+                case 5:
+                    window.location.href = `/PC/Patrol/DepartmentApproval?Regno=${r}&mode=${m}`;
+                    break;
+                default:
+                    console.warn("Unknown status:", stats);
+            }
+        };
+
+        // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+        const LoadPageData = async () => {
+            try {
+
+                const [regist, find, files] = await Promise.all([
+                    GetRegistrationDetails(),
+                    GetRegistrationFindingsID(),
+                    GetRegistratioFiles()
+                ]);
+            } catch (error) {
+                console.error("Failed to load page data:", error);
+            } finally {
+                // Hide loading spinner whether success or failure
+                //$("#loadingSpinner").hide();
+            }
+        }
+
+        $(document).ready(() => {
+            LoadPageData();
+        });
     </script>
 </body>
 

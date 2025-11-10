@@ -3,24 +3,6 @@
     ViewBag.Title = "PatrolReport";
     Layout = "~/Areas/PC/Views/Shared/_PatrolLayout.cshtml";
 }
-<div style="font-family:Segoe UI; padding:20px;">
-    <h2>Server Information</h2>
-
-    <table style="border-collapse: collapse; width: 400px;">
-        <tr>
-            <th style="text-align:left; border-bottom: 1px solid #ccc; padding: 8px;">Property</th>
-            <th style="text-align:left; border-bottom: 1px solid #ccc; padding: 8px;">Value</th>
-        </tr>
-        <tr>
-            <td style="padding: 8px;">Server IP</td>
-            <td style="padding: 8px;">@ViewBag.ServerIP</td>
-        </tr>
-        <tr>
-            <td style="padding: 8px;">Segment</td>
-            <td style="padding: 8px;">@ViewBag.Segment</td>
-        </tr>
-    </table>
-</div>
 
 <header class="InspectHead flex_space">
     <div class="flex_align">
@@ -349,7 +331,7 @@
                                       ${fileIcon}
                                     </div>
                                     <div class="file-info">
-                                        <div class="file-name">${filenameonly}</div>           
+                                        <div class="file-name">${filenameonly}</div>
                                     </div>
                              </button>
                           `;
@@ -373,6 +355,18 @@
             $("#OpenAttachment").modal("show");
             //window.location.href = "/PC/Patrol/PatrolReportDetails?Regno=" + rowIndex;
         });
+
+
+        $(document).on('click', '.editButton', async function (e) {
+            e.stopPropagation();
+            const buttonId = $(this).attr('id');
+            const rowIndex = buttonId.split('_')[1];
+
+            const response = await FetchAuthenticate('@Url.Action("HandleReportRoutingAsync", "Patrol")', { Regno: rowIndex });
+
+            window.location.href = response.Data;
+        });
+
 
         // Open PDF file in new tab when the paperclip button is clicked
         $(document).on('click', '.open-pdf-btn', function (e) {

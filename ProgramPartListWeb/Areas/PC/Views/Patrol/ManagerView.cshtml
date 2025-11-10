@@ -45,22 +45,22 @@
                     Managers
                 </li>
                 @*<li class="step-item" data-step="5">
-                    <span class="step-number">5</span>
-                    Department Managerss
-                </li>*@
+                        <span class="step-number">5</span>
+                        Department Managerss
+                    </li>*@
                 <li class="step-item" data-step="5">
                     <span class="step-number">5</span>
                     Division Manager
                 </li>
                 <li class="step-item" data-step="6">
                     <span class="step-number">6</span>
-                    View Form
+                    Completed
                 </li>
             </ul>
         </div>
 
         <div class="content">
-           
+
             <!-- Step 1: Create New Document -->
             <div class="step-content active" id="step-1">
 
@@ -194,25 +194,27 @@
                             <div class="row mb-3">
                                 <div class="col ">
                                     <label>Inspector Name: </label> <br />
-                                    <input type="text" id="InspectorName"  />
+                                    <input type="text" id="InspectorName" />
                                 </div>
 
                                 <div class="col ">
                                     <label>Date Conducted</label> <br />
-                                    <input type="text" id="DateConduct"  />
+                                    <input type="text" id="DateConduct" />
                                 </div>
                             </div>
 
-                            <div class="mb-3">
-                                <label>Person in charge </label> <br />
-                                <input type="text" id="PICName"  />
+                            <div class="row mb-3">
+                                <div class="col ">
+                                    <label>Person in charge </label> <br />
+                                    <input type="text" id="PICName" />
+                                </div>
+                                <div class="col ">
+                                    <label>PIC Comments</label>
+                                    <textarea placeholder="Type text here..." name="PIC_Comments" id="PIC_Comments" rows="3" cols="40" readonly></textarea>
+                                </div>
                             </div>
 
-                            <div class="mb-3">
-                                <label>PIC Comments</label>
-                                <textarea placeholder="Type text here..." name="PIC_Comments" id="PIC_Comments" rows="3" cols="40" readonly></textarea>
-                            </div>
-                           
+
                         </div>
                     </div>
 
@@ -229,12 +231,13 @@
 
     </div>
 
-    <div class="floating-comment-btn">
+    <div class="floating-comment-btn" style="@(ViewBag.Mode == 1 ? "" : "display:none")">
         <span class="comment-label">Moderate Comment</span>
         <div class="comment-btn" id="commentBtn">
             <i class="fa-regular fa-paper-plane"></i>
         </div>
     </div>
+
 
 
     <div class="float-container" id="floatContainer">
@@ -272,8 +275,8 @@
     <script type="text/javascript">
         let currentStep = 4;
         const totalSteps = 5;
-
-
+        // Global flag to prevent multiple redirects
+ 
         const commentBtn = document.getElementById('commentBtn');
         const formContainer = document.getElementById('floatContainer');
         const approveBtn = document.getElementById('approveBtn');
@@ -282,6 +285,7 @@
 
 
         let strRegno = $("#Regno").val();
+        let modeset = @ViewBag.Mode;
 
         function goToStep(step) {
             // Update current step
@@ -448,7 +452,6 @@
 
           const GetRegistrationDetails = async () => {
               let res = await FetchAuthenticate('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
-              console.log(res);
               if (res && res.Success) {
                  $("#regtext").text(strRegno);
                  $("#InspectorName").val(res.Data.InspectName);
@@ -464,11 +467,10 @@
                       $("#Return_Comments").prop("disabled", true);
                       $("#Manager_Comments").prop("readonly", true);
                   }
+
+                  RedirectPageView(res.Data.ReportStatus, strRegno);
              }
          }
-
-
-
          const GetRegistrationFindingsID = async () => {
              let res = await FetchAuthenticate('@Url.Action("GetRegistrationFindings", "Patrol")', { Regno: strRegno });
 
@@ -479,7 +481,6 @@
                  });
              }
          }
-
          const GetRegistratioFiles = async () => {
              let filesSelect = [];
              let res = await FetchAuthenticate('@Url.Action("GetRegistrationAllFiles", "Patrol")', { Regno: strRegno });
@@ -566,9 +567,55 @@
 
          }
 
-         GetRegistrationDetails();
-         GetRegistrationFindingsID();
-         GetRegistratioFiles();
+        const RedirectPageView = (stats, regno) => {
+            // Use encodeURIComponent to avoid issues with special characters
+            if (stats == 3) return;
+
+       
+
+            const r = encodeURIComponent(regno);
+            const m = encodeURIComponent(modeset);
+
+            switch (stats) {
+                case 1:
+                    window.location.href = `/PC/Patrol/ProcessOwner?Regno=${r}&mode=${m}`;
+                    break;
+                case 2:
+                    window.location.href = `/PC/Patrol/InspectorsReview?Regno=${r}&mode=${m}`;
+                    break;
+                case 3:
+                    window.location.href = `/PC/Patrol/ManagerView?Regno=${r}&mode=${m}`;
+                    break;
+                case 4:
+                case 5:
+                    window.location.href = `/PC/Patrol/DepartmentApproval?Regno=${r}&mode=${m}`;
+                    break;
+                default:
+                    console.warn("Unknown status:", stats);
+            }
+        };
+
+
+        // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+        const LoadPageData = async () => {
+            try {
+
+                const [regist, find, files] = await Promise.all([
+                    GetRegistrationDetails(),
+                    GetRegistrationFindingsID(),
+                    GetRegistratioFiles()
+                ]);
+            } catch (error) {
+                console.error("Failed to load page data:", error);
+            } finally {
+                // Hide loading spinner whether success or failure
+                //$("#loadingSpinner").hide();
+            }
+        }
+
+        $(document).ready(() => {
+            LoadPageData();
+        });
     </script>
 </body>
 

@@ -54,7 +54,7 @@
                 </li>
                 <li class="step-item" data-step="6">
                     <span class="step-number">6</span>
-                    View Form
+                    Completed 
                 </li>
             </ul>
         </div>
@@ -192,6 +192,7 @@
         let selectedFiles = [];
 
         let strRegno = $("#RegNo").val();
+        let modeset = @ViewBag.Mode;
 
         // =======  FOR UPLOADING FILES =======================
         const fileUploadArea = document.getElementById("file-upload-area");
@@ -365,6 +366,8 @@
             if (res && res.Success) {
                 $("#regtext").text(strRegno);
                 $("#SectionName").val("P1SA-" + res.Data.SectionName);
+
+                RedirectPageView(res.Data.ReportStatus, strRegno);
             }
         }
 
@@ -379,8 +382,49 @@
             }
         }
 
-        GetRegistrationDetails();
-        GetRegistrationID();
+        const RedirectPageView = (stats, regno) => {
+            if (stats == 1) return;
+            // Use encodeURIComponent to avoid issues with special characters
+            const r = encodeURIComponent(regno);
+            const m = encodeURIComponent(mode);
+
+            switch (stats) {
+                case 1:
+                    window.location.href = `/PC/Patrol/ProcessOwner?Regno=${r}&mode=${m}`;
+                    break;
+                case 2:
+                    window.location.href = `/PC/Patrol/InspectorsReview?Regno=${r}&mode=${m}`;
+                    break;
+                case 3:
+                    window.location.href = `/PC/Patrol/ManagerView?Regno=${r}&mode=${m}`;
+                    break;
+                case 4:
+                case 5:
+                case 6:
+                    window.location.href = `/PC/Patrol/DepartmentApproval?Regno=${r}&mode=${m}`;
+                    break;
+                default:
+                    console.warn("Unknown status:", stats);
+            }
+        };
+
+         // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+         const LoadPageData = async () => {
+             try {          
+                 const [regist, ID] = await Promise.all([
+                     GetRegistrationDetails(),
+                     GetRegistrationID()
+                 ]);
+             } catch (error) {
+                 console.error("Failed to load page data:", error);
+             } finally {
+                 //$("#loadingSpinner").hide();
+             }
+         }
+
+         $(document).ready(() => {
+             LoadPageData();
+         });
     </script>
 </body>
 

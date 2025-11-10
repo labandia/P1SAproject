@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Security.Policy;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -133,7 +134,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         }
 
 
-        
+
         // GET: GetRegistrationNoByID
         [JwtAuthorize]
         public async Task<ActionResult> GetRegistrationAllFiles(string Regno)
@@ -191,7 +192,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             //                           .ToList();
             //if (removeDuplicateData == null || !removeDuplicateData.Any())
             //    return JsonNotFound("No Inspectors data found");
-            if(!data.Any()) return JsonNotFound("No Inspectors data found");
+            if (!data.Any()) return JsonNotFound("No Inspectors data found");
             return JsonSuccess(data, "LoadInspectorData");
         }
         // GET: GetInpectsByApproval
@@ -201,7 +202,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             var data = await _ins.GetInpectorsData() ?? new List<InspectorModel>();
             var filterdata = data.Where(p => p.Approval == 1).ToList();
 
-            if (filterdata == null || !filterdata.Any())  return JsonNotFound("No Patrol data found");
+            if (filterdata == null || !filterdata.Any()) return JsonNotFound("No Patrol data found");
             return JsonSuccess(filterdata, "Loads Inspector By Approval");
         }
         // GET: GetProcesslist
@@ -237,7 +238,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             {
                 return JsonError(ex.Message, 500);
             }
-           
+
         }
         // POST : EditInspectors
         [HttpPost]
@@ -273,7 +274,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             {
                 int inspectID = Convert.ToInt32(Request.Form["ID"]);
                 int Approval = Convert.ToInt32(Request.Form["stats"]);
-          
+
                 bool result = await _ins.ApproveAndDisapproveInpectors(inspectID, Approval);
 
                 if (!result) return JsonError("Insert failed.", 500);
@@ -349,25 +350,25 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                     // Parse the string first
                     DateTime parsedDate;
                     if (DateTime.TryParse(x.ScheduleDate, out parsedDate))
-                                {
-                                    return new
-                                    {
-                                        id = x.ScheduleID,
-                                        title = x.ProcessName,
-                                        start = parsedDate.ToString("yyyy-MM-dd"), // convert to correct format
-                                        allDay = true,
-                                        extendedProps = new
-                                        {
-                                            Active = x.IsActive,
-                                            ProcID = x.ProcessID,    
-                                        }
-                                    };
-                                }
-                                else
-                                {
-                                    return null; // or handle parsing error
-                                }
-                            })
+                    {
+                        return new
+                        {
+                            id = x.ScheduleID,
+                            title = x.ProcessName,
+                            start = parsedDate.ToString("yyyy-MM-dd"), // convert to correct format
+                            allDay = true,
+                            extendedProps = new
+                            {
+                                Active = x.IsActive,
+                                ProcID = x.ProcessID,
+                            }
+                        };
+                    }
+                    else
+                    {
+                        return null; // or handle parsing error
+                    }
+                })
                   .Where(x => x != null)
                   .ToList();
 
@@ -394,7 +395,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
                 // Zero means if the set date is not yet Inserted
                 if (modeID == 0) {
-                    var obj = new   
+                    var obj = new
                     {
                         Employee_ID = Request.Form["Employee_ID"],
                         ScheduleDate = Request.Form["ScheduleDate"],
@@ -402,7 +403,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                         TrainerID = 1
                     };
 
-                
+
                     result = await _ins.SetScheduleCalendar(obj, mode);
                 }
                 else
@@ -463,7 +464,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         //            }
         //        }
         //    }
-           
+
 
         //    // Join all file names into  string
         //    string patrolPath = string.Join(";", MultipleAttachments);
@@ -727,17 +728,17 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             var regData = await _ins.GetRegistrationData();
             string oldPatrolPath = regData.SingleOrDefault(res => res.RegNo == Request.Form["RegNo"]).PatrolPath;
 
-              // Prepare new file names
+            // Prepare new file names
             string newFileName = $"RN_{Request.Form["RegNo"]}_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
             string outputPdfPath = newFileName.Replace(".xlsx", ".pdf");
 
 
 
-          
+
 
             // Step 2: Checks If a new Excel file is uploaded
             List<string> newAttachements = new List<string>();
-            if(Attachments != null && Attachments.Length > 0)
+            if (Attachments != null && Attachments.Length > 0)
             {
                 foreach (var file in Attachments)
                 {
@@ -753,7 +754,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             // if there is a new File upload, append them to the old/current PatrolPaths 
             string newpatrolPaths = oldPatrolPath;
             // If there is a file
-            if(newAttachements.Count > 0)
+            if (newAttachements.Count > 0)
             {
                 if (!string.IsNullOrEmpty(newpatrolPaths))
                     newpatrolPaths += ";" + string.Join(";", newAttachements);
@@ -784,7 +785,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             bool result = await _ins.EditRegistration(obj, findJson);
 
             if (result)
-            {   
+            {
                 CacheHelper.Remove("Registration");
                 await ExportFiler.SaveFileasPDF(obj, findJson, GlobalUtilities.DepartmentName(Department), newFileName, templatePath, isSign);
 
@@ -816,14 +817,14 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 processLink = $"http://p1saportalweb.sdp.com/PC/Patrol/InspectorsReview?Regno={finalPrefix}";
                 employeeEmail = emailList.FirstOrDefault(p => p.Employee_ID == Employee_ID);
             }
-            else if(ReportStatus == 3)
+            else if (ReportStatus == 3)
             {
                 employeeEmail = emailList.FirstOrDefault(p => p.Employee_ID == Employee_ID);
             }
 
 
             // ===================== STEP 8: Send Notification Email =====================
-          
+
             string emailBody = EmailService.RegistrationEmailBody(employeeEmail.FullName, finalPrefix, processLink);
 
             var SendEmail = new SentEmailModel
@@ -1197,7 +1198,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             //Debug.WriteLine("PSDsadasd : " + Request.Form["Registration"]);
             bool result = await _ins.DeleteRegistration(Request.Form["Registration"]);
 
-            if(result)
+            if (result)
             {
                 if (System.IO.File.Exists(excelfilepath))
                 {
@@ -1207,14 +1208,14 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             }
 
             var formData = GlobalUtilities.GetMessageResponse(result, 3, "Delete successful");
-            return Json(formData, JsonRequestBehavior.AllowGet);    
+            return Json(formData, JsonRequestBehavior.AllowGet);
         }
 
 
         [HttpPost]
         public async Task<ActionResult> SendingEmails(string Senders, string CC)
         {
-  
+
             try
             {
                 Debug.WriteLine("Senders : " + Senders);
@@ -1262,10 +1263,6 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 Debug.WriteLine(ex.Message);
                 return Json(new { success = false, message = ex.Message });
             }
-
-
-        
-
         }
 
 
@@ -1399,7 +1396,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         //}
 
 
-      
+
         private System.Security.SecureString ConvertToSecureString(string password)
         {
             var secure = new System.Security.SecureString();
@@ -1425,10 +1422,10 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             var viewModel = new UserViewModel
             {
                 auth = new AuthModel(),
-                reg = new RegisterModel()   
+                reg = new RegisterModel()
             };
 
-            return View(viewModel); 
+            return View(viewModel);
         }
         // GET: PC/Inspectors
         [CompressResponse]
@@ -1453,12 +1450,12 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             ViewBag.ServerIP = clientIp;
             ViewBag.Segment = segment;
 
-            return View();  
+            return View();
         }
         // GET: PC/PatrolReport
         [CompressResponse]
         public ActionResult PatrolSchedule() => View();
-       
+
         // GET: PC/AddReports
         [CompressResponse]
         public ActionResult AddReports() => View();
@@ -1490,20 +1487,40 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             ViewBag.ServerIP = clientIp;
             ViewBag.Segment = segment;
 
-            return View();  
+            return View();
         }
         // GET: PC/AddReports
         [CompressResponse]
-        public ActionResult ProcessOwner(string Regno) => View();
+        public ActionResult ProcessOwner(string Regno, int mode)
+        {
+            ViewBag.Regno = Regno;
+            ViewBag.Mode = mode;
+            return View();
+        }
+        // GET: PC/InspectorsReview
+        [CompressResponse]
+        public ActionResult InspectorsReview(string Regno, int mode)
+        {
+            ViewBag.Regno = Regno;
+            ViewBag.Mode = mode;
+            return View();
+        }
         // GET: PC/AddReports
         [CompressResponse]
-        public  ActionResult InspectorsReview(string Regno) => View();
+        public ActionResult ManagerView(string Regno, int mode)
+        {
+            ViewBag.Regno = Regno;
+            ViewBag.Mode = mode;
+            return View();
+        }
         // GET: PC/AddReports
         [CompressResponse]
-        public ActionResult ManagerView(string Regno) => View();
-        // GET: PC/AddReports
-        [CompressResponse]
-        public ActionResult DepartmentApproval(string Regno) => View();
+        public  ActionResult DepartmentApproval(string Regno, int mode)
+        {
+            ViewBag.Regno = Regno;
+            ViewBag.Mode = mode;
+            return View();
+        }
 
 
         private string GetClientIpAddress(HttpRequestBase request)
@@ -1563,5 +1580,40 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
             return prefix;
         }
+
+        [JwtAuthorize]
+        public async Task<ActionResult> HandleReportRoutingAsync(string Regno)
+        {
+            var getdata = await _reg.GetRegistrationData();
+            var report = getdata.SingleOrDefault(res => res.RegNo == Regno);
+            string url = "";
+
+
+            if (report == null || report.ReportStatus == 0)
+                return HttpNotFound();
+
+            switch (report.ReportStatus)
+            {
+                case 1:
+                    url = Url.Action("ProcessOwner", new { Regno, mode = 0 });
+                    break;
+                case 2:
+                    url = Url.Action("InspectorsReview", new { Regno, mode = 0 });
+                    break;
+                case 3:
+                    url = Url.Action("ManagerView", new { Regno, mode = 0 });
+                    break;
+                case 4:
+                case 5:
+                    url = Url.Action("DepartmentApproval", new { Regno, mode = 0 });
+                    break;
+                default:
+                    return View("UnknownStatus");
+            }
+
+            return JsonSuccess(url, "adsadasd");
+        }
+
+
     }
 }

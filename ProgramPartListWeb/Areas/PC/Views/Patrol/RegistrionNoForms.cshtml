@@ -53,7 +53,7 @@
                 </li>
                 <li class="step-item" data-step="6">
                     <span class="step-number">6</span>
-                    View Form
+                    Completed 
                 </li>
             </ul>
         </div>
@@ -325,14 +325,6 @@
             };
 
 
-        const RegistrationTable = async() => {
-            let res = await FetchAuthenticate('@Url.Action("GetRegistrationNo", "Patrol")', {});
-            console.log(res);
-            if (res && res.Success) {
-                regisTable = res.Data;
-                disableUsedDates(regisTable);
-            }
-        }
         function convertRegNoToDate(regNo) {
             if (!regNo || typeof regNo !== "string") return null;
 
@@ -369,6 +361,13 @@
 
 
 
+        const RegistrationTable = async() => {
+            let res = await FetchAuthenticate('@Url.Action("GetRegistrationNo", "Patrol")', {});
+            if (res && res.Success) {
+                regisTable = res.Data;
+                disableUsedDates(regisTable);
+            }
+        }
         const GetEmailList = async () => {
             let res = await FetchAuthenticate('@Url.Action("GetEmaiRegistration", "Patrol")', {});
             if (res.Success) {
@@ -381,16 +380,34 @@
             }
         };
 
-        GetEmailList();
-        RegistrationTable();
 
-        let segment = @ViewBag.Segment;
 
-        if (segment == 2) {
-            $("#prefix").text("PIFA-");
-        } else {
-            $("#prefix").text("PISA-");
+        // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+        const LoadPageData = async () => {
+            try {
+               let segment = @ViewBag.Segment;
+
+                if (segment == 2) {
+                    $("#prefix").text("PIFA-");
+                } else {
+                    $("#prefix").text("PISA-");
+                }
+
+                const [regist, email] = await Promise.all([
+                    RegistrationTable(),
+                    GetEmailList()
+                ]);
+            } catch (error) {
+                console.error("Failed to load page data:", error);
+            } finally {
+                // Hide loading spinner whether success or failure
+                //$("#loadingSpinner").hide();
+            }
         }
+
+        $(document).ready(() => {
+            LoadPageData();
+        });
 
     </script>
 </body>

@@ -156,6 +156,10 @@ namespace PMACS_V2
             // Register Repository Interface with Implementation
             container.RegisterType<IUserRepository, UserRespository>();
             container.RegisterType<IProducts, RotorProductRepository>();
+
+            container.RegisterType<IShopOrderIn, RotorSummaryRepository>();
+            container.RegisterType<IShopOrderOut, RotorSummaryRepository>();
+
             container.RegisterType<IPlanning, PlanningRepository>();
             container.RegisterType<IManpower, ManpowerRepository>();
             container.RegisterType<ICapacity, CapacityRepository>();

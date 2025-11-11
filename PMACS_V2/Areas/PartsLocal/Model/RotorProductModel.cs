@@ -52,14 +52,27 @@ namespace PMACS_V2.Areas.PartsLocal.Model
     }
     public class ShopOrderInModel
     {
+        private int _TransactionID;
+        private int _TransactionType;
         private string _TransactionDate;
         private string _Partnumber;
         private string _ModelName;
         private string _RotorOrder;
         private int _Area;
+        private int _PreviousQuantity;
         private int _Quantity;
         private string _Remarks;
 
+        public int TransactionID
+        {
+            get => _TransactionID;
+            set => _TransactionID = value;
+        }
+        public int TransactionType
+        {
+            get => _TransactionType;
+            set => _TransactionType = value;
+        }
         public string TransactionDate
         {
             get => _TransactionDate;
@@ -84,6 +97,11 @@ namespace PMACS_V2.Areas.PartsLocal.Model
         {
             get => _Area;
             set => _Area = value;
+        }
+         public int PreviousQuantity
+        {
+            get => _PreviousQuantity;
+            set => _PreviousQuantity = value;
         }
         public int Quantity
         {
@@ -100,6 +118,7 @@ namespace PMACS_V2.Areas.PartsLocal.Model
 
     public class ShopOrderOutModel
     {
+        private int _TransactionID;
         private string _TransactionDate;
         private string _Partnumber;
         private string _ModelName;
@@ -107,12 +126,19 @@ namespace PMACS_V2.Areas.PartsLocal.Model
         private string _ShopOrder;
         private int _PlanQuantity;
         private int _Area;
+        private int _PreviousQuantity;
         private int _Quantity;
         private string _PlanDate;
         private string _ModelBase;
         private string _Status;
-        private string _BushType;
+        private int _BushType;
         private string _Remarks;
+
+        public int TransactionID
+        {
+            get => _TransactionID;
+            set => _TransactionID = value;
+        }
 
         public string TransactionDate
         {
@@ -134,6 +160,11 @@ namespace PMACS_V2.Areas.PartsLocal.Model
             get => _RotorOrder;
             set => _RotorOrder = value;
         }
+        public int PreviousQuantity
+        {
+            get => _PreviousQuantity;
+            set => _PreviousQuantity = value;
+        }
         public int Quantity
         {
             get => _Quantity;
@@ -148,6 +179,11 @@ namespace PMACS_V2.Areas.PartsLocal.Model
         {
             get => _Remarks;
             set => _Remarks = value;
+        }
+        public int BushType
+        {
+            get => _BushType;
+            set => _BushType = value;
         }
     }
 }

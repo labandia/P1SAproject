@@ -96,12 +96,12 @@
                             <form class="row g-3 mb-4" id="ShopOrderInForm">
                                 <div class="col-md-6">
                                     <label for="validationLastName" class="form-label">Input by :</label>
-                                    <input type="text" class="form-control" name="Remarks_IN" id="validationLastName" required>
+                                    <input type="text" class="form-control" name="Remarks" required>
 
                                 </div>
                                 <div class="col-12">
                                     <label for="validationPhone" class="form-label">Rotor Shop Order : </label>
-                                    <input type="text" class="form-control" name="RotorShop_IN" id="RotorShop_IN" required>
+                                    <input type="text" class="form-control" name="RotorOrder" required>
 
                                 </div>
                             </form>
@@ -173,52 +173,46 @@
                             <form class="row g-3 mb-4" id="ShopOrderOutForm">
                                 <div class="col-md-6">
                                     <label for="PreparedBy" class="form-label">Prepared by:</label>
-                                    <input type="text" class="form-control" name="PreparedBy" id="PreparedBy" required>
+                                    <input type="text" class="form-control" name="Remarks"  required>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="FAShopOrder" class="form-label">FA Shop Order:</label>
-                                    <input type="text" class="form-control" name="FAShopOrder" id="FAShopOrder" required>
+                                    <input type="text" class="form-control" name="ShopOrder"  required>
                                 </div>
 
                                 <div class="col-md-6">
                                     <label for="PlanQuantity" class="form-label">Plan Quantity:</label>
-                                    <input type="number" class="form-control" name="PlanQuantity" id="PlanQuantity" required>
+                                    <input type="number" class="form-control" name="PlanQuantity"  required>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="Status" class="form-label">Status:</label>
-                                    <select class="form-control" name="Status" id="Status" required>
-                                        <option value="">Select Status</option>
-                                        <option value="Pending">Pending</option>
-                                        <option value="In Progress">In Progress</option>
-                                        <option value="Completed">Completed</option>
-                                        <option value="On Hold">On Hold</option>
+                                    <select class="form-control" name="Status" required>
+                                        <option value="None">None</option>
+                                        <option value="Completely issued">Completely issued</option>
+                                        <option value="Partially issued">Partially issued</option>
                                     </select>
                                 </div>
 
                                 <div class="col-12">
                                     <label for="RotorShopOrder" class="form-label">Rotor Shop Order:</label>
-                                    <input type="text" class="form-control" name="RotorShopOrder" id="RotorShopOrder" required>
+                                    <input type="text" class="form-control" name="RotorOrder"  required>
                                 </div>
 
                                 <div class="col-md-6">
                                     <label for="ModelBase" class="form-label">Model Base:</label>
-                                    <input type="text" class="form-control" name="ModelBase" id="ModelBase" required>
+                                    <input type="text" class="form-control" name="ModelBase"  required>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="PlanStart" class="form-label">Plan Start:</label>
-                                    <input type="date" class="form-control" name="PlanStart" id="PlanStart" required>
+                                    <input type="date" class="form-control" name="PlanDate"  required>
                                 </div>
 
                                 <div class="col-12">
                                     <label for="BushMaterial" class="form-label">Bush Material:</label>
-                                    <select class="form-control" name="BushMaterial" id="BushMaterial" required>
-                                        <option value="">Select Bush Material</option>
-                                        <option value="Bronze">Bronze</option>
-                                        <option value="Steel">Steel</option>
-                                        <option value="Aluminum">Aluminum</option>
-                                        <option value="Brass">Brass</option>
-                                        <option value="Copper">Copper</option>
-                                        <option value="None">None</option>
+                                    <select class="form-control" name="BushType" required>
+                                        <option value="0">None</option>
+                                        <option value="1">PB bush</option>
+                                        <option value="2">PB free bush</option>
                                     </select>
                                 </div>
                             </form>
@@ -240,6 +234,9 @@
         </div>
     </div>
 </div>
+
+
+
 <div class="PartslistAction">
     <div class="ImagepartsContainer">
         <img src="~/Content/Images/background.png" />
@@ -272,6 +269,8 @@
 <script>
     const ID = $("#RecordID").val();
     let referpartnum;
+    let Arealocation;
+    let previousCount;
 
     // Stepper elements
     const stepperSteps = document.querySelectorAll('.stepper-step');
@@ -300,7 +299,9 @@
      const partlocationStorageList = async () => {
          let res = await FetchAuthenticate('@Url.Action("GetProductDetails", "PartsLocator")', { RecordID : ID});
          if (res && res.Success) {
-             referpartnum = res.Data.Partnumber
+             referpartnum = res.Data.Partnumber;
+             Arealocation = res.Data.Area;
+             previousCount = res.Data.Quantity;
 
              $("#partText").text(referpartnum);
              $("#Model").text(res.Data.ModelName);
@@ -448,7 +449,7 @@
     }
 
     // IN Stepper Event Listeners
-    nextBtn.addEventListener('click', function () {
+    nextBtn.addEventListener('click', async function () {
         let checkQuan = document.getElementById("QuantityIN").value;
 
         if (checkQuan !== "") {
@@ -460,13 +461,19 @@
                 let formData = new FormData(shopForms);
                 formData.append("Quantity", parseInt(checkQuan));
                 formData.append("TransactionType", 0);
+                formData.append("Area", Arealocation);
                 formData.append("Partnumber", referpartnum);
+                formData.append("PreviousQuantity", previousCount);
 
                 const data = Object.fromEntries(formData);
-                console.log("IN Data:", data);
-                alert('Shop Order IN completed successfully!');
-                $("#ShowShopOrderIN").modal("hide");
-                resetStepperIN();
+
+                let res = await postData('@Url.Action("AddShopOrderIn", "PartsLocator")', data);
+
+                console.log(res);
+                //console.log(data);
+                //alert('Shop Order IN completed successfully!');
+                //$("#ShowShopOrderIN").modal("hide");
+                //resetStepperIN();
             }
         }
     });
@@ -492,9 +499,11 @@
                 formData.append("Quantity", parseInt(checkQuan));
                 formData.append("TransactionType", 1); // 1 for OUT
                 formData.append("Partnumber", referpartnum);
+                formData.append("Area", Arealocation);
+                formData.append("PreviousQuantity", previousCount);
 
                 const data = Object.fromEntries(formData);
-                console.log("OUT Data:", data);
+                console.log(data);
                 alert('Shop Order OUT completed successfully!');
                 $("#ShowShopOrderOut").modal("hide");
                 resetStepperOUT();

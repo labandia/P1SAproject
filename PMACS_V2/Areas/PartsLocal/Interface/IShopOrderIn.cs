@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PMACS_V2.Areas.PartsLocal.Interface
 {
-    internal interface IShopOrderIn
+    public interface IShopOrderIn
     {
         Task<IEnumerable<ShopOrderInModel>> GetShopOderInlist();
         Task<bool> AddTransactionIN(ShopOrderInModel shop);

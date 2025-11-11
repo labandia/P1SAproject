@@ -3,18 +3,30 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using PMACS_V2.Areas.P1SA.Models;
+using PMACS_V2.Areas.P1SA.Repository;
 using PMACS_V2.Areas.PartsLocal.Interface;
 using PMACS_V2.Areas.PartsLocal.Model;
 using PMACS_V2.Controllers;
 using ProgramPartListWeb.Helper;
+using ProgramPartListWeb.Utilities;
 
 namespace PMACS_V2.Areas.PartsLocal.Controllers
 {
     public class PartsLocatorController : ExtendController
     {
         private readonly IProducts _prod;
+        private readonly IShopOrderIn _shopin;
+        private readonly IShopOrderOut _shopout;    
 
-        public PartsLocatorController(IProducts prod) => _prod = prod;
+
+
+        public PartsLocatorController(IProducts prod, IShopOrderIn shopin, IShopOrderOut shopout)
+        {
+            _prod = prod;
+            _shopin = shopin;
+            _shopout = shopout; 
+        }
 
         [JwtAuthorize]
         public async Task<ActionResult> GetProductMasterlist()
@@ -57,7 +69,16 @@ namespace PMACS_V2.Areas.PartsLocal.Controllers
         }
 
 
+        [HttpPost]
+        public async Task<ActionResult> AddShopOrderIn(ShopOrderInModel shop)
+        {
+            bool result = await _shopin.AddTransactionIN(shop);
 
+            if (!result) return JsonValidationError();
+
+
+            return JsonCreated(shop, "Update successfully");
+        }
 
 
 

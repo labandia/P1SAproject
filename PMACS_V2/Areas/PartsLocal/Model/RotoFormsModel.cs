@@ -16,15 +16,20 @@ namespace PMACS_V2.Areas.PartsLocal.Model
         private string _BackImage;
     }
 
-    public class ShopOrderInForm
+    public class Transactionforms
     {
-        public string ShopOrder { get; set; }
-
         public int TransactionType { get; set; }
-        public string Partnumber { get; set; }
-        public int Quantity { get; set; } // --- Input Quantity
         public string Area { get; set; }
+        public string Partnumber { get; set; }
+        public string RotorOrder { get; set; }
+        public int Quantity { get; set; } // --- Input Quantity
         public string Remarks { get; set; }
+        public string ShopOrder { get; set; }
+        public int PlanQuantity { get; set; }
+        public string PlanDate { get; set; }
+        public string ModelBase { get; set; }
+        public string Status { get; set; }
+        public int BushType { get; set; }
 
     }
 

@@ -522,8 +522,18 @@ namespace PMACS_V2.Areas.P1SA.Repository
 
         public Task<bool> AddDailyMoldie(DieMoldDaily mold)
         {
-            string insertquery = @"INSERT INTO DieMoldDaily(PartNo, DateInput, TotalDie, CycleShot, Total, MachineNo, Remarks, Mincharge)
-                                       VALUES(@PartNo, @DateInput, @TotalDie, @CycleShot, @Total, @MachineNo, @Remarks, @Mincharge)";
+            // =========== Step 1: Get necessary data from the masterlist data  =============
+            // =========== Step 2: Get the last total shot from the daily input data  =============
+            // =========== Step 3: Calculate the total shot for the day  =============
+            // =========== Others:  if the Total shot is under 25,000 change the status to needed or 40,000 to 5000 to change the status to cleaning =============
+            // =========== Step 4: Insert the data to the daily input table  =============
+            // =========== Step 5: Update the summary table with the new total shot  =============
+
+            int lasttotalshot = 0;
+            int UpdateStatus = 1; // Default Status for Continue
+
+            string insertquery = @"INSERT INTO DieMoldDaily(PartNo, DateInput, CycleShot, Total, MachineNo, Remarks, Mincharge)
+                                       VALUES(@PartNo, @DateInput, @CycleShot, @Total, @MachineNo, @Remarks, @Mincharge)";
             return SqlDataAccess.UpdateInsertQuery(insertquery, mold);
         }
 

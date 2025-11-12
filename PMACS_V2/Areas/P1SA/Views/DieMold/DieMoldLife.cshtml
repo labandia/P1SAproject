@@ -272,10 +272,10 @@
 
                         <div class="form_group col-4 col-lg-4 col-sm-12">
                             <label for="">Part number <small style="color: #a81818; font-weight: 600;">*</small></label>
-                            @*<input type="text" name="PartNo" id="PartNo" placeholder="Enter Part number" required>*@
                             <div class="search-box">
-                                <input type="text" placeholder="Type Part number" name="PartNo" id="PartNo" required>
-                                <div class="namesdisplay"></div>
+                                <input type="text" placeholder="Type Part number" name="dailypartno" id="dailypartno" required>
+                                <input type="hidden" placeholder="Type Part number" name="PartNo" id="PartNo" required>
+                                <div class="dailypartnumdisplay"></div>
                             </div>
                         </div>
 
@@ -287,7 +287,7 @@
                     <div class="row">
                         <div class="form_group col-4 col-lg-4 col-sm-12">
                             <label for="">Cycle shot</label>
-                            <input type="text" name="CycleShot" id="CycleShot" placeholder="Enter Cycle Shot" onkeypress='return restrictChars(event)' required>
+                            <input type="number" name="CycleShot" id="CycleShot" placeholder="Enter Cycle Shot" onkeypress='return restrictChars(event)' required>
                         </div>
 
                         <div class="form_group col-4 col-lg-4 col-sm-12">
@@ -748,6 +748,7 @@
     let ToolingDisplay = $("#DieMoldToolist");
 
     const resultBox = document.querySelector(".namesdisplay");
+    const partbox = document.querySelector(".dailypartnumdisplay");
 
     // Tabs Content
     const tabs = document.querySelectorAll(".Mold_tab");
@@ -812,7 +813,7 @@
                         //GetMoldDieSummary();
                         break;
                     case 1:
-                        //GetMoldDieMonth(setMonth, currentYear, $("#MonitorProcess").val());
+                        GetMoldDieMonth(setMonth, currentYear, $("#MonitorProcess").val());
                         break;
                     case 2:
                         //GetMoldDieDay(setMonth, currentYear, $("#MonitorProcess").val());
@@ -866,10 +867,10 @@
     });
 
     $("#AddDailyforms").on('submit', async (e) => {
-     e.preventDefault();
-     let formData = new FormData(e.target);
+        e.preventDefault();
+        let formData = new FormData(e.target);
         const data = Object.fromEntries(formData);
-      console.log(data);
+        console.log(data);
      @*let res = await postData('@Url.Action("AddUpdateMoldDieTooling", "DieMold")', data);
      if (res.StatusCode === 201) {
          Swal.fire({
@@ -923,7 +924,6 @@
 
 
     $("#AddMoldforms").on('submit', async function (e) {
-                icon: "success",
         e.preventDefault();
         let formData = new FormData(e.target);
         const data = Object.fromEntries(formData);
@@ -1051,7 +1051,14 @@
 
             if (result.length > 0) {
                 resultBox.style.display = 'block';
-                display(result); // assumes display() handles array of objects
+
+                const content = result.map((list) => {
+                    return `<li onclick="selectinput(this)" data-id="${list.PartNo}">${list.PartNo}</li>`;
+                });
+
+                resultBox.innerHTML = "<ul>" + content.join('') + "</ul>";
+
+
             } else {
                 resultBox.style.display = 'block';
                 resultBox.innerHTML = '<div style="padding: 5px; color: #999;">No search found</div>';
@@ -1062,22 +1069,49 @@
         }
     });
 
-    function display(result) {
-        const content = result.map((list) => {
-            return `<li onclick="selectinput(this)" data-id="${list.PartNo}">${list.PartNo}</li>`;
-        });
 
-        resultBox.innerHTML = "<ul>" + content.join('') + "</ul>";
-    }
+
+    $("#dailypartno").keyup(function () {
+        let result = [];
+        let input = this.value;
+        if (input.length > 0) {
+            result = SummaryData.filter((item) => {
+                return item.PartNo.toLowerCase().includes(input.toLowerCase());
+            });
+
+            if (result.length > 0) {
+                partbox.style.display = 'block';
+
+                const content = result.map((list) => {
+                    return `<li onclick="partnuminput(this)" data-id="${list.PartNo}">${list.PartNo}</li>`;
+                });
+
+                partbox.innerHTML = "<ul>" + content.join('') + "</ul>";
+
+
+            } else {
+                partbox.style.display = 'block';
+                partbox.innerHTML = '<div style="padding: 5px; color: #999;">No search found</div>';
+            }
+        } else {
+            partbox.style.display = 'none';
+            partbox.innerHTML = ''; // clear the previous results or message
+        }
+    });
 
 
     function selectinput(list) {
         const selecPartno = list.getAttribute("data-id");
-        //employeeID = employeeId;
-        //$("#Employee_ID").val(employeeId);
         $("#ParNoSearch").val(list.innerHTML);
-        resultBox.innerHTML = '';
+        partbox.innerHTML = '';
         resultBox.style.display = 'none';
+    }
+
+    function partnuminput(list) {
+        const selecPartno = list.getAttribute("data-id");
+        $("#dailypartno").val(list.innerHTML);
+        partbox.innerHTML = '';
+        partbox.style.display = 'none';
     }
     //===============================================================
     //================ FETCH DATA AND DISPLAY =======================
@@ -1121,7 +1155,7 @@
         });
 
     }
-     const GetMoldDieDaily = async () => {
+    const GetMoldDieDaily = async () => {
          const id = loadingDisplay(2, 9);
          Loadingsteps(id, async () => {
              let res = await FetchAuthenticate('@Url.Action("GetMoldDieDailyList", "DieMold")', {});
@@ -1145,7 +1179,7 @@
 
                  //});
              } else {
-                
+
 
              }
          });

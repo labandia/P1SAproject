@@ -97,6 +97,7 @@ namespace ProgramPartListWeb.Areas.PC.Models
         public string Employee_ID { get; set; }
         public string FullName { get; set; }
         public string Email { get; set; }
+        public int Department_ID { get; set; }
     }
 
 

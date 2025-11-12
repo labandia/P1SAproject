@@ -36,6 +36,12 @@
             <div id="MoldMonitor">
                 <button class="primary_button_color" id="addMold"><i class="fa-solid fa-plus"></i> Add Data</button>
             </div>
+
+            @* MOLD Daily MOnitoring *@
+            <div id="MoldDailyMonitor">
+                <button class="primary_button_color" id="addDaily"><i class="fa-solid fa-plus"></i> Add Data</button>
+            </div>
+
             @* MOLD TOOLING*@
             <div id="MoldTooling">
                 <div class="d-flex align-items-center gap-2">
@@ -50,7 +56,8 @@
     <div class="Mold_tabcontainer">
         <div class="Mold_tabs">
             <button class="Mold_tab active" data-target="Summary">Summary</button>
-            <button class="Mold_tab" data-target="Monitoring">Monitoring</button>
+            <button class="Mold_tab" data-target="Monitoring">Month</button>
+            <button class="Mold_tab" data-target="Daily">Daily</button>
             <button class="Mold_tab" data-target="Tooling">Tooling</button>
             <div class="Mold_slider"></div>
         </div>
@@ -151,6 +158,34 @@
                 </div>
             </div>
 
+            <div class="Mold_content" id="Daily">
+
+                <div class="DieMainTable" id="DieWrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Part No. </th>
+                                <th>Model</th>
+                                <th>Cavity</th>
+                                <th id="MonthHeader">Shot Cycle</th>
+                                <th>Total</th>
+                                <th>Machine</th>
+                                <th>Operation</th>
+                                <th>Maintenance</th>
+                                <th>Remarks</th>
+                                <th>Maintenance Incharge</th>
+                            </tr>
+                        </thead>
+                        <tbody id="DieMoldDaily">
+                        </tbody>
+                    </table>
+
+
+                </div>
+
+
+            </div>
             <div class="Mold_content" id="Tooling">
                 <div class="Mold_ToolHeader">
                     <div class="searchinputContainer">
@@ -214,6 +249,90 @@
 
     <div id="PaginationContainer" class="paginationPartlocal"></div>
 </div>
+
+<!--########################## Adding Daily Mold Die  DATA #############################-->
+<div class="modal fade modal-xl" id="AddDailyMold" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Metallic Die Shot Cycle Control</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <form id="AddDailyforms" class="addformcontainer" autocomplete="off">
+                    <div class="row">
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Date Input <small style="color: #a81818; font-weight: 600;">*</small></label>
+                            <input type="date" name="DateInput" id="DateInput" required>
+                        </div>
+
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Part number <small style="color: #a81818; font-weight: 600;">*</small></label>
+                            @*<input type="text" name="PartNo" id="PartNo" placeholder="Enter Part number" required>*@
+                            <div class="search-box">
+                                <input type="text" placeholder="Type Part number" name="PartNo" id="PartNo" required>
+                                <div class="namesdisplay"></div>
+                            </div>
+                        </div>
+
+                       
+                    </div>
+
+
+
+                    <div class="row">
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Cycle shot</label>
+                            <input type="text" name="CycleShot" id="CycleShot" placeholder="Enter Cycle Shot" onkeypress='return restrictChars(event)' required>
+                        </div>
+
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Machine No</label>
+                            <input type="number" name="MachineNo" id="MachineNo" required>
+                        </div>
+
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Remarks</label>
+                            <input type="text" name="Remarks" id="Remarks" placeholder="Enter Details" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                      
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Maintenance incharge</label>
+                            <input type="text" name="Mincharge" id="Mincharge" placeholder="Enter the name of Incharged" required>
+                        </div>
+
+                     
+                    </div>
+
+
+
+
+
+                    <div class="flex_space " id="editsdisplay">
+                        <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                        <button type="submit" class="primary_button_color">
+                            <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
+                        </button>
+                    </div>
+                </form>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
 
 
 <!--########################## Add Moldie Parts #############################-->
@@ -672,6 +791,11 @@
                 // Footer Show
                 $("#Summaryfooter").hide();
                 $("#Monitorfooter").show();
+            } else if (index === 2) {
+                $("#MoldSummary").hide();
+                $("#MoldMonitor").hide();
+                $("#MoldTooling").hide();
+                $("#MoldDailyMonitor").show();
             } else {
                 $("#MoldSummary").hide();
                 $("#MoldMonitor").hide();
@@ -685,13 +809,17 @@
             if (!isTabLoaded[index]) {
                 switch (index) {
                     case 0:
-                        GetMoldDieSummary();
+                        //GetMoldDieSummary();
                         break;
                     case 1:
-                        GetMoldDieMonth(setMonth, currentYear, $("#MonitorProcess").val());
+                        //GetMoldDieMonth(setMonth, currentYear, $("#MonitorProcess").val());
+                        break;
+                    case 2:
+                        //GetMoldDieDay(setMonth, currentYear, $("#MonitorProcess").val());
+                        GetMoldDieDaily();
                         break;
                     default:
-                        GetMoldDieTooling();
+                        //GetMoldDieTooling();
                         break;
                 }
                 isTabLoaded[index] = true;
@@ -736,6 +864,36 @@
 
         }
     });
+
+    $("#AddDailyforms").on('submit', async (e) => {
+     e.preventDefault();
+     let formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+      console.log(data);
+     @*let res = await postData('@Url.Action("AddUpdateMoldDieTooling", "DieMold")', data);
+     if (res.StatusCode === 201) {
+         Swal.fire({
+             title: "Success",
+             text: res.Message,
+             icon: "success",
+             confirmButtonColor: "#0d97c9",
+             timer: 1500
+         }).then(() => {
+             GetMoldDieTooling();
+             $("#AddToolforms")[0].reset();
+             $("#AddTooling").modal("hide");
+         });
+     } else {
+         Swal.fire({
+             icon: "error",
+             text: data.ToolNo + " is already Exist",
+             timer: 1500,
+             showConfirmButton: false
+         });
+     }*@
+ });
+
+
     $("#AddToolforms").on('submit', async (e) => {
         e.preventDefault();
         let formData = new FormData(e.target);
@@ -827,6 +985,11 @@
     $("#addMold").on('click', (e) => {
         e.preventDefault();
         $("#AddMoldModal").modal("show");
+    });
+
+    $("#addDaily").on('click', (e) => {
+        e.preventDefault();
+        $("#AddDailyMold").modal("show");
     });
     //===============================================================
     //==================== FILTER DATA ==============================
@@ -958,6 +1121,38 @@
         });
 
     }
+     const GetMoldDieDaily = async () => {
+         const id = loadingDisplay(2, 9);
+         Loadingsteps(id, async () => {
+             let res = await FetchAuthenticate('@Url.Action("GetMoldDieDailyList", "DieMold")', {});
+             console.log(res);
+             if (res && res.Success) {
+                 //DieTooling = res.Data;
+
+                 // Loads the First Data
+                 DisplayDaily(res.Data);
+                 //$("#Datearrived").on('change', (e) => {
+                 //    const rawDate = e.target.value;
+
+                 //    if (rawDate) {
+                 //        const [year, month, day] = rawDate.split("-");
+                 //        const formatted = `${month}/${day}/${year.slice(-2)}`; // "06/11/25"
+                 //        let filterData = DieTooling.filter(res => res.DateArrived == formatted);
+                 //        DisplayTooling(filterData);
+                 //    } else {
+                 //        DisplayTooling(DieTooling);
+                 //    }
+
+                 //});
+             } else {
+                
+
+             }
+         });
+
+     }
+
+
     const GetMoldDieMonth = async (month = setMonth, year = currentYear, process = $("#ProcessID").val()) => {
         const id = loadingDisplay(1, 8);
         Loadingsteps(id, async () => {
@@ -1057,6 +1252,61 @@
     };
 
 
+    function DisplayDaily(dataArray) {
+        $("#DieMoldDaily").empty();
+
+        dataArray.forEach((row, index) => {
+            var setdata = `<tr >
+             <td>${row.DateInput}</td>
+             <td style='font-weight: 600;'>${row.PartNo}</td>
+             <td>${row.PartNo}</td>
+             <td>${row.PartNo}</td>
+             <td>${row.CycleShot}</td>
+             <td>${row.Total}</td>
+             <td>${row.MachineNo}</td>
+             <td>${row.Status}</td>
+             <td>${row.Status}</td>
+             <td>${row.Remarks}</td>
+              <td>${row.Mincharge}</td>
+             <td>
+                <button type='button' class='btn actionicon text-primary EditToolClick' id='editButton_${row.RecordID}' >
+                   <i class='fa-regular fa-pen-to-square action_btn'></i>
+                </button>
+
+
+             </td>
+     </tr>;`
+
+            $("#DieMoldDaily").append(setdata);
+        });
+
+
+        // Handle click event for edit button
+        $(document).on('click', '.EditToolClick', function (e) {
+            e.stopPropagation();
+            const buttonId = $(this).attr('id');
+            const rowIndex = buttonId.split('_')[1];
+            console.log("Row Selected : " + rowIndex);
+            var filterData = DieTooling.find(res => res.RecordID === rowIndex);
+
+            if (filterData) {
+
+            }
+
+            $("#EditTooling").modal("show");
+        });
+
+        // Handle click event for edit button
+        $(document).on('click', '.ToolDeleteClick', function (e) {
+            e.stopPropagation();
+            const buttonId = $(this).attr('id');
+            const rowIndex = buttonId.split('_')[1];
+            console.log("Row Selected : " + rowIndex);
+            $("#EditTooling").modal("show");
+        });
+    }
+
+
     function DisplayTooling(dataArray) {
         $("#DieMoldToolist").empty();
 
@@ -1076,7 +1326,7 @@
                    <i class='fa-regular fa-pen-to-square action_btn'></i>
                 </button>
 
-                
+
              </td>
          </tr>;`
 
@@ -1564,7 +1814,7 @@
             $("#Monitorfooter").hide();
 
             const [maintable, forest, logs, drop] = await Promise.all([
-                GetMoldDieSummary(),
+                GetMoldDieDaily(),
                 GetMoldDieMonth(),
                 GetMoldDieTooling(),
                 GetMoldDropdownlist()

@@ -362,7 +362,7 @@
         }
 
         const GetRegistrationDetails = async () => {
-            let res = await FetchAuthenticate('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
+            let res = await fetchData('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
             if (res && res.Success) {
                 $("#regtext").text(strRegno);
                 $("#SectionName").val("P1SA-" + res.Data.SectionName);
@@ -372,7 +372,7 @@
         }
 
         const GetRegistrationID = async () => {
-            let res = await FetchAuthenticate('@Url.Action("GetRegistrationFindings", "Patrol")', { Regno: strRegno });
+            let res = await fetchData('@Url.Action("GetRegistrationFindings", "Patrol")', { Regno: strRegno });
 
 
             if (res && res.Success) {

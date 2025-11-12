@@ -393,7 +393,6 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
 
         }
 
-        [JwtAuthorize]
         public async Task<ActionResult> GetHydroInventory()
         {
             var data = await _hydro.GetInventoryList() ?? new List<StockPartsModel>();

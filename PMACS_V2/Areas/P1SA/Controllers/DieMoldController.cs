@@ -91,6 +91,18 @@ namespace PMACS_V2.Areas.P1SA.Controllers
 
             return JsonSuccess(data);
         }
+
+        [JwtAuthorize]
+        public async Task<ActionResult> GetMoldDieDailyList()
+        {
+            var data = await _die.GetDailyMoldData() ?? new List<DieMoldDaily>();
+
+            if (data == null || !data.Any())
+                return JsonNotFound("No Mold Die Daily data found");
+
+            return JsonSuccess(data);
+        }
+
         [JwtAuthorize]
         public async Task<ActionResult> GetMoldieDropDownlist()
         {
@@ -111,6 +123,15 @@ namespace PMACS_V2.Areas.P1SA.Controllers
                 return JsonError(ex.Message);
             }
 
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> AddDailyMoldDieMonitor(DieMoldDaily add)
+        {
+            bool update = await _die.AddDailyMoldie(add);
+            if (!update) return JsonValidationError();
+            return JsonCreated(add, "Add Data Successfully");
         }
 
         [HttpPost]

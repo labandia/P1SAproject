@@ -14,6 +14,8 @@ namespace PMACS_V2.Areas.P1SA.Interface
         Task<List<DieMoldTotalPartnum>> GetMoldTotalPartNoList(int month, int year, string process);
         Task<List<DieMoldSetNotal>> GetSummaryMoldData();
 
+        Task<List<DieMoldDaily>> GetDailyMoldData();
+
 
         // ===============================================
         Task<List<DieMoldSummaryProcess>> GetMoldDieSummary(string process);
@@ -23,6 +25,8 @@ namespace PMACS_V2.Areas.P1SA.Interface
         Task<List<DieMoldProcess>> GetMoldProcess();
         Task<List<DieProcessDescription>> GetMoldPartDescription();
         // ===============================================
+        Task<bool> AddDailyMoldie(DieMoldDaily mold);
+
 
         Task<bool> AddUpdateMoldie(MoldInputModel mold);
         Task<bool> AddMoldieTooling(DieMoldToolingModel mold);

@@ -45,7 +45,7 @@
         </div>
         <div class="card-content">
             <h3 id="Countlist">0</h3>
-            <p>Total Items</p>
+            <p>Total Parts</p>
         </div>
     </div>
     <div class="cardStock">
@@ -77,8 +77,8 @@
             <tr>
                 <th style="width: 25%; text-align: left; padding-left: 1.5em !important;"><span style="margin-left: .5em;"><i class="fa-solid fa-screwdriver-wrench"></i>  Part No. / Partname</span> </th>
                 <th> <i class="fa-regular fa-address-card"></i> <span style="margin-left: .5em;">Supplier</span>  </th>
-                <th> <i class="fa-solid fa-box-open"></i>  <span style="margin-left: .5em;">Current Stock</span>  </th>
-                <th> <i class="fa-regular fa-square-check"></i> <span style="margin-left: .5em;">Mininum Stock</span>  </th>
+                <th> <i class="fa-solid fa-box-open"></i>   <span style="margin-left: .5em;">Current Stock</span>  </th>
+                <th> <i class="fa-regular fa-square-check"></i> <span style="margin-left: .5em;">Require Qty</span>  </th>
                 <th style="width: 15%;"> <i class="fa-solid fa-database"></i> <span style="margin-left: .5em;">Status</span>  </th>
 
             </tr>
@@ -485,7 +485,7 @@
         loadingDisplay();
 
         Loadingsteps(async () => {
-            let res = await FetchAuthenticate('@Url.Action("GetHydroInventory", "Hydro")', {});
+            let res = await fetchData('@Url.Action("GetHydroInventory", "Hydro")', {});
             if (res && res.Success) {
                 Inventlist = res.Data;
 

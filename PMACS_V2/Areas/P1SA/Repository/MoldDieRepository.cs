@@ -86,7 +86,10 @@ namespace PMACS_V2.Areas.P1SA.Repository
                               GROUP BY No,  PreviousCount, DieLife";
             return SqlDataAccess.GetData<DieMoldSetNotal>(strquery, null);
         }
-
+        public Task<List<DieMoldDaily>> GetDailyMoldData()
+        {
+            return SqlDataAccess.GetData<DieMoldDaily>("SELECT * FROM DieMoldDaily");
+        }
         public Task<List<DieMoldProcess>> GetMoldProcess()
         {
             return SqlDataAccess.GetData<DieMoldProcess>("SELECT * FROM DieMoldProcessName WHERE ProcessID IN ('M001', 'M002', 'M003', 'M004', 'M005')");
@@ -515,6 +518,13 @@ namespace PMACS_V2.Areas.P1SA.Repository
             string insertquery = @"INSERT INTO DiePressControl(ToolNo, Stamp, Machine, DieCondition, DieHeight, Operator, LeaderCom, Gear, Pitch)
                                        VALUES(@ToolNo, @Stamp, @Machine, @DieCondition, @DieHeight, @Operator, @LeaderCom, @Gear, @Pitch)";
             return SqlDataAccess.UpdateInsertQuery(insertquery, press);
+        }
+
+        public Task<bool> AddDailyMoldie(DieMoldDaily mold)
+        {
+            string insertquery = @"INSERT INTO DieMoldDaily(PartNo, DateInput, TotalDie, CycleShot, Total, MachineNo, Remarks, Mincharge)
+                                       VALUES(@PartNo, @DateInput, @TotalDie, @CycleShot, @Total, @MachineNo, @Remarks, @Mincharge)";
+            return SqlDataAccess.UpdateInsertQuery(insertquery, mold);
         }
 
        

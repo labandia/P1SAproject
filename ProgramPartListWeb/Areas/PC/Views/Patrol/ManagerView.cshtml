@@ -348,7 +348,6 @@
            // Approve action
        approveBtn.addEventListener('click', async (e) => {
            e.preventDefault();
-
            // Get the ID of the save button and Store original text
            const savebtn = document.querySelector("#approveBtn");
            const originalText = savebtn.innerHTML;
@@ -372,19 +371,21 @@
                savebtn.innerHTML = originalText;
 
 
-                // In a real application, you would send the approval to a server here
-                showNotification('approved successfully!', 'success');
+               // In a real application, you would send the approval to a server here
+               showNotification('approved successfully!', 'success');
 
-                // Reset form
-                document.getElementById('Manager_Comments').value = '';
-                document.getElementById('Return_Comments').value = '';
+               // Reset form
+               document.getElementById('Manager_Comments').value = '';
+               document.getElementById('Return_Comments').value = '';
 
-                // Close form
-                commentBtn.classList.remove('active');
-                formContainer.classList.remove('active');
+               // Close form
+               commentBtn.classList.remove('active');
+               formContainer.classList.remove('active');
 
-               GetRegistrationDetails();
-            }
+               setTimeout(() => {
+                   RedirectPageView(3, strRegno);
+               }, 3000);
+           } 
        });
 
 
@@ -451,7 +452,7 @@
 
 
           const GetRegistrationDetails = async () => {
-              let res = await FetchAuthenticate('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
+              let res = await fetchData('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
               if (res && res.Success) {
                  $("#regtext").text(strRegno);
                  $("#InspectorName").val(res.Data.InspectName);
@@ -472,7 +473,7 @@
              }
          }
          const GetRegistrationFindingsID = async () => {
-             let res = await FetchAuthenticate('@Url.Action("GetRegistrationFindings", "Patrol")', { Regno: strRegno });
+             let res = await fetchData('@Url.Action("GetRegistrationFindings", "Patrol")', { Regno: strRegno });
 
              if (res && res.Success) {
                  res.Data.forEach(item => {
@@ -483,7 +484,7 @@
          }
          const GetRegistratioFiles = async () => {
              let filesSelect = [];
-             let res = await FetchAuthenticate('@Url.Action("GetRegistrationAllFiles", "Patrol")', { Regno: strRegno });
+             let res = await fetchData('@Url.Action("GetRegistrationAllFiles", "Patrol")', { Regno: strRegno });
              if (res.Success && res) {
                  filesSelect = res.Data;
 

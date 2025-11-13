@@ -185,6 +185,7 @@
         const totalSteps = 5;
 
         let regisTable = [];
+        let emailTable = [];
 
         const addform = document.getElementById("step-1");
 
@@ -320,8 +321,26 @@
           });
 
 
-        $("#DepartmentID").on('click', function () {
+        $("#DepartmentID").on('change', function (e) {
+            e.preventDefault();
+            let deptId = parseInt($(this).val());
+            let filtered = emailTable.filter(res => res.Department_ID === deptId);
 
+            let $employeeSelect = $("#Employee_ID");
+            $employeeSelect.empty(); // clear old options
+
+            if (filtered.length > 0) {
+
+                // Add filtered employees
+                filtered.forEach(emp => {
+                    $employeeSelect.append(`<option value="${emp.Employee_ID}">${emp.FullName}</option>`);
+                });
+            } else {
+                // No employees found
+                $.each(emailTable, function (index, rowData) {
+                    $employeeSelect.append('<option value="' + rowData.Employee_ID + '">' + rowData.FullName + '</option>');
+                });
+            }
         });
 
 
@@ -368,19 +387,21 @@
 
 
         const RegistrationTable = async() => {
-            let res = await FetchAuthenticate('@Url.Action("GetRegistrationNo", "Patrol")', {});
+            let res = await fetchData('@Url.Action("GetRegistrationNo", "Patrol")', {});
             if (res && res.Success) {
                 regisTable = res.Data;
                 disableUsedDates(regisTable);
             }
         }
         const GetEmailList = async () => {
-            let res = await FetchAuthenticate('@Url.Action("GetEmaiRegistration", "Patrol")', {});
+            let res = await fetchData('@Url.Action("GetEmaiRegistration", "Patrol")', {});
             if (res.Success) {
                 let select = $("#Employee_ID");
                 select.empty();
 
-                $.each(res.Data, function (index, rowData) {
+                emailTable = res.Data;
+
+                $.each(emailTable, function (index, rowData) {
                     select.append('<option value="' + rowData.Employee_ID + '">' + rowData.FullName + '</option>');
                 });
             }

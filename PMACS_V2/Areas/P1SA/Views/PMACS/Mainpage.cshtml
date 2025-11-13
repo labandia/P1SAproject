@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "Production Manpower And Capacity System";
+    ViewBag.Title = "Mold Die and Cavity Parts Management System";
     Layout = "";
 }
 
@@ -25,11 +25,7 @@
         <!----------- login background design -------->
         <div class="main__contain">
             <h1 style="line-height: 1.6;">
-                <span style="font-weight: 600; color: #053766;">P</span>roduction
-                <span style="font-weight: 600; color: #053766;">M</span>anpower
-                <span style="font-weight: 600; color: #053766;">A</span>nd
-                <span style="font-weight: 600; color: #053766;">C</span>apacity
-                <span style="font-weight: 600; color: #053766;">S</span>ystem
+                Mold Die and Cavity Parts Management System
             </h1>
         </div>
         <div class="main__contain">
@@ -241,7 +237,7 @@
     $("#viewbtn").click(function () {
         localStorage.setItem('UserRole', 'Users');
         localStorage.setItem('Fullname', 'GUEST');
-        window.location.href = "/P1SA/PMACS/ManpowerProduction";
+        window.location.href = "/P1SA/DieMold/DieMoldLife";
     });
 
 
@@ -293,7 +289,7 @@
                              // For Persitent Login
                              localStorage.setItem('loginTime', new Date().toISOString());
                              localStorage.setItem('isLoggedInPMACS', 'true');
-                             window.location.href = "/P1SA/PMACS/ManpowerProduction";
+                             window.location.href = "/P1SA/DieMold/DieMoldLife";
                            
                          });
                      }, 1000);          

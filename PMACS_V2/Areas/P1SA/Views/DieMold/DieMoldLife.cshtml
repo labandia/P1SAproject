@@ -46,7 +46,7 @@
             <div id="MoldTooling">
                 <div class="d-flex align-items-center gap-2">
                     <button class="primary_button_color" id="Registrymodal"><i class="fa-solid fa-plus"></i> Add Data</button>
-                    <button id="Exportbtn"><i class="fa-solid fa-file-arrow-down"></i>Export Data</button>
+                    <button id="Exportbtn" style="display: none;"><i class="fa-solid fa-file-arrow-down"></i>Export Data</button>
                 </div>
             </div>
         </div>
@@ -160,21 +160,37 @@
 
             <div class="Mold_content" id="Daily">
 
+                <div class="flex_align">
+                    <div class="select-container">
+                        <select id="yearselectDaily"></select>
+                    </div>
+
+                    <div class="select-container">
+                        <select id="monthSelectDaily"></select>
+                    </div>
+
+                    <div class="select-container">
+                        <select id="DailyProcess">
+                            <option value="M002">Mold Frame</option>
+                        </select>
+                    </div>
+
+                </div>
+
                 <div class="DieMainTable" id="DieWrapper">
                     <table>
                         <thead>
                             <tr>
                                 <th>Date</th>
-                                <th>Part No. </th>
-                                <th>Model</th>
-                                <th>Cavity</th>
-                                <th id="MonthHeader">Shot Cycle</th>
+                                <th>Part No. / Model </th>
+                                <th>Number of Shot Cycle</th>
                                 <th>Total</th>
-                                <th>Machine</th>
+                                <th>Machine No.</th>
                                 <th>Operation</th>
                                 <th>Maintenance</th>
                                 <th>Remarks</th>
                                 <th>Maintenance Incharge</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody id="DieMoldDaily">
@@ -251,7 +267,7 @@
 </div>
 
 <!--########################## Adding Daily Mold Die  DATA #############################-->
-<div class="modal fade modal-xl" id="AddDailyMold" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+<div class="modal fade modal-lg" id="AddDailyMold" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-body modalwrap">
@@ -265,54 +281,67 @@
 
                 <form id="AddDailyforms" class="addformcontainer" autocomplete="off">
                     <div class="row">
-                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                        <div class="form_group col-6 col-lg-6 col-sm-12">
                             <label for="">Date Input <small style="color: #a81818; font-weight: 600;">*</small></label>
                             <input type="date" name="DateInput" id="DateInput" required>
                         </div>
 
-                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                        <div class="form_group col-6 col-lg-6 col-sm-12">
                             <label for="">Part number <small style="color: #a81818; font-weight: 600;">*</small></label>
                             <div class="search-box">
                                 <input type="text" placeholder="Type Part number" name="dailypartno" id="dailypartno" required>
-                                <input type="hidden" placeholder="Type Part number" name="PartNo" id="PartNo" required>
                                 <div class="dailypartnumdisplay"></div>
                             </div>
                         </div>
 
-                       
+
                     </div>
 
 
 
                     <div class="row">
-                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                        <div class="form_group col-6 col-lg-6 col-sm-12">
                             <label for="">Cycle shot</label>
                             <input type="number" name="CycleShot" id="CycleShot" placeholder="Enter Cycle Shot" onkeypress='return restrictChars(event)' required>
                         </div>
 
-                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                        <div class="form_group col-6 col-lg-6 col-sm-12">
                             <label for="">Machine No</label>
                             <input type="number" name="MachineNo" id="MachineNo" required>
                         </div>
 
-                        <div class="form_group col-4 col-lg-4 col-sm-12">
-                            <label for="">Remarks</label>
-                            <input type="text" name="Remarks" id="Remarks" placeholder="Enter Details" required>
-                        </div>
+
                     </div>
 
                     <div class="row">
-                      
-                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                        <div class="form_group col-6 col-lg-6 col-sm-12">
+                            <label for="">Remarks</label>
+
+                            <div class="select-container" style="width: 100% !important;">
+                                <select name="Remarks" id="Remarks">
+                                    <option value="N/A">N/A</option>
+                                    <option value="Shot cycle clearning">Shot cycle clearning</option>
+                                    <option value="Die Cleaning Due To 1 Month No operation">Die Cleaning Due To 1 Month No operation</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form_group col-6 col-lg-6 col-sm-12">
                             <label for="">Maintenance incharge</label>
-                            <input type="text" name="Mincharge" id="Mincharge" placeholder="Enter the name of Incharged" required>
+                           
+
+                            <div class="select-container" style="width: 100% !important;">
+                                <select name="Mincharge" id="Mincharge">
+                                    <option value="N.AMLOG">N.AMLOG</option>
+                                    <option value="J.ORO">J.ORO</option>
+                                </select>
+                            </div>
                         </div>
 
-                     
+
                     </div>
 
 
-
+                    <hr />
 
 
                     <div class="flex_space " id="editsdisplay">
@@ -332,6 +361,113 @@
 </div>
 
 
+<!--########################## Edit Daily Mold Die  DATA #############################-->
+<div class="modal fade modal-lg" id="EditDailyMold" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Edit Die Shot Cycle Control</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <form id="EditDailyforms" class="addformcontainer" autocomplete="off">
+                    <div class="row">
+                        <div class="form_group col-6 col-lg-6 col-sm-12">
+                            <input type="hidden" name="DailyRecordiD" id="DailyRecordiD" required>
+                            <label for="">Date Input <small style="color: #a81818; font-weight: 600;">*</small></label>
+                            <input type="date" name="DailyEditDateInput" id="DailyEditDateInput" >
+                        </div>
+
+                        <div class="form_group col-6 col-lg-6 col-sm-12">
+                            <label for="">Part number <small style="color: #a81818; font-weight: 600;">*</small></label>
+                            <input type="text" placeholder="Type Part number" name="Editdailypartno" id="Editdailypartno" readonly>
+                        </div>
+
+
+                    </div>
+
+
+
+                    <div class="row">
+                        <div class="form_group col-6 col-lg-6 col-sm-12">
+                            <label for="">Cycle shot</label>
+                            <input type="number" name="DailyeditCycleShot" id="DailyeditCycleShot" placeholder="Enter Cycle Shot" onkeypress='return restrictChars(event)' required>
+                        </div>
+
+                        <div class="form_group col-6 col-lg-6 col-sm-12">
+                            <label for="">Machine No</label>
+                            <input type="number" name="DailyEditMachineNo" id="DailyEditMachineNo" required>
+                        </div>
+
+
+                    </div>
+
+                    <div class="row">
+                        <div class="form_group col-6 col-lg-6 col-sm-12">
+                            <label for="">Remarks</label>
+                            
+
+                            <div class="select-container" style="width: 100% !important;">
+                                <select name="DailyEditRemarks" id="DailyEditRemarks">
+                                    <option value="N/A">N/A</option>
+                                    <option value="Shot cycle clearning">Shot cycle clearning</option>
+                                    <option value="Die Cleaning Due To 1 Month No operation">Die Cleaning Due To 1 Month No operation</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form_group col-6 col-lg-6 col-sm-12">
+                            <label for="">Maintenance incharge</label>
+                           
+
+                            <div class="select-container" style="width: 100% !important;">
+                                <select name="DailyEditMincharge" id="DailyEditMincharge">
+                                    <option value="N.AMLOG">N.AMLOG</option>
+                                    <option value="J.ORO">J.ORO</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+
+                    @*<div class="form_group col-6 col-lg-6 col-sm-12">
+                        <label for="">Remarks</label>
+
+                        <div class="select-container" style="width: 100% !important;">
+                            <select name="Remarks" id="Remarks">
+                                <option value="Mold Die">Mold Die</option>
+                                <option value="Tooling">Tooling</option>
+                            </select>
+                        </div>
+                    </div>*@
+                  
+
+
+
+                    <hr />
+
+
+                    <div class="flex_space " id="editsdisplay">
+                        <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                        <button type="submit" class="primary_button_color">
+                            <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
+                        </button>
+                    </div>
+                </form>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
 
 
 
@@ -570,34 +706,31 @@
                     <div class="row">
                         <div class="form_group col-4 col-lg-4 col-sm-12">
                             <label for="">Release(Shot Cycle test)</label>
-                            <input type="text" name="ShotRelease" id="ShotRelease" placeholder="Enter Cycle Shot" onkeypress='return restrictChars(event)' required>
+                            <input type="text" name="ShotRelease" id="ShotRelease" placeholder="Enter Cycle Shot" onkeypress='return restrictChars(event)' >
                         </div>
 
                         <div class="form_group col-4 col-lg-4 col-sm-12">
                             <label for="">Date Arrived</label>
-                            <input type="date" name="DateArrived" id="DateArrived" required>
+                            <input type="date" name="DateArrived" id="DateArrived" >
                         </div>
 
                         <div class="form_group col-4 col-lg-4 col-sm-12">
                             <label for="">Details of Modification</label>
-                            <input type="text" name="DetailsModify" id="DetailsModify" placeholder="Enter Details" required>
+                            <input type="text" name="DetailsModify" id="DetailsModify" placeholder="Enter Details" >
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form_group col-4 col-lg-4 col-sm-12">
                             <label for="">Date Repair</label>
-                            <input type="date" name="DateRepair" id="DateRepair" required>
+                            <input type="date" name="DateRepair" id="DateRepair" >
                         </div>
                         <div class="form_group col-4 col-lg-4 col-sm-12">
                             <label for="">Incharge</label>
                             <input type="text" name="Incharge" id="Incharge" placeholder="Enter the name of Incharged" required>
                         </div>
 
-                        <div class="form_group col-4 col-lg-4 col-sm-12">
-                            <label for="">Item # 2</label>
-                            <input type="text" name="Item2" id="Item2" placeholder="Enter No of Items" onkeypress='return restrictChars(event)' required>
-                        </div>
+                   
                     </div>
 
                     <div class="row">
@@ -606,10 +739,7 @@
                             <textarea placeholder="Write something here..." name="Remarks" id="Remarks" rows="3" cols="50" required></textarea>
                         </div>
 
-                        <div class="form_group col-4 col-lg-4 col-sm-12">
-                            <label for="">Details of Modification</label>
-                            <input type="text" name="DetailsModify2" id="DetailsModify2" placeholder="Enter Details" required>
-                        </div>
+                       
                     </div>
 
 
@@ -645,9 +775,11 @@
                     </button>
                 </div>
 
-                <form id="AddToolforms" class="addformcontainer" autocomplete="off">
+                <form id="EditToolforms" class="addformcontainer" autocomplete="off">
                     <div class="row">
                         <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <input type="hidden" name="EditRecordID" id="EditRecordID">
+
                             <label for="">Registration <small style="color: #a81818; font-weight: 600;">*</small></label>
                             <input type="text" name="EditRegNo" id="EditRegNo" placeholder="Enter Registration No." required>
                         </div>
@@ -671,46 +803,40 @@
                     <div class="row">
                         <div class="form_group col-4 col-lg-4 col-sm-12">
                             <label for="">Release(Shot Cycle test)</label>
-                            <input type="text" name="ShotRelease" id="ShotRelease" placeholder="Enter Cycle Shot" onkeypress='return restrictChars(event)' required>
+                            <input type="text" name="EditShotRelease" id="EditShotRelease" placeholder="Enter Cycle Shot" onkeypress='return restrictChars(event)' required>
                         </div>
 
                         <div class="form_group col-4 col-lg-4 col-sm-12">
                             <label for="">Date Arrived</label>
-                            <input type="date" name="DateArrived" id="DateArrived" required>
+                            <input type="date" name="EditDateArrived" id="EditDateArrived">
                         </div>
 
                         <div class="form_group col-4 col-lg-4 col-sm-12">
                             <label for="">Details of Modification</label>
-                            <input type="text" name="DetailsModify" id="DetailsModify" placeholder="Enter Details" required>
+                            <input type="text" name="EditDetailsModify" id="EditDetailsModify" placeholder="Enter Details" required>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form_group col-4 col-lg-4 col-sm-12">
                             <label for="">Date Repair</label>
-                            <input type="date" name="DateRepair" id="DateRepair" required>
+                            <input type="date" name="EditDateRepair" id="EditDateRepair">
                         </div>
                         <div class="form_group col-4 col-lg-4 col-sm-12">
                             <label for="">Incharge</label>
-                            <input type="text" name="Incharge" id="Incharge" placeholder="Enter the name of Incharged" required>
+                            <input type="text" name="EditIncharge" id="EditIncharge" placeholder="Enter the name of Incharged" required>
                         </div>
 
-                        <div class="form_group col-4 col-lg-4 col-sm-12">
-                            <label for="">Item # 2</label>
-                            <input type="text" name="Item2" id="Item2" placeholder="Enter No of Items" onkeypress='return restrictChars(event)' required>
-                        </div>
+                       
                     </div>
 
                     <div class="row">
                         <div class="form_group col-8 col-lg-8 col-sm-12">
                             <label for="">Remarks</label>
-                            <textarea placeholder="Write something here..." name="Remarks" id="Remarks" rows="3" cols="50" required></textarea>
+                            <textarea placeholder="Write something here..." name="EditRemarks" id="EditRemarks" rows="3" cols="50" required></textarea>
                         </div>
 
-                        <div class="form_group col-4 col-lg-4 col-sm-12">
-                            <label for="">Details of Modification</label>
-                            <input type="text" name="DetailsModify2" id="DetailsModify2" placeholder="Enter Details" required>
-                        </div>
+                       
                     </div>
 
 
@@ -742,6 +868,7 @@
     let SummaryData = [];
     let FinalSummaryData = [];
     let DieTooling = [];
+    let DailyData = [];
 
     let TableDisplay = $("#SummarylistData");
     let MonitorDisplay = $("#DieMoldMasterlist");
@@ -780,7 +907,7 @@
                 $("#MoldSummary").show();
                 $("#MoldMonitor").hide();
                 $("#MoldTooling").hide();
-
+                $("#MoldDailyMonitor").hide();
                 // Footer Show
                 $("#Summaryfooter").show();
                 $("#Monitorfooter").hide();
@@ -788,7 +915,7 @@
                 $("#MoldSummary").hide();
                 $("#MoldMonitor").show();
                 $("#MoldTooling").hide();
-
+                $("#MoldDailyMonitor").hide();
                 // Footer Show
                 $("#Summaryfooter").hide();
                 $("#Monitorfooter").show();
@@ -801,7 +928,7 @@
                 $("#MoldSummary").hide();
                 $("#MoldMonitor").hide();
                 $("#MoldTooling").show();
-
+                $("#MoldDailyMonitor").hide();
                 // Footer Show
                 $("#Summaryfooter").hide();
                 $("#Monitorfooter").hide();
@@ -810,17 +937,16 @@
             if (!isTabLoaded[index]) {
                 switch (index) {
                     case 0:
-                        //GetMoldDieSummary();
+                        GetMoldDieSummary();
                         break;
                     case 1:
                         GetMoldDieMonth(setMonth, currentYear, $("#MonitorProcess").val());
                         break;
                     case 2:
-                        //GetMoldDieDay(setMonth, currentYear, $("#MonitorProcess").val());
-                        GetMoldDieDaily();
+                        GetMoldDieDaily(setMonth, currentYear, $("#DailyProcess").val());
                         break;
                     default:
-                        //GetMoldDieTooling();
+                        GetMoldDieTooling();
                         break;
                 }
                 isTabLoaded[index] = true;
@@ -837,7 +963,7 @@
     ];
 
     const select = document.getElementById("monthSelect");
-
+    const dailyselect = document.getElementById("monthSelectDaily");
 
     //===============================================================
     //================= INPUT AND UPDATE DATA =======================
@@ -866,13 +992,20 @@
         }
     });
 
-    $("#AddDailyforms").on('submit', async (e) => {
+    $("#EditDailyforms").on('submit', async (e) => {
         e.preventDefault();
-        let formData = new FormData(e.target);
+        let formData = new FormData();
+        formData.append('RecordID', $('#DailyRecordiD').val());
+        formData.append('DateInput', $('#DailyEditDateInput').val());
+        formData.append('dailypartno', $('#Editdailypartno').val());
+        formData.append('CycleShot', $('#DailyeditCycleShot').val());
+        formData.append('MachineNo', $('#DailyEditMachineNo').val());
+        formData.append('Remarks', $('#DailyEditRemarks').val());
+        formData.append('Mincharge', $('#DailyEditMincharge').val());
         const data = Object.fromEntries(formData);
-        console.log(data);
-     @*let res = await postData('@Url.Action("AddUpdateMoldDieTooling", "DieMold")', data);
-     if (res.StatusCode === 201) {
+        let res = await postData('@Url.Action("UpdateDailyMoldDieMonitor", "DieMold")', data);
+
+         if (res.StatusCode === 201) {
          Swal.fire({
              title: "Success",
              text: res.Message,
@@ -880,9 +1013,9 @@
              confirmButtonColor: "#0d97c9",
              timer: 1500
          }).then(() => {
-             GetMoldDieTooling();
-             $("#AddToolforms")[0].reset();
-             $("#AddTooling").modal("hide");
+             GetMoldDieDaily(dailyselect.value, currentYear, $("#DailyProcess").val());
+             $("#EditDailyforms")[0].reset();
+             $("#EditDailyMold").modal("hide");
          });
      } else {
          Swal.fire({
@@ -891,8 +1024,40 @@
              timer: 1500,
              showConfirmButton: false
          });
-     }*@
- });
+     }
+    });
+
+
+$("#AddDailyforms").on('submit', async (e) => {
+       e.preventDefault();
+       let formData = new FormData(e.target);
+       const data = Object.fromEntries(formData);
+       //console.log(data);
+       let res = await postData('@Url.Action("AddDailyMoldDieMonitor", "DieMold")', data);
+    if (res.StatusCode === 201) {
+        Swal.fire({
+            title: "Success",
+            text: res.Message,
+            icon: "success",
+            confirmButtonColor: "#0d97c9",
+            timer: 1500
+        }).then(() => {
+            GetMoldDieDaily(dailyselect.value, currentYear, $("#DailyProcess").val());
+            $("#AddDailyforms")[0].reset();
+            $("#AddDailyMold").modal("hide");
+        });
+    } else {
+        Swal.fire({
+            icon: "error",
+            text: data.ToolNo + " is already Exist",
+            timer: 1500,
+            showConfirmButton: false
+        });
+    }
+});
+
+
+
 
 
     $("#AddToolforms").on('submit', async (e) => {
@@ -921,6 +1086,46 @@
             });
         }
     });
+
+
+
+    $("#EditToolforms").on('submit', async (e) => {
+         e.preventDefault();
+        let formData = new FormData();
+        formData.append('RecordID', $('#EditRecordID').val());
+        formData.append('RegNo', $('#EditRegNo').val());
+        formData.append('PartNo', $('#EditParNoSearch').val());
+        formData.append('Item', $('#EditItem').val());
+        formData.append('ShotRelease', $('#EditShotRelease').val());
+        formData.append('DateArrived', $('#EditDateArrived').val());
+        formData.append('DetailsModify', $('#EditDetailsModify').val());
+        formData.append('DateRepair', $('#EditDateRepair').val());
+        formData.append('Incharge', $('#EditIncharge').val());
+        formData.append('Remarks', $('#EditRemarks').val());
+
+        const data = Object.fromEntries(formData);
+        let res = await postData('@Url.Action("UpdateMoldDieTooling", "DieMold")', data);
+         if (res.StatusCode === 201) {
+             Swal.fire({
+                 title: "Success",
+                 text: res.Message,
+                 icon: "success",
+                 confirmButtonColor: "#0d97c9",
+                 timer: 1500
+             }).then(() => {
+                 GetMoldDieTooling();
+                 $("#EditToolforms")[0].reset();
+                 $("#EditTooling").modal("hide");
+             });
+         } else {
+             Swal.fire({
+                 icon: "error",
+                 text: data.ToolNo + " is already Exist",
+                 timer: 1500,
+                 showConfirmButton: false
+             });
+         }
+     });
 
 
     $("#AddMoldforms").on('submit', async function (e) {
@@ -1021,7 +1226,30 @@
         let month = $("#MonthHeader").val();
         $("#MonthHeader").text(months[month - 1]);
         GetMoldDieMonth(month, year, $("#MonitorProcess").val());
+    });
+
+    $("#DailyProcess").on('change', (e) => {
+        e.preventDefault();
+        let setMonth = parseInt(currentMonth) + 1;
+        GetMoldDieDaily(setMonth, currentYear, e.target.value);
+    });
+
+
+
+    $("#monthSelectDaily").on('change', (e) => {
+        e.preventDefault();
+        let month = e.target.value;
+        GetMoldDieDaily(month, currentYear, $("#DailyProcess").val());
     })
+
+    $("#yearselectDaily").on('change', (e) => {
+        e.preventDefault();
+        let year = e.target.value;
+        $("#MonthHeader").text(months[month - 1]);
+        GetMoldDieDaily(month, year, $("#DailyProcess").val());
+    })
+
+
 
 
     $("#clearbtn").on('click', (e) => {
@@ -1038,6 +1266,7 @@
             option.selected = true;
         }
         select.appendChild(option);
+        dailyselect.appendChild(option);
     });
 
     // INPUT SEARCH EMPLOYEE NAME WHEN TYPE
@@ -1149,22 +1378,27 @@
                                 </td>
                             </tr>`;
 
-                TableData.empty();
                 TableDisplay.append(loadData);
             }
         });
 
     }
-    const GetMoldDieDaily = async () => {
+    const GetMoldDieDaily = async (month = setMonth, year = currentYear, process = $("#ProcessID").val()) => {
          const id = loadingDisplay(2, 9);
-         Loadingsteps(id, async () => {
-             let res = await FetchAuthenticate('@Url.Action("GetMoldDieDailyList", "DieMold")', {});
-             console.log(res);
+        Loadingsteps(id, async () => {
+            let formData = new FormData();
+            // Where value of month is around 1 - 12
+            formData.append('Months', month);
+            formData.append('Year', year);
+            formData.append('ProcessID', process);
+            const data = Object.fromEntries(formData);
+
+            let res = await FetchAuthenticate('@Url.Action("GetMoldDieDailyList", "DieMold")', data);
              if (res && res.Success) {
                  //DieTooling = res.Data;
-
+                 DailyData = res.Data;
                  // Loads the First Data
-                 DisplayDaily(res.Data);
+                 DisplayDaily(DailyData);
                  //$("#Datearrived").on('change', (e) => {
                  //    const rawDate = e.target.value;
 
@@ -1178,6 +1412,26 @@
                  //    }
 
                  //});
+
+
+                 const years = Array.from(new Set(
+                     DailyData.map(item => {
+                         const rawDate = item.DateInput;
+                         const parsedDate = new Date(rawDate);
+                         return (!rawDate || isNaN(parsedDate.getTime()))
+                             ? currentYear
+                             : parsedDate.getFullYear();
+                     })
+                 ));
+
+                 //const year = TableData.map(item => new Date(item.DateAction).getFullYear());
+                 $("#yearselectDaily").empty();
+                 $.each(years, function (index, row) {
+                     $("#yearselectDaily").append("<option value='" + row + "'>" + row + "</option>");
+                 });
+
+
+
              } else {
 
 
@@ -1239,7 +1493,7 @@
             let res = await FetchAuthenticate('@Url.Action("GetMoldDieToolingList", "DieMold")', {});
             if (res && res.Success) {
                 DieTooling = res.Data;
-
+                console.log(DieTooling);
                 // Loads the First Data
                 DisplayTooling(DieTooling);
                 $("#Datearrived").on('change', (e) => {
@@ -1290,54 +1544,99 @@
         $("#DieMoldDaily").empty();
 
         dataArray.forEach((row, index) => {
+            let continueHtml = `<span>Continue</span>`;
+            let neededCompleteHtml = `<span>Needed</span> <span>Complete</span>`;
+
+            // Highlight according to status
+            if (row.Status === 0) {
+                continueHtml = `<span class="status-label active" style="color: #054e92; border: 2px solid #054e92;">Continue</span>`;
+            } else if (row.Status === 1) {
+                neededCompleteHtml = `
+            <span class="status-label active" style="color: #c97d0c; border: 2px solid #c97d0c;">Needed</span>
+            <span class="status-label">Complete</span>`;
+            } else if (row.Status === 2) {
+                neededCompleteHtml = `
+            <span class="status-label">Needed</span>
+            <span class="status-label active" style="color: #188f18; border: 2px solid #188f18;">Complete</span>`;
+            }
+
+
             var setdata = `<tr >
-             <td>${row.DateInput}</td>
-             <td style='font-weight: 600;'>${row.PartNo}</td>
-             <td>${row.PartNo}</td>
-             <td>${row.PartNo}</td>
-             <td>${row.CycleShot}</td>
-             <td>${row.Total}</td>
-             <td>${row.MachineNo}</td>
-             <td>${row.Status}</td>
-             <td>${row.Status}</td>
-             <td>${row.Remarks}</td>
-              <td>${row.Mincharge}</td>
-             <td>
-                <button type='button' class='btn actionicon text-primary EditToolClick' id='editButton_${row.RecordID}' >
-                   <i class='fa-regular fa-pen-to-square action_btn'></i>
-                </button>
+                     <td>${row.DateInput}</td>
+                     <td style='font-weight: 600;'>${row.PartNo} / ${row.DimensionQuality}</td>
+                     <td>${row.CycleShot}</td>
+                     <td>${row.Total}</td>
+                     <td>${row.MachineNo}</td>
+                      <td>${continueHtml}</td>
+                     <td>${neededCompleteHtml}</td>
+                     <td>${row.Remarks}</td>
+                      <td>${row.Mincharge}</td>
+                     <td>
+                        <button type='button' class='btn actionicon text-primary EditDaily' id='editButton_${row.RecordID}' >
+                           <i class='fa-regular fa-pen-to-square action_btn'></i>
+                        </button>
 
 
-             </td>
-     </tr>;`
+                     </td>
+             </tr>;`
 
             $("#DieMoldDaily").append(setdata);
         });
 
 
         // Handle click event for edit button
-        $(document).on('click', '.EditToolClick', function (e) {
-            e.stopPropagation();
-            const buttonId = $(this).attr('id');
-            const rowIndex = buttonId.split('_')[1];
-            console.log("Row Selected : " + rowIndex);
-            var filterData = DieTooling.find(res => res.RecordID === rowIndex);
+        //$(document).on('click', '.EditToolClick', function (e) {
+        //    e.stopPropagation();
+        //    const buttonId = $(this).attr('id');
+        //    const rowIndex = buttonId.split('_')[1];
 
-            if (filterData) {
+        //    var filterData = DieTooling.find(res => res.RecordID === rowIndex);
+        //    if (filterData) {
 
-            }
+        //    }
 
-            $("#EditTooling").modal("show");
-        });
+        //    $("#EditTooling").modal("show");
+        //});
 
         // Handle click event for edit button
-        $(document).on('click', '.ToolDeleteClick', function (e) {
+        $(document).on('click', '.EditDaily', function (e) {
             e.stopPropagation();
             const buttonId = $(this).attr('id');
             const rowIndex = buttonId.split('_')[1];
-            console.log("Row Selected : " + rowIndex);
-            $("#EditTooling").modal("show");
+
+            const filterdata = DailyData.find(res => res.RecordID === parseInt(rowIndex));
+            if (filterdata) {
+                $("#DailyRecordiD").val(filterdata.RecordID);   
+                setDateInput("DailyEditDateInput", filterdata.DateInput);
+                $("#Editdailypartno").val(filterdata.PartNo);
+                $("#DailyeditCycleShot").val(filterdata.CycleShot);
+                $("#DailyEditMachineNo").val(filterdata.MachineNo);
+                $("#DailyEditRemarks").val(filterdata.Remarks);
+                $("#DailyEditMincharge").val(filterdata.Mincharge);
+                $("#EditDailyMold").modal("show");
+
+            }
         });
+    }
+
+
+
+    function setDateInput(inputId, dateStr) {
+        if (!dateStr) return; // Exit if empty
+
+        const parts = dateStr.split("/"); // ["MM", "DD", "YY"]
+        if (parts.length !== 3) return; // Invalid format
+
+        const month = parts[0].padStart(2, '0');
+        const day = parts[1].padStart(2, '0');
+        const year = "20" + parts[2]; // assumes 2000+ year
+
+        const formattedDate = `${year}-${month}-${day}`;
+
+        const inputElement = document.getElementById(inputId);
+        if (inputElement) {
+            inputElement.value = formattedDate;
+        }
     }
 
 
@@ -1373,14 +1672,23 @@
             e.stopPropagation();
             const buttonId = $(this).attr('id');
             const rowIndex = buttonId.split('_')[1];
-            console.log("Row Selected : " + rowIndex);
-            var filterData = DieTooling.find(res => res.RecordID === rowIndex);
-
+            var filterData = DieTooling.find(res => res.RecordID === parseInt(rowIndex));
             if (filterData) {
+                setDateInput("EditDateArrived", filterData.DateArrived);
+                setDateInput("EditDateRepair", filterData.DateRepair);
+                $("#EditRecordID").val(filterData.RecordID);
+                $("#EditRegNo").val(filterData.RegNo);
+                $("#EditParNoSearch").val(filterData.PartNo);
+                $("#EditItem").val(filterData.Item);
+                $("#EditShotRelease").val(filterData.ShotRelease);
+                $("#EditDetailsModify").val(filterData.DetailsModify);
+                $("#EditIncharge").val(filterData.Incharge);
 
+
+                $("#EditRemarks").val(filterData.Remarks);
+                $("#EditTooling").modal("show");
             }
 
-            $("#EditTooling").modal("show");
         });
 
         // Handle click event for edit button
@@ -1842,12 +2150,13 @@
             $("#MoldSummary").show();
             $("#MoldMonitor").hide();
             $("#MoldTooling").hide();
-
+            $("#MoldDailyMonitor").hide();
             // Footer Show
             $("#Summaryfooter").show();
             $("#Monitorfooter").hide();
 
             const [maintable, forest, logs, drop] = await Promise.all([
+                GetMoldDieSummary(),
                 GetMoldDieDaily(),
                 GetMoldDieMonth(),
                 GetMoldDieTooling(),

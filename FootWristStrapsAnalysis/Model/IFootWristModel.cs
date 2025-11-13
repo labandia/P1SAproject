@@ -137,4 +137,12 @@ namespace FootWristStrapsAnalysis.Model
             set => _note = value;
         }
     }
+
+
+    public class EmployeeModel
+    {
+        public string EmployeeID { get; set; }
+        public string EmployeeName { get; set; }
+        public string EmpCode { get; set; }
+    }
 }

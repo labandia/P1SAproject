@@ -100,6 +100,46 @@ namespace ProgramPartListWeb.Helper
             }
         }
 
+
+        public static async Task<T> GetObjectOnly<T>(string query, object parameters = null, string cacheKey = null, int cacheMinutes = 10)
+        {
+            try
+            {
+                // Use cache only if key is provided
+                if (!string.IsNullOrEmpty(cacheKey))
+                {
+                    return await CacheHelper.GetOrSetAsync(cacheKey, async () =>
+                    {
+                        using (IDbConnection con = GetSqlConnection(_connectionString()))
+                        {
+                            bool isStoredProc = Regex.IsMatch(query, @"^\w+$");
+                            var commandType = isStoredProc ? CommandType.StoredProcedure : CommandType.Text;
+
+                            // Get the first record only
+                            return await con.QueryFirstOrDefaultAsync<T>(query, parameters, commandType: commandType);
+                        }
+                    }, cacheMinutes);
+                }
+                else
+                {
+                    using (IDbConnection con = GetSqlConnection(_connectionString()))
+                    {
+                        bool isStoredProc = Regex.IsMatch(query, @"^\w+$");
+                        var commandType = isStoredProc ? CommandType.StoredProcedure : CommandType.Text;
+
+                        return await con.QueryFirstOrDefaultAsync<T>(query, parameters, commandType: commandType);
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                Logger.Error(ex, $"SQL Exception while executing single-object query. Query: {query}, CacheKey: {cacheKey}");
+                return default(T); // null for classes, zero/default for structs
+            }
+        }
+
+
+
         // ############ SELECTS ONLY ONE ROW DATA  ##############################
         public static async Task<string> GetOneData(string query, object parameters)
         {

@@ -172,6 +172,7 @@
                     <div class="select-container">
                         <select id="DailyProcess">
                             <option value="M002">Mold Frame</option>
+                            <option value="M003">Mold Impeller</option>
                         </select>
                     </div>
 
@@ -866,6 +867,7 @@
     let setMonth = parseInt(currentMonth) + 1;
     let TableData = [];
     let SummaryData = [];
+    let GlobalSummaryData = []; 
     let FinalSummaryData = [];
     let DieTooling = [];
     let DailyData = [];
@@ -1304,7 +1306,7 @@ $("#AddDailyforms").on('submit', async (e) => {
         let result = [];
         let input = this.value;
         if (input.length > 0) {
-            result = SummaryData.filter((item) => {
+            result = GlobalSummaryData.filter((item) => {
                 return item.PartNo.toLowerCase().includes(input.toLowerCase());
             });
 
@@ -1383,6 +1385,16 @@ $("#AddDailyforms").on('submit', async (e) => {
         });
 
     }
+
+    const GetGlobalMoldDieSummary = async () => {
+        let res = await fetchData('@Url.Action("GlobalMoldDieSummaryList", "DieMold")', {});
+        if (res.Success && res) {
+            GlobalSummaryData = res.Data;
+        }
+    }
+
+
+
     const GetMoldDieDaily = async (month = setMonth, year = currentYear, process = $("#ProcessID").val()) => {
          const id = loadingDisplay(2, 9);
         Loadingsteps(id, async () => {
@@ -1606,7 +1618,7 @@ $("#AddDailyforms").on('submit', async (e) => {
 
             const filterdata = DailyData.find(res => res.RecordID === parseInt(rowIndex));
             if (filterdata) {
-                $("#DailyRecordiD").val(filterdata.RecordID);   
+                $("#DailyRecordiD").val(filterdata.RecordID);
                 setDateInput("DailyEditDateInput", filterdata.DateInput);
                 $("#Editdailypartno").val(filterdata.PartNo);
                 $("#DailyeditCycleShot").val(filterdata.CycleShot);
@@ -2155,7 +2167,8 @@ $("#AddDailyforms").on('submit', async (e) => {
             $("#Summaryfooter").show();
             $("#Monitorfooter").hide();
 
-            const [maintable, forest, logs, drop] = await Promise.all([
+            const [global, maintable, forest, logs, drop] = await Promise.all([
+                GetGlobalMoldDieSummary(),
                 GetMoldDieSummary(),
                 GetMoldDieDaily(),
                 GetMoldDieMonth(),

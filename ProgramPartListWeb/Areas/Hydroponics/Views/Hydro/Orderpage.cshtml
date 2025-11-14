@@ -75,6 +75,7 @@
             <th>Order Date</th>
             <th>Target Date</th>
             <th>PIC</th>
+            <th>CustomerName</th>
             <th>Progress </th>
             <th>Status</th>
             <th>Action</th>
@@ -134,6 +135,11 @@
                         <input type="date" placeholder="type Ojt registration No." name="TargetDate" id="TargetDate" required />
                     </div>
 
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Customer Name </label>
+                        <input type="text" placeholder="Enter Customer name." name="CustomerName" id="CustomerName" required />
+                    </div>
 
 
                     <div class="form_group col-12 col-sm-12 ">
@@ -536,8 +542,8 @@
                         ${daysRemaining < 0 && row.RequestStatus === 'Ongoing' ? '<br><small style="color: #dc3545;">Overdue</small>' :
                         daysRemaining < 7 && row.RequestStatus === 'Ongoing' ? '<br><strong style="color: #b45721; font-size: .735rem;">Due soon</strong>' : ''}
                     </td>
-                    <td>${row.TargetDate ?? "-"}</td>
                     <td>${row.PIC ?? "-"}</td>
+                    <td>${row.CustomerName ?? "-"}</td>
                     <td style="text-align:center;  display: flex; justify-content: center; flex-direction: column; align-items: center;">
                         <div class="progress-bar-container">
                             <div class="progress-bar" style="width:0; background:${barColor};"></div>

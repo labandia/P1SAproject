@@ -23,7 +23,8 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                         o.Quantity AS ChambersOrdered,
                                         o.Status AS RequestStatus,
                                         o.PIC,
-                                        o.ChamberID
+                                        o.ChamberID, 
+										o.CustomerName
                                     FROM Hydro_Orders o
                                     INNER JOIN Hydro_ChamberMasterlist m 
                                         ON m.ChamberID = o.ChamberID
@@ -65,6 +66,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                     o.PIC,
                                     d.MaterialStatus,
                                     d.CompletionPercent,
+									o.CustomerName,
                                     ct.PHPTotal * o.ChambersOrdered AS TotalPrice
                                 FROM OrdersCTE o
                                 LEFT JOIN DetailsCTE d ON o.OrderID = d.OrderID
@@ -191,8 +193,8 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             // GENERATE A UNIQUE ID FOR THE ORDER
             string OrderID = GlobalUtilities.GenerateID("CR");
 
-            string strsql = $@"INSERT INTO Hydro_Orders(OrderID, ChamberID, OrderedBy, Quantity, PIC, TargetDate)
-                               VALUES(@OrderID, @ChamberID, @OrderedBy, @Quantity, @PIC, @TargetDate)";
+            string strsql = $@"INSERT INTO Hydro_Orders(OrderID, ChamberID, OrderedBy, Quantity, PIC, TargetDate, CustomerName)
+                               VALUES(@OrderID, @ChamberID, @OrderedBy, @Quantity, @PIC, @TargetDate, @CustomerName)";
 
             bool result = await SqlDataAccess.UpdateInsertQuery(strsql, new
             {
@@ -201,7 +203,8 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                 item.OrderedBy,
                 item.Quantity,
                 item.PIC,
-                item.TargetDate
+                item.TargetDate, 
+                item.CustomerName
             });
 
             // If insert is Completed go the next process   

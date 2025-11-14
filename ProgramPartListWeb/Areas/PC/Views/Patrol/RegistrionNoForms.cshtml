@@ -44,33 +44,30 @@
                     Managers
                 </li>
                 @*<li class="step-item" data-step="5">
-            <span class="step-number">5</span>
-            Department Managerss
-        </li>*@
+                        <span class="step-number">5</span>
+                        Department Managerss
+                    </li>*@
                 <li class="step-item" data-step="5">
                     <span class="step-number">5</span>
                     Division Manager
                 </li>
                 <li class="step-item" data-step="6">
                     <span class="step-number">6</span>
-                    Completed 
+                    Completed
                 </li>
             </ul>
         </div>
 
         <div class="content">
-            <div class="progress-bar">
-                <div class="progressV2" style="width: 20%"></div>
-            </div>
-
+           
             <!-- Step 1: Create New Document -->
-            <form method="post" enctype="multipart/form-data"  class="step-content active" id="step-1" autocomplete="off">
+            <form method="post" enctype="multipart/form-data" class="step-content active" id="step-1" autocomplete="off">
                 <div class="flex_align mb-4">
                     <a class="Backbtn" href="/PC/Patrol/PatrolReport"><i class="fa-solid fa-arrow-left"></i></a>
                     <h3 class="mb-0">Create New Registration No.</h3>
                 </div>
 
-               
+
 
                 <div class="row mb-3">
                     <div class="col-12 col-sm-12 col-lg-4">
@@ -105,7 +102,6 @@
                         <label>Person In Charge : </label> <br />
                         <div class="select-container">
                             <select id="Employee_ID" name="Employee_ID">
-                               
                             </select>
                         </div>
                     </div>
@@ -148,38 +144,105 @@
                     <textarea placeholder="Type text here..." name="Inpects6" id="Inpects6" rows="3" cols="40"></textarea>
                 </div>
 
-               
+
 
                 <div class="button-group">
-                    <div></div> <!-- Empty div for spacing -->
+                    <div>Your information is secure and encrypted</div> <!-- Empty div for spacing -->
                     <button class="btn-next" type="submit" id="btnSave">Next</button>
                 </div>
             </form>
 
             <!-- Step 2: Person in Charge -->
             <div class="step-content" id="step-2">
-                
+
             </div>
 
             <!-- Step 3: Document Details -->
             <div class="step-content" id="step-3">
-             
 
-            <!-- Step 4: Attachments -->
-            <div class="step-content" id="step-4">
-                
+
+                <!-- Step 4: Attachments -->
+                <div class="step-content" id="step-4">
+
+                </div>
+
+                <!-- Step 5: Review & Submit -->
+                <div class="step-content" id="step-5">
+
+                </div>
             </div>
 
-            <!-- Step 5: Review & Submit -->
-            <div class="step-content" id="step-5">
-               
-            </div>
+
         </div>
 
-
     </div>
 
+
+
+    <!-- Sequential Loader -->
+    <div id="loader" class="loader-overlay">
+        <div class="loader-box">
+            <div class="loader-title">Generating Registration No...</div>
+
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text" id="progressText">0%</div>
+            </div>
+
+            <div class="step-list">
+                <div class="step" id="step1">
+                    <div class="step-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="step-contentloader">
+                        <div class="step-title">Saving to the Database</div>
+                        <div class="step-description">Storing your Registration data securely</div>
+                    </div>
+                </div>
+
+                <div class="step" id="step2">
+                    <div class="step-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="step-contentloader">
+                        <div class="step-title">Send Email to the Process Owner</div>
+                        <div class="step-description">Notifying the review team</div>
+                    </div>
+                </div>
+
+                <div class="step" id="step3">
+                    <div class="step-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="step-contentloader">
+                        <div class="step-title">Send Message Success</div>
+                        <div class="step-description">Confirming submission completion</div>
+                    </div>
+                </div>
+
+                <div class="step" id="step4">
+                    <div class="step-icon">
+                        <i class="fas fa-flag-checkered"></i>
+                    </div>
+                    <div class="step-contentloader">
+                        <div class="step-title">Done and Close</div>
+                        <div class="step-description">Process completed successfully</div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="done-btn" id="doneBtn"><i class="fa-solid fa-check"></i> Done</button>
+        </div>
     </div>
+
+
+
+
+
+
+
     <script type="text/javascript">
         let currentStep = 1;
         const totalSteps = 5;
@@ -204,8 +267,8 @@
             currentStep = step;
 
             // Update progress bar
-            const progressPercentage = ((step - 1) / (totalSteps - 1)) * 100;
-            document.querySelector('.progressV2').style.width = `${progressPercentage}%`;
+            //const progressPercentage = ((step - 1) / (totalSteps - 1)) * 100;
+            //document.querySelector('.progressV2').style.width = `${progressPercentage}%`;
 
             // Update sidebar steps
             document.querySelectorAll('.step-item').forEach((item, index) => {
@@ -267,8 +330,8 @@
                   const originalText = savebtn.innerHTML;
 
                  // Create loading icon and message container
-                 savebtn.disabled = true;
-                 savebtn.innerHTML = `<div class='buttonloading'></div><span id='loadingSequence'>Saving data...</span>`;
+                 //savebtn.disabled = true;
+                 //savebtn.innerHTML = `<div class='buttonloading'></div><span id='loadingSequence'>Saving data...</span>`;
 
                   // Append form data
                   let strfind = findingsJson(e.target);
@@ -294,7 +357,25 @@
                       $("#RegNo").css("border", "1px solid red");
                       return;
                   }
-                  // Step 1: Simulate "Saving data..."
+
+                  // Show loader
+                  document.getElementById('loader').classList.add('active');
+
+                  // Reset steps
+                  resetSteps();
+
+                  let res = await postData('@Url.Action("AddRegistration", "Patrol")', finalformData);
+
+                  if (res && res.Success) {
+                      // Start the sequential loading process
+                      startSequentialLoading();
+                  } else {
+                      // Reset button if failed
+                      document.querySelector("#loadingSequence").textContent = "Failed. Please try again.";
+                      await new Promise(resolve => setTimeout(resolve, 2000));
+                  }
+
+                  @*// Step 1: Simulate "Saving data..."
                   await new Promise(resolve => setTimeout(resolve, 1200)); // 1.2s delay for animation
 
                   // Step 2: Update loading text
@@ -315,7 +396,7 @@
                       await new Promise(resolve => setTimeout(resolve, 2000));
                       savebtn.innerHTML = originalText;
                       savebtn.disabled = false;
-                  }
+                  }*@
 
 
           });
@@ -436,6 +517,76 @@
             LoadPageData();
         });
 
+
+
+
+
+
+        // Loading Submisstion Process
+
+        function resetSteps() {
+            const steps = document.querySelectorAll('.step');
+            steps.forEach(step => {
+                step.classList.remove('active', 'completed');
+            });
+
+            document.getElementById('progressFill').style.width = '0%';
+            document.getElementById('progressText').textContent = '0%';
+            document.getElementById('doneBtn').classList.remove('show');
+        }
+
+        function startSequentialLoading() {
+            const steps = [
+                { id: 'step1', duration: 2000, progress: 25 },
+                { id: 'step2', duration: 2500, progress: 50 },
+                { id: 'step3', duration: 1500, progress: 75 },
+                { id: 'step4', duration: 1000, progress: 100 }
+            ];
+
+            let currentStep = 0;
+
+            function processNextStep() {
+                if (currentStep >= steps.length) {
+                    // All steps completed
+                    document.getElementById('doneBtn').classList.add('show');
+                    return;
+                }
+
+                const step = steps[currentStep];
+                const stepElement = document.getElementById(step.id);
+
+                // Activate current step
+                stepElement.classList.add('active');
+
+                // Update progress
+                document.getElementById('progressFill').style.width = step.progress + '%';
+                document.getElementById('progressText').textContent = step.progress + '%';
+
+                // Simulate processing time
+                setTimeout(function () {
+                    // Mark step as completed
+                    stepElement.classList.remove('active');
+                    stepElement.classList.add('completed');
+
+                    // Move to next step
+                    currentStep++;
+                    processNextStep();
+                }, step.duration);
+            }
+
+            // Start the sequence
+            processNextStep();
+        }
+
+
+        document.getElementById('doneBtn').addEventListener('click', function () {
+            // Hide loader
+            document.getElementById('loader').classList.remove('active');
+
+
+            window.location.href = "/PC/Patrol/PatrolReport";
+
+        });
     </script>
 </body>
 

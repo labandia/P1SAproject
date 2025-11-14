@@ -19,6 +19,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         private string _PIC;
         private string _MaterialStatus;
         private double _CompletionPercent;
+        private string _CustomerName;
         private int _TotalPrice;
 
 
@@ -77,6 +78,12 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         {
             get => _TotalPrice;
             set => _TotalPrice = value;
+        }
+
+        public string CustomerName
+        {
+            get => _CustomerName;
+            set => _CustomerName = value;
         }
     }
     public class RequestChambersDetailsModel
@@ -567,6 +574,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         public string PIC { get; set; }
         public string OrderedBy { get; set; } = "Admin";
         public int Quantity { get; set; }
+        public string CustomerName { get; set; }
         public string TargetDate { get; set; }
     }
 

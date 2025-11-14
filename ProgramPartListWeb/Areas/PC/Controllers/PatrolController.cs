@@ -29,7 +29,6 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         private readonly IRegistration _reg;
 
         public static string strSender => ConfigurationManager.AppSettings["config:SMTPEmail"];
-        string exePath = @"\\sdp01034s\SYSTEM EXECUTABLE\P1SA-PC_System\OpenExcel\OpenExcelApp.exe";
         // Default template path for PDF generation 
         string templatePath = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Uploads/PGFY-00031FORM_1.xlsx");
 
@@ -96,7 +95,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         public async Task<ActionResult> GetRegistrationNo()
         {
             //var data = await _ins.GetRegistrationData() ?? new List<PatrolRegistionModel>();
-            var data = await _reg.GetRegistrationData() ?? new List<PatrolRegistrationViewModel>();
+            var data = await _reg.GetRegistrationData(GetPrefix()) ?? new List<PatrolRegistrationViewModel>();
             if (data == null || !data.Any()) return JsonNotFound("No registration data found");
 
             return JsonSuccess(data, "Load Registration No#");
@@ -106,7 +105,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         public async Task<ActionResult> GetRegistrationNoDetails(string Regno)
         {
             // ===================== STEP 1: Retrieve Require Data =====================
-            var data = await _reg.GetRegistrationData() ?? new List<PatrolRegistrationViewModel>();
+            var data = await _reg.GetRegistrationData(GetPrefix()) ?? new List<PatrolRegistrationViewModel>();
             // ===================== STEP 2: Filter Only One Data =====================
             var filterdata = data.SingleOrDefault(res => res.RegNo == Regno);
 
@@ -445,8 +444,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
 
                 // ===================== STEP 2: Retrieve Required Data =====================
-                var emailList = await _reg.PatrolEmailData() ?? new List<EmailModelV2>();
-                var employeeEmail = emailList.FirstOrDefault(e => e.Employee_ID == employeeId);
+                var employeeEmail = await _reg.GetEmployeeEmailDetails(employeeId, 3, getprefix);
 
 
                 // ===================== STEP 3: Prepare File Paths =====================
@@ -643,15 +641,16 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 string finalPrefix = Request.Form["RegNo"];
                 string findJson = Request.Form["FindJson"];
                 string getprefix = GetPrefix();
+                string employeeId = Request.Form["Employee_ID"];
 
                 // ===================== STEP 2: Retrieve Required Data =====================
                 var emailList = await _reg.PatrolEmailData() ?? new List<EmailModelV2>();
-                var employeeEmail = emailList.FirstOrDefault(p => p.Employee_ID == Request.Form["Employee_ID"]);
+                var employeeEmail = await _reg.GetEmployeeEmailDetails(employeeId, 4, getprefix);    
 
                 if (employeeEmail == null)
                     return JsonValidationError("Employee email not found.");
 
-                var registrationData = await _reg.GetRegistrationData();
+                var registrationData = await _reg.GetRegistrationData(GetPrefix());
                 var existingReg = registrationData.SingleOrDefault(r => r.RegNo == finalPrefix);
 
                 if (existingReg == null)
@@ -713,7 +712,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
 
                 // ===================== STEP 7: Generate Updated PDF =====================
-                var updatedRegData = await _reg.GetRegistrationData();
+                var updatedRegData = await _reg.GetRegistrationData(GetPrefix());
                 var updatedReg = updatedRegData.SingleOrDefault(r => r.RegNo == finalPrefix);
                 var updatedFindings = await _reg.GetRegisterFindings(finalPrefix);
 
@@ -770,7 +769,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                     return JsonValidationError("Employee email not found.");
 
 
-                var registrationData = await _reg.GetRegistrationData();
+                var registrationData = await _reg.GetRegistrationData(GetPrefix());
                 string previousPdfPath = registrationData.SingleOrDefault(res => res.RegNo == Regno).Filepath;
 
                 // ===================== STEP 2: Prepare File Paths =====================
@@ -786,7 +785,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 CacheHelper.Remove("Registration");
 
                 // ===================== STEP 3: Generate Updated PDF =====================
-                var updatedRegData = await _reg.GetRegistrationData();
+                var updatedRegData = await _reg.GetRegistrationData(GetPrefix());
                 var updatedReg = updatedRegData.SingleOrDefault(r => r.RegNo == Regno);
                 var updatedFindings = await _reg.GetRegisterFindings(Regno);
 
@@ -845,7 +844,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                     return JsonValidationError("Employee email not found.");
 
 
-                var registrationData = await _reg.GetRegistrationData();
+                var registrationData = await _reg.GetRegistrationData(GetPrefix());
                 string previousPdfPath = registrationData.SingleOrDefault(res => res.RegNo == Regno).Filepath;
 
                 // ===================== STEP 2: Prepare File Paths =====================
@@ -861,7 +860,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 CacheHelper.Remove("Registration");
 
                 // ===================== STEP 3: Generate Updated PDF =====================
-                var updatedRegData = await _reg.GetRegistrationData();
+                var updatedRegData = await _reg.GetRegistrationData(GetPrefix());
                 var updatedReg = updatedRegData.SingleOrDefault(r => r.RegNo == Regno);
                 var updatedFindings = await _reg.GetRegisterFindings(Regno);
 
@@ -922,7 +921,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                     return JsonValidationError("Employee email not found.");
 
 
-                var registrationData = await _reg.GetRegistrationData();
+                var registrationData = await _reg.GetRegistrationData(GetPrefix());
                 string previousPdfPath = registrationData.SingleOrDefault(res => res.RegNo == Regno).Filepath;
 
                 // ===================== STEP 2: Prepare File Paths =====================
@@ -938,7 +937,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 CacheHelper.Remove("Registration");
 
                 // ===================== STEP 3: Generate Updated PDF =====================
-                var updatedRegData = await _reg.GetRegistrationData();
+                var updatedRegData = await _reg.GetRegistrationData(GetPrefix());
                 var updatedReg = updatedRegData.SingleOrDefault(r => r.RegNo == Regno);
                 var updatedFindings = await _reg.GetRegisterFindings(Regno);
 
@@ -1386,7 +1385,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         [JwtAuthorize]
         public async Task<ActionResult> HandleReportRoutingAsync(string Regno)
         {
-            var getdata = await _reg.GetRegistrationData();
+            var getdata = await _reg.GetRegistrationData(GetPrefix());
             var report = getdata.SingleOrDefault(res => res.RegNo == Regno);
             string url = "";
 

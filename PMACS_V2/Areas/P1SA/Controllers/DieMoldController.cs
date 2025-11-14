@@ -25,6 +25,16 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         // ===========================================================
         // ==================== MOLD DIE DATA  =======================
         // ===========================================================
+        public async Task<ActionResult> GlobalMoldDieSummaryList()
+        {
+            var data = await _die.GetMoldDieSummary() ?? new List<DieMoldSummaryProcess>();
+
+            if (data == null || !data.Any())
+                return JsonNotFound("No DieMonth input data found");
+
+            return JsonSuccess(data);
+        }
+
         [JwtAuthorize]
         public async Task<ActionResult> GetMoldDieSummaryList(string ProcessID)
         {

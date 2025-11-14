@@ -15,7 +15,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
     public class RegistrationRepository : IRegistration
     {
      
-        public Task<List<PatrolRegistrationViewModel>> GetRegistrationData()
+        public Task<List<PatrolRegistrationViewModel>> GetRegistrationData(string prefix)
         {
             string strsql = $@"SELECT 
                                 r.RegNo,
@@ -47,14 +47,31 @@ namespace ProgramPartListWeb.Areas.PC.Repository
 								ON r.Employee_ID = Emp.Employee_ID
 							LEFT JOIN Patrol_UserEmail PIC 
 								ON r.PIC_ID = PIC.Employee_ID
+                            WHERE r.RegNo LIKE '%{prefix}%'      
                             ORDER BY DateCreated DESC";
             return SqlDataAccess.GetData<PatrolRegistrationViewModel>(strsql);
         }
         public Task<List<EmailModelV2>> PatrolEmailData()
         {
-            string strsql = "SELECT * FROM Patrol_UserEmail";
+            string strsql = $@"SELECT Employee_ID, FullName, Email, Position, Department_ID, DepPrefix
+                               FROM Patrol_UserEmail";
             return SqlDataAccess.GetData<EmailModelV2>(strsql);
         }
+
+
+        public Task<EmailModelV2> GetEmployeeEmailDetails(string emp, int pos, string pre)
+        {
+            string strsql = $@"SELECT FullName, Email, Position, Department_ID 
+                               FROM Patrol_UserEmail 
+                               WHERE Employee_ID =@Employee_ID AND Position =@Position AND DepPrefix =@DepPrefix";
+            return SqlDataAccess.GetObjectOnly<EmailModelV2>(strsql, 
+                new { 
+                    Employee_ID  = emp,
+                    Position = pos,
+                    DepPrefix = pre
+                });
+        }
+
 
         public Task<List<FindingModel>> GetRegisterFindings(string regNo) => SqlDataAccess.GetData<FindingModel>("GetFindings", new { Regno = regNo });
 
@@ -226,5 +243,6 @@ namespace ProgramPartListWeb.Areas.PC.Repository
 
             throw new NotImplementedException();
         }
+
     }
 }

@@ -41,6 +41,7 @@ namespace PMACS_V2.Areas.P1SA.Models
         //public int ShotAverage { get; set; }
         public int Status { get; set; } 
         public string Remarks { get; set; } 
+        public string ProcessID { get; set; }
     }
 
 

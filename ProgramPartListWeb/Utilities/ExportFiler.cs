@@ -20,6 +20,24 @@ namespace ProgramPartListWeb.Utilities
 {
     public sealed class ExportFiler
     {
+        private static byte[] _cachedTemplateBytes;
+        private static readonly object templateLock = new object();
+
+        private static byte[] LoadTemplate(string template)
+        {
+            if (_cachedTemplateBytes != null)
+                return _cachedTemplateBytes;
+
+            lock (templateLock)
+            {
+                if (_cachedTemplateBytes == null)
+                    _cachedTemplateBytes = File.ReadAllBytes(template);
+            }
+
+            return _cachedTemplateBytes;
+        }
+
+
         public static string ExportExcelTemplate(string templatePath, string exportFolder, string newFilename)
         {
             // Ensure EPPlus license context
@@ -141,78 +159,92 @@ namespace ProgramPartListWeb.Utilities
         }
 
 
-        public static async Task SaveFileasPDFV2(AddFormRegistrationModel reg, string json, string fullname,  string department, string outputfilename, string template, bool Sign)
+        public static async Task SaveFileasPDFV2(
+                AddFormRegistrationModel reg,
+                string json,
+                string fullname,
+                string department,
+                string outputfilename,
+                string template,
+                bool Sign)
         {
             try
             {
-                string exportFolder = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\Patrol_Registration\";
-                string outputPdfPath = Path.Combine(exportFolder, Path.ChangeExtension(outputfilename, ".pdf"));
-                string tempPdfPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".pdf");
+                string exportFolder =
+                    @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\Patrol_Registration\";
+                string finalPdf = Path.Combine(exportFolder, outputfilename);
 
-                byte[] excelBytes;
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
-                //DateTime date = DateTime.ParseExact(reg.DateConduct, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                //string formatted = date.ToString("MMMM dd, yyyy");
+                // Load & cache Excel template
+                byte[] templateBytes = LoadTemplate(template);
 
-                // Step 1: Generate Excel in memory
-                using (var package = new ExcelPackage(new FileInfo(template)))
+                // Deserialize findings once
+                var findings = JsonConvert.DeserializeObject<List<FindingModel>>(json);
+
+                // All heavy CPU work runs here
+                await Task.Run(() =>
                 {
-                    var worksheet = package.Workbook.Worksheets[0];
+                    // ----------------------
+                    // STEP 1: Build Excel
+                    // ----------------------
+                    byte[] excelBytes;
 
-                    worksheet.Cells["B2"].Value = "Registration No: " + reg.RegNo;
-                    worksheet.Cells["B4"].Value = "Dept. /Section Inspected: P1SA-" + department;
-                    worksheet.Cells["G53"].Value = fullname;
-
-                    var findings = JsonConvert.DeserializeObject<List<FindingModel>>(json);
-                    foreach (var f in findings)
+                    using (var templateStream = new MemoryStream(templateBytes))
+                    using (var package = new ExcelPackage(templateStream))
                     {
-                        switch (f.FindID)
+                        var ws = package.Workbook.Worksheets[0];
+
+                        ws.Cells["B2"].Value = "Registration No: " + reg.RegNo;
+                        ws.Cells["B4"].Value = "Dept. /Section Inspected: P1SA-" + department;
+                        ws.Cells["G53"].Value = fullname;
+
+                        foreach (var f in findings)
                         {
-                            case 1: worksheet.Cells["B7"].Value = f.FindDescription; break;
-                            case 2: worksheet.Cells["B13"].Value = f.FindDescription;  break;
-                            case 3: worksheet.Cells["B20"].Value = f.FindDescription;  break;
-                            case 4: worksheet.Cells["B27"].Value = f.FindDescription;  break;
-                            case 5: worksheet.Cells["B34"].Value = f.FindDescription;  break;
-                            default: worksheet.Cells["B42"].Value = f.FindDescription;  break;
+                            string cell;
+
+                            switch (f.FindID)
+                            {
+                                case 1: cell = "B7"; break;
+                                case 2: cell = "B13"; break;
+                                case 3: cell = "B20"; break;
+                                case 4: cell = "B27"; break;
+                                case 5: cell = "B34"; break;
+                                default: cell = "B42"; break;
+                            }
+
+                            ws.Cells[cell].Value = f.FindDescription;
                         }
+
+                        excelBytes = package.GetAsByteArray();
                     }
 
-                    excelBytes = package.GetAsByteArray();
-                }
-
-                // Step 2: Convert to PDF using Spire.XLS
-                using (var excelStream = new MemoryStream(excelBytes))
-                {
-                    var workbook = new Spire.Xls.Workbook();
-                    workbook.LoadFromStream(excelStream, ExcelVersion.Version2013);
-                    var sheet = workbook.Worksheets[0];
-
-                    var affectedCells = new[] { "B42", "D41", "C41", "D42" };
-                    foreach (var cell in affectedCells)
+                    // ----------------------
+                    // STEP 2: Build PDF
+                    // ----------------------
+                    using (var excelStream = new MemoryStream(excelBytes))
                     {
-                        var range = sheet.Range[cell];
-                        range.Style.VerticalAlignment = VerticalAlignType.Center;
-                        range.Style.WrapText = true;
+                        var wb = new Spire.Xls.Workbook();
+                        wb.LoadFromStream(excelStream, ExcelVersion.Version2013);
+
+                        var sheet = wb.Worksheets[0];
+                        sheet.Range["B42"].Style.WrapText = true;
+                        sheet.SetRowHeight(41, 30);
+                        sheet.SetRowHeight(42, 30);
+
+                        wb.SaveToFile(finalPdf, FileFormat.PDF);
                     }
+                });
 
-                    sheet.SetRowHeight(41, 30);
-                    sheet.SetRowHeight(42, 30);
-
-                    
-                    workbook.SaveToFile(tempPdfPath, FileFormat.PDF);
-                }
-
-                File.Copy(tempPdfPath, outputPdfPath, overwrite: true);
-                File.Delete(tempPdfPath);
-
-                Debug.WriteLine($"✔ PDF successfully generated at: {outputPdfPath}");
+                Debug.WriteLine("PDF saved: " + finalPdf);
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("❌ Error generating PDF: " + ex.Message);
+                Debug.WriteLine("PDF ERROR: " + ex.Message);
             }
         }
+
+
 
 
         public static async Task UpdatePDFRegistration(
@@ -573,5 +605,9 @@ namespace ProgramPartListWeb.Utilities
             string data = await SqlDataAccess.GetOneData(strquery, new { ID = EmpID });
             return (!string.IsNullOrEmpty(data)) ? data : "";   
         }
+
+
+      
+
     }
 }

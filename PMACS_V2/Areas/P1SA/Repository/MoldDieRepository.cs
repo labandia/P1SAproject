@@ -116,6 +116,67 @@ namespace PMACS_V2.Areas.P1SA.Repository
             return SqlDataAccess.GetData<DieProcessDescription>("SELECT * FROM DieMoldDescription");
         }
 
+        public Task<List<DieMoldSummaryProcess>> GetMoldDieSummary()
+        {
+            // filter by   WHERE p.ProcessID = 'M003' 
+
+            // Get the TotalQty of the Mold die Input
+            string strquery = @" WITH TotalDiePerPart AS (
+                                    SELECT PartNo, SUM(TotalDie) AS TotalQty
+                                    FROM DieMoldMonitor
+                                    GROUP BY PartNo
+                                ),
+                                SingleDS AS (
+                                    SELECT PartNo, TotalDie, DateAction
+                                    FROM (
+                                        SELECT PartNo, TotalDie, DateAction,
+                                               ROW_NUMBER() OVER (PARTITION BY PartNo ORDER BY DateAction DESC) AS rn
+                                        FROM DieMoldMonitor
+                                    ) Ranked
+                                    WHERE rn = 1
+                                ),
+                                TotalByNo AS (
+                                    SELECT p.No, SUM(ISNULL(td.TotalQty, 0)) AS ShotOnwards
+                                    FROM DieMoldProcesses p
+                                    LEFT JOIN TotalDiePerPart td ON td.PartNo = p.PartNo
+                                    GROUP BY p.No
+                                )
+                                SELECT 
+                                    p.RecordID,
+                                    p.No,
+                                    p.ProcessID,
+                                    p.PartNo,
+                                    p.DieNumber,
+                                    p.DieSerial,
+                                    p.DieLife,
+                                    p.PreviousCount,
+                                    ISNULL(mp.Cavity, 0) AS Cavity,
+                                    ISNULL(mp.DimensionQuality, '') AS DimensionQuality,
+                                    ISNULL(md.Description, '') AS Description,
+                                    ISNULL(ds.DateAction, NULL) AS DateAction,
+                                    ISNULL(ds.TotalDie, 0) AS LatestTotalDie,
+                                    ISNULL(tb.ShotOnwards, 0) AS ShotOnwards,
+                                    ISNULL(p.PreviousCount, 0) + ISNULL(tb.ShotOnwards, 0) AS TotalShotCount,
+                                    CASE 
+										WHEN ISNULL(p.DieLife, 0) = 0 THEN 0
+										ELSE CAST((ISNULL(p.PreviousCount, 0) + ISNULL(tb.ShotOnwards, 0)) AS BIGINT) * 100 / p.DieLife
+									END AS Status,
+									CASE 
+										WHEN CAST((ISNULL(p.PreviousCount, 0) + ISNULL(tb.ShotOnwards, 0)) AS BIGINT) * 100 / NULLIF(p.DieLife, 0) >= 100 THEN 'End of Life'
+										ELSE 'For Monitoring'
+									END AS Remarks
+                                FROM DieMoldProcesses p
+                                LEFT JOIN DieMoldParts mp ON mp.PartNo = p.PartNo
+                                LEFT JOIN DieMoldDescription md ON md.PartDescriptionID = mp.PartDescriptionID
+                                LEFT JOIN SingleDS ds ON ds.PartNo = p.PartNo
+                                LEFT JOIN TotalDiePerPart td ON td.PartNo = p.PartNo
+                                LEFT JOIN TotalByNo tb ON tb.No = p.No
+                                ORDER BY p.No ASC";
+
+            return SqlDataAccess.GetData<DieMoldSummaryProcess>(strquery);
+        }
+
+
         public Task<List<DieMoldSummaryProcess>> GetMoldDieSummary(string process)
         {
             // filter by   WHERE p.ProcessID = 'M003' 
@@ -628,5 +689,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
 
             return await SqlDataAccess.UpdateInsertQuery(insertquery, parameters);
         }
+
+       
     }
 }

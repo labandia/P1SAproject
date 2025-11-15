@@ -1319,7 +1319,7 @@
 
         if (fileInput.files.length > 0) {
             var file = fileInput.files[0];
-            formData.append('image2', file);
+            formData.append('Image2', file);
         }
 
         // Append additional form fields
@@ -1328,30 +1328,30 @@
         formData.append('Isdelete', isDel);
         const data = Object.fromEntries(formData);
 
-        let res = await postData('@Url.Action("EditmachineList", "FanMajor")', formData);
+        let res = await postData('@Url.Action("EditmachineList", "FanMajor")', data);
+        console.log(res);
+        //if (res && res.Success) {
+        //    let newloadData = res.Data[0];
+        //    setTimeout(() => {
+        //        Swal.fire({
+        //            title: "Success",
+        //            text: "Edit Successfully",
+        //            icon: "success",
+        //            showConfirmButton: false,
+        //            timer: 2000
+        //        }).then(() => {
 
-        if (res && res.Success) {
-            let newloadData = res.Data[0];
-            setTimeout(() => {
-                Swal.fire({
-                    title: "Success",
-                    text: "Edit Successfully",
-                    icon: "success",
-                    showConfirmButton: false,
-                    timer: 2000
-                }).then(() => {
-
-                    savebtn.innerHTML = "<span><i class='fa-regular fa-floppy-disk'></i> Save Details</span>"
-                    $("#fansaveEdit").css("display", "none");
-                    $("#fanEnableEdit").css("display", "block");
-                    $('.mode').prop('disabled', true);
-                    displaycamefromtheedit(newloadData);
-                    //UpdateMachineData();
-                    //window.location.href = "/machine/Fanmajor";
-                    $("#Editmodal").modal("hide");
-                });
-            }, 500);
-        }
+        //            savebtn.innerHTML = "<span><i class='fa-regular fa-floppy-disk'></i> Save Details</span>"
+        //            $("#fansaveEdit").css("display", "none");
+        //            $("#fanEnableEdit").css("display", "block");
+        //            $('.mode').prop('disabled', true);
+        //            displaycamefromtheedit(newloadData);
+        //            //UpdateMachineData();
+        //            //window.location.href = "/machine/Fanmajor";
+        //            $("#Editmodal").modal("hide");
+        //        });
+        //    }, 500);
+        //}
 
     });
 

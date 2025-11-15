@@ -31,10 +31,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Customer_Complaint_user));
             this.projectitle = new System.Windows.Forms.Label();
             this.CustomDatagrid = new System.Windows.Forms.DataGridView();
-            this.CustSummaryGrid = new System.Windows.Forms.DataGridView();
-            this.OpenCC = new System.Windows.Forms.Button();
-            this.SelectedProcess = new System.Windows.Forms.ComboBox();
-            this.Externalbtn = new System.Windows.Forms.Button();
             this.RecordID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DateCreated = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SectionID = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -48,6 +44,10 @@
             this.CCtype = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Edit = new System.Windows.Forms.DataGridViewImageColumn();
             this.Delete = new System.Windows.Forms.DataGridViewImageColumn();
+            this.CustSummaryGrid = new System.Windows.Forms.DataGridView();
+            this.OpenCC = new System.Windows.Forms.Button();
+            this.SelectedProcess = new System.Windows.Forms.ComboBox();
+            this.Externalbtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.CustomDatagrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CustSummaryGrid)).BeginInit();
             this.SuspendLayout();
@@ -57,7 +57,7 @@
             this.projectitle.AutoSize = true;
             this.projectitle.Font = new System.Drawing.Font("Century Gothic", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.projectitle.ForeColor = System.Drawing.Color.Black;
-            this.projectitle.Location = new System.Drawing.Point(43, 47);
+            this.projectitle.Location = new System.Drawing.Point(44, 46);
             this.projectitle.Name = "projectitle";
             this.projectitle.Size = new System.Drawing.Size(253, 28);
             this.projectitle.TabIndex = 3;
@@ -67,6 +67,8 @@
             // 
             this.CustomDatagrid.AllowUserToAddRows = false;
             this.CustomDatagrid.AllowUserToDeleteRows = false;
+            this.CustomDatagrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.CustomDatagrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.CustomDatagrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.CustomDatagrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -83,7 +85,7 @@
             this.CCtype,
             this.Edit,
             this.Delete});
-            this.CustomDatagrid.Location = new System.Drawing.Point(48, 191);
+            this.CustomDatagrid.Location = new System.Drawing.Point(48, 225);
             this.CustomDatagrid.Name = "CustomDatagrid";
             this.CustomDatagrid.ReadOnly = true;
             this.CustomDatagrid.RowHeadersVisible = false;
@@ -91,51 +93,6 @@
             this.CustomDatagrid.TabIndex = 4;
             this.CustomDatagrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.CustomDatagrid_CellClick);
             this.CustomDatagrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.CustomDatagrid_CellFormatting);
-            // 
-            // CustSummaryGrid
-            // 
-            this.CustSummaryGrid.AllowUserToAddRows = false;
-            this.CustSummaryGrid.AllowUserToDeleteRows = false;
-            this.CustSummaryGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.CustSummaryGrid.Location = new System.Drawing.Point(905, 24);
-            this.CustSummaryGrid.Name = "CustSummaryGrid";
-            this.CustSummaryGrid.ReadOnly = true;
-            this.CustSummaryGrid.Size = new System.Drawing.Size(376, 148);
-            this.CustSummaryGrid.TabIndex = 5;
-            // 
-            // OpenCC
-            // 
-            this.OpenCC.Location = new System.Drawing.Point(634, 80);
-            this.OpenCC.Name = "OpenCC";
-            this.OpenCC.Size = new System.Drawing.Size(75, 23);
-            this.OpenCC.TabIndex = 6;
-            this.OpenCC.Text = "OpenCC";
-            this.OpenCC.UseVisualStyleBackColor = true;
-            this.OpenCC.Click += new System.EventHandler(this.OpenCC_Click);
-            // 
-            // SelectedProcess
-            // 
-            this.SelectedProcess.DisplayMember = "External";
-            this.SelectedProcess.FormattingEnabled = true;
-            this.SelectedProcess.Items.AddRange(new object[] {
-            "External",
-            "SDC"});
-            this.SelectedProcess.Location = new System.Drawing.Point(732, 80);
-            this.SelectedProcess.Name = "SelectedProcess";
-            this.SelectedProcess.Size = new System.Drawing.Size(121, 21);
-            this.SelectedProcess.TabIndex = 7;
-            this.SelectedProcess.ValueMember = "External";
-            this.SelectedProcess.SelectedIndexChanged += new System.EventHandler(this.SelectedProcess_SelectedIndexChanged);
-            // 
-            // Externalbtn
-            // 
-            this.Externalbtn.Location = new System.Drawing.Point(653, 136);
-            this.Externalbtn.Name = "Externalbtn";
-            this.Externalbtn.Size = new System.Drawing.Size(75, 23);
-            this.Externalbtn.TabIndex = 8;
-            this.Externalbtn.Text = "Externalbtn";
-            this.Externalbtn.UseVisualStyleBackColor = true;
-            this.Externalbtn.Click += new System.EventHandler(this.Externalbtn_Click);
             // 
             // RecordID
             // 
@@ -230,6 +187,52 @@
             this.Delete.HeaderText = "Delete";
             this.Delete.Name = "Delete";
             this.Delete.ReadOnly = true;
+            // 
+            // CustSummaryGrid
+            // 
+            this.CustSummaryGrid.AllowUserToAddRows = false;
+            this.CustSummaryGrid.AllowUserToDeleteRows = false;
+            this.CustSummaryGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.CustSummaryGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.CustSummaryGrid.Location = new System.Drawing.Point(905, 24);
+            this.CustSummaryGrid.Name = "CustSummaryGrid";
+            this.CustSummaryGrid.ReadOnly = true;
+            this.CustSummaryGrid.Size = new System.Drawing.Size(376, 148);
+            this.CustSummaryGrid.TabIndex = 5;
+            // 
+            // OpenCC
+            // 
+            this.OpenCC.Location = new System.Drawing.Point(49, 105);
+            this.OpenCC.Name = "OpenCC";
+            this.OpenCC.Size = new System.Drawing.Size(128, 34);
+            this.OpenCC.TabIndex = 6;
+            this.OpenCC.Text = "Add SDC Data";
+            this.OpenCC.UseVisualStyleBackColor = true;
+            this.OpenCC.Click += new System.EventHandler(this.OpenCC_Click);
+            // 
+            // SelectedProcess
+            // 
+            this.SelectedProcess.DisplayMember = "External";
+            this.SelectedProcess.FormattingEnabled = true;
+            this.SelectedProcess.Items.AddRange(new object[] {
+            "External",
+            "SDC"});
+            this.SelectedProcess.Location = new System.Drawing.Point(366, 113);
+            this.SelectedProcess.Name = "SelectedProcess";
+            this.SelectedProcess.Size = new System.Drawing.Size(121, 21);
+            this.SelectedProcess.TabIndex = 7;
+            this.SelectedProcess.ValueMember = "External";
+            this.SelectedProcess.SelectedIndexChanged += new System.EventHandler(this.SelectedProcess_SelectedIndexChanged);
+            // 
+            // Externalbtn
+            // 
+            this.Externalbtn.Location = new System.Drawing.Point(196, 105);
+            this.Externalbtn.Name = "Externalbtn";
+            this.Externalbtn.Size = new System.Drawing.Size(137, 34);
+            this.Externalbtn.TabIndex = 8;
+            this.Externalbtn.Text = "Add External Data";
+            this.Externalbtn.UseVisualStyleBackColor = true;
+            this.Externalbtn.Click += new System.EventHandler(this.Externalbtn_Click);
             // 
             // Customer_Complaint_user
             // 

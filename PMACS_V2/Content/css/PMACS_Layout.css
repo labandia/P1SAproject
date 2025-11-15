@@ -942,7 +942,7 @@
         font-size: var(--small-font-size);
     }
 
-    .formcontainer input, .formcontainer textarea, .addformcontainer input, .addformcontainer textarea {
+    .formcontainer input, .formcontainer textarea, .addformcontainer input, .addformcontainer textarea, .DieDetails_Container input {
         width: 100%;
         margin: .5em 0 1em 0;
         border: 1px solid #A5A1AA;

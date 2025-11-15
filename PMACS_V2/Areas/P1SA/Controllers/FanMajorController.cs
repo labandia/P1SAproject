@@ -169,59 +169,60 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             };
         }
         [HttpPost]
-        public async Task<ActionResult> EditmachineList()
+        public async Task<ActionResult> EditmachineList(EditFanMajorModel model)
         {
+
+            Debug.WriteLine($@"Equipment: {model.EditDateacq} - Date : {model.EditEquip}");
+
 
             try
             {
                 // Check if there are any files in the request
                 byte[] getCurrentImage = new byte[] { };
 
-                if (Request.Files.Count > 0)
+                // Handle uploaded file
+                if (model.Image2 != null && model.Image2.ContentLength > 0)
                 {
-                    var postedFile = Request.Files[0];
-                    string ext = Path.GetExtension(postedFile.FileName);
-                    string filename = "Mach" + DateTime.Now.ToString("yyyyMMddhhmmssffff") + ext;
-                    string imagefile = filename;
-
-                    // Save the file
-                    string filepathname = "";
+                    string ext = Path.GetExtension(model.Image2.FileName);
+                    string filename = "Mach" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ext;
                     string filePath = Server.MapPath("~/Content/Images/" + filename);
-                    // postedFile.SaveAs(filePath);
-                    filepathname = filePath;
 
-                    getCurrentImage = GlobalUtilities.ResizeAndConvertToBinary(postedFile, filePath);
+                    // Save file temporarily if you need it
+                    //model.Image2.SaveAs(filePath);
+                    Debug.WriteLine($@"File saved to: {filePath}");
 
-                    // DELETE THE IMAGE AFTER IT SAVES TO THE DATABASE
-                    if (System.IO.File.Exists(filepathname)) System.IO.File.Delete(filepathname);
+                    // Convert to byte[] if needed for database
+                    // imageBytes = GlobalUtilities.ResizeAndConvertToBinary(model.Image2, filePath);
 
+                    // Optional: delete temporary file
+                    // if (System.IO.File.Exists(filePath)) System.IO.File.Delete(filePath);
                 }
 
-                int machineID = Convert.ToInt32(Request.Form["EditID"]);
+                //int machineID = Convert.ToInt32(Request.Form["EditID"]);
 
-                var obj = new EditMachineModel
-                {
-                    ID = machineID,
-                    Machname =  Request.Form["EditEquip"],
-                    Date_acquired = Request.Form["EditDateacq"],
-                    Model = Request.Form["EditModel"],
-                    Location = Request.Form["Editlocal"],
-                    Serial = Request.Form["EditSerial"],
-                    Manufact = Request.Form["EditManu"],
-                    Asset = Request.Form["EditAssets"],
-                    Status = Request.Form["Editstatus"],
-                    Reasons = Request.Form["reason"],
-                    Tongs = Request.Form["edittons"],
-                    Filepath = getCurrentImage,
-                };
+                //var obj = new EditMachineModel
+                //{
+                //    ID = machineID,
+                //    Machname =  Request.Form["EditEquip"],
+                //    Date_acquired = Request.Form["EditDateacq"],
+                //    Model = Request.Form["EditModel"],
+                //    Location = Request.Form["Editlocal"],
+                //    Serial = Request.Form["EditSerial"],
+                //    Manufact = Request.Form["EditManu"],
+                //    Asset = Request.Form["EditAssets"],
+                //    Status = Request.Form["Editstatus"],
+                //    Reasons = Request.Form["reason"],
+                //    Tongs = Request.Form["edittons"],
+                //    Filepath = getCurrentImage,
+                //};
 
-                bool result = await _man.EditMachine(obj);
+                //bool result = await _man.EditMachine(obj);
 
-                if (result) CacheHelper.Remove("Machinelist");
+                //if (result) CacheHelper.Remove("Machinelist");
 
                 return new JsonResult
                 {
-                    Data = new { Success = true, Data = await _man.GetMachineDataByID(machineID) },
+                    Data = new { Success = true, Data = model },
                     JsonRequestBehavior = JsonRequestBehavior.AllowGet,
                     MaxJsonLength = int.MaxValue
                 };

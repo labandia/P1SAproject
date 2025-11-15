@@ -103,9 +103,33 @@ namespace PMACS_V2.Areas.P1SA.Repository
                     INNER JOIN DieMoldParts p ON d.PartNo = p.PartNo
                     	INNER JOIN DieMoldProcesses ps ON ps.PartNo = p.PartNo
 					WHERE ps.ProcessID = @process AND  MONTH(d.DateInput) = @month
-							AND YEAR(d.DateInput) = @year
+							AND YEAR(d.DateInput) = @year AND d.IsDelete = 1
                     ORDER BY RecordID DESC",  new { process = process, month = month, year  = year });
         }
+
+         public async Task<DieMoldDaily> GetDailyLastMoldData(string partnum)
+        {
+            var getData = await SqlDataAccess.GetData<DieMoldDaily>($@"SELECT 
+	                    TOP 1 
+                        d.RecordID,
+	                    FORMAT(d.DateInput, 'MM/dd/yy') as DateInput, 
+	                    d.PartNo, p.DimensionQuality, 
+	                    d.CycleShot, 
+	                    d.Total, 
+	                    d.MachineNo, 
+	                    d.Status, 
+	                    d.Remarks, 
+	                    d.Mincharge
+                    FROM DieMoldDaily d 
+                    INNER JOIN DieMoldParts p ON d.PartNo = p.PartNo
+                    	INNER JOIN DieMoldProcesses ps ON ps.PartNo = p.PartNo
+					WHERE  p.PartNo = @PartNo AND d.IsDelete = 1
+					ORDER BY RecordID DESC", new { PartNo = partnum });
+
+            return getData.FirstOrDefault();
+        }
+
+
         public Task<List<DieMoldProcess>> GetMoldProcess()
         {
             return SqlDataAccess.GetData<DieMoldProcess>("SELECT * FROM DieMoldProcessName WHERE ProcessID IN ('M001', 'M002', 'M003', 'M004', 'M005')");
@@ -690,6 +714,9 @@ namespace PMACS_V2.Areas.P1SA.Repository
             return await SqlDataAccess.UpdateInsertQuery(insertquery, parameters);
         }
 
-       
+        public Task<bool> DeleteDailyMoldie(int ID)
+        {
+             return SqlDataAccess.UpdateInsertQuery("UPDATE DieMoldDaily SET IsDelete = 0 WHERE RecordID =@RecordID", new { RecordID = ID });
+        }
     }
 }

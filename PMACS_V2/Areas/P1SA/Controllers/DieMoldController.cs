@@ -113,7 +113,21 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             return JsonSuccess(data);
         }
 
+
         [JwtAuthorize]
+        public async Task<ActionResult> GetMoldDieLastRecord(string partnum)
+        {
+
+            var data = await _die.GetDailyLastMoldData(partnum);
+
+            if (data == null)
+                return JsonNotFound("No Mold Die Daily data found");
+
+            return JsonSuccess(data);
+        }
+
+
+        [HttpGet]
         public async Task<ActionResult> GetMoldieDropDownlist()
         {
             try
@@ -152,7 +166,13 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             return JsonCreated(add, "Update Data Successfully");
         }
 
-
+        [HttpPost]
+        public async Task<ActionResult> DeleteDailyMoldDieMonitor(int ID)
+        {
+            bool update = await _die.DeleteDailyMoldie(ID);
+            if (!update) return JsonValidationError();
+            return JsonCreated(ID, "Delete Data Successfully");
+        }
 
 
         [HttpPost]

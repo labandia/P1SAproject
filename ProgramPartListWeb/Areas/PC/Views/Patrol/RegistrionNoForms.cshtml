@@ -74,7 +74,7 @@
                         <label>Registration No. <small style="color: #a81818; font-weight: 600;">*</small> </label> <br />
                         @*<input type="text" placeholder="Type Registration No." name="RegNo" id="RegNo" required />*@
                         <div class="date-wrapper">
-                            <span class="prefix" id="prefix">P1SA-</span>
+                            <span class="prefix" id="prefix">@ViewBag.Prefix-</span>
                             <input name="RegNo" id="RegNo" class="styled-date" type="text" placeholder="YYMMDD" readonly required>
 
                             <div class="calendar-icon-wrapper">
@@ -244,6 +244,7 @@
 
 
     <script type="text/javascript">
+        let prefix = "@ViewBag.Prefix";
         let currentStep = 1;
         const totalSteps = 5;
 
@@ -342,9 +343,11 @@
                   const finaldata = Object.fromEntries(finalformData);
 
 
-                  let reg = "P1SA-" + finaldata.RegNo;
+                  let reg = prefix + "-" + finaldata.RegNo;
 
-                  if (formValidation(reg)) {
+                   let checklist = regisTable.find(n => n.RegNo === reg);
+
+                  if (checklist) {
                       Swal.fire({
                           icon: "error",
                           text: "Registration No is already inserted",
@@ -425,10 +428,7 @@
         });
 
 
-            const formValidation = (regno) => {
-                const checkexist = regisTable.find(n => n.RegNo === regno);
-                return checkexist;
-            };
+
 
 
         function convertRegNoToDate(regNo) {
@@ -493,13 +493,7 @@
         // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
         const LoadPageData = async () => {
             try {
-               let segment = @ViewBag.Segment;
 
-                if (segment == 2) {
-                    $("#prefix").text("PIFA-");
-                } else {
-                    $("#prefix").text("PISA-");
-                }
 
                 const [regist, email] = await Promise.all([
                     RegistrationTable(),

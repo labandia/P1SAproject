@@ -160,9 +160,48 @@
 
                 <hr />
 
+
+                <div class="approval-container">
+                    <div class="approval-box">
+                        <div class="approval_title">LA Datu</div>
+                        <div class="approval_content">
+                            <p class="approval_status approved">Approved</p>
+                            <p class="approval_role">Manager</p>
+                        </div>
+                    </div>
+
+                    <div class="approval-box">
+                        <div class="approval_title">LA Datu</div>
+                        <div class="approval_content">
+                            <p class="approval_status approved">Approved</p>
+                            <p class="approval_role">Manager</p>
+                        </div>
+                    </div>
+
+                    <div class="approval-box">
+                        <div class="approval_title">LA Datu</div>
+                        <div class="approval_content">
+                            <p class="approval_status approved">Approved</p>
+                            <p class="approval_role">Manager</p>
+                        </div>
+                    </div>
+
+                    <div class="approval-box">
+                        <div class="approval_title">LA Datu</div>
+                        <div class="approval_content">
+                            <p class="approval_status approved">Approved</p>
+                            <p class="approval_role">Manager</p>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
                 <div class="button-group">
                     <div></div> <!-- Empty div for spacing -->
-                    <button type="submit" id="btnSave"><i class="fa-regular fa-floppy-disk"></i> Save & Send</button>
+                    <button type="submit" id="btnSave"><i class="fa-regular fa-floppy-disk"></i> Approved & Send Email</button>
                 </div>
             </form>
 
@@ -448,7 +487,7 @@
                 $("#regtext").text(strRegno);
                 $("#SectionName").val("P1SA-" + res.Data.SectionName);
 
-                RedirectPageView(res.Data.ReportStatus, strRegno);
+                //RedirectPageView(res.Data.ReportStatus, strRegno, 0);
             }
         }
 
@@ -463,7 +502,7 @@
             }
         }
 
-        const RedirectPageView = (stats, regno) => {
+        const RedirectPageView = (stats, regno, mode) => {
             if (stats == 1) return;
             // Use encodeURIComponent to avoid issues with special characters
             const r = encodeURIComponent(regno);

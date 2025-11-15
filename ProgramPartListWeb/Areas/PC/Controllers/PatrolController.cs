@@ -1275,18 +1275,8 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         [CompressResponse]
         public ActionResult RegistrionNoForms()
         {
-            // 1️⃣ Get the browser (client) IP
-            string clientIp = GetClientIpAddress(Request);
 
-            // 2️⃣ Extract the 3rd segment (e.g., "1" from 172.29.1.121)
-            string segment = GetSegment(clientIp, 3);
-
-
-            Debug.WriteLine("IpAddress: " + clientIp);
-            Debug.WriteLine("Third Segment: " + segment);
-
-            ViewBag.ServerIP = clientIp;
-            ViewBag.Segment = segment;
+            ViewBag.Prefix = GetPrefix();
 
             return View();
         }

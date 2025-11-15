@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web;
 
 namespace PMACS_V2.Areas.P1SA.Models
 {
@@ -299,4 +300,38 @@ namespace PMACS_V2.Areas.P1SA.Models
        public string Reasons { get; set; }
        public byte[] Filepath { get; set; }  
     }
+
+    public class EditFanMajorModel
+    {
+        public string EditID { get; set; }
+        public string EditEquip { get; set; }
+        public string EditDateacq { get; set; }
+        public string EditModel { get; set; }
+        public string EditLocal { get; set; }
+        public string EditSerial { get; set; }
+        public string EditManu { get; set; }
+        public string EditAssets { get; set; }
+        public string EditStatus { get; set; }
+        public string Reason { get; set; }
+        public string EditTons { get; set; }
+
+        public HttpPostedFileBase Image2 { get; set; }
+    }
+
+
+    public class EditFanMajorModeV2
+    {
+        public string EditID { get; set; }
+        public string EditEquip { get; set; }
+        public string EditDateacq { get; set; }
+        public string EditModel { get; set; }
+        public string EditLocal { get; set; }
+        public string EditSerial { get; set; }
+        public string EditManu { get; set; }
+        public string EditAssets { get; set; }
+        public string EditStatus { get; set; }
+        public string Reason { get; set; }
+        public string EditTons { get; set; }
+    }
+
 }

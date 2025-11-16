@@ -65,6 +65,20 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
             return await SqlDataAccess.GetData<RotorProductModel>(strsql, null);
         }
 
+        public Task<RotorProductModel> GetRotorStorageByID(int ID)
+        {
+            string strsql = $@"SELECT
+                                l.RecordID, 
+	                            m.Partnumber, m.ModelName, l.Area, l.Quantity,
+	                            m.FrontImage, m.BackImage
+                            FROM PartsLocatorRotor_Location l
+                            INNER JOIN PartsLocatorRotor_Masterlist m
+                            ON m.Partnumber = l.Partnumber
+                            WHERE l.RecordID = @RecordID    
+                            ORDER BY l.RecordID DESC";
+            return SqlDataAccess.GetDataByID<RotorProductModel>(strsql, new { RecordID = ID });
+        }
+
         public Task<bool> UpdateRotorMasterlist(RotorProductModel rotor)
         {
             throw new System.NotImplementedException();

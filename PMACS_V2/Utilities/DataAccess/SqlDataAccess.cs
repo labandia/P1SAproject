@@ -105,6 +105,24 @@ namespace PMACS_V2.Helper
                 return "";
             }
         }
+
+        // ############ SELECTS ONLY ONE ROW DATA  ##############################
+        public static async Task<T> GetDataByID<T>(string query, object parameters)
+        {
+            try
+            {
+                using (IDbConnection con = GetSqlConnection(_connectionString()))
+                {
+                    return await con.QuerySingleOrDefaultAsync<T>(query, parameters);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Database error: {ex.Message}");
+            }
+        }
+
+
         // ############ GET THE TOTAL COUNT OF THE QUERY ########################
         public static async Task<int> GetCountData(string query, object parameters = null)
         {

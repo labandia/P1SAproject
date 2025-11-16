@@ -1,15 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using PMACS_V2.Areas.P1SA.Models;
-using PMACS_V2.Areas.P1SA.Repository;
 using PMACS_V2.Areas.PartsLocal.Interface;
 using PMACS_V2.Areas.PartsLocal.Model;
 using PMACS_V2.Controllers;
 using ProgramPartListWeb.Helper;
-using ProgramPartListWeb.Utilities;
 
 namespace PMACS_V2.Areas.PartsLocal.Controllers
 {
@@ -18,8 +14,6 @@ namespace PMACS_V2.Areas.PartsLocal.Controllers
         private readonly IProducts _prod;
         private readonly IShopOrderIn _shopin;
         private readonly IShopOrderOut _shopout;    
-
-
 
         public PartsLocatorController(IProducts prod, IShopOrderIn shopin, IShopOrderOut shopout)
         {
@@ -32,9 +26,7 @@ namespace PMACS_V2.Areas.PartsLocal.Controllers
         public async Task<ActionResult> GetProductMasterlist()
         {
             var data = await _prod.GetRotorMasterlist() ?? new List<RotorProductModel>();
-
             if(data == null && data.Any()) return JsonNotFound("No Masterlist Data.");
-          
             return JsonSuccess(data);
         }
 
@@ -42,41 +34,23 @@ namespace PMACS_V2.Areas.PartsLocal.Controllers
         public async Task<ActionResult> GetStorageData()
         {
             var data = await _prod.GetRotorStorage() ?? new List<RotorProductModel>();
-
-            foreach (var item in data)
-            {
-                Debug.WriteLine($@"Record ID : {item.RecordID} - Partnumber : {item.Partnumber}");
-            }
-
-
             if (data == null && data.Any()) return JsonNotFound("No Storage Data.");
-
             return JsonSuccess(data);
         }
-
 
         [JwtAuthorize]
         public async Task<ActionResult> GetProductDetails(int RecordID)
         {
-            var data = await _prod.GetRotorStorage() ?? new List<RotorProductModel>();
-
-            var filteredData = data.SingleOrDefault(d => d.RecordID == RecordID);
-
-            if (filteredData == null)
-                return JsonNotFound("No Rotor data found");
-
-            return JsonSuccess(filteredData);
+            var data = await _prod.GetRotorStorageByID(RecordID) ?? new RotorProductModel { };
+            if (data == null)  return JsonNotFound("No Rotor data found");
+            return JsonSuccess(data);
         }
-
 
         [HttpPost]
         public async Task<ActionResult> AddShopOrderIn(ShopOrderInModel shop)
         {
             bool result = await _shopin.AddTransactionIN(shop);
-
             if (!result) return JsonValidationError();
-
-
             return JsonCreated(shop, "Update successfully");
         }
 

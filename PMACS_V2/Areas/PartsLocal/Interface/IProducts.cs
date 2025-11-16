@@ -8,6 +8,7 @@ namespace PMACS_V2.Areas.PartsLocal.Interface
     {
         Task<IEnumerable<RotorProductModel>> GetRotorMasterlist();
         Task<List<RotorProductModel>> GetRotorStorage();
+        Task<RotorProductModel> GetRotorStorageByID(int ID);
         Task<bool> UpdateRotorMasterlist(RotorProductModel rotor);
         Task<bool> AddRotorMasterlist(RotorProductModel rotor);
     }

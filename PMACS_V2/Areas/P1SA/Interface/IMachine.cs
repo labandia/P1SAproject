@@ -9,6 +9,7 @@ namespace PMACS_V2.Areas.P1SA.Interface
         //===============  GET FAN MAJOR MACHINE  DATA ===================
         Task<List<MachineModel>> GetMachineData(int offset, int limit, int sect, string mach);
         Task<List<MachineModel>> GetMachineDataByID(int ID);
+        Task<byte[]> GetMachineImage(int machineID);
         Task<List<EquipmentList>> GetEquipmentData(int sectionID);
         Task<List<CountMachineModel>> GetCountMachine(int sectionID, string MachineCode);
 

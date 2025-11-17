@@ -10,13 +10,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Mail;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 
 namespace PMACS_V2.Areas.P1SA.Controllers
 {
-    [CompressResponse]
-    [RateLimiting(300, 1)] // Limits the No of Request
     public class FanMajorController : ExtendController
     {
 
@@ -168,61 +168,99 @@ namespace PMACS_V2.Areas.P1SA.Controllers
                 MaxJsonLength = int.MaxValue
             };
         }
+
+
         [HttpPost]
-        public async Task<ActionResult> EditmachineList(EditFanMajorModel model)
+        public async Task<ActionResult> EditmachineList(HttpPostedFileBase[] Image2)
         {
-
-            Debug.WriteLine($@"Equipment: {model.EditDateacq} - Date : {model.EditEquip}");
-
 
             try
             {
+                int machineID = Convert.ToInt32(Request.Form["EditID"]);
+
+
                 // Check if there are any files in the request
-                byte[] getCurrentImage = new byte[] { };
+                // Load existing image in case no new upload
+                byte[] getCurrentImage = await _man.GetMachineImage(machineID);
+                string filename = "";
 
-                // Handle uploaded file
-                if (model.Image2 != null && model.Image2.ContentLength > 0)
+                //// Handle uploaded file
+                if (Image2 != null && Image2.Length > 0)
                 {
-                    string ext = Path.GetExtension(model.Image2.FileName);
-                    string filename = "Mach" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ext;
-                    string filePath = Server.MapPath("~/Content/Images/" + filename);
+                    foreach (var file in Image2)
+                    {
+                        if (file != null && file.ContentLength > 0)
+                        {
+                            string ext = Path.GetExtension(file.FileName);
+                            filename = "Mach" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ext;
+                            string filePath = Server.MapPath("~/Content/Images/" + filename);
 
-                    // Save file temporarily if you need it
-                    //model.Image2.SaveAs(filePath);
-                    Debug.WriteLine($@"File saved to: {filePath}");
+                            // Save the uploaded file
+                            file.SaveAs(filePath);
+                            Debug.WriteLine($@"File saved to: {filePath}");
 
-                    // Convert to byte[] if needed for database
-                    // imageBytes = GlobalUtilities.ResizeAndConvertToBinary(model.Image2, filePath);
+                            // Convert to binary for DB
+                            getCurrentImage = GlobalUtilities.ResizeAndConvertToBinary(file, filePath);
 
-                    // Optional: delete temporary file
-                    // if (System.IO.File.Exists(filePath)) System.IO.File.Delete(filePath);
+                            // Optional cleanup
+                            System.IO.File.Delete(filePath);
+
+                            break; // take only the first file
+                        }
+                    }
+
                 }
 
-                //int machineID = Convert.ToInt32(Request.Form["EditID"]);
 
-                //var obj = new EditMachineModel
-                //{
-                //    ID = machineID,
-                //    Machname =  Request.Form["EditEquip"],
-                //    Date_acquired = Request.Form["EditDateacq"],
-                //    Model = Request.Form["EditModel"],
-                //    Location = Request.Form["Editlocal"],
-                //    Serial = Request.Form["EditSerial"],
-                //    Manufact = Request.Form["EditManu"],
-                //    Asset = Request.Form["EditAssets"],
-                //    Status = Request.Form["Editstatus"],
-                //    Reasons = Request.Form["reason"],
-                //    Tongs = Request.Form["edittons"],
-                //    Filepath = getCurrentImage,
-                //};
+                var obj = new EditMachineModel
+                {
+                    ID = machineID,
+                    Machname = Request.Form["EditEquip"],
+                    Date_acquired = Request.Form["EditDateacq"],
+                    Model = Request.Form["EditModel"],
+                    Location = Request.Form["Editlocal"],
+                    Serial = Request.Form["EditSerial"],
+                    Manufact = Request.Form["EditManu"],
+                    Asset = Request.Form["EditAssets"],
+                    Status = Request.Form["Editstatus"],
+                    Reasons = Request.Form["reason"],
+                    Tongs = Request.Form["edittons"],
+                    Filepath = getCurrentImage,
+                };
 
-                //bool result = await _man.EditMachine(obj);
+                bool result = await _man.EditMachine(obj);
 
-                //if (result) CacheHelper.Remove("Machinelist");
+                if (result) CacheHelper.Remove("Machinelist");
+
+                var getmachID = await _man.GetMachineDataByID(machineID);
+
+                var machineWithImages = getmachID.Select(m => new
+                {
+                    m.ID,
+                    m.machcode,
+                    m.Machname,
+                    m.Model,
+                    m.Manufact,
+                    m.Serial,
+                    m.location,
+                    m.status,
+                    m.DateAdd,
+                    m.Asset,
+                    m.Equipment,
+                    m.Reasons,
+                    m.Date_acquired,
+                    m.Tongs,
+                    m.IsDelete,
+                    m.Section_ID,
+                    ImageBase64 = (m.Filepath != null && m.Filepath.Length > 0)
+                               ? SafeBase64(m.Filepath)
+                               : null
+                }).ToList();
+
 
                 return new JsonResult
                 {
-                    Data = new { Success = true, Data = model },
+                    Data = new { Success = true, Data = machineWithImages, Message = "Edit Machine successfully" },
                     JsonRequestBehavior = JsonRequestBehavior.AllowGet,
                     MaxJsonLength = int.MaxValue
                 };

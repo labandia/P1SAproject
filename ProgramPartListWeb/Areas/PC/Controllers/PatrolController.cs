@@ -483,14 +483,24 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
                 // ===================== STEP 6: Send Notification Email =====================
                 string processLink = $"http://p1saportalweb.sdp.com/PC/Patrol/ProcessOwner?Regno={finalPrefix}&mode=1";
-                string emailBody = EmailService.RegistrationEmailBody(employeeEmail.FullName, finalPrefix, processLink);
+                //string emailBody = EmailService.RegistrationEmailBody(employeeEmail.FullName, finalPrefix, processLink);
+
+
+                string countermeasureEmail = EmailService.RegistrationEmailBodyV2(
+                    employeeEmail.FullName,
+                    finalPrefix,
+                    departmentName,
+                    processLink,
+                    "processowner"
+                );
+
 
                 var sendEmail = new SentEmailModel
                 {
-                    Subject = "Patrol Inspection",
+                    Subject = $@"[FOLLOW UP - REGISTRATION REPORT] 'For Review/Submit CounterMeasure' - {finalPrefix}",
                     Sender = strSender,
                     BCC = "",
-                    Body = emailBody,
+                    Body = countermeasureEmail,
                     Recipient = employeeEmail.Email
                 };
 
@@ -727,16 +737,28 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
                 // ===================== STEP 8: Send Notification Email =====================
                 string processLink = $"http://p1saportalweb.sdp.com/PC/Patrol/InspectorsReview?Regno={finalPrefix}&mode=1";
-                string emailBody = EmailService.RegistrationEmailBody(employeeEmail.FullName, finalPrefix, processLink);
+                //string emailBody = EmailService.RegistrationEmailBody(employeeEmail.FullName, finalPrefix, processLink);
+                string InspectorsEmail = EmailService.RegistrationEmailBodyV2(
+                      employeeEmail.FullName,
+                      finalPrefix,
+                      updatedReg.SectionName,
+                      processLink,
+                      "inpectorapproval"
+                );
+
 
                 var SendEmail = new SentEmailModel
                 {
-                    Subject = "Patrol Inspection",
+                    Subject = $@"[FOLLOW UP - PATROL INSPECTION REPORT] 'For Review/Verification' - {finalPrefix}",
                     Sender = strSender,
                     BCC = "",
-                    Body = emailBody,
+                    Body = InspectorsEmail,
                     Recipient = employeeEmail.Email
                 };
+
+                
+
+
 
                 await EmailService.SendEmailViaSqlDatabase(SendEmail);
 
@@ -801,14 +823,23 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 // ===================== STEP 4: Send Notification Email =====================
                 // Send Directly to the Manager
                 string processLink = $"http://p1saportalweb.sdp.com/PC/Patrol/ManagerView?Regno={Regno}&mode=1";
-                string emailBody = EmailService.RegistrationEmailBody(employeeEmail.FullName, Regno, processLink);
+                //string emailBody = EmailService.RegistrationEmailBody(employeeEmail.FullName, Regno, processLink);
+
+                string ManagersEmail = EmailService.RegistrationEmailBodyV2(
+                     employeeEmail.FullName,
+                     Regno,
+                     updatedReg.SectionName,
+                     processLink,
+                     "inpectorapproval"
+                );
+
 
                 var sendEmail = new SentEmailModel
                 {
-                    Subject = "Patrol Inspection",
+                    Subject = $@"[FOLLOW UP - PATROL INSPECTION REPORT] 'For Review/Verification' - {Regno}",
                     Sender = strSender,
                     BCC = "",
-                    Body = emailBody,
+                    Body = ManagersEmail,
                     Recipient = employeeEmail.Email
                 };
 
@@ -875,14 +906,24 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
                 // ===================== STEP 4: Send Notification Email =====================
                 string processLink = $"http://p1saportalweb.sdp.com/PC/Patrol/DepartmentApproval?Regno={Regno}&mode=1";
-                string emailBody = EmailService.RegistrationEmailBody(employeeEmail.FullName, Regno, processLink);
+                //string emailBody = EmailService.RegistrationEmailBody(employeeEmail.FullName, Regno, processLink);
+
+                string ManagersEmail = EmailService.RegistrationEmailBodyV2(
+                     employeeEmail.FullName,
+                     Regno,
+                     updatedReg.SectionName,
+                     processLink,
+                     "inpectorapproval"
+                );
+
+
 
                 var sendEmail = new SentEmailModel
                 {
-                    Subject = "Patrol Inspection",
+                    Subject = $@"[FOLLOW UP - PATROL INSPECTION REPORT] 'For Review/Verification' - {Regno}",
                     Sender = strSender,
                     BCC = "",
-                    Body = emailBody,
+                    Body = ManagersEmail,
                     Recipient = employeeEmail.Email
                 };
 

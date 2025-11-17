@@ -30,6 +30,9 @@ namespace PMACS_V2.Areas.P1SA.Repository
                                Location =@Location, Serial =@Serial, Shifts =@Shifts, Manufact =@Manufact, Asset =@Asset, 
                                Tongs =@Tongs, Status =@Status, Reasons =@Reasons, Filepath =@Filepath
                               WHERE ID =@ID";
+
+
+
             return SqlDataAccess.UpdateInsertQuery(strsql, model);
         }
 
@@ -74,5 +77,14 @@ namespace PMACS_V2.Areas.P1SA.Repository
                     WHERE m.ID =@ID";
             return  SqlDataAccess.GetData<MachineModel>(strsql, new { ID = ID });
         }
+
+
+        public async Task<byte[]> GetMachineImage(int machineID)
+        {
+            string sql = "SELECT Filepath FROM machine WHERE ID = @ID";
+            return await SqlDataAccess.GetByteAsync(sql, new { ID = machineID });
+        }
+
+
     }
 }

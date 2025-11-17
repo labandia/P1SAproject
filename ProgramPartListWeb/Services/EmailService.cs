@@ -190,6 +190,145 @@ namespace ProgramPartListWeb.Utilities
 
             return emailBody;
         }
+
+
+        public static string RegistrationEmailBodyV2(string fullName, string reg, string DepartmentName, string link, string emailType = "default")
+        {
+            string messageContent = "";
+            string subjectLine = "";
+            string buttonText = "";
+            string headerColor = "";
+
+
+            switch (emailType.ToLower())
+            {
+                case "processowner":
+                    messageContent = $@"
+                            <p>This is to inform you that you have a <strong>For Review/Submit Countermeasure</strong> Patrol Inspection report.</p>
+                
+                            <table class='details-table'>
+                                <tr>
+                                    <td class='label'>Registration No:</td>
+                                    <td><strong>{reg}</strong></td>
+                                </tr>
+                               
+                                <tr>
+                                    <td class='label'>Dept. /Section Inspected:</td>
+                                    <td>{DepartmentName}</td>
+                                </tr>
+                            </table>";
+                    subjectLine = "[FOLLOW UP - REGISTRATION REPORT] 'For Review/Submit CounterMeasure'";
+                    buttonText = "Submit Countermeasure";
+                    headerColor = "linear-gradient(135deg, #dc3545, #c82333)";
+                    break;
+                case "inpectorapproval":
+                    messageContent = $@"
+                            <p>This is to inform you that you have a <strong>For Review/Approval</strong> Patrol Inspection report.</p>
+                
+                            <table class='details-table'>
+                                <tr>
+                                    <td class='label'>Registration  No:</td>
+                                    <td><strong>{reg}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td class='label'>Process Owner :</td>
+                                    <td><strong></strong></td>
+                                </tr>
+                                  <tr>
+                                    <td class='label'>Dept. /Section Inspected:</td>
+                                    <td>{DepartmentName}</td>
+                                </tr>
+                            </table>";
+                    subjectLine = "[FOLLOW UP - NONCON REPORT] 'For Review/Approval'";
+                    buttonText = "For Review Registration";
+                    headerColor = "linear-gradient(135deg, #dc3545, #c82333)";
+                    break;
+
+
+                default:
+                    messageContent = $@"
+                            <p>This is to inform you that you have a <strong>Registration Verification</strong> report.</p>
+                
+                            <table class='details-table'>
+                                <tr>
+                                    <td class='label'>Registration:</td>
+                                    <td><strong>{reg}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td class='label'>Details:</td>
+                                    <td>
+                                        <strong>Next Steps:</strong><br>
+                                        • Click the verification link below<br>
+                                        • Complete any remaining required information<br>
+                                        • Submit your registration for processing
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class='label'>Issuing Department:</td>
+                                    <td>Registration System</td>
+                                </tr>
+                            </table>";
+                    subjectLine = "[REGISTRATION VERIFICATION] 'Action Required'";
+                    buttonText = "Complete Registration";
+                    headerColor = "linear-gradient(135deg, #007bff, #0056b3)";
+                    break;
+            }
+
+            string emailBody = $@"
+                    <html>
+                    <head>
+                        <style>
+                            body {{ font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background-color: #f5f5f5; }}
+                            .container {{ max-width: 700px; margin: 0 auto; padding: 0; background: white; }}
+                            .header {{ background: {headerColor}; color: white; padding: 20px; }}
+                            .header h2 {{ margin: 0; font-size: 18px; font-weight: bold; }}
+                            .email-info {{ background: #e9ecef; padding: 8px 20px; font-size: 11px; color: #666; border-bottom: 1px solid #ddd; }}
+                            .content {{ padding: 25px !important; }}
+                            .button {{ display: inline-block; padding: 12px 24px; background-color: #dc3545; color: white; text-decoration: none; border-radius: 4px; font-weight: bold; margin: 15px 0; }}
+                            .footer {{ margin-top: 25px; padding-top: 20px; border-top: 1px solid #e9ecef; font-size: 11px; color: #6c757d; }}
+                            .details-table {{ width: 100%; border-collapse: collapse; margin: 20px 0; }}
+                            .details-table td {{ padding: 12px; border: 1px solid #dee2e6; vertical-align: top; }}
+                            .details-table tr:nth-child(even) {{ background-color: #f8f9fa; }}
+                            .label {{ font-weight: bold; color: #495057; width: 25%; background-color: #f8f9fa; }}
+                            .system-links {{ background: #e7f3ff; padding: 15px; border-radius: 4px; margin: 20px 0; }}
+                            .note-box {{ background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px; padding: 12px; margin: 15px 0; font-size: 12px; }}
+                            .browser-notice {{ font-size: 11px; color: #666; text-align: center; margin-bottom: 20px; }}
+                        </style>
+                    </head>
+                    <body>
+                        <div class='container'>
+
+                            <div class='content'>
+                                <p>Hi {fullName},</p>
+                                <p>Good day!</p>
+                    
+                                {messageContent}
+
+                                <div class='system-links'>
+                                    <p><strong>Please use the link below to access the system:</strong></p>
+                                    <p>
+                                        <strong>Link of the Registration form :</strong>  <a href='{link}' class='button'>{buttonText}</a>
+                                    </p>
+                        
+                                  
+                                </div>
+
+                            
+                            </div>
+                
+                            <div class='footer'>
+                                <p>This is an automated message. Please do not reply to this email.</p>
+                                <p>&copy; {DateTime.Now.Year} Sanyo Denki Phil. All rights reserved.</p>
+                            </div>
+                        </div>
+                    </body>
+                    </html>";
+
+            return emailBody;
+        }
+
+
+
     }
 
 }

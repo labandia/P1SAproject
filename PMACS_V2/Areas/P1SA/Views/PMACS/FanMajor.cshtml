@@ -384,6 +384,7 @@
 
 
                 <form id="editmachineforms" enctype="multipart/form-data">
+
                     <div class="addmachinewrap">
                         <div class="addmachinewrap__col">
 
@@ -420,7 +421,7 @@
                                 </div>
                                 <div class="detail__inputfield">
                                     <label for="">Shifts :</label><br />
-                                    <select id="EditShifts" name="EditShifts" class="mode" >
+                                    <select id="EditShifts" name="EditShifts" class="mode">
                                         <option value="0">2 shifts (DS/NS)</option>
                                         <option value="1">1 Shifts (DS)</option>
                                         <option value="2">1 Shifts (NS)</option>
@@ -482,12 +483,12 @@
                                     </div>
                                 </div>
                             </div>
-                            <input style="display: none" name="postedFile" type="file" class="form-control" id="EditimageUpload" accept="image/*" />
+                            <input style="display: none" name="Image2" type="file" class="form-control" id="EditimageUpload" accept="image/*" />
                         </div>
                     </div>
 
 
- 
+
                     <div class="Addmach__footer d-flex align-items-center justify-content-end gap-3">
                         <button type="button" id="deletebtn" class="primary_delete_color"><i class="fa-regular fa-trash-can"></i> Delete Machine</button>
                         <button id="fanEnableEdit" class="primary_button_color"> Enable the Edit</button>
@@ -704,6 +705,7 @@
 
         loadData[index].Asset = data.Asset;
         loadData[index].Date_acquired = data.Date_acquired;
+        loadData[index].ImageBase64 = data.ImageBase64;
         loadData[index].Dateadd = data.Dateadd;
         loadData[index].Equipment = data.Equipment;
         loadData[index].Filepath = data.Filepath;
@@ -882,7 +884,7 @@
         //            break;
         //    }
         //}
-        
+
     }
 
 
@@ -1298,60 +1300,44 @@
 
         let isDel;
         const radioButtons = document.querySelectorAll('[name="Editstatus"]');
-
         radioButtons.forEach(radio => {
-            if (radio.checked) {
-                if (radio.value !== 'Operational') {
-                    isDel = 0;
-
-                } else {
-                    isDel = 1;
-
-                }
-            }
+            if (radio.checked) isDel = radio.value === 'Operational' ? 1 : 0;
         });
 
         // Create a FormData object from the form element
         let formData = new FormData(event.target);
-        var selectedOption = $("input:radio[name=Editstatus]:checked").val()
-        // Append the image file to the FormData object
-        var fileInput = document.querySelector('#EditimageUpload');
 
-        if (fileInput.files.length > 0) {
-            var file = fileInput.files[0];
-            formData.append('Image2', file);
-        }
 
-        // Append additional form fields
-        formData.append('Status', selectedOption);
+
+        formData.append('Status', $("input:radio[name=Editstatus]:checked").val());
         formData.append('EmployeeID', EmployeeID);
         formData.append('Isdelete', isDel);
-        const data = Object.fromEntries(formData);
 
-        let res = await postData('@Url.Action("EditmachineList", "FanMajor")', data);
+
+
+        let res = await postDataV2('@Url.Action("EditmachineList", "FanMajor")', formData);
         console.log(res);
-        //if (res && res.Success) {
-        //    let newloadData = res.Data[0];
-        //    setTimeout(() => {
-        //        Swal.fire({
-        //            title: "Success",
-        //            text: "Edit Successfully",
-        //            icon: "success",
-        //            showConfirmButton: false,
-        //            timer: 2000
-        //        }).then(() => {
+        if (res && res.Success) {
+            let newloadData = res.Data[0];
 
-        //            savebtn.innerHTML = "<span><i class='fa-regular fa-floppy-disk'></i> Save Details</span>"
-        //            $("#fansaveEdit").css("display", "none");
-        //            $("#fanEnableEdit").css("display", "block");
-        //            $('.mode').prop('disabled', true);
-        //            displaycamefromtheedit(newloadData);
-        //            //UpdateMachineData();
-        //            //window.location.href = "/machine/Fanmajor";
-        //            $("#Editmodal").modal("hide");
-        //        });
-        //    }, 500);
-        //}
+            Swal.fire({
+                title: "Success",
+                text: res.Message,
+                icon: "success",
+                showConfirmButton: false,
+                timer: 2000
+            }).then(() => {
+
+                savebtn.innerHTML = "<span><i class='fa-regular fa-floppy-disk'></i> Save Details</span>"
+                $("#fansaveEdit").css("display", "none");
+                $("#fanEnableEdit").css("display", "block");
+                $('.mode').prop('disabled', true);
+                displaycamefromtheedit(newloadData);
+                //UpdateMachineData();
+                //window.location.href = "/machine/Fanmajor";
+                $("#Editmodal").modal("hide");
+            });
+        }
 
     });
 
@@ -1474,7 +1460,7 @@
         });
     }
 
-   
+
 
     FanMajorlist();
 </script>

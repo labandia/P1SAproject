@@ -199,7 +199,40 @@
                         </div>
                     </div>
 
+                    <div class="approval-container">
+                        <div class="approval-box">
+                            <div class="approval_title" id="PIC_approve">LA Datu</div>
+                            <div class="approval_content">
+                                <p class="approval_status approved" id="PIC_Isapprove">Approved</p>
 
+                            </div>
+                            <div class="approval_role">Person In Charge</div>
+                        </div>
+
+                        <div class="approval-box">
+                            <div class="approval_title" id="Inspect_approve">Lionell Gomez</div>
+                            <div class="approval_content">
+                                <p class="approval_status approved" id="Ins_Isapprove">Approved</p>
+                            </div>
+                            <div class="approval_role">Inspector</div>
+                        </div>
+
+                        <div class="approval-box">
+                            <div class="approval_title" id="Dep_approve">LA Datu</div>
+                            <div class="approval_content">
+                                <p class="approval_status approved" id="Dep_Isapprove">Approved</p>
+                            </div>
+                            <div class="approval_role">Department Manager</div>
+                        </div>
+
+                        <div class="approval-box">
+                            <div class="approval_title" id="Div_approve">LA Datu</div>
+                            <div class="approval_content">
+                                <p class="approval_status approved" id="Div_Isapprove">Approved</p>
+                            </div>
+                            <div class="approval_role">Division Manager</div>
+                        </div>
+                    </div>
 
 
                 </form>
@@ -438,10 +471,30 @@
 
         const GetRegistrationDetails = async () => {
             let res = await fetchData('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
+            console.log(res);
             if (res && res.Success) {
                 $("#regtext").text(strRegno);
                 $("#SectionName").val("P1SA-" + res.Data.SectionName);
                 $("#PIC_Comments").val(res.Data.PIC_Comments);
+
+
+                $("#PIC_approve").text(res.Data.PICName ?? 'N/A');
+                $("#Inspect_approve").text(res.Data.InspectName ?? 'N/A');
+                $("#Dep_approve").text(res.Data.DepartName ?? 'N/A');
+                $("#Div_approve").text(res.Data.DivName ?? 'N/A');
+
+
+                $("#PIC_Isapprove").text(res.Data.PIC_Comments != "" ? 'Approve' : 'Pending');
+                $("#Ins_Isapprove").text(res.Data.Inspect_IsAproved == true ? 'Approve' : 'Pending');
+                $("#Dep_Isapprove").text(res.Data.DepManager_IsAproved == true ? 'Approve' : 'Pending');
+                $("#Div_Isapprove").text(res.Data.DivManager_IsAproved == true ? 'Approve' : 'Pending');
+
+                // Set colors
+                setStatusColor("#PIC_Isapprove", res.Data.PIC_Comments != "");
+                setStatusColor("#Ins_Isapprove", res.Data.Inspect_IsAproved);
+                setStatusColor("#Dep_Isapprove", res.Data.DepManager_IsAproved);
+                setStatusColor("#Div_Isapprove", res.Data.DivManager_IsAproved);
+
 
                 if (res.Data.Inspect_IsAproved) {
                     $("#returnBtn").prop("disabled", true);
@@ -452,7 +505,14 @@
             }
         }
 
-
+        // Utility function to set color
+        const setStatusColor = (selector, value) => {
+            if (value === true) {
+                $(selector).css("color", "blue");
+            } else {
+                $(selector).css("color", "red");
+            }
+        };
 
         const GetRegistrationFindingsID = async () => {
             let res = await fetchData('@Url.Action("GetRegistrationFindings", "Patrol")', { Regno: strRegno });

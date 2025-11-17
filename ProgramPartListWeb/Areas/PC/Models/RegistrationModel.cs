@@ -16,34 +16,37 @@ namespace ProgramPartListWeb.Areas.PC.Models
 
 
         // 📋 Approval Info
-        public string Manager_ID { get; set; }
-        public string Manager_Comments { get; set; }
         public int ReportStatus { get; set; }
 
         // 🧑 Employee Info Or Inspector
         public string Inspect_ID { get; set; }
         public string InspectName { get; set; }
-        public string PICName { get; set; }
         public string Inspect_Comments { get; set; }
         public bool? Inspect_IsAproved { get; set; }
         public bool? Inspect_IsSent { get; set; }
 
         // 👷 PIC Info
         public string PIC_ID { get; set; }
+        public string PICName { get; set; }
         public string PIC_Comments { get; set; }
         public bool? PIC_IsSent { get; set; }
 
         // 👨‍💼 Manager Info
+        public string Manager_ID { get; set; }
+        public string ManagerName { get; set; }
+        public string Manager_Comments { get; set; }
         public bool? Manager_Isedit { get; set; }
         public bool? Manager_IsSent { get; set; }
 
         // 🏭 Department Manager Info
         public string DepManager_ID { get; set; }
+        public string DepartName { get; set; }
         public bool? DepManager_IsAproved { get; set; }
         public bool? DepManager_IsSent { get; set; }
 
         // 🏢 Division Manager Info
         public string DivManager_ID { get; set; }
+        public string DivName { get; set; }
         public bool? DivManager_IsAproved { get; set; }
         public bool? DivManager_IsSent { get; set; }
     }

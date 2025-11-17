@@ -89,6 +89,24 @@ namespace PMACS_V2.Helper
                 return new List<T>();
             }
         }
+        public static async Task<byte[]> GetByteAsync(string query, object parameters = null)
+        {
+            try
+            {
+                using (IDbConnection con = GetSqlConnection(_connectionString()))
+                {
+                    // Always treat as plain SQL text
+                    var result = await con.QueryAsync<byte[]>(query, parameters, commandType: CommandType.Text);
+                    return result.FirstOrDefault(); // Return first row or null
+                }
+            }
+            catch (SqlException ex)
+            {
+                Logger.Error(ex, $"SQL Exception while executing query: {query}");
+                return null;
+            }
+        }
+
         // ############ SELECTS ONLY ONE ROW DATA  ##############################
         public static async Task<string> GetOneData(string query, object parameters)
         {
@@ -375,5 +393,9 @@ namespace PMACS_V2.Helper
             return null; // Return null if parsing fails
         }
 
+        internal static Task<T> GetByteAsync<T>(string sql, object value)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

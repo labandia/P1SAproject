@@ -31,22 +31,41 @@ namespace ProgramPartListWeb.Areas.PC.Repository
 	                             a.Inspect_IsAproved, 
 	                             a.Inspect_IsSent,
 
-	                            a.PIC_ID, PIC.FullName AS PICName, a.PIC_Comments, a.PIC_IsSent, 
+	                            a.PIC_ID, 
+								PIC.FullName AS PICName, 
+								a.PIC_Comments, 
+								a.PIC_IsSent, 
 
-	                            a.Manager_ID, a.Manager_Comments, a.Manager_Isedit, a.Manager_IsSent, 
+	                            a.Manager_ID, 
+								man.FullName as ManagerName,  
+								a.Manager_Comments, 
+								a.Manager_Isedit, 
+								a.Manager_IsSent, 
 
-	                            a.DepManager_ID, a.DepManager_IsAproved, a.DepManager_IsSent, 
+	                            a.DepManager_ID, 
+								dep.FullName as DepartName,
+								a.DepManager_IsAproved, 
+								a.DepManager_IsSent, 
 
-	                            a.DivManager_ID,  a.DivManager_IsAproved, a.DivManager_IsSent
+	                            a.DivManager_ID,  
+								div.FullName as DivName,
+								a.DivManager_IsAproved, 
+								a.DivManager_IsSent
 
                             FROM Patrol_Registration r
                             INNER JOIN P1SADepartment_tbl d ON d.DepartmentID = r.Department_ID
                             INNER JOIN Patrol_Registration_Files f ON f.RegNo = r.RegNo
                             INNER JOIN Patrol_Registration_Approvelist a ON a.RegNo = r.RegNo
                             LEFT JOIN Patrol_UserEmail Emp 
-								ON r.Employee_ID = Emp.Employee_ID
+								ON r.Employee_ID = Emp.Employee_ID 
 							LEFT JOIN Patrol_UserEmail PIC 
 								ON r.PIC_ID = PIC.Employee_ID
+							LEFT JOIN Patrol_UserEmail man 
+								ON r.Manager_ID = man.Employee_ID 
+							LEFT JOIN Patrol_UserEmail dep 
+								ON r.DepManager_ID = dep.Employee_ID 
+							LEFT JOIN Patrol_UserEmail div 
+								ON r.DivManager_ID = div.Employee_ID 
                             WHERE r.RegNo LIKE '%{prefix}%'      
                             ORDER BY DateCreated DESC";
             return SqlDataAccess.GetData<PatrolRegistrationViewModel>(strsql);

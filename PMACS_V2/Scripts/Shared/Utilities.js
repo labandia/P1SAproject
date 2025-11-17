@@ -91,6 +91,31 @@ window.postData = function (url, data) {
     });
 };
 
+
+window.postDataV2 = async function (url, data){
+    console.clear();
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            body: data
+        });
+
+
+        const json = await response.json(); // Parse response regardless of HTTP status
+
+        if (!response.ok || json.Success === false) {
+            // Server returned JSON error
+            console.error("Server error:", json.Message || "Unknown error");
+            return json; // or return null or throw if needed
+        }
+
+        return json;
+    } catch (error) {
+        console.error("Error posting data:", error);
+        return null;
+    }
+};
+
 // =======================
 // POST PARTIAL VIEW DATA (TEXT RESPONSE)
 // =======================

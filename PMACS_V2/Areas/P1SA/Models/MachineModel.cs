@@ -303,7 +303,7 @@ namespace PMACS_V2.Areas.P1SA.Models
 
     public class EditFanMajorModel
     {
-        public string EditID { get; set; }
+        public int EditID { get; set; }
         public string EditEquip { get; set; }
         public string EditDateacq { get; set; }
         public string EditModel { get; set; }

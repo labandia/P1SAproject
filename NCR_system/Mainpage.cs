@@ -50,6 +50,9 @@ namespace NCR_system
 
         private async void Mainpage_Load(object sender, EventArgs e)
         {
+            this.WindowState = FormWindowState.Maximized;
+
+
             _cc.BringToFront();
             await _cc.DisplayCustomer(0);
         }

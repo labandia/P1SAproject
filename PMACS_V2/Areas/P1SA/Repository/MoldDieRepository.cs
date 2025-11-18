@@ -87,8 +87,12 @@ namespace PMACS_V2.Areas.P1SA.Repository
                               GROUP BY No,  PreviousCount, DieLife";
             return SqlDataAccess.GetData<DieMoldSetNotal>(strquery, null);
         }
-        public Task<List<DieMoldDaily>> GetDailyMoldData(int month, int year, string process)
+        public Task<List<DieMoldDaily>> GetDailyMoldData(int month, int days, int year, string process)
         {
+            string filterdays = (days != 0) ? $@"AND DAY(d.DateInput) = {days}" : "";
+
+         
+
             return SqlDataAccess.GetData<DieMoldDaily>($@"SELECT 
                         d.RecordID,
 	                    FORMAT(d.DateInput, 'MM/dd/yy') as DateInput, 
@@ -102,8 +106,12 @@ namespace PMACS_V2.Areas.P1SA.Repository
                     FROM DieMoldDaily d 
                     INNER JOIN DieMoldParts p ON d.PartNo = p.PartNo
                     	INNER JOIN DieMoldProcesses ps ON ps.PartNo = p.PartNo
-					WHERE ps.ProcessID = @process AND  MONTH(d.DateInput) = @month
-							AND YEAR(d.DateInput) = @year AND d.IsDelete = 1
+					WHERE 
+                        MONTH(d.DateInput) = @month
+					    AND YEAR(d.DateInput) = @year
+					    {filterdays}      
+					    AND ps.ProcessID = @process 
+					    AND d.IsDelete = 1
                     ORDER BY RecordID DESC",  new { process = process, month = month, year  = year });
         }
 
@@ -716,7 +724,8 @@ namespace PMACS_V2.Areas.P1SA.Repository
 
         public Task<bool> DeleteDailyMoldie(int ID)
         {
-             return SqlDataAccess.UpdateInsertQuery("UPDATE DieMoldDaily SET IsDelete = 0 WHERE RecordID =@RecordID", new { RecordID = ID });
+            //return SqlDataAccess.UpdateInsertQuery("UPDATE DieMoldDaily SET IsDelete = 0 WHERE RecordID =@RecordID", new { RecordID = ID });
+            return SqlDataAccess.UpdateInsertQuery("DELETE FROM  DieMoldDaily WHERE RecordID =@RecordID", new { RecordID = ID });
         }
     }
 }

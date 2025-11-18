@@ -26,7 +26,7 @@
     <div class="MainWrapper">
 
         <div class="sidebar">
-            <h2><i>📄</i><span id="regtext"></span></h2>
+            <h2><i>📄</i><span id="regtext">@regno</span></h2>
             <ul class="step-list">
                 <li class="step-item active" data-step="1">
                     <span class="step-number">1</span>
@@ -195,7 +195,7 @@
             <div class="loader-title">Updating Registration No...</div>
 
             <div class="progress-container">
-                <div class="progress-bar">
+                <div class="progress-bar" style="background: #f5f5f5;">
                     <div class="progress-fill" id="progressFill"></div>
                 </div>
                 <div class="progress-text" id="progressText">0%</div>
@@ -258,9 +258,9 @@
         const totalSteps = 5;
         let selectedFiles = [];
 
-        let strRegno = $("#RegNo").val();
+        let strRegno = "@regno";
         let modeset = @ViewBag.Mode;
-
+        console.log(strRegno);
         // =======  FOR UPLOADING FILES =======================
         const fileUploadArea = document.getElementById("file-upload-area");
         const fileList = document.getElementById("fileList");

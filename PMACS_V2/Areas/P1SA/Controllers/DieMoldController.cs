@@ -103,9 +103,11 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         }
 
         [JwtAuthorize]
-        public async Task<ActionResult> GetMoldDieDailyList(int Months, int Year, string ProcessID)
+        public async Task<ActionResult> GetMoldDieDailyList(int Months, int Year, string ProcessID, int Days)
         {
-            var data = await _die.GetDailyMoldData(Months, Year, ProcessID) ?? new List<DieMoldDaily>();
+
+            Debug.WriteLine("Already inside : " + Days);
+            var data = await _die.GetDailyMoldData(Months, Days,  Year, ProcessID) ?? new List<DieMoldDaily>();
 
             if (data == null || !data.Any())
                 return JsonNotFound("No Mold Die Daily data found");
@@ -164,6 +166,13 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             bool update = await _die.UpdateDailyMoldie(add);
             if (!update) return JsonValidationError();
             return JsonCreated(add, "Update Data Successfully");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> UpdateDailyCycleShot(int RecordID, int Cycleshot)
+        {
+            Debug.WriteLine($@"RecordID : {RecordID} - Cycleshot :  {Cycleshot}");
+            return JsonCreated("", "Update Data Successfully");
         }
 
         [HttpPost]

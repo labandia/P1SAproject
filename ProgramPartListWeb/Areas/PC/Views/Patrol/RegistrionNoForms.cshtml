@@ -185,8 +185,8 @@
             <div class="loader-title">Generating Registration No...</div>
 
             <div class="progress-container">
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill"></div>
+                <div class="progress-bar" style="background: #f5f5f5;">
+                    <div class="progress-fill" id="progressFill" ></div>
                 </div>
                 <div class="progress-text" id="progressText">0%</div>
             </div>
@@ -377,29 +377,6 @@
                       document.querySelector("#loadingSequence").textContent = "Failed. Please try again.";
                       await new Promise(resolve => setTimeout(resolve, 2000));
                   }
-
-                  @*// Step 1: Simulate "Saving data..."
-                  await new Promise(resolve => setTimeout(resolve, 1200)); // 1.2s delay for animation
-
-                  // Step 2: Update loading text
-                  document.querySelector("#loadingSequence").textContent = "Sending email to the Process Owner...";
-                  await new Promise(resolve => setTimeout(resolve, 1200));
-
-                  // Step 3: Send data to the controller
-                  let res = await postData('@Url.Action("AddRegistration", "Patrol")', finalformData);
-
-                  if (res && res.Success) {
-                      document.querySelector("#loadingSequence").textContent = "Done ✅";
-                      await new Promise(resolve => setTimeout(resolve, 1000));
-                      savebtn.innerHTML = originalText;
-                      window.location.href = "/PC/Patrol/PatrolReport";
-                  } else {
-                      // Reset button if failed
-                      document.querySelector("#loadingSequence").textContent = "Failed. Please try again.";
-                      await new Promise(resolve => setTimeout(resolve, 2000));
-                      savebtn.innerHTML = originalText;
-                      savebtn.disabled = false;
-                  }*@
 
 
           });

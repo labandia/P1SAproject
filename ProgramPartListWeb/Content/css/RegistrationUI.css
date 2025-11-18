@@ -750,8 +750,8 @@ form p{
         }
         
         .progress-bar {
+            width: 100%;
             height: 8px;
-            background-color: #2d2d3e;
             border-radius: 4px;
             overflow: hidden;
             margin-bottom: 10px;

@@ -181,7 +181,13 @@ namespace NCR_system.View.Module
         private void Customer_Complaint_user_Load(object sender, EventArgs e)
         {
             SelectedProcess.SelectedIndex = 0;
-
+            CustomDatagrid.Columns["RegNo"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            CustomDatagrid.Columns["SectionID"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            CustomDatagrid.Columns["LotNo"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            CustomDatagrid.Columns["NGQty"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            CustomDatagrid.Columns["Status"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            CustomDatagrid.Columns["Edit"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            CustomDatagrid.Columns["Delete"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
         }
 
         private async void SelectedProcess_SelectedIndexChanged(object sender, EventArgs e)

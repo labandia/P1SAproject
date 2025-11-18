@@ -22,6 +22,17 @@ namespace NCR_system.Repository
             return await SqlDataAccess.GetData<CustomerModel>(strsql, new { CCtype  = type});
         }
 
+        public Task<CustomerModel> GetCustomerDataByID(int recordID)
+        {
+            string strsql = $@"SELECT RecordID,DateCreated
+                                  ,ModelNo,LotNo,NGQty
+                                  ,Details,Status,SectionID
+                                  ,RegNo,CustomerName,CCtype
+                            FROM PC_CustomerConplaint
+                            WHERE RecordID = @RecordID";
+            return await SqlDataAccess.GetOneData<CustomerModel>(strsql, new { RecordID = recordID });
+        }
+
         public async Task<bool> InsertCustomerData(CustomerModel customer, int type)
         {
             bool result = false;

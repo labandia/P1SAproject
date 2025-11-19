@@ -37,12 +37,10 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Customer_Complaint_user));
-            this.projectitle = new System.Windows.Forms.Label();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
             this.CustomDatagrid = new System.Windows.Forms.DataGridView();
-            this.CustSummaryGrid = new System.Windows.Forms.DataGridView();
-            this.OpenCC = new System.Windows.Forms.Button();
-            this.SelectedProcess = new System.Windows.Forms.ComboBox();
-            this.Externalbtn = new System.Windows.Forms.Button();
             this.RecordID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DateCreated = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SectionID = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -56,29 +54,41 @@
             this.CCtype = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Edit = new System.Windows.Forms.DataGridViewImageColumn();
             this.Delete = new System.Windows.Forms.DataGridViewImageColumn();
+            this.CustSummaryGrid = new System.Windows.Forms.DataGridView();
+            this.Section = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TotalOpen = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.OpenCC = new System.Windows.Forms.Button();
+            this.SelectedProcess = new System.Windows.Forms.ComboBox();
+            this.Externalbtn = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.pieChart2 = new LiveCharts.WinForms.PieChart();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.filteritems = new System.Windows.Forms.ComboBox();
+            this.SDCPanel = new System.Windows.Forms.Panel();
+            this.ExternalPanel = new System.Windows.Forms.Panel();
+            this.label3 = new System.Windows.Forms.Label();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.sectionfilter = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.CustomDatagrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CustSummaryGrid)).BeginInit();
+            this.panel1.SuspendLayout();
+            this.SDCPanel.SuspendLayout();
+            this.ExternalPanel.SuspendLayout();
+            this.panel3.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // projectitle
-            // 
-            this.projectitle.AutoSize = true;
-            this.projectitle.Font = new System.Drawing.Font("Century Gothic", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.projectitle.ForeColor = System.Drawing.Color.Black;
-            this.projectitle.Location = new System.Drawing.Point(44, 46);
-            this.projectitle.Name = "projectitle";
-            this.projectitle.Size = new System.Drawing.Size(253, 28);
-            this.projectitle.TabIndex = 3;
-            this.projectitle.Text = "Customer Complaint";
             // 
             // CustomDatagrid
             // 
             this.CustomDatagrid.AllowUserToAddRows = false;
             this.CustomDatagrid.AllowUserToDeleteRows = false;
+            this.CustomDatagrid.AllowUserToResizeColumns = false;
+            this.CustomDatagrid.AllowUserToResizeRows = false;
             this.CustomDatagrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.CustomDatagrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.CustomDatagrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Century Gothic", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -104,14 +114,14 @@
             this.Delete});
             dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle7.Padding = new System.Windows.Forms.Padding(0, 5, 0, 5);
             dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.CustomDatagrid.DefaultCellStyle = dataGridViewCellStyle7;
-            this.CustomDatagrid.Location = new System.Drawing.Point(48, 225);
+            this.CustomDatagrid.Location = new System.Drawing.Point(16, 69);
             this.CustomDatagrid.Name = "CustomDatagrid";
             this.CustomDatagrid.ReadOnly = true;
             dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -123,58 +133,12 @@
             dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.CustomDatagrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle8;
             this.CustomDatagrid.RowHeadersVisible = false;
-            this.CustomDatagrid.RowTemplate.Height = 40;
+            this.CustomDatagrid.RowTemplate.Height = 30;
             this.CustomDatagrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.CustomDatagrid.Size = new System.Drawing.Size(1233, 489);
+            this.CustomDatagrid.Size = new System.Drawing.Size(986, 624);
             this.CustomDatagrid.TabIndex = 4;
             this.CustomDatagrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.CustomDatagrid_CellClick);
             this.CustomDatagrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.CustomDatagrid_CellFormatting);
-            // 
-            // CustSummaryGrid
-            // 
-            this.CustSummaryGrid.AllowUserToAddRows = false;
-            this.CustSummaryGrid.AllowUserToDeleteRows = false;
-            this.CustSummaryGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.CustSummaryGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.CustSummaryGrid.Location = new System.Drawing.Point(905, 24);
-            this.CustSummaryGrid.Name = "CustSummaryGrid";
-            this.CustSummaryGrid.ReadOnly = true;
-            this.CustSummaryGrid.Size = new System.Drawing.Size(376, 148);
-            this.CustSummaryGrid.TabIndex = 5;
-            // 
-            // OpenCC
-            // 
-            this.OpenCC.Location = new System.Drawing.Point(49, 105);
-            this.OpenCC.Name = "OpenCC";
-            this.OpenCC.Size = new System.Drawing.Size(128, 34);
-            this.OpenCC.TabIndex = 6;
-            this.OpenCC.Text = "Add SDC Data";
-            this.OpenCC.UseVisualStyleBackColor = true;
-            this.OpenCC.Click += new System.EventHandler(this.OpenCC_Click);
-            // 
-            // SelectedProcess
-            // 
-            this.SelectedProcess.DisplayMember = "External";
-            this.SelectedProcess.FormattingEnabled = true;
-            this.SelectedProcess.Items.AddRange(new object[] {
-            "External",
-            "SDC"});
-            this.SelectedProcess.Location = new System.Drawing.Point(366, 113);
-            this.SelectedProcess.Name = "SelectedProcess";
-            this.SelectedProcess.Size = new System.Drawing.Size(121, 21);
-            this.SelectedProcess.TabIndex = 7;
-            this.SelectedProcess.ValueMember = "External";
-            this.SelectedProcess.SelectedIndexChanged += new System.EventHandler(this.SelectedProcess_SelectedIndexChanged);
-            // 
-            // Externalbtn
-            // 
-            this.Externalbtn.Location = new System.Drawing.Point(196, 105);
-            this.Externalbtn.Name = "Externalbtn";
-            this.Externalbtn.Size = new System.Drawing.Size(137, 34);
-            this.Externalbtn.TabIndex = 8;
-            this.Externalbtn.Text = "Add External Data";
-            this.Externalbtn.UseVisualStyleBackColor = true;
-            this.Externalbtn.Click += new System.EventHandler(this.Externalbtn_Click);
             // 
             // RecordID
             // 
@@ -183,6 +147,7 @@
             this.RecordID.Name = "RecordID";
             this.RecordID.ReadOnly = true;
             this.RecordID.Visible = false;
+            this.RecordID.Width = 62;
             // 
             // DateCreated
             // 
@@ -190,6 +155,7 @@
             this.DateCreated.HeaderText = "Date";
             this.DateCreated.Name = "DateCreated";
             this.DateCreated.ReadOnly = true;
+            this.DateCreated.Width = 57;
             // 
             // SectionID
             // 
@@ -200,6 +166,7 @@
             this.SectionID.HeaderText = "Section in charge";
             this.SectionID.Name = "SectionID";
             this.SectionID.ReadOnly = true;
+            this.SectionID.Width = 116;
             // 
             // ModelNo
             // 
@@ -207,6 +174,7 @@
             this.ModelNo.HeaderText = "Model No/ Part no.";
             this.ModelNo.Name = "ModelNo";
             this.ModelNo.ReadOnly = true;
+            this.ModelNo.Width = 107;
             // 
             // LotNo
             // 
@@ -216,6 +184,7 @@
             this.LotNo.HeaderText = "Lot No.";
             this.LotNo.Name = "LotNo";
             this.LotNo.ReadOnly = true;
+            this.LotNo.Width = 64;
             // 
             // NGQty
             // 
@@ -225,6 +194,7 @@
             this.NGQty.HeaderText = "NG Qty";
             this.NGQty.Name = "NGQty";
             this.NGQty.ReadOnly = true;
+            this.NGQty.Width = 50;
             // 
             // Details
             // 
@@ -232,6 +202,7 @@
             this.Details.HeaderText = "Details of Problem";
             this.Details.Name = "Details";
             this.Details.ReadOnly = true;
+            this.Details.Width = 117;
             // 
             // RegNo
             // 
@@ -242,6 +213,7 @@
             this.RegNo.HeaderText = "Registration No.";
             this.RegNo.Name = "RegNo";
             this.RegNo.ReadOnly = true;
+            this.RegNo.Width = 107;
             // 
             // CustomerName
             // 
@@ -249,6 +221,7 @@
             this.CustomerName.HeaderText = "Customer Name";
             this.CustomerName.Name = "CustomerName";
             this.CustomerName.ReadOnly = true;
+            this.CustomerName.Width = 107;
             // 
             // Status
             // 
@@ -258,6 +231,7 @@
             this.Status.HeaderText = "Status";
             this.Status.Name = "Status";
             this.Status.ReadOnly = true;
+            this.Status.Width = 63;
             // 
             // CCtype
             // 
@@ -266,6 +240,7 @@
             this.CCtype.Name = "CCtype";
             this.CCtype.ReadOnly = true;
             this.CCtype.Visible = false;
+            this.CCtype.Width = 71;
             // 
             // Edit
             // 
@@ -274,42 +249,256 @@
             this.Edit.Image = ((System.Drawing.Image)(resources.GetObject("Edit.Image")));
             this.Edit.Name = "Edit";
             this.Edit.ReadOnly = true;
+            this.Edit.Width = 32;
             // 
             // Delete
             // 
             this.Delete.DataPropertyName = "Delete";
             this.Delete.HeaderText = "Delete";
+            this.Delete.Image = ((System.Drawing.Image)(resources.GetObject("Delete.Image")));
             this.Delete.Name = "Delete";
             this.Delete.ReadOnly = true;
+            this.Delete.Width = 48;
+            // 
+            // CustSummaryGrid
+            // 
+            this.CustSummaryGrid.AllowUserToAddRows = false;
+            this.CustSummaryGrid.AllowUserToDeleteRows = false;
+            this.CustSummaryGrid.AllowUserToResizeColumns = false;
+            this.CustSummaryGrid.AllowUserToResizeRows = false;
+            this.CustSummaryGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.CustSummaryGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Century Gothic", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle9.Padding = new System.Windows.Forms.Padding(5);
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.CustSummaryGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle9;
+            this.CustSummaryGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.CustSummaryGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Section,
+            this.TotalOpen});
+            this.CustSummaryGrid.EnableHeadersVisualStyles = false;
+            this.CustSummaryGrid.Location = new System.Drawing.Point(24, 22);
+            this.CustSummaryGrid.Name = "CustSummaryGrid";
+            this.CustSummaryGrid.ReadOnly = true;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle11.Font = new System.Drawing.Font("Century Gothic", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.CustSummaryGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle11;
+            this.CustSummaryGrid.RowHeadersVisible = false;
+            this.CustSummaryGrid.Size = new System.Drawing.Size(278, 148);
+            this.CustSummaryGrid.TabIndex = 5;
+            // 
+            // Section
+            // 
+            this.Section.DataPropertyName = "Section";
+            this.Section.HeaderText = "Section";
+            this.Section.Name = "Section";
+            this.Section.ReadOnly = true;
+            // 
+            // TotalOpen
+            // 
+            this.TotalOpen.DataPropertyName = "TotalOpen";
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.TotalOpen.DefaultCellStyle = dataGridViewCellStyle10;
+            this.TotalOpen.HeaderText = "Total Open items";
+            this.TotalOpen.Name = "TotalOpen";
+            this.TotalOpen.ReadOnly = true;
+            // 
+            // OpenCC
+            // 
+            this.OpenCC.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.OpenCC.Location = new System.Drawing.Point(17, 22);
+            this.OpenCC.Name = "OpenCC";
+            this.OpenCC.Size = new System.Drawing.Size(136, 41);
+            this.OpenCC.TabIndex = 6;
+            this.OpenCC.Text = "Add SDC";
+            this.OpenCC.UseVisualStyleBackColor = true;
+            this.OpenCC.Click += new System.EventHandler(this.OpenCC_Click);
+            // 
+            // SelectedProcess
+            // 
+            this.SelectedProcess.DisplayMember = "External";
+            this.SelectedProcess.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.SelectedProcess.FormattingEnabled = true;
+            this.SelectedProcess.ItemHeight = 13;
+            this.SelectedProcess.Items.AddRange(new object[] {
+            "External",
+            "SDC"});
+            this.SelectedProcess.Location = new System.Drawing.Point(313, 33);
+            this.SelectedProcess.Name = "SelectedProcess";
+            this.SelectedProcess.Size = new System.Drawing.Size(159, 21);
+            this.SelectedProcess.TabIndex = 7;
+            this.SelectedProcess.ValueMember = "External";
+            this.SelectedProcess.SelectedIndexChanged += new System.EventHandler(this.SelectedProcess_SelectedIndexChanged);
+            // 
+            // Externalbtn
+            // 
+            this.Externalbtn.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Externalbtn.Location = new System.Drawing.Point(16, 22);
+            this.Externalbtn.Name = "Externalbtn";
+            this.Externalbtn.Size = new System.Drawing.Size(137, 41);
+            this.Externalbtn.TabIndex = 8;
+            this.Externalbtn.Text = "Add External";
+            this.Externalbtn.UseVisualStyleBackColor = true;
+            this.Externalbtn.Click += new System.EventHandler(this.Externalbtn_Click);
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.White;
+            this.panel1.Controls.Add(this.ExternalPanel);
+            this.panel1.Controls.Add(this.panel3);
+            this.panel1.Controls.Add(this.label2);
+            this.panel1.Controls.Add(this.SDCPanel);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel1.Location = new System.Drawing.Point(1019, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(330, 766);
+            this.panel1.TabIndex = 9;
+            // 
+            // pieChart2
+            // 
+            this.pieChart2.Location = new System.Drawing.Point(35, 0);
+            this.pieChart2.Name = "pieChart2";
+            this.pieChart2.Size = new System.Drawing.Size(249, 196);
+            this.pieChart2.TabIndex = 4;
+            this.pieChart2.Text = "pieChart2";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(32, 540);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(35, 13);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "label2";
+            this.label2.Click += new System.EventHandler(this.label2_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(18, 12);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(96, 18);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "SDC Details ";
+            // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.Color.White;
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel2.Location = new System.Drawing.Point(0, 699);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(1019, 67);
+            this.panel2.TabIndex = 10;
+            // 
+            // filteritems
+            // 
+            this.filteritems.FormattingEnabled = true;
+            this.filteritems.Items.AddRange(new object[] {
+            "Open",
+            "Close"});
+            this.filteritems.Location = new System.Drawing.Point(496, 33);
+            this.filteritems.Name = "filteritems";
+            this.filteritems.Size = new System.Drawing.Size(121, 21);
+            this.filteritems.TabIndex = 11;
+            // 
+            // SDCPanel
+            // 
+            this.SDCPanel.Controls.Add(this.label1);
+            this.SDCPanel.Location = new System.Drawing.Point(3, 206);
+            this.SDCPanel.Name = "SDCPanel";
+            this.SDCPanel.Size = new System.Drawing.Size(324, 195);
+            this.SDCPanel.TabIndex = 6;
+            // 
+            // ExternalPanel
+            // 
+            this.ExternalPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.ExternalPanel.Controls.Add(this.label3);
+            this.ExternalPanel.Location = new System.Drawing.Point(3, 407);
+            this.ExternalPanel.Name = "ExternalPanel";
+            this.ExternalPanel.Size = new System.Drawing.Size(324, 319);
+            this.ExternalPanel.TabIndex = 7;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(18, 12);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(123, 18);
+            this.label3.TabIndex = 0;
+            this.label3.Text = "External Details ";
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.CustSummaryGrid);
+            this.panel3.Controls.Add(this.pieChart2);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel3.Location = new System.Drawing.Point(0, 0);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(330, 200);
+            this.panel3.TabIndex = 7;
+            // 
+            // sectionfilter
+            // 
+            this.sectionfilter.FormattingEnabled = true;
+            this.sectionfilter.Items.AddRange(new object[] {
+            "Molding",
+            "Press",
+            "Rotor",
+            "Winding",
+            "Circuit"});
+            this.sectionfilter.Location = new System.Drawing.Point(632, 33);
+            this.sectionfilter.Name = "sectionfilter";
+            this.sectionfilter.Size = new System.Drawing.Size(121, 21);
+            this.sectionfilter.TabIndex = 12;
             // 
             // Customer_Complaint_user
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.sectionfilter);
+            this.Controls.Add(this.filteritems);
+            this.Controls.Add(this.panel2);
             this.Controls.Add(this.Externalbtn);
             this.Controls.Add(this.SelectedProcess);
             this.Controls.Add(this.OpenCC);
-            this.Controls.Add(this.CustSummaryGrid);
             this.Controls.Add(this.CustomDatagrid);
-            this.Controls.Add(this.projectitle);
+            this.Controls.Add(this.panel1);
             this.Name = "Customer_Complaint_user";
             this.Size = new System.Drawing.Size(1349, 766);
             this.Load += new System.EventHandler(this.Customer_Complaint_user_Load);
             ((System.ComponentModel.ISupportInitialize)(this.CustomDatagrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CustSummaryGrid)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            this.SDCPanel.ResumeLayout(false);
+            this.SDCPanel.PerformLayout();
+            this.ExternalPanel.ResumeLayout(false);
+            this.ExternalPanel.PerformLayout();
+            this.panel3.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Label projectitle;
         public System.Windows.Forms.DataGridView CustomDatagrid;
         public System.Windows.Forms.DataGridView CustSummaryGrid;
         private System.Windows.Forms.Button OpenCC;
         private System.Windows.Forms.ComboBox SelectedProcess;
         private System.Windows.Forms.Button Externalbtn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Section;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TotalOpen;
         private System.Windows.Forms.DataGridViewTextBoxColumn RecordID;
         private System.Windows.Forms.DataGridViewTextBoxColumn DateCreated;
         private System.Windows.Forms.DataGridViewTextBoxColumn SectionID;
@@ -323,5 +512,16 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn CCtype;
         private System.Windows.Forms.DataGridViewImageColumn Edit;
         private System.Windows.Forms.DataGridViewImageColumn Delete;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
+        private LiveCharts.WinForms.PieChart pieChart2;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.ComboBox filteritems;
+        private System.Windows.Forms.Panel SDCPanel;
+        private System.Windows.Forms.Panel ExternalPanel;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.ComboBox sectionfilter;
     }
 }

@@ -430,7 +430,8 @@
 
                         <div class="form_group col-6 col-lg-6 col-sm-12">
                             <label for="">Part number <small style="color: #a81818; font-weight: 600;">*</small></label>
-                            <input type="text" placeholder="Type Part number" name="Editdailypartno" id="Editdailypartno" readonly>
+                            <input type="text" placeholder="Type Part number" name="Editdailypartno" id="Editdailypartno" required>
+                            <div class="dailyEditpartnumdisplay"></div>
                         </div>
 
 
@@ -926,6 +927,7 @@
 
     const resultBox = document.querySelector(".namesdisplay");
     const partbox = document.querySelector(".dailypartnumdisplay");
+    const editpartbox = document.querySelector(".dailyEditpartnumdisplay");
 
     const EditCycle = $("#changeCycle");
     const CancelCycle = $("#CancelCycle");
@@ -1081,7 +1083,7 @@
              confirmButtonColor: "#0d97c9",
              timer: 1500
          }).then(() => {
-             GetMoldDieDaily(dailyselect.value, currentYear, $("#DailyProcess").val());
+             RefreshDailyMonitor();
              $("#EditDailyforms")[0].reset();
              $("#EditDailyMold").modal("hide");
          });
@@ -1306,12 +1308,14 @@
         formData.append('Cycleshot', $("#Cycleshotdisplay").val());
 
         const data = Object.fromEntries(formData);
-
          let res = await postData('@Url.Action("UpdateDailyCycleShot", "DieMold")', data);
 
          if (res && res.Success) {
-             alert("Delete Successfully");
-             GetMoldDieMonth();
+             alert("Update Successfully");
+             //GetMoldDieMonth();
+             $("#Cycleshotdisplay").prop("readonly", true);
+             $("#ActionDel").css("display", "none");
+             $("#changeCycle").css("display", "block");
          }
     });
 
@@ -1501,6 +1505,36 @@
         }
     });
 
+    $("#Editdailypartno").keyup(function () {
+        let result = [];
+        let input = this.value;
+        if (input.length > 0) {
+            result = GlobalSummaryData.filter((item) => {
+                return item.PartNo.toLowerCase().includes(input.toLowerCase());
+            });
+
+            if (result.length > 0) {
+                editpartbox.style.display = 'block';
+
+                const content = result.map((list) => {
+                    return `<li onclick="partnumEditinput(this)" data-id="${list.PartNo}">${list.PartNo}</li>`;
+                });
+
+                editpartbox.innerHTML = "<ul>" + content.join('') + "</ul>";
+
+
+            } else {
+                editpartbox.style.display = 'block';
+                editpartbox.innerHTML = '<div style="padding: 5px; color: #999;">No search found</div>';
+            }
+        } else {
+            editpartbox.style.display = 'none';
+            editpartbox.innerHTML = ''; // clear the previous results or message
+        }
+    });
+
+
+
 
     function lockDateToMonth() {
         let year = parseInt(yearSelect.value);
@@ -1548,15 +1582,23 @@
         let res = await FetchAuthenticate('@Url.Action("GetMoldDieLastRecord", "DieMold")', { partnum: selecPartno });
 
         if (res && res.Success) {
+            setdailyrecordID = res.Data.RecordID;
             $("#partnodisplay").val(selecPartno);
             $("#DimDisplay").val(res.Data.DimensionQuality);
-            $("#Cycleshotdisplay").val(res.Data.CycleShot);
+            $("#Cycleshotdisplay").val(res.Data.Total);
         }
 
 
         $("#dailypartno").val(list.innerHTML);
         partbox.innerHTML = '';
         partbox.style.display = 'none';
+    }
+
+
+    async function partnumEditinput(list) {
+        $("#Editdailypartno").val(list.innerHTML);
+        editpartbox.innerHTML = '';
+        editpartbox.style.display = 'none';
     }
     //===============================================================
     //================ FETCH DATA AND DISPLAY =======================
@@ -2344,10 +2386,9 @@
                  e.stopPropagation();
                  const buttonId = $(this).attr('id');
                  const rowIndex = buttonId.split('_')[1];
-                 setdailyrecordID = rowIndex;
                  const filterdata = DailyData.find(res => res.RecordID === parseInt(rowIndex));
                  if (filterdata) {
-                    
+
                      $("#DailyRecordiD").val(filterdata.RecordID);
                      setDateInput("DailyEditDateInput", filterdata.DateInput);
                      $("#Editdailypartno").val(filterdata.PartNo);

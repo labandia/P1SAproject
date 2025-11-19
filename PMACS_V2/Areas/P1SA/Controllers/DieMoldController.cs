@@ -171,8 +171,9 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         [HttpPost]
         public async Task<ActionResult> UpdateDailyCycleShot(int RecordID, int Cycleshot)
         {
-            Debug.WriteLine($@"RecordID : {RecordID} - Cycleshot :  {Cycleshot}");
-            return JsonCreated("", "Update Data Successfully");
+            bool update = await _die.UpdateDailyLastCycle(RecordID, Cycleshot);
+            if (!update) return JsonValidationError();
+            return JsonCreated(update, "Update Data Successfully");
         }
 
         [HttpPost]

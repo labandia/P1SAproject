@@ -78,6 +78,25 @@ namespace MSDMonitoring.Data
 
             // return resultData;
         }
+
+        // ############ SELECTS ONLY ONE ROW DATA  ##############################
+        public static async Task<T> GetDataByID<T>(string query, object parameters)
+        {
+            try
+            {
+                using (IDbConnection con = GetConnection(ConnectionString()))
+                {
+                    return await con.QuerySingleOrDefaultAsync<T>(query, parameters);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Database error: {ex.Message}");
+            }
+        }
+
+
+
         // ############ SELECTS ONLY ONE ROW DATA  ##############################
         public static async Task<string> GetOneData(string query, object parameters)
         {

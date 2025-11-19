@@ -705,7 +705,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
         public async Task<bool> UpdateDailyMoldie(DieMoldDailyInput mold)
         {
             string insertquery = @"
-                UPDATE DieMoldDaily SET DateInput = @DateInput, CycleShot = @CycleShot,  
+                UPDATE DieMoldDaily SET DateInput = @DateInput, PartNo =@PartNo, CycleShot = @CycleShot,  
                 MachineNo =@MachineNo, Remarks = @Remarks, Mincharge = @Mincharge
                 WHERE RecordID =@RecordID";
 
@@ -713,6 +713,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
             {
                 RecordID = mold.RecordID,
                 DateInput = mold.DateInput,
+                PartNo = mold.dailypartno,  
                 CycleShot = mold.CycleShot,
                 MachineNo = mold.MachineNo,
                 Remarks = mold.Remarks,
@@ -726,6 +727,11 @@ namespace PMACS_V2.Areas.P1SA.Repository
         {
             //return SqlDataAccess.UpdateInsertQuery("UPDATE DieMoldDaily SET IsDelete = 0 WHERE RecordID =@RecordID", new { RecordID = ID });
             return SqlDataAccess.UpdateInsertQuery("DELETE FROM  DieMoldDaily WHERE RecordID =@RecordID", new { RecordID = ID });
+        }
+
+        public Task<bool> UpdateDailyLastCycle(int recordID, int lastcycle)
+        {
+            return SqlDataAccess.UpdateInsertQuery("UPDATE DieMoldDaily SET Total =@Total  WHERE RecordID =@RecordID", new { RecordID = recordID, Total = lastcycle });
         }
     }
 }

@@ -28,6 +28,7 @@ namespace PMACS_V2.Areas.P1SA.Interface
         // ===============================================
         Task<bool> AddDailyMoldie(DieMoldDailyInput mold);
         Task<bool> UpdateDailyMoldie(DieMoldDailyInput mold);
+        Task<bool> UpdateDailyLastCycle(int recordID, int lastcycle);
         Task<bool> DeleteDailyMoldie(int ID);
 
 

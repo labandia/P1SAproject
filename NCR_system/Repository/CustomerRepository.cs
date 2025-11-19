@@ -13,24 +13,26 @@ namespace NCR_system.Repository
     {
         public async Task<IEnumerable<CustomerModel>> GetCustomerData(int type)
         {
-            string strsql = $@"SELECT RecordID,DateCreated
-                                  ,ModelNo,LotNo,NGQty
-                                  ,Details,Status,SectionID
-                                  ,RegNo,CustomerName,CCtype
+            string strsql = $@"SELECT RecordID,
+		                        FORMAT(DateCreated, 'MM/dd/yy') as DateCreated,
+		                        ModelNo,LotNo,NGQty,
+		                        Details,Status,SectionID
+                                ,RegNo,CustomerName,CCtype
                             FROM PC_CustomerConplaint
-                            WHERE CCtype = @CCtype";
+                            WHERE CCtype = @CCtype AND IsDelete = 1";
             return await SqlDataAccess.GetData<CustomerModel>(strsql, new { CCtype  = type});
         }
 
         public Task<CustomerModel> GetCustomerDataByID(int recordID)
         {
-            string strsql = $@"SELECT RecordID,DateCreated
-                                  ,ModelNo,LotNo,NGQty
-                                  ,Details,Status,SectionID
-                                  ,RegNo,CustomerName,CCtype
+            string strsql = $@"SELECT RecordID,
+		                        FORMAT(DateCreated, 'MM/dd/yy') as DateCreated,
+		                        ModelNo,LotNo,NGQty,
+		                        Details,Status,SectionID
+                                ,RegNo,CustomerName,CCtype
                             FROM PC_CustomerConplaint
                             WHERE RecordID = @RecordID";
-            return await SqlDataAccess.GetOneData<CustomerModel>(strsql, new { RecordID = recordID });
+            return SqlDataAccess.GetDataByID<CustomerModel>(strsql, new { RecordID = recordID });
         }
 
         public async Task<bool> InsertCustomerData(CustomerModel customer, int type)

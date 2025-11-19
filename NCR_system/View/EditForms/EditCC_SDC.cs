@@ -30,8 +30,7 @@ namespace NCR_system.View.EditForms
 
         public async void SetCustomerDetails(int RecordID, int type)
         {
-            var data = await _cus.GetCustomerData(type);
-            var filterdata = data.SingleOrDefault(res => res.RecordID == RecordID);
+            var filterdata = await _cus.GetCustomerDataByID(RecordID);
 
             if (filterdata != null)
             {            
@@ -39,6 +38,7 @@ namespace NCR_system.View.EditForms
                 EditLotText.Text = filterdata.LotNo;
                 EditNGText.Text = filterdata.NGQty.ToString();
                 EditProblemText.Text = filterdata.Details;
+                comboBox1.SelectedIndex = filterdata.Status == 1 ? 0 : 1;
             }
         }
 

@@ -2893,7 +2893,7 @@
     }
 
 
-.namesdisplay ul li, .dailypartnumdisplay ul li {
+.namesdisplay ul li, .dailypartnumdisplay ul li, .dailyEditpartnumdisplay ul li {
     list-style: none;
     border-radius: 3px;
     padding: 15px;
@@ -2902,7 +2902,7 @@
     color: #222;
 }
 
-    .namesdisplay ul li:hover, .dailypartnumdisplay ul li:hover {
+    .namesdisplay ul li:hover, .dailypartnumdisplay ul li:hover, .dailyEditpartnumdisplay ul li:hover {
         background-color: #e9f3ff;
     }
 
@@ -2911,7 +2911,7 @@
         background: #fff;
     }
 
-.namesdisplay, .dailypartnumdisplay {
+.namesdisplay, .dailypartnumdisplay, .dailyEditpartnumdisplay {
     display: none;
     width: 100%;
     background: #fff;

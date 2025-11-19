@@ -47,40 +47,118 @@ namespace NCR_system.View.Module
 
                 if (proc == 0)
                 {
-                    
+                    CustomDatagrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
                     CustomDatagrid.Columns["RecordID"].Visible = false;
                     CustomDatagrid.Columns["CustomerName"].Visible = true;
                     CustomDatagrid.Columns["CCtype"].Visible = false;
 
+                    CustomDatagrid.Columns["DateCreated"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
                     CustomDatagrid.Columns["DateCreated"].DisplayIndex = 0;
+                    CustomDatagrid.Columns["DateCreated"].Width = 100;
+
+                    CustomDatagrid.Columns["RegNo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                    CustomDatagrid.Columns["RegNo"].Width = 150;
                     CustomDatagrid.Columns["RegNo"].DisplayIndex = 1;
+
+                    CustomDatagrid.Columns["CustomerName"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                     CustomDatagrid.Columns["CustomerName"].DisplayIndex = 2;
+
+                    CustomDatagrid.Columns["SectionID"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                    CustomDatagrid.Columns["SectionID"].Width = 150;
                     CustomDatagrid.Columns["SectionID"].DisplayIndex = 3;
+
+                    CustomDatagrid.Columns["ModelNo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                    CustomDatagrid.Columns["ModelNo"].Width = 150;
                     CustomDatagrid.Columns["ModelNo"].DisplayIndex = 4;
+
+                    CustomDatagrid.Columns["LotNo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                    CustomDatagrid.Columns["LotNo"].Width = 150;
                     CustomDatagrid.Columns["LotNo"].DisplayIndex = 5;
+
+                    CustomDatagrid.Columns["NGQty"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                    CustomDatagrid.Columns["NGQty"].Width = 100;
                     CustomDatagrid.Columns["NGQty"].DisplayIndex = 6;
+
+                    CustomDatagrid.Columns["Details"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                     CustomDatagrid.Columns["Details"].DisplayIndex = 7;
+
+                    CustomDatagrid.Columns["Status"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                    CustomDatagrid.Columns["Status"].Width = 100;
                     CustomDatagrid.Columns["Status"].DisplayIndex = 8;
+
+                    CustomDatagrid.Columns["Edit"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                    CustomDatagrid.Columns["Edit"].Width = 100;
                     CustomDatagrid.Columns["Edit"].DisplayIndex = 9;
+
+                    CustomDatagrid.Columns["Delete"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                    CustomDatagrid.Columns["Delete"].Width = 100;
                     CustomDatagrid.Columns["Delete"].DisplayIndex = 10;
+
+                    ExternalPanel.Visible = true;
+                    ExternalPanel.BringToFront();
+                    SDCPanel.Visible = false;
+
+
+                    Externalbtn.Visible = true;
+                    Externalbtn.BringToFront();
+                    OpenCC.Visible = false;
                 }
                 else
                 {
+                    CustomDatagrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
                     CustomDatagrid.Columns["RecordID"].Visible = false;
+
+                    CustomDatagrid.Columns["RegNo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                    CustomDatagrid.Columns["RegNo"].Width = 150;
                     CustomDatagrid.Columns["RegNo"].Visible = false;
+
+                    CustomDatagrid.Columns["CustomerName"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                     CustomDatagrid.Columns["CustomerName"].Visible = false;
                     CustomDatagrid.Columns["CCtype"].Visible = false;
 
+                    CustomDatagrid.Columns["DateCreated"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
                     CustomDatagrid.Columns["DateCreated"].DisplayIndex = 1;
+                    CustomDatagrid.Columns["DateCreated"].Width = 100;
+
+                    CustomDatagrid.Columns["SectionID"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                    CustomDatagrid.Columns["SectionID"].Width = 150;
                     CustomDatagrid.Columns["SectionID"].DisplayIndex = 2;
+
+                    CustomDatagrid.Columns["ModelNo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                    CustomDatagrid.Columns["ModelNo"].Width = 150;
                     CustomDatagrid.Columns["ModelNo"].DisplayIndex = 3;
+
+                    CustomDatagrid.Columns["LotNo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                    CustomDatagrid.Columns["LotNo"].Width = 150;
                     CustomDatagrid.Columns["LotNo"].DisplayIndex = 4;
+
+                    CustomDatagrid.Columns["NGQty"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                    CustomDatagrid.Columns["NGQty"].Width = 100;
                     CustomDatagrid.Columns["NGQty"].DisplayIndex = 5;
+
                     CustomDatagrid.Columns["Details"].DisplayIndex = 6;
 
+                    CustomDatagrid.Columns["Status"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                    CustomDatagrid.Columns["Status"].Width = 100;
                     CustomDatagrid.Columns["Status"].DisplayIndex = 7;
+
+                    CustomDatagrid.Columns["Edit"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                    CustomDatagrid.Columns["Edit"].Width = 100;
                     CustomDatagrid.Columns["Edit"].DisplayIndex = 8;
+
+                    CustomDatagrid.Columns["Delete"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                    CustomDatagrid.Columns["Delete"].Width = 100;
                     CustomDatagrid.Columns["Delete"].DisplayIndex = 9;
+
+                    SDCPanel.Visible = true;
+                    SDCPanel.BringToFront();
+                    ExternalPanel.Visible = false;
+
+
+                    OpenCC.Visible = true;
+                    OpenCC.BringToFront();
+                    Externalbtn.Visible = false;
                 }
 
 
@@ -181,6 +259,7 @@ namespace NCR_system.View.Module
         private void Customer_Complaint_user_Load(object sender, EventArgs e)
         {
             SelectedProcess.SelectedIndex = 0;
+            SelectedProcess.DropDownHeight = 41;
             CustomDatagrid.Columns["RegNo"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
             CustomDatagrid.Columns["SectionID"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
             CustomDatagrid.Columns["LotNo"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
@@ -197,6 +276,8 @@ namespace NCR_system.View.Module
 
         private void Externalbtn_Click(object sender, EventArgs e)
         {
+            var add = new AddExternalCC(_cust, this);
+            add.ShowDialog();
         }
 
         private void CustomDatagrid_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -241,6 +322,11 @@ namespace NCR_system.View.Module
                     MessageBox.Show($"Delete clicked on row {e.RowIndex} - Record ID selected:  {recordID}");
                 }
             }
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -61,22 +61,22 @@
             this.SelectedProcess = new System.Windows.Forms.ComboBox();
             this.Externalbtn = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.pieChart2 = new LiveCharts.WinForms.PieChart();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.filteritems = new System.Windows.Forms.ComboBox();
-            this.SDCPanel = new System.Windows.Forms.Panel();
             this.ExternalPanel = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.pieChart2 = new LiveCharts.WinForms.PieChart();
+            this.label2 = new System.Windows.Forms.Label();
+            this.SDCPanel = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.filteritems = new System.Windows.Forms.ComboBox();
             this.sectionfilter = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.CustomDatagrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CustSummaryGrid)).BeginInit();
             this.panel1.SuspendLayout();
-            this.SDCPanel.SuspendLayout();
             this.ExternalPanel.SuspendLayout();
             this.panel3.SuspendLayout();
+            this.SDCPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // CustomDatagrid
@@ -333,7 +333,7 @@
             this.SelectedProcess.Items.AddRange(new object[] {
             "External",
             "SDC"});
-            this.SelectedProcess.Location = new System.Drawing.Point(313, 33);
+            this.SelectedProcess.Location = new System.Drawing.Point(184, 33);
             this.SelectedProcess.Name = "SelectedProcess";
             this.SelectedProcess.Size = new System.Drawing.Size(159, 21);
             this.SelectedProcess.TabIndex = 7;
@@ -364,62 +364,6 @@
             this.panel1.Size = new System.Drawing.Size(330, 766);
             this.panel1.TabIndex = 9;
             // 
-            // pieChart2
-            // 
-            this.pieChart2.Location = new System.Drawing.Point(35, 0);
-            this.pieChart2.Name = "pieChart2";
-            this.pieChart2.Size = new System.Drawing.Size(249, 196);
-            this.pieChart2.TabIndex = 4;
-            this.pieChart2.Text = "pieChart2";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(32, 540);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(35, 13);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "label2";
-            this.label2.Click += new System.EventHandler(this.label2_Click);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(18, 12);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(96, 18);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "SDC Details ";
-            // 
-            // panel2
-            // 
-            this.panel2.BackColor = System.Drawing.Color.White;
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 699);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1019, 67);
-            this.panel2.TabIndex = 10;
-            // 
-            // filteritems
-            // 
-            this.filteritems.FormattingEnabled = true;
-            this.filteritems.Items.AddRange(new object[] {
-            "Open",
-            "Close"});
-            this.filteritems.Location = new System.Drawing.Point(496, 33);
-            this.filteritems.Name = "filteritems";
-            this.filteritems.Size = new System.Drawing.Size(121, 21);
-            this.filteritems.TabIndex = 11;
-            // 
-            // SDCPanel
-            // 
-            this.SDCPanel.Controls.Add(this.label1);
-            this.SDCPanel.Location = new System.Drawing.Point(3, 206);
-            this.SDCPanel.Name = "SDCPanel";
-            this.SDCPanel.Size = new System.Drawing.Size(324, 195);
-            this.SDCPanel.TabIndex = 6;
-            // 
             // ExternalPanel
             // 
             this.ExternalPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -449,6 +393,62 @@
             this.panel3.Size = new System.Drawing.Size(330, 200);
             this.panel3.TabIndex = 7;
             // 
+            // pieChart2
+            // 
+            this.pieChart2.Location = new System.Drawing.Point(35, 0);
+            this.pieChart2.Name = "pieChart2";
+            this.pieChart2.Size = new System.Drawing.Size(249, 196);
+            this.pieChart2.TabIndex = 4;
+            this.pieChart2.Text = "pieChart2";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(32, 540);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(35, 13);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "label2";
+            this.label2.Click += new System.EventHandler(this.label2_Click);
+            // 
+            // SDCPanel
+            // 
+            this.SDCPanel.Controls.Add(this.label1);
+            this.SDCPanel.Location = new System.Drawing.Point(3, 206);
+            this.SDCPanel.Name = "SDCPanel";
+            this.SDCPanel.Size = new System.Drawing.Size(324, 195);
+            this.SDCPanel.TabIndex = 6;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(18, 12);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(96, 18);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "SDC Details ";
+            // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.Color.White;
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel2.Location = new System.Drawing.Point(0, 699);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(1019, 67);
+            this.panel2.TabIndex = 10;
+            // 
+            // filteritems
+            // 
+            this.filteritems.FormattingEnabled = true;
+            this.filteritems.Items.AddRange(new object[] {
+            "Open",
+            "Close"});
+            this.filteritems.Location = new System.Drawing.Point(360, 33);
+            this.filteritems.Name = "filteritems";
+            this.filteritems.Size = new System.Drawing.Size(121, 21);
+            this.filteritems.TabIndex = 11;
+            // 
             // sectionfilter
             // 
             this.sectionfilter.FormattingEnabled = true;
@@ -458,7 +458,7 @@
             "Rotor",
             "Winding",
             "Circuit"});
-            this.sectionfilter.Location = new System.Drawing.Point(632, 33);
+            this.sectionfilter.Location = new System.Drawing.Point(517, 33);
             this.sectionfilter.Name = "sectionfilter";
             this.sectionfilter.Size = new System.Drawing.Size(121, 21);
             this.sectionfilter.TabIndex = 12;
@@ -482,11 +482,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.CustSummaryGrid)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.SDCPanel.ResumeLayout(false);
-            this.SDCPanel.PerformLayout();
             this.ExternalPanel.ResumeLayout(false);
             this.ExternalPanel.PerformLayout();
             this.panel3.ResumeLayout(false);
+            this.SDCPanel.ResumeLayout(false);
+            this.SDCPanel.PerformLayout();
             this.ResumeLayout(false);
 
         }

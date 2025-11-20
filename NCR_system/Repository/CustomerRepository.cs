@@ -19,19 +19,21 @@ namespace NCR_system.Repository
 		                        Details,Status,SectionID
                                 ,RegNo,CustomerName,CCtype
                             FROM PC_CustomerConplaint
-                            WHERE CCtype = @CCtype AND IsDelete = 1";
+                            WHERE CCtype = @CCtype AND IsDelete = 1
+                            ORDER BY RecordID DESC";
             return await SqlDataAccess.GetData<CustomerModel>(strsql, new { CCtype  = type});
         }
 
         public Task<CustomerModel> GetCustomerDataByID(int recordID)
         {
-            string strsql = $@"SELECT RecordID,
+            string strsql = $@"SELECT TOP 1 RecordID,
 		                        FORMAT(DateCreated, 'MM/dd/yy') as DateCreated,
 		                        ModelNo,LotNo,NGQty,
 		                        Details,Status,SectionID
                                 ,RegNo,CustomerName,CCtype
                             FROM PC_CustomerConplaint
-                            WHERE RecordID = @RecordID";
+                            WHERE RecordID = @RecordID
+                            ORDER BY RecordID DESC";
             return SqlDataAccess.GetDataByID<CustomerModel>(strsql, new { RecordID = recordID });
         }
 

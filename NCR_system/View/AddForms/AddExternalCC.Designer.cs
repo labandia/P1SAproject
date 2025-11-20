@@ -38,7 +38,6 @@
             this.Cancel_btn = new System.Windows.Forms.Button();
             this.EditProblemText = new System.Windows.Forms.RichTextBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.EditNGText = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.EditLotText = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -55,12 +54,12 @@
             this.panel6 = new System.Windows.Forms.Panel();
             this.panel7 = new System.Windows.Forms.Panel();
             this.panel8 = new System.Windows.Forms.Panel();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.EditNGText = new System.Windows.Forms.NumericUpDown();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel5.SuspendLayout();
             this.panel6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.EditNGText)).BeginInit();
             this.SuspendLayout();
             // 
             // EditCustomerText
@@ -113,7 +112,7 @@
             "Rotor",
             "Winding",
             "Circuit"});
-            this.selectDepart.Location = new System.Drawing.Point(28, 244);
+            this.selectDepart.Location = new System.Drawing.Point(29, 338);
             this.selectDepart.Name = "selectDepart";
             this.selectDepart.Size = new System.Drawing.Size(267, 21);
             this.selectDepart.TabIndex = 129;
@@ -148,6 +147,7 @@
             this.Cancel_btn.TabIndex = 127;
             this.Cancel_btn.Text = "Cancel";
             this.Cancel_btn.UseVisualStyleBackColor = true;
+            this.Cancel_btn.Click += new System.EventHandler(this.Cancel_btn_Click);
             // 
             // EditProblemText
             // 
@@ -167,16 +167,6 @@
             this.label6.TabIndex = 125;
             this.label6.Text = "Details of Problem :";
             // 
-            // EditNGText
-            // 
-            this.EditNGText.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.EditNGText.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.EditNGText.Location = new System.Drawing.Point(331, 333);
-            this.EditNGText.Multiline = true;
-            this.EditNGText.Name = "EditNGText";
-            this.EditNGText.Size = new System.Drawing.Size(267, 41);
-            this.EditNGText.TabIndex = 124;
-            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -191,7 +181,7 @@
             // 
             this.EditLotText.BackColor = System.Drawing.Color.WhiteSmoke;
             this.EditLotText.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.EditLotText.Location = new System.Drawing.Point(28, 333);
+            this.EditLotText.Location = new System.Drawing.Point(28, 244);
             this.EditLotText.Multiline = true;
             this.EditLotText.Name = "EditLotText";
             this.EditLotText.Size = new System.Drawing.Size(267, 41);
@@ -201,7 +191,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(25, 308);
+            this.label2.Location = new System.Drawing.Point(25, 214);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(55, 16);
             this.label2.TabIndex = 121;
@@ -231,7 +221,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(25, 214);
+            this.label3.Location = new System.Drawing.Point(26, 308);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(131, 16);
             this.label3.TabIndex = 118;
@@ -330,12 +320,13 @@
             this.panel8.Size = new System.Drawing.Size(572, 2);
             this.panel8.TabIndex = 55;
             // 
-            // numericUpDown1
+            // EditNGText
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(400, 12);
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(120, 20);
-            this.numericUpDown1.TabIndex = 140;
+            this.EditNGText.AutoSize = true;
+            this.EditNGText.Location = new System.Drawing.Point(331, 338);
+            this.EditNGText.Name = "EditNGText";
+            this.EditNGText.Size = new System.Drawing.Size(200, 20);
+            this.EditNGText.TabIndex = 140;
             // 
             // AddExternalCC
             // 
@@ -343,7 +334,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(630, 646);
             this.ControlBox = false;
-            this.Controls.Add(this.numericUpDown1);
+            this.Controls.Add(this.EditNGText);
             this.Controls.Add(this.panel5);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.label10);
@@ -357,7 +348,6 @@
             this.Controls.Add(this.Cancel_btn);
             this.Controls.Add(this.EditProblemText);
             this.Controls.Add(this.label6);
-            this.Controls.Add(this.EditNGText);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.EditLotText);
             this.Controls.Add(this.label2);
@@ -367,11 +357,12 @@
             this.Name = "AddExternalCC";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "-";
+            this.Load += new System.EventHandler(this.AddExternalCC_Load);
             this.panel1.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel5.ResumeLayout(false);
             this.panel6.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.EditNGText)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -387,7 +378,6 @@
         private System.Windows.Forms.Button Cancel_btn;
         private System.Windows.Forms.RichTextBox EditProblemText;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox EditNGText;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox EditLotText;
         private System.Windows.Forms.Label label2;
@@ -404,6 +394,6 @@
         private System.Windows.Forms.Panel panel6;
         private System.Windows.Forms.Panel panel7;
         private System.Windows.Forms.Panel panel8;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.NumericUpDown EditNGText;
     }
 }

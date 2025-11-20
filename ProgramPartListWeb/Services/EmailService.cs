@@ -204,7 +204,7 @@ namespace ProgramPartListWeb.Utilities
             {
                 case "processowner":
                     messageContent = $@"
-                            <p>This is to inform you that you have a <strong>For Review/Submit Countermeasure</strong> Patrol Inspection report.</p>
+                            <p>This is to inform you that you have a response and are <strong>required to submit a countermeasure</strong> for the Patrol Inspection report.</p>
                 
                             <table class='details-table'>
                                 <tr>
@@ -213,8 +213,12 @@ namespace ProgramPartListWeb.Utilities
                                 </tr>
                                
                                 <tr>
-                                    <td class='label'>Dept. /Section Inspected:</td>
+                                    <td class='label'>Dept. /Section:</td>
                                     <td>{DepartmentName}</td>
+                                </tr>
+                                <tr>
+                                    <td class='label'>Link of the Registration No. :</td>
+                                    <td> <a href='{link}' class='button'> Patrol inspection report </a></td>
                                 </tr>
                             </table>";
                     subjectLine = "[FOLLOW UP - REGISTRATION REPORT] 'For Review/Submit CounterMeasure'";
@@ -231,12 +235,16 @@ namespace ProgramPartListWeb.Utilities
                                     <td><strong>{reg}</strong></td>
                                 </tr>
                                 <tr>
-                                    <td class='label'>Process Owner :</td>
+                                    <td class='label'>Person Incharge :</td>
                                     <td><strong></strong></td>
                                 </tr>
                                   <tr>
-                                    <td class='label'>Dept. /Section Inspected:</td>
-                                    <td>{DepartmentName}</td>
+                                    <td class='label'>Dept. /Section:</td>
+                                    <td><strong>{DepartmentName}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td class='label'>Link of the Registration No. :</td>
+                                    <td> <a href='{link}' class='button'> Patrol inspection report </a></td>
                                 </tr>
                             </table>";
                     subjectLine = "[FOLLOW UP - NONCON REPORT] 'For Review/Approval'";
@@ -284,7 +292,7 @@ namespace ProgramPartListWeb.Utilities
                             .header h2 {{ margin: 0; font-size: 18px; font-weight: bold; }}
                             .email-info {{ background: #e9ecef; padding: 8px 20px; font-size: 11px; color: #666; border-bottom: 1px solid #ddd; }}
                             .content {{ padding: 25px !important; }}
-                            .button {{ display: inline-block; padding: 12px 24px; background-color: #dc3545; color: white; text-decoration: none; border-radius: 4px; font-weight: bold; margin: 15px 0; }}
+                            .button {{ display: inline-block; padding: 12px 24px; background-color: #dc3545; color: white; text-decoration: none; border-radius: 4px; font-weight: bold; }}
                             .footer {{ margin-top: 25px; padding-top: 20px; border-top: 1px solid #e9ecef; font-size: 11px; color: #6c757d; }}
                             .details-table {{ width: 100%; border-collapse: collapse; margin: 20px 0; }}
                             .details-table td {{ padding: 12px; border: 1px solid #dee2e6; vertical-align: top; }}
@@ -305,15 +313,10 @@ namespace ProgramPartListWeb.Utilities
                                 {messageContent}
 
                                 <div class='system-links'>
-                                    <p><strong>Please use the link below to access the system:</strong></p>
-                                    <p>
-                                        <strong>Link of the Registration form :</strong>  <a href='{link}' class='button'>{buttonText}</a>
-                                    </p>
-                        
-                                  
+                                    <p><strong>Please use the link above to access the system:</strong></p>                                
                                 </div>
 
-                            
+                                
                             </div>
                 
                             <div class='footer'>
@@ -329,6 +332,8 @@ namespace ProgramPartListWeb.Utilities
 
 
 
+
+       
     }
 
 }

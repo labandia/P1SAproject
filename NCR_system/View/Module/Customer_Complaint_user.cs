@@ -6,10 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -40,14 +38,32 @@ namespace NCR_system.View.Module
                 var getdata = (await _cust.GetCustomerData(proc)).ToList();
                 cuslist = getdata;
 
-             
-                CustomDatagrid.DataSource = cuslist;
-               
+                //var filterdata = cuslist.Where(c => c.SectionID == 1 || c.Status == 1).ToList();
 
+
+                //CustomDatagrid.DataSource = cuslist;
+
+                // 🔹 Prepare filtered list
+                var filtered = cuslist.AsEnumerable();
+
+                // 🔹 Filter by Section
+                if (sectionfilter.SelectedIndex > 0)
+                {
+                    filtered = filtered.Where(c => c.SectionID == sectionfilter.SelectedIndex);
+                }
+
+                // 🔹 Filter by Status
+                if (filteritems.SelectedIndex > 0)
+                {
+                    filtered = filtered.Where(c => c.Status == filteritems.SelectedIndex);
+                }
+
+                // 🔹 Apply final result
+                CustomDatagrid.DataSource = filtered.ToList();
 
                 if (proc == 0)
                 {
-                    CustomDatagrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+                    CustomDatagrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
                     CustomDatagrid.Columns["RecordID"].Visible = false;
                     CustomDatagrid.Columns["CustomerName"].Visible = true;
                     CustomDatagrid.Columns["CCtype"].Visible = false;
@@ -86,13 +102,13 @@ namespace NCR_system.View.Module
                     CustomDatagrid.Columns["Status"].Width = 100;
                     CustomDatagrid.Columns["Status"].DisplayIndex = 8;
 
-                    CustomDatagrid.Columns["Edit"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                    CustomDatagrid.Columns["Edit"].Width = 100;
-                    CustomDatagrid.Columns["Edit"].DisplayIndex = 9;
+                    //CustomDatagrid.Columns["Edit"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                    //CustomDatagrid.Columns["Edit"].Width = 100;
+                    //CustomDatagrid.Columns["Edit"].DisplayIndex = 9;
 
                     CustomDatagrid.Columns["Delete"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
                     CustomDatagrid.Columns["Delete"].Width = 100;
-                    CustomDatagrid.Columns["Delete"].DisplayIndex = 10;
+                    CustomDatagrid.Columns["Delete"].DisplayIndex = 9;
 
                     ExternalPanel.Visible = true;
                     ExternalPanel.BringToFront();
@@ -143,13 +159,13 @@ namespace NCR_system.View.Module
                     CustomDatagrid.Columns["Status"].Width = 100;
                     CustomDatagrid.Columns["Status"].DisplayIndex = 7;
 
-                    CustomDatagrid.Columns["Edit"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                    CustomDatagrid.Columns["Edit"].Width = 100;
-                    CustomDatagrid.Columns["Edit"].DisplayIndex = 8;
+                    //CustomDatagrid.Columns["Edit"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                    //CustomDatagrid.Columns["Edit"].Width = 100;
+                    //CustomDatagrid.Columns["Edit"].DisplayIndex = 8;
 
                     CustomDatagrid.Columns["Delete"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
                     CustomDatagrid.Columns["Delete"].Width = 100;
-                    CustomDatagrid.Columns["Delete"].DisplayIndex = 9;
+                    CustomDatagrid.Columns["Delete"].DisplayIndex = 8;
 
                     SDCPanel.Visible = true;
                     SDCPanel.BringToFront();
@@ -191,6 +207,7 @@ namespace NCR_system.View.Module
 
                 // 🔹 Display summary
                 CustSummaryGrid.DataSource = summary;
+
 
 
             }
@@ -258,6 +275,9 @@ namespace NCR_system.View.Module
 
         private void Customer_Complaint_user_Load(object sender, EventArgs e)
         {
+            filteritems.SelectedIndex = 0;
+            sectionfilter.SelectedIndex = 0;
+
             SelectedProcess.SelectedIndex = 0;
             SelectedProcess.DropDownHeight = 41;
             CustomDatagrid.Columns["RegNo"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
@@ -265,7 +285,7 @@ namespace NCR_system.View.Module
             CustomDatagrid.Columns["LotNo"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
             CustomDatagrid.Columns["NGQty"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
             CustomDatagrid.Columns["Status"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            CustomDatagrid.Columns["Edit"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //CustomDatagrid.Columns["Edit"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
             CustomDatagrid.Columns["Delete"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
         }
 
@@ -296,23 +316,23 @@ namespace NCR_system.View.Module
             var recordID = row.Cells["RecordID"].Value;
             var type = row.Cells["CCtype"].Value;   
 
-            if (column.Name == "Edit")
-            {
-                int CCtype = Convert.ToInt32(type);
-                // You can get the row data like this:
-                if (CCtype == 0)
-                {
-                    var openedit = new EditCC_External(_cust, Convert.ToInt32(recordID), Convert.ToInt32(type), this);
-                    openedit.ShowDialog();
-                }
-                else
-                {
-                    var openedit = new EditCC_SDC(_cust, Convert.ToInt32(recordID), Convert.ToInt32(type), this);
-                    openedit.ShowDialog();
-                }
+            //if (column.Name == "Edit")
+            //{
+            //    int CCtype = Convert.ToInt32(type);
+            //    // You can get the row data like this:
+            //    if (CCtype == 0)
+            //    {
+            //        var openedit = new EditCC_External(_cust, Convert.ToInt32(recordID), Convert.ToInt32(type), this);
+            //        openedit.ShowDialog();
+            //    }
+            //    else
+            //    {
+            //        var openedit = new EditCC_SDC(_cust, Convert.ToInt32(recordID), Convert.ToInt32(type), this);
+            //        openedit.ShowDialog();
+            //    }
           
-            }
-            else if (column.Name == "Delete")
+            //}
+            if (column.Name == "Delete")
             {
                 // Handle Delete image click
                 DialogResult result = MessageBox.Show("Are you sure you want to delete?", "Confirm Delete", MessageBoxButtons.YesNo);
@@ -325,6 +345,21 @@ namespace NCR_system.View.Module
         }
 
         private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private async void filteritems_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            await DisplayCustomer(SelectedProcess.SelectedIndex);
+        }
+
+        private async void sectionfilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            await DisplayCustomer(SelectedProcess.SelectedIndex);
+        }
+
+        private void CustomDatagrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
 
         }

@@ -185,12 +185,12 @@ namespace ProgramPartListWeb.Areas.PC.Repository
         public async Task<bool> ApproveByInspector(string reg, string datecon, string newfilepath, string ManagerID)
         {
             var regsql = SqlDataAccess.UpdateInsertQuery(@" UPDATE Patrol_Registration SET  
-                            ReportStatus = 3, DateConduct = @DateConduct, Manager_ID = @Manager_ID
-                            WHERE RegNo =@RegNo", new { RegNo = reg, DateConduct = datecon, Manager_ID = ManagerID });
+                            ReportStatus = 3, DateConduct = @DateConduct, Manager_ID = @Manager_ID, DepManager_ID =@DepManager_ID
+                            WHERE RegNo =@RegNo", new { RegNo = reg, DateConduct = datecon, Manager_ID = ManagerID, DepManager_ID = ManagerID });
 
             var revsql = SqlDataAccess.UpdateInsertQuery(@"UPDATE Patrol_Registration_Approvelist SET  
-                            Inspect_IsAproved =  1, Manager_ID = @Manager_ID
-                            WHERE RegNo =@RegNo", new { RegNo = reg, Manager_ID = ManagerID });
+                            Inspect_IsAproved =  1, Manager_ID = @Manager_ID, DepManager_ID =@DepManager_ID
+                            WHERE RegNo =@RegNo", new { RegNo = reg, Manager_ID = ManagerID, DepManager_ID = ManagerID });
 
             var regFiles = SqlDataAccess.UpdateInsertQuery(@"UPDATE Patrol_Registration_Files SET 
                             FilePath =@FilePath
@@ -204,7 +204,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
         public async Task<bool> ApproveByManager(string reg, string comments, string newfilepath, string DepManager)
         {
             var regsql = SqlDataAccess.UpdateInsertQuery(@" UPDATE Patrol_Registration SET  
-                            ReportStatus = 4, DepManager_ID =@DepManager_ID
+                            ReportStatus = 5, DepManager_ID =@DepManager_ID, 
                             WHERE RegNo =@RegNo", new { RegNo = reg, DepManager_ID = DepManager });
 
             var revsql = SqlDataAccess.UpdateInsertQuery(@"UPDATE Patrol_Registration_Approvelist SET  
@@ -222,6 +222,29 @@ namespace ProgramPartListWeb.Areas.PC.Repository
 
             return results.All(r => r);
         }
+
+        public async Task<bool> ApproveByDepartment(string reg, string comments, string newfilepath, string DepManager)
+        {
+            var regsql = SqlDataAccess.UpdateInsertQuery(@" UPDATE Patrol_Registration SET  
+                            ReportStatus = 5, DivManager_ID =@DivManager_ID
+                            WHERE RegNo =@RegNo", new { RegNo = reg, DivManager_ID = DepManager });
+
+            var revsql = SqlDataAccess.UpdateInsertQuery(@"UPDATE Patrol_Registration_Approvelist SET  
+                            DepManager_IsAproved =  1,  Manager_Comments =@Manager_Comments, DivManager_ID =@DivManager_ID
+                            WHERE RegNo =@RegNo", new { RegNo = reg, Manager_Comments = comments, DivManager_ID = DepManager });
+
+            var regFiles = SqlDataAccess.UpdateInsertQuery(@"UPDATE Patrol_Registration_Files SET FilePath =@FilePath
+                            WHERE RegNo =@RegNo", new
+            {
+                FilePath = newfilepath,
+                RegNo = reg
+            });
+
+            bool[] results = await Task.WhenAll(regsql, revsql, regFiles);
+
+            return results.All(r => r);
+        }
+
 
         public async Task<bool> ApproveByDivManager(string reg, string newfilepath, string DivManagerID)
         {
@@ -245,6 +268,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             return results.All(r => r);
         }
 
+
         public Task<bool> ReturnEmailMessage(string RegNo, string comments, int reportStats)
         {
             if(reportStats == 2) { 
@@ -263,5 +287,6 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             throw new NotImplementedException();
         }
 
+       
     }
 }

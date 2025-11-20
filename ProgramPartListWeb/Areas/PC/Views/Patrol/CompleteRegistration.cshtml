@@ -4,6 +4,7 @@
     var regno = Request.QueryString["Regno"];
 }
 
+
 <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/x-icon" href="@Url.Content("~/Content/Images/patrol .ico")">
@@ -78,6 +79,16 @@
 
             <!-- Step 4: Attachments -->
             <div class="step-content" id="step-4">
+
+            </div>
+
+            <!-- Step 5: Review & Submit -->
+            <div class="step-content" id="step-5">
+                
+            </div>
+
+            <!-- Step 6: Review & Submit -->
+            <div class="step-content" id="step-6">
                 <form method="post" enctype="multipart/form-data" class="formcontainer mt-4" id="addnewform" autocomplete="off">
                     <div class="row">
                         <div class="col-12">
@@ -101,6 +112,8 @@
                                     <input type="text" id="SectionName" readonly />
                                 </div>
                             </div>
+
+
 
 
 
@@ -191,32 +204,36 @@
                                 </div>
                             </div>
 
+
                             <div class="row mb-3">
                                 <div class="col ">
                                     <label>Inspector Name: </label> <br />
-                                    <input type="text" id="InspectorName" />
+                                    <input type="text" id="InspectorName" readonly />
                                 </div>
 
                                 <div class="col ">
                                     <label>Date Conducted</label> <br />
-                                    <input type="text" id="DateConduct" />
+                                    <input type="text" id="DateConduct" readonly />
                                 </div>
                             </div>
 
-                            <div class="row mb-3">
-                                <div class="col ">
-                                    <label>Person in charge </label> <br />
-                                    <input type="text" id="PICName" />
-                                </div>
-                                <div class="col ">
-                                    <label>PIC Comments</label>
-                                    <textarea placeholder="Type text here..." name="PIC_Comments" id="PIC_Comments" rows="3" cols="40" readonly></textarea>
-                                </div>
+                            <div class="mb-3">
+                                <label>Person in charge </label> <br />
+                                <input type="text" id="PICName" readonly />
                             </div>
 
+                            <div class="mb-3">
+                                <label>PIC Comments</label>
+                                <textarea placeholder="Type text here..." name="PIC_Comments" id="PIC_Comments" rows="3" cols="40" readonly></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label>Manager Comments</label>
+                                <textarea placeholder="Type text here..." name="Manager_Comments" id="Manager_Comments" rows="3" cols="40" readonly></textarea>
+                            </div>
 
                         </div>
                     </div>
+
 
                     <div class="approval-container">
                         <div class="approval-box">
@@ -253,25 +270,13 @@
                         </div>
                     </div>
 
-
                 </form>
             </div>
-
-            <!-- Step 5: Review & Submit -->
-            <div class="step-content" id="step-5">
-
-            </div>
         </div>
 
 
     </div>
 
-    <div class="floating-comment-btn" style="@(ViewBag.Mode == 1 ? "" : "display:none")">
-        <span class="comment-label">Moderate Comment</span>
-        <div class="comment-btn" id="commentBtn">
-            <i class="fa-regular fa-paper-plane"></i>
-        </div>
-    </div>
 
 
 
@@ -285,14 +290,10 @@
 
         <form id="commentForm">
 
-            <div class="form-group">
-                <label>Manager Comments</label>
-                <textarea placeholder="Add Comments Here ..." name="Manager_Comments" id="Manager_Comments" rows="3" cols="40"></textarea>
-            </div>
 
             <div class="form-group">
                 <label for="moderation-notes">Comments for Return (Optional)</label>
-                <textarea rows="4" id="Return_Comments" name="Return_Comments" placeholder="Send Message back ..."></textarea>
+                <textarea rows="4" id="Return_Comments" name="Return_Comments" placeholder="Send Message Back ..."></textarea>
             </div>
 
             <div class="action-buttons">
@@ -305,26 +306,25 @@
             </div>
         </form>
     </div>
-    <div class="notification" id="notification"></div>
+
+
+
+
+
+
 
     <script type="text/javascript">
-        let currentStep = 4;
-        const totalSteps = 5;
-        // Global flag to prevent multiple redirects
- 
-        const commentBtn = document.getElementById('commentBtn');
-        const formContainer = document.getElementById('floatContainer');
-        const approveBtn = document.getElementById('approveBtn');
-        const returnBtn = document.getElementById('returnBtn');
-        const notification = document.getElementById('notification');
+        let currentStep = 6;
+        const totalSteps = 6;
+
 
 
         let strRegno = $("#Regno").val();
-        let modeset = @ViewBag.Mode;
 
         function goToStep(step) {
             // Update current step
             currentStep = step;
+
 
 
             // Update sidebar step states
@@ -357,7 +357,7 @@
 
         // Initialize the form
         document.addEventListener('DOMContentLoaded', function () {
-            goToStep(4);
+            goToStep(6);
 
             // Add click event to sidebar steps
             document.querySelectorAll('.step-item').forEach(item => {
@@ -368,293 +368,147 @@
             });
         });
 
-        // Toggle form visibility
-        commentBtn.addEventListener('click', () => {
-            commentBtn.classList.toggle('active');
-            formContainer.classList.toggle('active');
-        });
-
-        // Close form
-        closeBtn.addEventListener('click', () => {
-            commentBtn.classList.remove('active');
-            formContainer.classList.remove('active');
-        });
-
-           // Approve action
-       approveBtn.addEventListener('click', async (e) => {
-           e.preventDefault();
-           // Get the ID of the save button and Store original text
-           const savebtn = document.querySelector("#approveBtn");
-           const originalText = savebtn.innerHTML;
-
-           // Create loading icon and message container
-           savebtn.disabled = true;
-           savebtn.innerHTML = `<div class='buttonloading'></div>`;
+       
+         const GetRegistrationDetails = async () => {
+             let res = await fetchData('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
+                 if (res && res.Success) {
+                     $("#regtext").text(strRegno);
+                     $("#InspectorName").val(res.Data.InspectName);
+                     $("#PICName").val(res.Data.PICName);
+                     $("#DateConduct").val(res.Data.DateConduct);
+                     $("#SectionName").val("P1SA-" + res.Data.SectionName);
 
 
-           let fomdata = new FormData();
-           fomdata.append("RegNo", strRegno);
-           fomdata.append("Comments", $("#Manager_Comments").val());
+                     $("#PIC_Comments").val(res.Data.PIC_Comments);
+                     $("#Manager_Comments").val(res.Data.Manager_Comments);
 
 
-           // Step 1: Simulate "Saving data..."
-           await new Promise(resolve => setTimeout(resolve, 1200)); // 1.2s delay for animation
-
-            let res = await postData('@Url.Action("ManagerApproveSubmit", "Patrol")', fomdata);
-           if (res.StatusCode === 201) {
-               await new Promise(resolve => setTimeout(resolve, 1000));
-               savebtn.innerHTML = originalText;
+                     $("#PIC_approve").text(res.Data.PICName ?? 'N/A');
+                     $("#Inspect_approve").text(res.Data.InspectName ?? 'N/A');
+                     $("#Dep_approve").text(res.Data.DepartName ?? 'N/A');
+                     $("#Div_approve").text(res.Data.DivName ?? 'N/A');
 
 
-               // In a real application, you would send the approval to a server here
-               showNotification('approved successfully!', 'success');
+                     $("#PIC_Isapprove").text(res.Data.PIC_Comments != "" ? 'Approve' : 'Pending');
+                     $("#Ins_Isapprove").text(res.Data.Inspect_IsAproved == true ? 'Approve' : 'Pending');
+                     $("#Dep_Isapprove").text(res.Data.DepManager_IsAproved == true ? 'Approve' : 'Pending');
+                     $("#Div_Isapprove").text(res.Data.DivManager_IsAproved == true ? 'Approve' : 'Pending');
 
-               // Reset form
-               document.getElementById('Manager_Comments').value = '';
-               document.getElementById('Return_Comments').value = '';
-
-               // Close form
-               commentBtn.classList.remove('active');
-               formContainer.classList.remove('active');
-
-               setTimeout(() => {
-                   window.location.href = `/PC/Patrol/ManagerView?Regno=${strRegno}&mode=0`;
-               }, 3000);
-           } 
-       });
+                     // Set colors
+                     setStatusColor("#PIC_Isapprove", res.Data.PIC_Comments != "");
+                     setStatusColor("#Ins_Isapprove", res.Data.Inspect_IsAproved);
+                     setStatusColor("#Dep_Isapprove", res.Data.DepManager_IsAproved);
+                     setStatusColor("#Div_Isapprove", res.Data.DivManager_IsAproved);
 
 
-       // Return action
-       returnBtn.addEventListener('click', () => {
-           const notes = document.getElementById('moderation-notes').value;
-
-           if (!notes) {
-               showNotification('Please provide a reason for returning the comment', 'error');
-               return;
-           }
-
-           let formData = new FormData();
-           formData.append("Regno", "");
-           formData.append("Message", notes);
-
-           // In a real application, you would send the return action to a server here
-           showNotification('Comment returned to author with your notes', 'info');
-
-           // Reset form
-           document.getElementById('moderation-notes').value = '';
-
-           // Close form
-           commentBtn.classList.remove('active');
-           formContainer.classList.remove('active');
-
-           // In a real app, you would update the comment status in the UI
-           setTimeout(() => {
-               const pendingComment = document.querySelector('.comment.pending');
-               if (pendingComment) {
-                   pendingComment.classList.remove('pending');
-                   pendingComment.classList.add('returned');
-                   const statusSpan = pendingComment.querySelector('.comment-status');
-                   statusSpan.textContent = 'RETURNED';
-                   statusSpan.className = 'comment-status status-returned';
-               }
-           }, 500);
-       });
-
-
-        // Show notification
-        function showNotification(message, type) {
-            notification.textContent = message;
-            notification.className = 'notification active ' + type;
-
-            setTimeout(() => {
-                notification.classList.remove('active');
-            }, 3000);
-        }
-
-        document.addEventListener('click', (e) => {
-            if (!formContainer.contains(e.target) &&
-                !commentBtn.contains(e.target) &&
-                formContainer.classList.contains('active')) {
-                commentBtn.classList.remove('active');
-                formContainer.classList.remove('active');
-            }
-        });
-
-
-        // Utility function to set color
-        const setStatusColor = (selector, value) => {
-            if (value === true) {
-                $(selector).css("color", "blue");
-            } else {
-                $(selector).css("color", "red");
-            }
-        };
-
-
-
-
-          const GetRegistrationDetails = async () => {
-              let res = await fetchData('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
-              if (res && res.Success) {
-                 $("#regtext").text(strRegno);
-                 $("#InspectorName").val(res.Data.InspectName);
-                 $("#PICName").val(res.Data.PICName);
-                 $("#DateConduct").val(res.Data.DateConduct);
-                 $("#SectionName").val("P1SA-" + res.Data.SectionName);
-                 $("#PIC_Comments").val(res.Data.PIC_Comments);
-                 $("#Manager_Comments").val(res.Data.Manager_Comments);
-
-                  $("#PIC_approve").text(res.Data.PICName ?? 'N/A');
-                  $("#Inspect_approve").text(res.Data.InspectName ?? 'N/A');
-                  $("#Dep_approve").text(res.Data.DepartName ?? 'N/A');
-                  $("#Div_approve").text(res.Data.DivName ?? 'N/A');
-
-
-                  $("#PIC_Isapprove").text(res.Data.PIC_Comments != "" ? 'Approve' : 'Pending');
-                  $("#Ins_Isapprove").text(res.Data.Inspect_IsAproved == true ? 'Approve' : 'Pending');
-                  $("#Dep_Isapprove").text(res.Data.DepManager_IsAproved == true ? 'Approve' : 'Pending');
-                  $("#Div_Isapprove").text(res.Data.DivManager_IsAproved == true ? 'Approve' : 'Pending');
-
-                  // Set colors
-                  setStatusColor("#PIC_Isapprove", res.Data.PIC_Comments != "");
-                  setStatusColor("#Ins_Isapprove", res.Data.Inspect_IsAproved);
-                  setStatusColor("#Dep_Isapprove", res.Data.DepManager_IsAproved);
-                  setStatusColor("#Div_Isapprove", res.Data.DivManager_IsAproved);
-
-
-
-                  if (modeset == 0) {
-                      $("#returnBtn").prop("disabled", true);
-                      $("#approveBtn").prop("disabled", true);
-                      $("#Return_Comments").prop("disabled", true);
-                      $("#Manager_Comments").prop("readonly", true);
-                  }
-
+                 }
              }
-         }
-         const GetRegistrationFindingsID = async () => {
-             let res = await fetchData('@Url.Action("GetRegistrationFindings", "Patrol")', { Regno: strRegno });
 
-             if (res && res.Success) {
-                 res.Data.forEach(item => {
-                     $(`#Inpects${item.FindID}`).val(item.FindDescription);
-                     $(`#counter${item.FindID}`).val(item.Countermeasure);
-                 });
-             }
-         }
-         const GetRegistratioFiles = async () => {
-             let filesSelect = [];
-             let res = await fetchData('@Url.Action("GetRegistrationAllFiles", "Patrol")', { Regno: strRegno });
-             if (res.Success && res) {
-                 filesSelect = res.Data;
+            // Utility function to set color
+            const setStatusColor = (selector, value) => {
+                if (value === true) {
+                    $(selector).css("color", "blue");
+                } else {
+                    $(selector).css("color", "red");
+                }
+            };
 
-                 let UploadCounterPath = filesSelect[0].CounterPath;
+             const GetRegistrationFindingsID = async () => {
+                 let res = await fetchData('@Url.Action("GetRegistrationFindings", "Patrol")', { Regno: strRegno });
 
-                 if (UploadCounterPath) {
-                     let files = UploadCounterPath.split(';');
-                     let fileHtml = "";
-
-                     files.forEach(f => {
-                         if (f.trim() !== "") {
-                             let filenameonly = f.replace(/\.pdf$/i, "");
-
-                             const fileExtension = f.split('.').pop().toLowerCase();
-
-                             let fileType = 'default';
-
-                             if (['pdf'].includes(fileExtension)) {
-                                 fileType = 'pdf';
-                             } else if (['xlsx', 'xls', 'xlsm', 'csv'].includes(fileExtension)) {
-                                 fileType = 'xlsx';
-                             } else if (['doc', 'docx', 'txt'].includes(fileExtension)) {
-                                 fileType = 'doc';
-                             } else if (['jpg', 'jpeg', 'png', 'gif', 'svg'].includes(fileExtension)) {
-                                 fileType = 'img';
-                             } else if (['zip', 'rar', '7z'].includes(fileExtension)) {
-                                 fileType = 'zip';
-                             }
-
-                             const fileIconClass = `file-icon ${fileType}`;
-
-
-                             let fileIcon = '';
-
-                             switch (fileType) {
-                                 case 'pdf':
-                                     fileIcon = '<i class="far fa-file-pdf"></i>';
-                                     break;
-                                 case 'doc':
-                                     fileIcon = '<i class="far fa-file-word"></i>';
-                                     break;
-                                 case 'img':
-                                     fileIcon = '<i class="far fa-file-image"></i>';
-                                     break;
-                                 case 'zip':
-                                     fileIcon = '<i class="far fa-file-archive"></i>';
-                                     break;
-                                 case 'xlsx':
-                                     fileIcon = '<i class="fa-regular fa-file-excel"></i>';
-                                     break;
-                                 default:
-                                     fileIcon = '<i class="far fa-file"></i>';
-                             }
-
-                             fileHtml += `
-                                   <button class="open-pdf-btn" data-pdf-url="/Patrol/ViewPDF?strfilepath=${f}">
-                                        <div class="${fileIconClass}">
-                                          ${fileIcon}
-                                        </div>
-                                        <div class="file-info">
-                                            <div class="file-name">${filenameonly}</div>
-                                        </div>
-                                 </button>
-                              `;
-                         }
-                     });
-
-                     document.getElementById("fileContainer").innerHTML = fileHtml;
-
-                     // Attach click event
-                     document.querySelectorAll(".open-pdf-btn").forEach(btn => {
-                         btn.addEventListener("click", function () {
-                             let pdfUrl = this.getAttribute("data-pdf-url");
-                             window.open(pdfUrl, "_blank"); // Open in new tab
-                         });
+                 if (res && res.Success) {
+                     res.Data.forEach(item => {
+                         $(`#Inpects${item.FindID}`).val(item.FindDescription);
+                         $(`#counter${item.FindID}`).val(item.Countermeasure);
                      });
                  }
-
-
              }
 
-         }
+             const GetRegistratioFiles = async () => {
+                 let filesSelect = [];
+                 let res = await fetchData('@Url.Action("GetRegistrationAllFiles", "Patrol")', { Regno: strRegno });
+                 if (res.Success && res) {
+                     filesSelect = res.Data;
 
-        const RedirectPageView = (stats, regno) => {
-            // Use encodeURIComponent to avoid issues with special characters
-            if (stats == 3) return;
+                     let UploadCounterPath = filesSelect[0].CounterPath;
 
-       
+                     if (UploadCounterPath) {
+                         let files = UploadCounterPath.split(';');
+                         let fileHtml = "";
 
-            const r = encodeURIComponent(regno);
-            const m = encodeURIComponent(modeset);
+                         files.forEach(f => {
+                             if (f.trim() !== "") {
+                                 let filenameonly = f.replace(/\.pdf$/i, "");
 
-            switch (stats) {
-                case 1:
-                    window.location.href = `/PC/Patrol/ProcessOwner?Regno=${r}&mode=${m}`;
-                    break;
-                case 2:
-                    window.location.href = `/PC/Patrol/InspectorsReview?Regno=${r}&mode=${m}`;
-                    break;
-                case 3:
-                    window.location.href = `/PC/Patrol/ManagerView?Regno=${r}&mode=${m}`;
-                    break;
-                case 4:
-                case 5:
-                    window.location.href = `/PC/Patrol/DepartmentApproval?Regno=${r}&mode=${m}`;
-                    break;
-                default:
-                    console.warn("Unknown status:", stats);
-            }
-        };
+                                 const fileExtension = f.split('.').pop().toLowerCase();
+
+                                 let fileType = 'default';
+
+                                 if (['pdf'].includes(fileExtension)) {
+                                     fileType = 'pdf';
+                                 } else if (['xlsx', 'xls', 'xlsm', 'csv'].includes(fileExtension)) {
+                                     fileType = 'xlsx';
+                                 } else if (['doc', 'docx', 'txt'].includes(fileExtension)) {
+                                     fileType = 'doc';
+                                 } else if (['jpg', 'jpeg', 'png', 'gif', 'svg'].includes(fileExtension)) {
+                                     fileType = 'img';
+                                 } else if (['zip', 'rar', '7z'].includes(fileExtension)) {
+                                     fileType = 'zip';
+                                 }
+
+                                 const fileIconClass = `file-icon ${fileType}`;
+
+
+                                 let fileIcon = '';
+
+                                 switch (fileType) {
+                                     case 'pdf':
+                                         fileIcon = '<i class="far fa-file-pdf"></i>';
+                                         break;
+                                     case 'doc':
+                                         fileIcon = '<i class="far fa-file-word"></i>';
+                                         break;
+                                     case 'img':
+                                         fileIcon = '<i class="far fa-file-image"></i>';
+                                         break;
+                                     case 'zip':
+                                         fileIcon = '<i class="far fa-file-archive"></i>';
+                                         break;
+                                     case 'xlsx':
+                                         fileIcon = '<i class="fa-regular fa-file-excel"></i>';
+                                         break;
+                                     default:
+                                         fileIcon = '<i class="far fa-file"></i>';
+                                 }
+
+                                 fileHtml += `
+                                      <button class="open-pdf-btn" data-pdf-url="/Patrol/ViewPDF?strfilepath=${f}">
+                                           <div class="${fileIconClass}">
+                                             ${fileIcon}
+                                           </div>
+                                           <div class="file-info">
+                                               <div class="file-name">${filenameonly}</div>
+                                           </div>
+                                    </button>
+                                 `;
+                             }
+                         });
+
+                         document.getElementById("fileContainer").innerHTML = fileHtml;
+
+                         // Attach click event
+                         document.querySelectorAll(".open-pdf-btn").forEach(btn => {
+                             btn.addEventListener("click", function () {
+                                 let pdfUrl = this.getAttribute("data-pdf-url");
+                                 window.open(pdfUrl, "_blank"); // Open in new tab
+                             });
+                         });
+                     }
+
+
+                 }
+
+             }
 
 
         // ############## DISPLAY ALL THE DATA TO THE PAGE ########################

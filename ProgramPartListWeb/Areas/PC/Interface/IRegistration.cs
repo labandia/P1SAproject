@@ -19,6 +19,8 @@ namespace ProgramPartListWeb.Areas.PC.Interface
         Task<bool> ApproveByInspector(string RegNo, string Datecon, string newfilepath, string ManagerID);
         Task<bool> ApproveByManager(string RegNo, string comments, string newfilepath, string DepManager);
 
+        Task<bool> ApproveByDepartment(string RegNo, string comments, string newfilepath, string DepManager);
+
         Task<bool> ApproveByDivManager(string RegNo, string newfilepath, string DivManagerID);
         Task<bool> ReturnEmailMessage(string RegNo, string comments, int ReturnByID);
     }

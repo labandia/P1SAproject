@@ -4,6 +4,7 @@
     var regno = Request.QueryString["Regno"];
 }
 
+
 <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/x-icon" href="@Url.Content("~/Content/Images/patrol .ico")">
@@ -45,22 +46,21 @@
                     Managers
                 </li>
                 @*<li class="step-item" data-step="5">
-            <span class="step-number">5</span>
-            Department Managerss
-        </li>*@
+                        <span class="step-number">5</span>
+                        Department Managerss
+                    </li>*@
                 <li class="step-item" data-step="5">
                     <span class="step-number">5</span>
                     Division Manager
                 </li>
                 <li class="step-item" data-step="6">
                     <span class="step-number">6</span>
-                    Completed 
+                    Completed
                 </li>
             </ul>
         </div>
 
         <div class="content">
-            
 
             <!-- Step 1: Create New Document -->
             <div class="step-content active" id="step-1">
@@ -75,14 +75,25 @@
             <!-- Step 3: Document Details -->
             <div class="step-content" id="step-3">
 
+            </div>
+
+            <!-- Step 4: Attachments -->
+            <div class="step-content" id="step-4">
+
+            </div>
+
+            <!-- Step 5: Review & Submit -->
+            <div class="step-content" id="step-5">
                 <form method="post" enctype="multipart/form-data" class="formcontainer mt-4" id="addnewform" autocomplete="off">
                     <div class="row">
                         <div class="col-12">
                             <div class="Attachmentcontainer mb-3">
+
                                 <label class="mb-0 fw-bold">Attachments : </label>
                                 <div id="fileContainer"></div>
 
                             </div>
+
 
                             <div class="row mb-3">
                                 <div class="col">
@@ -96,6 +107,8 @@
                                     <input type="text" id="SectionName" readonly />
                                 </div>
                             </div>
+
+
 
 
 
@@ -187,64 +200,76 @@
                             </div>
 
 
-                            <div class="row">
-                                <div class="col">
+                            <div class="row mb-3">
+                                <div class="col ">
+                                    <label>Inspector Name: </label> <br />
+                                    <input type="text" id="InspectorName" readonly />
+                                </div>
+
+                                <div class="col ">
+                                    <label>Date Conducted</label> <br />
+                                    <input type="text" id="DateConduct" readonly />
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col ">
+                                    <label>Person in charge </label> <br />
+                                    <input type="text" id="PICName" />
+                                </div>
+                                <div class="col ">
                                     <label>PIC Comments</label>
                                     <textarea placeholder="Type text here..." name="PIC_Comments" id="PIC_Comments" rows="3" cols="40" readonly></textarea>
                                 </div>
-
                             </div>
 
+                           
+
+                            <div class="mb-3">
+                                <label>Manager Comments</label>
+                                <textarea placeholder="Type text here..." name="Manager_Comments" id="Manager_Comments" rows="3" cols="40" readonly></textarea>
+                            </div>
 
                         </div>
                     </div>
 
 
+                    <div class="approval-container">
+                        <div class="approval-box">
+                            <div class="approval_title" id="PIC_approve">LA Datu</div>
+                            <div class="approval_content">
+                                <p class="approval_status approved" id="PIC_Isapprove">Approved</p>
 
+                            </div>
+                            <div class="approval_role">Person In Charge</div>
+                        </div>
+
+                        <div class="approval-box">
+                            <div class="approval_title" id="Inspect_approve">Lionell Gomez</div>
+                            <div class="approval_content">
+                                <p class="approval_status approved" id="Ins_Isapprove">Approved</p>
+                            </div>
+                            <div class="approval_role">Inspector</div>
+                        </div>
+
+                        <div class="approval-box">
+                            <div class="approval_title" id="Dep_approve">LA Datu</div>
+                            <div class="approval_content">
+                                <p class="approval_status approved" id="Dep_Isapprove">Approved</p>
+                            </div>
+                            <div class="approval_role">Department Manager</div>
+                        </div>
+
+                        <div class="approval-box">
+                            <div class="approval_title" id="Div_approve">LA Datu</div>
+                            <div class="approval_content">
+                                <p class="approval_status approved" id="Div_Isapprove">Approved</p>
+                            </div>
+                            <div class="approval_role">Division Manager</div>
+                        </div>
+                    </div>
 
                 </form>
-                <div class="approval-container">
-                    <div class="approval-box">
-                        <div class="approval_title" id="PIC_approve">LA Datu</div>
-                        <div class="approval_content">
-                            <p class="approval_status approved" id="PIC_Isapprove">Approved</p>
-
-                        </div>
-                        <div class="approval_role">Person In Charge</div>
-                    </div>
-
-                    <div class="approval-box">
-                        <div class="approval_title" id="Inspect_approve">Lionell Gomez</div>
-                        <div class="approval_content">
-                            <p class="approval_status approved" id="Ins_Isapprove">Approved</p>
-                        </div>
-                        <div class="approval_role">Inspector</div>
-                    </div>
-
-                    <div class="approval-box">
-                        <div class="approval_title" id="Dep_approve">LA Datu</div>
-                        <div class="approval_content">
-                            <p class="approval_status approved" id="Dep_Isapprove">Approved</p>
-                        </div>
-                        <div class="approval_role">Department Manager</div>
-                    </div>
-
-                    <div class="approval-box">
-                        <div class="approval_title" id="Div_approve">LA Datu</div>
-                        <div class="approval_content">
-                            <p class="approval_status approved" id="Div_Isapprove">Approved</p>
-                        </div>
-                        <div class="approval_role">Division Manager</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Step 4: Attachments -->
-            <div class="step-content" id="step-4">         
-            </div>
-
-            <!-- Step 5: Review & Submit -->
-            <div class="step-content" id="step-5">
             </div>
         </div>
 
@@ -252,9 +277,8 @@
     </div>
 
 
-
     <div class="floating-comment-btn" style="@(ViewBag.Mode == 1 ? "" : "display:none")">
-        <span class="comment-label">Moderate Comments</span>
+        <span class="comment-label">Moderate Comment</span>
         <div class="comment-btn" id="commentBtn">
             <i class="fa-regular fa-paper-plane"></i>
         </div>
@@ -270,14 +294,11 @@
         </div>
 
         <form id="commentForm">
-            <div class="form-group">
-                <label for="moderation-notes">Date Conducted</label>
-                <input type="date" id="DateConduct" class="DateConduct" required />
-            </div>
+
 
             <div class="form-group">
                 <label for="moderation-notes">Comments for Return (Optional)</label>
-                <textarea rows="4" id="moderation-notes" placeholder="Add notes for the author..."></textarea>
+                <textarea rows="4" id="Return_Comments" name="Return_Comments" placeholder="Send Message Back ..."></textarea>
             </div>
 
             <div class="action-buttons">
@@ -290,14 +311,16 @@
             </div>
         </form>
     </div>
-
-
     <div class="notification" id="notification"></div>
 
+
+
+
+
     <script type="text/javascript">
-        let currentStep = 3;
+        let currentStep = 5;
         const totalSteps = 5;
-        let filesUpload = [];
+
 
         const commentBtn = document.getElementById('commentBtn');
         const formContainer = document.getElementById('floatContainer');
@@ -305,13 +328,14 @@
         const returnBtn = document.getElementById('returnBtn');
         const notification = document.getElementById('notification');
 
-
         let strRegno = $("#Regno").val();
         let modeset = @ViewBag.Mode;
 
         function goToStep(step) {
             // Update current step
             currentStep = step;
+
+
 
             // Update sidebar step states
             document.querySelectorAll('.step-item').forEach((item, index) => {
@@ -343,7 +367,7 @@
 
         // Initialize the form
         document.addEventListener('DOMContentLoaded', function () {
-            goToStep(3);
+            goToStep(5);
 
             // Add click event to sidebar steps
             document.querySelectorAll('.step-item').forEach(item => {
@@ -367,88 +391,81 @@
         });
 
 
+           // Approve action
+       approveBtn.addEventListener('click', async (e) => {
+           e.preventDefault();
+
+           // Get the ID of the save button and Store original text
+           const savebtn = document.querySelector("#approveBtn");
+           const originalText = savebtn.innerHTML;
+
+           // Create loading icon and message container
+           savebtn.disabled = true;
+           savebtn.innerHTML = `<div class='buttonloading'></div>`;
 
 
-        // Approve action
-        approveBtn.addEventListener('click', async (e) => {
-            e.preventDefault();
-            let strDate = $("#DateConduct").val();
-
-            // Get the ID of the save button and Store original text
-            const savebtn = document.querySelector("#approveBtn");
-            const originalText = savebtn.innerHTML;
-
-            // Create loading icon and message container
-            savebtn.disabled = true;
-            savebtn.innerHTML = `<div class='buttonloading'></div>`;
-
-            let fomdata = new FormData();
-            fomdata.append("RegNo", strRegno);
-            fomdata.append("DateConduct", strDate);
-            if (strDate == "") {
-                alert("Date Conduct Required ... ");
-                savebtn.innerHTML = originalText;
-                savebtn.disabled = false;
-                return;
-            }
-
-            // Step 1: Simulate "Saving data..."
-            await new Promise(resolve => setTimeout(resolve, 1200)); // 1.2s delay for animation
+           let fomdata = new FormData();
+           fomdata.append("RegNo", strRegno);
+           fomdata.append("Comments", $("#Manager_Comments").val());
 
 
-            let res = await postData('@Url.Action("InspectorAproveSubmit", "Patrol")', fomdata);
-            if (res.StatusCode === 201) {
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                savebtn.innerHTML = originalText;
+           // Step 1: Simulate "Saving data..."
+           await new Promise(resolve => setTimeout(resolve, 1200)); // 1.2s delay for animation
+
+            let res = await postData('@Url.Action("DivisionApproveSubmit", "Patrol")', fomdata);
+           if (res.StatusCode === 201) {
+               await new Promise(resolve => setTimeout(resolve, 1000));
+               savebtn.innerHTML = originalText;
+
 
                 // In a real application, you would send the approval to a server here
                 showNotification('approved successfully!', 'success');
 
                 // Reset form
-                document.getElementById('moderation-notes').value = '';
+                document.getElementById('Manager_Comments').value = '';
+                document.getElementById('Return_Comments').value = '';
 
                 // Close form
                 commentBtn.classList.remove('active');
                 formContainer.classList.remove('active');
 
-                setTimeout(() => {
-                    RedirectPageView(2, strRegno);
-                }, 3000);
+               GetRegistrationDetails();
             }
-        });
+       });
 
 
-        // Return action
-        returnBtn.addEventListener('click', () => {
-            const notes = document.getElementById('moderation-notes').value;
+       // Return action
+       returnBtn.addEventListener('click', () => {
+           const notes = document.getElementById('moderation-notes').value;
 
-            if (!notes) {
-                showNotification('Please provide a reason for returning the comment', 'error');
-                return;
-            }
+           if (!notes) {
+               showNotification('Please provide a reason for returning the comment', 'error');
+               return;
+           }
 
-            // In a real application, you would send the return action to a server here
-            showNotification('Comment returned to author with your notes', 'info');
+           // In a real application, you would send the return action to a server here
+           showNotification('Comment returned to author with your notes', 'info');
 
-            // Reset form
-            document.getElementById('moderation-notes').value = '';
+           // Reset form
+           document.getElementById('moderation-notes').value = '';
 
-            // Close form
-            commentBtn.classList.remove('active');
-            formContainer.classList.remove('active');
+           // Close form
+           commentBtn.classList.remove('active');
+           formContainer.classList.remove('active');
 
-            // In a real app, you would update the comment status in the UI
-            setTimeout(() => {
-                const pendingComment = document.querySelector('.comment.pending');
-                if (pendingComment) {
-                    pendingComment.classList.remove('pending');
-                    pendingComment.classList.add('returned');
-                    const statusSpan = pendingComment.querySelector('.comment-status');
-                    statusSpan.textContent = 'RETURNED';
-                    statusSpan.className = 'comment-status status-returned';
-                }
-            }, 500);
-        });
+           // In a real app, you would update the comment status in the UI
+           setTimeout(() => {
+               const pendingComment = document.querySelector('.comment.pending');
+               if (pendingComment) {
+                   pendingComment.classList.remove('pending');
+                   pendingComment.classList.add('returned');
+                   const statusSpan = pendingComment.querySelector('.comment-status');
+                   statusSpan.textContent = 'RETURNED';
+                   statusSpan.className = 'comment-status status-returned';
+               }
+           }, 500);
+       });
+
 
         // Show notification
         function showNotification(message, type) {
@@ -469,155 +486,156 @@
             }
         });
 
+         const GetRegistrationDetails = async () => {
+             let res = await fetchData('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
+                 if (res && res.Success) {
+                     $("#regtext").text(strRegno);
+                     $("#InspectorName").val(res.Data.InspectName);
+                     $("#PICName").val(res.Data.PICName);
+                     $("#DateConduct").val(res.Data.DateConduct);
+                     $("#SectionName").val("P1SA-" + res.Data.SectionName);
 
 
-        const GetRegistrationDetails = async () => {
-            let res = await fetchData('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
-
-            if (res && res.Success) {
-                $("#regtext").text(strRegno);
-                $("#SectionName").val("P1SA-" + res.Data.SectionName);
-                $("#PIC_Comments").val(res.Data.PIC_Comments);
+                     $("#PIC_Comments").val(res.Data.PIC_Comments);
+                     $("#Manager_Comments").val(res.Data.Manager_Comments);
 
 
-                $("#PIC_approve").text(res.Data.PICName ?? 'N/A');
-                $("#Inspect_approve").text(res.Data.InspectName ?? 'N/A');
-                $("#Dep_approve").text(res.Data.DepartName ?? 'N/A');
-                $("#Div_approve").text(res.Data.DivName ?? 'N/A');
+                     $("#PIC_approve").text(res.Data.PICName ?? 'N/A');
+                     $("#Inspect_approve").text(res.Data.InspectName ?? 'N/A');
+                     $("#Dep_approve").text(res.Data.DepartName ?? 'N/A');
+                     $("#Div_approve").text(res.Data.DivName ?? 'N/A');
 
 
-                $("#PIC_Isapprove").text(res.Data.PIC_Comments != "" ? 'Approve' : 'Pending');
-                $("#Ins_Isapprove").text(res.Data.Inspect_IsAproved == true ? 'Approve' : 'Pending');
-                $("#Dep_Isapprove").text(res.Data.DepManager_IsAproved == true ? 'Approve' : 'Pending');
-                $("#Div_Isapprove").text(res.Data.DivManager_IsAproved == true ? 'Approve' : 'Pending');
+                     $("#PIC_Isapprove").text(res.Data.PIC_Comments != "" ? 'Approve' : 'Pending');
+                     $("#Ins_Isapprove").text(res.Data.Inspect_IsAproved == true ? 'Approve' : 'Pending');
+                     $("#Dep_Isapprove").text(res.Data.DepManager_IsAproved == true ? 'Approve' : 'Pending');
+                     $("#Div_Isapprove").text(res.Data.DivManager_IsAproved == true ? 'Approve' : 'Pending');
 
-                // Set colors
-                setStatusColor("#PIC_Isapprove", res.Data.PIC_Comments != "");
-                setStatusColor("#Ins_Isapprove", res.Data.Inspect_IsAproved);
-                setStatusColor("#Dep_Isapprove", res.Data.DepManager_IsAproved);
-                setStatusColor("#Div_Isapprove", res.Data.DivManager_IsAproved);
+                     // Set colors
+                     setStatusColor("#PIC_Isapprove", res.Data.PIC_Comments != "");
+                     setStatusColor("#Ins_Isapprove", res.Data.Inspect_IsAproved);
+                     setStatusColor("#Dep_Isapprove", res.Data.DepManager_IsAproved);
+                     setStatusColor("#Div_Isapprove", res.Data.DivManager_IsAproved);
 
 
-                if (res.Data.Inspect_IsAproved) {
-                    $("#returnBtn").prop("disabled", true);
-                    $("#approveBtn").prop("disabled", true);
+
+                     RedirectPageView(res.Data.ReportStatus, strRegno);
+                 }
+             }
+
+            // Utility function to set color
+            const setStatusColor = (selector, value) => {
+                if (value === true) {
+                    $(selector).css("color", "blue");
+                } else {
+                    $(selector).css("color", "red");
                 }
+            };
 
-                //RedirectPageView(res.Data.ReportStatus, strRegno);
-            }
-        }
+             const GetRegistrationFindingsID = async () => {
+                 let res = await fetchData('@Url.Action("GetRegistrationFindings", "Patrol")', { Regno: strRegno });
 
-        // Utility function to set color
-        const setStatusColor = (selector, value) => {
-            if (value === true) {
-                $(selector).css("color", "blue");
-            } else {
-                $(selector).css("color", "red");
-            }
-        };
+                 if (res && res.Success) {
+                     res.Data.forEach(item => {
+                         $(`#Inpects${item.FindID}`).val(item.FindDescription);
+                         $(`#counter${item.FindID}`).val(item.Countermeasure);
+                     });
+                 }
+             }
 
-        const GetRegistrationFindingsID = async () => {
-            let res = await fetchData('@Url.Action("GetRegistrationFindings", "Patrol")', { Regno: strRegno });
+             const GetRegistratioFiles = async () => {
+                 let filesSelect = [];
+                 let res = await fetchData('@Url.Action("GetRegistrationAllFiles", "Patrol")', { Regno: strRegno });
+                 if (res.Success && res) {
+                     filesSelect = res.Data;
 
-            if (res && res.Success) {
-                res.Data.forEach(item => {
-                    $(`#Inpects${item.FindID}`).val(item.FindDescription);
-                    $(`#counter${item.FindID}`).val(item.Countermeasure);
-                });
-            }
-        }
-        const GetRegistratioFiles = async () => {
-            let filesSelect = [];
-            let res = await fetchData('@Url.Action("GetRegistrationAllFiles", "Patrol")', { Regno: strRegno });
-            if (res.Success && res) {
-                filesSelect = res.Data;
+                     let UploadCounterPath = filesSelect[0].CounterPath;
 
-                let UploadCounterPath = filesSelect[0].CounterPath;
+                     if (UploadCounterPath) {
+                         let files = UploadCounterPath.split(';');
+                         let fileHtml = "";
 
-                if (UploadCounterPath) {
-                    let files = UploadCounterPath.split(';');
-                    let fileHtml = "";
+                         files.forEach(f => {
+                             if (f.trim() !== "") {
+                                 let filenameonly = f.replace(/\.pdf$/i, "");
 
-                    files.forEach(f => {
-                        if (f.trim() !== "") {
-                            let filenameonly = f.replace(/\.pdf$/i, "");
+                                 const fileExtension = f.split('.').pop().toLowerCase();
 
-                            const fileExtension =f.split('.').pop().toLowerCase();
+                                 let fileType = 'default';
 
-                            let fileType = 'default';
+                                 if (['pdf'].includes(fileExtension)) {
+                                     fileType = 'pdf';
+                                 } else if (['xlsx', 'xls', 'xlsm', 'csv'].includes(fileExtension)) {
+                                     fileType = 'xlsx';
+                                 } else if (['doc', 'docx', 'txt'].includes(fileExtension)) {
+                                     fileType = 'doc';
+                                 } else if (['jpg', 'jpeg', 'png', 'gif', 'svg'].includes(fileExtension)) {
+                                     fileType = 'img';
+                                 } else if (['zip', 'rar', '7z'].includes(fileExtension)) {
+                                     fileType = 'zip';
+                                 }
 
-                            if (['pdf'].includes(fileExtension)) {
-                                fileType = 'pdf';
-                            } else if (['xlsx', 'xls', 'xlsm', 'csv'].includes(fileExtension)) {
-                                fileType = 'xlsx';
-                            } else if (['doc', 'docx', 'txt'].includes(fileExtension)) {
-                                fileType = 'doc';
-                            } else if (['jpg', 'jpeg', 'png', 'gif', 'svg'].includes(fileExtension)) {
-                                fileType = 'img';
-                            } else if (['zip', 'rar', '7z'].includes(fileExtension)) {
-                                fileType = 'zip';
-                            }
-
-                            const fileIconClass = `file-icon ${fileType}`;
+                                 const fileIconClass = `file-icon ${fileType}`;
 
 
-                            let fileIcon = '';
+                                 let fileIcon = '';
 
-                            switch (fileType) {
-                                case 'pdf':
-                                    fileIcon = '<i class="far fa-file-pdf"></i>';
-                                    break;
-                                case 'doc':
-                                    fileIcon = '<i class="far fa-file-word"></i>';
-                                    break;
-                                case 'img':
-                                    fileIcon = '<i class="far fa-file-image"></i>';
-                                    break;
-                                case 'zip':
-                                    fileIcon = '<i class="far fa-file-archive"></i>';
-                                    break;
-                                case 'xlsx':
-                                    fileIcon = '<i class="fa-regular fa-file-excel"></i>';
-                                    break;
-                                default:
-                                    fileIcon = '<i class="far fa-file"></i>';
-                            }
+                                 switch (fileType) {
+                                     case 'pdf':
+                                         fileIcon = '<i class="far fa-file-pdf"></i>';
+                                         break;
+                                     case 'doc':
+                                         fileIcon = '<i class="far fa-file-word"></i>';
+                                         break;
+                                     case 'img':
+                                         fileIcon = '<i class="far fa-file-image"></i>';
+                                         break;
+                                     case 'zip':
+                                         fileIcon = '<i class="far fa-file-archive"></i>';
+                                         break;
+                                     case 'xlsx':
+                                         fileIcon = '<i class="fa-regular fa-file-excel"></i>';
+                                         break;
+                                     default:
+                                         fileIcon = '<i class="far fa-file"></i>';
+                                 }
+
+                                 fileHtml += `
+                                      <button class="open-pdf-btn" data-pdf-url="/Patrol/ViewPDF?strfilepath=${f}">
+                                           <div class="${fileIconClass}">
+                                             ${fileIcon}
+                                           </div>
+                                           <div class="file-info">
+                                               <div class="file-name">${filenameonly}</div>
+                                           </div>
+                                    </button>
+                                 `;
+                             }
+                         });
+
+                         document.getElementById("fileContainer").innerHTML = fileHtml;
+
+                         // Attach click event
+                         document.querySelectorAll(".open-pdf-btn").forEach(btn => {
+                             btn.addEventListener("click", function () {
+                                 let pdfUrl = this.getAttribute("data-pdf-url");
+                                 window.open(pdfUrl, "_blank"); // Open in new tab
+                             });
+                         });
+                     }
 
 
-                            fileHtml += `
-                                  <button class="open-pdf-btn" data-pdf-url="/Patrol/ViewPDF?strfilepath=${f}">
-                                       <div class="${fileIconClass}">
-                                          ${fileIcon}
-                                       </div>
-                                       <div class="file-info">
-                                           <div class="file-name">${filenameonly}</div>
-                                       </div>
-                                </button>
-                             `;
-                        }
-                    });
+                 }
 
-                    document.getElementById("fileContainer").innerHTML = fileHtml;
-
-                    // Attach click event
-                    document.querySelectorAll(".open-pdf-btn").forEach(btn => {
-                        btn.addEventListener("click", function () {
-                            let pdfUrl = this.getAttribute("data-pdf-url");
-                            window.open(pdfUrl, "_blank"); // Open in new tab
-                        });
-                    });
-                }
-
-
-            }
-
-        }
+             }
 
         const RedirectPageView = (stats, regno) => {
-            if (stats == 2) return;
+
+            if (stats === 4 || stats === 5 || stats === 6) return;
+
             // Use encodeURIComponent to avoid issues with special characters
             const r = encodeURIComponent(regno);
-            const m = encodeURIComponent(modeset);
+            const m = encodeURIComponent(mode);
 
             switch (stats) {
                 case 1:
@@ -631,7 +649,6 @@
                     break;
                 case 4:
                 case 5:
-                case 6:
                     window.location.href = `/PC/Patrol/DepartmentApproval?Regno=${r}&mode=${m}`;
                     break;
                 default:
@@ -639,28 +656,26 @@
             }
         };
 
+        // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+        const LoadPageData = async () => {
+            try {
 
+                const [regist, find, files] = await Promise.all([
+                    GetRegistrationDetails(),
+                    GetRegistrationFindingsID(),
+                    GetRegistratioFiles()
+                ]);
+            } catch (error) {
+                console.error("Failed to load page data:", error);
+            } finally {
+                // Hide loading spinner whether success or failure
+                //$("#loadingSpinner").hide();
+            }
+        }
 
-          // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
-          const LoadPageData = async () => {
-              try {
-
-                  const [regist, find, files] = await Promise.all([
-                      GetRegistrationDetails(),
-                      GetRegistrationFindingsID(),
-                      GetRegistratioFiles()
-                  ]);
-              } catch (error) {
-                  console.error("Failed to load page data:", error);
-              } finally {
-                  // Hide loading spinner whether success or failure
-                  //$("#loadingSpinner").hide();
-              }
-          }
-
-          $(document).ready(() => {
-              LoadPageData();
-          });
+        $(document).ready(() => {
+            LoadPageData();
+        });
     </script>
 </body>
 

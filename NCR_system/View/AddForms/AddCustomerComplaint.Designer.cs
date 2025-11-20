@@ -35,7 +35,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.LotText = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.NGText = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.ProblemText = new System.Windows.Forms.RichTextBox();
@@ -51,17 +50,19 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.NGText = new System.Windows.Forms.NumericUpDown();
             this.panel5.SuspendLayout();
             this.panel6.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.NGText)).BeginInit();
             this.SuspendLayout();
             // 
             // ModelText
             // 
             this.ModelText.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ModelText.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ModelText.Location = new System.Drawing.Point(329, 159);
+            this.ModelText.Location = new System.Drawing.Point(25, 159);
             this.ModelText.Multiline = true;
             this.ModelText.Name = "ModelText";
             this.ModelText.Size = new System.Drawing.Size(267, 35);
@@ -71,7 +72,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(326, 133);
+            this.label5.Location = new System.Drawing.Point(22, 133);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(151, 16);
             this.label5.TabIndex = 69;
@@ -81,7 +82,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(25, 133);
+            this.label3.Location = new System.Drawing.Point(328, 219);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(131, 16);
             this.label3.TabIndex = 68;
@@ -102,7 +103,7 @@
             // 
             this.LotText.BackColor = System.Drawing.Color.WhiteSmoke;
             this.LotText.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LotText.Location = new System.Drawing.Point(25, 246);
+            this.LotText.Location = new System.Drawing.Point(328, 154);
             this.LotText.Multiline = true;
             this.LotText.Name = "LotText";
             this.LotText.Size = new System.Drawing.Size(267, 41);
@@ -112,27 +113,17 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(25, 225);
+            this.label2.Location = new System.Drawing.Point(328, 133);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(55, 16);
             this.label2.TabIndex = 72;
             this.label2.Text = "Lot No :";
             // 
-            // NGText
-            // 
-            this.NGText.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.NGText.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.NGText.Location = new System.Drawing.Point(329, 246);
-            this.NGText.Multiline = true;
-            this.NGText.Name = "NGText";
-            this.NGText.Size = new System.Drawing.Size(267, 41);
-            this.NGText.TabIndex = 75;
-            // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(328, 225);
+            this.label4.Location = new System.Drawing.Point(25, 219);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(96, 16);
             this.label4.TabIndex = 74;
@@ -191,6 +182,8 @@
             // 
             // selectDepart
             // 
+            this.selectDepart.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.selectDepart.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.selectDepart.FormattingEnabled = true;
             this.selectDepart.Items.AddRange(new object[] {
             "Molding",
@@ -198,9 +191,9 @@
             "Rotor",
             "Winding",
             "Circuit"});
-            this.selectDepart.Location = new System.Drawing.Point(28, 159);
+            this.selectDepart.Location = new System.Drawing.Point(328, 242);
             this.selectDepart.Name = "selectDepart";
-            this.selectDepart.Size = new System.Drawing.Size(267, 21);
+            this.selectDepart.Size = new System.Drawing.Size(267, 29);
             this.selectDepart.TabIndex = 80;
             // 
             // label7
@@ -285,12 +278,21 @@
             this.panel4.Size = new System.Drawing.Size(572, 2);
             this.panel4.TabIndex = 55;
             // 
+            // NGText
+            // 
+            this.NGText.AutoSize = true;
+            this.NGText.Location = new System.Drawing.Point(28, 249);
+            this.NGText.Name = "NGText";
+            this.NGText.Size = new System.Drawing.Size(200, 20);
+            this.NGText.TabIndex = 143;
+            // 
             // AddCustomerComplaint
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(630, 567);
             this.ControlBox = false;
+            this.Controls.Add(this.NGText);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel5);
             this.Controls.Add(this.label7);
@@ -299,7 +301,6 @@
             this.Controls.Add(this.Cancel_btn);
             this.Controls.Add(this.ProblemText);
             this.Controls.Add(this.label6);
-            this.Controls.Add(this.NGText);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.LotText);
             this.Controls.Add(this.label2);
@@ -315,6 +316,7 @@
             this.panel6.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.NGText)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -327,7 +329,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox LotText;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox NGText;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.RichTextBox ProblemText;
@@ -343,5 +344,6 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.NumericUpDown NGText;
     }
 }

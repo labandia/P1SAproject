@@ -22,35 +22,57 @@ namespace NCR_system.View.AddForms
 
         private async void Save_btn_Click(object sender, EventArgs e)
         {
+            if (!FormValid()) return;
+
             var obj = new CustomerModel
             {
                 ModelNo = ModelText.Text,
                 LotNo = LotText.Text,
-                NGQty = Convert.ToInt32(NGText.Text),
+                NGQty = (int)NGText.Value,
                 Status = 1,
                 Details = ProblemText.Text,
-                SectionID  = selectDepart.SelectedIndex + 1,
+                SectionID = selectDepart.SelectedIndex + 1,
                 CCtype = 1
             };
 
             bool result = await _cus.InsertCustomerData(obj, 1);
 
-            if (result)
+            if (!result)
             {
-                MessageBox.Show("Data saved successfully.");
-                await _user.DisplayCustomer(1);
-                this.Close();
-            }
-            else
-            {
-                MessageBox.Show("Failed to save data.");
+                MessageBox.Show("Failed to save data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); 
+                return;
             }
 
+
+            MessageBox.Show("Data saved successfully.");
+            await _user.DisplayCustomer(1);
+            this.Close();
         }
 
         private void Cancel_btn_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+        
+        public bool FormValid()
+        {
+            if (string.IsNullOrWhiteSpace(ModelText.Text) ||
+                string.IsNullOrWhiteSpace(LotText.Text) ||
+                string.IsNullOrWhiteSpace(NGText.Text) ||
+                string.IsNullOrWhiteSpace(ProblemText.Text) ||
+                selectDepart.SelectedIndex == -1)
+            {
+                MessageBox.Show("Please fill in all required fields.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+
+            if (!int.TryParse(NGText.Text, out _))
+            {
+                MessageBox.Show("NG Quantity must be a valid number.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            return true;
         }
     }
 }

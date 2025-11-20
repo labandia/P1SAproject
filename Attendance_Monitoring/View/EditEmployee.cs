@@ -72,5 +72,10 @@ namespace Attendance_Monitoring.View
                 EmpID.Text = scannedCode;
             }
         }
+
+        private void EditEmployee_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

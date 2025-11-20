@@ -2,15 +2,7 @@
 using NCR_system.Models;
 using NCR_system.View.Module;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Runtime.Remoting.Contexts;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NCR_system.View.AddForms
@@ -30,6 +22,9 @@ namespace NCR_system.View.AddForms
         private async void Save_btn_Click(object sender, EventArgs e)
         {
 
+            if(!FormValid()) return;
+          
+
             var obj = new CustomerModel
             {
                 RegNo = EditRegNo.Text,
@@ -37,7 +32,7 @@ namespace NCR_system.View.AddForms
                 SectionID = selectDepart.SelectedIndex,
                 ModelNo = EditModelText.Text,
                 LotNo = EditLotText.Text,
-                NGQty = Convert.ToInt32(EditNGText.Text),
+                NGQty = (int)EditNGText.Value,
                 Details = EditProblemText.Text,
                 CCtype = 0
             };
@@ -46,7 +41,7 @@ namespace NCR_system.View.AddForms
 
             if (result)
             {
-                MessageBox.Show("Data saved successfully.");
+                MessageBox.Show("Data saved successfully.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 await _user.DisplayCustomer(0);
                 this.Close();
             }
@@ -55,6 +50,33 @@ namespace NCR_system.View.AddForms
                 MessageBox.Show("Failed to save data.");
             }
 
+        }
+
+        private void AddExternalCC_Load(object sender, EventArgs e)
+        {
+            EditNGText.MinimumSize = new Size(0, 40);
+            EditNGText.MaximumSize = new Size(500, 40);
+        }
+
+        private void Cancel_btn_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        public bool FormValid()
+        {
+            if (string.IsNullOrWhiteSpace(EditRegNo.Text) ||
+                string.IsNullOrWhiteSpace(EditCustomerText.Text) ||
+                string.IsNullOrWhiteSpace(EditModelText.Text) ||
+                string.IsNullOrWhiteSpace(EditLotText.Text) ||
+                string.IsNullOrWhiteSpace(EditNGText.Text) ||
+                string.IsNullOrWhiteSpace(EditProblemText.Text) ||
+                selectDepart.SelectedIndex == -1)
+            {
+                MessageBox.Show("Please fill in all required fields.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+            return true;
         }
     }
 }

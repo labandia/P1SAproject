@@ -1705,3 +1705,35 @@ header .count2 {
     color: #718096;
     margin-top: 8px;
 }
+
+
+
+        .btn-remove {
+            background-color: #e74c3c !important;
+          
+            color: white !important;
+        }
+
+        .btn-remove:hover {
+            background-color: #c0392b !important;
+        }
+
+        .btn-increment {
+            background-color: #2ecc71 !important;
+             margin-left: 10px;
+            color: white !important;
+        }
+
+        .btn-increment:hover {
+            background-color: #27ae60 !important;
+        }
+
+        .btn-decrement {
+            background-color: #f39c12 !important;
+            margin-right: 10px;
+            color: white !important;
+        }
+
+        .btn-decrement:hover {
+            background-color: #d35400 !important;
+        }

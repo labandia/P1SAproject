@@ -17,6 +17,9 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Interface
 
 
 
+        Task<bool> IncrementAndDecreaseStocks(int StockID, int CurrentQty, int Required);
+
+
 
         Task<IEnumerable<StockAddModel>> GetAddStocksList();
         Task<IEnumerable<StockAddDetailsModel>> GetAddStocksDetails(int ID);

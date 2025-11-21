@@ -500,7 +500,7 @@
 
                 InventoryPagination(Inventlist, 'InventorylistData');
 
-                
+
             } else {
                 const loadData = `<tr>
                   <td colspan='9'>
@@ -581,7 +581,11 @@
                                              </div>
                                          </td>
                                          <td data-cell="Supplier">${row.Supplier ? row.Supplier : "-"}</td>
-                                         <td data-cell="CurrentQty" style="font-weight: 600; color: #185d8b;">${row.CurrentQty} </td>
+                                         <td data-cell="CurrentQty" style="font-weight: 600; color: #185d8b;">
+                                                <button class="btn btn-decrement" onclick="decrementPart('${row.StockID}', ${row.CurrentQty}, ${row.ReorderLevel})"><i class="fa-solid fa-minus"></i></button>
+                                                    ${row.CurrentQty}
+                                                <button class="btn btn-increment" onclick="incrementPart('${row.StockID}',  ${row.CurrentQty}, ${row.ReorderLevel})"><i class="fa-solid fa-plus"></i></button>
+                                         </td>
                                          <td data-cell="WarningLevel" style="font-weight: 600;">${row.WarningLevel}</td>
                                          <td data-cell="Approval" >
                                            <div class='${getStatusClass(row.Status)}'>
@@ -1090,7 +1094,81 @@
         requestItems = requestItems.filter(item => item.partNo !== partNo);
         updateItemsTable();
     }
+
+
+    async function incrementPart(stockID, currentQty, Required) {
+        //alert(`Stock ID : ${stockID} - CurrentQty : ${currentQty} - Required: ${Required}`);
+
+        let incrementstocks = currentQty + 1;
+
+
+        let formData = new FormData();
+        formData.append('StockID', parseInt(stockID));
+        formData.append('CurrentQty', parseInt(incrementstocks));
+        formData.append('Required', parseInt(Required));
+
+        const data = Object.fromEntries(formData);
+        console.log(data);
+
+        let res = await postData('@Url.Action("AddOneStocksQuantity", "Hydro")', formData);
+        console.log(res);
+        if (res && res.Success) {
+            Inventlist = res.Data;
+
+            const lowStockCount = Inventlist.filter(item => item.Status === "Restock").length;
+            const OutStockCount = Inventlist.filter(item => item.Status === "Out of stocks").length;
+
+            $("#Countlist").text(Inventlist.length);
+            $("#lowStockItems").text(lowStockCount);
+            $("#outOfStockItems").text(OutStockCount);
+
+            TableDisplay.empty(); // Removing the Loading Display
+
+            InventoryPagination(Inventlist, 'InventorylistData');
+        }
+    }
+
+    async function decrementPart(stockID, currentQty, Required) {
+        //alert(`Stock ID : ${stockID} - CurrentQty : ${currentQty} - Required: ${Required}`);
+
+         let incrementstocks = currentQty - 1;
+
+
+         let formData = new FormData();
+         formData.append('StockID', parseInt(stockID));
+         formData.append('CurrentQty', parseInt(incrementstocks));
+         formData.append('Required', parseInt(Required));
+
+         const data = Object.fromEntries(formData);
+         console.log(data);
+
+         let res = await postData('@Url.Action("AddOneStocksQuantity", "Hydro")', formData);
+         console.log(res);
+         if (res && res.Success) {
+             Inventlist = res.Data;
+
+             const lowStockCount = Inventlist.filter(item => item.Status === "Restock").length;
+             const OutStockCount = Inventlist.filter(item => item.Status === "Out of stocks").length;
+
+             $("#Countlist").text(Inventlist.length);
+             $("#lowStockItems").text(lowStockCount);
+             $("#outOfStockItems").text(OutStockCount);
+
+             TableDisplay.empty(); // Removing the Loading Display
+
+             InventoryPagination(Inventlist, 'InventorylistData');
+         }
+    }
+
+
+
+
+
     // ===================================================================================
+
+
+
+
 
 
 

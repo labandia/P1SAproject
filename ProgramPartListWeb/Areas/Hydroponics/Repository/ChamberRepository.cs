@@ -3,6 +3,7 @@ using ProgramPartListWeb.Areas.Hydroponics.Models;
 using ProgramPartListWeb.Helper;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.UI.WebControls.WebParts;
@@ -24,7 +25,8 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                         o.Status AS RequestStatus,
                                         o.PIC,
                                         o.ChamberID, 
-										o.CustomerName
+										o.CustomerName, 
+                                        o.Remarks
                                     FROM Hydro_Orders o
                                     INNER JOIN Hydro_ChamberMasterlist m 
                                         ON m.ChamberID = o.ChamberID
@@ -67,6 +69,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                     d.MaterialStatus,
                                     d.CompletionPercent,
 									o.CustomerName,
+                                    o.Remarks,
                                     ct.PHPTotal * o.ChambersOrdered AS TotalPrice
                                 FROM OrdersCTE o
                                 LEFT JOIN DetailsCTE d ON o.OrderID = d.OrderID
@@ -173,11 +176,11 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
         public Task<List<ChamberTypeList>> GetChamberTypes() => SqlDataAccess.GetData<ChamberTypeList>("SELECT ChamberID, ChamberName FROM Hydro_ChamberMasterlist");
 
 
-        public Task<bool> UpdateRequestStatus(string OrderID, string RequestStatus)
+        public Task<bool> UpdateRequestStatus(string OrderID, string RequestStatus, string remarks)
         {
-            string strsql = $@"UPDATE Hydro_Orders SET Status =@Status 
+            string strsql = $@"UPDATE Hydro_Orders SET Status =@Status, Remarks =@Remarks
                                WHERE OrderID =@OrderID";
-            return SqlDataAccess.UpdateInsertQuery(strsql, new { OrderID = OrderID, Status = RequestStatus });  
+            return SqlDataAccess.UpdateInsertQuery(strsql, new { OrderID = OrderID, Status = RequestStatus, Remarks = remarks });  
         }
 
         public Task<bool> UpdateUnitCostChamber(int ChamberPartID, string UnitCost_PHP)
@@ -193,8 +196,8 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             // GENERATE A UNIQUE ID FOR THE ORDER
             string OrderID = GlobalUtilities.GenerateID("CR");
 
-            string strsql = $@"INSERT INTO Hydro_Orders(OrderID, ChamberID, OrderedBy, Quantity, PIC, TargetDate, CustomerName)
-                               VALUES(@OrderID, @ChamberID, @OrderedBy, @Quantity, @PIC, @TargetDate, @CustomerName)";
+            string strsql = $@"INSERT INTO Hydro_Orders(OrderID, ChamberID, OrderedBy, Quantity, PIC, TargetDate, CustomerName, Remarks)
+                               VALUES(@OrderID, @ChamberID, @OrderedBy, @Quantity, @PIC, @TargetDate, @CustomerName, @Remarks)";
 
             bool result = await SqlDataAccess.UpdateInsertQuery(strsql, new
             {
@@ -204,7 +207,8 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                 item.Quantity,
                 item.PIC,
                 item.TargetDate, 
-                item.CustomerName
+                item.CustomerName, 
+                item.Remarks
             });
 
             // If insert is Completed go the next process   
@@ -215,16 +219,51 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
                 foreach (var cham in chamberParts)
                 {
-                    string insertDetails = $@"INSERT INTO Hydro_OrderDetails(OrderID, PartNo, QtyUsed, RequiredQty)
-                               VALUES(@OrderID, @PartNo, @QtyUsed, @RequiredQty)";
+                    double requiredQty = item.Quantity > 1 ? cham.QuantityPerChamber * item.Quantity : cham.QuantityPerChamber;
 
-                    await SqlDataAccess.UpdateInsertQuery(insertDetails, new
+
+
+                    // Get current stock
+                    string stockQuery = "SELECT CurrentQty FROM Hydro_Stocks WHERE PartNo = @PartNo";
+                    double currentQty = await SqlDataAccess.GetCountData(stockQuery, new { PartNo = cham.PartNo });
+
+                    // Determine how much can be used
+                    double qtyToUse = Math.Min(currentQty, requiredQty);
+
+                    // 5️⃣ UPDATE STOCKS (ONLY IF THERE IS STOCK TO DEDUCT)
+                    if (qtyToUse > 0)
+                    {
+                        string usedStocksQuery = @"
+                            UPDATE Hydro_Stocks
+                            SET CurrentQty = CurrentQty - @UpdatedQty
+                            WHERE PartNo = @PartNo
+                              AND CurrentQty >= @UpdatedQty";
+
+                        await SqlDataAccess.UpdateInsertQuery(usedStocksQuery, new
+                        {
+                            UpdatedQty = requiredQty,
+                            PartNo = cham.PartNo
+                        });
+
+                    }
+
+
+
+
+                    // 6️⃣ INSERT DETAILS
+                    string insertDetailSql = @"
+                            INSERT INTO Hydro_OrderDetails(OrderID, PartNo, QtyUsed, RequiredQty)
+                            VALUES (@OrderID, @PartNo, @QtyUsed, @RequiredQty)";
+
+                    await SqlDataAccess.UpdateInsertQuery(insertDetailSql, new
                     {
                         OrderID = OrderID,
                         PartNo = cham.PartNo,
-                        QtyUsed = 0,
-                        RequiredQty = item.Quantity > 1 ? cham.QuantityPerChamber * item.Quantity : cham.QuantityPerChamber
+                        QtyUsed = qtyToUse,
+                        RequiredQty = requiredQty
                     });
+
+
                 }
 
             }

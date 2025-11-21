@@ -1,6 +1,7 @@
 ﻿using ProgramPartListWeb.Areas.Hydroponics.Interface;
 using ProgramPartListWeb.Areas.Hydroponics.Models;
 using ProgramPartListWeb.Helper;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -55,39 +56,12 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
         public async Task<bool> AddStockItem(List<AddStocksItem> stocks)
         {
             bool result = false;    
-            //string RequestNo = GlobalUtilities.GenerateID("SR");
-
-            //// Insert the Hydro_StockRequests table
-            //string insertStockRequestQuery = $@"INSERT INTO Hydro_StockRequests 
-            //                                    (RequestNo, RequestedBy, Purpose) 
-            //                                    VALUES (@RequestNo, @RequestedBy, @Purpose);
-            //                                    SELECT CAST(SCOPE_IDENTITY() as int)";
-            //var parameters = new
-            //{
-            //    RequestNo,
-            //    RequestedBy,
-            //    Purpose
-            //};
-
-            //int RequestID = await SqlDataAccess.GetCountData(insertStockRequestQuery, parameters);
-
-            //if (RequestID == 0) return false;
-
+   
             foreach (var item in stocks)
             {
-                //string insertStockRequestItemQuery = $@"INSERT INTO Hydro_StockRequestItems 
-                //                                        (RequestID, PartNo, QuantityRequested) 
-                //                                        VALUES (@RequestID, @PartNo, @quantity)";
-                //var itemParameters = new
-                //{
-                //    RequestID,
-                //    item.PartNo,
-                //    item.quantity
-                //};
-
-                //result = await SqlDataAccess.UpdateInsertQuery(insertStockRequestItemQuery, itemParameters);
-
-                string strsql = $@"UPDATE Hydro_Stocks SET CurrentQty = CurrentQty + @CurrentQty 
+                // Step 1:  Update Hydro_Stocks
+                string strsql = $@"UPDATE Hydro_Stocks 
+                              SET CurrentQty = CurrentQty + @CurrentQty 
                                WHERE  PartNo =@PartNo";
 
                 await SqlDataAccess.UpdateInsertQuery(strsql, new
@@ -96,11 +70,47 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                     CurrentQty = item.quantity
                 });
 
+
+                //// 2️⃣ Auto-allocate to incomplete order details
+                //string incompleteOrdersQuery = @"
+                //        SELECT od.OrderID, od.PartNo, od.RequiredQty, od.QtyUsed, s.CurrentQty
+                //        FROM Hydro_OrderDetails od
+                //        JOIN Hydro_Stocks s ON od.PartNo = s.PartNo
+                //        WHERE od.PartNo = @PartNo
+                //          AND od.QtyUsed < od.RequiredQty
+                //        ORDER BY od.OrderID ASC";
+
+                //var incompleteOrders = await SqlDataAccess.GetData<IncompleteOrderDetail>(incompleteOrdersQuery, new { PartNo = item.PartNo });
+
+
+                //foreach(var order in incompleteOrders)
+                //{
+                //    double requiredQty = order.RequiredQty;
+                //    double qtyUsed = order.QtyUsed;
+                //    double currentStock = order.QtyUsed;
+                //    double remainingQty = requiredQty - qtyUsed;
+
+
+                //    // Determine allocation amount
+                //    double qtyToAllocate = Math.Min(remainingQty, currentStock);
+
+                //    if (qtyToAllocate <= 0)
+                //        continue; // nothing to allocate
+
+
+                //    // If A 
+
+                //}
+
+
+
                 result = true;
             }
 
             return result;
         }
+
+        
 
         public async Task<bool> EditInventory(AddInventoryModel model, string partno)
         {
@@ -201,8 +211,17 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
             return SqlDataAccess.GetData<StockPartsModel>(strquery, null);
         }
-     
-   
+
+        public Task<bool> IncrementAndDecreaseStocks(int StockID, int CurrentQty, int Required)
+        {
+            return SqlDataAccess.UpdateInsertQuery("UPDATE Hydro_Stocks SET CurrentQty =@CurrentQty WHERE StockID =@StockID",
+                new
+                {
+                    CurrentQty = CurrentQty,
+                    StockID = StockID,
+                });
+        }
+
         public Task<bool> UpdateStocks(int ID, int Quan)
         {
             string strsql = $@"UPDATE Hydro_Stocks SET CurrentQty =@CurrentQty 

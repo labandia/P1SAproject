@@ -487,6 +487,31 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
 
 
 
+        [HttpPost]
+        public async Task<ActionResult> AddOneStocksQuantity(int StockID, int CurrentQty, int Required)
+        {
+            try
+            {
+                Debug.WriteLine($@"Stock : {StockID} - Current Qty : {CurrentQty} - Required : {Required}");
+
+                bool result = await _hydro.IncrementAndDecreaseStocks(StockID, CurrentQty, Required);
+
+                if (!result) return JsonPostError("Insert failed.", 500);
+
+                var data = await _hydro.GetInventoryList() ?? new List<StockPartsModel>();
+                if (data == null || !data.Any()) return JsonNotFound("No Hydro parlist Data.");
+
+                return JsonCreated(data, "Add Stocks Successfully");
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message, 500);
+            }
+
+        }
+
+
+
         //-----------------------------------------------------------------------------------------
         //---------------------------- REQUEST CHAMBER PAGE ---------------------------------------
         //-----------------------------------------------------------------------------------------
@@ -598,7 +623,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
 
                 if(completionrate == 100)
                 {
-                    await _chambers.UpdateRequestStatus(ID, "Completed");
+                    await _chambers.UpdateRequestStatus(ID, "Completed", "");
                 } 
 
 
@@ -613,11 +638,11 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> ChangeStatusRequest(string OrderID, string Status)
+        public async Task<ActionResult> ChangeStatusRequest(string OrderID, string Status, string EditRemarks)
         {
             try
             {
-                bool result = await _chambers.UpdateRequestStatus(OrderID, Status);
+                bool result = await _chambers.UpdateRequestStatus(OrderID, Status, EditRemarks);
                 if (!result) return JsonPostError("Update failed.", 500);
 
 

@@ -20,6 +20,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         private string _MaterialStatus;
         private double _CompletionPercent;
         private string _CustomerName;
+        private string _Remarks;
         private int _TotalPrice;
 
 
@@ -84,6 +85,11 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         {
             get => _CustomerName;
             set => _CustomerName = value;
+        }
+        public string Remarks
+        {
+            get => _Remarks;
+            set => _Remarks = value;
         }
     }
     public class RequestChambersDetailsModel
@@ -576,6 +582,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         public int Quantity { get; set; }
         public string CustomerName { get; set; }
         public string TargetDate { get; set; }
+        public string Remarks { get; set; }
     }
 
 
@@ -586,5 +593,16 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         public string PartName { get; set; }
         public int CurrentQty { get; set; }
         public string Status { get; set; }  
+    }
+
+
+
+    public class IncompleteOrderDetail
+    {
+        public string OrderID { get; set; }       // od.OrderID
+        public string PartNo { get; set; }        // od.PartNo
+        public double RequiredQty { get; set; }   // od.RequiredQty
+        public double QtyUsed { get; set; }       // od.QtyUsed
+        public double CurrentQty { get; set; }    // s.CurrentQty
     }
 }

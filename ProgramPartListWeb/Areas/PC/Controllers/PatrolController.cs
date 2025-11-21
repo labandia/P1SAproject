@@ -12,6 +12,7 @@ using System.Web.UI.WebControls;
 using OfficeOpenXml;
 using ProgramPartListWeb.Areas.PC.Interface;
 using ProgramPartListWeb.Areas.PC.Models;
+using ProgramPartListWeb.Areas.PC.Repository;
 using ProgramPartListWeb.Controllers;
 using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Models;
@@ -506,6 +507,10 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
                 await EmailService.SendEmailViaSqlDatabase(sendEmail);
 
+
+
+
+
                 return JsonCreated(true, "Updated successfully.");
             }
             catch (Exception ex)
@@ -513,6 +518,10 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 return JsonValidationError("An unexpected error occurred while processing the request." + ex.Message);
             }
         }
+
+
+      
+
 
         [HttpPost]
         public async Task<ActionResult> EditRegistration(HttpPostedFileBase[] Attachments)
@@ -642,6 +651,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         // =======================================================================
         // =================  SAVE AND SUBMIT BY PROCESS OWNER ===================
         // =======================================================================
+      
         [HttpPost]
         public async Task<ActionResult> ProcessOwnerSubmission(HttpPostedFileBase[] Attachments)
         {
@@ -738,13 +748,32 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 // ===================== STEP 8: Send Notification Email =====================
                 string processLink = $"http://p1saportalweb.sdp.com/PC/Patrol/InspectorsReview?Regno={finalPrefix}&mode=1";
                 //string emailBody = EmailService.RegistrationEmailBody(employeeEmail.FullName, finalPrefix, processLink);
-                string InspectorsEmail = EmailService.RegistrationEmailBodyV2(
-                      employeeEmail.FullName,
-                      finalPrefix,
-                      updatedReg.SectionName,
-                      processLink,
-                      "inpectorapproval"
-                );
+                //string InspectorsEmail = EmailService.RegistrationEmailBodyV2(
+                //      employeeEmail.FullName,
+                //      finalPrefix,
+                //      updatedReg.SectionName,
+                //      processLink,
+                //      "inpectorapproval"
+                //);
+
+
+                //var SendEmail = new SentEmailModel
+                //{
+                //    Subject = $@"[FOLLOW UP - PATROL INSPECTION REPORT] 'For Review/Verification' - {finalPrefix}",
+                //    Sender = strSender,
+                //    BCC = "",
+                //    Body = InspectorsEmail,
+                //    Recipient = employeeEmail.Email
+                //};
+
+                var getPatrolView = await GetRegistrationDetailList(finalPrefix);
+                var getFindings = await GetFindings(finalPrefix);
+
+
+                string InspectorsEmail = PatrolEmailService.CreatePatrolProductionBody(
+                    getPatrolView, getFindings, processLink
+                    );
+
 
 
                 var SendEmail = new SentEmailModel
@@ -756,11 +785,14 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                     Recipient = employeeEmail.Email
                 };
 
-                
-
 
 
                 await EmailService.SendEmailViaSqlDatabase(SendEmail);
+
+
+                
+
+
 
                 return JsonCreated(true, "Updated successfully.");
             }
@@ -860,10 +892,10 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                     Body = ManagersEmail,
                     Recipient = employeeEmail.Email
                 };
-
+                await EmailService.SendEmailViaSqlDatabase(sendEmail);
                 // ===================== Another Send Notification Email For the Process Owner  =====================
 
-                await EmailService.SendEmailViaSqlDatabase(sendEmail);
+
 
                 return JsonCreated(true, "Updated successfully.");
             }
@@ -1215,6 +1247,27 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
+
+  
+
+        public async Task<PatrolRegistrationViewModel> GetRegistrationDetailList(string Regno)
+        {
+            // ===================== STEP 1: Retrieve Require Data =====================
+            var data = await _reg.GetRegistrationData(GetPrefix()) ?? new List<PatrolRegistrationViewModel>();
+            // ===================== STEP 2: Filter Only One Data =====================
+            var filterdata = data.SingleOrDefault(res => res.RegNo == Regno);
+            return filterdata;
+        }
+
+
+        public async Task<List<FindingModel>> GetFindings(string Regno)
+        {
+            var data = await _reg.GetRegisterFindings(Regno) ?? new List<FindingModel>();
+            return data;
+        }
+
+
+
 
 
 

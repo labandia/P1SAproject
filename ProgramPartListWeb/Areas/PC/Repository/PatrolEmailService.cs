@@ -367,8 +367,65 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             foreach (var item in find)
             {
                 findings += "<li>" + item.FindDescription + "</li>";
-                Countermeasure += "<li>" + item.Countermeasure + "</li>";
             }
+
+            // Build countermeasures list - show "No Countermeasure yet" if empty
+            foreach (var item in find)
+            {
+                if (string.IsNullOrEmpty(item.Countermeasure))
+                {
+                    Countermeasure += "<li><em>No Countermeasure yet</em></li>";
+                }
+                else
+                {
+                    Countermeasure += "<li>" + item.Countermeasure + "</li>";
+                }
+            }
+
+            // If no findings at all, show a default message
+            if (string.IsNullOrEmpty(findings))
+            {
+                findings = "<li><em>No findings reported</em></li>";
+            }
+
+
+            messageContent = $@"
+                    <p>This is to inform you that you have a response and are <strong>required to submit a countermeasure</strong> for the Patrol Inspection report.</p>
+
+                    <table class='details-table'>
+                        <tr>
+                            <td class='label'>Registration No:</td>
+                            <td><strong>{patrol.RegNo}</strong></td>
+                        </tr>
+                        <tr>
+                            <td class='label'>Inspection / Findings:</td>
+                            <td>
+                                <ol>
+                                    {findings}
+                                </ol>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class='label'>Counter Measures:</td>
+                            <td>
+                                <ol>
+                                    {Countermeasure}
+                                </ol>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class='label'>Person Incharge:</td>
+                            <td>{patrol.PICName}</td>
+                        </tr>
+                        <tr>
+                            <td class='label'>Approve By Inspector:</td>
+                            <td>{patrol.InspectName}</td>
+                        </tr>
+                        <tr>
+                            <td class='label'>Link of the Registration No.:</td>
+                            <a href='{link}' class='button'>Submit Countermeasures</a>
+                        </tr>
+                    </table>";
 
 
             string emailBody = $@"
@@ -415,12 +472,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
         
                             {messageContent}
 
-                            <div class='system-links'>
-                                <p><strong>Please use the link above to access the system and submit your countermeasures:</strong></p>
-                                <div style='text-align: center; margin: 15px 0;'>
-                                    <a href='{link}' class='button'>Submit Countermeasures</a>
-                                </div>
-                            </div>
+                         
 
                             <div class='note-box'>
                                 <p><strong>Important:</strong> Please review the findings and submit appropriate countermeasures within the required timeframe.</p>

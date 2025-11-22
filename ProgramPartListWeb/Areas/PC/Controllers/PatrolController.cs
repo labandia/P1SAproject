@@ -435,6 +435,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 // ===================== STEP 1: Extract Request Data =====================
                 string regNo = Request.Form["RegNo"];
                 string employeeId = Request.Form["Employee_ID"];
+                string inspectId = Request.Form["SelectedInspector"];
                 int departmentId = Convert.ToInt32(Request.Form["DepartmentID"]);
                 string findJson = Request.Form["FindJson"];
                 string getprefix = GetPrefix();
@@ -460,7 +461,8 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                     RegNo = finalPrefix,
                     Department_ID = departmentId,
                     FilePath = pdfOutputPath,
-                    PIC_ID = employeeId
+                    PIC_ID = employeeId,
+                    InspectorID = inspectId
                 };
 
 
@@ -484,21 +486,26 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
                 // ===================== STEP 6: Send Notification Email =====================
                 string processLink = $"http://p1saportalweb.sdp.com/PC/Patrol/ProcessOwner?Regno={finalPrefix}&mode=1";
+                string strSubject = $@"[FOLLOW UP - REGISTRATION REPORT] 'For Review/Submit CounterMeasure' - {finalPrefix}";
                 //string emailBody = EmailService.RegistrationEmailBody(employeeEmail.FullName, finalPrefix, processLink);
 
+                var getPatrolView = await GetRegistrationDetailList(finalPrefix);
+                var getFindings = await GetFindings(finalPrefix);
 
-                string countermeasureEmail = EmailService.RegistrationEmailBodyV2(
+
+                string countermeasureEmail = PatrolEmailService.CreatePatrolProductionBody(
+                    getPatrolView,
+                    getFindings,
                     employeeEmail.FullName,
-                    finalPrefix,
-                    departmentName,
+                    strSubject,
                     processLink,
                     "processowner"
-                );
+                 );
 
 
                 var sendEmail = new SentEmailModel
                 {
-                    Subject = $@"[FOLLOW UP - REGISTRATION REPORT] 'For Review/Submit CounterMeasure' - {finalPrefix}",
+                    Subject = strSubject,
                     Sender = strSender,
                     BCC = "",
                     Body = countermeasureEmail,
@@ -511,7 +518,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
 
 
-                return JsonCreated(true, "Updated successfully.");
+                return JsonCreated(inspectId, "Updated successfully.");
             }
             catch (Exception ex)
             {
@@ -747,38 +754,24 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
                 // ===================== STEP 8: Send Notification Email =====================
                 string processLink = $"http://p1saportalweb.sdp.com/PC/Patrol/InspectorsReview?Regno={finalPrefix}&mode=1";
-                //string emailBody = EmailService.RegistrationEmailBody(employeeEmail.FullName, finalPrefix, processLink);
-                //string InspectorsEmail = EmailService.RegistrationEmailBodyV2(
-                //      employeeEmail.FullName,
-                //      finalPrefix,
-                //      updatedReg.SectionName,
-                //      processLink,
-                //      "inpectorapproval"
-                //);
-
-
-                //var SendEmail = new SentEmailModel
-                //{
-                //    Subject = $@"[FOLLOW UP - PATROL INSPECTION REPORT] 'For Review/Verification' - {finalPrefix}",
-                //    Sender = strSender,
-                //    BCC = "",
-                //    Body = InspectorsEmail,
-                //    Recipient = employeeEmail.Email
-                //};
-
+                string strSubject = $@"[PATROL INSPECTION] 'For Review/Verification' - {finalPrefix}";
+               
                 var getPatrolView = await GetRegistrationDetailList(finalPrefix);
                 var getFindings = await GetFindings(finalPrefix);
 
-
                 string InspectorsEmail = PatrolEmailService.CreatePatrolProductionBody(
-                    getPatrolView, getFindings, processLink
-                    );
-
+                    getPatrolView,
+                    getFindings,
+                    employeeEmail.FullName,
+                    strSubject,
+                    processLink,
+                    "processowner"
+                 );
 
 
                 var SendEmail = new SentEmailModel
                 {
-                    Subject = $@"[FOLLOW UP - PATROL INSPECTION REPORT] 'For Review/Verification' - {finalPrefix}",
+                    Subject = strSubject,
                     Sender = strSender,
                     BCC = "",
                     Body = InspectorsEmail,
@@ -786,13 +779,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 };
 
 
-
                 await EmailService.SendEmailViaSqlDatabase(SendEmail);
-
-
-                
-
-
 
                 return JsonCreated(true, "Updated successfully.");
             }
@@ -875,18 +862,24 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 // ===================== STEP 4: Send Notification Email =====================
                 string processLink =
                     $"http://p1saportalweb.sdp.com/PC/Patrol/ManagerView?Regno={Regno}&mode=1";
+   
+                string strSubject = $@"[PATROL INSPECTION] 'For Review/Verification' - {Regno}";
 
-                string ManagersEmail = EmailService.RegistrationEmailBodyV2(
+                var getPatrolView = await GetRegistrationDetailList(Regno);
+                var getFindings = await GetFindings(Regno);
+
+                string ManagersEmail = PatrolEmailService.CreatePatrolProductionBody(
+                    getPatrolView,
+                    getFindings,
                     employeeEmail.FullName,
-                    Regno,
-                    updatedReg.SectionName,
+                    strSubject,
                     processLink,
-                    "inpectorapproval"
-                );
+                    "sendtomanager"
+                 );
 
                 var sendEmail = new SentEmailModel
                 {
-                    Subject = $@"[FOLLOW UP - PATROL INSPECTION REPORT] 'For Review/Verification' - {Regno}",
+                    Subject = strSubject,
                     Sender = strSender,
                     BCC = "",
                     Body = ManagersEmail,
@@ -965,19 +958,24 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 string processLink = $"http://p1saportalweb.sdp.com/PC/Patrol/DivisionApproval?Regno={Regno}&mode=1";
                 //string emailBody = EmailService.RegistrationEmailBody(employeeEmail.FullName, Regno, processLink);
 
-                string ManagersEmail = EmailService.RegistrationEmailBodyV2(
-                     employeeEmail.FullName,
-                     Regno,
-                     updatedReg.SectionName,
-                     processLink,
-                     "inpectorapproval"
-                );
+                string strSubject = $@"[PATROL INSPECTION] 'For Review/Verification' - {Regno}";
 
+                var getPatrolView = await GetRegistrationDetailList(Regno);
+                var getFindings = await GetFindings(Regno);
+
+                string ManagersEmail = PatrolEmailService.CreatePatrolProductionBody(
+                    getPatrolView,
+                    getFindings,
+                    employeeEmail.FullName,
+                    strSubject,
+                    processLink,
+                    "sendtomanager"
+                 );
 
 
                 var sendEmail = new SentEmailModel
                 {
-                    Subject = $@"[FOLLOW UP - PATROL INSPECTION REPORT] 'For Review/Verification' - {Regno}",
+                    Subject = strSubject,
                     Sender = strSender,
                     BCC = "",
                     Body = ManagersEmail,
@@ -1266,7 +1264,42 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             return data;
         }
 
+        [HttpPost]
+        public async Task<ActionResult> UploadSignature(SignatureModel sig)
+        {
+            try
+            {
+                if (sig.SignatureImage != null && sig.SignatureImage.ContentLength > 0)
+                {
+                    //save file to the Database
+                    string filename = Path.GetFileName(sig.SignatureImage.FileName);
+                    var pathfile = Path.Combine(@"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\Signatures", filename);
+                    // Ensure directory exists
+                    var dir = Path.GetDirectoryName(pathfile);
+                    if (!Directory.Exists(dir))
+                        Directory.CreateDirectory(dir);
 
+                    bool result = await _reg.SaveSignatureData(sig.UserID, filename);
+
+                    // if the Image file name is Save 
+                    if (result)
+                    {
+                        sig.SignatureImage.SaveAs(pathfile);
+                    }
+
+
+                    return Json(new { success = true, Data = filename,  message = "Upload Image successful" }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new { success = false, message = "Failed Upload" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
 
 
 

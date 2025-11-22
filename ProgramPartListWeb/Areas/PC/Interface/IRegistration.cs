@@ -23,5 +23,8 @@ namespace ProgramPartListWeb.Areas.PC.Interface
 
         Task<bool> ApproveByDivManager(string RegNo, string newfilepath, string DivManagerID);
         Task<bool> ReturnEmailMessage(string RegNo, string comments, int ReturnByID);
+
+
+        Task<bool> SaveSignatureData(int userID, string fileName);
     }
 }

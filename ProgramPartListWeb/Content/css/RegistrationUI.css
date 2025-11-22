@@ -28,6 +28,21 @@ body, h1, h2, h3, h4, div, p, strong, small, button, select {
     font-family: inherit;
 }
 
+.primarybtn {
+    transition: .5s ease-in-out;
+    background: var(--primary-color) !important;
+    border-radius: .2em;
+    color: #fff;
+}
+
+    .primarybtn:hover {
+        background: var(--primary-hover) !important;
+    }
+
+    .primarybtn:disabled {
+        background: #A5A1AA;
+    }
+
 label{
     font-weight: 600 !important;
     color: #222;
@@ -932,4 +947,248 @@ form p{
         font-size: .8rem;
         text-align: center;
         padding: 10px 20px;
+    }
+
+
+
+
+
+
+
+
+
+
+
+/* =============== FOR UI SIGNATURE  ====================*/
+        .signature-container {
+            margin-top: 20px;
+            padding: 25px;
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            text-align: center;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        
+        .signature-container.has-signature {
+            border-color: #2ecc71;
+            border-style: solid;
+            background-color: #f0f9f4;
+        }
+        
+        .signature-placeholder {
+            color: #7f8c8d;
+            font-style: italic;
+            padding: 20px;
+        }
+        
+        .signature-image {
+            max-width: 100%;
+            max-height: 180px;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .clearbtn {
+            border: 1px solid rgba(37, 37, 37,0.5);
+        }
+
+        .SignatureAction button {
+            width: 100%;
+        }
+/* ============== FOR ULOADED SIGNATURE INPUT ================== */
+    .modalwrap {
+        padding: 2em 1.5em !important;
+    }
+
+    .custom_modal_header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: .5em;
+    }
+    .custom_modal__icon {
+        display: flex;
+        align-items: center;
+        gap: 1em;
+    }
+
+     .custom_icon_container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        padding: 1em;
+        background: hsl(209, 84%, 88%);
+        color: hsl(209, 80%, 50%);
+    }
+
+    .custom_icon_container i {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        font-size: 3rem !important;
+        transform: translate(-50%, -50%);
+    }
+
+     .custom_modal_header h5 { font-weight: 600; }
+    .formcontainer {
+        width: min(100%, 1200px);
+        margin: 0 auto;
+        background: var(--container-color);
+        padding: 2em;
+        border-radius: .5em;
+        margin-bottom: 3em;
+        margin-inline: auto;
+        box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    }
+    .addformcontainer { padding: .5em; }
+    .formcontainer h5, .addformcontainer h5, .formcontainer label, .addformcontainer label {
+        font-weight: 500;
+        color: #222;
+    }
+    .formcontainer label, .addformcontainer label {
+        font-size: var(--small-font-size);
+    }
+    .formcontainer input, .formcontainer textarea, .addformcontainer input, .addformcontainer textarea {
+        width: 100%;
+        margin: .5em 0 1em 0;
+        border: 1px solid #A5A1AA;
+        padding: .6em 1em;
+        font-size: var(--small-font-size);
+        border-radius: .3em;
+    }
+    .formcontainer input[type='checkbox']{
+        width: auto;
+        margin: 0;
+        padding: 0;
+    }
+
+    .formcontainer textarea, .addformcontainer textarea {
+        width: 100%;
+        margin: .5em 0 1em 0;
+        border: 1px solid #A5A1AA;
+        padding: .6em;
+        font-size: var(--normal-font-size);
+    }
+    .formcontainer input:focus, .formcontainer textarea:focus, .addformcontainer input:focus, .addformcontainer textarea:focus {
+         outline: 1px solid var(--primary-color);
+    }
+
+
+    
+    .Mold_tabs {
+        display: flex;
+        position: relative;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .Mold_tabs button {
+      width: 150px;
+      background: none;
+      border: none;
+      padding: 1rem;
+      cursor: pointer;
+      font-weight: 600;
+      color: #222;
+      font-size: var(--small-font-size);
+      transition: color 0.3s;
+      position: relative;
+      z-index: 1;
+    }
+
+    .Mold_tabs button.active {
+      color: var(--primary-color);
+    }
+
+    .Mold_slider {
+      position: absolute;
+      bottom: 0;
+      height: 2px;
+      width: 150px;
+      background: var(--primary-color);
+      transition: transform 0.3s ease;
+    }
+
+    .Mold_contentbox {
+      position: relative;
+      min-height: 100px;
+    }
+
+    .Mold_content {
+      opacity: 0;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    /*  width: 100%;*/
+      top: 0;
+      left: 0;
+      display: none;
+      padding: 1em 0 0;
+    }
+
+    .Mold_content.show {
+      opacity: 1;
+      transform: translateX(0);
+      display: block;
+    }
+
+
+
+/* ============ UPLOAD IMAGE LAYOUT ================= */
+ .upload-container {
+        flex-direction: column;
+        text-align: center;
+        padding: 30px;
+        border: 2px dashed #bdc3c7;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        background-color: #f9f9f9;
+    }
+    .upload-icon {
+        font-size: 48px;
+        color: #7f8c8d;
+        margin-bottom: 15px;
+    }
+    .file-info {
+        margin-bottom: 15px;
+        color: #7f8c8d;
+        font-size: 14px;
+    }
+    .upload-btn {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+    .upload-btn:hover {
+        background-color: #2980b9;
+    }
+
+
+    .preview-container {
+        display: none;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .preview-image {
+        max-width: 100%;
+        max-height: 200px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
+     .hidden {
+        display: none;
     }

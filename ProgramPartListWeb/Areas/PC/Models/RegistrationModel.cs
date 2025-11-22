@@ -63,6 +63,7 @@ namespace ProgramPartListWeb.Areas.PC.Models
         public int Department_ID { get; set; }
 
         public string Employee_ID { get; set; }
+        public string InspectorID { get; set; }
         public string PIC_ID { get; set; }
         public string Manager_ID { get; set; }
         public string DepManager_ID { get; set; }
@@ -102,6 +103,7 @@ namespace ProgramPartListWeb.Areas.PC.Models
         public string Email { get; set; }
         public int Position { get; set; }
         public int Department_ID { get; set; }
+        public string Signature { get; set; }
         public string DepPrefix { get; set; }
     }
 

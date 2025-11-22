@@ -436,7 +436,6 @@
         e.stopPropagation();
         const rowId = $(this).attr('id').split('_')[1];
         var getStats = requestData.filter(res => res.OrderID === rowId);
-        console.log(getStats);
         if (getStats) {
             $("#currentOrderStatus").val(getStats[0].RequestStatus);
             $("#EditRemarks").val(getStats[0].Remarks);

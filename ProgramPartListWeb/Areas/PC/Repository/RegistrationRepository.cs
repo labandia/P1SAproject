@@ -6,6 +6,7 @@ using ProgramPartListWeb.Helper;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -72,7 +73,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
         }
         public Task<List<EmailModelV2>> PatrolEmailData()
         {
-            string strsql = $@"SELECT Employee_ID, FullName, Email, Position, Department_ID, DepPrefix
+            string strsql = $@"SELECT Employee_ID, FullName, Email, Position, Department_ID, DepPrefix, Signature
                                FROM Patrol_UserEmail";
             return SqlDataAccess.GetData<EmailModelV2>(strsql);
         }
@@ -106,13 +107,14 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                        {
                            RegNo = reg.RegNo,
                            Department_ID = reg.Department_ID, 
-                           PIC_ID = reg.PIC_ID
+                           PIC_ID = reg.PIC_ID, 
+                           Employee_ID = reg.InspectorID
                        });
 
             // INSERT FILES TO THE OTHER TABLES
             await SqlDataAccess.UpdateInsertQuery("InserFiles", new { RegNo = reg.RegNo, FilePath = reg.FilePath});
-            await SqlDataAccess.UpdateInsertQuery("INSERT INTO Patrol_Registration_Approvelist(RegNo, PIC_ID) VALUES(@RegNo, @PIC_ID)", 
-                new { RegNo = reg.RegNo, PIC_ID = reg.PIC_ID });
+            await SqlDataAccess.UpdateInsertQuery("INSERT INTO Patrol_Registration_Approvelist(RegNo, PIC_ID, Inspect_ID) VALUES(@RegNo, @PIC_ID, @Inspect_ID)", 
+                new { RegNo = reg.RegNo, PIC_ID = reg.PIC_ID, Inspect_ID = reg.InspectorID });
 
             // INSERT FINDING AND COUNTERMEASURE PROCESS
             // Make a Json format 
@@ -287,6 +289,11 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             throw new NotImplementedException();
         }
 
-       
+        public Task<bool> SaveSignatureData(int userID, string fileName)
+        {
+            string strsql = "UPDATE Patrol_UserEmail Set Signature =@Signature WHERE Employee_ID =@Employee_ID";
+
+            return SqlDataAccess.UpdateInsertQuery(strsql, new { Signature = fileName, Employee_ID = userID });
+        }
     }
 }

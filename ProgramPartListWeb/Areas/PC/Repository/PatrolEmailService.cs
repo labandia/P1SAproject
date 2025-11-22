@@ -357,11 +357,21 @@ namespace ProgramPartListWeb.Areas.PC.Repository
         public static string CreatePatrolProductionBody(
            PatrolRegistrationViewModel patrol,
            List<FindingModel> find, 
-           string link)
+           string senderName,
+           string Subjectname,
+           string link,
+           string emailType = "default")
         {
             string messageContent = "";
             string findings = "";
             string Countermeasure = "";
+            string shortmessage = "";
+            string isAprovedInspector = (patrol.Inspect_IsAproved == true) ? 
+                        "<div class='completion-badge'>✓ </div></td>" : "";
+
+            string IsAprovedManager = (patrol.DepManager_IsAproved == true) ?
+                     "<div class='completion-badge'>✓ </div></td>" : "";
+
 
             // Build findings list
             foreach (var item in find)
@@ -389,8 +399,30 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             }
 
 
+            switch (emailType.ToLower())
+            {
+                case "processowner":
+                    shortmessage = "<p>This is to inform you that you have a response and are <strong>required to submit a countermeasure</strong> for the Patrol Inspection report.</p>";
+                    break;
+                case "sendtoinspector":
+                    shortmessage = "<p>This is to inform you that you have a <strong>For Review/Approval</strong> Patrol Inspection report.</p>";
+                    break;
+                case "sendtomanager":
+                    shortmessage = "<p>This is to inform you that you have a <strong>For Review/Approval</strong> Patrol Inspection report.</p>";
+                    break;
+                case "sendtodepartment":
+                    shortmessage = "<p>This is to inform you that you have a <strong>For Review/Approval</strong> Patrol Inspection report.</p>";
+                    break;
+                case "sendtodivision":
+                    shortmessage = "<p>This is to inform you that you have a <strong>For Review/Approval</strong> Patrol Inspection report.</p>";
+                    break;
+            }
+
+
+
+
             messageContent = $@"
-                    <p>This is to inform you that you have a response and are <strong>required to submit a countermeasure</strong> for the Patrol Inspection report.</p>
+                    {shortmessage}
 
                     <table class='details-table'>
                         <tr>
@@ -415,15 +447,19 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                         </tr>
                         <tr>
                             <td class='label'>Person Incharge:</td>
-                            <td>{patrol.PICName}</td>
+                            <td>{patrol.PICName ?? "-"}</td>
                         </tr>
                         <tr>
-                            <td class='label'>Approve By Inspector:</td>
-                            <td>{patrol.InspectName}</td>
+                            <td class='label'>Inspector:</td>
+                            <td>{patrol.InspectName ?? "-"} {isAprovedInspector}
+                        </tr>
+                        <tr>
+                            <td class='label'>Manager :</td>
+                            <td>{patrol.ManagerName ?? "-"} {IsAprovedManager}</td>
                         </tr>
                         <tr>
                             <td class='label'>Link of the Registration No.:</td>
-                            <a href='{link}' class='button'>Submit Countermeasures</a>
+                            <a href='{link}' class='button'>{link}</a>
                         </tr>
                     </table>";
 
@@ -458,16 +494,26 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                         .browser-notice {{ font-size: 11px; color: #666; text-align: center; margin-bottom: 20px; }}
                         ol {{ margin: 10px 0; padding-left: 20px; }}
                         li {{ margin-bottom: 8px; line-height: 1.5; }}
+                         .completion-badge {{
+                                            background: #28a745;
+                                            color: white;
+                                            padding: 8px 15px;
+                                            border-radius: 20px;
+                                            font-size: 14px;
+                                            font-weight: bold;
+                                            display: inline-block;
+                                            margin: 10px 0;
+                           }}
                     </style>
                 </head>
                 <body>
                     <div class='container'>
                         <div class='header'>
-                            <h2>[PATROL INSPECTION] Countermeasure Required - {patrol.RegNo}</h2>
+                            <h2>{Subjectname}</h2>
                         </div>
 
                         <div class='content'>
-                            <p>Hi {patrol.PICName},</p>
+                            <p>Hi {senderName},</p>
                             <p>Good day!</p>
         
                             {messageContent}
@@ -475,7 +521,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                          
 
                             <div class='note-box'>
-                                <p><strong>Important:</strong> Please review the findings and submit appropriate countermeasures within the required timeframe.</p>
+                                <p><strong>Important:</strong> The check indicates a Approved by </p>
                             </div>
                         </div>
     

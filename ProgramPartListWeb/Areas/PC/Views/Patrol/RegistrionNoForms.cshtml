@@ -59,98 +59,130 @@
         </div>
 
         <div class="content">
-           
-            <!-- Step 1: Create New Document -->
-            <form method="post" enctype="multipart/form-data" class="step-content active" id="step-1" autocomplete="off">
-                <div class="flex_align mb-4">
-                    <a class="Backbtn" href="/PC/Patrol/PatrolReport"><i class="fa-solid fa-arrow-left"></i></a>
-                    <h3 class="mb-0">Create New Registration No.</h3>
-                </div>
+            <div class="step-content active"  id="step-1">
+                <form method="post" enctype="multipart/form-data" autocomplete="off">
+                    <div class="flex_align mb-4">
+                        <a class="Backbtn" href="/PC/Patrol/PatrolReport"><i class="fa-solid fa-arrow-left"></i></a>
+                        <h3 class="mb-0">Create New Registration No.</h3>
+                    </div>
 
 
 
-                <div class="row mb-3">
-                    <div class="col-12 col-sm-12 col-lg-4">
-                        <label>Registration No. <small style="color: #a81818; font-weight: 600;">*</small> </label> <br />
-                        @*<input type="text" placeholder="Type Registration No." name="RegNo" id="RegNo" required />*@
-                        <div class="date-wrapper">
-                            <span class="prefix" id="prefix">@ViewBag.Prefix-</span>
-                            <input name="RegNo" id="RegNo" class="styled-date" type="text" placeholder="YYMMDD" readonly required>
+                    <div class="row mb-3">
+                        <div class="col-12 col-sm-12 col-lg-4">
+                            <label>Registration No. <small style="color: #a81818; font-weight: 600;">*</small> </label> <br />
+                            @*<input type="text" placeholder="Type Registration No." name="RegNo" id="RegNo" required />*@
+                            <div class="date-wrapper">
+                                <span class="prefix" id="prefix">@ViewBag.Prefix-</span>
+                                <input name="RegNo" id="RegNo" class="styled-date" type="text" placeholder="YYMMDD" readonly required>
 
-                            <div class="calendar-icon-wrapper">
-                                <i class="fa-regular fa-calendar-days calendar-icon"></i>
-                                <input type="date" class="real-date-input" id="hiddenDatePicker" onchange="formatAndDisplayDate(this.value)">
+                                <div class="calendar-icon-wrapper">
+                                    <i class="fa-regular fa-calendar-days calendar-icon"></i>
+                                    <input type="date" class="real-date-input" id="hiddenDatePicker" onchange="formatAndDisplayDate(this.value)">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-lg-4">
+                            <label>Dept. /Section Inspected <small style="color: #a81818; font-weight: 600;">*</small> </label>
+                            <div class="select-container">
+                                <select id="DepartmentID" name="DepartmentID" required>
+                                    <option>-- Select Department --</option>
+                                    <option value="1">Molding</option>
+                                    <option value="2">Press</option>
+                                    <option value="3">Rotor</option>
+                                    <option value="4">Winding</option>
+                                    <option value="5">Circuit</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <div class="col-12 col-sm-12 col-lg-4 ">
+                            <label>Person In Charge : </label> <br />
+                            <div class="select-container">
+                                <select id="Employee_ID" name="Employee_ID">
+                                </select>
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-sm-12 col-lg-4">
-                        <label>Dept. /Section Inspected <small style="color: #a81818; font-weight: 600;">*</small> </label>
-                        <div class="select-container">
-                            <select id="DepartmentID" name="DepartmentID" required>
-                                <option>-- Select Department --</option>
-                                <option value="1">Molding</option>
-                                <option value="2">Press</option>
-                                <option value="3">Rotor</option>
-                                <option value="4">Winding</option>
-                                <option value="5">Circuit</option>
-                            </select>
+
+
+                    <div class="col-12 col-sm-12 col-lg-12 mb-3">
+                        <label>1. Work Practice / Standard / Safety</label> <br />
+                        <input type="hidden" value="1" id="Find1" name="Find1" />
+                        <textarea placeholder="Type text here..." name="Inpects1" id="Inpects1" rows="3" cols="40" required></textarea>
+                    </div>
+
+                    <div class="col-12 col-sm-12 col-lg-12 mb-3">
+                        <label>2. Identification and status of the product or materials.</label> <br />
+                        <input type="hidden" value="2" id="Find2" name="Find2" required />
+                        <textarea placeholder="Type text here..." name="Inpects2" id="Inpects2" rows="3" cols="40"></textarea>
+                    </div>
+
+                    <div class="col-12 col-sm-12 col-lg-12 mb-3">
+                        <label>3. Condition and status of documents / records.</label> <br />
+                        <input type="hidden" value="3" id="Find3" name="Find3" required />
+                        <textarea placeholder="Type text here..." name="Inpects3" id="Inpects3" rows="3" cols="40"></textarea>
+                    </div>
+
+                    <div class="col-12 col-sm-12 col-lg-12 mb-3">
+                        <label>4. Record of ‘start-up process check’ and monthly inspection</label> <br />
+                        <input type="hidden" value="4" id="Find4" name="Find4" required />
+                        <textarea placeholder="Type text here..." name="Inpects4" id="Inpects4" rows="3" cols="40"></textarea>
+                    </div>
+
+                    <div class="col-12 col-sm-12 col-lg-12 mb-3">
+                        <label>5. Calibration of equipment and jigs used for measurement or inspection.</label> <br />
+                        <input type="hidden" value="5" id="Find5" name="Find5" required />
+                        <textarea placeholder="Type text here..." name="Inpects5" id="Inpects5" rows="3" cols="40"></textarea>
+                    </div>
+
+                    <div class="col-12 col-sm-12 col-lg-12 mb-3">
+                        <label>6. Countermeasure and implementation of previous quality and safety</label> <br />
+                        <input type="hidden" value="6" id="Find5" name="Find6" required />
+                        <textarea placeholder="Type text here..." name="Inpects6" id="Inpects6" rows="3" cols="40"></textarea>
+                    </div>
+
+
+
+
+
+                    <div class="button-group">
+                        <div>Your information is secure and encrypted</div> <!-- Empty div for spacing -->
+                        <button class="btn-next" type="submit" id="btnSave">Next</button>
+                    </div>
+                </form>
+
+
+
+                <div class="col-4 col-sm-12 col-lg-4 mb-3">
+                    <div class="form-group">
+                        <label for="Employee_ID"><i class="fas fa-user-check"></i> Select Inspector</label>
+                        <select id="Employee_IDV2" name="Employee_IDV2">
+                            <option value="">-- Please select an inspector --</option>
+
+                        </select>
+                    </div>
+
+                    <div class="signature-container" id="signature-display">
+                        <div class="signature-placeholder" id="placeholder">
+                            <i class="fas fa-signature" style="font-size: 48px; margin-bottom: 15px; color: #bdc3c7;"></i>
+                            <p>Select an inspector to view their signature</p>
+                        </div>
+                        <img id="signature-image" class="signature-image" style="display: none;">
+
+                        <div class="signature-Input" id="signature-Input" style="display: none;">
+                            <i class="fas fa-signature" style="font-size: 48px; margin-bottom: 15px; color: #bdc3c7;"></i>
+                            <p> No Signature Found. Please upload by click the Circle Icon. </p>
                         </div>
 
                     </div>
 
-                    <div class="col-12 col-sm-12 col-lg-4 ">
-                        <label>Person In Charge : </label> <br />
-                        <div class="select-container">
-                            <select id="Employee_ID" name="Employee_ID">
-                            </select>
-                        </div>
-                    </div>
+
                 </div>
-
-
-                <div class="col-12 col-sm-12 col-lg-12 mb-3">
-                    <label>1. Work Practice / Standard / Safety</label> <br />
-                    <input type="hidden" value="1" id="Find1" name="Find1" />
-                    <textarea placeholder="Type text here..." name="Inpects1" id="Inpects1" rows="3" cols="40" required></textarea>
-                </div>
-
-                <div class="col-12 col-sm-12 col-lg-12 mb-3">
-                    <label>2. Identification and status of the product or materials.</label> <br />
-                    <input type="hidden" value="2" id="Find2" name="Find2" required />
-                    <textarea placeholder="Type text here..." name="Inpects2" id="Inpects2" rows="3" cols="40"></textarea>
-                </div>
-
-                <div class="col-12 col-sm-12 col-lg-12 mb-3">
-                    <label>3. Condition and status of documents / records.</label> <br />
-                    <input type="hidden" value="3" id="Find3" name="Find3" required />
-                    <textarea placeholder="Type text here..." name="Inpects3" id="Inpects3" rows="3" cols="40"></textarea>
-                </div>
-
-                <div class="col-12 col-sm-12 col-lg-12 mb-3">
-                    <label>4. Record of ‘start-up process check’ and monthly inspection</label> <br />
-                    <input type="hidden" value="4" id="Find4" name="Find4" required />
-                    <textarea placeholder="Type text here..." name="Inpects4" id="Inpects4" rows="3" cols="40"></textarea>
-                </div>
-
-                <div class="col-12 col-sm-12 col-lg-12 mb-3">
-                    <label>5. Calibration of equipment and jigs used for measurement or inspection.</label> <br />
-                    <input type="hidden" value="5" id="Find5" name="Find5" required />
-                    <textarea placeholder="Type text here..." name="Inpects5" id="Inpects5" rows="3" cols="40"></textarea>
-                </div>
-
-                <div class="col-12 col-sm-12 col-lg-12 mb-3">
-                    <label>6. Countermeasure and implementation of previous quality and safety</label> <br />
-                    <input type="hidden" value="6" id="Find5" name="Find6" required />
-                    <textarea placeholder="Type text here..." name="Inpects6" id="Inpects6" rows="3" cols="40"></textarea>
-                </div>
-
-
-
-                <div class="button-group">
-                    <div>Your information is secure and encrypted</div> <!-- Empty div for spacing -->
-                    <button class="btn-next" type="submit" id="btnSave">Next</button>
-                </div>
-            </form>
+            </div>
+            <!-- Step 1: Create New Document -->
+         
 
             <!-- Step 2: Person in Charge -->
             <div class="step-content" id="step-2">
@@ -178,6 +210,9 @@
     </div>
 
 
+  
+
+
 
     <!-- Sequential Loader -->
     <div id="loader" class="loader-overlay">
@@ -186,7 +221,7 @@
 
             <div class="progress-container">
                 <div class="progress-bar" style="background: #f5f5f5;">
-                    <div class="progress-fill" id="progressFill" ></div>
+                    <div class="progress-fill" id="progressFill"></div>
                 </div>
                 <div class="progress-text" id="progressText">0%</div>
             </div>
@@ -238,13 +273,96 @@
     </div>
 
 
+    <!--########################## UPLOAD DATA #############################-->
+    <div class="modal fade modal-lg " id="uploadmodal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog"
+         data-bs-backdrop="static"
+         aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body modalwrap">
+                    <div class="custom_modal_header">
+                        <div class="custom_modal__icon">
+                            <div class="custom_icon_container">
+                                <i class="fa-solid fa-file-import"></i>
+                            </div>
+                            <div class="custom_modal_title">
+                                <span style="font-weight: 600;">Upload your Signature</span>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-light  close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+
+                    <div class="custom_modal_body">
+
+                        <div class="Mold_tabcontainer">
+                            <div class="Mold_tabs">
+                                <button class="Mold_tab active" data-target="UploadImage">Write Signature</button>
+                                <button class="Mold_tab" data-target="WriteTable">Upload Image</button>
+                                <div class="Mold_slider"></div>
+                            </div>
+
+                            <div class="Mold_contentbox">
+                                <div class="Mold_content show" id="UploadImage">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <span>Draw a Signature :</span>
+                                            <canvas id="signature-pad" width="400" height="200" style="border:1px solid #ccc;"></canvas>
+                                        </div>
+                                        <div class="col-6">
+                                            <form class="SignatureAction" id="SignatureForms">
+                                                <input type="hidden" id="SignatureData" name="SignatureData" />
+
+                                                <button type="button" class="clearbtn" onclick="clearSignature()"><i class="fa-solid fa-eraser"></i> Clear</button>
+                                                <button type="submit" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    @* Hidden input to hold the base64 image *@
+                                </div>
+                                <div class="Mold_content" id="WriteTable">
+                                    <form method="post" enctype="multipart/form-data" id="ImportExcel">
+                                        <div class="upload-container flex_center" id="upload-container">
+                                            <div class="upload-icon">📷</div>
+                                            <div class="file-info">Upload a photo of your signature.<br>Max file size: 1MB<br>png, jpg, jpeg, bmp, gif</div>
+                                            <input type="file" id="fileInput" accept=".png,.jpg,.jpeg,.bmp,.gif" class="hidden">
+                                            <button class="upload-btn" id="uploadBtn">Upload Photo</button>
+                                        </div>
+
+                                    </form>
+
+                                    <div class="preview-container" id="previewContainer">
+                                        <img id="SignatureImage" class="SignatureImage" src="/Content/Images/bussiness-man.png" alt="Signature" style="display: hidden;" />
+                                        <img id="previewImage" class="preview-image" src="" alt="Signature Preview">
+                                    </div>
+
+                                    <footer class="flex_end">
+                                        <span id="Upload "></span>
+                                        <button class="primarybtn flex_end" id="saveBtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                                    </footer>
+                                </div>
+                            </div>
+                        </div>
 
 
 
 
+                    </div>
+                </div>
 
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="~/Scripts/signature_pad.umd.min.js"></script>
     <script type="text/javascript">
         let prefix = "@ViewBag.Prefix";
+        let selectedInspector;
         let currentStep = 1;
         const totalSteps = 5;
 
@@ -252,6 +370,199 @@
         let emailTable = [];
 
         const addform = document.getElementById("step-1");
+        const signatureImage = document.getElementById('signature-image');
+        const signatureInput = document.getElementById('signature-Input');
+        const placeholder = document.getElementById('placeholder');
+
+
+        // Tabs Content
+        const tabs = document.querySelectorAll(".Mold_tab");
+        const slider = document.querySelector(".Mold_slider");
+        const contents = document.querySelectorAll(".Mold_content");
+
+        tabs.forEach((tab, index) => {
+            tab.addEventListener("click", () => {
+                // Handle tab active class
+                document.querySelector(".Mold_tab.active").classList.remove("active");
+                tab.classList.add("active");
+
+                // Move slider
+                slider.style.transform = `translateX(${index * 100}%)`;
+
+                // Switch content
+                const target = tab.getAttribute("data-target");
+                contents.forEach((content) => {
+                    content.classList.remove("show");
+                });
+                document.getElementById(target).classList.add("show");
+            });
+        });
+
+        // ==========   FOR DRAWING A SIGNATURE IMAGE =================
+        let canvas = document.getElementById("signature-pad");
+        let signaturePad = new SignaturePad(canvas);
+
+        function clearSignature() {
+            signaturePad.clear();
+        }
+
+        function saveSignature() {
+            if (signaturePad.isEmpty()) {
+                alert("Please provide a signature.");
+                return;
+            }
+
+            const dataUrl = signaturePad.toDataURL("image/png"); // Base64 PNG
+            document.getElementById("SignatureData").value = dataUrl;
+
+            // Submit the form
+            document.getElementById("signatureForm").submit();
+        }
+        // ===========================================================
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const InputFile = document.getElementById('fileInput');
+            const uploadbtn = document.getElementById('uploadBtn');
+            const savebtn = document.getElementById('saveBtn');
+
+            const previewContainer = document.getElementById('previewContainer');
+            const previewImage = document.getElementById('previewImage');
+
+            // Handle Upload button Click
+            uploadbtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                InputFile.click();
+            });
+
+            // Handle Functional of File Input Upload
+            InputFile.addEventListener('change', function (e) {
+                e.preventDefault();
+                //Check if the Image data exist
+                if (e.target.files.length > 0) {
+                    const file = e.target.files[0];
+
+                    // Check the file size (Max 1 MB)
+                    if (file.size > 1024 * 1024) {
+                        alert('File size exceeds 1MB limit');
+                        return;
+                    }
+                    // Check file Type
+                    const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/bmp', 'image/gif'];
+
+                    if (!validTypes.includes(file.type)) {
+                        alert("Invalid file type, Please upload a png, jpeg, bmp or gif file");
+                        return;
+                    }
+
+                    //Create a Preview Image When the Upload the file
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        previewImage.src = e.target.result;
+                        previewContainer.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+
+            // handle save button click
+            savebtn.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                //validate the form
+                if (!InputFile.files || InputFile.files.length === 0) {
+                    alert("Please upload an image of your signature before saving");
+                    return;
+                }
+
+
+                const formData = new FormData();
+                formData.append('SignatureImage', InputFile.files[0]);
+                formData.append('UserID', selectedInspector);
+
+                const data = Object.fromEntries(formData);
+
+                $.ajax({
+                    url:  '@Url.Action("UploadSignature", "Patrol")',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (res) {
+                        if (res && res.success) {
+                            placeholder.style.display = 'none';
+                            signatureImage.style.display = 'block';
+                            signatureInput.style.display = 'none';
+                            signatureImage.src = '/User/GetSignatureImage?filename=' + encodeURIComponent(res.Data);
+                            clearSignature();
+                            $("#uploadmodal").modal("hide");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        //$('#signatureImageError').text('An error occurred: ' + error);
+                    },
+                    complete: function () {
+                        //saveBtn.prop('disabled', false).text('Save');
+                    }
+                });
+
+                // Reset the form
+
+
+            });
+        });
+
+        $("#SignatureForms").on('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const dataUrl = signaturePad.toDataURL("image/png"); // Base64 PNG
+            //document.getElementById("SignatureData").value = dataUrl;
+
+
+            //formData.append('SignatureImage', dataUrl);
+            //formData.append('UserID', selectedInspector);
+
+            const data = Object.fromEntries(formData);
+            console.log(data);
+
+            fetch(dataUrl)
+                .then(res => res.blob())
+                .then(blob => {
+                    const timestamp = Date.now(); // e.g., 1721705540000
+                    const fileName = `Patrol_${timestamp}.png`;
+
+                    const formData = new FormData();
+                    const file = new File([blob], fileName, { type: "image/png" });
+
+                    formData.append("SignatureImage", file); // Simulates <input type="file" />
+                    formData.append("UserID", selectedInspector);
+                    const data = Object.fromEntries(formData);
+
+                    $.ajax({
+                        url:  '@Url.Action("UploadSignature", "Patrol")',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (res) {
+                            if (res && res.success) {
+                                placeholder.style.display = 'none';
+                                signatureImage.style.display = 'block';
+                                signatureInput.style.display = 'none';
+                                signatureImage.src = '/User/GetSignatureImage?filename=' + encodeURIComponent(res.Data);
+                                clearSignature();
+                                $("#uploadmodal").modal("hide");
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            //$('#signatureImageError').text('An error occurred: ' + error);
+                        },
+                        complete: function () {
+                            //saveBtn.prop('disabled', false).text('Save');
+                        }
+                    });
+                });
+        });
 
 
         function formatAndDisplayDate(value) {
@@ -337,6 +648,7 @@
                   // Append form data
                   let strfind = findingsJson(e.target);
                   let finalformData = new FormData(e.target);
+                  finalformData.append('SelectedInspector', selectedInspector);
                   finalformData.append('FindJson', strfind);
 
                   // For registration validation, read RegNo from form data
@@ -404,8 +716,41 @@
             }
         });
 
+        // Current selected inspector
+        let currentInspector = null;
+        $("#Employee_IDV2").on('change', function () {
+            const selectedValue = this.value;
 
+            if (selectedValue) {
+                let Getitems = emailTable.find(res => res.Employee_ID === selectedValue);
+                if (Getitems) {
+                    if (Getitems.Signature) {
+                        // Display the Signature Image
+                        placeholder.style.display = 'none';
+                        signatureInput.style.display = 'none';
+                        signatureImage.style.display = 'block';
+                        signatureImage.src = '/User/GetSignatureImage?filename=' + encodeURIComponent(Getitems.Signature);
+                    } else {
+                        // If No Signature Image
+                        placeholder.style.display = 'none';
+                        signatureImage.style.display = 'none';
+                        signatureInput.style.display = 'block';
+                    }
+                }
+            } else {
+                // Reset Back to Normal
+                placeholder.style.display = 'block';
+                signatureInput.style.display = 'none';
+                signatureImage.style.display = 'none';
+            }
 
+            selectedInspector = selectedValue;
+
+        });
+
+        signatureInput.addEventListener('click', function () {
+            $("#uploadmodal").modal('show');
+        });
 
 
         function convertRegNoToDate(regNo) {
@@ -453,17 +798,27 @@
         }
         const GetEmailList = async () => {
             let res = await fetchData('@Url.Action("GetEmaiRegistration", "Patrol")', {});
-            if (res.Success) {
+            if (res && res.Success) {
+                let selectV2 = $("#Employee_IDV2");
+
                 let select = $("#Employee_ID");
                 select.empty();
 
                 emailTable = res.Data;
 
                 $.each(emailTable, function (index, rowData) {
-                    select.append('<option value="' + rowData.Employee_ID + '">' + rowData.FullName + '</option>');
+                    if (rowData.Department_ID === 6) {
+                        selectV2.append('<option value="' + rowData.Employee_ID + '">' + rowData.FullName + '</option>');
+                    }
+
+                    if (rowData.Department_ID !== 6) {
+                        select.append('<option value="' + rowData.Employee_ID + '">' + rowData.FullName + '</option>');
+                    }
+
                 });
             }
         };
+
 
 
 

@@ -670,9 +670,12 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 string getprefix = GetPrefix();
                 string employeeId = Request.Form["Employee_ID"];
 
-                // ===================== STEP 2: Retrieve Required Data =====================
+                // ===================== STEP 1: Retrieve Required Data =====================
                 var emailList = await _reg.PatrolEmailData() ?? new List<EmailModelV2>();
-                var employeeEmail = await _reg.GetEmployeeEmailDetails(employeeId, 4, getprefix);    
+
+                // SAFE: Use FirstOrDefault to avoid "more than one matching element"
+                var employeeEmail = emailList
+                    .FirstOrDefault(e => e.Position == 3 && e.DepPrefix == getprefix);
 
                 if (employeeEmail == null)
                     return JsonValidationError("Employee email not found.");
@@ -753,7 +756,8 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                );
 
                 // ===================== STEP 8: Send Notification Email =====================
-                string processLink = $"http://p1saportalweb.sdp.com/PC/Patrol/InspectorsReview?Regno={finalPrefix}&mode=1";
+                string processLink =
+                     $"http://p1saportalweb.sdp.com/PC/Patrol/ManagerView?Regno={finalPrefix}&mode=1";
                 string strSubject = $@"[PATROL INSPECTION] 'For Review/Verification' - {finalPrefix}";
                
                 var getPatrolView = await GetRegistrationDetailList(finalPrefix);
@@ -791,114 +795,114 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         // =======================================================================
         // ==============  INSPECTOR PROCESS BY APPROVED AND REVISE ==============
         // =======================================================================
-        [HttpPost]
-        public async Task<ActionResult> InspectorAproveSubmit(string Regno, string DateConduct)
-        {
-            try
-            {
-                string getprefix = GetPrefix();
+        //[HttpPost]
+        //public async Task<ActionResult> InspectorAproveSubmit(string Regno, string DateConduct)
+        //{
+        //    try
+        //    {
+        //        string getprefix = GetPrefix();
 
-                // ===================== STEP 1: Retrieve Required Data =====================
-                var emailList = await _reg.PatrolEmailData() ?? new List<EmailModelV2>();
+        //        // ===================== STEP 1: Retrieve Required Data =====================
+        //        var emailList = await _reg.PatrolEmailData() ?? new List<EmailModelV2>();
 
-                // SAFE: Use FirstOrDefault to avoid "more than one matching element"
-                var employeeEmail = emailList
-                    .FirstOrDefault(e => e.Position == 3 && e.DepPrefix == getprefix);
+        //        // SAFE: Use FirstOrDefault to avoid "more than one matching element"
+        //        var employeeEmail = emailList
+        //            .FirstOrDefault(e => e.Position == 3 && e.DepPrefix == getprefix);
 
-                if (employeeEmail == null)
-                    return JsonValidationError("Employee email not found.");
+        //        if (employeeEmail == null)
+        //            return JsonValidationError("Employee email not found.");
 
-                // SAFE: Get registration list
-                var registrationData = await _reg.GetRegistrationData(getprefix);
+        //        // SAFE: Get registration list
+        //        var registrationData = await _reg.GetRegistrationData(getprefix);
 
-                var regItem = registrationData
-                    .FirstOrDefault(res => res.RegNo == Regno);
+        //        var regItem = registrationData
+        //            .FirstOrDefault(res => res.RegNo == Regno);
 
-                if (regItem == null)
-                    return JsonValidationError("Registration record not found.");
+        //        if (regItem == null)
+        //            return JsonValidationError("Registration record not found.");
 
-                string previousPdfPath = regItem.Filepath;
+        //        string previousPdfPath = regItem.Filepath;
 
-                // ===================== STEP 2: Prepare File Paths =====================
-                string timestampFile = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-                string excelFileName = $"RN_{Regno}_{timestampFile}.xlsx";
-                string pdfOutputPath = excelFileName.Replace(".xlsx", ".pdf");
+        //        // ===================== STEP 2: Prepare File Paths =====================
+        //        string timestampFile = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+        //        string excelFileName = $"RN_{Regno}_{timestampFile}.xlsx";
+        //        string pdfOutputPath = excelFileName.Replace(".xlsx", ".pdf");
 
-                bool isUpdated = await _reg.ApproveByInspector(
-                    Regno,
-                    DateConduct,
-                    pdfOutputPath,
-                    employeeEmail.Employee_ID
-                );
+        //        bool isUpdated = await _reg.ApproveByInspector(
+        //            Regno,
+        //            DateConduct,
+        //            pdfOutputPath,
+        //            employeeEmail.Employee_ID
+        //        );
 
-                if (!isUpdated)
-                    return JsonValidationError("Failed to update process owner information.");
+        //        if (!isUpdated)
+        //            return JsonValidationError("Failed to update process owner information.");
 
-                CacheHelper.Remove("Registration");
+        //        CacheHelper.Remove("Registration");
 
-                // ===================== STEP 3: Generate Updated PDF =====================
-                var updatedRegData = await _reg.GetRegistrationData(getprefix);
+        //        // ===================== STEP 3: Generate Updated PDF =====================
+        //        var updatedRegData = await _reg.GetRegistrationData(getprefix);
 
-                // SAFE: Get updated registration safely
-                var updatedReg = updatedRegData
-                    .FirstOrDefault(r => r.RegNo == Regno);
+        //        // SAFE: Get updated registration safely
+        //        var updatedReg = updatedRegData
+        //            .FirstOrDefault(r => r.RegNo == Regno);
 
-                if (updatedReg == null)
-                    return JsonValidationError("Updated registration not found.");
+        //        if (updatedReg == null)
+        //            return JsonValidationError("Updated registration not found.");
 
-                var updatedFindings = await _reg.GetRegisterFindings(Regno);
+        //        var updatedFindings = await _reg.GetRegisterFindings(Regno);
 
                 
-                await ExportFiler.UpdatePDFRegistration(
-                    updatedReg,
-                    updatedFindings,
-                    emailList,
-                    previousPdfPath,
-                    excelFileName,
-                    templatePath
-                );
+        //        await ExportFiler.UpdatePDFRegistration(
+        //            updatedReg,
+        //            updatedFindings,
+        //            emailList,
+        //            previousPdfPath,
+        //            excelFileName,
+        //            templatePath
+        //        );
                 
 
-                // ===================== STEP 4: Send Notification Email =====================
-                string processLink =
-                    $"http://p1saportalweb.sdp.com/PC/Patrol/ManagerView?Regno={Regno}&mode=1";
+        //        // ===================== STEP 4: Send Notification Email =====================
+        //        string processLink =
+        //            $"http://p1saportalweb.sdp.com/PC/Patrol/ManagerView?Regno={Regno}&mode=1";
    
-                string strSubject = $@"[PATROL INSPECTION] 'For Review/Verification' - {Regno}";
+        //        string strSubject = $@"[PATROL INSPECTION] 'For Review/Verification' - {Regno}";
 
-                var getPatrolView = await GetRegistrationDetailList(Regno);
-                var getFindings = await GetFindings(Regno);
+        //        var getPatrolView = await GetRegistrationDetailList(Regno);
+        //        var getFindings = await GetFindings(Regno);
 
-                string ManagersEmail = PatrolEmailService.CreatePatrolProductionBody(
-                    getPatrolView,
-                    getFindings,
-                    employeeEmail.FullName,
-                    strSubject,
-                    processLink,
-                    "sendtomanager"
-                 );
+        //        string ManagersEmail = PatrolEmailService.CreatePatrolProductionBody(
+        //            getPatrolView,
+        //            getFindings,
+        //            employeeEmail.FullName,
+        //            strSubject,
+        //            processLink,
+        //            "sendtomanager"
+        //         );
 
-                var sendEmail = new SentEmailModel
-                {
-                    Subject = strSubject,
-                    Sender = strSender,
-                    BCC = "",
-                    Body = ManagersEmail,
-                    Recipient = employeeEmail.Email
-                };
-                await EmailService.SendEmailViaSqlDatabase(sendEmail);
-                // ===================== Another Send Notification Email For the Process Owner  =====================
+        //        var sendEmail = new SentEmailModel
+        //        {
+        //            Subject = strSubject,
+        //            Sender = strSender,
+        //            BCC = "",
+        //            Body = ManagersEmail,
+        //            Recipient = employeeEmail.Email
+        //        };
+        //        await EmailService.SendEmailViaSqlDatabase(sendEmail);
+        //        // ===================== Another Send Notification Email For the Process Owner  =====================
 
 
 
-                return JsonCreated(true, "Updated successfully.");
-            }
-            catch (Exception ex)
-            {
-                return JsonValidationError(
-                    "An unexpected error occurred while processing the request. " + ex.Message
-                );
-            }
-        }
+        //        return JsonCreated(true, "Updated successfully.");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return JsonValidationError(
+        //            "An unexpected error occurred while processing the request. " + ex.Message
+        //        );
+        //    }
+        //}
 
         // =======================================================================
         // ==============  MANAGER PROESS SAME WITH THE INSPECTORS ==============
@@ -908,7 +912,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         {
             // 1. Get the RegNo for the ID update
             // 2. Press the Approve Button to update the ReportStatus to Approved or Revise
-            // 3.  Send A email when Update is Done Approve or Revise
+            // 3.  Send A email when Update is Done Approve or Revised
             // Option add An Remarks on the Revise to Notify the Process Owner On what to revise
             try
             {

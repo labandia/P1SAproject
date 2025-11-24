@@ -35,13 +35,12 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
         //    "person3@example.com"
         //};
 
-        public async Task<List<string>> GetAllRecepients()
+        public async Task<List<UsersModel>> GetAllRecepients()
         {
             var data = await _user.GetAllusers() ?? new List<UsersModel>();
 
             var filterbyProj = data
-                .Where(res => res.Project_ID == 10 && !string.IsNullOrEmpty(res.Email))
-                .Select(sel => sel.Email).ToList();
+                .Where(res => res.Project_ID == 10 && !string.IsNullOrEmpty(res.Email)).ToList();
 
             return filterbyProj;
         }
@@ -254,6 +253,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
         {
            try
             {
+
                 var emailCount = await GetStockSendEmailLogs();
                 bool anySent = false;
 
@@ -268,23 +268,49 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                     // get the latest log send email
                     var latestLog = emailCount
                          .Where(res =>
-                             res.EmailSent == recepient)
+                             res.EmailSent == recepient.Email)
                          .OrderByDescending(res => res.StockLogId)
-                         .FirstOrDefault();
+                        .FirstOrDefault();
 
-                    
+
 
 
 
                     // Gets the last sent date 
                     DateTime? lastSentAt = latestLog?.SentAt;
 
-                    // strict 4-hour rule 
-                    // it skips when its not in the 4 hours pass
-                    if (lastSentAt != null && DateTime.Now < lastSentAt.Value.AddHours(4))
+                    // ============================
+                    // ROLE-BASED SEND RULES
+                    // ============================
+
+
+                    // ROLE 3 → ONLY ONCE PER WEEK (MONDAY)
+                    if(recepient.Role_ID == 3)
                     {
-                        continue;
+                        // Only send on Monday
+                        if (DateTime.Now.DayOfWeek != DayOfWeek.Monday)
+                            continue;
+
+                        // If already sent this Monday → skip
+                        if (lastSentAt != null &&
+                            lastSentAt.Value.Date == DateTime.Now.Date)
+                            continue;
                     }
+                    else
+                    {
+                        // OTHER ROLES → ONCE PER DAY AT 10:00 AM
+                        DateTime today10AM = DateTime.Today.AddHours(10);
+
+                        // Do not send before 10:00 AM
+                        if (DateTime.Now < today10AM)
+                            continue;
+
+                        // If already sent today → skip
+                        if (lastSentAt != null &&
+                            lastSentAt.Value.Date == DateTime.Now.Date)
+                            continue;
+                    }
+
 
                     //Debug.WriteLine($"[{recepient}] Sending email...");
                     // check active alerts
@@ -304,7 +330,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                         Sender = strSender,
                         BCC = "",
                         Body = htmlBody,
-                        Recipient = recepient
+                        Recipient = recepient.Email
                     };
                     // send email here...
                     // EMAIL SAVE TO THE DATABASE
@@ -318,7 +344,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                             VALUES (@EmailSent, @Sequence)",
                             new
                             {
-                                EmailSent = recepient,
+                                EmailSent = recepient.Email,
                                 Sequence = 1
                             });
                     }

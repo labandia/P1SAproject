@@ -42,7 +42,9 @@
             <tr>
                 <th style="width: 20%; text-align: left; padding-left: 1.5em !important;"><i class="fa-solid fa-screwdriver-wrench"></i> <span style="margin-left: .5em;">Part No. / Partname</span> </th>
                 <th><i class="fa-regular fa-user"></i> <span style="margin-left: .5em;">Supplier</span>  </th>
-                <th><i class="fa-solid fa-database"></i> <span style="margin-left: .5em;">Require Qty</span>  </th>
+                <th><i class="fa-solid fa-database"></i> <span style="margin-left: .5em;">Lead Time</span>  </th>
+                <th  style="width: 10%;" ><i class="fa-solid fa-database"></i> <span style="margin-left: .5em;">MOQ(Mininum order quantity)</span>  </th>
+                <th><i class="fa-solid fa-database"></i> <span style="margin-left: .5em;">Usage Qty</span>  </th>
                 <th><i class="fa-regular fa-money-bill-1"></i> <span style="margin-left: .5em;">Unit Cost</span>  </th>
                 <th><i class="fa-regular fa-money-bill-1"></i> <span style="margin-left: .5em;">Total Cost</span>  </th>
                 <th> <span style="margin-left: .5em;">Action</span>  </th>
@@ -285,14 +287,14 @@
                              </td>
 
                              <td data-cell="Supplier">${row.Supplier ? row.Supplier : "-"}</td>
+                             <td data-cell="Supplier" style='font-weight: 600;'>${row.LeadTime ? row.LeadTime : "-"}</td>
+                             <td data-cell="Supplier" style='font-weight: 600;'>${row.MOQ ? row.MOQ : "-"}</td>
                              <td data-cell="Supplier" style='font-weight: 600;'>${row.RequireQty ? row.RequireQty : "-"}</td>
                              <td data-cell="UnitUSD" style='text-align: center; '>
-                                 <p>Dollar ($): <strong> ${row.UnitCost_PHP }</strong>  </p>
-                                 <p>Pesos (₱): <strong> ${roundedNum}</strong>  </p>
+                                 <p><strong> ${row.UnitCost_PHP }</strong>  </p>
                               </td>
                              <td data-cell="UnitUSD" style='text-align: center;'>
-                                 <p>Dollar ($): <strong> ${row.TotalPHPCost}</strong>  </p>
-                                 <p>Pesos (₱):  <strong> ${totalPHPCost.toFixed(2)}</strong>  </p>
+                                 <p><strong> ${row.TotalPHPCost}</strong>  </p>
                              </td>
                              <td data-cell="Delete" >
                                   <div class='flex_center'>

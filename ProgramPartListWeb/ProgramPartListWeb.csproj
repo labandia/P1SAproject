@@ -800,8 +800,11 @@
     <Content Include="Areas\PC\Views\Patrol\DepartmentApproval.cshtml" />
     <Content Include="Areas\PC\Views\Patrol\CompleteRegistration.cshtml" />
     <Content Include="Areas\PC\Views\Patrol\DivisionApproval.cshtml" />
+    <Content Include="Areas\Hydroponics\Views\Hydro\InventSummary.cshtml" />
     <None Include="Content\Images\.editorconfig" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
+    <Content Include="Scripts\chart.js" />
+    <Content Include="Scripts\chart.min.js" />
     <Content Include="Scripts\circularProgressBar.min.js" />
     <Content Include="Scripts\jquery-3.7.1.js" />
     <Content Include="Scripts\jquery-3.7.1.min.js" />
@@ -957,6 +960,8 @@
     <Content Include="Scripts\Shared\bootstrap.esm.min.js" />
     <Content Include="Scripts\Shared\bootstrap.js" />
     <Content Include="Scripts\Shared\bootstrap.min.js" />
+    <Content Include="Scripts\Shared\chart.js" />
+    <Content Include="Scripts\Shared\chart.min.js" />
     <Content Include="Scripts\Shared\jquery-3.7.1.js" />
     <Content Include="Scripts\Shared\jquery-3.7.1.min.js" />
     <Content Include="Scripts\Shared\jquery-3.7.1.slim.js" />

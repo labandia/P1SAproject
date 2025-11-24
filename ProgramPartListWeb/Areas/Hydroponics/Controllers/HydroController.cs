@@ -623,7 +623,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
 
                 if(completionrate == 100)
                 {
-                    await _chambers.UpdateRequestStatus(ID, "Completed", "");
+                    await _chambers.UpdateRequestStatus(ID, "Completed", "", "", 0);
                 } 
 
 
@@ -638,11 +638,11 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> ChangeStatusRequest(string OrderID, string Status, string EditRemarks)
+        public async Task<ActionResult> ChangeStatusRequest(string OrderID, string Status, string EditRemarks, string EditCustomerName, double EditAssemblyStats)
         {
             try
             {
-                bool result = await _chambers.UpdateRequestStatus(OrderID, Status, EditRemarks);
+                bool result = await _chambers.UpdateRequestStatus(OrderID, Status, EditRemarks, EditCustomerName, EditAssemblyStats);
                 if (!result) return JsonPostError("Update failed.", 500);
 
 
@@ -697,6 +697,8 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         public ActionResult RequestStock() => View();
         // GET: Hydroponics/UserManage
         public ActionResult TransactionHistory() => View();
+        // GET: Hydroponics/RequestStock
+        public ActionResult InventSummary() => View();
         // GET: Hydroponics/UserManage
         public ActionResult UserManage() => View();
         // GET: Hydroponics/PartList

@@ -1,0 +1,129 @@
+﻿
+@{
+    ViewBag.Title = "InventSummary";
+    Layout = "~/Areas/Hydroponics/Views/Shared/HydroPartsLayout.cshtml";
+}
+
+<h2 style="text-align: center; margin-top: .5em;">
+    San-Hydro App Parts Inventory
+</h2>
+
+<div id="chartContainer">
+    <canvas id="partChart" height="2500"></canvas>
+</div>
+
+
+
+<script src="~/Scripts/chart.js"></script>
+
+<script>
+    let Inventlist = [];
+    // ============================
+    //  SAMPLE DATA
+    //  Replace this with your DB result
+    // ============================
+    const dataList = [
+        { PartNo: "PN-001", Required: 120, Inventory: 90 },
+        { PartNo: "PN-002", Required: 80, Inventory: 100 },
+        { PartNo: "PN-003", Required: 150, Inventory: 130 },
+        { PartNo: "PN-004", Required: 60, Inventory: 20 },
+    ];
+
+     const InventoryTable = async () => {
+         let res = await fetchData('@Url.Action("GetHydroInventory", "Hydro")', {});
+         if (res && res.Success) {
+             Inventlist = res.Data;
+
+             console.log(Inventlist);
+
+
+             // ============================
+             //  CONVERT to Chart.js format
+             // ============================
+             const partNumbers = Inventlist.map(x => x.PartName);
+             const requiredQty = Inventlist.map(x => x.ReorderLevel);
+             const inventoryQty = Inventlist.map(x => x.CurrentQty);
+
+             // ============================
+             //  DRAW CHART
+             // ============================
+             const ctx = document.getElementById('partChart').getContext('2d');
+             document.getElementById("partChart").height = partNumbers.length * 10;
+             new Chart(ctx, {
+                 type: 'bar',
+                 data: {
+                     labels: partNumbers,
+                     datasets: [
+                         {
+                             label: 'Qty Required per unit',
+                             data: requiredQty,
+                             categoryPercentage: 0.8,
+                             barPercentage: 0.8,
+                             backgroundColor: 'rgba(99, 193, 255, 0.8)',
+                             borderColor: 'rgb(99, 167, 255)',
+                             borderWidth: 1
+                         },
+                         {
+                             label: 'Inventory Qty',
+                             data: inventoryQty,
+                             categoryPercentage: 0.8,
+                             barPercentage: 0.8,
+                             backgroundColor: 'rgba(54, 235, 130, 0.8)',
+                             borderColor: 'rgba(54, 235, 130, 1)',
+                             borderWidth: 1
+                         }
+                     ]
+                 },
+                 options: {
+                     indexAxis: 'y',
+
+                     // ============================
+                     //        FONT SETTINGS
+                     // ============================
+                     plugins: {
+                         legend: {
+                             labels: {
+                                 font: {
+                                     size: 14,
+                                     family: "Manrope",
+                                     weight: "bold"
+                                 },
+                                 padding: 20
+                             }
+                         }
+                     },
+
+                     scales: {
+                         y: {
+                             ticks: {
+                                 align: 'start',
+                                 padding: 10,
+                                 color: "#333333",     
+                                 font: {
+                                     size: 12,
+                                     family: "Manrope",
+                                     weight: "bold"
+                                 }
+                             }
+                         },
+                         x: {
+                             ticks: {
+                                 font: {
+                                     size: 12,
+                                     family: "Arial",
+                                     weight: "normal"
+                                 }
+                             }
+                         }
+                     }
+                 }
+             });
+         }
+     }
+
+
+
+    
+
+    InventoryTable();
+</script>

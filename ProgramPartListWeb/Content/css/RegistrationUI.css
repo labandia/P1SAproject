@@ -563,6 +563,23 @@ form p{
     }
 
 
+    .floatingSend{
+        width: 70px;
+        height: 70px;
+        display: block;
+        border-radius: 50%;
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        transition: all .5s ease-in;
+    }
+
+    .floatingSend:hover{
+        background: rgba(0, 0, 0, 0.8) !important;
+}
+    }
+
+
   .float-container {
     position: fixed;
     bottom: 110px;

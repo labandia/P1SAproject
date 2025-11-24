@@ -1665,6 +1665,12 @@ header .count2 {
     color: #856404;
 }
 
+.readiness-Planned {
+    background: #cde4ff;
+    color: #044785;
+}
+
+
 .readiness-not-ready {
     background: #f8d7da;
     color: #721c24;
@@ -1737,3 +1743,51 @@ header .count2 {
         .btn-decrement:hover {
             background-color: #d35400 !important;
         }
+
+
+
+
+
+
+#chartContainer {
+    width: 100%;
+}
+
+
+
+.table-containerV2 {
+    width: 100%;
+    overflow-x: auto; /* Enable horizontal scroll */
+    overflow-y: hidden;
+    white-space: nowrap; /* Prevent wrapping */
+}
+
+#chamberOrdersTable {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 700px; /* Ensures scroll when too many columns */
+}
+
+    #chamberOrdersTable th,
+    #chamberOrdersTable td {
+        padding: 1em !important;
+        border: 1px solid #ccc;
+        text-align: left;
+        min-width: 120px; /* Force equal visual width */
+    }
+
+        #chamberOrdersTable th.sortable {
+            cursor: pointer;
+        }
+th.sortable {
+    cursor: pointer;
+    user-select: none;
+}
+
+    th.sortable.asc::after {
+        content: " ▲";
+    }
+
+    th.sortable:not(.asc)::after {
+        content: " ▼";
+    }

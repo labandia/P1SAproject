@@ -11,85 +11,89 @@
 @*<button id="Showadd" class="floatBtn" type="button"><i class="fa-solid fa-file-circle-plus"></i></button>*@
 
 
-<div class="filters flex_space">
-    <div class="flex_align">
-        <div class="filter-group">
-            <strong>Chamber type: </strong>
-            <div class="select-container">
-                <select id="categoryFilter">
-                    <option value="all">All Types</option>
-                    <option value="SHIBAKAWA">SHIBAKAWA</option>
-                    <option value="NUPON">NUPON</option>
-                    <option value="SLIM TYPE">SLIM TYPE</option>
-                </select>
+<section style="padding: .5em 0 3em;">
+    <div class="filters flex_space">
+        <div class="flex_align">
+            <div class="filter-group">
+                <strong>Chamber type: </strong>
+                <div class="select-container">
+                    <select id="categoryFilter">
+                        <option value="all">All Types</option>
+                        <option value="SHIBAKAWA">SHIBAKAWA</option>
+                        <option value="NUPON">NUPON</option>
+                        <option value="SLIM TYPE">SLIM TYPE</option>
+                    </select>
+                </div>
+
+
+
+            </div>
+            <div class="filter-group">
+                <strong>Status : </strong>
+                <div class="select-container">
+                    <select id="stockStatusFilter">
+                        <option value="all">All Status</option>
+                        <option value="ONGOING">Ongoing</option>
+                        <option value="COMPLETE">Completed</option>
+                        <option value="PLANNED">For Planned</option>
+                        <option value="SHIPPED">For Shipping</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <strong>Date Range: </strong>
+                <div class="flex_align">
+                    <input type="date" id="startDate">
+                    <input type="date" id="endDate">
+                </div>
             </div>
 
 
+            @*<div class="filter-group">
+                    <div class="Inputcontainer">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" placeholder="Search Request..." id="inventorySearch" autocomplete="off" />
+                        <div class="line"></div>
+                    </div>
 
+                </div>*@
         </div>
-        <div class="filter-group">
-            <strong>Status : </strong>
-            <div class="select-container">
-                <select id="stockStatusFilter">
-                    <option value="all">All Status</option>
-                    <option value="Ongoing">Ongoing</option>
-                    <option value="Completed">Completed</option>
-                    <option value="For Shipped">For Shipping</option>
-                </select>
-            </div>
-        </div>
 
         <div class="filter-group">
-            <strong>Date Range: </strong>
-            <div class="flex_align">
-                <input type="date" id="startDate">
-                <input type="date" id="endDate">
-            </div>
+            <button id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-file-circle-plus"></i> New Request</button>
         </div>
 
 
-        @*<div class="filter-group">
-            <div class="Inputcontainer">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" placeholder="Search Request..." id="inventorySearch" autocomplete="off" />
-                <div class="line"></div>
-            </div>
-
-        </div>*@
+    </div>
+    <div class="table-containerV2">
+        <table id="chamberOrdersTable">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Chamber Type</th>
+                    <th class="sortable" data-column="3">Order Date</th>
+                    <th>Target Date</th>
+                    <th>PIC</th>
+                    <th>CustomerName</th>
+                    <th>Parts Status</th>
+                    <th>Assembly Status</th>
+                    <th>Status</th>
+                    <th>Remarks</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="chamberOrdersTableBody">
+                <!-- Dynamic content -->
+            </tbody>
+        </table>
     </div>
 
-    <div class="filter-group">
-        <button id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-file-circle-plus"></i> New Request</button>
-    </div>
-  
-
-</div>
-
-
-<table id="chamberOrdersTable">
-    <thead>
-        <tr>
-            <th>Order ID</th>
-            <th>Chamber Type</th>
-            <th>Quantity</th>
-            <th>Order Date</th>
-            <th>Target Date</th>
-            <th>PIC</th>
-            <th>CustomerName</th>
-            <th>Parts </th>
-            <th>Status</th>
-            <th>Remarks</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody id="chamberOrdersTableBody">
-        <!-- Dynamic content -->
-    </tbody>
-</table>
+</section>
 
 
 @*<div id="paginationV2" class="pagination-container">
-</div>*@
+    </div>*@
 
 <div class="MasterlistWrap_footer ">
     <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
@@ -130,10 +134,15 @@
                         <input type="number" value="1" placeholder="type Ojt registration No." name="Quantity" id="Quantity" min="1" required />
                     </div>
 
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Order Date <small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <input type="date" name="OrderDate" id="OrderDate" required />
+                    </div>
+
 
                     <div class="form_group col-12 col-sm-12">
                         <label>Target Completion Date <small style="color: #a81818; font-weight: 600;">*</small></label>
-                        <input type="date" placeholder="type Ojt registration No." name="TargetDate" id="TargetDate" required />
+                        <input type="date" name="TargetDate" id="TargetDate" required />
                     </div>
 
 
@@ -197,10 +206,23 @@
                         <div class="select-container">
                             <select id="Status" name="Status">
                                 <option value="">Select Status</option>
-                                <option value="COMPLETED">COMPLETED</option>
-                                <option value="ONGOING">ONGOING</option>
+                                <option value="COMPLETED">Completed</option>
+                                <option value="ONGOING">Ongoing</option>
                                 <option value="For Shipped">For Shipped</option>
+                                <option value="PLANNED">For Planned</option>
                             </select>
+                        </div>
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Customer Name </label>
+                        <input type="text" placeholder="Enter Customer name." name="EditCustomerName" id="EditCustomerName" required />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Assembly Status : </label>
+                        <div>
+                            <input type="number" placeholder="Enter Percentage rate" name="EditAssemblyStats" id="EditAssemblyStats" min="0" max="100" />
                         </div>
                     </div>
 
@@ -241,6 +263,36 @@
 
     const addforms = document.getElementById("addnewform");
     const changeforms = document.getElementById("Statusnewform");
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const table = document.getElementById("chamberOrdersTable");
+        const tbody = document.getElementById("chamberOrdersTableBody");
+
+        // MM/DD/YYYY parser
+        function parseUSDate(dateStr) {
+            const [month, day, year] = dateStr.split("/");
+            return new Date(`${year}-${month}-${day}`);
+        }
+
+        document.querySelectorAll("#chamberOrdersTable th.sortable").forEach(header => {
+            header.addEventListener("click", () => {
+                const colIndex = parseInt(header.dataset.column);
+                const rows = Array.from(tbody.querySelectorAll("tr"));
+
+                const isAsc = header.classList.toggle("asc");
+
+                rows.sort((a, b) => {
+                    const dateA = parseUSDate(a.children[colIndex].innerText.trim());
+                    const dateB = parseUSDate(b.children[colIndex].innerText.trim());
+                    return isAsc ? dateA - dateB : dateB - dateA;
+                });
+
+                rows.forEach(row => tbody.appendChild(row));
+            });
+        });
+    });
+
+
 
     // ========================== LOAD REQUEST DATA ==============================
     const RequesDataList = async () => {
@@ -298,13 +350,20 @@
             else if (percent >= 40) barColor = "#f39c12"; // yellow
 
             let statsCss = "";
+            let statsname = "";
 
-            if (row.RequestStatus == 'Completed') {
-                statsCss = 'readiness-ready'
-            } else if (row.RequestStatus == 'For Shipped') {
+            if (row.RequestStatus == 'COMPLETED') {
+                statsCss = 'readiness-ready';
+                statsname = 'Completed';
+            } else if (row.RequestStatus == 'SHIPPED') {
                 statsCss = 'readiness-warning'
+                statsname = 'For Shipped';
+            } else if (row.RequestStatus == 'PLANNED') {
+                statsCss = 'readiness-Planned'
+                statsname = 'For Planned';
             } else {
                 statsCss = 'readiness-not-ready'
+                statsname = 'Ongoing';
             }
 
             const daysRemaining = calculateDaysRemaining(row.TargetDate);
@@ -314,8 +373,7 @@
             TableData.append(`
                 <tr >
                     <td><strong>${row.OrderID ?? "-"}</strong></td>
-                    <td>${row.ChamberName ?? "-"}</td>
-                    <td>${row.ChambersOrdered ?? 0} unit(s)</td>
+                    <td>${row.ChamberName ?? "-"} <br /> ${row.ChambersOrdered ?? 0} unit(s)</td>
                     <td>${row.OrderDate ?? "-"}</td>
                     <td>
                         ${row.TargetDate ?? "-"}
@@ -330,15 +388,17 @@
                         </div>
                         <span style="font-size:.75rem;">${percent}% Complete</span>
                     </td>
+                       <td style='text-align: center;'>${row.AssemblyStats ?? "0.0"} %</td>
                     <td>
                         <span class='readiness-badge ${statsCss}'>
-                            ${row.RequestStatus ?? "-"}
+                            ${statsname}
                         </span>
                     </td>
+
                     <td>${row.Remarks ?? "-"}</td>
                     <td class="order-actions">
 
-                       
+
                         <div class="flex_align">
                             <button class="RequestRow text-secondary bg-white" id="Details_${row.OrderID}">
                                 <i class="fas fa-eye"></i>
@@ -438,6 +498,8 @@
         var getStats = requestData.filter(res => res.OrderID === rowId);
         if (getStats) {
             $("#currentOrderStatus").val(getStats[0].RequestStatus);
+            $("#EditCustomerName").val(getStats[0].CustomerName);
+            $("#EditAssemblyStats").val(getStats[0].AssemblyStats);
             $("#EditRemarks").val(getStats[0].Remarks);
             $("#OrderID").val(getStats[0].OrderID);
             $("#Status").val(getStats[0].RequestStatus);

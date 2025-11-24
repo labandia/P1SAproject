@@ -26,7 +26,8 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                         o.PIC,
                                         o.ChamberID, 
 										o.CustomerName, 
-                                        o.Remarks
+                                        o.Remarks, 
+                                        o.AssemblyStats
                                     FROM Hydro_Orders o
                                     INNER JOIN Hydro_ChamberMasterlist m 
                                         ON m.ChamberID = o.ChamberID
@@ -70,6 +71,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                     d.CompletionPercent,
 									o.CustomerName,
                                     o.Remarks,
+                                    o.AssemblyStats,
                                     ct.PHPTotal * o.ChambersOrdered AS TotalPrice
                                 FROM OrdersCTE o
                                 LEFT JOIN DetailsCTE d ON o.OrderID = d.OrderID
@@ -107,7 +109,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 	                            cm.ChamberName,
                                 ROUND(SUM((i.Unit_Price) * c.QuantityPerChamber), 0) AS UnitCost_PHP,
                                 ROUND(SUM(c.QuantityPerChamber * (i.Unit_Price * 58)), 0) AS TotalPHPCost, 
-	                            MIN(FLOOR(ISNULL(s.CurrentQty,0) / c.QuantityPerChamber)) AS MaxBuildableChambers,
+	                            MIN(FLOOR(ISNULL(s.CurrentQty,0) / NULLIF(c.QuantityPerChamber,0))) AS MaxBuildableChambers,
                                 (SELECT COUNT(*) FROM Hydro_ChamberParts p
 	                            WHERE p.ChamberID = cm.ChamberID) as TotalParts
                             FROM Hydro_ChamberParts c
@@ -165,7 +167,9 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 	                            CONCAT(CAST(ROUND(c.QuantityPerChamber, 0) AS INT), ' ', i.Unit) AS RequireQty,
 	                            i.Unit_Price as UnitCost_PHP,
 	                            c.QuantityPerChamber * (i.Unit_Price * 58) as TotalPHPCost,
-                                i.ImageParts
+                                i.ImageParts, 
+                                i.LeadTime, 
+								i.MOQ
                             FROM Hydro_ChamberParts c
                             INNER JOIN Hydro_InventoryParts i ON c.PartNo = i.PartNo
                             INNER JOIN Hydro_CategoryParts cp ON cp.CategoryID = i.CategoryID
@@ -176,11 +180,11 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
         public Task<List<ChamberTypeList>> GetChamberTypes() => SqlDataAccess.GetData<ChamberTypeList>("SELECT ChamberID, ChamberName FROM Hydro_ChamberMasterlist");
 
 
-        public Task<bool> UpdateRequestStatus(string OrderID, string RequestStatus, string remarks)
+        public Task<bool> UpdateRequestStatus(string OrderID, string RequestStatus, string remarks, string EditCustomerName, double EditAssemblyStats)
         {
-            string strsql = $@"UPDATE Hydro_Orders SET Status =@Status, Remarks =@Remarks
+            string strsql = $@"UPDATE Hydro_Orders SET Status =@Status, Remarks =@Remarks, CustomerName =@CustomerName,  AssemblyStats =@AssemblyStats
                                WHERE OrderID =@OrderID";
-            return SqlDataAccess.UpdateInsertQuery(strsql, new { OrderID = OrderID, Status = RequestStatus, Remarks = remarks });  
+            return SqlDataAccess.UpdateInsertQuery(strsql, new { OrderID = OrderID, Status = RequestStatus, Remarks = remarks, CustomerName = EditCustomerName, AssemblyStats = EditAssemblyStats });  
         }
 
         public Task<bool> UpdateUnitCostChamber(int ChamberPartID, string UnitCost_PHP)
@@ -196,8 +200,8 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             // GENERATE A UNIQUE ID FOR THE ORDER
             string OrderID = GlobalUtilities.GenerateID("CR");
 
-            string strsql = $@"INSERT INTO Hydro_Orders(OrderID, ChamberID, OrderedBy, Quantity, PIC, TargetDate, CustomerName, Remarks)
-                               VALUES(@OrderID, @ChamberID, @OrderedBy, @Quantity, @PIC, @TargetDate, @CustomerName, @Remarks)";
+            string strsql = $@"INSERT INTO Hydro_Orders(OrderID, ChamberID, OrderedBy, Quantity, PIC, TargetDate, OrderDate, CustomerName, Remarks)
+                               VALUES(@OrderID, @ChamberID, @OrderedBy, @Quantity, @PIC, @TargetDate, @OrderDate, @CustomerName, @Remarks)";
 
             bool result = await SqlDataAccess.UpdateInsertQuery(strsql, new
             {
@@ -207,6 +211,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                 item.Quantity,
                 item.PIC,
                 item.TargetDate, 
+                item.OrderDate,
                 item.CustomerName, 
                 item.Remarks
             });

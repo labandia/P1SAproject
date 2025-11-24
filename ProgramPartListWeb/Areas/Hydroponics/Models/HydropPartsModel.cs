@@ -18,6 +18,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         private string _RequestStatus;
         private string _PIC;
         private string _MaterialStatus;
+        private double _AssemblyStats;
         private double _CompletionPercent;
         private string _CustomerName;
         private string _Remarks;
@@ -53,6 +54,11 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         {
             get => _ChambersOrdered;
             set => _ChambersOrdered = value;
+        }
+        public double AssemblyStats
+        {
+            get => _AssemblyStats;
+            set => _AssemblyStats = value;
         }
         public string RequestStatus
         {
@@ -249,7 +255,8 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         private double _UnitCost_PHP;
         private double _TotalPHPCost;
         private string _ImageParts;
-
+        private string _LeadTime;
+        private int _MOQ;
 
         public int ChamberPartID
         {
@@ -313,6 +320,17 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         {
             get => _ImageParts;
             set => _ImageParts = value;
+        }
+
+        public string LeadTime
+        {
+            get => _LeadTime;
+            set => _LeadTime = value;
+        }
+        public int MOQ
+        {
+            get => _MOQ;
+            set => _MOQ = value;
         }
     }
     public class ChamberTypeList
@@ -582,6 +600,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         public int Quantity { get; set; }
         public string CustomerName { get; set; }
         public string TargetDate { get; set; }
+        public string OrderDate { get; set; }
         public string Remarks { get; set; }
     }
 

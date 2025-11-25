@@ -143,6 +143,7 @@ namespace PMACS_V2.Areas.P1SA.Models
         public int Status { get; set; }
         public string Remarks { get; set; }
         public string Mincharge { get; set; }
+        public string ProcessID { get; set; }
     }
 
     public class DieMoldDailyInput

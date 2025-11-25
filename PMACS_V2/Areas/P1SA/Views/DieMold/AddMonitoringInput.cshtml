@@ -1,0 +1,167 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddMonitoringInput</title>
+    <link href="~/Content/css/MoldDie.css" rel="stylesheet" />
+</head>
+<body>
+    <header class="heads">
+        <div class="heads_container">
+            <a href="/P1SA/DieMold/DieMoldLife"><i class="fa-solid fa-arrow-left"></i> <span>  Back to Main menu</span> </a>
+            
+        </div>
+    </header>
+
+
+    <div class="DieMainContainer">
+        <!-- Left Panel - Form -->
+        <div class="left-panel">
+            <div class="Processcard">
+                <div class="Processcard_header">
+                    <h2 class="Processcard_title">Process Information</h2>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label required" for="processSelect">Select Process</label>
+                    <div class="select-container">
+                        <select class="form-control" id="processSelect">
+                            <option value="">-- Select Process --</option>
+                            <option value="ACM">ACM</option>
+                            <option value="Mold frame">Mold frame</option>
+                            <option value="Mold Impeller">Mold Impeller</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="search-section">
+                    <div class="search-container">
+                        <input type="text" id="searchInput" class="form-control search-input" placeholder="Enter part number to search (e.g., 002886060-01)">
+                        <button id="searchButton" class="btn btn-primary">
+                            <i class="fa-solid fa-search"></i>
+                            <span>Search</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+            <form id="addDailyForm" class="addformcontainer" autocomplete="off">
+                <div class="form-group">
+                    <label class="form-label required" for="dateInput">Date Input</label>
+                    <input type="date" class="form-control" id="dateInput" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="cycleShot">Cycle Shot</label>
+                    <input type="number" class="form-control" id="cycleShot" placeholder="Enter Cycle Shot">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="machineNo">Machine No</label>
+                    <input type="number" class="form-control" id="machineNo" placeholder="Enter Machine Number">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="remarks">Remarks</label>
+                    <div class="select-container">
+                        <select class="form-control" id="remarks">
+                            <option value="N/A">N/A</option>
+                            <option value="Shot cycle cleaning">Shot cycle cleaning</option>
+                            <option value="Die Cleaning Due To 1 Month No operation">Die Cleaning Due To 1 Month No operation</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="maintenanceIncharge">Maintenance Incharge</label>
+                    <div class="select-container">
+                        <select class="form-control" id="maintenanceIncharge">
+                            <option value="N.AMLOG">N.AMLOG</option>
+                            <option value="J.ORO">J.ORO</option>
+                            <option value="R.AGACOSCOS">R.AGACOSCOS</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <div class="required-note">
+                        <small>All fields marked with <span class="required"></span> must be filled out</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fa-regular fa-floppy-disk"></i>
+                        <span>Save Record</span>
+                    </button>
+                </div>
+            </form>
+
+        </div>
+
+        <!-- Right Panel - Data Display -->
+        <div class="right-panel">
+            <div class="Detailcard">
+                <div class="Detailcard_header">
+                    <h2 class="Detailcard_title">Part Information</h2>
+                </div>
+
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div class="summary-label">Part Number</div>
+                        <div class="summary-value" id="partNumber">-</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Model Name</div>
+                        <div class="summary-value" id="modelName">-</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Last Cycle Shot</div>
+                        <div class="summary-value" id="lastCycleShot">-</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Status</div>
+                        <div class="summary-value" id="partStatus">
+                            <span class="status-badge status-inactive">No Data</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Shot Cycle</th>
+                            <th>Total</th>
+                            <th>Machine No.</th>
+                            <th>Operation</th>
+                            <th>Maintenance</th>
+                            <th>Remarks</th>
+                            <th>Incharge</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dieMoldMasterlist">
+                        <!-- Data will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+
+
+ 
+</body>
+</html>

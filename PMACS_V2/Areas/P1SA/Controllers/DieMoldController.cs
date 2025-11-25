@@ -106,13 +106,12 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         public async Task<ActionResult> GetMoldDieDailyList(int Months, int Year, string ProcessID, int Days)
         {
 
-            Debug.WriteLine("Already inside : " + Days);
             var data = await _die.GetDailyMoldData(Months, Days,  Year, ProcessID) ?? new List<DieMoldDaily>();
 
             if (data == null || !data.Any())
                 return JsonNotFound("No Mold Die Daily data found");
 
-            return JsonSuccess(data);
+            return JsonSuccess(data, "Add Data Succesfully");
         }
 
 
@@ -357,6 +356,8 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         // GET: P1SA/DieMold
         public ActionResult DieMoldLife() =>  View();
         public ActionResult DiePressLife() => View();
+
+        public ActionResult AddMonitoringInput() => View();
         // GET: P1SA/DieMold/DiePressMonitorDetails/:ID
         public async Task<ActionResult> DiePressMonitorDetails(int ID)
         {

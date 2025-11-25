@@ -255,41 +255,98 @@
     const pageSize = 10;
 
     let today = new Date();
-    let dd = String(today.getDate()).padStart(2, '0');
-    let mm = String(today.getMonth() + 1).padStart(2, '0');
-    let yyyy = today.getFullYear();
-    let todayStr = `${yyyy}-${mm}-${dd}`;
-    document.getElementById("TargetDate").setAttribute("min", todayStr);
+    //let dd = String(today.getDate()).padStart(2, '0');
+    //let mm = String(today.getMonth() + 1).padStart(2, '0');
+    //let yyyy = today.getFullYear();
+    //let todayStr = `${yyyy}-${mm}-${dd}`;
+    //document.getElementById("TargetDate").setAttribute("min", todayStr);
 
     const addforms = document.getElementById("addnewform");
     const changeforms = document.getElementById("Statusnewform");
 
+
+
+
+
+
     document.addEventListener("DOMContentLoaded", () => {
-        const table = document.getElementById("chamberOrdersTable");
+        const container = document.querySelector(".table-containerV2");
+        let isDown = false;
+        let startX, startY, scrollLeft, scrollTop;
+
+        container.addEventListener("mousedown", (e) => {
+            isDown = true;
+            container.classList.add("dragging");
+            startX = e.pageX - container.offsetLeft;
+            startY = e.pageY - container.offsetTop;
+            scrollLeft = container.scrollLeft;
+            scrollTop = container.scrollTop;
+        });
+
+        container.addEventListener("mouseleave", () => {
+            isDown = false;
+            container.classList.remove("dragging");
+        });
+
+        container.addEventListener("mouseup", () => {
+            isDown = false;
+            container.classList.remove("dragging");
+        });
+
+        container.addEventListener("mousemove", (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+
+            const x = e.pageX - container.offsetLeft;
+            const y = e.pageY - container.offsetTop;
+
+            const walkX = (x - startX) * 1.2;  // scroll speed
+            const walkY = (y - startY) * 1.2;
+
+            container.scrollLeft = scrollLeft - walkX;
+            container.scrollTop = scrollTop - walkY;
+        });
+
+
+
         const tbody = document.getElementById("chamberOrdersTableBody");
 
-        // MM/DD/YYYY parser
-        function parseUSDate(dateStr) {
-            const [month, day, year] = dateStr.split("/");
-            return new Date(`${year}-${month}-${day}`);
-        }
+        tbody.addEventListener("click", (e) => {
+            let row = e.target.closest("tr");
+            if (!row) return;
 
-        document.querySelectorAll("#chamberOrdersTable th.sortable").forEach(header => {
-            header.addEventListener("click", () => {
-                const colIndex = parseInt(header.dataset.column);
-                const rows = Array.from(tbody.querySelectorAll("tr"));
+            // Remove previous highlight
+            tbody.querySelectorAll("tr").forEach(r => r.classList.remove("selected-row"));
 
-                const isAsc = header.classList.toggle("asc");
-
-                rows.sort((a, b) => {
-                    const dateA = parseUSDate(a.children[colIndex].innerText.trim());
-                    const dateB = parseUSDate(b.children[colIndex].innerText.trim());
-                    return isAsc ? dateA - dateB : dateB - dateA;
-                });
-
-                rows.forEach(row => tbody.appendChild(row));
-            });
+            // Highlight clicked row
+            row.classList.add("selected-row");
         });
+
+        //const table = document.getElementById("chamberOrdersTable");
+        //const tbody = document.getElementById("chamberOrdersTableBody");
+
+        //// MM/DD/YYYY parser
+        //function parseUSDate(dateStr) {
+        //    const [month, day, year] = dateStr.split("/");
+        //    return new Date(`${year}-${month}-${day}`);
+        //}
+
+        //document.querySelectorAll("#chamberOrdersTable th.sortable").forEach(header => {
+        //    header.addEventListener("click", () => {
+        //        const colIndex = parseInt(header.dataset.column);
+        //        const rows = Array.from(tbody.querySelectorAll("tr"));
+
+        //        const isAsc = header.classList.toggle("asc");
+
+        //        rows.sort((a, b) => {
+        //            const dateA = parseUSDate(a.children[colIndex].innerText.trim());
+        //            const dateB = parseUSDate(b.children[colIndex].innerText.trim());
+        //            return isAsc ? dateA - dateB : dateB - dateA;
+        //        });
+
+        //        rows.forEach(row => tbody.appendChild(row));
+        //    });
+        //});
     });
 
 

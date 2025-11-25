@@ -1001,6 +1001,7 @@
     <Content Include="Views\P1SAportalweb\SampleView.cshtml" />
     <Content Include="Views\P1SAportalweb\Chat.cshtml" />
     <Content Include="Views\Stock\Chat.cshtml" />
+    <Content Include="Views\Shared\_SystemConfig.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -9,6 +9,7 @@
         <div class="MoldTitle">
             <h4>Molding Mold Die Life </h4>
             <small>Manage Mold die Monitoring</small>
+            <button id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-file-circle-plus"></i> Add Newadasdsadsa</button>
         </div>
         <div class="Mold__actions">
             @* MOLD SUMMARY *@
@@ -908,6 +909,12 @@
 
 
 <script type="text/javascript">
+    const addmodal = document.getElementById("Showadd");
+    addmodal.addEventListener('click', (e) => {
+        e.preventDefault();
+        //$("#AddProductModal").modal('show');
+        window.location.href = "/P1SA/DieMold/AddMonitoringInput";
+    });
     const currentMonth = new Date().getMonth();
     const currentYear = new Date().getFullYear();
 
@@ -1099,45 +1106,44 @@
 
 
    $("#AddDailyforms").on('submit', async (e) => {
-    e.preventDefault();
-    let formData = new FormData(e.target);
-
-    let checkduplicat = DailyData.find(item =>
-        item.PartNo === data.dailypartno &&
-        new Date(item.DateInput).toDateString() === new Date(data.DateInput).toDateString()
-    );
-    if (checkduplicat) {
-        Swal.fire({
-            icon: "error",
-            text: "Partnumber is already Input Today",
-            timer: 1500,
-            showConfirmButton: false
-        });
-        return;
-    }
-
+        e.preventDefault();
+        let formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+        let checkduplicat = DailyData.find(item =>
+            item.PartNo === data.dailypartno &&
+            new Date(item.DateInput).toDateString() === new Date(data.DateInput).toDateString()
+        );
+        if (checkduplicat) {
+            Swal.fire({
+                icon: "error",
+                text: "Partnumber is already Input Today",
+                timer: 1500,
+                showConfirmButton: false
+            });
+            return;
+        }
 
        let res = await postData('@Url.Action("AddDailyMoldDieMonitor", "DieMold")', data);
-    if (res.StatusCode === 201) {
-        Swal.fire({
-            title: "Success",
-            text: res.Message,
-            icon: "success",
-            confirmButtonColor: "#0d97c9",
-            timer: 1500
-        }).then(() => {
-            GetMoldDieDaily(dailyselect.value, currentYear, $("#DailyProcess").val());
-            $("#AddDailyforms")[0].reset();
-            $("#AddDailyMold").modal("hide");
-        });
-    } else {
-        Swal.fire({
-            icon: "error",
-            text: data.ToolNo + " is already Exist",
-            timer: 1500,
-            showConfirmButton: false
-        });
-    }
+       if (res && res.Success) {
+            Swal.fire({
+                title: "Success",
+                text: res.Message,
+                icon: "success",
+                confirmButtonColor: "#0d97c9",
+                timer: 1500
+            }).then(() => {
+                GetMoldDieDaily(dailyselect.value, GetRow, currentYear, $("#DailyProcess").val());
+                $("#AddDailyforms")[0].reset();
+                $("#AddDailyMold").modal("hide");
+            });
+        } else {
+            Swal.fire({
+                icon: "error",
+                text: data.ToolNo + " is already Exist",
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }
 });
 
 
@@ -1342,7 +1348,7 @@
         e.preventDefault();
         let month = e.target.value;
         $("#MonthHeader").text(months[month - 1]);
-        GetMoldDieMonth(month, currentYear, $("#MonitorProcess").val());
+        GetMoldDieMonth(month, GetRow,  currentYear, $("#MonitorProcess").val());
     })
 
     $("#yearselect").on('change', (e) => {
@@ -1350,13 +1356,13 @@
         let year = e.target.value;
         let month = $("#MonthHeader").val();
         $("#MonthHeader").text(months[month - 1]);
-        GetMoldDieMonth(month, year, $("#MonitorProcess").val());
+        GetMoldDieMonth(month, GetRow,  year, $("#MonitorProcess").val());
     });
 
     $("#DailyProcess").on('change', (e) => {
         e.preventDefault();
         let setMonth = parseInt(currentMonth) + 1;
-        GetMoldDieDaily(setMonth, currentYear, e.target.value);
+        GetMoldDieDaily(setMonth, GetRow,  currentYear, e.target.value);
     });
 
 
@@ -1653,7 +1659,7 @@
 
     const GetMoldDieDaily = async (month = setMonth, day = GetRow, year = currentYear, process = $("#ProcessID").val()) => {
 
-
+        console.log(`Months : ${month} - days : ${day} - Year : ${year} - Process : ${process}`);
 
        const id = loadingDisplay(2, 10);
         Loadingsteps(id, async () => {
@@ -1695,7 +1701,7 @@
              } else {
                  const loadData = `<tr>
                        <td colspan='10'>
-                           🔍 ${res.Message}
+                           🔍 ${res.message}
                        </td>
                    </tr>`;
 

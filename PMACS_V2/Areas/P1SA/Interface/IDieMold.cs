@@ -15,6 +15,7 @@ namespace PMACS_V2.Areas.P1SA.Interface
         Task<List<DieMoldSetNotal>> GetSummaryMoldData();
 
         Task<List<DieMoldDaily>> GetDailyMoldData(int month, int days,  int year, string process);
+        Task<List<DieMoldDaily>> GetDailyMoldHistoryData(string partnum, string processID);
         Task<DieMoldDaily> GetDailyLastMoldData(string partnum);
 
         // ===============================================

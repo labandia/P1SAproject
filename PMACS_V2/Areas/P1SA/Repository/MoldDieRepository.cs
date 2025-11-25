@@ -127,7 +127,8 @@ namespace PMACS_V2.Areas.P1SA.Repository
 	                    d.MachineNo, 
 	                    d.Status, 
 	                    d.Remarks, 
-	                    d.Mincharge
+	                    d.Mincharge, 
+                        ps.ProcessID
                     FROM DieMoldDaily d 
                     INNER JOIN DieMoldParts p ON d.PartNo = p.PartNo
                     	INNER JOIN DieMoldProcesses ps ON ps.PartNo = p.PartNo
@@ -666,6 +667,24 @@ namespace PMACS_V2.Areas.P1SA.Repository
             int UpdateStatus = 0; // 0 = Continue (default)
 
 
+            
+            //var partnuminfo = await GetDailyLastMoldData(mold.dailypartno);
+
+            //if (partnuminfo == null) return false;
+
+
+
+            //if(partnuminfo.ProcessID == "M002" && partnuminfo.ProcessID == "M003")
+            //{
+            //    if (newtotalshot >= 48000)
+            //    {
+            //        UpdateStatus = 2; // Complete (Cleaning)
+            //    }
+            //}
+
+
+
+
 
             // ===== Step 3: Range check for status update =====
             if (newtotalshot >= 48000)
@@ -732,6 +751,27 @@ namespace PMACS_V2.Areas.P1SA.Repository
         public Task<bool> UpdateDailyLastCycle(int recordID, int lastcycle)
         {
             return SqlDataAccess.UpdateInsertQuery("UPDATE DieMoldDaily SET Total =@Total  WHERE RecordID =@RecordID", new { RecordID = recordID, Total = lastcycle });
+        }
+
+        public Task<List<DieMoldDaily>> GetDailyMoldHistoryData(string partnum, string processID)
+        {
+            return SqlDataAccess.GetData<DieMoldDaily>($@"SELECT 
+                        d.RecordID,
+	                    FORMAT(d.DateInput, 'MM/dd/yy') as DateInput, 
+	                    d.PartNo, p.DimensionQuality, 
+	                    d.CycleShot, 
+	                    d.Total, 
+	                    d.MachineNo, 
+	                    d.Status, 
+	                    d.Remarks, 
+	                    d.Mincharge
+                    FROM DieMoldDaily d 
+                    INNER JOIN DieMoldParts p ON d.PartNo = p.PartNo
+                    	INNER JOIN DieMoldProcesses ps ON ps.PartNo = p.PartNo
+					WHERE 
+                        d.PartNo = @PartNo AND ps.ProcessID = @ProcessID
+					    AND d.IsDelete = 1
+                    ORDER BY RecordID DESC", new { PartNo = partnum, ProcessID = processID });
         }
     }
 }

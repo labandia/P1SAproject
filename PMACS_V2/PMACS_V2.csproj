@@ -435,6 +435,7 @@
     <Content Include="Content\css\live.min.css">
       <DependentUpon>live.css</DependentUpon>
     </Content>
+    <Content Include="Content\css\MoldDie.css" />
     <Content Include="Content\css\Planning.min.css">
       <DependentUpon>Planning.css</DependentUpon>
     </Content>
@@ -588,6 +589,7 @@
     <Content Include="Areas\PartsLocal\Views\PartsLocator\Index.cshtml" />
     <Content Include="Areas\PartsLocal\Views\PartsLocator\TrackParts.cshtml" />
     <Content Include="Areas\PartsLocal\Views\PartsLocator\ProductDetails.cshtml" />
+    <Content Include="Areas\P1SA\Views\DieMold\AddMonitoringInput.cshtml" />
     <None Include="bundleconfig.json" />
     <None Include="Scripts\Shared\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\chart.js" />

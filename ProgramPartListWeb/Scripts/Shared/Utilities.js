@@ -17,7 +17,8 @@ window.FetchAuthenticate = function (url, fdata) {
     }
 
     return makeRequest(token).then(function (res) {
-        var logout = localStorage.getItem('Logout');
+        var logout = localStorage.getItem('Logout') || window.AppConfig.loginUrl;
+
         if (res.status === 401) {
             return refreshAccessToken().then(function (refreshSuccess) {
                 if (refreshSuccess) {

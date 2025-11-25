@@ -1776,6 +1776,11 @@ header .count2 {
         min-width: 120px; /* Force equal visual width */
     }
 
+    /* Highlight clicked row */
+    #chamberOrdersTable tbody tr.selected-row {
+        background-color: #dddddd; /* light blue */
+    }
+
         #chamberOrdersTable th.sortable {
             cursor: pointer;
         }
@@ -1791,3 +1796,4 @@ th.sortable {
     th.sortable:not(.asc)::after {
         content: " ▼";
     }
+    /* Dragging visual effect */

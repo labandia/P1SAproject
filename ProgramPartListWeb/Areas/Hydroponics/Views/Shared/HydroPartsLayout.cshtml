@@ -18,6 +18,8 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
+    @Html.Partial("_SystemConfig")
+
     <!--========== SIDEBAR ==========-->
     <!-- Sidebar -->
     <div class="sidebar">
@@ -27,6 +29,7 @@
         </div>
 
         <div class="nav-menu">
+
             <a href="/Hydroponics/Hydro/Orderpage" class="nav-item">
                 <i class="fas fa-box"></i>
                 <span class="nav-text">Request Chambers</span>
@@ -43,9 +46,9 @@
 
 
             @*<a href="/Hydroponics/Hydro/TransactionHistory" class="nav-item">
-            <i class="fa-solid fa-clock-rotate-left"></i>
-            <span class="nav-text">Transaction History</span>
-        </a>*@
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    <span class="nav-text">Transaction History</span>
+                </a>*@
             <a href="/Hydroponics/Hydro/UserManage" class="nav-item">
                 <i class="fas fa-users"></i>
                 <span class="nav-text">Manage Users</span>
@@ -129,7 +132,7 @@
             <div class="modal-content">
 
                 <div class="modal-body modalwrap">
-                    
+
                     <table width="100%" cellpadding="0" cellspacing="0" border="0" align="left" background:#ffffff; border:1px solid #ddd;">
                         <tr>
                             <td style="padding:20px;">
@@ -176,6 +179,9 @@
 
 
     <script type="text/javascript">
+         // This becomes available to all JavaScript files
+     
+
         const isDev = window.location.hostname === "localhost";
 
         /*==================== LINK ACTIVE ====================*/
@@ -285,7 +291,9 @@ async function pollStockAlerts() {
          });
      } catch (error) {
          console.warn("Error fetching stock alerts:", error);
-     }
+    }
+
+
  }
 
  async function GetNotification() {
@@ -475,6 +483,9 @@ async function pollStockAlerts() {
         $(document).ready(async () => {
             await Promise.all([GetFullname(), GetNotification(), pollStockAlerts()]);
         });
+
+
+
     </script>
 
 

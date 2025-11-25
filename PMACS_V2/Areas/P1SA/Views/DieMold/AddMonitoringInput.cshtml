@@ -10,12 +10,14 @@
     <meta name="viewport" content="width=device-width" />
     <title>AddMonitoringInput</title>
     <link href="~/Content/css/MoldDie.css" rel="stylesheet" />
+
+    @Scripts.Render("~/bundles/shared-js")
+    @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
     <header class="heads">
         <div class="heads_container">
             <a href="/P1SA/DieMold/DieMoldLife"><i class="fa-solid fa-arrow-left"></i> <span>  Back to Main menu</span> </a>
-            
         </div>
     </header>
 
@@ -33,9 +35,10 @@
                     <div class="select-container">
                         <select class="form-control" id="processSelect">
                             <option value="">-- Select Process --</option>
-                            <option value="ACM">ACM</option>
-                            <option value="Mold frame">Mold frame</option>
-                            <option value="Mold Impeller">Mold Impeller</option>
+                            <option value="M001">ACM</option>
+                            <option value="M002">Mold frame</option>
+                            <option value="M003">Mold Impeller</option>
+                            <option value="M004">Mold Impeller</option>
                         </select>
                     </div>
                 </div>
@@ -161,7 +164,10 @@
     </div>
 
 
+    <script type="text/javascript">
+        
+    </script>
 
- 
+
 </body>
 </html>

@@ -773,5 +773,30 @@ namespace PMACS_V2.Areas.P1SA.Repository
 					    AND d.IsDelete = 1
                     ORDER BY RecordID DESC", new { PartNo = partnum, ProcessID = processID });
         }
+
+        public async Task<DieMoldDaily> GetDailyLastMoldData(string partnum, string processID)
+        {
+            var getData = await SqlDataAccess.GetData<DieMoldDaily>($@"SELECT 
+	                    TOP 1 
+                        d.RecordID,
+	                    FORMAT(d.DateInput, 'MM/dd/yy') as DateInput, 
+	                    d.PartNo, p.DimensionQuality, 
+	                    d.CycleShot, 
+	                    d.Total, 
+	                    d.MachineNo, 
+	                    d.Status, 
+	                    d.Remarks, 
+	                    d.Mincharge, 
+                        ps.ProcessID
+                    FROM DieMoldDaily d 
+                    INNER JOIN DieMoldParts p ON d.PartNo = p.PartNo
+                    	INNER JOIN DieMoldProcesses ps ON ps.PartNo = p.PartNo
+					WHERE 
+                        d.PartNo = @PartNo AND ps.ProcessID = @ProcessID
+					    AND d.IsDelete = 1
+					ORDER BY RecordID DESC", new { PartNo = partnum, ProcessID = processID });
+
+            return getData.FirstOrDefault();
+        }
     }
 }

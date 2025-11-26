@@ -9,7 +9,7 @@
         <div class="MoldTitle">
             <h4>Molding Mold Die Life </h4>
             <small>Manage Mold die Monitoring</small>
-            <button id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-file-circle-plus"></i> Add Newadasdsadsa</button>
+            
         </div>
         <div class="Mold__actions">
             @* MOLD SUMMARY *@
@@ -40,7 +40,8 @@
 
             @* MOLD Daily MOnitoring *@
             <div id="MoldDailyMonitor">
-                <button class="primary_button_color" id="addDaily"><i class="fa-solid fa-plus"></i> Add Data</button>
+                <button style="display: none;" class="primary_button_color" id="addDaily"><i class="fa-solid fa-plus"></i> Add Data</button>
+                <button id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-file-circle-plus"></i> Add Daily Input</button>
             </div>
 
             @* MOLD TOOLING*@
@@ -1108,7 +1109,7 @@
    $("#AddDailyforms").on('submit', async (e) => {
         e.preventDefault();
         let formData = new FormData(e.target);
-        const data = Object.fromEntries(formData);
+       const data = Object.fromEntries(formData);
         let checkduplicat = DailyData.find(item =>
             item.PartNo === data.dailypartno &&
             new Date(item.DateInput).toDateString() === new Date(data.DateInput).toDateString()

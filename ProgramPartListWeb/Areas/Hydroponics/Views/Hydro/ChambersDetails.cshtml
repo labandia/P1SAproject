@@ -263,7 +263,7 @@
                 // Compute by USD dollar
                 let computePHP = parseFloat(row.UnitCost_PHP) * 58;
                 var roundedNum = parseFloat(computePHP.toFixed(2));
-                let totalPHPCost = roundedNum * row.QuantityPerChamber;
+                let totalUSDCost = row.UnitCost_PHP * row.QuantityPerChamber;
 
                    // Image Display
                  let imagePath = row.ImageParts
@@ -294,7 +294,7 @@
                                  <p><strong> ${row.UnitCost_PHP }</strong>  </p>
                               </td>
                              <td data-cell="UnitUSD" style='text-align: center;'>
-                                 <p><strong> ${row.TotalPHPCost}</strong>  </p>
+                                 <p><strong> ${totalUSDCost.toFixed(2)}</strong>  </p>
                              </td>
                              <td data-cell="Delete" >
                                   <div class='flex_center'>

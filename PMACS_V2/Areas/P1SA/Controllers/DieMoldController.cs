@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
@@ -112,6 +113,38 @@ namespace PMACS_V2.Areas.P1SA.Controllers
                 return JsonNotFound("No Mold Die Daily data found");
 
             return JsonSuccess(data, "Add Data Succesfully");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> UpdateDailyStatus(int RecordID, int Status)
+        {
+            bool update = await _die.ChangeStatsDaily(RecordID, Status);
+            if (!update) return JsonValidationError();
+            return JsonCreated(update, "Add Data Successfully");
+        }
+
+
+        public async Task<ActionResult> SearchMoldieDaily(string ProcessID, string SearchInput)
+        {
+
+             //Run tasks in parallel for better performance
+            var datalistTask = _die.GetDailyMoldHistoryData(SearchInput, ProcessID);
+            var detailsTask = _die.GetDailyLastMoldData(SearchInput, ProcessID);
+
+            await Task.WhenAll(datalistTask, detailsTask);
+
+
+            var tableList = datalistTask.Result ?? new List<DieMoldDaily>();
+            var detailList = detailsTask.Result;
+
+            // All in One Display
+            var multiData = new Dictionary<string, object>
+            {
+                { "GetList", tableList },
+                { "Details", detailList }
+            };
+
+            return JsonMultipleDataV2(multiData);
         }
 
 

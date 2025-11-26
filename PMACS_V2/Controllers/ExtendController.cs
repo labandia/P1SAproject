@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -101,6 +102,53 @@ namespace PMACS_V2.Controllers
             Logger.Info("{0} | StatusCode={1} | TotalItems={2}", responseMessage, statusCode, totalCount);
             return Json(response, JsonRequestBehavior.AllowGet);
         }
+
+        protected JsonResult JsonMultipleDataV2(Dictionary<string, object> dataSets, string message = null)
+        {
+            bool isEmpty = dataSets == null || dataSets.Count == 0 || dataSets.All(kvp =>
+                kvp.Value == null || (kvp.Value is IEnumerable enumerable && !enumerable.Cast<object>().Any()));
+
+            int statusCode = isEmpty ? 404 : 200;
+            string responseMessage = message ?? (isEmpty ? "Data not found" : "Data retrieved successfully");
+            bool success = !isEmpty;
+
+            var responseData = new Dictionary<string, object>();
+            int totalCount = 0;
+
+            if (dataSets != null)
+            {
+                foreach (var kvp in dataSets)
+                {
+                    if (kvp.Value is IEnumerable enumerable && !(kvp.Value is string))
+                    {
+                        var list = enumerable.Cast<object>().ToList();
+                        responseData[kvp.Key] = list;
+                        totalCount += list.Count;
+                    }
+                    else
+                    {
+                        responseData[kvp.Key] = kvp.Value;
+                        totalCount += (kvp.Value != null ? 1 : 0);
+                    }
+                }
+            }
+
+            var response = new
+            {
+                Success = success,
+                StatusCode = statusCode,
+                Message = responseMessage,
+                Data = responseData,
+                TotalCount = totalCount
+            };
+
+            Response.StatusCode = statusCode;
+
+            Logger.Info("{0} | StatusCode={1} | TotalItems={2}", responseMessage, statusCode, totalCount);
+
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
 
         protected JsonResult JsonError(string message = "An error occurred", int statusCode = 500)
         {

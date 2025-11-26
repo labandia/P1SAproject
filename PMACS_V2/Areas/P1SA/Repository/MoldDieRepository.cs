@@ -91,7 +91,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
         {
             string filterdays = (days != 0) ? $@"AND DAY(d.DateInput) = {days}" : "";
 
-         
+
 
             return SqlDataAccess.GetData<DieMoldDaily>($@"SELECT 
                         d.RecordID,
@@ -112,10 +112,10 @@ namespace PMACS_V2.Areas.P1SA.Repository
 					    {filterdays}      
 					    AND ps.ProcessID = @process 
 					    AND d.IsDelete = 1
-                    ORDER BY RecordID DESC",  new { process = process, month = month, year  = year });
+                    ORDER BY RecordID DESC", new { process = process, month = month, year = year });
         }
 
-         public async Task<DieMoldDaily> GetDailyLastMoldData(string partnum)
+        public async Task<DieMoldDaily> GetDailyLastMoldData(string partnum)
         {
             var getData = await SqlDataAccess.GetData<DieMoldDaily>($@"SELECT 
 	                    TOP 1 
@@ -651,54 +651,107 @@ namespace PMACS_V2.Areas.P1SA.Repository
 
         public async Task<bool> AddDailyMoldie(DieMoldDailyInput mold)
         {
-            // =========== Step 1: Get necessary data from the masterlist data  =============
-            // =========== Step 2: Get the last total shot from the daily input data  =============
-            // =========== Step 3: Calculate the total shot for the day  =============
-            // =========== Others:  if the Total shot is under 25,000 change the status to needed or 40,000 to 5000 to change the status to cleaning =============
-            // =========== Step 4: Insert the data to the daily input table  =============
-            // =========== Step 5: Update the summary table with the new total shot  =============
-            int lasttotal = await SqlDataAccess.GetCountData($@"SELECT TOP 1 Total
-                                FROM DieMoldDaily
-                                WHERE PartNo = @PartNo ORDER BY RecordID DESC", new { PartNo = mold.dailypartno });
+            int lasttotal = await SqlDataAccess.GetCountData($@"
+                            SELECT TOP 1 Total
+                            FROM DieMoldDaily
+                            WHERE PartNo = @PartNo ORDER BY RecordID DESC", 
+                            new { PartNo = mold.dailypartno });
 
 
             // ===== Step 2: Compute new total =====
             int newtotalshot = lasttotal + mold.CycleShot;
-            int UpdateStatus = 0; // 0 = Continue (default)
+            int UpdateStatus = 0; // 0 = Continue
+
+            var partnuminfo = await GetDailyLastMoldData(mold.dailypartno);
+            if (partnuminfo == null) return false;
 
 
-            
-            //var partnuminfo = await GetDailyLastMoldData(mold.dailypartno);
-
-            //if (partnuminfo == null) return false;
+            string dq = partnuminfo.DimensionQuality ?? "";
+            string pid = partnuminfo.ProcessID ?? "";
 
 
-
-            //if(partnuminfo.ProcessID == "M002" && partnuminfo.ProcessID == "M003")
-            //{
-            //    if (newtotalshot >= 48000)
-            //    {
-            //        UpdateStatus = 2; // Complete (Cleaning)
-            //    }
-            //}
-
-
-
-
-
-            // ===== Step 3: Range check for status update =====
-            if (newtotalshot >= 48000)
+            // ===========================
+            // RULE: M002 & M003 (General)
+            // ===========================
+            if (pid == "M002" || pid == "M003")
             {
-                UpdateStatus = 2; // Complete (Cleaning)
+                if (newtotalshot >= 48000 && newtotalshot <= 49999)
+                {
+                    UpdateStatus = 1; // Cleaning
+                }
+                else if (newtotalshot > 50000)
+                {
+                    UpdateStatus = 2; // Needed
+                    newtotalshot = 0;
+                }
             }
-            else if (newtotalshot >= 45000 && newtotalshot < 48000)
+
+            // ===================================
+            // RULE: R60-25 (contains) + M002 only
+            // ===================================
+            if (dq.Contains("R60-25") && pid == "M002")
             {
-                UpdateStatus = 1; // Needed
+                if (newtotalshot >= 38000 && newtotalshot <= 39999)
+                {
+                    UpdateStatus = 1;
+                }
+                else if (newtotalshot > 40000)
+                {
+                    UpdateStatus = 2;
+                    newtotalshot = 0;
+                }
             }
-            else
+
+
+            // ===========================
+            // RULE: M003 (Specific Option)
+            // ===========================
+            if (pid == "M003")
             {
-                UpdateStatus = 0; // Continue
+                if (newtotalshot >= 68000 && newtotalshot <= 69999)
+                {
+                    UpdateStatus = 1;
+                }
+                else if (newtotalshot > 70000)
+                {
+                    UpdateStatus = 2;
+                    newtotalshot = 0;
+                }
             }
+
+
+            // ===========================
+            // RULE: M005
+            // ===========================
+            if (pid == "M005")
+            {
+                if (newtotalshot >= 28000 && newtotalshot <= 29999)
+                {
+                    UpdateStatus = 1;
+                }
+                else if (newtotalshot > 30000)
+                {
+                    UpdateStatus = 2;
+                    newtotalshot = 0;
+                }
+            }
+
+            // =============================
+            // RULE: CRV40-56 (contains ANY)
+            // =============================
+            if (dq.Contains("CRV40-56"))
+            {
+                if (newtotalshot >= 28000 && newtotalshot <= 29999)
+                {
+                    UpdateStatus = 1;
+                }
+                else if (newtotalshot > 30000)
+                {
+                    UpdateStatus = 2;
+                    newtotalshot = 0;
+                }
+            }
+
 
             // ===== Step 4: Insert data =====
             string insertquery = @"
@@ -717,6 +770,17 @@ namespace PMACS_V2.Areas.P1SA.Repository
                 Mincharge = mold.Mincharge,
                 Status = UpdateStatus
             };
+
+            string strmonitor = $@"
+                        INSERT INTO DieMoldMonitor(PartNo, DateAction, TotalDie)
+                        VALUES(@PartNo, @DateAction, @TotalDie)";
+
+            await SqlDataAccess.UpdateInsertQuery(strmonitor, new
+            {
+                PartNo = mold.dailypartno,
+                DateAction = mold.DateInput,
+                TotalDie = mold.CycleShot
+            });
 
             return await SqlDataAccess.UpdateInsertQuery(insertquery, parameters);
         }
@@ -738,6 +802,13 @@ namespace PMACS_V2.Areas.P1SA.Repository
                 Remarks = mold.Remarks,
                 Mincharge = mold.Mincharge
             };
+
+            string updatequery = @"UPDATE DieMoldMonitor SET TotalDie =@TotalDie WHERE CAST(DateAction AS DATE) = @DateAction AND PartNo = @PartNo";
+            var parameter = new { TotalDie = mold.CycleShot, DateAction = mold.DateInput, PartNo = mold.dailypartno };
+           
+            bool result = await SqlDataAccess.UpdateInsertQuery(updatequery, parameter);
+
+            Debug.WriteLine("HERE : " + result);
 
             return await SqlDataAccess.UpdateInsertQuery(insertquery, parameters);
         }
@@ -797,6 +868,12 @@ namespace PMACS_V2.Areas.P1SA.Repository
 					ORDER BY RecordID DESC", new { PartNo = partnum, ProcessID = processID });
 
             return getData.FirstOrDefault();
+        }
+
+        public Task<bool> ChangeStatsDaily(int ID, int Stats)
+        {
+            string strsql = $@"UPDATE DieMoldDaily SET Status =@Status WHERE RecordID =@RecordID";
+            return SqlDataAccess.UpdateInsertQuery(strsql, new { Status = Stats, RecordID = ID });
         }
     }
 }

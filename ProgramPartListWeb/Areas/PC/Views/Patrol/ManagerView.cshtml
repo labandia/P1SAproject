@@ -66,189 +66,187 @@
             </div>
 
             <!-- Step 3: Document Details -->
-            <div class="step-content" id="step-3">
+            <form method="post" enctype="multipart/form-data" class="step-content active" style="padding: 1.5em 0;" id="step-3" autocomplete="off">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="Attachmentcontainer mb-3">
 
-            </div>
+                            <label class="mb-0 fw-bold">Attachments : </label>
+                            <div id="fileContainer"></div>
+
+                        </div>
+
+
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label>Registration No.  </label> <br />
+                                <input type="text" id="Regno" value="@regno" name="Regno" readonly />
+                                <input type="hidden" name="Filepath" id="Filepath" />
+
+                            </div>
+                            <div class="col">
+                                <label>Department / Section  </label> <br />
+                                <input type="text" id="SectionName" readonly />
+                            </div>
+                        </div>
+
+
+
+
+                        <h5 class="mb-4 mt-4 fw-bold">Inspection Criterion / Findings</h5>
+                        <hr />
+                        <div class="row mb-3">
+                            <div class="col ">
+                                <label>1. Work Practice / Standard / Safety</label> <br />
+                                <input type="hidden" value="1" id="Find1" name="Find1" />
+                                <textarea placeholder="Type text here..." name="Inpects1" id="Inpects1" rows="3" cols="40" readonly></textarea>
+                            </div>
+
+                            <div class="col ">
+                                <label>Countermeasures</label> <br />
+                                <textarea placeholder="Type text here..." name="counter1" id="counter1" rows="3" cols="40" readonly></textarea>
+                            </div>
+                        </div>
+
+
+
+
+                        <div class="row mb-3">
+                            <div class="col ">
+                                <label>2. Identification and status of the product or materials.</label> <br />
+                                <input type="hidden" value="2" id="Find2" name="Find2" required />
+                                <textarea placeholder="Type text here..." name="Inpects2" id="Inpects2" rows="3" cols="40" readonly></textarea>
+                            </div>
+
+                            <div class="col ">
+                                <label>Countermeasures</label> <br />
+                                <textarea placeholder="Type text here..." name="counter2" id="counter2" rows="3" cols="40" readonly></textarea>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col ">
+                                <label>3. Condition and status of documents / records.</label> <br />
+                                <input type="hidden" value="3" id="Find3" name="Find3" required />
+                                <textarea placeholder="Type text here..." name="Inpects3" id="Inpects3" rows="3" cols="40" readonly></textarea>
+                            </div>
+
+                            <div class="col ">
+                                <label>Countermeasures</label> <br />
+                                <textarea placeholder="Type text here..." name="counter3" id="counter3" rows="3" cols="40" readonly> </textarea>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col ">
+                                <label>4. Record of ‘start-up process check’ and monthly inspection</label> <br />
+                                <input type="hidden" value="4" id="Find4" name="Find4" required />
+                                <textarea placeholder="Type text here..." name="Inpects4" id="Inpects4" rows="3" cols="40" readonly></textarea>
+                            </div>
+
+                            <div class="col ">
+                                <label>Countermeasures</label> <br />
+                                <textarea placeholder="Type text here..." name="counter4" id="counter4" rows="3" cols="40" readonly></textarea>
+                            </div>
+                        </div>
+
+
+                        <div class="row mb-3">
+                            <div class="col ">
+                                <label>5. Calibration of equipment and jigs used for measurement or inspection.</label> <br />
+                                <input type="hidden" value="5" id="Find5" name="Find5" required />
+                                <textarea placeholder="Type text here..." name="Inpects5" id="Inpects5" rows="3" cols="40" readonly></textarea>
+                            </div>
+
+                            <div class="col ">
+                                <label>Countermeasures</label> <br />
+                                <textarea placeholder="Type text here..." name="counter5" id="counter5" rows="3" cols="40" readonly></textarea>
+                            </div>
+                        </div>
+
+
+
+                        <div class="row mb-3">
+                            <div class="col ">
+                                <label>6. Countermeasure and implementation of previous quality and safety</label> <br />
+                                <input type="hidden" value="6" id="Find5" name="Find6" required />
+                                <textarea placeholder="Type text here..." name="Inpects6" id="Inpects6" rows="3" cols="40" readonly></textarea>
+                            </div>
+
+                            <div class="col ">
+                                <label>Countermeasures</label> <br />
+                                <textarea placeholder="Type text here..." name="counter6" id="counter6" rows="3" cols="40" readonly></textarea>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col ">
+                                <label>Inspector Name: </label> <br />
+                                <input type="text" id="InspectorName" />
+                            </div>
+
+                            <div class="col ">
+                                <label>Date Conducted</label> <br />
+                                <input type="text" id="DateConduct" />
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col ">
+                                <label>Person in charge </label> <br />
+                                <input type="text" id="PICName" />
+                            </div>
+                            <div class="col ">
+                                <label>PIC Comments</label>
+                                <textarea placeholder="Type text here..." name="PIC_Comments" id="PIC_Comments" rows="3" cols="40" readonly></textarea>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+                <div class="approval-container">
+                    <div class="approval-box">
+                        <div class="approval_title" id="PIC_approve">LA Datu</div>
+                        <div class="approval_content">
+                            <p class="approval_status approved" id="PIC_Isapprove">Approved</p>
+
+                        </div>
+                        <div class="approval_role">Person In Charge</div>
+                    </div>
+
+                    <div class="approval-box">
+                        <div class="approval_title" id="Inspect_approve">Lionell Gomez</div>
+                        <div class="approval_content">
+                            <p class="approval_status approved" id="Ins_Isapprove">Approved</p>
+                        </div>
+                        <div class="approval_role">Inspector</div>
+                    </div>
+
+                    <div class="approval-box">
+                        <div class="approval_title" id="Dep_approve">LA Datu</div>
+                        <div class="approval_content">
+                            <p class="approval_status approved" id="Dep_Isapprove">Approved</p>
+                        </div>
+                        <div class="approval_role">Department Manager</div>
+                    </div>
+
+                    <div class="approval-box">
+                        <div class="approval_title" id="Div_approve">LA Datu</div>
+                        <div class="approval_content">
+                            <p class="approval_status approved" id="Div_Isapprove">Approved</p>
+                        </div>
+                        <div class="approval_role">Division Manager</div>
+                    </div>
+                </div>
+
+
+            </form>
 
             <!-- Step 4: Attachments -->
             <div class="step-content" id="step-4">
-                <form method="post" enctype="multipart/form-data" class="formcontainer mt-4" id="addnewform" autocomplete="off">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="Attachmentcontainer mb-3">
-
-                                <label class="mb-0 fw-bold">Attachments : </label>
-                                <div id="fileContainer"></div>
-
-                            </div>
-
-
-                            <div class="row mb-3">
-                                <div class="col">
-                                    <label>Registration No.  </label> <br />
-                                    <input type="text" id="Regno" value="@regno" name="Regno" readonly />
-                                    <input type="hidden" name="Filepath" id="Filepath" />
-
-                                </div>
-                                <div class="col">
-                                    <label>Department / Section  </label> <br />
-                                    <input type="text" id="SectionName" readonly />
-                                </div>
-                            </div>
-
-
-
-
-                            <h5 class="mb-4 mt-4 fw-bold">Inspection Criterion / Findings</h5>
-                            <hr />
-                            <div class="row mb-3">
-                                <div class="col ">
-                                    <label>1. Work Practice / Standard / Safety</label> <br />
-                                    <input type="hidden" value="1" id="Find1" name="Find1" />
-                                    <textarea placeholder="Type text here..." name="Inpects1" id="Inpects1" rows="3" cols="40" readonly></textarea>
-                                </div>
-
-                                <div class="col ">
-                                    <label>Countermeasures</label> <br />
-                                    <textarea placeholder="Type text here..." name="counter1" id="counter1" rows="3" cols="40" readonly></textarea>
-                                </div>
-                            </div>
-
-
-
-
-                            <div class="row mb-3">
-                                <div class="col ">
-                                    <label>2. Identification and status of the product or materials.</label> <br />
-                                    <input type="hidden" value="2" id="Find2" name="Find2" required />
-                                    <textarea placeholder="Type text here..." name="Inpects2" id="Inpects2" rows="3" cols="40" readonly></textarea>
-                                </div>
-
-                                <div class="col ">
-                                    <label>Countermeasures</label> <br />
-                                    <textarea placeholder="Type text here..." name="counter2" id="counter2" rows="3" cols="40" readonly></textarea>
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <div class="col ">
-                                    <label>3. Condition and status of documents / records.</label> <br />
-                                    <input type="hidden" value="3" id="Find3" name="Find3" required />
-                                    <textarea placeholder="Type text here..." name="Inpects3" id="Inpects3" rows="3" cols="40" readonly></textarea>
-                                </div>
-
-                                <div class="col ">
-                                    <label>Countermeasures</label> <br />
-                                    <textarea placeholder="Type text here..." name="counter3" id="counter3" rows="3" cols="40" readonly> </textarea>
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <div class="col ">
-                                    <label>4. Record of ‘start-up process check’ and monthly inspection</label> <br />
-                                    <input type="hidden" value="4" id="Find4" name="Find4" required />
-                                    <textarea placeholder="Type text here..." name="Inpects4" id="Inpects4" rows="3" cols="40" readonly></textarea>
-                                </div>
-
-                                <div class="col ">
-                                    <label>Countermeasures</label> <br />
-                                    <textarea placeholder="Type text here..." name="counter4" id="counter4" rows="3" cols="40" readonly></textarea>
-                                </div>
-                            </div>
-
-
-                            <div class="row mb-3">
-                                <div class="col ">
-                                    <label>5. Calibration of equipment and jigs used for measurement or inspection.</label> <br />
-                                    <input type="hidden" value="5" id="Find5" name="Find5" required />
-                                    <textarea placeholder="Type text here..." name="Inpects5" id="Inpects5" rows="3" cols="40" readonly></textarea>
-                                </div>
-
-                                <div class="col ">
-                                    <label>Countermeasures</label> <br />
-                                    <textarea placeholder="Type text here..." name="counter5" id="counter5" rows="3" cols="40" readonly></textarea>
-                                </div>
-                            </div>
-
-
-
-                            <div class="row mb-3">
-                                <div class="col ">
-                                    <label>6. Countermeasure and implementation of previous quality and safety</label> <br />
-                                    <input type="hidden" value="6" id="Find5" name="Find6" required />
-                                    <textarea placeholder="Type text here..." name="Inpects6" id="Inpects6" rows="3" cols="40" readonly></textarea>
-                                </div>
-
-                                <div class="col ">
-                                    <label>Countermeasures</label> <br />
-                                    <textarea placeholder="Type text here..." name="counter6" id="counter6" rows="3" cols="40" readonly></textarea>
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <div class="col ">
-                                    <label>Inspector Name: </label> <br />
-                                    <input type="text" id="InspectorName" />
-                                </div>
-
-                                <div class="col ">
-                                    <label>Date Conducted</label> <br />
-                                    <input type="text" id="DateConduct" />
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <div class="col ">
-                                    <label>Person in charge </label> <br />
-                                    <input type="text" id="PICName" />
-                                </div>
-                                <div class="col ">
-                                    <label>PIC Comments</label>
-                                    <textarea placeholder="Type text here..." name="PIC_Comments" id="PIC_Comments" rows="3" cols="40" readonly></textarea>
-                                </div>
-                            </div>
-
-
-                        </div>
-                    </div>
-
-                    <div class="approval-container">
-                        <div class="approval-box">
-                            <div class="approval_title" id="PIC_approve">LA Datu</div>
-                            <div class="approval_content">
-                                <p class="approval_status approved" id="PIC_Isapprove">Approved</p>
-
-                            </div>
-                            <div class="approval_role">Person In Charge</div>
-                        </div>
-
-                        <div class="approval-box">
-                            <div class="approval_title" id="Inspect_approve">Lionell Gomez</div>
-                            <div class="approval_content">
-                                <p class="approval_status approved" id="Ins_Isapprove">Approved</p>
-                            </div>
-                            <div class="approval_role">Inspector</div>
-                        </div>
-
-                        <div class="approval-box">
-                            <div class="approval_title" id="Dep_approve">LA Datu</div>
-                            <div class="approval_content">
-                                <p class="approval_status approved" id="Dep_Isapprove">Approved</p>
-                            </div>
-                            <div class="approval_role">Department Manager</div>
-                        </div>
-
-                        <div class="approval-box">
-                            <div class="approval_title" id="Div_approve">LA Datu</div>
-                            <div class="approval_content">
-                                <p class="approval_status approved" id="Div_Isapprove">Approved</p>
-                            </div>
-                            <div class="approval_role">Division Manager</div>
-                        </div>
-                    </div>
-
-
-                </form>
+                
             </div>
 
             <!-- Step 5: Review & Submit -->

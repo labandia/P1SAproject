@@ -475,50 +475,46 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 CacheHelper.Remove("Registration");
 
                 // ===================== STEP 5: Generate Updated PDF =====================
-                string departmentName = GlobalUtilities.DepartmentName(departmentId);
+                //string departmentName = GlobalUtilities.DepartmentName(departmentId);
 
-                await ExportFiler.SaveFileasPDFV2(
-                    obj, findJson,
-                    employeeEmail.FullName,
-                    departmentName, pdfOutputPath,
-                    templatePath, false
-                );
+                //await ExportFiler.SaveFileasPDFV2(
+                //    obj, findJson,
+                //    employeeEmail.FullName,
+                //    departmentName, pdfOutputPath,
+                //    templatePath, false
+                //);
 
                 // ===================== STEP 6: Send Notification Email =====================
-                string processLink = $"http://p1saportalweb.sdp.com/PC/Patrol/ProcessOwner?Regno={finalPrefix}&mode=1";
-                string strSubject = $@"[FOLLOW UP - REGISTRATION REPORT] 'For Review/Submit CounterMeasure' - {finalPrefix}";
-                //string emailBody = EmailService.RegistrationEmailBody(employeeEmail.FullName, finalPrefix, processLink);
+                //string processLink = $"http://p1saportalweb.sdp.com/PC/Patrol/ProcessOwner?Regno={finalPrefix}&mode=1";
+                //string strSubject = $@"[FOLLOW UP - REGISTRATION REPORT] 'For Review/Submit CounterMeasure' - {finalPrefix}";
+                ////string emailBody = EmailService.RegistrationEmailBody(employeeEmail.FullName, finalPrefix, processLink);
 
-                var getPatrolView = await GetRegistrationDetailList(finalPrefix);
-                var getFindings = await GetFindings(finalPrefix);
-
-
-                string countermeasureEmail = PatrolEmailService.CreatePatrolProductionBody(
-                    getPatrolView,
-                    getFindings,
-                    employeeEmail.FullName,
-                    strSubject,
-                    processLink,
-                    "processowner"
-                 );
+                //var getPatrolView = await GetRegistrationDetailList(finalPrefix);
+                //var getFindings = await GetFindings(finalPrefix);
 
 
-                var sendEmail = new SentEmailModel
-                {
-                    Subject = strSubject,
-                    Sender = strSender,
-                    BCC = "",
-                    Body = countermeasureEmail,
-                    Recipient = employeeEmail.Email
-                };
-
-                await EmailService.SendEmailViaSqlDatabase(sendEmail);
+                //string countermeasureEmail = PatrolEmailService.CreatePatrolProductionBody(
+                //    getPatrolView,
+                //    getFindings,
+                //    employeeEmail.FullName,
+                //    strSubject,
+                //    processLink,
+                //    "processowner"
+                // );
 
 
+                //var sendEmail = new SentEmailModel
+                //{
+                //    Subject = strSubject,
+                //    Sender = strSender,
+                //    BCC = "",
+                //    Body = countermeasureEmail,
+                //    Recipient = employeeEmail.Email
+                //};
 
+                //await EmailService.SendEmailViaSqlDatabase(sendEmail);
 
-
-                return JsonCreated(inspectId, "Updated successfully.");
+                return JsonCreated(obj, "Updated successfully.");
             }
             catch (Exception ex)
             {

@@ -194,12 +194,7 @@ form p{
             margin-bottom: 25px;
         }
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #4a5568;
-        }
+    
 
         input, select, textarea, #DateConduct {
             width: 100%;
@@ -406,9 +401,7 @@ form p{
 
 
     #btnSave {
-        /*        width: 60px;
-            height: 60px;
-            border-radius: 50%;*/
+    
         bottom: 3em;
         right: 3em;
         background: #2A7B9B;
@@ -576,7 +569,7 @@ form p{
 
     .floatingSend:hover{
         background: rgba(0, 0, 0, 0.8) !important;
-}
+
     }
 
 

@@ -9,9 +9,29 @@ namespace FootWristStrapsAnalysis.Services
 {
     internal class FootWristServices : IFootWrist
     {
-        public Task<IEnumerable<IFootWristModel>> GetFootAnalysisData()
+        public async Task<IEnumerable<IFootWristModel>> GetFootAnalysisData()
         {
-            throw new NotImplementedException();
+            string strsql = $@"SELECT RecordID
+                              ,TestDate
+                              ,TestTime
+                              ,EmployeeID
+                              ,EmployeeName
+                              ,ComprehensiveResult
+                              ,LeftFootResistance
+                              ,LeftFootResult
+                              ,RightFootResistance
+                              ,RightFootResult
+                              ,WristStrapResult
+                              ,ConductivityEvaluation
+                              ,LowerEvaluationLimit
+                              ,UpperEvaluationLimit
+                              ,EvaluationBuzzer
+                              ,EvaluationExternalOutput
+                              ,FG470
+                              ,Note
+                          FROM FootWristStrapTestResults";
+
+            return await SqlDataAccess.GetIEnumerableData<IFootWristModel>(strsql);
         }
 
         public Task<bool> ImportSetFootAnalysis(IFootWristModel foot)

@@ -517,7 +517,6 @@
             //formData.append('UserID', selectedInspector);
 
             const data = Object.fromEntries(formData);
-            console.log(data);
 
             fetch(dataUrl)
                 .then(res => res.blob())
@@ -680,7 +679,7 @@
                       startSequentialLoading();
                   } else {
                       // Reset button if failed
-                      document.querySelector("#loadingSequence").textContent = "Failed. Please try again.";
+                      //document.querySelector("#loadingSequence").textContent = "Failed. Please try again.";
                       await new Promise(resolve => setTimeout(resolve, 2000));
                   }
 

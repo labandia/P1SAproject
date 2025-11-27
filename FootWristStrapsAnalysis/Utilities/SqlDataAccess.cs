@@ -61,6 +61,35 @@ namespace ProgramPartListWeb.Helper
         }
 
 
+        public static async Task<IEnumerable<T>> GetIEnumerableData<T>(string query, object parameters = null)
+        {
+            try
+            {
+                using (IDbConnection con = GetSqlConnection(connectionString()))
+                {
+                    // Detect if the query is a stored procedure name (no spaces, only word chars)
+                    bool isStoredProc = Regex.IsMatch(query, @"^\w+$");
+
+                    var commandType = isStoredProc ? CommandType.StoredProcedure : CommandType.Text;
+
+                    var result = await con.QueryAsync<T>(
+                        query,
+                        parameters,
+                        commandType: commandType
+                    );
+
+                    return result; // Already IEnumerable<T>
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("SQL Exception: " + ex.Message);
+                return Enumerable.Empty<T>();  // safer than null
+            }
+        }
+
+
+
         // ############ DYNAMIC FUNCTION LIST<T> GETDATA ########################
         public static async Task<List<T>> GetData<T>(string query, object parameters = null)
         {

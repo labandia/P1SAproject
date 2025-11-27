@@ -2,16 +2,11 @@
 using FootWristStrapsAnalysis.Model;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
 
 namespace FootWristStrapsAnalysis
 {
@@ -34,7 +29,12 @@ namespace FootWristStrapsAnalysis
 
         private async void Startup_Load(object sender, EventArgs e)
         {
+            this.WindowState = FormWindowState.Maximized;
+
             await StartAsync();
+
+            var getData = await _foot.GetFootAnalysisData();
+            AnalysisTable.DataSource = getData.ToList();
         }
 
 
@@ -290,6 +290,39 @@ namespace FootWristStrapsAnalysis
         private async void prevbtn_Click(object sender, EventArgs e)
         {
             await ImportPreviousFiles();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
+        List<DataGridViewRow> selectedRows = new List<DataGridViewRow>();
+
+        private void AnalysisTable_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+
+            string checkCol = "Select";
+
+            // Toggle checkbox
+            bool current = Convert.ToBoolean(
+                AnalysisTable.Rows[e.RowIndex].Cells[checkCol].Value ?? false
+            );
+
+            bool newValue = !current;
+            AnalysisTable.Rows[e.RowIndex].Cells[checkCol].Value = newValue;
+
+            // Add to list if checked
+            if (newValue)
+            {
+                if (!selectedRows.Contains(AnalysisTable.Rows[e.RowIndex]))
+                    selectedRows.Add(AnalysisTable.Rows[e.RowIndex]);
+            }
+            else
+            {
+                // Remove if unchecked
+                selectedRows.Remove(AnalysisTable.Rows[e.RowIndex]);
+            }
         }
     }
 }

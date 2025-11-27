@@ -491,13 +491,13 @@
           const GetRegistrationDetails = async () => {
               let res = await fetchData('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
               if (res && res.Success) {
-                 $("#regtext").text(strRegno);
-                 $("#InspectorName").val(res.Data.InspectName);
-                 $("#PICName").val(res.Data.PICName);
-                 $("#DateConduct").val(res.Data.DateConduct);
-                 $("#SectionName").val("P1SA-" + res.Data.SectionName);
-                 $("#PIC_Comments").val(res.Data.PIC_Comments);
-                 $("#Manager_Comments").val(res.Data.Manager_Comments);
+                  $("#regtext").text(strRegno);
+                  $("#InspectorName").val(res.Data.InspectName);
+                  $("#PICName").val(res.Data.PICName);
+                  $("#DateConduct").val(res.Data.DateConduct);
+                  $("#SectionName").val("P1SA-" + res.Data.SectionName);
+                  $("#PIC_Comments").val(res.Data.PIC_Comments);
+                  $("#Manager_Comments").val(res.Data.Manager_Comments);
 
                   $("#PIC_approve").text(res.Data.PICName ?? 'N/A');
                   $("#Inspect_approve").text(res.Data.InspectName ?? 'N/A');

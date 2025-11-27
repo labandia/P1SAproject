@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace FootWristStrapsAnalysis
 {
@@ -14,6 +15,8 @@ namespace FootWristStrapsAnalysis
     {
         private readonly IFootWrist _foot;
         private readonly System.Timers.Timer _importTimer;
+
+        private static IEnumerable<IFootWristModel> footlist;
 
         public Startup(IFootWrist foot)
         {
@@ -34,7 +37,8 @@ namespace FootWristStrapsAnalysis
             await StartAsync();
 
             var getData = await _foot.GetFootAnalysisData();
-            AnalysisTable.DataSource = getData.ToList();
+            footlist = getData.ToList();
+            AnalysisTable.DataSource = footlist;
         }
 
 
@@ -323,6 +327,23 @@ namespace FootWristStrapsAnalysis
                 // Remove if unchecked
                 selectedRows.Remove(AnalysisTable.Rows[e.RowIndex]);
             }
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            string filterText = textBox1.Text.ToLower();
+            var filteredList = new List<IFootWristModel>();
+
+            if (filterText != "")
+            {
+                filteredList = footlist.Where(p => p.EmployeeID.ToLower().Contains(filterText)).ToList();
+            }
+            else
+            {
+                filteredList = footlist.ToList();
+            }
+
+            AnalysisTable.DataSource = filteredList;
         }
     }
 }

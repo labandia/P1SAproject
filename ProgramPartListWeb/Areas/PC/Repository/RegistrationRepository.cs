@@ -103,36 +103,54 @@ namespace ProgramPartListWeb.Areas.PC.Repository
         public async Task<bool> AddRegistration(AddFormRegistrationModel reg, string json)
         {
             //INSERT MAIN REGISTRATION PROCESS
-            bool result = await SqlDataAccess.UpdateInsertQuery("InsertRegistration",new
-                       {
-                           RegNo = reg.RegNo,
-                           Department_ID = reg.Department_ID, 
-                           PIC_ID = reg.PIC_ID, 
-                           Employee_ID = reg.InspectorID
-                       });
+            bool result = await SqlDataAccess.UpdateInsertQuery("InsertRegistration", new
+            {
+                RegNo = reg.RegNo,
+                Department_ID = reg.Department_ID,
+                PIC_ID = reg.PIC_ID,
+                Employee_ID = reg.InspectorID
+            });
 
-            // INSERT FILES TO THE OTHER TABLES
-            await SqlDataAccess.UpdateInsertQuery("InserFiles", new { RegNo = reg.RegNo, FilePath = reg.FilePath});
-            await SqlDataAccess.UpdateInsertQuery("INSERT INTO Patrol_Registration_Approvelist(RegNo, PIC_ID, Inspect_ID) VALUES(@RegNo, @PIC_ID, @Inspect_ID)", 
-                new { RegNo = reg.RegNo, PIC_ID = reg.PIC_ID, Inspect_ID = reg.InspectorID });
+            // If main insert failed → stop the whole process
+            if (!result) return false;
 
-            // INSERT FINDING AND COUNTERMEASURE PROCESS
-            // Make a Json format 
+            // ========== 2. INSERT FILES ==========
+            await SqlDataAccess.UpdateInsertQuery("InserFiles", new
+            {
+                RegNo = reg.RegNo,
+                FilePath = reg.FilePath
+            });
+
+            // ========== 3. INSERT APPROVAL LIST ==========
+            await SqlDataAccess.UpdateInsertQuery(@"
+                INSERT INTO Patrol_Registration_Approvelist
+                (RegNo, PIC_ID, Inspect_ID, Inspect_IsAproved, Inspect_IsSent) 
+                VALUES(@RegNo, @PIC_ID, @Inspect_ID, 1, 1)",
+            new
+            {
+                RegNo = reg.RegNo,
+                PIC_ID = reg.PIC_ID,
+                Inspect_ID = reg.InspectorID
+            });
+
+            // ========== 4. INSERT FINDINGS ==========
             var findings = JsonConvert.DeserializeObject<List<FindingModel>>(json);
 
-            foreach (var f in findings)
+            if (findings != null && findings.Count > 0)
             {
-                var findparams = new
+                foreach (var f in findings)
                 {
-                    RegNo = "P1SA-" + f.RegNo,
-                    FindID = f.FindID,
-                    FindDescription = f.FindDescription
-                };
-                await SqlDataAccess.UpdateInsertQuery("InsertFindings", findparams, "Registration");
+                    await SqlDataAccess.UpdateInsertQuery("InsertFindings", new
+                    {
+                        RegNo = "P1SA-" + f.RegNo,
+                        FindID = f.FindID,
+                        FindDescription = f.FindDescription
+                    }, "Registration");
+                }
             }
 
 
-            return result;
+            return true;
         }
 
         public async Task<bool> EditReg_ProcessOwner(ProcessOwnerForms reg, string json)

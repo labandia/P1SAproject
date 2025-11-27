@@ -366,6 +366,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             string findings = "";
             string Countermeasure = "";
             string shortmessage = "";
+            string buttonLink = "";
             string isAprovedInspector = (patrol.Inspect_IsAproved == true) ? 
                         "<div class='completion-badge'>✓ </div></td>" : "";
 
@@ -382,11 +383,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             // Build countermeasures list - show "No Countermeasure yet" if empty
             foreach (var item in find)
             {
-                if (string.IsNullOrEmpty(item.Countermeasure))
-                {
-                    Countermeasure += "<li><em>No Countermeasure yet</em></li>";
-                }
-                else
+                if (!string.IsNullOrEmpty(item.Countermeasure))
                 {
                     Countermeasure += "<li>" + item.Countermeasure + "</li>";
                 }
@@ -402,18 +399,23 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             switch (emailType.ToLower())
             {
                 case "processowner":
+                    buttonLink = "Process owner Submit Countermeasure";
                     shortmessage = "<p>This is to inform you that you have a response and are <strong>required to submit a countermeasure</strong> for the Patrol Inspection report.</p>";
                     break;
                 case "sendtoinspector":
+                    buttonLink = "Inspector Review & Arpproved";
                     shortmessage = "<p>This is to inform you that you have a <strong>For Review/Approval</strong> Patrol Inspection report.</p>";
                     break;
                 case "sendtomanager":
+                    buttonLink = "Manager Review & Arpproved";
                     shortmessage = "<p>This is to inform you that you have a <strong>For Review/Approval</strong> Patrol Inspection report.</p>";
                     break;
                 case "sendtodepartment":
+                    buttonLink = "Department Manager Review & Arpproved";
                     shortmessage = "<p>This is to inform you that you have a <strong>For Review/Approval</strong> Patrol Inspection report.</p>";
                     break;
                 case "sendtodivision":
+                    buttonLink = "Divison Manager Review & Arpproved";
                     shortmessage = "<p>This is to inform you that you have a <strong>For Review/Approval</strong> Patrol Inspection report.</p>";
                     break;
             }
@@ -459,7 +461,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                         </tr>
                         <tr>
                             <td class='label'>Link of the Registration No.:</td>
-                            <a href='{link}' class='button'>{link}</a>
+                            <a href='{link}' class='button'>{buttonLink}</a>
                         </tr>
                     </table>";
 

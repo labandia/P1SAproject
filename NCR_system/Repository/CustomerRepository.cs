@@ -37,6 +37,25 @@ namespace NCR_system.Repository
             return SqlDataAccess.GetDataByID<CustomerModel>(strsql, new { RecordID = recordID });
         }
 
+        public Task<List<CustomerTotalModel>> GetCustomersOpenItem(int type = 0)
+        {
+            string strsql = $@"SELECT 
+                                s.DepartmentName,
+                                COUNT(c.Status) AS totalOpen
+                            FROM PC_Section s
+                            LEFT JOIN PC_CustomerConplaint c
+                                ON c.SectionID = s.SectionID 
+                                AND c.CCtype = @CCtype 
+                                AND c.Status = 1 
+                                AND c.IsDelete = 1
+                            GROUP BY 
+                                s.SectionID, 
+                                s.DepartmentName
+                            ORDER BY 
+                                s.SectionID ASC;";
+            return SqlDataAccess.GetData<CustomerTotalModel>(strsql, new { CCtype = type });
+        }
+
         public async Task<bool> InsertCustomerData(CustomerModel customer, int type)
         {
             bool result = false;

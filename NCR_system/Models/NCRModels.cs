@@ -109,6 +109,26 @@ namespace NCR_system.Models
             set => _DateRegist = value;
         }
     }
+    
+
+    public class CustomerTotalModel
+    {
+        private string _DepartmentName;
+        private int _totalOpen;
+
+        
+        public string DepartmentName
+        {
+            get => _DepartmentName;
+            set => _DepartmentName = value;
+        }
+        public int totalOpen
+        {
+            get => _totalOpen;
+            set => _totalOpen = value;
+        }
+    }
+    
     public class CustomerModel
     {
         private int _RecordID;

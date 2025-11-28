@@ -191,37 +191,31 @@ namespace NCR_system.View.Module
                     new KeyValuePair<int, string>(5, "Circuit")
                 };
 
+                var countItems = await _cust.GetCustomersOpenItem(proc);
 
-                // 🔹 Group existing open items
-                var openCounts = cuslist
-                    .Where(c => c.Status == 1)
-                    .GroupBy(c => c.SectionID)
-                    .ToDictionary(g => g.Key, g => g.Count());
 
-                // 🔹 Merge all sections with counts (include 0 if missing)
-                var summary = sections
-                    .Select(s => new
-                    {
-                        Section = s.Value,
-                        TotalOpen = openCounts.ContainsKey(s.Key) ? openCounts[s.Key] : 0
-                    })
-                    .ToList();
-
-                // 🔹 Display summary
-
-                foreach(var item in summary)
+                foreach (var items in countItems)
                 {
-                    Debug.WriteLine($"Photos {item.TotalOpen}");
-                    MoldText.Text = item.TotalOpen.ToString();
-                    PressText.Text = (item.TotalOpen != 0 && item.Section == "Press") ? item.TotalOpen.ToString() : "0";
-                    RotorText.Text = (item.TotalOpen != 0 && item.Section == "Rotor") ? item.TotalOpen.ToString() : "0";
-                    WindText.Text = (item.TotalOpen != 0 && item.Section == "Winding") ? item.TotalOpen.ToString() : "0";
-                    CircuitText.Text = (item.TotalOpen != 0 && item.Section == "Circuit") ? item.TotalOpen.ToString() : "0";
+                    switch (items.DepartmentName)
+                    {
+                        case "Molding":
+                            MoldText.Text = items.totalOpen.ToString();
+                            break;
+                        case "Press":
+                            PressText.Text = items.totalOpen.ToString();
+                            break;
+                        case "Rotor":
+                            RotorText.Text = items.totalOpen.ToString();
+                            break;
+                        case "Winding":
+                            WindText.Text = items.totalOpen.ToString();
+                            break;
+                        default:
+                            CircuitText.Text = items.totalOpen.ToString();
+                            break;
+                    }
+
                 }
-
-
-                CustSummaryGrid.DataSource = summary;
-
 
 
             }
@@ -376,6 +370,11 @@ namespace NCR_system.View.Module
         }
 
         private void CustomDatagrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void label2_Click_1(object sender, EventArgs e)
         {
 
         }

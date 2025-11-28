@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
@@ -63,11 +64,12 @@ namespace NCR_system.View.Module
 
                 if (proc == 0)
                 {
-                    CustomDatagrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                    //CustomDatagrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.ColumnHeader;
                     CustomDatagrid.Columns["RecordID"].Visible = false;
                     CustomDatagrid.Columns["CustomerName"].Visible = true;
                     CustomDatagrid.Columns["CCtype"].Visible = false;
 
+                    CustomDatagrid.Columns["DateCreated"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                     CustomDatagrid.Columns["DateCreated"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
                     CustomDatagrid.Columns["DateCreated"].DisplayIndex = 0;
                     CustomDatagrid.Columns["DateCreated"].Width = 100;
@@ -110,9 +112,9 @@ namespace NCR_system.View.Module
                     CustomDatagrid.Columns["Delete"].Width = 100;
                     CustomDatagrid.Columns["Delete"].DisplayIndex = 9;
 
-                    ExternalPanel.Visible = true;
-                    ExternalPanel.BringToFront();
-                    SDCPanel.Visible = false;
+                    //ExternalPanel.Visible = true;
+                    //ExternalPanel.BringToFront();
+                    //SDCPanel.Visible = false;
 
 
                     Externalbtn.Visible = true;
@@ -167,9 +169,9 @@ namespace NCR_system.View.Module
                     CustomDatagrid.Columns["Delete"].Width = 100;
                     CustomDatagrid.Columns["Delete"].DisplayIndex = 8;
 
-                    SDCPanel.Visible = true;
-                    SDCPanel.BringToFront();
-                    ExternalPanel.Visible = false;
+                    //SDCPanel.Visible = true;
+                    //SDCPanel.BringToFront();
+                    //ExternalPanel.Visible = false;
 
 
                     OpenCC.Visible = true;
@@ -206,6 +208,18 @@ namespace NCR_system.View.Module
                     .ToList();
 
                 // 🔹 Display summary
+
+                foreach(var item in summary)
+                {
+                    Debug.WriteLine($"Photos {item.TotalOpen}");
+                    MoldText.Text = item.TotalOpen.ToString();
+                    PressText.Text = (item.TotalOpen != 0 && item.Section == "Press") ? item.TotalOpen.ToString() : "0";
+                    RotorText.Text = (item.TotalOpen != 0 && item.Section == "Rotor") ? item.TotalOpen.ToString() : "0";
+                    WindText.Text = (item.TotalOpen != 0 && item.Section == "Winding") ? item.TotalOpen.ToString() : "0";
+                    CircuitText.Text = (item.TotalOpen != 0 && item.Section == "Circuit") ? item.TotalOpen.ToString() : "0";
+                }
+
+
                 CustSummaryGrid.DataSource = summary;
 
 
@@ -255,11 +269,13 @@ namespace NCR_system.View.Module
 
                 if (checkstats == "Open")
                 {
-                    e.CellStyle.ForeColor = Color.Green;
+                    e.CellStyle.ForeColor = Color.White;
+                    e.CellStyle.BackColor = Color.FromArgb(78, 166, 101);
                 }
                 else
                 {
-                    e.CellStyle.ForeColor = Color.Red;
+                    e.CellStyle.ForeColor = Color.White;
+                    e.CellStyle.BackColor = Color.FromArgb(184, 94, 104);
                 }
 
 

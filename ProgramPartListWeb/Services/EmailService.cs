@@ -82,8 +82,8 @@ namespace ProgramPartListWeb.Utilities
 
         public static  Task<bool> SendEmailViaSqlDatabase(SentEmailModel em)
         {
-            string strsql = $@"INSERT INTO P1SA_EmailSend(Subject, Sender, Recipient, Body)
-                               VALUES(@Subject, @Sender, @Recipient, @Body)";
+            string strsql = $@"INSERT INTO P1SA_EmailSend(Subject, Sender, Recipient, Body, BCC)
+                               VALUES(@Subject, @Sender, @Recipient, @Body, @BCC)";
             return  SqlDataAccess.UpdateInsertQuery(strsql, em);
         }
 

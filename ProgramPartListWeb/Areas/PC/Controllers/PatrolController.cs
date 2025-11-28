@@ -434,8 +434,8 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             {
                 // ===================== STEP 1: Extract Request Data =====================
                 string regNo = Request.Form["RegNo"];
-                string employeeId = Request.Form["Employee_ID"];
-                string inspectId = Request.Form["SelectedInspector"];
+                string employeeId = Request.Form["Employee_ID"]; // -- Process Owner ID
+                string inspectId = Request.Form["SelectedInspector"]; // -- Select Inspector ID
                 int departmentId = Convert.ToInt32(Request.Form["DepartmentID"]);
                 string findJson = Request.Form["FindJson"];
                 string getprefix = GetPrefix();
@@ -462,7 +462,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                     Department_ID = departmentId,
                     FilePath = pdfOutputPath,
                     PIC_ID = employeeId,
-                    InspectorID = inspectId
+                    Employee_ID = inspectId
                 };
 
 
@@ -664,7 +664,6 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 string finalPrefix = Request.Form["RegNo"];
                 string findJson = Request.Form["FindJson"];
                 string getprefix = GetPrefix();
-                string employeeId = Request.Form["Employee_ID"];
 
                 // ===================== STEP 1: Retrieve Required Data =====================
                 var emailList = await _reg.PatrolEmailData() ?? new List<EmailModelV2>();
@@ -725,10 +724,10 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 var processObj = new ProcessOwnerForms
                 {
                     RegNo = Request.Form["RegNo"],
-                    Employee_ID = Request.Form["Employee_ID"],
                     PIC_Comments = Request.Form["PIC_Comments"],
                     CounterPath = combinedAttachmentPaths,
-                    Filepath = pdfOutputPath
+                    Filepath = pdfOutputPath,
+                    DepManager_ID = employeeEmail.Employee_ID
                 };
                 // ===================== STEP 6: Update Records =====================
                 bool isUpdated = await _reg.EditReg_ProcessOwner(processObj, findJson);
@@ -954,9 +953,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 );
 
                 // ===================== STEP 4: Send Notification Email =====================
-                //string processLink = $"http://p1saportalweb.sdp.com/PC/Patrol/DepartmentApproval?Regno={Regno}&mode=1";
                 string processLink = $"http://p1saportalweb.sdp.com/PC/Patrol/DivisionApproval?Regno={Regno}&mode=1";
-                //string emailBody = EmailService.RegistrationEmailBody(employeeEmail.FullName, Regno, processLink);
 
                 string strSubject = $@"[PATROL INSPECTION] 'For Review/Verification' - {Regno}";
 
@@ -995,7 +992,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         // =======================================================================
 
         // =======================================================================
-        // ==============  DEPARTMENT  SAME FLOW WITH THE INSPECTORS ==============
+        // ==============  DEPARTMENT  SAME FLOW WITH THE INSPECTORS =============
         // =======================================================================
         [HttpPost]
         public async Task<ActionResult> DepartmentApproveSubmit(string Regno)
@@ -1136,24 +1133,94 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 );
 
                 // ===================== STEP 4: Send Notification Email =====================
-                string processLink = $"http://p1saportalweb.sdp.com/PC/Patrol/DepartmentApproval?Regno={Regno}&mode=1";
 
-                string ManagersEmail = EmailService.RegistrationEmailBodyV2(
-                       employeeEmail.FullName,
-                       Regno,
-                       updatedReg.SectionName,
-                       processLink,
-                       "inpectorapproval"
+                string processLink = $"http://p1saportalweb.sdp.com/PC/Patrol/DepartmentApproval?Regno={Regno}&mode=0";
+                string strSubject =  $@"[COMPLETE REGISTRATION - PATROL INSPECTION REPORT] ' - {Regno}";
+
+
+                List<string> idList = new List<string>();
+
+                foreach (var row in registrationData)
+                {
+                    // Inspector
+                    string inspectorEmail = emailList
+                        .Where(e => e.Employee_ID == row.Inspect_ID?.ToString())
+                        .Select(e => e.Email)
+                        .FirstOrDefault();
+
+                    if (!string.IsNullOrWhiteSpace(inspectorEmail))
+                        idList.Add(inspectorEmail);
+
+
+                    // PIC
+                    string picEmail = emailList
+                        .Where(e => e.Employee_ID == row.PIC_ID?.ToString())
+                        .Select(e => e.Email)
+                        .FirstOrDefault();
+
+                    if (!string.IsNullOrWhiteSpace(picEmail))
+                        idList.Add(picEmail);
+
+
+                    // Manager
+                    string managerEmail = emailList
+                        .Where(e => e.Employee_ID == row.Manager_ID?.ToString())
+                        .Select(e => e.Email)
+                        .FirstOrDefault();
+
+                    if (!string.IsNullOrWhiteSpace(managerEmail))
+                        idList.Add(managerEmail);
+
+
+                    // Department Manager
+                    string depManagerEmail = emailList
+                        .Where(e => e.Employee_ID == row.DepManager_ID?.ToString())
+                        .Select(e => e.Email)
+                        .FirstOrDefault();
+
+                    if (!string.IsNullOrWhiteSpace(depManagerEmail))
+                        idList.Add(depManagerEmail);
+
+
+                    // Division Manager
+                    string divManagerEmail = emailList
+                        .Where(e => e.Employee_ID == row.DivManager_ID?.ToString())
+                        .Select(e => e.Email)
+                        .FirstOrDefault();
+
+                    if (!string.IsNullOrWhiteSpace(divManagerEmail))
+                        idList.Add(divManagerEmail);
+                }
+
+
+                // Final: remove duplicates
+                idList = idList.Distinct().ToList();
+
+                // Final BCC
+                string bccString = string.Join(";", idList);
+                var getFindings = await GetFindings(Regno);
+
+
+                string DivisionManagersEmail = PatrolEmailService.CreatePatrolProductionBody(
+                   updatedReg,
+                   getFindings,
+                   "ALL",
+                   strSubject,
+                   processLink,
+                   "sendtodivision"
                 );
+
+                
 
                 var sendEmail = new SentEmailModel
                 {
-                    Subject = $@"[FOLLOW UP - PATROL INSPECTION REPORT] 'For Review/Verification' - {Regno}",
+                    Subject = $@"[COMPLETE REGISTRATION - PATROL INSPECTION REPORT] ' - {Regno}",
                     Sender = strSender,
-                    BCC = "",
-                    Body = ManagersEmail,
+                    BCC = bccString,
+                    Body = DivisionManagersEmail,
                     Recipient = employeeEmail.Email
                 };
+
 
 
                 await EmailService.SendEmailViaSqlDatabase(sendEmail);

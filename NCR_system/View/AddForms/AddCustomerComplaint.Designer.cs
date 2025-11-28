@@ -71,31 +71,31 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold);
             this.label5.Location = new System.Drawing.Point(22, 133);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(151, 16);
+            this.label5.Size = new System.Drawing.Size(150, 17);
             this.label5.TabIndex = 69;
             this.label5.Text = "Model No. / Part No.  :";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold);
             this.label3.Location = new System.Drawing.Point(328, 219);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(131, 16);
+            this.label3.Size = new System.Drawing.Size(124, 17);
             this.label3.TabIndex = 68;
             this.label3.Text = "Section in Charge :";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Century Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(25, 37);
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(23, 36);
             this.label1.Name = "label1";
             this.label1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.label1.Size = new System.Drawing.Size(313, 23);
+            this.label1.Size = new System.Drawing.Size(329, 30);
             this.label1.TabIndex = 67;
             this.label1.Text = "Create SDC Customer Complaint";
             // 
@@ -112,30 +112,30 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold);
             this.label2.Location = new System.Drawing.Point(328, 133);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(55, 16);
+            this.label2.Size = new System.Drawing.Size(58, 17);
             this.label2.TabIndex = 72;
             this.label2.Text = "Lot No :";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold);
             this.label4.Location = new System.Drawing.Point(25, 219);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(96, 16);
+            this.label4.Size = new System.Drawing.Size(93, 17);
             this.label4.TabIndex = 74;
             this.label4.Text = "NG Quantity :";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.Location = new System.Drawing.Point(25, 313);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(132, 16);
+            this.label6.Size = new System.Drawing.Size(132, 17);
             this.label6.TabIndex = 76;
             this.label6.Text = "Details of Problem :";
             // 
@@ -154,14 +154,14 @@
             this.Save_btn.Cursor = System.Windows.Forms.Cursors.Hand;
             this.Save_btn.FlatAppearance.BorderSize = 0;
             this.Save_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Save_btn.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Save_btn.Font = new System.Drawing.Font("Segoe UI Emoji", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Save_btn.ForeColor = System.Drawing.Color.White;
             this.Save_btn.Image = ((System.Drawing.Image)(resources.GetObject("Save_btn.Image")));
             this.Save_btn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Save_btn.Location = new System.Drawing.Point(418, 486);
+            this.Save_btn.Location = new System.Drawing.Point(433, 490);
             this.Save_btn.Name = "Save_btn";
             this.Save_btn.Padding = new System.Windows.Forms.Padding(45, 0, 50, 0);
-            this.Save_btn.Size = new System.Drawing.Size(180, 43);
+            this.Save_btn.Size = new System.Drawing.Size(165, 39);
             this.Save_btn.TabIndex = 79;
             this.Save_btn.Text = "Save";
             this.Save_btn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -171,10 +171,10 @@
             // Cancel_btn
             // 
             this.Cancel_btn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.Cancel_btn.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Cancel_btn.Location = new System.Drawing.Point(224, 486);
+            this.Cancel_btn.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Cancel_btn.Location = new System.Drawing.Point(266, 490);
             this.Cancel_btn.Name = "Cancel_btn";
-            this.Cancel_btn.Size = new System.Drawing.Size(178, 43);
+            this.Cancel_btn.Size = new System.Drawing.Size(148, 39);
             this.Cancel_btn.TabIndex = 78;
             this.Cancel_btn.Text = "Cancel";
             this.Cancel_btn.UseVisualStyleBackColor = true;
@@ -199,12 +199,12 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.ForeColor = System.Drawing.Color.DimGray;
             this.label7.Location = new System.Drawing.Point(28, 67);
             this.label7.Name = "label7";
             this.label7.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.label7.Size = new System.Drawing.Size(341, 17);
+            this.label7.Size = new System.Drawing.Size(303, 17);
             this.label7.TabIndex = 81;
             this.label7.Text = "Provide details about the SDC Customer complaint";
             // 

@@ -111,9 +111,9 @@ namespace ProgramPartListWeb.Areas.PC.Models
     public class ProcessOwnerForms
     {
         public string RegNo { get; set; }
-        public string Employee_ID { get; set; }
         public string PIC_Comments { get; set; }
         public string CounterPath { get; set; }
+        public string DepManager_ID { get; set; }
         public string Filepath { get; set; }
     }
 

@@ -276,7 +276,7 @@ namespace ProgramPartListWeb.Utilities
                 string getManagersName = processowner.SingleOrDefault(x => x.Employee_ID == reg.Manager_ID)?.FullName ?? "N/A";
 
                 // ✅ Step 4: Format date safely
-
+                
 
 
 
@@ -364,7 +364,7 @@ namespace ProgramPartListWeb.Utilities
                 }); // end Task.Run for Excel generation
 
                 // Convert Excel to PDF using Spire.XLS (synchronous -> run on threadpool)
-                await Task.Run(() =>
+                await Task.Run( () =>
                 {
                     using (var excelStream = new MemoryStream(excelBytes))
                     {
@@ -386,6 +386,81 @@ namespace ProgramPartListWeb.Utilities
 
                         sheet.SetRowHeight(41, 30);
                         sheet.SetRowHeight(42, 30);
+
+
+
+                        //foreach (IShape shape in sheet.PrstGeomShapes)
+                        //{
+                        //    string empID = null;
+
+                        //    switch (shape.Name)
+                        //    {
+                        //        case "SignaImage":
+                        //            empID = reg.Inspect_ID;
+                        //            break;
+                        //        case "Department":
+                        //            empID = reg.Manager_ID;
+                        //            break;
+                        //        case "Supervisor":
+                        //            empID = reg.PIC_ID;
+                        //            break;
+                        //        case "Division":
+                        //            empID = reg.DivManager_ID;
+                        //            break;
+                        //    }
+
+                        //    if (!string.IsNullOrEmpty(empID) && shape is IPrstGeomShape imageShape)
+                        //    {
+                        //        string fileName = GetImageStringP1SA(empID).Result;
+
+                        //        // ✅ Only insert image if filename is not null or empty
+                        //        if (!string.IsNullOrEmpty(fileName))
+                        //        {
+                        //            string pathfile = Path.Combine(@"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\Signatures", fileName);
+
+                        //            if (File.Exists(pathfile))
+                        //            {
+                        //                imageShape.Fill.CustomPicture(pathfile);
+                        //                Debug.WriteLine($"✅ Signature inserted for shape: {shape.Name}");
+                        //            }
+                        //            else
+                        //            {
+                        //                Debug.WriteLine($"⚠️ Image file not found: {pathfile}");
+                        //            }
+                        //        }
+                        //        else
+                        //        {
+                        //            Debug.WriteLine($"ℹ️ No signature to display for shape: {shape.Name}");
+                        //        }
+                        //    }
+                        //}
+                        var shapeMap = new Dictionary<string, string>
+                        {
+                            { "SignaImage", reg.Inspect_ID },
+                            { "Department", reg.Manager_ID },
+                            { "Supervisor", reg.PIC_ID },
+                            { "Division", reg.DivManager_ID }
+                        };
+
+                        foreach (var shape in sheet.PrstGeomShapes.OfType<IPrstGeomShape>())
+                        {
+                            if (shapeMap.TryGetValue(shape.Name, out string empID) && !string.IsNullOrEmpty(empID))
+                            {
+                                string fileName = GetImageStringP1SA(empID).Result;
+                                if (!string.IsNullOrEmpty(fileName))
+                                {
+                                    string pathfile = Path.Combine(@"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\Signatures", fileName);
+                                    if (File.Exists(pathfile))
+                                    {
+                                        shape.Fill.CustomPicture(pathfile);
+                                    }
+                                }
+                            }
+                        }
+
+
+
+
 
                         workbook.SaveToFile(tempPdfPath, FileFormat.PDF);
                     }
@@ -448,151 +523,151 @@ namespace ProgramPartListWeb.Utilities
         }
 
 
-        //public static async Task SaveFileasPDF(RegistrationModel reg, string json, string department, string outputfilename, string template, bool Sign)
-        //{
-        //    try
-        //    {
-        //        //string templatePath = HttpContext.Current.Server.MapPath("~/Content/Uploads/PGFY-00031FORM_1.xlsx");
-        //        string exportFolder = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\";
-        //        string outputPdfPath = Path.Combine(exportFolder, Path.ChangeExtension(outputfilename, ".pdf"));
-        //        string tempPdfPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".pdf");
+        public static async Task SaveFileasPDFV2(RegistrationModel reg, string json, string department, string outputfilename, string template, bool Sign)
+        {
+            try
+            {
+                //string templatePath = HttpContext.Current.Server.MapPath("~/Content/Uploads/PGFY-00031FORM_1.xlsx");
+                string exportFolder = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\";
+                string outputPdfPath = Path.Combine(exportFolder, Path.ChangeExtension(outputfilename, ".pdf"));
+                string tempPdfPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".pdf");
 
-        //        byte[] excelBytes;
-        //        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                byte[] excelBytes;
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
-        //        DateTime date = DateTime.ParseExact(reg.DateConduct, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-        //        string formatted = date.ToString("MMMM dd, yyyy");  // Output: "July 24, 2025"
+                DateTime date = DateTime.ParseExact(reg.DateConduct, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                string formatted = date.ToString("MMMM dd, yyyy");  // Output: "July 24, 2025"
 
-        //        // Step 1: Generate Excel in memory
-        //        using (var package = new ExcelPackage(new FileInfo(template)))
-        //        {
-        //            var worksheet = package.Workbook.Worksheets[0];
+                // Step 1: Generate Excel in memory
+                using (var package = new ExcelPackage(new FileInfo(template)))
+                {
+                    var worksheet = package.Workbook.Worksheets[0];
 
-        //            worksheet.Cells["B2"].Value = "Registration No: " + reg.RegNo;
-        //            worksheet.Cells["B4"].Value = "Dept. /Section Inspected: P1SA-" + department;
-        //            worksheet.Cells["C48"].Value = reg.Manager_Comments;
-        //            worksheet.Cells["C53"].Value = "Manager: " + reg.Manager;
-        //            worksheet.Cells["D48"].Value = " Date Conducted: " + formatted;
-        //            worksheet.Cells["D49"].Value = " Comment (Person In-Charge):  " + reg.PIC;
-        //            worksheet.Cells["G53"].Value = reg.PIC;
-        //            worksheet.Cells["D50"].Value = reg.PIC_Comments;
-        //            worksheet.Cells["E53"].Value = reg.FullName;
+                    worksheet.Cells["B2"].Value = "Registration No: " + reg.RegNo;
+                    worksheet.Cells["B4"].Value = "Dept. /Section Inspected: P1SA-" + department;
+                    worksheet.Cells["C48"].Value = reg.Manager_Comments;
+                    worksheet.Cells["C53"].Value = "Manager: " + reg.Manager;
+                    worksheet.Cells["D48"].Value = " Date Conducted: " + formatted;
+                    worksheet.Cells["D49"].Value = " Comment (Person In-Charge):  " + reg.PIC;
+                    worksheet.Cells["G53"].Value = reg.PIC;
+                    worksheet.Cells["D50"].Value = reg.PIC_Comments;
+                    worksheet.Cells["E53"].Value = reg.FullName;
 
 
-        //            var findings = JsonConvert.DeserializeObject<List<FindingModel>>(json);
-        //            foreach (var f in findings)
-        //            {
-        //                switch (f.FindID)
-        //                {
-        //                    case 1:
-        //                        worksheet.Cells["B7"].Value = f.FindDescription;
-        //                        worksheet.Cells["D6"].Value = f.Countermeasure;
-        //                        break;
-        //                    case 2:
-        //                        worksheet.Cells["B13"].Value = f.FindDescription;
-        //                        worksheet.Cells["D12"].Value = f.Countermeasure;
-        //                        break;
-        //                    case 3:
-        //                        worksheet.Cells["B20"].Value = f.FindDescription;
-        //                        worksheet.Cells["D19"].Value = f.Countermeasure;
-        //                        break;
-        //                    case 4:
-        //                        worksheet.Cells["B27"].Value = f.FindDescription;
-        //                        worksheet.Cells["D26"].Value = f.Countermeasure;
-        //                        break;
-        //                    case 5:
-        //                        worksheet.Cells["B34"].Value = f.FindDescription;
-        //                        worksheet.Cells["D33"].Value = f.Countermeasure;
-        //                        break;
-        //                    default:
-        //                        worksheet.Cells["B42"].Value = f.FindDescription;
-        //                        worksheet.Cells["D41"].Value = f.Countermeasure;
-        //                        break;
-        //                }
-        //            }
+                    var findings = JsonConvert.DeserializeObject<List<FindingModel>>(json);
+                    foreach (var f in findings)
+                    {
+                        switch (f.FindID)
+                        {
+                            case 1:
+                                worksheet.Cells["B7"].Value = f.FindDescription;
+                                worksheet.Cells["D6"].Value = f.Countermeasure;
+                                break;
+                            case 2:
+                                worksheet.Cells["B13"].Value = f.FindDescription;
+                                worksheet.Cells["D12"].Value = f.Countermeasure;
+                                break;
+                            case 3:
+                                worksheet.Cells["B20"].Value = f.FindDescription;
+                                worksheet.Cells["D19"].Value = f.Countermeasure;
+                                break;
+                            case 4:
+                                worksheet.Cells["B27"].Value = f.FindDescription;
+                                worksheet.Cells["D26"].Value = f.Countermeasure;
+                                break;
+                            case 5:
+                                worksheet.Cells["B34"].Value = f.FindDescription;
+                                worksheet.Cells["D33"].Value = f.Countermeasure;
+                                break;
+                            default:
+                                worksheet.Cells["B42"].Value = f.FindDescription;
+                                worksheet.Cells["D41"].Value = f.Countermeasure;
+                                break;
+                        }
+                    }
 
-        //            // Save to memory
-        //            excelBytes = package.GetAsByteArray();
-        //        }
+                    // Save to memory
+                    excelBytes = package.GetAsByteArray();
+                }
 
-        //        // Step 2: Convert to PDF in memory using Spire.XLS
-        //        using (var excelStream = new MemoryStream(excelBytes))
-        //        {
-        //            var workbook = new Spire.Xls.Workbook();
-        //            workbook.LoadFromStream(excelStream, ExcelVersion.Version2013);
+                // Step 2: Convert to PDF in memory using Spire.XLS
+                using (var excelStream = new MemoryStream(excelBytes))
+                {
+                    var workbook = new Spire.Xls.Workbook();
+                    workbook.LoadFromStream(excelStream, ExcelVersion.Version2013);
 
-        //            var sheet = workbook.Worksheets[0];
+                    var sheet = workbook.Worksheets[0];
 
-        //            // ✨ Fix: Set top alignment and wrap to avoid vertical space
-        //            var affectedCells = new[] { "B42", "D41", "C41", "D42" };
-        //            foreach (var cell in affectedCells)
-        //            {
-        //                var range = sheet.Range[cell];
-        //                range.Style.VerticalAlignment = VerticalAlignType.Top;
-        //                range.Style.WrapText = true;
+                    // ✨ Fix: Set top alignment and wrap to avoid vertical space
+                    var affectedCells = new[] { "B42", "D41", "C41", "D42" };
+                    foreach (var cell in affectedCells)
+                    {
+                        var range = sheet.Range[cell];
+                        range.Style.VerticalAlignment = VerticalAlignType.Top;
+                        range.Style.WrapText = true;
 
-        //            }
+                    }
 
-        //            // ✨ Optional: Adjust row heights to avoid excess space
-        //            sheet.SetRowHeight(41, 30);
-        //            sheet.SetRowHeight(42, 30);
+                    // ✨ Optional: Adjust row heights to avoid excess space
+                    sheet.SetRowHeight(41, 30);
+                    sheet.SetRowHeight(42, 30);
 
-        //            // ⭐️ Next Step : Insert user signature image at C55
-        //            string imagePath = await GetImageString(reg.Employee_ID);
-        //            if (!string.IsNullOrEmpty(imagePath))
-        //            {
-        //                string pathfile = Path.Combine(@"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\Signatures", imagePath);
-        //                Debug.WriteLine("HERE : " +  pathfile);
-        //                //CellRange cell = sheet.Range["E53"];
-        //                //ExcelPicture picture = sheet.Pictures.Add(cell.Row, cell.Column, pathfile);
+                    // ⭐️ Next Step : Insert user signature image at C55
+                    string imagePath = await GetImageString(reg.Employee_ID);
+                    if (!string.IsNullOrEmpty(imagePath))
+                    {
+                        string pathfile = Path.Combine(@"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\Signatures", imagePath);
+                        Debug.WriteLine("HERE : " + pathfile);
+                        //CellRange cell = sheet.Range["E53"];
+                        //ExcelPicture picture = sheet.Pictures.Add(cell.Row, cell.Column, pathfile);
 
-        //                //picture.TopRowOffset = 0;
-        //                //picture.LeftColumnOffset = 0;
-        //                //picture.Width = (int)(cell.ColumnWidth * 7); // Scale approx. to column width
-        //                //picture.Height = (int)sheet.Rows[cell.Row - 1].RowHeight; // Match row height
+                        //picture.TopRowOffset = 0;
+                        //picture.LeftColumnOffset = 0;
+                        //picture.Width = (int)(cell.ColumnWidth * 7); // Scale approx. to column width
+                        //picture.Height = (int)sheet.Rows[cell.Row - 1].RowHeight; // Match row height
 
-        //                if (File.Exists(pathfile))
-        //                {
-        //                    foreach (IShape shape in sheet.PrstGeomShapes)
-        //                    {
-        //                        if (shape.Name == "SignaImage")
-        //                        {
-        //                            // Make sure it's a shape that supports image fill
-        //                            if (shape is IPrstGeomShape imageShape)
-        //                            {
-        //                                // Apply the image fill
-        //                                imageShape.Fill.CustomPicture(pathfile);
+                        if (File.Exists(pathfile))
+                        {
+                            foreach (IShape shape in sheet.PrstGeomShapes)
+                            {
+                                if (shape.Name == "SignaImage")
+                                {
+                                    // Make sure it's a shape that supports image fill
+                                    if (shape is IPrstGeomShape imageShape)
+                                    {
+                                        // Apply the image fill
+                                        imageShape.Fill.CustomPicture(pathfile);
 
-        //                                // Optional: Auto-size the shape to image dimensions or vice versa
-        //                                // This is optional; you can also resize the shape manually
-        //                                //System.Drawing.Image img = System.Drawing.Image.FromFile(pathfile);
-        //                                //shape.Width = img.Width;
-        //                                //shape.Height = img.Height;
-        //                            }
-        //                        }
-        //                    }
-        //                }
-        //                else
-        //                {
-        //                    Debug.WriteLine("Image file not found at: " + pathfile);
-        //                }
-        //            }
+                                        // Optional: Auto-size the shape to image dimensions or vice versa
+                                        // This is optional; you can also resize the shape manually
+                                        //System.Drawing.Image img = System.Drawing.Image.FromFile(pathfile);
+                                        //shape.Width = img.Width;
+                                        //shape.Height = img.Height;
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            Debug.WriteLine("Image file not found at: " + pathfile);
+                        }
+                    }
 
-        //            // Save to temporary local file first
-        //            workbook.SaveToFile(tempPdfPath, FileFormat.PDF);
-        //        }
+                    // Save to temporary local file first
+                    workbook.SaveToFile(tempPdfPath, FileFormat.PDF);
+                }
 
-        //        File.Copy(tempPdfPath, outputPdfPath, overwrite: true);
-        //        File.Delete(tempPdfPath);
+                File.Copy(tempPdfPath, outputPdfPath, overwrite: true);
+                File.Delete(tempPdfPath);
 
-        //        // Optional: Notify or log result
-        //        Debug.WriteLine($"PDF successfully generated at: {outputPdfPath}");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Debug.WriteLine("Error generating PDF: " + ex);
-        //    }
-        //}
+                // Optional: Notify or log result
+                Debug.WriteLine($"PDF successfully generated at: {outputPdfPath}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error generating PDF: " + ex);
+            }
+        }
 
         private static async Task<string>GetImageString(string EmpID)
         {
@@ -607,7 +682,14 @@ namespace ProgramPartListWeb.Utilities
         }
 
 
-      
+        private static async Task<string> GetImageStringP1SA(string EmpID)
+        {
+            string strquery = $@"SELECT TOP 1 Signature
+                                 FROM Patrol_UserEmail WHERE Employee_ID =@ID";
+
+            string data = await SqlDataAccess.GetOneData(strquery, new { ID = EmpID });
+            return (!string.IsNullOrEmpty(data)) ? data : "";
+        }
 
     }
 }

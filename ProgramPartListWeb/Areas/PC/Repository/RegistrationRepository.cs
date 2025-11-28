@@ -1,15 +1,11 @@
 ﻿using Newtonsoft.Json;
-using OfficeOpenXml.Core.Worksheet.Fill;
 using ProgramPartListWeb.Areas.PC.Interface;
 using ProgramPartListWeb.Areas.PC.Models;
 using ProgramPartListWeb.Helper;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace ProgramPartListWeb.Areas.PC.Repository
 {
@@ -108,7 +104,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                 RegNo = reg.RegNo,
                 Department_ID = reg.Department_ID,
                 PIC_ID = reg.PIC_ID,
-                Employee_ID = reg.InspectorID
+                Employee_ID = reg.Employee_ID
             });
 
             // If main insert failed → stop the whole process
@@ -130,7 +126,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             {
                 RegNo = reg.RegNo,
                 PIC_ID = reg.PIC_ID,
-                Inspect_ID = reg.InspectorID
+                Inspect_ID = reg.Employee_ID
             });
 
             // ========== 4. INSERT FINDINGS ==========
@@ -157,21 +153,28 @@ namespace ProgramPartListWeb.Areas.PC.Repository
         {
             // UPDATE THE MAIN REGISTRATION TABLE
             string mainsql = $@"UPDATE Patrol_Registration
-                                SET ReportStatus = 2, Employee_ID = @Employee_ID
+                                SET ReportStatus = 2, Manager_ID =@Manager_ID,  DepManager_ID =@DepManager_ID
                                 WHERE RegNo = @RegNo";
-            var regMain = SqlDataAccess.UpdateInsertQuery(mainsql, new { RegNo = reg.RegNo, Employee_ID = reg.Employee_ID });
+            var regMain = SqlDataAccess.UpdateInsertQuery(mainsql, new 
+            { 
+                RegNo = reg.RegNo,
+                Manager_ID = reg.DepManager_ID,
+                DepManager_ID = reg.DepManager_ID
+            });
 
 
             string appsql = $@"UPDATE Patrol_Registration_Approvelist
-                                SET PIC_Comments = @PIC_Comments, Inspect_ID = @Inspect_ID
+                                SET PIC_Comments = @PIC_Comments, Manager_ID =@Manager_ID,  DepManager_ID =@DepManager_ID
                                 WHERE RegNo = @RegNo";
 
             var regApp = SqlDataAccess.UpdateInsertQuery(appsql, new
             {
                 RegNo = reg.RegNo,
                 PIC_Comments = reg.PIC_Comments,
-                Inspect_ID = reg.Employee_ID
+                Manager_ID = reg.DepManager_ID,
+                DepManager_ID = reg.DepManager_ID
             });
+
             // UPDATE THE UPLOADED FILES
             var regFiles = SqlDataAccess.UpdateInsertQuery("EditPatrolFilesRegister", new
             {
@@ -269,12 +272,12 @@ namespace ProgramPartListWeb.Areas.PC.Repository
         public async Task<bool> ApproveByDivManager(string reg, string newfilepath, string DivManagerID)
         {
             var regsql = SqlDataAccess.UpdateInsertQuery(@"UPDATE Patrol_Registration SET  
-                            ReportStatus = 5, DivManager_ID =@DivManager_ID
-                            WHERE RegNo =@RegNo", new { RegNo = reg, DivManager_ID = DivManagerID });
+                            ReportStatus = 6, IsApproved = 1, ApprovalDate = GETDATE()
+                            WHERE RegNo =@RegNo", new { RegNo = reg });
 
             var revsql = SqlDataAccess.UpdateInsertQuery(@"UPDATE Patrol_Registration_Approvelist SET  
-                            Inspect_IsAproved =  1, DivManager_IsAproved = 1, DivManager_ID =@DivManager_ID
-                            WHERE RegNo =@RegNo", new { RegNo = reg, DivManager_ID = DivManagerID });
+                            DivManager_IsAproved =  1
+                            WHERE RegNo =@RegNo", new { RegNo = reg });
 
             var regFiles = SqlDataAccess.UpdateInsertQuery(@"UPDATE Patrol_Registration_Files SET FilePath =@FilePath
                             WHERE RegNo =@RegNo", new

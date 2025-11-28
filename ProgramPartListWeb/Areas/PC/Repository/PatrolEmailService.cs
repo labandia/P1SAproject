@@ -367,11 +367,17 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             string Countermeasure = "";
             string shortmessage = "";
             string buttonLink = "";
-            string isAprovedInspector = (patrol.Inspect_IsAproved == true) ? 
-                        "<div class='completion-badge'>✓ </div></td>" : "";
+            string isAprovedInspector = (patrol.Inspect_IsAproved == true)
+                ? "<span class='completion-badge'>&#10003;</span>"
+                : "";
 
-            string IsAprovedManager = (patrol.DepManager_IsAproved == true) ?
-                     "<div class='completion-badge'>✓ </div></td>" : "";
+            string IsAprovedManager = (patrol.DepManager_IsAproved == true)
+                ? "<span class='completion-badge'> &#10003;</span>"
+                : "";
+
+            string IsAprovedDivisonManager = (patrol.DivManager_IsAproved == true)
+                ? "<span class='completion-badge'> &#10003;</span>"
+                : "";
 
 
             // Build findings list
@@ -453,11 +459,20 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                         </tr>
                         <tr>
                             <td class='label'>Inspector:</td>
-                            <td>{patrol.InspectName ?? "-"} {isAprovedInspector}
+                            <td>{patrol.InspectName ?? "-"} {isAprovedInspector}</td>
                         </tr>
+
                         <tr>
                             <td class='label'>Manager :</td>
                             <td>{patrol.ManagerName ?? "-"} {IsAprovedManager}</td>
+                        </tr>
+                        <tr>
+                            <td class='label'>Manager Comments:</td>
+                            <td>{patrol.Manager_Comments ?? "-"} </td>
+                        </tr>
+                        <tr>
+                            <td class='label'>Divison Manager:</td>
+                            <td>{patrol.DivName ?? "-"} {IsAprovedDivisonManager}</td>
                         </tr>
                         <tr>
                             <td class='label'>Link of the Registration No.:</td>
@@ -504,7 +519,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                                             font-size: 14px;
                                             font-weight: bold;
                                             display: inline-block;
-                                            margin: 10px 0;
+                                            margin: 10px 0 10px 20px;
                            }}
                     </style>
                 </head>
@@ -523,8 +538,9 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                          
 
                             <div class='note-box'>
-                                <p><strong>Important:</strong> The check indicates a Approved by </p>
+                                <p><strong>Important:</strong> The check <span class='completion-badge'>&#10003;</span> indicates that the item has been approved by the person.</p>
                             </div>
+
                         </div>
     
                         <div class='footer'>

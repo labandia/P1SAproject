@@ -244,7 +244,6 @@
 
         let strRegno = "@regno";
         let modeset = @ViewBag.Mode;
-        console.log(strRegno);
         // =======  FOR UPLOADING FILES =======================
         const fileUploadArea = document.getElementById("file-upload-area");
         const fileList = document.getElementById("fileList");
@@ -320,7 +319,7 @@
         };
 
 
-         addform.addEventListener('submit', async (e) => {
+        addform.addEventListener('submit', async (e) => {
              e.preventDefault();
 
                  // Get the ID of the save button and Store original text

@@ -1,15 +1,12 @@
 ﻿using MSDMonitoring.Data;
 using NCR_system.Interface;
 using NCR_system.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace NCR_system.Repository
 {
-    internal class CustomerRepository : ICustomerComplaint
+    internal class CustomerRepository : ICustomerComplaint, ISummary
     {
         public async Task<IEnumerable<CustomerModel>> GetCustomerData(int type)
         {
@@ -55,6 +52,8 @@ namespace NCR_system.Repository
                                 s.SectionID ASC;";
             return SqlDataAccess.GetData<CustomerTotalModel>(strsql, new { CCtype = type });
         }
+
+       
 
         public async Task<bool> InsertCustomerData(CustomerModel customer, int type)
         {

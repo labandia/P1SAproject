@@ -461,6 +461,7 @@
 
 
 <script type="text/javascript">
+    let IsRestrictRole;
     let Inventlist = [];
     let loadData = [];
     let userRole;
@@ -533,7 +534,7 @@
 
     const ActionRestrict = () => {
         userRole = localStorage.getItem("UserRole");
-        if (userRole === "Leader" || userRole === "Users") {
+        if (userRole === "Manager" || userRole === "Supervisor") {
             return false;
         }
     }
@@ -561,8 +562,22 @@
                     : '@Url.Content("~/Content/Images/no-image.png")';
 
 
+                if (ActionRestrict() === false) {
+                   
+                }
 
 
+                let IsAccessIncrement = (ActionRestrict() === false) ?
+                    `<button id="decrement" class="btn btn-secondary" ><i class="fa-solid fa-plus"></i></button>`
+                    : ` <button id="increment" class="btn btn-increment" onclick="incrementPart('${row.StockID}',  ${row.CurrentQty}, ${row.ReorderLevel})"><i class="fa-solid fa-plus"></i></button>`;
+
+
+                let IsAccessdecrease = (ActionRestrict() === false) ?
+                    `<button id="decrement" class="btn btn-secondary" ><i class="fa-solid fa-minus"></i></button>`
+                    : `<button id="decrement" class="btn btn-decrement" onclick="decrementPart('${row.StockID}', ${row.CurrentQty}, ${row.ReorderLevel})"><i class="fa-solid fa-minus"></i></button>`;
+
+
+               
 
                    const rowHtml = `
                                      <tr data-id="${row.PartID}" data-category="${row.CategoryID}" class='rowClick' id='editButton_${row.PartID}'>
@@ -582,9 +597,9 @@
                                          </td>
                                          <td data-cell="Supplier">${row.Supplier ? row.Supplier : "-"}</td>
                                          <td data-cell="CurrentQty" style="font-weight: 600; color: #185d8b;">
-                                                <button class="btn btn-decrement" onclick="decrementPart('${row.StockID}', ${row.CurrentQty}, ${row.ReorderLevel})"><i class="fa-solid fa-minus"></i></button>
+                                                ${IsAccessdecrease}
                                                     ${row.CurrentQty}
-                                                <button class="btn btn-increment" onclick="incrementPart('${row.StockID}',  ${row.CurrentQty}, ${row.ReorderLevel})"><i class="fa-solid fa-plus"></i></button>
+                                               ${IsAccessIncrement}
                                          </td>
                                          <td data-cell="WarningLevel" style="font-weight: 600;">${row.WarningLevel}</td>
                                          <td data-cell="Approval" >
@@ -1261,6 +1276,11 @@
     const LoadPageData = async () => {
         try {
             if (ActionRestrict() === false) {
+                $("#Showadd").prop("disabled", true).css({
+                    backgroundColor: "rgb(230,230,230)",
+                    color: "rgb(172,172,172)"
+                });
+               
             }
 
             const [invent, drop] = await Promise.all([

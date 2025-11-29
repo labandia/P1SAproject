@@ -10,6 +10,7 @@ namespace NCR_system.Interface
     public interface IShipRejected
     {
         Task<IEnumerable<RejectShipmentModel>> GetRejectedShipData(int proc);
+        Task<List<CustomerTotalModel>> GetCustomersOpenItem(int type = 0);
         Task<bool> InsertShipRejectData(RejectShipmentModel ncr, int proc);
         Task<bool> UpdateShipRejectData(RejectShipmentModel ncr);
     }

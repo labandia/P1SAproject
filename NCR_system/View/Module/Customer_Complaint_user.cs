@@ -17,6 +17,7 @@ namespace NCR_system.View.Module
     public partial class Customer_Complaint_user : UserControl
     {
         private readonly ICustomerComplaint _cust;
+        private readonly ISummary _sum;
 
 
         public List<CustomerModel> cuslist { get; private set; } = new List<CustomerModel>();
@@ -24,10 +25,11 @@ namespace NCR_system.View.Module
 
 
 
-        public Customer_Complaint_user(ICustomerComplaint cust)
+        public Customer_Complaint_user(ICustomerComplaint cust, ISummary sum)
         {
             InitializeComponent();
             _cust = cust;
+            _sum = sum; 
         }
 
 
@@ -112,14 +114,16 @@ namespace NCR_system.View.Module
                     CustomDatagrid.Columns["Delete"].Width = 100;
                     CustomDatagrid.Columns["Delete"].DisplayIndex = 9;
 
-                    //ExternalPanel.Visible = true;
-                    //ExternalPanel.BringToFront();
-                    //SDCPanel.Visible = false;
 
+                    OpenCC.Enabled = false;
+                    OpenCC.BackColor = Color.FromArgb(230, 230, 230);
+                    OpenCC.ForeColor = Color.FromArgb(194, 194, 194);
+                    OpenCC.FlatAppearance.BorderColor = Color.FromArgb(172, 172, 172);
 
-                    Externalbtn.Visible = true;
-                    Externalbtn.BringToFront();
-                    OpenCC.Visible = false;
+                    Externalbtn.Enabled = true;
+                    Externalbtn.BackColor = Color.FromArgb(95, 34, 200);
+                    Externalbtn.ForeColor = Color.FromArgb(255, 255, 255);
+
                 }
                 else
                 {
@@ -169,14 +173,17 @@ namespace NCR_system.View.Module
                     CustomDatagrid.Columns["Delete"].Width = 100;
                     CustomDatagrid.Columns["Delete"].DisplayIndex = 8;
 
-                    //SDCPanel.Visible = true;
-                    //SDCPanel.BringToFront();
-                    //ExternalPanel.Visible = false;
+               
 
+                    Externalbtn.Enabled = false;
+                    Externalbtn.BackColor = Color.FromArgb(230, 230, 230);
+                    Externalbtn.ForeColor = Color.FromArgb(194, 194, 194);
+                    Externalbtn.FlatAppearance.BorderColor = Color.FromArgb(172, 172, 172);
 
-                    OpenCC.Visible = true;
-                    OpenCC.BringToFront();
-                    Externalbtn.Visible = false;
+                    OpenCC.Enabled = true;
+                    OpenCC.BackColor = Color.FromArgb(95, 34, 200);
+                    OpenCC.ForeColor = Color.FromArgb(255, 255, 255);
+
                 }
 
 
@@ -191,7 +198,7 @@ namespace NCR_system.View.Module
                     new KeyValuePair<int, string>(5, "Circuit")
                 };
 
-                var countItems = await _cust.GetCustomersOpenItem(proc);
+                var countItems = await _sum.GetCustomersOpenItem(proc);
 
 
                 foreach (var items in countItems)

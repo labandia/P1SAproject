@@ -9,6 +9,23 @@ namespace NCR_system.Repository
 {
     internal class RejectShipRepository : IShipRejected
     {
+        public Task<List<CustomerTotalModel>> GetCustomersOpenItem(int type = 0)
+        {
+            string strsql = $@"SELECT 
+                                s.DepartmentName,
+                                COUNT(c.Status) AS totalOpen
+                            FROM PC_Section s
+                            LEFT JOIN PC_RejectShip c
+                                ON c.SectionID = s.SectionID 
+                                AND c.Status = 1 
+                            GROUP BY 
+                                s.SectionID, 
+                                s.DepartmentName
+                            ORDER BY 
+                            s.SectionID ASC;";
+            return SqlDataAccess.GetData<CustomerTotalModel>(strsql, null);
+        }
+
         public async Task<IEnumerable<RejectShipmentModel>> GetRejectedShipData(int proc)
         {
             string strsql = $@"SELECT 

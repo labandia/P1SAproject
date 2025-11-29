@@ -128,13 +128,11 @@
             this.Customerbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Customerbtn.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Customerbtn.ForeColor = System.Drawing.Color.White;
-            this.Customerbtn.Location = new System.Drawing.Point(0, 158);
+            this.Customerbtn.Location = new System.Drawing.Point(16, 167);
             this.Customerbtn.Name = "Customerbtn";
-            this.Customerbtn.Padding = new System.Windows.Forms.Padding(0, 0, 0, 10);
-            this.Customerbtn.Size = new System.Drawing.Size(116, 48);
+            this.Customerbtn.Size = new System.Drawing.Size(116, 28);
             this.Customerbtn.TabIndex = 10;
             this.Customerbtn.Text = "Customer Complaint";
-            this.Customerbtn.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.Customerbtn.UseVisualStyleBackColor = false;
             this.Customerbtn.Click += new System.EventHandler(this.Customerbtn_Click);
             // 

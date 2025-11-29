@@ -373,6 +373,7 @@
     async function Getuserinfo() {
         const accessToken = localStorage.getItem('accessToken');
         const result = await FetchAuthenticate('/User/GetUserInformation', { accessToken });
+        console.log(result);
         nowpass = result.Password;
         UserID = result.userId;
         document.getElementById("SignatureImage").src = '/User/GetSignatureImage?filename=' + encodeURIComponent(result.Signature);

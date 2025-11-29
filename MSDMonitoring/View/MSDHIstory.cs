@@ -45,6 +45,70 @@ namespace MSDMonitoring
             //MonitorTable.Columns[0].Width = 200;
             //MonitorTable.Columns[1].Width = 200;
 
+
+            MonitorTable.Columns["Partnumber"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            MonitorTable.Columns["Partnumber"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            MonitorTable.Columns["Partnumber"].Width = 100;
+
+            MonitorTable.Columns["ReelID"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            MonitorTable.Columns["ReelID"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+
+            //MonitorTable.Columns["Storelocation"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //MonitorTable.Columns["Storelocation"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+
+            MonitorTable.Columns["Position"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            MonitorTable.Columns["Position"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+
+            MonitorTable.Columns["FloorLife"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            MonitorTable.Columns["FloorLife"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+
+            MonitorTable.Columns["Level"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            MonitorTable.Columns["Level"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+
+            MonitorTable.Columns["LotNo"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            MonitorTable.Columns["LotNo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+
+            MonitorTable.Columns["Line"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            MonitorTable.Columns["Line"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+
+            MonitorTable.Columns["TimeIn"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            MonitorTable.Columns["TimeIn"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            MonitorTable.Columns["TimeIn"].Width = 100;
+
+            MonitorTable.Columns["TimeOut"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            MonitorTable.Columns["TimeOut"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            MonitorTable.Columns["TimeOut"].Width = 100;
+
+            MonitorTable.Columns["Reel_Quantity"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            MonitorTable.Columns["Reel_Quantity"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            MonitorTable.Columns["Reel_Quantity"].Width = 120;
+
+            
+            MonitorTable.Columns["Quantity_IN"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            MonitorTable.Columns["Quantity_IN"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            MonitorTable.Columns["Quantity_IN"].Width = 150;
+
+            MonitorTable.Columns["PlanQty"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            MonitorTable.Columns["PlanQty"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            MonitorTable.Columns["PlanQty"].Width = 150;
+
+            MonitorTable.Columns["Input_Name"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            MonitorTable.Columns["Input_Name"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            MonitorTable.Columns["Input_Name"].Width = 120;
+
+            MonitorTable.Columns["InputName"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            MonitorTable.Columns["InputName"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            MonitorTable.Columns["InputName"].Width = 120;
+
+            MonitorTable.Columns["Exphours"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            MonitorTable.Columns["Exphours"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            MonitorTable.Columns["Exphours"].Width = 120;
+
+            MonitorTable.Columns["TotalHours"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            MonitorTable.Columns["TotalHours"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            MonitorTable.Columns["TotalHours"].Width = 120;
+
+
             MonitorTable.Columns["Print"].DisplayIndex = 22;
             MonitorTable.Columns["Print"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
             MonitorTable.Columns["Print"].Width = 70;
@@ -67,15 +131,57 @@ namespace MSDMonitoring
             {
                 e.CellStyle.Font = new Font(MonitorTable.Font, FontStyle.Bold);
             }
+            
 
-            if (e.ColumnIndex == 19 && e.Value != null)
+            if (MonitorTable.Columns[e.ColumnIndex].Name == "RemainLife")
             {
-                if (e.Value.ToString().Trim().Equals("CLOSE", StringComparison.OrdinalIgnoreCase))
+                string checkstats = e.Value.ToString() != "CLOSE" ? e.Value.ToString() : "CLOSE";
+                e.Value = checkstats;
+
+                if (checkstats != "CLOSE")
                 {
-                    e.CellStyle.ForeColor = Color.Red;
-                    e.CellStyle.Font = new Font(MonitorTable.Font, FontStyle.Bold);
+                    e.CellStyle.ForeColor = Color.FromArgb(78, 166, 101);
+
                 }
+                else
+                {
+                    e.CellStyle.ForeColor = Color.White;
+                    e.CellStyle.BackColor = Color.FromArgb(184, 94, 104);
+                }
+
+
+                e.FormattingApplied = true;
             }
+            else if (MonitorTable.Columns[e.ColumnIndex].Name == "Position")
+            {
+                string checkstats = e.Value.ToString() == "UPPER" ? "UPPER" : "LOWER";
+
+                e.Value = checkstats;
+
+                if (checkstats == "UPPER")
+                {
+                    e.CellStyle.ForeColor = Color.FromArgb(32, 88, 161);
+
+                }
+                else
+                {
+                    e.CellStyle.ForeColor = Color.FromArgb(161, 92, 32);
+                }
+
+
+                e.FormattingApplied = true;
+            }
+
+
+
+            //if (e.ColumnIndex == 19 && e.Value != null)
+            //{
+            //    if (e.Value.ToString().Trim().Equals("CLOSE", StringComparison.OrdinalIgnoreCase))
+            //    {
+            //        e.CellStyle.ForeColor = Color.Red;
+            //        e.CellStyle.Font = new Font(MonitorTable.Font, FontStyle.Bold);
+            //    }
+            //}
         }
 
         private async void BtnNext_Click(object sender, EventArgs e)

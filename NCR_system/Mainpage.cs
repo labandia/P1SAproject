@@ -13,6 +13,7 @@ namespace NCR_system
 {
     public partial class Mainpage : Form
     {
+        private readonly Dashboard _dash;
         private readonly Customer_Complaint_user _cc;
         private readonly Inprocess_control _proc;
         private readonly NCR_control _ncr;
@@ -25,7 +26,8 @@ namespace NCR_system
             Inprocess_control proc,
             NCR_control ncr,
             Rejected rej,
-            ShipRejected ship)
+            ShipRejected ship,
+            Dashboard dash)
         {
             InitializeComponent();
             _serviceProvider = service;
@@ -34,6 +36,7 @@ namespace NCR_system
             _ncr = ncr;
             _rej = rej;
             _ship = ship;
+            _dash = dash;
 
 
             _cc.Dock = DockStyle.Fill;
@@ -41,6 +44,9 @@ namespace NCR_system
             _ncr.Dock = DockStyle.Fill;
             _rej.Dock = DockStyle.Fill;
             _ship.Dock = DockStyle.Fill;
+            _dash.Dock = DockStyle.Fill;
+
+            Controls.Add(_dash);
             Controls.Add(_cc);
             Controls.Add(_proc);
             Controls.Add(_ncr);
@@ -90,6 +96,11 @@ namespace NCR_system
         private void panelContainer_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            _dash.BringToFront();
         }
     }
 }

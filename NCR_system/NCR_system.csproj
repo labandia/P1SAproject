@@ -227,6 +227,12 @@
     <Compile Include="View\Module\Customer_Complaint_user.Designer.cs">
       <DependentUpon>Customer_Complaint_user.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\Module\Dashboard.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\Module\Dashboard.Designer.cs">
+      <DependentUpon>Dashboard.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\Module\Inprocess_control.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -304,6 +310,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\Module\Customer_Complaint_user.resx">
       <DependentUpon>Customer_Complaint_user.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Module\Dashboard.resx">
+      <DependentUpon>Dashboard.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\Module\Inprocess_control.resx">
       <DependentUpon>Inprocess_control.cs</DependentUpon>

@@ -42,6 +42,7 @@ namespace NCR_system
 
             services.AddTransient<Customer_Complaint_user>();
             services.AddTransient<Inprocess_control>();
+            services.AddTransient<Dashboard>();
             services.AddTransient<NCR_control>();
             services.AddTransient<Rejected>();
             services.AddTransient<ShipRejected>();

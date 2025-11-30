@@ -83,6 +83,7 @@ namespace NCR_system.View.Module
                     CustomDatagrid.Columns["CustomerName"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                     CustomDatagrid.Columns["CustomerName"].DisplayIndex = 2;
 
+                    CustomDatagrid.Columns["SectionID"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                     CustomDatagrid.Columns["SectionID"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
                     CustomDatagrid.Columns["SectionID"].Width = 150;
                     CustomDatagrid.Columns["SectionID"].DisplayIndex = 3;
@@ -91,10 +92,12 @@ namespace NCR_system.View.Module
                     CustomDatagrid.Columns["ModelNo"].Width = 150;
                     CustomDatagrid.Columns["ModelNo"].DisplayIndex = 4;
 
+                    CustomDatagrid.Columns["LotNo"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                     CustomDatagrid.Columns["LotNo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
                     CustomDatagrid.Columns["LotNo"].Width = 150;
                     CustomDatagrid.Columns["LotNo"].DisplayIndex = 5;
 
+                    CustomDatagrid.Columns["NGQty"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                     CustomDatagrid.Columns["NGQty"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
                     CustomDatagrid.Columns["NGQty"].Width = 100;
                     CustomDatagrid.Columns["NGQty"].DisplayIndex = 6;
@@ -102,6 +105,7 @@ namespace NCR_system.View.Module
                     CustomDatagrid.Columns["Details"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                     CustomDatagrid.Columns["Details"].DisplayIndex = 7;
 
+                    CustomDatagrid.Columns["Status"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                     CustomDatagrid.Columns["Status"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
                     CustomDatagrid.Columns["Status"].Width = 100;
                     CustomDatagrid.Columns["Status"].DisplayIndex = 8;
@@ -110,6 +114,7 @@ namespace NCR_system.View.Module
                     //CustomDatagrid.Columns["Edit"].Width = 100;
                     //CustomDatagrid.Columns["Edit"].DisplayIndex = 9;
 
+                    CustomDatagrid.Columns["Delete"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                     CustomDatagrid.Columns["Delete"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
                     CustomDatagrid.Columns["Delete"].Width = 100;
                     CustomDatagrid.Columns["Delete"].DisplayIndex = 9;
@@ -198,7 +203,7 @@ namespace NCR_system.View.Module
                     new KeyValuePair<int, string>(5, "Circuit")
                 };
 
-                var countItems = await _sum.GetCustomersOpenItem(proc);
+                var countItems = await _sum.GetCustomersOpenItem(proc) ?? new List<CustomerTotalModel>();
 
 
                 foreach (var items in countItems)
@@ -297,13 +302,7 @@ namespace NCR_system.View.Module
 
             SelectedProcess.SelectedIndex = 0;
             SelectedProcess.DropDownHeight = 41;
-            CustomDatagrid.Columns["RegNo"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            CustomDatagrid.Columns["SectionID"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            CustomDatagrid.Columns["LotNo"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            CustomDatagrid.Columns["NGQty"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            CustomDatagrid.Columns["Status"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            //CustomDatagrid.Columns["Edit"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            CustomDatagrid.Columns["Delete"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+          
         }
 
         private async void SelectedProcess_SelectedIndexChanged(object sender, EventArgs e)

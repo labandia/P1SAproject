@@ -32,6 +32,7 @@ namespace NCR_system.View.Module
 
 
                 RejectedGrid.Columns["RegNo"].DisplayIndex = 0;
+                RejectedGrid.Columns["RegNo"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 RejectedGrid.Columns["RegNo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 
 
@@ -42,7 +43,7 @@ namespace NCR_system.View.Module
 
                 RejectedGrid.Columns["IssueGroup"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 RejectedGrid.Columns["IssueGroup"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                RejectedGrid.Columns["IssueGroup"].Width = 120;
+                RejectedGrid.Columns["IssueGroup"].Width = 150;
                 RejectedGrid.Columns["IssueGroup"].DisplayIndex = 2;
 
 

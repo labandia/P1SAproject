@@ -31,8 +31,8 @@
     <table>
         <thead>
             <tr>
-                <th style="text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-file-contract"></i> <span style="margin-left: .5em;">Registration No.</span></th>
-                <th style="text-align: left; padding-left: 1.5em;"><i class="fa-solid fa-user-secret"></i>  <span style="margin-left: .5em;">Inspector</span> </th>
+                <th style="text-align: center; padding-left: 1.5em;"><i class="fa-solid fa-file-contract"></i> <span style="margin-left: .5em;">Registration No.</span></th>
+                <th style="text-align: center; padding-left: 1.5em;"><i class="fa-solid fa-user-secret"></i>  <span style="margin-left: .5em;">Inspector</span> </th>
                 <th><i class="fa-regular fa-building"></i> <span style="margin-left: .5em;">Section</span> </th>
                 <th><i class="fa-regular fa-user"></i> <span style="margin-left: .5em;">PIC</span></th>
                 <th><i class="fa-regular fa-calendar"></i> <span style="margin-left: .5em;">Date Conducted</span> </th>
@@ -174,19 +174,19 @@
 
                 switch (rowData.ReportStatus) {
                     case 1:
-                        Stats = `<span id="reportStats">Process Owner</span>`;
+                        Stats = `<span id="reportStats" style='color: rgb(9, 67, 100)'>Process Owner</span>`;
                         break;
                     case 2:
-                        Stats = `<span id="reportStats">Inspection </span>`;
+                        Stats = `<span id="reportStats"  style='color: rgb(100, 30, 9)'>Inspection </span>`;
                         break;
                     case 3:
-                        Stats = `<span id="reportStats">Managers </span>`;
+                        Stats = `<span id="reportStats" style='color: rgb(33, 9, 100);'>Managers </span>`;
                         break;
                     case 4:
-                        Stats = `<span id="reportStats">Div Manager </span>`;
+                        Stats = `<span id="reportStats" style='color: rgb(9, 15, 100);'>Div Manager </span>`;
                         break;
                     case 6:
-                        Stats = `<span id="reportStats">Completed</span>`;
+                        Stats = `<span id="reportStats" style='color: rgb(9, 100, 73);'>Completed</span>`;
                         break;
                     default:
                         Stats = `<span id="reportStats">Div Manager </span>`;
@@ -197,10 +197,10 @@
 
                 const rowHtml = `
                  <tr class='row_${i} editButton' id='editButton_${rowData.RegNo}'>
-                     <td style='font-weight: 600; text-align: left; padding-left: 1.5em;' data-cell="RegNo">${rowData.RegNo}</td>
+                     <td style='font-weight: 600; text-align: center; padding-left: 1.5em;' data-cell="RegNo">${rowData.RegNo}</td>
                      <td style='font-weight: 600; text-align: left; padding-left: 1.5em; color: #0c382ce8;' data-cell="Inspector">${rowData.InspectName ?? "N/A"}</td>
                      <td data-cell="SectionName"><span class="Section">${rowData.SectionName ?? "N/A"}</span></td>
-                     <td data-cell="PIC">${rowData.PICName ?? "N/A"}</td>
+                     <td style='text-align: left; padding-left: 1.5em; color: #0c382ce8;' data-cell="PIC">${rowData.PICName ?? "N/A"}</td>
                      <td data-cell="DateConduct">${rowData.DateConduct ?? "N/A"}</td>
                      <td data-cell="Filepath" >
                         <div class='flex_center'>

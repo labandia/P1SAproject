@@ -39,6 +39,75 @@ namespace FootWristStrapsAnalysis
             var getData = await _foot.GetFootAnalysisData();
             footlist = getData.ToList();
             AnalysisTable.DataSource = footlist;
+
+            AnalysisTable.Columns["TestTime"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            AnalysisTable.Columns["TestTime"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            AnalysisTable.Columns["TestTime"].Width = 120;
+
+            // Employee ID
+            AnalysisTable.Columns["EmployeeID"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            AnalysisTable.Columns["EmployeeID"].Width = 120;
+
+            // Employee Name
+            AnalysisTable.Columns["EmployeeName"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            AnalysisTable.Columns["EmployeeName"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            AnalysisTable.Columns["EmployeeName"].Width = 150;
+
+            // Comprehensive Result 
+            AnalysisTable.Columns["ComprehensiveResult"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            AnalysisTable.Columns["ComprehensiveResult"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            AnalysisTable.Columns["ComprehensiveResult"].Width = 200;
+
+            // Left Foot Resis 
+            AnalysisTable.Columns["LeftFootResistance"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            AnalysisTable.Columns["LeftFootResistance"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            AnalysisTable.Columns["LeftFootResistance"].Width = 150;
+
+            // Left Foot Result 
+            AnalysisTable.Columns["LeftFootResult"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            AnalysisTable.Columns["LeftFootResult"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            AnalysisTable.Columns["LeftFootResult"].Width = 150;
+
+            // Right Foot Resis 
+            AnalysisTable.Columns["RightFootResistance"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            AnalysisTable.Columns["RightFootResistance"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            AnalysisTable.Columns["RightFootResistance"].Width = 200;
+
+            // Right Foot Resis 
+            AnalysisTable.Columns["RightFootResult"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            AnalysisTable.Columns["RightFootResult"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            AnalysisTable.Columns["RightFootResult"].Width = 150;
+
+            // Wrist Strap resis
+            AnalysisTable.Columns["WristStrapResult"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            AnalysisTable.Columns["WristStrapResult"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            AnalysisTable.Columns["WristStrapResult"].Width = 200;
+
+            //ConductivityEvaluation
+            AnalysisTable.Columns["ConductivityEvaluation"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            AnalysisTable.Columns["ConductivityEvaluation"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            AnalysisTable.Columns["ConductivityEvaluation"].Width = 200;
+
+            // ----------------------------------------------------------------
+            // Lower Evaluation Limit
+            AnalysisTable.Columns["LowerEvaluationLimit"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            AnalysisTable.Columns["LowerEvaluationLimit"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            AnalysisTable.Columns["LowerEvaluationLimit"].Width = 200;
+
+            // Upper Evaluation Limit
+            AnalysisTable.Columns["UpperEvaluationLimit"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            AnalysisTable.Columns["UpperEvaluationLimit"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            AnalysisTable.Columns["UpperEvaluationLimit"].Width = 200;
+
+            // Evaluation Buzzer
+            AnalysisTable.Columns["EvaluationBuzzer"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            AnalysisTable.Columns["EvaluationBuzzer"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            AnalysisTable.Columns["EvaluationBuzzer"].Width = 200;
+
+            // Evaluation External Output
+            AnalysisTable.Columns["EvaluationExternalOutput"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            AnalysisTable.Columns["EvaluationExternalOutput"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            AnalysisTable.Columns["EvaluationExternalOutput"].Width = 200;
         }
 
 

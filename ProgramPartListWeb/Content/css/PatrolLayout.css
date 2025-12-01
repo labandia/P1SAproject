@@ -299,7 +299,8 @@
     /* Optional: Table row styling */
     .MainTable tbody td,  .InspecTable tbody td {
         padding: 0.75em;
-        font-weight: 600;
+        font-weight: 500;
+         border: 1px solid #d4d3d3;
     }
     .MasterlistWrap_footer {
         width: 100%;
@@ -450,7 +451,7 @@
     }
 
 /*================== STATUS DATA =======================*/
-    .Complete, .Incomplete, .Section {
+    .Complete, .Incomplete, .Section, .ProcessOwner, .Inspector, .DepartManage, .DivManage  {
         font-weight: 600;
         padding: .4em 1em;
         border-radius: .2rem;

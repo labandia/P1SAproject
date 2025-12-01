@@ -120,6 +120,9 @@
   <metadata name="RecordID.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <metadata name="RegNo.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
   <metadata name="DateIssued.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -166,10 +169,11 @@
   </metadata>
   <data name="Delete.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAABGdBTUEAALGPC/xhBQAAAIJJREFUKFOd
-        jjEKwkAUBacK2FuktrW09AjJEfQIeoR4A71LAjlF7mOpPNgPydtv48DAsm9YFmoa4FDU+SdH4ATMwKeo
-        s+60bWiB9yp0tanZsF99xdVW8UpeDp8ei0cShoPH4p6E4c1jcU3C8OKx6JMw7DwW5yQMtVXsgAlYzLFs
-        //EFmEk6wdJd2CkAAAAASUVORK5CYII=
+        iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAABGdBTUEAALGPC/xhBQAAAMRJREFUOE/N
+        izEOAWEQhf9CqyPR7SEk6u3YebNbUiskbsAR9ghUbrIalZhZrUuIG5BZS5hiI6Lwki+ZvHlfCL/KNo5b
+        CogC5xqxzu+eUea5ArkAGwWur9RdbhvvBWGeVs8GbOO9sCfqlcwz3z9iP9v4PgjQV+Bk95F5sMuytmG3
+        dfazjffeRAEKIeIKoPhYVGArzKlh9x+LQjQ6pGlHk6QrwLBRVKJIgYsSLRVYvHHv7Bd5r4owTxRYlcD6
+        FeuEaOz3X+UGYM+1BF/FpI4AAAAASUVORK5CYII=
 </value>
   </data>
   <data name="pictureBox5.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

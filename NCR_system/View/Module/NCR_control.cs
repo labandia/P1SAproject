@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using System;
 using System.Windows.Forms;
 using System.Linq;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Windows.Media.Media3D;
 
 namespace NCR_system.View.Module
 {
@@ -25,6 +27,92 @@ namespace NCR_system.View.Module
                 //NCRGrid.DataSource = null;
                 var inprocesslist = (await _ncr.GetNCRData(procs)).ToList();
                 NCRGrid.DataSource = inprocesslist;
+
+                //RecordID
+                NCRGrid.Columns["Category"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                NCRGrid.Columns["Category"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                NCRGrid.Columns["Category"].DisplayIndex = 0;
+                //NCRGrid.Columns["Category"].Visible = false;
+
+
+
+                NCRGrid.Columns["RegNo"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                NCRGrid.Columns["RegNo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                NCRGrid.Columns["RegNo"].Width = 150;
+                NCRGrid.Columns["RegNo"].DisplayIndex = 1;
+                //NCRGrid.Columns["RegNo"].Visible = false;
+
+                NCRGrid.Columns["DateIssued"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                NCRGrid.Columns["DateIssued"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                NCRGrid.Columns["DateIssued"].Width = 150;
+                NCRGrid.Columns["DateIssued"].DisplayIndex = 2;
+
+                NCRGrid.Columns["IssuedGroup"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                NCRGrid.Columns["IssuedGroup"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                NCRGrid.Columns["IssuedGroup"].Width = 180;
+                NCRGrid.Columns["IssuedGroup"].DisplayIndex = 3;
+
+                NCRGrid.Columns["SectionID"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                NCRGrid.Columns["SectionID"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                NCRGrid.Columns["SectionID"].Width = 180;
+                NCRGrid.Columns["SectionID"].DisplayIndex = 4;
+
+                NCRGrid.Columns["ModelNo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                NCRGrid.Columns["ModelNo"].DisplayIndex = 5;
+
+                NCRGrid.Columns["Quantity"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                NCRGrid.Columns["Quantity"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                NCRGrid.Columns["Quantity"].Width = 100;
+                NCRGrid.Columns["Quantity"].DisplayIndex = 6;
+
+                NCRGrid.Columns["Contents"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                NCRGrid.Columns["Contents"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                NCRGrid.Columns["Contents"].Width = 100;
+                NCRGrid.Columns["Contents"].DisplayIndex = 7;
+      
+                NCRGrid.Columns["DateRegist"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                NCRGrid.Columns["DateRegist"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                NCRGrid.Columns["DateRegist"].Width = 120;
+                NCRGrid.Columns["DateRegist"].DisplayIndex = 8;
+
+                NCRGrid.Columns["Status"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                NCRGrid.Columns["Status"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                NCRGrid.Columns["Status"].Width = 150;
+                NCRGrid.Columns["Status"].DisplayIndex = 9;
+
+                // Target Date
+                NCRGrid.Columns["TargetDate"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                NCRGrid.Columns["TargetDate"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                NCRGrid.Columns["TargetDate"].DisplayIndex = 10;
+
+
+                NCRGrid.Columns["FilePath"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                NCRGrid.Columns["FilePath"].DisplayIndex = 11;
+
+                // Date Close
+                NCRGrid.Columns["DateCloseReg"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                NCRGrid.Columns["DateCloseReg"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                NCRGrid.Columns["DateCloseReg"].Width = 150;
+                NCRGrid.Columns["DateCloseReg"].DisplayIndex = 12;
+
+                // Circulation 
+                NCRGrid.Columns["CircularStatus"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                NCRGrid.Columns["CircularStatus"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                NCRGrid.Columns["CircularStatus"].Width = 150;
+                NCRGrid.Columns["CircularStatus"].DisplayIndex = 13;
+
+
+                NCRGrid.Columns["Edit"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                NCRGrid.Columns["Edit"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                NCRGrid.Columns["Edit"].Width = 150;
+                NCRGrid.Columns["Edit"].DisplayIndex = 14;
+
+
+                NCRGrid.Columns["Delete"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                NCRGrid.Columns["Delete"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                NCRGrid.Columns["Delete"].Width = 150;
+                NCRGrid.Columns["Delete"].DisplayIndex = 15;
+
                 CountDisplay.Text = "Records number : " + inprocesslist.Count.ToString(); 
 
 
@@ -140,6 +228,11 @@ namespace NCR_system.View.Module
                     MessageBox.Show("File not found:\n" + filePath);
                 }
             }
+        }
+
+        private void OpenReject_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

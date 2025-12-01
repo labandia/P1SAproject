@@ -25,9 +25,9 @@ namespace ProductConfirm
             _serviceProvider = serviceProvider;
         }
 
-        private void Loginbtn_Click(object sender, EventArgs e)
+        private async void Loginbtn_Click(object sender, EventArgs e)
         {
-            loginfunction();
+            await loginfunction();
         }
 
 
@@ -49,7 +49,10 @@ namespace ProductConfirm
 
         private async void password_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter) loginfunction();      
+            if (e.KeyCode == Keys.Enter)
+            {
+                await loginfunction();
+            }    
         }
 
 

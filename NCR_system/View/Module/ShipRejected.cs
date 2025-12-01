@@ -34,16 +34,58 @@ namespace NCR_system.View.Module
                 RejectedGrid.DataSource = ShipList;
 
 
+                RejectedGrid.Columns["RegNo"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                RejectedGrid.Columns["RegNo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
                 RejectedGrid.Columns["RegNo"].DisplayIndex = 0;
+                RejectedGrid.Columns["RegNo"].Width = 200;
+
+                RejectedGrid.Columns["DateIssued"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                RejectedGrid.Columns["DateIssued"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                RejectedGrid.Columns["DateIssued"].Width = 150;
                 RejectedGrid.Columns["DateIssued"].DisplayIndex = 1;
+
+                RejectedGrid.Columns["IssueGroup"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                RejectedGrid.Columns["IssueGroup"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                RejectedGrid.Columns["IssueGroup"].Width = 200;
                 RejectedGrid.Columns["IssueGroup"].DisplayIndex = 2;
+
+
+                RejectedGrid.Columns["SectionID"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                RejectedGrid.Columns["SectionID"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                RejectedGrid.Columns["SectionID"].Width = 150;
                 RejectedGrid.Columns["SectionID"].DisplayIndex = 3;
+
+                RejectedGrid.Columns["ModelNo"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                RejectedGrid.Columns["ModelNo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
                 RejectedGrid.Columns["ModelNo"].DisplayIndex = 4;
+
+                RejectedGrid.Columns["Quantity"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                RejectedGrid.Columns["Quantity"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
                 RejectedGrid.Columns["Quantity"].DisplayIndex = 5;
+
+
+                RejectedGrid.Columns["Contents"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                RejectedGrid.Columns["Contents"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
                 RejectedGrid.Columns["Contents"].DisplayIndex = 6;
+
+                RejectedGrid.Columns["DateCloseReg"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                RejectedGrid.Columns["DateCloseReg"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                RejectedGrid.Columns["DateCloseReg"].Width = 150;
                 RejectedGrid.Columns["DateCloseReg"].DisplayIndex = 7;
+
+                RejectedGrid.Columns["Status"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                RejectedGrid.Columns["Status"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                RejectedGrid.Columns["Status"].Width = 200;
                 RejectedGrid.Columns["Status"].DisplayIndex = 8;
+
+                RejectedGrid.Columns["Edit"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                RejectedGrid.Columns["Edit"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                RejectedGrid.Columns["Edit"].Width = 100;
                 RejectedGrid.Columns["Edit"].DisplayIndex = 9;
+
+                RejectedGrid.Columns["Delete"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                RejectedGrid.Columns["Delete"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                RejectedGrid.Columns["Delete"].Width = 100;
                 RejectedGrid.Columns["Delete"].DisplayIndex = 10;
 
 
@@ -121,15 +163,23 @@ namespace NCR_system.View.Module
                 switch (e.Value.ToString())
                 {
                     case "1":
+                        e.CellStyle.ForeColor = Color.White;
+                        e.CellStyle.BackColor = Color.FromArgb(78, 166, 101);
                         e.Value = "Open";
                         break;
                     case "0":
+                        e.CellStyle.ForeColor = Color.White;
+                        e.CellStyle.BackColor = Color.FromArgb(184, 94, 104);
                         e.Value = "Close / Completed";
                         break;
                     case "2":
+                        e.CellStyle.ForeColor = Color.White;
+                        e.CellStyle.BackColor = Color.FromArgb(173, 171, 59);
                         e.Value = "Report Ok";
                         break;
                     case "3":
+                        e.CellStyle.ForeColor = Color.White;
+                        e.CellStyle.BackColor = Color.FromArgb(219, 137, 37);
                         e.Value = "For Circulation";
                         break;
                     default:

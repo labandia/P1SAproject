@@ -12,14 +12,17 @@ namespace NCR_system.Repository
         public async Task<IEnumerable<NCRModels>> GetNCRData(int type)
         {
             string strsql = $@"SELECT 
-                              RecordID,DateIssued ,RegNo,Category
-                              ,IssueGroup,SectionID,ModelNo
-                              ,Quantity,Contents
-                              ,Status,CircularStatus
-                              ,DateCloseReg,FilePath
-                              ,Remarkstat,Process
-                              ,TargetDate,Reviewer,DateRegist
-                          FROM PC_NCR WHERE Process =@Type";
+	                            RecordID,
+	                            FORMAT(DateIssued, 'MM/dd/yy') as DateIssued,
+	                            RegNo,Category
+	                            ,IssueGroup,SectionID,ModelNo
+	                            ,Quantity,Contents
+	                            ,Status,CircularStatus
+	                            ,FORMAT(DateCloseReg, 'MM/dd/yy') as DateCloseReg,
+	                            FilePath
+	                            ,Remarkstat,Process
+	                            ,TargetDate,Reviewer,DateRegist
+                            FROM PC_NCR WHERE Process =@Type";
             return await SqlDataAccess.GetData<NCRModels>(strsql, new { Type = type });
         }
 

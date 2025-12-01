@@ -65,8 +65,7 @@ namespace NCR_system
 
         private async void Customerbtn_Click(object sender, EventArgs e)
         {
-            _cc.BringToFront();
-            await _cc.DisplayCustomer(0);
+           
         }
 
         private async void processbtn_Click(object sender, EventArgs e)
@@ -101,6 +100,12 @@ namespace NCR_system
         private void button1_Click(object sender, EventArgs e)
         {
             _dash.BringToFront();
+        }
+
+        private async void Customerbtn_Click_1(object sender, EventArgs e)
+        {
+            _cc.BringToFront();
+            await _cc.DisplayCustomer(0);
         }
     }
 }

@@ -90,34 +90,31 @@ namespace NCR_system.View.Module
 
 
 
-                // 🔹 Define all known sections
-                var sections = new List<KeyValuePair<int, string>>()
+                var countItems = await _ship.GetCustomersOpenItem(proc);
+
+
+                foreach (var items in countItems)
                 {
-                    new KeyValuePair<int, string>(1, "Molding"),
-                    new KeyValuePair<int, string>(2, "Press"),
-                    new KeyValuePair<int, string>(3, "Rotor"),
-                    new KeyValuePair<int, string>(4, "Winding"),
-                    new KeyValuePair<int, string>(5, "Circuit")
-                };
-
-                var statusToCount = new[] { 1, 2, 3 };
-                // 🔹 Group existing open items
-                var openCounts = ShipList
-                     .Where(c => statusToCount.Contains(c.Status))
-                    .GroupBy(c => c.SectionID)
-                    .ToDictionary(g => g.Key, g => g.Count());
-
-                // 🔹 Merge all sections with counts (include 0 if missing)
-                var summary = sections
-                    .Select(s => new
+                    switch (items.DepartmentName)
                     {
-                        Section = s.Value,
-                        TotalOpen = openCounts.ContainsKey(s.Key) ? openCounts[s.Key] : 0
-                    })
-                    .ToList();
+                        case "Molding":
+                            MoldText.Text = items.totalOpen.ToString();
+                            break;
+                        case "Press":
+                            PressText.Text = items.totalOpen.ToString();
+                            break;
+                        case "Rotor":
+                            RotorText.Text = items.totalOpen.ToString();
+                            break;
+                        case "Winding":
+                            WindText.Text = items.totalOpen.ToString();
+                            break;
+                        default:
+                            CircuitText.Text = items.totalOpen.ToString();
+                            break;
+                    }
 
-                // 🔹 Display summary
-                SummaryRejected.DataSource = summary;
+                }
 
 
             }

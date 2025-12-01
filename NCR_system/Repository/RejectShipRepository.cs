@@ -3,6 +3,7 @@ using NCR_system.Interface;
 using NCR_system.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace NCR_system.Repository
@@ -17,13 +18,14 @@ namespace NCR_system.Repository
                             FROM PC_Section s
                             LEFT JOIN PC_RejectShip c
                                 ON c.SectionID = s.SectionID 
-                                AND c.Status = 1 
+                                AND c.Status = 1
+                                AND c.Process = @Process  
                             GROUP BY 
                                 s.SectionID, 
                                 s.DepartmentName
                             ORDER BY 
-                            s.SectionID ASC;";
-            return SqlDataAccess.GetData<CustomerTotalModel>(strsql, null);
+                                s.SectionID ASC;";
+            return SqlDataAccess.GetData<CustomerTotalModel>(strsql, new { Process = type });
         }
 
         public async Task<IEnumerable<RejectShipmentModel>> GetRejectedShipData(int proc)

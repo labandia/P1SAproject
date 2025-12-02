@@ -47,7 +47,6 @@ window.FetchAuthenticate = function (url, fdata) {
 // GLOBAL GET FUNCTIONS WITHOUT TOKEN AUTHENTICATION 
 window.fetchData = function (url, fdata) {
     if (fdata === void 0) fdata = {};
-    console.clear();
 
     var queryString = Object.keys(fdata || {})
         .map(function (k) { return encodeURIComponent(k) + '=' + encodeURIComponent(fdata[k]); })
@@ -66,7 +65,6 @@ window.fetchData = function (url, fdata) {
 };
 
 window.postData = function (url, data) {
-    console.clear();
     return fetch(url, {
         method: 'POST',
         body: data
@@ -139,80 +137,10 @@ window.PullUserInformation = function () {
     });
 };
 
-// Login check logic (unchanged, only arrow removed)
-window.IsLoginUser = function (options) {
-    options = options || {};
-    var storageKey = options.storageKey;
-    var expectedValue = options.expectedValue;
-    var redirectUrl = options.redirectUrl;
-    var redirectIfLoggedInUrl = options.redirectIfLoggedInUrl || null;
-    var expirationKey = options.expirationKey || null;
-    var maxHours = options.maxHours || null;
-
-    var value = localStorage.getItem(storageKey);
-
-    if (value === expectedValue && redirectIfLoggedInUrl) {
-        if (expirationKey && maxHours) {
-            var loginTimeStr = localStorage.getItem(expirationKey);
-            if (loginTimeStr) {
-                var loginTime = new Date(loginTimeStr);
-                var now = new Date();
-                var diffHours = Math.abs(now - loginTime) / 36e5;
-                if (diffHours <= maxHours) {
-                    window.location.href = redirectIfLoggedInUrl;
-                    return;
-                }
-            }
-        } else {
-            window.location.href = redirectIfLoggedInUrl;
-            return;
-        }
-    }
-
-    if (value !== expectedValue) {
-        var currentPath = window.location.pathname;
-        if (currentPath !== redirectUrl) {
-            if (typeof ActionRestrict === 'function') {
-                var allowed = ActionRestrict();
-                if (allowed !== false) {
-                    window.location.href = redirectUrl;
-                    return;
-                }
-            } else {
-                window.location.href = redirectUrl;
-                return;
-            }
-        }
-        return;
-    }
-
-    if (expirationKey && maxHours) {
-        var loginTimeStr2 = localStorage.getItem(expirationKey);
-        var currentPath2 = window.location.pathname;
-        var targetPath = new URL(redirectUrl, window.location.origin).pathname;
-
-        if (loginTimeStr2) {
-            var loginTime2 = new Date(loginTimeStr2);
-            var now2 = new Date();
-            var diffHours2 = Math.abs(now2 - loginTime2) / 36e5;
-            if (diffHours2 > maxHours) {
-                localStorage.clear();
-                if (currentPath2 !== targetPath) {
-                    window.location.href = redirectUrl;
-                }
-            }
-        } else {
-            localStorage.clear();
-            if (currentPath2 !== targetPath) {
-                window.location.href = redirectUrl;
-            }
-        }
-    }
-};
 
 // Refresh Token
 function refreshAccessToken() {
-    var logout = localStorage.getItem('Logout');
+    var logout = localStorage.getItem('Logout') || window.AppConfig.loginUrl;
     var refreshToken = localStorage.getItem('refreshToken');
     if (!refreshToken) return Promise.resolve(false);
 

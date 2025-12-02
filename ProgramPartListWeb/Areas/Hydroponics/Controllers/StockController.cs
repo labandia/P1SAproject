@@ -5,6 +5,7 @@ using ProgramPartListWeb.Models;
 using ProgramPartListWeb.Utilities.Common;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -111,6 +112,29 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
                 }, JsonRequestBehavior.AllowGet);
             }
         }
+
+
+        [HttpPost]
+        public async Task<ActionResult> AlreadyReadNotification(int UserID)
+        {    
+            try
+            {
+                bool isRead = await _stock.ClickNotificationCount(UserID);
+
+                return JsonCreated(isRead, "Update Successfully");
+            }
+            catch (Exception e)
+            {
+                return Json(new
+                {
+                    Success = false,
+                    Message = "Error while sending Email stock alerts",
+                    Error = e.Message,
+                    LastCheck = DateTime.Now
+                }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
 
     }
 }

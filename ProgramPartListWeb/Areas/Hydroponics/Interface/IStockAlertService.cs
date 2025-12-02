@@ -22,5 +22,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Interface
         Task MarkAlertAsReadAsync(int alertId);
         Task SendNotificationsAsync(StockAlert alert);
         Task<bool> SendEmailNotificationStocks();
+
+        Task<bool> ClickNotificationCount(int alertId);
     }
 }

@@ -35,19 +35,18 @@
             </div>
             @* MOLD MOnitoring *@
             <div id="MoldMonitor">
-                <button class="primary_button_color" id="addMold"><i class="fa-solid fa-plus"></i> Add Data</button>
+                <button class="primary_button_color"  data-bs-toggle="modal" data-bs-target="#AddMoldModal"><i class="fa-solid fa-plus"></i> Add Data</button>
             </div>
 
             @* MOLD Daily MOnitoring *@
             <div id="MoldDailyMonitor">
-                <button style="display: none;" class="primary_button_color" id="addDaily"><i class="fa-solid fa-plus"></i> Add Data</button>
                 <button id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-file-circle-plus"></i> Add Daily Input</button>
             </div>
 
             @* MOLD TOOLING*@
             <div id="MoldTooling">
                 <div class="d-flex align-items-center gap-2">
-                    <button class="primary_button_color" id="Registrymodal"><i class="fa-solid fa-plus"></i> Add Data</button>
+                    <button class="primary_button_color" data-bs-toggle="modal" data-bs-target="#AddTooling"><i class="fa-solid fa-plus"></i> Add Data</button>
                     <button id="Exportbtn" style="display: none;"><i class="fa-solid fa-file-arrow-down"></i>Export Data</button>
                 </div>
             </div>
@@ -910,23 +909,23 @@
 
 
 <script type="text/javascript">
-    const addmodal = document.getElementById("Showadd");
-    addmodal.addEventListener('click', (e) => {
-        e.preventDefault();
-        //$("#AddProductModal").modal('show');
-        window.location.href = "/P1SA/DieMold/AddMonitoringInput";
-    });
+
+    let TableData = [], SummaryData = [], GlobalSummaryData = [], FinalSummaryData = [], DieTooling = [], DailyData = [];
+
+    // Date Dropdown Selection
+    const months = [
+        "January", "February", "March", "April",
+        "May", "June", "July", "August",
+        "September", "October", "November", "December"
+    ];
+
+    
+    
     const currentMonth = new Date().getMonth();
     const currentYear = new Date().getFullYear();
 
     let setdailyrecordID = 0;
     let setMonth = parseInt(currentMonth) + 1;
-    let TableData = [];
-    let SummaryData = [];
-    let GlobalSummaryData = [];
-    let FinalSummaryData = [];
-    let DieTooling = [];
-    let DailyData = [];
 
     let TableDisplay = $("#SummarylistData");
     let MonitorDisplay = $("#DieMoldMasterlist");
@@ -937,14 +936,13 @@
     const partbox = document.querySelector(".dailypartnumdisplay");
     const editpartbox = document.querySelector(".dailyEditpartnumdisplay");
 
-    const EditCycle = $("#changeCycle");
-    const CancelCycle = $("#CancelCycle");
+
 
     // Tabs Content
     const tabs = document.querySelectorAll(".Mold_tab");
     const slider = document.querySelector(".Mold_slider");
     const contents = document.querySelectorAll(".Mold_content");
-    let isTabLoaded = [true, false, false];
+    let isTabLoaded = [true, false, false,  false];
 
     tabs.forEach((tab, index) => {
         tab.addEventListener("click", () => {
@@ -974,6 +972,8 @@
                 // Footer Show
                 $("#Summaryfooter").show();
                 $("#Monitorfooter").hide();
+
+                GetMoldDieSummary();
             } else if (index === 1) {
                 $("#MoldSummary").hide();
                 $("#MoldMonitor").show();
@@ -982,11 +982,17 @@
                 // Footer Show
                 $("#Summaryfooter").hide();
                 $("#Monitorfooter").show();
+
+                GetMoldDieMonth(setMonth, currentYear, $("#MonitorProcess").val());
+
             } else if (index === 2) {
                 $("#MoldSummary").hide();
                 $("#MoldMonitor").hide();
                 $("#MoldTooling").hide();
                 $("#MoldDailyMonitor").show();
+
+                GetMoldDieDaily(setMonth, GetRow, currentYear, $("#DailyProcess").val());
+
             } else {
                 $("#MoldSummary").hide();
                 $("#MoldMonitor").hide();
@@ -995,39 +1001,17 @@
                 // Footer Show
                 $("#Summaryfooter").hide();
                 $("#Monitorfooter").hide();
+
+                GetMoldDieTooling();
+
             }
 
-            if (!isTabLoaded[index]) {
-                switch (index) {
-                    case 0:
-                        console.log("Summary");
-                        GetMoldDieSummary();
-                        break;
-                    case 1:
-                        console.log("Monthly");
-                        GetMoldDieMonth(setMonth, currentYear, $("#MonitorProcess").val());
-                        break;
-                    case 2:
-                        console.log("Daily");
-                        GetMoldDieDaily(setMonth, GetRow, currentYear, $("#DailyProcess").val());
-                        break;
-                    default:
-                        console.log("Tooling");
-                        GetMoldDieTooling();
-                        break;
-                }
-                isTabLoaded[index] = true;
-            }
+          
         });
     });
 
 
-    // Date Dropdown Selection
-    const months = [
-        "January", "February", "March", "April",
-        "May", "June", "July", "August",
-        "September", "October", "November", "December"
-    ];
+    
 
     const yearSelect = document.getElementById("yearselectDaily");
     const monthSelect = document.getElementById("monthSelectDaily");
@@ -1048,6 +1032,11 @@
     //===============================================================
     //================= INPUT AND UPDATE DATA =======================
     //===============================================================
+    // Show Add Modal / Redirect
+    $("#Showadd").on("click", function (e) {
+        e.preventDefault();
+        window.location.href = "/P1SA/DieMold/AddMonitoringInput";
+    });
 
 
     $("#InputMoldie").on('submit', async (e) => {
@@ -1109,8 +1098,7 @@
      }
     });
 
-
-   $("#AddDailyforms").on('submit', async (e) => {
+    $("#AddDailyforms").on('submit', async (e) => {
         e.preventDefault();
         let formData = new FormData(e.target);
        const data = Object.fromEntries(formData);
@@ -1151,10 +1139,6 @@
         }
 });
 
-
-
-
-
     $("#AddToolforms").on('submit', async (e) => {
         e.preventDefault();
         let formData = new FormData(e.target);
@@ -1181,8 +1165,6 @@
             });
         }
     });
-
-
 
     $("#EditToolforms").on('submit', async (e) => {
          e.preventDefault();
@@ -1221,7 +1203,6 @@
              });
          }
      });
-
 
     $("#AddMoldforms").on('submit', async function (e) {
         e.preventDefault();
@@ -1278,40 +1259,26 @@
         }
     });
 
-    $("#Registrymodal").on('click', (e) => {
-        e.preventDefault();
-        $("#AddTooling").modal("show");
-    });
-    $("#addMold").on('click', (e) => {
-        e.preventDefault();
-        $("#AddMoldModal").modal("show");
-    });
 
-    $("#addDaily").on('click', (e) => {
-        e.preventDefault();
-        $("#AddDailyMold").modal("show");
-    });
 
-    EditCycle.on('click', (e) => {
+    $("#changeCycle").on('click', (e) => {
         e.preventDefault();
         // make input editable
         $("#Cycleshotdisplay").prop("readonly", false);
 
         // show the action buttons
-        $("#ActionDel").css("display", "block");
-        $("#changeCycle").css("display", "none");
+        $("#ActionDel").show();
+        $("#changeCycle").hide();
     });
-
-    CancelCycle.on('click', (e) => {
+    $("#CancelCycle").on('click', (e) => {
         e.preventDefault();
         // make input editable
         $("#Cycleshotdisplay").prop("readonly", true);
 
         // show the action buttons
-        $("#ActionDel").css("display", "none");
-        $("#changeCycle").css("display", "block");
+        $("#ActionDel").hide();
+        $("#changeCycle").show();
     });
-
     $("#UpdateCycle").on('click', async function (e) {
         e.preventDefault();
         let formData = new FormData();
@@ -1323,7 +1290,6 @@
 
          if (res && res.Success) {
              alert("Update Successfully");
-             //GetMoldDieMonth();
              $("#Cycleshotdisplay").prop("readonly", true);
              $("#ActionDel").css("display", "none");
              $("#changeCycle").css("display", "block");
@@ -1369,8 +1335,6 @@
         let setMonth = parseInt(currentMonth) + 1;
         GetMoldDieDaily(setMonth, GetRow,  currentYear, e.target.value);
     });
-
-
 
 
 
@@ -1433,7 +1397,6 @@
         // Default day = 01
         let dateValue = `${year}-${month}-01`;
         document.getElementById("DailyfilterDate").value = dateValue;
-
 
     }
 
@@ -1626,6 +1589,7 @@
                 SummaryData = res.Data.FinalSummary;
                 FinalSummaryData = res.Data.MoldDieSummary;
                 displaySummaryPagination(SummaryData, 'SummarylistData', 'SummaryPaginationContainer', 50, 5);
+
                 $.each(FinalSummaryData, function (index, row) {
                     let remarkColor = "";
                     if (row.Category === "For Monitoring") {
@@ -1663,8 +1627,7 @@
 
 
     const GetMoldDieDaily = async (month = setMonth, day = GetRow, year = currentYear, process = $("#ProcessID").val()) => {
-
-        console.log(`Months : ${month} - days : ${day} - Year : ${year} - Process : ${process}`);
+        DailyDisplay.empty();
 
        const id = loadingDisplay(2, 10);
         Loadingsteps(id, async () => {
@@ -1677,7 +1640,8 @@
             const data = Object.fromEntries(formData);
 
             let res = await FetchAuthenticate('@Url.Action("GetMoldDieDailyList", "DieMold")', data);
-             if (res && res.Success) {
+            console.log(res);
+            if (res && res.Success) {
                  //DieTooling = res.Data;
                  DailyData = res.Data;
                  // Loads the First Data
@@ -1706,7 +1670,7 @@
              } else {
                  const loadData = `<tr>
                        <td colspan='10'>
-                           🔍 ${res.message}
+                           🔍 ${res.Message}
                        </td>
                    </tr>`;
 
@@ -2532,11 +2496,7 @@
 
             const [global, maintable, forest, logs, drop] = await Promise.all([
                 GetGlobalMoldDieSummary(),
-                GetMoldDieSummary(),
-                GetMoldDieDaily(),
-                GetMoldDieMonth(),
-                GetMoldDieTooling(),
-                GetMoldDropdownlist()
+                GetMoldDieSummary()
             ]);
 
 

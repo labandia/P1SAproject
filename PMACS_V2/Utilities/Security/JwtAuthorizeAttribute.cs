@@ -21,16 +21,24 @@ namespace ProgramPartListWeb.Helper
             if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
                 return false;
 
-            var token = authHeader.Substring("Bearer ".Length).Trim();
+            var token = authHeader.Substring("Bearer ".Length);
 
             try
             {
+                // Validate JWT
                 var principal = JWTAuthentication.ValidateToken(token);
                 if (principal == null)
                     return false;
 
                 httpContext.User = principal; // Set the current principal
-                return true;
+                System.Threading.Thread.CurrentPrincipal = principal;
+
+                // No role required, token is enough
+                if (string.IsNullOrEmpty(_requiredRole))
+                    return true;
+
+                // Validate role
+                return principal.IsInRole(_requiredRole);
             }
             catch
             {
@@ -44,15 +52,15 @@ namespace ProgramPartListWeb.Helper
             bool isApiRequest = request.Headers["Authorization"] != null
                                 || request.AcceptTypes?.Any(t => t.Contains("application/json")) == true;
 
+
+            filterContext.HttpContext.Response.TrySkipIisCustomErrors = true;
+
+
             if (isApiRequest)
             {
-                filterContext.Result = new JsonResult
+                filterContext.Result = new JsonResult()
                 {
-                    Data = new
-                    {
-                        success = false,
-                        message = "Unauthorized: Access is denied due to invalid token or insufficient permissions."
-                    },
+                    Data = new { success = false, message = "Unauthorized" },
                     JsonRequestBehavior = JsonRequestBehavior.AllowGet
                 };
 

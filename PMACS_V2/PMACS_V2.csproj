@@ -651,6 +651,7 @@
     <Content Include="Views\Error\ServerError.cshtml" />
     <Content Include="Views\Error\General.cshtml" />
     <Content Include="Views\Home\Chat.cshtml" />
+    <Content Include="Views\Shared\_SystemConfig.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Extend\" />

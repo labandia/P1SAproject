@@ -482,5 +482,13 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                                                         INNER JOIN Hydro_InventoryParts i ON i.PartNo = d.PartNo
                                                                         WHERE d.NotificationId = @NotificationId;", new { NotificationId = Id });
         }
+
+        public Task<bool> ClickNotificationCount(int alertId)
+        {
+            string sql = $@"UPDATE Hyrdo_StockNotificationUsers 
+                            SET IsRead = 1, ReadDate = GETDATE()
+                            WHERE User_ID =@User_ID;";
+            return  SqlDataAccess.UpdateInsertQuery(sql, new { User_ID = alertId });
+        }
     }
 }

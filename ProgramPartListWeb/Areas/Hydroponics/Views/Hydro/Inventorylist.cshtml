@@ -1155,10 +1155,8 @@
          formData.append('Required', parseInt(Required));
 
          const data = Object.fromEntries(formData);
-         console.log(data);
 
          let res = await postData('@Url.Action("AddOneStocksQuantity", "Hydro")', formData);
-         console.log(res);
          if (res && res.Success) {
              Inventlist = res.Data;
 

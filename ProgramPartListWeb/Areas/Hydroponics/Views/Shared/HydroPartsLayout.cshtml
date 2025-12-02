@@ -18,7 +18,6 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    @Html.Partial("_SystemConfig")
 
     <!--========== SIDEBAR ==========-->
     <!-- Sidebar -->
@@ -180,7 +179,7 @@
 
     <script type="text/javascript">
          // This becomes available to all JavaScript files
-     
+
 
         const isDev = window.location.hostname === "localhost";
 
@@ -266,9 +265,22 @@
  let unseenCount = 0;
 
  // Toggle dropdown
- $("#notificationBell").click(function () {
+ $("#notificationBell").click( async function () {
+     let ID = parseInt(localStorage.getItem("UserID"));
+     $("#countinside").text("0");
+     $("#notificationBadge").hide();
      $("#notificationDropdown").toggle();
      unseenCount = 0; // ✅ reset unseen count
+
+
+     const response = await $.ajax({
+            url: '@Url.Action("AlreadyReadNotification", "Stock")',
+            data: { UserID: ID },
+            type: 'POST',
+            dataType: 'json'
+        });
+
+     console.log(response);
  });
 
 
@@ -359,9 +371,7 @@ async function pollStockAlerts() {
 
 
             if (response.Success) {
-                $("#countinside").text("0");
-                $("#notificationBadge").hide();
-                $("#notificationDropdown").hide();
+
                 const container = $("#NotificationBody");
                 container.empty();
 
@@ -469,15 +479,6 @@ async function pollStockAlerts() {
         });
 
 
-        //window.IsLoginUser({
-        //    storageKey: "isLoggedInHydro",
-        //    redirectUrl: '/Hydroponics/Hydro/Inventorylist',
-        //    expectedValue: 'true',
-        //    expirationKey: 'HydroTime',
-        //    maxHours: 24
-        //});
-
-
 
         // ========================== INITIAL LOAD ==============================
         $(document).ready(async () => {
@@ -488,6 +489,7 @@ async function pollStockAlerts() {
 
     </script>
 
+    @Html.Partial("_SystemConfig")
 
 </body>
 </html>

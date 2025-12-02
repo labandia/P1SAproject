@@ -36,53 +36,53 @@
 
 
                         @*<a href="/P1SA/DieMold/DieMoldLife" class="sidebar__link">
-                            <i class="fa fa-microchip  sidebar__icon"></i>
-                            <span class="sidebar__name">Molding</span>
-                        </a>
+                                <i class="fa fa-microchip  sidebar__icon"></i>
+                                <span class="sidebar__name">Molding</span>
+                            </a>
 
-                        <a href="/P1SA/DieMold/DiePressLife" class="sidebar__link">
-                            <i class="fa-solid fa-gears sidebar__icon"></i>
-                            <span class="sidebar__name">Press</span>
-                        </a>*@
+                            <a href="/P1SA/DieMold/DiePressLife" class="sidebar__link">
+                                <i class="fa-solid fa-gears sidebar__icon"></i>
+                                <span class="sidebar__name">Press</span>
+                            </a>*@
 
                         <a href="/P1SA/PMACS/ManpowerProduction" class="sidebar__link">
-            <i class="fa fa-users sidebar__icon"></i>
-            <span class="sidebar__name">Manpower</span>
-        </a>
+                            <i class="fa fa-users sidebar__icon"></i>
+                            <span class="sidebar__name">Manpower</span>
+                        </a>
 
 
-        <a href="/P1SA/PMACS/FanMajor" class="sidebar__link">
-            <i class="fa-solid fa-gears sidebar__icon"></i>
-            <span class="sidebar__name">Fan Major</span>
-        </a>
-
-
-
-        <a href="/P1SA/PMACS/Selection" class="sidebar__link">
-            <i class="fa fa-microchip  sidebar__icon"></i>
-            <span class="sidebar__name">Capacity Process</span>
-        </a>
-
-        <a href="/P1SA/PMACS/P1SASummary" class="sidebar__link">
-            <i class="fa fa-table  sidebar__icon"></i>
-            <span class="sidebar__name">P1SA summary</span>
-        </a>
+                        <a href="/P1SA/PMACS/FanMajor" class="sidebar__link">
+                            <i class="fa-solid fa-gears sidebar__icon"></i>
+                            <span class="sidebar__name">Fan Major</span>
+                        </a>
 
 
 
-        <div class="sidebar__dropdown">
-            <a href="#" class="sidebar__link">
-                <i class="fa-regular fa-circle-user sidebar__icon"></i>
-                <span class="sidebar__name">Moldie Die And Cavity</span>
-            </a>
+                        <a href="/P1SA/PMACS/Selection" class="sidebar__link">
+                            <i class="fa fa-microchip  sidebar__icon"></i>
+                            <span class="sidebar__name">Capacity Process</span>
+                        </a>
 
-            <div class="sidebar__dropdown-collapse">
-                <div class="sidebar__dropdown-content">
-                    <a href="/P1SA/DieMold/DieMoldLife" class="sidebar__dropdown-item">Molding</a>
-                    <a href="/P1SA/DieMold/DiePressLife" class="sidebar__dropdown-item">Press</a>
-                </div>
-            </div>
-        </div>
+                        <a href="/P1SA/PMACS/P1SASummary" class="sidebar__link">
+                            <i class="fa fa-table  sidebar__icon"></i>
+                            <span class="sidebar__name">P1SA summary</span>
+                        </a>
+
+
+
+                        <div class="sidebar__dropdown">
+                            <a href="#" class="sidebar__link">
+                                <i class="fa-regular fa-circle-user sidebar__icon"></i>
+                                <span class="sidebar__name">Moldie Die And Cavity</span>
+                            </a>
+
+                            <div class="sidebar__dropdown-collapse">
+                                <div class="sidebar__dropdown-content">
+                                    <a href="/P1SA/DieMold/DieMoldLife" class="sidebar__dropdown-item">Molding</a>
+                                    <a href="/P1SA/DieMold/DiePressLife" class="sidebar__dropdown-item">Press</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="sidebar__items">
@@ -113,7 +113,7 @@
 
 
 
- 
+
     <script type="text/javascript">
         const logbtn = document.getElementById("logID");
 
@@ -125,7 +125,7 @@
             this.classList.add('active')
         }
 
-       
+
 
         linkColor.forEach(l => l.addEventListener('click', colorLink))
         document.addEventListener("DOMContentLoaded", function () {
@@ -140,7 +140,7 @@
 
         logbtn.addEventListener('click', function (e) {
             e.preventDefault();
-            
+
             if (ActionRestrict() !== false) {
                 Swal.fire({
                     title: "Sign out ?",
@@ -177,16 +177,9 @@
             $("#Exitname").text("Exit");
         }
 
-        window.IsLoginUser({
-            storageKey: "isLoggedInPMACS",
-            redirectUrl: '/P1SA/PMACS/Mainpage',
-            expectedValue: 'true',
-            expirationKey: 'loginTime',
-            maxHours: 24
-        });
-       
+
     </script>
 
-
+    @Html.Partial("_SystemConfig")
 </body>
 </html>

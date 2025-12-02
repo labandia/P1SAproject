@@ -1,0 +1,40 @@
+﻿@{
+    // Detect current Area
+    var area = ViewContext.RouteData.DataTokens["area"] as string ?? "";
+
+    // Default login
+    string loginAction = "Mainpage";
+    string loginController = "PMACS";
+
+    // Area-specific logic
+    switch (area)
+    {
+        case "P1SA":
+            loginAction = "Mainpage";
+            loginController = "PMACS";
+            break;
+
+        case "PartsLocal":
+            loginAction = "Index";
+            loginController = "PartsLocator";
+            break;
+    }
+
+    // Build URL
+    string loginUrl = Url.Action(loginAction, loginController, new { area = area });
+
+    // System name
+    string systemName = area == "" ? "Main System" : $"{area} System";
+
+    // Api root (optional)
+    string apiRoot = Url.Content("~/api/");
+}
+
+<script>
+    window.AppConfig = {
+        area: "@area",
+        systemName: "@systemName",
+        loginUrl: "@loginUrl",
+        apiRoot: "@apiRoot"
+    };
+</script>

@@ -15,6 +15,8 @@ namespace FootWristStrapsAnalysis
     {
         private readonly IFootWrist _foot;
         private readonly System.Timers.Timer _importTimer;
+        List<DataGridViewRow> selectedRows = new List<DataGridViewRow>();
+        private IEnumerable<IFootWristModel> getData = new List<IFootWristModel>();
 
         private static IEnumerable<IFootWristModel> footlist;
 
@@ -32,12 +34,17 @@ namespace FootWristStrapsAnalysis
 
         private async void Startup_Load(object sender, EventArgs e)
         {
+            var selectedDate = dateTimePicker1.Value.Date; // Get only the date part
             this.WindowState = FormWindowState.Maximized;
 
             await StartAsync();
 
-            var getData = await _foot.GetFootAnalysisData();
-            footlist = getData.ToList();
+            getData = await _foot.GetFootAnalysisData();
+            var displayByDate = getData.Where(res => res.TestDate.HasValue && res.TestDate.Value.Date == selectedDate).ToList();
+            footlist = displayByDate; // Use the filtered list instead of all data
+            
+            CountTable.Text = footlist.Count().ToString();
+
             AnalysisTable.DataSource = footlist;
 
             AnalysisTable.Columns["TestTime"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
@@ -369,9 +376,29 @@ namespace FootWristStrapsAnalysis
         {
 
         }
-        List<DataGridViewRow> selectedRows = new List<DataGridViewRow>();
 
-        private void AnalysisTable_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+      
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            string filterText = textBox1.Text.ToLower();
+            var filteredList = new List<IFootWristModel>();
+
+            if (filterText != "")
+            {
+                filteredList = footlist.Where(p =>
+                    (!string.IsNullOrEmpty(p.EmployeeID) && p.EmployeeID.ToLower().Contains(filterText)) ||
+                    (!string.IsNullOrEmpty(p.EmployeeName) && p.EmployeeName.ToLower().Contains(filterText))).ToList();
+            }
+            else
+            {
+                filteredList = footlist.ToList();
+            }
+
+            CountTable.Text = filteredList.Count().ToString();
+            AnalysisTable.DataSource = filteredList;
+        }
+
+        private void AnalysisTable_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
 
@@ -398,21 +425,29 @@ namespace FootWristStrapsAnalysis
             }
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        private void button1_Click_1(object sender, EventArgs e)
         {
-            string filterText = textBox1.Text.ToLower();
-            var filteredList = new List<IFootWristModel>();
+            ExportDatatoExcel();
+        }
 
-            if (filterText != "")
-            {
-                filteredList = footlist.Where(p => p.EmployeeID.ToLower().Contains(filterText)).ToList();
-            }
-            else
-            {
-                filteredList = footlist.ToList();
-            }
+        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        {
+            // Assuming getData is already loaded somewhere else (e.g., Form_Load)
+            if (getData == null) return;
 
-            AnalysisTable.DataSource = filteredList;
+            var selectedDate = dateTimePicker1.Value.Date;
+            footlist = getData
+                .Where(res => res.TestDate.HasValue && res.TestDate.Value.Date == selectedDate)
+                .ToList();
+            CountTable.Text = footlist.Count().ToString();  
+
+            AnalysisTable.DataSource = footlist;
+        }
+
+
+        public void ExportDatatoExcel()
+        {
+
         }
     }
 }

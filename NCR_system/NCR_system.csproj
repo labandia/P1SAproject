@@ -131,6 +131,12 @@
       <DependentUpon>Mainpage.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\NCRModels.cs" />
+    <Compile Include="NonConformity.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NonConformity.Designer.cs">
+      <DependentUpon>NonConformity.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\CustomerRepository.cs" />
@@ -259,6 +265,9 @@
     </Compile>
     <EmbeddedResource Include="Mainpage.resx">
       <DependentUpon>Mainpage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NonConformity.resx">
+      <DependentUpon>NonConformity.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -629,7 +629,7 @@
 
         const RedirectPageView = (stats, regno) => {
 
-            if (stats === 4 || stats === 5 || stats === 6) return;
+            if (stats === 4 || stats === 5) return;
 
             // Use encodeURIComponent to avoid issues with special characters
             const r = encodeURIComponent(regno);
@@ -648,6 +648,9 @@
                 case 4:
                 case 5:
                     window.location.href = `/PC/Patrol/DepartmentApproval?Regno=${r}&mode=${m}`;
+                    break;
+                case 6:
+                    window.location.href = `/PC/Patrol/CompleteRegistration?Regno=${r}&mode=${m}`;
                     break;
                 default:
                     console.warn("Unknown status:", stats);

@@ -447,7 +447,14 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
                 // ===================== STEP 2: Retrieve Required Data =====================
                 var employeeEmail = await _reg.GetEmployeeEmailDetails(employeeId, 5, getprefix);
+                var inspectorEmail = await _reg.GetEmployeeEmailDetails(inspectId, 4, getprefix);
 
+
+                if (employeeEmail == null)
+                    return JsonValidationError("Process owner email not found.");
+
+                if (inspectorEmail == null)
+                    return JsonValidationError("Inspector email not found.");
 
                 // ===================== STEP 3: Prepare File Paths =====================
                 string timestampFile = DateTime.Now.ToString("yyyyMMdd_HHmmss");
@@ -480,8 +487,11 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 await ExportFiler.SaveFileasPDFV2(
                     obj, findJson,
                     employeeEmail.FullName,
+                    inspectorEmail.FullName,
                     departmentName, pdfOutputPath,
-                    templatePath, false
+                    templatePath,
+                    inspectorEmail.Signature,
+                    true
                 );
 
                 // ===================== STEP 6: Send Notification Email =====================
@@ -523,91 +533,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         }
 
 
-      
-
-
-        [HttpPost]
-        public async Task<ActionResult> EditRegistration(HttpPostedFileBase[] Attachments)
-        {
-            var data = await _ins.GetEmployee() ?? new List<Employee>();
-            int Department = Convert.ToInt32(data.FirstOrDefault(p => p.EmployeeID == Request.Form["Employee_ID"])?.Department_ID);
-            bool isSign = !string.IsNullOrEmpty(Request.Form["IsSign"]);
-
-
-            // Step 1:  Get existing record to get old Countermeasures Excel file path if needed
-            var regData = await _ins.GetRegistrationData();
-            string oldPatrolPath = regData.SingleOrDefault(res => res.RegNo == Request.Form["RegNo"]).PatrolPath;
-
-            // Prepare new file names
-            string newFileName = $"RN_{Request.Form["RegNo"]}_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
-            string outputPdfPath = newFileName.Replace(".xlsx", ".pdf");
-
-
-
-
-
-            // Step 2: Checks If a new Excel file is uploaded
-            List<string> newAttachements = new List<string>();
-            if (Attachments != null && Attachments.Length > 0)
-            {
-                foreach (var file in Attachments)
-                {
-                    if (file != null && file.ContentLength > 0)
-                    {
-                        string fileName = $"CM_{Request.Form["RegNo"]}_{DateTime.Now:yyyyMMdd_HHmmss}{Path.GetExtension(file.FileName)}";
-                        ExportFiler.SaveFileasExcel(file, fileName);
-                        newAttachements.Add(fileName);
-                    }
-                }
-            }
-
-            // if there is a new File upload, append them to the old/current PatrolPaths 
-            string newpatrolPaths = oldPatrolPath;
-            // If there is a file
-            if (newAttachements.Count > 0)
-            {
-                if (!string.IsNullOrEmpty(newpatrolPaths))
-                    newpatrolPaths += ";" + string.Join(";", newAttachements);
-                else
-                    newpatrolPaths = string.Join(";", newAttachements);
-            }
-
-
-            var obj = new RegistrationModel
-            {
-                RegNo = Request.Form["RegNo"],
-                DateConduct = Request.Form["DateConduct"],
-                Employee_ID = Request.Form["Employee_ID"],
-                FullName = Request.Form["EmployeeSearch"],
-                PIC = Request.Form["PIC"],
-                PIC_Comments = Request.Form["PIC_Comments"],
-                FilePath = outputPdfPath,
-                Manager = Request.Form["Manager"],
-                Manager_Comments = Request.Form["Manager_Comments"],
-                PatrolPath = newpatrolPaths,
-                IsSigned = isSign
-            };
-
-            string findJson = Request.Form["FindJson"];
-
-
-            // Step 3: UPDATES the Information and PDF FILE
-            bool result = await _ins.EditRegistration(obj, findJson);
-
-            if (result)
-            {
-                CacheHelper.Remove("Registration");
-                await ExportFiler.SaveFileasPDF(obj, findJson, GlobalUtilities.DepartmentName(Department), newFileName, templatePath, isSign);
-
-
-            }
-
-            if (!result) JsonValidationError();
-
-
-            return JsonCreated(result, "Updated successfully");
-
-        }
+     
 
         [HttpPost]
         public async Task<ActionResult> ReturnEmailSubmit(string Regno, string Message, int ReportStatus)
@@ -735,16 +661,82 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                     return JsonValidationError("Failed to update process owner information.");
 
 
-
                 // ===================== STEP 7: Generate Updated PDF =====================
                 var updatedRegData = await _reg.GetRegistrationData(GetPrefix());
                 var updatedReg = updatedRegData.SingleOrDefault(r => r.RegNo == finalPrefix);
                 var updatedFindings = await _reg.GetRegisterFindings(finalPrefix);
 
+                // ===================== STEP 7: Build Email Signatures =====================
+                List<EmailSignatures> emailSigns = new List<EmailSignatures>();
+
+                // Signature of the PIC
+                if (!string.IsNullOrEmpty(updatedReg.PIC_ID))
+                {
+                    var picId = await _reg.GetEmployeeEmailDetails(updatedReg.PIC_ID, 5, getprefix);
+
+                    if(picId != null && !string.IsNullOrEmpty(picId.Signature))
+                    {
+                        emailSigns.Add(new EmailSignatures
+                        {
+                            Position = 5,
+                            Signature = picId.Signature
+                        });
+                    }
+                }
+                // Signature of the Inspector
+                if (!string.IsNullOrEmpty(updatedReg.Inspect_ID))
+                {
+                    var picId = await _reg.GetEmployeeEmailDetails(updatedReg.Inspect_ID, 4, getprefix);
+
+                    if (picId != null && !string.IsNullOrEmpty(picId.Signature))
+                    {
+                        emailSigns.Add(new EmailSignatures
+                        {
+                            Position = 4,
+                            Signature = picId.Signature
+                        });
+                    }
+                }
+                // Signature of the Manager
+                if (!string.IsNullOrEmpty(updatedReg.Manager_ID))
+                {
+                    var picId = await _reg.GetEmployeeEmailDetails(updatedReg.Manager_ID, 3, getprefix);
+                    if (picId != null && !string.IsNullOrEmpty(picId.Signature))
+                    {
+                        emailSigns.Add(new EmailSignatures
+                        {
+                            Position = 3,
+                            Signature = picId.Signature
+                        });
+                    }      
+                }
+                // Signature of the Division Manager
+                if (!string.IsNullOrEmpty(updatedReg.DivManager_ID))
+                {
+                    var picId = await _reg.GetEmployeeEmailDetails(updatedReg.DivManager_ID, 1, getprefix);
+                    if (picId != null && !string.IsNullOrEmpty(picId.Signature))
+                    {
+                        emailSigns.Add(new EmailSignatures
+                        {
+                            Position = 1,
+                            Signature = picId.Signature
+                        });
+                    }     
+                }
+
+
+                foreach (var sign in emailSigns)
+                {
+                    Debug.WriteLine($"Position: {sign.Position}, Signature name: {sign.Signature}");
+                }
+
+
+
                 await ExportFiler.UpdatePDFRegistration(
                    updatedReg,
                    updatedFindings,
                    emailList,
+                   emailSigns,
                    previousPdfPath,
                    excelFileName,
                    templatePath
@@ -943,14 +935,14 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 var updatedReg = updatedRegData.SingleOrDefault(r => r.RegNo == Regno);
                 var updatedFindings = await _reg.GetRegisterFindings(Regno);
 
-                await ExportFiler.UpdatePDFRegistration(
-                    updatedReg,
-                    updatedFindings,
-                    emailList,
-                    previousPdfPath,
-                    excelFileName,
-                    templatePath
-                );
+                //await ExportFiler.UpdatePDFRegistration(
+                //    updatedReg,
+                //    updatedFindings,
+                //    emailList,
+                //    previousPdfPath,
+                //    excelFileName,
+                //    templatePath
+                //);
 
                 // ===================== STEP 4: Send Notification Email =====================
                 string processLink = $"http://p1saportalweb.sdp.com/PC/Patrol/DivisionApproval?Regno={Regno}&mode=1";
@@ -1036,14 +1028,14 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 var updatedReg = updatedRegData.SingleOrDefault(r => r.RegNo == Regno);
                 var updatedFindings = await _reg.GetRegisterFindings(Regno);
 
-                await ExportFiler.UpdatePDFRegistration(
-                    updatedReg,
-                    updatedFindings,
-                    emailList,
-                    previousPdfPath,
-                    excelFileName,
-                    templatePath
-                );
+                //await ExportFiler.UpdatePDFRegistration(
+                //    updatedReg,
+                //    updatedFindings,
+                //    emailList,
+                //    previousPdfPath,
+                //    excelFileName,
+                //    templatePath
+                //);
 
                 // ===================== STEP 4: Send Notification Email =====================
                 string processLink = $"http://p1saportalweb.sdp.com/PC/Patrol/DepartmentApproval?Regno={Regno}&mode=1";
@@ -1123,14 +1115,14 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 var updatedReg = updatedRegData.SingleOrDefault(r => r.RegNo == Regno);
                 var updatedFindings = await _reg.GetRegisterFindings(Regno);
 
-                await ExportFiler.UpdatePDFRegistration(
-                    updatedReg,
-                    updatedFindings,
-                    emailList,
-                    previousPdfPath,
-                    excelFileName,
-                    templatePath
-                );
+                //await ExportFiler.UpdatePDFRegistration(
+                //    updatedReg,
+                //    updatedFindings,
+                //    emailList,
+                //    previousPdfPath,
+                //    excelFileName,
+                //    templatePath
+                //);
 
                 // ===================== STEP 4: Send Notification Email =====================
 
@@ -1207,7 +1199,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                    "ALL",
                    strSubject,
                    processLink,
-                   "sendtodivision"
+                   "sendCompletedForm"
                 );
 
                 

@@ -77,7 +77,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
 
         public Task<EmailModelV2> GetEmployeeEmailDetails(string emp, int pos, string pre)
         {
-            string strsql = $@"SELECT FullName, Email, Position, Department_ID 
+            string strsql = $@"SELECT FullName, Email, Position, Department_ID, Signature
                                FROM Patrol_UserEmail 
                                WHERE Employee_ID =@Employee_ID AND Position =@Position AND DepPrefix =@DepPrefix";
             return SqlDataAccess.GetObjectOnly<EmailModelV2>(strsql, 
@@ -164,7 +164,8 @@ namespace ProgramPartListWeb.Areas.PC.Repository
 
 
             string appsql = $@"UPDATE Patrol_Registration_Approvelist
-                                SET PIC_Comments = @PIC_Comments, Manager_ID =@Manager_ID,  DepManager_ID =@DepManager_ID
+                                SET PIC_Comments = @PIC_Comments, Manager_ID =@Manager_ID,  DepManager_ID =@DepManager_ID, 
+                                PIC_IsSent = 1
                                 WHERE RegNo = @RegNo";
 
             var regApp = SqlDataAccess.UpdateInsertQuery(appsql, new

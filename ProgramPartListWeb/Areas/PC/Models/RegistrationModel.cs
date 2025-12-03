@@ -52,7 +52,12 @@ namespace ProgramPartListWeb.Areas.PC.Models
     }
 
 
+    public class EmailSignatures
+    {
+        public int Position { get; set; }
+        public string Signature { get; set; }
 
+    }
 
 
 

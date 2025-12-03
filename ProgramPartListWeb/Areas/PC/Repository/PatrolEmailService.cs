@@ -367,6 +367,11 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             string Countermeasure = "";
             string shortmessage = "";
             string buttonLink = "";
+
+            string isAprovedPIC = (patrol.PIC_IsSent == true)
+                ? "<span class='completion-badge'>&#10003;</span>"
+                : ""; 
+
             string isAprovedInspector = (patrol.Inspect_IsAproved == true)
                 ? "<span class='completion-badge'>&#10003;</span>"
                 : "";
@@ -424,6 +429,10 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                     buttonLink = "Divison Manager Review & Arpproved";
                     shortmessage = "<p>This is to inform you that you have a <strong>For Review/Approval</strong> Patrol Inspection report.</p>";
                     break;
+                default:
+                    buttonLink = "Completed Registration No.";
+                    shortmessage = "<p>This is to inform you that you have a <strong>For Review/Approval</strong> Patrol Inspection report.</p>";
+                    break;
             }
 
 
@@ -455,7 +464,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                         </tr>
                         <tr>
                             <td class='label'>Person Incharge:</td>
-                            <td>{patrol.PICName ?? "-"}</td>
+                            <td>{patrol.PICName ?? "-"} {isAprovedPIC}</td>
                         </tr>
                         <tr>
                             <td class='label'>Inspector:</td>

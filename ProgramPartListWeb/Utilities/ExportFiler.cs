@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.Xml;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -160,36 +161,37 @@ namespace ProgramPartListWeb.Utilities
 
 
         public static async Task SaveFileasPDFV2(
-                AddFormRegistrationModel reg,
-                string json,
-                string fullname,
-                string department,
-                string outputfilename,
-                string template,
-                bool Sign)
+               AddFormRegistrationModel reg,
+               string json,
+               string fullname, // -- name of the PIC
+               string inspectname, // -- name of the Inspector  
+               string department,
+               string outputfilename,
+               string template,
+               string IsSignature,
+               bool Sign)
         {
             try
             {
-                string exportFolder =
-                    @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\Patrol_Registration\";
+                string exportFolder = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\Patrol_Registration\";
                 string finalPdf = Path.Combine(exportFolder, outputfilename);
 
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
-                // Load & cache Excel template
+                // Load Excel template
                 byte[] templateBytes = LoadTemplate(template);
 
-                // Deserialize findings once
+                // Deserialize JSON
                 var findings = JsonConvert.DeserializeObject<List<FindingModel>>(json);
+                if (findings == null) findings = new List<FindingModel>();
 
-                // All heavy CPU work runs here
-                await Task.Run(() =>
+                await Task.Run(async () =>
                 {
-                    // ----------------------
-                    // STEP 1: Build Excel
-                    // ----------------------
                     byte[] excelBytes;
 
+                    // ----------------------------------------------------
+                    // STEP 1 — BUILD EXCEL
+                    // ----------------------------------------------------
                     using (var templateStream = new MemoryStream(templateBytes))
                     using (var package = new ExcelPackage(templateStream))
                     {
@@ -198,41 +200,84 @@ namespace ProgramPartListWeb.Utilities
                         ws.Cells["B2"].Value = "Registration No: " + reg.RegNo;
                         ws.Cells["B4"].Value = "Dept. /Section Inspected: P1SA-" + department;
                         ws.Cells["G53"].Value = fullname;
+                        ws.Cells["E53"].Value = inspectname;
 
                         foreach (var f in findings)
                         {
-                            string cell;
+                            string targetCell = "B42"; // default
 
                             switch (f.FindID)
                             {
-                                case 1: cell = "B7"; break;
-                                case 2: cell = "B13"; break;
-                                case 3: cell = "B20"; break;
-                                case 4: cell = "B27"; break;
-                                case 5: cell = "B34"; break;
-                                default: cell = "B42"; break;
+                                case 1: targetCell = "B7"; break;
+                                case 2: targetCell = "B13"; break;
+                                case 3: targetCell = "B20"; break;
+                                case 4: targetCell = "B27"; break;
+                                case 5: targetCell = "B34"; break;
+                                default: targetCell = "B42"; break;
                             }
 
-                            ws.Cells[cell].Value = f.FindDescription;
+                            ws.Cells[targetCell].Value = f.FindDescription;
                         }
 
                         excelBytes = package.GetAsByteArray();
                     }
-
-                    // ----------------------
-                    // STEP 2: Build PDF
-                    // ----------------------
+                    // ----------------------------------------------------
+                    // STEP 2 — BUILD PDF
+                    // ----------------------------------------------------
                     using (var excelStream = new MemoryStream(excelBytes))
                     {
-                        var wb = new Spire.Xls.Workbook();
-                        wb.LoadFromStream(excelStream, ExcelVersion.Version2013);
+                        var workbook = new Spire.Xls.Workbook();
+                        workbook.LoadFromStream(excelStream, ExcelVersion.Version2013);
 
-                        var sheet = wb.Worksheets[0];
+                        var sheet = workbook.Worksheets[0];
+
+                        // Row height + wrapping
                         sheet.Range["B42"].Style.WrapText = true;
                         sheet.SetRowHeight(41, 30);
                         sheet.SetRowHeight(42, 30);
 
-                        wb.SaveToFile(finalPdf, FileFormat.PDF);
+                        // ----------------------------------------------------
+                        // STEP 3 — OPTIONAL SIGNATURE INSERTION
+                        // ----------------------------------------------------
+                        if (Sign)
+                        {
+                            string imageName = IsSignature;
+                            Debug.WriteLine("Filname: " + imageName);
+                            if (!string.IsNullOrEmpty(imageName))
+                            {
+                                string imagePath = Path.Combine(
+                                    @"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\Signatures",
+                                    imageName
+                                );
+
+                                if (File.Exists(imagePath))
+                                {
+                                    foreach (IShape shape in sheet.PrstGeomShapes)
+                                    {
+                                        if (shape.Name == "SignaImage" && shape is IPrstGeomShape imgShape)
+                                        {
+                                            imgShape.Fill.CustomPicture(imagePath);
+                                            Debug.WriteLine("✔ Signature added.");
+                                            break;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    Debug.WriteLine("⚠ Signature file missing: " + imagePath);
+                                }
+                            }
+                        }
+                        //string strquery = $@"SELECT TOP 1 Signature
+                        //         FROM Patrol_UserEmail WHERE Employee_ID =@ID";
+
+                        //string data = await SqlDataAccess.GetOneData(strquery, new { ID = reg.Employee_ID });
+                        //string imageName = (!string.IsNullOrEmpty(data)) ? data : "";
+                        
+                        //Debug.WriteLine("Image file : " + imageName);
+
+                        // Save PDF
+                        workbook.SaveToFile(finalPdf, FileFormat.PDF);
                     }
                 });
 
@@ -240,9 +285,10 @@ namespace ProgramPartListWeb.Utilities
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("PDF ERROR: " + ex.Message);
+                Debug.WriteLine("❌ PDF ERROR: " + ex);
             }
         }
+
 
 
 
@@ -251,6 +297,7 @@ namespace ProgramPartListWeb.Utilities
                     PatrolRegistrationViewModel reg,
                     List<FindingModel> find,
                     List<EmailModelV2> processowner,
+                    List<EmailSignatures> emails,
                     string previousFile,
                     string outputfilename,
                     string template)
@@ -388,79 +435,67 @@ namespace ProgramPartListWeb.Utilities
                         sheet.SetRowHeight(42, 30);
 
 
-
-                        //foreach (IShape shape in sheet.PrstGeomShapes)
-                        //{
-                        //    string empID = null;
-
-                        //    switch (shape.Name)
-                        //    {
-                        //        case "SignaImage":
-                        //            empID = reg.Inspect_ID;
-                        //            break;
-                        //        case "Department":
-                        //            empID = reg.Manager_ID;
-                        //            break;
-                        //        case "Supervisor":
-                        //            empID = reg.PIC_ID;
-                        //            break;
-                        //        case "Division":
-                        //            empID = reg.DivManager_ID;
-                        //            break;
-                        //    }
-
-                        //    if (!string.IsNullOrEmpty(empID) && shape is IPrstGeomShape imageShape)
-                        //    {
-                        //        string fileName = GetImageStringP1SA(empID).Result;
-
-                        //        // ✅ Only insert image if filename is not null or empty
-                        //        if (!string.IsNullOrEmpty(fileName))
-                        //        {
-                        //            string pathfile = Path.Combine(@"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\Signatures", fileName);
-
-                        //            if (File.Exists(pathfile))
-                        //            {
-                        //                imageShape.Fill.CustomPicture(pathfile);
-                        //                Debug.WriteLine($"✅ Signature inserted for shape: {shape.Name}");
-                        //            }
-                        //            else
-                        //            {
-                        //                Debug.WriteLine($"⚠️ Image file not found: {pathfile}");
-                        //            }
-                        //        }
-                        //        else
-                        //        {
-                        //            Debug.WriteLine($"ℹ️ No signature to display for shape: {shape.Name}");
-                        //        }
-                        //    }
-                        //}
-                        var shapeMap = new Dictionary<string, string>
+                        // Import Images Signatures
+                        // 
+                        foreach(var emailSig in emails)
                         {
-                            { "SignaImage", reg.Inspect_ID },
-                            { "Department", reg.Manager_ID },
-                            { "Supervisor", reg.PIC_ID },
-                            { "Division", reg.DivManager_ID }
-                        };
+                            string imageName = emailSig.Signature;
+                            string imagePath = Path.Combine(
+                               @"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\Signatures",
+                               imageName
+                            );
 
-                        foreach (var shape in sheet.PrstGeomShapes.OfType<IPrstGeomShape>())
-                        {
-                            if (shapeMap.TryGetValue(shape.Name, out string empID) && !string.IsNullOrEmpty(empID))
+
+                            if (File.Exists(imagePath))
                             {
-                                string fileName = GetImageStringP1SA(empID).Result;
-                                if (!string.IsNullOrEmpty(fileName))
+                                foreach (IShape shape in sheet.PrstGeomShapes)
                                 {
-                                    string pathfile = Path.Combine(@"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\Signatures", fileName);
-                                    if (File.Exists(pathfile))
+                                    if(emailSig.Position == 5)
                                     {
-                                        shape.Fill.CustomPicture(pathfile);
+                                        if (shape.Name == "SignaImage" && shape is IPrstGeomShape imgShape)
+                                        {
+                                            imgShape.Fill.CustomPicture(imagePath);
+                                            Debug.WriteLine("✔ Signature added.");
+                                        }
                                     }
+
+                                    if (emailSig.Position == 4)
+                                    {
+                                        if (shape.Name == "Supervisor" && shape is IPrstGeomShape imgShape)
+                                        {
+                                            imgShape.Fill.CustomPicture(imagePath);
+                                            Debug.WriteLine("✔ Signature added.");
+                                        }
+                                    }
+
+
+                                    if (emailSig.Position == 3)
+                                    {
+                                        if (shape.Name == "Department" && shape is IPrstGeomShape imgShape)
+                                        {
+                                            imgShape.Fill.CustomPicture(imagePath);
+                                            Debug.WriteLine("✔ Signature added.");
+                                        }
+                                    }
+
+                                    if (emailSig.Position == 1)
+                                    {
+                                        if (shape.Name == "Division" && shape is IPrstGeomShape imgShape)
+                                        {
+                                            imgShape.Fill.CustomPicture(imagePath);
+                                            Debug.WriteLine("✔ Signature added.");
+                                        }
+                                    }
+
                                 }
                             }
+                            else
+                            {
+                                Debug.WriteLine("⚠ Signature file missing: " + imagePath);
+                            }
                         }
-
-
-
-
+    
+                        
 
                         workbook.SaveToFile(tempPdfPath, FileFormat.PDF);
                     }
@@ -682,13 +717,134 @@ namespace ProgramPartListWeb.Utilities
         }
 
 
-        private static async Task<string> GetImageStringP1SA(string EmpID)
+        public static async Task<string> GetImageStringP1SA(string EmpID)
         {
             string strquery = $@"SELECT TOP 1 Signature
                                  FROM Patrol_UserEmail WHERE Employee_ID =@ID";
 
             string data = await SqlDataAccess.GetOneData(strquery, new { ID = EmpID });
             return (!string.IsNullOrEmpty(data)) ? data : "";
+        }
+
+
+
+
+
+
+        public static async Task UpdatePDFRegistrationV2(
+    PatrolRegistrationViewModel reg,
+    List<FindingModel> find,
+    List<EmailModelV2> processowner,
+    string previousFile,
+    string outputfilename,
+    string template)
+        {
+            try
+            {
+                string exportFolder = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\Patrol_Registration\";
+                string outputPdf = Path.Combine(exportFolder, Path.ChangeExtension(outputfilename, ".pdf"));
+                string tempPdf = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".pdf");
+
+                // ================================
+                // 1. Generate Excel using EPPlus
+                // ================================
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                byte[] excelBytes;
+
+                using (var pkg = new ExcelPackage(new FileInfo(template)))
+                {
+                    var ws = pkg.Workbook.Worksheets[0];
+
+                    // Basic info
+                    ws.Cells["B2"].Value = "Registration No: " + reg.RegNo;
+                    ws.Cells["B4"].Value = "Dept. / Section Inspected: P1SA-" + reg.SectionName;
+                    ws.Cells["C53"].Value = "Manager: " + processowner.FirstOrDefault(p => p.Employee_ID == reg.Manager_ID)?.FullName;
+                    ws.Cells["E53"].Value = processowner.FirstOrDefault(p => p.Employee_ID == reg.Inspect_ID)?.FullName;  // Inspector
+                    ws.Cells["G53"].Value = processowner.FirstOrDefault(p => p.Employee_ID == reg.PIC_ID)?.FullName;       // PIC / Supervisor
+
+                    ws.Cells["C48"].Value = reg.Manager_Comments;
+                    ws.Cells["D48"].Value = "Date Conducted: " + (reg.DateConduct ?? "N/A");
+                    ws.Cells["D50"].Value = reg.PIC_Comments;
+
+                    // Fill findings
+                    if (find != null)
+                    {
+                        foreach (var f in find)
+                        {
+                            switch (f.FindID)
+                            {
+                                case 1: ws.Cells["B7"].Value = f.FindDescription; ws.Cells["D6"].Value = f.Countermeasure; break;
+                                case 2: ws.Cells["B13"].Value = f.FindDescription; ws.Cells["D12"].Value = f.Countermeasure; break;
+                                case 3: ws.Cells["B20"].Value = f.FindDescription; ws.Cells["D19"].Value = f.Countermeasure; break;
+                                case 4: ws.Cells["B27"].Value = f.FindDescription; ws.Cells["D26"].Value = f.Countermeasure; break;
+                                case 5: ws.Cells["B34"].Value = f.FindDescription; ws.Cells["D33"].Value = f.Countermeasure; break;
+                                default: ws.Cells["B42"].Value = f.FindDescription; ws.Cells["D41"].Value = f.Countermeasure; break;
+                            }
+                        }
+                    }
+
+                    excelBytes = pkg.GetAsByteArray();
+                }
+
+                // =========================================
+                // 2. Load Excel in Spire.XLS and insert IMAGES
+                // =========================================
+                using (MemoryStream ms = new MemoryStream(excelBytes))
+                {
+                    Workbook wb = new Workbook();
+                    wb.LoadFromStream(ms);
+                    Worksheet ws = wb.Worksheets[0];
+
+                    // ----------------------------
+                    // 🔥 Final: Insert real pictures
+                    // ----------------------------
+                    await InsertSignature(ws, "E53", reg.Inspect_ID);      // Inspector
+                    await InsertSignature(ws, "C53", reg.Manager_ID);      // Manager
+                    await InsertSignature(ws, "G53", reg.PIC_ID);          // Supervisor / PIC
+                    await InsertSignature(ws, "B53", reg.DivManager_ID);   // Division Manager
+
+                    // Export PDF
+                    wb.SaveToFile(tempPdf, FileFormat.PDF);
+                }
+
+                // Save final output
+                File.Copy(tempPdf, outputPdf, true);
+                File.Delete(tempPdf);
+
+                Debug.WriteLine("✔ PDF Generated: " + outputPdf);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("❌ PDF Error: " + ex);
+            }
+        }
+
+        private static async Task InsertSignature(Worksheet sheet, string cellRef, string empID)
+        {
+            if (string.IsNullOrEmpty(empID))
+                return;
+
+            string fileName = await GetImageStringP1SA(empID);
+            if (string.IsNullOrEmpty(fileName))
+                return;
+
+            string path = Path.Combine(@"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\Signatures", fileName);
+
+            if (!File.Exists(path))
+                return;
+
+            CellRange cell = sheet.Range[cellRef];
+
+            // Insert Excel picture (This always appears in PDF!)
+            ExcelPicture pic = sheet.Pictures.Add(cell.Row, cell.Column, path);
+
+            // Auto-resize
+            pic.Width = 110;
+            pic.Height = 45;
+
+            // Align to cell
+            pic.TopRowOffset = 2;
+            pic.LeftColumnOffset = 2;
         }
 
     }

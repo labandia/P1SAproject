@@ -38,9 +38,17 @@ namespace ProgramPartListWeb.Helper
                                           : "TestDevelopment";
             }
 
-            //LogConnectionChoice(host, Hostname, connectionKey);
 
-            return AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings[connectionKey].ConnectionString);
+            // ⭐ FIX: Prevent NULL connection string
+            if (string.IsNullOrEmpty(connectionKey))
+            {
+                connectionKey = "LiveDevelopment";
+            }
+            LogConnectionChoice(host, Hostname, connectionKey);
+
+            return AesEncryption.DecodeBase64ToString(
+                ConfigurationManager.ConnectionStrings[connectionKey].ConnectionString
+                );
         }
 
 

@@ -204,7 +204,7 @@
                         </div>
 
 
-                        <div class="row mb-3">
+                        @*<div class="row mb-3">
                             <div class="col ">
                                 <label>Inspector Name: </label> <br />
                                 <input type="text" id="InspectorName" readonly />
@@ -214,12 +214,12 @@
                                 <label>Date Conducted</label> <br />
                                 <input type="text" id="DateConduct" readonly />
                             </div>
-                        </div>
+                        </div>*@
 
-                        <div class="mb-3">
+                        @*<div class="mb-3">
                             <label>Person in charge </label> <br />
                             <input type="text" id="PICName" readonly />
-                        </div>
+                        </div>*@
 
                         <div class="mb-3">
                             <label>PIC Comments</label>
@@ -371,9 +371,9 @@
              let res = await fetchData('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
                  if (res && res.Success) {
                      $("#regtext").text(strRegno);
-                     $("#InspectorName").val(res.Data.InspectName);
-                     $("#PICName").val(res.Data.PICName);
-                     $("#DateConduct").val(res.Data.DateConduct);
+                     //$("#InspectorName").val(res.Data.InspectName);
+                     //$("#PICName").val(res.Data.PICName);
+                     //$("#DateConduct").val(res.Data.DateConduct);
                      $("#SectionName").val("P1SA-" + res.Data.SectionName);
 
 

@@ -18,6 +18,8 @@ namespace FootWristStrapsAnalysis
         List<DataGridViewRow> selectedRows = new List<DataGridViewRow>();
         private IEnumerable<IFootWristModel> getData = new List<IFootWristModel>();
 
+        private List<int> selectedRecordIds = new List<int>();
+
         private static IEnumerable<IFootWristModel> footlist;
 
         public Startup(IFootWrist foot)
@@ -403,6 +405,7 @@ namespace FootWristStrapsAnalysis
             if (e.RowIndex < 0) return;
 
             string checkCol = "Select";
+            string recordCol = "RecordID";  // <- your RecordID column name
 
             // Toggle checkbox
             bool current = Convert.ToBoolean(
@@ -412,16 +415,27 @@ namespace FootWristStrapsAnalysis
             bool newValue = !current;
             AnalysisTable.Rows[e.RowIndex].Cells[checkCol].Value = newValue;
 
+            var value = AnalysisTable.Rows[e.RowIndex].Cells[recordCol].Value;
+
+            if (value == null || value == DBNull.Value)
+                return;
+
+
+            int recordId;
+            if (!int.TryParse(value.ToString(), out recordId))
+                return;
+
+
             // Add to list if checked
             if (newValue)
             {
-                if (!selectedRows.Contains(AnalysisTable.Rows[e.RowIndex]))
-                    selectedRows.Add(AnalysisTable.Rows[e.RowIndex]);
+                if (!selectedRecordIds.Contains(recordId))
+                    selectedRecordIds.Add(recordId);
             }
             else
             {
                 // Remove if unchecked
-                selectedRows.Remove(AnalysisTable.Rows[e.RowIndex]);
+                selectedRecordIds.Remove(recordId);
             }
         }
 
@@ -447,7 +461,10 @@ namespace FootWristStrapsAnalysis
 
         public void ExportDatatoExcel()
         {
-
+            foreach (int id in selectedRecordIds)
+            {
+                Debug.WriteLine(id);
+            }
         }
     }
 }

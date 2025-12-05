@@ -617,6 +617,11 @@
         grid-template-columns: 65% 35%;
         grid-column-gap: 20px;
     }
+
+    .OpenAttach, .open-pdf-btn {
+        border: 1px solid #A5A1AA !important;
+    }
+
 /* ========= LOADING ANIMATION =========== */
     .Loadercontainer{
         display: flex;

@@ -199,7 +199,7 @@
                         </div>
 
 
-                        <div class="row mb-3">
+                        @*<div class="row mb-3">
                             <div class="col ">
                                 <label>Inspector Name: </label> <br />
                                 <input type="text" id="InspectorName" readonly />
@@ -209,14 +209,14 @@
                                 <label>Date Conducted</label> <br />
                                 <input type="text" id="DateConduct" readonly />
                             </div>
-                        </div>
+                        </div>*@
 
                         <div class="row mb-3">
-                            <div class="col ">
+                            @*<div class="col ">
                                 <label>Person in charge </label> <br />
                                 <input type="text" id="PICName" />
-                            </div>
-                            <div class="col ">
+                            </div>*@
+                            <div class="col-12">
                                 <label>PIC Comments</label>
                                 <textarea placeholder="Type text here..." name="PIC_Comments" id="PIC_Comments" rows="3" cols="40" readonly></textarea>
                             </div>
@@ -274,6 +274,9 @@
 
     </div>
 
+    <!-- Modal overlay to prevent clicking outside -->
+    <div class="modal-overlay" id="modalOverlay"></div>
+
 
     <div class="floating-comment-btn" style="@(ViewBag.Mode == 1 ? "" : "display:none")">
         <span class="comment-label">Moderate Comment</span>
@@ -292,15 +295,29 @@
         </div>
 
         <form id="commentForm">
+            <label>Signatures For Approval</label><br />
 
+            <div class="signature-container" id="signature-display">
+                <div class="signature-placeholder" id="placeholder">
+                    <i class="fas fa-signature" style="font-size: 48px; margin-bottom: 15px; color: #bdc3c7;"></i>
+                    <p>No Signature Display Please Upload</p>
+                </div>
+                <img id="signature-image" class="signature-image" style="display: none;">
 
-            <div class="form-group">
+                <div class="signature-Input" id="signature-Input" style="display: none;">
+                    <i class="fas fa-signature" style="font-size: 48px; margin-bottom: 15px; color: #bdc3c7;"></i>
+                    <p> No Signature Found. Please upload by click the Circle Icon. </p>
+                </div>
+
+            </div>
+
+            <div class="form-group" style="display: none;">
                 <label for="moderation-notes">Comments for Return (Optional)</label>
                 <textarea rows="4" id="Return_Comments" name="Return_Comments" placeholder="Send Message Back ..."></textarea>
             </div>
 
             <div class="action-buttons">
-                <button type="button" class="return-btn" id="returnBtn">
+                <button type="button" style="display: none;" class="return-btn" id="returnBtn">
                     <i class="fas fa-undo"></i> Return
                 </button>
                 <button type="button" class="approve-btn" id="approveBtn">
@@ -311,11 +328,97 @@
     </div>
     <div class="notification" id="notification"></div>
 
+    <!--########################## UPLOAD DATA #############################-->
+    <div class="modal fade modal-lg " id="uploadmodal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog"
+         data-bs-backdrop="static"
+         aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body modalwrap">
+                    <div class="custom_modal_header">
+                        <div class="custom_modal__icon">
+                            <div class="custom_icon_container">
+                                <i class="fa-solid fa-file-import"></i>
+                            </div>
+                            <div class="custom_modal_title">
+                                <span style="font-weight: 600;">Upload your Signature</span>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-light  close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+
+                    <div class="custom_modal_body">
+
+                        <div class="Mold_tabcontainer">
+                            <div class="Mold_tabs">
+                                <button class="Mold_tab active" data-target="UploadImage">Write Signature</button>
+                                <button class="Mold_tab" data-target="WriteTable">Upload Image</button>
+                                <div class="Mold_slider"></div>
+                            </div>
+
+                            <div class="Mold_contentbox">
+                                <div class="Mold_content show" id="UploadImage">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <span>Draw a Signature :</span>
+                                            <canvas id="signature-pad" width="400" height="200" style="border:1px solid #ccc;"></canvas>
+                                        </div>
+                                        <div class="col-6">
+                                            <form class="SignatureAction" id="SignatureForms">
+                                                <input type="hidden" id="SignatureData" name="SignatureData" />
+
+                                                <button type="button" class="clearbtn" onclick="clearSignature()"><i class="fa-solid fa-eraser"></i> Clear</button>
+                                                <button type="submit" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    @* Hidden input to hold the base64 image *@
+                                </div>
+                                <div class="Mold_content" id="WriteTable">
+                                    <form method="post" enctype="multipart/form-data" id="ImportExcel">
+                                        <div class="upload-container flex_center" id="upload-container">
+                                            <div class="upload-icon">📷</div>
+                                            <div class="file-info">Upload a photo of your signature.<br>Max file size: 1MB<br>png, jpg, jpeg, bmp, gif</div>
+                                            <input type="file" id="fileInput" accept=".png,.jpg,.jpeg,.bmp,.gif" class="hidden">
+                                            <button class="upload-btn" id="uploadBtn">Upload Photo</button>
+                                        </div>
+
+                                    </form>
+
+                                    <div class="preview-container" id="previewContainer">
+                                        <img id="SignatureImage" class="SignatureImage" src="/Content/Images/bussiness-man.png" alt="Signature" style="display: hidden;" />
+                                        <img id="previewImage" class="preview-image" src="" alt="Signature Preview">
+                                    </div>
+
+                                    <footer class="flex_end">
+                                        <span id="Upload "></span>
+                                        <button class="primarybtn flex_end" id="saveBtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                                    </footer>
+                                </div>
+                            </div>
+                        </div>
 
 
 
 
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="~/Scripts/signature_pad.umd.min.js"></script>
     <script type="text/javascript">
+        let emailTable = [];
+        let strManagerID;
+
         let currentStep = 5;
         const totalSteps = 5;
 
@@ -325,9 +428,14 @@
         const approveBtn = document.getElementById('approveBtn');
         const returnBtn = document.getElementById('returnBtn');
         const notification = document.getElementById('notification');
+        const modalOverlay = document.getElementById('modalOverlay');
 
         let strRegno = $("#Regno").val();
         let modeset = @ViewBag.Mode;
+
+        const signatureImage = document.getElementById('signature-image');
+        const signatureInput = document.getElementById('signature-Input');
+        const placeholder = document.getElementById('placeholder');
 
         function goToStep(step) {
             // Update current step
@@ -376,16 +484,22 @@
             });
         });
 
+        signatureInput.addEventListener('click', function () {
+            $("#uploadmodal").modal('show');
+        });
+
         // Toggle form visibility
         commentBtn.addEventListener('click', () => {
             commentBtn.classList.toggle('active');
             formContainer.classList.toggle('active');
+            modalOverlay.classList.toggle('active');
         });
 
         // Close form
         closeBtn.addEventListener('click', () => {
             commentBtn.classList.remove('active');
             formContainer.classList.remove('active');
+            modalOverlay.classList.remove('active');
         });
 
 
@@ -426,8 +540,11 @@
                 // Close form
                 commentBtn.classList.remove('active');
                 formContainer.classList.remove('active');
+                modalOverlay.classList.remove('active');
 
-               GetRegistrationDetails();
+               setTimeout(() => {
+                   window.location.href = `/PC/Patrol/CompleteRegistration?Regno=${strRegno}&mode=0`;
+               }, 3000);
             }
        });
 
@@ -450,6 +567,7 @@
            // Close form
            commentBtn.classList.remove('active');
            formContainer.classList.remove('active');
+           modalOverlay.classList.remove('active');
 
            // In a real app, you would update the comment status in the UI
            setTimeout(() => {
@@ -475,22 +593,17 @@
             }, 3000);
         }
 
-        document.addEventListener('click', (e) => {
-            if (!formContainer.contains(e.target) &&
-                !commentBtn.contains(e.target) &&
-                formContainer.classList.contains('active')) {
-                commentBtn.classList.remove('active');
-                formContainer.classList.remove('active');
-            }
-        });
+        
 
          const GetRegistrationDetails = async () => {
              let res = await fetchData('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
-                 if (res && res.Success) {
+             if (res && res.Success) {
+                 strManagerID = res.Data.Manager_ID; 
+
                      $("#regtext").text(strRegno);
-                     $("#InspectorName").val(res.Data.InspectName);
-                     $("#PICName").val(res.Data.PICName);
-                     $("#DateConduct").val(res.Data.DateConduct);
+                     //$("#InspectorName").val(res.Data.InspectName);
+                     //$("#PICName").val(res.Data.PICName);
+                     //$("#DateConduct").val(res.Data.DateConduct);
                      $("#SectionName").val("P1SA-" + res.Data.SectionName);
 
 
@@ -517,9 +630,33 @@
 
 
 
-                     RedirectPageView(res.Data.ReportStatus, strRegno);
+                     //RedirectPageView(res.Data.ReportStatus, strRegno);
+
+                     let Getitems = emailTable.find(res => res.Employee_ID === strManagerID);
+                     if (Getitems) {
+                         if (Getitems.Signature) {
+                             // Display the Signature Image
+                             placeholder.style.display = 'none';
+                             signatureInput.style.display = 'none';
+                             signatureImage.style.display = 'block';
+                             signatureImage.src = '/User/GetSignatureImage?filename=' + encodeURIComponent(Getitems.Signature);
+                         } else {
+                             // If No Signature Image
+                             placeholder.style.display = 'none';
+                             signatureImage.style.display = 'none';
+                             signatureInput.style.display = 'block';
+                         }
+                     }
                  }
-             }
+        }
+
+
+             const GetEmailList = async () => {
+                 let res = await fetchData('@Url.Action("GetEmaiRegistration", "Patrol")', {});
+                  if (res && res.Success) {
+                      emailTable = res.Data;
+                  }
+             };
 
             // Utility function to set color
             const setStatusColor = (selector, value) => {
@@ -661,7 +798,8 @@
         const LoadPageData = async () => {
             try {
 
-                const [regist, find, files] = await Promise.all([
+                const [email, regist, find, files] = await Promise.all([
+                    GetEmailList(),
                     GetRegistrationDetails(),
                     GetRegistrationFindingsID(),
                     GetRegistratioFiles()

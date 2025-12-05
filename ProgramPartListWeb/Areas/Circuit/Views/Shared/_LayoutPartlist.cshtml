@@ -192,15 +192,8 @@
             });
         });
 
-        window.IsLoginUser({
-            storageKey: "isLoggedInProgram",
-            redirectUrl: '/Circuit/ProgramPartList/LogMainpage',
-            expectedValue: 'true',
-            expirationKey: 'PartlistTime',
-            maxHours: 24
-        });
 
     </script>
-
+    @Html.Partial("_SystemConfig")
 </body>
 </html>

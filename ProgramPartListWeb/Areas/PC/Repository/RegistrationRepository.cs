@@ -153,8 +153,9 @@ namespace ProgramPartListWeb.Areas.PC.Repository
         {
             // UPDATE THE MAIN REGISTRATION TABLE
             string mainsql = $@"UPDATE Patrol_Registration
-                                SET ReportStatus = 2, Manager_ID =@Manager_ID,  DepManager_ID =@DepManager_ID
+                                SET ReportStatus = 3, Manager_ID =@Manager_ID,  DepManager_ID =@DepManager_ID
                                 WHERE RegNo = @RegNo";
+
             var regMain = SqlDataAccess.UpdateInsertQuery(mainsql, new 
             { 
                 RegNo = reg.RegNo,

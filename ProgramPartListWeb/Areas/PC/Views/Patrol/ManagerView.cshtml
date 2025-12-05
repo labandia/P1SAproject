@@ -179,7 +179,7 @@
                             </div>
                         </div>
 
-                        <div class="row mb-3">
+                        @*<div class="row mb-3">
                             <div class="col ">
                                 <label>Inspector Name: </label> <br />
                                 <input type="text" id="InspectorName" />
@@ -189,14 +189,14 @@
                                 <label>Date Conducted</label> <br />
                                 <input type="text" id="DateConduct" />
                             </div>
-                        </div>
+                        </div>*@
 
                         <div class="row mb-3">
-                            <div class="col ">
+                            @*<div class="col ">
                                 <label>Person in charge </label> <br />
                                 <input type="text" id="PICName" />
-                            </div>
-                            <div class="col ">
+                            </div>*@
+                            <div class="col-12">
                                 <label>PIC Comments</label>
                                 <textarea placeholder="Type text here..." name="PIC_Comments" id="PIC_Comments" rows="3" cols="40" readonly></textarea>
                             </div>
@@ -246,7 +246,7 @@
 
             <!-- Step 4: Attachments -->
             <div class="step-content" id="step-4">
-                
+
             </div>
 
             <!-- Step 5: Review & Submit -->
@@ -257,6 +257,9 @@
 
 
     </div>
+
+    <!-- Modal overlay to prevent clicking outside -->
+    <div class="modal-overlay" id="modalOverlay"></div>
 
     <div class="floating-comment-btn" style="@(ViewBag.Mode == 1 ? "" : "display:none")">
         <span class="comment-label">Moderate Comment</span>
@@ -287,6 +290,24 @@
                 <textarea rows="4" id="Return_Comments" name="Return_Comments" placeholder="Send Message back ..."></textarea>
             </div>
 
+            <label>Signatures For Approval</label><br />
+
+            <div class="signature-container" id="signature-display">
+                <div class="signature-placeholder" id="placeholder">
+                    <i class="fas fa-signature" style="font-size: 48px; margin-bottom: 15px; color: #bdc3c7;"></i>
+                    <p>No Signature Display Please Upload</p>
+                </div>
+                <img id="signature-image" class="signature-image" style="display: none;">
+
+                <div class="signature-Input" id="signature-Input" style="display: none;">
+                    <i class="fas fa-signature" style="font-size: 48px; margin-bottom: 15px; color: #bdc3c7;"></i>
+                    <p> No Signature Found. Please upload by click the Circle Icon. </p>
+                </div>
+
+            </div>
+
+
+
             <div class="action-buttons">
                 <button style="display: none;" type="button" class="return-btn" id="returnBtn">
                     <i class="fas fa-undo"></i> Return
@@ -301,21 +322,120 @@
 
     <div class="notification" id="notification"></div>
 
+
+    <!--########################## UPLOAD DATA #############################-->
+    <div class="modal fade modal-lg " id="uploadmodal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog"
+         data-bs-backdrop="static"
+         aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body modalwrap">
+                    <div class="custom_modal_header">
+                        <div class="custom_modal__icon">
+                            <div class="custom_icon_container">
+                                <i class="fa-solid fa-file-import"></i>
+                            </div>
+                            <div class="custom_modal_title">
+                                <span style="font-weight: 600;">Upload your Signature</span>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-light  close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+
+                    <div class="custom_modal_body">
+
+                        <div class="Mold_tabcontainer">
+                            <div class="Mold_tabs">
+                                <button class="Mold_tab active" data-target="UploadImage">Write Signature</button>
+                                <button class="Mold_tab" data-target="WriteTable">Upload Image</button>
+                                <div class="Mold_slider"></div>
+                            </div>
+
+                            <div class="Mold_contentbox">
+                                <div class="Mold_content show" id="UploadImage">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <span>Draw a Signature :</span>
+                                            <canvas id="signature-pad" width="400" height="200" style="border:1px solid #ccc;"></canvas>
+                                        </div>
+                                        <div class="col-6">
+                                            <form class="SignatureAction" id="SignatureForms">
+                                                <input type="hidden" id="SignatureData" name="SignatureData" />
+
+                                                <button type="button" class="clearbtn" onclick="clearSignature()"><i class="fa-solid fa-eraser"></i> Clear</button>
+                                                <button type="submit" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    @* Hidden input to hold the base64 image *@
+                                </div>
+                                <div class="Mold_content" id="WriteTable">
+                                    <form method="post" enctype="multipart/form-data" id="ImportExcel">
+                                        <div class="upload-container flex_center" id="upload-container">
+                                            <div class="upload-icon">📷</div>
+                                            <div class="file-info">Upload a photo of your signature.<br>Max file size: 1MB<br>png, jpg, jpeg, bmp, gif</div>
+                                            <input type="file" id="fileInput" accept=".png,.jpg,.jpeg,.bmp,.gif" class="hidden">
+                                            <button class="upload-btn" id="uploadBtn">Upload Photo</button>
+                                        </div>
+
+                                    </form>
+
+                                    <div class="preview-container" id="previewContainer">
+                                        <img id="SignatureImage" class="SignatureImage" src="/Content/Images/bussiness-man.png" alt="Signature" style="display: hidden;" />
+                                        <img id="previewImage" class="preview-image" src="" alt="Signature Preview">
+                                    </div>
+
+                                    <footer class="flex_end">
+                                        <span id="Upload "></span>
+                                        <button class="primarybtn flex_end" id="saveBtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                                    </footer>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+    <script src="~/Scripts/signature_pad.umd.min.js"></script>
     <script type="text/javascript">
+        let emailTable = [];
+        let strManagerID;
+
         let currentStep = 3;
         const totalSteps = 5;
         // Global flag to prevent multiple redirects
- 
+
         const commentBtn = document.getElementById('commentBtn');
         const formContainer = document.getElementById('floatContainer');
         const approveBtn = document.getElementById('approveBtn');
         const closeBtn = document.getElementById('closeBtn');
         const returnBtn = document.getElementById('returnBtn');
         const notification = document.getElementById('notification');
-
+        const modalOverlay = document.getElementById('modalOverlay');
 
         let strRegno = $("#Regno").val();
         let modeset = @ViewBag.Mode;
+
+        const signatureImage = document.getElementById('signature-image');
+        const signatureInput = document.getElementById('signature-Input');
+        const placeholder = document.getElementById('placeholder');
+
 
         function goToStep(step) {
             // Update current step
@@ -363,16 +483,23 @@
             });
         });
 
+        signatureInput.addEventListener('click', function () {
+            $("#uploadmodal").modal('show');
+        });
+
+
         // Toggle form visibility
         commentBtn.addEventListener('click', () => {
             commentBtn.classList.toggle('active');
             formContainer.classList.toggle('active');
+            modalOverlay.classList.toggle('active');
         });
 
         // Close form
         closeBtn.addEventListener('click', () => {
             commentBtn.classList.remove('active');
             formContainer.classList.remove('active');
+            modalOverlay.classList.remove('active');
         });
 
            // Approve action
@@ -411,11 +538,12 @@
                // Close form
                commentBtn.classList.remove('active');
                formContainer.classList.remove('active');
+               modalOverlay.classList.remove('active');
 
                setTimeout(() => {
                    window.location.href = `/PC/Patrol/ManagerView?Regno=${strRegno}&mode=0`;
                }, 3000);
-           } 
+           }
        });
 
 
@@ -441,6 +569,7 @@
            // Close form
            commentBtn.classList.remove('active');
            formContainer.classList.remove('active');
+           modalOverlay.classList.remove('active');
 
            // In a real app, you would update the comment status in the UI
            setTimeout(() => {
@@ -466,14 +595,7 @@
             }, 3000);
         }
 
-        document.addEventListener('click', (e) => {
-            if (!formContainer.contains(e.target) &&
-                !commentBtn.contains(e.target) &&
-                formContainer.classList.contains('active')) {
-                commentBtn.classList.remove('active');
-                formContainer.classList.remove('active');
-            }
-        });
+
 
 
         // Utility function to set color
@@ -488,13 +610,15 @@
 
 
 
-          const GetRegistrationDetails = async () => {
-              let res = await fetchData('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
-              if (res && res.Success) {
+        const GetRegistrationDetails = async () => {
+            let res = await fetchData('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
+            if (res && res.Success) {
+                 strManagerID = res.Data.Manager_ID; 
+
                   $("#regtext").text(strRegno);
-                  $("#InspectorName").val(res.Data.InspectName);
-                  $("#PICName").val(res.Data.PICName);
-                  $("#DateConduct").val(res.Data.DateConduct);
+                  //$("#InspectorName").val(res.Data.InspectName);
+                  //$("#PICName").val(res.Data.PICName);
+                  //$("#DateConduct").val(res.Data.DateConduct);
                   $("#SectionName").val("P1SA-" + res.Data.SectionName);
                   $("#PIC_Comments").val(res.Data.PIC_Comments);
                   $("#Manager_Comments").val(res.Data.Manager_Comments);
@@ -525,9 +649,25 @@
                       $("#Manager_Comments").prop("readonly", true);
                   }
 
+                console.log(emailTable);
+                let Getitems = emailTable.find(res => res.Employee_ID === strManagerID);
+                if (Getitems) {
+                    if (Getitems.Signature) {
+                        // Display the Signature Image
+                        placeholder.style.display = 'none';
+                        signatureInput.style.display = 'none';
+                        signatureImage.style.display = 'block';
+                        signatureImage.src = '/User/GetSignatureImage?filename=' + encodeURIComponent(Getitems.Signature);
+                    } else {
+                        // If No Signature Image
+                        placeholder.style.display = 'none';
+                        signatureImage.style.display = 'none';
+                        signatureInput.style.display = 'block';
+                    }
+                }
              }
          }
-         const GetRegistrationFindingsID = async () => {
+        const GetRegistrationFindingsID = async () => {
              let res = await fetchData('@Url.Action("GetRegistrationFindings", "Patrol")', { Regno: strRegno });
 
              if (res && res.Success) {
@@ -537,7 +677,7 @@
                  });
              }
          }
-         const GetRegistratioFiles = async () => {
+        const GetRegistratioFiles = async () => {
              let filesSelect = [];
              let res = await fetchData('@Url.Action("GetRegistrationAllFiles", "Patrol")', { Regno: strRegno });
              if (res.Success && res) {
@@ -623,11 +763,20 @@
 
          }
 
+        const GetEmailList = async () => {
+            let res = await fetchData('@Url.Action("GetEmaiRegistration", "Patrol")', {});
+            console.log(res);
+             if (res && res.Success) {
+                 emailTable = res.Data;
+             }
+        };
+
+
         const RedirectPageView = (stats, regno) => {
             // Use encodeURIComponent to avoid issues with special characters
             if (stats == 3) return;
 
-       
+
 
             const r = encodeURIComponent(regno);
             const m = encodeURIComponent(modeset);
@@ -656,7 +805,8 @@
         const LoadPageData = async () => {
             try {
 
-                const [regist, find, files] = await Promise.all([
+                const [regist, find, files, ads] = await Promise.all([
+                    GetEmailList(),
                     GetRegistrationDetails(),
                     GetRegistrationFindingsID(),
                     GetRegistratioFiles()
@@ -672,6 +822,199 @@
         $(document).ready(() => {
             LoadPageData();
         });
+
+
+
+    // Tabs Content
+     const tabs = document.querySelectorAll(".Mold_tab");
+     const slider = document.querySelector(".Mold_slider");
+     const contents = document.querySelectorAll(".Mold_content");
+
+     tabs.forEach((tab, index) => {
+         tab.addEventListener("click", () => {
+             // Handle tab active class
+             document.querySelector(".Mold_tab.active").classList.remove("active");
+             tab.classList.add("active");
+
+             // Move slider
+             slider.style.transform = `translateX(${index * 100}%)`;
+
+             // Switch content
+             const target = tab.getAttribute("data-target");
+             contents.forEach((content) => {
+                 content.classList.remove("show");
+             });
+             document.getElementById(target).classList.add("show");
+         });
+     });
+
+
+     // ==========   FOR DRAWING A SIGNATURE IMAGE =================
+     let canvas = document.getElementById("signature-pad");
+     let signaturePad = new SignaturePad(canvas);
+
+     function clearSignature() {
+         signaturePad.clear();
+     }
+
+     function saveSignature() {
+         if (signaturePad.isEmpty()) {
+             alert("Please provide a signature.");
+             return;
+         }
+
+         const dataUrl = signaturePad.toDataURL("image/png"); // Base64 PNG
+         document.getElementById("SignatureData").value = dataUrl;
+
+         // Submit the form
+         document.getElementById("signatureForm").submit();
+     }
+     // ===========================================================
+
+     document.addEventListener('DOMContentLoaded', function () {
+         const InputFile = document.getElementById('fileInput');
+         const uploadbtn = document.getElementById('uploadBtn');
+         const savebtn = document.getElementById('saveBtn');
+
+         const previewContainer = document.getElementById('previewContainer');
+         const previewImage = document.getElementById('previewImage');
+
+         // Handle Upload button Click
+         uploadbtn.addEventListener('click', function (e) {
+             e.preventDefault();
+             InputFile.click();
+         });
+
+         // Handle Functional of File Input Upload
+         InputFile.addEventListener('change', function (e) {
+             e.preventDefault();
+             //Check if the Image data exist
+             if (e.target.files.length > 0) {
+                 const file = e.target.files[0];
+
+                 // Check the file size (Max 1 MB)
+                 if (file.size > 1024 * 1024) {
+                     alert('File size exceeds 1MB limit');
+                     return;
+                 }
+                 // Check file Type
+                 const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/bmp', 'image/gif'];
+
+                 if (!validTypes.includes(file.type)) {
+                     alert("Invalid file type, Please upload a png, jpeg, bmp or gif file");
+                     return;
+                 }
+
+                 //Create a Preview Image When the Upload the file
+                 const reader = new FileReader();
+                 reader.onload = function (e) {
+                     previewImage.src = e.target.result;
+                     previewContainer.style.display = 'block';
+                 };
+                 reader.readAsDataURL(file);
+             }
+         });
+
+
+         // handle save button click
+         savebtn.addEventListener('click', function (e) {
+             e.preventDefault();
+
+             //validate the form
+             if (!InputFile.files || InputFile.files.length === 0) {
+                 alert("Please upload an image of your signature before saving");
+                 return;
+             }
+
+
+             const formData = new FormData();
+             formData.append('SignatureImage', InputFile.files[0]);
+             formData.append('UserID', strManagerID);
+
+             const data = Object.fromEntries(formData);
+
+             $.ajax({
+                 url:  '@Url.Action("UploadSignature", "Patrol")',
+                 type: 'POST',
+                 data: formData,
+                 processData: false,
+                 contentType: false,
+                 success: function (res) {
+                     if (res && res.success) {
+                         placeholder.style.display = 'none';
+                         signatureImage.style.display = 'block';
+                         signatureInput.style.display = 'none';
+                         signatureImage.src = '/User/GetSignatureImage?filename=' + encodeURIComponent(res.Data);
+                         clearSignature();
+                         $("#uploadmodal").modal("hide");
+                     }
+                 },
+                 error: function (xhr, status, error) {
+                     //$('#signatureImageError').text('An error occurred: ' + error);
+                 },
+                 complete: function () {
+                     //saveBtn.prop('disabled', false).text('Save');
+                 }
+             });
+
+             // Reset the form
+
+
+         });
+     });
+
+
+
+        $("#SignatureForms").on('submit', async (e) => {
+               e.preventDefault();
+               const formData = new FormData(e.target);
+               const dataUrl = signaturePad.toDataURL("image/png"); // Base64 PNG
+               //document.getElementById("SignatureData").value = dataUrl;
+
+
+               //formData.append('SignatureImage', dataUrl);
+               //formData.append('UserID', selectedInspector);
+
+               const data = Object.fromEntries(formData);
+
+               fetch(dataUrl)
+                   .then(res => res.blob())
+                   .then(blob => {
+                       const timestamp = Date.now(); // e.g., 1721705540000
+                       const fileName = `Patrol_${timestamp}.png`;
+
+                       const formData = new FormData();
+                       const file = new File([blob], fileName, { type: "image/png" });
+
+                       formData.append("SignatureImage", file); // Simulates <input type="file" />
+                       formData.append("UserID", strManagerID);
+                       const data = Object.fromEntries(formData);
+
+                       $.ajax({
+                           url:  '@Url.Action("UploadSignature", "Patrol")',
+                           type: 'POST',
+                           data: formData,
+                           processData: false,
+                           contentType: false,
+                           success: function (res) {
+                               if (res && res.success) {
+                                   placeholder.style.display = 'none';
+                                   signatureImage.style.display = 'block';
+                                   signatureInput.style.display = 'none';
+                                   signatureImage.src = '/User/GetSignatureImage?filename=' + encodeURIComponent(res.Data);
+                                   clearSignature();
+                                   $("#uploadmodal").modal("hide");
+                               }
+                           },
+                           error: function (xhr, status, error) {
+                               //$('#signatureImageError').text('An error occurred: ' + error);
+                           },
+                           complete: function () {
+                               //saveBtn.prop('disabled', false).text('Save');
+                           }
+                       });
+                   });
+           });
     </script>
 </body>
 

@@ -362,18 +362,19 @@
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\MoldDie\Controllers\MoldController.cs" />
+    <Compile Include="Areas\MoldDie\MoldDieAreaRegistration.cs" />
     <Compile Include="Areas\P1SA\Controllers\CapacityController.cs" />
-    <Compile Include="Areas\P1SA\Controllers\DieMoldController.cs" />
     <Compile Include="Areas\P1SA\Controllers\FanMajorController.cs" />
     <Compile Include="Areas\P1SA\Controllers\PMACSController.cs" />
     <Compile Include="Areas\P1SA\Controllers\PostCapacityController.cs" />
     <Compile Include="Areas\P1SA\Interface\ICapacity.cs" />
-    <Compile Include="Areas\P1SA\Interface\IDieMold.cs" />
+    <Compile Include="Areas\MoldDie\Interface\IDieMold.cs" />
     <Compile Include="Areas\P1SA\Interface\IMachine.cs" />
     <Compile Include="Areas\P1SA\Interface\IManpower.cs" />
     <Compile Include="Areas\P1SA\Models\CapacityModels.cs" />
     <Compile Include="Areas\P1SA\Models\CapacityPartialViewModel.cs" />
-    <Compile Include="Areas\P1SA\Models\DieModel.cs" />
+    <Compile Include="Areas\MoldDie\Models\DieModel.cs" />
     <Compile Include="Areas\P1SA\Models\MachineModel.cs" />
     <Compile Include="Areas\P1SA\Models\ManpowerModel.cs" />
     <Compile Include="Areas\P1SA\Models\CapacityPostModels.cs" />
@@ -381,7 +382,7 @@
     <Compile Include="Areas\P1SA\Repository\CapacityRepository.cs" />
     <Compile Include="Areas\P1SA\Repository\MachineRepository.cs" />
     <Compile Include="Areas\P1SA\Repository\ManpowerRepository.cs" />
-    <Compile Include="Areas\P1SA\Repository\MoldDieRepository.cs" />
+    <Compile Include="Areas\MoldDie\Repository\MoldDieRepository.cs" />
     <Compile Include="Areas\P1SA\Repository\UpdateRepository.cs" />
     <Compile Include="Areas\PartsLocal\Controllers\PartsLocatorController.cs" />
     <Compile Include="Areas\PartsLocal\Interface\IProducts.cs" />
@@ -569,18 +570,15 @@
     <Content Include="Areas\Planning\Views\Plan\LiveViewMonitoring.cshtml" />
     <Content Include="Areas\Planning\Views\Plan\MonitoringDashboard.cshtml" />
     <Content Include="Areas\Planning\Views\Shared\_PlanningLayout.cshtml" />
-    <Content Include="Areas\P1SA\Views\DieMold\DieMoldLife.cshtml" />
     <Content Include="Content\fonts\Inter.ttf" />
     <Content Include="Content\fonts\Urbanist.ttf" />
     <Content Include="Content\fonts\Manrope.ttf" />
     <Content Include="Content\fonts\Roboto.ttf" />
     <Content Include="Content\fonts\OpenSans.ttf" />
-    <Content Include="Areas\P1SA\Views\DieMold\DiePressLife.cshtml" />
     <Content Include="Content\fonts\Nunito.ttf" />
     <Content Include="Content\fonts\SharpSans.otf" />
     <Content Include="Content\fonts\Figtree.ttf" />
     <Content Include="Content\fonts\Quicksand.ttf" />
-    <Content Include="Areas\P1SA\Views\DieMold\DiePressMonitorDetails.cshtml" />
     <Content Include="Areas\PartsLocal\Views\web.config" />
     <Content Include="Areas\PartsLocal\Views\Shared\_PartlocalLayout.cshtml" />
     <Content Include="Areas\PartsLocal\Views\PartsLocator\Masterlist.cshtml" />
@@ -589,7 +587,13 @@
     <Content Include="Areas\PartsLocal\Views\PartsLocator\Index.cshtml" />
     <Content Include="Areas\PartsLocal\Views\PartsLocator\TrackParts.cshtml" />
     <Content Include="Areas\PartsLocal\Views\PartsLocator\ProductDetails.cshtml" />
-    <Content Include="Areas\P1SA\Views\DieMold\AddMonitoringInput.cshtml" />
+    <Content Include="Areas\MoldDie\Views\web.config" />
+    <Content Include="Areas\MoldDie\Views\Mold\Index.cshtml" />
+    <Content Include="Areas\MoldDie\Views\Shared\_MoldieLayout.cshtml" />
+    <Content Include="Areas\MoldDie\Views\Mold\AddMonitoringInput.cshtml" />
+    <Content Include="Areas\MoldDie\Views\Mold\DieMoldLife.cshtml" />
+    <Content Include="Areas\MoldDie\Views\Mold\DiePressLife.cshtml" />
+    <Content Include="Areas\MoldDie\Views\Mold\DiePressMonitorDetails.cshtml" />
     <None Include="bundleconfig.json" />
     <None Include="Scripts\Shared\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\chart.js" />
@@ -655,6 +659,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Extend\" />
+    <Folder Include="Views\MoldDie\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Shared\bootstrap.rtl.min.css.map" />

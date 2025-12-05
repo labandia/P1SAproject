@@ -4,7 +4,7 @@
     Layout = "~/Areas/PC/Views/Shared/_PatrolLayout.cshtml";
 }
 
-<header class="InspectHead flex_space">
+<header class="InspectHead flex_space mb-1">
     <div class="flex_align">
         <div class="Inputcontainer">
             <i class="fa-solid fa-magnifying-glass"></i>
@@ -15,9 +15,7 @@
         <div class="flex_align">
             <i class="fa-solid fa-file-pdf "></i>
             <small>PDF file</small>
-            <i class="fa-solid fa-file-excel text-success"></i>
-            <small>Excel file</small>
-            <i class="fa-solid fa-square-xmark text-danger"></i>
+            <i class="fa-solid fa-ban text-danger"></i>
             <small>No Attachement files</small>
         </div>
     </div>
@@ -161,32 +159,36 @@
                             ? `<button class="open-pdf-btn" data-pdf-url="/Patrol/ViewPDF?strfilepath=${rowData.Filepath}">
                                   <i class="fa-solid fa-file-pdf"></i>
                                 </button>`
-                            : `<i class="fa-solid fa-square-xmark text-danger"></i>`;
+                            : `<button class="OpenAttach"  >
+                                           <i class="fa-solid fa-ban text-danger"></i>  
+                                        </button>`;
 
                 let hasExcelfile = (rowData.CounterPath != null && rowData.CounterPath.trim() !== "")
                             ? `<button class="OpenAttach"  id='OpenAttach_${rowData.RegNo}'>
-                                    <i class="fa-solid fa-file-excel text-success"></i>
+                                   <i class="fa-solid fa-paperclip"></i>
                                 </button>`
-                    : `<i class="fa-solid fa-square-xmark text-danger"></i>`;
+                    : `<button class="OpenAttach"  >
+                                   <i class="fa-solid fa-ban text-danger"></i>  
+                                </button>`;
 
 
                 let Stats = "";
 
                 switch (rowData.ReportStatus) {
                     case 1:
-                        Stats = `<span id="reportStats" style='color: rgb(9, 67, 100)'>Process Owner</span>`;
+                        Stats = `<span id="reportStats" style='color: rgb(9, 67, 100); font-weight: 600;'>Process Owner</span>`;
                         break;
                     case 2:
-                        Stats = `<span id="reportStats"  style='color: rgb(100, 30, 9)'>Inspection </span>`;
+                        Stats = `<span id="reportStats"  style='color: rgb(100, 30, 9); font-weight: 600;'>Inspection </span>`;
                         break;
                     case 3:
-                        Stats = `<span id="reportStats" style='color: rgb(33, 9, 100);'>Managers </span>`;
+                        Stats = `<span id="reportStats" style='color: rgb(33, 9, 100); font-weight: 600;'>Managers </span>`;
                         break;
                     case 4:
-                        Stats = `<span id="reportStats" style='color: rgb(9, 15, 100);'>Div Manager </span>`;
+                        Stats = `<span id="reportStats" style='color: rgb(9, 15, 100); font-weight: 600;'>Div Manager </span>`;
                         break;
                     case 6:
-                        Stats = `<span id="reportStats" style='color: rgb(9, 100, 73);'>Completed</span>`;
+                        Stats = `<span id="reportStats" style='color: rgb(9, 100, 73); font-weight: 600;'>Completed</span>`;
                         break;
                     default:
                         Stats = `<span id="reportStats">Div Manager </span>`;

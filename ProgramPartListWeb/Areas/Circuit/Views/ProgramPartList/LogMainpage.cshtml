@@ -93,7 +93,6 @@
 
              logform.addEventListener('submit', async (e) => {
                  e.preventDefault();
-                 console.clear();
                  const savebtn = document.querySelector("#loginbtn");
                  savebtn.innerHTML = " <div class='buttonloading'></div>";
 
@@ -167,12 +166,5 @@
                      //}
              });
 
-            window.IsLoginUser({
-                storageKey: "isLoggedInProgram",
-                redirectUrl: '/Circuit/ProgramPartList/LogMainpage',
-                expectedValue: 'true',
-                redirectIfLoggedInUrl: '/Circuit/ProgramPartList/ManagePlanSchedule',
-                expirationKey: 'PartlistTime',
-                maxHours: 24
-            });
+           
     </script>

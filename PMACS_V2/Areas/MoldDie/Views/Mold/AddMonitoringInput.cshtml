@@ -24,7 +24,7 @@
 <body>
     <header class="heads">
         <div class="heads_container">
-            <a href="/P1SA/DieMold/DieMoldLife"><i class="fa-solid fa-arrow-left"></i> <span>  Back to Moldie Monitoring</span> </a>
+            <a href="/MoldDie/Mold/DieMoldLife"><i class="fa-solid fa-arrow-left"></i> <span>  Back to Moldie Monitoring</span> </a>
         </div>
     </header>
 
@@ -337,7 +337,7 @@
                   return;
               }
 
-             let res = await postData('@Url.Action("AddDailyMoldDieMonitor", "DieMold")', data);
+             let res = await postData('@Url.Action("AddDailyMoldDieMonitor", "Mold")', data);
              if (res && res.Success) {
                   Swal.fire({
                       title: "Success",
@@ -373,7 +373,7 @@
              formData.append('Remarks', $('#DailyEditRemarks').val());
              formData.append('Mincharge', $('#DailyEditMincharge').val());
              const data = Object.fromEntries(formData);
-             let res = await postData('@Url.Action("UpdateDailyMoldDieMonitor", "DieMold")', data);
+             let res = await postData('@Url.Action("UpdateDailyMoldDieMonitor", "Mold")', data);
 
               if (res.StatusCode === 201) {
               Swal.fire({
@@ -432,7 +432,7 @@
                 await new Promise(resolve => setTimeout(resolve, 1000));
 
                 // Perform server request
-                let res = await FetchAuthenticate('@Url.Action("SearchMoldieDaily", "DieMold")', {
+                let res = await FetchAuthenticate('@Url.Action("SearchMoldieDaily", "Mold")', {
                     ProcessID: selectionProcess,
                     SearchInput: searchInput
                 });
@@ -486,7 +486,7 @@
                 } else {
                     // Handle no results or failure
                     const loadData = `<tr>
-                         <td colspan='7'>
+                         <td colspan='9'>
                              🔍 No Data Found
                          </td>
                      </tr>`;
@@ -497,6 +497,13 @@
                     $("#modelName").text("-");
                     $("#lastCycleShot").text("-");
                     $("#partStatus").text("No Data");
+
+                    Swal.fire({
+                        icon: "error",
+                        text: "No Data found or the Partnumber is not the Process",
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
                 }
             } catch (err) {
                 console.error("Search error:", err);
@@ -631,7 +638,7 @@
                       confirmButtonText: "Yes, delete it!"
                   }).then( async (result) => {
                       if (result.isConfirmed) {
-                          let res = await postData('@Url.Action("DeleteDailyMoldDieMonitor", "DieMold")', { ID: rowIndex });
+                          let res = await postData('@Url.Action("DeleteDailyMoldDieMonitor", "Mold")', { ID: rowIndex });
                           if (res.Success && res) {
 
                               Swal.fire({
@@ -661,7 +668,7 @@
             console.log("Clicked:", recordId, status);
 
             // OPTIONAL: call your backend here
-            let res = await postData('@Url.Action("UpdateDailyStatus", "DieMold")', {
+            let res = await postData('@Url.Action("UpdateDailyStatus", "Mold")', {
                 RecordID: recordId,
                 Status: status
             });

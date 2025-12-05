@@ -1,27 +1,22 @@
 ﻿using PMACS_V2.Areas.P1SA.Interface;
-using PMACS_V2.Areas.P1SA.Models;
-using PMACS_V2.Controllers;
-using PMACS_V2.Utilities;
-using PMACS_V2.Utilities.Security;
-using ProgramPartListWeb.Helper;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
+using System.Configuration;
 using System.Web.Mvc;
+using PMACS_V2.Controllers;
+using System.Threading.Tasks;
+using PMACS_V2.Areas.P1SA.Models;
+using ProgramPartListWeb.Helper;
+using System.Diagnostics;
 
-namespace PMACS_V2.Areas.P1SA.Controllers
+namespace PMACS_V2.Areas.MoldDie.Controllers
 {
-    [CompressResponse]
-    [RateLimiting(300, 1)] // Limits the No of Request
-    public class DieMoldController : ExtendController
+    public class MoldController : ExtendController
     {
         private readonly IDieMold _die;
         public static string strSender => ConfigurationManager.AppSettings["config:SMTPEmail"];
-        public DieMoldController(IDieMold die) => _die = die;
+        public MoldController(IDieMold die) => _die = die;
 
         // ===========================================================
         // ==================== MOLD DIE DATA  =======================
@@ -107,7 +102,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         public async Task<ActionResult> GetMoldDieDailyList(int Months, int Year, string ProcessID, int Days)
         {
 
-            var data = await _die.GetDailyMoldData(Months, Days,  Year, ProcessID) ?? new List<DieMoldDaily>();
+            var data = await _die.GetDailyMoldData(Months, Days, Year, ProcessID) ?? new List<DieMoldDaily>();
 
             if (data == null || !data.Any())
                 return JsonNotFound("No Mold Die Daily data found");
@@ -127,7 +122,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         public async Task<ActionResult> SearchMoldieDaily(string ProcessID, string SearchInput)
         {
 
-             //Run tasks in parallel for better performance
+            //Run tasks in parallel for better performance
             var datalistTask = _die.GetDailyMoldHistoryData(SearchInput, ProcessID);
             var detailsTask = _die.GetDailyLastMoldData(SearchInput, ProcessID);
 
@@ -260,7 +255,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         }
         [HttpPost]
         public async Task<ActionResult> DeleteMoldDieData(int RecordID, string PartNo)
-        {          
+        {
             bool update = await _die.DeleteMoldDie(RecordID, PartNo);
             if (!update) return JsonValidationError();
             return JsonCreated(update, "Delete Data Successfully");
@@ -359,7 +354,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         [HttpPost]
         public async Task<ActionResult> AddPressDieControl(PressDieControlData obj)
         {
-           
+
             bool update = await _die.AddPressDieControl(obj);
             if (!update) return JsonValidationError();
 
@@ -387,7 +382,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
 
 
         // GET: P1SA/DieMold
-        public ActionResult DieMoldLife() =>  View();
+        public ActionResult DieMoldLife() => View();
         public ActionResult DiePressLife() => View();
 
         public ActionResult AddMonitoringInput() => View();
@@ -404,5 +399,9 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             return View(filterData);
         }
 
+
+
+        // GET: MoldDie/Mold  -- Default Page 
+        public ActionResult Index() => View();
     }
 }

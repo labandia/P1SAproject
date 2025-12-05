@@ -21,7 +21,6 @@
                 <th> <i class="fa-regular fa-calendar-days"></i> <span style="margin-left: .5em;">Date Qualified</span></th>
                 <th> <i class="fa-solid fa-file-contract"></i> <span style="margin-left: .5em;">Registration No.</span> </th>
                 <th> <i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Remarks</span>  </th>
-                <th> <i class="fa-regular fa-square-check"></i> <span style="margin-left: .5em;">Approval</span>  </th>
                 <th id="hiddenColumn"> <i class="fa-solid fa-bolt"></i> <span style="margin-left: .5em;">Action</span> </th>
                 @*<th>Action</th>*@
             </tr>
@@ -337,17 +336,19 @@
                     </td>`; 
 
 
+                //<td data-cell="Approval">
+                //    <span class='${parseInt(rowData.Approval) === 1 ? "Complete" : "Incomplete"}'>
+                //        ${parseInt(rowData.Approval) === 1 ? "Approval" : "Pending"}
+                //    </span>
+                //</td>
+
                 const rowHtml = `
                     <tr class='row_${i} rowClick' id='editButton_${rowData.InspectID}'>
                         <td style='font-weight: 600; text-align: left; padding-left: 1em; color: #0c382ce8; ' data-cell="Part number">${capitalize(rowData.FullName)}</td>
                         <td data-cell="DateQualified">${rowData.DateQualified ? rowData.DateQualified : "-"}</td>
                         <td data-cell="OJTRegistration">${rowData.OJTRegistration ? rowData.OJTRegistration : "-"}</td>
                         <td data-cell="Remarks">${rowData.Remarks ? rowData.Remarks : "-"}</td>
-                        <td data-cell="Approval">
-                            <span class='${parseInt(rowData.Approval) === 1 ? "Complete" : "Incomplete"}'>
-                                ${parseInt(rowData.Approval) === 1 ? "Approval" : "Pending"}
-                            </span>
-                        </td>
+                       
                         ${usercontrol}
                     </tr>
                             `;

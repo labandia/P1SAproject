@@ -93,6 +93,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         //---------------------------- REGISTRATION NO --------------------------------------------
         //-----------------------------------------------------------------------------------------
         // GET: GetRegistrationNo
+
         public async Task<ActionResult> GetRegistrationNo()
         {
             //var data = await _ins.GetRegistrationData() ?? new List<PatrolRegistionModel>();
@@ -697,41 +698,11 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                         });
                     }
                 }
-                // Signature of the Manager
-                if (!string.IsNullOrEmpty(updatedReg.Manager_ID))
-                {
-                    var picId = await _reg.GetEmployeeEmailDetails(updatedReg.Manager_ID, 3, getprefix);
-                    if (picId != null && !string.IsNullOrEmpty(picId.Signature))
-                    {
-                        emailSigns.Add(new EmailSignatures
-                        {
-                            Position = 3,
-                            Signature = picId.Signature
-                        });
-                    }      
-                }
-                // Signature of the Division Manager
-                if (!string.IsNullOrEmpty(updatedReg.DivManager_ID))
-                {
-                    var picId = await _reg.GetEmployeeEmailDetails(updatedReg.DivManager_ID, 1, getprefix);
-                    if (picId != null && !string.IsNullOrEmpty(picId.Signature))
-                    {
-                        emailSigns.Add(new EmailSignatures
-                        {
-                            Position = 1,
-                            Signature = picId.Signature
-                        });
-                    }     
-                }
-
-
-                foreach (var sign in emailSigns)
-                {
-                    Debug.WriteLine($"Position: {sign.Position}, Signature name: {sign.Signature}");
-                }
-
-
-
+               
+                //foreach (var sign in emailSigns)
+                //{
+                //    Debug.WriteLine($"Position: {sign.Position}, Signature name: {sign.Signature}");
+                //}
                 await ExportFiler.UpdatePDFRegistration(
                    updatedReg,
                    updatedFindings,
@@ -935,14 +906,62 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 var updatedReg = updatedRegData.SingleOrDefault(r => r.RegNo == Regno);
                 var updatedFindings = await _reg.GetRegisterFindings(Regno);
 
-                //await ExportFiler.UpdatePDFRegistration(
-                //    updatedReg,
-                //    updatedFindings,
-                //    emailList,
-                //    previousPdfPath,
-                //    excelFileName,
-                //    templatePath
-                //);
+                // ===================== STEP 7: Build Email Signatures =====================
+                List<EmailSignatures> emailSigns = new List<EmailSignatures>();
+
+                // Signature of the PIC
+                if (!string.IsNullOrEmpty(updatedReg.PIC_ID))
+                {
+                    var picId = await _reg.GetEmployeeEmailDetails(updatedReg.PIC_ID, 5, getprefix);
+
+                    if (picId != null && !string.IsNullOrEmpty(picId.Signature))
+                    {
+                        emailSigns.Add(new EmailSignatures
+                        {
+                            Position = 5,
+                            Signature = picId.Signature
+                        });
+                    }
+                }
+                // Signature of the Inspector
+                if (!string.IsNullOrEmpty(updatedReg.Inspect_ID))
+                {
+                    var picId = await _reg.GetEmployeeEmailDetails(updatedReg.Inspect_ID, 4, getprefix);
+
+                    if (picId != null && !string.IsNullOrEmpty(picId.Signature))
+                    {
+                        emailSigns.Add(new EmailSignatures
+                        {
+                            Position = 4,
+                            Signature = picId.Signature
+                        });
+                    }
+                }
+
+                // Signature of the Manager
+                if (!string.IsNullOrEmpty(updatedReg.Manager_ID))
+                {
+                    var picId = await _reg.GetEmployeeEmailDetails(updatedReg.Manager_ID, 3, getprefix);
+                    if (picId != null && !string.IsNullOrEmpty(picId.Signature))
+                    {
+                        emailSigns.Add(new EmailSignatures
+                        {
+                            Position = 3,
+                            Signature = picId.Signature
+                        });
+                    }
+                }
+
+          
+                await ExportFiler.UpdatePDFRegistration(
+                   updatedReg,
+                   updatedFindings,
+                   emailList,
+                   emailSigns,
+                   previousPdfPath,
+                   excelFileName,
+                   templatePath
+               );
 
                 // ===================== STEP 4: Send Notification Email =====================
                 string processLink = $"http://p1saportalweb.sdp.com/PC/Patrol/DivisionApproval?Regno={Regno}&mode=1";
@@ -1028,14 +1047,76 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 var updatedReg = updatedRegData.SingleOrDefault(r => r.RegNo == Regno);
                 var updatedFindings = await _reg.GetRegisterFindings(Regno);
 
-                //await ExportFiler.UpdatePDFRegistration(
-                //    updatedReg,
-                //    updatedFindings,
-                //    emailList,
-                //    previousPdfPath,
-                //    excelFileName,
-                //    templatePath
-                //);
+                // ===================== STEP 7: Build Email Signatures =====================
+                List<EmailSignatures> emailSigns = new List<EmailSignatures>();
+
+                // Signature of the PIC
+                if (!string.IsNullOrEmpty(updatedReg.PIC_ID))
+                {
+                    var picId = await _reg.GetEmployeeEmailDetails(updatedReg.PIC_ID, 5, getprefix);
+
+                    if (picId != null && !string.IsNullOrEmpty(picId.Signature))
+                    {
+                        emailSigns.Add(new EmailSignatures
+                        {
+                            Position = 5,
+                            Signature = picId.Signature
+                        });
+                    }
+                }
+                // Signature of the Inspector
+                if (!string.IsNullOrEmpty(updatedReg.Inspect_ID))
+                {
+                    var picId = await _reg.GetEmployeeEmailDetails(updatedReg.Inspect_ID, 4, getprefix);
+
+                    if (picId != null && !string.IsNullOrEmpty(picId.Signature))
+                    {
+                        emailSigns.Add(new EmailSignatures
+                        {
+                            Position = 4,
+                            Signature = picId.Signature
+                        });
+                    }
+                }
+
+                // Signature of the Manager
+                if (!string.IsNullOrEmpty(updatedReg.Manager_ID))
+                {
+                    var picId = await _reg.GetEmployeeEmailDetails(updatedReg.Manager_ID, 3, getprefix);
+                    if (picId != null && !string.IsNullOrEmpty(picId.Signature))
+                    {
+                        emailSigns.Add(new EmailSignatures
+                        {
+                            Position = 3,
+                            Signature = picId.Signature
+                        });
+                    }
+                }
+
+                // Signature of the Division Manager
+                if (!string.IsNullOrEmpty(updatedReg.DivManager_ID))
+                {
+                    var picId = await _reg.GetEmployeeEmailDetails(updatedReg.DivManager_ID, 1, getprefix);
+                    if (picId != null && !string.IsNullOrEmpty(picId.Signature))
+                    {
+                        emailSigns.Add(new EmailSignatures
+                        {
+                            Position = 1,
+                            Signature = picId.Signature
+                        });
+                    }
+                }
+
+
+                await ExportFiler.UpdatePDFRegistration(
+                   updatedReg,
+                   updatedFindings,
+                   emailList,
+                   emailSigns,
+                   previousPdfPath,
+                   excelFileName,
+                   templatePath
+               );
 
                 // ===================== STEP 4: Send Notification Email =====================
                 string processLink = $"http://p1saportalweb.sdp.com/PC/Patrol/DepartmentApproval?Regno={Regno}&mode=1";
@@ -1076,14 +1157,9 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         [HttpPost]
         public async Task<ActionResult> DivisionApproveSubmit(string Regno)
         {
-            // 1. Get the RegNo for the ID update
-            // 2. Press the Approve Button to update the ReportStatus to Approved or Revise
-            // 3.  Send A email when Update is Done Approve or Revise
-            // Option add An Remarks on the Revise to Notify the Process Owner On what to revise
             try
             {
                 string getprefix = GetPrefix();
-
 
                 // ===================== STEP 1: Retrieve Required Data =====================
                 var emailList = await _reg.PatrolEmailData() ?? new List<EmailModelV2>();
@@ -1115,14 +1191,74 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 var updatedReg = updatedRegData.SingleOrDefault(r => r.RegNo == Regno);
                 var updatedFindings = await _reg.GetRegisterFindings(Regno);
 
-                //await ExportFiler.UpdatePDFRegistration(
-                //    updatedReg,
-                //    updatedFindings,
-                //    emailList,
-                //    previousPdfPath,
-                //    excelFileName,
-                //    templatePath
-                //);
+                // ===================== STEP 7: Build Email Signatures =====================
+                List<EmailSignatures> emailSigns = new List<EmailSignatures>();
+
+                // Signature of the PIC
+                if (!string.IsNullOrEmpty(updatedReg.PIC_ID))
+                {
+                    var picId = await _reg.GetEmployeeEmailDetails(updatedReg.PIC_ID, 5, getprefix);
+
+                    if (picId != null && !string.IsNullOrEmpty(picId.Signature))
+                    {
+                        emailSigns.Add(new EmailSignatures
+                        {
+                            Position = 5,
+                            Signature = picId.Signature
+                        });
+                    }
+                }
+                // Signature of the Inspector
+                if (!string.IsNullOrEmpty(updatedReg.Inspect_ID))
+                {
+                    var picId = await _reg.GetEmployeeEmailDetails(updatedReg.Inspect_ID, 4, getprefix);
+
+                    if (picId != null && !string.IsNullOrEmpty(picId.Signature))
+                    {
+                        emailSigns.Add(new EmailSignatures
+                        {
+                            Position = 4,
+                            Signature = picId.Signature
+                        });
+                    }
+                }
+
+                // Signature of the Manager
+                if (!string.IsNullOrEmpty(updatedReg.Manager_ID))
+                {
+                    var picId = await _reg.GetEmployeeEmailDetails(updatedReg.Manager_ID, 3, getprefix);
+                    if (picId != null && !string.IsNullOrEmpty(picId.Signature))
+                    {
+                        emailSigns.Add(new EmailSignatures
+                        {
+                            Position = 3,
+                            Signature = picId.Signature
+                        });
+                    }
+                }
+                // Signature of the Division Manager
+                if (!string.IsNullOrEmpty(updatedReg.DivManager_ID))
+                {
+                    var picId = await _reg.GetEmployeeEmailDetails(updatedReg.DivManager_ID, 1, getprefix);
+                    if (picId != null && !string.IsNullOrEmpty(picId.Signature))
+                    {
+                        emailSigns.Add(new EmailSignatures
+                        {
+                            Position = 1,
+                            Signature = picId.Signature
+                        });
+                    }
+                }
+
+                await ExportFiler.UpdatePDFRegistration(
+                   updatedReg,
+                   updatedFindings,
+                   emailList,
+                   emailSigns,
+                   previousPdfPath,
+                   excelFileName,
+                   templatePath
+               );
 
                 // ===================== STEP 4: Send Notification Email =====================
 
@@ -1725,7 +1861,8 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                     url = Url.Action("DepartmentApproval", new { Regno, mode = 0 });
                     break;
                 default:
-                    return View("UnknownStatus");
+                    url = Url.Action("CompleteRegistration", new { Regno, mode = 0 });
+                    break;
             }
 
             return JsonSuccess(url, "adsadasd");

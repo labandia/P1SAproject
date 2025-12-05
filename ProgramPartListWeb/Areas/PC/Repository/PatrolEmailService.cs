@@ -431,7 +431,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                     break;
                 default:
                     buttonLink = "Completed Registration No.";
-                    shortmessage = "<p>This is to inform you that you have a <strong>For Review/Approval</strong> Patrol Inspection report.</p>";
+                    shortmessage = $@"<p>The Registration No. <strong>{patrol.RegNo}</strong> is already completed.</p>";
                     break;
             }
 

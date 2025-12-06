@@ -115,8 +115,8 @@ namespace NCR_system.Models
     {
         private string _DepartmentName;
         private int _totalOpen;
+        private int _TotalClosed;
 
-        
         public string DepartmentName
         {
             get => _DepartmentName;
@@ -126,6 +126,11 @@ namespace NCR_system.Models
         {
             get => _totalOpen;
             set => _totalOpen = value;
+        }
+        public int TotalClosed
+        {
+            get => _TotalClosed;
+            set => _TotalClosed = value;
         }
     }
     

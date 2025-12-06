@@ -1,4 +1,6 @@
-﻿using NCR_system.Interface;
+﻿using LiveCharts.Wpf;
+using LiveCharts;
+using NCR_system.Interface;
 using NCR_system.View.AddForms;
 using NCR_system.View.EditForms;
 using System;
@@ -7,6 +9,9 @@ using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Diagnostics;
+using System.Windows.Media;
+using System.Windows;
 
 namespace NCR_system.View.Module
 {
@@ -15,6 +20,7 @@ namespace NCR_system.View.Module
         private readonly IShipRejected _ship;
 
         public DataGridView Customgrid { get { return RejectedGrid; } }
+     
 
         public Rejected(IShipRejected ship)
         {
@@ -26,6 +32,9 @@ namespace NCR_system.View.Module
         {
             try
             {
+                List<int> outputData = new List<int> { };
+                List<int> outputData2 = new List<int> { };
+
                 // For Displaying Customer
                 var rejectlist = (await _ship.GetRejectedShipData(proc)).ToList();
                 RejectedGrid.DataSource = rejectlist;
@@ -103,35 +112,82 @@ namespace NCR_system.View.Module
 
 
                 var countItems = await _ship.GetCustomersOpenItem(proc);
-
+                int kk = 0;
 
                 foreach (var items in countItems)
                 {
-                    switch (items.DepartmentName)
-                    {
-                        case "Molding":
-                            MoldText.Text = items.totalOpen.ToString();
-                            break;
-                        case "Press":
-                            PressText.Text = items.totalOpen.ToString();
-                            break;
-                        case "Rotor":
-                            RotorText.Text = items.totalOpen.ToString();
-                            break;
-                        case "Winding":
-                            WindText.Text = items.totalOpen.ToString();
-                            break;
-                        default:
-                            CircuitText.Text = items.totalOpen.ToString();
-                            break;
-                    }
-
+                    kk++;
+                    outputData.Add(items.totalOpen);
+                    outputData2.Add(items.TotalClosed);
+                    Debug.WriteLine(kk);
                 }
+
+
+                //foreach(var number in outputData2)
+                //{
+                //    Debug.WriteLine(number);
+                //}
+
+
+
+                DisplayCharts(outputData, outputData2);
+                //cartesianChart1.Series = new SeriesCollection();
+                //cartesianChart1.AxisX.Clear();
+                //cartesianChart1.AxisY.Clear();
+
+
+                //cartesianChart1.Series = new SeriesCollection
+                //{
+                //    new ColumnSeries
+                //    {
+                //        Title = "Open Items",
+                //        Values = new ChartValues<int>(outputData),
+                //         MaxColumnWidth = 150,   // 🔥 Bar size increased
+                //    },
+                //     new ColumnSeries
+                //    {
+                //        Title = "Production B",
+                //        Values = new ChartValues<int>(outputData2),
+                //         MaxColumnWidth = 150,          // optional color
+                //    }
+                //};
+
+                //    cartesianChart1.AxisX.Add(new Axis
+                //    {
+                //        Title = "",
+                //        Labels = new[] { "Molding", "Press", "Rotor", "Winding", "Circuit" },
+                //        Foreground = System.Windows.Media.Brushes.Black,              // label color
+                //        FontFamily = new System.Windows.Media.FontFamily("Segoe UI"), // label font
+                //        FontSize = 11,
+                //        FontWeight = FontWeights.Bold,      // <-- Added
+                //        Separator = new Separator
+                //        {
+                //            Step = 1,
+                //            Stroke = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 180, 180, 180)),
+                //            StrokeThickness = 1
+                //        }
+                //    });
+
+                //    cartesianChart1.AxisY.Add(new Axis
+                //    {
+                //        Title = "Total Open Items",
+                //        LabelFormatter = value => value.ToString("N0"),
+                //        Foreground = System.Windows.Media.Brushes.Black,              // label color
+                //        FontFamily = new System.Windows.Media.FontFamily("Segoe UI"), // label font
+                //        FontSize = 9,
+                //        FontWeight = FontWeights.Bold,      // <-- Added
+                //        Separator = new Separator
+                //        {
+                //            Stroke = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 180, 180, 180)),         // line color
+                //            StrokeThickness = 1,                 // line thickness
+                //            StrokeDashArray = new DoubleCollection { 2 }  // <-- FIXED
+                //        }
+                //    });
 
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                System.Windows.Forms.MessageBox.Show(ex.Message);
             }
         }
 
@@ -227,18 +283,18 @@ namespace NCR_system.View.Module
             else if (column.Name == "Delete")
             {
                 // Handle Delete image click
-                DialogResult result = MessageBox.Show("Are you sure you want to delete?", "Confirm Delete", MessageBoxButtons.YesNo);
+                DialogResult result = System.Windows.Forms.MessageBox.Show("Are you sure you want to delete?", "Confirm Delete", MessageBoxButtons.YesNo);
                 if (result == DialogResult.Yes)
                 {
                     // Remove the row or perform deletion
-                    MessageBox.Show($"Delete clicked on row {e.RowIndex} - Record ID selected:  {recordID}");
+                    System.Windows.Forms.MessageBox.Show($"Delete clicked on row {e.RowIndex} - Record ID selected:  {recordID}");
                 }
             }
         }
 
         private void Rejected_Load(object sender, EventArgs e)
         {
-
+          
         }
 
         private void RejectedGrid_CellFormatting_1(object sender, DataGridViewCellFormattingEventArgs e)
@@ -279,18 +335,95 @@ namespace NCR_system.View.Module
 
                 if (checkstats == "Open")
                 {
-                    e.CellStyle.ForeColor = Color.White;
-                    e.CellStyle.BackColor = Color.FromArgb(78, 166, 101);
+                    e.CellStyle.ForeColor = System.Drawing.Color.White;
+                    e.CellStyle.BackColor = System.Drawing.Color.FromArgb(78, 166, 101);
                 }
                 else
                 {
-                    e.CellStyle.ForeColor = Color.White;
-                    e.CellStyle.BackColor = Color.FromArgb(184, 94, 104);
+                    e.CellStyle.ForeColor = System.Drawing.Color.White;
+                    e.CellStyle.BackColor = System.Drawing.Color.FromArgb(184, 94, 104);
                 }
 
 
                 e.FormattingApplied = true;
             }
         }
+
+
+        public void DisplayCharts(List<int> outputData, List<int> outputData2)
+        {
+            // RESET the chart fully
+            cartesianChart1.Series.Clear();
+            cartesianChart1.AxisX.Clear();
+            cartesianChart1.AxisY.Clear();
+
+            // ----------------- SERIES (DOUBLE BAR) -----------------
+            cartesianChart1.Series = new SeriesCollection
+            {
+                new ColumnSeries
+                {
+                    Title = "Open Items",
+                    Values = new ChartValues<int>(outputData),
+                    MaxColumnWidth = 150,
+                    DataLabels = true,                            // <--- VALUE LABELS
+                    LabelPoint = p => p.Y.ToString("N0"),
+
+                    Fill = new SolidColorBrush(System.Windows.Media.Color.FromRgb(66, 133, 244)), // Blue
+                    ColumnPadding = 20
+                },
+                new ColumnSeries
+                {
+                    Title = "Closed Items",
+                    Values = new ChartValues<int>(outputData2),
+                    MaxColumnWidth = 150,
+
+                     DataLabels = true,                            // <--- VALUE LABELS
+                    LabelPoint = p => p.Y.ToString("N0"),
+
+                    Fill = new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 128, 0)),  // Orange
+                    ColumnPadding = 20                               // <--- spacing inside the group
+                }
+            };
+
+            // ----------------- AXIS X (CATEGORIES) -----------------
+            cartesianChart1.AxisX.Add(new Axis
+            {
+                Title = "",
+                Labels = new[] { "Molding", "Press", "Rotor", "Winding", "Circuit" },
+
+                Foreground = System.Windows.Media.Brushes.Black,
+                FontFamily = new System.Windows.Media.FontFamily("Segoe UI"),
+                FontSize = 11,
+                FontWeight = FontWeights.Bold,
+
+                Separator = new Separator
+                {
+                    Step = 1,
+                    Stroke = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 180, 180, 180)),
+                    StrokeThickness = 1
+                }
+            });
+
+            // ----------------- AXIS Y (VALUES) -----------------
+            cartesianChart1.AxisY.Add(new Axis
+            {
+                Title = "",
+                LabelFormatter = value => value.ToString("N0"),
+
+                Foreground = System.Windows.Media.Brushes.Black,
+                FontFamily = new System.Windows.Media.FontFamily("Segoe UI"),
+                FontSize = 9,
+                FontWeight = FontWeights.Bold,
+
+                Separator = new Separator
+                {
+                    Stroke = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 180, 180, 180)),
+                    StrokeThickness = 1,
+                    StrokeDashArray = new DoubleCollection { 1 }
+                }
+            });
+
+        }
+
     }
 }

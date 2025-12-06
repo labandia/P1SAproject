@@ -12,19 +12,21 @@ namespace NCR_system.Repository
     {
         public Task<List<CustomerTotalModel>> GetCustomersOpenItem(int type = 0)
         {
+            string IsStatus = type == 0 ? "1" : "1, 2, 3";
+
             string strsql = $@"SELECT 
                                 s.DepartmentName,
-                                COUNT(c.Status) AS totalOpen
+                                SUM(CASE WHEN c.Status IN ({IsStatus}) AND c.Process = @Process THEN 1 ELSE 0 END) AS TotalOpen,
+                                SUM(CASE WHEN c.Status = 0 AND c.Process = @Process THEN 1 ELSE 0 END) AS TotalClosed
                             FROM PC_Section s
                             LEFT JOIN PC_RejectShip c
-                                ON c.SectionID = s.SectionID 
-                                AND c.Status = 1
-                                AND c.Process = @Process  
+                                ON c.SectionID = s.SectionID
                             GROUP BY 
-                                s.SectionID, 
+                                s.SectionID,
                                 s.DepartmentName
                             ORDER BY 
                                 s.SectionID ASC;";
+
             return SqlDataAccess.GetData<CustomerTotalModel>(strsql, new { Process = type });
         }
 

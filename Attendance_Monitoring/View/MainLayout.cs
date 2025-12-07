@@ -36,6 +36,8 @@ namespace Attendance_Monitoring.View
 
         private void MainLayout_Load(object sender, EventArgs e)
         {
+            this.WindowState = FormWindowState.Maximized;
+
             // CHANGE THE COLOR BACKGROUND OF THE MENU BUTTON
             Attendance.BackColor = Color.FromArgb(54, 97, 235);
             Attendance.ForeColor = Color.FromArgb(255, 255, 255);

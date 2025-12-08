@@ -60,8 +60,8 @@ html:focus-within {
 
 body {
     text-rendering: optimizeSpeed;
-    font-family: var(--body-font) !important;
-    font-size: var(--normal-font-size);
+/*    font-family: var(--body-font) !important;*/
+/*    font-size: var(--normal-font-size);*/
     color: var(--text-color);
     background: #f5f5f5;
 }

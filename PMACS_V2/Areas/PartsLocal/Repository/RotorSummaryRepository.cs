@@ -15,8 +15,11 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
             string updatestorage = $@"UPDATE PartsLocatorRotor_Location SET Quantity = Quantity + @Quantity
                                      WHERE Partnumber =@Partnumber AND Area =@Area";
 
-            bool storageResult = await SqlDataAccess.UpdateInsertQuery(updatestorage, 
-                    new { Quantity = shop.Quantity, Partnumber = shop.Partnumber, Area = shop.Area });
+            bool storageResult = await SqlDataAccess.UpdateInsertQuery(updatestorage, new { 
+                    Quantity = shop.Quantity, 
+                    Partnumber = shop.Partnumber, 
+                    Area = shop.Area 
+             });
 
             // if the Update storage is Success proceed to Summary insert
             if (storageResult)
@@ -69,14 +72,49 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
             return SqlDataAccess.UpdateInsertQuery(strsql, shop);
         }
 
-        public Task<IEnumerable<ShopOrderInModel>> GetShopOderInlist()
+        public async Task<IEnumerable<ShopOrderInModel>> GetShopOderInlist()
         {
-            throw new System.NotImplementedException();
+            string strsql = $@"SELECT t.TransactionID, 
+                              FORMAT(t.TransactionDate, 'MM/dd/yy') as TransactionDate,
+	                          FORMAT(t.TransactionDate, 'hh:mm') as TransactionTime
+                              ,t.RotorOrder
+                              ,t.Partnumber
+	                          ,m.ModelName
+	                          ,t.Area
+                              ,t.Quantity
+                              ,t.PreviousQuantity
+                              ,t.Remarks
+                          FROM PartsLocatorRotor_Transaction t
+                          INNER JOIN PartsLocatorRotor_Masterlist m 
+                          ON t.Partnumber = m.Partnumber
+                          WHERE  t.TransactionType = 0";
+
+            return await SqlDataAccess.GetData<ShopOrderInModel>(strsql, null);
         }
 
-        public Task<IEnumerable<ShopOrderOutModel>> GetShopOderOutlist()
+        public async Task<IEnumerable<ShopOrderOutModel>> GetShopOderOutlist()
         {
-            throw new System.NotImplementedException();
+            string strsql = $@"SELECT t.TransactionID, 
+                                FORMAT(t.TransactionDate, 'MM/dd/yy') as TransactionDate,
+	                            FORMAT(t.TransactionDate, 'hh:mm') as TransactionTime
+                                ,t.RotorOrder
+                                ,t.Partnumber
+	                            ,m.ModelName
+	                            ,t.Area
+                                ,t.Quantity
+                                ,t.PreviousQuantity
+                                ,t.Remarks
+	                            ,t.PlanDate
+	                            ,t.PlanQuantity
+	                            ,t.ModelBase
+	                            ,t.Status
+	                            ,t.BushType
+                            FROM PartsLocatorRotor_Transaction t
+                            INNER JOIN PartsLocatorRotor_Masterlist m 
+                            ON t.Partnumber = m.Partnumber
+                            WHERE  t.TransactionType = 1";
+
+            return await SqlDataAccess.GetData<ShopOrderOutModel>(strsql, null);
         }
     }
 }

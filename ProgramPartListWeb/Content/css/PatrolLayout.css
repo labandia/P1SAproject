@@ -618,7 +618,7 @@
         grid-column-gap: 20px;
     }
 
-    .OpenAttach, .open-pdf-btn {
+    .OpenAttach, .open-pdf-btn, .Noattach {
         border: 1px solid #A5A1AA !important;
     }
 

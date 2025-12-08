@@ -54,9 +54,21 @@ namespace PMACS_V2.Areas.PartsLocal.Controllers
             return JsonCreated(shop, "Update successfully");
         }
 
+        [JwtAuthorize]
+        public async Task<ActionResult> GetTransactionSummaryIn()
+        {
+            var data = await _shopin.GetShopOderInlist() ?? new List<ShopOrderInModel>();
+            if (data == null && data.Any()) return JsonNotFound("No Masterlist Data.");
+            return JsonSuccess(data);
+        }
 
-
-
+        [JwtAuthorize]
+        public async Task<ActionResult> GetTransactionSummaryOut()
+        {
+            var data = await _shopout.GetShopOderOutlist() ?? new List<ShopOrderOutModel>();
+            if (data == null && data.Any()) return JsonNotFound("No Masterlist Data.");
+            return JsonSuccess(data);
+        }
 
         // GET: PartsLocal/Masterlist
         public ActionResult TrackParts() { return View(); }

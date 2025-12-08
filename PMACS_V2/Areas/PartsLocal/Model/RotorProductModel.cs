@@ -53,8 +53,8 @@ namespace PMACS_V2.Areas.PartsLocal.Model
     public class ShopOrderInModel
     {
         private int _TransactionID;
-        private int _TransactionType;
         private string _TransactionDate;
+        private string _TransactionTime;
         private string _Partnumber;
         private string _ModelName;
         private string _RotorOrder;
@@ -68,15 +68,15 @@ namespace PMACS_V2.Areas.PartsLocal.Model
             get => _TransactionID;
             set => _TransactionID = value;
         }
-        public int TransactionType
-        {
-            get => _TransactionType;
-            set => _TransactionType = value;
-        }
         public string TransactionDate
         {
             get => _TransactionDate;
             set => _TransactionDate = value;
+        }
+        public string TransactionTime
+        {
+            get => _TransactionTime;
+            set => _TransactionTime = value;
         }
         public string Partnumber
         {
@@ -120,6 +120,7 @@ namespace PMACS_V2.Areas.PartsLocal.Model
     {
         private int _TransactionID;
         private string _TransactionDate;
+        private string _TransactionTime;
         private string _Partnumber;
         private string _ModelName;
         private string _RotorOrder;
@@ -139,11 +140,15 @@ namespace PMACS_V2.Areas.PartsLocal.Model
             get => _TransactionID;
             set => _TransactionID = value;
         }
-
         public string TransactionDate
         {
             get => _TransactionDate;
             set => _TransactionDate = value;
+        }
+        public string TransactionTime
+        {
+            get => _TransactionTime;
+            set => _TransactionTime = value;
         }
         public string Partnumber
         {

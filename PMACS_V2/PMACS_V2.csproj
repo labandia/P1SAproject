@@ -491,6 +491,9 @@
     <Content Include="Content\lib\font-awesome\css\v5-font-face.css" />
     <Content Include="Content\lib\font-awesome\css\v5-font-face.min.css" />
     <Content Include="Content\lib\font-awesome\js\all.js" />
+    <Content Include="Content\Shared\Site.min.css">
+      <DependentUpon>Site.css</DependentUpon>
+    </Content>
     <Content Include="Scripts\Shared\all.min.js" />
     <Content Include="Content\lib\font-awesome\js\brands.js" />
     <Content Include="Content\lib\font-awesome\js\brands.min.js" />
@@ -514,9 +517,6 @@
     </Content>
     <Content Include="Content\css\Planning.css" />
     <Content Include="Content\css\Sidebar_one.css" />
-    <Content Include="Content\Shared\Site.min.css">
-      <DependentUpon>Site.css</DependentUpon>
-    </Content>
     <Content Include="Content\Shared\sweetalert2.css" />
     <Content Include="Content\Shared\sweetalert2.min.css" />
     <Content Include="favicon.ico" />

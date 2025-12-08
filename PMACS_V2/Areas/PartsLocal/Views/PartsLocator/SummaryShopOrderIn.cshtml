@@ -4,5 +4,94 @@
     Layout = "~/Areas/PartsLocal/Views/Shared/_PartlocalLayout.cshtml";
 }
 
-<h2>SummaryShopOrderIn</h2>
+<section>
+    <div class="TrackTable">
+        <table>
+            <thead>
+                <tr>
+                    <th>Date Issued</th>
+                    <th>Time </th>
+                    <th>Rotor order </th>
+                    <th>Part number</th>
+                    <th>Model name</th>
+                    <th>Area location</th>
+                    <th>Quantity</th>
+                    <th>Remarks</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="ShopOrderSummaryIn">
+            </tbody>
+        </table>
 
+
+    </div>
+</section>
+
+
+<script type="text/javascript">
+
+    const GetTransactionSummaryIN = async () => {
+          let res = await FetchAuthenticate('@Url.Action("GetTransactionSummaryIn", "PartsLocator")', {});
+          //console.log(res);
+          if (res && res.Success) {
+              $("#ShopOrderSummaryIn").empty();
+              let dataArray = res.Data;
+
+
+              dataArray.forEach((row, index) => {
+                  var setdata = `<tr >
+                      <td>${row.TransactionDate}</td>
+                      <td>${row.TransactionTime}</td>
+                      <td style='font-weight: 600;'>${row.RotorOrder}</td>
+                      <td style='font-weight: 600;'>${row.Partnumber}</td>
+                      <td style='text-align: left; padding-left: 1.5em;'>${row.ModelName}</td>
+                      <td>${row.Area}</td>
+                      <td>${row.Quantity}</td>
+                      <td>${row.Remarks}</td>
+                      <td>
+                         <button type='button' class='btn actionicon text-primary EditToolClick' id='editButton_${row.TransactionID}' >
+                            <i class='fa-regular fa-pen-to-square action_btn'></i>
+                         </button>
+                      </td>
+                  </tr>;`
+
+                  $("#ShopOrderSummaryIn").append(setdata);
+              });
+
+
+              // Handle click event for edit button
+              $(document).on('click', '.EditToolClick', function (e) {
+                  e.stopPropagation();
+                  
+
+              });
+
+              
+          } else {
+                 const loadData = `<tr>
+                   <td colspan='9'>
+                       🔍 ${res.Message}
+                   </td>
+               </tr>`;
+
+                 ToolingDisplay.empty();
+                 ToolingDisplay.append(loadData);
+
+          }
+      }
+
+
+    const GetTransactionSummaryOUT = async () => {
+        let res = await FetchAuthenticate('@Url.Action("GetTransactionSummaryOut", "PartsLocator")', {});
+        console.log(res);
+        if (res && res.Success) {
+            let dataArray = res.Data;
+        }
+
+    }
+
+
+    GetTransactionSummaryIN();
+    GetTransactionSummaryOUT();
+</script>

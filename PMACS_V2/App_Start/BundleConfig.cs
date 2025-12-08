@@ -18,7 +18,7 @@ namespace PMACS_V2
             bundles.Add(new StyleBundle("~/Content/shared-css")
                 .Include(
                     "~/Content/Shared/bootstrap.min.css",
-                    "~/Content/Shared/site.min.css",
+                    "~/Content/Shared/Site.css",
                     "~/Content/Shared/sweetalert2.min.css"
                 ));
 

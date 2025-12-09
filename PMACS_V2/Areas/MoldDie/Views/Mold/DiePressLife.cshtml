@@ -628,7 +628,7 @@
         e.preventDefault();
         let formData = new FormData(e.target);
         const data = Object.fromEntries(formData);
-        let res = await postData('@Url.Action("AddPressRegistry", "DieMold")', formData);
+        let res = await postData('@Url.Action("AddPressRegistry", "Mold")', formData);
 
         if (res.StatusCode === 201) {
             Swal.fire({
@@ -663,7 +663,7 @@
         e.preventDefault();
         let formData = new FormData(e.target);
         const data = Object.fromEntries(formData);
-        let res = await postData('@Url.Action("UpdatePressRegistry", "DieMold")', data);
+        let res = await postData('@Url.Action("UpdatePressRegistry", "Mold")', data);
         if (res && res.Success) {
             Swal.fire({
                 title: "Success",
@@ -683,7 +683,7 @@
         e.preventDefault();
         let formData = new FormData(e.target);
         const data = Object.fromEntries(formData);
-        let res = await postData('@Url.Action("AddUpdatePressDieMonitor", "DieMold")', data);
+        let res = await postData('@Url.Action("AddUpdatePressDieMonitor", "Mold")', data);
         if (res.StatusCode === 201) {
             GetPressMonitoring(setMonth, currentYear);
             //GetMoldDieMonth(select.value, currentYear);
@@ -698,7 +698,7 @@
 
         const id = loadingDisplay(2, colval);
         Loadingsteps(id, async () => {
-            let res = await FetchAuthenticate('@Url.Action("GetPressDieRegistryList", "DieMold")', {});
+            let res = await FetchAuthenticate('@Url.Action("GetPressDieRegistryList", "Mold")', {});
             if (res && res.Success) {
                 SummaryData = res.Data;
                 const ToolData = SummaryData.filter(res => res.Operational === 1).map(res => res.ToolNo);
@@ -722,7 +722,7 @@
         //const data = Object.fromEntries(formData);
         const id = loadingDisplay(1, 7);
         Loadingsteps(id, async () => {
-            let res = await FetchAuthenticate('@Url.Action("GetPressDieMainMonitoringList", "DieMold")', {});
+            let res = await FetchAuthenticate('@Url.Action("GetPressDieMainMonitoringList", "Mold")', {});
              if (res && res.Success) {
                  TableData = res.Data;
                  displayMainMonitoring(TableData, 'DiePressMonitoringlist', 'PaginationContainer', 50, 5);
@@ -734,7 +734,7 @@
     const GetPressSummary = async () => {
         const id = loadingDisplay(0, 10);
         Loadingsteps(id, async () => {
-            let res = await FetchAuthenticate('@Url.Action("GetPressDieSummaryList", "DieMold")', {});
+            let res = await FetchAuthenticate('@Url.Action("GetPressDieSummaryList", "Mold")', {});
             if (res && res.Success) {
                 PressData = res.Data;
                 //console.log(PressData);
@@ -747,7 +747,7 @@
     const GetPressControl = async () => {
         const id = loadingDisplay(3, 11);
         Loadingsteps(id, async () => {
-            let res = await FetchAuthenticate('@Url.Action("GetPressDieControlList", "DieMold")', {});
+            let res = await FetchAuthenticate('@Url.Action("GetPressDieControlList", "Mold")', {});
             if (res && res.Success) {
                 ControlData = res.Data;
                 displayControlPagination(ControlData, 'DiePressControlist', 'PaginationControlContainer', 50, 5);

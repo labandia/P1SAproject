@@ -440,6 +440,9 @@
     <Content Include="Content\css\Planning.min.css">
       <DependentUpon>Planning.css</DependentUpon>
     </Content>
+    <Content Include="Content\css\PMACS_Layout.min.css">
+      <DependentUpon>PMACS_Layout.css</DependentUpon>
+    </Content>
     <Content Include="Content\Shared\bootstrap-grid.css" />
     <Content Include="Content\Shared\bootstrap-grid.min.css" />
     <Content Include="Content\Shared\bootstrap-grid.rtl.css" />
@@ -457,9 +460,6 @@
     <Content Include="Content\Shared\bootstrap.rtl.css" />
     <Content Include="Content\Shared\bootstrap.rtl.min.css" />
     <Content Include="Content\css\PMACS_Layout.css" />
-    <Content Include="Content\css\PMACS_Layout.min.css">
-      <DependentUpon>PMACS_Layout.css</DependentUpon>
-    </Content>
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\fonts.css" />

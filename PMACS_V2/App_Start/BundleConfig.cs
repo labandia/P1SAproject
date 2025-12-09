@@ -17,7 +17,6 @@ namespace PMACS_V2
             // =======================
             bundles.Add(new StyleBundle("~/Content/shared-css")
                 .Include(
-                    "~/Content/Shared/bootstrap.min.css",
                     "~/Content/Shared/Site.css",
                     "~/Content/Shared/sweetalert2.min.css"
                 ));
@@ -26,13 +25,14 @@ namespace PMACS_V2
             // 2. SHARED JS (CORE LIBRARIES)
             // =======================     
             bundles.Add(new ScriptBundle("~/bundles/shared-js").Include(
+                 "~/Scripts/Shared/Utilities.js",
                  "~/Scripts/Shared/jquery-3.7.1.js",
                  "~/Scripts/Shared/jquery.validate.js",
                  "~/Scripts/Shared/all.min.js",
-                 "~/Scripts/Shared/sweetalert2.min.js",
-                 "~/Scripts/Shared/Utilities.min.js"
+                 "~/Scripts/Shared/sweetalert2.min.js"
             ));
 
+       
             // =======================
             // 3. Validation + Modernizr
             // =======================
@@ -45,13 +45,11 @@ namespace PMACS_V2
             ));
 
             // For PMACS CSS
-            bundles.Add(new StyleBundle("~/Content/pmacs-css").Include("~/Content/css/PMACS_Layout.min.css"));
+            bundles.Add(new StyleBundle("~/Content/pmacs-css").Include("~/Content/css/PMACS_Layout.css"));
 
             // For Planning Monitor CSS
-            bundles.Add(new StyleBundle("~/Content/planning-css").Include("~/Content/css/Planning.min.css",
-                 "~/Content/Shared/bootstrap.min.css"));
-            bundles.Add(new StyleBundle("~/Content/live-css").Include("~/Content/css/live.min.css",
-                "~/Content/Shared/bootstrap.min.css"));
+            bundles.Add(new StyleBundle("~/Content/planning-css").Include("~/Content/css/Planning.min.css"));
+            bundles.Add(new StyleBundle("~/Content/live-css").Include("~/Content/css/live.min.css"));
 
 
             // =======================

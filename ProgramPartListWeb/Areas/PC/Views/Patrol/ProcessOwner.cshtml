@@ -12,7 +12,7 @@
     <link rel="preload" href="~/Content/fonts/Poppins-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 
 
-    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+    <link href="~/Content/Shared/bootstrap.min.css" rel="stylesheet" />
     <link href="~/Content/css/RegistrationUI.css" rel="stylesheet" />
 
     @Styles.Render("~/Content/shared-css")
@@ -340,7 +340,8 @@
     </div>
 
 
-
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/Popper.min.js"></script>
     <script src="~/Scripts/signature_pad.umd.min.js"></script>
     <script type="text/javascript">
         let currentStep = 2;
@@ -588,7 +589,7 @@
 
         const GetEmailList = async () => {
             let res = await fetchData('@Url.Action("GetEmaiRegistration", "Patrol")', {});
-            if (res && res.Success) {  
+            if (res && res.Success) {
                 emailTable = res.Data;
             }
         };
@@ -629,7 +630,7 @@
                  ]);
              } catch (error) {
                  console.error("Failed to load page data:", error);
-             } 
+             }
          }
 
          $(document).ready(() => {

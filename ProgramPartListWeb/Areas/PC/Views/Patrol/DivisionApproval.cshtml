@@ -13,7 +13,7 @@
     <link rel="preload" href="~/Content/fonts/Poppins-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 
 
-    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+    <link href="~/Content/Shared/bootstrap.min.css" rel="stylesheet" />
     <link href="~/Content/css/RegistrationUI.css" rel="stylesheet" />
 
     @Styles.Render("~/Content/shared-css")
@@ -200,22 +200,22 @@
 
 
                         @*<div class="row mb-3">
-                            <div class="col ">
-                                <label>Inspector Name: </label> <br />
-                                <input type="text" id="InspectorName" readonly />
-                            </div>
+                                <div class="col ">
+                                    <label>Inspector Name: </label> <br />
+                                    <input type="text" id="InspectorName" readonly />
+                                </div>
 
-                            <div class="col ">
-                                <label>Date Conducted</label> <br />
-                                <input type="text" id="DateConduct" readonly />
-                            </div>
-                        </div>*@
+                                <div class="col ">
+                                    <label>Date Conducted</label> <br />
+                                    <input type="text" id="DateConduct" readonly />
+                                </div>
+                            </div>*@
 
                         <div class="row mb-3">
                             @*<div class="col ">
-                                <label>Person in charge </label> <br />
-                                <input type="text" id="PICName" />
-                            </div>*@
+                                    <label>Person in charge </label> <br />
+                                    <input type="text" id="PICName" />
+                                </div>*@
                             <div class="col-12">
                                 <label>PIC Comments</label>
                                 <textarea placeholder="Type text here..." name="PIC_Comments" id="PIC_Comments" rows="3" cols="40" readonly></textarea>
@@ -413,7 +413,8 @@
     </div>
 
 
-
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/Popper.min.js"></script>
     <script src="~/Scripts/signature_pad.umd.min.js"></script>
     <script type="text/javascript">
         let emailTable = [];
@@ -593,12 +594,12 @@
             }, 3000);
         }
 
-        
+
 
          const GetRegistrationDetails = async () => {
              let res = await fetchData('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
              if (res && res.Success) {
-                 strManagerID = res.Data.Manager_ID; 
+                 strManagerID = res.Data.Manager_ID;
 
                      $("#regtext").text(strRegno);
                      //$("#InspectorName").val(res.Data.InspectName);

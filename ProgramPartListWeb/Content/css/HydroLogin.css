@@ -1,50 +1,58 @@
-﻿    @font-face {
-        font-family: 'Manrope';
-        src: url('/Content/fonts/Manrope-Regular.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-    }
+﻿@font-face {
+    font-family: 'Inter';
+    src: url('/Content/fonts/Inter.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
 
 
-    body, html {
-        margin: 0;
-        height: 100%;
-        font-family: Manrope, sans-serif;
-    }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
 
-    .bg-animated {
-      position: fixed;
-      inset: 0;
-      background: linear-gradient(120deg, #0f172a, #0ea5e9, #7c3aed);
-      background-size: 300% 300%;
-      animation: gradientShift 12s ease infinite;
-      z-index: -1;
-    }
-    @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
+body{
+    height: 100vh;
+    overflow: hidden;
+}
 
-    /* Centered login card */
-    .center {
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-    .cardCustom {
-        background: rgba(0, 0, 0, 0.5);
-        padding: 24px;
-        border-radius: 12px;
-        color: #fff;
-        width: 400px;
-        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.6);
-    }
-    .cardCustom h2 { margin-top: 0; text-align:center; }
-    label { display:block; margin-top:12px; font-size:14px; }
-    input {
+
+
+button {
+    margin-top: 18px;
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    background: #0ea5e9;
+    color: #fff;
+}
+
+
+
+.center {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.cardCustom {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 24px;
+    border-radius: 12px;
+    color: #fff;
+    width: 400px;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.6);
+}
+.cardCustom h2 { margin-top: 0; text-align:center; }
+label { display:block; margin-top:12px; font-size:14px; font-weight: 600; }
+input {
       width: 100%;
       padding: 10px;
       margin-top: 6px;
@@ -53,24 +61,166 @@
       outline: none;
       background: #f5f5f5;
       color: #222;
+}
+
+.sign-in-btn {
+    background: #0ea5e9;
+    padding: .7rem 1.25rem;
+}
+/*========================================
+  1. LOGO text Layout
+========================================*/
+
+.logo {
+        font-size: 35px;
+        font-weight: 700;
+        text-align:center;
+        transform: translateY(-20%);
     }
-    button {
-        margin-top: 18px;
-        width: 100%;
-        padding: 10px;
-        border-radius: 8px;
-        border: none;
-        cursor: pointer;
-        font-weight: bold;
-        background: #0ea5e9;
-        color: #fff;
+
+    .logo span {
+        color: #3498db;
     }
-    label{
-        font-weight: 600;
-        font-size: 1rem;
-        margin-bottom: .5em;
+
+    .logo p {
+        font-weight: 400;
+        font-size: 18px;
+        margin: 0;
+        opacity: .6;
     }
-    /* Loader overlay */
+
+/*========================================
+  1. Backgroud Animation
+========================================*/
+.bg-animated {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(120deg, #0f172a, #0ea5e9, #7c3aed);
+    background-size: 300% 300%;
+    animation: gradientShift 12s ease infinite;
+    z-index: -1;
+}
+
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/*========================================
+  1. Card Box Layout
+========================================*/
+.Wrapcontainer {
+    display: grid;
+    width: 900px;
+    height: 500px;
+    grid-template-columns: 50% 50%;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+/*========================================
+  1. Slider Carousel Layout
+========================================*/
+.carousel-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* hides other slides */
+    background: rgba(0, 0, 0, 0.5);
+}
+.welcome-text {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.login-container {
+    background: #fff;
+}
+
+.login-container {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.hydrocenter {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+}
+
+.hydrocenter img {
+    width: 60%;
+}
+
+.formwrapper {
+    width: 100%;
+    padding: 0 3em;
+}
+
+.slider {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.slide.Slideactive {
+    opacity: 1;
+}
+
+.controls {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+}
+
+.control-btn {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #bbb;
+    cursor: pointer;
+}
+
+.control-btn.active {
+    background: #333;
+}
+
+
+
+
+
+
+/*========================================
+  1. Sign IN Backgroud Animation
+========================================*/
     .loader-overlay {
       position: fixed;
       inset: 0;
@@ -107,155 +257,45 @@
 
 
 
-    .logo {
-        font-size: 35px;
-        font-weight: 700;
-        text-align:center;
-        transform: translateY(-20%);
-    }
-
-    .logo span {
-        color: #3498db;
-    }
-
-    .logo p {
-        font-weight: 400;
-        font-size: 18px;
-        margin: 0;
-        opacity: .6;
-    }
-
-      /* Controls styling */
-        .controls {
-            display: flex;
-            justify-content: center;
-            margin-top: 2rem;
-            gap: 1rem;
-        }
-        
-        .control-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            width: 30px;
-            height: 5px;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .control-btn:hover {
-            background: rgba(255, 255, 255, 0.8);
-            transform: scale(1.1);
-        }
-img{
-    width: 20%;
-}
 
 
-.Wrapcontainer {
-    display: grid;
-    width: 900px;
-    height: 500px;
-    grid-template-columns: 50% 50%;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-}
 
-.carousel-container {
-    position: relative;
+.custom_modal_header {
     width: 100%;
-    height: 100%;
-    overflow: hidden; /* hides other slides */
-    background: rgba(0, 0, 0, 0.5);
-}
-
-
-.welcome-text {
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: 10px;
-    text-align: center;
-}
-.login-container{
-   
-    background: #fff;
-}
-.login-container {
     display: flex;
-    height: 100%;
     align-items: center;
-    justify-content: center;
-    flex-direction: column;
+    justify-content: space-between;
+    flex-wrap: nowrap;
 }
 
-.hydrocenter img{
-    width: 60%;
+.modalwrap {
+    padding: 1.5em;
 }
 
-.formwrapper {
-    width: 100%;
-    padding: 0 3em;
+.primarybtn{
+    background: #3498db;
 }
 
 
-
-
-.hydrocenter {
-    position: relative;
-    height: 100%;
-    overflow: hidden;
-}
-
-/*.hydrocenter, .login-container {
+/* Controls styling */
+.controls {
     display: flex;
-    height: 100%;
-    align-items: center;
     justify-content: center;
-    flex-direction: column;
+    margin-top: 2rem;
+    gap: 1rem;
 }
-*/
 
+.control-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    width: 30px;
+    height: 5px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
 
-
-
-    .slider {
-        position: relative;
-        width: 100%;
-        height: 100%;
-    }
-
-    .slide {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: absolute;
-        inset: 0;
-        opacity: 0;
-        transition: opacity 1s ease-in-out;
-    }
-
-    .slide.Slideactive {
-        opacity: 1;
-    }
-
-    .controls {
-        position: absolute;
-        bottom: 40px;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        gap: 10px;
-    }
-
-    .control-btn {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        background: #bbb;
-        cursor: pointer;
-    }
-
-    .control-btn.active {
-        background: #333;
+    .control-btn:hover {
+        background: rgba(255, 255, 255, 0.8);
+        transform: scale(1.1);
     }

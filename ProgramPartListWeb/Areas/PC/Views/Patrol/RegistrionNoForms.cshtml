@@ -10,8 +10,8 @@
     <title>@ViewBag.Title</title>
     <link rel="preload" href="~/Content/fonts/Poppins-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 
+    <link href="~/Content/Shared/bootstrap.min.css" rel="stylesheet" />
 
-    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
     <link href="~/Content/css/RegistrationUI.css" rel="stylesheet" />
 
     @Styles.Render("~/Content/shared-css")
@@ -35,12 +35,12 @@
                     <span class="step-number">2</span>
                     Process Owner
                 </li>
-               
+
                 <li class="step-item" data-step="3">
                     <span class="step-number">3</span>
                     Managers
                 </li>
-               
+
                 <li class="step-item" data-step="4">
                     <span class="step-number">4</span>
                     Division Manager
@@ -52,8 +52,8 @@
             </ul>
         </div>
 
-        <div class="content" >
-            <div class="step-content active" style="padding-top: 1.5em;"  id="step-1">
+        <div class="content">
+            <div class="step-content active" style="padding-top: 1.5em;" id="step-1">
                 <form method="post" enctype="multipart/form-data" autocomplete="off">
                     <div class="flex_align mb-4">
                         <a class="Backbtn" href="/PC/Patrol/PatrolReport"><i class="fa-solid fa-arrow-left"></i></a>
@@ -142,7 +142,7 @@
 
 
                     <div class="button-group">
-                        @*<div>Your information is secure and encrypted</div>*@ 
+                        @*<div>Your information is secure and encrypted</div>*@
                         <button class="btn-next floatingSend" type="submit" id="btnSave"><i class="fa-regular fa-paper-plane"></i></button>
                     </div>
                 </form>
@@ -176,8 +176,6 @@
                 </div>
             </div>
             <!-- Step 1: Create New Document -->
-         
-
             <!-- Step 2: Person in Charge -->
             <div class="step-content" id="step-2">
 
@@ -204,7 +202,7 @@
     </div>
 
 
-  
+
 
 
 
@@ -352,7 +350,8 @@
     </div>
 
 
-
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/Popper.min.js"></script>
     <script src="~/Scripts/signature_pad.umd.min.js"></script>
     <script type="text/javascript">
         let prefix = "@ViewBag.Prefix";

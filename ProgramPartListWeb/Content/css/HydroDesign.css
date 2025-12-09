@@ -12,35 +12,9 @@
         font-style: normal;
     }
 
-    /*========== VARIABLES CSS ==========*/
-    :root {
-        --header-height: 3.5rem;
-        --nav-width: 250px;
-        /*========== Colors ==========*/
-        --primary-color: hsl(204, 70%, 53%);
-        --primary-hover: hsl(204, 70%, 32%);
-        --primary-alt-color: #F4F0FA;
-        --first-color-light: #F4F0FA;
-        --title-color: #010202;
-        --text-color: #58555E;
-        --text-color-light: #A5A1AA;
-        --body-color: #F9F6FD;
-        --container-color: #FFFFFF;
-        /*========== Font and typography ==========*/
-        --custom-body-font: 'Manrope', sans-serif;
-
-        --custom-normal-font-size: 13px;
-        --custom-small-font-size: 11px;
-        --custom-smaller-font-size: 9px;
-    }
 
     @media screen and (min-width: 1024px) {
-        :root {
-            --custom-normal-font-size: 14px;
-            --custom-small-font-size: 12px;
-            --custom-smaller-font-size: 10px;
-        }
-
+   
         .floatBtn {
             bottom: 4em !important;
             right: 4em !important;
@@ -51,7 +25,7 @@
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        font-family: var(--custom-body-font) !important;
+        font-family: 'Inter', sans-serif;
     }
 
     body {
@@ -84,14 +58,14 @@
 
     .primarybtn {
         transition: .5s ease-in-out;
-        background: var(--primary-color) !important;
+        background: hsl(204, 70%, 53%);
         border-radius: .2em;
         padding: .3em .5em;
         color: #fff;
     }
 
     .primarybtn:hover {
-        background: var(--primary-hover) !important;
+        background: hsl(204, 70%, 32%);
     }
 
     .primarybtn:disabled {
@@ -112,7 +86,7 @@
 
     /* Sidebar Styles - Positioned at top left corner */
     .sidebar {
-        width: var(--nav-width);
+        width: 250px;
         background: linear-gradient(135deg, #2c3e50, #1a2530);
         color: white;
         height: 100vh;
@@ -134,7 +108,7 @@
     }
 
     .logo span {
-        color: var(--primary-color);
+        color: hsl(204, 70%, 53%);
     }
 
     .logo p {
@@ -163,7 +137,7 @@
 
     .nav-item:hover, .nav-item.active {
         background-color: rgba(255, 255, 255, 0.1);
-        border-left: 4px solid var(--primary-color);
+        border-left: 4px solid hsl(204, 70%, 53%);
     }
 
     .nav-item i {
@@ -173,7 +147,7 @@
 
     /* Main Content */
     .main-content {
-        margin-left: var(--nav-width);
+        margin-left: 250px;
         transition: margin-left 0.3s ease;
     }
 
@@ -186,7 +160,7 @@
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         position: fixed;
         top: 0;
-        left: var(--nav-width);
+        left: 250px;
         right: 0;
         z-index: 999;
         height: 4rem;
@@ -394,9 +368,13 @@
 
     td {
         color: #222;
-        font-size: var(--custom-normal-font-size) !important;
+        font-size: 13px;
         font-weight: 500;
     }
+
+
+
+
     /*=======================================================*/ 
     .custom_modal_header {
         display: flex;
@@ -439,7 +417,7 @@
     .formcontainer {
         width: min(100%, 1200px);
         margin: 0 auto;
-        background: var(--container-color);
+        background:#FFFFFF;
         padding: 2em;
         border-radius: .5em;
         margin-bottom: 3em;
@@ -452,14 +430,14 @@
         color: #222;
     }
     .formcontainer label, .addformcontainer label {
-        font-size: var(--small-font-size);
+        font-size: .836rem;
     }
     .formcontainer input, .formcontainer textarea, .addformcontainer input, .addformcontainer textarea, .RequestedByText, .DateInputText, .PurposeText {
         width: 100%;
         margin: .5em 0 1em 0;
         border: 1px solid #A5A1AA;
         padding: .6em 1em;
-        font-size: var(--small-font-size);
+        font-size: .75rem;
         border-radius: .3em;
     }
 
@@ -476,7 +454,7 @@
         margin: .5em 0 1em 0;
         border: 1px solid #A5A1AA;
         padding: .6em;
-        font-size: var(--normal-font-size);
+        font-size: .938rem;
     }
 
     .form_group label{
@@ -485,7 +463,7 @@
 
 
     .formcontainer input:focus, .formcontainer textarea:focus, .addformcontainer input:focus, .addformcontainer textarea:focus {
-         outline: 1px solid var(--primary-color);
+         outline: 1px solid hsl(204, 70%, 53%);
     }
     /*=========== UPLOAD IMAGE INPUT  =================*/
     .upload-container {
@@ -636,14 +614,14 @@
         border: 1px solid #A5A1AA;
         border-radius: 4px;
         background: white;
-        font-size: var(--custom-normal-font-size);
+        font-size: 13px;
         position: relative;
         outline: none;
     }
 
     .select-container::after {
         content: '▼'; /* Unicode character for a down arrow */
-        font-size: var(--normal-font-size);
+        font-size: .938rem;
         position: absolute;
         top: 50%;
         right: 15px;
@@ -664,7 +642,7 @@
     .Inputcontainer {
         position: relative;
         border-radius: .2em;
-        font-size: var(--normal-font-size);
+        font-size: .938rem;
         background: #fff;
         padding: 5px 1.5em 5px 1em;
         border: 1px solid #bebfca;
@@ -673,7 +651,7 @@
     input[type='date'] {
         padding: 5px 1.5em 5px 1em;
         border: 1px solid #bebfca;
-        font-size: var(--normal-font-size);
+        font-size: .938rem;
         background: #fff;
     }
 
@@ -685,14 +663,14 @@
 
     .Inputcontainer input:focus + .line {
         width: 100%;
-        background-color: var(--primary-color);
+        background-color: hsl(204, 70%, 53%);
     }
 
     .Inputcontainer .line {
         height: 2px;
         width: 0px;
         position: absolute;
-        background-color: var(--primary-color);
+        background-color: hsl(204, 70%, 53%);
         display: inline-block;
         transition: .3s width ease-in-out;
         bottom: 0;
@@ -773,14 +751,14 @@
       cursor: pointer;
       font-weight: 600;
       color: #222;
-      font-size: var(--small-font-size);
+      font-size: .75rem;
       transition: color 0.3s;
       position: relative;
       z-index: 1;
     }
 
     .Mold_tabs button.active {
-      color: var(--primary-color);
+      color: hsl(204, 70%, 53%);
     }
 
     .Mold_slider {
@@ -788,7 +766,7 @@
       bottom: 0;
       height: 2px;
       width: 150px;
-      background: var(--primary-color);
+      background: hsl(204, 70%, 53%);
       transition: transform 0.3s ease;
     }
 
@@ -865,31 +843,26 @@
         border-radius: 50%;
     }
 
-    .circular-progress {
-        --size: 70px; /* circle size */
-        --progress: 0; /* percent (0–100) */
-        --bar-color: #4caf50; /* default green */
-        --track-color: #e6e6e6; /* background ring */
-        --text-color: #333;
-        width: var(--size);
-        height: var(--size);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 600;
-        font-size: 0.85rem;
-        color: var(--text-color);
-        position: relative;
-        background: conic-gradient( var(--bar-color) calc(var(--progress) * 1%), var(--track-color) 0 );
-    }
+.circular-progress {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #58555E;
+    position: relative;
+    background: conic-gradient(#4caf50 calc(0 * 1%), #e6e6e6 0 );
+}
 
     /* inner cut-out circle (to make it a ring) */
     .circular-progress::before {
         content: "";
         position: absolute;
-        width: calc(var(--size) - 15px);
-        height: calc(var(--size) - 15px);
+        width: calc(70px - 15px);
+        height: calc(70px - 15px);
         border-radius: 50%;
         background: #fff;
     }
@@ -996,7 +969,7 @@
       height: 56px;
       border-radius: 50%;
       border: 3px solid;
-      border-color: var(--primary-color) transparent;
+      border-color: hsl(204, 70%, 53%) transparent;
     }
 
     @keyframes rotation {
@@ -1419,7 +1392,7 @@ header .count2 {
     margin: .5em 0 1em 0;
     border: 1px solid #A5A1AA;
     padding: .6em 1em;
-    font-size: var(--small-font-size);
+    font-size: .75rem;
     border-radius: .3em;
 }
 .addformStocks input:focus, .addformStocks select:focus {
@@ -1430,7 +1403,7 @@ header .count2 {
 
 .stockGroup label{
     font-weight: 600;
-    font-size: var(--small-font-size);
+    font-size: .75rem;
 }
 
 

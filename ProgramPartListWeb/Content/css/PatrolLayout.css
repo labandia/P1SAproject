@@ -1,4 +1,12 @@
-﻿
+﻿    @font-face {
+        font-family: 'poppins';
+        src: url('/Content/fonts/Poppins-Regular.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+
+
     /*========== VARIABLES CSS ==========*/
     :root {
         --header-height: 3.5rem;
@@ -17,8 +25,8 @@
         --body-font: 'poppins-regular', sans-serif;
     }
 
-    body{
-        font-family: var(--body-font) !important;
+    *{
+        font-family: 'poppins', sans-serif;
     }
 
     body, h1, h2, h3, h4, div, p, strong, small, button, select {
@@ -146,7 +154,7 @@
         padding: 1rem 1rem 0;
         background-color: #1e3a48;
         box-shadow: 1px 0 0 rgba(22, 8, 43, 0.1);
-        z-index: var(--z-fixed);
+        z-index: 100;
         transition: .4s;
     }
     .sidebar__container {
@@ -295,12 +303,14 @@
         font-size: .8rem;
         background: #fff;
         color: #505050;
+        text-align: center;
     }
     /* Optional: Table row styling */
     .MainTable tbody td,  .InspecTable tbody td {
         padding: 0.75em;
         font-weight: 500;
          border: 1px solid #d4d3d3;
+         text-align: center;
     }
     .MasterlistWrap_footer {
         width: 100%;

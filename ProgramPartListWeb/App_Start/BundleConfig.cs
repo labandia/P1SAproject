@@ -18,19 +18,18 @@ namespace ProgramPartListWeb
             // =======================
             bundles.Add(new StyleBundle("~/Content/shared-css")
                 .Include(
-                    "~/Content/Shared/bootstrap.min.css",
-                    "~/Content/Shared/site.min.css"
+                    "~/Content/Shared/site.css"
                 ));
             // =======================
             // 2. SHARED JS (CORE LIBRARIES)
             // =======================     
             bundles.Add(new ScriptBundle("~/bundles/shared-js").Include(
+                 "~/Scripts/Shared/Utilities.js",
                  "~/Scripts/Shared/jquery-3.7.1.js",
                  "~/Scripts/jquery.validate.js",
                  "~/Scripts/all.min.js",
                  "~/Scripts/sweetalert2.min.js",
-                 "~/Scripts/Cryptojs.min.js",
-                 "~/Scripts/Shared/Utilities.min.js"
+                 "~/Scripts/Cryptojs.min.js"
             ));
 
 
@@ -53,7 +52,7 @@ namespace ProgramPartListWeb
             bundles.Add(new StyleBundle("~/Content/partlist-css").Include("~/Content/css/Programpartlist.min.css"));
 
             // For Progam Partlist Inspection  CSS
-            bundles.Add(new StyleBundle("~/Content/Hydro-css").Include("~/Content/css/HydroDesign.min.css"));
+            bundles.Add(new StyleBundle("~/Content/Hydro-css").Include("~/Content/css/HydroDesign.css"));
 
 
             // =======================

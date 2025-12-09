@@ -13,7 +13,7 @@
     <link rel="preload" href="~/Content/fonts/Manrope-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 
 
-    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+    <link href="~/Content/Shared/bootstrap.min.css" rel="stylesheet" />
     <link href="~/Content/css/HydroLogin.css" rel="stylesheet" />
 
     @Styles.Render("~/Content/shared-css")
@@ -87,7 +87,7 @@
 
 
 
-                    <button type="submit" style="margin-top: 1em; padding: .5em 1em;" class="sign-in-btn"><i class="fa-solid fa-right-to-bracket"></i> Sign in</button>
+                    <button type="submit" style="margin-top: 1em;" class="sign-in-btn"><i class="fa-solid fa-right-to-bracket"></i> Sign in</button>
                     <p class="forgetbtn" id="changebtn" style="text-align: center; margin-top: .5em;">Change Password</p>
 
                 </form>
@@ -192,15 +192,14 @@
                 <div class="custom_modal_header">
                     <h5>Change Password</h5>
 
-                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
-                        <span>&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
                 </div>
 
 
                 <form method="post" enctype="multipart/form-data" class="addformcontainer" id="changenewform" autocomplete="off">
                     <div class="form_group col-12 col-sm-12">
-                        <label>Employee ID <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                        <label>Employee ID <small style="color: #a81818; font-weight: 600;">*</small></label> 
                         <input type="text" name="CEmployee_ID" id="CEmployee_ID" placeholder="Enter Employee ID" autocomplete="off" required />
                     </div>
                     <div class="form_group col-12 col-sm-12">
@@ -247,7 +246,8 @@
 
 
 
-
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Scripts/Popper.min.js"></script>
 <script type="text/javascript">
     const loader = document.getElementById('loader');
     const logform = document.getElementById('logincredentials');

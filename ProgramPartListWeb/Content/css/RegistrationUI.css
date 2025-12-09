@@ -1,4 +1,12 @@
-﻿/*========== VARIABLES CSS ==========*/
+﻿@font-face {
+    font-family: 'poppins';
+    src: url('/Content/fonts/Poppins-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+/*========== VARIABLES CSS ==========*/
 :root {
     --header-height: 3.5rem;
     --nav-width: 250px;
@@ -19,6 +27,10 @@
     --border-color: #a09e9e;
 }
 
+* {
+    font-family: 'poppins', sans-serif;
+}
+
 body {
     font-family: var(--body-font) !important;
     font-size: .935rem;
@@ -26,6 +38,10 @@ body {
 
 body, h1, h2, h3, h4, div, p, strong, small, button, select {
     font-family: inherit;
+}
+
+ul{
+    margin: 0;
 }
 
 .primarybtn {

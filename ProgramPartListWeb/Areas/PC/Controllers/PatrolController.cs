@@ -1858,7 +1858,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                     break;
                 case 4:
                 case 5:
-                    url = Url.Action("DepartmentApproval", new { Regno, mode = 0 });
+                    url = Url.Action("DivisionApproval", new { Regno, mode = 0 });
                     break;
                 default:
                     url = Url.Action("CompleteRegistration", new { Regno, mode = 0 });

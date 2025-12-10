@@ -117,6 +117,7 @@ form p{
 
 .step-list {
     list-style: none;
+    padding: 0;
 }
 
 .step-item {

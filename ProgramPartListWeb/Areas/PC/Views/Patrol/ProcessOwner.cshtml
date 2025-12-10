@@ -586,6 +586,99 @@
             }
         }
 
+        const GetRegistratioFiles = async () => {
+            let filesSelect = [];
+
+            if (modeset != 0) {
+                return;
+            }
+
+            $("#file-upload-area").hide();   
+
+             let res = await fetchData('@Url.Action("GetRegistrationAllFiles", "Patrol")', { Regno: strRegno });
+             if (res.Success && res) {
+                 filesSelect = res.Data;
+
+                 let UploadCounterPath = filesSelect[0].CounterPath;
+
+                 if (UploadCounterPath) {
+                     let files = UploadCounterPath.split(';');
+                     let fileHtml = "";
+
+                     files.forEach(f => {
+                         if (f.trim() !== "") {
+                             let filenameonly = f.replace(/\.pdf$/i, "");
+
+                             const fileExtension = f.split('.').pop().toLowerCase();
+
+                             let fileType = 'default';
+
+                             if (['pdf'].includes(fileExtension)) {
+                                 fileType = 'pdf';
+                             } else if (['xlsx', 'xls', 'xlsm', 'csv'].includes(fileExtension)) {
+                                 fileType = 'xlsx';
+                             } else if (['doc', 'docx', 'txt'].includes(fileExtension)) {
+                                 fileType = 'doc';
+                             } else if (['jpg', 'jpeg', 'png', 'gif', 'svg'].includes(fileExtension)) {
+                                 fileType = 'img';
+                             } else if (['zip', 'rar', '7z'].includes(fileExtension)) {
+                                 fileType = 'zip';
+                             }
+
+                             const fileIconClass = `file-icon ${fileType}`;
+
+
+                             let fileIcon = '';
+
+                             switch (fileType) {
+                                 case 'pdf':
+                                     fileIcon = '<i class="far fa-file-pdf"></i>';
+                                     break;
+                                 case 'doc':
+                                     fileIcon = '<i class="far fa-file-word"></i>';
+                                     break;
+                                 case 'img':
+                                     fileIcon = '<i class="far fa-file-image"></i>';
+                                     break;
+                                 case 'zip':
+                                     fileIcon = '<i class="far fa-file-archive"></i>';
+                                     break;
+                                 case 'xlsx':
+                                     fileIcon = '<i class="fa-regular fa-file-excel"></i>';
+                                     break;
+                                 default:
+                                     fileIcon = '<i class="far fa-file"></i>';
+                             }
+
+                             fileHtml += `
+                                   <button class="open-pdf-btn" data-pdf-url="/Patrol/ViewPDF?strfilepath=${f}">
+                                        <div class="${fileIconClass}">
+                                          ${fileIcon}
+                                        </div>
+                                        <div class="file-info">
+                                            <div class="file-name">${filenameonly}</div>
+                                        </div>
+                                 </button>
+                              `;
+                         }
+                     });
+
+                     document.getElementById("fileContainer").innerHTML = fileHtml;
+
+                     // Attach click event
+                     document.querySelectorAll(".open-pdf-btn").forEach(btn => {
+                         btn.addEventListener("click", function () {
+                             let pdfUrl = this.getAttribute("data-pdf-url");
+                             window.open(pdfUrl, "_blank"); // Open in new tab
+                         });
+                     });
+                 }
+
+
+             }
+
+ }
+
 
         const GetEmailList = async () => {
             let res = await fetchData('@Url.Action("GetEmaiRegistration", "Patrol")', {});
@@ -626,7 +719,8 @@
              try {
                  const [regist, ID, email] = await Promise.all([
                      GetRegistrationDetails(),
-                     GetRegistrationID()
+                     GetRegistrationID(),
+                     GetRegistratioFiles()
                  ]);
              } catch (error) {
                  console.error("Failed to load page data:", error);

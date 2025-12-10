@@ -134,7 +134,7 @@ p {
 
 input, select, textarea {
     border: none;
-    border-radius: 10px; /* var(--radius-md) */
+    border-radius: .2em;
     background: #f8f8f8; /* var(--color-surface-alt) but not defined — added safe default */
 }
 

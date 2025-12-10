@@ -14,7 +14,6 @@
 
 
     @media screen and (min-width: 1024px) {
-   
         .floatBtn {
             bottom: 4em !important;
             right: 4em !important;
@@ -22,9 +21,7 @@
     }
 
     * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+
         font-family: 'Inter', sans-serif;
     }
 
@@ -60,12 +57,14 @@
         transition: .5s ease-in-out;
         background: hsl(204, 70%, 53%);
         border-radius: .2em;
-        padding: .3em .5em;
+        padding: 0.6rem 1.25rem; 
         color: #fff;
     }
 
     .primarybtn:hover {
+        transform: translateY(-1px); /* Reduced effect */
         background: hsl(204, 70%, 32%);
+        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.08);
     }
 
     .primarybtn:disabled {
@@ -1722,31 +1721,45 @@ header .count2 {
 
 
 
-#chartContainer {
-    width: 100%;
-}
+    #chartContainer {
+        width: 100%;
+    }
 
 
 
-.table-containerV2 {
-    width: 100%;
-    overflow-x: auto; /* Enable horizontal scroll */
-    overflow-y: hidden;
-    white-space: nowrap; /* Prevent wrapping */
-}
+    .table-containerV2 {
+        width: 100%;
+        overflow-x: auto; 
+        overflow-y: hidden;
+        white-space: nowrap; 
+        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.08);
+    }
 
-#chamberOrdersTable {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 700px; /* Ensures scroll when too many columns */
-}
+    #chamberOrdersTable {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 700px; /* Ensures scroll when too many columns */
+    }
+
+    #chamberOrdersTable thead tr{
+        background-color: #f8f9fa;
+    }
 
     #chamberOrdersTable th,
     #chamberOrdersTable td {
         padding: 1em !important;
-        border: 1px solid #ccc;
         text-align: left;
         min-width: 120px; /* Force equal visual width */
+    }
+
+
+
+    #chamberOrdersTable tr{
+        cursor: pointer;
+    }
+
+    #chamberOrdersTable tr:hover{
+        background-color: #f8f9fa;
     }
 
     /* Highlight clicked row */

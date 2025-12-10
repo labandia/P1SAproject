@@ -9,6 +9,8 @@ using ProgramPartListWeb.Utilities;
 using System.Diagnostics;
 using System;
 using Microsoft.AspNet.SignalR;
+using OfficeOpenXml;
+using ProgramPartListWeb.Utilities.DataAccess;
 
 namespace ProgramPartListWeb.Controllers
 {
@@ -92,24 +94,28 @@ namespace ProgramPartListWeb.Controllers
 
         public ActionResult OpenExcel()
         {
-            // UNC path to the Excel file
-            string filePath = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\Patrol_Countermeasure\CM_250812_20250812_171539.xlsx";
+            string folder = @"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\PatrolCountermeasure";
+            string fileName = "CM_250812_20250812_171539.xlsx";
+            string fullPath = Path.Combine(folder, fileName);
 
-            if (!System.IO.File.Exists(filePath))
+            string networkUser = @"Jaye-labandia";
+            string networkPass = "P1saprocess@19";
+
+            using (NetworkShareAccesser.Access(folder, networkUser, networkPass))
             {
-                return HttpNotFound("Excel file not found in network folder.");
+                if (!System.IO.File.Exists(fullPath))
+                    return Content("File not found.");
+
+                byte[] fileBytes = System.IO.File.ReadAllBytes(fullPath);
+
+                return File(
+                    fileBytes,
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    fileName // triggers browser download/open dialog
+                );
             }
-
-            byte[] fileBytes = System.IO.File.ReadAllBytes(filePath);
-
-            // Use the Excel MIME type for .xlsx
-            string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-
-            // inline = open directly (if Excel is installed and registered with the browser)
-            Response.AppendHeader("Content-Disposition", "inline; filename=CM_250812_20250812_171539.xlsx");
-
-            return File(fileBytes, contentType);
         }
+
 
         public ActionResult DownloadConsoleApp()
         {
@@ -117,6 +123,34 @@ namespace ProgramPartListWeb.Controllers
             string fileName = Path.GetFileName(filePath);
 
             return File(filePath, "application/octet-stream", fileName);
+        }
+
+
+        public ActionResult ReadExcel()
+        {
+            string networkFolder = @"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\PatrolCountermeasure";
+            string fileName = "CM_250812_20250812_171539.xlsx";
+            string fullPath = Path.Combine(networkFolder, fileName);
+
+            string networkUser = @"Jaye-labandia";   // ← Put your network account
+            string networkPass = "p1saprocess@19";                  // ← Put password here
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            // Connect to the network share
+            using (NetworkShareAccesser.Access(networkFolder, networkUser, networkPass))
+            {
+                if (!System.IO.File.Exists(fullPath))
+                    return Content("Excel file not found in network folder.");
+
+                using (var package = new ExcelPackage(new FileInfo(fullPath)))
+                {
+                    var sheet = package.Workbook.Worksheets[0];
+                    string value = sheet.Cells["A1"].Text;
+
+                    return Content("Cell A1 Value: " + value);
+                }
+            }
         }
 
 

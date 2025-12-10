@@ -1,5 +1,6 @@
 ﻿using FootWristStrapsAnalysis.Interface;
 using FootWristStrapsAnalysis.Model;
+using ProgramPartListWeb.Helper;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -39,84 +40,104 @@ namespace FootWristStrapsAnalysis
             var selectedDate = dateTimePicker1.Value.Date; // Get only the date part
             this.WindowState = FormWindowState.Maximized;
 
-            await StartAsync();
+            // Step 1: Get the Folder path if exist
+            string folderpath = await GetTheFileFolder();
 
-            getData = await _foot.GetFootAnalysisData();
-            var displayByDate = getData.Where(res => res.TestDate.HasValue && res.TestDate.Value.Date == selectedDate).ToList();
-            footlist = displayByDate; // Use the filtered list instead of all data
-            
-            CountTable.Text = footlist.Count().ToString();
+            if (folderpath != "")
+            {
+                folderText.Text = folderpath;   
+                // Step 2: Starts the check file The Data from the exist file folder and Upload it
+                await StartAsync();
 
-            AnalysisTable.DataSource = footlist;
+                getData = await _foot.GetFootAnalysisData();
+                var displayByDate = getData.Where(res => res.TestDate.HasValue && res.TestDate.Value.Date == selectedDate).ToList();
 
-            AnalysisTable.Columns["TestTime"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            AnalysisTable.Columns["TestTime"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            AnalysisTable.Columns["TestTime"].Width = 120;
+                if(displayByDate != null)
+                {
+                    MessageBox.Show("No Data Found.",
+                         "Warning",
+                         MessageBoxButtons.OK,
+                         MessageBoxIcon.Warning);
+                    return;
+                }
 
-            // Employee ID
-            AnalysisTable.Columns["EmployeeID"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            AnalysisTable.Columns["EmployeeID"].Width = 120;
+                footlist = displayByDate; // Use the filtered list instead of all data
 
-            // Employee Name
-            AnalysisTable.Columns["EmployeeName"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            AnalysisTable.Columns["EmployeeName"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            AnalysisTable.Columns["EmployeeName"].Width = 150;
+                CountTable.Text = footlist.Count().ToString();
 
-            // Comprehensive Result 
-            AnalysisTable.Columns["ComprehensiveResult"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            AnalysisTable.Columns["ComprehensiveResult"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            AnalysisTable.Columns["ComprehensiveResult"].Width = 200;
+                AnalysisTable.DataSource = footlist;
 
-            // Left Foot Resis 
-            AnalysisTable.Columns["LeftFootResistance"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            AnalysisTable.Columns["LeftFootResistance"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            AnalysisTable.Columns["LeftFootResistance"].Width = 150;
+                AnalysisTable.Columns["TestTime"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                AnalysisTable.Columns["TestTime"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                AnalysisTable.Columns["TestTime"].Width = 120;
 
-            // Left Foot Result 
-            AnalysisTable.Columns["LeftFootResult"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            AnalysisTable.Columns["LeftFootResult"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            AnalysisTable.Columns["LeftFootResult"].Width = 150;
+                // Employee ID
+                AnalysisTable.Columns["EmployeeID"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                AnalysisTable.Columns["EmployeeID"].Width = 120;
 
-            // Right Foot Resis 
-            AnalysisTable.Columns["RightFootResistance"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            AnalysisTable.Columns["RightFootResistance"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            AnalysisTable.Columns["RightFootResistance"].Width = 200;
+                // Employee Name
+                AnalysisTable.Columns["EmployeeName"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                AnalysisTable.Columns["EmployeeName"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                AnalysisTable.Columns["EmployeeName"].Width = 150;
 
-            // Right Foot Resis 
-            AnalysisTable.Columns["RightFootResult"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            AnalysisTable.Columns["RightFootResult"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            AnalysisTable.Columns["RightFootResult"].Width = 150;
+                // Comprehensive Result 
+                AnalysisTable.Columns["ComprehensiveResult"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                AnalysisTable.Columns["ComprehensiveResult"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                AnalysisTable.Columns["ComprehensiveResult"].Width = 200;
 
-            // Wrist Strap resis
-            AnalysisTable.Columns["WristStrapResult"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            AnalysisTable.Columns["WristStrapResult"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            AnalysisTable.Columns["WristStrapResult"].Width = 200;
+                // Left Foot Resis 
+                AnalysisTable.Columns["LeftFootResistance"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                AnalysisTable.Columns["LeftFootResistance"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                AnalysisTable.Columns["LeftFootResistance"].Width = 150;
 
-            //ConductivityEvaluation
-            AnalysisTable.Columns["ConductivityEvaluation"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            AnalysisTable.Columns["ConductivityEvaluation"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            AnalysisTable.Columns["ConductivityEvaluation"].Width = 200;
+                // Left Foot Result 
+                AnalysisTable.Columns["LeftFootResult"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                AnalysisTable.Columns["LeftFootResult"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                AnalysisTable.Columns["LeftFootResult"].Width = 150;
 
-            // ----------------------------------------------------------------
-            // Lower Evaluation Limit
-            AnalysisTable.Columns["LowerEvaluationLimit"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            AnalysisTable.Columns["LowerEvaluationLimit"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            AnalysisTable.Columns["LowerEvaluationLimit"].Width = 200;
+                // Right Foot Resis 
+                AnalysisTable.Columns["RightFootResistance"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                AnalysisTable.Columns["RightFootResistance"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                AnalysisTable.Columns["RightFootResistance"].Width = 200;
 
-            // Upper Evaluation Limit
-            AnalysisTable.Columns["UpperEvaluationLimit"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            AnalysisTable.Columns["UpperEvaluationLimit"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            AnalysisTable.Columns["UpperEvaluationLimit"].Width = 200;
+                // Right Foot Resis 
+                AnalysisTable.Columns["RightFootResult"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                AnalysisTable.Columns["RightFootResult"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                AnalysisTable.Columns["RightFootResult"].Width = 150;
 
-            // Evaluation Buzzer
-            AnalysisTable.Columns["EvaluationBuzzer"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            AnalysisTable.Columns["EvaluationBuzzer"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            AnalysisTable.Columns["EvaluationBuzzer"].Width = 200;
+                // Wrist Strap resis
+                AnalysisTable.Columns["WristStrapResult"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                AnalysisTable.Columns["WristStrapResult"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                AnalysisTable.Columns["WristStrapResult"].Width = 200;
 
-            // Evaluation External Output
-            AnalysisTable.Columns["EvaluationExternalOutput"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            AnalysisTable.Columns["EvaluationExternalOutput"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            AnalysisTable.Columns["EvaluationExternalOutput"].Width = 200;
+                //ConductivityEvaluation
+                AnalysisTable.Columns["ConductivityEvaluation"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                AnalysisTable.Columns["ConductivityEvaluation"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                AnalysisTable.Columns["ConductivityEvaluation"].Width = 200;
+
+                // ----------------------------------------------------------------
+                // Lower Evaluation Limit
+                AnalysisTable.Columns["LowerEvaluationLimit"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                AnalysisTable.Columns["LowerEvaluationLimit"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                AnalysisTable.Columns["LowerEvaluationLimit"].Width = 200;
+
+                // Upper Evaluation Limit
+                AnalysisTable.Columns["UpperEvaluationLimit"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                AnalysisTable.Columns["UpperEvaluationLimit"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                AnalysisTable.Columns["UpperEvaluationLimit"].Width = 200;
+
+                // Evaluation Buzzer
+                AnalysisTable.Columns["EvaluationBuzzer"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                AnalysisTable.Columns["EvaluationBuzzer"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                AnalysisTable.Columns["EvaluationBuzzer"].Width = 200;
+
+                // Evaluation External Output
+                AnalysisTable.Columns["EvaluationExternalOutput"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                AnalysisTable.Columns["EvaluationExternalOutput"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                AnalysisTable.Columns["EvaluationExternalOutput"].Width = 200;
+            }
+
+          
         }
 
 
@@ -133,7 +154,8 @@ namespace FootWristStrapsAnalysis
         {
             try
             {
-                string folderPath = @"D:\PC_system\CIRCUIT";
+                //string folderPath = @"D:\PC_system\CIRCUIT";
+                string folderPath = folderText.Text;
 
                 if (!Directory.Exists(folderPath))
                 {
@@ -256,12 +278,12 @@ namespace FootWristStrapsAnalysis
             }
         }
 
-
         public async Task ImportPreviousFiles()
         {
             try
             {
-                string folderPath = @"D:\PC_system\CIRCUIT";
+                //string folderPath = @"D:\PC_system\CIRCUIT";
+                string folderPath = folderText.Text;
 
                 if (!Directory.Exists(folderPath))
                 {
@@ -464,6 +486,63 @@ namespace FootWristStrapsAnalysis
             foreach (int id in selectedRecordIds)
             {
                 Debug.WriteLine(id);
+            }
+        }
+
+        public async Task<string> GetTheFileFolder()
+        {
+            string fileCheck = await SqlDataAccess.GetOneData("SELECT FolderPath FROM FolderPaths WHERE ProjectName = @ProjectName ", new { ProjectName = "FootWrist" });
+            return fileCheck;
+        }
+
+
+
+        private void btnOpenfolder_Click(object sender, EventArgs e)
+        {
+            using (FolderBrowserDialog dialog = new FolderBrowserDialog())
+            {
+                dialog.Description = "Select a folder";
+                dialog.ShowNewFolderButton = true; // optional
+
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    string selectedPath = dialog.SelectedPath;
+                    folderText.Text = selectedPath.Trim();
+                }
+            }
+        }
+
+        private async void button4_Click(object sender, EventArgs e)
+        {
+            string checkSql = "SELECT COUNT(PathID) FROM FolderPaths WHERE ProjectName = @ProjectName";
+            bool isExist = await SqlDataAccess.Checkdata(checkSql, new { ProjectName = "FootWrist" });
+
+            string strsql;
+            if (!isExist)
+            {
+                strsql = "INSERT INTO FolderPaths(FolderPath, ProjectName) VALUES(@FolderPath, @ProjectName)";
+            }
+            else
+            {
+                strsql = "UPDATE FolderPaths SET FolderPath =@FolderPath WHERE ProjectName =@ProjectName";
+            }
+
+
+            var obj = new
+            {
+                FolderPath = folderText.Text,
+                ProjectName = "FootWrist"
+            };
+
+
+            bool result = await SqlDataAccess.UpdateInsertQuery(strsql, obj);
+
+            if (result)
+            {
+                MessageBox.Show("Save folder path Successfully",
+                "Information",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
             }
         }
     }

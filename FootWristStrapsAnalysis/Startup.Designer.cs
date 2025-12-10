@@ -28,25 +28,25 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle37 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle38 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle22 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle23 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle24 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle25 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle26 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle27 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle28 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle29 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle30 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle31 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle32 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle33 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle34 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle35 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle36 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Startup));
             this.AnalysisTable = new System.Windows.Forms.DataGridView();
             this.RecordID = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -76,6 +76,10 @@
             this.CountTable = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.folderText = new System.Windows.Forms.TextBox();
+            this.btnOpenfolder = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.AnalysisTable)).BeginInit();
             this.SuspendLayout();
             // 
@@ -85,22 +89,22 @@
             this.AnalysisTable.AllowUserToDeleteRows = false;
             this.AnalysisTable.AllowUserToResizeColumns = false;
             this.AnalysisTable.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.AnalysisTable.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle20.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.AnalysisTable.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle20;
             this.AnalysisTable.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.AnalysisTable.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
             this.AnalysisTable.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(6, 5, 6, 5);
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Transparent;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Transparent;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.AnalysisTable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle21.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle21.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle21.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle21.Padding = new System.Windows.Forms.Padding(6, 5, 6, 5);
+            dataGridViewCellStyle21.SelectionBackColor = System.Drawing.Color.Transparent;
+            dataGridViewCellStyle21.SelectionForeColor = System.Drawing.Color.Transparent;
+            dataGridViewCellStyle21.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.AnalysisTable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle21;
             this.AnalysisTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.AnalysisTable.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.RecordID,
@@ -122,30 +126,30 @@
             this.EvaluationExternalOutput,
             this.FG470,
             this.Note});
-            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle18.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle18.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle18.Padding = new System.Windows.Forms.Padding(6, 5, 6, 5);
-            dataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            dataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.AnalysisTable.DefaultCellStyle = dataGridViewCellStyle18;
-            this.AnalysisTable.Location = new System.Drawing.Point(21, 93);
+            dataGridViewCellStyle37.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle37.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle37.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle37.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle37.Padding = new System.Windows.Forms.Padding(6, 5, 6, 5);
+            dataGridViewCellStyle37.SelectionBackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            dataGridViewCellStyle37.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle37.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.AnalysisTable.DefaultCellStyle = dataGridViewCellStyle37;
+            this.AnalysisTable.Location = new System.Drawing.Point(21, 112);
             this.AnalysisTable.Name = "AnalysisTable";
             this.AnalysisTable.ReadOnly = true;
-            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle19.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle19.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle19.SelectionBackColor = System.Drawing.Color.Transparent;
-            dataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.AnalysisTable.RowHeadersDefaultCellStyle = dataGridViewCellStyle19;
+            dataGridViewCellStyle38.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle38.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle38.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle38.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle38.SelectionBackColor = System.Drawing.Color.Transparent;
+            dataGridViewCellStyle38.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle38.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.AnalysisTable.RowHeadersDefaultCellStyle = dataGridViewCellStyle38;
             this.AnalysisTable.RowHeadersVisible = false;
             this.AnalysisTable.RowTemplate.Height = 35;
             this.AnalysisTable.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.AnalysisTable.Size = new System.Drawing.Size(1098, 593);
+            this.AnalysisTable.Size = new System.Drawing.Size(1098, 574);
             this.AnalysisTable.TabIndex = 0;
             this.AnalysisTable.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.AnalysisTable_CellClick);
             // 
@@ -177,8 +181,8 @@
             // TestTime
             // 
             this.TestTime.DataPropertyName = "TestTime";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.TestTime.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.TestTime.DefaultCellStyle = dataGridViewCellStyle22;
             this.TestTime.HeaderText = "Test Time";
             this.TestTime.Name = "TestTime";
             this.TestTime.ReadOnly = true;
@@ -187,8 +191,8 @@
             // EmployeeID
             // 
             this.EmployeeID.DataPropertyName = "EmployeeID";
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.EmployeeID.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle23.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.EmployeeID.DefaultCellStyle = dataGridViewCellStyle23;
             this.EmployeeID.HeaderText = "Employee ID";
             this.EmployeeID.Name = "EmployeeID";
             this.EmployeeID.ReadOnly = true;
@@ -205,8 +209,8 @@
             // ComprehensiveResult
             // 
             this.ComprehensiveResult.DataPropertyName = "ComprehensiveResult";
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.ComprehensiveResult.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.ComprehensiveResult.DefaultCellStyle = dataGridViewCellStyle24;
             this.ComprehensiveResult.HeaderText = "Comprehensive Result";
             this.ComprehensiveResult.Name = "ComprehensiveResult";
             this.ComprehensiveResult.ReadOnly = true;
@@ -215,8 +219,8 @@
             // LeftFootResistance
             // 
             this.LeftFootResistance.DataPropertyName = "LeftFootResistance";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.LeftFootResistance.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.LeftFootResistance.DefaultCellStyle = dataGridViewCellStyle25;
             this.LeftFootResistance.HeaderText = "Left Foot Resistance";
             this.LeftFootResistance.Name = "LeftFootResistance";
             this.LeftFootResistance.ReadOnly = true;
@@ -225,8 +229,8 @@
             // LeftFootResult
             // 
             this.LeftFootResult.DataPropertyName = "LeftFootResult";
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.LeftFootResult.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.LeftFootResult.DefaultCellStyle = dataGridViewCellStyle26;
             this.LeftFootResult.HeaderText = "Left Foot Result";
             this.LeftFootResult.Name = "LeftFootResult";
             this.LeftFootResult.ReadOnly = true;
@@ -235,8 +239,8 @@
             // RightFootResistance
             // 
             this.RightFootResistance.DataPropertyName = "RightFootResistance";
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.RightFootResistance.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.RightFootResistance.DefaultCellStyle = dataGridViewCellStyle27;
             this.RightFootResistance.HeaderText = "Right Foot Resistance";
             this.RightFootResistance.Name = "RightFootResistance";
             this.RightFootResistance.ReadOnly = true;
@@ -245,8 +249,8 @@
             // RightFootResult
             // 
             this.RightFootResult.DataPropertyName = "RightFootResult";
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.RightFootResult.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.RightFootResult.DefaultCellStyle = dataGridViewCellStyle28;
             this.RightFootResult.HeaderText = "Right Foot Result";
             this.RightFootResult.Name = "RightFootResult";
             this.RightFootResult.ReadOnly = true;
@@ -255,8 +259,8 @@
             // WristStrapResult
             // 
             this.WristStrapResult.DataPropertyName = "WristStrapResult";
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.WristStrapResult.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.WristStrapResult.DefaultCellStyle = dataGridViewCellStyle29;
             this.WristStrapResult.HeaderText = "Wrist Strap Result";
             this.WristStrapResult.Name = "WristStrapResult";
             this.WristStrapResult.ReadOnly = true;
@@ -265,8 +269,8 @@
             // ConductivityEvaluation
             // 
             this.ConductivityEvaluation.DataPropertyName = "ConductivityEvaluation";
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.ConductivityEvaluation.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle30.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.ConductivityEvaluation.DefaultCellStyle = dataGridViewCellStyle30;
             this.ConductivityEvaluation.HeaderText = "Conductivity Evaluation";
             this.ConductivityEvaluation.Name = "ConductivityEvaluation";
             this.ConductivityEvaluation.ReadOnly = true;
@@ -275,8 +279,8 @@
             // LowerEvaluationLimit
             // 
             this.LowerEvaluationLimit.DataPropertyName = "LowerEvaluationLimit";
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.LowerEvaluationLimit.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle31.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.LowerEvaluationLimit.DefaultCellStyle = dataGridViewCellStyle31;
             this.LowerEvaluationLimit.HeaderText = "Lower Evaluation Limit";
             this.LowerEvaluationLimit.Name = "LowerEvaluationLimit";
             this.LowerEvaluationLimit.ReadOnly = true;
@@ -285,8 +289,8 @@
             // UpperEvaluationLimit
             // 
             this.UpperEvaluationLimit.DataPropertyName = "UpperEvaluationLimit";
-            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.UpperEvaluationLimit.DefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle32.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.UpperEvaluationLimit.DefaultCellStyle = dataGridViewCellStyle32;
             this.UpperEvaluationLimit.HeaderText = "Upper Evaluation Limit";
             this.UpperEvaluationLimit.Name = "UpperEvaluationLimit";
             this.UpperEvaluationLimit.ReadOnly = true;
@@ -295,8 +299,8 @@
             // EvaluationBuzzer
             // 
             this.EvaluationBuzzer.DataPropertyName = "EvaluationBuzzer";
-            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.EvaluationBuzzer.DefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle33.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.EvaluationBuzzer.DefaultCellStyle = dataGridViewCellStyle33;
             this.EvaluationBuzzer.HeaderText = "Evaluation Buzzer";
             this.EvaluationBuzzer.Name = "EvaluationBuzzer";
             this.EvaluationBuzzer.ReadOnly = true;
@@ -305,8 +309,8 @@
             // EvaluationExternalOutput
             // 
             this.EvaluationExternalOutput.DataPropertyName = "EvaluationExternalOutput";
-            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.EvaluationExternalOutput.DefaultCellStyle = dataGridViewCellStyle15;
+            dataGridViewCellStyle34.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.EvaluationExternalOutput.DefaultCellStyle = dataGridViewCellStyle34;
             this.EvaluationExternalOutput.HeaderText = "Evaluation External Output";
             this.EvaluationExternalOutput.Name = "EvaluationExternalOutput";
             this.EvaluationExternalOutput.ReadOnly = true;
@@ -315,8 +319,8 @@
             // FG470
             // 
             this.FG470.DataPropertyName = "FG470";
-            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.FG470.DefaultCellStyle = dataGridViewCellStyle16;
+            dataGridViewCellStyle35.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.FG470.DefaultCellStyle = dataGridViewCellStyle35;
             this.FG470.HeaderText = "FG470";
             this.FG470.Name = "FG470";
             this.FG470.ReadOnly = true;
@@ -325,8 +329,8 @@
             // Note
             // 
             this.Note.DataPropertyName = "Note";
-            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Note.DefaultCellStyle = dataGridViewCellStyle17;
+            dataGridViewCellStyle36.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Note.DefaultCellStyle = dataGridViewCellStyle36;
             this.Note.HeaderText = "Note";
             this.Note.Name = "Note";
             this.Note.ReadOnly = true;
@@ -387,12 +391,11 @@
             // 
             // label1
             // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label1.AutoSize = true;
             this.label1.BackColor = System.Drawing.Color.Transparent;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label1.Location = new System.Drawing.Point(28, 697);
+            this.label1.Location = new System.Drawing.Point(20, 88);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(64, 17);
             this.label1.TabIndex = 94;
@@ -400,12 +403,11 @@
             // 
             // CountTable
             // 
-            this.CountTable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.CountTable.AutoSize = true;
             this.CountTable.BackColor = System.Drawing.Color.Transparent;
             this.CountTable.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CountTable.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.CountTable.Location = new System.Drawing.Point(89, 697);
+            this.CountTable.Location = new System.Drawing.Point(81, 88);
             this.CountTable.Name = "CountTable";
             this.CountTable.Size = new System.Drawing.Size(13, 17);
             this.CountTable.TabIndex = 98;
@@ -445,11 +447,67 @@
             this.button3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.button3.UseVisualStyleBackColor = true;
             // 
+            // label2
+            // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label2.AutoSize = true;
+            this.label2.BackColor = System.Drawing.Color.Transparent;
+            this.label2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.label2.Location = new System.Drawing.Point(20, 698);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(125, 17);
+            this.label2.TabIndex = 101;
+            this.label2.Text = "Load Folder path : ";
+            // 
+            // folderText
+            // 
+            this.folderText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.folderText.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.folderText.Location = new System.Drawing.Point(151, 697);
+            this.folderText.Name = "folderText";
+            this.folderText.Size = new System.Drawing.Size(179, 22);
+            this.folderText.TabIndex = 102;
+            // 
+            // btnOpenfolder
+            // 
+            this.btnOpenfolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnOpenfolder.FlatAppearance.BorderColor = System.Drawing.Color.DimGray;
+            this.btnOpenfolder.FlatAppearance.BorderSize = 2;
+            this.btnOpenfolder.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnOpenfolder.Location = new System.Drawing.Point(345, 692);
+            this.btnOpenfolder.Name = "btnOpenfolder";
+            this.btnOpenfolder.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.btnOpenfolder.Size = new System.Drawing.Size(102, 29);
+            this.btnOpenfolder.TabIndex = 103;
+            this.btnOpenfolder.Text = "Select folder";
+            this.btnOpenfolder.UseVisualStyleBackColor = true;
+            this.btnOpenfolder.Click += new System.EventHandler(this.btnOpenfolder_Click);
+            // 
+            // button4
+            // 
+            this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button4.FlatAppearance.BorderColor = System.Drawing.Color.DimGray;
+            this.button4.FlatAppearance.BorderSize = 2;
+            this.button4.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button4.Location = new System.Drawing.Point(453, 691);
+            this.button4.Name = "button4";
+            this.button4.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.button4.Size = new System.Drawing.Size(110, 29);
+            this.button4.TabIndex = 104;
+            this.button4.Text = "Save the path";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
             // Startup
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1144, 749);
+            this.Controls.Add(this.button4);
+            this.Controls.Add(this.btnOpenfolder);
+            this.Controls.Add(this.folderText);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.CountTable);
@@ -498,6 +556,10 @@
         private System.Windows.Forms.Label CountTable;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox folderText;
+        private System.Windows.Forms.Button btnOpenfolder;
+        private System.Windows.Forms.Button button4;
     }
 }
 

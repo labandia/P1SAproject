@@ -49,7 +49,7 @@ namespace ProgramPartListWeb
             bundles.Add(new StyleBundle("~/Content/patrol-css").Include("~/Content/css/PatrolLayout.min.css"));
 
             // For Progam Partlist Inspection  CSS
-            bundles.Add(new StyleBundle("~/Content/partlist-css").Include("~/Content/css/Programpartlist.min.css"));
+            bundles.Add(new StyleBundle("~/Content/partlist-css").Include("~/Content/css/Programpartlist.css"));
 
             // For Progam Partlist Inspection  CSS
             bundles.Add(new StyleBundle("~/Content/Hydro-css").Include("~/Content/css/HydroDesign.css"));

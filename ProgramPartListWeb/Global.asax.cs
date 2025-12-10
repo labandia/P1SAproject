@@ -166,15 +166,18 @@ namespace ProgramPartListWeb
             container.RegisterType<IAuthRepository, AuthRepository>();
             container.RegisterType<IUserRepository, UserRespository>();
             container.RegisterType<IEmployee, EmployeeRepository>();
-            container.RegisterType<ISeriesRepository, SeriesRepository>();
             //container.RegisterType<INotification, NotificationRepository>();
             container.RegisterType<IAluminumProducts, PressRepository>();
             container.RegisterType<IInspector, InpectorRepository>();
             container.RegisterType<IHyrdoParts, HydroPartsRepository>();
-            container.RegisterType<ISupplier, SupplierRepository>();
 
             container.RegisterType<IRegistration, RegistrationRepository>();
 
+            // ProgramPartlist
+            container.RegisterType<IPlanSchedule, PlanScheduleRepository>();
+
+
+            // Hydroponics
             container.RegisterType<IChambers, ChamberRepository>();
             container.RegisterType<IPartsList, PartsMasterlistRepository>();
             container.RegisterType<IStocksparts, StockpartsRepository>();

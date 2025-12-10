@@ -6,30 +6,29 @@ using System.Web;
 
 namespace ProgramPartListWeb.Areas.Circuit.Models
 {
-    public class PlanPartslist
+    public class PlanScheduleMode
     {
-        public string PlanSched { get; set; }   
+        public int Series_ID { get; set; }
+        public string Series_no { get; set; }
         public int Line { get; set; }
-        public float Timetarget { get; set; }   
-        public string SetupNavi { get; set; }   
-        public string VisualManage { get; set; }    
-        public string Serial {  get; set; } 
+        public decimal Timetarget { get; set; }
+        public string CreatedBy { get; set; }
+        public string Shift { get; set; }
         public string Remarks { get; set; }
+        public string SetupNavi { get; set; }
+        public string VisualManage { get; set; }
+        public string Status { get; set; }
+        public string MachineSerial { get; set; }
         public string Modelno { get; set; }
-        public string SetGroup {  get; set; }   
-        public int Shift { get; set; }
-        public int Status { get; set; }
-        public int Ongoing { get; set; }    
-        public string CreatedBy {  get; set; }  
-
-
-
+        public string SetGroup { get; set; }
+        public int Ongoing { get; set; }
+        public int TotalCount { get; set; }
+        public int Planstatus { get; set; }
     }
 
-    public class partlistComponents
+
+    public class PartlistComponents
     {
-        [Key]
-        public int RecordID { get; set; }
         public string Series_no { get; set; }
         public int SetNo { get; set; }
         public string AbassadorPartnum { get; set; }
@@ -37,9 +36,11 @@ namespace ProgramPartListWeb.Areas.Circuit.Models
         public string Locations { get; set; }
         public string FeederType { get; set; }
         public int Prepared_Quantity { get; set; }
-        public int Machno { get; set; }
+        public int MachineNo { get; set; }
     }
-    public class SummaryComponentModelV2
+
+
+    public class SummaryComponentModel
     {
         public int RecordID { get; set; }
         public string DateInput { get; set; }
@@ -61,12 +62,12 @@ namespace ProgramPartListWeb.Areas.Circuit.Models
         public string Series_no { get; set; }
     }
 
-    public class SupplerList
+    public class SupplierModel
     {
-        public string AbassadorPartnum { get; set;}
-        public string Partname { get; set;} 
-        public string Location { get; set;}
-        public string Supplier { get; set;}
-        public string Code { get; set;} 
+        public int SupID { get; set; }
+        public string AbassadorPartnum { get; set; }
+        public string Partname { get; set; }
+        public string Supplier { get; set; }
+        public string Code { get; set; }
     }
 }

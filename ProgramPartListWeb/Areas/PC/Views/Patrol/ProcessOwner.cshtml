@@ -593,7 +593,8 @@
                 return;
             }
 
-            $("#file-upload-area").hide();   
+            $("#file-upload-area").hide();
+            $("#btnSave").hide();
 
              let res = await fetchData('@Url.Action("GetRegistrationAllFiles", "Patrol")', { Regno: strRegno });
              if (res.Success && res) {

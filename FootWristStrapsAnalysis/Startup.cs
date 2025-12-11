@@ -1,9 +1,13 @@
 ﻿using FootWristStrapsAnalysis.Interface;
 using FootWristStrapsAnalysis.Model;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
 using ProgramPartListWeb.Helper;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +18,8 @@ namespace FootWristStrapsAnalysis
 {
     public partial class Startup : Form
     {
+        private string templateFilepath = @"C:\\Users\\jaye-labandia\\Desktop\\Record_STATIC.xlsx";
+
         private readonly IFootWrist _foot;
         private readonly System.Timers.Timer _importTimer;
         List<DataGridViewRow> selectedRows = new List<DataGridViewRow>();
@@ -463,7 +469,29 @@ namespace FootWristStrapsAnalysis
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-            ExportDatatoExcel();
+            try
+            {
+                SaveFileDialog saveFileDialog = new SaveFileDialog
+                {
+                    Filter = "Excel Files|*.xlsx",
+                    Title = "Save Excel File",
+                    FileName = $"ESD_Test_Report_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx"
+                };
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    PopulateTemplateFromDatabase(saveFileDialog.FileName);
+                    MessageBox.Show("Export completed successfully!", "Success",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show($"Error exporting to Excel: {ex.Message}", "Error",
+                  MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+
         }
 
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
@@ -481,13 +509,7 @@ namespace FootWristStrapsAnalysis
         }
 
 
-        public void ExportDatatoExcel()
-        {
-            foreach (int id in selectedRecordIds)
-            {
-                Debug.WriteLine(id);
-            }
-        }
+       
 
         public async Task<string> GetTheFileFolder()
         {
@@ -544,6 +566,243 @@ namespace FootWristStrapsAnalysis
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Information);
             }
+        }
+
+
+
+        private Dictionary<DateTime, Dictionary<string, ESDTestData>> OrganizeDataByDateAndEmployee(IEnumerable<IFootWristModel> data)
+        {
+            var organizedData = new Dictionary<DateTime, Dictionary<string, ESDTestData>>();
+
+            foreach (var  row in data)
+            {
+
+                DateTime testDate = Convert.ToDateTime(row.TestDate);
+                string employeeID = row.EmployeeID;
+
+                var testData = new ESDTestData
+                {
+                    TestDate = testDate,
+                    EmployeeID = employeeID,
+                    EmployeeName = row.EmployeeName,
+                    LeftFootResistance = row.LeftFootResistance,
+                    LeftFootResult = row.LeftFootResult,
+                    RightFootResistance = row.RightFootResistance,
+                    RightFootResult = row.RightFootResult
+                };
+
+                if (!organizedData.ContainsKey(testDate))
+                {
+                    organizedData[testDate] = new Dictionary<string, ESDTestData>();
+                }
+
+                organizedData[testDate][employeeID] = testData;
+            }
+
+            return organizedData;
+        }
+
+
+        private async void PopulateTemplateFromDatabase(string outputPath)
+        {
+            // 1. Copy template to output path
+            File.Copy(templateFilepath, outputPath, true);
+
+            var getData = await _foot.GetTestDataForMonth(11, 2025);
+
+            //Dictionary<DateTime, Dictionary<string, ESDTestData>> organizedData =
+            //   OrganizeDataByDateAndEmployee(getData);
+
+            //foreach (int id in selectedRecordIds)
+            //{
+            //    Debug.WriteLine(id);
+            //}
+
+            // 3. Open the copied template
+            using (var package = new ExcelPackage(new FileInfo(outputPath)))
+            {
+                var worksheet = package.Workbook.Worksheets["Sheet1"]; // Or worksheet index
+
+                if (worksheet == null)
+                {
+                    worksheet = package.Workbook.Worksheets[0];
+                }
+
+                //// 4. Extract employee column mapping from template
+                Dictionary<string, (int rightCol, int leftCol)> employeeColumnMap =
+                    ExtractEmployeeColumnsFromTemplate(worksheet);
+
+                //// 5. Organize data from database
+                Dictionary<DateTime, Dictionary<string, ESDTestData>> organizedData =
+                    OrganizeDataByDateAndEmployee(getData);
+
+                //// 6. Map database IDs to template IDs (if needed)
+                Dictionary<string, string> dbToTemplateMapping = GetDatabaseToTemplateMapping();
+
+                //// 7. Populate the data into template
+                PopulateDataIntoTemplate(worksheet, organizedData, employeeColumnMap, dbToTemplateMapping);
+
+                // 8. Save changes
+                package.Save();
+            }
+        }
+
+        private Dictionary<string, (int rightCol, int leftCol)> ExtractEmployeeColumnsFromTemplate(ExcelWorksheet worksheet)
+        {
+            var columnMap = new Dictionary<string, (int rightCol, int leftCol)>();
+
+            // Employee IDs are in row 10 (Excel row 10, which is EPPlus row 10)
+            int employeeNameRow = 10;
+
+            // Scan from column C to V (3 to 22 in EPPlus)
+            for (int col = 3; col <= 22; col += 2)
+            {
+                // Get the employee ID from the template
+                var cell = worksheet.Cells[employeeNameRow, col];
+                string employeeID = cell.Value?.ToString()?.Trim();
+
+                if (!string.IsNullOrEmpty(employeeID))
+                {
+                    // Employee occupies this column and the next one
+                    int rightCol = col;      // Right foot column
+                    int leftCol = col + 1;   // Left foot column
+
+                    columnMap[employeeID] = (rightCol, leftCol);
+
+                    // Debug output
+                    Debug.WriteLine($"Template has employee '{employeeID}' at columns {GetExcelColumnName(rightCol)}-{GetExcelColumnName(leftCol)}");
+                }
+            }
+
+            return columnMap;
+        }
+
+        private Dictionary<string, string> GetDatabaseToTemplateMapping()
+        {
+            // Map database EmployeeIDs to template EmployeeIDs
+            // This is needed if they use different IDs
+            return new Dictionary<string, string>
+            {
+                {"SOC027", "S2CC827"},    // Database -> Template
+                {"SCC573", "S1CC573"},    // Database -> Template
+                // Add more mappings as needed
+                // If IDs are the same, you don't need to map them
+            };
+        }
+
+
+        private void PopulateDataIntoTemplate(ExcelWorksheet worksheet,
+           Dictionary<DateTime, Dictionary<string, ESDTestData>> organizedData,
+           Dictionary<string, (int rightCol, int leftCol)> templateColumnMap,
+           Dictionary<string, string> dbToTemplateMapping)
+        {
+            // Populate data for each day of December (rows 11-41)
+            for (int day = 1; day <= 31; day++)
+            {
+                int row = 10 + day; // Row 11 for day 1, 12 for day 2, etc.
+                DateTime currentDate = new DateTime(2023, 12, day);
+
+                // Check each employee that exists in the template
+                foreach (var templateEntry in templateColumnMap)
+                {
+                    string templateEmployeeID = templateEntry.Key;
+                    int rightCol = templateEntry.Value.rightCol;
+                    int leftCol = templateEntry.Value.leftCol;
+
+                    // Find the corresponding database ID
+                    string dbEmployeeID = FindDatabaseEmployeeID(templateEmployeeID, dbToTemplateMapping);
+
+                    // Check if we have data for this date and employee
+                    bool hasData = organizedData.ContainsKey(currentDate) &&
+                                  organizedData[currentDate].ContainsKey(dbEmployeeID);
+
+                    if (hasData)
+                    {
+                        ESDTestData testData = organizedData[currentDate][dbEmployeeID];
+
+                        // Populate Right foot result (O for pass, X for fail)
+                        string rightValue = testData.RightFootResult ? "O" : "X";
+                        worksheet.Cells[row, rightCol].Value = rightValue;
+                        worksheet.Cells[row, rightCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+                        // Apply color
+                        if (testData.RightFootResult)
+                        {
+                            worksheet.Cells[row, rightCol].Style.Font.Color.SetColor(Color.Green);
+                        }
+                        else
+                        {
+                            worksheet.Cells[row, rightCol].Style.Font.Color.SetColor(Color.Red);
+                        }
+
+                        // Populate Left foot result
+                        string leftValue = testData.LeftFootResult ? "O" : "X";
+                        worksheet.Cells[row, leftCol].Value = leftValue;
+                        worksheet.Cells[row, leftCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+                        // Apply color
+                        if (testData.LeftFootResult)
+                        {
+                            worksheet.Cells[row, leftCol].Style.Font.Color.SetColor(Color.Green);
+                        }
+                        else
+                        {
+                            worksheet.Cells[row, leftCol].Style.Font.Color.SetColor(Color.Red);
+                        }
+                    }
+                    else
+                    {
+                        // No data for this day - clear the cells but keep formatting
+                        worksheet.Cells[row, rightCol].Value = "";
+                        worksheet.Cells[row, leftCol].Value = "";
+                    }
+                }
+            }
+        }
+
+        private string FindDatabaseEmployeeID(string templateEmployeeID, Dictionary<string, string> mapping)
+        {
+            // First check if template ID is directly in mapping
+            if (mapping.ContainsValue(templateEmployeeID))
+            {
+                // Find the database ID that maps to this template ID
+                foreach (var entry in mapping)
+                {
+                    if (entry.Value == templateEmployeeID)
+                        return entry.Key;
+                }
+            }
+
+            // If no mapping found, assume they're the same
+            return templateEmployeeID;
+        }
+
+
+        private string GetExcelColumnName(int columnNumber)
+        {
+            int dividend = columnNumber;
+            string columnName = string.Empty;
+
+            while (dividend > 0)
+            {
+                int modulo = (dividend - 1) % 26;
+                columnName = Convert.ToChar(65 + modulo) + columnName;
+                dividend = (dividend - modulo) / 26;
+            }
+
+            return columnName;
+        }
+
+        public class ESDTestData
+        {
+            public DateTime TestDate { get; set; }
+            public string EmployeeID { get; set; }
+            public string EmployeeName { get; set; }
+            public string LeftFootResistance { get; set; }
+            public bool LeftFootResult { get; set; }
+            public string RightFootResistance { get; set; }
+            public bool RightFootResult { get; set; }
+            public bool ComprehensiveResult { get; set; }
         }
     }
 }

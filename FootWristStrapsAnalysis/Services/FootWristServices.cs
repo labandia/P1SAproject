@@ -33,6 +33,23 @@ namespace FootWristStrapsAnalysis.Services
 
             return await SqlDataAccess.GetIEnumerableData<IFootWristModel>(strsql);
         }
+        public async Task<IEnumerable<IFootWristModel>> GetTestDataForMonth(int month, int year)
+        {
+            string strsql = $@"SELECT 
+                                TestDate,
+                                EmployeeID,
+                                EmployeeName,
+                                LeftFootResistance,
+                                LeftFootResult,
+                                RightFootResistance,
+                                RightFootResult,
+                                ComprehensiveResult
+                            FROM FootWristStrapTestResults
+                            WHERE MONTH(TestDate) ={month} AND YEAR(TestDate) ={year}
+                            ORDER BY TestDate, EmployeeID";
+            return await SqlDataAccess.GetIEnumerableData<IFootWristModel>(strsql, null);
+        }
+
 
         public Task<bool> ImportSetFootAnalysis(IFootWristModel foot)
         {
@@ -100,5 +117,7 @@ namespace FootWristStrapsAnalysis.Services
 
             return SqlDataAccess.Checkdata(checkdata, new { EmployeeID, Date = today });
         }
+
+       
     }
 }

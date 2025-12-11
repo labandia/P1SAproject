@@ -136,8 +136,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interface\IExportFoot.cs" />
     <Compile Include="Interface\IFootWrist.cs" />
     <Compile Include="Model\IFootWristModel.cs" />
+    <Compile Include="Services\ExportFootRepository.cs" />
     <Compile Include="Services\FootWristServices.cs" />
     <Compile Include="Startup.cs">
       <SubType>Form</SubType>

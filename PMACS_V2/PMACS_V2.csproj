@@ -437,6 +437,7 @@
       <DependentUpon>live.css</DependentUpon>
     </Content>
     <Content Include="Content\css\MoldDie.css" />
+    <Content Include="Content\css\PartsLocator.css" />
     <Content Include="Content\css\Planning.min.css">
       <DependentUpon>Planning.css</DependentUpon>
     </Content>

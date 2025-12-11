@@ -1,0 +1,590 @@
+﻿
+
+  
+
+/* Navbar */
+    .sidenavbar {
+      width: 70%;
+      display: flex;
+      align-items: center;
+      background: #111;
+      color: white;
+      padding: 10px 20px;
+      clip-path: polygon(0 0, 100% 1%, 95% 100%, 0% 100%);
+    }
+    .sidenavbar .logo {
+      font-weight: bold;
+      margin-right: 30px;
+    }
+    .sidenavbar ul {
+      list-style: none;
+      display: flex;
+      margin: 0;
+      padding: 0;
+    }
+    .sidenavbar ul li {
+      margin: 0 12px;
+      cursor: pointer;
+      padding: 6px 12px;
+      border-radius: .2em;
+    }
+    .sidenavbar ul li.active {
+      background: #22c55e;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.subtitle {
+    color: #7f8c8d;
+    font-size: 1.1rem;
+}
+
+.search-section {
+    border-radius: 10px;
+    margin-bottom: 25px;
+    color: white;
+    margin-top: 2em;
+}
+
+.search-container {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+    .search-container input {
+        padding: 12px 18px;
+        border: none;
+        border-radius: 6px;
+        flex-grow: 1;
+        min-width: 250px;
+        font-size: 16px;
+    }
+
+    .search-container button {
+        padding: 12px 24px;
+        background-color: #2c3e50;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: 600;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+        .search-container button:hover {
+            background-color: #1a252f;
+            transform: translateY(-2px);
+        }
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.grid-cell {
+    background-color: #f9f9f9;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+}
+
+    .grid-cell:hover {
+        background-color: #f0f0f0;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .grid-cell.active {
+        background-color: #2ecc71;
+        border-color: #27ae60;
+        color: white;
+        font-weight: bold;
+    }
+
+    .grid-cell.highlighted {
+        background-color: #ffeaa7;
+        border-color: #fdcb6e;
+        animation: pulse 1.5s infinite;
+    }
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(253, 203, 110, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(253, 203, 110, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(253, 203, 110, 0);
+    }
+}
+
+.cell-label {
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 8px;
+    color: #2c3e50;
+}
+
+.grid-cell.active .cell-label {
+    color: white;
+}
+
+.part-number {
+    font-size: 14px;
+    color: #666;
+    word-break: break-all;
+    font-family: monospace;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.grid-cell.active .part-number {
+    color: white;
+}
+
+.results-section {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.results-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+    .results-table th {
+        background-color: #4a6ee0;
+        color: white;
+        padding: 12px 15px;
+        text-align: left;
+    }
+
+    .results-table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #eaeaea;
+    }
+
+    .results-table tr:nth-child(even) {
+        background-color: #f8f9fa;
+    }
+
+    .results-table tr:hover {
+        background-color: #f1f2f6;
+    }
+
+.instructions {
+    margin-top: 25px;
+    padding: 20px;
+    background-color: #e8f4fd;
+    border-radius: 8px;
+    border-left: 5px solid #4a6ee0;
+}
+
+    .instructions h3 {
+        margin-bottom: 15px;
+        color: #2c3e50;
+    }
+
+    .instructions p {
+        color: #555;
+        line-height: 1.6;
+        margin-bottom: 10px;
+    }
+
+.results-info {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #e8f4fd;
+    border-radius: 6px;
+    text-align: center;
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+@media (max-width: 992px) {
+    .grid-container {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .grid-container {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .grid-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .search-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+        .search-container input {
+            min-width: 100%;
+        }
+}
+
+@media (max-width: 400px) {
+    .grid-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.ProductDetails {
+ 
+}
+
+.ProductDetails__content {
+    display: flex;
+    align-items: center;
+    gap: 2em;
+    padding: 1.5em;
+}
+
+    .ProductDetails__content p {
+        font-weight: 600;
+        margin-top: .5em;
+        font-size: 1.2rem;
+    }
+
+    .ProductDetails__content img {
+        width: 70px;
+    }
+
+
+.ProductsActions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    gap: 2em;
+    max-width: 1200px;
+    width: 90%;
+    margin: 0 auto;
+}
+
+.ProductionsForms, .ProductionsImage {
+    padding: 1.5em 1em;
+}
+
+.ProductionsImage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+    .ProductionsImage label {
+        text-align: left;
+    }
+
+    .ProductionsImage img {
+        width: 60%;
+    }
+
+
+
+    .ProductionsForms label, .ProductionsImage label {
+        font-weight: 600;
+        margin: .5em 0;
+    }
+
+.ProductionsForms input {
+    width: 100%;
+    background: #ccc;
+    padding: .8em 1em;
+    border-radius: .2em;
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.ProductionsForms__status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ccc;
+    padding: 1em;
+    gap: 1em;
+    border: 1px solid hsl(210, 29%, 9%);
+}
+
+.TransactionWrap button {
+    width: 100%;
+    border: 1px solid #222;
+    padding: 1.5em 1.5em;
+    transition: .5s ease-in-out;
+}
+
+    .TransactionWrap button:disabled {
+        border: none;
+    }
+
+.PartslistAction {
+    display: grid;
+    grid-template-columns: 1fr 40%;
+    flex-wrap: wrap;
+}
+
+.MainVerifyContainer label {
+    margin-bottom: 1em;
+    font-weight: 600;
+}
+
+
+.ImagepartsContainer {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+    .ImagepartsContainer img {
+        width: 500px;
+    }
+
+.VerifyContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #A5A1AA;
+    width: 100%;
+    height: 80px;
+}
+
+
+.GridContainer{
+    display: grid;
+    grid-template-columns: 1fr 30%;
+    gap: 20px;
+}
+
+.GridColumn{
+    padding: 2em; 
+}
+
+.GridColumnInfo{
+    position: fixed;
+    height: 100vh;
+    top: 0;
+    right: 0;
+    width: 32%;
+    z-index: 100;
+    padding: 2em;
+}
+
+
+.stepper {
+    display: flex;
+    flex-direction: column;
+}
+
+.stepper-steps {
+    display: flex;
+    justify-content: flex-start !important;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+    .stepper-steps::before {
+        content: '';
+        position: absolute;
+        top: 20px;
+        left: 25%;
+        right: 25%;
+        height: 4px;
+        background-color: #e9ecef;
+        z-index: 1;
+    }
+
+.stepper-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+    width: 50%;
+}
+
+.stepper-step-indicator {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #e9ecef;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+    border: 3px solid #e9ecef;
+}
+
+.stepper-step.active .stepper-step-indicator {
+    background-color: hsl(209, 80%, 50%);
+    color: white;
+    border-color: hsl(209, 80%, 50%);
+}
+
+.stepper-step.completed .stepper-step-indicator {
+    background-color: #4cc9f0;
+    color: white;
+    border-color: #4cc9f0;
+}
+
+.stepper-step-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #6c757d;
+}
+
+.stepper-step.active .stepper-step-label {
+    color: hsl(209, 80%, 50%);
+    font-weight: 600;
+}
+
+.stepper-content {
+    position: relative;
+    min-height: 250px;
+}
+
+.stepper-pane {
+    display: none;
+    animation: fadeIn 0.5s ease;
+}
+
+    .stepper-pane.active {
+        display: block;
+    }
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.pane-title {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: #222;
+    font-weight: 600;
+}
+
+.form-control:focus {
+    border-color: hsl(209, 80%, 50%);
+    box-shadow: 0 0 0 0.2rem rgba(67, 97, 238, 0.25);
+}
+
+.btn-primary {
+    background-color: hsl(209, 80%, 50%);
+    border-color: hsl(209, 80%, 50%);
+}
+
+    .btn-primary:hover {
+        background-color: #3f37c9;
+        border-color: #3f37c9;
+    }
+
+.btn-success {
+    background-color: #4cc9f0;
+    border-color: #4cc9f0;
+}
+
+.stepper-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e9ecef;
+}
+
+.step-indicators {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.step-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #e9ecef;
+    transition: all .5s ease;
+}
+
+    .step-indicator.active {
+        background-color: hsl(209, 80%, 50%);
+        transform: scale(1.2);
+    }
+
+.completion-message {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.completion-icon {
+    font-size: 60px;
+    color: #4cc9f0;
+    margin-bottom: 20px;
+}
+
+.completion-message h3 {
+    color: #212529;
+    margin-bottom: 15px;
+}

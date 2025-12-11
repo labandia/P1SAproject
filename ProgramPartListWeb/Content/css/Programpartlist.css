@@ -1,6 +1,6 @@
-﻿
-
-
+﻿html, body {
+    height: 100%
+}
 
 .app {
     height: 100%;
@@ -22,6 +22,7 @@
     padding: 8px 10px;
     border-radius: 12px;
     background: rgba(255,255,255,.03);
+    color: #e5e7eb;
 }
 
 .menu {

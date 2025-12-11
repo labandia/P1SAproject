@@ -131,9 +131,9 @@ p {
 ========================================*/
 
 input, select, textarea {
-    padding: 10px 14px;
     border-radius: 10px; /* var(--radius-md) */
-    border: 1px solid #dcdcdc; /* You had var(--color-border) but no value — added safe default */
+    outline: none;
+    border: none;
     background: #f8f8f8; /* var(--color-surface-alt) but not defined — added safe default */
 }
 

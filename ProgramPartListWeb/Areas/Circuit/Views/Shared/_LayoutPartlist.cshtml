@@ -25,23 +25,20 @@
             <div class="brand">📁 API Tab Manager</div>
             <div class="muted" style="padding:0 8px;">Click to open a tab</div>
             <div class="menu" id="sidebarMenu">
-                <button data-key="dashboard" data-title="Dashboard" class="active">
+                <button data-key="PlanSchedule" data-title="Plan Schedule" data-url="@Url.Action("PlanSchedule", "ProgramPartList")">
                     <span class="dot"></span><span>Dashboard</span>
                 </button>
-                <button data-key="users" data-title="Users" data-api="https://jsonplaceholder.typicode.com/users">
-                    <span class="dot"></span><span>Users</span>
-                    <span class="badge">API</span>
+                <button data-key="PDAView" data-title="PDAView" data-url="@Url.Action("PDAView", "ProgramPartlist")">
+                    <span class="dot"></span><span>Program Partlist</span>
                 </button>
                 <button data-key="posts" data-title="Posts" data-api="https://jsonplaceholder.typicode.com/posts">
                     <span class="dot"></span><span>Posts</span>
-                    <span class="badge">API</span>
                 </button>
                 <button data-key="create" data-title="Create Post">
                     <span class="dot"></span><span>Create Post</span>
                 </button>
                 <button data-key="todos" data-title="Todos" data-api="https://jsonplaceholder.typicode.com/todos">
                     <span class="dot"></span><span>Todos</span>
-                    <span class="badge">API</span>
                 </button>
                 <button data-key="settings" data-title="Settings">
                     <span class="dot"></span><span>Settings</span>
@@ -57,96 +54,463 @@
             </div>
         </aside>
 
+        <!-- MAIN AREA -->
         <main class="main">
+
+            <!-- Dynamic Tabs -->
             <div class="tabs" id="tabBar" aria-label="Open tabs"></div>
+
+            <!-- Dynamic Content (Your SPAs / Panels) -->
             <div class="content" id="contentArea" aria-live="polite"></div>
+
+            <!-- MVC Body Section (Your Views Render Here) -->
+            <div id="mvcContent" >
+                @RenderBody()
+            </div>
+
         </main>
     </div>
 
-    <main>
-        @RenderBody()
-    </main>
+
 
 
     <script type="text/javascript">
-        //var sessionCheckInterval;
-        //function startSessionCheck() {
-        //    clearInterval(sessionCheckInterval); // Clear previous interval
-        //    sessionCheckInterval = setInterval(checkSession, 3600000); // Restart session check every 60 seconds
-        //}
+        // Tab Management System
+        const tabBar = document.getElementById('tabBar');
+        const contentArea = document.getElementById('contentArea');
+        const mvcContent = document.getElementById('mvcContent');
+        const sidebarMenu = document.getElementById('sidebarMenu');
+        const tabCountEl = document.getElementById('tabCount');
+        const cachedCountEl = document.getElementById('cachedCount');
 
+        // Tab registry
+        const tabs = new Map();
+        const cache = new Map();
+        let activeTabKey = null;
+        let mvcContentKey = 'mvc-' + Date.now(); // Unique key for initial MVC content
 
-        //function checkSession() {
-        //    $.ajax({
-        //        url: "/User/CheckSession",
-        //        method: "GET",
-        //        success: function (response) {
-        //            if (!response.isAuthenticated) {
-        //                //alert("Your session has expired. Redirecting to login page.");
-        //                window.location.href = "/Series/LogMainpage";
-        //            }
-        //        }
-        //    });
-        //}
+        // Initialize with current MVC view
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentTitle = '@ViewBag.Title' || 'Dashboard';
+            const currentUrl = window.location.pathname + window.location.search;
 
-        //// Start interval on page load
-        //startSessionCheck();
+            // Store initial MVC content as a tab
+            tabs.set(mvcContentKey, {
+                title: currentTitle,
+                url: currentUrl,
+                tabEl: null,
+                isLoaded: true,
+                isMvc: true,
+                content: mvcContent.innerHTML
+            });
 
-        //// Reset interval on user activity
-        //document.addEventListener("mousemove", startSessionCheck); // Mouse movement
-        //document.addEventListener("keydown", startSessionCheck);   // Keyboard typing
-        //document.addEventListener("click", startSessionCheck);     // Mouse clicks
+            updateTabStats();
+        });
 
+        // Function to open a page in a new tab
+        function openPageInTab(key, title, url) {
+            // Check if tab already exists
+            for (const [tabKey, tab] of tabs) {
+                if (tab.url === url) {
+                    activateTab(tabKey);
+                    return;
+                }
+            }
 
+            // Create tab element
+            const tab = document.createElement('div');
+            tab.className = 'tab';
+            tab.dataset.key = key;
+            tab.innerHTML = `
+                <span>${title}</span>
+                <span class="close" title="Close tab" aria-label="Close tab">✕</span>
+            `;
 
+            // Add click events
+            tab.addEventListener('click', (e) => {
+                const isClose = e.target.closest('.close');
+                if (isClose) {
+                    closeTab(key);
+                    return;
+                }
+                activateTab(key);
+            });
 
-        //document.addEventListener("DOMContentLoaded", function () {
-        //    var currentUrl = window.location.pathname.toLowerCase();
-        //    document.querySelectorAll(".nav-link").forEach(function (link) {
-        //        if (link.getAttribute("href").toLowerCase() === currentUrl) {
-        //            link.classList.add("active");
-        //        }
-        //    });
-        //});
+            tab.addEventListener('auxclick', (e) => {
+                if (e.button === 1) {
+                    closeTab(key);
+                }
+            });
 
+            // Show tab bar
+            tabBar.style.display = 'flex';
 
+            // Add to DOM
+            tabBar.appendChild(tab);
 
-        //const togglebutton = document.getElementById('toggle-btn');
-        //const sidebar = document.getElementById('sidebar');
+            // Store tab reference
+            tabs.set(key, {
+                title,
+                url,
+                tabEl: tab,
+                isLoaded: false,
+                isMvc: false,
+                content: null
+            });
 
-        //function toggleSidebar() {
-        //    sidebar.classList.toggle('close');
-        //    togglebutton.classList.toggle('rotate');
+            // Activate this tab
+            activateTab(key);
+            updateTabStats();
+        }
 
-        //    // sidebar.getElementsByClassName('show');
+        // Function to activate a tab
+        function activateTab(key) {
+            const ctx = tabs.get(key);
+            if (!ctx) return;
 
-        //    closeallSubMenus();
-        //}
+            // Hide all content areas
+            contentArea.style.display = 'none';
+            mvcContent.style.display = 'none';
 
-        //function toggleSubMenu(button) {
+            // Update tab UI
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            if (ctx.tabEl) {
+                ctx.tabEl.classList.add('active');
+            }
 
-        //    if (button.nextElementSibling.classList.contains('show')) {
-        //        closeallSubMenus();
-        //    }
+            // Update sidebar active state
+            document.querySelectorAll('.menu button').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-key') === key) {
+                    btn.classList.add('active');
+                }
+            });
 
-        //    button.nextElementSibling.classList.toggle('show');
-        //    button.classList.toggle('rotate');
+            // Show appropriate content
+            if (ctx.isMvc) {
+                mvcContent.style.display = 'block';
+            } else {
+                contentArea.style.display = 'block';
 
-        //    if (sidebar.classList.contains('close')) {
-        //        sidebar.classList.toggle('close');
-        //        togglebutton.classList.toggle('rotate');
-        //    }
-        //}
+                // Load content if not already loaded
+                if (!ctx.isLoaded) {
+                    loadTabContent(key, ctx.url);
+                } else if (ctx.content) {
+                    contentArea.innerHTML = ctx.content;
+                }
+            }
 
-        //function closeallSubMenus() {
-        //    Array.from(sidebar.getElementsByClassName('show')).forEach(ul => {
-        //        ul.classList.remove('show');
-        //        ul.previousElementSibling.classList.remove('rotate');
-        //    });
-        //}
+            activeTabKey = key;
 
+            // Scroll tab into view
+            if (ctx.tabEl) {
+                ctx.tabEl.scrollIntoView({ inline: 'center', behavior: 'smooth' });
+            }
+        }
 
+        // Function to load tab content
+        function loadTabContent(key, url) {
+            const ctx = tabs.get(key);
+            if (!ctx || ctx.isLoaded) return;
 
+            // Show loading state
+            if (ctx.tabEl) {
+                ctx.tabEl.classList.add('loading');
+            }
+            contentArea.innerHTML = '<div class="spinner"></div>';
+
+            // Check cache first
+            if (cache.has(url)) {
+                const cached = cache.get(url);
+                contentArea.innerHTML = cached.content;
+                ctx.isLoaded = true;
+                ctx.content = cached.content;
+                if (ctx.tabEl) ctx.tabEl.classList.remove('loading');
+                updateCacheStats();
+                return;
+            }
+
+            // Fetch content
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    return response.text();
+                })
+                .then(html => {
+                    // Parse HTML and extract main content
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+
+                    // Try to find main content
+                    let mainContent = doc.querySelector('#mvcContent') ||
+                                     doc.querySelector('main') ||
+                                     doc.querySelector('.container') ||
+                                     doc.body;
+
+                    // Clean up HTML
+                    let content = mainContent.innerHTML;
+
+                    // Remove scripts to avoid conflicts
+                    content = content.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+
+                    contentArea.innerHTML = content;
+                    ctx.isLoaded = true;
+                    ctx.content = content;
+
+                    if (ctx.tabEl) ctx.tabEl.classList.remove('loading');
+
+                    // Cache the content
+                    cache.set(url, {
+                        content: content,
+                        timestamp: Date.now()
+                    });
+                    updateCacheStats();
+                })
+                .catch(error => {
+                    console.error('Failed to load tab content:', error);
+                    contentArea.innerHTML = `
+                        <div class="card">
+                            <h2>Error Loading Content</h2>
+                            <div class="status-message error">
+                                Failed to load content from ${url}
+                            </div>
+                            <button class="btn" onclick="retryLoad('${key}', '${url}')">Retry</button>
+                        </div>
+                    `;
+                    if (ctx.tabEl) ctx.tabEl.classList.remove('loading');
+                });
+        }
+
+        // Retry loading
+        window.retryLoad = function(key, url) {
+            const ctx = tabs.get(key);
+            if (ctx) {
+                ctx.isLoaded = false;
+                loadTabContent(key, url);
+            }
+        };
+
+        // Function to close a tab
+        function closeTab(key) {
+            const ctx = tabs.get(key);
+            if (!ctx) return;
+
+            const wasActive = ctx.tabEl && ctx.tabEl.classList.contains('active');
+
+            // Remove from DOM
+            if (ctx.tabEl) {
+                ctx.tabEl.remove();
+            }
+            tabs.delete(key);
+
+            // If closing active tab and other tabs exist
+            if (wasActive && tabs.size > 0) {
+                const lastKey = Array.from(tabs.keys()).pop();
+                activateTab(lastKey);
+            }
+            // If no tabs left, show MVC content
+            else if (tabs.size === 0) {
+                contentArea.style.display = 'none';
+                mvcContent.style.display = 'block';
+                tabBar.style.display = 'none';
+                activeTabKey = mvcContentKey;
+
+                // Reset sidebar active state
+                document.querySelectorAll('.menu button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+            }
+
+            updateTabStats();
+        }
+
+        // Function to refresh a tab
+        window.refreshTab = function (key) {
+            const ctx = tabs.get(key);
+            if (ctx && !ctx.isMvc) {
+                ctx.isLoaded = false;
+                cache.delete(ctx.url);
+                loadTabContent(key, ctx.url);
+            }
+        };
+
+        // Update stats
+        function updateTabStats() {
+            tabCountEl.textContent = tabs.size - 1; // Subtract the MVC content tab
+        }
+
+        function updateCacheStats() {
+            cachedCountEl.textContent = cache.size;
+        }
+
+        // Sidebar click handler
+        sidebarMenu.addEventListener('click', function (e) {
+            const button = e.target.closest('button[data-key]');
+            if (!button) return;
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            const key = button.getAttribute('data-key');
+            const title = button.getAttribute('data-title') || button.querySelector('span:nth-child(2)').textContent;
+            const url = button.getAttribute('data-url');
+            const apiUrl = button.getAttribute('data-api');
+
+            if (url) {
+                // Open MVC page in tab
+                openPageInTab(key, title, url);
+            } else if (apiUrl) {
+                // Open API data in tab
+                openApiInTab(key, title, apiUrl);
+            } else {
+                // Open static content in tab
+                openStaticTab(key, title);
+            }
+        });
+
+        // Open API data in tab
+        function openApiInTab(key, title, apiUrl) {
+            openPageInTab(key, title, '#api');
+
+            // Load API data
+            const ctx = tabs.get(key);
+            if (ctx) {
+                contentArea.innerHTML = '<div class="spinner"></div>';
+
+                fetch(apiUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        let tableHtml = '';
+
+                        if (key === 'users' && Array.isArray(data)) {
+                            tableHtml = `
+                                <div class="card">
+                                    <h2>${title}</h2>
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Username</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${data.slice(0, 10).map(user => `
+                                                <tr>
+                                                    <td>${user.id}</td>
+                                                    <td>${user.name}</td>
+                                                    <td>${user.email}</td>
+                                                    <td>${user.username}</td>
+                                                </tr>
+                                            `).join('')}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            `;
+                        }
+
+                        contentArea.innerHTML = tableHtml || `
+                            <div class="card">
+                                <h2>${title}</h2>
+                                <pre>${JSON.stringify(data, null, 2)}</pre>
+                            </div>
+                        `;
+                    })
+                    .catch(error => {
+                        contentArea.innerHTML = `
+                            <div class="card">
+                                <h2>Error</h2>
+                                <div class="status-message error">
+                                    Failed to load API data: ${error.message}
+                                </div>
+                            </div>
+                        `;
+                    });
+            }
+        }
+
+        // Open static content tab
+        function openStaticTab(key, title) {
+            openPageInTab(key, title, '#static');
+
+            let content = '';
+
+            switch(key) {
+                case 'create':
+                    content = `
+                        <div class="card">
+                            <h2>${title}</h2>
+                            <div class="form-group">
+                                <label for="postTitle">Title</label>
+                                <input type="text" id="postTitle" class="form-control" placeholder="Enter post title">
+                            </div>
+                            <div class="form-group">
+                                <label for="postBody">Content</label>
+                                <textarea id="postBody" class="form-control" rows="4" placeholder="Enter post content"></textarea>
+                            </div>
+                            <button class="btn" onclick="submitPost()">Submit Post</button>
+                            <div id="postResult" style="margin-top: 16px;"></div>
+                        </div>
+                    `;
+                    break;
+                default:
+                    content = `
+                        <div class="card">
+                            <h2>${title}</h2>
+                            <p>This is the ${title} tab.</p>
+                        </div>
+                    `;
+            }
+
+            contentArea.innerHTML = content;
+            const ctx = tabs.get(key);
+            if (ctx) {
+                ctx.isLoaded = true;
+                ctx.content = content;
+            }
+        }
+
+        // Submit post function
+        window.submitPost = function() {
+            const title = document.getElementById('postTitle').value;
+            const body = document.getElementById('postBody').value;
+            const resultEl = document.getElementById('postResult');
+
+            if (!title || !body) {
+                resultEl.innerHTML = `
+                    <div class="status-message error">
+                        Please fill in both title and content
+                    </div>
+                `;
+                return;
+            }
+
+            resultEl.innerHTML = `
+                <div class="status-message success">
+                    Post submitted successfully!
+                </div>
+            `;
+        };
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Ctrl/Cmd+W closes active tab
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'w') {
+                e.preventDefault();
+                if (activeTabKey && activeTabKey !== mvcContentKey) {
+                    closeTab(activeTabKey);
+                }
+            }
+
+            // Ctrl/Cmd+R refreshes active tab
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'r') {
+                e.preventDefault();
+                if (activeTabKey && activeTabKey !== mvcContentKey) {
+                    refreshTab(activeTabKey);
+                }
+            }
+        });
 
     </script>
     @Html.Partial("_SystemConfig")

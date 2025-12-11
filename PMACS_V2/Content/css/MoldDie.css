@@ -1,6 +1,6 @@
 ﻿@font-face {
     font-family: 'Poppins';
-    src: url('~/Content/fonts/Poppins-Regular.ttf') format('truetype');
+    src: url('/Content/fonts/Poppins-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
@@ -46,29 +46,19 @@
     }
 }
 
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
 
-html:focus-within {
-    scroll-behavior: smooth;
-}
+
 
 body {
     text-rendering: optimizeSpeed;
-/*    font-family: var(--body-font) !important;*/
-/*    font-size: var(--normal-font-size);*/
-    color: var(--text-color);
+    font-family: 'Poppins', sans-serif;
+    color: hsl(355, 4%, 35%);
     background: #f5f5f5;
 }
 
 
 button, input, a, p {
-    font-family: var(--body-font) !important;
+    font-family: 'Poppins', sans-serif;
 }
 
 a {
@@ -155,11 +145,11 @@ button, a {
     align-items: center;
     text-decoration: underline;
     color: hsl(211, 17%, 74%);
-    font-size: var(--small-font-size);
+    font-size: .813rem;
 }
 
 .heads_action i {
-    font-size: var(--smaller-font-size);
+    font-size: .813rem;
     color: hsl(211, 17%, 74%);
     text-decoration: none;
 }
@@ -221,7 +211,7 @@ button, a {
     .formcontainer label, .addformcontainer label {
         font-weight: 500;
         color: #222;
-        font-size: var(--small-font-size);
+        font-size: .813rem;
     }
 
     .formcontainer input, .formcontainer textarea, .addformcontainer input, .addformcontainer textarea, .DieDetails_Container input {
@@ -229,7 +219,7 @@ button, a {
         margin: .5em 0 1em 0;
         border: 1px solid #A5A1AA;
         padding: .6em;
-        font-size: var(--normal-font-size);
+        font-size: .9em;
         border-radius: .3em;
     }
 
@@ -244,7 +234,7 @@ button, a {
         margin: .5em 0 1em 0;
         border: 1px solid #A5A1AA;
         padding: .6em;
-        font-size: var(--normal-font-size);
+        font-size:.9em;
     }
 
     .formcontainer input:focus, .formcontainer textarea:focus, .addformcontainer input:focus, .addformcontainer textarea:focus {
@@ -269,7 +259,7 @@ button, a {
         right: 16px;
         top: 50%;
         transform: translateY(-50%);
-        color: var(--gray);
+        color: #A5A1AA;
         pointer-events: none;
     }
 
@@ -334,7 +324,7 @@ select.form-control {
         width: 100%;
         padding: 12px 16px;
         border: 1px solid #A5A1AA;
-        border-radius: var(--border-radius);
+        border-radius: .5em;
         font-size: 1rem;
     }
 
@@ -373,10 +363,10 @@ select.form-control {
         color: #222;
         padding: .5em 3em .5em 1em;
         appearance: none;
-        border: 1px solid var(--border-color);
+        border: 1px solid #A5A1AA;
         border-radius: 4px;
         background: white;
-        font-size: var(--small-font-size);
+        font-size: .813rem;
         position: relative;
         outline: none;
         cursor: pointer;
@@ -384,7 +374,7 @@ select.form-control {
 
     .select-containerV2::after {
         content: '▼'; /* Unicode character for a down arrow */
-        font-size: var(--normal-font-size);
+        font-size: .9em;
         position: absolute;
         top: 50%;
         right: 15px;

@@ -10,7 +10,7 @@
 
     <link href="~/Content/Shared/bootstrap.min.css" rel="stylesheet" />
     @Styles.Render("~/Content/shared-css")
-    @Styles.Render("~/Content/pmacs-css")
+    @Styles.Render("~/Content/parts-css")
 
     <!-- Modernizr SHOULD stay in head -->
     @Scripts.Render("~/bundles/modernizr")
@@ -19,14 +19,37 @@
 
 </head>
 <body>
+
+    <!-- Navbar -->
+    <nav class="sidenavbar">
+        <div class="logo">📦 Parts Locator Rotor Web System</div>
+        <ul style="background: rgba(245, 245, 245, 0.1); padding: .4em .2em; border-radius: .2em;">
+            <li class="active">
+                <a href="/PartsLocal/PartsLocator/TrackParts" class="sidebar__link">
+                    <span class="sidebar__name">Location Parts</span>
+                </a>
+            </li>
+            <li>
+                <a href="/PartsLocal/PartsLocator/SummaryShopOrderIn" class="sidebar__link">
+                    <span class="sidebar__name"> Shop Order Summary</span>
+                </a> 
+            </li>
+        </ul>
+    </nav>
+    <main>
+        @RenderBody()
+    </main>
+
+
+
     <!--========== NAV ==========-->
-    <div class="sidebar" id="sidebar">
+    <!--<div class="sidebar" id="sidebar">
         <nav class="sidebar__container">
             <div>
                 <a href="#" class="sidebar__link sidebar__logo">
-                    <img class="sidebar__image" alt="pmacs_Image" src="~/Content/Images/pmacs.ico" />
+                    <img class="sidebar__image" alt="pmacs_Image" src="~/Content/Images/pmacs.ico" />-->
                     @*<i class="fa-solid fa-users-viewfinder sidebar__icon"></i>*@
-                    <span class="sidebar__logo-name">PMACS</span>
+                    <!--<span class="sidebar__logo-name">PMACS</span>
                 </a>
 
                 <div class="sidebar__list">
@@ -49,7 +72,7 @@
 
                     </div>
 
-                    <div class="sidebar__items">
+                    <div class="sidebar__items">-->
                         @*<h3 class="sidebar__subtitle">Settings</h3>
 
 
@@ -59,7 +82,7 @@
                                 <span class="sidebar__name">Change Password</span>
                             </a>*@
 
-                    </div>
+                    <!--</div>
                 </div>
             </div>
 
@@ -68,81 +91,76 @@
                 <span class="sidebar__name" id="Exitname">Log Out</span>
             </a>
         </nav>
-    </div>
+    </div>-->
 
     <!--========== CONTENTS ==========-->
-    <main>
-        @RenderBody()
-    </main>
-
-
     <!-- Load JS HERE (BOTTOM) -->
     <script src="~/Scripts/Shared/bootstrap.bundle.min.js"></script>
     <script src="~/Scripts/Shared/Global.js"></script>
     @*<script src="~/Scripts/Shared/Utilities.js"></script>*@
 
     <script type="text/javascript">
-        const logbtn = document.getElementById("logID");
+        //const logbtn = document.getElementById("logID");
 
-        /*==================== LINK ACTIVE ====================*/
-        const linkColor = document.querySelectorAll('.sidebar__link')
+        ///*==================== LINK ACTIVE ====================*/
+        //const linkColor = document.querySelectorAll('.sidebar__link')
 
-        function colorLink() {
-            linkColor.forEach(l => l.classList.remove('active'))
-            this.classList.add('active')
-        }
-
-
-
-        linkColor.forEach(l => l.addEventListener('click', colorLink))
-        document.addEventListener("DOMContentLoaded", function () {
-            var currentUrl = window.location.pathname.toLowerCase();
-            document.querySelectorAll(".sidebar__link").forEach(function (link) {
-                if (link.getAttribute("href").toLowerCase() === currentUrl) {
-                    link.classList.add("active");
-                }
-            });
-        });
+        //function colorLink() {
+        //    linkColor.forEach(l => l.classList.remove('active'))
+        //    this.classList.add('active')
+        //}
 
 
-        logbtn.addEventListener('click', function (e) {
-            e.preventDefault();
 
-            if (ActionRestrict() !== false) {
-                Swal.fire({
-                    title: "Sign out ?",
-                    text: "Are you sure you want to sign out?",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#a3a3a3",
-                    confirmButtonText: "Log out"
-                }).then((result) => {
-                    /* Read more about isConfirmed, isDenied below */
-                    if (result.isConfirmed) {
-                        //logout();
-                        localStorage.removeItem('activeLinkIndex');
-                        localStorage.removeItem('UserRole');
-                        localStorage.removeItem('users');
-                        localStorage.removeItem('isLoggedInPMACS');
-                        window.location.href = "/P1SA/PMACS/Mainpage";
-                    }
-                });
-            } else {
-                localStorage.removeItem('UserRole');
-                localStorage.removeItem('Fullname');
-                localStorage.removeItem('accessToken');
-                localStorage.removeItem('refreshToken');
-                localStorage.removeItem('isLoggedInPMACS');
-                window.location.href = "/P1SA/PMACS/Mainpage";
-            }
-
-        });
+        //linkColor.forEach(l => l.addEventListener('click', colorLink))
+        //document.addEventListener("DOMContentLoaded", function () {
+        //    var currentUrl = window.location.pathname.toLowerCase();
+        //    document.querySelectorAll(".sidebar__link").forEach(function (link) {
+        //        if (link.getAttribute("href").toLowerCase() === currentUrl) {
+        //            link.classList.add("active");
+        //        }
+        //    });
+        //});
 
 
-        if (ActionRestrict() === false) {
-            $("#Exitname").text("Exit");
-        }
+        //logbtn.addEventListener('click', function (e) {
+        //    e.preventDefault();
+
+        //    if (ActionRestrict() !== false) {
+        //        Swal.fire({
+        //            title: "Sign out ?",
+        //            text: "Are you sure you want to sign out?",
+        //            icon: "warning",
+        //            showCancelButton: true,
+        //            confirmButtonColor: "#3085d6",
+        //            cancelButtonColor: "#a3a3a3",
+        //            confirmButtonText: "Log out"
+        //        }).then((result) => {
+        //            /* Read more about isConfirmed, isDenied below */
+        //            if (result.isConfirmed) {
+        //                //logout();
+        //                localStorage.removeItem('activeLinkIndex');
+        //                localStorage.removeItem('UserRole');
+        //                localStorage.removeItem('users');
+        //                localStorage.removeItem('isLoggedInPMACS');
+        //                window.location.href = "/P1SA/PMACS/Mainpage";
+        //            }
+        //        });
+        //    } else {
+        //        localStorage.removeItem('UserRole');
+        //        localStorage.removeItem('Fullname');
+        //        localStorage.removeItem('accessToken');
+        //        localStorage.removeItem('refreshToken');
+        //        localStorage.removeItem('isLoggedInPMACS');
+        //        window.location.href = "/P1SA/PMACS/Mainpage";
+        //    }
+
+        //});
+
+
+        //if (ActionRestrict() === false) {
+        //    $("#Exitname").text("Exit");
+        //}
 
 
     </script>

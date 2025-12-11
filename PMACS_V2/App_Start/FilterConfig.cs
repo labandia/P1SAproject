@@ -9,7 +9,7 @@ namespace PMACS_V2
         {
             filters.Add(new HandleErrorAttribute());
             //filters.Add(new GlobalErrorException());
-            //filters.Add(new CompressResponseAttribute());
+            filters.Add(new CompressResponseAttribute());
         }
     }
 }

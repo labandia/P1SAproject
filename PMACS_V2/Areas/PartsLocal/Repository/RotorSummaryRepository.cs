@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PMACS_V2.Areas.PartsLocal.Repository
 {
-    public class RotorSummaryRepository : IShopOrderIn, IShopOrderOut
+    public class RotorSummaryRepository : IShopOrderIn
     {
        
         public async Task<bool> AddTransactionIN(ShopOrderInModel shop)
@@ -25,7 +25,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
             if (storageResult)
             {
                 string strsql = $@"INSERT INTO PartsLocatorRotor_Transaction(TransactionType, Partnumber, RotorOrder, Area, Quantity, PreviousQuantity,  Remarks) 
-                              VALUES(@TransactionType, @Partnumber, @RotorOrder, @Area, @Quantity, @PreviousQuantity,  @Remarks)";
+                              VALUES(0, @Partnumber, @RotorOrder, @Area, @Quantity, @PreviousQuantity,  @Remarks)";
 
                 await SqlDataAccess.UpdateInsertQuery(strsql, shop);
             }
@@ -37,7 +37,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
         {
             string strsql = $@"INSERT INTO PartsLocatorRotor_Transaction(TransactionType, Partnumber, RotorOrder, ShopOrder, PlanQuantity, 
                               PlanDate, ModelBase, Area, Quantity, Remarks, Status, BushType) 
-                              VALUE(@TransactionType, @Partnumber, @RotorOrder, @ShopOrder, @Area, @Quantity, @PlanQuantity, 
+                              VALUE(1, @Partnumber, @RotorOrder, @ShopOrder, @Area, @Quantity, @PlanQuantity, 
                               @PlanDate, @Remarks, @ModelBase, @Status, @BushType)";
 
             return SqlDataAccess.UpdateInsertQuery(strsql, shop);

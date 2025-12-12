@@ -10,85 +10,330 @@
     <link href="~/Content/css/loginlayout.css" rel="stylesheet" />
     <meta name="viewport" content="width=device-width" />
     <title>Home</title>
+    <script src="~/Scripts/Shared/bootstrap.bundle.min.js"></script>
+
+
+    @Styles.Render("~/Content/shared-css")
+
+    @Scripts.Render("~/bundles/shared-js")
+    @Scripts.Render("~/bundles/modernizr")
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a3a5f 0%, #2c5282 50%, #4a90e2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .logo {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+            .logo h1 {
+                color: white;
+                font-size: 2.2rem;
+                font-weight: 700;
+                letter-spacing: 1px;
+                margin-bottom: 5px;
+            }
+
+            .logo h2 {
+                color: #a0c8ff;
+                font-size: 1.1rem;
+                font-weight: 400;
+                letter-spacing: 2px;
+            }
+
+        .login-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            padding: 35px 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .login-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 5px;
+                background: linear-gradient(90deg, #4a90e2, #2c5282);
+            }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+            .login-header h3 {
+                color: #1a3a5f;
+                font-size: 1.6rem;
+                font-weight: 600;
+                margin-bottom: 8px;
+            }
+
+            .login-header p {
+                color: #718096;
+                font-size: 0.95rem;
+            }
+
+        .form-group {
+            margin-bottom: 22px;
+            position: relative;
+        }
+
+            .form-group label {
+                display: block;
+                color: #2d3748;
+                font-weight: 600;
+                margin-bottom: 8px;
+                font-size: 0.95rem;
+            }
+
+        .input-with-icon {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+            .input-with-icon i {
+                position: absolute;
+                top: 50%;
+                color: #a0aec0;
+                font-size: 1.1rem;
+            }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 14px 14px 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            color: #2d3748;
+            transition: all 0.3s;
+        }
+
+            .form-control:focus {
+                outline: none;
+                border-color: #4a90e2;
+                box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+            }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #a0aec0;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+            .password-toggle:hover {
+                color: #4a90e2;
+            }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+            .checkbox-container input {
+                margin-right: 10px;
+                width: 18px;
+                height: 18px;
+                accent-color: #4a90e2;
+            }
+
+            .checkbox-container label {
+                color: #4a5568;
+                font-size: 0.95rem;
+                cursor: pointer;
+            }
+
+        .signin-btn {
+ 
+            background: linear-gradient(90deg, #4a90e2, #2c5282);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 15px;
+            width: 100%;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 0.5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+            .signin-btn:hover {
+                background: linear-gradient(90deg, #3a80d2, #1a4272);
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(74, 144, 226, 0.3);
+            }
+
+            .signin-btn:active {
+                transform: translateY(0);
+            }
+
+        .create-account {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+            .create-account p {
+                color: #718096;
+                margin-bottom: 15px;
+                font-size: 0.95rem;
+            }
+
+        .create-btn {
+            background-color: #f7fafc;
+            color: #4a90e2;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+            .create-btn:hover {
+                background-color: #edf2f7;
+                border-color: #4a90e2;
+            }
+
+        .footer {
+            margin-top: 25px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
+            text-align: center;
+            max-width: 420px;
+        }
+
+        .error-message {
+            color: #e53e3e;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success-message {
+            color: #38a169;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        
+    </style>
+
 </head>
+
+
+
 <body>
-    <div class="loginwrapper">
-        <div class="logincontainer activeforms">
+    <div class="container">
+        <div class="logo">
+            <h1>Parts locator System</h1>
+            <h2>(Rotor)</h2>
+        </div>
+
+        <div class="login-card">
+            <div class="login-header">
+                <h3>Enter your Credentials</h3>
+                <p>Access the parts locator system with your account</p>
+            </div>
+
             <form id="logincredentials">
-                <h3>Parts Locator Aluminum Frame</h3>
-                <div class="group">
-                    <label>Username : </label>
-                    <input type="text" name="username" id="username" placeholder="Enter Username" required />
-                </div>
-                <div class="group">
-                    <label>Password : </label>
-                    <input type="password" name="password" id="password" placeholder="Enter Password" required />
-                </div>
-
-                <button type="submit" id="loginbtn">Login</button>
-            </form>
-            <p class="selectreg">Dont have an account? <span id="changereg">Click here...</span></p>
-        </div>
-
-
-        <div class="Registrationcontainer">
-            <form id="Registerform" autocomplete="off">
-                <h2>Register Users</h2>
-                <div class="group">
-                    <label>Username: </label>
-                    <input type="text" name="usertext" id="usertext" placeholder="Username" required />
-                </div>
-                <div class="group">
-                    <label>Password: </label>
-                    <input type="password" name="passtext" id="passtext" placeholder="Password" required />
+                <div class="form-group">
+                    <label for="username">Username :</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="username" name="username" class="form-control" placeholder="Enter your username" required>
+                    </div>
+                    <div class="error-message" id="username-error">Please enter a valid username</div>
                 </div>
 
-                <div class="group">
-                    <label>First name: </label>
-                    <input type="text" name="fname" id="fname" placeholder="Enter Firstname" required />
+                <div class="form-group">
+                    <label for="password">Password :</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" name="password" id="password" class="form-control" placeholder="Enter your password" required>
+                       
+                    </div>
+                    <div class="error-message" id="password-error">Password must be at least 6 characters</div>
                 </div>
 
-                <div class="group">
-                    <label>Last name: </label>
-                    <input type="text" name="lname" id="lname" placeholder="Enter lastname" required />
-                </div>
+               
 
-                <button type="submit" id="Regisbtn">Registered</button>
+                <button type="submit" class="signin-btn" id="loginbtn"><span style='color: #fff;'><i class='fa-regular fa-floppy-disk'></i>  Sign In</span></button>
+
+                <div class="success-message" id="success-message">Login successful! Redirecting...</div>
             </form>
 
-            <p class="selectreg">Already have an account? <span id="changelogin">Click here...</span></p>
+            @*<div class="create-account">
+                <p>Don't have an account yet?</p>
+                <button type="button" class="create-btn" id="createAccountBtn">Create a New account</button>
+            </div>*@
         </div>
 
-
+        <div class="footer">
+            <p>© 2025 P1SA - Process Control All rights reserved.</p>
+            <small>This System is developed By Jaye Labandia || local no : 224</small>
+        </div>
     </div>
+
 </body>
 </html>
 
 
-<script src="~/Scripts/Shared/Utilities.min.js"></script>
-<script src="~/Scripts/Shared/sweetalert2.min.js"></script>
-<script src="~/Scripts/Shared/jquery-3.7.1.min.js"></script>
 <script type="text/javascript">
   const logform = document.getElementById('logincredentials');
-  const regform = document.getElementById('Registerform');
-  const changeforms = document.getElementById('changereg');
-  const changelogs = document.getElementById('changelogin');
 
 
-  changeforms.addEventListener('click', function (e) {
-      e.preventDefault();
 
-      document.querySelector('.logincontainer').classList.remove('activeforms');
-      document.querySelector('.Registrationcontainer').classList.add('activeforms');
-  });
+   
 
-  changelogs.addEventListener('click', function (e) {
-      e.preventDefault();
 
-      document.querySelector('.Registrationcontainer').classList.remove('activeforms');
-      document.querySelector('.logincontainer').classList.add('activeforms');
-  });
 
+ 
   logform.addEventListener('submit', function (e) {
       e.preventDefault();
 
@@ -120,7 +365,7 @@
                           localStorage.setItem('accessToken', res.Data.access_token);
                           localStorage.setItem('refreshToken', res.Data.refresh_token);
                           //localStorage.setItem('tempID', res.Data.userID);
-                          window.location.href = "/PartsLocal/PartsLocator/Masterlist";
+                          window.location.href = "/PartsLocal/PartsLocator/TrackParts";
                       });
                   } else {
                       Swal.fire({
@@ -141,37 +386,5 @@
       });
 
   });
-  regform.addEventListener('submit', function (e) {
-      e.preventDefault();
-          const savebtn = document.querySelector("#Regisbtn");
-          savebtn.innerHTML = " <div class='buttonloading'></div>";
 
-          let formData = new FormData(Registerform);
-          const data = Object.fromEntries(formData);
-          $.ajax({
-              url: '@Url.Action("RegisterUsers", "User")',
-              type: 'POST',
-              dataType: 'json',
-              data: data,
-              success: function (res) {
-                  Swal.fire({
-                      title: "Success",
-                      text: res.Message,
-                      icon: "success",
-                      showConfirmButton: false,
-                      timer: 1500
-                  }).then(() => {
-                      savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-regular fa-floppy-disk'></i>  Registered</span>"
-                      document.querySelector('.Registrationcontainer').classList.remove('activeforms');
-                      document.querySelector('.logincontainer').classList.add('activeforms');
-                  });
-
-                  savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-regular fa-floppy-disk'></i>  Registered</span>"
-              },
-              error: function (jqXHR, textStatus, errorThrown) {
-                  alert('An error occurred while processing the request.');
-                  console.error(textStatus, errorThrown);
-              }
-          });
-  });
 </script>

@@ -7,16 +7,12 @@
 
 <div class="GridContainer">
     <div class="GridColumn">
-        <header>
-            <h3>Parts Locator Inventory</h3>
-        </header>
-
-
+     
         <div class="search-section">
             <div class="search-container">
-                <input type="text" id="searchInput" placeholder="Enter part number to search (e.g., 002886060-01)">
-                <button id="searchButton">Search Parts</button>
-                <button id="clearSearch">Clear Search</button>
+                <input type="text" id="searchInput" placeholder="Enter part number to search (e.g., 002886060-01)" autocomplete="off">
+                <button id="searchButton"><i class="fa-solid fa-magnifying-glass"></i> Search Parts</button>
+                <button id="clearSearch"><i class="fa-solid fa-xmark"></i> Clear Search</button>
             </div>
         </div>
 
@@ -64,8 +60,6 @@
                     <span>Part number :</span>
                     <p id="partText">--NA--</p>
                 </div>
-                @*<i class='bx bx-arrow-back'></i>*@
-                <img draggable="false" style="transform: scale(0.8)" src="~/Content/Images/hashtag (1).png" />
             </div>
 
             <div class="ProductDetails__content">
@@ -73,29 +67,17 @@
                     <span>Model name :</span>
                     <p id="Model">--NA--</p>
                 </div>
-                @*<i class='bx bx-arrow-back'></i>*@
-                <img draggable="false" style="transform: scale(0.8)" src="~/Content/Images/hashtag (1).png" />
             </div>
-            <div class="ProductDetails__content">
-                <div class="ProductDetails__Text">
-                    <span>Location :</span>
-                    <p id="localText">--NA--</p>
-                </div>
-                @*<i class='bx bx-arrow-back'></i>*@
-                <img draggable="false" style="transform: scale(0.8)" src="~/Content/Images/hashtag (1).png" />
-            </div>
-
+           
             <div class="ProductDetails__content">
                 <div class="ProductDetails__Text">
                     <span>Quantity :</span>
                     <p id="Quantity">--NA--</p>
                 </div>
-                @*<i class='bx bx-arrow-back'></i>*@
-                <img draggable="false" g src="~/Content/Images/boxes.png" />
 
             </div>
         </div>
-
+        <hr />
         <div class="PartslistAction">
 
 
@@ -106,13 +88,16 @@
                 <br />
                 <label>Verify status : </label><br />
                 <div class="VerifyContainer">
-                    <span id="VerifyStats"></span>
+                    <span id="VerifyIcon"><i class="fa-solid fa-circle-xmark"></i></span>
+                    <span id="VerifyStats">Not Good</span>
                 </div>
+
                 <label>Select a Transaction  : </label>
-                <hr />
+
+                <hr style="margin: 0;" />
                 <div class="flex_align TransactionWrap">
-                    <button id="OpenOutbtn" disabled>Out (Issued)</button>
-                    <button id="OpenInbtn" disabled>IN  (Receive)</button>
+                    <button id="OpenOutbtn" disabled><i class="fa-solid fa-box-open"></i>  Out (Issued)</button>
+                    <button id="OpenInbtn" disabled><i class="fa-solid fa-box"></i> IN  (Receive)</button>
                 </div>
             </div>
 
@@ -503,21 +488,42 @@
     });
 
     $("#RequireInput").on('keyup', function (e) {
-        if (event.key === 'Enter') {
+        if (e.key === 'Enter') {
             const val = e.target.value;
 
             if (val === referpartnum) {
+                // Text
                 $("#VerifyStats").text("GOOD");
+
+                // Icon -> green check
+                $("#VerifyIcon").html('<i class="fa-solid fa-circle-check"></i>');
+
+                // Styling
+                $(".VerifyContainer")
+                    .removeClass("verify-bad")
+                    .addClass("verify-good");
+
+                // Enable buttons
                 $("#OpenOutbtn").prop("disabled", false);
                 $("#OpenInbtn").prop("disabled", false);
+
             } else {
+                // Text
                 $("#VerifyStats").text("NOT GOOD");
+
+                // Icon -> red X
+                $("#VerifyIcon").html('<i class="fa-solid fa-circle-xmark"></i>');
+
+                // Styling
+                $(".VerifyContainer")
+                    .removeClass("verify-good")
+                    .addClass("verify-bad");
+
+                // Disable buttons
                 $("#OpenOutbtn").prop("disabled", true);
                 $("#OpenInbtn").prop("disabled", true);
             }
         }
-
-
     });
 
     $("#OpenOutbtn").on('click', function (e) {
@@ -777,7 +783,7 @@ prevBtn.addEventListener('click', function () {
 });
 
 // OUT Stepper Event Listeners
-nextBtnOut.addEventListener('click', function () {
+nextBtnOut.addEventListener('click', async function () {
     let checkQuan = document.getElementById("QuantityOUT").value;
 
     if (checkQuan !== "") {
@@ -785,23 +791,26 @@ nextBtnOut.addEventListener('click', function () {
             currentStepOut++;
             updateStepperOut();
         } else {
+            let newQuan = previousCount - parseInt(checkQuan);
+
+
             // Finish button clicked
             let formData = new FormData(shopFormsOut);
-            formData.append("Quantity", parseInt(checkQuan));
+            formData.append("Quantity", newQuan);
             formData.append("TransactionType", 1); // 1 for OUT
             formData.append("Partnumber", referpartnum);
             formData.append("Area", Arealocation);
             formData.append("PreviousQuantity", previousCount);
 
-            let newQuan = previousCount - parseInt(checkQuan);
 
             const data = Object.fromEntries(formData);
-            let res = await postData('@Url.Action("AddShopOrderIn", "PartsLocator")', data);
+            let res = await postData('@Url.Action("AddShopOrderOut", "PartsLocator")', data);
             if (res && res.Success) {
                 alert('Shop Order OUT completed successfully!');
                 $("#ShowShopOrderOut").modal("hide");
 
                 $("#Quantity").text(newQuan);
+                previousCount = 0;
 
                 resetStepperOUT();
             }
@@ -859,7 +868,6 @@ function resetStepperOUT() {
 
              $("#partText").text(referpartnum);
              $("#Model").text(res.Data.ModelName);
-             $("#localText").text(res.Data.Area);
              $("#Quantity").text(res.Data.Quantity);
          }
      }

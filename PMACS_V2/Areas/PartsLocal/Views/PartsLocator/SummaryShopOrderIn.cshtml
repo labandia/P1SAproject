@@ -4,7 +4,25 @@
     Layout = "~/Areas/PartsLocal/Views/Shared/_PartlocalLayout.cshtml";
 }
 
-<section>
+<section class="table-container">
+    <div class="table-header">
+        <h3>Shop Order Summary</h3>
+        <div class="table-actions">
+            <select class="filter-select">
+                <option>All Categories</option>
+                <option>Electronics</option>
+                <option>Clothing</option>
+                <option>Home & Garden</option>
+                <option>Books</option>
+            </select>
+            <select class="filter-select">
+                <option value="1">Sort by: Out</option>
+                <option value="0">Sort by: In</option>
+            </select>
+        </div>
+    </div>
+
+
     <div class="TrackTable">
         <table>
             <thead>

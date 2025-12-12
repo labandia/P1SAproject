@@ -393,6 +393,7 @@
     <Compile Include="Areas\PartsLocal\PartsLocalAreaRegistration.cs" />
     <Compile Include="Areas\PartsLocal\Repository\RotorProductRepository.cs" />
     <Compile Include="Areas\PartsLocal\Repository\RotorSummaryRepository.cs" />
+    <Compile Include="Areas\PartsLocal\Repository\RotorSummaryRepositoryOut.cs" />
     <Compile Include="Areas\Planning\Controllers\PlanController.cs" />
     <Compile Include="Areas\Planning\Interface\IPlanning.cs" />
     <Compile Include="Areas\Planning\Model\PlanningModel.cs" />

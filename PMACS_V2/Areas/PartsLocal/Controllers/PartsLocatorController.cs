@@ -54,6 +54,14 @@ namespace PMACS_V2.Areas.PartsLocal.Controllers
             return JsonCreated(shop, "Update successfully");
         }
 
+        [HttpPost]
+        public async Task<ActionResult> AddShopOrderOut(ShopOrderOutModel shop)
+        {
+            bool result = await _shopout.AddTransactionOut(shop);
+            if (!result) return JsonValidationError();
+            return JsonCreated(shop, "Update successfully");
+        }
+
         [JwtAuthorize]
         public async Task<ActionResult> GetTransactionSummaryIn()
         {

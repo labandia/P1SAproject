@@ -158,7 +158,7 @@ namespace PMACS_V2
             container.RegisterType<IProducts, RotorProductRepository>();
 
             container.RegisterType<IShopOrderIn, RotorSummaryRepository>();
-            container.RegisterType<IShopOrderOut, RotorSummaryRepository>();
+            container.RegisterType<IShopOrderOut, RotorSummaryRepositoryOut>();
 
             container.RegisterType<IPlanning, PlanningRepository>();
             container.RegisterType<IManpower, ManpowerRepository>();

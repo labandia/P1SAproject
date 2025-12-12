@@ -11,14 +11,25 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
 {
     public class RotorSummaryRepositoryOut : IShopOrderOut
     {
-        public Task<bool> AddTransactionOut(ShopOrderOutModel shop)
+        public async Task<bool> AddTransactionOut(ShopOrderOutModel shop)
         {
-            string strsql = $@"INSERT INTO PartsLocatorRotor_Transaction(TransactionType, Partnumber, RotorOrder, ShopOrder, PlanQuantity, 
-                              PlanDate, ModelBase, Area, Quantity, Remarks, Status, BushType) 
-                              VALUE(1, @Partnumber, @RotorOrder, @ShopOrder, @Area, @Quantity, @PlanQuantity, 
-                              @PlanDate, @Remarks, @ModelBase, @Status, @BushType)";
+            string updatestorage = $@"UPDATE PartsLocatorRotor_Location SET Quantity = Quantity - @Quantity
+                                     WHERE Partnumber =@Partnumber AND Area =@Area";
 
-            return SqlDataAccess.UpdateInsertQuery(strsql, shop);
+            bool storageResult = await SqlDataAccess.UpdateInsertQuery(updatestorage, new
+            {
+                Quantity = shop.Quantity,
+                Partnumber = shop.Partnumber,
+                Area = shop.Area
+            });
+
+
+            string strsql = $@"INSERT INTO PartsLocatorRotor_Transaction(TransactionType, Partnumber, RotorOrder, ShopOrder, PlanQuantity, 
+                              PlanDate, ModelBase, Area, Quantity, Remarks, Status, BushType, PreviousQuantity) 
+                              VALUES(1, @Partnumber, @RotorOrder, @ShopOrder, @PlanQuantity, 
+                              @PlanDate, @ModelBase, @Area, @Quantity, @Remarks, @Status, @BushType, @PreviousQuantity)";
+
+            return await SqlDataAccess.UpdateInsertQuery(strsql, shop);
         }
 
         public Task<bool> DeleteTransactionOut(ShopOrderOutModel shop)
@@ -38,19 +49,24 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
         public  async Task<IEnumerable<ShopOrderOutModel>> GetShopOderOutlist()
         {
             string strsql = $@"SELECT t.TransactionID, 
-                              FORMAT(t.TransactionDate, 'MM/dd/yy') as TransactionDate,
-	                          FORMAT(t.TransactionDate, 'hh:mm') as TransactionTime
-                              ,t.RotorOrder
-                              ,t.Partnumber
-	                          ,m.ModelName
-	                          ,t.Area
-                              ,t.Quantity
-                              ,t.PreviousQuantity
-                              ,t.Remarks
-                          FROM PartsLocatorRotor_Transaction t
-                          INNER JOIN PartsLocatorRotor_Masterlist m 
-                          ON t.Partnumber = m.Partnumber
-                          WHERE  t.TransactionType = 0";
+                                FORMAT(t.TransactionDate, 'MM/dd/yy') as TransactionDate,
+	                            FORMAT(t.TransactionDate, 'hh:mm') as TransactionTime
+                                ,t.RotorOrder
+                                ,t.Partnumber
+	                            ,m.ModelName
+	                            ,t.Area
+                                ,t.Quantity
+                                ,t.PreviousQuantity
+                                ,t.Remarks
+	                            ,t.PlanDate
+	                            ,t.PlanQuantity
+	                            ,t.ModelBase
+	                            ,t.Status
+	                            ,t.BushType
+                            FROM PartsLocatorRotor_Transaction t
+                            INNER JOIN PartsLocatorRotor_Masterlist m 
+                            ON t.Partnumber = m.Partnumber
+                            WHERE  t.TransactionType = 1";
 
             return await SqlDataAccess.GetData<ShopOrderOutModel>(strsql, null);
         }

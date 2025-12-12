@@ -8,49 +8,88 @@
     <div class="table-header">
         <h3>Shop Order Summary</h3>
         <div class="table-actions">
-            <select class="filter-select">
-                <option>All Categories</option>
-                <option>Electronics</option>
-                <option>Clothing</option>
-                <option>Home & Garden</option>
-                <option>Books</option>
-            </select>
-            <select class="filter-select">
+            
+            <select class="filter-select" id="SortByAction">
                 <option value="1">Sort by: Out</option>
                 <option value="0">Sort by: In</option>
             </select>
         </div>
     </div>
 
-
-    <div class="TrackTable">
-        <table>
-            <thead>
-                <tr>
-                    <th>Date Issued</th>
-                    <th>Time </th>
-                    <th>Rotor order </th>
-                    <th>Part number</th>
-                    <th>Model name</th>
-                    <th>Area location</th>
-                    <th>Quantity</th>
-                    <th>Remarks</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="ShopOrderSummaryIn">
-            </tbody>
-        </table>
-
-
+    <div id="SummaryINdisplay">
+        <div class="TrackTable">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date Issued</th>
+                        <th>Time </th>
+                        <th>Rotor order </th>
+                        <th>Part number</th>
+                        <th>Model name</th>
+                        <th>Area location</th>
+                        <th>Quantity</th>
+                        <th>Remarks</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="ShopOrderSummaryIn">
+                </tbody>
+            </table>
+        </div>
     </div>
+
+
+    <div id="SummaryOutdisplay">
+        <div class="TrackTable">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date Prepared</th>
+                        <th>Time </th>
+                        <th>Rotor order Order</th>
+                        <th>FA order Order</th>
+                        <th>Plan Quantity</th>
+                        <th>Plan Start</th>
+                        <th>Model Base</th>
+                        <th>Part number</th>
+                        <th>Model name</th>
+                        <th>Area location</th>
+                        <th>Quantity</th>
+                        <th>Prepared By </th>
+                        <th>Status</th>
+                        <th>Bush Natural</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="ShopOrderSummaryOut">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
 </section>
 
-<script type="text/javascript">
 
+
+
+<script type="text/javascript">
+    $("#SortByAction").on('change', function (e) {
+        e.preventDefault();
+        let val = e.target.value;
+        if (val == 0) {
+            $("#SummaryINdisplay").show();
+            $("#SummaryOutdisplay").hide();
+        } else {
+            $("#SummaryINdisplay").hide();
+            $("#SummaryOutdisplay").show();
+        }
+
+    });
     const GetTransactionSummaryIN = async () => {
-          let res = await FetchAuthenticate('@Url.Action("GetTransactionSummaryIn", "PartsLocator")', {});
-          //console.log(res);
+        let res = await FetchAuthenticate('@Url.Action("GetTransactionSummaryIn", "PartsLocator")', {});
+        console.log("IN ");
+          console.log(res);
           if (res && res.Success) {
               $("#ShopOrderSummaryIn").empty();
               let dataArray = res.Data;
@@ -97,18 +136,45 @@
 
           }
       }
-
-
     const GetTransactionSummaryOUT = async () => {
         let res = await FetchAuthenticate('@Url.Action("GetTransactionSummaryOut", "PartsLocator")', {});
+        console.log("OUT ");
         console.log(res);
         if (res && res.Success) {
+            $("#ShopOrderSummaryOut").empty();
             let dataArray = res.Data;
+
+            dataArray.forEach((row, index) => {
+                var setdata = `<tr >
+                  <td>${row.TransactionDate}</td>
+                  <td>${row.TransactionTime}</td>
+                  <td style='font-weight: 600;'>${row.RotorOrder}</td>
+                  <td style='font-weight: 600;'>${row.ShopOrder}</td>
+                  <td>${row.PlanQuantity}</td>
+                  <td>${row.PlanDate}</td>
+                  <td>${row.ModelBase}</td>
+                  <td style='font-weight: 600;'>${row.Partnumber}</td>
+                  <td style='text-align: left; padding-left: 1.5em;'>${row.ModelName}</td>
+                  <td>${row.Area}</td>
+                  <td>${row.Quantity}</td>
+                  <td>${row.Remarks}</td>
+                  <td>${row.Status}</td>
+                  <td>${row.BushType}</td>
+                  <td>
+                     <button type='button' class='btn actionicon text-primary EditToolClick' id='editButton_${row.TransactionID}' >
+                        <i class='fa-regular fa-pen-to-square action_btn'></i>
+                     </button>
+                  </td>
+              </tr>;`
+
+                $("#ShopOrderSummaryOut").append(setdata);
+            });
         }
 
     }
 
-
+    $("#SummaryINdisplay").hide();
+    $("#SummaryOutdisplay").show();
     GetTransactionSummaryIN();
     GetTransactionSummaryOUT();
 </script>

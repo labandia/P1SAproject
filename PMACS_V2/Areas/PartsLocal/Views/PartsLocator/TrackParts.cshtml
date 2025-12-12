@@ -757,12 +757,11 @@ nextBtn.addEventListener('click', async function () {
             const data = Object.fromEntries(formData);
             let newQuan = previousCount + parseInt(checkQuan);
             let res = await postData('@Url.Action("AddShopOrderIn", "PartsLocator")', data);
-            console.log(res);
             if (res && res.Success) {
                 alert('Shop Order IN completed successfully!');
                 $("#ShowShopOrderIN").modal("hide");
                 $("#Quantity").text(newQuan);
-
+                previousCount = newQuan;
                 resetStepperIN();
             }
 
@@ -796,7 +795,7 @@ nextBtnOut.addEventListener('click', async function () {
 
             // Finish button clicked
             let formData = new FormData(shopFormsOut);
-            formData.append("Quantity", newQuan);
+            formData.append("Quantity", parseInt(checkQuan));
             formData.append("TransactionType", 1); // 1 for OUT
             formData.append("Partnumber", referpartnum);
             formData.append("Area", Arealocation);
@@ -810,7 +809,7 @@ nextBtnOut.addEventListener('click', async function () {
                 $("#ShowShopOrderOut").modal("hide");
 
                 $("#Quantity").text(newQuan);
-                previousCount = 0;
+                previousCount = newQuan;
 
                 resetStepperOUT();
             }

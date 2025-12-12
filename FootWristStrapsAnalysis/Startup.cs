@@ -628,9 +628,9 @@ namespace FootWristStrapsAnalysis
                     worksheet = package.Workbook.Worksheets[0];
                 }
 
-                //// 4. Extract employee column mapping from template
+                // 4. Get employee column mapping FROM DATABASE
                 Dictionary<string, (int rightCol, int leftCol)> employeeColumnMap =
-                    ExtractEmployeeColumnsFromTemplate(worksheet);
+                    GetEmployeeColumnMappingFromDatabase();
 
                 //// 5. Organize data from database
                 Dictionary<DateTime, Dictionary<string, ESDTestData>> organizedData =
@@ -792,6 +792,58 @@ namespace FootWristStrapsAnalysis
 
             return columnName;
         }
+
+
+        private Dictionary<string, (int rightCol, int leftCol)> GetEmployeeColumnMappingFromDatabase()
+        {
+            var columnMap = new Dictionary<string, (int rightCol, int leftCol)>();
+
+            // Get distinct employee IDs from database
+            List<string> employeeIDs = GetDistinctEmployeeIDsForMonth(12, 2023);
+
+            if (employeeIDs.Count == 0)
+            {
+                MessageBox.Show("No employee data found in database for December 2023",
+                    "No Data", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return columnMap;
+            }
+
+            // Map each employee to Excel columns starting from column C
+            // Each employee gets 2 columns: Right (even columns) and Left (odd columns)
+            int startCol = 3; // Column C
+
+            for (int i = 0; i < employeeIDs.Count; i++)
+            {
+                string employeeID = employeeIDs[i];
+                int rightCol = startCol + (i * 2);     // C, E, G, I, etc.
+                int leftCol = rightCol + 1;            // D, F, H, J, etc.
+
+                // Stop if we exceed column V (max 22 columns)
+                if (rightCol > 22 || leftCol > 22) // 22 = Column V
+                {
+                    MessageBox.Show($"Warning: Too many employees ({employeeIDs.Count}). " +
+                                   $"Only first {i} employees will be shown in columns C-V.",
+                                   "Capacity Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    break;
+                }
+
+                columnMap[employeeID] = (rightCol, leftCol);
+
+                Console.WriteLine($"Database employee '{employeeID}' mapped to columns " +
+                                 $"{GetExcelColumnName(rightCol)} (Right) and {GetExcelColumnName(leftCol)} (Left)");
+            }
+
+            return columnMap;
+        }
+
+        private List<string> GetDistinctEmployeeIDsForMonth(int month, int year)
+        {
+            List<string> employeeIDs = new List<string>();
+
+            return employeeIDs;
+        }
+
+
 
         public class ESDTestData
         {

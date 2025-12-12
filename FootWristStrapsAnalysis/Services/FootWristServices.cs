@@ -118,6 +118,15 @@ namespace FootWristStrapsAnalysis.Services
             return SqlDataAccess.Checkdata(checkdata, new { EmployeeID, Date = today });
         }
 
-       
+        public Task<List<string>> GetSelectedEmployeeID(int month, int year)
+        {
+            string query = @"
+                        SELECT DISTINCT EmployeeID
+                        FROM FootWristStrapTestResults
+                        WHERE MONTH(TestDate) = @Month AND YEAR(TestDate) = @Year
+                        ORDER BY EmployeeID";
+
+            return SqlDataAccess.StringList(query, new { Month = month, Year = year });
+        }
     }
 }

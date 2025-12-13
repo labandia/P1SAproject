@@ -44,7 +44,7 @@ namespace FootWristStrapsAnalysis
         private async void Startup_Load(object sender, EventArgs e)
         {
             var selectedDate = dateTimePicker1.Value.Date; // Get only the date part
-            this.WindowState = FormWindowState.Maximized;
+            this.WindowState = FormWindowState.Maximized; // set the form to Fullscreen 
 
             // Step 1: Get the Folder path if exist
             string folderpath = await GetTheFileFolder();
@@ -513,7 +513,9 @@ namespace FootWristStrapsAnalysis
 
         public async Task<string> GetTheFileFolder()
         {
-            string fileCheck = await SqlDataAccess.GetOneData("SELECT FolderPath FROM FolderPaths WHERE ProjectName = @ProjectName ", new { ProjectName = "FootWrist" });
+            string fileCheck = await SqlDataAccess.GetOneData($@"SELECT FolderPath 
+                                FROM FolderPaths WHERE ProjectName = @ProjectName ", 
+                                new { ProjectName = "FootWrist" });
             return fileCheck;
         }
 

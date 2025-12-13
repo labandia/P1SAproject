@@ -716,6 +716,9 @@
     <Content Include="Content\css\HydroLogin.css" />
     <Content Include="Content\css\OrderDetails.css" />
     <Content Include="Content\css\Patrolforms.css" />
+    <Content Include="Content\css\Programpartlist.min.css">
+      <DependentUpon>Programpartlist.css</DependentUpon>
+    </Content>
     <Content Include="Content\css\RegistrationUI.css" />
     <Content Include="Content\Images\Electrical.png" />
     <Content Include="Content\Images\FrontImage.png" />
@@ -751,9 +754,6 @@
     <Content Include="Content\css\PatrolLayout.css" />
     <Content Include="Content\css\PatrolLayout.min.css">
       <DependentUpon>PatrolLayout.css</DependentUpon>
-    </Content>
-    <Content Include="Content\css\Programpartlist.min.css">
-      <DependentUpon>Programpartlist.css</DependentUpon>
     </Content>
     <Content Include="Content\css\Sidebar_one.css" />
     <Content Include="Content\font-awesome\css\all.css" />
@@ -795,6 +795,7 @@
     <Content Include="Areas\PC\Views\Patrol\CompleteRegistration.cshtml" />
     <Content Include="Areas\PC\Views\Patrol\DivisionApproval.cshtml" />
     <Content Include="Areas\Hydroponics\Views\Hydro\InventSummary.cshtml" />
+    <Content Include="Areas\Circuit\Views\ProgramPartList\Dashboard.cshtml" />
     <None Include="Content\Images\.editorconfig" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\chart.js" />

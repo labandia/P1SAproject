@@ -24,17 +24,17 @@
     <nav class="sidenavbar">
         <div class="logo">📦 Parts Locator Rotor System</div>
         <ul style="background: rgba(245, 245, 245, 0.1); padding: .4em .2em; border-radius: .2em;">
-            <li class="active">
-                <a href="/PartsLocal/PartsLocator/TrackParts" class="sidebar__link">
+            <li >
+                <a href="/PartsLocal/PartsLocator/TrackParts" class="sidebar__link ">
                     <span class="sidebar__name">Location Parts</span>
                 </a>
             </li>
-            <li>
+            <li >
                 <a href="/PartsLocal/PartsLocator/SummaryShopOrderIn" class="sidebar__link">
                     <span class="sidebar__name"> Shop Order Summary</span>
                 </a>
             </li>
-            <li>
+            <li >
                 <a href="/PartsLocal/PartsLocator/Masterlist" class="sidebar__link">
                     <span class="sidebar__name"> Inventory</span>
                 </a>
@@ -108,24 +108,24 @@
         //const logbtn = document.getElementById("logID");
 
         ///*==================== LINK ACTIVE ====================*/
-        //const linkColor = document.querySelectorAll('.sidebar__link')
+        const linkColor = document.querySelectorAll('.sidebar__link')
 
-        //function colorLink() {
-        //    linkColor.forEach(l => l.classList.remove('active'))
-        //    this.classList.add('active')
-        //}
+        function colorLink() {
+            linkColor.forEach(l => l.classList.remove('active'))
+            this.classList.add('active')
+        }
 
 
 
-        //linkColor.forEach(l => l.addEventListener('click', colorLink))
-        //document.addEventListener("DOMContentLoaded", function () {
-        //    var currentUrl = window.location.pathname.toLowerCase();
-        //    document.querySelectorAll(".sidebar__link").forEach(function (link) {
-        //        if (link.getAttribute("href").toLowerCase() === currentUrl) {
-        //            link.classList.add("active");
-        //        }
-        //    });
-        //});
+        linkColor.forEach(l => l.addEventListener('click', colorLink))
+        document.addEventListener("DOMContentLoaded", function () {
+            var currentUrl = window.location.pathname.toLowerCase();
+            document.querySelectorAll(".sidebar__link").forEach(function (link) {
+                if (link.getAttribute("href").toLowerCase() === currentUrl) {
+                    link.classList.add("active");
+                }
+            });
+        });
 
 
         //logbtn.addEventListener('click', function (e) {

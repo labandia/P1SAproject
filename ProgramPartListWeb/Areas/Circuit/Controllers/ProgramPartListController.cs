@@ -44,12 +44,12 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
         public ActionResult HistoryTransaction() => View();
         public ActionResult ComponentsOut() => View();
         public ActionResult RegisterSupplier() => View();
-        public ActionResult LogMainpage() =>  View();    
+        public ActionResult LogMainpage() =>  View();
 
 
-
-        public ActionResult PlanSchedule() => View();
         public ActionResult PDAView() => View();
+        public ActionResult PlanSchedule() => View();
+        public ActionResult Dashboard() => View();
         public ActionResult PlanScheduleDetails(string series)
         {
             try

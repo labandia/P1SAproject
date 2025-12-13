@@ -11,10 +11,13 @@
     <meta name="description" content="Learn how to improve your website with caching, accessibility, and SEO best practices.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
+    <link href="~/Content/Shared/bootstrap.min.css" rel="stylesheet" />
+
+
     <link href="~/Content/css/Programpartlist.css" rel="stylesheet" />
     <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+
     @Styles.Render("~/Content/shared-css")
-    @Styles.Render("~/Content/partlist-css")
 
     @Scripts.Render("~/bundles/shared-js")
     @Scripts.Render("~/bundles/modernizr")
@@ -22,23 +25,26 @@
 <body>
     <div class="app">
         <aside class="sidebar">
-            <div class="brand">📁 API Tab Manager</div>
-            <div class="muted" style="padding:0 8px;">Click to open a tab</div>
+            <div class="brand">📁 Program PartList</div>
             <div class="menu" id="sidebarMenu">
-                <button data-key="PlanSchedule" data-title="Plan Schedule" data-url="@Url.Action("PlanSchedule", "ProgramPartList")">
+                <button data-key="Dashboard" data-title="Dashboard" data-url="@Url.Action("Dashboard", "ProgramPartList")">
                     <span class="dot"></span><span>Dashboard</span>
                 </button>
+
+                <button data-key="ManageSchedule" data-title="Plan Schedule" data-url="@Url.Action("ManagePlanSchedule", "ProgramPartList")">
+                    <span class="dot"></span><span>Partlist Data</span>
+                </button>
                 <button data-key="PDAView" data-title="PDAView" data-url="@Url.Action("PDAView", "ProgramPartlist")">
-                    <span class="dot"></span><span>Program Partlist</span>
+                    <span class="dot"></span><span>PDA view</span>
                 </button>
-                <button data-key="posts" data-title="Posts" data-api="https://jsonplaceholder.typicode.com/posts">
-                    <span class="dot"></span><span>Posts</span>
+                <button data-key="PlanSchedule" data-title="Plan Schedule" data-url="@Url.Action("PlanSchedule", "ProgramPartlist")">
+                    <span class="dot"></span><span>Plan Schedule</span>
                 </button>
-                <button data-key="create" data-title="Create Post">
-                    <span class="dot"></span><span>Create Post</span>
+                <button data-key="Warehouse" data-title="Warehouse" data-url="@Url.Action("ManageWarehouse", "ProgramPartlist")">
+                    <span class="dot"></span><span>Warehouse</span>
                 </button>
-                <button data-key="todos" data-title="Todos" data-api="https://jsonplaceholder.typicode.com/todos">
-                    <span class="dot"></span><span>Todos</span>
+                <button data-key="Components" data-title="Comp out" data-url="@Url.Action("ComponentsOut", "ProgramPartlist")">
+                    <span class="dot"></span><span>Comp out</span>
                 </button>
                 <button data-key="settings" data-title="Settings">
                     <span class="dot"></span><span>Settings</span>
@@ -58,13 +64,13 @@
         <main class="main">
 
             <!-- Dynamic Tabs -->
-            <div class="tabs" id="tabBar" aria-label="Open tabs"></div>
+            <div class="tabs" id="tabBar" aria-label="Open tabs" style="color: #fff;"></div>
 
             <!-- Dynamic Content (Your SPAs / Panels) -->
             <div class="content" id="contentArea" aria-live="polite"></div>
 
             <!-- MVC Body Section (Your Views Render Here) -->
-            <div id="mvcContent" >
+            <div id="mvcContent">
                 @RenderBody()
             </div>
 
@@ -73,7 +79,8 @@
 
 
 
-
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/Popper.min.js"></script>
     <script type="text/javascript">
         // Tab Management System
         const tabBar = document.getElementById('tabBar');
@@ -88,6 +95,19 @@
         const cache = new Map();
         let activeTabKey = null;
         let mvcContentKey = 'mvc-' + Date.now(); // Unique key for initial MVC content
+
+
+        // Update the initial display in your JavaScript
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initially hide the tab bar
+            //tabBar.style.display = 'none';
+
+            // Make sure MVC content is visible
+            mvcContent.style.display = 'block';
+            contentArea.style.display = 'none';
+
+            // Rest of your initialization code...
+        });
 
         // Initialize with current MVC view
         document.addEventListener('DOMContentLoaded', function () {
@@ -513,6 +533,5 @@
         });
 
     </script>
-    @Html.Partial("_SystemConfig")
 </body>
 </html>

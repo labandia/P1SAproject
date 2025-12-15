@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 
 namespace PMACS_V2.Models
@@ -22,6 +23,17 @@ namespace PMACS_V2.Models
         public string Message { get; set; }
         public T Header { get; set; }
         public T Data { get; set; }
+    }
+
+    public class PagedResult<T>
+    {
+        public List<T> Items { get; set; }
+        public int PageNumber { get; set; }
+        public int PageSize { get; set; }
+        public int TotalRecords { get; set; }
+
+        public int TotalPages =>
+            (int)Math.Ceiling((double)TotalRecords / PageSize);
     }
 
 

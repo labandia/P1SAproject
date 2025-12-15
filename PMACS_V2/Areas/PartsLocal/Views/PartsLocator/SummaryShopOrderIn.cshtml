@@ -88,9 +88,8 @@
     });
     const GetTransactionSummaryIN = async () => {
         let res = await FetchAuthenticate('@Url.Action("GetTransactionSummaryIn", "PartsLocator")', {});
-        console.log("IN ");
-          console.log(res);
-          if (res && res.Success) {
+
+        if (res && res.Success) {
               $("#ShopOrderSummaryIn").empty();
               let dataArray = res.Data;
 

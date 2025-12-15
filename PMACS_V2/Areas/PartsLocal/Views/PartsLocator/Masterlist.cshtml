@@ -4,77 +4,129 @@
     Layout = "~/Areas/PartsLocal/Views/Shared/_PartlocalLayout.cshtml";
 }
 
-<section>
-    <header class="MainHeader">
-        <div class="MoldTitle">
-            <h4>Parts Locator Inventory </h4>
-            <small>Manage rotor partnumber</small>
-        </div>
-        <div class="Mold__actions">
-            @* MOLD MOnitoring *@
-            <div id="MoldMonitor">
-                <button class="primary_button_color" id="addmodal"><i class="fa-solid fa-plus"></i> Add Data</button>
-            </div>
-
-        </div>
-    </header>
-
-    <div class="Mold_tabcontainer">
-        <div class="Mold_tabs">
-            <button class="Mold_tab active" data-target="Summary">Inventory</button>
-            <button class="Mold_tab" data-target="Monitoring">Masterlist</button>
-            <div class="Mold_slider"></div>
-        </div>
-
-        <div class="Mold_contentbox">
-            <div class="Mold_content show" id="Summary">
-                <div class="DieMainTable" id="DieWrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Front Image</th>
-                                <th>Back Image</th>
-                                <th>Part Number</th>
-                                <th>Model Name</th>
-                                <th>Area location</th>
-                                <th>Quantity</th>
-                            </tr>
-                        </thead>
-                        <tbody id="DiePressMonitoringlistV2">
-                        </tbody>
-                    </table>
+<section class="maincontainer" style="margin-top: 2em;">
+    <div class="MasterWrapper">
+        <div class="MasterContent">
+          
+            <div class="flex_space mb-4">
+                <h4 style="font-weight: 600; color: #222;">Master List</h4>
+                <div class="flex_align">
+                    <div class="searchinputContainer">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" placeholder="Search here ... " id="searchData" />
+                        <div class="line"></div>
+                    </div>
 
 
+                    <button type="button" id="OpenAddMaster" class="btn-cust-primary">Add MasterList</button>
                 </div>
             </div>
-            <div class="Mold_content" id="Monitoring">
-                <div class="DieMainTable" id="DieWrapper">
+            <div class="DieMainTable">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Part Number</th>
+                            <th>Model Name</th>
+                            <th>Front Image</th>
+                            <th>Back Image</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="MasterlistTable">
+                    </tbody>
+                </table>
+            </div>
+            <div id="pagination" style="display: flex; align-items:center; justify-content: center; "></div>
+        </div>
 
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Front Image</th>
-                                <th>Back Image</th>
-                                <th>Part Number</th>
-                                <th>Model Name</th>
-                            </tr>
-                        </thead>
-                        <tbody id="DiePressMonitoringlist">
-                        </tbody>
-                    </table>
+        <div class="MasterContent">
+           
 
+            <div class="flex_space mb-4">
+                <h4 style="font-weight: 600; color: #222;">Palete Location</h4>
+                <button>Add Palete Location </button>
+            </div>
 
-                </div>
+            <div class="DieMainTable" id="DieWrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Part Number</th>
+                            <th>Model Name</th>
+                            <th>Palete location</th>
+                            <th>Quantity</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="StorageTables">
+                    </tbody>
+                </table>
             </div>
         </div>
+
     </div>
-
-
 </section>
 
 
-<script type="text/javascript">
+@*=================================================================================*@
+@*=========================== ADD MASTERLIST ======================================*@
+@*=================================================================================*@
+<div class="modal fade modal-l" id="AddProductModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
 
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5 id="changeTitle">Add MasterList</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+
+                <form method="post" enctype="multipart/form-data" class="addformcontainer" id="addnewform" autocomplete="off">
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Part Number <small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <input type="text" placeholder="Enter the Part No" name="Partnumber" id="Partnumber" required />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>Model Name <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                        <input type="text" placeholder="Enter the Name of the part no." name="ModelName" id="ModelName" required />
+                    </div>
+
+                    <h6>Upload Images</h6>
+                    <hr />
+                    <label>Front Image</label>
+
+                    <label>BacK Image</label>
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div>
+                            <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                        </div>
+                        <button id="btnSave" class="btn-cust-primary"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+    let currentPage = 1;
+    const pageSize = 10;
+
+
+    let MasterlistData = [];
+    let StorageData = [];
+    let ismode;
 
     // Tabs Content
     const tabs = document.querySelectorAll(".Mold_tab");
@@ -106,27 +158,250 @@
         });
     });
 
+    // ================== OPEN DIALOG ======================
+    $("#OpenAddMaster").on('click', function (e) {
+        e.preventDefault();
+        $("#changeTitle").text("Add Masterlist");
+        OpenAddFormMasterList("add");
+    })
+    // =====================================================
 
-      const GetMasterlist = async () => {
-          let res = await FetchAuthenticate('@Url.Action("GetProductMasterlist", "PartsLocator")', {});
-          console.log(res);
-          //if (res && res.Success) {
-                
-             //} else {
-             //    const loadData = `<tr>
-             //      <td colspan='9'>
-             //          🔍 ${res.Message}
-             //      </td>
-             //  </tr>`;
+    // ================= FORM SUBMISSION ======================
+    $("#addnewform").on('submit', async function (e) {
+        e.preventDefault();
+        let formData = new FormData(this);
+        const data = Object.fromEntries(formData);
 
-             //    ToolingDisplay.empty();
-             //    ToolingDisplay.append(loadData);
+        // Step 1 : Check if the partnumber is already Exist
+        let isExist = MasterlistData.some(res => res.Partnumber === data.Partnumber);
 
-             //}
+        if (isExist) {
+            alert("Partnumber is already Exist");
+            return;
+        }
+
+        let res = await postData('@Url.Action("AddMasterlist", "PartsLocator")', data);
+
+        console.log(res);
+    });
+
+    // =====================================================
+    let debounceTimer;
+
+    $("#searchData").on('keyup', () => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            currentPage = 1;
+            GetMasterlist();
+        }, 400);
+    });
+
+
+
+    function OpenAddFormMasterList(mode, ID = 0) {
+        $('#addnewform')[0].reset();
+
+        if (mode === "Edit") {
+            $("#changeTitle").text("Edit Masterlist");
+
+            let filterdata = MasterlistData.find(res => res.Partnumber === ID);
+            console.log(filterdata);
+            if (filterdata) {
+                $("#Partnumber").val(filterdata.Partnumber);
+                $("#ModelName").val(filterdata.ModelName);
+            }
+        }
+
+        $("#AddProductModal").modal('show');
+    }
+
+
+
+
+    // ================== FETCH DATA ======================
+    const GetMasterlist = async () => {
+        let search = $("#searchData").val();
+
+        const url =
+                    `@Url.Action("GetProductMasterlistPagination", "PartsLocator")`
+                    + `?search=${encodeURIComponent(search)}`
+                    + `&page=${currentPage}`
+                    + `&pageSize=${pageSize}`;
+
+
+        let res = await FetchAuthenticate(url, {});
+
+          if (res && res.Success) {
+              $("#MasterlistTable").empty();
+              MasterlistData = res.Data.Items;
+
+              MasterlistData.forEach((row, index) => {
+                  var setdata = `<tr class='selectedpartnum' id='selectedpartnum_${row.Partnumber}'>
+                        <td>${row.Partnumber}</td>
+                        <td>${row.ModelName}</td>
+                        <td>${row.FrontImage}</td>
+                        <td>${row.BackImage}</td>
+                        <td>
+                           <button type='button' class='btn actionicon text-primary editButton' id='editButton_${row.Partnumber}' >
+                              <i class='fa-regular fa-pen-to-square action_btn'></i>
+                           </button>
+
+                           <button type='button' class='btn actionicon text-danger deleteButton' id='deleteButton_${row.Partnumber}' >
+                               <i class='fa-regular fa-trash-can action_btn'></i>
+                            </button>
+                        </td>
+                    </tr>;`
+
+                  $("#MasterlistTable").append(setdata);
+              });
+
+              // Display the pagination
+              renderPagination(res.Data);
+
+
+              // Opens Edit Form Modal
+             $(document).on('click', '.editButton', async function (e) {
+                 e.stopPropagation();
+                 const buttonId = $(this).attr('id');
+                 const rowIndex = buttonId.split('_')[1];
+
+                 OpenAddFormMasterList("Edit", rowIndex);
+             });
+
+             // Display the Location pallete of the Partnum
+
+             $(document).on('click', '.selectedpartnum', async function (e) {
+                 e.stopPropagation();
+                 const buttonId = $(this).attr('id');
+                 const rowIndex = buttonId.split('_')[1];
+
+
+                 let res = await FetchAuthenticate('@Url.Action("GetProductsLocationPallete", "PartsLocator")', {
+                     partnum : rowIndex
+                 });
+
+                 if (res && res.Success) {
+                     $("#StorageTables").empty();
+                     let tableData = res.Data;
+
+                     tableData.forEach((row, index) => {
+                         var setdata = `<tr>
+                               <td>${row.Partnumber}</td>
+                               <td>${row.ModelName}</td>
+                               <td>${GetLocationString(row.Area)}</td>
+                               <td>${row.Quantity}</td>
+                               <td>
+                                  <button type='button' class='btn actionicon text-primary EditToolClick' id='editButton_${row.RecordID}' >
+                                     <i class='fa-regular fa-pen-to-square action_btn'></i>
+                                  </button>
+                               </td>
+                           </tr>;`
+
+                         $("#StorageTables").append(setdata);
+                     });
+
+
+                 }
+
+             });
+
+
+          } else {
+                 const loadData = `<tr>
+                   <td colspan='9'>
+                       🔍 ${res.Message}
+                   </td>
+               </tr>`;
+
+                 ToolingDisplay.empty();
+                 ToolingDisplay.append(loadData);
+
+          }
       }
+    const GetPaleteLocation = async () => {
+        let res = await FetchAuthenticate('@Url.Action("GetStorageData", "PartsLocator")', {});
+
+         if (res && res.Success) {
+             $("#StorageTables").empty();
+             StorageData = res.Data;
+
+             StorageData.forEach((row, index) => {
+                     var setdata = `<tr >
+                            <td>${row.Partnumber}</td>
+                            <td>${row.ModelName}</td>
+                            <td>${GetLocationString(row.Area)}</td>
+                            <td>${row.Quantity}</td>
+                            <td>
+                               <button type='button' class='btn actionicon text-primary EditToolClick' id='editButton_${row.RecordID}' >
+                                  <i class='fa-regular fa-pen-to-square action_btn'></i>
+                               </button>
+                            </td>
+                        </tr>;`
+
+                 $("#StorageTables").append(setdata);
+                 });
+
+         } else {
+                const loadData = `<tr>
+                  <td colspan='9'>
+                      🔍 ${res.Message}
+                  </td>
+              </tr>`;
+
+                ToolingDisplay.empty();
+                ToolingDisplay.append(loadData);
+
+         }
+    }
 
 
 
-    GetMasterlist();
+
+
+
+
+
+
+    // ================== COMMON FUNCTION ======================
+    function GetLocationString(area) {
+        if (area < 1 || area > 26) return "";
+        return String.fromCharCode(64 + area);
+    }
+
+    function renderPagination(data) {
+        const pager = document.getElementById("pagination");
+        pager.innerHTML = "";
+
+        if (data.PageNumber > 1) {
+            pager.innerHTML += `<button onclick="goPage(${data.PageNumber - 1})">Prev</button>`;
+        }
+
+        pager.innerHTML += ` Page ${data.PageNumber} of ${data.TotalRecords} `;
+
+        if (data.PageNumber < data.TotalRecords) {
+            pager.innerHTML += `<button onclick="goPage(${data.PageNumber + 1})">Next</button>`;
+        }
+    }
+
+    function goPage(page) {
+        currentPage = page;
+        GetMasterlist();
+    }
+
+
+    const LoadPageData = async () => {
+        try {
+
+            const [master, palete] = await Promise.all([
+                GetMasterlist()
+            ]);
+        } catch (error) {
+            console.error("Failed to load page data:", error);
+        }
+    }
+    //GetPaleteLocation()
+
+
+    LoadPageData();
 </script>
 

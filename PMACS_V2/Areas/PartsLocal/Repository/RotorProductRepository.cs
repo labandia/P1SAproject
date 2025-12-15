@@ -2,6 +2,7 @@
 using PMACS_V2.Areas.PartsLocal.Interface;
 using PMACS_V2.Areas.PartsLocal.Model;
 using PMACS_V2.Helper;
+using PMACS_V2.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,6 +10,36 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
 {
     public class RotorProductRepository : IProducts
     {
+        public async Task<PagedResult<RotorProductModel>> GetRotorMasterlistPage(string search, int pageNumber, int pageSize)
+        {
+            string strsql = $@"SELECT
+                               m.Partnumber, m.ModelName,
+                               m.FrontImage, m.BackImage
+                            FROM PartsLocatorRotor_Masterlist m
+                            WHERE (m.Partnumber LIKE '%' + @search + '%')
+                            ORDER BY ModelName ASC
+                            OFFSET (@page - 1) * @pageSize ROWS
+                            FETCH NEXT @pageSize ROWS ONLY";
+
+            var items = await SqlDataAccess.GetData<RotorProductModel>(strsql, new
+            {
+                search = search,
+                page = pageNumber,
+                pageSize = pageSize
+            });
+
+            int TotalRecords = items.Count;
+
+            return new PagedResult<RotorProductModel>
+            {
+                Items = items,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalRecords = TotalRecords
+            };
+        }
+
+
         public async Task<bool> AddRotorMasterlist(RotorProductModel rotor)
         {
             // CHECK IF EXIST THEN INSERT AFTERWARDS
@@ -52,6 +83,8 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
             return await SqlDataAccess.GetData<RotorProductModel>(strsql, null);
         }
 
+        
+
         public async Task<List<RotorProductModel>> GetRotorStorage()
         {
             string strsql = $@"SELECT
@@ -61,7 +94,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                             FROM PartsLocatorRotor_Location l
                             INNER JOIN PartsLocatorRotor_Masterlist m
                             ON m.Partnumber = l.Partnumber
-                            ORDER BY l.RecordID DESC";
+                            ORDER BY l.Area ASC";
             return await SqlDataAccess.GetData<RotorProductModel>(strsql, null);
         }
 

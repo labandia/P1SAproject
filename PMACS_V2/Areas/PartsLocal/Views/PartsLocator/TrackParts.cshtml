@@ -181,6 +181,7 @@
                     <div class="stepper-content">
                         <!-- Step 1: Account Information -->
                         <div class="stepper-pane active" id="validation-step-1">
+                            <label for="QuantityIN" class="form-label">Enter Quantity:</label>
                             <input type="text" class="form-control" id="QuantityIN" name="QuantityIN" required>
                         </div>
 
@@ -633,6 +634,8 @@
 
 // Update stepper UI for IN
 function updateStepper() {
+   
+
     // Update step indicators
     stepperSteps.forEach((step, index) => {
         const stepNumber = index + 1;
@@ -663,7 +666,7 @@ function updateStepper() {
     stepIndicators.forEach((indicator, index) => {
         const indicatorNumber = index + 1;
 
-        if (indicatorNumber === currentStep) {
+        if (indicatorNumber === 1) {
             indicator.classList.add('active');
         } else {
             indicator.classList.remove('active');
@@ -876,4 +879,16 @@ function resetStepperOUT() {
     // Initialize both steppers
     updateStepper();
     updateStepperOut();
+
+
+    // Reset steppers when modals close
+    $('#ShowShopOrderIN').on('hidden.bs.modal', function () {
+        resetStepperIN();
+        resetStepperOUT();
+    });
+
+    $('#ShowShopOrderOut').on('hidden.bs.modal', function () {
+        resetStepperOUT();
+        resetStepperIN();
+    });
 </script>

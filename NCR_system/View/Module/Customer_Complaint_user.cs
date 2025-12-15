@@ -12,7 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace NCR_system.View.Module
+namespace NCR_system.View.Module    
 {
     public partial class Customer_Complaint_user : UserControl
     {
@@ -22,8 +22,6 @@ namespace NCR_system.View.Module
 
         public List<CustomerModel> cuslist { get; private set; } = new List<CustomerModel>();
         public DataGridView Customgrid { get { return CustomDatagrid; } }
-
-
 
         public Customer_Complaint_user(ICustomerComplaint cust, ISummary sum)
         {

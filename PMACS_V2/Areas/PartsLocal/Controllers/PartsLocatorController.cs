@@ -22,13 +22,51 @@ namespace PMACS_V2.Areas.PartsLocal.Controllers
             _shopout = shopout; 
         }
 
+
+        // ===========================================================
+        // =============== MASTERLIST PAGES FUNCTION  ================
+        // ===========================================================
         [JwtAuthorize]
-        public async Task<ActionResult> GetProductMasterlist()
+        public async Task<ActionResult> GetProductMasterlistPagination(
+            string search = "",
+            int page = 1,
+            int pageSize = 10)
         {
-            var data = await _prod.GetRotorMasterlist() ?? new List<RotorProductModel>();
-            if(data == null && data.Any()) return JsonNotFound("No Masterlist Data.");
+            var data = await _prod.GetRotorMasterlistPage(search, page, pageSize);
+            if (data == null && data.Items.Any()) return JsonNotFound("No Masterlist Data.");
             return JsonSuccess(data);
         }
+
+        [JwtAuthorize]
+        public async Task<ActionResult> GetProductsLocationPallete(string partnum = "")
+        {
+            var data = await _prod.GetRotorStorage() ?? new List<RotorProductModel>();
+
+            var filterdata = data.Where(res => res.Partnumber == partnum);
+
+            if (filterdata == null && filterdata.Any()) return JsonNotFound("No Masterlist Data.");
+            return JsonSuccess(filterdata);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> AddMasterlist(RotorProductModel shop)
+        {
+            //bool result = await _prod.AddRotorMasterlist(shop);
+            //if (!result) return JsonValidationError();
+            return JsonCreated(shop, "Insert successfully");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> EditMasterlist(RotorProductModel shop)
+        {
+            bool result = await _prod.UpdateRotorMasterlist(shop);
+            if (!result) return JsonValidationError();
+            return JsonCreated(shop, "Update successfully");
+        }
+
+        // ===========================================================
+        // ================== TRACK LOCATION  ========================
+        // ===========================================================
 
         [JwtAuthorize]
         public async Task<ActionResult> GetStorageData()
@@ -45,7 +83,13 @@ namespace PMACS_V2.Areas.PartsLocal.Controllers
             if (data == null)  return JsonNotFound("No Rotor data found");
             return JsonSuccess(data);
         }
+      
 
+        // ===========================================================
+
+        // ===========================================================
+        // ================== SHOP ORDER SUMMARY  ====================
+        // ===========================================================
         [HttpPost]
         public async Task<ActionResult> AddShopOrderIn(ShopOrderInModel shop)
         {
@@ -77,6 +121,14 @@ namespace PMACS_V2.Areas.PartsLocal.Controllers
             if (data == null && data.Any()) return JsonNotFound("No Masterlist Data.");
             return JsonSuccess(data);
         }
+
+        // ===========================================================
+
+
+
+        // ===========================================================
+        // ================== DISPLAY PAGES ==========================
+        // ===========================================================
 
         // GET: PartsLocal/Masterlist
         public ActionResult TrackParts() { return View(); }

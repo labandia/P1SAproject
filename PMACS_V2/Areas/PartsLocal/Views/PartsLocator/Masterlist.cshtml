@@ -135,19 +135,68 @@
                 </div>
 
 
-                <form method="post" enctype="multipart/form-data" class="addformcontainer" id="addnewform" autocomplete="off">
+                <form method="post" enctype="multipart/form-data" class="addformcontainer" id="AddLocationform" autocomplete="off">
 
                     <div class="form_group col-12 col-sm-12">
                         <label>Part Number <small style="color: #a81818; font-weight: 600;">*</small></label>
-                        <input type="text" placeholder="Enter the Part No" name="Partnumber" id="Palete_Partnumber" required />
+                        <input type="text" placeholder="Enter the Part No" name="partnum" id="Palete_Partnumber" required />
                     </div>
 
-          
+
 
                     <div class="form_group col-12 col-sm-12 ">
                         <label>Select Palete Location<small style="color: #a81818; font-weight: 600;">*</small></label> <br />
                         <div class="select-container">
-                            <select id="selectedPalleted" name="selectedPalleted" required>
+                            <select id="selectedPalleted" name="area" required>
+                                <option value="0">-- Select Pallete --</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div>
+                            <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                        </div>
+                        <button id="btnSave" class="btn-cust-primary"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@*=================================================================================*@
+@*=========================== CHANGE PALETE LOCATION ==============================*@
+@*=================================================================================*@
+<div class="modal fade modal-l" id="EditLocationModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5 id="changeTitle">Change Palete Location</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+
+                <form method="post" enctype="multipart/form-data" class="addformcontainer" id="EditLocationform" autocomplete="off">
+                    <input type="hidden" name="oldlocal" id="oldlocation"/>
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Part Number <small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <input type="text" placeholder="Enter the Part No" name="partnum" id="EditPalletepartnum" required />
+                    </div>
+
+
+
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>Select Palete Location<small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                        <div class="select-container">
+                            <select id="currentPallete" name="area" required>
                                 <option value="0">-- Select Pallete --</option>
                             </select>
                         </div>
@@ -168,8 +217,6 @@
 
 
 
-
-
 <script type="text/javascript">
     let currentPage = 1;
     const pageSize = 10;
@@ -178,6 +225,7 @@
     let MasterlistData = [];
     let StorageData = [];
     let strPartnum;
+    let strOldlocal;
     let ismode;
 
     // Tabs Content
@@ -185,7 +233,6 @@
     const slider = document.querySelector(".Mold_slider");
     const contents = document.querySelectorAll(".Mold_content");
 
-    const select = document.getElementById("selectedPalleted");
 
     tabs.forEach((tab, index) => {
         tab.addEventListener("click", () => {
@@ -225,6 +272,8 @@
         $("#Palete_Partnumber").prop("readonly", true);
         $("#AddLocationModal").modal("show");
     });
+
+
     // =====================================================
 
     // ================= FORM SUBMISSION ======================
@@ -245,6 +294,40 @@
 
         console.log(res);
     });
+
+
+    $("#AddLocationform").on('submit', async function (e) {
+        e.preventDefault();
+        let formData = new FormData(this);
+        const data = Object.fromEntries(formData);
+
+        let res = await postData('@Url.Action("AddMasterlocation", "PartsLocator")', data);
+
+        if (res && res.Success) {
+            GetPaleteLocation(data.partnum);
+            $("#AddLocationModal").modal("hide");
+        }
+    });
+
+    $("#EditLocationform").on('submit', async function (e) {
+        e.preventDefault();
+        let formData = new FormData(this);
+        const data = Object.fromEntries(formData);
+
+        if (strOldlocal === parseInt(data.area)) {
+            alert("Selected area is already the current area. !!!");
+            return;
+        }
+
+        let res = await postData('@Url.Action("EditMasterlocation", "PartsLocator")', data);
+
+        if (res && res.Success) {
+            GetPaleteLocation(data.partnum);
+            $("#EditLocationModal").modal("hide");
+        }
+
+    });
+
 
     // =====================================================
     let debounceTimer;
@@ -331,43 +414,51 @@
 
              });
 
+              // Opens Edit Form Modal
+              $(document).on('click', '.deleteButton', async function (e) {
+                  e.stopPropagation();
+                  const buttonId = $(this).attr('id');
+                  const rowIndex = buttonId.split('_')[1];
+
+                  Swal.fire({
+                      title: "Are you sure?",
+                      text: "You won't be able to revert this!",
+                      icon: "warning",
+                      showCancelButton: true,
+                      confirmButtonColor: "#3085d6",
+                      cancelButtonColor: "#d33",
+                      confirmButtonText: "Yes, delete it!"
+                  }).then(async (result) => {   // 👈 make this async
+                        if (result.isConfirmed) {
+
+                            let res = await postData('@Url.Action("DeleteMasterListpartnum", "PartsLocator")', {
+                                partnum: rowIndex
+                            });
+
+                            if (res && res.Success) {
+                                Swal.fire({
+                                    title: res.Message,
+                                    icon: "success"
+                                });
+
+                                // optional: remove row / reload table
+                                // location.reload();
+                            } else {
+                                Swal.fire("Error", res?.Message || "Delete failed", "error");
+                            }
+                        }
+                    });
+
+
+              });
+
              // Display the Location pallete of the Partnum
 
              $(document).on('click', '.selectedpartnum', async function (e) {
                  e.stopPropagation();
                  const buttonId = $(this).attr('id');
                  const rowIndex = buttonId.split('_')[1];
-
-                 strPartnum = rowIndex;
-
-                 let res = await FetchAuthenticate('@Url.Action("GetProductsLocationPallete", "PartsLocator")', {
-                     partnum : rowIndex
-                 });
-
-                 if (res && res.Success) {
-                     $("#StorageTables").empty();
-                     let tableData = res.Data;
-
-                     tableData.forEach((row, index) => {
-                         var setdata = `<tr>
-                               <td>${row.Partnumber}</td>
-                               <td>${row.ModelName}</td>
-                               <td>${GetLocationString(row.Area)}</td>
-                               <td>${row.Quantity}</td>
-                               <td>
-                                  <button type='button' class='btn actionicon text-primary EditToolClick' id='editButton_${row.RecordID}' >
-                                     <i class='fa-regular fa-pen-to-square action_btn'></i>
-                                  </button>
-                               </td>
-                           </tr>;`
-
-                         $("#StorageTables").append(setdata);
-                     });
-
-                     // Enable
-                     $("#AddPalete").prop("disabled", false);
-                 }
-
+                 GetPaleteLocation(rowIndex);
              });
 
 
@@ -382,41 +473,102 @@
                  ToolingDisplay.append(loadData);
 
           }
-      }
-    const GetPaleteLocation = async () => {
-        let res = await FetchAuthenticate('@Url.Action("GetStorageData", "PartsLocator")', {});
+    }
 
-         if (res && res.Success) {
-             $("#StorageTables").empty();
-             StorageData = res.Data;
 
-             StorageData.forEach((row, index) => {
-                     var setdata = `<tr >
-                            <td>${row.Partnumber}</td>
-                            <td>${row.ModelName}</td>
-                            <td>${GetLocationString(row.Area)}</td>
-                            <td>${row.Quantity}</td>
-                            <td>
-                               <button type='button' class='btn actionicon text-primary EditToolClick' id='editButton_${row.RecordID}' >
-                                  <i class='fa-regular fa-pen-to-square action_btn'></i>
-                               </button>
-                            </td>
-                        </tr>;`
 
-                 $("#StorageTables").append(setdata);
-                 });
+    const GetPaleteLocation = async (partnum) => {
+        strPartnum = partnum;
 
-         } else {
-                const loadData = `<tr>
-                  <td colspan='9'>
-                      🔍 ${res.Message}
-                  </td>
-              </tr>`;
+        let res = await FetchAuthenticate('@Url.Action("GetProductsLocationPallete", "PartsLocator")', {
+            partnum: partnum
+        });
 
-                ToolingDisplay.empty();
-                ToolingDisplay.append(loadData);
+        if (res && res.Success) {
+          $("#StorageTables").empty();
+          StorageData = res.Data;
 
-         }
+          StorageData.forEach((row, index) => {
+              var setdata = `<tr>
+                    <td>${row.Partnumber}</td>
+                    <td>${row.ModelName}</td>
+                    <td>${GetLocationString(row.Area)}</td>
+                    <td>${row.Quantity}</td>
+                    <td>
+                       <button type='button' class='btn actionicon text-primary EditPallete' id='EditPallete_${row.RecordID}' >
+                          <i class='fa-regular fa-pen-to-square action_btn'></i>
+                       </button>
+
+                         <button type='button' class='btn actionicon text-danger DeletePallete' id='DeletePallete_${row.RecordID}' >
+                           <i class='fa-regular fa-trash-can action_btn'></i>
+                        </button>
+                    </td>
+                </tr>;`
+
+              $("#StorageTables").append(setdata);
+          });
+
+          // Opens Edit Form Modal
+          $(document).on('click', '.EditPallete', function (e) {
+              e.stopPropagation();
+              const buttonId = $(this).attr('id');
+              const rowIndex = buttonId.split('_')[1];
+              let filterdata = StorageData.find(res => res.RecordID === parseInt(rowIndex));
+
+              if (filterdata) {
+                  $("#EditPalletepartnum").val(filterdata.Partnumber);
+                  $("#oldlocation").val(filterdata.Area);
+                  $("#currentPallete").val(filterdata.Area);
+
+                  strOldlocal = filterdata.Area;
+
+                  $("#EditLocationModal").modal('show');
+
+              }
+          });
+
+          // Delete Data Form Modal
+          $(document).on('click', '.DeletePallete', function (e) {
+              e.stopPropagation();
+              const buttonId = $(this).attr('id');
+              const rowIndex = buttonId.split('_')[1];
+
+
+              Swal.fire({
+                  title: "Are you sure?",
+                  text: "You won't be able to revert this!",
+                  icon: "warning",
+                  showCancelButton: true,
+                  confirmButtonColor: "#3085d6",
+                  cancelButtonColor: "#d33",
+                  confirmButtonText: "Yes, delete it!"
+              }).then(async (result) => {
+                  if (result.isConfirmed) {
+                      let res = await postData('@Url.Action("DeleteMasterlocation", "PartsLocator")', {
+                          recordID: parseInt(rowIndex)
+                         });
+
+                         if (res && res.Success) {
+                             Swal.fire({
+                                 title: res.Message,
+                                 icon: "success"
+                             });
+
+                             GetPaleteLocation(strPartnum);
+                             // optional: remove row / reload table
+                             // location.reload();
+                         } else {
+                             Swal.fire("Error", res?.Message || "Delete failed", "error");
+                         }
+                  }
+              });
+          });
+
+          // Enable
+          $("#AddPalete").prop("disabled", false);
+        }
+
+
     }
 
 
@@ -449,17 +601,22 @@
     }
 
     const selectDis = document.getElementById("selectedPalleted");
+    const editArea = document.getElementById("currentPallete");
 
     for (let i = 0; i < 26; i++) {
-        const option = document.createElement("option");
+        //const option = document.createElement("option");
 
-        // A to Z
-        option.text = String.fromCharCode(65 + i);
+        //// A to Z
+        //option.text = String.fromCharCode(65 + i);
 
-        // Numeric value (1–26)
-        option.value = i + 1;
+        //// Numeric value (1–26)
+        //option.value = i + 1;
+        const text = String.fromCharCode(65 + i);
+        const value = i + 1;
 
-        selectDis.appendChild(option);
+
+        selectDis.append(new Option(text, value));
+        editArea.append(new Option(text, value));
     }
 
 
@@ -480,7 +637,6 @@
             console.error("Failed to load page data:", error);
         }
     }
-    //GetPaleteLocation()
 
 
     LoadPageData();

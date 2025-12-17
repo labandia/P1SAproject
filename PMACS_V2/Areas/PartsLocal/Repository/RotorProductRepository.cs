@@ -16,7 +16,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                                m.Partnumber, m.ModelName,
                                m.FrontImage, m.BackImage
                             FROM PartsLocatorRotor_Masterlist m
-                            WHERE (m.Partnumber LIKE '%' + @search + '%')
+                            WHERE (m.Partnumber LIKE '%' + @search + '%') AND m.IsDeleted = 0
                             ORDER BY ModelName ASC
                             OFFSET (@page - 1) * @pageSize ROWS
                             FETCH NEXT @pageSize ROWS ONLY";
@@ -79,7 +79,8 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
             string strsql = $@"SELECT
                                m.Partnumber, m.ModelName,
                                m.FrontImage, m.BackImage
-                            FROM PartsLocatorRotor_Masterlist m";
+                            FROM PartsLocatorRotor_Masterlist m
+                            WHERE m.IsDeleted = 0";
             return await SqlDataAccess.GetData<RotorProductModel>(strsql, null);
         }
 
@@ -94,6 +95,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                             FROM PartsLocatorRotor_Location l
                             INNER JOIN PartsLocatorRotor_Masterlist m
                             ON m.Partnumber = l.Partnumber
+                            WHERE m.IsDeleted = 0 AND l.IsRemove =  0
                             ORDER BY l.Area ASC";
             return await SqlDataAccess.GetData<RotorProductModel>(strsql, null);
         }
@@ -115,6 +117,83 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
         public Task<bool> UpdateRotorMasterlist(RotorProductModel rotor)
         {
             throw new System.NotImplementedException();
+        }
+
+
+
+        // ADD / EDIT / REMOVE LOCATION METHODS
+
+        public Task<bool> AddNewLocation(int Area, string partnum)
+        {
+            //string strsql = $@"INSERT INTO PartsLocatorRotor_Location (Partnumber, Area, Quantity)
+            //                SELECT @Partnumber, @Area, 0
+            //                WHERE NOT EXISTS (
+            //                    SELECT 1 FROM PartsLocatorRotor_Location 
+            //                    WHERE (Partnumber = @Partnumber AND Area =@Area) AND IsDeleted = 0
+            //                )";
+            //return SqlDataAccess.UpdateInsertQuery(strsql, new 
+            //{ 
+            //    Partnumber = partnum, 
+            //    Area = Area 
+            //});
+
+            string strsql = @"
+                        IF EXISTS (
+                            SELECT 1 
+                            FROM PartsLocatorRotor_Location 
+                            WHERE Partnumber = @Partnumber 
+                              AND Area = @Area 
+                        )
+                        BEGIN
+                                UPDATE PartsLocatorRotor_Location
+                                SET 
+                                    IsRemove = 0,
+                                    LastUpdated = GETDATE()
+                                WHERE Partnumber = @Partnumber 
+                                  AND Area = @Area 
+                                  AND IsDeleted = 0
+                        END
+                        ELSE
+                        BEGIN
+                            INSERT INTO PartsLocatorRotor_Location (Partnumber, Area, Quantity)
+                            VALUES (@Partnumber, @Area, 0)
+                        END
+                    ";
+
+            return SqlDataAccess.UpdateInsertQuery(strsql, new
+            {
+                Partnumber = partnum,
+                Area = Area
+            });
+        }
+
+        public Task<bool> ChangeLocation(int Area, string partnum, int oldLocation)
+        {
+            string strsql = $@"UPDATE PartsLocatorRotor_Location
+                            SET Area = @Area
+                            WHERE (Partnumber = @Partnumber AND Area = @oldLocation) AND IsDeleted = 0";
+            return SqlDataAccess.UpdateInsertQuery(strsql, new 
+            {
+                Partnumber = partnum, 
+                Area = Area, 
+                oldLocation = oldLocation 
+            });
+        }
+
+        public Task<bool> RemoveLocation(int recorID)
+        {
+            string strsql = $@"UPDATE PartsLocatorRotor_Location SET IsRemove = 1
+                            WHERE RecordID = @recorID";
+
+            return SqlDataAccess.UpdateInsertQuery(strsql, new { recorID = recorID });
+        }
+
+        public Task<bool> DeleteMasterlist(string partnum)
+        {
+            string strsql = $@"UPDATE PartsLocatorRotor_Masterlist SET IsDeleted = 1
+                            WHERE Partnumber = @Partnumber AND IsDeleted = 0";
+
+            return SqlDataAccess.UpdateInsertQuery(strsql, new { Partnumber = partnum });
         }
     }
 }

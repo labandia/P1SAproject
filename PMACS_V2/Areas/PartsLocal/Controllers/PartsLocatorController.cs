@@ -64,6 +64,40 @@ namespace PMACS_V2.Areas.PartsLocal.Controllers
             return JsonCreated(shop, "Update successfully");
         }
 
+        [HttpPost]
+        public async Task<ActionResult> DeleteMasterListpartnum(string partnum)
+        {
+            bool result = await _prod.DeleteMasterlist(partnum);
+            if (!result) return JsonValidationError();
+            return JsonCreated(result, "Delete Masterlist successfully");
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> AddMasterlocation(int area, string partnum)
+        {
+            bool result = await _prod.AddNewLocation(area, partnum);
+            if (!result) return JsonValidationError();
+            return JsonCreated(result, "Add new Palete location successfully");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> EditMasterlocation(int area, string partnum, int oldlocal)
+        {
+            bool result = await _prod.ChangeLocation(area, partnum, oldlocal);
+            if (!result) return JsonValidationError();
+            return JsonCreated(result, "Change new palete location successfully");
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteMasterlocation(int recordID)
+        {
+            bool result = await _prod.RemoveLocation(recordID);
+            if (!result) return JsonValidationError();
+            return JsonCreated(result, "Delete Masterlist successfully");
+        }
+
         // ===========================================================
         // ================== TRACK LOCATION  ========================
         // ===========================================================

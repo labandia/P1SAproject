@@ -18,5 +18,11 @@ namespace PMACS_V2.Areas.PartsLocal.Interface
         Task<RotorProductModel> GetRotorStorageByID(int ID);
         Task<bool> UpdateRotorMasterlist(RotorProductModel rotor);
         Task<bool> AddRotorMasterlist(RotorProductModel rotor);
+        Task<bool> DeleteMasterlist(string partnum);
+
+        // ADD / EDIT / REMOVE LOCATION METHODS
+        Task<bool> AddNewLocation(int Area, string partnum);
+        Task<bool> ChangeLocation(int Area, string partnum, int oldLocation);
+        Task<bool> RemoveLocation(int recorID);
     }
 }

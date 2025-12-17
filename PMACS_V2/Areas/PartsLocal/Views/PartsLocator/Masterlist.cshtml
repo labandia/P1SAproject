@@ -7,7 +7,7 @@
 <section class="maincontainer" style="margin-top: 2em;">
     <div class="MasterWrapper">
         <div class="MasterContent">
-          
+
             <div class="flex_space mb-4">
                 <h4 style="font-weight: 600; color: #222;">Master List</h4>
                 <div class="flex_align">
@@ -40,11 +40,11 @@
         </div>
 
         <div class="MasterContent">
-           
+
 
             <div class="flex_space mb-4">
                 <h4 style="font-weight: 600; color: #222;">Palete Location</h4>
-                <button>Add Palete Location </button>
+                <button type="button" id="AddPalete" class="btn-cust-primary" disabled>Add Palete Location </button>
             </div>
 
             <div class="DieMainTable" id="DieWrapper">
@@ -118,6 +118,57 @@
 
 
 
+@*=================================================================================*@
+@*=========================== ADD PALETE LOCATION =================================*@
+@*=================================================================================*@
+<div class="modal fade modal-l" id="AddLocationModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5 id="changeTitle">Add Palete Location</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+
+                <form method="post" enctype="multipart/form-data" class="addformcontainer" id="addnewform" autocomplete="off">
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Part Number <small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <input type="text" placeholder="Enter the Part No" name="Partnumber" id="Palete_Partnumber" required />
+                    </div>
+
+          
+
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>Select Palete Location<small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                        <div class="select-container">
+                            <select id="selectedPalleted" name="selectedPalleted" required>
+                                <option value="0">-- Select Pallete --</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div>
+                            <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                        </div>
+                        <button id="btnSave" class="btn-cust-primary"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
 
 <script type="text/javascript">
     let currentPage = 1;
@@ -126,12 +177,15 @@
 
     let MasterlistData = [];
     let StorageData = [];
+    let strPartnum;
     let ismode;
 
     // Tabs Content
     const tabs = document.querySelectorAll(".Mold_tab");
     const slider = document.querySelector(".Mold_slider");
     const contents = document.querySelectorAll(".Mold_content");
+
+    const select = document.getElementById("selectedPalleted");
 
     tabs.forEach((tab, index) => {
         tab.addEventListener("click", () => {
@@ -163,7 +217,14 @@
         e.preventDefault();
         $("#changeTitle").text("Add Masterlist");
         OpenAddFormMasterList("add");
-    })
+    });
+
+    $("#AddPalete").on('click', function (e) {
+        e.preventDefault();
+        $("#Palete_Partnumber").val(strPartnum);
+        $("#Palete_Partnumber").prop("readonly", true);
+        $("#AddLocationModal").modal("show");
+    });
     // =====================================================
 
     // ================= FORM SUBMISSION ======================
@@ -266,6 +327,8 @@
                  const rowIndex = buttonId.split('_')[1];
 
                  OpenAddFormMasterList("Edit", rowIndex);
+
+
              });
 
              // Display the Location pallete of the Partnum
@@ -275,6 +338,7 @@
                  const buttonId = $(this).attr('id');
                  const rowIndex = buttonId.split('_')[1];
 
+                 strPartnum = rowIndex;
 
                  let res = await FetchAuthenticate('@Url.Action("GetProductsLocationPallete", "PartsLocator")', {
                      partnum : rowIndex
@@ -300,7 +364,8 @@
                          $("#StorageTables").append(setdata);
                      });
 
-
+                     // Enable
+                     $("#AddPalete").prop("disabled", false);
                  }
 
              });
@@ -382,6 +447,22 @@
             pager.innerHTML += `<button onclick="goPage(${data.PageNumber + 1})">Next</button>`;
         }
     }
+
+    const selectDis = document.getElementById("selectedPalleted");
+
+    for (let i = 0; i < 26; i++) {
+        const option = document.createElement("option");
+
+        // A to Z
+        option.text = String.fromCharCode(65 + i);
+
+        // Numeric value (1–26)
+        option.value = i + 1;
+
+        selectDis.appendChild(option);
+    }
+
+
 
     function goPage(page) {
         currentPage = page;

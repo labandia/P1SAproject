@@ -433,44 +433,63 @@ namespace FootWristStrapsAnalysis
             if (e.RowIndex < 0) return;
 
             string checkCol = "Select";
-            string recordCol = "RecordID";  // <- your RecordID column name
+            string recordCol = "RecordID";
 
-            // Toggle checkbox
+            // Current checkbox value
             bool current = Convert.ToBoolean(
                 AnalysisTable.Rows[e.RowIndex].Cells[checkCol].Value ?? false
             );
 
-            bool newValue = !current;
-            AnalysisTable.Rows[e.RowIndex].Cells[checkCol].Value = newValue;
-
+            // Get RecordID
             var value = AnalysisTable.Rows[e.RowIndex].Cells[recordCol].Value;
+            if (value == null || value == DBNull.Value) return;
 
-            if (value == null || value == DBNull.Value)
-                return;
+            if (!int.TryParse(value.ToString(), out int recordId)) return;
 
-
-            int recordId;
-            if (!int.TryParse(value.ToString(), out recordId))
-                return;
-
-
-            // Add to list if checked
-            if (newValue)
+            // 🔹 IF USER IS TRYING TO CHECK (currently unchecked)
+            if (!current)
             {
+                // Reached limit → block new selection
+                if (selectedRecordIds.Count >= 10)
+                {
+                    MessageBox.Show(
+                        "You can only select up to 10 records for export.",
+                        "Limit Exceeded",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning
+                    );
+                    return;
+                }
+
+                // Allow checking
+                AnalysisTable.Rows[e.RowIndex].Cells[checkCol].Value = true;
+
                 if (!selectedRecordIds.Contains(recordId))
                     selectedRecordIds.Add(recordId);
             }
             else
             {
-                // Remove if unchecked
+                // 🔹 USER IS UNCHECKING → always allowed
+                AnalysisTable.Rows[e.RowIndex].Cells[checkCol].Value = false;
                 selectedRecordIds.Remove(recordId);
             }
+
         }
 
         private void button1_Click_1(object sender, EventArgs e)
         {
             try
             {
+
+                Debug.WriteLine("Selected " + selectedRecordIds.Count);
+                if(selectedRecordIds.Count == 0)
+                {
+                    MessageBox.Show("No Records Selected for Export... ", "Error",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+
                 SaveFileDialog saveFileDialog = new SaveFileDialog
                 {
                     Filter = "Excel Files|*.xlsx",

@@ -1,11 +1,13 @@
-﻿using PMACS_V2.Areas.P1SA.Interface;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using Dapper;
+using Microsoft.Office.Interop.Excel;
+using PMACS_V2.Areas.P1SA.Interface;
 using PMACS_V2.Areas.P1SA.Models;
 using PMACS_V2.Helper;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-
-using System.Threading.Tasks;
 
 namespace PMACS_V2.Areas.P1SA.Repository
 {
@@ -644,9 +646,42 @@ namespace PMACS_V2.Areas.P1SA.Repository
             throw new NotImplementedException();
         }
 
-        public Task<bool> UpdateForecast(forecastInput fores, string strsql)
+        public Task<bool> UpdateForecast(forecastInput fores, string strsql, string[] columns)
         {
-            return SqlDataAccess.UpdateInsertQuery(strsql, fores);
+            var parameters = new DynamicParameters();
+            parameters.Add("@forest_code", 0);
+            int count = 0;
+
+            foreach (var column in columns)
+            {
+                switch (count)
+                {
+                    case 0:        
+                        parameters.Add("@" + column, fores.column2);
+                        break;
+                    case 1:
+                        parameters.Add("@" + column, fores.column3);
+                        break;
+                    case 2:
+                        parameters.Add("@" + column, fores.column4);
+                        break;
+                    case 3:
+                        parameters.Add("@" + column, fores.column5);
+                        break;
+                    case 4:
+                        parameters.Add("@" + column, fores.column6);
+                        break;
+                    case 5:
+                        parameters.Add("@" + column, fores.column7);
+                        break;
+                    case 6:
+                        parameters.Add("@" + column, fores.column8);
+                        break;
+                }
+                count++;
+            }
+
+            return SqlDataAccess.UpdateInsertQuery(strsql, parameters);
         }
     }
 }

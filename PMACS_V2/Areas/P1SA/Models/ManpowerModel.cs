@@ -113,12 +113,12 @@ namespace PMACS_V2.Areas.P1SA.Models
     public class forecastInput
     {
         public int forest_code { get; set; } 
-        public string column2 { get; set; }
-        public string column3 { get; set; }
-        public string column4 { get; set; }
-        public string column5 { get; set; }
-        public string column6 { get; set; }
-        public string column7 { get; set; }
-        public string column8 { get; set; }
+        public double column2 { get; set; }
+        public double column3 { get; set; }
+        public double column4 { get; set; }
+        public double column5 { get; set; }
+        public double column6 { get; set; }
+        public double column7 { get; set; }
+        public double column8 { get; set; }
     }
 }

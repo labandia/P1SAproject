@@ -240,34 +240,31 @@ namespace PMACS_V2.Areas.P1SA.Controllers
                                 {
                                     if (worksheet.Cells[row, 2].Text == "ﾌｧﾝﾕﾆｯﾄ")
                                     {
+                                        // Values updates
                                         var obj = new forecastInput
                                         {
-                                            column2 = column2,
-                                            column3 = column3,
-                                            column4 = column4,      
-                                            column5 = column5,
-                                            column6 = column6,
-                                            column7 = column7,
+                                            column2 = Convert.ToDouble(worksheet.Cells[row, 3].Text),
+                                            column3 = Convert.ToDouble(worksheet.Cells[row, 4].Text),
+                                            column4 = Convert.ToDouble(worksheet.Cells[row, 5].Text),      
+                                            column5 = Convert.ToDouble(worksheet.Cells[row, 6].Text),
+                                            column6 = Convert.ToDouble(worksheet.Cells[row, 7].Text),
+                                            column7 = Convert.ToDouble(worksheet.Cells[row, 8].Text),
                                             forest_code = 0
                                         };
 
+                                        // All properties assigned
+                                        string[] newcolumns = new string[]
+                                        {
+                                            column2,
+                                            column3,
+                                            column4,
+                                            column5,
+                                            column6,
+                                            column7
+                                        };
 
-                                        await _cap.UpdateForecast(obj, CombineString);  
-                                        //using (SqlConnection con = new SqlConnection(cons.DbConnection()))
-                                        //{
-                                        //    con.Open();
-                                        //    using (SqlCommand cmd = new SqlCommand(CombineString, con))
-                                        //    {
-                                        //        cmd.Parameters.AddWithValue("@forest_code", 0);
-                                        //        cmd.Parameters.AddWithValue("@" + column2, Convert.ToDouble(worksheet.Cells[row, 3].Text));
-                                        //        cmd.Parameters.AddWithValue("@" + column3, Convert.ToDouble(worksheet.Cells[row, 4].Text));
-                                        //        cmd.Parameters.AddWithValue("@" + column4, Convert.ToDouble(worksheet.Cells[row, 5].Text));
-                                        //        cmd.Parameters.AddWithValue("@" + column5, Convert.ToDouble(worksheet.Cells[row, 6].Text));
-                                        //        cmd.Parameters.AddWithValue("@" + column6, Convert.ToDouble(worksheet.Cells[row, 7].Text));
-                                        //        cmd.Parameters.AddWithValue("@" + column7, Convert.ToDouble(worksheet.Cells[row, 8].Text));
-                                        //        cmd.ExecuteNonQuery();
-                                        //    }
-                                        //}
+                                        await _cap.UpdateForecast(obj, CombineString, newcolumns);  
+                                     
                                     }
                                     else
                                     {

@@ -57,6 +57,6 @@ namespace PMACS_V2.Areas.P1SA.Interface
         Task<bool> DeleteModels(int capinfo_id, int capgroup);
 
 
-        Task<bool> UpdateForecast(forecastInput fores, string strsql);
+        Task<bool> UpdateForecast(forecastInput fores, string strsql, string[] columns);
     }
 }

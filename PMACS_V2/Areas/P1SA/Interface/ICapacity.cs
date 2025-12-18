@@ -55,5 +55,8 @@ namespace PMACS_V2.Areas.P1SA.Interface
         Task<bool> UpdateProcessform(ProcessformPostModel cap);
         Task<bool> UpdateManpower(int totalManpower, string processcode);
         Task<bool> DeleteModels(int capinfo_id, int capgroup);
+
+
+        Task<bool> UpdateForecast(forecastInput fores, string strsql);
     }
 }

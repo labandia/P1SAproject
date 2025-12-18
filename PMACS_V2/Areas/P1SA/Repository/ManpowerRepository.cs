@@ -39,7 +39,8 @@ namespace PMACS_V2.Areas.P1SA.Repository
         }
         public Task<bool> EditRequireManpower(object parameters)
         {
-            string strquery = "UPDATE PMACS_ProdManpower SET  SDP = @SDP, SubCon = @SubCon, Remarks = @Remarks  WHERE Manpower_ID = @Manpower_ID";
+            string strquery = $@"UPDATE PMACS_ProdManpower SET  SDP = @SDP, SubCon = @SubCon, 
+                            Remarks = @Remarks  WHERE Manpower_ID = @Manpower_ID";
             return SqlDataAccess.UpdateInsertQuery(strquery, parameters);
         }
 

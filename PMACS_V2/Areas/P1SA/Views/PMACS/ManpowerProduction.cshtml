@@ -244,87 +244,86 @@
          }
      }
 
+        let lackingChartInstance = null;
 
+     function ChartDisplay(label, dataS) {
 
-    function ChartDisplay(label, dataS) {
-        const ctx = document.getElementById('lackingChart').getContext('2d');
+            const canvas = document.getElementById('lackingChart');
+            const ctx = canvas.getContext('2d');
 
-        const backgroundColors = dataS.map(value => value < 0 ? '#ff4d4d' : '#1983e6');
+            // 🔴 Destroy previous chart
+            if (lackingChartInstance) {
+                lackingChartInstance.destroy();
+                lackingChartInstance = null;
+            }
 
-        const data = {
-            labels: label,
-            datasets: [{
-                label: 'Lacking Manpower',
-                data: dataS,
-                backgroundColor: backgroundColors,
-                borderRadius: 5
-            }]
-        }
+            const backgroundColors = dataS.map(value =>
+                value < 0 ? '#ff4d4d' : '#1983e6'
+            );
 
+            const data = {
+                labels: label,
+                datasets: [{
+                    label: 'Lacking Manpower',
+                    data: dataS,
+                    backgroundColor: backgroundColors,
+                    borderRadius: 5
+                }]
+            };
 
-        const config = {
-            type: 'bar',
-            data: data,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: {
-                        beginAtZero: true,
-                        title: {
-                            display: false,
-                            text: '',
-                            font: {
-                                family: 'Poppins'  // 👈 Set font family for axis title
+            const config = {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            ticks: {
+                                font: { family: 'Poppins' }
                             }
                         },
-                        ticks: {
-                            font: {
-                                family: 'Poppins'
+                        y: {
+                            ticks: {
+                                font: { family: 'Poppins' }
                             }
                         }
                     },
-                    y: {
-                        ticks: {
-                            font: {
-                                family: 'Poppins'
-                            }
-                        }
-                    }
-                },
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: true,
-                        labels: {
-                            font: {
-                                family: 'Poppins'
-                            }
-                        }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function (context) {
-                                return `${context.parsed.y}`;
+                    plugins: {
+                        legend: {
+                            display: true,
+                            labels: {
+                                font: { family: 'Poppins' }
                             }
                         },
-                        titleFont: {
-                            family: 'Poppins'
-                        },
-                        bodyFont: {
-                            family: 'Poppins'
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return `${context.parsed.y}`;
+                                }
+                            },
+                            titleFont: { family: 'Poppins' },
+                            bodyFont: { family: 'Poppins' }
                         }
                     }
                 }
-            }
-        };
+            };
 
+            // ✅ Save instance
+            lackingChartInstance = new Chart(ctx, config);
+     }
 
-        const lackingChart = new Chart(ctx, config);
+        let manpowerChartInstance = null;
 
-    }
     function DoughnutDisplay(label, total) {
-        const ctx = document.getElementById('manpowerChart').getContext('2d');
+        const canvas = document.getElementById('manpowerChart');
+        const ctx = canvas.getContext('2d');
+
+        // 🔴 Destroy existing chart before creating a new one
+        if (manpowerChartInstance) {
+            manpowerChartInstance.destroy();
+            manpowerChartInstance = null;
+        }
 
         const data = {
             labels: ['SPD', 'Sub/Con'],
@@ -346,7 +345,6 @@
                     title: {
                         display: true,
                         text: 'Total Manpower Distribution',
-                        align: 'center',
                         font: {
                             size: 14,
                             family: 'Poppins'
@@ -364,39 +362,29 @@
                                 size: 14
                             },
                             generateLabels: function (chart) {
-                                const data = chart.data;
-                                const dataset = data.datasets[0];
-                                return data.labels.map((label, i) => {
-                                    return {
-                                        text: `${label}: ${dataset.data[i]}`,
-                                        fillStyle: dataset.backgroundColor[i],
-                                        strokeStyle: dataset.backgroundColor[i],
-                                        index: i
-                                    };
-                                });
+                                const dataset = chart.data.datasets[0];
+                                return chart.data.labels.map((label, i) => ({
+                                    text: `${label}: ${dataset.data[i]}`,
+                                    fillStyle: dataset.backgroundColor[i],
+                                    strokeStyle: dataset.backgroundColor[i],
+                                    index: i
+                                }));
                             }
                         }
                     },
                     tooltip: {
                         callbacks: {
                             label: function (context) {
-                                const label = context.label || '';
-                                const value = context.parsed || 0;
-                                return `${label}: ${value}`;
+                                return `${context.label}: ${context.parsed}`;
                             }
-                        },
-                        titleFont: {
-                            family: 'Poppins'
-                        },
-                        bodyFont: {
-                            family: 'Poppins'
                         }
                     }
                 }
             }
         };
 
-        new Chart(ctx, config);
+        // ✅ Save chart instance
+        manpowerChartInstance = new Chart(ctx, config);
     }
 
 
@@ -463,9 +451,12 @@
 
      editmanpower.addEventListener('submit', async (e) => {
          e.preventDefault();
-         var formData = new FormData(e.target);
-         let res = await postData('@Url.Action("EditManpower", "PMACS")', formData);
-         if (res.StatusCode === 200) {
+         let formData = new FormData(e.target);
+         const data = Object.fromEntries(formData);
+
+         let res = await postData('@Url.Action("EditManpower", "PMACS")', data);
+
+         if (res && res.Success) {
              $("#exampleModal").modal("hide");
              Swal.fire({
                  title: "Success",
@@ -474,7 +465,7 @@
                  showConfirmButton: false,
                  timer: 1000
              }).then(() => {
-                 InitializationData();
+                 LoadPageData();
              });
          }
 
@@ -504,7 +495,7 @@
                  + "<input type='hidden' value='" + data.Manpower_ID + "' name='Manpower_ID' class='form-control' id='SumID' />"
                  + "<input type='text' value='" + data.SDP + "' name='SDP'   id='SDP' autocomplete='off' onkeypress='return restrictChars(event)' maxlength='5' /><br />"
                  + "<label style='font-weight: 600; color: #222; margin-bottom: .5em;'>SubCon :</label> <br />"
-                 + "<input type='text' value='" + data.SubCon + "' name='Sub/Con'   id='SubCon' autocomplete='off'  maxlength='5' onkeypress='return restrictChars(event)' /><br />"
+                  + "<input type='text' value='" + data.SubCon + "' name='SubCon'   id='SubCon' autocomplete='off'  maxlength='5' onkeypress='return restrictChars(event)' /><br />"
                  + "<label style='font-weight: 600; color: #222; margin-bottom: .5em; '>Remarks :</label> <br />"
                  + "<input type='text' value='" + data.Remarks + "' name='Remarks'   id='Remarks' autocomplete='off' />"
                  + "<div class='footer d-flex justify-content-end pt-4 pb-2 gap-2'>"

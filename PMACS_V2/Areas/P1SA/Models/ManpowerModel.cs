@@ -101,4 +101,24 @@ namespace PMACS_V2.Areas.P1SA.Models
         public string Action { get; set; }
         public string LastUpdated {  get; set; }   
     }
+
+    public class manpowerform
+    {
+        public int Manpower_ID { get; set; }
+        public string SubCon { get; set; }
+        public string SDP { get; set; }
+        public string Remarks { get; set; }
+    }
+
+    public class forecastInput
+    {
+        public int forest_code { get; set; } 
+        public string column2 { get; set; }
+        public string column3 { get; set; }
+        public string column4 { get; set; }
+        public string column5 { get; set; }
+        public string column6 { get; set; }
+        public string column7 { get; set; }
+        public string column8 { get; set; }
+    }
 }

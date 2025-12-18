@@ -332,16 +332,8 @@
             const formData = new FormData();
             formData.append('excelfile', file);
             formData.append('calendar', $("#calendar").val());
-            //const data = Object.fromEntries(formData);
-            //console.log(data);
-            // You can now send the formData to the server using fetch or XMLHttpRequest
-            // Example using fetch:
-            // fetch('/your-upload-endpoint', {
-            //     method: 'POST',
-            //     body: formData
-            // }).then(response => response.json())
-            //   .then(data => console.log(data))
-            //   .catch(error => console.error('Error:', error));
+            const data = Object.fromEntries(formData);
+    
             let check = ValidationForm();
             const xhr = new XMLHttpRequest();
             xhr.open('POST', '/Capacity/ImportForecastData', true);
@@ -356,31 +348,36 @@
             });
 
             xhr.addEventListener('load', function () {
-                const progressBar = document.getElementById('progress-bar');
-                progressBar.style.display = 'none';
-                if (xhr.status === 200) {
-                    const res = JSON.parse(xhr.responseText);
-                    if (res.isSuccess) {
-                        $("#uploadmodal").modal("hide");
-                        Swal.fire({
-                            text: res.message,
-                            icon: "success",
-                            confirmButtonColor: "#0d97c9",
-                            timer: 2000
-                        }).then(() => {
-                            window.location.href = "/Capacity/ForecastData";
-                        });
-                    } else {
-                        alert("Upload a file first");
-                    }
-                } else {
-                    alert('Upload failed!');
-                }
+                const res = JSON.parse(xhr.responseText);
+                console.log(res);
+
+
+                //const progressBar = document.getElementById('progress-bar');
+                //progressBar.style.display = 'none';
+                //if (xhr.status === 200) {
+                //    const res = JSON.parse(xhr.responseText);
+                //    console.log(res);
+                //    //if (res.isSuccess) {
+                //    //    $("#uploadmodal").modal("hide");
+                //    //    Swal.fire({
+                //    //        text: res.message,
+                //    //        icon: "success",
+                //    //        confirmButtonColor: "#0d97c9",
+                //    //        timer: 2000
+                //    //    }).then(() => {
+                //    //        window.location.href = "/Capacity/ForecastData";
+                //    //    });
+                //    //} else {
+                //    //    alert("Upload a file first");
+                //    //}
+                //} else {
+                //    alert('Upload failed!');
+                //}
             });
 
-            xhr.addEventListener('error', function () {
-                alert('An error occurred while uploading the file.');
-            });
+            //xhr.addEventListener('error', function () {
+            //    alert('An error occurred while uploading the file.');
+            //});
 
 
             xhr.send(formData);

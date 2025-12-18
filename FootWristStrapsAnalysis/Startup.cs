@@ -12,7 +12,9 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Media;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+
 
 namespace FootWristStrapsAnalysis
 {
@@ -26,12 +28,16 @@ namespace FootWristStrapsAnalysis
         private IEnumerable<IFootWristModel> getData = new List<IFootWristModel>();
 
         private List<int> selectedRecordIds = new List<int>();
+        private List<string> selectedEmployeeID = new List<string>();
 
         private static IEnumerable<IFootWristModel> footlist;
 
         public Startup(IFootWrist foot)
         {
             InitializeComponent();
+          
+
+
             _foot = foot;
 
             // 🔁 Run every 15 minutes (900,000 ms)
@@ -165,14 +171,16 @@ namespace FootWristStrapsAnalysis
 
                 if (!Directory.Exists(folderPath))
                 {
-                    Debug.WriteLine("⚠️ Folder not found: " + folderPath);
+                    //Debug.WriteLine("⚠️ Folder not found: " + folderPath);
+                    MessageBox.Show("⚠️ Folder not found: " + folderPath);
                     return;
                 }
 
                 string[] csvFiles = Directory.GetFiles(folderPath, "*.csv", SearchOption.TopDirectoryOnly);
                 if (csvFiles.Length == 0)
                 {
-                    Debug.WriteLine("⚠️ No CSV files found in the folder.");
+                    //Debug.WriteLine("⚠️ No CSV files found in the folder.");
+                    MessageBox.Show("⚠️ No CSV files found in the folder.");
                     return;
                 }
 
@@ -410,6 +418,10 @@ namespace FootWristStrapsAnalysis
       
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
+            selectedRecordIds = new List<int>();
+
+            selecteditem.Text = "0 / 10";
+
             string filterText = textBox1.Text.ToLower();
             var filteredList = new List<IFootWristModel>();
 
@@ -435,11 +447,14 @@ namespace FootWristStrapsAnalysis
             string checkCol = "Select";
             string recordCol = "RecordID";
 
+            string selectedEmployee  = AnalysisTable.Rows[e.RowIndex].Cells["EmployeeID"].Value.ToString();
+
             // Current checkbox value
             bool current = Convert.ToBoolean(
                 AnalysisTable.Rows[e.RowIndex].Cells[checkCol].Value ?? false
             );
-
+   
+            Debug.WriteLine("GET Employee" + AnalysisTable.Rows[e.RowIndex].Cells["EmployeeID"].Value);
             // Get RecordID
             var value = AnalysisTable.Rows[e.RowIndex].Cells[recordCol].Value;
             if (value == null || value == DBNull.Value) return;
@@ -465,23 +480,33 @@ namespace FootWristStrapsAnalysis
                 AnalysisTable.Rows[e.RowIndex].Cells[checkCol].Value = true;
 
                 if (!selectedRecordIds.Contains(recordId))
+                {
                     selectedRecordIds.Add(recordId);
+                    selectedEmployeeID.Add(selectedEmployee);
+                }
             }
             else
             {
                 // 🔹 USER IS UNCHECKING → always allowed
                 AnalysisTable.Rows[e.RowIndex].Cells[checkCol].Value = false;
                 selectedRecordIds.Remove(recordId);
+
+               
+                if (selectedEmployeeID.Contains(selectedEmployee))
+                {
+                    selectedEmployeeID.Remove(selectedEmployee);
+                }
             }
+
+            selecteditem.Text = selectedRecordIds.Count.ToString() + " / 10";
 
         }
 
-        private void button1_Click_1(object sender, EventArgs e)
+        private async void button1_Click_1(object sender, EventArgs e)
         {
             try
             {
 
-                Debug.WriteLine("Selected " + selectedRecordIds.Count);
                 if(selectedRecordIds.Count == 0)
                 {
                     MessageBox.Show("No Records Selected for Export... ", "Error",
@@ -499,7 +524,7 @@ namespace FootWristStrapsAnalysis
 
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    PopulateTemplateFromDatabase(saveFileDialog.FileName);
+                    await PopulateTemplateFromDatabase(saveFileDialog.FileName);
                     MessageBox.Show("Export completed successfully!", "Success",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -599,6 +624,7 @@ namespace FootWristStrapsAnalysis
             {
 
                 DateTime testDate = Convert.ToDateTime(row.TestDate);
+
                 string employeeID = row.EmployeeID;
 
                 var testData = new ESDTestData
@@ -624,46 +650,61 @@ namespace FootWristStrapsAnalysis
         }
 
 
-        private async void PopulateTemplateFromDatabase(string outputPath)
+        private async Task PopulateTemplateFromDatabase(string outputPath)
         {
+            if (!File.Exists(templateFilepath))
+                throw new FileNotFoundException("Template file not found.", templateFilepath);
+
             // 1. Copy template to output path
             File.Copy(templateFilepath, outputPath, true);
 
             var getData = await _foot.GetTestDataForMonth(11, 2025);
 
+
+
+            if (getData == null || !getData.Any())
+                throw new Exception("No data returned from database.");
             //Dictionary<DateTime, Dictionary<string, ESDTestData>> organizedData =
             //   OrganizeDataByDateAndEmployee(getData);
 
-            //foreach (int id in selectedRecordIds)
-            //{
-            //    Debug.WriteLine(id);
-            //}
+
+
+
 
             // 3. Open the copied template
             using (var package = new ExcelPackage(new FileInfo(outputPath)))
             {
-                var worksheet = package.Workbook.Worksheets["Sheet1"]; // Or worksheet index
+                var worksheet = package.Workbook.Worksheets["Sheet1"]
+                    ?? package.Workbook.Worksheets.FirstOrDefault();
 
                 if (worksheet == null)
-                {
-                    worksheet = package.Workbook.Worksheets[0];
-                }
+                    throw new Exception("No worksheet found in Excel template.");
 
                 // 4. Get employee column mapping FROM DATABASE
                 Dictionary<string, (int rightCol, int leftCol)> employeeColumnMap =
                     GetEmployeeColumnMappingFromDatabase();
+
+
+            
+
+                worksheet.Cells[5, 5].Value = 2021;
+                worksheet.Cells[5, 9].Value = "Month: Febuary";
+
 
                 //// 5. Organize data from database
                 Dictionary<DateTime, Dictionary<string, ESDTestData>> organizedData =
                     OrganizeDataByDateAndEmployee(getData);
 
                 //// 6. Map database IDs to template IDs (if needed)
-                Dictionary<string, string> dbToTemplateMapping = GetDatabaseToTemplateMapping();
+                Dictionary<string, string> dbToTemplateMapping = new Dictionary<string, string>();
+
+
+                WriteEmployeeHeaders(worksheet, employeeColumnMap);
 
                 //// 7. Populate the data into template
                 PopulateDataIntoTemplate(worksheet, organizedData, employeeColumnMap, dbToTemplateMapping);
 
-                // 8. Save changes
+                //// 8. Save changes
                 package.Save();
             }
         }
@@ -711,75 +752,141 @@ namespace FootWristStrapsAnalysis
             };
         }
 
+        private void WriteEmployeeHeaders(
+            ExcelWorksheet worksheet,
+            Dictionary<string, (int rightCol, int leftCol)> employeeColumnMap)
+                {
+                    int headerRow = 10; // Row above C10
+
+                    foreach (var emp in employeeColumnMap)
+                    {
+                        // Employee ID centered across both columns
+                        worksheet.Cells[headerRow, emp.Value.rightCol].Value = emp.Key;
+                        worksheet.Cells[headerRow, emp.Value.leftCol].Value = emp.Key;
+
+                        // Rotate text vertically
+                        worksheet.Cells[headerRow, emp.Value.rightCol].Style.TextRotation = 90;
+                        worksheet.Cells[headerRow, emp.Value.leftCol].Style.TextRotation = 90;
+
+                        worksheet.Cells[headerRow, emp.Value.rightCol].Style.HorizontalAlignment =
+                            ExcelHorizontalAlignment.Center;
+                        worksheet.Cells[headerRow, emp.Value.leftCol].Style.HorizontalAlignment =
+                            ExcelHorizontalAlignment.Center;
+                    }
+        }
+
 
         private void PopulateDataIntoTemplate(ExcelWorksheet worksheet,
            Dictionary<DateTime, Dictionary<string, ESDTestData>> organizedData,
            Dictionary<string, (int rightCol, int leftCol)> templateColumnMap,
            Dictionary<string, string> dbToTemplateMapping)
         {
+            int startRow = 11; // ✅ MUST match A11 = Day 1
+            int daysInMonth = DateTime.DaysInMonth(2025, 11);
+
             // Populate data for each day of December (rows 11-41)
-            for (int day = 1; day <= 31; day++)
+            for (int day = 1; day <= daysInMonth; day++)
             {
-                int row = 10 + day; // Row 11 for day 1, 12 for day 2, etc.
-                DateTime currentDate = new DateTime(2023, 12, day);
+                int row = 11 + day; // Row 11 for day 1, 12 for day 2, etc.
+                DateTime currentDate = new DateTime(2025, 11, day);
+
+                foreach (var emp in templateColumnMap)
+                {
+                    Debug.WriteLine(currentDate.ToString());
+                    int rightCol = emp.Value.rightCol;
+                    int leftCol = emp.Value.leftCol;
+
+                    // First: check if the DATE exists in DB
+                    if (!organizedData.TryGetValue(currentDate, out var empData))
+                    {
+                        continue;
+                    }
+
+                    // Second: check if EMPLOYEE exists for that date
+                    if (!empData.TryGetValue(emp.Key, out var testData))
+                    {
+                        continue;
+                    }
+
+                    // ✅ Date and employee found → write to Excel
+                    SetResultCell(worksheet.Cells[row, rightCol], testData.RightFootResult);
+                    SetResultCell(worksheet.Cells[row, leftCol], testData.LeftFootResult);
+                }
+
+
 
                 // Check each employee that exists in the template
-                foreach (var templateEntry in templateColumnMap)
-                {
-                    string templateEmployeeID = templateEntry.Key;
-                    int rightCol = templateEntry.Value.rightCol;
-                    int leftCol = templateEntry.Value.leftCol;
+                //foreach (var templateEntry in templateColumnMap)
+                //{
+                //    string templateEmployeeID = templateEntry.Key;
+                //    int rightCol = templateEntry.Value.rightCol;
+                //    int leftCol = templateEntry.Value.leftCol;
 
-                    // Find the corresponding database ID
-                    string dbEmployeeID = FindDatabaseEmployeeID(templateEmployeeID, dbToTemplateMapping);
+                //    // Find the corresponding database ID
+                //    //string dbEmployeeID = FindDatabaseEmployeeID(templateEmployeeID, dbToTemplateMapping);
 
-                    // Check if we have data for this date and employee
-                    bool hasData = organizedData.ContainsKey(currentDate) &&
-                                  organizedData[currentDate].ContainsKey(dbEmployeeID);
+                //    // Check if we have data for this date and employee
+                //    bool hasData = organizedData.ContainsKey(currentDate) &&
+                //                  organizedData[currentDate].ContainsKey(templateEmployeeID);
 
-                    if (hasData)
-                    {
-                        ESDTestData testData = organizedData[currentDate][dbEmployeeID];
+                //    if (hasData)
+                //    {
+                //        ESDTestData testData = organizedData[currentDate][templateEmployeeID];
 
-                        // Populate Right foot result (O for pass, X for fail)
-                        string rightValue = testData.RightFootResult ? "O" : "X";
-                        worksheet.Cells[row, rightCol].Value = rightValue;
-                        worksheet.Cells[row, rightCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                //        // Populate Right foot result (O for pass, X for fail)
+                //        string rightValue = testData.RightFootResult ? "O" : "X";
+                //        worksheet.Cells[row, rightCol].Value = rightValue;
+                //        worksheet.Cells[row, rightCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
-                        // Apply color
-                        if (testData.RightFootResult)
-                        {
-                            worksheet.Cells[row, rightCol].Style.Font.Color.SetColor(Color.Green);
-                        }
-                        else
-                        {
-                            worksheet.Cells[row, rightCol].Style.Font.Color.SetColor(Color.Red);
-                        }
+                //        // Apply color
+                //        if (testData.RightFootResult)
+                //        {
+                //            worksheet.Cells[row, rightCol].Style.Font.Color.SetColor(System.Drawing.Color.Green);
+                //        }
+                //        else
+                //        {
+                //            worksheet.Cells[row, rightCol].Style.Font.Color.SetColor(System.Drawing.Color.Red);
+                //        }
 
-                        // Populate Left foot result
-                        string leftValue = testData.LeftFootResult ? "O" : "X";
-                        worksheet.Cells[row, leftCol].Value = leftValue;
-                        worksheet.Cells[row, leftCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                //        // Populate Left foot result
+                //        string leftValue = testData.LeftFootResult ? "O" : "X";
+                //        worksheet.Cells[row, leftCol].Value = leftValue;
+                //        worksheet.Cells[row, leftCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
-                        // Apply color
-                        if (testData.LeftFootResult)
-                        {
-                            worksheet.Cells[row, leftCol].Style.Font.Color.SetColor(Color.Green);
-                        }
-                        else
-                        {
-                            worksheet.Cells[row, leftCol].Style.Font.Color.SetColor(Color.Red);
-                        }
-                    }
-                    else
-                    {
-                        // No data for this day - clear the cells but keep formatting
-                        worksheet.Cells[row, rightCol].Value = "";
-                        worksheet.Cells[row, leftCol].Value = "";
-                    }
-                }
+                //        // Apply color
+                //        if (testData.LeftFootResult)
+                //        {
+                //            worksheet.Cells[row, leftCol].Style.Font.Color.SetColor(System.Drawing.Color.Green);
+                //        }
+                //        else
+                //        {
+                //            worksheet.Cells[row, leftCol].Style.Font.Color.SetColor(System.Drawing.Color.Red);
+                //        }
+                //    }
+                //    else
+                //    {
+                //        // No data for this day - clear the cells but keep formatting
+                //        worksheet.Cells[row, rightCol].Value = "";
+                //        worksheet.Cells[row, leftCol].Value = "";
+                //    }
+                //}
             }
         }
+
+
+        private void SetResultCell(ExcelRange cell, bool isPass)
+        {
+            cell.Value = isPass ? "O" : "X";
+            cell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            cell.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+            cell.Style.Font.Bold = true;
+
+            cell.Style.Font.Color.SetColor(
+                isPass ? System.Drawing.Color.Green : System.Drawing.Color.Red
+            );
+        }
+
+
 
         private string FindDatabaseEmployeeID(string templateEmployeeID, Dictionary<string, string> mapping)
         {
@@ -820,9 +927,9 @@ namespace FootWristStrapsAnalysis
             var columnMap = new Dictionary<string, (int rightCol, int leftCol)>();
 
             // Get distinct employee IDs from database
-            List<string> employeeIDs = GetDistinctEmployeeIDsForMonth(12, 2023);
+            //List<string> employeeIDs = GetDistinctEmployeeIDsForMonth(12, 2023);
 
-            if (employeeIDs.Count == 0)
+            if (selectedEmployeeID.Count == 0)
             {
                 MessageBox.Show("No employee data found in database for December 2023",
                     "No Data", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -833,16 +940,16 @@ namespace FootWristStrapsAnalysis
             // Each employee gets 2 columns: Right (even columns) and Left (odd columns)
             int startCol = 3; // Column C
 
-            for (int i = 0; i < employeeIDs.Count; i++)
+            for (int i = 0; i < selectedEmployeeID.Count; i++)
             {
-                string employeeID = employeeIDs[i];
+                string employeeID = selectedEmployeeID[i];
                 int rightCol = startCol + (i * 2);     // C, E, G, I, etc.
                 int leftCol = rightCol + 1;            // D, F, H, J, etc.
 
                 // Stop if we exceed column V (max 22 columns)
                 if (rightCol > 22 || leftCol > 22) // 22 = Column V
                 {
-                    MessageBox.Show($"Warning: Too many employees ({employeeIDs.Count}). " +
+                    MessageBox.Show($"Warning: Too many employees ({selectedEmployeeID.Count}). " +
                                    $"Only first {i} employees will be shown in columns C-V.",
                                    "Capacity Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     break;

@@ -1,11 +1,11 @@
 ﻿using FootWristStrapsAnalysis.Interface;
 using FootWristStrapsAnalysis.Services;
 using Microsoft.Extensions.DependencyInjection;
+using OfficeOpenXml;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+
+
 
 namespace FootWristStrapsAnalysis
 {
@@ -18,6 +18,11 @@ namespace FootWristStrapsAnalysis
         [STAThread]
         static void Main()
         {
+
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // obsolete
+
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             var services = new ServiceCollection();

@@ -33,7 +33,7 @@ namespace PracticeC_
             //Console.WriteLine("Number of String : " +  strReelID.Length);
 
 
-
+            SampleDictionary();
 
             //string filePath = @"C:\Users\jaye-labandia\Downloads\MSD_MasterList.pdf";
 
@@ -95,7 +95,7 @@ namespace PracticeC_
             //string machineName = Environment.MachineName.ToLower();
             //Console.WriteLine($"Original: {machineName}");
             //Console.WriteLine(VerifyPassword("ErcXN5O+LcsWG5/cMOMWOg==:cZs22bq4HkpRKxiubSnaRQ0U4NIhfn7xUHi3De8cXWw=", "sdp1234a*"));
-            samplehash();
+            //samplehash();
 
             //PingComputer("172.29.1.121");
 
@@ -496,5 +496,40 @@ namespace PracticeC_
             //    Thread.Sleep(5000); // Wait for 5 seconds
             //}
         }
+
+
+        public static void SampleDictionary()
+        {
+            Dictionary<int, string> employees = new Dictionary<int, string>();
+
+            employees.Add(1, "John");
+            employees.Add(2, "Maria");
+            employees.Add(3, "Alex");
+
+            var numEmployee = Enumerable.Range(1, 3);
+
+            foreach (int emp in numEmployee)
+            {
+                Console.WriteLine($"The #{emp} of the year is: {employees[emp]}");
+            }
+
+            // Check if key value exists
+            if(employees.ContainsKey(4))
+            {
+                Console.WriteLine("Key 2 exists with value: " + employees[2]);
+            }
+            else
+            {
+                Console.WriteLine("Key 4 does not exist.");
+            }
+
+            // Loop through dictionary  
+            //foreach (var items in employees)
+            //{
+            //    Console.WriteLine("Key : " + items.Key + " Value : " + items.Value);
+            //}
+        }
+
+
     }
 }

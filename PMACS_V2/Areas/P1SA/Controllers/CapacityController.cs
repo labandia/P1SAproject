@@ -10,6 +10,12 @@ using PMACS_V2.Controllers;
 using PMACS_V2.Utilities.Security;
 using ProgramPartListWeb.Helper;
 using PMACS_V2.Utilities;
+using System.Web;
+using Microsoft.SqlServer.Server;
+using System.Diagnostics;
+using OfficeOpenXml;
+using System.Data.SqlClient;
+using Microsoft.Ajax.Utilities;
 
 namespace PMACS_V2.Areas.P1SA.Controllers
 {
@@ -156,6 +162,172 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             return JsonSuccess(data);
         }
 
+        [HttpPost]
+        public async Task<ActionResult> ImportForecastData()
+        {
+            bool msgsuccess = false;
+            int httpcode = 0;
+            string rmk = "";
+            string msg = "";
+
+            HttpPostedFileBase postedFile = Request.Files["excelfile"];
+            string selected = Request.Form["calendar"];
+
+            // Store column headers
+            string column2 = "";
+            string column3 = "";
+            string column4 = "";
+            string column5 = "";
+            string column6 = "";
+            string column7 = "";
+
+            int columnselectedHeader = 0;
+
+            object formdata;
+            string CombineString = "";
+
+            try
+            {
+                if (postedFile != null && postedFile.ContentLength > 0)
+                {
+                    Debug.WriteLine("HERE");
+                    // Save file
+                    string savepath = Server.MapPath("~/Content/Excel/") + postedFile.FileName;
+                    postedFile.SaveAs(savepath);
+
+                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+                    using (var package = new ExcelPackage(new System.IO.FileInfo(savepath)))
+                    {
+                        ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+
+                        for (int row = 3; row <= worksheet.Dimension.End.Row - 1; row++)
+                        {
+                            if (row == 3)
+                            {
+                                // ================= HEADER SETUP =================
+                                if (selected != "month")
+                                {
+                                    for (int col = 1; col <= worksheet.Dimension.End.Column; col++)
+                                    {
+                                        if (DateForecast(worksheet.Cells[1, col].Text) == selected)
+                                        {
+                                            columnselectedHeader = col;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    column2 = DateForecast(worksheet.Cells[3, 3].Text);
+                                    column3 = DateForecast(worksheet.Cells[3, 4].Text);
+                                    column4 = DateForecast(worksheet.Cells[3, 5].Text);
+                                    column5 = DateForecast(worksheet.Cells[3, 6].Text);
+                                    column6 = DateForecast(worksheet.Cells[3, 7].Text);
+                                    column7 = DateForecast(worksheet.Cells[3, 8].Text);
+
+                                    CombineString =
+                                        $"UPDATE Forecast_tbl SET " +
+                                        $"{column2}=@{column2}, {column3}=@{column3}, " +
+                                        $"{column4}=@{column4}, {column5}=@{column5}, " +
+                                        $"{column6}=@{column6}, {column7}=@{column7} " +
+                                        "WHERE forest_code=@forest_code";
+                                }
+                            }
+                            else
+                            {
+                                // ================= DATA PROCESSING =================
+                                if (string.IsNullOrEmpty(worksheet.Cells[row, 1].Text))
+                                {
+                                    if (worksheet.Cells[row, 2].Text == "ﾌｧﾝﾕﾆｯﾄ")
+                                    {
+                                        var obj = new forecastInput
+                                        {
+                                            column2 = column2,
+                                            column3 = column3,
+                                            column4 = column4,      
+                                            column5 = column5,
+                                            column6 = column6,
+                                            column7 = column7,
+                                            forest_code = 0
+                                        };
+
+
+                                        await _cap.UpdateForecast(obj, CombineString);  
+                                        //using (SqlConnection con = new SqlConnection(cons.DbConnection()))
+                                        //{
+                                        //    con.Open();
+                                        //    using (SqlCommand cmd = new SqlCommand(CombineString, con))
+                                        //    {
+                                        //        cmd.Parameters.AddWithValue("@forest_code", 0);
+                                        //        cmd.Parameters.AddWithValue("@" + column2, Convert.ToDouble(worksheet.Cells[row, 3].Text));
+                                        //        cmd.Parameters.AddWithValue("@" + column3, Convert.ToDouble(worksheet.Cells[row, 4].Text));
+                                        //        cmd.Parameters.AddWithValue("@" + column4, Convert.ToDouble(worksheet.Cells[row, 5].Text));
+                                        //        cmd.Parameters.AddWithValue("@" + column5, Convert.ToDouble(worksheet.Cells[row, 6].Text));
+                                        //        cmd.Parameters.AddWithValue("@" + column6, Convert.ToDouble(worksheet.Cells[row, 7].Text));
+                                        //        cmd.Parameters.AddWithValue("@" + column7, Convert.ToDouble(worksheet.Cells[row, 8].Text));
+                                        //        cmd.ExecuteNonQuery();
+                                        //    }
+                                        //}
+                                    }
+                                    else
+                                    {
+                                        int forecode = Convert.ToInt32(worksheet.Cells[row, 1].Text);
+                                        string checksql =
+                                            $"SELECT Model_name FROM Forecast_tbl WHERE forest_code = {forecode}";
+
+
+                                    }
+
+
+                                }
+
+
+                            }
+
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                msg = ex.Message;
+                msgsuccess = false;
+                httpcode = 403;
+                rmk = "error";
+            }
+
+            formdata = new
+            {
+                isSuccess = msgsuccess,
+                code = httpcode,
+                remarks = rmk,
+                message = msg
+            };
+
+            return Json(formdata, JsonRequestBehavior.AllowGet);
+
+        }
+
+        public string DateForecast(string mname)
+        {
+            var monthMap = new Dictionary<string, string>
+            {
+                { "1月の合計", "January" },
+                { "2月の合計", "February" },
+                { "3月の合計", "March" },
+                { "4月の合計", "April" },
+                { "5月の合計", "May" },
+                { "6月の合計", "June" },
+                { "7月の合計", "July" },
+                { "8月の合計", "August" },
+                { "9月の合計", "September" },
+                { "10月の合計", "October" },
+                { "11月の合計", "November" },
+                { "12月の合計", "December" }
+            };
+
+            return monthMap.TryGetValue(mname, out var month) ? month : "";
+        }
 
         // GET: Capacity/Winding/capid
         public ActionResult Winding(string capid)

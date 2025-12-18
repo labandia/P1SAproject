@@ -643,5 +643,10 @@ namespace PMACS_V2.Areas.P1SA.Repository
         {
             throw new NotImplementedException();
         }
+
+        public Task<bool> UpdateForecast(forecastInput fores, string strsql)
+        {
+            return SqlDataAccess.UpdateInsertQuery(strsql, fores);
+        }
     }
 }

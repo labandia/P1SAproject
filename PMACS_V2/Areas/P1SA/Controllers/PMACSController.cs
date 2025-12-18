@@ -75,17 +75,10 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         // ==================== Edit Manpower =========================
         // ============================================================
         [HttpPost]
-        public async Task<ActionResult> EditManpower()
+        public async Task<ActionResult> EditManpower(manpowerform man)
         {
-            var obj = new
-            {
-                SDP = Convert.ToInt32(Request.Form["SDP"]), 
-                SubCon = Convert.ToInt32(Request.Form["Sub/Con"]),
-                Remarks = Request.Form["Remarks"],
-                Manpower_ID = Convert.ToInt32(Request.Form["Manpower_ID"])
-            };
 
-            bool result = await _man.EditRequireManpower(obj);
+            bool result = await _man.EditRequireManpower(man);
             if (result)
             {
                 CacheHelper.Remove("manpower");

@@ -4,6 +4,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.Ajax.Utilities;
 using Microsoft.Office.Interop.Excel;
 using PMACS_V2.Areas.P1SA.Interface;
 using PMACS_V2.Areas.P1SA.Models;
@@ -507,10 +508,10 @@ namespace PMACS_V2.Areas.P1SA.Repository
 
             string strsql = $@"SELECT c.Capinfo_ID, c.Product_type, c.Model_name,c.Winding_Assy,
                         c.CycleTime, c.WireDia, c.WindTurns, c.jig, c.Head_count, cp.AvailMachine,
-                        COALESCE(f.{months}, 0) as foredata, c.Capgroup_ID, c.ProcessCode,
-                        COALESCE(NULLIF(f.{months} * {CycleTime} / 60 / 60, 0.0), 0.0)  as manhour,
-                        COALESCE(NULLIF(f.{months} * {CycleTime} / 60 / 60 / 24 / c.Operation_time * 1.9, 0.0), 0.0)  as Require,
-                        COALESCE(NULLIF(f.{months} * {CycleTime} / 60 / 60 / 24 / c.Operation_time * 1.9, 0.0), 0.0)  as Manpower, 
+                        COALESCE(f.March, 0) as foredata, c.Capgroup_ID, c.ProcessCode,
+                        COALESCE(NULLIF(f.March * {CycleTime} / 60 / 60, 0.0), 0.0)  as manhour,
+                        COALESCE(NULLIF(f.March * {CycleTime} / 60 / 60 / 24 / c.Operation_time * 1.9, 0.0), 0.0)  as Require,
+                        COALESCE(NULLIF(f.March * {CycleTime} / 60 / 60 / 24 / c.Operation_time * 1.9, 0.0), 0.0)  as Manpower, 
                         (cp.Days * 3600 / {CycleTime} *  cp.OperationTime) as Capday,
                         (cp.Days * 3600 / {CycleTime}  *  cp.OperationTime) * cp.Months as Capmonth
                         FROM PMACS_Capacity_Winding c
@@ -682,6 +683,34 @@ namespace PMACS_V2.Areas.P1SA.Repository
             }
 
             return SqlDataAccess.UpdateInsertQuery(strsql, parameters);
+        }
+
+        public Task<bool> CheckForecast(int code)
+        {
+            string strsql = $@"SELECT Model_name FROM Forecast_tbl WHERE forest_code = @forest_code";
+
+            return SqlDataAccess.Checkdata(strsql, new
+            {
+                forest_code = code
+            });
+        }
+
+        public Task<bool> InsertForeast(string model, int code)
+        {
+            string insertsql = $@"INSERT INTO Forecast_tbl(Model_name, forest_code) 
+                                VALUES (@Model_name, @forest_code)";
+
+            return SqlDataAccess.Checkdata(insertsql, new
+            {
+                Model_name = model, 
+                forest_code = code
+            });
+        }
+
+        public Task<bool> InsertMonthForeast(string monht, double monthval, int code)
+        {
+            string strSql = $@"UPDATE Forecast_tbl SET {monht} = {monthval} WHERE forest_code=@forest_code";
+            return SqlDataAccess.Checkdata(strSql, new { forest_code = code });
         }
     }
 }

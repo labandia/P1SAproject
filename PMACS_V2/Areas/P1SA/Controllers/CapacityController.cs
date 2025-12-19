@@ -199,10 +199,11 @@ namespace PMACS_V2.Areas.P1SA.Controllers
 
                     using (var package = new ExcelPackage(new System.IO.FileInfo(savepath)))
                     {
-                        ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+                        ExcelWorksheet worksheet = package.Workbook.Worksheets[3];
 
                         for (int row = 3; row <= worksheet.Dimension.End.Row - 1; row++)
                         {
+                            // ==============================================
                             if (row == 3)
                             {
                                 // ================= HEADER SETUP =================
@@ -231,58 +232,138 @@ namespace PMACS_V2.Areas.P1SA.Controllers
                                         $"{column4}=@{column4}, {column5}=@{column5}, " +
                                         $"{column6}=@{column6}, {column7}=@{column7} " +
                                         "WHERE forest_code=@forest_code";
+
                                 }
                             }
                             else
                             {
+                              
+
+
+                                // ############## SELECT A PARTICULAR MONTHS ##################
                                 // ================= DATA PROCESSING =================
-                                if (string.IsNullOrEmpty(worksheet.Cells[row, 1].Text))
+                                if (selected == "month")
                                 {
-                                    if (worksheet.Cells[row, 2].Text == "ﾌｧﾝﾕﾆｯﾄ")
+                                    // All properties assigned
+                                    string[] newcolumns = new string[]
                                     {
-                                        // Values updates
-                                        var obj = new forecastInput
-                                        {
-                                            column2 = Convert.ToDouble(worksheet.Cells[row, 3].Text),
-                                            column3 = Convert.ToDouble(worksheet.Cells[row, 4].Text),
-                                            column4 = Convert.ToDouble(worksheet.Cells[row, 5].Text),      
-                                            column5 = Convert.ToDouble(worksheet.Cells[row, 6].Text),
-                                            column6 = Convert.ToDouble(worksheet.Cells[row, 7].Text),
-                                            column7 = Convert.ToDouble(worksheet.Cells[row, 8].Text),
-                                            forest_code = 0
-                                        };
+                                         column2,
+                                         column3,
+                                         column4,
+                                         column5,
+                                         column6,
+                                         column7
+                                    };
 
-                                        // All properties assigned
-                                        string[] newcolumns = new string[]
+                                    if (string.IsNullOrEmpty(worksheet.Cells[row, 1].Text))
+                                    {
+                                        // ==============================================
+                                        if (worksheet.Cells[row, 2].Text == "ﾌｧﾝﾕﾆｯﾄ")
                                         {
-                                            column2,
-                                            column3,
-                                            column4,
-                                            column5,
-                                            column6,
-                                            column7
-                                        };
+                                            // Values updates
+                                            var obj = new forecastInput
+                                            {
+                                                column2 = Convert.ToDouble(worksheet.Cells[row, 3].Text),
+                                                column3 = Convert.ToDouble(worksheet.Cells[row, 4].Text),
+                                                column4 = Convert.ToDouble(worksheet.Cells[row, 5].Text),
+                                                column5 = Convert.ToDouble(worksheet.Cells[row, 6].Text),
+                                                column6 = Convert.ToDouble(worksheet.Cells[row, 7].Text),
+                                                column7 = Convert.ToDouble(worksheet.Cells[row, 8].Text),
+                                                forest_code = 0
+                                            };
 
-                                        await _cap.UpdateForecast(obj, CombineString, newcolumns);  
-                                     
+
+                                            await _cap.UpdateForecast(obj, CombineString, newcolumns);
+
+                                        }
+
+                                        // ==============================================
                                     }
                                     else
                                     {
-                                        int forecode = Convert.ToInt32(worksheet.Cells[row, 1].Text);
-                                        string checksql =
-                                            $"SELECT Model_name FROM Forecast_tbl WHERE forest_code = {forecode}";
+                                        int forecode = string.IsNullOrEmpty(worksheet.Cells[row, 1].Value.ToString())
+                                          ? Convert.ToInt32(worksheet.Cells[row, 1].Value) : 0;
+
+                                        bool checkexist = await _cap.CheckForecast(forecode);
+
+                                        if (checkexist)
+                                        {
+                                            // Values updates
+                                            var obj = new forecastInput
+                                            {
+                                                column2 = Convert.ToDouble(worksheet.Cells[row, 3].Text),
+                                                column3 = Convert.ToDouble(worksheet.Cells[row, 4].Text),
+                                                column4 = Convert.ToDouble(worksheet.Cells[row, 5].Text),
+                                                column5 = Convert.ToDouble(worksheet.Cells[row, 6].Text),
+                                                column6 = Convert.ToDouble(worksheet.Cells[row, 7].Text),
+                                                column7 = Convert.ToDouble(worksheet.Cells[row, 8].Text),
+                                                forest_code = forecode
+                                            };
+
+                                            // All properties assigned
 
 
+                                            await _cap.UpdateForecast(obj, CombineString, newcolumns);
+                                        }
+                                        else
+                                        {
+                                            string modelname = worksheet.Cells[row, 3].Text;
+
+                                            bool result = await _cap.InsertForeast(modelname, forecode);
+
+                                            if (result)
+                                            {
+                                                var obj = new forecastInput
+                                                {
+                                                    column2 = Convert.ToDouble(worksheet.Cells[row, 3].Text),
+                                                    column3 = Convert.ToDouble(worksheet.Cells[row, 4].Text),
+                                                    column4 = Convert.ToDouble(worksheet.Cells[row, 5].Text),
+                                                    column5 = Convert.ToDouble(worksheet.Cells[row, 6].Text),
+                                                    column6 = Convert.ToDouble(worksheet.Cells[row, 7].Text),
+                                                    column7 = Convert.ToDouble(worksheet.Cells[row, 8].Text),
+                                                    forest_code = forecode
+                                                };
+
+                                                await _cap.UpdateForecast(obj, CombineString, newcolumns);
+                                            }
+                                        }
                                     }
+                                }
+                                else
+                                {
+                                    int forecode = string.IsNullOrEmpty(worksheet.Cells[row, 1].Value.ToString())
+                                         ? Convert.ToInt32(worksheet.Cells[row, 1].Value) : 0;
 
+                                    if (string.IsNullOrEmpty(worksheet.Cells[row, 1].Text))
+                                    {
+                                        // ==============================================
+                                        if (worksheet.Cells[row, 2].Text == "ﾌｧﾝﾕﾆｯﾄ")
+                                        {
+                                            await _cap.InsertMonthForeast(selected, Convert.ToDouble(worksheet.Cells[row, columnselectedHeader].Text), 0);
+                                        }
+
+                                        // ==============================================
+                                    }
+                                    else
+                                    {
+                                        await _cap.InsertMonthForeast(selected, Convert.ToDouble(worksheet.Cells[row, columnselectedHeader].Text), forecode);
+                                    }
 
                                 }
 
-
                             }
 
+
+                            // ==============================================
                         }
                     }
+
+                    msg = "File uploaded successfully.";
+                    msgsuccess = true;
+                    httpcode = 200;
+                    rmk = "success";
+
+
                 }
             }
             catch (Exception ex)

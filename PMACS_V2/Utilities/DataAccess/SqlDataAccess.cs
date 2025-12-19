@@ -40,7 +40,7 @@ namespace PMACS_V2.Helper
 
             //LogConnectionChoice(host, Hostname, connectionKey);
 
-            return AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings["TestDevelopment"].ConnectionString);
+            return AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings["LiveDevelopment"].ConnectionString);
         }
 
         // CHECK CONNECTION 

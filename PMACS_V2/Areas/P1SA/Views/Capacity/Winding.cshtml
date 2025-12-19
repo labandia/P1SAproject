@@ -326,7 +326,7 @@
         <div class="modal-content">
             <div class="modal-body">
                 <div class="custom_modal_header">
-                    <div class="custom_modal__icon2">
+                    <div class="custom_modal__icon2 flex_align">
                         <div class="custom_icon_container">
                             <i class="fa-regular fa-rectangle-list"></i>
                         </div>
@@ -345,70 +345,70 @@
                     <div class="model__fields">
                         <div class="detail__inputfield">
                             <label for="">Product type :  </label>
-                            <input class="mode" type="text" name="WindProduct_type" id="WindProduct_type" disabled>
+                            <input class="mode" type="text" name="WindProduct_type" id="WindProduct_type" >
                         </div>
                         <div class="detail__inputfield">
                             <label for="">Part number :</label>
-                            <input class="editmode" type="text" name="Winding_Assy" id="Winding_Assy" disabled>
+                            <input class="editmode" type="text" name="Winding_Assy" id="Winding_Assy" >
                         </div>
                     </div>
                     <div class="model__fields">
                         <div class="detail__inputfield">
                             <label for="">Model :</label>
                             <input type="hidden" name="Capgroup_ID" id="Capgroup_ID">
-                            <input class="mode" type="text" name="WindModel_name" id="WindModel_name" disabled>
+                            <input class="mode" type="text" name="WindModel_name" id="WindModel_name" >
                         </div>
 
                         <div class="detail__inputfield">
                             <label for="">Cycle per pcs:</label>
-                            <input class="editmode" type="text" name="WindCyclepcs" id="WindCyclepcs" disabled>
+                            <input class="editmode" type="text" name="WindCyclepcs" id="WindCyclepcs" >
                         </div>
                     </div>
 
                     <div class="model__fields">
                         <div class="detail__inputfield">
                             <label for="">Capacity per Day :</label>
-                            <input class="mode" type="text" name="WindCapday" id="WindCapday" disabled>
+                            <input class="mode" type="text" name="WindCapday" id="WindCapday" >
                         </div>
                         <div class="detail__inputfield">
                             <label for="">Actual Head</label>
-                            <input class="editmode" type="text" name="WindHead_count" id="WindHead_count" disabled>
+                            <input class="editmode" type="text" name="WindHead_count" id="WindHead_count" >
                         </div>
                     </div>
 
                     <div class="model__fields">
                         <div class="detail__inputfield">
                             <label for="">Capacity per Month :</label>
-                            <input class="mode" type="text" name="WindCapmonth" id="WindCapmonth" disabled>
+                            <input class="mode" type="text" name="WindCapmonth" id="WindCapmonth" >
                         </div>
                         <div class="detail__inputfield">
                             <label for="">Jig :</label>
-                            <input class="editmode" type="text" name="Windjig" id="Windjig" disabled>
+                            <input class="editmode" type="text" name="Windjig" id="Windjig" >
                         </div>
                     </div>
 
                     <div class="model__fields">
                         <div class="detail__inputfield">
                             <label for="">Hours :</label>
-                            <input class="mode" type="text" name="Windmanhour" id="Windmanhour" disabled>
+                            <input class="mode" type="text" name="Windmanhour" id="Windmanhour" >
                         </div>
                         <div class="detail__inputfield">
                             <label for="">Operation Time :</label>
-                            <input class="editmode" type="text" name="WindOperation_time" id="WindOperation_time" disabled>
+                            <input class="editmode" type="text" name="WindOperation_time" id="WindOperation_time" >
                         </div>
                     </div>
 
                     <div class="model__fields">
                         <div class="detail__inputfield">
                             <label for="">Manpower :</label>
-                            <input class="mode" type="text" name="WindRequire" id="WindRequire" disabled>
+                            <input class="mode" type="text" name="WindRequire" id="WindRequire" >
                         </div>
                     </div>
 
                     <div class="model__fields">
                         <div class="detail__inputfield">
                             <label for="">Turns :</label>
-                            <input class="mode" type="text" name="WindWindTurns" id="WindWindTurns" disabled>
+                            <input class="mode" type="text" name="WindWindTurns" id="WindWindTurns" >
                         </div>
                     </div>
 
@@ -416,7 +416,7 @@
                     <div class="model__fields">
                         <div class="detail__inputfield">
                             <label for="">Wire :</label>
-                            <input class="mode" type="text" name="WindWireDia" id="WindWireDia" disabled>
+                            <input class="mode" type="text" name="WindWireDia" id="WindWireDia" >
                         </div>
                     </div>
 
@@ -447,7 +447,7 @@
         <div class="modal-content">
             <div class="modal-body">
                 <div class="custom_modal_header">
-                    <div class="custom_modal__icon2">
+                    <div class="custom_modal__icon2 flex_align">
                         <div class="custom_icon_container">
                             <i class="fa-regular fa-rectangle-list"></i>
                         </div>
@@ -466,11 +466,11 @@
                     <div class="model__fields">
                         <div class="detail__inputfield">
                             <label for="">Product type :  </label>
-                            <input class="mode" type="text" name="Product" id="Product" disabled>
+                            <input class="mode" type="text" name="Product" id="Product" >
                         </div>
                         <div class="detail__inputfield">
                             <label for="">Cycle Time:</label>
-                            <input class="editmode" type="text" name="Cycletime" id="Cycletime" disabled>
+                            <input class="editmode" type="text" name="Cycletime" id="Cycletime" >
                         </div>
                     </div>
 
@@ -1105,22 +1105,27 @@
          // Handle click event for edit button
          $(document).on('click', '.rowClick', function (e) {
              e.stopPropagation();
-             //const buttonId = $(this).attr('id');
-             //const rowIndex = buttonId.split('_')[1];
-             //let searchData = TableData.filter(item => item.Capinfo_ID === parseInt(rowIndex));
-             //indexvalue = TableData.findIndex(item => item.Capinfo_ID === parseInt(rowIndex));
-             //processcode = searchData[0].ProcessCode;
-             //$("#Detail_Capinfo_ID").val(searchData[0].Capinfo_ID);
-             //$("#Detail_Impeller").val(searchData[0].Impeller);
-             //$("#Detail_Dream").val(searchData[0].Dream);
-             //$("#Detail_CycleTime").val(searchData[0].CycleTime);
-             //$("#Detail_Cover").val(searchData[0].Cover);
-             //$("#Detail_Model_name").val(searchData[0].Model_name);
-             //$("#Detail_Manhour").val(RoundNumberOne(searchData[0].manhour));
-             //$("#Detail_Operation_time").val(searchData[0].Operation_time);
-             //$("#Detail_Require").val(RoundNumberOne(searchData[0].Require));
-             //$("#Detail_Capday").val(searchData[0].Capday);
-             //$("#Detail_Capmonth").val(searchData[0].Capmonth);
+             const buttonId = $(this).attr('id');
+             const rowIndex = buttonId.split('_')[1];
+             let searchData = TableData.filter(item => item.Capinfo_ID === parseInt(rowIndex));
+             indexvalue = TableData.findIndex(item => item.Capinfo_ID === parseInt(rowIndex));
+             console.log(searchData);
+             processcode = searchData[0].ProcessCode;
+             $("#Detail_Capinfo_ID").val(searchData[0].Capinfo_ID);
+             $("#WindProduct_type").val(searchData[0].Product_type);
+             $("#Winding_Assy").val(searchData[0].Winding_Assy);
+             $("#WindModel_name").val(searchData[0].Model_name);
+             $("#WindCyclepcs").val(searchData[0].CycleTime);
+             $("#WindCapday").val(searchData[0].Capday);
+             $("#WindHead_count").val(RoundNumberOne(searchData[0].Head_count));
+             $("#WindCapmonth").val(searchData[0].Capmonth);
+             $("#Windjig").val(RoundNumberOne(searchData[0].jig));
+             $("#Windmanhour").val(searchData[0].manhour);
+             $("#WindOperation_time").val("0.64");
+
+             $("#WindRequire").val(RoundNumberOne(searchData[0].Require));
+             $("#WindWindTurns").val(searchData[0].WindTurns);
+             $("#WindWireDia").val(searchData[0].WireDia);
 
              $("#detailsModal").modal("show");
          });

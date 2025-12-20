@@ -465,12 +465,12 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(35, 38);
+            this.label7.Font = new System.Drawing.Font("Segoe UI Semibold", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(32, 38);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(245, 30);
+            this.label7.Size = new System.Drawing.Size(208, 32);
             this.label7.TabIndex = 25;
-            this.label7.Text = "Attendance Monitoring";
+            this.label7.Text = "Daily Attendance ";
             // 
             // AttendancePage
             // 

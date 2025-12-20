@@ -138,7 +138,7 @@
   <data name="EmployeeMenu.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAA
-        6AAAAOgBhtX2rwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAeFSURBVFhHvVd7
+        5wAAAOcB8BtYtQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAeFSURBVFhHvVd7
         UJTXFb/ust+u7OPjsbAv2CK7KEjsuBBYIbLKm32wGMWkkQosoisKYkyqtoliVNCiJCaT/tGmpWowKXUm
         aUeMYIyO6TTpdNqojU5sE2tU4iOJU3XZBdaF0zk3+23YTx5mJu2ZOfPduffM/f3u+c6551xCwiWCEFJM
         CNlACGkihOQTQgQ8m/+ZzI+USW4kpakGKlzmkQrXvEDSrPh7kTJxPyEki2/8fcv8SJnYt62zCrrPbILG
@@ -177,7 +177,7 @@
   <data name="CRMonitor.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAC
-        3gAAAt4BSfFGLQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAP3SURBVFhH7Zd/
+        3QAAAt0B5EhnQAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAP3SURBVFhH7Zd/
         TBNnGMfff0zUWUpnYfTEP2YJSAJsGNSYia1Qzl9EHI5l020Rl8C2bPtDiUozzfy5GRUVQ0gkoE6zxDpD
         IKubU+j12l6N7d15wAaiAhahwPhVF1mhwpmHiDmO1rSnhD+2J/nmzb1P7/l+8r5P37tD6P9AaC1CKGeG
         tAYtwpSuc/pcciYE3kiXEs82Xz7Mz4TAe+YB5oe94d66ZjklVLYmuUU896ryVxO8oQnnIYQUQr2tUjqo
@@ -201,7 +201,7 @@
   <data name="Attendance.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAA
-        5wAAAOcB8BtYtQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAaISURBVFhHzVYJ
+        5gAAAOYBIly6UQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAaISURBVFhHzVYJ
         TFRXFNXGmpra2DStbVrTNG3SpHFp1MSKWpduWtM2MY0abaMgQmFgWEQUQQKCbMMuDMLg4DAMiywSkB0X
         xA0GEB1BZVGWgT+foiNUlJlBOM17nxnhD1BqNelNTv78e++/57z37ntvZsyYwiwsts6xWLhrxfpPLN/g
         xyYyiy93fbRqifUivv+FbOHCrbNtbMJq087W6+ztIxql0ry3+DljbcsvHpv8I7O6JTmX/nJyjJTx49Oy

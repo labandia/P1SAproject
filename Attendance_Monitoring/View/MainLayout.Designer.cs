@@ -69,7 +69,7 @@
             this.EmployeeMenu.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.EmployeeMenu.ForeColor = System.Drawing.Color.White;
             this.EmployeeMenu.Image = ((System.Drawing.Image)(resources.GetObject("EmployeeMenu.Image")));
-            this.EmployeeMenu.Location = new System.Drawing.Point(11, 283);
+            this.EmployeeMenu.Location = new System.Drawing.Point(12, 461);
             this.EmployeeMenu.Name = "EmployeeMenu";
             this.EmployeeMenu.Size = new System.Drawing.Size(58, 46);
             this.EmployeeMenu.TabIndex = 5;
@@ -88,7 +88,7 @@
             this.CRMonitor.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CRMonitor.ForeColor = System.Drawing.Color.White;
             this.CRMonitor.Image = ((System.Drawing.Image)(resources.GetObject("CRMonitor.Image")));
-            this.CRMonitor.Location = new System.Drawing.Point(11, 216);
+            this.CRMonitor.Location = new System.Drawing.Point(12, 394);
             this.CRMonitor.Name = "CRMonitor";
             this.CRMonitor.Size = new System.Drawing.Size(58, 46);
             this.CRMonitor.TabIndex = 4;
@@ -106,7 +106,7 @@
             this.Attendance.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Attendance.ForeColor = System.Drawing.Color.White;
             this.Attendance.Image = ((System.Drawing.Image)(resources.GetObject("Attendance.Image")));
-            this.Attendance.Location = new System.Drawing.Point(11, 150);
+            this.Attendance.Location = new System.Drawing.Point(12, 328);
             this.Attendance.Name = "Attendance";
             this.Attendance.Size = new System.Drawing.Size(58, 46);
             this.Attendance.TabIndex = 3;
@@ -123,16 +123,16 @@
             this.sidepanel.Dock = System.Windows.Forms.DockStyle.Left;
             this.sidepanel.Location = new System.Drawing.Point(0, 0);
             this.sidepanel.Name = "sidepanel";
-            this.sidepanel.Size = new System.Drawing.Size(81, 703);
+            this.sidepanel.Size = new System.Drawing.Size(185, 703);
             this.sidepanel.TabIndex = 2;
             this.sidepanel.Paint += new System.Windows.Forms.PaintEventHandler(this.sidepanel_Paint);
             // 
             // panel1
             // 
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(81, 0);
+            this.panel1.Location = new System.Drawing.Point(185, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1270, 703);
+            this.panel1.Size = new System.Drawing.Size(1166, 703);
             this.panel1.TabIndex = 3;
             // 
             // MainLayout

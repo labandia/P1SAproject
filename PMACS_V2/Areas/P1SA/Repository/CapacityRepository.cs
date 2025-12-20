@@ -685,9 +685,13 @@ namespace PMACS_V2.Areas.P1SA.Repository
             return SqlDataAccess.UpdateInsertQuery(strsql, parameters);
         }
 
-        public Task<bool> CheckForecast(int code)
+        public Task<bool> CheckForecast(string code)
         {
-            string strsql = $@"SELECT Model_name FROM Forecast_tbl WHERE forest_code = @forest_code";
+            string strsql = $@"SELECT Model_name FROM PMACS_Forecast WHERE forest_code = @forest_code";
+
+            int codeint = int.Parse(code);
+
+            Debug.WriteLine("INDSIDE :" + codeint);
 
             return SqlDataAccess.Checkdata(strsql, new
             {
@@ -697,7 +701,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
 
         public Task<bool> InsertForeast(string model, int code)
         {
-            string insertsql = $@"INSERT INTO Forecast_tbl(Model_name, forest_code) 
+            string insertsql = $@"INSERT INTO PMACS_Forecast(Model_name, forest_code) 
                                 VALUES (@Model_name, @forest_code)";
 
             return SqlDataAccess.Checkdata(insertsql, new
@@ -711,6 +715,33 @@ namespace PMACS_V2.Areas.P1SA.Repository
         {
             string strSql = $@"UPDATE Forecast_tbl SET {monht} = {monthval} WHERE forest_code=@forest_code";
             return SqlDataAccess.Checkdata(strSql, new { forest_code = code });
+        }
+
+        public async Task<bool> DeleteForecast()
+        {
+            var getmodels = await SqlDataAccess.GetlistStrings("SELECT Model_name FROM PMACS_Forecast", null);
+
+            foreach (var model in getmodels)
+            {
+                string delstrsql = $@"UPDATE PMACS_Forecast SET  
+                                          January = 0,
+                                          February = 0,
+                                          March = 0,
+                                          April = 0,
+                                          May = 0,
+                                          June = 0,
+                                          July = 0,
+                                          August = 0,
+                                          September = 0,
+                                          October = 0,
+                                          November = 0,
+                                          December = 0 
+                                    WHERE Model_name = @Model_name";
+
+                await SqlDataAccess.UpdateInsertQuery(delstrsql, new { Model_name = model });
+            }
+
+            return true;
         }
     }
 }

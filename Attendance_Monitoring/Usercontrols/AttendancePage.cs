@@ -26,6 +26,8 @@ namespace Attendance_Monitoring.Usercontrols
         public string tdate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
         public int DepartmentID { get; set; }
 
+        string[] SectionName = { "Molding", "Press", "Rotor", "Winding", "Circuit" };
+
         public AttendancePage(IServiceProvider serviceProvider, IAttendanceMonitor monitor, IEmployee emp)
         {
             InitializeComponent();
@@ -178,6 +180,8 @@ namespace Attendance_Monitoring.Usercontrols
         {
             try
             {
+                label7.Text  = "Daily Attendance : " + SectionName[DepartmentID + 1];
+
                 selecttime.DropDownStyle = ComboBoxStyle.DropDownList;
                 Timeclock.Text = DateTime.Now.ToLongTimeString();
                 emplist = await _emp.GetEmployees();

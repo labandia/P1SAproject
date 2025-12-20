@@ -190,7 +190,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
             {
                 if (postedFile != null && postedFile.ContentLength > 0)
                 {
-                    Debug.WriteLine("HERE");
+                    //Debug.WriteLine("HERE");
                     // Save file
                     string savepath = Server.MapPath("~/Content/Excel/") + postedFile.FileName;
                     postedFile.SaveAs(savepath);
@@ -200,6 +200,11 @@ namespace PMACS_V2.Areas.P1SA.Controllers
                     using (var package = new ExcelPackage(new System.IO.FileInfo(savepath)))
                     {
                         ExcelWorksheet worksheet = package.Workbook.Worksheets[3];
+
+
+                        // Delete the all the Value of the Months
+                        await _cap.DeleteForecast();
+
 
                         for (int row = 3; row <= worksheet.Dimension.End.Row - 1; row++)
                         {
@@ -227,11 +232,11 @@ namespace PMACS_V2.Areas.P1SA.Controllers
                                     column7 = DateForecast(worksheet.Cells[3, 8].Text);
 
                                     CombineString =
-                                        $"UPDATE Forecast_tbl SET " +
-                                        $"{column2}=@{column2}, {column3}=@{column3}, " +
-                                        $"{column4}=@{column4}, {column5}=@{column5}, " +
-                                        $"{column6}=@{column6}, {column7}=@{column7} " +
-                                        "WHERE forest_code=@forest_code";
+                                        $@"UPDATE Forecast_tbl SET 
+                                            {column2}=@{column2}, {column3}=@{column3}, 
+                                            {column4}=@{column4}, {column5}=@{column5}, 
+                                            {column6}=@{column6}, {column7}=@{column7} 
+                                            WHERE forest_code=@forest_code";
 
                                 }
                             }
@@ -284,7 +289,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
                                         int forecode = string.IsNullOrEmpty(worksheet.Cells[row, 1].Value.ToString())
                                           ? Convert.ToInt32(worksheet.Cells[row, 1].Value) : 0;
 
-                                        bool checkexist = await _cap.CheckForecast(forecode);
+                                        bool checkexist = await _cap.CheckForecast(worksheet.Cells[row, 1].Value.ToString());
 
                                         if (checkexist)
                                         {
@@ -297,22 +302,24 @@ namespace PMACS_V2.Areas.P1SA.Controllers
                                                 column5 = Convert.ToDouble(worksheet.Cells[row, 6].Text),
                                                 column6 = Convert.ToDouble(worksheet.Cells[row, 7].Text),
                                                 column7 = Convert.ToDouble(worksheet.Cells[row, 8].Text),
-                                                forest_code = forecode
+                                                forest_code = int.Parse(worksheet.Cells[row, 1].Value.ToString())
                                             };
 
                                             // All properties assigned
-
+                                            Debug.WriteLine("HERE");
 
                                             await _cap.UpdateForecast(obj, CombineString, newcolumns);
                                         }
                                         else
                                         {
-                                            string modelname = worksheet.Cells[row, 3].Text;
+                                            int code2 = Convert.ToInt32(worksheet.Cells[row, 1].Value.ToString());
 
-                                            bool result = await _cap.InsertForeast(modelname, forecode);
+                                            Debug.WriteLine("HERE2 : " + worksheet.Cells[row, 1].Value.ToString());
+                                            bool result = await _cap.CheckForecast(worksheet.Cells[row, 1].Value.ToString());
 
                                             if (result)
                                             {
+                                                Debug.WriteLine("TRUE");
                                                 var obj = new forecastInput
                                                 {
                                                     column2 = Convert.ToDouble(worksheet.Cells[row, 3].Text),
@@ -321,7 +328,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
                                                     column5 = Convert.ToDouble(worksheet.Cells[row, 6].Text),
                                                     column6 = Convert.ToDouble(worksheet.Cells[row, 7].Text),
                                                     column7 = Convert.ToDouble(worksheet.Cells[row, 8].Text),
-                                                    forest_code = forecode
+                                                    forest_code = int.Parse(worksheet.Cells[row, 1].Value.ToString())
                                                 };
 
                                                 await _cap.UpdateForecast(obj, CombineString, newcolumns);
@@ -331,11 +338,13 @@ namespace PMACS_V2.Areas.P1SA.Controllers
                                 }
                                 else
                                 {
+                                    Debug.WriteLine("HERE3");
                                     int forecode = string.IsNullOrEmpty(worksheet.Cells[row, 1].Value.ToString())
                                          ? Convert.ToInt32(worksheet.Cells[row, 1].Value) : 0;
 
                                     if (string.IsNullOrEmpty(worksheet.Cells[row, 1].Text))
                                     {
+                                        Debug.WriteLine("HERE4");
                                         // ==============================================
                                         if (worksheet.Cells[row, 2].Text == "ﾌｧﾝﾕﾆｯﾄ")
                                         {
@@ -346,6 +355,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
                                     }
                                     else
                                     {
+                                        Debug.WriteLine("HERE5");
                                         await _cap.InsertMonthForeast(selected, Convert.ToDouble(worksheet.Cells[row, columnselectedHeader].Text), forecode);
                                     }
 

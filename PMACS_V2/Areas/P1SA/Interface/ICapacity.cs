@@ -58,7 +58,11 @@ namespace PMACS_V2.Areas.P1SA.Interface
 
 
 
-        Task<bool> CheckForecast(int code);
+        Task<bool> DeleteForecast();
+
+
+
+        Task<bool> CheckForecast(string code);
         Task<bool> UpdateForecast(forecastInput fores, string strsql, string[] columns);
         Task<bool> InsertForeast(string model, int code);
         Task<bool> InsertMonthForeast(string monht, double monthval,  int code);

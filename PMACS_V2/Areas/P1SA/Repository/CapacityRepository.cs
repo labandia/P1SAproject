@@ -655,6 +655,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
 
             foreach (var column in columns)
             {
+                Debug.WriteLine("COLUMN NAMES: " + column); 
                 switch (count)
                 {
                     case 0:        
@@ -691,7 +692,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
 
             int codeint = int.Parse(code);
 
-            Debug.WriteLine("INDSIDE :" + codeint);
+            //Debug.WriteLine("INDSIDE :" + codeint);
 
             return SqlDataAccess.Checkdata(strsql, new
             {

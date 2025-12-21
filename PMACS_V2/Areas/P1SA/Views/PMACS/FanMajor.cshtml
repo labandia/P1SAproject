@@ -669,7 +669,9 @@
 
     }
     const CountMachine = async (secId, mach, data) => {
+        console.log("COUNT MACHINE");
         let res = await fetchData('@Url.Action("GetMachineCount", "FanMajor")', { sectionID: secId, machcode: mach });
+        console.log(res);
         if (res && res.Success) {
             let load = res.Data;
             switch (secId) {
@@ -750,6 +752,7 @@
 
     //##################################################################################################### //
     const MachineFilterData = async (formdata, sectionID, mach, mode) => {
+        console.log(mach);
         loadData = [];
         let res = await FetchAuthenticate('@Url.Action("GetFanmajorMachine", "FanMajor")', formdata);
         if (res && res.Success) {
@@ -785,7 +788,7 @@
                 displayEquipment(sectionID);
             }
 
-            CountMachine(sectionID, "", loadData);
+            CountMachine(sectionID, mach, loadData);
         }
     }
 

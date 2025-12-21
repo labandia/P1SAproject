@@ -143,6 +143,12 @@
     <Compile Include="Repository\InprocessRepository.cs" />
     <Compile Include="Repository\NCR_Repository.cs" />
     <Compile Include="Repository\RejectShipRepository.cs" />
+    <Compile Include="SampleUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SampleUI.Designer.cs">
+      <DependentUpon>SampleUI.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\AddForms\AddCustomerComplaint.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -278,6 +284,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="SampleUI.resx">
+      <DependentUpon>SampleUI.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\AddForms\AddCustomerComplaint.resx">
       <DependentUpon>AddCustomerComplaint.cs</DependentUpon>
     </EmbeddedResource>

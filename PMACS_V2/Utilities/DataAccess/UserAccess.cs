@@ -30,7 +30,7 @@ namespace PMACS_V2.Utilities
             if (host.Contains("localhost"))
             {
                 if (machineName == "desktop-fc0up1p") // Home PC name
-                    connectionKey = "HomeDevelopment";
+                    connectionKey = "UsersHomeConnection";
                 else
                     connectionKey = "UsersTestConnection";
             }

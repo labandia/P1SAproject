@@ -83,6 +83,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         // GET: P1SA/GetEquipmenList/ID
         public async Task<ActionResult> GetMachineCount(int sectionID, string machcode)
         {
+            
             var data = await _man.GetCountMachine(sectionID, machcode) ?? new List<CountMachineModel>();
             if (data == null || !data.Any())
                 return JsonNotFound("No Equipment data found");

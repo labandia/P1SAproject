@@ -33,7 +33,7 @@ namespace PracticeC_
             //Console.WriteLine("Number of String : " +  strReelID.Length);
 
 
-            SampleDictionary();
+            //SampleDictionary();
 
             //string filePath = @"C:\Users\jaye-labandia\Downloads\MSD_MasterList.pdf";
 
@@ -102,7 +102,7 @@ namespace PracticeC_
             //Console.WriteLine("Generate ID : " + GenerateID(""));
 
 
-            //ConvertstringtoBase64();
+            ConvertstringtoBase64();
 
             Console.ReadKey();
         }
@@ -136,6 +136,7 @@ namespace PracticeC_
             //string connectionString = "server=DESKTOP-FC0UP1P;User ID=PCsystem;password=p1saprocess;database=Programlist";
             //string connectionString = "SoloCoding";
             //string connectionString = "server=DESKTOP-FC0UP1P;User ID=PCsystem;password=p1saprocess;database=P1sa";
+            //string connectionString = "server=DESKTOP-FC0UP1P;User ID=PCsystem;password=p1saprocess;database=PMACS_LIVE";
             //string connectionString = "server=SDP0706ES;User ID=p1sa;password=p1sa1234a*;database=PMACS_TEST;Pooling=True;Min Pool Size=50;Max Pool Size=100;";
             //string connectionString = "server=172.29.3.139;User ID=p1sa;password=p1sa1234a*;database=PRODCONF;Pooling=True;Min Pool Size=50;Max Pool Size=100;";
             //string connectionString = "Data Source=DESKTOP-FC0UP1P;Initial Catalog=Prodcon;Persist Security Info=True;User ID=PCsystem;Password=p1saprocess;";
@@ -143,14 +144,15 @@ namespace PracticeC_
             //string connectionString = "server=172.29.3.139;User ID=p1sa;password=p1sa1234a*;database=PMACS_LIVE;Pooling=True;Min Pool Size=50;Max Pool Size=100;";
             //string connectionString = "server=SDP0706ES; User ID = p1sa; password=p1sa1234a*; database=PMACS_LIVE; Pooling=True; Min Pool Size=50; Max Pool Size=100;";
             //string connectionString = "server=DESKTOP-FC0UP1P;User ID=PCsystem;password=p1saprocess;database=P1sa;Pooling=True;Min Pool Size=50;Max Pool Size=100;";
-            //string connectionString = "server=DESKTOP-FC0UP1P\\SQLEXPRESS;database=P1sa;Integrated Security=True;";
-            //string base64ConnectionString = Convert.ToBase64String(Encoding.UTF8.GetBytes(connectionString));
+            //string connectionString = "server=DESKTOP-FC0UP1P\\SQLEXPRESS;database=PMACS_LIVE;Integrated Security=True;";
+            string connectionString = "server=DESKTOP-FC0UP1P\\SQLEXPRESS;database=PRODCON;Integrated Security=True;";
+            string base64ConnectionString = Convert.ToBase64String(Encoding.UTF8.GetBytes(connectionString));
 
             // Print the encoded connection string
-            //Console.WriteLine($"Base64 Encoded Connection String: {base64ConnectionString}");
+            Console.WriteLine($"Base64 Encoded Connection String: {base64ConnectionString}");
             // Print the encoded connection string
-            string a = DecodeBase64ToString("c2VydmVyPVNEUDA3MDZFUzsgVXNlciBJRCA9IHAxc2E7IHBhc3N3b3JkPXAxc2ExMjM0YSo7IGRhdGFiYXNlPVBNQUNTX0xJVkU7IFBvb2xpbmc9VHJ1ZTsgTWluIFBvb2wgU2l6ZT01MDsgTWF4IFBvb2wgU2l6ZT0xMDA7");
-            Console.WriteLine($"Base64 Decrypted {a}");
+            //string a = DecodeBase64ToString("c2VydmVyPVNEUDA3MDZFUzsgVXNlciBJRCA9IHAxc2E7IHBhc3N3b3JkPXAxc2ExMjM0YSo7IGRhdGFiYXNlPVBNQUNTX0xJVkU7IFBvb2xpbmc9VHJ1ZTsgTWluIFBvb2wgU2l6ZT01MDsgTWF4IFBvb2wgU2l6ZT0xMDA7");
+            //Console.WriteLine($"Base64 Decrypted {a}");
             Console.ReadKey();
         }
 

@@ -38,11 +38,11 @@ namespace PMACS_V2.Areas.P1SA.Repository
 
         public Task<List<CountMachineModel>> GetCountMachine(int sectionID, string MachineCode)
         {
-            string machfilter = MachineCode != "" ? "AND MACH_CODE = " + MachineCode + " " : "";
-            string strsql = "SELECT SUM(CASE WHEN IsDelete = 1 THEN 1 ELSE 0 END) as work, " +
-                                   "SUM(CASE WHEN IsDelete = 0 THEN 1 ELSE 0 END) as notwork " +
-                            "FROM machine WHERE " +
-                            "Section_ID = @sectionID " + machfilter + "";
+            string machfilter = MachineCode != "" ? $@"AND MACH_CODE = '" + MachineCode + "' " : "";
+            string strsql = $@"SELECT SUM(CASE WHEN IsDelete = 1 THEN 1 ELSE 0 END) as work, 
+                                     SUM(CASE WHEN IsDelete = 0 THEN 1 ELSE 0 END) as notwork 
+                            FROM machine WHERE 
+                            Section_ID = @sectionID  {machfilter}";
 
             return SqlDataAccess.GetData<CountMachineModel>(strsql, new { sectionID = sectionID });
         }

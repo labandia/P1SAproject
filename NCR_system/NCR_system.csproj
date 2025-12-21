@@ -344,7 +344,6 @@
     <EmbeddedResource Include="View\Module\ShipRejected.resx">
       <DependentUpon>ShipRejected.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="NCR_system_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">

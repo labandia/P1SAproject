@@ -17,6 +17,7 @@ using System.Web.Mvc;
 
 namespace PMACS_V2.Areas.P1SA.Controllers
 {
+    [CompressResponse]
     public class FanMajorController : ExtendController
     {
 

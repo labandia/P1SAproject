@@ -16,6 +16,7 @@ using System.Diagnostics;
 using OfficeOpenXml;
 using System.Data.SqlClient;
 using Microsoft.Ajax.Utilities;
+using System.IO;
 
 namespace PMACS_V2.Areas.P1SA.Controllers
 {
@@ -109,7 +110,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         [JwtAuthorize]
         public async Task<ActionResult> GetForecastChartList()
         {
-            var data = await _cap.GetForecastChart() ?? new List<ForecastModel>();
+            var data = await _cap.GetTotalForecast() ?? new List<TotalForecastModel>();
             if (data == null || !data.Any())
                 return JsonNotFound("No Forecast Chart data found");
 
@@ -165,235 +166,149 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         [HttpPost]
         public async Task<ActionResult> ImportForecastData()
         {
-            bool msgsuccess = false;
-            int httpcode = 0;
-            string rmk = "";
-            string msg = "";
-
-            HttpPostedFileBase postedFile = Request.Files["excelfile"];
-            string selected = Request.Form["calendar"];
-
-            // Store column headers
-            string column2 = "";
-            string column3 = "";
-            string column4 = "";
-            string column5 = "";
-            string column6 = "";
-            string column7 = "";
-
-            int columnselectedHeader = 0;
-
-            object formdata;
-            string CombineString = "";
-
+            var response = new
+            {
+                isSuccess = false,
+                code = 500,
+                remarks = "error",
+                message = ""
+            };
             try
             {
-                if (postedFile != null && postedFile.ContentLength > 0)
+                var postedFile = Request.Files["excelfile"];
+                var selected = Request.Form["calendar"];
+
+                if (postedFile == null || postedFile.ContentLength == 0)
+                    throw new Exception("No file uploaded.");
+
+                string savePath = Path.Combine(Server.MapPath("~/Content/Excel/"), postedFile.FileName);
+                postedFile.SaveAs(savePath);
+
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+                using (var package = new ExcelPackage(new FileInfo(savePath)))
                 {
-                    //Debug.WriteLine("HERE");
-                    // Save file
-                    string savepath = Server.MapPath("~/Content/Excel/") + postedFile.FileName;
-                    postedFile.SaveAs(savepath);
+                    var worksheet = package.Workbook.Worksheets[3];
 
-                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                    await _cap.DeleteForecast();
 
-                    using (var package = new ExcelPackage(new System.IO.FileInfo(savepath)))
+                    int selectedHeaderCol = 0;
+                    string[] monthColumns = new string[6];
+                    double[] totalForeCastColumns = new double[6];
+                    string updateQuery = "";
+
+                    // ===== HEADER SETUP =====
+                    if (selected != "month")
                     {
-                        ExcelWorksheet worksheet = package.Workbook.Worksheets[3];
-
-
-                        // Delete the all the Value of the Months
-                        await _cap.DeleteForecast();
-
-
-                        for (int row = 3; row <= worksheet.Dimension.End.Row - 1; row++)
+                        for (int col = 1; col <= worksheet.Dimension.End.Column; col++)
                         {
-                            // ==============================================
-                            if (row == 3)
+                            if (DateForecast(worksheet.Cells[1, col].Text) == selected)
                             {
-                                // ================= HEADER SETUP =================
-                                if (selected != "month")
-                                {
-                                    for (int col = 1; col <= worksheet.Dimension.End.Column; col++)
-                                    {
-                                        if (DateForecast(worksheet.Cells[1, col].Text) == selected)
-                                        {
-                                            columnselectedHeader = col;
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    column2 = DateForecast(worksheet.Cells[3, 3].Text);
-                                    column3 = DateForecast(worksheet.Cells[3, 4].Text);
-                                    column4 = DateForecast(worksheet.Cells[3, 5].Text);
-                                    column5 = DateForecast(worksheet.Cells[3, 6].Text);
-                                    column6 = DateForecast(worksheet.Cells[3, 7].Text);
-                                    column7 = DateForecast(worksheet.Cells[3, 8].Text);
-
-                                    CombineString =
-                                        $@"UPDATE Forecast_tbl SET 
-                                            {column2}=@{column2}, {column3}=@{column3}, 
-                                            {column4}=@{column4}, {column5}=@{column5}, 
-                                            {column6}=@{column6}, {column7}=@{column7} 
-                                            WHERE forest_code=@forest_code";
-
-                                }
+                                selectedHeaderCol = col;
+                                break;
                             }
-                            else
-                            {
-                              
-
-
-                                // ############## SELECT A PARTICULAR MONTHS ##################
-                                // ================= DATA PROCESSING =================
-                                if (selected == "month")
-                                {
-                                    // All properties assigned
-                                    string[] newcolumns = new string[]
-                                    {
-                                         column2,
-                                         column3,
-                                         column4,
-                                         column5,
-                                         column6,
-                                         column7
-                                    };
-
-                                    if (string.IsNullOrEmpty(worksheet.Cells[row, 1].Text))
-                                    {
-                                        // ==============================================
-                                        if (worksheet.Cells[row, 2].Text == "ﾌｧﾝﾕﾆｯﾄ")
-                                        {
-                                            // Values updates
-                                            var obj = new forecastInput
-                                            {
-                                                column2 = Convert.ToDouble(worksheet.Cells[row, 3].Text),
-                                                column3 = Convert.ToDouble(worksheet.Cells[row, 4].Text),
-                                                column4 = Convert.ToDouble(worksheet.Cells[row, 5].Text),
-                                                column5 = Convert.ToDouble(worksheet.Cells[row, 6].Text),
-                                                column6 = Convert.ToDouble(worksheet.Cells[row, 7].Text),
-                                                column7 = Convert.ToDouble(worksheet.Cells[row, 8].Text),
-                                                forest_code = 0
-                                            };
-
-
-                                            await _cap.UpdateForecast(obj, CombineString, newcolumns);
-
-                                        }
-
-                                        // ==============================================
-                                    }
-                                    else
-                                    {
-                                        int forecode = string.IsNullOrEmpty(worksheet.Cells[row, 1].Value.ToString())
-                                          ? Convert.ToInt32(worksheet.Cells[row, 1].Value) : 0;
-
-                                        bool checkexist = await _cap.CheckForecast(worksheet.Cells[row, 1].Value.ToString());
-
-                                        if (checkexist)
-                                        {
-                                            // Values updates
-                                            var obj = new forecastInput
-                                            {
-                                                column2 = Convert.ToDouble(worksheet.Cells[row, 3].Text),
-                                                column3 = Convert.ToDouble(worksheet.Cells[row, 4].Text),
-                                                column4 = Convert.ToDouble(worksheet.Cells[row, 5].Text),
-                                                column5 = Convert.ToDouble(worksheet.Cells[row, 6].Text),
-                                                column6 = Convert.ToDouble(worksheet.Cells[row, 7].Text),
-                                                column7 = Convert.ToDouble(worksheet.Cells[row, 8].Text),
-                                                forest_code = int.Parse(worksheet.Cells[row, 1].Value.ToString())
-                                            };
-
-                                            // All properties assigned
-                                            Debug.WriteLine("HERE");
-
-                                            await _cap.UpdateForecast(obj, CombineString, newcolumns);
-                                        }
-                                        else
-                                        {
-                                            int code2 = Convert.ToInt32(worksheet.Cells[row, 1].Value.ToString());
-
-                                            Debug.WriteLine("HERE2 : " + worksheet.Cells[row, 1].Value.ToString());
-                                            bool result = await _cap.CheckForecast(worksheet.Cells[row, 1].Value.ToString());
-
-                                            if (result)
-                                            {
-                                                Debug.WriteLine("TRUE");
-                                                var obj = new forecastInput
-                                                {
-                                                    column2 = Convert.ToDouble(worksheet.Cells[row, 3].Text),
-                                                    column3 = Convert.ToDouble(worksheet.Cells[row, 4].Text),
-                                                    column4 = Convert.ToDouble(worksheet.Cells[row, 5].Text),
-                                                    column5 = Convert.ToDouble(worksheet.Cells[row, 6].Text),
-                                                    column6 = Convert.ToDouble(worksheet.Cells[row, 7].Text),
-                                                    column7 = Convert.ToDouble(worksheet.Cells[row, 8].Text),
-                                                    forest_code = int.Parse(worksheet.Cells[row, 1].Value.ToString())
-                                                };
-
-                                                await _cap.UpdateForecast(obj, CombineString, newcolumns);
-                                            }
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    Debug.WriteLine("HERE3");
-                                    int forecode = string.IsNullOrEmpty(worksheet.Cells[row, 1].Value.ToString())
-                                         ? Convert.ToInt32(worksheet.Cells[row, 1].Value) : 0;
-
-                                    if (string.IsNullOrEmpty(worksheet.Cells[row, 1].Text))
-                                    {
-                                        Debug.WriteLine("HERE4");
-                                        // ==============================================
-                                        if (worksheet.Cells[row, 2].Text == "ﾌｧﾝﾕﾆｯﾄ")
-                                        {
-                                            await _cap.InsertMonthForeast(selected, Convert.ToDouble(worksheet.Cells[row, columnselectedHeader].Text), 0);
-                                        }
-
-                                        // ==============================================
-                                    }
-                                    else
-                                    {
-                                        Debug.WriteLine("HERE5");
-                                        await _cap.InsertMonthForeast(selected, Convert.ToDouble(worksheet.Cells[row, columnselectedHeader].Text), forecode);
-                                    }
-
-                                }
-
-                            }
-
-
-                            // ==============================================
                         }
                     }
+                    else
+                    {
+                        for (int i = 0; i < 6; i++)
+                        {
+                            totalForeCastColumns[i] = Convert.ToDouble(worksheet.Cells[2, 3 + i].Text);
+                            monthColumns[i] = DateForecast(worksheet.Cells[3, 3 + i].Text);
+                        }
 
-                    msg = "File uploaded successfully.";
-                    msgsuccess = true;
-                    httpcode = 200;
-                    rmk = "success";
+                        updateQuery = $@"
+                            UPDATE PMACS_Forecast SET
+                                {monthColumns[0]}=@{monthColumns[0]},
+                                {monthColumns[1]}=@{monthColumns[1]},
+                                {monthColumns[2]}=@{monthColumns[2]},
+                                {monthColumns[3]}=@{monthColumns[3]},
+                                {monthColumns[4]}=@{monthColumns[4]},
+                                {monthColumns[5]}=@{monthColumns[5]}
+                            WHERE forest_code=@forest_code";
 
+                      
+                    }
+
+                    // ===== ROWS UPDATING AND ADDING MODELS =====
+                    for (int row = 4; row <= worksheet.Dimension.End.Row - 1; row++)
+                    {
+                        string codeText = worksheet.Cells[row, 1].Text?.Trim();
+                        string modelnames = worksheet.Cells[row, 2].Text?.Trim();
+
+                        int forestCode;
+
+                        if (modelnames == "ﾌｧﾝﾕﾆｯﾄ")
+                        {
+                            forestCode = 0;
+                        }
+                        else if (!string.IsNullOrWhiteSpace(codeText) && int.TryParse(codeText, out var fc))
+                        {
+                            forestCode = fc;
+                        }
+                        else
+                        {
+                            continue;
+                        }
+
+                        //Debug.WriteLine($"ROW {row} | Model={modelnames} | ForestCode={forestCode}");
+
+                        if (selected == "month")
+                        {
+                            var forecast = CreateForecastInput(worksheet, row, forestCode);
+                            await _cap.UpdateForecast(forecast, updateQuery, monthColumns);
+                        }
+                        else
+                        {
+                            double value = GetDouble(worksheet.Cells[row, selectedHeaderCol].Text);
+                            await _cap.InsertMonthForeast(selected, value, forestCode);
+                        }
+
+                    }
+
+                    await _cap.UpdateTotalForecast(monthColumns, totalForeCastColumns);
 
                 }
+
+                response = new
+                {
+                    isSuccess = true,
+                    code = 200,
+                    remarks = "success",
+                    message = "File uploaded successfully."
+                };
             }
             catch (Exception ex)
             {
-                msg = ex.Message;
-                msgsuccess = false;
-                httpcode = 403;
-                rmk = "error";
+                response = new
+                {
+                    isSuccess = false,
+                    code = 403,
+                    remarks = "error",
+                    message = ex.Message
+                };
             }
 
-            formdata = new
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        private forecastInput CreateForecastInput(ExcelWorksheet ws, int row, int forestCode)
+        {
+            return new forecastInput
             {
-                isSuccess = msgsuccess,
-                code = httpcode,
-                remarks = rmk,
-                message = msg
+                column2 = GetDouble(ws.Cells[row, 3].Text),
+                column3 = GetDouble(ws.Cells[row, 4].Text),
+                column4 = GetDouble(ws.Cells[row, 5].Text),
+                column5 = GetDouble(ws.Cells[row, 6].Text),
+                column6 = GetDouble(ws.Cells[row, 7].Text),
+                column7 = GetDouble(ws.Cells[row, 8].Text),
+                forest_code = forestCode
             };
+        }
 
-            return Json(formdata, JsonRequestBehavior.AllowGet);
-
+        private double GetDouble(string value)
+        {
+            return double.TryParse(value, out var result) ? result : 0;
         }
 
         public string DateForecast(string mname)

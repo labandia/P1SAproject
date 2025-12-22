@@ -189,31 +189,47 @@
 
     }
     const GetForecastForChart = async () => {
-        let res = await FetchAuthenticate('@Url.Action("GetForecastChartList", "Capacity")', {})
-        if (res && res.Success) {
-            const result = Object.values(res.Data[0]).map(value => Math.round(value));
-            DisplayChartData(result);
+        let res = await FetchAuthenticate('@Url.Action("GetForecastChartList", "Capacity")', {});
+
+        if (res?.Success && res.Data?.length) {
+
+            const row = res.Data[0];
+
+            const forecastData = MONTH_ORDER.map(month =>
+                Math.round(row[month] ?? 0)
+            );
+
+            DisplayChartData(forecastData);
         }
     }
-    function DisplayChartData(data) {
-        // DISPLAY THE CHART TOTAL
-        const ctx = document.getElementById('myChart');
-        new Chart(ctx, {
+
+    let myChartInstance = null;
+    const MONTH_ORDER = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
+
+    function DisplayChartData(foresdata) {
+        console.log(foresdata);
+        const ctx = document.getElementById('myChart').getContext('2d');
+
+        // 🔴 Destroy existing chart before creating a new one
+        if (myChartInstance) {
+            myChartInstance.destroy();
+        }
+
+        myChartInstance = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                labels: [
+                    'January', 'February', 'March', 'April', 'May', 'June',
+                    'July', 'August', 'September', 'October', 'November', 'December'
+                ],
                 datasets: [{
-                    label: 'Total forecast Data ',
-                    data: data,
-                    backgroundColor: [
-                        'rgba(25, 131, 230, 0.3)',
-                        'rgba(25, 131, 230, 0.3)',
-                        'rgba(25, 131, 230, 0.3)',
-                        'rgba(25, 131, 230, 0.3)',
-                        'rgba(25, 131, 230, 0.3)',
-                        'rgba(25, 131, 230, 0.3)',
-                        'rgba(25, 131, 230, 0.3)',
-                    ],
+                    label: 'Total Forecast Data',
+                    data: foresdata,
+                    backgroundColor: 'rgba(25, 131, 230, 0.3)',
                     borderWidth: 1
                 }]
             },
@@ -221,40 +237,36 @@
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: {
-                        display: false // 👈 removes the legend box (red area)
-                    },
-                    title: {
-                        display: false
-                    }
+                    legend: { display: false },
+                    title: { display: false }
                 },
                 scales: {
                     y: {
                         beginAtZero: true,
                         ticks: {
                             font: {
-                                family: 'Poppins', // Change the font family
-                                size: 12,        // Change the font size
-                                weight: 'bold'   // Change the font weight
+                                family: 'Poppins',
+                                size: 12,
+                                weight: 'bold'
                             },
-                            color: '#222' // Change the font color
+                            color: '#222'
                         }
                     },
                     x: {
                         ticks: {
                             font: {
-                                family: 'Poppins', // Change the font family
-                                size: 14,        // Change the font size
-                                weight: 'medium'   // Change the font weight
+                                family: 'Poppins',
+                                size: 14,
+                                weight: '500'
                             },
-                            color: '#222' // Change the font color
+                            color: '#222'
                         }
                     }
                 }
             }
-
         });
     }
+
 
 
     // TABS CONTROLS
@@ -333,7 +345,7 @@
             formData.append('excelfile', file);
             formData.append('calendar', $("#calendar").val());
             const data = Object.fromEntries(formData);
-    
+
             let check = ValidationForm();
             const xhr = new XMLHttpRequest();
             xhr.open('POST', '/Capacity/ImportForecastData', true);
@@ -352,27 +364,28 @@
                 console.log(res);
 
 
-                //const progressBar = document.getElementById('progress-bar');
-                //progressBar.style.display = 'none';
-                //if (xhr.status === 200) {
-                //    const res = JSON.parse(xhr.responseText);
-                //    console.log(res);
-                //    //if (res.isSuccess) {
-                //    //    $("#uploadmodal").modal("hide");
-                //    //    Swal.fire({
-                //    //        text: res.message,
-                //    //        icon: "success",
-                //    //        confirmButtonColor: "#0d97c9",
-                //    //        timer: 2000
-                //    //    }).then(() => {
-                //    //        window.location.href = "/Capacity/ForecastData";
-                //    //    });
-                //    //} else {
-                //    //    alert("Upload a file first");
-                //    //}
-                //} else {
-                //    alert('Upload failed!');
-                //}
+                const progressBar = document.getElementById('progress-bar');
+                progressBar.style.display = 'none';
+                if (xhr.status === 200) {
+                    const res = JSON.parse(xhr.responseText);
+                    console.log(res);
+                    if (res.isSuccess) {
+                        $("#uploadmodal").modal("hide");
+                        Swal.fire({
+                            text: res.message,
+                            icon: "success",
+                            confirmButtonColor: "#0d97c9",
+                            timer: 2000
+                        }).then(() => {
+                            GetForecastForChart();
+                            $("#uploadmodal").modal("hide");
+                        });
+                    } else {
+                        alert("Upload a file first");
+                    }
+                } else {
+                    alert('Upload failed!');
+                }
             });
 
             //xhr.addEventListener('error', function () {
@@ -566,7 +579,7 @@
 
         } catch (error) {
             console.error("Failed to load page data:", error);
-        } 
+        }
     }
 
     $(document).ready(() => {

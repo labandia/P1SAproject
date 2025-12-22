@@ -647,43 +647,36 @@ namespace PMACS_V2.Areas.P1SA.Repository
             throw new NotImplementedException();
         }
 
-        public Task<bool> UpdateForecast(forecastInput fores, string strsql, string[] columns)
+        public Task<bool> UpdateForecast(
+                 forecastInput fores,
+                 string sql,
+                 string[] monthColumns)
         {
             var parameters = new DynamicParameters();
-            parameters.Add("@forest_code", 0);
-            int count = 0;
 
-            foreach (var column in columns)
+            // WHERE clause parameter
+            parameters.Add("@forest_code", fores.forest_code);
+
+            var values = new double[]
             {
-                Debug.WriteLine("COLUMN NAMES: " + column); 
-                switch (count)
-                {
-                    case 0:        
-                        parameters.Add("@" + column, fores.column2);
-                        break;
-                    case 1:
-                        parameters.Add("@" + column, fores.column3);
-                        break;
-                    case 2:
-                        parameters.Add("@" + column, fores.column4);
-                        break;
-                    case 3:
-                        parameters.Add("@" + column, fores.column5);
-                        break;
-                    case 4:
-                        parameters.Add("@" + column, fores.column6);
-                        break;
-                    case 5:
-                        parameters.Add("@" + column, fores.column7);
-                        break;
-                    case 6:
-                        parameters.Add("@" + column, fores.column8);
-                        break;
-                }
-                count++;
+                fores.column2,
+                fores.column3,
+                fores.column4,
+                fores.column5,
+                fores.column6,
+                fores.column7
+            };
+
+            for (int i = 0; i < monthColumns.Length; i++)
+            {
+                string month = monthColumns[i];
+                double value = values[i];
+
+                parameters.Add("@" + month, value);
+                Debug.WriteLine($"Added parameter -> @{month} = {value}");
             }
 
-            return SqlDataAccess.UpdateInsertQuery(strsql, parameters);
+            return SqlDataAccess.UpdateInsertQuery(sql, parameters);
         }
 
         public Task<bool> CheckForecast(string code)
@@ -743,6 +736,31 @@ namespace PMACS_V2.Areas.P1SA.Repository
             }
 
             return true;
+        }
+
+        public async Task<bool> UpdateTotalForecast(string[] columns, double[] rows)
+        {
+            for (int i = 0; i < columns.Length; i++)
+            {
+                string column = columns[i]; 
+                double value = rows[i];
+                Console.WriteLine($"Index {i}: {value}");
+                await SqlDataAccess.UpdateInsertQuery($@"UPDATE PMACS_ForecastTotal SET {column} = {value} WHERE RecordID = 1", null);
+            }
+
+            return true;
+        }
+
+        public Task<List<TotalForecastModel>> GetTotalForecast()
+        {
+            return SqlDataAccess.GetData<TotalForecastModel>($@"SELECT January
+                                                          ,February,March
+                                                          ,April,May
+                                                          ,June,July
+                                                          ,August,September
+                                                          ,October,November
+                                                          ,December
+                                                    FROM PMACS_ForecastTotal", null);
         }
     }
 }

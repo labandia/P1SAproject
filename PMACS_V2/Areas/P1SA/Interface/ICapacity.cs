@@ -19,6 +19,7 @@ namespace PMACS_V2.Areas.P1SA.Interface
         Task<int> GetForecastTotal(string month);
         Task<List<ForecastModel>> GetForecast(string year);
         Task<List<ForecastModel>> GetForecastChart();
+        Task<List<TotalForecastModel>> GetTotalForecast();
 
         //Molding Capacity
         Task<List<MoldingModel>> GetMoldingModels(string months, int capid);
@@ -60,7 +61,7 @@ namespace PMACS_V2.Areas.P1SA.Interface
 
         Task<bool> DeleteForecast();
 
-
+        Task<bool> UpdateTotalForecast(string[] columns, double[] rows);
 
         Task<bool> CheckForecast(string code);
         Task<bool> UpdateForecast(forecastInput fores, string strsql, string[] columns);

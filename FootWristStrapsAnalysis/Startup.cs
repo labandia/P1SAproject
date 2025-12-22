@@ -20,7 +20,7 @@ namespace FootWristStrapsAnalysis
 {
     public partial class Startup : Form
     {
-        private string templateFilepath = @"C:\\Users\\jaye-labandia\\Desktop\\Record_STATIC.xlsx";
+        private string templateFilepath = @"\\sdp01034s\SYSTEM EXECUTABLE\P1SA-PC_System\ExportTemplate\Record_STATIC.xlsx";
 
         private readonly IFootWrist _foot;
         private readonly System.Timers.Timer _importTimer;
@@ -60,11 +60,10 @@ namespace FootWristStrapsAnalysis
                 folderText.Text = folderpath;   
                 // Step 2: Starts the check file The Data from the exist file folder and Upload it
                 await StartAsync();
-
                 getData = await _foot.GetFootAnalysisData();
                 var displayByDate = getData.Where(res => res.TestDate.HasValue && res.TestDate.Value.Date == selectedDate).ToList();
 
-                if(displayByDate != null)
+                if (displayByDate == null)
                 {
                     MessageBox.Show("No Data Found.",
                          "Warning",
@@ -259,7 +258,7 @@ namespace FootWristStrapsAnalysis
                         {
                             TestDate = fileDate,
                             TestTime = testTime,
-                            EmployeeID = employeeId,
+                            EmployeeID = employeeId.Trim('"'),
                             EmployeeName = col[3].Trim().Trim('"'),
                             ComprehensiveResult = col[5].Trim().Trim('"') == "PASS",
                             LeftFootResistance = col[6].Trim().Trim('"'),
@@ -398,6 +397,15 @@ namespace FootWristStrapsAnalysis
                 }
 
                 MessageBox.Show("✅ Previous files import completed.");
+
+
+                var selectedDate = dateTimePicker1.Value.Date;
+                footlist = getData
+                    .Where(res => res.TestDate.HasValue && res.TestDate.Value.Date == selectedDate)
+                    .ToList();
+                CountTable.Text = footlist.Count().ToString();
+
+                AnalysisTable.DataSource = footlist;
             }
             catch (Exception ex)
             {
@@ -527,6 +535,19 @@ namespace FootWristStrapsAnalysis
                     await PopulateTemplateFromDatabase(saveFileDialog.FileName);
                     MessageBox.Show("Export completed successfully!", "Success",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    selectedRecordIds = new List<int>();
+                    selectedEmployeeID = new List<string>();
+
+                    selecteditem.Text = "0 / 10";
+
+                    foreach (DataGridViewRow row in AnalysisTable.Rows)
+                    {
+                        if (!row.IsNewRow)
+                        {
+                            row.Cells["Select"].Value = false;
+                        }
+                    }
                 }
             }
             catch(Exception ex)
@@ -540,6 +561,11 @@ namespace FootWristStrapsAnalysis
 
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
+            selectedRecordIds = new List<int>();
+            selectedEmployeeID = new List<string>();
+
+            selecteditem.Text = "0 / 10";
+
             // Assuming getData is already loaded somewhere else (e.g., Form_Load)
             if (getData == null) return;
 
@@ -649,16 +675,28 @@ namespace FootWristStrapsAnalysis
             return organizedData;
         }
 
-
+        string[] monthNames =
+        {
+            "January", "February", "March", "April",
+            "May", "June", "July", "August",
+            "September", "October", "November", "December"
+        };
         private async Task PopulateTemplateFromDatabase(string outputPath)
         {
+            DateTime selectedDate = dateTimePicker1.Value;
+
+            int month = selectedDate.Month;   // 1–12
+            int year = selectedDate.Year;
+
+            int daysInMonth = DateTime.DaysInMonth(year, month);
+
             if (!File.Exists(templateFilepath))
                 throw new FileNotFoundException("Template file not found.", templateFilepath);
 
             // 1. Copy template to output path
             File.Copy(templateFilepath, outputPath, true);
 
-            var getData = await _foot.GetTestDataForMonth(11, 2025);
+            var getData = await _foot.GetTestDataForMonth(month, year);
 
 
 
@@ -684,11 +722,11 @@ namespace FootWristStrapsAnalysis
                 Dictionary<string, (int rightCol, int leftCol)> employeeColumnMap =
                     GetEmployeeColumnMappingFromDatabase();
 
+                string monthName = monthNames[month - 1];
 
-            
 
-                worksheet.Cells[5, 5].Value = 2021;
-                worksheet.Cells[5, 9].Value = "Month: Febuary";
+                worksheet.Cells[5, 5].Value = year;
+                worksheet.Cells[5, 9].Value = $@"Month: {monthName}";
 
 
                 //// 5. Organize data from database
@@ -781,18 +819,25 @@ namespace FootWristStrapsAnalysis
            Dictionary<string, (int rightCol, int leftCol)> templateColumnMap,
            Dictionary<string, string> dbToTemplateMapping)
         {
+
             int startRow = 11; // ✅ MUST match A11 = Day 1
-            int daysInMonth = DateTime.DaysInMonth(2025, 11);
+            //int daysInMonth = DateTime.DaysInMonth(2025, 11);
+
+            DateTime selectedDate = dateTimePicker1.Value;
+
+            int month = selectedDate.Month;   // 1–12
+            int year = selectedDate.Year;
+
+            int daysInMonth = DateTime.DaysInMonth(year, month);
 
             // Populate data for each day of December (rows 11-41)
             for (int day = 1; day <= daysInMonth; day++)
             {
                 int row = 11 + day; // Row 11 for day 1, 12 for day 2, etc.
-                DateTime currentDate = new DateTime(2025, 11, day);
+                DateTime currentDate = new DateTime(year, month, day); // ✅ FIXED
 
                 foreach (var emp in templateColumnMap)
                 {
-                    Debug.WriteLine(currentDate.ToString());
                     int rightCol = emp.Value.rightCol;
                     int leftCol = emp.Value.leftCol;
 
@@ -814,62 +859,7 @@ namespace FootWristStrapsAnalysis
                 }
 
 
-
-                // Check each employee that exists in the template
-                //foreach (var templateEntry in templateColumnMap)
-                //{
-                //    string templateEmployeeID = templateEntry.Key;
-                //    int rightCol = templateEntry.Value.rightCol;
-                //    int leftCol = templateEntry.Value.leftCol;
-
-                //    // Find the corresponding database ID
-                //    //string dbEmployeeID = FindDatabaseEmployeeID(templateEmployeeID, dbToTemplateMapping);
-
-                //    // Check if we have data for this date and employee
-                //    bool hasData = organizedData.ContainsKey(currentDate) &&
-                //                  organizedData[currentDate].ContainsKey(templateEmployeeID);
-
-                //    if (hasData)
-                //    {
-                //        ESDTestData testData = organizedData[currentDate][templateEmployeeID];
-
-                //        // Populate Right foot result (O for pass, X for fail)
-                //        string rightValue = testData.RightFootResult ? "O" : "X";
-                //        worksheet.Cells[row, rightCol].Value = rightValue;
-                //        worksheet.Cells[row, rightCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-
-                //        // Apply color
-                //        if (testData.RightFootResult)
-                //        {
-                //            worksheet.Cells[row, rightCol].Style.Font.Color.SetColor(System.Drawing.Color.Green);
-                //        }
-                //        else
-                //        {
-                //            worksheet.Cells[row, rightCol].Style.Font.Color.SetColor(System.Drawing.Color.Red);
-                //        }
-
-                //        // Populate Left foot result
-                //        string leftValue = testData.LeftFootResult ? "O" : "X";
-                //        worksheet.Cells[row, leftCol].Value = leftValue;
-                //        worksheet.Cells[row, leftCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-
-                //        // Apply color
-                //        if (testData.LeftFootResult)
-                //        {
-                //            worksheet.Cells[row, leftCol].Style.Font.Color.SetColor(System.Drawing.Color.Green);
-                //        }
-                //        else
-                //        {
-                //            worksheet.Cells[row, leftCol].Style.Font.Color.SetColor(System.Drawing.Color.Red);
-                //        }
-                //    }
-                //    else
-                //    {
-                //        // No data for this day - clear the cells but keep formatting
-                //        worksheet.Cells[row, rightCol].Value = "";
-                //        worksheet.Cells[row, leftCol].Value = "";
-                //    }
-                //}
+        
             }
         }
 
@@ -879,7 +869,7 @@ namespace FootWristStrapsAnalysis
             cell.Value = isPass ? "O" : "X";
             cell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
             cell.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-            cell.Style.Font.Bold = true;
+            cell.Style.Font.Bold = false;
 
             cell.Style.Font.Color.SetColor(
                 isPass ? System.Drawing.Color.Green : System.Drawing.Color.Red

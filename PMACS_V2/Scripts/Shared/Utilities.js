@@ -1,4 +1,6 @@
-﻿// =======================
+﻿
+
+// =======================
 // GLOBAL GET FUNCTIONS WITH TOKEN AUTHENTICATION
 // =======================
 window.FetchAuthenticate = function (url, fdata) {

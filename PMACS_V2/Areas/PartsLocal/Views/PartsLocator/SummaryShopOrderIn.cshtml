@@ -7,8 +7,47 @@
 <section class="table-container">
     <div class="table-header">
         <h3>Shop Order Summary</h3>
-        <div class="table-actions">
-            
+        
+        <div class="flex_align">
+            <button class="btn btn-secondary" id="refreshBtn">
+                <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+            <button class="btn btn-primary">
+                <i class="fas fa-download"></i> Export
+            </button>
+        </div>
+
+    </div>
+
+    <!-- Controls Section -->
+    <div class="controls-section">
+        <div class="control-group">
+            <label class="control-label">
+                <i class="fas fa-search"></i> Search here
+            </label>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search by order number, part number, model...">
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">
+                <i class="fas fa-calendar"></i> Start Date
+            </label>
+            <input type="date" class="date-filter" id="dateFilter">
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">
+                <i class="fas fa-calendar"></i> End Date
+            </label>
+            <input type="date" class="date-filter" id="dateFilter">
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">
+                <i class="fas fa-tags"></i> Filter by Shop Order
+            </label>
             <select class="filter-select" id="SortByAction">
                 <option value="1">Sort by: Out</option>
                 <option value="0">Sort by: In</option>
@@ -86,6 +125,14 @@
         }
 
     });
+
+    $("#refreshBtn").on('click', function (e) {
+        e.preventDefault();
+        $("#SummaryINdisplay").hide();
+        $("#SummaryOutdisplay").show();
+
+    });
+
     const GetTransactionSummaryIN = async () => {
         let res = await FetchAuthenticate('@Url.Action("GetTransactionSummaryIn", "PartsLocator")', {});
 
@@ -95,7 +142,7 @@
 
 
               dataArray.forEach((row, index) => {
-                  var setdata = `<tr >
+                  var setdata = `<tr class="fade-in">
                       <td>${row.TransactionDate}</td>
                       <td>${row.TransactionTime}</td>
                       <td style='font-weight: 600;'>${row.RotorOrder}</td>
@@ -137,14 +184,12 @@
       }
     const GetTransactionSummaryOUT = async () => {
         let res = await FetchAuthenticate('@Url.Action("GetTransactionSummaryOut", "PartsLocator")', {});
-        console.log("OUT ");
-        console.log(res);
         if (res && res.Success) {
             $("#ShopOrderSummaryOut").empty();
             let dataArray = res.Data;
 
             dataArray.forEach((row, index) => {
-                var setdata = `<tr >
+                var setdata = `<tr class="fade-in">
                   <td>${row.TransactionDate}</td>
                   <td>${row.TransactionTime}</td>
                   <td style='font-weight: 600;'>${row.RotorOrder}</td>

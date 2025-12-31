@@ -1,0 +1,998 @@
+﻿
+@{
+    ViewBag.Title = "DieMoldDaily";
+    Layout = "~/Areas/MoldDie/Views/Shared/_MainLayout.cshtml";
+}
+
+
+<section>
+    <div class="DieMainContainer">
+        <!-- Left Panel - Form -->
+        <div class="left-panel">
+
+            <div class="formcustomgroup">
+                <label style="font-size: .9rem;" class="form-label " for="processSelect">Select Process</label>
+                <br />
+                <div class="select-container" style="width: 100%">
+                    <select id="processSelect">
+                        <option value="">-- Select Process --</option>
+                        <option value="M001">ACM</option>
+                        <option value="M002">Mold frame</option>
+                        <option value="M003">Mold Impeller</option>
+                        <option value="M004">Slot Insulator</option>
+                        <option value="M005">Stepping Motor</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="formcustomgroup">
+                <label style="font-size: .9rem;" class="form-label required" for="processSelect">Search PartNo.</label>
+                <br />
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Enter part number to search (e.g., 002886060-01)" maxlength="14">
+                    <button id="searchButton" class="btn btn-secondary">
+                        <i class="fa-solid fa-search"></i>
+                    </button>
+                </div>
+            </div>
+
+
+
+
+            <form id="addDailyForm" class="addformcontainer" autocomplete="off">
+                <div class="formcustomgroup">
+                    <label class="form-label required" for="dateInput">Date Input</label> <br />
+                    <input type="date" id="DateInput" name="DateInput" required>
+                </div>
+                <div class="formcustomgroup">
+                    <label class="form-label" for="cycleShot">Cycle Shot</label> <br />
+                    <input type="number" id="CycleShot" name="CycleShot" placeholder="Enter Cycle Shot" required>
+                </div>
+                <div class="formcustomgroup">
+                    <label class="form-label" for="machineNo">Machine No</label> <br />
+                    <input type="number" id="MachineNo" name="MachineNo" placeholder="Enter Machine Number" required>
+                </div>
+                <div class="formcustomgroup">
+                    <label class="form-label" for="remarks">Remarks</label> <br />
+                    <div class="select-container">
+                        <select id="remarks" name="Remarks">
+                            <option value="N/A">N/A</option>
+                            <option value="Shot cycle cleaning">Shot cycle cleaning</option>
+                            <option value="Die Cleaning Due To 1 Month No operation">Die Cleaning Due To 1 Month No operation</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="formcustomgroup">
+                    <label class="form-label" for="maintenanceIncharge">Maintenance Incharge</label> <br />
+                    <div class="select-container" style="width: 100%;">
+                        <select id="Mincharge" name="Mincharge">
+                            <option value="N.AMLOG">N.AMLOG</option>
+                            <option value="J.ORO">J.ORO</option>
+                            <option value="R.AGACOSCOS">R.AGACOSCOS</option>
+                        </select>
+                    </div>
+                </div>
+
+                <hr />
+
+                <div class="form-actions">
+
+                    <button type="submit" style="width: 100%; padding: .5em 0;">
+                        <i class="fa-regular fa-floppy-disk"></i>
+                        <span>Save Record</span>
+                    </button>
+                </div>
+            </form>
+
+        </div>
+
+        <!-- Right Panel - Data Display -->
+        <div class="right-panel">
+            <div id="DailySummary">
+                <div class="flex_space" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1em;">
+                    <div class="filters">
+                        <div class="select-container">
+                            <input type="date" id="DailyfilterDate" />
+                        </div>
+
+                        <div class="select-container">
+                            <select id="yearselectDaily"></select>
+                        </div>
+
+                        <div class="select-container">
+                            <select id="monthSelectDaily"></select>
+                        </div>
+
+                        <div class="select-container">
+                            <select id="DailyProcess">
+                                <option value="M002">Mold Frame</option>
+                                <option value="M003">Mold Impeller</option>
+                                <option value="M004">Slot Insulator </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="select-container">
+                        <div id="DailyContainer" class="paginationPartlocal"></div>
+                    </div>
+
+                </div>
+                <hr />
+
+                <div class="DieMainTable" id="DieWrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Part No. / Model </th>
+                                <th>No.of Shot Cycle</th>
+                                <th>Total</th>
+                                <th>Machine No.</th>
+                                <th>Status</th>
+                                <th>Remarks</th>
+                                <th>MIC</th>
+                            </tr>
+                        </thead>
+                        <tbody id="DieMoldDaily">
+                        </tbody>
+                    </table>
+
+
+
+                </div>
+            </div>
+
+
+            <div id="DailyInputs">
+                <div class="Detailcard">
+                    <div class="summary-grid" style="display: flex; align-items: center; gap: 20px;">
+                        <div class="summary-item">
+                            <div class="summary-label">Part Number</div>
+                            <div class="summary-value" id="partNumber">-</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">Dimension Quality</div>
+                            <div class="summary-value" id="modelName">-</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">Last Cycle Shot</div>
+                            <div class="summary-value" id="lastCycleShot">-</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">Status</div>
+                            <div class="summary-value" id="partStatus">
+                                No Data
+                            </div>
+                        </div>
+                        <div class="summary-item">
+                            <button id="Originalback"><i class="fa-solid fa-arrow-rotate-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Shot Cycle</th>
+                                <th>Total</th>
+                                <th>Machine No.</th>
+                                <th>Remarks</th>
+                                <th>Incharge</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dieMoldMasterlist">
+                            <!-- Data will be populated here -->
+                            <tr>
+                                <td colspan='10'>
+                                    🔍 No Data Found
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+</section>
+
+
+
+<!--########################## Edit Daily Mold Die  DATA #############################-->
+<div class="modal fade modal-lg" id="EditDailyMold" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Edit Die Shot Cycle Control</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <form id="EditDailyforms" class="addformcontainer" autocomplete="off">
+                    <div class="row">
+                        <div class="form_group col-6 col-lg-6 col-sm-12">
+                            <input type="hidden" name="DailyRecordiD" id="DailyRecordiD" required>
+                            <label for="">Date Input <small style="color: #a81818; font-weight: 600;">*</small></label>
+                            <input type="date" name="DailyEditDateInput" id="DailyEditDateInput">
+                        </div>
+
+                        <div class="form_group col-6 col-lg-6 col-sm-12">
+                            <label for="">Part number <small style="color: #a81818; font-weight: 600;">*</small></label>
+                            <input type="text" placeholder="Type Part number" name="Editdailypartno" id="Editdailypartno" required>
+                            <div class="dailyEditpartnumdisplay"></div>
+                        </div>
+
+
+                    </div>
+
+
+
+                    <div class="row">
+                        <div class="form_group col-6 col-lg-6 col-sm-12">
+                            <label for="">Cycle shot</label>
+                            <input type="number" name="DailyeditCycleShot" id="DailyeditCycleShot" placeholder="Enter Cycle Shot" onkeypress='return restrictChars(event)' required>
+                        </div>
+
+                        <div class="form_group col-6 col-lg-6 col-sm-12">
+                            <label for="">Machine No</label>
+                            <input type="number" name="DailyEditMachineNo" id="DailyEditMachineNo" required>
+                        </div>
+
+
+                    </div>
+
+                    <div class="row">
+                        <div class="form_group col-6 col-lg-6 col-sm-12">
+                            <label for="">Remarks</label>
+
+
+                            <div class="select-container" style="width: 100% !important;">
+                                <select name="DailyEditRemarks" id="DailyEditRemarks">
+                                    <option value="N/A">N/A</option>
+                                    <option value="Shot cycle clearning">Shot cycle clearning</option>
+                                    <option value="Die Cleaning Due To 1 Month No operation">Die Cleaning Due To 1 Month No operation</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form_group col-6 col-lg-6 col-sm-12">
+                            <label for="">Maintenance incharge</label>
+
+
+                            <div class="select-container" style="width: 100% !important;">
+                                <select name="DailyEditMincharge" id="DailyEditMincharge">
+                                    <option value="N.AMLOG">N.AMLOG</option>
+                                    <option value="J.ORO">J.ORO</option>
+                                    <option value="R.AGACOSCOS">R.AGACOSCOS</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+
+                    @*<div class="form_group col-6 col-lg-6 col-sm-12">
+                            <label for="">Remarks</label>
+
+                            <div class="select-container" style="width: 100% !important;">
+                                <select name="Remarks" id="Remarks">
+                                    <option value="Mold Die">Mold Die</option>
+                                    <option value="Tooling">Tooling</option>
+                                </select>
+                            </div>
+                        </div>*@
+
+
+
+
+                    <hr />
+
+
+                    <div class="flex_space " id="editsdisplay">
+                        <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                        <button type="submit" class="primary_button_color">
+                            <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
+                        </button>
+                    </div>
+                </form>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+    // Loads the year and month select options
+    initMonthSelect("monthSelectDaily", true);
+
+     let GetData = [], DailyData = [];
+     let TableDisplay = $("#dieMoldMasterlist");
+     let DailyDisplay = $("#DieMoldDaily");
+
+    let yearSelect = $("#yearselectDaily");
+     const currentMonth = new Date().getMonth();
+    const currentYear = new Date().getFullYear();
+
+    const yearSelectfilter = document.getElementById("yearselectDaily");
+    const monthSelect = document.getElementById("monthSelectDaily");
+    const dateInput = document.getElementById("DailyfilterDate");
+
+     let setMonth = parseInt(currentMonth) + 1;
+     let GetRow = 0;
+
+     // Submit a Add Forms
+     $("#addDailyForm").on('submit', async function (e) {
+         e.preventDefault();
+         const searchInput = $("#searchInput").val().trim();
+         const selectionProcess = $("#processSelect").val();
+
+         if (searchInput === "" && selectionProcess === "") {
+             alert("Check all the required Input");
+             return;
+         }
+
+         let formData = new FormData(e.target);
+         formData.append('PartNo', searchInput);
+         const data = Object.fromEntries(formData);
+
+           // Check for duplicate entry for the same part number on the same date
+         let checkduplicate = await fetchData('@Url.Action("CheckDialyMoldExist", "Mold")',
+             {
+                 PartNo: data.PartNo,
+             DateInput: data.DateInput
+         });
+
+         if (checkduplicate) {
+                 Swal.fire({
+                     icon: "error",
+                     text: "Partnumber is already Input Today",
+                     timer: 1500,
+                     showConfirmButton: false
+                 });
+                 return;
+         }
+
+          let res = await postData('@Url.Action("AddDailyMoldDieMonitor", "Mold")', data);
+          if (res && res.Success) {
+               Swal.fire({
+                   title: "Success",
+                   text: res.Message,
+                   icon: "success",
+                   confirmButtonColor: "#0d97c9",
+                   timer: 1500
+               }).then(() => {
+                   SearchMoldiePartno();
+                   document.getElementById("addDailyForm").reset();
+                   $("#searchInput").val("");
+               });
+           } else {
+               Swal.fire({
+                   icon: "error",
+                   text: "Error  Problem ecounter.",
+                   timer: 1500,
+                   showConfirmButton: false
+               });
+           }
+     });
+     $("#EditDailyforms").on('submit', async (e) => {
+          e.preventDefault();
+          let formData = new FormData();
+          formData.append('RecordID', $('#DailyRecordiD').val());
+          formData.append('DateInput', $('#DailyEditDateInput').val());
+          formData.append('dailypartno', $('#Editdailypartno').val());
+          formData.append('CycleShot', $('#DailyeditCycleShot').val());
+          formData.append('MachineNo', $('#DailyEditMachineNo').val());
+          formData.append('Remarks', $('#DailyEditRemarks').val());
+          formData.append('Mincharge', $('#DailyEditMincharge').val());
+          const data = Object.fromEntries(formData);
+          let res = await postData('@Url.Action("UpdateDailyMoldDieMonitor", "Mold")', data);
+
+           if (res.StatusCode === 201) {
+           Swal.fire({
+               title: "Success",
+               text: res.Message,
+               icon: "success",
+               confirmButtonColor: "#0d97c9",
+               timer: 1500
+           }).then(() => {
+               SearchMoldiePartno();
+               $("#EditDailyforms")[0].reset();
+               $("#EditDailyMold").modal("hide");
+           });
+       } else {
+           Swal.fire({
+               icon: "error",
+               text: data.ToolNo + " is already Exist",
+               timer: 1500,
+               showConfirmButton: false
+           });
+       }
+      });
+
+      // Back to Daily Summary
+    $("#Originalback").on('click', function (e) {
+        e.preventDefault();
+        GetMoldDieDaily();
+    });
+
+    //===============================================================
+    //==================== FILTER DATA ==============================
+    //===============================================================
+    dateInput.addEventListener('change', function (e) {
+        e.preventDefault();
+        // Get the day part only
+        let month = $("#monthSelectDaily").val();
+        let dateValue = dateInput.value;
+        GetRow = parseInt(dateValue.split("-")[2], 10);
+
+        GetMoldDieDaily(month, GetRow, $("#DailyProcess").val());
+    });
+
+
+    $("#monthSelectDaily").on('change', (e) => {
+        e.preventDefault();
+        let month = e.target.value;
+        let dateValue = dateInput.value;
+        GetRow = parseInt(dateValue.split("-")[2], 10);
+
+        GetMoldDieDaily(month, GetRow, $("#DailyProcess").val());
+    })
+
+    $("#yearselectDaily").on('change', (e) => {
+        e.preventDefault();
+        let month = $("#monthSelectDaily").val();
+        let year = e.target.value;
+        let dateValue = dateInput.value;
+        GetRow = parseInt(dateValue.split("-")[2], 10);
+
+        $("#MonthHeader").text(months[month - 1]);
+        GetMoldDieDaily(month, GetRow, $("#DailyProcess").val());
+    })
+    //===============================================================
+
+     // Search functionality
+     $("#searchButton").on('click', function (e) {
+         e.preventDefault();
+         SearchMoldiePartno();
+     });
+     // Allow Enter key to trigger search
+     $("#searchInput").on('keypress', function (e) {
+         if (e.key === 'Enter') {
+             SearchMoldiePartno();
+         }
+     });
+     // Search Logic
+     async function SearchMoldiePartno() {
+         const searchInput = $("#searchInput").val().trim();
+         const selectionProcess = $("#processSelect").val();
+
+         $("#DailySummary").hide();
+         $("#DailyInputs").show();
+
+
+         if (!searchInput) {
+             // Handle empty input
+             alert("No search input provided.");
+             return;
+         }
+
+         if (selectionProcess === "") {
+             // Handle empty input
+             alert("Set a Process first...");
+             return;
+         }
+         const searchButton = document.getElementById('searchButton');
+         const originalText = searchButton.innerHTML;
+
+         // Show loading state
+         searchButton.innerHTML = '<div class="loading"></div> Searching...';
+         searchButton.disabled = true;
+
+         try {
+             TableDisplay.empty(); // Removing the Loading Display
+             await new Promise(resolve => setTimeout(resolve, 1000));
+
+             let res = await FetchAuthenticate('@Url.Action("SearchMoldieDaily", "Mold")', {
+                 ProcessID: selectionProcess,
+                 SearchInput: searchInput
+             });
+
+
+             if (res && res.Success) {
+
+                 let Details = res.Data.Details;
+                 GetData = res.Data.GetList;
+
+                 // Display the Details
+                 if (Details) {
+                     $("#partNumber").text(Details.PartNo);
+                     $("#modelName").text(Details.DimensionQuality);
+                     $("#lastCycleShot").text(Details.Total);
+
+                     let statusHtml = "";
+
+                     if (Details.Status === 0) {
+                         statusHtml = `
+                         <button class="status-btn active"
+                             style="color:#054e92; border:2px solid #054e92;">
+                             Continue
+                         </button>`;
+                                     }
+                     else if (Details.Status === 1) {
+                                         statusHtml = `
+                         <button class="status-btn active"
+                             style="color:#c97d0c; border:2px solid #c97d0c;">
+                             Needed
+                         </button>`;
+                                     }
+                      else if (Details.Status === 2) {
+                                         statusHtml = `
+                         <button class="status-btn active"
+                             style="color:#188f18; border:2px solid #188f18;">
+                             Completed
+                         </button>`;
+                     }
+
+                     $("#partStatus").html(statusHtml);
+                 }
+
+                 PopulateDatalist(GetData);
+
+             } else {
+                 // Handle no results or failure
+                 const loadData = `<tr>
+                      <td colspan='9'>
+                          🔍 No Data Found
+                      </td>
+                  </tr>`;
+
+                 TableDisplay.append(loadData);
+
+                 $("#partNumber").text("-");
+                 $("#modelName").text("-");
+                 $("#lastCycleShot").text("-");
+                 $("#partStatus").text("No Data");
+
+                 Swal.fire({
+                     icon: "error",
+                     text: "No Data found or the Partnumber is not the Process",
+                     timer: 3000,
+                     showConfirmButton: false
+                 });
+             }
+         } catch (err) {
+             console.error("Search error:", err);
+         } finally {
+             // Reset button
+             searchButton.innerHTML = originalText;
+             searchButton.disabled = false;
+         }
+     }
+
+     function PopulateDatalist(data) {
+         $("#dieMoldMasterlist").empty();
+
+         data.forEach((rowData, index) => {
+
+             // Continue Status (0)
+             let continueHtml = `
+         <button class="status-btn" onclick="ChangeStatus(${rowData.RecordID}, 0)">
+             Continue
+         </button>`;
+
+             // Needed + Complete (1, 2)
+             let neededCompleteHtml = `
+         <button class="status-btn"
+             onclick="ChangeStatus(${rowData.RecordID}, 1)">
+             Needed
+         </button>
+         <button class="status-btn"
+             onclick="ChangeStatus(${rowData.RecordID}, 2)">
+             Complete
+         </button>`;
+
+             // Highlight active based on rowData.Status
+             if (rowData.Status === 0) {
+                 continueHtml = `
+             <button class="status-btn active"
+                 style="color:#054e92;border:2px solid #054e92;"
+                 onclick="ChangeStatus(${rowData.RecordID}, 1)">
+                 Continue
+             </button>`;
+             }
+             else if (rowData.Status === 1) {
+                 neededCompleteHtml = `
+             <button class="status-btn active"
+                 style="color:#c97d0c;border:2px solid #c97d0c;"
+                 onclick="ChangeStatus(${rowData.RecordID}, 1)">
+                 Needed
+             </button>
+             <button class="status-btn"
+                 onclick="ChangeStatus(${rowData.RecordID}, 2)">
+                 Complete
+             </button>`;
+             }
+             else if (rowData.Status === 2) {
+                 neededCompleteHtml = `
+             <button class="status-btn"
+                 onclick="ChangeStatus(${rowData.RecordID}, 1)">
+                 Needed
+             </button>
+             <button class="status-btn active"
+                 style="color:#188f18;border:2px solid #188f18;"
+                 onclick="ChangeStatus(${rowData.RecordID}, 2)">
+                 Complete
+             </button>`;
+             }
+
+             const rowHtml = `
+         <tr>
+             <td>${formatJsonDate(rowData.DateInput)}</td>
+             <td>${rowData.CycleShot}</td>
+             <td>${rowData.Total}</td>
+             <td>${rowData.MachineNo}</td>
+             <td>${rowData.Remarks}</td>
+             <td>${rowData.Mincharge}</td>
+              <td>${continueHtml} ${neededCompleteHtml}</td>
+             <td>
+                 <button type="button" class="btn actionicon text-primary EditDaily"
+                     id="editButton_${rowData.RecordID}">
+                     <i class="fa-regular fa-pen-to-square action_btn"></i>
+                 </button>
+
+                 <button type="button" class="btn actionicon text-danger deleteDailyButton"
+                     id="deleteDailyButton_${rowData.RecordID}">
+                     <i class="fa-regular fa-trash-can"></i>
+                 </button>
+             </td>
+         </tr>`;
+
+             $("#dieMoldMasterlist").append(rowHtml);
+         });
+
+
+         // Handle click event for edit button
+         $(document).on('click', '.EditDaily', function (e) {
+             e.stopPropagation();
+
+
+             const buttonId = $(this).attr('id');
+             const rowIndex = buttonId.split('_')[1];
+             const filterdata = GetData.find(res => res.RecordID === parseInt(rowIndex));
+             console.log("HERE");
+
+             console.log(filterdata);
+
+             if (filterdata) {
+                 let setDate = formatJsonDate(filterdata.DateInput);
+                 console.log(setDate);
+                 $("#DailyRecordiD").val(filterdata.RecordID);
+                 setDateInput("DailyEditDateInput", setDate);
+                 $("#Editdailypartno").val(filterdata.PartNo);
+                 $("#DailyeditCycleShot").val(filterdata.CycleShot);
+                 $("#DailyEditMachineNo").val(filterdata.MachineNo);
+                 $("#DailyEditRemarks").val(filterdata.Remarks);
+                 $("#DailyEditMincharge").val(filterdata.Mincharge);
+                 $("#EditDailyMold").modal("show");
+
+             }
+         });
+
+
+            // Handle click event for edit button
+           $(document).on('click', '.deleteDailyButton', async function (e) {
+               e.stopPropagation();
+               const buttonId = $(this).attr('id');
+               const rowIndex = buttonId.split('_')[1];
+
+
+               Swal.fire({
+                   title: "Are you sure you want to delete this?",
+                   text: "You won't be able to revert this!",
+                   icon: "warning",
+                   showCancelButton: true,
+                   confirmButtonColor: "#3085d6",
+                   cancelButtonColor: "#d33",
+                   confirmButtonText: "Yes, delete it!"
+               }).then( async (result) => {
+                   if (result.isConfirmed) {
+                       let res = await postData('@Url.Action("DeleteDailyMoldDieMonitor", "Mold")', { ID: rowIndex });
+                       if (res.Success && res) {
+
+                           Swal.fire({
+                               title: "Success",
+                               text: res.Message,
+                               icon: "success",
+                               confirmButtonColor: "#0d97c9",
+                               timer: 1500
+                           }).then(() => {
+                               SearchMoldiePartno();
+                           });
+
+
+                       }
+                   }
+               });
+
+           });
+
+
+
+     }
+
+     async function ChangeStatus(recordId, status) {
+
+         let res = await postData('@Url.Action("UpdateDailyStatus", "Mold")', {
+             RecordID: recordId,
+             Status: status
+         });
+
+         if (res && res.Success) {
+             // Refresh your table
+             SearchMoldiePartno()
+         }
+     }
+
+     function setDateInput(inputId, dateStr) {
+         if (!dateStr) return; // Exit if empty
+
+         const parts = dateStr.split("/"); // ["MM", "DD", "YY"]
+         if (parts.length !== 3) return; // Invalid format
+
+         const month = parts[0].padStart(2, '0');
+         const day = parts[1].padStart(2, '0');
+         const year = parts[2]; // assumes 2000+ year
+
+         const formattedDate = `${year}-${month}-${day}`;
+
+         const inputElement = document.getElementById(inputId);
+         if (inputElement) {
+             inputElement.value = formattedDate;
+         }
+    }
+
+    const GetMoldieYears = async () => {
+        let res = await fetchData('@Url.Action("GetYearMoldDie", "Mold")', {});
+
+            yearSelect.empty();
+            $.each(res, function (index, year) {
+                yearSelect.append(`<option value='${year}'>${year}</option>`);
+            });
+
+        // select the first option automatically
+        yearSelect.prop('selectedIndex', 0);
+    }
+
+    const GetMoldDieDaily = async (month = setMonth, day = GetRow, process = $("#DailyProcess").val()) => {
+        $("#DailySummary").show();
+        $("#DailyInputs").hide();
+
+        await GetMoldieYears();
+
+        DailyDisplay.empty();
+
+        const id = window.loadingDisplay("DieMoldDaily", 8);
+
+        const year = yearSelect.val() === null || yearSelect.val() === ""
+            ? currentYear
+            : yearSelect.val();
+
+        if (typeof window.Loadingsteps === "function") {
+             window.Loadingsteps(id, async () => {
+                 let formData = new FormData();
+                 // Where value of month is around 1 - 12
+                 formData.append('Months', month);
+                 formData.append('Days', day);
+                 formData.append('Year', year);
+                 formData.append('ProcessID', process);
+                 const data = Object.fromEntries(formData);
+
+                 let res = await FetchAuthenticate('@Url.Action("GetMoldDieDailyList", "Mold")', data);
+
+                 if (res && res.Success) {
+                      //DieTooling = res.Data;
+                      DailyData = res.Data;
+                      displayDailyPagination(DailyData, 'DieMoldDaily', 'DailyContainer', 50, 5);
+
+                  } else {
+                      const loadData = `<tr>
+                            <td colspan='10'>
+                                🔍 ${res.Message}
+                            </td>
+                        </tr>`;
+
+                      DailyDisplay.empty();
+                      DailyDisplay.append(loadData);
+
+                  }
+              });
+        }
+
+
+
+
+     }
+
+
+    function displayDailyPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 7, visibleButtons = 5) {
+             let currentPage = 1;
+             let filteredData = [...dataArray];
+
+             const updatePaginationInfo = () => {
+                 const totalRecords = filteredData.length;
+                 const totalPages = Math.ceil(totalRecords / recordsPerPage);
+                 //$("#DailytotalpageID").text(totalPages);
+                 //$("#DailyDatalengthID").text(totalRecords);
+                 return totalPages;
+             };
+
+             const renderTable = (page) => {
+                 const totalPages = updatePaginationInfo();
+                 const startIndex = (page - 1) * recordsPerPage;
+                 const endIndex = Math.min(startIndex + recordsPerPage, filteredData.length);
+                 const tableBody = document.getElementById(tableBodyId);
+                 tableBody.innerHTML = '';
+
+                 for (let i = startIndex; i < endIndex; i++) {
+                     const rowData = filteredData[i];
+
+                     let continueHtml = `<span>Continue</span>`;
+                     let neededCompleteHtml = `<span>Needed</span> <span>Complete</span>`;
+
+                     // Highlight according to status
+                     if (rowData.Status === 0) {
+                         continueHtml = `<span class="status-label active" style="color: #054e92; border: 2px solid #054e92;">Continue</span>`;
+                     } else if (rowData.Status === 1) {
+                         neededCompleteHtml = `
+                        <span class="status-label active" style="color: #c97d0c; border: 2px solid #c97d0c;">Needed</span>
+                        <span class="status-label">Complete</span>`;
+                     } else if (rowData.Status === 2) {
+                         neededCompleteHtml = `
+                        <span class="status-label">Needed</span>
+                        <span class="status-label active" style="color: #188f18; border: 2px solid #188f18;">Complete</span>`;
+                     }
+
+
+                     const rowHtml = `
+                         <tr >
+                             <td>${formatJsonDate(rowData.DateInput)}</td>
+                             <td style='font-weight: 600;'>${rowData.PartNo} / ${rowData.Dimension_Quality}</td>
+                             <td>${rowData.CycleShot}</td>
+                             <td>${rowData.Total}</td>
+                             <td>${rowData.MachineNo}</td>
+                             <td>${continueHtml} ${neededCompleteHtml}</td>
+                             <td>${rowData.Remarks}</td>
+                              <td>${rowData.Mincharge}</td>
+
+                        </tr>`;
+                     tableBody.innerHTML += rowHtml;
+                 }
+
+                 //$("#DailypagecountID").text(currentPage);
+             };
+
+             const renderPagination = () => {
+                 const totalPages = updatePaginationInfo();
+                 const paginationContainer = document.getElementById(paginationId);
+                 paginationContainer.innerHTML = '';
+
+                 let startPage = Math.max(1, currentPage - Math.floor(visibleButtons / 2));
+                 let endPage = Math.min(totalPages, startPage + visibleButtons - 1);
+
+                 if (endPage > totalPages) {
+                     endPage = totalPages;
+                     startPage = Math.max(1, endPage - visibleButtons + 1);
+                 }
+
+                 if (totalPages <= visibleButtons) {
+                     startPage = 1;
+                     endPage = totalPages;
+                 }
+
+                 // Previous button
+                 paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
+                     <i class="fa-solid fa-backward"></i>
+                 </button>`;
+
+                 for (let i = startPage; i <= endPage; i++) {
+                     paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+                 }
+
+                 // Next button
+                 paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
+                     <i class="fa-solid fa-forward"></i>
+                 </button>`;
+             };
+
+             const changePage = (page) => {
+                 if (page >= 1 && page <= updatePaginationInfo()) {
+                     currentPage = page;
+                     renderTable(currentPage);
+                     renderPagination();
+                 }
+             };
+
+             // Handle click event for edit button
+             $(document).on('click', '.EditDaily', function (e) {
+                 e.stopPropagation();
+                 const buttonId = $(this).attr('id');
+                 const rowIndex = buttonId.split('_')[1];
+                 const filterdata = DailyData.find(res => res.RecordID === parseInt(rowIndex));
+                 if (filterdata) {
+                     let setDate = formatJsonDate(filterdata.DateInput);
+
+                     $("#DailyRecordiD").val(filterdata.RecordID);
+                     setDateInput("DailyEditDateInput", setDate);
+                     $("#Editdailypartno").val(filterdata.PartNo);
+                     $("#DailyeditCycleShot").val(filterdata.CycleShot);
+                     $("#DailyEditMachineNo").val(filterdata.MachineNo);
+                     $("#DailyEditRemarks").val(filterdata.Remarks);
+                     $("#DailyEditMincharge").val(filterdata.Mincharge);
+                     $("#EditDailyMold").modal("show");
+
+                 }
+             });
+
+              // Handle click event for edit button
+             $(document).on('click', '.deleteDailyButton', async function (e) {
+                 e.stopPropagation();
+                 const buttonId = $(this).attr('id');
+                 const rowIndex = buttonId.split('_')[1];
+
+
+                 Swal.fire({
+                     title: "Are you sure you want to delete this?",
+                     text: "You won't be able to revert this!",
+                     icon: "warning",
+                     showCancelButton: true,
+                     confirmButtonColor: "#3085d6",
+                     cancelButtonColor: "#d33",
+                     confirmButtonText: "Yes, delete it!"
+                 }).then( async (result) => {
+                     if (result.isConfirmed) {
+                         let res = await postData('@Url.Action("DeleteDailyMoldDieMonitor", "Mold")', { ID: rowIndex });
+                         if (res.Success && res) {
+
+                             Swal.fire({
+                                 title: "Success",
+                                 text: res.Message,
+                                 icon: "success",
+                                 confirmButtonColor: "#0d97c9",
+                                 timer: 1500
+                             }).then(() => {
+                                 RefreshDailyMonitor();
+                             });
+
+
+                         }
+                     }
+                 });
+
+             });
+
+
+             window.changePage = changePage;
+             renderTable(currentPage);
+             renderPagination();
+    }
+
+
+    GetMoldDieDaily();
+
+</script>

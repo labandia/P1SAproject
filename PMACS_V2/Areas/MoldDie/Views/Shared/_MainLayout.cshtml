@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Mold Die And Cavity Management System</title>
+
+
+    <link href="~/Content/css/MoldDie.css" rel="stylesheet" />
+    <script src="~/Scripts/Shared/bootstrap.bundle.min.js"></script>
+    <link href="~/Content/Shared/bootstrap.min.css" rel="stylesheet" />
+
+    <script src="~/Scripts/Shared/Global.js"></script>
+
+    @Styles.Render("~/Content/shared-css")
+
+    @Scripts.Render("~/bundles/shared-js")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <nav>
+        <div class="logo">Mold Die Management System</div>
+        <ul class="nav-cus-links">
+            <li><a href="/MoldDie/Mold/DieMoldSummary" class="nav-item"><i class="fa-solid fa-gauge"></i> Summary</a></li>
+            <li><a href="/MoldDie/Mold/DieMoldDaily" class="nav-item"> <i class="fa-solid fa-table-list"></i> Daily Moldie</a></li>
+            <li><a href="/MoldDie/Mold/DieMoldTooling" class="nav-item"> <i class="fa-solid fa-toolbox"></i> Tooling</a></li>
+            <li><a href="/MoldDie/Mold/DieMoldMasterlist" class="nav-item"> <i class="fa-solid fa-gear"></i> MasterList</a></li>
+        </ul>
+        <div class="Users">
+            <div class="Users-info" id="usersInfo">
+                <div class="user-profile hidden" id="userProfile">
+                    <span id="username">Guest user</span>
+                    <div class="user-avatar" id="user-avatar">JD</div>
+
+                </div>
+
+                <div class="menu">
+                    <div class="menu_header">
+                        <p id="DisplayName"></p>
+                        <small id="role">Administrator</small>
+                    </div>
+                    <ul>
+                        <li><a href="#"><i class="ph-bold ph-user"></i> <i class="fa-solid fa-key"></i> Change Password</a></li>
+                        <li><a id="logID" href="#"><i class="ph-bold ph-sign-out"></i><i class="fa-solid fa-door-open"></i>Sign Out</a></li>
+                    </ul>
+                </div>
+
+
+                <button class="mobile-menu-btn" aria-label="Toggle menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!--========== CONTENTS ==========-->
+    <main>
+        @RenderBody()
+    </main>
+
+
+    <script src="~/Scripts/Shared/bootstrap.min.js"></script>
+    <script src="~/Scripts/Shared/popper.min.js"></script>
+    <script type="text/javascript">
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var currentUrl = window.location.pathname.toLowerCase();
+            document.querySelectorAll(".nav-item").forEach(function (link) {
+                if (link.getAttribute("href").toLowerCase() === currentUrl) {
+                    link.classList.add("active");
+                }
+            });
+        });
+
+        let profile = document.querySelector('.user-avatar');
+
+        profile.onclick = function () {
+            let menu = document.querySelector('.menu');
+            menu.classList.toggle('menuactive');
+        }
+
+        const GetFullname = async () => {
+            var x = localStorage.getItem("Fullname") || "Guest user";
+            let initials = getInitials(x);
+            $("#username").text(x);
+            $("#user-avatar").text(initials);
+        };
+
+        function getInitials(name) {
+            return name
+                .split(" ")                // split into words
+                .map(word => word.charAt(0).toUpperCase()) // take first letter
+                .join("");                 // join together
+        }
+
+        GetFullname();
+    </script>
+</body>
+</html>

@@ -1,0 +1,386 @@
+﻿
+@{
+    ViewBag.Title = "DieMoldMasterlist";
+    Layout = "~/Areas/MoldDie/Views/Shared/_MainLayout.cshtml";
+}
+
+<section>
+    <div class="Mold_ToolHeader flex_space mb-4">
+
+        <div class="flex_align">
+            <div class="searchinputContainer">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" placeholder="Search here ... " id="RegisterSearch" />
+                <div class="line"></div>
+            </div>
+            <div class="select-container">
+                <select id="DescriptionID">
+                  
+                </select>
+            </div>
+        </div>
+        <button class="primarybtn" data-bs-toggle="modal" data-bs-target="#AddTooling"><i class="fa-solid fa-plus"></i> Add Data</button>
+    </div>
+
+
+
+    <div class="DieMainTable" id="DieWrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>PartNo. </th>
+                    <th>PartDescription</th>
+                    <th id="MonthHeader">Dimension Quality</th>
+                    <th>Die Serial</th>
+                    <th>DieNumber</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="DieMoldToolist">
+            </tbody>
+        </table>
+    </div>
+
+</section>
+
+<!--########################## Adding Tooling  DATA #############################-->
+<div class="modal fade modal-m" id="AddTooling" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Add Masterlist Data</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <form method="post" enctype="multipart/form-data" class="addformcontainer" id="addnewform" autocomplete="off">
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Part Number <small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <input type="text" placeholder="Enter the Part No" name="PartNo" id="PartNo" required />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12 mb-3">
+                        <label class="mb-2">Part No. Description<small style="color: #a81818; font-weight: 600;">*</small></label> <br />                   
+                        <div class="select-container" style="width: 100%;">
+                            <select id="PartDescription" name="PartDescription">
+                                
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>Dimension Quality <small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <input type="text" placeholder="Enter the Part No" name="Dimension_Quality" id="Dimension_Quality" required />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Die Serial<small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <input type="text" placeholder="Enter the Part No" name="DieSerial" id="DieSerial" required />
+                    </div>
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Die Number <small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <input type="text" placeholder="Enter the Part No" name="DieNumber" id="DieNumber" required />
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div>
+                            <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                        </div>
+                        <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                    </div>
+                </form>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+<!--########################## Edit Tooling  DATA #############################-->
+<div class="modal fade modal-m" id="EditTooling" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header flex_space">
+                    <h5>Edit Masterlist </h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <form method="post" enctype="multipart/form-data" class="addformcontainer" id="editnewform" autocomplete="off">
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Part Number <small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <input type="text" placeholder="Enter the Part No" name="PartNo" id="EditPartNo" required />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12 mb-3">
+                        <label class="mb-2">Part No. Description<small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                        <div class="select-container" style="width: 100%;">
+                            <select id="EditPartDescription" name="PartDescription">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>Dimension Quality <small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <input type="text" placeholder="Enter the Part No" name="Dimension_Quality" id="EditDimension_Quality" required />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Die Serial<small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <input type="text" placeholder="Enter the Part No" name="DieSerial" id="EditDieSerial" required />
+                    </div>
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Die Number <small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <input type="text" placeholder="Enter the Part No" name="DieNumber" id="EditDieNumber" required />
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div>
+                            <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                        </div>
+                        <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                    </div>
+                </form>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script type="text/javascript">
+    let DieMasterlist = [];
+    let yearSelect = $("#DescriptionID");
+
+    $("#addnewform").on('submit', async (e) => {
+        e.preventDefault();
+        let formData = new FormData(e.target);
+       const data = Object.fromEntries(formData);
+
+       let res = await postData('@Url.Action("AddMoldDieMasterlist", "Mold")', data);
+        if (res.StatusCode === 201) {
+            Swal.fire({
+                title: "Success",
+                text: res.Message,
+                icon: "success",
+                confirmButtonColor: "#0d97c9",
+                timer: 1500
+            }).then(() => {
+                GetMoldDieMasterlist();
+                $("#addnewform")[0].reset();
+                $("#AddTooling").modal("hide");
+            });
+        } else {
+            Swal.fire({
+                icon: "error",
+                text: data.ToolNo + " is already Exist",
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }
+    });
+
+     $("#editnewform").on('submit', async (e) => {
+         e.preventDefault();
+        let formData = new FormData(e.target);
+
+         const data = Object.fromEntries(formData);
+
+        let res = await postData('@Url.Action("UpdateMoldMasterlist", "Mold")', data);
+         if (res.StatusCode === 201) {
+             Swal.fire({
+                 title: "Success",
+                 text: res.Message,
+                 icon: "success",
+                 confirmButtonColor: "#0d97c9",
+                 timer: 1500
+             }).then(() => {
+                 GetMoldDieMasterlist();
+                 $("#editnewform")[0].reset();
+                 $("#EditTooling").modal("hide");
+             });
+         } else {
+             Swal.fire({
+                 icon: "error",
+                 text: data.ToolNo + " is already Exist",
+                 timer: 1500,
+                 showConfirmButton: false
+             });
+         }
+     });
+
+    const GetMoldieDescription = async () => {
+        let res = await fetchData('@Url.Action("GetPartDescription", "Mold")', {});
+        console.log(res);
+          yearSelect.empty();
+          $("#PartDescription").empty();
+          $.each(res, function (index, year) {
+              yearSelect.append(`<option value='${year}'>${year}</option>`);
+              $("#PartDescription").append(`<option value='${year}'>${year}</option>`);
+              $("#EditPartDescription").append(`<option value='${year}'>${year}</option>`);
+          });
+
+      // select the first option automatically
+      yearSelect.prop('selectedIndex', 0);
+    }
+
+    const GetMoldDieMasterlist = async () => {
+
+        const id = window.loadingDisplay("DieMoldToolist", 6);
+
+        if (typeof window.Loadingsteps === "function") {
+            window.Loadingsteps(id, async () => {
+                let res = await FetchAuthenticate('@Url.Action("GetMoldDieMasterList", "Mold")', {});
+                  if (res && res.Success) {
+                      DieMasterlist = res.Data;
+                      // Loads the First Data
+                      DisplayMasterlist(DieMasterlist);
+                      //$("#Datearrived").on('change', (e) => {
+                      //    const rawDate = e.target.value;
+
+                      //    if (rawDate) {
+                      //        const [year, month, day] = rawDate.split("-");
+                      //        const formatted = `${month}/${day}/${year.slice(-2)}`; // "06/11/25"
+                      //        let filterData = DieTooling.filter(res => res.DateArrived == formatted);
+                      //        DisplayTooling(filterData);
+                      //    } else {
+                      //        DisplayTooling(DieTooling);
+                      //    }
+
+                      //});
+                  } else {
+                      const loadData = `<tr>
+                        <td colspan='9'>
+                            🔍 ${res.Message}
+                        </td>
+                    </tr>`;
+
+                      ToolingDisplay.empty();
+                      ToolingDisplay.append(loadData);
+
+                  }
+            });
+        }
+    }
+
+    function DisplayMasterlist(dataArray) {
+        $("#DieMoldToolist").empty();
+
+        dataArray.forEach((row, index) => {
+            var setdata = `<tr >
+             <td>${row.PartNo}</td>
+             <td>${row.PartDescription}</td>
+             <td>${row.Dimension_Quality}</td>
+             <td>${row.DieSerial}</td>
+             <td>${row.DieNumber}</td>
+
+             <td>
+                <button type='button' class='btn actionicon text-primary EditToolClick' id='editButton_${row.PartNo}' >
+                   <i class='fa-regular fa-pen-to-square action_btn'></i>
+                </button>
+
+                <button type="button" class="btn actionicon text-danger deleteDailyButton"
+                    id="deleteDailyButton_${row.PartNo}">
+                    <i class="fa-regular fa-trash-can"></i>
+                </button>
+             </td>
+         </tr>;`
+
+            $("#DieMoldToolist").append(setdata);
+        });
+
+
+        // Handle click event for edit button
+        $(document).on('click', '.EditToolClick', function (e) {
+            e.stopPropagation();
+            const buttonId = $(this).attr('id');
+            const rowIndex = buttonId.split('_')[1];
+            var filterData = DieMasterlist.find(res => res.PartNo === rowIndex);
+            if (filterData) {
+
+                $("#EditPartNo").val(filterData.PartNo);
+                $("#EditPartDescription").val(filterData.PartDescription);
+                $("#EditDimension_Quality").val(filterData.Dimension_Quality);
+                $("#EditDieSerial").val(filterData.DieSerial);
+                $("#EditDieNumber").val(filterData.DieNumber);
+
+
+                $("#EditTooling").modal("show");
+            }
+
+        });
+
+         // Handle click event for edit button
+            $(document).on('click', '.deleteDailyButton', async function (e) {
+                e.stopPropagation();
+                const buttonId = $(this).attr('id');
+                const rowIndex = buttonId.split('_')[1];
+
+
+                Swal.fire({
+                    title: "Are you sure you want to delete this?",
+                    text: "You won't be able to revert this!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, delete it!"
+                }).then( async (result) => {
+                    if (result.isConfirmed) {
+                        let res = await postData('@Url.Action("DeleteDailyMoldDieMonitor", "Mold")', { ID: rowIndex });
+                        if (res.Success && res) {
+
+                            Swal.fire({
+                                title: "Success",
+                                text: res.Message,
+                                icon: "success",
+                                confirmButtonColor: "#0d97c9",
+                                timer: 1500
+                            }).then(() => {
+                                SearchMoldiePartno();
+                            });
+
+
+                        }
+                    }
+                });
+
+            });
+    }
+
+    function setDateInput(inputId, dateStr) {
+        if (!dateStr) return; // Exit if empty
+
+        const parts = dateStr.split("/"); // ["MM", "DD", "YY"]
+        if (parts.length !== 3) return; // Invalid format
+
+        const month = parts[0].padStart(2, '0');
+        const day = parts[1].padStart(2, '0');
+        const year = parts[2]; // assumes 2000+ year
+
+        const formattedDate = `${year}-${month}-${day}`;
+
+        const inputElement = document.getElementById(inputId);
+        if (inputElement) {
+            inputElement.value = formattedDate;
+        }
+    }
+
+    GetMoldieDescription();
+    GetMoldDieMasterlist();
+</script>

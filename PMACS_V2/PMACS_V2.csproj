@@ -363,7 +363,11 @@
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\MoldDie\Controllers\MoldController.cs" />
+    <Compile Include="Areas\MoldDie\Controllers\PressMoldController.cs" />
+    <Compile Include="Areas\MoldDie\Interface\IMoldDieModel.cs" />
+    <Compile Include="Areas\MoldDie\Models\PressModel.cs" />
     <Compile Include="Areas\MoldDie\MoldDieAreaRegistration.cs" />
+    <Compile Include="Areas\MoldDie\Repository\MoldDieServices.cs" />
     <Compile Include="Areas\P1SA\Controllers\CapacityController.cs" />
     <Compile Include="Areas\P1SA\Controllers\FanMajorController.cs" />
     <Compile Include="Areas\P1SA\Controllers\PMACSController.cs" />
@@ -596,6 +600,13 @@
     <Content Include="Areas\MoldDie\Views\Mold\DieMoldLife.cshtml" />
     <Content Include="Areas\MoldDie\Views\Mold\DiePressLife.cshtml" />
     <Content Include="Areas\MoldDie\Views\Mold\DiePressMonitorDetails.cshtml" />
+    <Content Include="Areas\MoldDie\Views\Shared\_MoldDIeSummaryView.cshtml" />
+    <Content Include="Areas\MoldDie\Views\Shared\_ToolingTable.cshtml" />
+    <Content Include="Areas\MoldDie\Views\Shared\_MainLayout.cshtml" />
+    <Content Include="Areas\MoldDie\Views\Mold\DieMoldDaily.cshtml" />
+    <Content Include="Areas\MoldDie\Views\Mold\DieMoldSummary.cshtml" />
+    <Content Include="Areas\MoldDie\Views\Mold\DieMoldTooling.cshtml" />
+    <Content Include="Areas\MoldDie\Views\Mold\DieMoldMasterlist.cshtml" />
     <None Include="bundleconfig.json" />
     <None Include="Scripts\Shared\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\chart.js" />
@@ -660,6 +671,7 @@
     <Content Include="Views\Shared\_SystemConfig.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Areas\MoldDie\Views\PressMold\" />
     <Folder Include="Views\Extend\" />
     <Folder Include="Views\MoldDie\" />
   </ItemGroup>

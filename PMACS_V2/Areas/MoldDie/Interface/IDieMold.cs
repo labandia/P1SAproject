@@ -1,4 +1,5 @@
-﻿using PMACS_V2.Areas.P1SA.Models;
+﻿using PMACS_V2.Areas.MoldDie.Models;
+using PMACS_V2.Areas.P1SA.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,7 @@ namespace PMACS_V2.Areas.P1SA.Interface
         Task<List<DieMoldDaily>> GetDailyMoldHistoryData(string partnum, string processID);
         Task<DieMoldDaily> GetDailyLastMoldData(string partnum, string processID);
 
+        Task<bool> CheckMoldieExist(string partnum, string Dateinput);
         Task<bool> ChangeStatsDaily(int ID, int Stats);
         Task<bool> AddDailyMoldie(DieMoldDailyInput mold);
         Task<bool> UpdateDailyMoldie(DieMoldDailyInput mold);
@@ -39,7 +41,6 @@ namespace PMACS_V2.Areas.P1SA.Interface
         Task<List<DieMoldToolingModelDisplay>> GetMoldToolingData();
 
         Task<List<DieMoldProcess>> GetMoldProcess();
-        Task<List<DieProcessDescription>> GetMoldPartDescription();
         // ===============================================
        
 

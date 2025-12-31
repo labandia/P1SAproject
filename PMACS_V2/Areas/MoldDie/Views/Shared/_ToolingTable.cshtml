@@ -1,0 +1,42 @@
+﻿@using PMACS_V2.Models
+@model RequestData<PMACS_V2.Areas.P1SA.Models.DieMoldToolingModelDisplay>
+
+
+<div class="DieMainTable" id="DieWrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>Registration No.</th>
+                <th>Mold Name / Part No. </th>
+                <th>Item</th>
+                <th>Details of Modification</th>
+                <th id="MonthHeader">Release(Shot Cycle test)</th>
+                <th>Date Arrived</th>
+                <th>Date Repair</th>
+                <th>Incharge</th>
+                <th>Remarks</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="DieMoldToolist">
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.RegNo</td>
+                    <td>@item.PartNo</td>
+                    <td>@item.Item</td>
+                    <td>@item.DetailsModify</td>
+                    <td>@item.RecordID</td>
+                    <td>@item.DateArrived?.ToString("yyyy-MM-dd")</td>
+                    <td>@item.DateRepair?.ToString("yyyy-MM-dd")</td>
+                    <td>@item.Incharge</td>
+                    <td>@item.Remarks</td>
+                    <td>
+                        <button class="btnEdit" data-id="@item.RecordID">Edit</button>
+                        <button class="btnDelete" data-id="@item.RecordID">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -51,8 +51,8 @@ namespace PMACS_V2.Areas.PartsLocal.Controllers
         [HttpPost]
         public async Task<ActionResult> AddMasterlist(RotorProductModel shop)
         {
-            //bool result = await _prod.AddRotorMasterlist(shop);
-            //if (!result) return JsonValidationError();
+            bool result = await _prod.AddRotorMasterlist(shop);
+            if (!result) return JsonValidationError();
             return JsonCreated(shop, "Insert successfully");
         }
 

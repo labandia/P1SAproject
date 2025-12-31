@@ -1,0 +1,428 @@
+﻿
+@{
+    ViewBag.Title = "DieMoldTooling";
+    Layout = "~/Areas/MoldDie/Views/Shared/_MainLayout.cshtml";
+}
+
+
+<section>
+    <div class="Mold_ToolHeader flex_space mb-4">
+        
+        <div class="flex_align">
+            <div class="searchinputContainer">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" placeholder="Search here ... " id="RegisterSearch" />
+                <div class="line"></div>
+            </div>
+
+      
+
+            <div class="Mold_ToolHeader__group">
+                <input type="date" id="Datearrived" class="" />
+            </div>
+        </div>
+        <button class="primarybtn" data-bs-toggle="modal" data-bs-target="#AddTooling"><i class="fa-solid fa-plus"></i> Add Data</button>
+    </div>
+
+
+
+    <div class="DieMainTable" id="DieWrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Registration No.</th>
+                    <th>Mold Name / Part No. </th>
+                    <th id="MonthHeader">Release(Shot Cycle test)</th>
+                    <th>Date Repair</th>
+                    <th>Incharge</th>
+                    <th>Details of Modification</th>
+                    <th>Remarks</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="DieMoldToolist">
+            </tbody>
+        </table>
+    </div>
+
+</section>
+
+
+<!--########################## Adding Tooling  DATA #############################-->
+<div class="modal fade modal-xl" id="AddTooling" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Add Tooling Data</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <form id="AddToolforms" class="addformcontainer" autocomplete="off">
+                    <div class="row">
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Registration <small style="color: #a81818; font-weight: 600;">*</small></label>
+                            <input type="text" name="RegNo" id="RegNo" placeholder="Enter Registration No." required>
+                        </div>
+
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Part number <small style="color: #a81818; font-weight: 600;">*</small></label>
+                            @*<input type="text" name="PartNo" id="PartNo" placeholder="Enter Part number" required>*@
+                            <div class="search-box">
+                                <input type="text" placeholder="Type Part number" name="PartNo" id="ParNoSearch" required>
+                                <div class="namesdisplay"></div>
+                            </div>
+                        </div>
+
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Item # 1</label>
+                            <input type="text" name="Item" id="Item" placeholder="Enter Items 1" onkeypress='return restrictChars(event)' required>
+                        </div>
+                    </div>
+
+
+
+                    <div class="row">
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Release(Shot Cycle test)</label>
+                            <input type="text" name="ShotRelease" id="ShotRelease" placeholder="Enter Cycle Shot" onkeypress='return restrictChars(event)'>
+                        </div>
+
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Date Arrived</label>
+                            <input type="date" name="DateArrived" id="DateArrived">
+                        </div>
+
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Details of Modification</label>
+                            <input type="text" name="DetailsModify" id="DetailsModify" placeholder="Enter Details">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Date Repair</label>
+                            <input type="date" name="DateRepair" id="DateRepair">
+                        </div>
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Incharge</label>
+                            <input type="text" name="Incharge" id="Incharge" placeholder="Enter the name of Incharged" required>
+                        </div>
+
+
+                    </div>
+
+                    <div class="row">
+                        <div class="form_group col-8 col-lg-8 col-sm-12">
+                            <label for="">Remarks</label>
+                            <textarea placeholder="Write something here..." name="Remarks" id="Remarks" rows="3" cols="50" required></textarea>
+                        </div>
+
+
+                    </div>
+
+
+
+
+                    <div class="flex_space " id="editsdisplay">
+                        <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                        <button type="submit" class="primarybtn">
+                            <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
+                        </button>
+                    </div>
+                </form>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+<!--########################## Edit Tooling  DATA #############################-->
+<div class="modal fade modal-xl" id="EditTooling" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header flex_space">
+                    <h5>Edit Tooling Data</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <form id="EditToolforms" class="addformcontainer" autocomplete="off">
+                    <div class="row">
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <input type="hidden" name="RecordID" id="EditRecordID">
+
+                            <label for="">Registration <small style="color: #a81818; font-weight: 600;">*</small></label>
+                            <input type="text" name="RegNo" id="EditRegNo" placeholder="Enter Registration No." required>
+                        </div>
+
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Part number <small style="color: #a81818; font-weight: 600;">*</small></label>
+                            @*<input type="text" name="PartNo" id="PartNo" placeholder="Enter Part number" required>*@
+                            <div class="search-box">
+                                <input type="text" placeholder="Type Part number" name="PartNo" id="EditParNoSearch" required>
+                            </div>
+                        </div>
+
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Item # 1</label>
+                            <input type="text" name="Item" id="EditItem" placeholder="Enter Items 1" onkeypress='return restrictChars(event)' required>
+                        </div>
+                    </div>
+
+
+
+                    <div class="row">
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Release(Shot Cycle test)</label>
+                            <input type="text" name="ShotRelease" id="EditShotRelease" placeholder="Enter Cycle Shot" onkeypress='return restrictChars(event)' required>
+                        </div>
+
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Date Arrived</label>
+                            <input type="date" name="DateArrived" id="EditDateArrived">
+                        </div>
+
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Details of Modification</label>
+                            <input type="text" name="DetailsModify" id="EditDetailsModify" placeholder="Enter Details" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Date Repair</label>
+                            <input type="date" name="DateRepair" id="EditDateRepair">
+                        </div>
+                        <div class="form_group col-4 col-lg-4 col-sm-12">
+                            <label for="">Incharge</label>
+                            <input type="text" name="Incharge" id="EditIncharge" placeholder="Enter the name of Incharged" required>
+                        </div>
+
+
+                    </div>
+
+                    <div class="row">
+                        <div class="form_group col-8 col-lg-8 col-sm-12">
+                            <label for="">Remarks</label>
+                            <textarea placeholder="Write something here..." name="Remarks" id="EditRemarks" rows="3" cols="50" required></textarea>
+                        </div>
+
+
+                    </div>
+
+
+
+
+                    <div class="flex_space " id="editsdisplay">
+                        <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                        <button type="submit" class="primarybtn">
+                            <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
+                        </button>
+                    </div>
+                </form>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    let DieTooling = [];
+
+
+   $("#AddToolforms").on('submit', async (e) => {
+        e.preventDefault();
+        let formData = new FormData(e.target);
+       const data = Object.fromEntries(formData);
+
+       let res = await postData('@Url.Action("AddUpdateMoldDieTooling", "Mold")', data);
+        if (res.StatusCode === 201) {
+            Swal.fire({
+                title: "Success",
+                text: res.Message,
+                icon: "success",
+                confirmButtonColor: "#0d97c9",
+                timer: 1500
+            }).then(() => {
+                GetMoldDieTooling();
+                $("#AddToolforms")[0].reset();
+                $("#AddTooling").modal("hide");
+            });
+        } else {
+            Swal.fire({
+                icon: "error",
+                text: data.ToolNo + " is already Exist",
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }
+    });
+
+     $("#EditToolforms").on('submit', async (e) => {
+         e.preventDefault();
+        let formData = new FormData(e.target);
+
+         const data = Object.fromEntries(formData);
+
+        let res = await postData('@Url.Action("UpdateMoldDieTooling", "Mold")', data);
+         if (res.StatusCode === 201) {
+             Swal.fire({
+                 title: "Success",
+                 text: res.Message,
+                 icon: "success",
+                 confirmButtonColor: "#0d97c9",
+                 timer: 1500
+             }).then(() => {
+                 GetMoldDieTooling();
+                 $("#EditToolforms")[0].reset();
+                 $("#EditTooling").modal("hide");
+             });
+         } else {
+             Swal.fire({
+                 icon: "error",
+                 text: data.ToolNo + " is already Exist",
+                 timer: 1500,
+                 showConfirmButton: false
+             });
+         }
+     });
+
+    const GetMoldDieTooling = async () => {
+
+        const id = window.loadingDisplay("DieMoldToolist", 8);
+
+        if (typeof window.Loadingsteps === "function") {
+            window.Loadingsteps(id, async () => {
+                let res = await FetchAuthenticate('@Url.Action("GetMoldDieToolingList", "Mold")', {});
+                console.log(res);
+                  if (res && res.Success) {
+                      DieTooling = res.Data;
+                      // Loads the First Data
+                      DisplayTooling(DieTooling);
+                      //$("#Datearrived").on('change', (e) => {
+                      //    const rawDate = e.target.value;
+
+                      //    if (rawDate) {
+                      //        const [year, month, day] = rawDate.split("-");
+                      //        const formatted = `${month}/${day}/${year.slice(-2)}`; // "06/11/25"
+                      //        let filterData = DieTooling.filter(res => res.DateArrived == formatted);
+                      //        DisplayTooling(filterData);
+                      //    } else {
+                      //        DisplayTooling(DieTooling);
+                      //    }
+
+                      //});
+                  } else {
+                      const loadData = `<tr>
+                        <td colspan='9'>
+                            🔍 ${res.Message}
+                        </td>
+                    </tr>`;
+
+                      ToolingDisplay.empty();
+                      ToolingDisplay.append(loadData);
+
+                  }
+            });
+        }
+    }
+
+    function DisplayTooling(dataArray) {
+        $("#DieMoldToolist").empty();
+
+        dataArray.forEach((row, index) => {
+            var setdata = `<tr >
+             <td>${row.RegNo}</td>
+             <td style='font-weight: 600;'>${row.PartNo} / ${row.Dimension_Quality}</td>
+             <td>${row.ShotRelease}</td>
+             <td>${formatJsonDate(row.DateRepair)}</td>
+             <td>${row.Incharge}</td>
+             <td>${row.DetailsModify}</td>
+
+             <td>${row.Remarks}</td>
+             <td>
+                <button type='button' class='btn actionicon text-primary EditToolClick' id='editButton_${row.RecordID}' >
+                   <i class='fa-regular fa-pen-to-square action_btn'></i>
+                </button>
+
+
+             </td>
+         </tr>;`
+
+            $("#DieMoldToolist").append(setdata);
+        });
+
+
+        // Handle click event for edit button
+        $(document).on('click', '.EditToolClick', function (e) {
+            e.stopPropagation();
+            const buttonId = $(this).attr('id');
+            const rowIndex = buttonId.split('_')[1];
+            var filterData = DieTooling.find(res => res.RecordID === parseInt(rowIndex));
+            if (filterData) {
+                let setDateArrive = formatJsonDate(filterData.DateArrived);
+                let setDateRepair = formatJsonDate(filterData.DateRepair);
+
+                setDateInput("EditDateArrived", setDateArrive);
+                setDateInput("EditDateRepair", setDateRepair);
+                $("#EditRecordID").val(filterData.RecordID);
+                $("#EditRegNo").val(filterData.RegNo);
+                $("#EditParNoSearch").val(filterData.PartNo);
+                $("#EditItem").val(filterData.Item);
+                $("#EditShotRelease").val(filterData.ShotRelease);
+                $("#EditDetailsModify").val(filterData.DetailsModify);
+                $("#EditIncharge").val(filterData.Incharge);
+
+
+                $("#EditRemarks").val(filterData.Remarks);
+                $("#EditTooling").modal("show");
+            }
+
+        });
+
+        // Handle click event for edit button
+        $(document).on('click', '.ToolDeleteClick', function (e) {
+            e.stopPropagation();
+            const buttonId = $(this).attr('id');
+            const rowIndex = buttonId.split('_')[1];
+            $("#EditTooling").modal("show");
+        });
+    }
+
+    function setDateInput(inputId, dateStr) {
+        if (!dateStr) return; // Exit if empty
+
+        const parts = dateStr.split("/"); // ["MM", "DD", "YY"]
+        if (parts.length !== 3) return; // Invalid format
+
+        const month = parts[0].padStart(2, '0');
+        const day = parts[1].padStart(2, '0');
+        const year = parts[2]; // assumes 2000+ year
+
+        const formattedDate = `${year}-${month}-${day}`;
+
+        const inputElement = document.getElementById(inputId);
+        if (inputElement) {
+            inputElement.value = formattedDate;
+        }
+    }
+
+
+    GetMoldDieTooling();
+</script>

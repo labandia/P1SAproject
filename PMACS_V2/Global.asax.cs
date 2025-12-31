@@ -19,6 +19,8 @@ using PMACS_V2.Areas.Planning.Repository;
 using System.IO.Compression;
 using PMACS_V2.Areas.PartsLocal.Interface;
 using PMACS_V2.Areas.PartsLocal.Repository;
+using PMACS_V2.Areas.MoldDie.Interface;
+using PMACS_V2.Areas.MoldDie.Repository;
 
 namespace PMACS_V2
 {
@@ -165,6 +167,7 @@ namespace PMACS_V2
             container.RegisterType<ICapacity, CapacityRepository>();
             container.RegisterType<IMachine, MachineRepository>();
             container.RegisterType<IDieMold, MoldDieRepository>();
+            container.RegisterType<IMoldDieModel, MoldDieServices>();
 
 
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));

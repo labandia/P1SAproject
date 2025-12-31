@@ -297,19 +297,6 @@
         let GetData = [];
         let TableDisplay = $("#dieMoldMasterlist");
 
-        // Search functionality
-        $("#searchButton").on('click', function (e) {
-            e.preventDefault();
-            SearchMoldiePartno();
-        });
-
-        // Allow Enter key to trigger search
-        $("#searchInput").on('keypress', function (e) {
-            if (e.key === 'Enter') {
-                SearchMoldiePartno();
-            }
-        });
-
         // Submit a Add Forms
         $("#addDailyForm").on('submit', async function (e) {
             e.preventDefault();
@@ -325,20 +312,23 @@
             formData.append('dailypartno', searchInput);
             const data = Object.fromEntries(formData);
 
-              let checkduplicat = GetData.find(item =>
-                  item.PartNo === data.dailypartno &&
-                  new Date(item.DateInput).toDateString() === new Date(data.DateInput).toDateString()
-              );
-              if (checkduplicat) {
-                  Swal.fire({
-                      icon: "error",
-                      text: "Partnumber is already Input Today",
-                      timer: 1500,
-                      showConfirmButton: false
-                  });
-                  return;
-              }
+              // Check for duplicate entry for the same part number on the same date
+            let checkduplicate = await fetchData('@Url.Action("CheckDialyMoldExist", "Mold")',
+            {
+                PartNo: data.dailypartno,
+                DateInput: data.DateInput
+            });
 
+            if (checkduplicate) {
+                    Swal.fire({
+                        icon: "error",
+                        text: "Partnumber is already Input Today",
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                    return;
+            }
+    
              let res = await postData('@Url.Action("AddDailyMoldDieMonitor", "Mold")', data);
              if (res && res.Success) {
                   Swal.fire({
@@ -355,16 +345,14 @@
               } else {
                   Swal.fire({
                       icon: "error",
-                      text: data.ToolNo + " is already Exist",
+                      text: "Error  Problem ecounter.",
                       timer: 1500,
                       showConfirmButton: false
                   });
               }
         });
 
-
-
-         $("#EditDailyforms").on('submit', async (e) => {
+        $("#EditDailyforms").on('submit', async (e) => {
              e.preventDefault();
              let formData = new FormData();
              formData.append('RecordID', $('#DailyRecordiD').val());
@@ -400,8 +388,17 @@
          });
 
 
-
-
+        // Search functionality
+        $("#searchButton").on('click', function (e) {
+            e.preventDefault();
+            SearchMoldiePartno();
+        });
+        // Allow Enter key to trigger search
+        $("#searchInput").on('keypress', function (e) {
+            if (e.key === 'Enter') {
+                SearchMoldiePartno();
+            }
+        });
         // Search Logic
         async function SearchMoldiePartno() {
             const searchInput = $("#searchInput").val().trim();
@@ -418,9 +415,6 @@
                 alert("Set a Process first...");
                 return;
             }
-
-
-
             const searchButton = document.getElementById('searchButton');
             const originalText = searchButton.innerHTML;
 
@@ -430,22 +424,17 @@
 
             try {
                 TableDisplay.empty(); // Removing the Loading Display
-                // Simulate delay
                 await new Promise(resolve => setTimeout(resolve, 1000));
 
-                // Perform server request
                 let res = await FetchAuthenticate('@Url.Action("SearchMoldieDaily", "Mold")', {
                     ProcessID: selectionProcess,
                     SearchInput: searchInput
                 });
 
-                console.log(res);
 
                 if (res && res.Success) {
-                    // Handle success logic here
 
                     let Details = res.Data.Details;
-                    let Status = "";
                     GetData = res.Data.GetList;
 
                     // Display the Details
@@ -453,8 +442,6 @@
                         $("#partNumber").text(Details.PartNo);
                         $("#modelName").text(Details.DimensionQuality);
                         $("#lastCycleShot").text(Details.Total);
-
-
 
                         let statusHtml = "";
 
@@ -667,9 +654,7 @@
 
 
         async function ChangeStatus(recordId, status) {
-            console.log("Clicked:", recordId, status);
 
-            // OPTIONAL: call your backend here
             let res = await postData('@Url.Action("UpdateDailyStatus", "Mold")', {
                 RecordID: recordId,
                 Status: status
@@ -680,6 +665,8 @@
                 SearchMoldiePartno()
             }
         }
+
+
         function setDateInput(inputId, dateStr) {
             if (!dateStr) return; // Exit if empty
 

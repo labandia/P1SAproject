@@ -1,4 +1,100 @@
-﻿
+﻿// Global months array
+window.Months = [
+    "January", "February", "March", "April",
+    "May", "June", "July", "August",
+    "September", "October", "November", "December"
+];
+
+// Global function to populate month dropdown
+window.initMonthSelect = function (selectId, setCurrent = false) {
+    const select = document.getElementById(selectId);
+    if (!select) return;
+
+    select.innerHTML = ""; // clear existing options
+
+    Months.forEach((month, index) => {
+        const option = document.createElement("option");
+        option.value = index + 1;   // 1–12
+        option.text = month;
+        select.appendChild(option);
+    });
+
+    // Optional: auto-select current month
+    if (setCurrent) {
+        select.value = new Date().getMonth() + 1;
+    }
+};
+
+
+window.formatJsonDate = function (value) {
+    if (!value) return "";
+
+    const ms = parseInt(value.replace("/Date(", "").replace(")/", ""));
+    if (isNaN(ms)) return "";
+
+    const date = new Date(ms);
+    return date.toLocaleDateString();
+};
+
+
+window.Loadingsteps = function(loadingTextId, callback){
+    const steps = [
+        "Fetching data from the database...",
+        "Processing data...",
+        "Finalizing table view..."
+    ];
+
+    let stepIndex = 0;
+
+    const interval = setInterval(() => {
+        const stepText = document.getElementById(loadingTextId);
+        if (stepText) {
+            stepText.innerText = steps[stepIndex];
+            stepIndex++;
+        } else {
+            clearInterval(interval); // in case it's removed
+        }
+
+        if (stepIndex >= steps.length) {
+            clearInterval(interval);
+            if (typeof callback === "function") callback();
+        }
+    }, 800);
+}
+
+
+// Global loading display function
+window.loadingDisplay = function (tableBodyId, col) {
+    const loadingTextId = `loadingStepText_${Date.now()}`;
+    const $table = $("#" + tableBodyId);
+
+    if ($table.length === 0) {
+        console.warn(`Table element with ID '${tableBodyId}' not found.`);
+        return null;
+    }
+
+    const loadData = `
+        <tr class="loading-row">
+            <td colspan="${col}">
+                <div class="Loadercontainer">
+                    <span class="loader"></span>
+                    <p id="${loadingTextId}" style='margin: 0;'>
+                        Fetching data from the database..
+                    </p>
+                </div>
+            </td>
+        </tr>
+    `;
+
+    // Optional: remove previous loading rows
+    $table.find(".loading-row").remove();
+
+    $table.append(loadData);
+
+    return loadingTextId;
+};
+
+
 
 
 // MERGE THE ARRAY WITH THE SAME MODEL NAME VALUE

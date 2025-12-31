@@ -51,8 +51,6 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Part Number</th>
-                            <th>Model Name</th>
                             <th>Palete location</th>
                             <th>Quantity</th>
                             <th>Actions</th>
@@ -184,22 +182,27 @@
 
 
                 <form method="post" enctype="multipart/form-data" class="addformcontainer" id="EditLocationform" autocomplete="off">
-                    <input type="hidden" name="oldlocal" id="oldlocation"/>
+                    <input type="hidden" name="oldlocal" id="oldlocation" />
 
                     <div class="form_group col-12 col-sm-12">
                         <label>Part Number <small style="color: #a81818; font-weight: 600;">*</small></label>
-                        <input type="text" placeholder="Enter the Part No" name="partnum" id="EditPalletepartnum" required />
+                        <input type="text" placeholder="Enter the Part No" name="partnum" id="EditPalletepartnum" readonly />
                     </div>
 
 
 
-                    <div class="form_group col-12 col-sm-12 ">
+                    <div class="form_group col-12 col-sm-12 mb-2">
                         <label>Select Palete Location<small style="color: #a81818; font-weight: 600;">*</small></label> <br />
                         <div class="select-container">
                             <select id="currentPallete" name="area" required>
                                 <option value="0">-- Select Pallete --</option>
                             </select>
                         </div>
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Current Quantity <small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <input type="text" placeholder="Enter the Part No" name="Quantity" id="EditQuantity" required />
                     </div>
 
                     <div class="d-flex justify-content-between align-items-center mt-4">
@@ -374,7 +377,7 @@
 
 
         let res = await FetchAuthenticate(url, {});
-
+        console.log(res);
           if (res && res.Success) {
               $("#MasterlistTable").empty();
               MasterlistData = res.Data.Items;
@@ -458,6 +461,7 @@
                  e.stopPropagation();
                  const buttonId = $(this).attr('id');
                  const rowIndex = buttonId.split('_')[1];
+                 console.log("ROW CLICK: " + rowIndex );
                  GetPaleteLocation(rowIndex);
              });
 
@@ -483,15 +487,13 @@
         let res = await FetchAuthenticate('@Url.Action("GetProductsLocationPallete", "PartsLocator")', {
             partnum: partnum
         });
-
+        console.log(res);
         if (res && res.Success) {
           $("#StorageTables").empty();
           StorageData = res.Data;
 
           StorageData.forEach((row, index) => {
               var setdata = `<tr>
-                    <td>${row.Partnumber}</td>
-                    <td>${row.ModelName}</td>
                     <td>${GetLocationString(row.Area)}</td>
                     <td>${row.Quantity}</td>
                     <td>
@@ -518,7 +520,7 @@
               if (filterdata) {
                   $("#EditPalletepartnum").val(filterdata.Partnumber);
                   $("#oldlocation").val(filterdata.Area);
-                  $("#currentPallete").val(filterdata.Area);
+                  $("#EditQuantity").val(filterdata.Quantity);
 
                   strOldlocal = filterdata.Area;
 

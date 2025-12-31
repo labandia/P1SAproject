@@ -1,0 +1,572 @@
+﻿
+@{
+    ViewBag.Title = "DieMoldSummary";
+    Layout = "~/Areas/MoldDie/Views/Shared/_MainLayout.cshtml";
+}
+
+<section>
+    <header class="DashHeader">
+        <div>
+            <span id="ChangeTitle">Overview / Summary</span>
+        </div>
+
+        <div class="flex_align" style="display: flex; align-items: center; gap: 10px;">
+            <div class="select-container">
+                <select id="yearselect"></select>
+            </div>
+
+            <div class="select-container">
+                <select id="monthSelect"></select>
+            </div>
+
+            <div class="select-container">
+                <select id="ProcessID">
+                    <option value="M002">Mold  Frame</option>
+                    <option value="M001">ACM</option>
+                    <option value="M003">Mold Impeller</option>
+                    <option value="M004">Slot Insulator </option>
+                    <option value="M005">Stepping Motor</option>
+                </select>
+            </div>
+
+            <div class="DashAction flex_align">
+                <button type="button" id="changeSummary" class="active"><i class="fa-solid fa-chart-line"></i></button>
+                <button type="button" id="changeMonth"> <i class="fa-regular fa-calendar-days"></i></button>
+            </div>
+        </div>
+    </header>
+
+
+    <div class="SummaryMainDisplay" id="OverallDisplay">
+        <div class="tablecontent">
+            <div class="MoldiefooterContainer flex_space" id="Summaryfooter">
+                <div class="searchinputContainer">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" placeholder="Search here ... " id="searchbox" />
+                    <div class="line"></div>
+                </div>
+
+                <div id="SummaryPaginationContainer" class="paginationPartlocal"></div>
+            </div>
+
+
+            <div class="DieMainTable" id="DieWrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Part No </th>
+                            <th>Dimension/ Quality</th>
+                            <th style="width: 10%;">Die number</th>
+                            <th style="width: 10%;">Die Serial No.</th>
+                            <th>2011-2015</th>
+                            <th>Shot Count </th>
+                            <th>Status</th>
+                            @*<th>Renarks</th>*@
+                        </tr>
+                    </thead>
+                    <tbody id="SummarylistData">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="TableCharts">
+            <h1>Charts herer</h1>
+        </div>
+
+    </div>
+
+    <div id="MonthlyDisplay" style="display: none;">
+
+        <div class="DieMainTable" id="DieWrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="text-align: left !important; padding-left: 1.5em;">Part Number </th>
+                        @*<th>Part Description </th>*@
+                        <th>Dimension/ Quality </th>
+                        <th>No. of Cavity</th>
+                        <th>Die Serial</th>
+                        <th id="MonthHeader">Jan-16</th>
+                        <th>TotalQty</th>
+                    </tr>
+                </thead>
+                <tbody id="DieMoldMonthly">
+                </tbody>
+            </table>
+
+            <div class="MoldiefooterContainer" id="Monitorfooter">
+                <span>Showing  <span id="MonitorpagecountID">-</span> to <span id="MonitortotalpageID">-</span> of  <span id="MonitorDatalengthID">-</span> Entries</span>
+
+                <div id="PaginationContainer" class="paginationPartlocal"></div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+
+
+
+<script>
+    // Loads the year and month select options
+    initMonthSelect("monthSelect", true);
+
+    let SummaryData = [], FinalSummaryData = [], MonthlyData = [];
+    let TableDisplay = $("#SummarylistData");
+    let MonthDisplay = $("#DieMoldMonthly");
+    let yearSelect = $("#yearselect");
+
+
+
+
+
+    //===============================================================
+    //==================== CHANGE SUMMARY DISPLAY ===================
+    //===============================================================
+    $("#changeSummary").on('click', function (e) {
+        e.preventDefault();
+        $("#ChangeTitle").text("Overview / Summary");
+        GetMoldDieSummary();
+        $("#MonthlyDisplay").hide();      // hide monthly
+        $("#OverallDisplay").show();      // show summary
+    });
+
+    $("#changeMonth").on('click', function (e) {
+        e.preventDefault();
+        $("#ChangeTitle").text("Overview / Monthly");
+        GetMoldDieMontly();
+        $("#OverallDisplay").hide();      // hide summary
+        $("#MonthlyDisplay").show();      // show monthly
+    });
+
+
+    //===============================================================
+    //==================== FILTER DATA ==============================
+    //===============================================================
+    $("#ProcessID").on('change', (e) => {
+        e.preventDefault();
+        GetMoldDieSummary();
+    });
+
+
+    //===============================================================
+    //================ FETCH DATA AND DISPLAY =======================
+    //===============================================================
+    const GetMoldieYears = async () => {
+        let res = await fetchData('@Url.Action("GetYearMoldDie", "Mold")', {});
+
+            yearSelect.empty();
+            $.each(res, function (index, year) {
+                yearSelect.append(`<option value='${year}'>${year}</option>`);
+            });
+
+        // select the first option automatically
+        yearSelect.prop('selectedIndex', 0);
+    }
+    const GetMoldDieSummary = async () => {
+        SummaryData = [];
+        FinalSummaryData = [];
+        $("#SummarylistData").empty();
+        // Loads the year First
+        await GetMoldieYears();
+
+        // Starts the loading screen
+        const id = window.loadingDisplay("SummarylistData", 7);
+
+        const year = yearSelect.val();
+
+        let obj = {
+            Months: $("#monthSelect").val(),
+            Year: year,
+            ProcessID: $("#ProcessID").val()
+        };
+
+        if (typeof window.Loadingsteps === "function") {
+             window.Loadingsteps(id, async () => {
+                 let res = await FetchAuthenticate('@Url.Action("GetMoldDieSummaryList", "Mold")', obj);
+                     if (res && res.Success) {
+                         TableDisplay.empty(); // Removing the Loading Display
+
+                         SummaryData = res.Data.FinalSummary;
+                         FinalSummaryData = res.Data.MoldDieSummary;
+                         displaySummaryPagination(SummaryData, 'SummarylistData', 'SummaryPaginationContainer', 100, 5);
+
+                         $.each(FinalSummaryData, function (index, row) {
+                             let remarkColor = "";
+                             if (row.Category === "For Monitoring") {
+                                 remarkColor = "color: #054e92;";
+                             } else if (row.Category === "End of life") {
+                                 remarkColor = "color: #a81818;";
+                             }
+
+                             var setdata = `<tr class= 'row_${index}'>
+                                                   <td style='text-align: left; padding: 1em; font-size: .8rem;  font-weight: 600; ${remarkColor}'>${row.Category}</td>
+                                                   <td style='text-align: center; font-weight: 700;'>${row.MoldDie}</td>
+                                              </tr>`;
+                             $("#FinalSummaryData").append(setdata);
+                         });
+                     } else {
+                         const loadData = `<tr>
+                                         <td colspan='7'>
+                                             🔍 ${res.Message}
+                                         </td>
+                                     </tr>`;
+
+                         TableDisplay.append(loadData);
+                     }
+                 });
+        }
+
+
+     }
+
+    const GetMoldDieMontly = async () => {
+            MonthlyData = [];
+        $("#DieMoldMonthly").empty();
+            // Loads the year First
+            await GetMoldieYears();
+
+            // Starts the loading screen
+            const id = window.loadingDisplay("DieMoldMonthly", 6);
+
+            const year = yearSelect.val();
+
+            let obj = {
+                Months: $("#monthSelect").val(),
+                Year: year,
+                ProcessID: $("#ProcessID").val()
+            };
+
+            if (typeof window.Loadingsteps === "function") {
+                 window.Loadingsteps(id, async () => {
+                     let res = await FetchAuthenticate('@Url.Action("GetMoldDieMonthlyList", "Mold")', obj);
+                     console.log(res);
+                         if (res && res.Success) {
+                             MonthDisplay.empty(); // Removing the Loading Display
+
+                             MonthlyData = res.Data
+                             displayMonthlyPagination(MonthlyData, 'DieMoldMonthly', 'PaginationContainer', 50, 5);
+
+                         } else {
+                             const loadData = `<tr>
+                                             <td colspan='7'>
+                                                 🔍 ${res.Message}
+                                             </td>
+                                         </tr>`;
+
+                             MonthDisplay.append(loadData);
+                         }
+                     });
+            }
+
+
+         }
+
+    function displaySummaryPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 10, visibleButtons = 5) {
+                let currentPage = 1;
+                let filteredData = [...dataArray]; // Make a copy for filtering
+
+                const updatePaginationInfo = () => {
+                    const totalRecords = filteredData.length;
+                    const totalPages = Math.ceil(totalRecords / recordsPerPage);
+
+                    //$("#SummarytotalpageID").text(totalPages);
+                    //$("#SummaryDatalengthID").text(totalRecords);
+
+                    return totalPages;
+                };
+
+                const renderTable = (page) => {
+                    const totalPages = updatePaginationInfo();
+                    const startIndex = (page - 1) * recordsPerPage;
+                    const endIndex = Math.min(startIndex + recordsPerPage, filteredData.length);
+                    const tableBody = document.getElementById(tableBodyId);
+                    tableBody.innerHTML = '';
+
+                    // Step 1: Group by "No"
+                    const groupMap = new Map();
+                    for (let i = startIndex; i < endIndex; i++) {
+                        const row = filteredData[i];
+                        if (!groupMap.has(row.DieSerial)) groupMap.set(row.DieSerial, []);
+                        groupMap.get(row.DieSerial).push(row);
+                    }
+
+                    // Step 2: Render rows with merged "No"
+                    groupMap.forEach((groupRows, noValue) => {
+                        const NoValue = groupRows[0].No;
+                        const dienumValue = groupRows[0].DieNumber;
+                        const dieSerialValue = groupRows[0].DieSerial;
+                        const dielifeValue = groupRows[0].DieLife;
+
+                        const PreviousValue = groupRows[0].PreviousCount;
+                        const ShotOnValue = groupRows[0].ShotOnwards;
+                        const TotalShotValue = groupRows[0].totalshoutCount;
+                        const StatusValue = groupRows[0].Status;
+                        const RemarkeValue = groupRows[0].Remarks;
+
+                        groupRows.forEach((rowData, idx) => {
+                            let percentage = parseFloat(StatusValue) || 0;
+                            let rowHtml = "<tr class='rowClick' id='editButton'>";
+
+                            rowHtml += `<td data-cell="PartNo" style="text-align: left; padding-left: 1.5em; font-weight: 600;" >${rowData.PartNo}</td>`;
+                            rowHtml += `<td data-cell="DimensionQuality" >${rowData.Dimension_Quality}</td>`;
+
+                            rowHtml += `<td data-cell="DieNumber" >${rowData.DieNumber}</td>`;
+
+
+
+                            if (idx === 0) {
+                                rowHtml += `<td rowspan="${groupRows.length}" data-cell="DieSerial" >${dieSerialValue}</td>`;
+                                rowHtml += `<td rowspan="${groupRows.length}" data-cell="PreviousCount" >${PreviousValue}</td>`;
+                                //rowHtml += `<td rowspan="${groupRows.length}" data-cell="Remarks" style="${remarkColor}">${RemarkeValue}</td>`;
+                            }
+                            rowHtml += `<td data-cell="ShotOnwards" >${rowData.ShotOnwards}</td>`;
+
+                            if (idx === 0) {
+
+                                rowHtml += `<td rowspan="${groupRows.length}" data-cell="Status">
+                                    <div class='progress-bar'>
+                                        <span data-width='${percentage}'></span>
+                                    </div>
+                                    <small style='color: #222; font-weight: 600;'>${StatusValue}%</small>
+                                </td>`;
+
+
+                                let remarkColor = "";
+                                if (RemarkeValue === "For Monitoring") {
+                                    remarkColor = "color: #054e92; font-weight: 600; font-size: .8rem;";
+                                } else if (RemarkeValue === "End of Life") {
+                                    remarkColor = "color: #a81818; font-weight: 600; font-size: .8rem;";
+                                }
+                            }
+
+                            rowHtml += "</tr>";
+                            tableBody.innerHTML += rowHtml;
+                        });
+                    });
+
+
+
+                    const spans = document.querySelectorAll('.progress-bar span');
+                    spans.forEach((span) => {
+                        // For Monitoring
+                        if (span.dataset.width <= 100) {
+                            span.style.background = '#054e92';
+                        }
+                        else {
+                            // End Of life
+                            span.style.background = '#a81818';
+                        }
+                        span.style.width = span.dataset.width + "%";
+                        //span.innerHTML = span.dataset.width;
+                    });
+
+                    //$("#SummarypagecountID").text(currentPage);
+                };
+
+                const renderPagination = () => {
+                    const totalPages = updatePaginationInfo();
+                    const paginationContainer = document.getElementById(paginationId);
+                    paginationContainer.innerHTML = '';
+
+                    let startPage = Math.max(1, currentPage - Math.floor(visibleButtons / 2));
+                    let endPage = Math.min(totalPages, startPage + visibleButtons - 1);
+
+                    if (endPage > totalPages) {
+                        endPage = totalPages;
+                        startPage = Math.max(1, endPage - visibleButtons + 1);
+                    }
+
+                    if (totalPages <= visibleButtons) {
+                        startPage = 1;
+                        endPage = totalPages;
+                    }
+
+                    // Previous button
+                    paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="SummarychangePage(${currentPage - 1})">
+                                         <i class="fa-solid fa-backward"></i>
+                                     </button>`;
+
+                    for (let i = startPage; i <= endPage; i++) {
+                        paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="SummarychangePage(${i})">${i}</button>`;
+                    }
+
+                    // Next button
+                    paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="SummarychangePage(${currentPage + 1})">
+                                        <i class="fa-solid fa-forward"></i>
+                                     </button>`;
+                };
+
+                const SummarychangePage = (page) => {
+                    if (page >= 1 && page <= updatePaginationInfo()) {
+                        currentPage = page;
+                        renderTable(currentPage);
+                        renderPagination();
+                    }
+                };
+
+                // 🔍 Search functionality
+                const searchTable = () => {
+                    const query = $('#Summarysearchbox').val().toLowerCase();
+
+                    filteredData = dataArray.filter(item =>
+                        item.PartNo.toLowerCase().includes(query) || item.DieSerial.toLowerCase().includes(query)
+                    );
+
+                    currentPage = 1;
+                    renderTable(currentPage);
+                    renderPagination();
+                };
+
+                // Add event listener for search input
+                $('#Summarysearchbox').on('input', searchTable);
+
+                // Handle click event for edit button
+                $(document).on('click', '.rowClick', function (e) {
+                    e.stopPropagation();
+                    const buttonId = $(this).attr('id');
+                    const rowIndex = buttonId.split('_')[1];
+                    const result = TableData.find(p => p.RecordID == rowIndex);
+
+                });
+
+
+                // Initialize table and pagination
+                window.SummarychangePage = SummarychangePage;
+                renderTable(currentPage);
+                renderPagination();
+
+       }
+
+    function displayMonthlyPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 50, visibleButtons = 5) {
+         let currentPage = 1;
+         let filteredData = [...dataArray]; // Make a copy for filtering
+
+         const updatePaginationInfo = () => {
+             const totalRecords = filteredData.length;
+             const totalPages = Math.ceil(totalRecords / recordsPerPage);
+
+             $("#MonitortotalpageID").text(totalPages);
+             $("#MonitorDatalengthID").text(totalRecords);
+
+             return totalPages;
+         };
+
+         const renderTable = (page) => {
+             const totalPages = updatePaginationInfo();
+             const startIndex = (page - 1) * recordsPerPage;
+             const endIndex = Math.min(startIndex + recordsPerPage, filteredData.length);
+             const tableBody = document.getElementById(tableBodyId);
+             tableBody.innerHTML = '';
+
+             // Step 1: Group by "Serial"
+             const groupMap = new Map();
+             for (let i = startIndex; i < endIndex; i++) {
+                 const row = {
+                     ...filteredData[i],
+                     _indexInTableData: dataArray.indexOf(filteredData[i])
+                 };
+                 if (!groupMap.has(row.DieSerial)) groupMap.set(row.DieSerial, []);
+                 groupMap.get(row.DieSerial).push(row);
+             }
+
+             // Step 2: Render rows with merged "No"
+             groupMap.forEach((groupRows, noValue) => {
+                 const newTotalValue = groupRows[0].TotalNo;
+                 const dieSerialValue = groupRows[0].DieSerial;
+                 const PreviousValue = groupRows[0].PreviousCount;
+
+                 groupRows.forEach((rowData, idx) => {
+                     const originalIndex = rowData._indexInTableData;
+
+                     let rowHtml = `<tr class='rowClick' id='editButton_${rowData.RecordID}' data-index='${originalIndex}'>`;
+
+                     rowHtml += `<td data-cell="PartNo" style="text-align: left; padding-left: 1.5em; font-weight: 600;" >${rowData.PartNo}</td>`;
+                     rowHtml += `<td data-cell="DimensionQuality" >${rowData.Dimension_Quality}</td>`;
+                     rowHtml += `<td data-cell="Cavity" >0</td>`;
+
+                     if (idx === 0) {
+                         rowHtml += `<td rowspan="${groupRows.length}" data-cell="DieSerial" >${dieSerialValue}</td>`;
+                         rowHtml += `<td rowspan="${groupRows.length}" data-cell="PreviousCount" >${PreviousValue}</td>`;
+                         rowHtml += `<td rowspan="${groupRows.length}" data-cell="NewTotal" style="color: #054e92; font-weight: 600; ">${newTotalValue}</td>`;
+                     }
+
+
+
+
+
+                      rowHtml += "</tr>";
+                     tableBody.innerHTML += rowHtml;
+                 });
+             });
+
+             $("#MonitorpagecountID").text(currentPage);
+         };
+
+         const renderPagination = () => {
+             const totalPages = updatePaginationInfo();
+             const paginationContainer = document.getElementById(paginationId);
+             paginationContainer.innerHTML = '';
+
+             let startPage = Math.max(1, currentPage - Math.floor(visibleButtons / 2));
+             let endPage = Math.min(totalPages, startPage + visibleButtons - 1);
+
+             if (endPage > totalPages) {
+                 endPage = totalPages;
+                 startPage = Math.max(1, endPage - visibleButtons + 1);
+             }
+
+             if (totalPages <= visibleButtons) {
+                 startPage = 1;
+                 endPage = totalPages;
+             }
+
+             // Previous button
+             paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} style='color: #222 !important;' onclick="MonitorchangePage(${currentPage - 1})">
+                                                <i class="fa-solid fa-backward"></i>
+                                            </button>`;
+
+             for (let i = startPage; i <= endPage; i++) {
+                 paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="MonitorchangePage(${i})">${i}</button>`;
+             }
+
+             // Next button
+             paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="MonitorchangePage(${currentPage + 1})">
+                                           <i class="fa-solid fa-forward"></i>
+                                        </button>`;
+         };
+
+         const MonitorchangePage = (page) => {
+             if (page >= 1 && page <= updatePaginationInfo()) {
+                 currentPage = page;
+                 renderTable(currentPage);
+                 renderPagination();
+             }
+         };
+
+         // 🔍 Search functionality
+         const searchTable = () => {
+             const query = $('#searchbox').val().toLowerCase();
+
+             filteredData = dataArray.filter(item =>
+                 item.PartNo.toLowerCase().includes(query) || item.No === parseInt(query)
+             );
+
+             currentPage = 1;
+             renderTable(currentPage);
+             renderPagination();
+         };
+
+       
+         // Initialize table and pagination
+         window.MonitorchangePage = MonitorchangePage;
+         renderTable(currentPage);
+         renderPagination();
+    }
+    //================== INITIALIZE DATA FIRST ======================
+    GetMoldDieSummary();
+
+</script>

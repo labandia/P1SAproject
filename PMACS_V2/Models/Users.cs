@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 namespace PMACS_V2.Models
 {
     public class Users
@@ -54,5 +56,13 @@ namespace PMACS_V2.Models
         public string BCC { get; set; }
         public string Body { get; set; }
 
+    }
+
+
+    public class RequestData<T>
+    {
+        public List<T> Items { get; set; }
+        public int Page { get; set; }
+        public int TotalPages { get; set; }
     }
 }

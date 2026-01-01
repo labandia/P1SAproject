@@ -18,7 +18,7 @@
                     </div>
 
 
-                    <button type="button" id="OpenAddMaster" class="btn-cust-primary">Add MasterList</button>
+                    <button type="button" id="OpenAddMaster" class="btn-cust-primary"><i class="fas fa-plus"></i> Add Data</button>
                 </div>
             </div>
             <div class="DieMainTable">
@@ -44,9 +44,11 @@
 
             <div class="flex_space mb-4">
                 <h4 style="font-weight: 600; color: #222;">Palete Location</h4>
-                <button type="button" id="AddPalete" class="btn-cust-primary" disabled>Add Palete Location </button>
+                <button type="button" id="AddPalete" class="btn-cust-primary" disabled> <i class="fas fa-location-dot"></i>  Add Palete Location </button>
             </div>
-
+            <div class="mt-3" id="selectedPartInfo" >
+                <p><strong>Selected Part:</strong> <span id="currentPartNumber"></span> - <span id="currentModelName"></span></p>
+            </div>
             <div class="DieMainTable" id="DieWrapper">
                 <table>
                     <thead>
@@ -140,7 +142,10 @@
                         <input type="text" placeholder="Enter the Part No" name="partnum" id="Palete_Partnumber" required />
                     </div>
 
-
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Quantity <small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <input type="number" placeholder="Enter Amount of Quantity" name="Quantity" id="Palete_Quantity" required />
+                    </div>
 
                     <div class="form_group col-12 col-sm-12 ">
                         <label>Select Palete Location<small style="color: #a81818; font-weight: 600;">*</small></label> <br />
@@ -182,7 +187,7 @@
 
 
                 <form method="post" enctype="multipart/form-data" class="addformcontainer" id="EditLocationform" autocomplete="off">
-                    <input type="hidden" name="oldlocal" id="oldlocation" />
+                    <input type="hidden" name="RecordID" id="RecordID" />
 
                     <div class="form_group col-12 col-sm-12">
                         <label>Part Number <small style="color: #a81818; font-weight: 600;">*</small></label>
@@ -194,7 +199,7 @@
                     <div class="form_group col-12 col-sm-12 mb-2">
                         <label>Select Palete Location<small style="color: #a81818; font-weight: 600;">*</small></label> <br />
                         <div class="select-container">
-                            <select id="currentPallete" name="area" required>
+                            <select id="currentPallete" name="newarea" required>
                                 <option value="0">-- Select Pallete --</option>
                             </select>
                         </div>
@@ -230,6 +235,9 @@
     let strPartnum;
     let strOldlocal;
     let ismode;
+
+    const currentPartNumberEl = document.getElementById('currentPartNumber');
+    const currentModelNameEl = document.getElementById('currentModelName');
 
     // Tabs Content
     const tabs = document.querySelectorAll(".Mold_tab");
@@ -323,7 +331,6 @@
         }
 
         let res = await postData('@Url.Action("EditMasterlocation", "PartsLocator")', data);
-
         if (res && res.Success) {
             GetPaleteLocation(data.partnum);
             $("#EditLocationModal").modal("hide");
@@ -510,6 +517,7 @@
               $("#StorageTables").append(setdata);
           });
 
+            currentPartNumberEl.textContent = partnum;
           // Opens Edit Form Modal
           $(document).on('click', '.EditPallete', function (e) {
               e.stopPropagation();
@@ -519,7 +527,8 @@
 
               if (filterdata) {
                   $("#EditPalletepartnum").val(filterdata.Partnumber);
-                  $("#oldlocation").val(filterdata.Area);
+                  $("#RecordID").val(filterdata.RecordID);
+                  $("#currentPallete").val(filterdata.Area);    
                   $("#EditQuantity").val(filterdata.Quantity);
 
                   strOldlocal = filterdata.Area;

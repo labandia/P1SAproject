@@ -123,19 +123,8 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
 
         // ADD / EDIT / REMOVE LOCATION METHODS
 
-        public Task<bool> AddNewLocation(int Area, string partnum)
+        public Task<bool> AddNewLocation(int Area, string partnum, int Quantity)
         {
-            //string strsql = $@"INSERT INTO PartsLocatorRotor_Location (Partnumber, Area, Quantity)
-            //                SELECT @Partnumber, @Area, 0
-            //                WHERE NOT EXISTS (
-            //                    SELECT 1 FROM PartsLocatorRotor_Location 
-            //                    WHERE (Partnumber = @Partnumber AND Area =@Area) AND IsDeleted = 0
-            //                )";
-            //return SqlDataAccess.UpdateInsertQuery(strsql, new 
-            //{ 
-            //    Partnumber = partnum, 
-            //    Area = Area 
-            //});
 
             string strsql = @"
                         IF EXISTS (
@@ -147,36 +136,37 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                         BEGIN
                                 UPDATE PartsLocatorRotor_Location
                                 SET 
+                                    Quantity = @Quantity,       
                                     IsRemove = 0,
                                     LastUpdated = GETDATE()
                                 WHERE Partnumber = @Partnumber 
                                   AND Area = @Area 
-                                  AND IsDeleted = 0
                         END
                         ELSE
                         BEGIN
                             INSERT INTO PartsLocatorRotor_Location (Partnumber, Area, Quantity)
-                            VALUES (@Partnumber, @Area, 0)
+                            VALUES (@Partnumber, @Area, @Quantity)
                         END
                     ";
 
             return SqlDataAccess.UpdateInsertQuery(strsql, new
             {
                 Partnumber = partnum,
-                Area = Area
+                Area = Area, 
+                Quantity = Quantity
             });
         }
 
-        public Task<bool> ChangeLocation(int Area, string partnum, int oldLocation)
+        public Task<bool> ChangeLocation(int ID, int Area, int Quan)
         {
             string strsql = $@"UPDATE PartsLocatorRotor_Location
-                            SET Area = @Area
-                            WHERE (Partnumber = @Partnumber AND Area = @oldLocation) AND IsDeleted = 0";
+                            SET Area = @Area, Quantity =@Quantity
+                            WHERE RecordID =@RecordID AND IsRemove = 0";
             return SqlDataAccess.UpdateInsertQuery(strsql, new 
             {
-                Partnumber = partnum, 
                 Area = Area, 
-                oldLocation = oldLocation 
+                Quantity = Quan,
+                RecordID = ID
             });
         }
 

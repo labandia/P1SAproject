@@ -74,18 +74,19 @@ namespace PMACS_V2.Areas.PartsLocal.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> AddMasterlocation(int area, string partnum)
+        public async Task<ActionResult> AddMasterlocation(int area, string partnum, int Quantity)
         {
-            bool result = await _prod.AddNewLocation(area, partnum);
+            bool result = await _prod.AddNewLocation(area, partnum, Quantity);
             if (!result) return JsonValidationError();
             return JsonCreated(result, "Add new Palete location successfully");
         }
 
         [HttpPost]
-        public async Task<ActionResult> EditMasterlocation(int area, string partnum, int oldlocal)
+        public async Task<ActionResult> EditMasterlocation(int RecordID, int newarea, int Quantity)
         {
-            bool result = await _prod.ChangeLocation(area, partnum, oldlocal);
+            bool result = await _prod.ChangeLocation(RecordID, newarea, Quantity);
             if (!result) return JsonValidationError();
+           
             return JsonCreated(result, "Change new palete location successfully");
         }
 

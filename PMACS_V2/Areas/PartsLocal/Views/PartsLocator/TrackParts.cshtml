@@ -407,7 +407,7 @@
             6: 'F', 7: 'G', 8: 'H', 9: 'I', 10: 'J',
             11: 'K', 12: 'L', 13: 'M', 14: 'N', 15: 'O',
             16: 'P', 17: 'Q', 18: 'R', 19: 'S', 20: 'T',
-            6: 'U'
+            21: 'U'
         };
         return mapping[areaNumber] || areaNumber;
     };
@@ -418,6 +418,7 @@
     // Create grid cells
     labels.forEach(letter => {
         // Create grid cell
+        //console.log("LETTER " + letter);
         const cell = document.createElement('div');
         cell.className = 'grid-cell';
         cell.id = `cell-${letter}`;
@@ -444,19 +445,14 @@
         cell.addEventListener('click', function () {
             const selectedRecordId = getRecordIdByArea(letter);
             if (selectedRecordId !== null) {
-                console.log("✅ Selected RecordID:", selectedRecordId);
-
-                // Show alert with selected record ID
-
-                // Example: send to backend or details page
-                //window.location.href = "/PartsLocal/PartsLocator/ProductDetails?StorageID=" + selectedRecordId;
+           
 
                 getProductDetails(selectedRecordId);
 
             } else {
                 $("#letterdisplay").text(letter);
                 var letterStorage = storageList.filter(res => res.Area === letter);
-
+                const exists = storageList.some(u => u.Area === letter);
                 const container = $("#StorageBody");
                 container.empty();
 

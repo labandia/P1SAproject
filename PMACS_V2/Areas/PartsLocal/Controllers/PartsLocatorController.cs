@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -141,19 +142,65 @@ namespace PMACS_V2.Areas.PartsLocal.Controllers
             return JsonCreated(shop, "Update successfully");
         }
 
-        [JwtAuthorize]
-        public async Task<ActionResult> GetTransactionSummaryIn()
+        [HttpPost]
+        public async Task<ActionResult> EditShopOrderOut(ShopOrderOutModel shop)
         {
-            var data = await _shopin.GetShopOderInlist() ?? new List<ShopOrderInModel>();
+            bool result = await _shopout.EditTransactionOut(shop);
+            if (!result) return JsonValidationError();
+            return JsonCreated(shop, "Update successfully");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> EditShopOrderIn(ShopOrderInModel shop)
+        {
+            bool result = await _shopin.EditTransaction(shop);
+            if (!result) return JsonValidationError();
+            return JsonCreated(shop, "Update successfully");
+        }
+
+
+
+        [JwtAuthorize]
+        public async Task<ActionResult> GetTransactionSummaryIn(
+            DateTime? startDate,
+            DateTime? endDate,
+            string search,
+            int pageNumber = 1,
+            int pageSize = 10)
+        {
+            var from = startDate ?? DateTime.Today;
+            var to = endDate ?? DateTime.Today;
+
+            var data = await _shopin.GetShopOderInlist(
+                    from.Date,
+                    to.Date,
+                    search,
+                    pageNumber,
+                    pageSize) ?? new List<ShopOrderInModel>();
             if (data == null && data.Any()) return JsonNotFound("No Masterlist Data.");
             return JsonSuccess(data);
         }
 
         [JwtAuthorize]
-        public async Task<ActionResult> GetTransactionSummaryOut()
+        public async Task<ActionResult> GetTransactionSummaryOut(
+            DateTime? startDate,
+            DateTime? endDate,
+            string search,
+            int pageNumber = 1,
+            int pageSize = 10)
         {
-            var data = await _shopout.GetShopOderOutlist() ?? new List<ShopOrderOutModel>();
+            var from = startDate ?? DateTime.Today;
+            var to = endDate ?? DateTime.Today;
+
+            var data = await _shopout.GetShopOderOutlist(
+                    from.Date,
+                    to.Date,
+                    search,
+                    pageNumber,
+                    pageSize) ?? new List<ShopOrderOutModel>();
             if (data == null && data.Any()) return JsonNotFound("No Masterlist Data.");
+            // Fallback defaults
+         
             return JsonSuccess(data);
         }
 

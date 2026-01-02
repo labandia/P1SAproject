@@ -42,36 +42,31 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
 
         public async Task<bool> AddRotorMasterlist(RotorProductModel rotor)
         {
-            // CHECK IF EXIST THEN INSERT AFTERWARDS
-            string strsql = $@"INSERT INTO PartsLocatorRotor_Masterlist (Partnumber, ModelName)
-                            SELECT @Partnumber, @ModelName
-                            WHERE NOT EXISTS (
-                                SELECT 1 FROM PartsLocatorRotor_Masterlist 
-                                WHERE Partnumber = @Partnumber 
-                            )";
-       
-            bool result = await SqlDataAccess.UpdateInsertQuery(strsql, new { Partnumber = rotor.Partnumber, ModelName = rotor.ModelName });
+            string strsql = @"
+                    IF EXISTS (
+                        SELECT 1
+                        FROM PartsLocatorRotor_Masterlist
+                        WHERE Partnumber = @Partnumber
+                    )
+                    BEGIN
+                        UPDATE PartsLocatorRotor_Masterlist
+                        SET 
+                            ModelName = @ModelName
+                        WHERE Partnumber = @Partnumber
+                    END
+                    ELSE
+                    BEGIN
+                        INSERT INTO PartsLocatorRotor_Masterlist
+                            (Partnumber, ModelName)
+                        VALUES
+                            (@Partnumber, @ModelName)
+                    END";
 
-            if (result)
+            return await SqlDataAccess.UpdateInsertQuery(strsql, new
             {
-                string strlocalsql = $@"INSERT INTO PartsLocatorRotor_Location (Partnumber, Area, Quantity)
-                            SELECT @Partnumber, @Area, @Quantity
-                            WHERE NOT EXISTS (
-                                SELECT 1 FROM PartsLocatorRotor_Location 
-                                WHERE Partnumber = @Partnumber AND Area =@Area
-                            )";
-
-                var parameter = new
-                {
-                    Partnumber = rotor.Partnumber,
-                    Area = rotor.Area,
-                    Quantity = rotor.Quantity
-                };
-
-                await SqlDataAccess.UpdateInsertQuery(strlocalsql, parameter);
-            }
-
-            return result;  
+                Partnumber = rotor.Partnumber,
+                ModelName = rotor.ModelName
+            });
         }
 
         public async Task<IEnumerable<RotorProductModel>> GetRotorMasterlist()

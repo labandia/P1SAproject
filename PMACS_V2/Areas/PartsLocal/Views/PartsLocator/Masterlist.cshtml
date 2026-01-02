@@ -302,8 +302,10 @@
         }
 
         let res = await postData('@Url.Action("AddMasterlist", "PartsLocator")', data);
-
-        console.log(res);
+        if (res && res.Success) {
+            GetMasterlist();
+            $("#AddProductModal").modal("hide");
+        }
     });
 
 
@@ -383,8 +385,10 @@
                     + `&pageSize=${pageSize}`;
 
 
+       
+
+
         let res = await FetchAuthenticate(url, {});
-        console.log(res);
           if (res && res.Success) {
               $("#MasterlistTable").empty();
               MasterlistData = res.Data.Items;
@@ -528,7 +532,7 @@
               if (filterdata) {
                   $("#EditPalletepartnum").val(filterdata.Partnumber);
                   $("#RecordID").val(filterdata.RecordID);
-                  $("#currentPallete").val(filterdata.Area);    
+                  $("#currentPallete").val(filterdata.Area);
                   $("#EditQuantity").val(filterdata.Quantity);
 
                   strOldlocal = filterdata.Area;
@@ -560,11 +564,6 @@
                          });
 
                          if (res && res.Success) {
-                             Swal.fire({
-                                 title: res.Message,
-                                 icon: "success"
-                             });
-
                              GetPaleteLocation(strPartnum);
                              // optional: remove row / reload table
                              // location.reload();

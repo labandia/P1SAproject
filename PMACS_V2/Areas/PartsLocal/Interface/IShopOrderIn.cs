@@ -9,7 +9,11 @@ namespace PMACS_V2.Areas.PartsLocal.Interface
 {
     public interface IShopOrderIn
     {
-        Task<IEnumerable<ShopOrderInModel>> GetShopOderInlist();
+        Task<IEnumerable<ShopOrderInModel>> GetShopOderInlist(DateTime startDate,
+              DateTime endDate,
+              string search,
+              int pageNumber,
+              int pageSize);
         Task<bool> AddTransactionIN(ShopOrderInModel shop);
         Task<bool> EditTransaction(ShopOrderInModel shop);  
         Task<bool> DeleteTransaction(ShopOrderInModel shop);

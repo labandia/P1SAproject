@@ -1,12 +1,18 @@
-﻿using PMACS_V2.Areas.PartsLocal.Model;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using PMACS_V2.Areas.PartsLocal.Model;
 
 namespace PMACS_V2.Areas.PartsLocal.Interface
 {
     public interface IShopOrderOut
     {
-        Task<IEnumerable<ShopOrderOutModel>> GetShopOderOutlist();
+        Task<IEnumerable<ShopOrderOutModel>> GetShopOderOutlist(
+              DateTime startDate,
+              DateTime endDate, 
+              string search,
+              int pageNumber,
+              int pageSize);
         Task<bool> AddTransactionOut(ShopOrderOutModel shop);
         Task<bool> EditTransactionOut(ShopOrderOutModel shop);
         Task<bool> DeleteTransactionOut(ShopOrderOutModel shop);

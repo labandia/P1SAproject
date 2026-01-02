@@ -1,11 +1,13 @@
-﻿using PMACS_V2.Areas.PartsLocal.Interface;
-using PMACS_V2.Areas.PartsLocal.Model;
-using PMACS_V2.Helper;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using OfficeOpenXml.Packaging.Ionic.Zlib;
+using PMACS_V2.Areas.PartsLocal.Interface;
+using PMACS_V2.Areas.PartsLocal.Model;
+using PMACS_V2.Helper;
 
 namespace PMACS_V2.Areas.PartsLocal.Repository
 {
@@ -40,36 +42,77 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
         public Task<bool> EditTransactionOut(ShopOrderOutModel shop)
         {
             string strsql = $@"UPDATE PartsLocatorRotor_Transaction 
-                              SET RotorOrder =@RotorOrder, Quantity =@Quantity
+                              SET RotorOrder =@RotorOrder, ShopOrder =@ShopOrder, PlanQuantity =@PlanQuantity,
+                                  ModelBase =@ModelBase, 
+                                  Status =@Status, 
+                                  BushType =@BushType
                               WHERE TransactionID =@TransactionID";
 
-            return SqlDataAccess.UpdateInsertQuery(strsql, shop);
+            return SqlDataAccess.UpdateInsertQuery(strsql, new
+            {
+                RotorOrder = shop.RotorOrder,
+                ShopOrder = shop.ShopOrder,
+                PlanQuantity = shop.PlanQuantity,
+                ModelBase = shop.ModelBase,
+                Status = shop.Status,
+                BushType = shop.BushType,
+                TransactionID = shop.TransactionID
+            });
         }
 
-        public  async Task<IEnumerable<ShopOrderOutModel>> GetShopOderOutlist()
+        public async Task<IEnumerable<ShopOrderOutModel>> GetShopOderOutlist(
+            DateTime startDate,
+            DateTime endDate,
+            string search,
+            int pageNumber,
+            int pageSize)
         {
-            string strsql = $@"SELECT t.TransactionID, 
-                                FORMAT(t.TransactionDate, 'MM/dd/yy') as TransactionDate,
-	                            FORMAT(t.TransactionDate, 'hh:mm') as TransactionTime
-                                ,t.RotorOrder
-                                ,t.Partnumber
-	                            ,m.ModelName
-	                            ,t.Area
-                                ,t.Quantity
-                                ,t.PreviousQuantity
-                                ,t.Remarks
-	                            ,t.PlanDate
-	                            ,t.PlanQuantity
-	                            ,t.ModelBase
-	                            ,t.Status
-	                            ,t.BushType
-                            FROM PartsLocatorRotor_Transaction t
-                            INNER JOIN PartsLocatorRotor_Masterlist m 
-                            ON t.Partnumber = m.Partnumber
-                            WHERE  t.TransactionType = 1
-                            ORDER BY t.TransactionID DESC";
+            int offset = (pageNumber - 1) * pageSize;
 
-            return await SqlDataAccess.GetData<ShopOrderOutModel>(strsql, null);
+            string strsql = @"
+                        SELECT 
+                            t.TransactionID,
+                            FORMAT(t.TransactionDate, 'MM/dd/yy') AS TransactionDate,
+                            FORMAT(t.TransactionDate, 'hh:mm') AS TransactionTime,
+                            t.RotorOrder,
+                            t.Partnumber,
+                            m.ModelName,
+                            t.ShopOrder,
+                            t.Area,
+                            t.Quantity,
+                            t.PreviousQuantity,
+                            t.Remarks,
+                            t.PlanDate,
+                            t.PlanQuantity,
+                            t.ModelBase,
+                            t.Status,
+                            t.BushType
+                        FROM PartsLocatorRotor_Transaction t
+                        INNER JOIN PartsLocatorRotor_Masterlist m 
+                            ON t.Partnumber = m.Partnumber
+                        WHERE t.TransactionType = 1
+                          AND t.TransactionDate >= @StartDate
+                          AND t.TransactionDate < DATEADD(DAY, 1, @EndDate)
+                          AND (
+                                @Search IS NULL
+                                OR t.Partnumber LIKE '%' + @Search + '%'
+                                OR m.ModelName LIKE '%' + @Search + '%'
+                                OR CAST(t.RotorOrder AS varchar(50)) LIKE '%' + @Search + '%'
+                              )
+                        ORDER BY t.TransactionID DESC
+                        OFFSET @Offset ROWS
+                        FETCH NEXT @PageSize ROWS ONLY";
+
+            return await SqlDataAccess.GetData<ShopOrderOutModel>(
+                    strsql,
+                    new
+                    {
+                        StartDate = startDate.Date,
+                        EndDate = endDate.Date,
+                        Search = string.IsNullOrWhiteSpace(search) ? null : search,
+                        Offset = offset,
+                        PageSize = pageSize
+                    });
         }
     }
 }

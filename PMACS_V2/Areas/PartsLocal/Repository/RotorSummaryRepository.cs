@@ -1,9 +1,10 @@
 ﻿
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using PMACS_V2.Areas.PartsLocal.Interface;
 using PMACS_V2.Areas.PartsLocal.Model;
 using PMACS_V2.Helper;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace PMACS_V2.Areas.PartsLocal.Repository
 {
@@ -40,32 +41,32 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
             throw new System.NotImplementedException();
         }
 
-        public Task<bool> DeleteTransactionOut(ShopOrderOutModel shop)
-        {
-            throw new System.NotImplementedException();
-        }
 
         public Task<bool> EditTransaction(ShopOrderInModel shop)
         {
             string strsql = $@"UPDATE PartsLocatorRotor_Transaction 
-                              SET RotorOrder =@RotorOrder, Quantity =@Quantity
+                              SET RotorOrder =@RotorOrder, Quantity =@Quantity, 
+                                Remarks =@Remarks
                               WHERE TransactionID =@TransactionID";
 
-            return SqlDataAccess.UpdateInsertQuery(strsql, shop);
+            return SqlDataAccess.UpdateInsertQuery(strsql, new
+            {
+                RotorOrder = shop.RotorOrder,
+                Quantity = shop.Quantity,
+                Remarks = shop.Remarks,
+                TransactionID = shop.TransactionID
+            });
         }
 
-        public Task<bool> EditTransactionOut(ShopOrderOutModel shop)
-        {
-            string strsql = $@"UPDATE PartsLocatorRotor_Transaction 
-                              SET RotorOrder =@RotorOrder, ShopOrder =@_ShopOrder, Quantity =@Quantity,  PlanQuantity =@PlanQuantity, 
-                                  PlanDate =@PlanDate, ModelBase =@ModelBase, Status =@Status, BushType =@BushType        
-                              WHERE TransactionID =@TransactionID";
 
-            return SqlDataAccess.UpdateInsertQuery(strsql, shop);
-        }
-
-        public async Task<IEnumerable<ShopOrderInModel>> GetShopOderInlist()
+        public async Task<IEnumerable<ShopOrderInModel>> GetShopOderInlist(DateTime startDate,
+            DateTime endDate,
+            string search,
+            int pageNumber,
+            int pageSize)
         {
+            int offset = (pageNumber - 1) * pageSize;
+
             string strsql = $@"SELECT t.TransactionID, 
                               FORMAT(t.TransactionDate, 'MM/dd/yy') as TransactionDate,
 	                          FORMAT(t.TransactionDate, 'hh:mm') as TransactionTime
@@ -80,9 +81,28 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                           INNER JOIN PartsLocatorRotor_Masterlist m 
                           ON t.Partnumber = m.Partnumber
                           WHERE  t.TransactionType = 0
-                          ORDER BY t.TransactionID DESC";
+                          AND t.TransactionDate >= @StartDate
+                          AND t.TransactionDate < DATEADD(DAY, 1, @EndDate)
+                          AND (
+                                @Search IS NULL
+                                OR t.Partnumber LIKE '%' + @Search + '%'
+                                OR m.ModelName LIKE '%' + @Search + '%'
+                                OR CAST(t.RotorOrder AS varchar(50)) LIKE '%' + @Search + '%'
+                              )
+                          ORDER BY t.TransactionID DESC
+                          OFFSET @Offset ROWS
+                          FETCH NEXT @PageSize ROWS ONLY";
 
-            return await SqlDataAccess.GetData<ShopOrderInModel>(strsql, null);
+            return await SqlDataAccess.GetData<ShopOrderInModel>(
+                   strsql,
+                   new
+                   {
+                       StartDate = startDate.Date,
+                       EndDate = endDate.Date,
+                       Search = string.IsNullOrWhiteSpace(search) ? null : search,
+                       Offset = offset,
+                       PageSize = pageSize
+                   });
         }
 
       

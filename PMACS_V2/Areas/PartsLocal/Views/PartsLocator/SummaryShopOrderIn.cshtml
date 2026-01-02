@@ -7,7 +7,7 @@
 <section class="table-container">
     <div class="table-header">
         <h3>Shop Order Summary</h3>
-        
+
         <div class="flex_align">
             <button class="btn btn-secondary" id="refreshBtn">
                 <i class="fas fa-sync-alt"></i> Refresh
@@ -34,14 +34,14 @@
             <label class="control-label">
                 <i class="fas fa-calendar"></i> Start Date
             </label>
-            <input type="date" class="date-filter" id="dateFilter">
+            <input type="date" class="date-filter" id="startDate">
         </div>
 
         <div class="control-group">
             <label class="control-label">
                 <i class="fas fa-calendar"></i> End Date
             </label>
-            <input type="date" class="date-filter" id="dateFilter">
+            <input type="date" class="date-filter" id="endDate">
         </div>
 
         <div class="control-group">
@@ -85,7 +85,7 @@
                     <tr>
                         <th>Date Prepared</th>
                         <th>Time </th>
-                        <th>Rotor order Order</th>
+                        <th>Rotor Shop Order</th>
                         <th>FA order Order</th>
                         <th>Plan Quantity</th>
                         <th>Plan Start</th>
@@ -109,14 +109,171 @@
 
 </section>
 
+@*=================================================================================*@
+@*=========================== EDIT SHOP ORDER OUT    ==============================*@
+@*=================================================================================*@
+<div class="modal fade modal-l" id="EditShopOrderOutModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5 id="changeTitle">Shop Order OUT (Edit)</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
 
 
+                <form method="post" enctype="multipart/form-data" class="addformcontainer" id="EditShopOrderOutform" autocomplete="off">
+                    <input type="hidden" name="TransactionID" id="EditOutRecordID" />
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Rotor Shop order <small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <input type="text" placeholder="Enter the Rotor Shop Order" name="RotorOrder" id="EditOutRotorOrder"  />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>FA Shop order <small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <input type="text" placeholder="Enter the FA Shop Order" name="ShopOrder" id="EditOutShopOrder"  />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Plan Quantity <small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <input type="text" placeholder="Enter the Plan Quantity" name="PlanQuantity" id="EditOutPlanQuantity"  />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Model Base <small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <input type="text" placeholder="Enter the ModelBase" name="ModelBase" id="EditOutModelBase"  />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>Status <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                        <div class="select-container">
+                            <select id="EditOutStatus" name="Status" required>
+                                <option value="None">None</option>
+                                <option value="Completely issued">Completely issued</option>
+                                <option value="Partially issued">Partially issued</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>Bush Material <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                        <div class="select-container">
+                            <select id="EditOutBushType" name="BushType" required>
+                                <option value="0">None</option>
+                                <option value="1">PB bush</option>
+                                <option value="2">PB free bush</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div>
+                            <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                        </div>
+                        <button id="btnSave" class="btn-cust-primary"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@*=================================================================================*@
+@*=========================== EDIT SHOP ORDER IN     ==============================*@
+@*=================================================================================*@
+<div class="modal fade modal-l" id="EditShopOrderINModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5 id="changeTitle">Shop Order IN (Edit)</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+
+                <form method="post" enctype="multipart/form-data" class="addformcontainer" id="EditShopOrderInform" autocomplete="off">
+                    <input type="hidden" name="TransactionID" id="EditInRecordID" />
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Rotor Shop order <small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <input type="text" placeholder="Enter the Part No" name="RotorOrder" id="EditInRotorOrder"  />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Quantity	 <small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <input type="text" placeholder="Enter the Part No" name="Quantity" id="EditInQuantity"  />
+                    </div>
+                    
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Remarks	 <small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <input type="text" placeholder="Enter the Part No" name="Remarks" id="EditInRemarks"  />
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div>
+                            <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                        </div>
+                        <button id="btnSave" class="btn-cust-primary"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript">
+    let currentPage = 1;
+    const pageSize = 10;
+    let shopStats = 1;
+    let debounceTimer;
+
+    $("#searchInput").on('keyup', function (e) {
+        e.preventDefault();
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            currentPage = 1;
+            if (shopStats == 0) {
+                GetTransactionSummaryIN();
+                return;
+            }
+            GetTransactionSummaryOUT();
+        }, 400);
+
+    });
+
+    $("#startDate").on('change', function (e) {
+        e.preventDefault();
+        if (shopStats == 0) {
+            GetTransactionSummaryIN();
+            return;
+        }
+        GetTransactionSummaryOUT();
+    });
+
+    $("#endDate").on('change', function (e) {
+        e.preventDefault();
+        if (shopStats == 0) {
+            GetTransactionSummaryIN();
+            return;
+        }
+        GetTransactionSummaryOUT();
+    });
+
     $("#SortByAction").on('change', function (e) {
         e.preventDefault();
-        let val = e.target.value;
-        if (val == 0) {
+        shopStats = e.target.value;
+        if (shopStats == 0) {
             $("#SummaryINdisplay").show();
             $("#SummaryOutdisplay").hide();
         } else {
@@ -130,12 +287,69 @@
         e.preventDefault();
         $("#SummaryINdisplay").hide();
         $("#SummaryOutdisplay").show();
-
     });
 
-    const GetTransactionSummaryIN = async () => {
-        let res = await FetchAuthenticate('@Url.Action("GetTransactionSummaryIn", "PartsLocator")', {});
 
+    $("#EditShopOrderOutform").on('submit', async function (e) {
+        e.preventDefault();
+        let formData = new FormData(this);
+        const data = Object.fromEntries(formData);
+
+        let res = await postData('@Url.Action("EditShopOrderOut", "PartsLocator")', data);
+        if (res && res.Success) {
+            $("#EditShopOrderOutModal").modal('hide');
+
+            if (shopStats == 0) {
+                GetTransactionSummaryIN();
+            } else {
+                GetTransactionSummaryOUT();
+              
+            }
+          
+        }
+    });
+    
+    $("#EditShopOrderInform").on('submit', async function (e) {
+         e.preventDefault();
+         let formData = new FormData(this);
+         const data = Object.fromEntries(formData);
+
+         let res = await postData('@Url.Action("EditShopOrderIn", "PartsLocator")', data);
+         if (res && res.Success) {
+            $("#EditShopOrderINModal").modal('hide');
+ 
+             if (shopStats == 0) {
+                 GetTransactionSummaryIN();
+
+             } else {
+                 GetTransactionSummaryOUT();
+
+             }
+
+         }
+     });
+
+
+    const GetTransactionSummaryIN = async () => {
+         let search = $("#searchInput").val();
+
+         const startDate = $("#startDate").val();
+         const endDate = $("#endDate").val();
+
+         console.log("Sending startDate:", startDate);
+         console.log("Sending endDate:", endDate);
+
+          const params = new URLSearchParams({
+              search: search || "",
+              startDate: startDate || "",
+              endDate: endDate || "",
+              pageNumber: currentPage || 1,
+              pageSize: pageSize || 10
+         });
+
+         const url = `@Url.Action("GetTransactionSummaryIn", "PartsLocator")?${params.toString()}`;
+
+        let res = await FetchAuthenticate(url, {});
         if (res && res.Success) {
               $("#ShopOrderSummaryIn").empty();
               let dataArray = res.Data;
@@ -165,11 +379,24 @@
               // Handle click event for edit button
               $(document).on('click', '.EditToolClick', function (e) {
                   e.stopPropagation();
-                  
+                  const buttonId = $(this).attr('id');
+                  const rowIndex = buttonId.split('_')[1];
+                  let filterdata = dataArray.find(res => res.TransactionID === parseInt(rowIndex));
+
+
+                  if (filterdata) {
+                      $("#EditInRecordID").val(filterdata.TransactionID);
+                      $("#EditInRotorOrder").val(filterdata.RotorOrder);
+                      $("#EditInQuantity").val(filterdata.Quantity);
+                      $("#EditInRemarks").val(filterdata.Remarks);
+
+                      $("#EditShopOrderINModal").modal('show');
+
+                  }
 
               });
 
-              
+
           } else {
                  const loadData = `<tr>
                    <td colspan='9'>
@@ -183,29 +410,58 @@
           }
       }
     const GetTransactionSummaryOUT = async () => {
-        let res = await FetchAuthenticate('@Url.Action("GetTransactionSummaryOut", "PartsLocator")', {});
+        let search = $("#searchInput").val();
+
+        const startDate = $("#startDate").val();
+        const endDate = $("#endDate").val();
+
+        //console.log("Sending startDate:", startDate);
+        //console.log("Sending endDate:", endDate);
+
+         const params = new URLSearchParams({
+            search: search || "",
+            startDate: startDate || "",
+             endDate: endDate || "",
+             pageNumber: currentPage || 1,
+             pageSize: pageSize || 10
+        });
+
+        const url = `@Url.Action("GetTransactionSummaryOut", "PartsLocator")?${params.toString()}`;
+
+        let res = await FetchAuthenticate(url, {});
+
         if (res && res.Success) {
             $("#ShopOrderSummaryOut").empty();
             let dataArray = res.Data;
 
             dataArray.forEach((row, index) => {
+                let strStatus = "";
+
+                if (row.BushType === 0) {
+                    strStatus = "None";
+                } else if (row.BushType === 1) {
+                    strStatus = "PB bush";
+                } else {
+                    strStatus = "PB Free bush";
+                }
+
                 var setdata = `<tr class="fade-in">
                   <td>${row.TransactionDate}</td>
                   <td>${row.TransactionTime}</td>
                   <td style='font-weight: 600;'>${row.RotorOrder}</td>
                   <td style='font-weight: 600;'>${row.ShopOrder}</td>
-                  <td>${row.PlanQuantity}</td>
-                  <td>${row.PlanDate}</td>
+                  <td>${row.PlanQuantity !== null ? row.PlanQuantity : "-"}</td>
+                  <td>${row.PlanDate !== null ? row.PlanDate : "-"}</td>
                   <td>${row.ModelBase}</td>
                   <td style='font-weight: 600;'>${row.Partnumber}</td>
                   <td style='text-align: left; padding-left: 1.5em;'>${row.ModelName}</td>
-                  <td>${row.Area}</td>
+                  <td>${row.Area == 0 ? "N/A" : row.Area}</td>
                   <td>${row.Quantity}</td>
                   <td>${row.Remarks}</td>
                   <td>${row.Status}</td>
-                  <td>${row.BushType}</td>
+                  <td>${strStatus}</td>
                   <td>
-                     <button type='button' class='btn actionicon text-primary EditToolClick' id='editButton_${row.TransactionID}' >
+                     <button type='button' class='btn actionicon text-primary EditToolOOutClick' id='editButton_${row.TransactionID}' >
                         <i class='fa-regular fa-pen-to-square action_btn'></i>
                      </button>
                   </td>
@@ -213,12 +469,56 @@
 
                 $("#ShopOrderSummaryOut").append(setdata);
             });
+
+
+            // Handle click event for edit button
+            $(document).on('click', '.EditToolOOutClick', function (e) {
+                e.stopPropagation();
+                const buttonId = $(this).attr('id');
+                const rowIndex = buttonId.split('_')[1];
+                let filterdata = dataArray.find(res => res.TransactionID === parseInt(rowIndex));
+
+                console.log(filterdata);
+                if (filterdata) {
+                    $("#EditOutRecordID").val(filterdata.TransactionID);
+                    $("#EditOutRotorOrder").val(filterdata.RotorOrder);
+                    $("#EditOutShopOrder").val(filterdata.ShopOrder);
+                    $("#EditOutPlanQuantity").val(filterdata.PlanQuantity);
+                    $("#EditOutModelBase").val(filterdata.ModelBase);
+                    $("#EditOutStatus").val(filterdata.Status);
+                    $("#EditOutBushType").val(filterdata.BushType);
+
+                    $("#EditShopOrderOutModal").modal('show');
+
+                }
+            });
         }
 
     }
 
-    $("#SummaryINdisplay").hide();
-    $("#SummaryOutdisplay").show();
-    GetTransactionSummaryIN();
-    GetTransactionSummaryOUT();
+  
+
+    $(document).ready(function () {
+
+        const now = new Date();
+
+        const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+        const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+        const formatDate = date => date.toISOString().split("T")[0];
+
+        // Set the input values
+        $("#startDate").val(formatDate(firstDay));
+        $("#endDate").val(formatDate(lastDay));
+
+        $("#SummaryINdisplay").hide();
+        $("#SummaryOutdisplay").show();
+        GetTransactionSummaryOUT();
+        GetTransactionSummaryIN();
+
+    });
+
+
+
+
 </script>

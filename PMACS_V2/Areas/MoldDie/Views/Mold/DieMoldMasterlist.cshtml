@@ -8,23 +8,31 @@
     <div class="Mold_ToolHeader flex_space mb-4">
 
         <div class="flex_align">
-            <div class="searchinputContainer">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" placeholder="Search here ... " id="RegisterSearch" />
-                <div class="line"></div>
+            <div class="control-group">
+                <label class="control-label">
+                    <i class="fas fa-calendar"></i>  Search here
+                </label>
+                <div class="search-box">
+                    <input type="text" placeholder="Search here ... " id="RegisterSearch" />
+                </div>
             </div>
-            <div class="select-container">
-                <select id="DescriptionID">
-                  
+
+            <div class="control-group">
+                <label class="control-label">
+                    <i class="fas fa-tags"></i> Filter by Description
+                </label>
+                <select id="DescriptionID" class="filter-select">
+                    <option value="">-- Select Description --</option>
                 </select>
             </div>
+          
         </div>
         <button class="primarybtn" data-bs-toggle="modal" data-bs-target="#AddTooling"><i class="fa-solid fa-plus"></i> Add Data</button>
     </div>
 
 
 
-    <div class="DieMainTable" id="DieWrapper">
+    <div class="TrackTable" id="DieWrapper">
         <table>
             <thead>
                 <tr>
@@ -41,6 +49,7 @@
         </table>
     </div>
 
+    <div id="pagination" style="display: flex; align-items:center; justify-content: center; "></div>
 </section>
 
 <!--########################## Adding Tooling  DATA #############################-->
@@ -164,8 +173,32 @@
 
 
 <script type="text/javascript">
+    let isFirstLoad = true;
+    let currentPage = 1;
+    const pageSize = 50;
+
     let DieMasterlist = [];
     let yearSelect = $("#DescriptionID");
+    let ToolingDisplay = $("#DieMoldToolist");
+
+    let debounceTimer;
+
+    $("#RegisterSearch").on('keyup', () => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            currentPage = 1;
+            GetMoldDieMasterlist();
+        }, 400);
+    });
+
+    $("#DescriptionID").on('change', () => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            currentPage = 1;
+            GetMoldDieMasterlist();
+        }, 400);
+    });
+
 
     $("#addnewform").on('submit', async (e) => {
         e.preventDefault();
@@ -195,7 +228,7 @@
         }
     });
 
-     $("#editnewform").on('submit', async (e) => {
+    $("#editnewform").on('submit', async (e) => {
          e.preventDefault();
         let formData = new FormData(e.target);
 
@@ -226,8 +259,8 @@
 
     const GetMoldieDescription = async () => {
         let res = await fetchData('@Url.Action("GetPartDescription", "Mold")', {});
-        console.log(res);
-          yearSelect.empty();
+
+          //yearSelect.empty();
           $("#PartDescription").empty();
           $.each(res, function (index, year) {
               yearSelect.append(`<option value='${year}'>${year}</option>`);
@@ -240,50 +273,64 @@
     }
 
     const GetMoldDieMasterlist = async () => {
+        let search = $("#RegisterSearch").val();
+        let filterval = $("#DescriptionID").val();
 
-        const id = window.loadingDisplay("DieMoldToolist", 6);
+        const url =
+             `@Url.Action("GetMoldDieMasterList", "Mold")`
+             + `?search=${encodeURIComponent(search)}`
+             + `&filter=${filterval}`
+             + `&page=${currentPage}`
+             + `&pageSize=${pageSize}`;
 
-        if (typeof window.Loadingsteps === "function") {
+        // Clear table only on first load
+        if (isFirstLoad) {
+            $("#DieMoldToolist").empty();
+        }
+
+        let loaderId = null;
+
+
+        if (isFirstLoad && typeof window.Loadingsteps === "function") {
+            const id = window.loadingDisplay("DieMoldToolist", 6);
+
             window.Loadingsteps(id, async () => {
-                let res = await FetchAuthenticate('@Url.Action("GetMoldDieMasterList", "Mold")', {});
-                  if (res && res.Success) {
-                      DieMasterlist = res.Data;
-                      // Loads the First Data
-                      DisplayMasterlist(DieMasterlist);
-                      //$("#Datearrived").on('change', (e) => {
-                      //    const rawDate = e.target.value;
-
-                      //    if (rawDate) {
-                      //        const [year, month, day] = rawDate.split("-");
-                      //        const formatted = `${month}/${day}/${year.slice(-2)}`; // "06/11/25"
-                      //        let filterData = DieTooling.filter(res => res.DateArrived == formatted);
-                      //        DisplayTooling(filterData);
-                      //    } else {
-                      //        DisplayTooling(DieTooling);
-                      //    }
-
-                      //});
-                  } else {
-                      const loadData = `<tr>
-                        <td colspan='9'>
-                            🔍 ${res.Message}
-                        </td>
-                    </tr>`;
-
-                      ToolingDisplay.empty();
-                      ToolingDisplay.append(loadData);
-
-                  }
+                await loadMasterlist(url);
+                isFirstLoad = false; // ✅ turn off loader forever
             });
+        } else {
+            // No loader for filters / pagination
+            await loadMasterlist(url);
         }
     }
+
+    const loadMasterlist = async (url) => {
+        let res = await FetchAuthenticate(url, {});
+                if (res && res.Success) {
+                    DieMasterlist = res.Data.Items;
+                    // Loads the First Data
+                    DisplayMasterlist(DieMasterlist);
+
+                    renderPagination(res.Data);
+                } else {
+                    const loadData = `<tr>
+                 <td colspan='6'>
+                     🔍 ${res?.Message ?? "No data found"}
+                 </td>
+             </tr>`;
+
+            ToolingDisplay.empty();
+            ToolingDisplay.append(loadData);
+            console.clear();
+        }
+    };
 
     function DisplayMasterlist(dataArray) {
         $("#DieMoldToolist").empty();
 
         dataArray.forEach((row, index) => {
             var setdata = `<tr >
-             <td>${row.PartNo}</td>
+             <td style='font-weight: 600;'>${row.PartNo}</td>
              <td>${row.PartDescription}</td>
              <td>${row.Dimension_Quality}</td>
              <td>${row.DieSerial}</td>
@@ -363,6 +410,25 @@
             });
     }
 
+    function renderPagination(data) {
+        const pager = document.getElementById("pagination");
+        pager.innerHTML = "";
+
+        if (data.PageNumber > 1) {
+            pager.innerHTML += `<button onclick="goPage(${data.PageNumber - 1})">Prev</button>`;
+        }
+
+        pager.innerHTML += ` Page ${data.PageNumber} of ${data.TotalRecords} `;
+
+        if (data.PageNumber < data.TotalRecords) {
+            pager.innerHTML += `<button onclick="goPage(${data.PageNumber + 1})">Next</button>`;
+        }
+    }
+
+    function goPage(page) {
+        currentPage = page;
+        GetMoldDieMasterlist();
+    }
     function setDateInput(inputId, dateStr) {
         if (!dateStr) return; // Exit if empty
 

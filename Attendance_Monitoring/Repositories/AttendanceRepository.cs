@@ -45,14 +45,14 @@ namespace Attendance_Monitoring.Repositories
 
             if (selectime == 0)
             {
-                strquery = "SELECT  pc.Date_today, pc.Employee_ID, e.FullName, FORMAT(pc.TimeIn, 'hh:mm:ss tt') as TimeIn, pc.Shifts, pc.LateTime " +
+                strquery = "SELECT pc.RecordID,  pc.Date_today, pc.Employee_ID, e.FullName, FORMAT(pc.TimeIn, 'hh:mm:ss tt') as TimeIn, pc.Shifts, pc.LateTime " +
                            "FROM "+ tbl +" pc INNER JOIN Employee_tbl e ON e.Employee_ID = pc.Employee_ID " +
                            "WHERE CAST(Date_today AS DATE) = @Datetoday AND Shifts = @Shifts ORDER BY " +
                            "RecordID DESC";
             }
             else
             {
-                strquery = "SELECT   pc.Date_today, "+
+                strquery = "SELECT pc.RecordID,   pc.Date_today, " +
                      "pc.Employee_ID, e.FullName, FORMAT(pc.TimeOut, 'hh:mm:ss tt') as TimeIn, " +
                      "pc.Shifts, pc.LateTime FROM " + tbl + " pc INNER JOIN Employee_tbl e ON e.Employee_ID = pc.Employee_ID " +
                      "WHERE CAST(Date_today AS DATE) = '" + dDate +  "' AND pc.TimeOut is Not null AND Shifts = '" + shifts +  "' " +

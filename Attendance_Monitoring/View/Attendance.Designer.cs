@@ -34,12 +34,6 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Attendance));
             this.attendancetable = new System.Windows.Forms.DataGridView();
-            this.Employee_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Date_today = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.FullName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TimeIn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Shifts = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.LateTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Summary_data = new System.Windows.Forms.Button();
             this.EmployID = new System.Windows.Forms.TextBox();
             this.selecttime = new System.Windows.Forms.ComboBox();
@@ -62,6 +56,15 @@
             this.label6 = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.label5 = new System.Windows.Forms.Label();
+            this.RecordID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Employee_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Date_today = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FullName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TimeIn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Shifts = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LateTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Edit = new System.Windows.Forms.DataGridViewImageColumn();
+            this.Delete = new System.Windows.Forms.DataGridViewImageColumn();
             ((System.ComponentModel.ISupportInitialize)(this.attendancetable)).BeginInit();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -96,12 +99,15 @@
             this.attendancetable.ColumnHeadersHeight = 35;
             this.attendancetable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.attendancetable.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.RecordID,
             this.Employee_ID,
             this.Date_today,
             this.FullName,
             this.TimeIn,
             this.Shifts,
-            this.LateTime});
+            this.LateTime,
+            this.Edit,
+            this.Delete});
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -123,50 +129,8 @@
             this.attendancetable.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.attendancetable.Size = new System.Drawing.Size(1094, 310);
             this.attendancetable.TabIndex = 0;
+            this.attendancetable.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.attendancetable_CellClick);
             this.attendancetable.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.Attendancetable_CellFormatting);
-            // 
-            // Employee_ID
-            // 
-            this.Employee_ID.DataPropertyName = "Employee_ID";
-            this.Employee_ID.HeaderText = "ID number";
-            this.Employee_ID.Name = "Employee_ID";
-            this.Employee_ID.ReadOnly = true;
-            // 
-            // Date_today
-            // 
-            this.Date_today.DataPropertyName = "Date_today";
-            this.Date_today.HeaderText = "Date_today";
-            this.Date_today.Name = "Date_today";
-            this.Date_today.ReadOnly = true;
-            this.Date_today.Visible = false;
-            // 
-            // FullName
-            // 
-            this.FullName.DataPropertyName = "FullName";
-            this.FullName.HeaderText = "Employee Name";
-            this.FullName.Name = "FullName";
-            this.FullName.ReadOnly = true;
-            // 
-            // TimeIn
-            // 
-            this.TimeIn.DataPropertyName = "TimeIn";
-            this.TimeIn.HeaderText = "Time check";
-            this.TimeIn.Name = "TimeIn";
-            this.TimeIn.ReadOnly = true;
-            // 
-            // Shifts
-            // 
-            this.Shifts.DataPropertyName = "Shifts";
-            this.Shifts.HeaderText = "Shifts";
-            this.Shifts.Name = "Shifts";
-            this.Shifts.ReadOnly = true;
-            // 
-            // LateTime
-            // 
-            this.LateTime.DataPropertyName = "LateTime";
-            this.LateTime.HeaderText = "Late Time";
-            this.LateTime.Name = "LateTime";
-            this.LateTime.ReadOnly = true;
             // 
             // Summary_data
             // 
@@ -454,6 +418,71 @@
             this.label5.TabIndex = 16;
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // RecordID
+            // 
+            this.RecordID.DataPropertyName = "RecordID";
+            this.RecordID.HeaderText = "RecordID";
+            this.RecordID.Name = "RecordID";
+            this.RecordID.ReadOnly = true;
+            this.RecordID.Visible = false;
+            // 
+            // Employee_ID
+            // 
+            this.Employee_ID.DataPropertyName = "Employee_ID";
+            this.Employee_ID.HeaderText = "ID number";
+            this.Employee_ID.Name = "Employee_ID";
+            this.Employee_ID.ReadOnly = true;
+            // 
+            // Date_today
+            // 
+            this.Date_today.DataPropertyName = "Date_today";
+            this.Date_today.HeaderText = "Date_today";
+            this.Date_today.Name = "Date_today";
+            this.Date_today.ReadOnly = true;
+            this.Date_today.Visible = false;
+            // 
+            // FullName
+            // 
+            this.FullName.DataPropertyName = "FullName";
+            this.FullName.HeaderText = "Employee Name";
+            this.FullName.Name = "FullName";
+            this.FullName.ReadOnly = true;
+            // 
+            // TimeIn
+            // 
+            this.TimeIn.DataPropertyName = "TimeIn";
+            this.TimeIn.HeaderText = "Time check";
+            this.TimeIn.Name = "TimeIn";
+            this.TimeIn.ReadOnly = true;
+            // 
+            // Shifts
+            // 
+            this.Shifts.DataPropertyName = "Shifts";
+            this.Shifts.HeaderText = "Shifts";
+            this.Shifts.Name = "Shifts";
+            this.Shifts.ReadOnly = true;
+            // 
+            // LateTime
+            // 
+            this.LateTime.DataPropertyName = "LateTime";
+            this.LateTime.HeaderText = "Late Time";
+            this.LateTime.Name = "LateTime";
+            this.LateTime.ReadOnly = true;
+            // 
+            // Edit
+            // 
+            this.Edit.DataPropertyName = "Edit";
+            this.Edit.HeaderText = "Edit";
+            this.Edit.Name = "Edit";
+            this.Edit.ReadOnly = true;
+            // 
+            // Delete
+            // 
+            this.Delete.DataPropertyName = "Delete";
+            this.Delete.HeaderText = "Delete";
+            this.Delete.Name = "Delete";
+            this.Delete.ReadOnly = true;
+            // 
             // Attendance
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -514,11 +543,14 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.DataGridViewTextBoxColumn RecordID;
         private System.Windows.Forms.DataGridViewTextBoxColumn Employee_ID;
         private System.Windows.Forms.DataGridViewTextBoxColumn Date_today;
         private System.Windows.Forms.DataGridViewTextBoxColumn FullName;
         private System.Windows.Forms.DataGridViewTextBoxColumn TimeIn;
         private System.Windows.Forms.DataGridViewTextBoxColumn Shifts;
         private System.Windows.Forms.DataGridViewTextBoxColumn LateTime;
+        private System.Windows.Forms.DataGridViewImageColumn Edit;
+        private System.Windows.Forms.DataGridViewImageColumn Delete;
     }
 }

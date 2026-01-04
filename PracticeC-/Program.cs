@@ -145,7 +145,7 @@ namespace PracticeC_
             //string connectionString = "server=SDP0706ES; User ID = p1sa; password=p1sa1234a*; database=PMACS_LIVE; Pooling=True; Min Pool Size=50; Max Pool Size=100;";
             //string connectionString = "server=DESKTOP-FC0UP1P;User ID=PCsystem;password=p1saprocess;database=P1sa;Pooling=True;Min Pool Size=50;Max Pool Size=100;";
             //string connectionString = "server=DESKTOP-FC0UP1P\\SQLEXPRESS;database=PMACS_LIVE;Integrated Security=True;";
-            string connectionString = "server=DESKTOP-FC0UP1P\\SQLEXPRESS;database=PRODCON;Integrated Security=True;";
+            string connectionString = "server=DESKTOP-FC0UP1P\\SQLEXPRESS;database=PMACS_TEST;Integrated Security=True;";
             string base64ConnectionString = Convert.ToBase64String(Encoding.UTF8.GetBytes(connectionString));
 
             // Print the encoded connection string

@@ -73,6 +73,9 @@ namespace Attendance_Monitoring.View
                 itemattends = await _admin.GetAttendanceMonitor(tb, timecheck, shift, selectime);
                 //DataTable dt = await connect.GetData(query);
                 attendancetable.DataSource = itemattends;
+
+                attendancetable.Columns["Edit"].DisplayIndex = 6;
+
                 DisplayTotal.Text = "Total Attendence: " + attendancetable.RowCount;
                 EmployID.Focus();
             }
@@ -539,6 +542,46 @@ namespace Attendance_Monitoring.View
 
             attendancetable.DataSource =  filteredList;
             DisplayTotal.Text = "Total Records: " + attendancetable.RowCount;
+        }
+
+        private void attendancetable_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0)
+                return;
+
+            var column = attendancetable.Columns[e.ColumnIndex];
+            var row = attendancetable.Rows[e.RowIndex];
+
+            var recordID = row.Cells["RecordID"].Value;
+
+            if (column.Name == "Edit")
+            {
+                ChangeTimeIn ch = new ChangeTimeIn(Convert.ToInt32(recordID), this, _serviceProvider);
+                ch.ShowDialog();
+
+            }
+
+
+            if (column.Name == "Delete")
+            {
+                // Handle Delete image click
+                DialogResult result = MessageBox.Show("Are you sure you want to delete?", "Confirm Delete", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                    int selectTime = selecttime.SelectedIndex;
+
+                    if (selectTime > 0)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                        // Remove the row or perform deletion
+                        MessageBox.Show($"Delete clicked on row {e.RowIndex} - Record ID selected:  {recordID}");
+                }
+            }
         }
 
         //public async Task RunningClock()

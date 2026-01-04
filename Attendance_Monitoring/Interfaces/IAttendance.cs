@@ -1,4 +1,5 @@
 ﻿using Attendance_Monitoring.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -17,6 +18,7 @@ namespace Attendance_Monitoring.Repositories
         // UPDATES INTO THE DATABASE
         Task<bool> AttendanceTimeOut(SummaryAttendanceModel attend, string tablename);
 
-       
+        Task<bool> AttendanceDeleteTimeIN(int ID, DateTime dateToday);
+        Task<bool> AttendanceDeleteTimeOut(int ID, DateTime dateToday);
     }
 }

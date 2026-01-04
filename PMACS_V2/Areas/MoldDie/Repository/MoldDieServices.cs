@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Web;
 using PMACS_V2.Areas.MoldDie.Interface;
 using PMACS_V2.Areas.P1SA.Models;
+using PMACS_V2.Areas.PartsLocal.Model;
 using PMACS_V2.Helper;
+using PMACS_V2.Models;
 
 namespace PMACS_V2.Areas.MoldDie.Repository
 {
@@ -21,7 +24,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
              return SqlDataAccess.GetData<string>(@"SELECT 
                                 ISNULL(YEAR(DateAction), YEAR(GETDATE())) AS ActionYear
                             FROM DieMoldMonitor
-                            GROUP BY YEAR(DateAction);");
+                            GROUP BY YEAR(DateAction) ORDER BY ActionYear DESC;");
         }
 
         public Task<List<string>> GetMoldDieDescription()
@@ -105,8 +108,8 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             return totalpart;
         }
         // ===========================================================
-        // MOLD DIE DAILY FUNCTIONALITY
         // ===========================================================
+        // MOLD DIE DAILY FUNCTIONALITY
         public Task<List<DieMoldMonitoringModel>> GetDailyMoldData(int month, int days, int year, string process)
         {
             string filterdays = (days != 0) ? $@"AND DAY(d.DateInput) = {days}" : "";
@@ -146,7 +149,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                         INNER JOIN DieMold_MoldingMainParts p ON d.PartNo = p.PartNo
                         WHERE 
                             d.PartNo = @PartNo AND p.ProcessID = @ProcessID
-                        ORDER BY RecordID DESC", new { PartNo = partnum, ProcessID = processID });
+                        ORDER BY d.RecordID DESC", new { PartNo = partnum, ProcessID = processID });
         }
         
 
@@ -165,7 +168,6 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                 if (IsExist)
                 {
                     var dateOnly = mold.DateInput.Date;
-                    Debug.WriteLine("UPDATE LAST PARTNUMBER ");
                     // Get last total shot
                     int lasttotal = await SqlDataAccess.GetCountData($@"
                     SELECT TOP 1 Total
@@ -179,13 +181,16 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                     int newtotalshot = lasttotal + mold.CycleShot;
                     int UpdateStatus = 0; // 0 = Continue
 
-                    var getData = await GetDailyMoldHistoryData(mold.PartNo, mold.ProcessID);
-                    var partnuminfo = getData.FirstOrDefault();
+                    var partnuminfo = (await GetDailyMoldHistoryData(
+                        mold.PartNo, mold.ProcessID))
+                        .FirstOrDefault();
+
                     if (partnuminfo == null) return false;
 
+                    Debug.WriteLine(partnuminfo.Dimension_Quality);
 
                     string dq = partnuminfo.Dimension_Quality ?? "";
-                    string pid = partnuminfo.ProcessID ?? "";
+                    string pid = mold.ProcessID;
 
 
                     // ===========================
@@ -273,9 +278,9 @@ namespace PMACS_V2.Areas.MoldDie.Repository
 
                     // ===== Step 4: Insert data =====
                     string insertquery = @"
-                INSERT INTO DieMold_Daily
-                (PartNo, DateInput, CycleShot, Total, MachineNo, Remarks, Mincharge, Status)
-                VALUES (@PartNo, @DateInput, @CycleShot, @Total, @MachineNo, @Remarks, @Mincharge, @Status)";
+                            INSERT INTO DieMold_Daily
+                            (PartNo, DateInput, CycleShot, Total, MachineNo, Remarks, Mincharge, Status)
+                            VALUES (@PartNo, @DateInput, @CycleShot, @Total, @MachineNo, @Remarks, @Mincharge, @Status)";
 
                     var parameters = new
                     {
@@ -308,9 +313,9 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                     // INSERT A NEW PARTNUMBER
                     // ===== Step 4: Insert data =====
                     string insertquery = @"
-                INSERT INTO DieMold_Daily
-                (PartNo, DateInput, CycleShot, Total, MachineNo, Remarks, Mincharge, Status)
-                VALUES (@PartNo, @DateInput, @CycleShot, @Total, @MachineNo, @Remarks, @Mincharge, @Status)";
+                        INSERT INTO DieMold_Daily
+                        (PartNo, DateInput, CycleShot, Total, MachineNo, Remarks, Mincharge, Status)
+                        VALUES (@PartNo, @DateInput, @CycleShot, @Total, @MachineNo, @Remarks, @Mincharge, @Status)";
 
                     var parameters = new
                     {
@@ -389,18 +394,51 @@ namespace PMACS_V2.Areas.MoldDie.Repository
         // ===========================================================
         // MOLD DIE TOOLING FUNCTIONALITY
         // ===========================================================
-        public Task<List<DieMoldToolingModelDisplay>> GetMoldToolingData()
+        public async Task<PagedResult<DieMoldToolingModelDisplay>> GetMoldToolingData(
+            string search,
+            string filter,
+            int pageNumber,
+            int pageSize)
         {
+            int offset = (pageNumber - 1) * pageSize;
+            string filterCondition = filter != "" ? $@"AND CAST(t.DateArrived AS DATE) = {filter} " : "";
+
             string strquery = $@"SELECT t.RecordID, t.RegNo, t.PartNo, p.Dimension_Quality, 
-                                t.Item, t.DetailsModify, t.ShotRelease,
-                                t.DateArrived,
-                                t.DateRepair,
-                                t.Incharge, t.Remarks
+                                    t.Item, t.DetailsModify, t.ShotRelease,
+                                    t.DateArrived,
+                                    t.DateRepair,
+                                    t.Incharge, t.Remarks
                                 FROM DieMoldDieTooling t
                                 INNER JOIN DieMold_MoldingMainParts p ON t.PartNo = p.PartNo
-                                ORDER BY t.RecordID DESC";
+                                WHERE (
+                                    @Search IS NULL
+                                    OR t.RegNo LIKE '%' + @Search + '%'
+                                    OR t.PartNo LIKE '%' + @Search + '%'
+                                ) {filterCondition}     
+                                ORDER BY t.RecordID DESC
+                                OFFSET @Offset ROWS
+                                FETCH NEXT @PageSize ROWS ONLY";
 
-            return SqlDataAccess.GetData<DieMoldToolingModelDisplay>(strquery, null);
+            var items = await SqlDataAccess.GetData<DieMoldToolingModelDisplay>(strquery,
+                         new
+                         {
+                             Search = string.IsNullOrWhiteSpace(search) ? null : search,
+                             Offset = offset,
+                             PageSize = pageSize
+                         });
+
+            int TotalRecords = items.Count;
+
+
+
+            return new PagedResult<DieMoldToolingModelDisplay>
+            {
+                Items = items,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalRecords = TotalRecords
+            };
+
         }
 
         public async Task<bool> AddUpdateMoldieTooling(DieMoldToolingModelDisplay mold, int action)
@@ -431,12 +469,44 @@ namespace PMACS_V2.Areas.MoldDie.Repository
         // ===========================================================
         // MOLD DIE MASTERLIST 
         // ===========================================================
-        public Task<List<DieMoldMonitoringModel>> GetMoldieMasterlist()
+        public async Task<PagedResult<DieMoldMonitoringModel>> GetMoldieMasterlist(
+            string search,
+            string filter,
+            int pageNumber,
+            int pageSize)
         {
-             return SqlDataAccess.GetData<DieMoldMonitoringModel>(@"SELECT PartNo,PartDescription
+            int offset = (pageNumber - 1) * pageSize;
+            string filterCondition = filter != "" ? $@"AND PartDescription = '{filter}' " : "";
+
+            var items = await SqlDataAccess.GetData<DieMoldMonitoringModel>($@"
+                                SELECT PartNo,PartDescription
                                       ,Dimension_Quality,DieSerial
                                       ,DieNumber
-                                FROM DieMold_MoldingMainParts", null);
+                                FROM DieMold_MoldingMainParts
+                                WHERE (
+                                    @Search IS NULL
+                                    OR PartNo LIKE '%' + @Search + '%'
+                                    OR DieSerial LIKE '%' + @Search + '%'
+                                ) {filterCondition} 
+                          ORDER BY PartNo
+                          OFFSET @Offset ROWS
+                          FETCH NEXT @PageSize ROWS ONLY",
+                          new
+                          {
+                              Search = string.IsNullOrWhiteSpace(search) ? null : search,
+                              Offset = offset,
+                              PageSize = pageSize
+                          });
+
+            int TotalRecords = items.Count;
+
+            return new PagedResult<DieMoldMonitoringModel>
+            {
+                Items = items,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalRecords = TotalRecords
+            };
         }
 
         public Task<bool> AddUpdateMoldieMasterlist(DieMoldMonitoringModel mold, int action)

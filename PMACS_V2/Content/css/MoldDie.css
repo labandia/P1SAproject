@@ -475,12 +475,12 @@
 
 
 
-        table {
+        /*table {
             width: 100%;
             border-collapse: collapse;
-            background: #fff;
+            background: #fff;*/
             /*box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);*/
-        }
+        /*}
 
         table th {
             background: #f3f3f3;
@@ -497,7 +497,7 @@
             text-align: center;
             color: #222;
             font-size: .835rem;
-        }
+        }*/
 
 
 
@@ -505,10 +505,17 @@
 
 
 
-        /*============================ DIE MOLD DIE  ===============================*/
+     /*============================ DIE MOLD DIE  ===============================*/
+    .DieMainTable {
+        overflow-x: auto;
+        padding: 0;
+        width: 100%;
+    }
+
     .DieMainTable table, .MainTable table {
         width: 100%;
-        table-layout: fixed;
+        border-collapse: collapse;
+        table-layout: auto; /* Auto-adjust based on content */
 /*        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);*/
         text-align: center;
         border: 1px solid #d4d3d3;
@@ -526,6 +533,7 @@
         font-weight: 600;
         cursor: pointer;
         padding: .7em 0;
+          white-space: nowrap;
     }
 
 
@@ -559,6 +567,7 @@
             justify-content: center;
             gap: 10px;
             color: #222;
+            margin-top: 1em;
         }
 
         .paginationPartlocal button {
@@ -644,10 +653,13 @@
         gap: 12px;
     }
 
-  
-    .formcustomgroup{
-        margin-bottom: 1em;
+    .search-container input{
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
     }
+
+  
+    
 
     label {
         font-size: .9rem;
@@ -674,7 +686,7 @@
     .DieMainContainer{
         display: grid;
         grid-template-columns: 20% 1fr;
-        gap: 20px;
+        gap: 30px;
     }
 
 
@@ -773,6 +785,330 @@
          outline: 1px solid var(--primary-color);
     }
 
+        #Originalback{
+            background: #d4d3d3;
+            padding: .2em 1em;
+        }
+        
+        .summary-grid{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+        .summary-label {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .summary-value {
+            padding: 12px 16px 0px 0px;
+        }
+        #partStatus button{
+            padding: .5em 1.5em !important;
+        }
+
+
+
+     /* Controls Section */
+        .controls-section {
+            background: white;
+            border-radius: 12px;
+/*            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);*/
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .control-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .search-box {
+            position: relative !important;
+            width: 100%;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 16px 12px 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: .5em;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background-color: white;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #4361ee;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 16px;
+        }
+
+        .filter-select, .date-filter {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: .5em;
+            font-size: 14px;
+            background-color: white;
+            color: #1e293b;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23494b5f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 16px;
+        }
+
+        .filter-select:focus, .date-filter:focus {
+            outline: none;
+            border-color: #4361ee;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+        }
+
+
+        .status-btn, .status-label{
+            padding: .5em 1em;
+        }
+
+
+
+
+
+
+          /* Table Styling - Full Width with Auto Layout */
+        .TrackTable {
+            overflow-x: auto !important;
+            padding: 0;
+            width: 100%;
+            box-shadow:  0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .TrackTable table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: auto; /* Auto-adjust based on content */
+        }
+
+        .TrackTable thead {
+            background-color: #f1f5f9;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .TrackTable th {
+            padding: 18px 20px;
+            text-align: center;
+            font-weight: 600;
+            color: #334155;
+            font-size: 14px;
+            letter-spacing: 0.03em;
+            border-bottom: 2px solid #e2e8f0;
+            white-space: nowrap;
+        }
+
+        .TrackTable tbody tr td{
+            text-align: center;
+            padding: .5em 1em;
+        }
+        .TrackTable tbody tr {
+            border-bottom: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .TrackTable tbody tr:hover {
+            background-color: #eef2ff;
+        }
+
+
+
+        .actionicon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 8px 10px;
+          border-radius: .2em;
+        }
+
+            .actionicon::before,
+            .actionicon::after {
+                content: none !important;
+
+            }
+
+        .actionicon i {
+          line-height: 1;
+        }
+
+
+
+
+
+
+    /* Input Fields */
+        .formcustomgroup input[type="date"],
+        .formcustomgroup input[type="number"],
+        .formcustomgroup select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #1e293b;
+            background-color: white;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .formcustomgroup select{
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23494b5f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 16px;
+        }
+
+            .Moldformcontaner input[type="date"]:focus,
+            .Moldformcontaner input[type="number"]:focus,
+            .Moldformcontaner select:focus {
+                border-color: hsl(209, 80%, 50%);
+                box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+            }
+
+            .Moldformcontaner input[type="date"]:hover,
+            .Moldformcontaner input[type="number"]:hover,
+            .Moldformcontaner select:hover {
+                border-color: #cbd5e1;
+            }
+
+        /* Placeholder Styling */
+        .Moldformcontaner input::placeholder {
+            color: #94a3b8;
+            font-weight: 400;
+        }
+
+
+        .Moldformcontaner select {
+           appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23494b5f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 16px;
+        }
+
+            .Moldformcontaner select option {
+                padding: 12px;
+                font-size: 14px;
+            }
+
+        /* Number Input Styling */
+        .Moldformcontaner input[type="number"]::-webkit-inner-spin-button,
+        .Moldformcontaner input[type="number"]::-webkit-outer-spin-button {
+            opacity: 1;
+            height: 40px;
+            margin-right: 4px;
+        }
+
+        /* Divider */
+        .Moldformcontaner hr {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #cbd5e1, transparent);
+            margin: 32px 0;
+            position: relative;
+        }
+
+            .Moldformcontaner hr::before {
+                content: '';
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                width: 40px;
+                height: 3px;
+                background: hsl(209, 80%, 50%);
+                border-radius: 2px;
+            }
+
+
+
+        .Moldformcontaner
+        .formcustomgroup {
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+  
+
+        /* Validation States */
+        .formcustomgroup.success input,
+        .formcustomgroup.success select {
+            border-color: #06d6a0;
+        }
+
+        .formcustomgroup label{
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .formcustomgroup.error input,
+        .formcustomgroup.error select {
+            border-color: #ef476f;
+        }
+
+        .formcustomgroup.error .error-message {
+                display: block;
+        }
+        /* Floating Label Effect */
+        .formcustomgroup.focused .form-label {
+            color: #0f68bb;
+        }
+        @media (max-width: 480px) {
+                .formcustomgroup {
+                    margin-bottom: 20px;
+                }
+        }
+
+    /* Form Group with Icon */
+        .formcustomgroup.with-icon {
+            position: relative;
+        }
+
+        .formcustomgroup.with-icon i {
+            position: absolute;
+            left: 16px;
+            top: 40px;
+            color: #94a3b8;
+            font-size: 16px;
+            pointer-events: none;
+        }
+
+        .validate-message{
+            color: #ef476f;
+            font-size: .7rem;
+        }
 
 
 
@@ -784,6 +1120,82 @@
 
 
 
+/* Success Message */
+.success-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #06d6a0;
+    color: white;
+    padding: 16px 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    display: none;
+    align-items: center;
+    gap: 10px;
+    z-index: 1000;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
 
 
+/* Button 2: Pulse with Border */
+.pulse-2 {
+    position: relative;
+    background: transparent;
+    border: 2px solid #c97d0c;
+    color: #c97d0c;
+    box-shadow: 0 0 20px rgba(0, 217, 255, 0.3);
+    animation: pulse-border 1.5s infinite;
+}
 
+
+@keyframes pulse-border {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 152, 0, 0.7);
+    }
+
+    70% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 18px rgba(255, 152, 0, 0);
+    }
+
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 152, 0, 0);
+    }
+}
+
+
+/* Loading State */
+        .primary_button_color.loading {
+            position: relative;
+            color: transparent;
+        }
+
+        .primary_button_color.loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }

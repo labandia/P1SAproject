@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -179,12 +180,15 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
         // ===========================================================
 
         [JwtAuthorize]
-        public async Task<ActionResult> GetMoldDieToolingList()
+        public async Task<ActionResult> GetMoldDieToolingList(
+            string search = "",
+            string filter = "",
+            int page = 1,
+            int pageSize = 50)
         {
-            var data = await _dieV2.GetMoldToolingData() ?? new List<DieMoldToolingModelDisplay>();
+            var data = await _dieV2.GetMoldToolingData(search, filter, page, pageSize);
 
-            if (data == null || !data.Any())
-                return JsonNotFound("No Mold Die Tooling data found");
+            if (data == null && data.Items.Any()) return JsonNotFound("No Mold Die Tooling data found");
 
             return JsonSuccess(data);
         }
@@ -210,12 +214,15 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
         // MOLD DIE MASTERLIST 
         // ===========================================================
         [JwtAuthorize]
-        public async Task<ActionResult> GetMoldDieMasterList()
+        public async Task<ActionResult> GetMoldDieMasterList(
+            string search = "",
+            string filter = "",
+            int page = 1,
+            int pageSize = 50)
         {
-            var data = await _dieV2.GetMoldieMasterlist() ?? new List<DieMoldMonitoringModel>();
+            var data = await _dieV2.GetMoldieMasterlist(search, filter,  page, pageSize);
 
-            if (data == null || !data.Any())
-                return JsonNotFound("No Mold Die Tooling data found");
+            if (data == null && data.Items.Any()) return JsonNotFound("No Mold Die Tooling data found");
 
             return JsonSuccess(data);
         }
@@ -258,16 +265,16 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
 
         public async Task<ActionResult> LoadMoldDieToolingView()
         {
-            var data = await _dieV2.GetMoldToolingData() ?? new List<DieMoldToolingModelDisplay>();
+            //var data = await _dieV2.GetMoldToolingData() ?? new List<DieMoldToolingModelDisplay>();
 
-            var model = new RequestData<DieMoldToolingModelDisplay>
-            {
-                Items = data,
-                Page = 1,
-                TotalPages = 1,
-            };
+            //var model = new RequestData<DieMoldToolingModelDisplay>
+            //{
+            //    Items = data,
+            //    Page = 1,
+            //    TotalPages = 1,
+            //};
 
-            return PartialView("_ToolingTable", model);
+            return PartialView("_ToolingTable", null);
         }
     }
 }

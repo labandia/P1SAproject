@@ -239,7 +239,7 @@
     $("#viewbtn").click(function () {
         localStorage.setItem('UserRole', 'Users');
         localStorage.setItem('Fullname', 'GUEST');
-        window.location.href = "/P1SA/DieMold/DieMoldLife";
+        window.location.href = "/MoldDie/Mold/DieMoldSummary";
     });
 
 
@@ -291,8 +291,7 @@
                              // For Persitent Login
                              localStorage.setItem('loginTime', new Date().toISOString());
                              localStorage.setItem('isLoggedInPMACS', 'true');
-                             //window.location.href = "/P1SA/DieMold/DieMoldLife";
-                             window.location.href = "/MoldDie/Mold/DieMoldLife";
+                             window.location.href = "/MoldDie/Mold/DieMoldSummary";
                          });
                      }, 1000);
                  }

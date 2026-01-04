@@ -21,13 +21,18 @@ namespace Attendance_Monitoring.Models
 
     public class AttendanceModel
     {
+        private int _RecordID;
         private DateTime date_today;
         private string employeeID;
         private string fullname;
         private string timein;
         private string shift;
         private string lateTime;
-
+        public int RecordID
+        {
+            get => _RecordID;
+            set => _RecordID = value;
+        }
 
         public DateTime Date_today
         {

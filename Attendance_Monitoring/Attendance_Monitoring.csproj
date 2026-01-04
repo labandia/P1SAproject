@@ -238,6 +238,12 @@
     <Compile Include="View\Attendance.Designer.cs">
       <DependentUpon>Attendance.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\ChangeTimeIn.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\ChangeTimeIn.Designer.cs">
+      <DependentUpon>ChangeTimeIn.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\CRMainpage.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -348,6 +354,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\Attendance.resx">
       <DependentUpon>Attendance.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\ChangeTimeIn.resx">
+      <DependentUpon>ChangeTimeIn.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\CRMainpage.resx">
       <DependentUpon>CRMainpage.cs</DependentUpon>

@@ -49,7 +49,7 @@ namespace Attendance_Monitoring
             services.AddTransient<AttendanceMain>();
 
             ServiceProvider = services.BuildServiceProvider();
-            var mainForm = ServiceProvider.GetRequiredService<AttendanceMain>();
+            var mainForm = ServiceProvider.GetRequiredService<Selection>();
             Application.Run(mainForm);
         }
     }

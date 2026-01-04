@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using PMACS_V2.Areas.P1SA.Models;
+using PMACS_V2.Areas.PartsLocal.Model;
+using PMACS_V2.Models;
 
 namespace PMACS_V2.Areas.MoldDie.Interface
 {
@@ -32,7 +34,11 @@ namespace PMACS_V2.Areas.MoldDie.Interface
         // ===========================================================
         // MOLD DIE TOOLING DATA 
         // ===========================================================
-        Task<List<DieMoldToolingModelDisplay>> GetMoldToolingData();
+        Task<PagedResult<DieMoldToolingModelDisplay>> GetMoldToolingData(
+            string search,
+            string filter,
+            int pageNumber,
+            int pageSize);
         Task<bool> AddUpdateMoldieTooling(DieMoldToolingModelDisplay mold, int action);
         Task<bool> DeleteMoldieTooling(int ID);
 
@@ -40,7 +46,11 @@ namespace PMACS_V2.Areas.MoldDie.Interface
         // ===========================================================
         // MOLD DIE MASTERLIST 
         // ===========================================================
-        Task<List<DieMoldMonitoringModel>> GetMoldieMasterlist();
+        Task<PagedResult<DieMoldMonitoringModel>> GetMoldieMasterlist(
+              string search,
+              string filter,
+              int pageNumber,
+              int pageSize);
         Task<bool> AddUpdateMoldieMasterlist(DieMoldMonitoringModel mold, int action);
     }
 }

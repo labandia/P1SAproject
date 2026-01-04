@@ -384,10 +384,7 @@
                     + `&page=${currentPage}`
                     + `&pageSize=${pageSize}`;
 
-
-       
-
-
+ 
         let res = await FetchAuthenticate(url, {});
           if (res && res.Success) {
               $("#MasterlistTable").empty();

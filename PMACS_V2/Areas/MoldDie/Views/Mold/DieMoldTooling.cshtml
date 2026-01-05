@@ -387,7 +387,9 @@
                 <button type='button' class='btn actionicon text-primary EditToolClick' id='editButton_${row.RecordID}' >
                    <i class='fa-regular fa-pen-to-square action_btn'></i>
                 </button>
-
+                <button type='button' class='btn actionicon text-danger ToolDeleteClick' id="deleteDailyButton_${row.RecordID}">
+                  <i class="fa-regular fa-trash-can"></i>
+                </button>
 
              </td>
          </tr>;`
@@ -428,7 +430,35 @@
             e.stopPropagation();
             const buttonId = $(this).attr('id');
             const rowIndex = buttonId.split('_')[1];
-            $("#EditTooling").modal("show");
+           
+             Swal.fire({
+                 title: "Are you sure you want to delete this?",
+                 text: "You won't be able to revert this!",
+                 icon: "warning",
+                 showCancelButton: true,
+                 confirmButtonColor: "#3085d6",
+                 cancelButtonColor: "#d33",
+                 confirmButtonText: "Yes, delete it!"
+             }).then( async (result) => {
+                 if (result.isConfirmed) {
+                     let res = await postData('@Url.Action("DeleteMoldDieTooling", "Mold")', { ID: rowIndex });
+                     if (res.Success && res) {
+
+                         Swal.fire({
+                             title: "Success",
+                             text: res.Message,
+                             icon: "success",
+                             confirmButtonColor: "#0d97c9",
+                             timer: 1500
+                         }).then(() => {
+                             GetMoldDieTooling();
+                         });
+
+
+                     }
+                 }
+             });
+
         });
     }
 

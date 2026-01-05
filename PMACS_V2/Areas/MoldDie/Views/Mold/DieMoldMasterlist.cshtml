@@ -73,26 +73,40 @@
                     </div>
 
                     <div class="form_group col-12 col-sm-12 mb-3">
-                        <label class="mb-2">Part No. Description<small style="color: #a81818; font-weight: 600;">*</small></label> <br />                   
+                        <label class="mb-2">Part No. Description<small style="color: #a81818; font-weight: 600;">*</small></label> <br />
                         <div class="select-container" style="width: 100%;">
                             <select id="PartDescription" name="PartDescription">
-                                
                             </select>
                         </div>
                     </div>
                     <div class="form_group col-12 col-sm-12 ">
-                        <label>Dimension Quality <small style="color: #a81818; font-weight: 600;">*</small></label>
-                        <input type="text" placeholder="Enter the Part No" name="Dimension_Quality" id="Dimension_Quality" required />
+                        <label>Dimension Quality <small style="color: #a81818; font-weight: 600;"> *</small></label>
+                        <input type="text" placeholder="Enter the Dimension Quailty" name="Dimension_Quality" id="Dimension_Quality" required />
                     </div>
 
                     <div class="form_group col-12 col-sm-12">
-                        <label>Die Serial<small style="color: #a81818; font-weight: 600;">*</small></label>
-                        <input type="text" placeholder="Enter the Part No" name="DieSerial" id="DieSerial" required />
+                        <label>Die Serial<small style="color: #a81818; font-weight: 600;"> *</small></label>
+                        <input type="text" placeholder="Enter the Die Serial" name="DieSerial" id="DieSerial" required />
                     </div>
                     <div class="form_group col-12 col-sm-12">
-                        <label>Die Number <small style="color: #a81818; font-weight: 600;">*</small></label>
-                        <input type="text" placeholder="Enter the Part No" name="DieNumber" id="DieNumber" required />
+                        <label>Die Number <small style="color: #a81818; font-weight: 600;"> *</small></label>
+                        <input type="number" placeholder="Enter the Die Number" name="DieNumber" id="DieNumber" required />
                     </div>
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label class="mb-2">Select Process <small style="color: #a81818; font-weight: 600;"> *</small></label>
+                        <div class="select-container" style="width: 100%;">
+                            <select id="ProcessID" name="ProcessID">
+                                <option value="M002">Mold  Frame</option>
+                                <option value="M001">ACM</option>
+                                <option value="M003">Mold Impeller</option>
+                                <option value="M004">Slot Insulator </option>
+                                <option value="M005">Stepping Motor</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    
 
                     <div class="d-flex justify-content-between align-items-center mt-4">
                         <div>
@@ -127,8 +141,8 @@
                 <form method="post" enctype="multipart/form-data" class="addformcontainer" id="editnewform" autocomplete="off">
 
                     <div class="form_group col-12 col-sm-12">
-                        <label>Part Number <small style="color: #a81818; font-weight: 600;">*</small></label>
-                        <input type="text" placeholder="Enter the Part No" name="PartNo" id="EditPartNo" required />
+                        <label>Part Number </label>
+                        <input type="text" placeholder="Enter the Part No" name="PartNo" id="EditPartNo" readonly />
                     </div>
 
                     <div class="form_group col-12 col-sm-12 mb-3">
@@ -139,17 +153,17 @@
                         </div>
                     </div>
                     <div class="form_group col-12 col-sm-12 ">
-                        <label>Dimension Quality <small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <label>Dimension Quality </label>
                         <input type="text" placeholder="Enter the Part No" name="Dimension_Quality" id="EditDimension_Quality" required />
                     </div>
 
                     <div class="form_group col-12 col-sm-12">
-                        <label>Die Serial<small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <label>Die Serial</label>
                         <input type="text" placeholder="Enter the Part No" name="DieSerial" id="EditDieSerial" required />
                     </div>
                     <div class="form_group col-12 col-sm-12">
-                        <label>Die Number <small style="color: #a81818; font-weight: 600;">*</small></label>
-                        <input type="text" placeholder="Enter the Part No" name="DieNumber" id="EditDieNumber" required />
+                        <label>Die Number </label>
+                        <input type="number" placeholder="Enter the Part No" name="DieNumber" id="EditDieNumber" required />
                     </div>
 
                     <div class="d-flex justify-content-between align-items-center mt-4">
@@ -203,10 +217,30 @@
     $("#addnewform").on('submit', async (e) => {
         e.preventDefault();
         let formData = new FormData(e.target);
-       const data = Object.fromEntries(formData);
+        const data = Object.fromEntries(formData);
 
-       let res = await postData('@Url.Action("AddMoldDieMasterlist", "Mold")', data);
-        if (res.StatusCode === 201) {
+           // Check for duplicate entry for the same part number on the same date
+         let checkduplicate = await fetchData('@Url.Action("CheckMasterlistMoldExist", "Mold")',
+          {
+             PartNo: data.PartNo
+         });
+
+         if (checkduplicate) {
+                 Swal.fire({
+                     icon: "error",
+                     text: `Partnumber ${data.PartNo} is already Exist `,
+                     timer: 1500,
+                     showConfirmButton: false
+                 });
+                 return;
+         }
+
+
+
+       
+
+        @*let res = await postData('@Url.Action("AddMoldDieMasterlist", "Mold")', data);
+        if (res && res.Success) {
             Swal.fire({
                 title: "Success",
                 text: res.Message,
@@ -215,24 +249,24 @@
                 timer: 1500
             }).then(() => {
                 GetMoldDieMasterlist();
+                $("#AddTooling").modal('hide');
                 $("#addnewform")[0].reset();
-                $("#AddTooling").modal("hide");
             });
         } else {
             Swal.fire({
                 icon: "error",
-                text: data.ToolNo + " is already Exist",
+                text: res?.Message ?? "Add data Failed",
                 timer: 1500,
                 showConfirmButton: false
             });
-        }
+        }*@
     });
 
     $("#editnewform").on('submit', async (e) => {
          e.preventDefault();
         let formData = new FormData(e.target);
 
-         const data = Object.fromEntries(formData);
+        const data = Object.fromEntries(formData);
 
         let res = await postData('@Url.Action("UpdateMoldMasterlist", "Mold")', data);
          if (res.StatusCode === 201) {
@@ -244,13 +278,13 @@
                  timer: 1500
              }).then(() => {
                  GetMoldDieMasterlist();
+                 $("#EditTooling").modal('hide');
                  $("#editnewform")[0].reset();
-                 $("#EditTooling").modal("hide");
              });
          } else {
              Swal.fire({
                  icon: "error",
-                 text: data.ToolNo + " is already Exist",
+                 text: res?.Message ?? "Update data Failed",
                  timer: 1500,
                  showConfirmButton: false
              });
@@ -389,7 +423,7 @@
                     confirmButtonText: "Yes, delete it!"
                 }).then( async (result) => {
                     if (result.isConfirmed) {
-                        let res = await postData('@Url.Action("DeleteDailyMoldDieMonitor", "Mold")', { ID: rowIndex });
+                        let res = await postData('@Url.Action("DeleteMoldMasterlist", "Mold")', { partno: rowIndex });
                         if (res.Success && res) {
 
                             Swal.fire({
@@ -399,7 +433,8 @@
                                 confirmButtonColor: "#0d97c9",
                                 timer: 1500
                             }).then(() => {
-                                SearchMoldiePartno();
+                                $("#RegisterSearch").val("");
+                                GetMoldDieMasterlist();
                             });
 
 

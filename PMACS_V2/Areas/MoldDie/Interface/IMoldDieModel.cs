@@ -51,6 +51,9 @@ namespace PMACS_V2.Areas.MoldDie.Interface
               string filter,
               int pageNumber,
               int pageSize);
+        Task<bool> CheckMoldieMasterlist(string partno);
+
         Task<bool> AddUpdateMoldieMasterlist(DieMoldMonitoringModel mold, int action);
+        Task<bool> DeleteMoldieMasterlist(string partno);
     }
 }

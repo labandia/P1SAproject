@@ -71,7 +71,20 @@
         </div>
 
         <div class="TableCharts">
-            <h1>Charts herer</h1>
+            @*<h1>Charts herer</h1>*@
+            <div class="DieMainTable">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Category </th>
+                            <th>No of Die </th>
+                        </tr>
+                    </thead>
+                    <tbody id="FinalSummaryData">
+
+                    </tbody>
+                </table>
+            </div>
         </div>
 
     </div>
@@ -157,12 +170,18 @@
     //===============================================================
     const GetMoldieYears = async () => {
         let res = await fetchData('@Url.Action("GetYearMoldDie", "Mold")', {});
+        const newyear = new Date().getFullYear();
 
-            yearSelect.empty();
+        yearSelect.empty();
+        if (res.length > 0) {
             $.each(res, function (index, year) {
                 yearSelect.append(`<option value='${year}'>${year}</option>`);
             });
-
+        } else {
+            yearSelect.append(`<option value='${newyear}'>${newyear}</option>`);
+        }
+       
+         
         // select the first option automatically
         yearSelect.prop('selectedIndex', 0);
     }
@@ -170,14 +189,14 @@
         SummaryData = [];
         FinalSummaryData = [];
         $("#SummarylistData").empty();
+        $("#FinalSummaryData").empty();
         // Loads the year First
         await GetMoldieYears();
 
         // Starts the loading screen
         const id = window.loadingDisplay("SummarylistData", 7);
 
-        const year = yearSelect.val();
-
+        const year = yearSelect.val() ?? new Date().getFullYear();
         let obj = {
             Months: $("#monthSelect").val(),
             Year: year,
@@ -185,10 +204,13 @@
         };
 
         if (typeof window.Loadingsteps === "function") {
-             window.Loadingsteps(id, async () => {
+            window.Loadingsteps(id, async () => {
+                TableDisplay.empty(); // Removing the Loading Display
+
+
                  let res = await FetchAuthenticate('@Url.Action("GetMoldDieSummaryList", "Mold")', obj);
                      if (res && res.Success) {
-                         TableDisplay.empty(); // Removing the Loading Display
+                     
 
                          SummaryData = res.Data.FinalSummary;
                          FinalSummaryData = res.Data.MoldDieSummary;
@@ -211,7 +233,7 @@
                      } else {
                          const loadData = `<tr>
                                          <td colspan='7'>
-                                             🔍 ${res.Message}
+                                             🔍 ${res?.Message ?? "No data found"}
                                          </td>
                                      </tr>`;
 
@@ -225,7 +247,7 @@
 
     const GetMoldDieMontly = async () => {
             MonthlyData = [];
-        $("#DieMoldMonthly").empty();
+            $("#DieMoldMonthly").empty();
             // Loads the year First
             await GetMoldieYears();
 
@@ -243,7 +265,7 @@
             if (typeof window.Loadingsteps === "function") {
                  window.Loadingsteps(id, async () => {
                      let res = await FetchAuthenticate('@Url.Action("GetMoldDieMonthlyList", "Mold")', obj);
-                     console.log(res);
+
                          if (res && res.Success) {
                              MonthDisplay.empty(); // Removing the Loading Display
 
@@ -253,7 +275,7 @@
                          } else {
                              const loadData = `<tr>
                                              <td colspan='7'>
-                                                 🔍 ${res.Message}
+                                                 🔍 ${res?.Message ?? "No data found"}
                                              </td>
                                          </tr>`;
 
@@ -424,15 +446,7 @@
                 // Add event listener for search input
                 $('#Summarysearchbox').on('input', searchTable);
 
-                // Handle click event for edit button
-                $(document).on('click', '.rowClick', function (e) {
-                    e.stopPropagation();
-                    const buttonId = $(this).attr('id');
-                    const rowIndex = buttonId.split('_')[1];
-                    const result = TableData.find(p => p.RecordID == rowIndex);
-
-                });
-
+              
 
                 // Initialize table and pagination
                 window.SummarychangePage = SummarychangePage;

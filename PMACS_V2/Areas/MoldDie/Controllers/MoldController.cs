@@ -104,11 +104,11 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
         }
         // ===========================================================
         // MOLD DIE DAILY FUNCTIONALITY
-        // ===========================================================
+        // ============================================================
         [JwtAuthorize]
         public async Task<ActionResult> GetMoldDieDailyList(int Months, int Year, string ProcessID, int Days)
         {
-
+            Debug.WriteLine($@"Months : {Months} - Year : {Year} - Process : {ProcessID} Days : {Days}");
             var data = await _dieV2.GetDailyMoldData(Months, Days, Year, ProcessID) ?? new List<DieMoldMonitoringModel>();
 
             if (data == null || !data.Any())
@@ -120,7 +120,7 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
         [HttpGet]
         public async Task<ActionResult> SearchMoldieDaily(string ProcessID, string SearchInput)
         {
-
+        
             //Run tasks in parallel for better performance
             var datalistTask = await _dieV2.GetDailyMoldHistoryData(SearchInput, ProcessID);
             var detailsTask = datalistTask.FirstOrDefault();
@@ -210,9 +210,25 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
 
             return JsonCreated(add, "Update Data Successfully");
         }
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteMoldDieTooling(int ID)
+        {
+            bool update = await _dieV2.DeleteMoldieTooling(ID);
+            if (!update) return JsonValidationError();
+
+            return JsonCreated(update, "Delete Data Successfully");
+        }
         // ===========================================================
         // MOLD DIE MASTERLIST 
         // ===========================================================
+        [HttpGet]
+        public async Task<JsonResult> CheckMasterlistMoldExist(string PartNo)
+        {
+            bool result = await _dieV2.CheckMoldieMasterlist(PartNo);
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
         [JwtAuthorize]
         public async Task<ActionResult> GetMoldDieMasterList(
             string search = "",
@@ -244,6 +260,14 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
             return JsonCreated(add, "Update Data Successfully");
         }
 
+        [HttpPost]
+        public async Task<ActionResult> DeleteMoldMasterlist(string partno)
+        {
+            bool update = await _dieV2.DeleteMoldieMasterlist(partno);
+            if (!update) return JsonValidationError();
+
+            return JsonCreated(update, "Update Data Successfully");
+        }
 
 
         // GET: P1SA/DieMold

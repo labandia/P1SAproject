@@ -349,6 +349,7 @@
 
 <script type="text/javascript">
     let isFirstLoad = true;
+    let isYearLoad = true;
     // Loads the year and month select options
     initMonthSelect("monthSelectDaily", true);
 
@@ -387,7 +388,7 @@
 
            // Check for duplicate entry for the same part number on the same date
          let checkduplicate = await fetchData('@Url.Action("CheckDialyMoldExist", "Mold")',
-             {
+          {
              PartNo: data.PartNo,
              DateInput: data.DateInput
          });
@@ -482,14 +483,30 @@
         GetMoldDieDaily(month, GetRow, $("#DailyProcess").val());
     });
 
+    $("#DailyProcess").on('change', (e) => {
+        e.preventDefault();
+    
+        console.log("HERE");
+
+        const month = $("#monthSelectDaily").val();
+        const day = getSelectedDay();
+        const process = $("#DailyProcess").val();
+        //console.log("month" + month);
+        //console.log("day" + day);
+        //console.log("process" + process);
+
+        GetMoldDieDaily(month, day, process);
+      
+    })
+
 
     $("#monthSelectDaily").on('change', (e) => {
         e.preventDefault();
         let month = e.target.value;
         let dateValue = dateInput.value;
         GetRow = parseInt(dateValue.split("-")[2], 10);
-
-        GetMoldDieDaily(month, GetRow, $("#DailyProcess").val());
+        console.log("HERE" + month);
+        //GetMoldDieDaily(month, GetRow, $("#DailyProcess").val());
     })
 
     $("#yearselectDaily").on('change', (e) => {
@@ -499,9 +516,23 @@
         let dateValue = dateInput.value;
         GetRow = parseInt(dateValue.split("-")[2], 10);
 
-        $("#MonthHeader").text(months[month - 1]);
         GetMoldDieDaily(month, GetRow, $("#DailyProcess").val());
     })
+
+    const  reloadDailyData = (e) => {
+        const month = $("#monthSelectDaily").val();
+        const day = getSelectedDay();
+        const process = $("#DailyProcess").val();
+
+      
+
+        GetMoldDieDaily(month, day, process);
+    };
+    function getSelectedDay() {
+        if (!dateInput.value) return 0;
+        const parts = dateInput.value.split("-");
+        return parts.length === 3 ? parseInt(parts[2], 10) : 0;
+    }
     //===============================================================
 
      // Search functionality
@@ -832,7 +863,10 @@
         $("#DailySummary").show();
         $("#DailyInputs").hide();
 
-        await GetMoldieYears();
+        if (isYearLoad) {
+            await GetMoldieYears();
+        }
+
 
         const year = yearSelect.val() === null || yearSelect.val() === ""
             ? currentYear
@@ -859,7 +893,7 @@
             window.Loadingsteps(id, async () => {
                 await loadMasterlist("", data);
                 isFirstLoad = false; // ✅ turn off loader forever
-
+                isYearLoad = false;
             });
         } else {
             // No loader for filters / pagination
@@ -872,7 +906,6 @@
         $("#DieMoldDaily").empty();
 
         let res = await FetchAuthenticate('@Url.Action("GetMoldDieDailyList", "Mold")', data);
-        console.log(res);
          if (res && res.Success) {
               //DieTooling = res.Data;
               DailyData = res.Data;

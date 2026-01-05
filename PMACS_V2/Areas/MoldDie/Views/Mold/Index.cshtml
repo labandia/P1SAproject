@@ -99,7 +99,6 @@
         <span>© 2024 P1SA - Process Control All rights reserved.</span>
 
     </footer>
-    <span class="version">PMACS ver. @ViewData["Version"]</span>
 </section>
 
 <div id="notification" class="notification">
@@ -142,7 +141,7 @@
 
 
     const LoadUsers = async () => {
-        let res = await fetchData('@Url.Action("GetFullnameList", "PMACS")', {});
+        let res = await fetchData('/PMACS/GetFullnameList', {});
         if (res && res.Success) {
             loadData = res.Data;
             loadData = loadData.map(function (item) {
@@ -356,6 +355,6 @@
     $(document).ready(() => { LoadPageData(); });
 
 
-    
+
 </script>
 

@@ -5,10 +5,8 @@ using System.Drawing.Printing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using System.Web;
 using PMACS_V2.Areas.MoldDie.Interface;
 using PMACS_V2.Areas.P1SA.Models;
-using PMACS_V2.Areas.PartsLocal.Model;
 using PMACS_V2.Helper;
 using PMACS_V2.Models;
 
@@ -112,6 +110,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
         // MOLD DIE DAILY FUNCTIONALITY
         public Task<List<DieMoldMonitoringModel>> GetDailyMoldData(int month, int days, int year, string process)
         {
+            Debug.WriteLine($@"Month : {month} - Days : {days} - Year : {year} - Process : {process}");
             string filterdays = (days != 0) ? $@"AND DAY(d.DateInput) = {days}" : "";
 
             return SqlDataAccess.GetData<DieMoldMonitoringModel>($@"SELECT 
@@ -131,7 +130,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
 					        AND YEAR(d.DateInput) = @year
 					        {filterdays}      
 					        AND p.ProcessID = @process 
-                        ORDER BY RecordID DESC", new { process = process, month = month, year = year });
+                        ORDER BY d.RecordID DESC", new { process = process, month = month, year = year });
         }
         public Task<List<DieMoldMonitoringModel>> GetDailyMoldHistoryData(string partnum, string processID)
         {
@@ -410,7 +409,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                                     t.Incharge, t.Remarks
                                 FROM DieMoldDieTooling t
                                 INNER JOIN DieMold_MoldingMainParts p ON t.PartNo = p.PartNo
-                                WHERE (
+                                WHERE t.IsDeleted = 0 AND  (
                                     @Search IS NULL
                                     OR t.RegNo LIKE '%' + @Search + '%'
                                     OR t.PartNo LIKE '%' + @Search + '%'
@@ -463,12 +462,19 @@ namespace PMACS_V2.Areas.MoldDie.Repository
         }
         public Task<bool> DeleteMoldieTooling(int ID)
         {
-            throw new NotImplementedException();
+            return SqlDataAccess.UpdateInsertQuery("UPDATE DieMoldDieTooling SET IsDeleted = 1 WHERE RecordID =@RecordID", new { RecordID = ID });
         }
 
         // ===========================================================
         // MOLD DIE MASTERLIST 
         // ===========================================================
+        public Task<bool> CheckMoldieMasterlist(string partno)
+        {
+            return SqlDataAccess.Checkdata($@"SELECT COUNT(PartNo) FROM DieMold_MoldingMainParts 
+                                        WHERE PartNo =@PartNo",
+                           new { PartNo = partno });
+        }
+
         public async Task<PagedResult<DieMoldMonitoringModel>> GetMoldieMasterlist(
             string search,
             string filter,
@@ -488,9 +494,9 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                                     OR PartNo LIKE '%' + @Search + '%'
                                     OR DieSerial LIKE '%' + @Search + '%'
                                 ) {filterCondition} 
-                          ORDER BY PartNo
-                          OFFSET @Offset ROWS
-                          FETCH NEXT @PageSize ROWS ONLY",
+                              ORDER BY PartNo
+                              OFFSET @Offset ROWS
+                              FETCH NEXT @PageSize ROWS ONLY",
                           new
                           {
                               Search = string.IsNullOrWhiteSpace(search) ? null : search,
@@ -513,8 +519,8 @@ namespace PMACS_V2.Areas.MoldDie.Repository
         {
             if(action == 0)
             {
-                string insertquery = @"INSERT INTO DieMold_MoldingMainParts(PartNo, PartDescription, Dimension_Quality, DieSerial, DieNumber)
-                                   VALUES(@PartNo, @PartDescription, @Dimension_Quality, @DieSerial, @DieNumber)";
+                string insertquery = @"INSERT INTO DieMold_MoldingMainParts(PartNo, PartDescription, Dimension_Quality, DieSerial, DieNumber, ProcessID)
+                                   VALUES(@PartNo, @PartDescription, @Dimension_Quality, @DieSerial, @DieNumber, @ProcessID)";
                 return SqlDataAccess.UpdateInsertQuery(insertquery, mold, "MoldieMasterlist");
             }
             else
@@ -538,6 +544,11 @@ namespace PMACS_V2.Areas.MoldDie.Repository
         public Task<bool> UpdateDailyLastCycle(int recordID, int lastcycle)
         {
             throw new NotImplementedException();
+        }
+
+        public Task<bool> DeleteMoldieMasterlist(string partno)
+        {
+            return SqlDataAccess.UpdateInsertQuery("DELETE FROM DieMold_MoldingMainParts WHERE PartNo =@PartNo", new { PartNo = partno });
         }
 
        

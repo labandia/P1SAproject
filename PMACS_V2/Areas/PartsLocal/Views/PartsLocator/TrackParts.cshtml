@@ -150,7 +150,7 @@
 @*=================================================================================*@
 @*=========================== SHOP ORDER IN =====================================*@
 @*=================================================================================*@
-<div class="modal fade modal-l" id="ShowShopOrderIN" tabindex="-1" role="dialog" data-bs-backdrop="static">
+<div class="modal fade modal-lg" id="ShowShopOrderIN" tabindex="-1" role="dialog" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
 
@@ -162,6 +162,8 @@
                         <span>&times;</span>
                     </button>
                 </div>
+
+                <hr />
 
 
                 <div class="stepper" id="validationStepper">
@@ -188,20 +190,39 @@
 
                         <!-- Step 2: Profile Information -->
                         <div class="stepper-pane" id="validation-step-2">
-                            <form class="row g-3 mb-4" id="ShopOrderInForm">
-                                <div class="col-md-6">
-                                    <label for="validationLastName" class="form-label">Input by :</label>
-                                    <input type="text" class="form-control" name="Remarks" required>
+                            <div class="pane-header">
+                                <h3>Shop Order Details</h3>
+                                <p>Provide the shop order information for monitoring purposes.</p>
+                            </div>
 
-                                </div>
-                                <div class="col-12">
-                                    <label for="validationPhone" class="form-label">Rotor Shop Order : </label>
-                                    <input type="text" class="form-control" name="RotorOrder" required>
+                            <div class="shop-order-form">
+                                <form class="row g-3 mb-4" id="ShopOrderInForm">
+                                    <div class="form-row">
+                                        <div class="form-col">
+                                            <div class="form-group">
+                                                <label for="inputBy" class="form-label">
+                                                    <i class="fas fa-user"></i> Input By
+                                                </label>
+                                                <input type="text" class="form-control" id="inputBy" name="Remarks" placeholder="Enter your name" required>
+                                            </div>
+                                        </div>
 
-                                </div>
-                            </form>
+                                        <div class="form-col">
+                                            <div class="form-group">
+                                                <label for="rotorOrder" class="form-label">
+                                                    <i class="fas fa-cogs"></i> Rotor Shop Order
+                                                </label>
+                                                <input type="text" class="form-control" id="rotorOrder" name="RotorOrder" placeholder="Enter rotor order number" required>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+
+                               
+                            </div>
                         </div>
-                    </div>
 
                     <div class="stepper-actions">
                         <div class="step-indicators">

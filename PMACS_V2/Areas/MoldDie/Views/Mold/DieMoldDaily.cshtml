@@ -473,58 +473,18 @@
     //===============================================================
     //==================== FILTER DATA ==============================
     //===============================================================
-    dateInput.addEventListener('change', function (e) {
-        e.preventDefault();
-        // Get the day part only
-        let month = $("#monthSelectDaily").val();
-        let dateValue = dateInput.value;
-        GetRow = parseInt(dateValue.split("-")[2], 10);
+    dateInput.addEventListener('change', reloadDailyData);
 
-        GetMoldDieDaily(month, GetRow, $("#DailyProcess").val());
-    });
+    $("#DailyProcess").on('change', reloadDailyData);
 
-    $("#DailyProcess").on('change', (e) => {
-        e.preventDefault();
-    
-        console.log("HERE");
+    $("#monthSelectDaily").on('change', reloadDailyData);
 
+    $("#yearselectDaily").on('change', reloadDailyData);
+
+    function reloadDailyData() {
         const month = $("#monthSelectDaily").val();
         const day = getSelectedDay();
         const process = $("#DailyProcess").val();
-        //console.log("month" + month);
-        //console.log("day" + day);
-        //console.log("process" + process);
-
-        GetMoldDieDaily(month, day, process);
-      
-    })
-
-
-    $("#monthSelectDaily").on('change', (e) => {
-        e.preventDefault();
-        let month = e.target.value;
-        let dateValue = dateInput.value;
-        GetRow = parseInt(dateValue.split("-")[2], 10);
-        console.log("HERE" + month);
-        //GetMoldDieDaily(month, GetRow, $("#DailyProcess").val());
-    })
-
-    $("#yearselectDaily").on('change', (e) => {
-        e.preventDefault();
-        let month = $("#monthSelectDaily").val();
-        let year = e.target.value;
-        let dateValue = dateInput.value;
-        GetRow = parseInt(dateValue.split("-")[2], 10);
-
-        GetMoldDieDaily(month, GetRow, $("#DailyProcess").val());
-    })
-
-    const  reloadDailyData = (e) => {
-        const month = $("#monthSelectDaily").val();
-        const day = getSelectedDay();
-        const process = $("#DailyProcess").val();
-
-      
 
         GetMoldDieDaily(month, day, process);
     };

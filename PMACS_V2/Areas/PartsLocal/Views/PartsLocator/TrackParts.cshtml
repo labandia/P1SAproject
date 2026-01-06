@@ -305,15 +305,33 @@
                                             <label for="PreparedBy" class="form-label">Prepared by:</label>
                                             <input type="text" placeholder="Enter your Name or ID Number" class="form-control" name="Remarks" required>
                                         </div>
+
+                                        <div class="col-6">
+                                            <label for="RotorShopOrder" class="form-label">Rotor Shop Order:</label>
+                                            <input type="text" placeholder="Enter Rotor Shop Order" class="form-control" name="RotorOrder" required>
+                                        </div>
+
                                         <div class="col-md-6">
                                             <label for="FAShopOrder" class="form-label">FA Shop Order:</label>
                                             <input type="text" placeholder="Enter Shop Order" class="form-control" name="ShopOrder" required>
                                         </div>
 
                                         <div class="col-md-6">
+                                            <label for="ModelBase" class="form-label">Model Base:</label>
+                                            <input type="text" placeholder="Enter Model Base" class="form-control" name="ModelBase" required>
+                                        </div>
+
+                                        <div class="col-md-6">
                                             <label for="PlanQuantity" class="form-label">Plan Quantity:</label>
                                             <input type="number" placeholder="Enter Plan Quantity" class="form-control" name="PlanQuantity" required>
                                         </div>
+
+                                        <div class="col-md-6">
+                                            <label for="PlanStart" class="form-label">Plan Start:</label>
+                                            <input type="date" class="form-control" name="PlanDate" required>
+                                        </div>
+
+
                                         <div class="col-md-6">
                                             <label for="Status" class="form-label">Status:</label>
                                             <select class="form-control" name="Status" required>
@@ -323,21 +341,8 @@
                                             </select>
                                         </div>
 
-                                        <div class="col-12">
-                                            <label for="RotorShopOrder" class="form-label">Rotor Shop Order:</label>
-                                            <input type="text" placeholder="Enter Rotor Shop Order" class="form-control" name="RotorOrder" required>
-                                        </div>
 
-                                        <div class="col-md-6">
-                                            <label for="ModelBase" class="form-label">Model Base:</label>
-                                            <input type="text" placeholder="Enter Model Base" class="form-control" name="ModelBase" required>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="PlanStart" class="form-label">Plan Start:</label>
-                                            <input type="date"  class="form-control" name="PlanDate" required>
-                                        </div>
-
-                                        <div class="col-12">
+                                        <div class="col-6">
                                             <label for="BushMaterial" class="form-label">Bush Material:</label>
                                             <select class="form-control" name="BushType" required>
                                                 <option value="0">None</option>

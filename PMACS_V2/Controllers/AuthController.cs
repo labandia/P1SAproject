@@ -8,22 +8,26 @@ using PMACS_V2.Interface;
 using PMACS_V2.Helper;
 using ProgramPartListWeb.Helper;
 using PMACS_V2.Utilities.Security;
+using System.Diagnostics;
+using PMACS_V2.Models;
 
 
 namespace PMACS_V2.Controllers
 {
     public class AuthController : ExtendController
     {
-        private readonly IUserRepository _user;
+        private readonly IAuthRepository _auth;
 
-        public AuthController(IUserRepository user) => _user = user;
+        public AuthController(IAuthRepository auth) => _auth = auth;
 
         [AllowAnonymous]
         [RateLimiting(5, 1)]
         [HttpPost]
-        public async Task<ActionResult> Authenticate(string username, string password)
+        public async Task<ActionResult> Authenticate(string username, string password, int proj = 1)
         {
-            var user = (await _user.LoginCredentials(username)).FirstOrDefault();
+            var user = (await _auth.GetByUsername(username.Trim(), proj)).FirstOrDefault();
+            var results = new DataMessageResponse<object> { };
+
             // Check if user Exist
             if (user == null)
                 return JsonPostError("Invalid credentials / Username Doesnt is Exist", 400, "VALIDATION_ERROR");
@@ -32,14 +36,14 @@ namespace PMACS_V2.Controllers
                 return JsonPostError("Invalid credentials / password is incorrect", 400, "VALIDATION_ERROR");
 
             // Get the Role name 
-            string role = GlobalUtilities.UserRolesname(user.Role_ID);
+            string role = _auth.GetuserRolename(user.Role_ID);
             string fullname = user.Fullname;
 
             // Generate token for accesstoken and refreshtoken
             var accessToken = JWTAuthentication.GenerateAccessToken(fullname, role, user.User_ID);
-            var refreshToken = JWTAuthentication.GenerateRefreshToken(fullname, role, user.User_ID);
+            var refreshToken = _auth.GetRefreshToken(fullname, role, user.User_ID);
 
-            var data = new { access_token = accessToken, refresh_token = refreshToken, fullname, role };
+            var data = new { access_token = accessToken, refresh_token = refreshToken, fullname, role, user.User_ID };
 
             return JsonSuccess(data, "Login Success");   
 

@@ -156,6 +156,7 @@ namespace PMACS_V2
             var container = new UnityContainer();
 
             // Register Repository Interface with Implementation
+            container.RegisterType<IAuthRepository, AuthRepository>();
             container.RegisterType<IUserRepository, UserRespository>();
             container.RegisterType<IProducts, RotorProductRepository>();
 

@@ -53,7 +53,15 @@ namespace FootWristStrapsAnalysis.Services
 
         public Task<bool> ImportSetFootAnalysis(IFootWristModel foot)
         {
-            string insertQuery = @"
+            string sql = @"
+                IF NOT EXISTS
+                (
+                    SELECT 1
+                    FROM FootWristStrapTestResults
+                    WHERE EmployeeID = @EmployeeID
+                      AND CAST(TestDate AS DATE) = CAST(@TestDate AS DATE)
+                )
+                BEGIN
                     INSERT INTO FootWristStrapTestResults
                     (
                         TestDate,
@@ -93,10 +101,12 @@ namespace FootWristStrapsAnalysis.Services
                         @EvaluationExternalOutput,
                         @FG470,
                         @Note
-                    );";
+                    );
+                END";
 
-             return SqlDataAccess.UpdateInsertQuery(insertQuery, foot);
+            return SqlDataAccess.UpdateInsertQuery(sql, foot);
         }
+
 
         public Task<bool> CheckIfEmployeeIDImportToday(string EmployeeID, DateTime today)
         {

@@ -9,10 +9,9 @@ namespace PMACS_V2.Interface
 {
     public interface IAuthRepository
     {
-        Task<List<AuthModel>> GetByUsername(string username);
-        string GetRefreshToken(int userId);
-        void RevokeRefreshToken(int userId);
-
+        Task<List<AuthModel>> GetByUsername(string username, int proj);
+        string GetRefreshToken(string fullname, string role, int userId);
         string GetuserRolename(int roleid);
+        bool VerifyPassword(string enteredPassword, string storedHash);
     }
 }

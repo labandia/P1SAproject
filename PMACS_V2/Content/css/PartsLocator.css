@@ -5,6 +5,12 @@
         font-style: normal;
     }
 
+    .ModalWrapper {
+        padding: 1em 1.5em 0;
+    }
+
+
+
     body {
         text-rendering: optimizeSpeed;
         font-family: 'Poppins', sans-serif;
@@ -38,7 +44,15 @@
         cursor: not-allowed;
     }
 
+    .btn-secondary {
+            background-color: #f1f5f9;
+            color: #64748b;
+    }
 
+    .btn-secondary:hover {
+            background-color: #e2e8f0;
+            color: #475569;
+    }
 
     table {
         width: 100%;
@@ -60,6 +74,14 @@
         padding: .7em 1em;
         text-align: center;
         color: #222;
+    }
+
+        table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+    table tbody tr:hover {
+        background-color: #eef2ff;
     }
 
     .maincontainer{
@@ -679,12 +701,25 @@
     border-color: #4cc9f0;
 }
 
+.btn {
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 .stepper-actions {
     display: flex;
     justify-content: space-between;
     margin-top: 30px;
-    padding-top: 20px;
     border-top: 1px solid #e9ecef;
+    padding: 1em 1.5em;
 }
 
 .step-indicators {
@@ -1035,7 +1070,6 @@
             white-space: nowrap;
         }
 
-        
 
 
         .TrackTable tbody tr {
@@ -1101,6 +1135,4 @@
             flex: 1;
         }
 
-        .form-group {
-            margin-bottom: 24px;
-        }
+       

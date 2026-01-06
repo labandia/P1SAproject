@@ -184,54 +184,60 @@
                     <div class="stepper-content">
                         <!-- Step 1: Account Information -->
                         <div class="stepper-pane active" id="validation-step-1">
-                            <label for="QuantityIN" class="form-label">Enter Quantity:</label>
-                            <input type="text" class="form-control" id="QuantityIN" name="QuantityIN" required>
+                            <div class="ModalWrapper">
+                                <label for="QuantityIN" class="form-label">Enter Quantity:</label>
+                                <input type="text" class="form-control" id="QuantityIN" name="QuantityIN" required>
+                            </div>        
                         </div>
 
                         <!-- Step 2: Profile Information -->
                         <div class="stepper-pane" id="validation-step-2">
-                            <div class="pane-header">
-                                <h3>Shop Order Details</h3>
-                                <p>Provide the shop order information for monitoring purposes.</p>
-                            </div>
+                            <div class="ModalWrapper">
+                                <div class="pane-header">
+                                    <h3>Shop Order Details</h3>
+                                    <p>Provide the shop order information for monitoring purposes.</p>
+                                </div>
 
-                            <div class="shop-order-form">
-                                <form class="row g-3 mb-4" id="ShopOrderInForm">
-                                    <div class="form-row">
-                                        <div class="form-col">
-                                            <div class="form-group">
-                                                <label for="inputBy" class="form-label">
-                                                    <i class="fas fa-user"></i> Input By
-                                                </label>
-                                                <input type="text" class="form-control" id="inputBy" name="Remarks" placeholder="Enter your name" required>
+                                <div class="shop-order-form">
+                                    <form id="ShopOrderInForm">
+                                        <div class="form-row">
+                                            <div class="form-col">
+                                                <div class="form-group">
+                                                    <label for="inputBy" class="form-label">
+                                                        <i class="fas fa-user"></i> Input By
+                                                    </label>
+                                                    <input type="text" class="form-control" id="inputBy" name="Remarks" placeholder="Enter your name" required>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-col">
+                                                <div class="form-group">
+                                                    <label for="rotorOrder" class="form-label">
+                                                        <i class="fas fa-cogs"></i> Rotor Shop Order
+                                                    </label>
+                                                    <input type="text" class="form-control" id="rotorOrder" name="RotorOrder" placeholder="Enter rotor order number" required>
+                                                </div>
                                             </div>
                                         </div>
 
-                                        <div class="form-col">
-                                            <div class="form-group">
-                                                <label for="rotorOrder" class="form-label">
-                                                    <i class="fas fa-cogs"></i> Rotor Shop Order
-                                                </label>
-                                                <input type="text" class="form-control" id="rotorOrder" name="RotorOrder" placeholder="Enter rotor order number" required>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </form>
-                            </div>
+                                    </form>
+                                </div> 
 
                                
-                            </div>
-                        </div>
+                            </div>       
+
+                               
+                         </div>
+                    </div>
 
                     <div class="stepper-actions">
                         <div class="step-indicators">
                             <div class="step-indicator active" data-step="1"></div>
                             <div class="step-indicator" data-step="2"></div>
                         </div>
-                        <div>
-                            <button class="btn btn-secondary" id="prevBtn" disabled>Previous</button>
-                            <button class="btn btn-primary" id="nextBtn">Next</button>
+                        <div class="flex_align">
+                            <button class="btn btn-secondary" id="prevBtn" disabled> <i class="fas fa-arrow-left"></i> Previous</button>
+                            <button class="btn btn-primary" id="nextBtn">Next <i class="fas fa-arrow-right"></i></button>
                         </div>
                     </div>
                 </div>
@@ -278,7 +284,8 @@
                     <div class="stepper-content">
                         <!-- Step 1: Quantity Information -->
                         <div class="stepper-pane active" id="validation-out-step-1">
-                            <div class="form-group">
+                
+                            <div class="ModalWrapper">
                                 <label for="QuantityOUT" class="form-label">Quantity to Issue:</label>
                                 <input type="number" class="form-control" id="QuantityOUT" name="QuantityOUT" required>
                             </div>
@@ -286,54 +293,65 @@
 
                         <!-- Step 2: Shop Order Out Information -->
                         <div class="stepper-pane" id="validation-out-step-2">
-                            <form class="row g-3 mb-4" id="ShopOrderOutForm">
-                                <div class="col-md-6">
-                                    <label for="PreparedBy" class="form-label">Prepared by:</label>
-                                    <input type="text" class="form-control" name="Remarks" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="FAShopOrder" class="form-label">FA Shop Order:</label>
-                                    <input type="text" class="form-control" name="ShopOrder" required>
+                            <div class="ModalWrapper">
+                                <div class="pane-header">
+                                    <h3>Shop Order Details</h3>
+                                    <p>Complete all required information for the shop order monitoring process. All fields marked with <span style="color: red;">*</span> are required.</p>
                                 </div>
 
-                                <div class="col-md-6">
-                                    <label for="PlanQuantity" class="form-label">Plan Quantity:</label>
-                                    <input type="number" class="form-control" name="PlanQuantity" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="Status" class="form-label">Status:</label>
-                                    <select class="form-control" name="Status" required>
-                                        <option value="None">None</option>
-                                        <option value="Completely issued">Completely issued</option>
-                                        <option value="Partially issued">Partially issued</option>
-                                    </select>
-                                </div>
+                                <div class="shop-order-form">
+                                    <form class="row g-3 mb-4" id="ShopOrderOutForm">
+                                        <div class="col-md-6">
+                                            <label for="PreparedBy" class="form-label">Prepared by:</label>
+                                            <input type="text" placeholder="Enter your Name or ID Number" class="form-control" name="Remarks" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="FAShopOrder" class="form-label">FA Shop Order:</label>
+                                            <input type="text" placeholder="Enter Shop Order" class="form-control" name="ShopOrder" required>
+                                        </div>
 
-                                <div class="col-12">
-                                    <label for="RotorShopOrder" class="form-label">Rotor Shop Order:</label>
-                                    <input type="text" class="form-control" name="RotorOrder" required>
-                                </div>
+                                        <div class="col-md-6">
+                                            <label for="PlanQuantity" class="form-label">Plan Quantity:</label>
+                                            <input type="number" placeholder="Enter Plan Quantity" class="form-control" name="PlanQuantity" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="Status" class="form-label">Status:</label>
+                                            <select class="form-control" name="Status" required>
+                                                <option value="None">None</option>
+                                                <option value="Completely issued">Completely issued</option>
+                                                <option value="Partially issued">Partially issued</option>
+                                            </select>
+                                        </div>
 
-                                <div class="col-md-6">
-                                    <label for="ModelBase" class="form-label">Model Base:</label>
-                                    <input type="text" class="form-control" name="ModelBase" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="PlanStart" class="form-label">Plan Start:</label>
-                                    <input type="date" class="form-control" name="PlanDate" required>
-                                </div>
+                                        <div class="col-12">
+                                            <label for="RotorShopOrder" class="form-label">Rotor Shop Order:</label>
+                                            <input type="text" placeholder="Enter Rotor Shop Order" class="form-control" name="RotorOrder" required>
+                                        </div>
 
-                                <div class="col-12">
-                                    <label for="BushMaterial" class="form-label">Bush Material:</label>
-                                    <select class="form-control" name="BushType" required>
-                                        <option value="0">None</option>
-                                        <option value="1">PB bush</option>
-                                        <option value="2">PB free bush</option>
-                                    </select>
+                                        <div class="col-md-6">
+                                            <label for="ModelBase" class="form-label">Model Base:</label>
+                                            <input type="text" placeholder="Enter Model Base" class="form-control" name="ModelBase" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="PlanStart" class="form-label">Plan Start:</label>
+                                            <input type="date"  class="form-control" name="PlanDate" required>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <label for="BushMaterial" class="form-label">Bush Material:</label>
+                                            <select class="form-control" name="BushType" required>
+                                                <option value="0">None</option>
+                                                <option value="1">PB bush</option>
+                                                <option value="2">PB free bush</option>
+                                            </select>
+                                        </div>
+                                    </form>
                                 </div>
-                            </form>
+        
+                            </div>
+
                         </div>
-                    </div>
+                     </div>
 
                     <div class="stepper-actions">
                         <div class="step-indicators">
@@ -341,8 +359,12 @@
                             <div class="step-indicator" data-step="2"></div>
                         </div>
                         <div>
-                            <button class="btn btn-secondary" id="prevBtnOut" disabled>Previous</button>
-                            <button class="btn btn-primary" id="nextBtnOut">Next</button>
+                           
+
+                            <div class="flex_align">
+                                <button class="btn btn-secondary" id="prevBtnOut" disabled> <i class="fas fa-arrow-left"></i> Previous</button>
+                                <button class="btn btn-primary" id="nextBtnOut">Next <i class="fas fa-arrow-right"></i></button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -737,7 +759,7 @@ function updateStepperOut() {
     stepIndicatorsOut.forEach((indicator, index) => {
         const indicatorNumber = index + 1;
 
-        if (indicatorNumber === currentStepOut) {
+        if (indicatorNumber === 1) {
             indicator.classList.add('active');
         } else {
             indicator.classList.remove('active');
@@ -779,11 +801,19 @@ nextBtn.addEventListener('click', async function () {
             let newQuan = previousCount + parseInt(checkQuan);
             let res = await postData('@Url.Action("AddShopOrderIn", "PartsLocator")', data);
             if (res && res.Success) {
-                alert('Shop Order IN completed successfully!');
-                $("#ShowShopOrderIN").modal("hide");
-                $("#Quantity").text(newQuan);
-                previousCount = newQuan;
-                resetStepperIN();
+                Swal.fire({
+                    title: "Success",
+                    text: 'Shop Order IN completed successfully!',
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
+                    $("#ShowShopOrderIN").modal("hide");
+                    $("#Quantity").text(newQuan);
+                    previousCount = newQuan;
+                    resetStepperIN();
+                });
+        
             }
 
 
@@ -825,14 +855,21 @@ nextBtnOut.addEventListener('click', async function () {
 
             const data = Object.fromEntries(formData);
             let res = await postData('@Url.Action("AddShopOrderOut", "PartsLocator")', data);
-            if (res && res.Success) {
-                alert('Shop Order OUT completed successfully!');
-                $("#ShowShopOrderOut").modal("hide");
+            if (res && res.Success) {            
+                Swal.fire({
+                    title: "Success",
+                    text: 'Shop Order OUT completed successfully!',
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
+                    $("#ShowShopOrderOut").modal("hide");
 
-                $("#Quantity").text(newQuan);
-                previousCount = newQuan;
+                    $("#Quantity").text(newQuan);
+                    previousCount = newQuan;
 
-                resetStepperOUT();
+                    resetStepperOUT();
+                });
             }
 
 
@@ -889,6 +926,9 @@ function resetStepperOUT() {
              $("#partText").text(referpartnum);
              $("#Model").text(res.Data.ModelName);
              $("#Quantity").text(res.Data.Quantity);
+
+             $("#RequireInput").focus();
+
          }
      }
 

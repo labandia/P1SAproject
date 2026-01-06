@@ -31,7 +31,7 @@ namespace PMACS_V2.Areas.PartsLocal.Controllers
         public async Task<ActionResult> GetProductMasterlistPagination(
             string search = "",
             int page = 1,
-            int pageSize = 10)
+            int pageSize = 100)
         {
             var data = await _prod.GetRotorMasterlistPage(search, page, pageSize);
             if (data == null && data.Items.Any()) return JsonNotFound("No Masterlist Data.");
@@ -177,7 +177,7 @@ namespace PMACS_V2.Areas.PartsLocal.Controllers
                     search,
                     pageNumber,
                     pageSize) ?? new List<ShopOrderInModel>();
-            if (data == null && data.Any()) return JsonNotFound("No Masterlist Data.");
+            if (data == null && data.Any()) return JsonNotFound("No Shop Summary In Data.");
             return JsonSuccess(data);
         }
 
@@ -198,9 +198,10 @@ namespace PMACS_V2.Areas.PartsLocal.Controllers
                     search,
                     pageNumber,
                     pageSize) ?? new List<ShopOrderOutModel>();
-            if (data == null && data.Any()) return JsonNotFound("No Masterlist Data.");
+            if (!data.Any())
+                return JsonNotFound("No Shop Summary Out Data.");
             // Fallback defaults
-         
+
             return JsonSuccess(data);
         }
 

@@ -400,28 +400,34 @@
     let previousCount;
 
 
-    // Stepper elements
-    const stepperSteps = document.querySelectorAll('.stepper-step');
-    const stepperPanes = document.querySelectorAll('.stepper-pane');
-    const stepIndicators = document.querySelectorAll('.step-indicator');
+    /* =========================================================
+                    GLOBAL VARIABLES
+    ========================================================= */
+    let currentStep = 1;
+    let currentStepOut = 1;
+    const totalSteps = 2;
+
+    /* =========================================================
+                IN STEPPER ELEMENTS (SCOPED)
+    ========================================================= */
+    const stepperSteps = document.querySelectorAll('#validationStepper .stepper-step');
+    const stepperPanes = document.querySelectorAll('#validationStepper .stepper-pane');
+    const stepIndicators = document.querySelectorAll('#validationStepper .step-indicator');
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
-
-    // Stepper elements for OUT
+    const shopForms = document.getElementById('ShopOrderInForm');
+    /* =========================================================
+     OUT STEPPER ELEMENTS (SCOPED)
+     ========================================================= */
     const stepperStepsOut = document.querySelectorAll('#validationStepperOut .stepper-step');
     const stepperPanesOut = document.querySelectorAll('#validationStepperOut .stepper-pane');
     const stepIndicatorsOut = document.querySelectorAll('#validationStepperOut .step-indicator');
     const prevBtnOut = document.getElementById('prevBtnOut');
     const nextBtnOut = document.getElementById('nextBtnOut');
-
-    // Current step
-    let currentStep = 1;
-    let currentStepOut = 1;
-    const totalSteps = 2;
-
-    // Form elements
-    const shopForms = document.getElementById('ShopOrderInForm');
     const shopFormsOut = document.getElementById('ShopOrderOutForm');
+
+
+
 
 
 
@@ -493,7 +499,7 @@
         cell.addEventListener('click', function () {
             const selectedRecordId = getRecordIdByArea(letter);
             if (selectedRecordId !== null) {
-           
+
 
                 getProductDetails(selectedRecordId);
 
@@ -675,234 +681,182 @@
     });
 
 
-    // ============================== STEPPER FUNCTIONS ================================== //
+    /* =========================================================
+       IN STEPPER FUNCTIONS
+    ========================================================= */
+    function updateStepper() {
 
-// Update stepper UI for IN
-function updateStepper() {
-   
+        stepperSteps.forEach((step, index) => {
+            step.classList.toggle('active', index + 1 === currentStep);
+            step.classList.toggle('completed', index + 1 < currentStep);
+        });
 
-    // Update step indicators
-    stepperSteps.forEach((step, index) => {
-        const stepNumber = index + 1;
+        stepperPanes.forEach((pane, index) => {
+            pane.classList.toggle('active', index + 1 === currentStep);
+        });
 
-        if (stepNumber < currentStep) {
-            step.classList.remove('active');
-            step.classList.add('completed');
-        } else if (stepNumber === currentStep) {
-            step.classList.add('active');
-            step.classList.remove('completed');
+        prevBtn.disabled = currentStep === 1;
+
+        if (currentStep === totalSteps) {
+            nextBtn.textContent = 'Finish';
+            nextBtn.classList.replace('btn-primary', 'btn-success');
         } else {
-            step.classList.remove('active', 'completed');
+            nextBtn.textContent = 'Next';
+            nextBtn.classList.replace('btn-success', 'btn-primary');
         }
-    });
-
-    // Update step panes
-    stepperPanes.forEach((pane, index) => {
-        const paneNumber = index + 1;
-
-        if (paneNumber === currentStep) {
-            pane.classList.add('active');
-        } else {
-            pane.classList.remove('active');
-        }
-    });
-
-    // Update step indicators
-    stepIndicators.forEach((indicator, index) => {
-        const indicatorNumber = index + 1;
-
-        if (indicatorNumber === 1) {
-            indicator.classList.add('active');
-        } else {
-            indicator.classList.remove('active');
-        }
-    });
-
-    // Update buttons
-    prevBtn.disabled = currentStep === 1;
-
-    if (currentStep === totalSteps) {
-        nextBtn.textContent = 'Finish';
-        nextBtn.classList.remove('btn-primary');
-        nextBtn.classList.add('btn-success');
-    } else {
-        nextBtn.textContent = 'Next';
-        nextBtn.classList.remove('btn-success');
-        nextBtn.classList.add('btn-primary');
     }
-}
-
+    /* =========================================================
+                    OUT STEPPER FUNCTIONS
+========================================================= */
 // Update stepper UI for OUT
-function updateStepperOut() {
-    // Update step indicators
-    stepperStepsOut.forEach((step, index) => {
-        const stepNumber = index + 1;
+    function updateStepperOut() {
 
-        if (stepNumber < currentStepOut) {
-            step.classList.remove('active');
-            step.classList.add('completed');
-        } else if (stepNumber === currentStepOut) {
-            step.classList.add('active');
-            step.classList.remove('completed');
+        stepperStepsOut.forEach((step, index) => {
+            step.classList.toggle('active', index + 1 === currentStepOut);
+            step.classList.toggle('completed', index + 1 < currentStepOut);
+        });
+
+        stepperPanesOut.forEach((pane, index) => {
+            pane.classList.toggle('active', index + 1 === currentStepOut);
+        });
+
+        prevBtnOut.disabled = currentStepOut === 1;
+
+        if (currentStepOut === totalSteps) {
+            nextBtnOut.textContent = 'Finish';
+            nextBtnOut.classList.replace('btn-primary', 'btn-success');
         } else {
-            step.classList.remove('active', 'completed');
+            nextBtnOut.textContent = 'Next';
+            nextBtnOut.classList.replace('btn-success', 'btn-primary');
         }
-    });
-
-    // Update step panes
-    stepperPanesOut.forEach((pane, index) => {
-        const paneNumber = index + 1;
-
-        if (paneNumber === currentStepOut) {
-            pane.classList.add('active');
-        } else {
-            pane.classList.remove('active');
-        }
-    });
-
-    // Update step indicators
-    stepIndicatorsOut.forEach((indicator, index) => {
-        const indicatorNumber = index + 1;
-
-        if (indicatorNumber === 1) {
-            indicator.classList.add('active');
-        } else {
-            indicator.classList.remove('active');
-        }
-    });
-
-    // Update buttons
-    prevBtnOut.disabled = currentStepOut === 1;
-
-    if (currentStepOut === totalSteps) {
-        nextBtnOut.textContent = 'Finish';
-        nextBtnOut.classList.remove('btn-primary');
-        nextBtnOut.classList.add('btn-success');
-    } else {
-        nextBtnOut.textContent = 'Next';
-        nextBtnOut.classList.remove('btn-success');
-        nextBtnOut.classList.add('btn-primary');
     }
-}
 
-// IN Stepper Event Listeners
-nextBtn.addEventListener('click', async function () {
-    let checkQuan = document.getElementById("QuantityIN").value;
+    /* =========================================================
+       IN BUTTON EVENTS
+    ========================================================= */
+    nextBtn.addEventListener('click', async function () {
+        let checkQuan = document.getElementById("QuantityIN").value;
 
-    if (checkQuan !== "") {
+        if (!checkQuan) return;
+
         if (currentStep < totalSteps) {
             currentStep++;
             updateStepper();
-        } else {
-            // Finish button clicked
-            let formData = new FormData(shopForms);
-            formData.append("Quantity", parseInt(checkQuan));
-            formData.append("TransactionType", 0);
-            formData.append("Area", Arealocation);
-            formData.append("Partnumber", referpartnum);
-            formData.append("PreviousQuantity", previousCount);
-
-            const data = Object.fromEntries(formData);
-            let newQuan = previousCount + parseInt(checkQuan);
-            let res = await postData('@Url.Action("AddShopOrderIn", "PartsLocator")', data);
-            if (res && res.Success) {
-                Swal.fire({
-                    title: "Success",
-                    text: 'Shop Order IN completed successfully!',
-                    icon: "success",
-                    showConfirmButton: false,
-                    timer: 1500
-                }).then(() => {
-                    $("#ShowShopOrderIN").modal("hide");
-                    $("#Quantity").text(newQuan);
-                    previousCount = newQuan;
-                    resetStepperIN();
-                });
-        
-            }
-
-
-            //console.log(data);
-            //alert('Shop Order IN completed successfully!');
-            //$("#ShowShopOrderIN").modal("hide");
-            //resetStepperIN();
+            return;
         }
-    }
-});
 
-prevBtn.addEventListener('click', function () {
-    if (currentStep > 1) {
-        currentStep--;
-        updateStepper();
-    }
-});
+         // Finish button clicked
+         let formData = new FormData(shopForms);
+         formData.append("Quantity", parseInt(checkQuan));
+         formData.append("TransactionType", 0);
+         formData.append("Area", Arealocation);
+         formData.append("Partnumber", referpartnum);
+         formData.append("PreviousQuantity", previousCount);
 
-// OUT Stepper Event Listeners
-nextBtnOut.addEventListener('click', async function () {
-    let checkQuan = document.getElementById("QuantityOUT").value;
+         const data = Object.fromEntries(formData);
+         let res = await postData('@Url.Action("AddShopOrderIn", "PartsLocator")', data);
 
-    if (checkQuan !== "") {
+         if (res?.Success) {
+             Swal.fire({
+                 title: "Success",
+                 text: 'Shop Order IN completed successfully!',
+                 icon: "success",
+                 showConfirmButton: false,
+                 timer: 1500
+             }).then(() => {
+                 $("#ShowShopOrderIN").modal("hide");
+                 previousCount += parseInt(checkQuan);
+                 $("#Quantity").text(previousCount);
+                 resetStepperIN();
+             });
+
+         }
+    });
+
+    prevBtn.addEventListener('click', () => {
+        if (currentStep > 1) {
+            currentStep--;
+            updateStepper();
+        }
+    });
+
+    /* =========================================================
+       OUT BUTTON EVENTS
+    ========================================================= */
+    nextBtnOut.addEventListener('click', async function () {
+        let checkQuan = document.getElementById("QuantityOUT").value;
+
+        if (!checkQuan || checkQuan <= 0) return;
+
+        // 🔒 STOCK VALIDATION
+        if (checkQuan > previousCount) {
+            Swal.fire({
+                icon: "error",
+                title: "Invalid Quantity",
+                text: `Available stock is only ${previousCount}`,
+            });
+            return;
+        }
+
         if (currentStepOut < totalSteps) {
             currentStepOut++;
             updateStepperOut();
-        } else {
-            let newQuan = previousCount - parseInt(checkQuan);
-
-
-            // Finish button clicked
-            let formData = new FormData(shopFormsOut);
-            formData.append("Quantity", parseInt(checkQuan));
-            formData.append("TransactionType", 1); // 1 for OUT
-            formData.append("Partnumber", referpartnum);
-            formData.append("Area", Arealocation);
-            formData.append("PreviousQuantity", previousCount);
-
-
-            const data = Object.fromEntries(formData);
-            let res = await postData('@Url.Action("AddShopOrderOut", "PartsLocator")', data);
-            if (res && res.Success) {            
-                Swal.fire({
-                    title: "Success",
-                    text: 'Shop Order OUT completed successfully!',
-                    icon: "success",
-                    showConfirmButton: false,
-                    timer: 1500
-                }).then(() => {
-                    $("#ShowShopOrderOut").modal("hide");
-
-                    $("#Quantity").text(newQuan);
-                    previousCount = newQuan;
-
-                    resetStepperOUT();
-                });
-            }
-
-
+            return;
         }
-    }
-});
 
-prevBtnOut.addEventListener('click', function () {
-    if (currentStepOut > 1) {
-        currentStepOut--;
+          // Finish button clicked
+          let formData = new FormData(shopFormsOut);
+          formData.append("Quantity", parseInt(checkQuan));
+          formData.append("TransactionType", 1); // 1 for OUT
+          formData.append("Partnumber", referpartnum);
+          formData.append("Area", Arealocation);
+          formData.append("PreviousQuantity", previousCount);
+
+          let res = await postData('@Url.Action("AddShopOrderOut", "PartsLocator")', Object.fromEntries(formData));
+
+          if (res?.Success) {
+              Swal.fire({
+                  title: "Success",
+                  text: 'Shop Order OUT completed successfully!',
+                  icon: "success",
+                  showConfirmButton: false,
+                  timer: 1500
+              }).then(() => {
+                  $("#ShowShopOrderOut").modal("hide");
+                  previousCount -= parseInt(checkQuan);
+                  $("#Quantity").text(previousCount);
+                  resetStepperOUT();
+              });
+          }
+    });
+
+    prevBtnOut.addEventListener('click', function () {
+        if (currentStepOut > 1) {
+            currentStepOut--;
+            updateStepperOut();
+        }
+    });
+
+    /* =========================================================
+       RESET FUNCTIONS
+    ========================================================= */
+    function resetStepperIN() {
+        currentStep = 1;
+        document.getElementById("QuantityIN").value = "";
+        shopForms.reset();
+        stepperPanes.forEach(p => p.classList.remove('active'));
+        document.getElementById('validation-step-1').classList.add('active');
+        updateStepper();
+    }
+
+    function resetStepperOUT() {
+        currentStepOut = 1;
+        document.getElementById("QuantityOUT").value = "";
+        shopFormsOut.reset();
+        stepperPanesOut.forEach(p => p.classList.remove('active'));
+        document.getElementById('validation-out-step-1').classList.add('active');
         updateStepperOut();
     }
-});
-
-// Reset stepper functions
-function resetStepperIN() {
-    currentStep = 1;
-    document.getElementById("QuantityIN").value = "";
-    shopForms.reset();
-    updateStepper();
-}
-
-function resetStepperOUT() {
-    currentStepOut = 1;
-    document.getElementById("QuantityOUT").value = "";
-    shopFormsOut.reset();
-    updateStepperOut();
-}
 
 
 
@@ -939,19 +893,27 @@ function resetStepperOUT() {
 
     partlocationStorageList();
 
-    // Initialize both steppers
+    /* =========================================================
+             MODAL CLOSE RESET
+            ========================================================= */
+    $('#ShowShopOrderIN').on('hidden.bs.modal', resetStepperIN);
+    $('#ShowShopOrderOut').on('hidden.bs.modal', resetStepperOUT);
+
+    $('#ShowShopOrderIN').on('shown.bs.modal', function () {
+        setTimeout(() => {
+            $('#QuantityIN').focus();
+        }, 200);
+    });
+
+    $('#ShowShopOrderOut').on('shown.bs.modal', function () {
+        setTimeout(() => {
+            $('#QuantityOUT').focus();
+        }, 200);
+    });
+
+    /* =========================================================
+            INIT
+     ========================================================= */
     updateStepper();
     updateStepperOut();
-
-
-    // Reset steppers when modals close
-    $('#ShowShopOrderIN').on('hidden.bs.modal', function () {
-        resetStepperIN();
-        resetStepperOUT();
-    });
-
-    $('#ShowShopOrderOut').on('hidden.bs.modal', function () {
-        resetStepperOUT();
-        resetStepperIN();
-    });
 </script>

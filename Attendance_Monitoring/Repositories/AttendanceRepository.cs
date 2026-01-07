@@ -1,6 +1,7 @@
 ﻿using Attendance_Monitoring.Models;
 using Attendance_Monitoring.Utilities;
 using Dapper;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,6 +10,16 @@ namespace Attendance_Monitoring.Repositories
 {
     public class AttendanceRepository : IAttendance
     {
+        public Task<bool> AttendanceDeleteTimeIN(int ID, DateTime dateToday)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> AttendanceDeleteTimeOut(int ID, DateTime dateToday)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<bool> AttendanceTimeIn(string EmployeeID, string shift, string late, string tb)
         {
             string insertQuery = $@"INSERT INTO {tb} (Employee_ID, Shifts, LateTime) VALUES (@EmpID, @Shifts, @LateTime)";

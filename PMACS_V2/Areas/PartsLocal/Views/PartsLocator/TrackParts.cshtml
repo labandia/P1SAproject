@@ -186,7 +186,7 @@
                         <div class="stepper-pane active" id="validation-step-1">
                             <div class="ModalWrapper">
                                 <label for="QuantityIN" class="form-label">Enter Quantity:</label>
-                                <input type="text" class="form-control" id="QuantityIN" name="QuantityIN" required>
+                                <input type="number" class="form-control" id="QuantityIN" name="QuantityIN" required>
                             </div>        
                         </div>
 
@@ -206,7 +206,8 @@
                                                     <label for="inputBy" class="form-label">
                                                         <i class="fas fa-user"></i> Input By
                                                     </label>
-                                                    <input type="text" class="form-control" id="inputBy" name="Remarks" placeholder="Enter your name" required>
+                                                    <input type="text" class="form-control" id="inputBy" name="Remarks" placeholder="Enter your Employee ID" required>
+                                                    <small style="color: #0094ff;">Use barcode scan or direct type </small>
                                                 </div>
                                             </div>
 
@@ -304,26 +305,27 @@
                                         <div class="col-md-6">
                                             <label for="PreparedBy" class="form-label">Prepared by:</label>
                                             <input type="text" placeholder="Enter your Name or ID Number" class="form-control" name="Remarks" id="SearchEmployee" required>
+                                            <small style="color: #0094ff;">Use barcode scan or direct type </small>
                                         </div>
 
                                         <div class="col-6">
                                             <label for="RotorShopOrder" class="form-label">Rotor Shop Order:</label>
-                                            <input type="text" placeholder="Enter Rotor Shop Order" class="form-control" name="RotorOrder" required>
+                                            <input type="text" placeholder="Enter Rotor Shop Order" class="form-control" name="RotorOrder" id="RotorFocus" required>
                                         </div>
 
                                         <div class="col-md-6">
                                             <label for="FAShopOrder" class="form-label">FA Shop Order:</label>
-                                            <input type="text" placeholder="Enter Shop Order" class="form-control" name="ShopOrder" required>
+                                            <input type="text" placeholder="Enter Shop Order" class="form-control" name="ShopOrder" id="FAFocus" required>
                                         </div>
 
                                         <div class="col-md-6">
                                             <label for="ModelBase" class="form-label">Model Base:</label>
-                                            <input type="text" placeholder="Enter Model Base" class="form-control" name="ModelBase" required>
+                                            <input type="text" placeholder="Enter Model Base" class="form-control" name="ModelBase" id="ModelFocus" required>
                                         </div>
 
                                         <div class="col-md-6">
                                             <label for="PlanQuantity" class="form-label">Plan Quantity:</label>
-                                            <input type="number" placeholder="Enter Plan Quantity" class="form-control" name="PlanQuantity" required>
+                                            <input type="number" placeholder="Enter Plan Quantity" class="form-control" name="PlanQuantity" id="PlanFocus" required>
                                         </div>
 
                                         <div class="col-md-6">
@@ -680,13 +682,56 @@
         }
     });
 
-    $("SearchEmployee").on('keyup', function (e) {
+    $("#SearchEmployee").on('keyup', function (e) {
         if (e.key === 'Enter') {
-            $("#rotorOrder").focus();
-            let searchEmp = e.target.value; 
+            let searchEmp = e.target.value;
             console.log("SEARCH EMPLOYEE " + searchEmp);
+            SearchEmployeeInfo(searchEmp, 0);
         }
     });
+
+    $("#inputBy").on('keyup', function (e) {
+        if (e.key === 'Enter') {
+            let searchEmp = e.target.value;
+            SearchEmployeeInfo(searchEmp, 1);
+        }
+    });
+
+    $("#RotorFocus").on('keyup', function (e) {
+        if (e.key === 'Enter') {
+            $("#FAFocus").focus();
+        }
+    });
+
+    $("#FAFocus").on('keyup', function (e) {
+        if (e.key === 'Enter') {
+            $("#ModelFocus").focus();
+        }
+    });
+
+    $("#ModelFocus").on('keyup', function (e) {
+        if (e.key === 'Enter') {
+            $("#PlanFocus").focus();
+        }
+    });
+
+    async function SearchEmployeeInfo(searchEmp, action) {
+        let res = await FetchAuthenticate('@Url.Action("GetEmployeeInfo", "PartsLocator")', { emp: searchEmp });
+        if (res && res.Success) {
+            console.log(res.Data);
+            if (res.Data.length == 0) {
+                return;
+            }
+            let Data = res.Data[0].Fullname;
+            if (action === 0) {
+                $("#SearchEmployee").val(Data);
+                $("#RotorFocus").focus();
+            } else {
+                $("#inputBy").val(Data);
+                $("#rotorOrder").focus();
+            }
+        }
+    }
 
 
     /* =========================================================

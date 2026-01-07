@@ -394,16 +394,19 @@
                   var setdata = `<tr class='selectedpartnum' id='selectedpartnum_${row.Partnumber}'>
                         <td>${row.Partnumber}</td>
                         <td>${row.ModelName}</td>
-                        <td>${row.FrontImage}</td>
-                        <td>${row.BackImage}</td>
+                        <td>${row.FrontImage ?? "-"}</td>
+                        <td>${row.BackImage ?? "-"}</td>
                         <td>
-                           <button type='button' class='btn actionicon text-primary editButton' id='editButton_${row.Partnumber}' >
-                              <i class='fa-regular fa-pen-to-square action_btn'></i>
-                           </button>
+                            <div class="flex_align">
+                                  <button type='button' class='btn actionicon text-primary editButton' id='editButton_${row.Partnumber}' >
+                                     <i class='fa-regular fa-pen-to-square action_btn'></i>
+                                  </button>
 
-                           <button type='button' class='btn actionicon text-danger deleteButton' id='deleteButton_${row.Partnumber}' >
-                               <i class='fa-regular fa-trash-can action_btn'></i>
-                            </button>
+                                  <button type='button' class='btn actionicon text-danger deleteButton' id='deleteButton_${row.Partnumber}' >
+                                      <i class='fa-regular fa-trash-can action_btn'></i>
+                                   </button>
+                            
+                            </div>
                         </td>
                     </tr>;`
 

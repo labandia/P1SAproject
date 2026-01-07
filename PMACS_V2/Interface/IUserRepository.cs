@@ -11,5 +11,6 @@ namespace PMACS_V2.Interface
         Task<string> UsersFullname(int id);
         Task<bool> RegiserUserData(object parameters);
 
+        Task<List<Employee>>GetEmployees(string emp);
     }
 }

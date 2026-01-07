@@ -108,7 +108,7 @@
         </div>
     </div>
 
-
+    <div id="pagination" style="display: flex; align-items:center; justify-content: center; "></div>
 </section>
 
 @*=================================================================================*@
@@ -450,7 +450,7 @@
         console.log(res);
         if (res && res.Success) {
             $("#ShopOrderSummaryOut").empty();
-            let dataArray = res.Data;
+            let dataArray = res.Data.Items;
 
             dataArray.forEach((row, index) => {
                 let strStatus = "";
@@ -488,7 +488,7 @@
 
                 $("#ShopOrderSummaryOut").append(setdata);
             });
-
+            renderPagination(res.Data);
 
             // Handle click event for edit button
             $(document).on('click', '.EditToolOOutClick', function (e) {
@@ -523,7 +523,30 @@
 
     }
 
-  
+    function renderPagination(data) {
+        const pager = document.getElementById("pagination");
+        pager.innerHTML = "";
+
+        if (data.PageNumber > 1) {
+            pager.innerHTML += `<button onclick="goPage(${data.PageNumber - 1})">Prev</button>`;
+        }
+
+        pager.innerHTML += ` Page ${data.PageNumber} of ${data.TotalRecords} `;
+
+        if (data.PageNumber < data.TotalRecords) {
+            pager.innerHTML += `<button onclick="goPage(${data.PageNumber + 1})">Next</button>`;
+        }
+    }
+
+    function goPage(page) {
+        currentPage = page;
+
+        if (shopStats == 0) {
+            GetTransactionSummaryIN();
+        } else {
+            GetTransactionSummaryOUT();
+        }
+    }
 
     $(document).ready(function () {
 

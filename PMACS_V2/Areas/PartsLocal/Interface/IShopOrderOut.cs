@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using PMACS_V2.Areas.PartsLocal.Model;
+using PMACS_V2.Models;
 
 namespace PMACS_V2.Areas.PartsLocal.Interface
 {
     public interface IShopOrderOut
     {
-        Task<IEnumerable<ShopOrderOutModel>> GetShopOderOutlist(
+        Task<PagedResult<ShopOrderOutModel>> GetShopOderOutlist(
               DateTime startDate,
               DateTime endDate, 
               string search,

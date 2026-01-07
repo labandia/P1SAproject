@@ -197,9 +197,10 @@ namespace PMACS_V2.Areas.PartsLocal.Controllers
                     to.Date,
                     search,
                     pageNumber,
-                    pageSize) ?? new List<ShopOrderOutModel>();
-            if (!data.Any())
-                return JsonNotFound("No Shop Summary Out Data.");
+                    pageSize);
+
+            if (data == null && data.Items.Any()) return JsonNotFound("No Shop Summary Out Data.");
+       
             // Fallback defaults
 
             return JsonSuccess(data);

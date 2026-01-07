@@ -5,9 +5,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using OfficeOpenXml.Packaging.Ionic.Zlib;
+using PMACS_V2.Areas.P1SA.Models;
 using PMACS_V2.Areas.PartsLocal.Interface;
 using PMACS_V2.Areas.PartsLocal.Model;
 using PMACS_V2.Helper;
+using PMACS_V2.Models;
 
 namespace PMACS_V2.Areas.PartsLocal.Repository
 {
@@ -60,7 +62,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
             });
         }
 
-        public async Task<IEnumerable<ShopOrderOutModel>> GetShopOderOutlist(
+        public async Task<PagedResult<ShopOrderOutModel>> GetShopOderOutlist(
             DateTime startDate,
             DateTime endDate,
             string search,
@@ -103,7 +105,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                         OFFSET @Offset ROWS
                         FETCH NEXT @PageSize ROWS ONLY";
 
-            return await SqlDataAccess.GetData<ShopOrderOutModel>(
+            var items =  await SqlDataAccess.GetData<ShopOrderOutModel>(
                     strsql,
                     new
                     {
@@ -113,6 +115,16 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                         Offset = offset,
                         PageSize = pageSize
                     });
+
+            int TotalRecords = items.Count;
+
+            return new PagedResult<ShopOrderOutModel>
+            {
+                Items = items,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalRecords = TotalRecords
+            };
         }
     }
 }

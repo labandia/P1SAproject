@@ -66,6 +66,7 @@
                 </div>
 
                 <form method="post" enctype="multipart/form-data" class="addformcontainer" id="addnewform" autocomplete="off">
+                      
 
                     <div class="form_group col-12 col-sm-12">
                         <label>Part Number <small style="color: #a81818; font-weight: 600;">*</small></label>
@@ -239,7 +240,7 @@
 
        
 
-        @*let res = await postData('@Url.Action("AddMoldDieMasterlist", "Mold")', data);
+        let res = await postData('@Url.Action("AddMoldDieMasterlist", "Mold")', data);
         if (res && res.Success) {
             Swal.fire({
                 title: "Success",
@@ -248,9 +249,7 @@
                 confirmButtonColor: "#0d97c9",
                 timer: 1500
             }).then(() => {
-                GetMoldDieMasterlist();
-                $("#AddTooling").modal('hide');
-                $("#addnewform")[0].reset();
+                location.reload();
             });
         } else {
             Swal.fire({
@@ -259,7 +258,7 @@
                 timer: 1500,
                 showConfirmButton: false
             });
-        }*@
+        }
     });
 
     $("#editnewform").on('submit', async (e) => {

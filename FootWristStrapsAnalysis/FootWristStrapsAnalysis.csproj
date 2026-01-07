@@ -24,7 +24,7 @@
     <UpdateRequired>true</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <MinimumRequiredVersion>1.0.0.0</MinimumRequiredVersion>
-    <ApplicationRevision>6</ApplicationRevision>
+    <ApplicationRevision>8</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -139,6 +139,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FolderPathInputDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FolderPathInputDialog.Designer.cs">
+      <DependentUpon>FolderPathInputDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Interface\IExportFoot.cs" />
     <Compile Include="Interface\IFootWrist.cs" />
     <Compile Include="Model\IFootWristModel.cs" />
@@ -159,6 +165,15 @@
     <Compile Include="Utilities\PasswordHasher.cs" />
     <Compile Include="Utilities\SqlDataAccess.cs" />
     <Compile Include="Utilities\UsersAccess.cs" />
+    <Compile Include="WaitFormDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WaitFormDialog.Designer.cs">
+      <DependentUpon>WaitFormDialog.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="FolderPathInputDialog.resx">
+      <DependentUpon>FolderPathInputDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Startup.resx">
       <DependentUpon>Startup.cs</DependentUpon>
     </EmbeddedResource>
@@ -171,6 +186,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="WaitFormDialog.resx">
+      <DependentUpon>WaitFormDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">

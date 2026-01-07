@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Drawing.Printing;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
+using System.Web.Services.Description;
+using System.Web.UI.WebControls.WebParts;
 using PMACS_V2.Areas.MoldDie.Interface;
 using PMACS_V2.Areas.P1SA.Models;
 using PMACS_V2.Helper;
@@ -138,6 +142,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                             d.RecordID,
 	                        FORMAT(d.DateInput, 'MM/dd/yy') as DateInput, 
 	                        d.PartNo, p.Dimension_Quality, 
+                            p.DieSerial,
 	                        d.CycleShot, 
 	                        d.Total, 
 	                        d.MachineNo, 
@@ -186,10 +191,10 @@ namespace PMACS_V2.Areas.MoldDie.Repository
 
                     if (partnuminfo == null) return false;
 
-                    Debug.WriteLine(partnuminfo.Dimension_Quality);
 
                     string dq = partnuminfo.Dimension_Quality ?? "";
                     string pid = mold.ProcessID;
+                    string serial = mold.DieSerial;
 
 
                     // ===========================
@@ -292,6 +297,12 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                         Mincharge = mold.Mincharge,
                         Status = UpdateStatus
                     };
+                    
+                    await SqlDataAccess.UpdateInsertQuery(insertquery, parameters);
+
+                    // =====================================================
+                    // INSERT MONITOR LOG
+                    // =====================================================
 
                     string strmonitor = $@"
                         INSERT INTO DieMoldMonitor(PartNo, DateAction, TotalDie)
@@ -303,14 +314,47 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                         DateAction = dateOnly,
                         TotalDie = mold.CycleShot
                     });
+                    // =====================================================
+                    // 🔥 UPDATE OTHER PART NUMBERS WITH SAME DIE SERIAL
+                    // =====================================================
 
-                    return await SqlDataAccess.UpdateInsertQuery(insertquery, parameters);
+                    var relatedParts = await SqlDataAccess.GetlistStrings(@"
+                            SELECT DISTINCT PartNo
+                            FROM DieMold_MoldingMainParts
+                            WHERE (DieSerial = @DieSerial AND ProcessID = @ProcessID) AND PartNo <> @PartNo",
+                            new {
+                                DieSerial = mold.DieSerial,
+                                ProcessID = pid,
+                                PartNo = mold.PartNo 
+                            });
+                    Debug.WriteLine("HERE");
+                    foreach (var part in relatedParts) {
+                        Debug.WriteLine(part);
+                        await SqlDataAccess.UpdateInsertQuery(insertquery, 
+                            new { 
+                                PartNo = part, 
+                                DateInput = dateOnly, 
+                                CycleShot = newtotalshot, 
+                                Total = newtotalshot, 
+                                mold.MachineNo, 
+                                Remarks = "Auto update (same DieSerial)", 
+                                mold.Mincharge, 
+                                Status = UpdateStatus
+                            }); 
+                    }
+                
+
+
+
+                    return true;
                 }
                 else
                 {
-                    Debug.WriteLine("NEW INSERT PARTNUMBER ");
-                    // INSERT A NEW PARTNUMBER
-                    // ===== Step 4: Insert data =====
+                    // =====================================================
+                    // NEW PART NUMBER
+                    // =====================================================
+                    var dateOnly = mold.DateInput.Date;
+
                     string insertquery = @"
                         INSERT INTO DieMold_Daily
                         (PartNo, DateInput, CycleShot, Total, MachineNo, Remarks, Mincharge, Status)
@@ -339,7 +383,38 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                         TotalDie = mold.CycleShot
                     });
 
-                    return await SqlDataAccess.UpdateInsertQuery(insertquery, parameters);
+                    await SqlDataAccess.UpdateInsertQuery(insertquery, parameters);
+                    // =====================================================
+                    // 🔥 UPDATE OTHER PART NUMBERS WITH SAME DIE SERIAL
+                    // =====================================================
+                    Debug.WriteLine("HERE 2");
+                    var relatedParts = await SqlDataAccess.GetlistStrings(@"
+                            SELECT DISTINCT PartNo
+                            FROM DieMold_MoldingMainParts
+                            WHERE (DieSerial = @DieSerial AND ProcessID = @ProcessID) AND PartNo <> @PartNo",                       
+                            new
+                            {
+                                DieSerial = mold.DieSerial,
+                                ProcessID = mold.ProcessID,
+                                PartNo = mold.PartNo
+                            });
+                    foreach (var part in relatedParts)
+                    {
+                        await SqlDataAccess.UpdateInsertQuery(insertquery,
+                            new
+                            {
+                                PartNo = part,
+                                DateInput = dateOnly,
+                                CycleShot = mold.CycleShot,
+                                Total = mold.CycleShot,
+                                mold.MachineNo,
+                                Remarks = "Auto update (same DieSerial)",
+                                mold.Mincharge,
+                                Status = 0
+                            });
+                    }
+
+                    return true;
                 }
             }
             else

@@ -303,7 +303,7 @@
                                     <form class="row g-3 mb-4" id="ShopOrderOutForm">
                                         <div class="col-md-6">
                                             <label for="PreparedBy" class="form-label">Prepared by:</label>
-                                            <input type="text" placeholder="Enter your Name or ID Number" class="form-control" name="Remarks" required>
+                                            <input type="text" placeholder="Enter your Name or ID Number" class="form-control" name="Remarks" id="SearchEmployee" required>
                                         </div>
 
                                         <div class="col-6">
@@ -677,6 +677,14 @@
     searchInput.addEventListener('keyup', function (event) {
         if (event.key === 'Enter') {
             searchButton.click();
+        }
+    });
+
+    $("SearchEmployee").on('keyup', function (e) {
+        if (e.key === 'Enter') {
+            $("#rotorOrder").focus();
+            let searchEmp = e.target.value; 
+            console.log("SEARCH EMPLOYEE " + searchEmp);
         }
     });
 

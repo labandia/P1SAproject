@@ -84,7 +84,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                             t.Quantity,
                             t.PreviousQuantity,
                             t.Remarks,
-                            t.PlanDate,
+                            FORMAT(t.PlanDate, 'MM/dd/yy') AS PlanDate,
                             t.PlanQuantity,
                             t.ModelBase,
                             t.Status,

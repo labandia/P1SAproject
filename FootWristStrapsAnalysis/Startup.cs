@@ -49,106 +49,139 @@ namespace FootWristStrapsAnalysis
 
         private async void Startup_Load(object sender, EventArgs e)
         {
-            var selectedDate = dateTimePicker1.Value.Date; // Get only the date part
-            this.WindowState = FormWindowState.Maximized; // set the form to Fullscreen 
+            this.Enabled = false;
 
-            // Step 1: Get the Folder path if exist
+            var waitForm = new WaitFormDialog
+            {
+                TopMost = true,
+                ShowInTaskbar = false
+            };
+
+            waitForm.Show();
+            waitForm.BringToFront();
+            waitForm.Activate();
+
+            try
+            {
+                var minDelay = Task.Delay(1500);
+                var startupWork = InitializeApplicationAsync(waitForm);
+
+                await Task.WhenAll(minDelay, startupWork);
+            }
+            finally
+            {
+                waitForm.TopMost = false;
+                waitForm.Close();
+                waitForm.Dispose();
+
+                // Re-enable main form AFTER waitForm is closed
+                this.Enabled = true;
+                this.Activate();
+            }
+        }
+
+        private async Task InitializeApplicationAsync(WaitFormDialog waitForm)
+        {
+            var selectedDate = dateTimePicker1.Value.Date; // Get only the date part
+
+            await ShowStep(waitForm, "Checking folder path if exist...", 10);
+
             string folderpath = await GetTheFileFolder();
 
-            if (folderpath != "")
+            // 🚨 NO PATH → ASK USER
+            if (string.IsNullOrWhiteSpace(folderpath) || !Directory.Exists(folderpath))
             {
-                folderText.Text = folderpath;   
-                // Step 2: Starts the check file The Data from the exist file folder and Upload it
-                await StartAsync();
-                getData = await _foot.GetFootAnalysisData();
-                var displayByDate = getData.Where(res => res.TestDate.HasValue && res.TestDate.Value.Date == selectedDate).ToList();
+                waitForm.Hide();
+                await Task.Yield(); // allow UI repaint
 
-                if (displayByDate == null)
+                using (var dialog = new FolderPathInputDialog())
                 {
-                    MessageBox.Show("No Data Found.",
-                         "Warning",
-                         MessageBoxButtons.OK,
-                         MessageBoxIcon.Warning);
-                    return;
+                    dialog.StartPosition = FormStartPosition.CenterScreen;
+
+                    if (dialog.ShowDialog() != DialogResult.OK)
+                        return; // user cancelled
+
+                    folderpath = dialog.FolderPath;
                 }
 
-                footlist = displayByDate; // Use the filtered list instead of all data
+                waitForm.Show();
+                waitForm.BringToFront();
 
-                CountTable.Text = footlist.Count().ToString();
-
-                AnalysisTable.DataSource = footlist;
-
-                AnalysisTable.Columns["TestTime"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                AnalysisTable.Columns["TestTime"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                AnalysisTable.Columns["TestTime"].Width = 120;
-
-                // Employee ID
-                AnalysisTable.Columns["EmployeeID"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                AnalysisTable.Columns["EmployeeID"].Width = 120;
-
-                // Employee Name
-                AnalysisTable.Columns["EmployeeName"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                AnalysisTable.Columns["EmployeeName"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                AnalysisTable.Columns["EmployeeName"].Width = 150;
-
-                // Comprehensive Result 
-                AnalysisTable.Columns["ComprehensiveResult"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                AnalysisTable.Columns["ComprehensiveResult"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                AnalysisTable.Columns["ComprehensiveResult"].Width = 200;
-
-                // Left Foot Resis 
-                AnalysisTable.Columns["LeftFootResistance"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                AnalysisTable.Columns["LeftFootResistance"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                AnalysisTable.Columns["LeftFootResistance"].Width = 150;
-
-                // Left Foot Result 
-                AnalysisTable.Columns["LeftFootResult"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                AnalysisTable.Columns["LeftFootResult"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                AnalysisTable.Columns["LeftFootResult"].Width = 150;
-
-                // Right Foot Resis 
-                AnalysisTable.Columns["RightFootResistance"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                AnalysisTable.Columns["RightFootResistance"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                AnalysisTable.Columns["RightFootResistance"].Width = 200;
-
-                // Right Foot Resis 
-                AnalysisTable.Columns["RightFootResult"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                AnalysisTable.Columns["RightFootResult"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                AnalysisTable.Columns["RightFootResult"].Width = 150;
-
-                // Wrist Strap resis
-                AnalysisTable.Columns["WristStrapResult"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                AnalysisTable.Columns["WristStrapResult"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                AnalysisTable.Columns["WristStrapResult"].Width = 200;
-
-                //ConductivityEvaluation
-                AnalysisTable.Columns["ConductivityEvaluation"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                AnalysisTable.Columns["ConductivityEvaluation"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                AnalysisTable.Columns["ConductivityEvaluation"].Width = 200;
-
-                // ----------------------------------------------------------------
-                // Lower Evaluation Limit
-                AnalysisTable.Columns["LowerEvaluationLimit"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                AnalysisTable.Columns["LowerEvaluationLimit"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                AnalysisTable.Columns["LowerEvaluationLimit"].Width = 200;
-
-                // Upper Evaluation Limit
-                AnalysisTable.Columns["UpperEvaluationLimit"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                AnalysisTable.Columns["UpperEvaluationLimit"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                AnalysisTable.Columns["UpperEvaluationLimit"].Width = 200;
-
-                // Evaluation Buzzer
-                AnalysisTable.Columns["EvaluationBuzzer"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                AnalysisTable.Columns["EvaluationBuzzer"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                AnalysisTable.Columns["EvaluationBuzzer"].Width = 200;
-
-                // Evaluation External Output
-                AnalysisTable.Columns["EvaluationExternalOutput"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                AnalysisTable.Columns["EvaluationExternalOutput"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                AnalysisTable.Columns["EvaluationExternalOutput"].Width = 200;
+                // Save path to DB
+                await SaveFolderPath(folderpath);
             }
 
-          
+            folderText.Text = folderpath;
+
+            await ShowStep(waitForm, "Importing today's CSV file...", 35);
+            // ⏳ Import + timer start
+            await StartAsync();
+
+            // ⏳ Load data
+            await ShowStep(waitForm, "Loading test records...", 65);
+            getData = await _foot.GetFootAnalysisData();
+
+            var displayByDate = getData
+                    .Where(res => res.TestDate.HasValue &&
+                                  res.TestDate.Value.Date == selectedDate)
+                    .ToList();
+
+            if (!displayByDate.Any())
+            {
+                MessageBox.Show("No Data Found.", "Warning",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            footlist = displayByDate;
+
+            CountTable.Text = footlist.Count().ToString();
+            AnalysisTable.DataSource = footlist;
+
+            await ShowStep(waitForm, "Preparing display...", 90);
+            ConfigureGrid();
+
+            await ShowStep(waitForm, "Completed", 100, 500);
+        }
+
+        private async Task ShowStep(
+            WaitFormDialog waitForm,
+            string message,
+            int progress,
+            int delayMs = 400)
+        {
+            waitForm.SetStatus(message);
+            waitForm.SetProgress(progress);
+
+            // Force UI refresh (important)
+            await Task.Yield();
+
+            // Keep message visible
+            await Task.Delay(delayMs);
+        }
+
+        private void ConfigureGrid()
+        {
+            AnalysisTable.Columns["TestTime"].Width = 120;
+            AnalysisTable.Columns["EmployeeID"].Width = 120;
+            AnalysisTable.Columns["EmployeeName"].Width = 150;
+            AnalysisTable.Columns["ComprehensiveResult"].Width = 200;
+            AnalysisTable.Columns["LeftFootResistance"].Width = 150;
+            AnalysisTable.Columns["LeftFootResult"].Width = 150;
+            AnalysisTable.Columns["RightFootResistance"].Width = 200;
+            AnalysisTable.Columns["RightFootResult"].Width = 150;
+            AnalysisTable.Columns["WristStrapResult"].Width = 200;
+            AnalysisTable.Columns["ConductivityEvaluation"].Width = 200;
+            AnalysisTable.Columns["LowerEvaluationLimit"].Width = 200;
+            AnalysisTable.Columns["UpperEvaluationLimit"].Width = 200;
+            AnalysisTable.Columns["EvaluationBuzzer"].Width = 200;
+            AnalysisTable.Columns["EvaluationExternalOutput"].Width = 200;
+
+            foreach (DataGridViewColumn col in AnalysisTable.Columns)
+            {
+                col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                col.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            }
         }
 
 
@@ -608,39 +641,27 @@ namespace FootWristStrapsAnalysis
 
         private async void button4_Click(object sender, EventArgs e)
         {
-            string checkSql = "SELECT COUNT(PathID) FROM FolderPaths WHERE ProjectName = @ProjectName";
-            bool isExist = await SqlDataAccess.Checkdata(checkSql, new { ProjectName = "FootWrist" });
-
-            string strsql;
-            if (!isExist)
-            {
-                strsql = "INSERT INTO FolderPaths(FolderPath, ProjectName) VALUES(@FolderPath, @ProjectName)";
-            }
-            else
-            {
-                strsql = "UPDATE FolderPaths SET FolderPath =@FolderPath WHERE ProjectName =@ProjectName";
-            }
-
-
-            var obj = new
-            {
-                FolderPath = folderText.Text,
-                ProjectName = "FootWrist"
-            };
-
-
-            bool result = await SqlDataAccess.UpdateInsertQuery(strsql, obj);
-
-            if (result)
-            {
-                MessageBox.Show("Save folder path Successfully",
-                "Information",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
-            }
+            await SaveFolderPath(folderText.Text);       
         }
 
+        private async Task SaveFolderPath(string folderPath)
+        {
+            string checkSql =
+                "SELECT COUNT(PathID) FROM FolderPaths WHERE ProjectName = @ProjectName";
 
+            bool exists = await SqlDataAccess.Checkdata(
+                checkSql, new { ProjectName = "FootWrist" });
+
+            string sql = exists
+                ? "UPDATE FolderPaths SET FolderPath = @FolderPath WHERE ProjectName = @ProjectName"
+                : "INSERT INTO FolderPaths(FolderPath, ProjectName) VALUES(@FolderPath, @ProjectName)";
+
+            await SqlDataAccess.UpdateInsertQuery(sql, new
+            {
+                FolderPath = folderPath,
+                ProjectName = "FootWrist"
+            });
+        }
 
         private Dictionary<DateTime, Dictionary<string, ESDTestData>> OrganizeDataByDateAndEmployee(IEnumerable<IFootWristModel> data)
         {

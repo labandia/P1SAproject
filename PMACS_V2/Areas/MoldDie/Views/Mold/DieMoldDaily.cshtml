@@ -36,6 +36,8 @@
 
 
             <form id="addDailyForm" class="Moldformcontaner" style="margin-top: 1em;" autocomplete="off">
+                <input type="hidden" name="DieSerial" id="strDieSerial" />
+
                 <!-- Date Input -->
                 <div class="formcustomgroup with-icon">
                     <label class="form-label required" for="dateInput">Date Input</label>
@@ -563,6 +565,7 @@
                      $("#partNumber").text(Details.PartNo);
                      $("#modelName").text(Details.Dimension_Quality);
                      $("#lastCycleShot").text(Details.Total);
+                     $("#strDieSerial").val(Details.DieSerial);
 
                      let statusHtml = "";
 

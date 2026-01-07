@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using PMACS_V2.Areas.PartsLocal.Interface;
 using PMACS_V2.Areas.PartsLocal.Model;
 using PMACS_V2.Controllers;
+using PMACS_V2.Interface;
 using ProgramPartListWeb.Helper;
 
 namespace PMACS_V2.Areas.PartsLocal.Controllers
@@ -14,15 +16,23 @@ namespace PMACS_V2.Areas.PartsLocal.Controllers
     {
         private readonly IProducts _prod;
         private readonly IShopOrderIn _shopin;
-        private readonly IShopOrderOut _shopout;    
+        private readonly IShopOrderOut _shopout;
+        private readonly IUserRepository _user;
 
-        public PartsLocatorController(IProducts prod, IShopOrderIn shopin, IShopOrderOut shopout)
+        public PartsLocatorController(IProducts prod, IShopOrderIn shopin, IShopOrderOut shopout, IUserRepository user)
         {
             _prod = prod;
             _shopin = shopin;
-            _shopout = shopout; 
+            _shopout = shopout;
+            _user = user;
         }
-
+        [HttpGet]
+        public async Task<ActionResult> GetEmployeeInfo(string emp)
+        {
+            var data = await _user.GetEmployees(emp) ?? new List<Models.Employee>();
+            if (data == null && data.Any()) return JsonNotFound("No Employees Data.");
+            return JsonSuccess(data);
+        }
 
         // ===========================================================
         // =============== MASTERLIST PAGES FUNCTION  ================

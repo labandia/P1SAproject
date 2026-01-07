@@ -16,6 +16,17 @@ namespace PMACS_V2.Repository
             throw new NotImplementedException();
         }
 
+        public Task<List<Employee>> GetEmployees(string emp)
+        {
+            return UsersAccess.UserGetData<Employee>($@"SELECT Employee_ID,FullName,Process
+                                                      ,Affiliation,Department_ID
+                                                    FROM Employee_tbl
+                                                    WHERE IsDelete = 0 AND Employee_ID = @Employee_ID", new
+                                                    {
+                                                        Employee_ID = emp
+                                                    });
+        }
+
         public async  Task<List<AuthModel>> LoginCredentials(string user)
         {
             string strquery = @"SELECT ua.User_ID, ua.Username, ua.Password, ua.Role_ID, u.Fullname

@@ -43,18 +43,20 @@ namespace Attendance_Monitoring.View
                 sumlist = await _admin.GetSummaryList(tb, newDateString, newDateString);
                 summarytable.DataSource = sumlist;
 
-                //summarytable.Columns["Date_today"].DisplayIndex = 0;
-                //summarytable.Columns["Employee_ID"].DisplayIndex = 1;
-                //summarytable.Columns["FullName"].DisplayIndex = 2;
-                //summarytable.Columns["TimeIn"].DisplayIndex = 3;
-                //summarytable.Columns["TimeOut"].DisplayIndex = 4;
-                //summarytable.Columns["LateTime"].DisplayIndex = 5;
-                //summarytable.Columns["Regular"].DisplayIndex = 6;
+                summarytable.Columns["Date_today"].DisplayIndex = 0;
+                summarytable.Columns["Employee_ID"].DisplayIndex = 1;
+                summarytable.Columns["FullName"].DisplayIndex = 2;
+                summarytable.Columns["TimeIn"].DisplayIndex = 3;
+                summarytable.Columns["TimeOut"].DisplayIndex = 4;
+                summarytable.Columns["LateTime"].DisplayIndex = 5;
+                summarytable.Columns["Regular"].DisplayIndex = 6;
 
-                //summarytable.Columns["Overtime"].DisplayIndex = 7;
-                //summarytable.Columns["Gtotal"].DisplayIndex = 8;
-                //summarytable.Columns["Shifts"].DisplayIndex = 9;
+                summarytable.Columns["Gtotal"].DisplayIndex = 7;
+                summarytable.Columns["Overtime"].DisplayIndex = 8;
+                summarytable.Columns["ShiftsTime"].DisplayIndex = 9;
+
                 summarytable.Columns["Action"].DisplayIndex = 10;
+                summarytable.Columns["Edit"].DisplayIndex = 11;
 
                 label4.Text = "Total Results: " + summarytable.RowCount;
             }

@@ -28,7 +28,7 @@ namespace Attendance_Monitoring.Utilities
                 if (machineName == "desktop-fc0up1p") //  Home production
                     connectionKey = "HomeDevelopment";
                 else if (machineName == "sdp04003c") //  Test production
-                    connectionKey = "TestDevelopment";
+                    connectionKey = "LiveTest";
                 else
                     connectionKey = "LiveDevelopment";
 
@@ -36,6 +36,7 @@ namespace Attendance_Monitoring.Utilities
                 LogConnectionChoice(machineName, connectionKey);
 
                 return AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings[connectionKey].ConnectionString);
+                //return _cons;
             }
             catch (Exception ex)
             {

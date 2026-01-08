@@ -46,7 +46,6 @@ namespace Attendance_Monitoring.View
 
 
                 var emp = await _admin.GetCRaccess();
-
                 var employee = emp.FirstOrDefault(p => p.IPaddress.Equals(ipAddress, StringComparison.OrdinalIgnoreCase));
 
                 if (employee != null)

@@ -82,67 +82,78 @@ namespace FootWristStrapsAnalysis
 
         private async Task InitializeApplicationAsync(WaitFormDialog waitForm)
         {
-            var selectedDate = dateTimePicker1.Value.Date; // Get only the date part
-
-            await ShowStep(waitForm, "Checking folder path if exist...", 10);
-
-            string folderpath = await GetTheFileFolder();
-
-            // 🚨 NO PATH → ASK USER
-            if (string.IsNullOrWhiteSpace(folderpath) || !Directory.Exists(folderpath))
+            try
             {
-                waitForm.Hide();
-                await Task.Yield(); // allow UI repaint
+                var selectedDate = dateTimePicker1.Value.Date;
 
-                using (var dialog = new FolderPathInputDialog())
+                await ShowStep(waitForm, "Checking folder path if exist...", 10);
+
+                string folderpath = await GetTheFileFolder();
+
+                // 🚨 NO PATH → ASK USER
+                if (string.IsNullOrWhiteSpace(folderpath) || !Directory.Exists(folderpath))
                 {
-                    dialog.StartPosition = FormStartPosition.CenterScreen;
+                    waitForm.Hide();
+                    await Task.Yield();
 
-                    if (dialog.ShowDialog() != DialogResult.OK)
-                        return; // user cancelled
+                    using (var dialog = new FolderPathInputDialog())
+                    {
+                        dialog.StartPosition = FormStartPosition.CenterScreen;
 
-                    folderpath = dialog.FolderPath;
+                        if (dialog.ShowDialog() != DialogResult.OK)
+                        {
+                            waitForm.Close();   // ✅ CLOSE
+                            return;
+                        }
+
+                        folderpath = dialog.FolderPath;
+                    }
+
+                    waitForm.Show();
+                    waitForm.BringToFront();
+
+                    await SaveFolderPath(folderpath);
                 }
 
-                waitForm.Show();
-                waitForm.BringToFront();
+                folderText.Text = folderpath;
 
-                // Save path to DB
-                await SaveFolderPath(folderpath);
-            }
+                await ShowStep(waitForm, "Importing today's CSV file...", 35);
+                await StartAsync();
 
-            folderText.Text = folderpath;
+                await ShowStep(waitForm, "Loading records...", 65);
+                getData = await _foot.GetFootAnalysisData();
 
-            await ShowStep(waitForm, "Importing today's CSV file...", 35);
-            // ⏳ Import + timer start
-            await StartAsync();
-
-            // ⏳ Load data
-            await ShowStep(waitForm, "Loading records...", 65);
-
-            getData = await _foot.GetFootAnalysisData();
-
-            var displayByDate = getData
+                var displayByDate = getData
                     .Where(res => res.TestDate.HasValue &&
                                   res.TestDate.Value.Date == selectedDate)
                     .ToList();
 
-            if (!displayByDate.Any())
-            {
-                MessageBox.Show("No Data Found.", "Warning",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                if (!displayByDate.Any())
+                {
+                    waitForm.Close();   // ✅ CLOSE
+                    MessageBox.Show(
+                        "No Data Found.",
+                        "Warning",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                    return;
+                }
+
+                footlist = displayByDate;
+                CountTable.Text = footlist.Count().ToString();
+                AnalysisTable.DataSource = footlist;
+
+                await ShowStep(waitForm, "Preparing display...", 90);
+                ConfigureGrid();
+
+                await ShowStep(waitForm, "Completed", 100, 500);
             }
-
-            footlist = displayByDate;
-
-            CountTable.Text = footlist.Count().ToString();
-            AnalysisTable.DataSource = footlist;
-
-            await ShowStep(waitForm, "Preparing display...", 90);
-            ConfigureGrid();
-
-            await ShowStep(waitForm, "Completed", 100, 500);
+            finally
+            {
+                // ✅ GUARANTEED cleanup (even if exception occurs)
+                if (!waitForm.IsDisposed)
+                    waitForm.Close();
+            }
         }
 
         private async Task ShowStep(

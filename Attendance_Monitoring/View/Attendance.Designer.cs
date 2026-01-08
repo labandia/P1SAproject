@@ -63,8 +63,6 @@
             this.TimeIn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Shifts = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.LateTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Edit = new System.Windows.Forms.DataGridViewImageColumn();
-            this.Delete = new System.Windows.Forms.DataGridViewImageColumn();
             ((System.ComponentModel.ISupportInitialize)(this.attendancetable)).BeginInit();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -105,9 +103,7 @@
             this.FullName,
             this.TimeIn,
             this.Shifts,
-            this.LateTime,
-            this.Edit,
-            this.Delete});
+            this.LateTime});
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -129,7 +125,6 @@
             this.attendancetable.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.attendancetable.Size = new System.Drawing.Size(1094, 310);
             this.attendancetable.TabIndex = 0;
-            this.attendancetable.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.attendancetable_CellClick);
             this.attendancetable.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.Attendancetable_CellFormatting);
             // 
             // Summary_data
@@ -469,20 +464,6 @@
             this.LateTime.Name = "LateTime";
             this.LateTime.ReadOnly = true;
             // 
-            // Edit
-            // 
-            this.Edit.DataPropertyName = "Edit";
-            this.Edit.HeaderText = "Edit";
-            this.Edit.Name = "Edit";
-            this.Edit.ReadOnly = true;
-            // 
-            // Delete
-            // 
-            this.Delete.DataPropertyName = "Delete";
-            this.Delete.HeaderText = "Delete";
-            this.Delete.Name = "Delete";
-            this.Delete.ReadOnly = true;
-            // 
             // Attendance
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -550,7 +531,5 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn TimeIn;
         private System.Windows.Forms.DataGridViewTextBoxColumn Shifts;
         private System.Windows.Forms.DataGridViewTextBoxColumn LateTime;
-        private System.Windows.Forms.DataGridViewImageColumn Edit;
-        private System.Windows.Forms.DataGridViewImageColumn Delete;
     }
 }

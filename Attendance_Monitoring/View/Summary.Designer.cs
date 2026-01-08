@@ -57,6 +57,7 @@
             this.Gtotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ShiftsTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Action = new System.Windows.Forms.DataGridViewImageColumn();
+            this.Edit = new System.Windows.Forms.DataGridViewImageColumn();
             ((System.ComponentModel.ISupportInitialize)(this.summarytable)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -97,7 +98,8 @@
             this.Overtime,
             this.Gtotal,
             this.ShiftsTime,
-            this.Action});
+            this.Action,
+            this.Edit});
             this.summarytable.EnableHeadersVisualStyles = false;
             this.summarytable.Location = new System.Drawing.Point(42, 241);
             this.summarytable.Name = "summarytable";
@@ -362,6 +364,13 @@
             this.Action.ReadOnly = true;
             this.Action.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             // 
+            // Edit
+            // 
+            this.Edit.DataPropertyName = "Edit";
+            this.Edit.HeaderText = "Edit";
+            this.Edit.Name = "Edit";
+            this.Edit.ReadOnly = true;
+            // 
             // Summary
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -421,5 +430,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Gtotal;
         private System.Windows.Forms.DataGridViewTextBoxColumn ShiftsTime;
         private System.Windows.Forms.DataGridViewImageColumn Action;
+        private System.Windows.Forms.DataGridViewImageColumn Edit;
     }
 }

@@ -90,7 +90,7 @@ namespace PracticeC_
             //DateTime now = DateTime.Now;
 
             //TimeSpan ts = launchDate - now;
-            samplehash();
+            //samplehash();
             //Console.WriteLine("TimeSpan: {0}", ts.ToString());
             //string machineName = Environment.MachineName.ToLower();
             //Console.WriteLine($"Original: {machineName}");
@@ -102,7 +102,7 @@ namespace PracticeC_
             //Console.WriteLine("Generate ID : " + GenerateID(""));
 
 
-            //ConvertstringtoBase64();
+            ConvertstringtoBase64();
 
             Console.ReadKey();
         }
@@ -133,7 +133,7 @@ namespace PracticeC_
 
         public static void ConvertstringtoBase64()
         {
-            //string connectionString = "server=DESKTOP-FC0UP1P;User ID=PCsystem;password=p1saprocess;database=Programlist";
+            string connectionString = "Data Source=172.29.3.139;Initial Catalog=PMACS_TEST;Persist Security Info=True;User ID=p1sa;Password=p1sa1234a*";
             //string connectionString = "SoloCoding";
             //string connectionString = "server=DESKTOP-FC0UP1P;User ID=PCsystem;password=p1saprocess;database=P1sa";
             //string connectionString = "server=DESKTOP-FC0UP1P;User ID=PCsystem;password=p1saprocess;database=PMACS_LIVE";
@@ -145,7 +145,7 @@ namespace PracticeC_
             //string connectionString = "server=SDP0706ES; User ID = p1sa; password=p1sa1234a*; database=PMACS_LIVE; Pooling=True; Min Pool Size=50; Max Pool Size=100;";
             //string connectionString = "server=DESKTOP-FC0UP1P;User ID=PCsystem;password=p1saprocess;database=P1sa;Pooling=True;Min Pool Size=50;Max Pool Size=100;";
             //string connectionString = "server=DESKTOP-FC0UP1P\\SQLEXPRESS;database=PMACS_LIVE;Integrated Security=True;";
-            string connectionString = "server=DESKTOP-FC0UP1P\\SQLEXPRESS;database=PMACS_TEST;Integrated Security=True;";
+            //string connectionString = "server=DESKTOP-FC0UP1P\\SQLEXPRESS;database=PMACS_TEST;Integrated Security=True;";
             string base64ConnectionString = Convert.ToBase64String(Encoding.UTF8.GetBytes(connectionString));
 
             // Print the encoded connection string

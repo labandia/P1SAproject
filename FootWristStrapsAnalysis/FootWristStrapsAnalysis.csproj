@@ -158,6 +158,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UploadPreviousData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UploadPreviousData.Designer.cs">
+      <DependentUpon>UploadPreviousData.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utilities\AesEncryption.cs" />
     <Compile Include="Utilities\CacheHelper.cs" />
     <Compile Include="Utilities\CustomLogger.cs" />
@@ -186,6 +192,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="UploadPreviousData.resx">
+      <DependentUpon>UploadPreviousData.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="WaitFormDialog.resx">
       <DependentUpon>WaitFormDialog.cs</DependentUpon>
     </EmbeddedResource>

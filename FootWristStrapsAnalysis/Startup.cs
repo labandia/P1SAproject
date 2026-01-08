@@ -458,9 +458,11 @@ namespace FootWristStrapsAnalysis
             }
         }
 
-        private async void prevbtn_Click(object sender, EventArgs e)
+        private  void prevbtn_Click(object sender, EventArgs e)
         {
-            await ImportPreviousFiles();
+            //await ImportPreviousFiles();
+            UploadPreviousData uploadForm = new UploadPreviousData();
+            uploadForm.ShowDialog();
         }
 
         private void button1_Click(object sender, EventArgs e)

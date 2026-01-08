@@ -118,7 +118,8 @@ namespace FootWristStrapsAnalysis
             await StartAsync();
 
             // ⏳ Load data
-            await ShowStep(waitForm, "Loading test records...", 65);
+            await ShowStep(waitForm, "Loading records...", 65);
+
             getData = await _foot.GetFootAnalysisData();
 
             var displayByDate = getData

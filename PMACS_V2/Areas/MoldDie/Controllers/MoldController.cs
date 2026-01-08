@@ -108,7 +108,6 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
         [JwtAuthorize]
         public async Task<ActionResult> GetMoldDieDailyList(int Months, int Year, string ProcessID, int Days)
         {
-            Debug.WriteLine($@"Months : {Months} - Year : {Year} - Process : {ProcessID} Days : {Days}");
             var data = await _dieV2.GetDailyMoldData(Months, Days, Year, ProcessID) ?? new List<DieMoldMonitoringModel>();
 
             if (data == null || !data.Any())
@@ -123,7 +122,7 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
         
             //Run tasks in parallel for better performance
             var datalistTask = await _dieV2.GetDailyMoldHistoryData(SearchInput, ProcessID);
-            var detailsTask = datalistTask.FirstOrDefault();
+            var detailsTask = await _dieV2.GetMoldieMasterlistParts(SearchInput);
             // All in One Display
             var multiData = new Dictionary<string, object>
             {

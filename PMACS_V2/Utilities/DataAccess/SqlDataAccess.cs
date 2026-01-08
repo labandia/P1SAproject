@@ -86,6 +86,7 @@ namespace PMACS_V2.Helper
             catch (SqlException ex)
             {
                 Logger.Error(ex, $"SQL Exception while executing query. Query: {query}, CacheKey: {cacheKey}");
+                Debug.WriteLine(ex.Message);
                 return new List<T>();
             }
         }
@@ -151,13 +152,13 @@ namespace PMACS_V2.Helper
                     // Check if the query is a stored procedure name (only word characters, no spaces/symbols)
                     var isStoredProcedure = Regex.IsMatch(query, @"^\w+$");
 
-                    int count = await con.ExecuteScalarAsync<int>(
+                    int? count = await con.ExecuteScalarAsync<int?>(
                         query,
                         parameters,
                         commandType: isStoredProcedure ? CommandType.StoredProcedure : CommandType.Text
                     );
 
-                    return count;
+                    return count ?? 0;
                 }
             }
             catch (Exception ex)

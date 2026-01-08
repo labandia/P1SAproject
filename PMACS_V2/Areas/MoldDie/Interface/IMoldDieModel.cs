@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using PMACS_V2.Areas.P1SA.Models;
 using PMACS_V2.Areas.PartsLocal.Model;
@@ -31,6 +32,23 @@ namespace PMACS_V2.Areas.MoldDie.Interface
         Task<bool> DeleteDailyMoldie(int ID);
         Task<bool> UpdateDailyLastCycle(int recordID, int lastcycle);
 
+
+        Task<List<string>> GetSamePartsNo(string dieSerial,
+                                        string processId,
+                                        string currentPart);
+
+
+
+        Task UpsertDailyAsync(
+               string partNo,
+               DateTime date,
+               int cycleShot,
+               int total,
+               int status,
+               DieMoldMonitoringModel mold);
+
+        Task UpsertMonitor(string partNo, DateTime date, int cycleShot);
+
         // ===========================================================
         // MOLD DIE TOOLING DATA 
         // ===========================================================
@@ -51,7 +69,11 @@ namespace PMACS_V2.Areas.MoldDie.Interface
               string filter,
               int pageNumber,
               int pageSize);
+
+        Task<DieMoldMonitoringModel> GetMoldieMasterlistParts(string partno);
         Task<bool> CheckMoldieMasterlist(string partno);
+
+
 
         Task<bool> AddUpdateMoldieMasterlist(DieMoldMonitoringModel mold, int action);
         Task<bool> DeleteMoldieMasterlist(string partno);

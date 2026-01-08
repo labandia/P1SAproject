@@ -7,6 +7,7 @@
 
 <html>
 <head>
+    <link rel="icon" type="image/x-icon" href="@Url.Content("~/Content/Images/circle.ico")">
     <link href="~/Content/css/loginlayout.css" rel="stylesheet" />
     <meta name="viewport" content="width=device-width" />
     <title>Parts Locator (Rotor) System</title>
@@ -183,7 +184,6 @@
             }
 
         .signin-btn {
- 
             background: linear-gradient(90deg, #4a90e2, #2c5282);
             color: white;
             border: none;
@@ -260,8 +260,6 @@
             margin-top: 5px;
             display: none;
         }
-
-        
     </style>
 
 </head>
@@ -341,7 +339,7 @@
       savebtn.innerHTML = " <div class='buttonloading'></div>";
 
       let formData = new FormData(e.target);
-      formData.append('proj', 10);
+      formData.append('proj', 11);
       const data = Object.fromEntries(formData);
       let res = await postData('/Auth/Authenticate', data);
 

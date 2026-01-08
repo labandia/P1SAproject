@@ -449,6 +449,7 @@
     <Content Include="Content\css\PMACS_Layout.min.css">
       <DependentUpon>PMACS_Layout.css</DependentUpon>
     </Content>
+    <Content Include="Content\Images\circle.ico" />
     <Content Include="Content\Shared\bootstrap-grid.css" />
     <Content Include="Content\Shared\bootstrap-grid.min.css" />
     <Content Include="Content\Shared\bootstrap-grid.rtl.css" />

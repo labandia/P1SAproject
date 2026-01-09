@@ -470,69 +470,152 @@
         return mapping[areaNumber] || areaNumber;
     };
 
+    // Create grid with RBF location codes
+    const createGrid = () => {
+        gridContainer.innerHTML = '';
+
+        locationCodes.forEach(locationCode => {
+            const cell = document.createElement('div');
+            cell.className = 'grid-cell';
+            cell.id = `cell-${locationCode}`;
+            cell.setAttribute('data-area', locationCode);
+            cell.title = locationCode; // Full code on hover
+
+            const labelElement = document.createElement('div');
+            labelElement.className = 'cell-label';
+            // Display shortened version (last 4 characters)
+            labelElement.textContent = locationCode.substring(locationCode.length - 4);
+
+            // Find part numbers for this location
+            const locationItems = storageList.filter(item => item.Area === locationCode);
+            const partNumbers = [...new Set(locationItems.map(item => item.Partnumber))];
+
+            const partNumberElement = document.createElement('div');
+            partNumberElement.className = 'part-number';
+            partNumberElement.id = `part-${locationCode}`;
+            partNumberElement.textContent = partNumbers.length > 0 ?
+                partNumbers.slice(0, 3).join(', ') + (partNumbers.length > 3 ? '...' : '') :
+                '-';
+
+            cell.appendChild(labelElement);
+            cell.appendChild(partNumberElement);
+            gridContainer.appendChild(cell);
+
+            // Add click event
+            cell.addEventListener('click', function () {
+                handleLocationClick(locationCode);
+            });
+        });
+    };
+    // Handle location click
+    const handleLocationClick = (locationCode) => {
+        const selectedRecordId = getRecordIdByLocation(locationCode);
+        if (selectedRecordId !== null) {
+            getProductDetails(selectedRecordId);
+        } else {
+            showLocationDetails(locationCode);
+        }
+        highlightBoxOnly(locationCode);
+    };
+
+    // Show location details in modal
+    const showLocationDetails = (locationCode) => {
+        $("#letterdisplay").text(locationCode);
+        const locationStorage = storageList.filter(res => res.Area === locationCode);
+        const container = $("#StorageBody");
+        container.empty();
+
+        if (locationStorage.length === 0) {
+            container.append(
+                `<tr>
+                            <td colspan="5" style="text-align: center; padding: 20px; color: #6c757d;">
+                                <i class="fas fa-box-open" style="font-size: 24px; margin-bottom: 10px; display: block;"></i>
+                                No parts stored in this location
+                            </td>
+                        </tr>`
+            );
+        } else {
+            locationStorage.forEach(res => {
+                container.append(
+                    `<tr class='Editbtnbutton' id='editButton_${res.RecordID}' >
+                                <td>${res.Partnumber}</td>
+                                <td>${res.ModelName}</td>
+                                <td>${res.Quantity}</td>
+                                <td>${res.FrontImage}</td>
+                                <td>${res.BackImage}</td>
+                            </tr>`
+                );
+            });
+        }
+
+        $("#OpenStorageModal").modal("show");
+    };
+
+
+
     // Create grid cells A-U
-    const labels = "ABCDEFGHIJKLMNOPQRSTU".split("");
+    //const labels = "ABCDEFGHIJKLMNOPQRSTU".split("");
 
     // Create grid cells
-    labels.forEach(letter => {
-        // Create grid cell
-        //console.log("LETTER " + letter);
-        const cell = document.createElement('div');
-        cell.className = 'grid-cell';
-        cell.id = `cell-${letter}`;
-        cell.setAttribute('data-area', letter);
+    //labels.forEach(letter => {
+    //    // Create grid cell
+    //    //console.log("LETTER " + letter);
+    //    const cell = document.createElement('div');
+    //    cell.className = 'grid-cell';
+    //    cell.id = `cell-${letter}`;
+    //    cell.setAttribute('data-area', letter);
 
-        const labelElement = document.createElement('div');
-        labelElement.className = 'cell-label';
-        labelElement.textContent = letter;
+    //    const labelElement = document.createElement('div');
+    //    labelElement.className = 'cell-label';
+    //    labelElement.textContent = letter;
 
-        // Find part numbers for this area
-        const areaItems = storageList.filter(item => item.Area === letter);
-        const partNumbers = [...new Set(areaItems.map(item => item.Partnumber))];
+    //    // Find part numbers for this area
+    //    const areaItems = storageList.filter(item => item.Area === letter);
+    //    const partNumbers = [...new Set(areaItems.map(item => item.Partnumber))];
 
-        const partNumberElement = document.createElement('div');
-        partNumberElement.className = 'part-number';
-        partNumberElement.id = `part-${letter}`;
-        partNumberElement.textContent = partNumbers.length > 0 ? partNumbers.join(', ') : '-';
+    //    const partNumberElement = document.createElement('div');
+    //    partNumberElement.className = 'part-number';
+    //    partNumberElement.id = `part-${letter}`;
+    //    partNumberElement.textContent = partNumbers.length > 0 ? partNumbers.join(', ') : '-';
 
-        cell.appendChild(labelElement);
-        cell.appendChild(partNumberElement);
-        gridContainer.appendChild(cell);
+    //    cell.appendChild(labelElement);
+    //    cell.appendChild(partNumberElement);
+    //    gridContainer.appendChild(cell);
 
-        // Add click event to grid cell
-        cell.addEventListener('click', function () {
-            const selectedRecordId = getRecordIdByArea(letter);
-            if (selectedRecordId !== null) {
+    //    // Add click event to grid cell
+    //    cell.addEventListener('click', function () {
+    //        const selectedRecordId = getRecordIdByArea(letter);
+    //        if (selectedRecordId !== null) {
 
 
-                getProductDetails(selectedRecordId);
+    //            getProductDetails(selectedRecordId);
 
-            } else {
-                $("#letterdisplay").text(letter);
-                var letterStorage = storageList.filter(res => res.Area === letter);
-                const exists = storageList.some(u => u.Area === letter);
-                const container = $("#StorageBody");
-                container.empty();
+    //        } else {
+    //            $("#letterdisplay").text(letter);
+    //            var letterStorage = storageList.filter(res => res.Area === letter);
+    //            const exists = storageList.some(u => u.Area === letter);
+    //            const container = $("#StorageBody");
+    //            container.empty();
 
-                letterStorage.forEach(res => {
-                    container.append(
-                        `<tr class='Editbtnbutton' id='editButton_${res.RecordID}' >
-                            <td>${res.Partnumber}</td>
-                            <td>${res.ModelName}</td>
-                            <td>${res.Quantity}</td>
-                            <td>${res.FrontImage}</td>
-                            <td>${res.BackImage}</td>
-                        </tr>`
-                    );
-                });
+    //            letterStorage.forEach(res => {
+    //                container.append(
+    //                    `<tr class='Editbtnbutton' id='editButton_${res.RecordID}' >
+    //                        <td>${res.Partnumber}</td>
+    //                        <td>${res.ModelName}</td>
+    //                        <td>${res.Quantity}</td>
+    //                        <td>${res.FrontImage}</td>
+    //                        <td>${res.BackImage}</td>
+    //                    </tr>`
+    //                );
+    //            });
 
-                $("#OpenStorageModal").modal("show");
-            }
+    //            $("#OpenStorageModal").modal("show");
+    //        }
 
-            // Highlight only the selected box
-            highlightBoxOnly(letter);
-        });
-    });
+    //        // Highlight only the selected box
+    //        highlightBoxOnly(letter);
+    //    });
+    //});
 
     // === Show Details ===
     $(document).on("click", ".Editbtnbutton", function (e) {

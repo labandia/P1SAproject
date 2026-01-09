@@ -3,6 +3,8 @@ using FootWristStrapsAnalysis.Model;
 using ProgramPartListWeb.Helper;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FootWristStrapsAnalysis.Services
@@ -49,20 +51,28 @@ namespace FootWristStrapsAnalysis.Services
                             ORDER BY TestDate, EmployeeID";
             return await SqlDataAccess.GetIEnumerableData<IFootWristModel>(strsql, null);
         }
+        public async Task<List<SummaryCount>> GetTotalSummary(DateTime testDate)
+        {
+            string sql = @"
+                    SELECT
+                        ISNULL(SUM(CASE WHEN ComprehensiveResult = 1 THEN 1 ELSE 0 END), 0) AS PassCount,
+                        ISNULL(SUM(CASE WHEN ComprehensiveResult = 0 THEN 1 ELSE 0 END), 0) AS FailCount
+                    FROM FootWristStrapTestResults
+                    WHERE CAST(TestDate AS date) = @TestDate;
+                ";
 
+        
+
+            return await SqlDataAccess.GetData<SummaryCount>(
+                sql,
+                new { TestDate = testDate.ToString("yyyy-MM-dd") }
+            );
+        }
 
         public Task<bool> ImportSetFootAnalysis(IFootWristModel foot)
         {
             string sql = @"
-                IF NOT EXISTS
-                (
-                    SELECT 1
-                    FROM FootWristStrapTestResults
-                    WHERE EmployeeID = @EmployeeID
-                      AND CAST(TestDate AS DATE) = CAST(@TestDate AS DATE)
-                )
-                BEGIN
-                    INSERT INTO FootWristStrapTestResults
+                 INSERT INTO FootWristStrapTestResults
                     (
                         TestDate,
                         TestTime,
@@ -101,8 +111,59 @@ namespace FootWristStrapsAnalysis.Services
                         @EvaluationExternalOutput,
                         @FG470,
                         @Note
-                    );
-                END";
+                    );";
+
+
+            //string sql = @"
+            //    IF NOT EXISTS
+            //    (
+            //        SELECT 1
+            //        FROM FootWristStrapTestResults
+            //        WHERE EmployeeID = @EmployeeID
+            //          AND CAST(TestDate AS DATE) = CAST(@TestDate AS DATE)
+            //    )
+            //    BEGIN
+            //        INSERT INTO FootWristStrapTestResults
+            //        (
+            //            TestDate,
+            //            TestTime,
+            //            EmployeeID,
+            //            EmployeeName,
+            //            ComprehensiveResult,
+            //            LeftFootResistance,
+            //            LeftFootResult,
+            //            RightFootResistance,
+            //            RightFootResult,
+            //            WristStrapResult,
+            //            ConductivityEvaluation,
+            //            LowerEvaluationLimit,
+            //            UpperEvaluationLimit,
+            //            EvaluationBuzzer,
+            //            EvaluationExternalOutput,
+            //            FG470,
+            //            Note
+            //        )
+            //        VALUES
+            //        (
+            //            @TestDate,
+            //            @TestTime,
+            //            @EmployeeID,
+            //            @EmployeeName,
+            //            @ComprehensiveResult,
+            //            @LeftFootResistance,
+            //            @LeftFootResult,
+            //            @RightFootResistance,
+            //            @RightFootResult,
+            //            @WristStrapResult,
+            //            @ConductivityEvaluation,
+            //            @LowerEvaluationLimit,
+            //            @UpperEvaluationLimit,
+            //            @EvaluationBuzzer,
+            //            @EvaluationExternalOutput,
+            //            @FG470,
+            //            @Note
+            //        );
+            //    END";
 
             return SqlDataAccess.UpdateInsertQuery(sql, foot);
         }
@@ -138,5 +199,25 @@ namespace FootWristStrapsAnalysis.Services
 
             return SqlDataAccess.StringList(query, new { Month = month, Year = year });
         }
+
+        public async Task<bool> DeleteByTestDate(DateTime testDate)
+        {
+            string sql = "DELETE FROM FootWristStrapTestResults WHERE TestDate =@TestDate";
+            return  await SqlDataAccess.UpdateInsertQuery(sql, new { TestDate = testDate.Date });
+        }
+
+        public Task<int> GetRowCountByDate(DateTime testDate)
+        {
+            string sql = @"SELECT COUNT(*) 
+                   FROM FootWristStrapTestResults 
+                   WHERE TestDate = @TestDate";
+
+            return  SqlDataAccess.GetCountData(
+                sql,
+                new { TestDate = testDate.Date }
+            );
+        }
+
+    
     }
 }

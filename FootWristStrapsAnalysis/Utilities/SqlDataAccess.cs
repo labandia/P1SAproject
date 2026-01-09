@@ -35,7 +35,7 @@ namespace ProgramPartListWeb.Helper
 
                 //LogConnectionChoice(machineName, connectionKey);
 
-                return AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings[connectionKey].ConnectionString);
+                return AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings["LiveDevelopment"].ConnectionString);
             }
             catch (Exception ex)
             {
@@ -99,7 +99,7 @@ namespace ProgramPartListWeb.Helper
                 {
                     var IsStoreProd = Regex.IsMatch(query, @"^\w+$");
                     var commandType = IsStoreProd ? CommandType.StoredProcedure : CommandType.Text;
-                    var result = await con.QueryAsync<T>(query, parameters, commandType: CommandType.StoredProcedure);
+                    var result = await con.QueryAsync<T>(query, parameters, commandType: commandType);
 
                     return result.ToList();
                 }

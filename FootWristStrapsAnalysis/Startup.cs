@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Media;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using Color = System.Drawing.Color;
 
 
 namespace FootWristStrapsAnalysis
@@ -51,6 +52,9 @@ namespace FootWristStrapsAnalysis
         {
             this.Enabled = false;
 
+            comboBox1.SelectedIndex = 0;
+
+
             var waitForm = new WaitFormDialog
             {
                 TopMost = true,
@@ -85,6 +89,7 @@ namespace FootWristStrapsAnalysis
             try
             {
                 var selectedDate = dateTimePicker1.Value.Date;
+
 
                 await ShowStep(waitForm, "Checking folder path if exist...", 10);
 
@@ -121,16 +126,28 @@ namespace FootWristStrapsAnalysis
                 await StartAsync();
 
                 await ShowStep(waitForm, "Loading records...", 65);
+
+
+                string selectedResult = comboBox1.SelectedItem?.ToString() ?? "All";
                 getData = await _foot.GetFootAnalysisData();
 
-                var displayByDate = getData
-                    .Where(res => res.TestDate.HasValue &&
-                                  res.TestDate.Value.Date == selectedDate)
-                    .ToList();
+
+              
+
+                var displayByDate = FilterFootData(
+                    getData,
+                    selectedDate,
+                    selectedResult
+                );
+
+                //var displayByDate = getData
+                //    .Where(res => res.TestDate.HasValue &&
+                //                  res.TestDate.Value.Date == selectedDate)
+                //    .ToList();
 
                 if (!displayByDate.Any())
                 {
-                    waitForm.Close();   // ✅ CLOSE
+                    //waitForm.Close();   // ✅ CLOSE
                     MessageBox.Show(
                         "No Data Found.",
                         "Warning",
@@ -138,6 +155,15 @@ namespace FootWristStrapsAnalysis
                         MessageBoxIcon.Warning);
                     return;
                 }
+
+                var summaryList = await _foot.GetTotalSummary(selectedDate) ?? new List<SummaryCount>();
+
+                foreach (var summary in summaryList)
+                {
+                    PassCount.Text = summary.PassCount.ToString();
+                    FailCount.Text = summary.FailCount.ToString();
+                }
+
 
                 footlist = displayByDate;
                 CountTable.Text = footlist.Count().ToString();
@@ -147,6 +173,10 @@ namespace FootWristStrapsAnalysis
                 ConfigureGrid();
 
                 await ShowStep(waitForm, "Completed", 100, 500);
+
+                
+
+             
             }
             finally
             {
@@ -204,137 +234,352 @@ namespace FootWristStrapsAnalysis
             Debug.WriteLine("⏰ Auto import timer started (every 15 minutes).");
         }
 
-
-        // ✅ Core function that runs every 15 min
         public async Task AutomaticImportData()
         {
             try
             {
-                //string folderPath = @"D:\PC_system\CIRCUIT";
                 string folderPath = folderText.Text;
 
                 if (!Directory.Exists(folderPath))
                 {
-                    //Debug.WriteLine("⚠️ Folder not found: " + folderPath);
                     MessageBox.Show("⚠️ Folder not found: " + folderPath);
                     return;
                 }
 
-                string[] csvFiles = Directory.GetFiles(folderPath, "*.csv", SearchOption.TopDirectoryOnly);
+                string[] csvFiles = Directory.GetFiles(folderPath, "*.csv");
                 if (csvFiles.Length == 0)
                 {
-                    //Debug.WriteLine("⚠️ No CSV files found in the folder.");
-                    MessageBox.Show("⚠️ No CSV files found in the folder.");
+                    MessageBox.Show("⚠️ No CSV files found.");
                     return;
                 }
 
                 DateTime today = DateTime.Today;
-                bool foundTodayFile = false;
+                bool todayFileFound = false;
 
                 foreach (string file in csvFiles)
                 {
                     string fileName = Path.GetFileNameWithoutExtension(file);
                     Debug.WriteLine($"📄 Checking file: {fileName}");
 
-                    // ===================== STEP 2: Extract date from filename =====================
+                    // ===== STEP 1: Extract date from filename =====
                     string[] parts = fileName.Split('_');
                     if (parts.Length < 2)
                     {
-                        Debug.WriteLine("Invalid filename format: " + fileName);
+                        Debug.WriteLine($"❌ Invalid filename format: {fileName}");
                         continue;
                     }
 
-                    string datePart = parts[1];
-                    if (!DateTime.TryParseExact(datePart, "yyyyMMdd", null, System.Globalization.DateTimeStyles.None, out DateTime fileDate))
+                    if (!DateTime.TryParseExact(
+                            parts[1],
+                            "yyyyMMdd",
+                            null,
+                            System.Globalization.DateTimeStyles.None,
+                            out DateTime fileDate))
                     {
-                        Debug.WriteLine("Invalid date format in file name: " + fileName);
+                        Debug.WriteLine($"❌ Invalid date format: {fileName}");
                         continue;
                     }
 
-                    // ===================== STEP 3: Only today's file =====================
+                    // ===== STEP 2: Only TODAY'S file =====
                     if (fileDate.Date != today)
                     {
-                        Debug.WriteLine($"Skipping {fileName} — not today's file.");
+                        Debug.WriteLine($"⏭ Skipping {fileName} — not today's file.");
                         continue;
                     }
 
-                    foundTodayFile = true;
+                    todayFileFound = true;
+                    Debug.WriteLine($"✅ Processing TODAY'S file: {fileName}");
+
+                    // ===== STEP 3: VALIDATE ROW COUNT =====
                     string[] lines = File.ReadAllLines(file);
-                    if (lines.Length < 2)
-                        continue;
+                    int excelRowCount = lines.Length - 1; // minus header
+                    int dbRowCount = await _foot.GetRowCountByDate(today);
+                    dbRowCount = dbRowCount + 1;
+                    Debug.WriteLine($"📊 Excel Rows: {excelRowCount}, DB Rows: {dbRowCount}");
 
-                    // ===================== STEP 4: Process CSV rows =====================
-                    for (int i = 1; i < lines.Length; i++)
+                    // ✅ SKIP IF SAME COUNT
+                    if (excelRowCount == dbRowCount)
                     {
-                        string[] col = lines[i].Split(',');
-
-                        if (col.Length < 18)
-                        {
-                            Debug.WriteLine($"Skipping invalid row {i} in {fileName}");
-                            continue;
-                        }
-
-                        string employeeId = col[2].Trim();
-                        if (string.IsNullOrWhiteSpace(employeeId))
-                            continue;
-
-                        // ===================== STEP 5: Check if EmployeeID already exists =====================
-                        bool exists = await _foot.CheckIfEmployeeIDImportToday(employeeId, fileDate);
-                        if (exists)
-                        {
-                            Debug.WriteLine($"Skipping {employeeId} — already exists for {fileDate:yyyy-MM-dd}");
-                            continue;
-                        }
-
-
-                        TimeSpan testTime;
-                        string timeString = col[1].Trim().Trim('"'); // ✅ remove surrounding quotes
-
-                        if (!TimeSpan.TryParseExact(timeString, @"h\:mm", null, out testTime) &&
-                            !TimeSpan.TryParseExact(timeString, @"hh\:mm", null, out testTime))
-                        {
-                            // fallback if parsing fails
-                            testTime = TimeSpan.Zero;
-                            Debug.WriteLine($"⚠️ Invalid time format for Employee {col[2].Trim()} in row {i}: '{timeString}'");
-                        }
-
-                        // ===================== STEP 6: Insert the new record =====================
-                        IFootWristModel data = new IFootWristModel
-                        {
-                            TestDate = fileDate,
-                            TestTime = testTime,
-                            EmployeeID = employeeId.Trim('"'),
-                            EmployeeName = col[3].Trim().Trim('"'),
-                            ComprehensiveResult = col[5].Trim().Trim('"') == "PASS",
-                            LeftFootResistance = col[6].Trim().Trim('"'),
-                            LeftFootResult = col[7].Trim().Trim('"') == "PASS",
-                            RightFootResistance = col[8].Trim().Trim('"'),
-                            RightFootResult = col[9].Trim().Trim('"') == "PASS",
-                            WristStrapResult = col[10].Trim().Trim('"'),
-                            ConductivityEvaluation = col[11].Trim().Trim('"'),
-                            LowerEvaluationLimit = col[12].Trim().Trim('"'),
-                            UpperEvaluationLimit = col[13].Trim().Trim('"'),
-                            EvaluationBuzzer = col[14].Trim().Trim('"') == "PASS",
-                            EvaluationExternalOutput = col[15].Trim().Trim('"') == "PASS",
-                            FG470 = col[16].Trim().Trim('"'),
-                            Note = col[17].Trim().Trim('"') == "DS"
-                        };
-
-                        await _foot.ImportSetFootAnalysis(data);
-                        Debug.WriteLine($"✅ Inserted Employee: {data.EmployeeID} ({data.EmployeeName})");
+                        Debug.WriteLine("⏭ Excel and DB row counts are equal — skipping import.");
+                        return;
                     }
+
+                    // 🔥 DELETE ONLY IF EXCEL HAS MORE ROWS
+                    if (excelRowCount > dbRowCount)
+                    {
+                        Debug.WriteLine($"🗑 Deleting records for date: {today:yyyy-MM-dd}");
+                        await _foot.DeleteByTestDate(today);
+                    }
+
+
+                    // ===== STEP 4: Import CSV =====
+                    await ImportCsvInsertToday(file, today);
+
+                    break; // 💡 only ONE today's file
                 }
 
-                if (foundTodayFile)
-                    Debug.WriteLine($"✅ Import complete for today's file(s). Time: {DateTime.Now:HH:mm:ss}");
+                if (!todayFileFound)
+                    Debug.WriteLine("ℹ️ No CSV file found for today.");
                 else
-                    Debug.WriteLine($"ℹ️ No file found for today's date {today:yyyy-MM-dd}.");
+                    Debug.WriteLine("✅ Today import completed successfully.");
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("❌ Error in AutomaticImportData: " + ex.Message);
+                Debug.WriteLine("❌ Import error: " + ex.Message);
             }
         }
+
+
+
+        private async Task ImportCsvInsertToday(string filePath, DateTime today)
+        {
+            string[] lines = File.ReadAllLines(filePath);
+            if (lines.Length < 2)
+                return;
+
+            int excelRowCount = lines.Length - 1; // exclude header
+
+            int count = 0;
+
+            for (int i = 1; i < lines.Length; i++)
+            {
+                string[] col = lines[i].Split(',');
+
+                if (col.Length < 18)
+                {
+                    Debug.WriteLine($"Skipping invalid row {i}");
+                    continue;
+                }
+
+                TimeSpan testTime;
+                string timeString = col[1].Trim().Trim('"');
+
+                if (!TimeSpan.TryParseExact(timeString, @"h\:mm", null, out testTime) &&
+                    !TimeSpan.TryParseExact(timeString, @"hh\:mm", null, out testTime))
+                {
+                    testTime = TimeSpan.Zero;
+                }
+                string strEmployee = col[2].Trim().Trim('"');
+                string strleft = col[7].Trim().Trim('"');
+
+                var data = new IFootWristModel
+                {
+                    TestDate = today, // ✅ ALWAYS TODAY
+                    TestTime = testTime,
+                    EmployeeID = col[2].Trim().Trim('"'),
+                    EmployeeName = col[3].Trim().Trim('"'),
+                    ComprehensiveResult = col[5].Trim().Trim('"') == "PASS",
+                    LeftFootResistance = col[6].Trim().Trim('"'),
+                    LeftFootResult = col[7].Trim().Trim('"') == "PASS",
+                    RightFootResistance = col[8].Trim().Trim('"'),
+                    RightFootResult = col[9].Trim().Trim('"') == "PASS",
+                    WristStrapResult = col[10].Trim().Trim('"'),
+                    ConductivityEvaluation = col[11].Trim().Trim('"'),
+                    LowerEvaluationLimit = col[12].Trim().Trim('"'),
+                    UpperEvaluationLimit = col[13].Trim().Trim('"'),
+                    EvaluationBuzzer = col[14].Trim().Trim('"') == "PASS",
+                    EvaluationExternalOutput = col[15].Trim().Trim('"') == "PASS",
+                    FG470 = col[16].Trim().Trim('"'),
+                    Note = col[17].Trim().Trim('"') == "DS"
+                };
+
+                count++;
+
+                await _foot.ImportSetFootAnalysis(data);
+
+                Debug.WriteLine($@"Employee ID : {strEmployee} -  LeftResult : {strleft} - Count : {count}");
+            }
+        }
+
+
+        private List<IFootWristModel> FilterFootData(
+               IEnumerable<IFootWristModel> sourceData,
+              DateTime selectedDate,
+              string resultFilter   // "All", "Pass", "Fail"
+          )
+        {
+            return sourceData
+                .Where(res =>
+                    res.TestDate.HasValue &&
+                    res.TestDate.Value.Date == selectedDate &&
+                    (
+                        resultFilter == "ALL" ||
+                        (resultFilter == "PASS" && res.ComprehensiveResult == true) ||
+                        (resultFilter == "FAIL" && res.ComprehensiveResult == false)
+                    )
+                )
+                .ToList();
+        }
+
+
+
+        private void DisplayFootData(
+               IEnumerable<IFootWristModel> sourceData,
+              DateTime selectedDate,
+              string resultFilter   // "All", "Pass", "Fail"
+         )
+        {
+            var displayByDate = sourceData
+                .Where(res =>
+                    res.TestDate.HasValue &&
+                    res.TestDate.Value.Date == selectedDate &&
+                    (
+                        resultFilter == "ALL" ||
+                        (resultFilter == "PASS" && res.ComprehensiveResult == true) ||
+                        (resultFilter == "FAIL" && res.ComprehensiveResult == false)
+                    )
+                )
+                .ToList();
+
+
+            if (!displayByDate.Any())
+            {
+                //waitForm.Close();   // ✅ CLOSE
+                MessageBox.Show(
+                    "No Data Found.",
+                    "Warning",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return;
+            }
+
+
+            footlist = displayByDate;
+            CountTable.Text = footlist.Count().ToString();
+            AnalysisTable.DataSource = footlist;
+        }
+
+
+        //// ✅ Core function that runs every 15 min
+        //public async Task AutomaticImportData()
+        //{
+        //    try
+        //    {
+        //        //string folderPath = @"D:\PC_system\CIRCUIT";
+        //        string folderPath = folderText.Text;
+
+        //        if (!Directory.Exists(folderPath))
+        //        {
+        //            //Debug.WriteLine("⚠️ Folder not found: " + folderPath);
+        //            MessageBox.Show("⚠️ Folder not found: " + folderPath);
+        //            return;
+        //        }
+
+        //        string[] csvFiles = Directory.GetFiles(folderPath, "*.csv", SearchOption.TopDirectoryOnly);
+        //        if (csvFiles.Length == 0)
+        //        {
+        //            //Debug.WriteLine("⚠️ No CSV files found in the folder.");
+        //            MessageBox.Show("⚠️ No CSV files found in the folder.");
+        //            return;
+        //        }
+
+        //        DateTime today = DateTime.Today;
+        //        bool foundTodayFile = false;
+
+        //        foreach (string file in csvFiles)
+        //        {
+        //            string fileName = Path.GetFileNameWithoutExtension(file);
+        //            Debug.WriteLine($"📄 Checking file: {fileName}");
+
+        //            // ===================== STEP 2: Extract date from filename =====================
+        //            string[] parts = fileName.Split('_');
+        //            if (parts.Length < 2)
+        //            {
+        //                Debug.WriteLine("Invalid filename format: " + fileName);
+        //                continue;
+        //            }
+
+        //            string datePart = parts[1];
+        //            if (!DateTime.TryParseExact(datePart, "yyyyMMdd", null, System.Globalization.DateTimeStyles.None, out DateTime fileDate))
+        //            {
+        //                Debug.WriteLine("Invalid date format in file name: " + fileName);
+        //                continue;
+        //            }
+
+        //            // ===================== STEP 3: Only today's file =====================
+        //            if (fileDate.Date != today)
+        //            {
+        //                Debug.WriteLine($"Skipping {fileName} — not today's file.");
+        //                continue;
+        //            }
+
+        //            foundTodayFile = true;
+        //            string[] lines = File.ReadAllLines(file);
+        //            if (lines.Length < 2)
+        //                continue;
+
+        //            // ===================== STEP 4: Process CSV rows =====================
+        //            for (int i = 1; i < lines.Length; i++)
+        //            {
+        //                string[] col = lines[i].Split(',');
+
+        //                if (col.Length < 18)
+        //                {
+        //                    Debug.WriteLine($"Skipping invalid row {i} in {fileName}");
+        //                    continue;
+        //                }
+
+        //                string employeeId = col[2].Trim();
+        //                if (string.IsNullOrWhiteSpace(employeeId))
+        //                    continue;
+
+        //                // ===================== STEP 5: Check if EmployeeID already exists =====================
+        //                bool exists = await _foot.CheckIfEmployeeIDImportToday(employeeId, fileDate);
+        //                if (exists)
+        //                {
+        //                    Debug.WriteLine($"Skipping {employeeId} — already exists for {fileDate:yyyy-MM-dd}");
+        //                    continue;
+        //                }
+
+
+        //                TimeSpan testTime;
+        //                string timeString = col[1].Trim().Trim('"'); // ✅ remove surrounding quotes
+
+        //                if (!TimeSpan.TryParseExact(timeString, @"h\:mm", null, out testTime) &&
+        //                    !TimeSpan.TryParseExact(timeString, @"hh\:mm", null, out testTime))
+        //                {
+        //                    // fallback if parsing fails
+        //                    testTime = TimeSpan.Zero;
+        //                    Debug.WriteLine($"⚠️ Invalid time format for Employee {col[2].Trim()} in row {i}: '{timeString}'");
+        //                }
+
+        //                // ===================== STEP 6: Insert the new record =====================
+        //                IFootWristModel data = new IFootWristModel
+        //                {
+        //                    TestDate = fileDate,
+        //                    TestTime = testTime,
+        //                    EmployeeID = employeeId.Trim('"'),
+        //                    EmployeeName = col[3].Trim().Trim('"'),
+        //                    ComprehensiveResult = col[5].Trim().Trim('"') == "PASS",
+        //                    LeftFootResistance = col[6].Trim().Trim('"'),
+        //                    LeftFootResult = col[7].Trim().Trim('"') == "PASS",
+        //                    RightFootResistance = col[8].Trim().Trim('"'),
+        //                    RightFootResult = col[9].Trim().Trim('"') == "PASS",
+        //                    WristStrapResult = col[10].Trim().Trim('"'),
+        //                    ConductivityEvaluation = col[11].Trim().Trim('"'),
+        //                    LowerEvaluationLimit = col[12].Trim().Trim('"'),
+        //                    UpperEvaluationLimit = col[13].Trim().Trim('"'),
+        //                    EvaluationBuzzer = col[14].Trim().Trim('"') == "PASS",
+        //                    EvaluationExternalOutput = col[15].Trim().Trim('"') == "PASS",
+        //                    FG470 = col[16].Trim().Trim('"'),
+        //                    Note = col[17].Trim().Trim('"') == "DS"
+        //                };
+
+        //                await _foot.ImportSetFootAnalysis(data);
+        //                Debug.WriteLine($"✅ Inserted Employee: {data.EmployeeID} ({data.EmployeeName})");
+        //            }
+        //        }
+
+        //        if (foundTodayFile)
+        //            Debug.WriteLine($"✅ Import complete for today's file(s). Time: {DateTime.Now:HH:mm:ss}");
+        //        else
+        //            Debug.WriteLine($"ℹ️ No file found for today's date {today:yyyy-MM-dd}.");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Debug.WriteLine("❌ Error in AutomaticImportData: " + ex.Message);
+        //    }
+        //}
 
         public async Task ImportPreviousFiles()
         {
@@ -461,7 +706,7 @@ namespace FootWristStrapsAnalysis
         private  void prevbtn_Click(object sender, EventArgs e)
         {
             //await ImportPreviousFiles();
-            UploadPreviousData uploadForm = new UploadPreviousData();
+            UploadPreviousData uploadForm = new UploadPreviousData(_foot, folderText.Text);
             uploadForm.ShowDialog();
         }
 
@@ -996,6 +1241,24 @@ namespace FootWristStrapsAnalysis
             return employeeIDs;
         }
 
+        private bool TryGetDateFromFilename(string filePath, out DateTime fileDate)
+        {
+            fileDate = DateTime.MinValue;
+
+            string fileName = Path.GetFileNameWithoutExtension(filePath); // FG465_20251219
+            string[] parts = fileName.Split('_');
+
+            if (parts.Length < 2)
+                return false;
+
+            return DateTime.TryParseExact(
+                parts[1],
+                "yyyyMMdd",
+                null,
+                System.Globalization.DateTimeStyles.None,
+                out fileDate
+            );
+        }
 
 
         public class ESDTestData
@@ -1008,6 +1271,104 @@ namespace FootWristStrapsAnalysis
             public string RightFootResistance { get; set; }
             public bool RightFootResult { get; set; }
             public bool ComprehensiveResult { get; set; }
+        }
+
+        private void AnalysisTable_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (AnalysisTable.Columns[e.ColumnIndex].Name == "ComprehensiveResult")
+            {
+                string checkstats = e.Value.ToString() == "True" ? "PASS" : "FAIL";
+                e.Value = checkstats;
+
+                if (checkstats == "PASS")
+                {
+                    e.CellStyle.ForeColor = Color.FromArgb(78, 166, 101);
+
+                }
+                else
+                {
+                    e.CellStyle.ForeColor = Color.FromArgb(184, 94, 104);
+                }
+
+
+                e.FormattingApplied = true;
+            }else if (AnalysisTable.Columns[e.ColumnIndex].Name == "LeftFootResult")
+            {
+                string checkstats = e.Value.ToString() == "True" ? "PASS" : "FAIL";
+                e.Value = checkstats;
+                if (checkstats == "PASS")
+                {
+                    e.CellStyle.ForeColor = Color.FromArgb(78, 166, 101);
+
+                }
+                else
+                {
+                    e.CellStyle.ForeColor = Color.FromArgb(184, 94, 104);
+                }
+                e.FormattingApplied = true;
+            }
+            else if (AnalysisTable.Columns[e.ColumnIndex].Name == "RightFootResult")
+            {
+                string checkstats = e.Value.ToString() == "True" ? "PASS" : "FAIL";
+                e.Value = checkstats;
+
+                if (checkstats == "PASS")
+                {
+                    e.CellStyle.ForeColor = Color.FromArgb(78, 166, 101);
+
+                }
+                else
+                {
+                    e.CellStyle.ForeColor = Color.FromArgb(184, 94, 104);
+                }
+                e.FormattingApplied = true;
+            }
+            else if (AnalysisTable.Columns[e.ColumnIndex].Name == "EvaluationBuzzer")
+            {
+                string checkstats = e.Value.ToString() == "True" ? "PASS" : "FAIL";
+                e.Value = checkstats;
+
+                if (checkstats == "PASS")
+                {
+                    e.CellStyle.ForeColor = Color.FromArgb(78, 166, 101);
+
+                }
+                else
+                {
+                    e.CellStyle.ForeColor = Color.FromArgb(184, 94, 104);
+                }
+                e.FormattingApplied = true;
+            }
+            else if (AnalysisTable.Columns[e.ColumnIndex].Name == "EvaluationExternalOutput")
+            {
+                string checkstats = e.Value.ToString() == "True" ? "PASS" : "FAIL";
+                e.Value = checkstats;
+
+                if (checkstats == "PASS")
+                {
+                    e.CellStyle.ForeColor = Color.FromArgb(78, 166, 101);
+
+                }
+                else
+                {
+                    e.CellStyle.ForeColor = Color.FromArgb(184, 94, 104);
+                }
+                e.FormattingApplied = true;
+            }
+        }
+
+        private async void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var selectedDate = dateTimePicker1.Value.Date;
+            string selectedResult = comboBox1.SelectedItem?.ToString() ?? "ALL";
+            getData = await _foot.GetFootAnalysisData();
+
+            DisplayFootData(
+                  getData,
+                  selectedDate,
+                  selectedResult
+              );
+
         }
     }
 }

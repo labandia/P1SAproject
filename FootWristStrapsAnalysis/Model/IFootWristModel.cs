@@ -139,6 +139,13 @@ namespace FootWristStrapsAnalysis.Model
     }
 
 
+    public class SummaryCount
+    {
+        public int PassCount { get; set; }  
+        public int FailCount { get; set; }
+    }
+
+
     public class EmployeeModel
     {
         public string EmployeeID { get; set; }

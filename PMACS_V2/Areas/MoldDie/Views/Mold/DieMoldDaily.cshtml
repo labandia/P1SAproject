@@ -32,7 +32,15 @@
                 </div>
             </div>
 
-
+            <div class="formcustomgroup" style="margin-top: 1em;">
+                <label class="form-label required" for="processSelect">Search Die Serial.  <span class="validate-message" id="validDateinput">Input part no.</span></label>
+                <div class="search-container">
+                    <input type="text" id="searchDie" placeholder="Enter part number to search (e.g., 002886060-01)" maxlength="14">
+                    <button id="searchButton" class="btn btn-secondary">
+                        <i class="fa-solid fa-search"></i>
+                    </button>
+                </div>
+            </div>
 
 
             <form id="addDailyForm" class="Moldformcontaner" style="margin-top: 1em;" autocomplete="off">
@@ -355,9 +363,11 @@
     // Loads the year and month select options
     initMonthSelect("monthSelectDaily", true);
 
-     let GetData = [], DailyData = [];
-     let TableDisplay = $("#dieMoldMasterlist");
-     let DailyDisplay = $("#DieMoldDaily");
+    let GetData = [], DailyData = [];
+    let TableDisplay = $("#dieMoldMasterlist");
+    let DailyDisplay = $("#DieMoldDaily");
+    let strpartnum = "";
+    let searchSet;
 
     let yearSelect = $("#yearselectDaily");
     const currentMonth = new Date().getMonth();
@@ -510,7 +520,7 @@
      });
      // Search Logic
      async function SearchMoldiePartno() {
-         const searchInput = $("#searchInput").val().trim();
+         strpartnum = $("#searchInput").val().trim();
          const selectionProcess = $("#processSelect").val();
 
          if (selectionProcess === "" && !searchInput) {
@@ -551,7 +561,7 @@
 
              let res = await FetchAuthenticate('@Url.Action("SearchMoldieDaily", "Mold")', {
                  ProcessID: selectionProcess,
-                 SearchInput: searchInput
+                 SearchInput: strpartnum
              });
 
 
@@ -566,6 +576,7 @@
                      $("#modelName").text(Details.Dimension_Quality);
                      $("#lastCycleShot").text(Details.Total);
                      $("#strDieSerial").val(Details.DieSerial);
+                     strpartnum = Details.PartNo;   
 
                      let statusHtml = "";
 

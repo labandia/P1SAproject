@@ -147,7 +147,7 @@ namespace FootWristStrapsAnalysis
 
                 if (!displayByDate.Any())
                 {
-                    //waitForm.Close();   // ✅ CLOSE
+                    waitForm.Close();   // ✅ CLOSE
                     MessageBox.Show(
                         "No Data Found.",
                         "Warning",
@@ -294,7 +294,6 @@ namespace FootWristStrapsAnalysis
                     string[] lines = File.ReadAllLines(file);
                     int excelRowCount = lines.Length - 1; // minus header
                     int dbRowCount = await _foot.GetRowCountByDate(today);
-                    dbRowCount = dbRowCount + 1;
                     Debug.WriteLine($"📊 Excel Rows: {excelRowCount}, DB Rows: {dbRowCount}");
 
                     // ✅ SKIP IF SAME COUNT

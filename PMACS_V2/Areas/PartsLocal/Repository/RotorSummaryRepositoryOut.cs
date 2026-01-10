@@ -92,7 +92,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                         FROM PartsLocatorRotor_Transaction t
                         INNER JOIN PartsLocatorRotor_Masterlist m 
                             ON t.Partnumber = m.Partnumber
-                        WHERE t.TransactionType = 1
+                        WHERE t.TransactionType = 1 AND t.IsDelete = 0
                           AND t.TransactionDate >= @StartDate
                           AND t.TransactionDate < DATEADD(DAY, 1, @EndDate)
                           AND (

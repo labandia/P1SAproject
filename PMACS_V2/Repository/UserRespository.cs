@@ -21,7 +21,7 @@ namespace PMACS_V2.Repository
             return UsersAccess.UserGetData<Employee>($@"SELECT Employee_ID,FullName,Process
                                                       ,Affiliation,Department_ID
                                                     FROM Employee_tbl
-                                                    WHERE IsDelete = 0 AND Employee_ID = @Employee_ID", new
+                                                    WHERE IsDelete = 1 AND Employee_ID = @Employee_ID", new
                                                     {
                                                         Employee_ID = emp
                                                     });

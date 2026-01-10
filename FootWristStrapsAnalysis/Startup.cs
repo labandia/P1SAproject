@@ -148,11 +148,11 @@ namespace FootWristStrapsAnalysis
                 if (!displayByDate.Any())
                 {
                     waitForm.Close();   // ✅ CLOSE
-                    MessageBox.Show(
-                        "No Data Found.",
-                        "Warning",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
+                    //MessageBox.Show(
+                    //    "No Data Found.",
+                    //    "Warning",
+                    //    MessageBoxButtons.OK,
+                    //    MessageBoxIcon.Warning);
                     return;
                 }
 
@@ -434,11 +434,11 @@ namespace FootWristStrapsAnalysis
             if (!displayByDate.Any())
             {
                 //waitForm.Close();   // ✅ CLOSE
-                MessageBox.Show(
-                    "No Data Found.",
-                    "Warning",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
+                //MessageBox.Show(
+                //    "No Data Found.",
+                //    "Warning",
+                //    MessageBoxButtons.OK,
+                //    MessageBoxIcon.Warning);
                 return;
             }
 
@@ -1150,9 +1150,9 @@ namespace FootWristStrapsAnalysis
             cell.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
             cell.Style.Font.Bold = false;
 
-            cell.Style.Font.Color.SetColor(
-                isPass ? System.Drawing.Color.Green : System.Drawing.Color.Red
-            );
+            //cell.Style.Font.Color.SetColor(
+            //    isPass ? System.Drawing.Color.Green : System.Drawing.Color.Red
+            //);
         }
 
 

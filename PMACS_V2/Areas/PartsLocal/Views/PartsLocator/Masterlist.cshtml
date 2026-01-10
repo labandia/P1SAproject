@@ -151,7 +151,7 @@
                         <label>Select Palete Location<small style="color: #a81818; font-weight: 600;">*</small></label> <br />
                         <div class="select-container">
                             <select id="selectedPalleted" name="area" required>
-                                <option value="0">-- Select Pallete --</option>
+                                <option value="">-- Select Shelf --</option>
                             </select>
                         </div>
                     </div>
@@ -200,7 +200,7 @@
                         <label>Select Palete Location<small style="color: #a81818; font-weight: 600;">*</small></label> <br />
                         <div class="select-container">
                             <select id="currentPallete" name="newarea" required>
-                                <option value="0">-- Select Pallete --</option>
+                                <option value="">-- Select Shelf --</option>
                             </select>
                         </div>
                     </div>
@@ -243,6 +243,33 @@
     const tabs = document.querySelectorAll(".Mold_tab");
     const slider = document.querySelector(".Mold_slider");
     const contents = document.querySelectorAll(".Mold_content");
+
+
+    const locationCodes = [
+        'RBF21001001',
+        'RBF22001001',
+        'RBF23001001',
+        'RBF24001001',
+        'RBF25001001',
+        'RBF26001001',
+        'RBF27001001',
+        'RBF28001001',
+        'RBF29001001',
+        'RBF2A001001',
+        'RBF2B001001',
+        'RBF2C001001',
+        'RBF2D001001',
+        'RBF2E001001',
+        'RBF2F001001',
+        'RBF2G001001',
+        'RBF2H001001',
+        'RBF2J001001',
+        'RBF2K001001',
+        'RBF2L001001',
+        'RBF2M001001',
+        'RBF2N001001',
+        'RBF2P001001'
+    ];
 
 
     tabs.forEach((tab, index) => {
@@ -326,7 +353,7 @@
         e.preventDefault();
         let formData = new FormData(this);
         const data = Object.fromEntries(formData);
-
+        console.log(data);
         if (strOldlocal === parseInt(data.area)) {
             alert("Selected area is already the current area. !!!");
             return;
@@ -361,10 +388,10 @@
             $("#changeTitle").text("Edit Masterlist");
 
             let filterdata = MasterlistData.find(res => res.Partnumber === ID);
-            console.log(filterdata);
             if (filterdata) {
                 $("#Partnumber").val(filterdata.Partnumber);
                 $("#ModelName").val(filterdata.ModelName);
+                $("#currentPallete").val(filterdata.Area);
             }
         }
 
@@ -472,7 +499,6 @@
                  e.stopPropagation();
                  const buttonId = $(this).attr('id');
                  const rowIndex = buttonId.split('_')[1];
-                 console.log("ROW CLICK: " + rowIndex );
                  GetPaleteLocation(rowIndex);
              });
 
@@ -489,7 +515,12 @@
 
           }
     }
-
+    const ShelfList = () => {
+        $.each(locationCodes, function (index, year) {
+            $("#currentPallete").append(`<option value='${year}'>${year}</option>`);
+            $("#selectedPalleted").append(`<option value='${year}'>${year}</option>`);
+        });
+    }
 
 
     const GetPaleteLocation = async (partnum) => {
@@ -498,14 +529,13 @@
         let res = await FetchAuthenticate('@Url.Action("GetProductsLocationPallete", "PartsLocator")', {
             partnum: partnum
         });
-        console.log(res);
         if (res && res.Success) {
           $("#StorageTables").empty();
           StorageData = res.Data;
 
           StorageData.forEach((row, index) => {
               var setdata = `<tr>
-                    <td>${GetLocationString(row.Area)}</td>
+                    <td>${row.Area}</td>
                     <td>${row.Quantity}</td>
                     <td>
                        <button type='button' class='btn actionicon text-primary EditPallete' id='EditPallete_${row.RecordID}' >
@@ -528,7 +558,7 @@
               const buttonId = $(this).attr('id');
               const rowIndex = buttonId.split('_')[1];
               let filterdata = StorageData.find(res => res.RecordID === parseInt(rowIndex));
-
+              console.log(filterdata);
               if (filterdata) {
                   $("#EditPalletepartnum").val(filterdata.Partnumber);
                   $("#RecordID").val(filterdata.RecordID);
@@ -610,24 +640,7 @@
         }
     }
 
-    const selectDis = document.getElementById("selectedPalleted");
-    const editArea = document.getElementById("currentPallete");
-
-    for (let i = 0; i < 26; i++) {
-        //const option = document.createElement("option");
-
-        //// A to Z
-        //option.text = String.fromCharCode(65 + i);
-
-        //// Numeric value (1–26)
-        //option.value = i + 1;
-        const text = String.fromCharCode(65 + i);
-        const value = i + 1;
-
-
-        selectDis.append(new Option(text, value));
-        editArea.append(new Option(text, value));
-    }
+  
 
 
 
@@ -641,7 +654,8 @@
         try {
 
             const [master, palete] = await Promise.all([
-                GetMasterlist()
+                GetMasterlist(),
+                ShelfList()
             ]);
         } catch (error) {
             console.error("Failed to load page data:", error);

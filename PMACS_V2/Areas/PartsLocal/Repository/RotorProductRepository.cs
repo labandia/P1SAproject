@@ -85,7 +85,8 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
         {
             string strsql = $@"SELECT
                                 l.RecordID, 
-	                            m.Partnumber, m.ModelName, l.Area, l.Quantity,
+	                            m.Partnumber, m.ModelName, l.Quantity,
+		                        CONCAT('R', l.Area) as Area,
 	                            m.FrontImage, m.BackImage
                             FROM PartsLocatorRotor_Location l
                             INNER JOIN PartsLocatorRotor_Masterlist m
@@ -118,7 +119,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
 
         // ADD / EDIT / REMOVE LOCATION METHODS
 
-        public Task<bool> AddNewLocation(int Area, string partnum, int Quantity)
+        public Task<bool> AddNewLocation(string Area, string partnum, int Quantity)
         {
 
             string strsql = @"
@@ -152,7 +153,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
             });
         }
 
-        public Task<bool> ChangeLocation(int ID, int Area, int Quan)
+        public Task<bool> ChangeLocation(int ID, string Area, int Quan)
         {
             string strsql = $@"UPDATE PartsLocatorRotor_Location
                             SET Area = @Area, Quantity =@Quantity

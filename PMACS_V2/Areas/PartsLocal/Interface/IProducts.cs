@@ -21,8 +21,8 @@ namespace PMACS_V2.Areas.PartsLocal.Interface
         Task<bool> DeleteMasterlist(string partnum);
 
         // ADD / EDIT / REMOVE LOCATION METHODS
-        Task<bool> AddNewLocation(int Area, string partnum, int Quan);
-        Task<bool> ChangeLocation(int ID,  int Area, int Quan);
+        Task<bool> AddNewLocation(string Area, string partnum, int Quan);
+        Task<bool> ChangeLocation(int ID,  string Area, int Quan);
         Task<bool> RemoveLocation(int recorID);
     }
 }

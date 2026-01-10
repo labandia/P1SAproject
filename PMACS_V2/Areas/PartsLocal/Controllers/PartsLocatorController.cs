@@ -85,7 +85,7 @@ namespace PMACS_V2.Areas.PartsLocal.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> AddMasterlocation(int area, string partnum, int Quantity)
+        public async Task<ActionResult> AddMasterlocation(string area, string partnum, int Quantity)
         {
             bool result = await _prod.AddNewLocation(area, partnum, Quantity);
             if (!result) return JsonValidationError();
@@ -93,7 +93,7 @@ namespace PMACS_V2.Areas.PartsLocal.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> EditMasterlocation(int RecordID, int newarea, int Quantity)
+        public async Task<ActionResult> EditMasterlocation(int RecordID, string newarea, int Quantity)
         {
             bool result = await _prod.ChangeLocation(RecordID, newarea, Quantity);
             if (!result) return JsonValidationError();
@@ -168,6 +168,14 @@ namespace PMACS_V2.Areas.PartsLocal.Controllers
             return JsonCreated(shop, "Update successfully");
         }
 
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteShopOrderIn(ShopOrderInModel shop)
+        {
+            bool result = await _shopin.DeleteTransaction(shop);
+            if (!result) return JsonValidationError();
+            return JsonCreated(shop, "Delete Data successfully");
+        }
 
 
         [JwtAuthorize]

@@ -35,7 +35,7 @@ namespace ProgramPartListWeb.Helper
 
                 //LogConnectionChoice(machineName, connectionKey);
 
-                return AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings["LiveDevelopment"].ConnectionString);
+                return AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings[connectionKey].ConnectionString);
             }
             catch (Exception ex)
             {

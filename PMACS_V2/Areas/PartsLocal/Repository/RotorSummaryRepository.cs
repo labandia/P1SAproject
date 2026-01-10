@@ -38,7 +38,11 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
 
         public Task<bool> DeleteTransaction(ShopOrderInModel shop)
         {
-            throw new System.NotImplementedException();
+            string strsql = $@"UPDATE PartsLocatorRotor_Transaction SET IsDelete = 1 WHERE TransactionID =@TransactionID";
+            return SqlDataAccess.UpdateInsertQuery(strsql, new
+            {
+                TransactionID = shop.TransactionID
+            }); 
         }
 
 
@@ -80,7 +84,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                           FROM PartsLocatorRotor_Transaction t
                           INNER JOIN PartsLocatorRotor_Masterlist m 
                           ON t.Partnumber = m.Partnumber
-                          WHERE  t.TransactionType = 0
+                          WHERE  t.TransactionType = 0 AND t.IsDelete = 0
                           AND t.TransactionDate >= @StartDate
                           AND t.TransactionDate < DATEADD(DAY, 1, @EndDate)
                           AND (

@@ -149,10 +149,10 @@ namespace PracticeC_
             string base64ConnectionString = Convert.ToBase64String(Encoding.UTF8.GetBytes(connectionString));
 
             // Print the encoded connection string
-            Console.WriteLine($"Base64 Encoded Connection String: {base64ConnectionString}");
+            //Console.WriteLine($"Base64 Encoded Connection String: {base64ConnectionString}");
             // Print the encoded connection string
-            //string a = DecodeBase64ToString("c2VydmVyPVNEUDA3MDZFUzsgVXNlciBJRCA9IHAxc2E7IHBhc3N3b3JkPXAxc2ExMjM0YSo7IGRhdGFiYXNlPVBNQUNTX0xJVkU7IFBvb2xpbmc9VHJ1ZTsgTWluIFBvb2wgU2l6ZT01MDsgTWF4IFBvb2wgU2l6ZT0xMDA7");
-            //Console.WriteLine($"Base64 Decrypted {a}");
+            string a = DecodeBase64ToString("c2VydmVyPVNEUDA3MDZFUztVc2VyIElEPXAxc2E7cGFzc3dvcmQ9cDFzYTEyMzRhKjtkYXRhYmFzZT1QTUFDU19URVNUO1Bvb2xpbmc9VHJ1ZTtNaW4gUG9vbCBTaXplPTUwO01heCBQb29sIFNpemU9MTAwOw==");
+            Console.WriteLine($"Base64 Decrypted {a}");
             Console.ReadKey();
         }
 

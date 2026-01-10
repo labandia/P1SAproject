@@ -108,7 +108,7 @@
         </div>
     </div>
 
-    <div id="pagination" style="display: flex; align-items:center; justify-content: center; "></div>
+    <div id="pagination" style="display: flex; align-items:center; justify-content: center; padding: 1em; "></div>
 </section>
 
 @*=================================================================================*@
@@ -317,12 +317,12 @@
                 GetTransactionSummaryIN();
             } else {
                 GetTransactionSummaryOUT();
-              
+
             }
-          
+
         }
     });
-    
+
     $("#EditShopOrderInform").on('submit', async function (e) {
          e.preventDefault();
          let formData = new FormData(this);
@@ -331,7 +331,7 @@
          let res = await postData('@Url.Action("EditShopOrderIn", "PartsLocator")', data);
          if (res && res.Success) {
             $("#EditShopOrderINModal").modal('hide');
- 
+
              if (shopStats == 0) {
                  GetTransactionSummaryIN();
 
@@ -379,14 +379,20 @@
                       <td style='font-weight: 600;'>${row.RotorOrder}</td>
                       <td style='font-weight: 600;'>${row.Partnumber}</td>
                       <td style='text-align: left; padding-left: 1.5em;'>${row.ModelName}</td>
-                      <td>${customAreaMapping(row.Area)}</td>
+                      <td>${row.Area}</td>
                       <td>${row.PreviousQuantity}</td>
                       <td>${row.Quantity}</td>
                       <td>${row.Remarks}</td>
                       <td>
-                         <button type='button' class='btn actionicon text-primary EditToolClick' id='editButton_${row.TransactionID}' >
-                            <i class='fa-regular fa-pen-to-square action_btn'></i>
-                         </button>
+                          <div style='display: flex; align-items: center; column-gap: 5px;'>
+                             <button type='button' class='btn actionicon text-primary EditToolClick' id='editButton_${row.TransactionID}' >
+                                <i class='fa-regular fa-pen-to-square action_btn'></i>
+                             </button>
+
+                             <button type='button' class='btn actionicon text-danger deleteButton' id='deleteButton_${row.TransactionID}' >
+                                <i class='fa-regular fa-trash-can action_btn'></i>
+                             </button>
+                          </div>
                       </td>
                   </tr>;`
 
@@ -414,6 +420,47 @@
 
               });
 
+
+                    // Opens Edit Form Modal
+                 $(document).on('click', '.deleteButton', async function (e) {
+                     e.stopPropagation();
+                     const buttonId = $(this).attr('id');
+                     const rowIndex = buttonId.split('_')[1];
+
+                     Swal.fire({
+                         title: "Are you sure?",
+                         text: "You won't be able to revert this!",
+                         icon: "warning",
+                         showCancelButton: true,
+                         confirmButtonColor: "#3085d6",
+                         cancelButtonColor: "#d33",
+                         confirmButtonText: "Yes, delete it!"
+                     }).then(async (result) => {   // 👈 make this async
+                           if (result.isConfirmed) {
+
+                               let res = await postData('@Url.Action("DeleteShopOrderIn", "PartsLocator")', {
+                                   TransactionID: rowIndex
+                               });
+                               if (res && res.Success) {
+                                   Swal.fire({
+                                       title: res.Message,
+                                       icon: "success"
+                                   });
+
+                                   if (shopStats == 0) {
+                                       GetTransactionSummaryIN();
+                                   } else {
+                                       GetTransactionSummaryOUT();
+
+                                   }
+                               } else {
+                                   Swal.fire("Error", res?.Message || "Delete failed", "error");
+                               }
+                           }
+                       });
+
+
+                 });
 
           } else {
                  const loadData = `<tr>
@@ -447,7 +494,6 @@
         const url = `@Url.Action("GetTransactionSummaryOut", "PartsLocator")?${params.toString()}`;
 
         let res = await FetchAuthenticate(url, {});
-        console.log(res);
         if (res && res.Success) {
             $("#ShopOrderSummaryOut").empty();
             let dataArray = res.Data.Items;
@@ -473,7 +519,7 @@
                   <td>${row.ModelBase}</td>
                   <td style='font-weight: 600;'>${row.Partnumber}</td>
                   <td style='text-align: left; padding-left: 1.5em;'>${row.ModelName}</td>
-                  <td>${row.Area == 0 ? "N/A" : customAreaMapping(row.Area)}</td>
+                  <td>${row.Area == 0 ? "N/A" : row.Area}</td>
                   <td>${row.PreviousQuantity}</td>
                   <td>${row.Quantity}</td>
                   <td>${row.Remarks}</td>
@@ -483,6 +529,8 @@
                      <button type='button' class='btn actionicon text-primary EditToolOOutClick' id='editButton_${row.TransactionID}' >
                         <i class='fa-regular fa-pen-to-square action_btn'></i>
                      </button>
+
+                     
                   </td>
               </tr>;`
 

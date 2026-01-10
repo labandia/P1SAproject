@@ -53,7 +53,7 @@ namespace FootWristStrapsAnalysis
             this.Enabled = false;
 
             comboBox1.SelectedIndex = 0;
-
+            comboBox2.SelectedIndex = 0;
 
             var waitForm = new WaitFormDialog
             {
@@ -128,46 +128,7 @@ namespace FootWristStrapsAnalysis
                 await ShowStep(waitForm, "Loading records...", 65);
 
 
-                string selectedResult = comboBox1.SelectedItem?.ToString() ?? "All";
-                getData = await _foot.GetFootAnalysisData();
-
-
-              
-
-                var displayByDate = FilterFootData(
-                    getData,
-                    selectedDate,
-                    selectedResult
-                );
-
-                //var displayByDate = getData
-                //    .Where(res => res.TestDate.HasValue &&
-                //                  res.TestDate.Value.Date == selectedDate)
-                //    .ToList();
-
-                if (!displayByDate.Any())
-                {
-                    waitForm.Close();   // ✅ CLOSE
-                    //MessageBox.Show(
-                    //    "No Data Found.",
-                    //    "Warning",
-                    //    MessageBoxButtons.OK,
-                    //    MessageBoxIcon.Warning);
-                    return;
-                }
-
-                var summaryList = await _foot.GetTotalSummary(selectedDate) ?? new List<SummaryCount>();
-
-                foreach (var summary in summaryList)
-                {
-                    PassCount.Text = summary.PassCount.ToString();
-                    FailCount.Text = summary.FailCount.ToString();
-                }
-
-
-                footlist = displayByDate;
-                CountTable.Text = footlist.Count().ToString();
-                AnalysisTable.DataSource = footlist;
+                await FootwristReloadFilterData();
 
                 await ShowStep(waitForm, "Preparing display...", 90);
                 ConfigureGrid();
@@ -238,6 +199,8 @@ namespace FootWristStrapsAnalysis
         {
             try
             {
+                dateTimePicker1.Value = DateTime.Today;
+
                 string folderPath = folderText.Text;
 
                 if (!Directory.Exists(folderPath))
@@ -392,19 +355,27 @@ namespace FootWristStrapsAnalysis
 
 
         private List<IFootWristModel> FilterFootData(
-               IEnumerable<IFootWristModel> sourceData,
+              IEnumerable<IFootWristModel> sourceData,
               DateTime selectedDate,
-              string resultFilter   // "All", "Pass", "Fail"
+              string resultFilter,    // "All", "Pass", "Fail"
+              List<string> prefixes
           )
         {
+           
             return sourceData
                 .Where(res =>
                     res.TestDate.HasValue &&
-                    res.TestDate.Value.Date == selectedDate &&
+                    res.TestDate.Value.Date == selectedDate.Date &&
                     (
                         resultFilter == "ALL" ||
                         (resultFilter == "PASS" && res.ComprehensiveResult == true) ||
                         (resultFilter == "FAIL" && res.ComprehensiveResult == false)
+                    ) &&
+                    (
+                        prefixes == null ||
+                        (!string.IsNullOrEmpty(res.EmployeeID) &&
+                         prefixes.Any(p =>
+                             res.EmployeeID.StartsWith(p, StringComparison.OrdinalIgnoreCase)))
                     )
                 )
                 .ToList();
@@ -415,17 +386,25 @@ namespace FootWristStrapsAnalysis
         private void DisplayFootData(
                IEnumerable<IFootWristModel> sourceData,
               DateTime selectedDate,
-              string resultFilter   // "All", "Pass", "Fail"
+              string resultFilter,  // "All", "Pass", "Fail"
+              List<string> prefixes
          )
         {
-            var displayByDate = sourceData
+          
+            var displayByDate =  sourceData
                 .Where(res =>
                     res.TestDate.HasValue &&
-                    res.TestDate.Value.Date == selectedDate &&
+                    res.TestDate.Value.Date == selectedDate.Date &&
                     (
                         resultFilter == "ALL" ||
                         (resultFilter == "PASS" && res.ComprehensiveResult == true) ||
                         (resultFilter == "FAIL" && res.ComprehensiveResult == false)
+                    ) &&
+                    (
+                        prefixes == null ||
+                        (!string.IsNullOrEmpty(res.EmployeeID) &&
+                         prefixes.Any(p =>
+                             res.EmployeeID.StartsWith(p, StringComparison.OrdinalIgnoreCase)))
                     )
                 )
                 .ToList();
@@ -850,8 +829,12 @@ namespace FootWristStrapsAnalysis
 
         }
 
-        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        private async void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
+            var selectedDate = dateTimePicker1.Value.Date;
+            string selectedResult = comboBox1.SelectedItem?.ToString() ?? "ALL";
+            string selectedAgency = comboBox2.SelectedItem?.ToString() ?? "All";
+            List<string> prefixes = GetEmployeeIdPrefixes(selectedAgency);
             selectedRecordIds = new List<int>();
             selectedEmployeeID = new List<string>();
 
@@ -860,7 +843,16 @@ namespace FootWristStrapsAnalysis
             // Assuming getData is already loaded somewhere else (e.g., Form_Load)
             if (getData == null) return;
 
-            var selectedDate = dateTimePicker1.Value.Date;
+            var summaryList = await _foot.GetTotalSummary(selectedDate, prefixes) ?? new List<SummaryCount>();
+
+            foreach (var summary in summaryList)
+            {
+                PassCount.Text = summary.PassCount.ToString();
+                FailCount.Text = summary.FailCount.ToString();
+            }
+
+
+
             footlist = getData
                 .Where(res => res.TestDate.HasValue && res.TestDate.Value.Date == selectedDate)
                 .ToList();
@@ -1358,15 +1350,69 @@ namespace FootWristStrapsAnalysis
 
         private async void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            await FootwristReloadFilterData();
+        }
+
+        private async void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            await FootwristReloadFilterData();
+        }
+
+
+
+        private async Task FootwristReloadFilterData()
+        {
             var selectedDate = dateTimePicker1.Value.Date;
             string selectedResult = comboBox1.SelectedItem?.ToString() ?? "ALL";
+            string selectedAgency = comboBox2.SelectedItem?.ToString() ?? "All";
+            List<string> prefixes = GetEmployeeIdPrefixes(selectedAgency);
+
             getData = await _foot.GetFootAnalysisData();
 
             DisplayFootData(
                   getData,
                   selectedDate,
-                  selectedResult
+                  selectedResult,
+                  prefixes
               );
+
+            var summaryList = await _foot.GetTotalSummary(selectedDate, prefixes) ?? new List<SummaryCount>();
+
+            foreach (var summary in summaryList)
+            {
+                PassCount.Text = summary.PassCount.ToString();
+                FailCount.Text = summary.FailCount.ToString();
+            }
+        }
+
+
+        public static List<string> GetEmployeeIdPrefixes(string selectedAgency)
+        {
+            if (string.IsNullOrWhiteSpace(selectedAgency))
+                return null;
+
+            switch (selectedAgency)
+            {
+                case "OS":
+                    return new List<string> { "EN" };
+
+                case "TMS":
+                    return new List<string> { "SD" };
+
+                case "SYNERGY ONE":
+                    return new List<string> { "8" };
+
+                case "SDP":
+                    return new List<string> { "1", "2" };
+
+                case "ALL":
+                default:
+                    return null; // No filter
+            }
+        }
+
+        private void AnalysisTable_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
 
         }
     }

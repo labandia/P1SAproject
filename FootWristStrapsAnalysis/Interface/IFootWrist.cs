@@ -9,7 +9,7 @@ namespace FootWristStrapsAnalysis.Interface
     {
         Task<IEnumerable<IFootWristModel>> GetFootAnalysisData();
         Task<IEnumerable<IFootWristModel>> GetTestDataForMonth(int month, int year);
-        Task<List<SummaryCount>> GetTotalSummary(DateTime testDate);
+        Task<List<SummaryCount>> GetTotalSummary(DateTime testDate, List<string> prefix);
 
         Task<List<string>>GetSelectedEmployeeID(int month, int year);
 

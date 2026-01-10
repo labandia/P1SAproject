@@ -51,22 +51,37 @@ namespace FootWristStrapsAnalysis.Services
                             ORDER BY TestDate, EmployeeID";
             return await SqlDataAccess.GetIEnumerableData<IFootWristModel>(strsql, null);
         }
-        public async Task<List<SummaryCount>> GetTotalSummary(DateTime testDate)
+        public async Task<List<SummaryCount>> GetTotalSummary(DateTime testDate, List<string> prefixes)
         {
-            string sql = @"
-                    SELECT
-                        ISNULL(SUM(CASE WHEN ComprehensiveResult = 1 THEN 1 ELSE 0 END), 0) AS PassCount,
-                        ISNULL(SUM(CASE WHEN ComprehensiveResult = 0 THEN 1 ELSE 0 END), 0) AS FailCount
-                    FROM FootWristStrapTestResults
-                    WHERE CAST(TestDate AS date) = @TestDate;
-                ";
+            Debug.WriteLine("CALL");
+            var conditions = new List<string>();
+            var parameters = new Dictionary<string, object>();
+            
+            parameters.Add("@TestDate", testDate.Date);
 
-        
 
-            return await SqlDataAccess.GetData<SummaryCount>(
-                sql,
-                new { TestDate = testDate.ToString("yyyy-MM-dd") }
-            );
+            if (prefixes != null && prefixes.Any())
+            {
+                for (int i = 0; i < prefixes.Count; i++)
+                {
+                    string paramName = "@p" + i;
+                    conditions.Add($"EmployeeID LIKE {paramName}");
+                    parameters.Add(paramName, prefixes[i] + "%");
+                }
+            }
+
+            string sql = $@"
+                SELECT
+                    ISNULL(SUM(CASE WHEN ComprehensiveResult = 1 THEN 1 ELSE 0 END), 0) AS PassCount,
+                    ISNULL(SUM(CASE WHEN ComprehensiveResult = 0 THEN 1 ELSE 0 END), 0) AS FailCount
+                FROM FootWristStrapTestResults
+                WHERE CAST(TestDate AS date) = @TestDate
+                {(conditions.Any() ? "AND (" + string.Join(" OR ", conditions) + ")" : "")}
+            ";
+
+            Debug.WriteLine(sql);
+
+            return await SqlDataAccess.GetData<SummaryCount>(sql, parameters);
         }
 
         public Task<bool> ImportSetFootAnalysis(IFootWristModel foot)

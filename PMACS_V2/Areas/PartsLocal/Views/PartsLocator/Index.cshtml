@@ -18,7 +18,7 @@
 
     @Scripts.Render("~/bundles/shared-js")
     @Scripts.Render("~/bundles/modernizr")
-    <style>
+<style>
         * {
             margin: 0;
             padding: 0;
@@ -260,7 +260,8 @@
             margin-top: 5px;
             display: none;
         }
-    </style>
+
+</style>
 
 </head>
 
@@ -324,26 +325,21 @@
 
 <script type="text/javascript">
   const logform = document.getElementById('logincredentials');
-
-
-
-   
-
+  const savebtn = document.getElementById("loginbtn");
 
 
  
   logform.addEventListener('submit', async function (e) {
       e.preventDefault();
 
-      const savebtn = document.querySelector("#loginbtn");
-      savebtn.innerHTML = " <div class='buttonloading'></div>";
+      savebtn.innerHTML = " <div class='loader'></div>";
 
       let formData = new FormData(e.target);
       formData.append('proj', 11);
       const data = Object.fromEntries(formData);
       let res = await postData('/Auth/Authenticate', data);
 
-      if (res && res.StatusCode === 200) {
+      if (res?.Success) {
           setTimeout(() => {
               Swal.fire({
                   title: "Success",

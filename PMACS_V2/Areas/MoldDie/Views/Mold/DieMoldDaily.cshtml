@@ -36,7 +36,7 @@
                 <label class="form-label required" for="processSelect">Search Die Serial.  <span class="validate-message" id="validDateinput">Input part no.</span></label>
                 <div class="search-container">
                     <input type="text" id="searchDie" placeholder="Enter part number to search (e.g., 002886060-01)" maxlength="14">
-                    <button id="searchButton" class="btn btn-secondary">
+                    <button id="searchDieButton" class="btn btn-secondary">
                         <i class="fa-solid fa-search"></i>
                     </button>
                 </div>
@@ -518,6 +518,13 @@
              SearchMoldiePartno();
          }
      });
+
+    $("#searchDie").on('keypress', function (e) {
+        if (e.key === 'Enter') {
+            SearchByDieNo(e.target.value);
+        }
+    });
+
      // Search Logic
      async function SearchMoldiePartno() {
          strpartnum = $("#searchInput").val().trim();
@@ -576,7 +583,7 @@
                      $("#modelName").text(Details.Dimension_Quality);
                      $("#lastCycleShot").text(Details.Total);
                      $("#strDieSerial").val(Details.DieSerial);
-                     strpartnum = Details.PartNo;   
+                     strpartnum = Details.PartNo;
 
                      let statusHtml = "";
 
@@ -631,6 +638,109 @@
              searchButton.disabled = false;
          }
      }
+
+
+     // Search By Die Serial No.
+    async function SearchByDieNo(searchval) {
+        const selectionProcess = $("#processSelect").val();
+
+        if (!searchval) {
+            //$("#validprocess").hide();
+            //$("#validDateinput").show();
+            alert("Search Die Alert");
+            return;
+        }
+
+        const searchButton = document.getElementById('searchDieButton');
+        const originalText = searchButton.innerHTML;
+
+        // Show loading state
+        searchButton.innerHTML = '<div class="loading"></div> Searching...';
+        searchButton.disabled = true;
+
+        $("#DailySummary").hide();
+        $("#DailyInputs").show();
+
+
+        try {
+            TableDisplay.empty(); // Removing the Loading Display
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            let res = await FetchAuthenticate('@Url.Action("SearchMoldieDaily", "Mold")', {
+                ProcessID: selectionProcess,
+                DieInput: searchval
+            });
+
+
+            if (res && res.Success) {
+
+                let Details = res.Data.Details;
+                GetData = res.Data.GetList;
+                console.log(Details);
+                // Display the Details
+                if (Details) {
+                    $("#partNumber").text(Details.PartNo);
+                    $("#modelName").text(Details.Dimension_Quality);
+                    $("#lastCycleShot").text(Details.Total);
+                    $("#strDieSerial").val(Details.DieSerial);
+                    strpartnum = Details.PartNo;
+
+                    let statusHtml = "";
+
+                    if (Details.Status === 0) {
+                        statusHtml = `
+                        <button class="status-btn active"
+                            style="color:#054e92; border:2px solid #054e92;">
+                            Continue
+                        </button>`;
+                                    }
+                    else if (Details.Status === 1) {
+                                        statusHtml = `
+                        <button class="status-btn pulse-2">
+                            Needed
+                        </button>`;
+                                    }
+                     else if (Details.Status === 2) {
+                                        statusHtml = `
+                        <button class="status-btn active"
+                            style="color:#188f18; border:2px solid #188f18;">
+                            Completed
+                        </button>`;
+                    }
+
+                    $("#partStatus").html(statusHtml);
+                }
+
+                PopulateDatalist(GetData);
+
+            } else {
+                // Handle no results or failure
+                const loadData = `<tr>
+                     <td colspan='9'>
+                         🔍 No Data Found
+                     </td>
+                 </tr>`;
+
+                TableDisplay.append(loadData);
+
+                $("#partNumber").text("-");
+                $("#modelName").text("-");
+                $("#lastCycleShot").text("-");
+                $("#partStatus").text("No Data");
+
+
+            }
+        } catch (err) {
+            console.error("Search error:", err);
+        } finally {
+            // Reset button
+            searchButton.innerHTML = originalText;
+            searchButton.disabled = false;
+        }
+    }
+
+
+
 
      function PopulateDatalist(data) {
          $("#dieMoldMasterlist").empty();
@@ -929,7 +1039,7 @@
                     <td>${row.CycleShot}</td>
                     <td>${row.Total}</td>
                     <td>${row.MachineNo}</td>
-                    <td>  
+                    <td>
                         <div class='flex_align'>
                           ${continueHtml} ${neededCompleteHtml}
                       </div>

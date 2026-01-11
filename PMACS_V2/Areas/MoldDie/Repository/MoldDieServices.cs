@@ -135,26 +135,63 @@ namespace PMACS_V2.Areas.MoldDie.Repository
 					        AND p.ProcessID = @process 
                         ORDER BY d.RecordID DESC", new { process = process, month = month, year = year });
         }
-        public Task<List<DieMoldMonitoringModel>> GetDailyMoldHistoryData(string partnum, string processID)
+        public Task<List<DieMoldMonitoringModel>> GetDailyMoldHistoryData(
+            string searchValue,
+            string processID)
         {
-            return SqlDataAccess.GetData<DieMoldMonitoringModel>($@"SELECT 
-                            d.RecordID,
-	                        FORMAT(d.DateInput, 'MM/dd/yy') as DateInput, 
-	                        d.PartNo, p.Dimension_Quality, 
-                            p.DieSerial,
-	                        d.CycleShot, 
-	                        d.Total, 
-	                        d.MachineNo, 
-	                        d.Status, 
-	                        d.Remarks, 
-	                        d.Mincharge
-                        FROM DieMold_Daily d 
-                        INNER JOIN DieMold_MoldingMainParts p ON d.PartNo = p.PartNo
-                        WHERE 
-                            d.PartNo = @PartNo AND p.ProcessID = @ProcessID
-                        ORDER BY d.RecordID DESC", new { PartNo = partnum, ProcessID = processID });
+            bool isPartNo = !string.IsNullOrWhiteSpace(searchValue)
+                            && searchValue.StartsWith("0");
+
+            string sql = isPartNo
+                ? @"SELECT 
+                d.RecordID,
+                FORMAT(d.DateInput, 'MM/dd/yy') AS DateInput, 
+                d.PartNo,
+                p.Dimension_Quality, 
+                p.DieSerial,
+                d.CycleShot, 
+                d.Total, 
+                d.MachineNo, 
+                d.Status, 
+                d.Remarks, 
+                d.Mincharge
+            FROM DieMold_Daily d 
+            INNER JOIN DieMold_MoldingMainParts p 
+                ON d.PartNo = p.PartNo
+            WHERE 
+                d.PartNo = @SearchValue
+                AND p.ProcessID = @ProcessID
+            ORDER BY d.RecordID DESC;"
+                : @"SELECT 
+                d.RecordID,
+                FORMAT(d.DateInput, 'MM/dd/yy') AS DateInput, 
+                d.PartNo,
+                p.Dimension_Quality, 
+                p.DieSerial,
+                d.CycleShot, 
+                d.Total, 
+                d.MachineNo, 
+                d.Status, 
+                d.Remarks, 
+                d.Mincharge
+            FROM DieMold_Daily d 
+            INNER JOIN DieMold_MoldingMainParts p 
+                ON d.PartNo = p.PartNo
+            WHERE 
+                p.DieSerial = @SearchValue
+                AND p.ProcessID = @ProcessID
+            ORDER BY d.RecordID DESC;";
+
+            return SqlDataAccess.GetData<DieMoldMonitoringModel>(
+                sql,
+                new
+                {
+                    SearchValue = searchValue?.Trim(),
+                    ProcessID = processID
+                });
         }
-        
+
+
 
         public async Task<bool> AddUpdateDailyMoldie(DieMoldMonitoringModel mold, int action)
         {

@@ -31,18 +31,18 @@ namespace FootWristStrapsAnalysis
         private List<int> selectedRecordIds = new List<int>();
         private List<string> selectedEmployeeID = new List<string>();
 
-        private static IEnumerable<IFootWristModel> footlist;
+        private static IEnumerable<IFootWristModel> footlist;   
 
         public Startup(IFootWrist foot)
         {
             InitializeComponent();
           
-
-
             _foot = foot;
 
             // 🔁 Run every 15 minutes (900,000 ms)
-            _importTimer = new System.Timers.Timer(15 * 60 * 1000);
+            //_importTimer = new System.Timers.Timer(15 * 60 * 1000);
+            // 🔁 Run every 1s (900,000 ms)
+            _importTimer = new System.Timers.Timer(2000);
             _importTimer.Elapsed += async (s, e) => await AutomaticImportData();
             _importTimer.AutoReset = true;
             _importTimer.Enabled = false; // start manually after load
@@ -1085,54 +1085,119 @@ namespace FootWristStrapsAnalysis
         }
 
 
-        private void PopulateDataIntoTemplate(ExcelWorksheet worksheet,
-           Dictionary<DateTime, Dictionary<string, ESDTestData>> organizedData,
-           Dictionary<string, (int rightCol, int leftCol)> templateColumnMap,
-           Dictionary<string, string> dbToTemplateMapping)
+        //private void PopulateDataIntoTemplate(
+        //   ExcelWorksheet worksheet,
+        //   Dictionary<DateTime, Dictionary<string, ESDTestData>> organizedData,
+        //   Dictionary<string, (int rightCol, int leftCol)> templateColumnMap,
+        //   Dictionary<string, string> dbToTemplateMapping)
+        //{
+
+        //    int startRow = 11; // ✅ MUST match A11 = Day 1
+        //    //int daysInMonth = DateTime.DaysInMonth(2025, 11);
+
+        //    DateTime selectedDate = dateTimePicker1.Value;
+
+        //    int month = selectedDate.Month;   // 1–12
+        //    int year = selectedDate.Year;
+
+        //    int daysInMonth = DateTime.DaysInMonth(year, month);
+
+        //    // Populate data for each day of December (rows 11-41)
+        //    for (int day = 1; day <= daysInMonth; day++)
+        //    {
+        //        int row = 11 + day; // Row 11 for day 1, 12 for day 2, etc.
+        //        DateTime currentDate = new DateTime(year, month, day); // ✅ FIXED
+
+        //        foreach (var emp in templateColumnMap)
+        //        {
+        //            int rightCol = emp.Value.rightCol;
+        //            int leftCol = emp.Value.leftCol;
+
+        //            // First: check if the DATE exists in DB
+        //            if (!organizedData.TryGetValue(currentDate, out var empData))
+        //            {
+        //                continue;
+        //            }
+
+        //            // Second: check if EMPLOYEE exists for that date
+        //            if (!empData.TryGetValue(emp.Key, out var testData))
+        //            {
+        //                continue;
+        //            }
+
+        //            // ✅ Date and employee found → write to Excel
+        //            SetResultCell(worksheet.Cells[row, rightCol], testData.RightFootResult);
+        //            SetResultCell(worksheet.Cells[row, leftCol], testData.LeftFootResult);
+        //        }
+
+
+
+        //    }
+        //}
+
+        private void PopulateDataIntoTemplate(
+                ExcelWorksheet worksheet,
+                Dictionary<DateTime, Dictionary<string, ESDTestData>> organizedData,
+                Dictionary<string, (int rightCol, int leftCol)> templateColumnMap,
+                Dictionary<string, string> dbToTemplateMapping)
         {
-
-            int startRow = 11; // ✅ MUST match A11 = Day 1
-            //int daysInMonth = DateTime.DaysInMonth(2025, 11);
-
             DateTime selectedDate = dateTimePicker1.Value;
 
-            int month = selectedDate.Month;   // 1–12
+            int month = selectedDate.Month;
             int year = selectedDate.Year;
 
             int daysInMonth = DateTime.DaysInMonth(year, month);
 
-            // Populate data for each day of December (rows 11-41)
             for (int day = 1; day <= daysInMonth; day++)
             {
-                int row = 11 + day; // Row 11 for day 1, 12 for day 2, etc.
-                DateTime currentDate = new DateTime(year, month, day); // ✅ FIXED
+                int row = 11 + day;
+                DateTime currentDate = new DateTime(year, month, day);
+
+                bool isSunday = currentDate.DayOfWeek == DayOfWeek.Sunday;
+                bool hasDateData = organizedData.ContainsKey(currentDate);
 
                 foreach (var emp in templateColumnMap)
                 {
                     int rightCol = emp.Value.rightCol;
                     int leftCol = emp.Value.leftCol;
 
-                    // First: check if the DATE exists in DB
-                    if (!organizedData.TryGetValue(currentDate, out var empData))
+                    ExcelRange rightCell = worksheet.Cells[row, rightCol];
+                    ExcelRange leftCell = worksheet.Cells[row, leftCol];
+
+                    // 🔺 SUNDAY + NO DATA → TRIANGLE
+                    if (isSunday && !hasDateData)
                     {
+                        rightCell.Value = "▲";
+                        leftCell.Value = "▲";
+
+                        rightCell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                        rightCell.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                        rightCell.Style.Font.Bold = true;
+
+                        leftCell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                        leftCell.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                        leftCell.Style.Font.Bold = true;
+
                         continue;
                     }
 
-                    // Second: check if EMPLOYEE exists for that date
+                    // No data and not Sunday → blank
+                    if (!hasDateData)
+                        continue;
+
+                    var empData = organizedData[currentDate];
+
+                    // Employee not found → skip
                     if (!empData.TryGetValue(emp.Key, out var testData))
-                    {
                         continue;
-                    }
 
-                    // ✅ Date and employee found → write to Excel
-                    SetResultCell(worksheet.Cells[row, rightCol], testData.RightFootResult);
-                    SetResultCell(worksheet.Cells[row, leftCol], testData.LeftFootResult);
+                    // Normal O / X
+                    SetResultCell(rightCell, testData.RightFootResult);
+                    SetResultCell(leftCell, testData.LeftFootResult);
                 }
-
-
-        
             }
         }
+
 
 
         private void SetResultCell(ExcelRange cell, bool isPass)
@@ -1143,7 +1208,7 @@ namespace FootWristStrapsAnalysis
             cell.Style.Font.Bold = false;
 
             //cell.Style.Font.Color.SetColor(
-            //    isPass ? System.Drawing.Color.Green : System.Drawing.Color.Red
+            //    isPass ? Color.Green : Color.Red
             //);
         }
 

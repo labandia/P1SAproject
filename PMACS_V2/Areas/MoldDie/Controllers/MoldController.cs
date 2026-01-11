@@ -132,6 +132,27 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
 
             return JsonMultipleDataV2(multiData);
         }
+
+        [HttpGet]
+        public async Task<ActionResult> SearchByDieSerialMoldie(string ProcessID, string DieInput)
+        {
+
+            ////Run tasks in parallel for better performance
+            //var datalistTask = await _dieV2.GetDailyMoldHistoryData(SearchInput, ProcessID);
+            //var detailsTask = await _dieV2.GetMoldieMasterlistParts(SearchInput);
+            //// All in One Display
+            //var multiData = new Dictionary<string, object>
+            //{
+            //    { "GetList", datalistTask },
+            //    { "Details", detailsTask }
+            //};
+
+            //return JsonMultipleDataV2(multiData);
+
+            return JsonSuccess("", "Mold Die Month Retrieve");
+        }
+
+
         [HttpGet]
         public async Task<JsonResult> CheckDialyMoldExist(string PartNo, string DateInput)
         {

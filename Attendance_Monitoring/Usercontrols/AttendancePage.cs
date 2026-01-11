@@ -2,7 +2,6 @@
 using Attendance_Monitoring.Interfaces;
 using Attendance_Monitoring.Models;
 using Attendance_Monitoring.Repositories;
-using Attendance_Monitoring.View.V2;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -44,37 +43,43 @@ namespace Attendance_Monitoring.Usercontrols
         {
             try
             {
-                int Shift;
-                string timecheck;
-                string Timeout_date;
-                // TIME OUT NIGHT SHIFT DATE TIME
-                DateTime yesterday = DateTime.Today.AddDays(-1);
-                // Change format of the date and time
-                string yest = yesterday.ToString("yyyy-MM-dd HH:mm:ss.fff");
+                string yest = DateTime.Today
+                             .AddDays(-1)
+                             .ToString("yyyy-MM-dd HH:mm:ss.fff");
 
-                if (selectime == 0)
-                {
-                    Shift = Timeprocess.TimeIncheckAsIntV2(DateTime.Now);
-                    timecheck = tdate;
-                }
-                else
-                {
-                    Shift = Timeprocess.TimeoutcheckV2(DateTime.Now);
-                    Timeout_date = Shift == 0 ? tdate : yest;
-                    timecheck = Timeout_date;
-                }
+                bool isTimeIn = selectime == 0;
 
-                var getdata = await _monitor.GetAttendanceRecordsList(timecheck, Shift, selectime, DepartmentID);
+                int Shift = isTimeIn
+                    ? Timeprocess.TimeIncheckAsIntV2(DateTime.Now)
+                    : Timeprocess.TimeoutcheckV2(DateTime.Now);
 
-                itemattends = (getdata.Success && getdata.Payload != null) ? getdata.Payload.ToList() : new List<P1SA_AttendanceModel>();
+                string timecheck = (isTimeIn || Shift == 0) ? tdate : yest;
+
+
+
+                var getdata = await _monitor.GetAttendanceRecordsList(
+                    timecheck, 
+                    Shift, 
+                    selectime, 
+                    DepartmentID
+                 );
+
+                itemattends = getdata.Success && getdata.Payload != null
+                    ? getdata.Payload.ToList() 
+                    : new List<P1SA_AttendanceModel>();
+
                 attendancetable.DataSource = itemattends;
-                DisplayTotal.Text = "Total Attendence: " + attendancetable.RowCount;
+                DisplayTotal.Text = $"Total Attendance: {attendancetable.RowCount}";
                 EmployID.Focus();
 
             }
             catch (FormatException)
             {
-                MessageBox.Show("Error found at Retreiving Employee Data", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error found at Retreiving Employee Data", 
+                    "Error", 
+                    MessageBoxButtons.OK, 
+                    MessageBoxIcon.Error
+                );
             }
         }
         private async void Selecttime_SelectedIndexChanged(object sender, EventArgs e)
@@ -180,6 +185,8 @@ namespace Attendance_Monitoring.Usercontrols
         {
             try
             {
+                shiftselect.SelectedIndex = 0;
+
                 label7.Text  = "Daily Attendance : " + SectionName[DepartmentID + 1];
 
                 selecttime.DropDownStyle = ComboBoxStyle.DropDownList;
@@ -229,12 +236,6 @@ namespace Attendance_Monitoring.Usercontrols
 
             attendancetable.DataSource =  filteredList;
             DisplayTotal.Text = "Total Records: " + attendancetable.RowCount;
-        }
-
-        private void Summary_data_Click(object sender, EventArgs e)
-        {
-            SummaryV2 sm = new SummaryV2(DepartmentID, _monitor, _serviceProvider);
-            sm.Show();
         }
     }
 }

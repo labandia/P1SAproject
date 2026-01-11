@@ -38,7 +38,7 @@ namespace PMACS_V2.Utilities
 
             LogConnectionChoice(host, machineName, connectionKey);
 
-            return AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings["UsersLiveConnection"].ConnectionString);
+            return AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings[connectionKey].ConnectionString);
         }
 
         public static SqlConnection GetSqlConnection(string connectionString)

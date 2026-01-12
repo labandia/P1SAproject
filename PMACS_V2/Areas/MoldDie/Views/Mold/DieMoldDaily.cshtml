@@ -180,29 +180,31 @@
                     <h3 style="margin: 0;">Product Details</h3>
                     <button id="Originalback"><i class="fa-solid fa-arrow-rotate-right"></i>Daily</button>
                 </div>
-                <div class="Detailcard">
-                    <div class="summary-grid">
-                        <div class="summary-item">
-                            <div class="summary-label">Part Number</div>
-                            <div class="summary-value" id="partNumber">-</div>
-                        </div>
-                        <div class="summary-item">
-                            <div class="summary-label">Dimension Quality</div>
-                            <div class="summary-value" id="modelName">-</div>
-                        </div>
-                        <div class="summary-item">
-                            <div class="summary-label">Last Cycle Shot</div>
-                            <div class="summary-value" id="lastCycleShot">-</div>
-                        </div>
-                        <div class="summary-item">
+              
 
-                            <div class="summary-value" id="partStatus">
-                                No Data
-                            </div>
-                        </div>
+                <div class="DetailSerialMain" id="DetailSerialcard">
+                    <table class="DetailSerialcard">
+                        <thead>
+                            <tr>
+                                <th>Part number</th>
+                                <th>Dimension Quality</th>
+                                <th>Die Serial </th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="DieSerialMasterlist">
+                            <!-- Data will be populated here -->
+                            <tr>
+                                <td colspan='10'>
+                                    🔍 No Data Found
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-                    </div>
                 </div>
+
+
 
                 <hr />
 
@@ -512,6 +514,13 @@
          e.preventDefault();
          SearchMoldiePartno();
      });
+
+    $("#searchDieButton").on('click', function (e) {
+        e.preventDefault();
+        let partnum = $("#searchDie").val();
+        SearchByDieNo(partnum);
+    });
+
      // Allow Enter key to trigger search
      $("#searchInput").on('keypress', function (e) {
          if (e.key === 'Enter') {
@@ -521,6 +530,7 @@
 
     $("#searchDie").on('keypress', function (e) {
         if (e.key === 'Enter') {
+            console.log("VALUE : " + e.target.value);
             SearchByDieNo(e.target.value);
         }
     });
@@ -573,43 +583,26 @@
 
 
              if (res && res.Success) {
-
-                 let Details = res.Data.Details;
+                 let addDetails = [];
+                 addDetails.push(res.Data.Details);
                  GetData = res.Data.GetList;
-                 console.log(Details);
-                 // Display the Details
-                 if (Details) {
-                     $("#partNumber").text(Details.PartNo);
-                     $("#modelName").text(Details.Dimension_Quality);
-                     $("#lastCycleShot").text(Details.Total);
-                     $("#strDieSerial").val(Details.DieSerial);
-                     strpartnum = Details.PartNo;
 
-                     let statusHtml = "";
+                 $("#DieSerialMasterlist").empty();
 
-                     if (Details.Status === 0) {
-                         statusHtml = `
-                         <button class="status-btn active"
-                             style="color:#054e92; border:2px solid #054e92;">
-                             Continue
-                         </button>`;
-                                     }
-                     else if (Details.Status === 1) {
-                                         statusHtml = `
-                         <button class="status-btn pulse-2">
-                             Needed
-                         </button>`;
-                                     }
-                      else if (Details.Status === 2) {
-                                         statusHtml = `
-                         <button class="status-btn active"
-                             style="color:#188f18; border:2px solid #188f18;">
-                             Completed
-                         </button>`;
-                     }
+                 addDetails.forEach((rowData, index) => {
+                     const rowHtml = `
+                        <tr>
+                            <td>${rowData.PartNo}</td>
+                            <td>${rowData.Dimension_Quality}</td>
+                            <td>${rowData.DieSerial}</td>
+                            <td>${getStatusHtml(rowData.Status)}</td>                     
+                        </tr>`;
 
-                     $("#partStatus").html(statusHtml);
-                 }
+                     $("#DieSerialMasterlist").append(rowHtml);
+                 });
+
+             
+
 
                  PopulateDatalist(GetData);
 
@@ -644,12 +637,12 @@
     async function SearchByDieNo(searchval) {
         const selectionProcess = $("#processSelect").val();
 
-        if (!searchval) {
-            //$("#validprocess").hide();
-            //$("#validDateinput").show();
-            alert("Search Die Alert");
-            return;
-        }
+        //if (!searchval) {
+        //    //$("#validprocess").hide();
+        //    //$("#validDateinput").show();
+        //    alert("Search Die Alert");
+        //    return;
+        //}
 
         const searchButton = document.getElementById('searchDieButton');
         const originalText = searchButton.innerHTML;
@@ -658,60 +651,84 @@
         searchButton.innerHTML = '<div class="loading"></div> Searching...';
         searchButton.disabled = true;
 
-        $("#DailySummary").hide();
-        $("#DailyInputs").show();
+        
 
 
         try {
-            TableDisplay.empty(); // Removing the Loading Display
             await new Promise(resolve => setTimeout(resolve, 1000));
 
-            let res = await FetchAuthenticate('@Url.Action("SearchMoldieDaily", "Mold")', {
+            let res = await FetchAuthenticate('@Url.Action("SearchByDieSerialMoldie", "Mold")', {
                 ProcessID: selectionProcess,
                 DieInput: searchval
             });
-
-
+            console.log(res);
             if (res && res.Success) {
+                $("#DailySummary").hide();
+                $("#DailyInputs").show();
+
+                $("#DetailSerialcard").show();
+
 
                 let Details = res.Data.Details;
-                GetData = res.Data.GetList;
-                console.log(Details);
+                let GetList = res.Data.GetList;
                 // Display the Details
                 if (Details) {
-                    $("#partNumber").text(Details.PartNo);
-                    $("#modelName").text(Details.Dimension_Quality);
-                    $("#lastCycleShot").text(Details.Total);
-                    $("#strDieSerial").val(Details.DieSerial);
-                    strpartnum = Details.PartNo;
+                    $("#DieSerialMasterlist").empty();
+                    let prevDieSerial = null;
+                    let prevStatus = null;
+                    let rowspanCount = 0;
+                    let lastRowDieStatusTd = null;
 
-                    let statusHtml = "";
 
-                    if (Details.Status === 0) {
-                        statusHtml = `
-                        <button class="status-btn active"
-                            style="color:#054e92; border:2px solid #054e92;">
-                            Continue
-                        </button>`;
-                                    }
-                    else if (Details.Status === 1) {
-                                        statusHtml = `
-                        <button class="status-btn pulse-2">
-                            Needed
-                        </button>`;
-                                    }
-                     else if (Details.Status === 2) {
-                                        statusHtml = `
-                        <button class="status-btn active"
-                            style="color:#188f18; border:2px solid #188f18;">
-                            Completed
-                        </button>`;
-                    }
+                    Details.forEach((rowData, index) => {
+                        const isSameGroup =
+                            rowData.DieSerial === prevDieSerial &&
+                            rowData.Status === prevStatus;
 
-                    $("#partStatus").html(statusHtml);
+                        let dieTd = "";
+                        let statusTd = "";
+
+                        if (!isSameGroup) {
+                            rowspanCount = 1;
+
+                            dieTd = `<td class="die-serial">${rowData.DieSerial}</td>`;
+                            statusTd = `
+                                <td class="status" style='margin-left: auto;'>
+                                    ${getStatusHtml(rowData.Status)}
+                                </td>`;
+                        } else {
+                            rowspanCount++;
+
+                            lastDieTd.attr("rowspan", rowspanCount);
+                            lastStatusTd.attr("rowspan", rowspanCount);
+                        }
+
+
+                        const rowHtml = `
+                            <tr>
+                                <td>${rowData.PartNo}</td>
+                                <td>${rowData.Dimension_Quality}</td>
+                                ${dieTd}
+                                ${statusTd}
+                            </tr>
+                        `;
+
+                        const $row = $(rowHtml);
+                        $("#DieSerialMasterlist").append($row);
+
+
+                        if (!isSameGroup) {
+                            lastDieTd = $row.find(".die-serial");
+                            lastStatusTd = $row.find(".status");
+                        }
+
+                        prevDieSerial = rowData.DieSerial;
+                        prevStatus = rowData.Status;
+                    });
+
+                    PopulateDieSerialist(GetList);
                 }
 
-                PopulateDatalist(GetData);
 
             } else {
                 // Handle no results or failure
@@ -723,12 +740,6 @@
 
                 TableDisplay.append(loadData);
 
-                $("#partNumber").text("-");
-                $("#modelName").text("-");
-                $("#lastCycleShot").text("-");
-                $("#partStatus").text("No Data");
-
-
             }
         } catch (err) {
             console.error("Search error:", err);
@@ -739,6 +750,29 @@
         }
     }
 
+    function getStatusHtml(status) {
+        if (status === 0) {
+            return `
+            <button class="status-btn active"
+                style="color:#054e92; border:2px solid #054e92;">
+                Continue
+            </button>`;
+        }
+        else if (status === 1) {
+            return `
+            <button class="status-btn pulse-2">
+                Needed
+            </button>`;
+        }
+        else if (status === 2) {
+            return `
+            <button class="status-btn active"
+                style="color:#188f18; border:2px solid #188f18;">
+                Completed
+            </button>`;
+        }
+        return "";
+    }
 
 
 
@@ -799,33 +833,33 @@
              }
 
              const rowHtml = `
-         <tr>
-             <td>${formatJsonDate(rowData.DateInput)}</td>
-             <td>${rowData.CycleShot}</td>
-             <td>${rowData.Total}</td>
-             <td>${rowData.MachineNo}</td>
-             <td>${rowData.Remarks}</td>
-             <td>${rowData.Mincharge}</td>
-              <td>
-                <div class='flex_align'>
-                    ${continueHtml} ${neededCompleteHtml}
-                </div>
-              </td>
-             <td >
-                <div style='display: grid; grid-template-columns: 50% 50%; gap: 5px;'>
-                      <button type="button" class="text-primary actionicon EditDaily"
-                          id="editButton_${rowData.RecordID}">
-                          <i class="fa-regular fa-pen-to-square action_btn"></i>
-                      </button>
+                 <tr>
+                     <td>${formatJsonDate(rowData.DateInput)}</td>
+                     <td>${rowData.CycleShot}</td>
+                     <td>${rowData.Total}</td>
+                     <td>${rowData.MachineNo}</td>
+                     <td>${rowData.Remarks}</td>
+                     <td>${rowData.Mincharge}</td>
+                      <td>
+                        <div class='flex_align'>
+                            ${continueHtml} ${neededCompleteHtml}
+                        </div>
+                      </td>
+                     <td >
+                        <div style='display: grid; grid-template-columns: 50% 50%; gap: 5px;'>
+                              <button type="button" class="text-primary actionicon EditDaily"
+                                  id="editButton_${rowData.RecordID}">
+                                  <i class="fa-regular fa-pen-to-square action_btn"></i>
+                              </button>
 
-                      <button type="button" class="text-danger actionicon  deleteDailyButton"
-                          id="deleteDailyButton_${rowData.RecordID}">
-                          <i class="fa-regular fa-trash-can"></i>
-                      </button>
-                </div>
+                              <button type="button" class="text-danger actionicon  deleteDailyButton"
+                                  id="deleteDailyButton_${rowData.RecordID}">
+                                  <i class="fa-regular fa-trash-can"></i>
+                              </button>
+                        </div>
 
-             </td>
-         </tr>`;
+                     </td>
+                 </tr>`;
 
              $("#dieMoldMasterlist").append(rowHtml);
          });
@@ -899,6 +933,97 @@
 
 
      }
+
+
+    function PopulateDieSerialist(data) {
+        $("#dieMoldMasterlist").empty();
+
+        data.forEach((rowData, index) => {
+
+            // Continue Status (0)
+            let continueHtml = `
+       <button class="status-btn" onclick="ChangeStatus(${rowData.DieSerial}, 0)">
+           Continue
+       </button>`;
+
+            // Needed + Complete (1, 2)
+            let neededCompleteHtml = `
+       <button class="status-btn"
+           onclick="ChangeStatus(${rowData.DieSerial}, 1)">
+           Needed
+       </button>
+       <button class="status-btn"
+           onclick="ChangeStatus(${rowData.DieSerial}, 2)">
+           Complete
+       </button>`;
+
+            // Highlight active based on rowData.Status
+            if (rowData.Status === 0) {
+                continueHtml = `
+           <button class="status-btn active"
+               style="color:#054e92;border:2px solid #054e92;"
+               onclick="ChangeStatus(${rowData.DieSerial}, 1)">
+               Continue
+           </button>`;
+            }
+            else if (rowData.Status === 1) {
+                neededCompleteHtml = `
+           <button class="status-btn active"
+               style="color:#c97d0c;border:2px solid #c97d0c;"
+               onclick="ChangeStatus(${rowData.DieSerial}, 1)">
+               Needed
+           </button>
+           <button class="status-btn"
+               onclick="ChangeStatus(${rowData.DieSerial}, 2)">
+               Complete
+           </button>`;
+            }
+            else if (rowData.Status === 2) {
+                neededCompleteHtml = `
+           <button class="status-btn"
+               onclick="ChangeStatus(${rowData.DieSerial}, 1)">
+               Needed
+           </button>
+           <button class="status-btn active"
+               style="color:#188f18;border:2px solid #188f18;"
+               onclick="ChangeStatus(${rowData.DieSerial}, 2)">
+               Complete
+           </button>`;
+            }
+
+            const rowHtml = `
+               <tr>
+                   <td>${formatJsonDate(rowData.DateInput)}</td>
+                   <td>${rowData.CycleShot}</td>
+                   <td>${rowData.Total}</td>
+                   <td>${rowData.MachineNo}</td>
+                   <td>${rowData.Remarks}</td>
+                   <td>${rowData.Mincharge}</td>
+                    <td>
+                      <div class='flex_align'>
+                          ${continueHtml} ${neededCompleteHtml}
+                      </div>
+                    </td>
+                   <td >
+                      <div style='display: grid; grid-template-columns: 50% 50%; gap: 5px;'>
+                            <button type="button" class="text-primary actionicon EditDaily"
+                                id="editButton_${rowData.DieSerial}">
+                                <i class="fa-regular fa-pen-to-square action_btn"></i>
+                            </button>
+
+                            <button type="button" class="text-danger actionicon  deleteDailyButton"
+                                id="deleteDailyButton_${rowData.DieSerial}">
+                                <i class="fa-regular fa-trash-can"></i>
+                            </button>
+                      </div>
+
+                   </td>
+               </tr>`;
+
+            $("#dieMoldMasterlist").append(rowHtml);
+        });
+    }
+
 
      async function ChangeStatus(recordId, status) {
 

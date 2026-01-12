@@ -138,18 +138,18 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
         {
 
             ////Run tasks in parallel for better performance
-            //var datalistTask = await _dieV2.GetDailyMoldHistoryData(SearchInput, ProcessID);
-            //var detailsTask = await _dieV2.GetMoldieMasterlistParts(SearchInput);
+            var datalistTask = await _dieV2.GetDailyMoldHistoryByDieSerialData(DieInput, ProcessID);
+            var detailsTask = await _dieV2.GetMoldieDieSerialParts(DieInput);
             //// All in One Display
-            //var multiData = new Dictionary<string, object>
-            //{
-            //    { "GetList", datalistTask },
-            //    { "Details", detailsTask }
-            //};
+            var multiData = new Dictionary<string, object>
+            {
+                { "GetList", datalistTask },
+                { "Details", detailsTask }
+            };
 
-            //return JsonMultipleDataV2(multiData);
+            return JsonMultipleDataV2(multiData);
 
-            return JsonSuccess("", "Mold Die Month Retrieve");
+            //return JsonSuccess(datalistTask, "Mold Die Month Retrieve");
         }
 
 

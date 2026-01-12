@@ -13,7 +13,7 @@
     <title>Parts Locator (Rotor) System</title>
     <script src="~/Scripts/Shared/bootstrap.bundle.min.js"></script>
 
-
+    <link href="~/Content/css/Global.css" rel="stylesheet" />
     @Styles.Render("~/Content/shared-css")
 
     @Scripts.Render("~/bundles/shared-js")
@@ -325,12 +325,12 @@
 
 <script type="text/javascript">
   const logform = document.getElementById('logincredentials');
-  const savebtn = document.getElementById("loginbtn");
-
+ 
 
  
   logform.addEventListener('submit', async function (e) {
       e.preventDefault();
+      const savebtn = document.querySelector("#loginbtn");
 
       savebtn.innerHTML = " <div class='loader'></div>";
 
@@ -349,10 +349,26 @@
                   timer: 1500
               }).then(() => {
                   savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-regular fa-floppy-disk'></i>  Login</span>"
+                  //localStorage.setItem('tempID', res.Data.userID);
+
+
+                  localStorage.removeItem('activeLinkIndex');
+                  localStorage.setItem('Logout', "/P1SA/PMACS/Mainpage");
+
+                  // For Info of the user
+                  localStorage.setItem('UserRole', res.Data.role);
+                  localStorage.setItem('Fullname', res.Data.fullname);
+
+                  // For Authorize User Access
                   localStorage.setItem('accessToken', res.Data.access_token);
                   localStorage.setItem('refreshToken', res.Data.refresh_token);
-                  //localStorage.setItem('tempID', res.Data.userID);
+
+                  // For Persitent Login
+                  localStorage.setItem('PartslocalTime', new Date().toISOString());
+                  localStorage.setItem('isLoggedInPartslocator', 'true');
+                  //window.location.href = "/P1SA/DieMold/DieMoldLife";
                   window.location.href = "/PartsLocal/PartsLocator/TrackParts";
+
               });
           }, 500);
       } else {
@@ -366,4 +382,13 @@
 
   });
 
+
+    window.IsLoginUser({
+        storageKey: "isLoggedInPartslocator",
+        redirectUrl: '/PartsLocal/PartsLocator/index',
+        expectedValue: 'true',
+        redirectIfLoggedInUrl: '/PartsLocal/PartsLocator/TrackParts',
+        expirationKey: 'PartslocalTime',
+        maxHours: 24
+    });
 </script>

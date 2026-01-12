@@ -470,9 +470,9 @@
             this.label8.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label8.Location = new System.Drawing.Point(38, 165);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(296, 13);
+            this.label8.Size = new System.Drawing.Size(256, 13);
             this.label8.TabIndex = 26;
-            this.label8.Text = "Scan your employee ID barcode or type your ID manually";
+            this.label8.Text = "Scan your employee ID barcode or type manually";
             // 
             // label9
             // 

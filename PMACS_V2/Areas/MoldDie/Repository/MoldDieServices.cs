@@ -142,6 +142,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             bool isPartNo = !string.IsNullOrWhiteSpace(searchValue)
                             && searchValue.StartsWith("0");
 
+
             string sql = isPartNo
                 ? @"SELECT 
                 d.RecordID,
@@ -189,6 +190,35 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                     SearchValue = searchValue?.Trim(),
                     ProcessID = processID
                 });
+        }
+
+        public Task<List<DieMoldMonitoringModel>> GetDailyMoldHistoryByDieSerialData(string diepart, string processID)
+        {
+            string strsql = $@"SELECT 
+                    FORMAT(d.DateInput, 'MM/dd/yy') AS DateInput,             
+				    p.DieSerial,
+                    d.CycleShot, 
+                    d.Total, 
+                    d.MachineNo, 
+                    d.Status, 
+                    d.Remarks, 
+                    d.Mincharge
+                FROM DieMold_Daily d 
+                INNER JOIN DieMold_MoldingMainParts p 
+                    ON d.PartNo = p.PartNo
+                WHERE 
+                    p.DieSerial = @SearchValue
+                    AND p.ProcessID = @ProcessID
+			    GROUP BY p.DieSerial, d.DateInput, d.CycleShot,
+			    d.Total, d.MachineNo, d.Status, d.Remarks, d.Mincharge";
+
+            return SqlDataAccess.GetData<DieMoldMonitoringModel>(
+              strsql,
+              new
+              {
+                  SearchValue = diepart,
+                  ProcessID = processID
+              });
         }
 
 
@@ -487,14 +517,46 @@ namespace PMACS_V2.Areas.MoldDie.Repository
 
         public async Task<DieMoldMonitoringModel> GetMoldieMasterlistParts(string partno)
         {
-            var items = await SqlDataAccess.GetData<DieMoldMonitoringModel>($@"SELECT PartNo,PartDescription
-                                      ,Dimension_Quality,DieSerial
-                                      ,DieNumber
-                                FROM DieMold_MoldingMainParts
-                                WHERE PartNo = @PartNo", new { PartNo = partno});
+            bool isPartNo = !string.IsNullOrWhiteSpace(partno)
+                          && partno.StartsWith("0");
+
+
+            string sql = isPartNo
+                ? @"SELECT 
+                      PartNo,PartDescription
+                     ,Dimension_Quality,DieSerial
+                     ,DieNumber
+                FROM DieMold_MoldingMainParts
+                WHERE PartNo = @searchValue"
+                : @"SELECT 
+                      PartNo,PartDescription
+                     ,Dimension_Quality,DieSerial
+                     ,DieNumber
+                FROM DieMold_MoldingMainParts
+                WHERE DieSerial = @searchValue";
+
+            var items = await  SqlDataAccess.GetData<DieMoldMonitoringModel>(
+                sql,
+                new
+                {
+                    SearchValue = partno?.Trim()
+                });
 
             return items.FirstOrDefault();  
         }
+
+        public Task<List<DieMoldMonitoringModel>> GetMoldieDieSerialParts(string diepart)
+        {
+             string strsql = @"SELECT 
+                      PartNo,PartDescription
+                     ,Dimension_Quality,DieSerial
+                     ,DieNumber
+                FROM DieMold_MoldingMainParts
+                WHERE DieSerial = @DieSerial";
+            return SqlDataAccess.GetData<DieMoldMonitoringModel>(strsql, new { DieSerial = diepart });
+        }
+
+
 
         public async Task<PagedResult<DieMoldMonitoringModel>> GetMoldieMasterlist(
             string search,
@@ -639,5 +701,6 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             return (newTotal, status);
         }
 
+       
     }
 }

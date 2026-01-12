@@ -43,9 +43,19 @@ namespace FootWristStrapsAnalysis
             //_importTimer = new System.Timers.Timer(15 * 60 * 1000);
             // 🔁 Run every 1s (900,000 ms)
             _importTimer = new System.Timers.Timer(2000);
-            _importTimer.Elapsed += async (s, e) => await AutomaticImportData();
-            _importTimer.AutoReset = true;
-            _importTimer.Enabled = false; // start manually after load
+            _importTimer.Elapsed += async (s, e) =>
+            {
+                _importTimer.Stop();
+                try
+                {
+                    await AutomaticImportData();
+                }
+                finally
+                {
+                    _importTimer.Start();
+                }
+            };
+
         }
 
         private async void Startup_Load(object sender, EventArgs e)
@@ -277,6 +287,10 @@ namespace FootWristStrapsAnalysis
                     // ===== STEP 4: Import CSV =====
                     await ImportCsvInsertToday(file, today);
 
+                    // 🔁 REFRESH GRID AFTER IMPORT
+                    await RefreshGridAfterImport();
+
+
                     break; // 💡 only ONE today's file
                 }
 
@@ -351,6 +365,9 @@ namespace FootWristStrapsAnalysis
 
                 Debug.WriteLine($@"Employee ID : {strEmployee} -  LeftResult : {strleft} - Count : {count}");
             }
+
+                  
+
         }
 
 
@@ -765,7 +782,6 @@ namespace FootWristStrapsAnalysis
             }
             else
             {
-                // 🔹 USER IS UNCHECKING → always allowed
                 AnalysisTable.Rows[e.RowIndex].Cells[checkCol].Value = false;
                 selectedRecordIds.Remove(recordId);
 
@@ -840,7 +856,6 @@ namespace FootWristStrapsAnalysis
 
             selecteditem.Text = "0 / 10";
 
-            // Assuming getData is already loaded somewhere else (e.g., Form_Load)
             if (getData == null) return;
 
             var summaryList = await _foot.GetTotalSummary(selectedDate, prefixes) ?? new List<SummaryCount>();
@@ -1136,10 +1151,10 @@ namespace FootWristStrapsAnalysis
         //}
 
         private void PopulateDataIntoTemplate(
-                ExcelWorksheet worksheet,
-                Dictionary<DateTime, Dictionary<string, ESDTestData>> organizedData,
-                Dictionary<string, (int rightCol, int leftCol)> templateColumnMap,
-                Dictionary<string, string> dbToTemplateMapping)
+            ExcelWorksheet worksheet,
+            Dictionary<DateTime, Dictionary<string, ESDTestData>> organizedData,
+            Dictionary<string, (int rightCol, int leftCol)> templateColumnMap,
+            Dictionary<string, string> dbToTemplateMapping)
         {
             DateTime selectedDate = dateTimePicker1.Value;
 
@@ -1147,13 +1162,14 @@ namespace FootWristStrapsAnalysis
             int year = selectedDate.Year;
 
             int daysInMonth = DateTime.DaysInMonth(year, month);
+            DateTime today = DateTime.Today;
 
             for (int day = 1; day <= daysInMonth; day++)
             {
                 int row = 11 + day;
                 DateTime currentDate = new DateTime(year, month, day);
 
-                bool isSunday = currentDate.DayOfWeek == DayOfWeek.Sunday;
+                bool isPastDate = currentDate.Date < today;
                 bool hasDateData = organizedData.ContainsKey(currentDate);
 
                 foreach (var emp in templateColumnMap)
@@ -1164,24 +1180,15 @@ namespace FootWristStrapsAnalysis
                     ExcelRange rightCell = worksheet.Cells[row, rightCol];
                     ExcelRange leftCell = worksheet.Cells[row, leftCol];
 
-                    // 🔺 SUNDAY + NO DATA → TRIANGLE
-                    if (isSunday && !hasDateData)
+                    // 🔺 PAST DATE + NO DATA → TRIANGLE
+                    if (isPastDate && !hasDateData)
                     {
-                        rightCell.Value = "▲";
-                        leftCell.Value = "▲";
-
-                        rightCell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                        rightCell.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-                        rightCell.Style.Font.Bold = true;
-
-                        leftCell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                        leftCell.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-                        leftCell.Style.Font.Bold = true;
-
+                        SetTriangleCell(rightCell);
+                        SetTriangleCell(leftCell);
                         continue;
                     }
 
-                    // No data and not Sunday → blank
+                    // No data → leave blank
                     if (!hasDateData)
                         continue;
 
@@ -1198,6 +1205,14 @@ namespace FootWristStrapsAnalysis
             }
         }
 
+        private void SetTriangleCell(ExcelRange cell)
+        {
+            cell.Value = "△";
+            cell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            cell.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+            cell.Style.Font.Bold = true;
+            cell.Style.Font.Color.SetColor(Color.Black);
+        }
 
 
         private void SetResultCell(ExcelRange cell, bool isPass)
@@ -1475,6 +1490,41 @@ namespace FootWristStrapsAnalysis
                     return null; // No filter
             }
         }
+
+        private async Task RefreshGridAfterImport()
+        {
+            if (this.IsDisposed) return;
+
+            if (InvokeRequired)
+            {
+                Invoke(new Func<Task>(async () => await RefreshGridAfterImport()));
+                return;
+            }
+
+            // Reload data from DB
+            getData = await _foot.GetFootAnalysisData();
+
+            var selectedDate = dateTimePicker1.Value.Date;
+            string selectedResult = comboBox1.SelectedItem?.ToString() ?? "ALL";
+            string selectedAgency = comboBox2.SelectedItem?.ToString() ?? "ALL";
+            List<string> prefixes = GetEmployeeIdPrefixes(selectedAgency);
+
+            DisplayFootData(
+                getData,
+                selectedDate,
+                selectedResult,
+                prefixes
+            );
+
+            // Refresh summary
+            var summaryList = await _foot.GetTotalSummary(selectedDate, prefixes) ?? new List<SummaryCount>();
+            foreach (var summary in summaryList)
+            {
+                PassCount.Text = summary.PassCount.ToString();
+                FailCount.Text = summary.FailCount.ToString();
+            }
+        }
+
 
         private void AnalysisTable_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {

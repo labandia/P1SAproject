@@ -21,7 +21,7 @@ namespace PMACS_V2.Areas.MoldDie.Interface
         // ===========================================================
         Task<List<DieMoldMonitoringModel>> GetDailyMoldData(int month, int days, int year, string process);
         Task<List<DieMoldMonitoringModel>> GetDailyMoldHistoryData(string partnum, string processID);
-
+        Task<List<DieMoldMonitoringModel>> GetDailyMoldHistoryByDieSerialData(string diepart, string processID);
 
 
         Task<bool> CheckMoldieExist(string partnum, string Dateinput);
@@ -71,6 +71,7 @@ namespace PMACS_V2.Areas.MoldDie.Interface
               int pageSize);
 
         Task<DieMoldMonitoringModel> GetMoldieMasterlistParts(string partno);
+        Task<List<DieMoldMonitoringModel>> GetMoldieDieSerialParts(string diepart);
         Task<bool> CheckMoldieMasterlist(string partno);
 
 

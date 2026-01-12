@@ -1209,3 +1209,64 @@
         }
 
 
+
+
+.DetailSerialMain {
+    max-width: 900px;
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+/* Table */
+.DetailSerialcard {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+    /* Header */
+    .DetailSerialcard thead th {
+        background-color: #2c3e50;
+        color: #ffffff;
+        padding: 10px;
+        text-align: center;
+    }
+
+    /* Cells */
+    .DetailSerialcard td {
+        border: 1px solid #dcdcdc;
+        padding: 8px 10px;
+        text-align: center;
+    }
+
+    /* Zebra stripes */
+    .DetailSerialcard tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    /* Hover */
+    .DetailSerialcard tbody tr:hover {
+        background-color: #eef6ff;
+    }
+
+    /* Rowspanned columns */
+    .DetailSerialcard td.die-serial,
+    .DetailSerialcard td.status {
+        font-weight: 600;
+        background-color: #f1f5f9;
+        vertical-align: middle;
+    }
+
+    /* Status colors */
+    .DetailSerialcard td.status {
+        text-transform: uppercase;
+    }
+
+        .DetailSerialcard td.status.active {
+            color: #1e7e34;
+        }
+
+        .DetailSerialcard td.status.inactive {
+            color: #b02a37;
+        }

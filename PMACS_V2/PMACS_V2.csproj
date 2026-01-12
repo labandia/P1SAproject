@@ -438,6 +438,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\ErrorLog.txt" />
+    <Content Include="Content\css\Global.css" />
     <Content Include="Content\css\live.min.css">
       <DependentUpon>live.css</DependentUpon>
     </Content>

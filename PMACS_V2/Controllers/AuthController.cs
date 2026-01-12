@@ -21,7 +21,6 @@ namespace PMACS_V2.Controllers
         public AuthController(IAuthRepository auth) => _auth = auth;
 
         [AllowAnonymous]
-        [RateLimiting(5, 1)]
         [HttpPost]
         public async Task<ActionResult> Authenticate(string username, string password, int proj = 1)
         {

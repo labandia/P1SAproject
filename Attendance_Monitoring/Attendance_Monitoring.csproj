@@ -171,24 +171,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Interfaces\IAttendanceMonitor.cs" />
-    <Compile Include="Interfaces\IAttendanceV2.cs" />
     <Compile Include="Interfaces\ICRmonitorV2.cs" />
     <Compile Include="Models\ApiResponse.cs" />
     <Compile Include="Repositories\AttendanceMonitorRepository.cs" />
-    <Compile Include="Repositories\AttendanceV2Repository.cs" />
     <Compile Include="Repositories\CRMonitorRepositoryV2.cs" />
-    <Compile Include="Repositories\EmployeeRespositoryV2.cs" />
     <Compile Include="Utilities\Caching\CacheHelper.cs" />
     <Compile Include="Utilities\Logging\CustomLogger.cs" />
     <Compile Include="Utilities\Timeprocess.cs" />
     <Compile Include="Models\Attendance.cs" />
     <Compile Include="Models\CRmodel.cs" />
     <Compile Include="Models\Employee.cs" />
-    <Compile Include="Repositories\AttendanceRepository.cs" />
-    <Compile Include="Repositories\CRMonitoringRespository.cs" />
     <Compile Include="Repositories\EmployeeRespository.cs" />
-    <Compile Include="Interfaces\IAttendance.cs" />
-    <Compile Include="Interfaces\ICRmonitor.cs" />
     <Compile Include="Interfaces\IEmployee.cs" />
     <Compile Include="Usercontrols\AttendancePage.cs">
       <SubType>UserControl</SubType>

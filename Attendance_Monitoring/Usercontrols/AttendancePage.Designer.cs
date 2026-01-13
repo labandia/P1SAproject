@@ -30,9 +30,9 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AttendancePage));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.Timeclock = new System.Windows.Forms.Label();
@@ -84,6 +84,7 @@
             // 
             // label5
             // 
+            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label5.BackColor = System.Drawing.Color.Transparent;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.Color.Transparent;
@@ -123,7 +124,7 @@
             // 
             // DisplayTotal
             // 
-            this.DisplayTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.DisplayTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.DisplayTotal.AutoSize = true;
             this.DisplayTotal.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DisplayTotal.ForeColor = System.Drawing.SystemColors.ControlText;
@@ -321,8 +322,8 @@
             // 
             this.attendancetable.AllowUserToAddRows = false;
             this.attendancetable.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.attendancetable.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle10.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.attendancetable.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle10;
             this.attendancetable.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -331,14 +332,14 @@
             this.attendancetable.BackgroundColor = System.Drawing.Color.White;
             this.attendancetable.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.attendancetable.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.Silver;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Silver;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.attendancetable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle11.BackColor = System.Drawing.Color.Silver;
+            dataGridViewCellStyle11.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.Color.Silver;
+            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.attendancetable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle11;
             this.attendancetable.ColumnHeadersHeight = 35;
             this.attendancetable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.attendancetable.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -352,14 +353,14 @@
             this.Overtime,
             this.Shifts,
             this.LateTime});
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.attendancetable.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.attendancetable.DefaultCellStyle = dataGridViewCellStyle12;
             this.attendancetable.EnableHeadersVisualStyles = false;
             this.attendancetable.Location = new System.Drawing.Point(40, 264);
             this.attendancetable.Name = "attendancetable";
@@ -544,13 +545,13 @@
             // exportbtn
             // 
             this.exportbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.exportbtn.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.exportbtn.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.exportbtn.Image = ((System.Drawing.Image)(resources.GetObject("exportbtn.Image")));
             this.exportbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.exportbtn.Location = new System.Drawing.Point(1043, 214);
+            this.exportbtn.Location = new System.Drawing.Point(1029, 205);
             this.exportbtn.Name = "exportbtn";
             this.exportbtn.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            this.exportbtn.Size = new System.Drawing.Size(98, 34);
+            this.exportbtn.Size = new System.Drawing.Size(112, 41);
             this.exportbtn.TabIndex = 33;
             this.exportbtn.Text = "Export";
             this.exportbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -562,10 +563,10 @@
             this.Filterbtn.ForeColor = System.Drawing.Color.Black;
             this.Filterbtn.Image = ((System.Drawing.Image)(resources.GetObject("Filterbtn.Image")));
             this.Filterbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Filterbtn.Location = new System.Drawing.Point(784, 218);
+            this.Filterbtn.Location = new System.Drawing.Point(784, 205);
             this.Filterbtn.Name = "Filterbtn";
             this.Filterbtn.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            this.Filterbtn.Size = new System.Drawing.Size(92, 28);
+            this.Filterbtn.Size = new System.Drawing.Size(114, 41);
             this.Filterbtn.TabIndex = 32;
             this.Filterbtn.Text = "Load";
             this.Filterbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;

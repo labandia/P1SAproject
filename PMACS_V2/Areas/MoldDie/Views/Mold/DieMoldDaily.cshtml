@@ -33,7 +33,7 @@
             </div>
 
             <div class="formcustomgroup" style="margin-top: 1em;">
-                <label class="form-label required" for="processSelect">Search Die Serial.  <span class="validate-message" id="validDateinput">Input part no.</span></label>
+                <label class="form-label required" for="processSelect">Search Die Serial.  <span class="validate-message" id="validDateDieSerial">Input DieSerial no.</span></label>
                 <div class="search-container">
                     <input type="text" id="searchDie" placeholder="Enter part number to search (e.g., 002886060-01)" maxlength="14">
                     <button id="searchDieButton" class="btn btn-secondary">
@@ -362,6 +362,7 @@
 <script type="text/javascript">
     let isFirstLoad = true;
     let isYearLoad = true;
+    let isSeletedSearch = 0;
     // Loads the year and month select options
     initMonthSelect("monthSelectDaily", true);
 
@@ -369,6 +370,7 @@
     let TableDisplay = $("#dieMoldMasterlist");
     let DailyDisplay = $("#DieMoldDaily");
     let strpartnum = "";
+    let strDieSerial = "";
     let searchSet;
 
     let yearSelect = $("#yearselectDaily");
@@ -386,54 +388,54 @@
      $("#addDailyForm").on('submit', async function (e) {
          e.preventDefault();
          const searchInput = $("#searchInput").val().trim();
+         const searchDie = $("#searchDie").val().trim();
          const selectionProcess = $("#processSelect").val();
 
-         if (searchInput === "" && selectionProcess === "") {
+         if (
+             (searchInput.trim() === "" && searchDie.trim() === "") ||
+             selectionProcess.trim() === ""
+         ) {
              alert("Check all the required Input");
              return;
          }
 
-
+         let value = isSeletedSearch === 0 ? searchInput : searchDie;
 
          let formData = new FormData(e.target);
-         formData.append('PartNo', searchInput);
          formData.append('ProcessID', selectionProcess);
+         formData.append("PartNo", strpartnum);
+         formData.append("DieSerial", searchDie);
+
          const data = Object.fromEntries(formData);
 
-           // Check for duplicate entry for the same part number on the same date
+         // Check for duplicate entry for the same part number on the same date
          let checkduplicate = await fetchData('@Url.Action("CheckDialyMoldExist", "Mold")',
-          {
-             PartNo: data.PartNo,
+         {
+             srcval: value,
              DateInput: data.DateInput
          });
 
          if (checkduplicate) {
-                 Swal.fire({
-                     icon: "error",
-                     text: "Partnumber is already Input ",
-                     timer: 1500,
-                     showConfirmButton: false
-                 });
-                 return;
+             Swal.fire({
+                 icon: "error",
+                 text: "Partnumber is already Input ",
+                 timer: 1500,
+                 showConfirmButton: false
+             });
+             return;
          }
 
          let res = await postData('@Url.Action("AddDailyMoldDieMonitor", "Mold")', data);
-         console.log(res);
           if (res && res.Success) {
               showSuccessMessage();
-
-              SearchMoldiePartno();
+              if (isSeletedSearch === 0) {
+                  SearchMoldiePartno();
+              } else {
+                  SearchByDieNo(strDieSerial);
+              }
               document.getElementById("addDailyForm").reset();
               $("#searchInput").val("");
-               //Swal.fire({
-               //    title: "Success",
-               //    text: res.Message,
-               //    icon: "success",
-               //    confirmButtonColor: "#0d97c9",
-               //    timer: 1500
-               //}).then(() => {
-
-               //});
+              $("#searchDie").val("");
            } else {
                Swal.fire({
                    icon: "error",
@@ -442,7 +444,14 @@
                    showConfirmButton: false
                });
            }
+
+
+
+
      });
+
+
+
      $("#EditDailyforms").on('submit', async (e) => {
           e.preventDefault();
           let formData = new FormData();
@@ -512,11 +521,13 @@
      // Search functionality
      $("#searchButton").on('click', function (e) {
          e.preventDefault();
+         isSeletedSearch = 0;
          SearchMoldiePartno();
      });
 
     $("#searchDieButton").on('click', function (e) {
         e.preventDefault();
+        isSeletedSearch = 1;
         let partnum = $("#searchDie").val();
         SearchByDieNo(partnum);
     });
@@ -524,12 +535,14 @@
      // Allow Enter key to trigger search
      $("#searchInput").on('keypress', function (e) {
          if (e.key === 'Enter') {
+             isSeletedSearch = 0;
              SearchMoldiePartno();
          }
      });
 
     $("#searchDie").on('keypress', function (e) {
         if (e.key === 'Enter') {
+            isSeletedSearch = 1;
             console.log("VALUE : " + e.target.value);
             SearchByDieNo(e.target.value);
         }
@@ -595,13 +608,13 @@
                             <td>${rowData.PartNo}</td>
                             <td>${rowData.Dimension_Quality}</td>
                             <td>${rowData.DieSerial}</td>
-                            <td>${getStatusHtml(rowData.Status)}</td>                     
+                            <td>${getStatusHtml(rowData.Status)}</td>
                         </tr>`;
 
                      $("#DieSerialMasterlist").append(rowHtml);
                  });
 
-             
+
 
 
                  PopulateDatalist(GetData);
@@ -637,12 +650,32 @@
     async function SearchByDieNo(searchval) {
         const selectionProcess = $("#processSelect").val();
 
-        //if (!searchval) {
-        //    //$("#validprocess").hide();
-        //    //$("#validDateinput").show();
-        //    alert("Search Die Alert");
-        //    return;
-        //}
+        if (selectionProcess === "" && !searchInput) {
+            // Handle empty input
+            $("#validDateDieSerial").show();
+            $("#validprocess").show();
+            $("#validDateinput").hide();
+            return;
+        }
+
+        if (selectionProcess === "") {
+            // Handle empty input
+            $("#validprocess").show();
+            $("#validDateinput").hide();
+            $("#validDateDieSerial").hide();
+            return;
+        }
+
+        if (!searchInput) {
+            // Handle empty input
+            $("#validprocess").hide();
+            $("#validDateinput").hide();
+            $("#validDateDieSerial").show();
+            return;
+        }
+        $("#validDateDieSerial").hide();
+        $("#validprocess").hide();
+
 
         const searchButton = document.getElementById('searchDieButton');
         const originalText = searchButton.innerHTML;
@@ -651,7 +684,7 @@
         searchButton.innerHTML = '<div class="loading"></div> Searching...';
         searchButton.disabled = true;
 
-        
+
 
 
         try {
@@ -661,8 +694,10 @@
                 ProcessID: selectionProcess,
                 DieInput: searchval
             });
-            console.log(res);
             if (res && res.Success) {
+
+                strpartnum = res.Data.Details[0].PartNo;
+                strDieSerial = searchval;
                 $("#DailySummary").hide();
                 $("#DailyInputs").show();
 
@@ -1197,6 +1232,7 @@
 
     $("#validprocess").hide();
     $("#validDateinput").hide();
+    $("#validDateDieSerial").hide();
     GetMoldDieDaily();
 
 </script>

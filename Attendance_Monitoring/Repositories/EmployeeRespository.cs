@@ -6,15 +6,37 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Data;
+using System.Linq;
 
 namespace Attendance_Monitoring.Models
 {
     public class EmployeeRespository : IEmployee
     {
-        public Task<List<Employee>> GetEmployees()
+        public Task<List<Employee>> GetEmployees(string emp = "", int dep = 0)
         {
-            string strquery = "ManageEmployee";
-            return SqlDataAccess.GetData<Employee>(strquery);
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+            string strquery = @"
+                SELECT DISTINCT 
+                    Employee_ID, FullName, Process, Affiliation, Department_ID
+                FROM Employee_tbl
+                WHERE IsDelete = 1";
+
+            if (!string.IsNullOrEmpty(emp))
+            {
+                strquery += " AND Employee_ID = @Employee_ID";
+                parameters.Add("@Employee_ID", emp);
+            }
+
+            if (dep != 0)
+            {
+                strquery += " AND Department_ID = @Department_ID";
+                parameters.Add("@Department_ID", dep);
+            }
+
+            strquery += " ORDER BY FullName ASC";
+
+            return SqlDataAccess.GetData<Employee>(strquery, parameters);
         }
         public Task<List<Department>> GetDepartments()
         {

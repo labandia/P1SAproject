@@ -223,9 +223,10 @@
             // 
             // dashboard1
             // 
+            this.dashboard1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dashboard1.Location = new System.Drawing.Point(167, 3);
             this.dashboard1.Name = "dashboard1";
-            this.dashboard1.Size = new System.Drawing.Size(967, 466);
+            this.dashboard1.Size = new System.Drawing.Size(1200, 712);
             this.dashboard1.TabIndex = 0;
             // 
             // Mainpage

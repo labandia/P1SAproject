@@ -13,7 +13,8 @@
     <link rel="preload" href="~/Content/fonts/Poppins-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 
 
-    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+    <link href="~/Content/Shared/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/css/HydroLogin.css" rel="stylesheet" />
 
 
     @Styles.Render("~/Content/shared-css")
@@ -169,6 +170,9 @@
     </div>
 </div>
 
+
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Scripts/Popper.min.js"></script>
 <script type="text/javascript">
     const logform = document.getElementById('logincredentials');
     const regform = document.getElementById('addnewform');
@@ -239,11 +243,11 @@
         e.preventDefault();
         let formData = new FormData(e.target);
         formData.append('ProjectID', 9);
-        
+
         const data = Object.fromEntries(formData);
         if (!RegisterValidationForm()) {
-              //const savebtn = document.querySelector("#Regisbtn");
-              //savebtn.innerHTML = " <div class='buttonloading'></div>";
+            //const savebtn = document.querySelector("#Regisbtn");
+            //savebtn.innerHTML = " <div class='buttonloading'></div>";
             let res = await postData('/User/CreateNewUser', formData);
             if (res && res.Success) {
                 Swal.fire({
@@ -276,7 +280,7 @@
         e.preventDefault();
         let formData = new FormData(e.target);
         const data = Object.fromEntries(formData);
-       
+
         if (ChangeValidationForm()) {
             let res = await postData('/User/ChangePassword', formData);
             if (res && res.Success) {
@@ -345,6 +349,6 @@
     $("#logshow").show();
 
 
-  
+
 </script>
 

@@ -26,7 +26,7 @@ namespace Attendance_Monitoring.View
             try
             {
                 // 1. Get all employees
-                var items = await _admin.GetEmployees();
+                var items = await _admin.GetEmployees("", 0);
 
                 // 2. Group by Department_ID and project into Department objects
                 var itemlist = items

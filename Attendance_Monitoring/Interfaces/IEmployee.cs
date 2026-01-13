@@ -7,7 +7,7 @@ namespace Attendance_Monitoring.Repositories
 {
     public interface IEmployee
     {
-        Task<List<Employee>> GetEmployees();
+        Task<List<Employee>> GetEmployees(string emp, int dep);
         Task<bool> AddEmployee(Employee emp);
         Task<bool> UpdateEmployee(Employee emp, string temp);
         Task<bool> DeleteEmployee(string empID);

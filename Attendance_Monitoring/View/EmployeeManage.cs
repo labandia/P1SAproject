@@ -45,7 +45,7 @@ namespace Attendance_Monitoring.View
 
         public async Task Displayemployee(int depid)
         {
-            var items = await _emp.GetEmployees();
+            var items = await _emp.GetEmployees("", depid);
 
 
             emplist = items.ToList();
@@ -68,7 +68,7 @@ namespace Attendance_Monitoring.View
         private async void PopulateComboBox()
         {
             // 1. Get all employees
-            var items = await _emp.GetEmployees();
+            var items = await _emp.GetEmployees("", 0);
 
             // 2. Group by Department_ID and project into Department objects
             var itemlist = items

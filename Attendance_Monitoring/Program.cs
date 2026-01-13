@@ -22,7 +22,7 @@ namespace Attendance_Monitoring
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             var services = new ServiceCollection();
-            //services.AddSingleton<IEmployee, EmployeeRespository>();
+            services.AddSingleton<IEmployee, EmployeeRespository>();
             services.AddSingleton<ICRmonitor, CRMonitoringRespository>();
             services.AddSingleton<IAttendance, AttendanceRepository>();
             services.AddSingleton<IAttendanceV2, AttendanceV2Repository>();
@@ -49,7 +49,7 @@ namespace Attendance_Monitoring
             services.AddTransient<AttendanceMain>();
 
             ServiceProvider = services.BuildServiceProvider();
-            var mainForm = ServiceProvider.GetRequiredService<AttendanceMain>();
+            var mainForm = ServiceProvider.GetRequiredService<Selection>();
             Application.Run(mainForm);
         }
     }

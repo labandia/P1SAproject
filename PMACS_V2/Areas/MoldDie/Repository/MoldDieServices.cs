@@ -210,7 +210,8 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                     p.DieSerial = @SearchValue
                     AND p.ProcessID = @ProcessID
 			    GROUP BY p.DieSerial, d.DateInput, d.CycleShot,
-			    d.Total, d.MachineNo, d.Status, d.Remarks, d.Mincharge";
+			    d.Total, d.MachineNo, d.Status, d.Remarks, d.Mincharge
+                 ORDER BY d.DateInput DESC;";
 
             return SqlDataAccess.GetData<DieMoldMonitoringModel>(
               strsql,
@@ -221,7 +222,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
               });
         }
 
-
+ 
 
         public async Task<bool> AddUpdateDailyMoldie(DieMoldMonitoringModel mold, int action)
         {
@@ -355,11 +356,19 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             string strsql = $@"UPDATE DieMold_Daily SET Status =@Status WHERE RecordID =@RecordID";
             return SqlDataAccess.UpdateInsertQuery(strsql, new { Status = Stats, RecordID = ID });
         }
-        public Task<bool> CheckMoldieExist(string partnum, string Dateinput)
+        public Task<bool> CheckMoldieExist(string searchValue, string Dateinput)
         {
-            return SqlDataAccess.Checkdata($@"SELECT COUNT(PartNo) FROM DieMold_Daily 
-                                        WHERE PartNo =@PartNo AND CAST(DateInput AS DATE) = @DateInput",
-                                       new { PartNo = partnum, DateInput = Dateinput });
+            bool isPartNo = !string.IsNullOrWhiteSpace(searchValue)
+                           && searchValue.StartsWith("0");
+
+            string filter = isPartNo ? "p.PartNo =@Searchval" : "p.DieSerial =@Searchval";
+
+            string sql = $@"SELECT COUNT(p.PartNo) FROM DieMold_Daily d
+                            INNER JOIN DieMold_MoldingMainParts p ON p.PartNo = d.PartNo
+                            WHERE {filter} AND CAST(DateInput AS DATE) = @DateInput";
+
+
+            return SqlDataAccess.Checkdata(sql, new { Searchval = searchValue, DateInput = Dateinput });
         }
         public Task<bool> DeleteDailyMoldie(int ID)
         {
@@ -701,6 +710,6 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             return (newTotal, status);
         }
 
-       
+        
     }
 }

@@ -27,7 +27,7 @@ namespace Attendance_Monitoring.Usercontrols
         // PURPOSE IS TO REFRESH THE TABLE WHEN DONE ADDING AND UPDATING
         public async Task Displayemployee(int depid)
         {
-            var items = await _emp.GetEmployees();
+            var items = await _emp.GetEmployees("", depid);
             emplist = items.ToList();
             Employeetable.AutoGenerateColumns = false;
             //Employeetable.DataSource =  emplist;

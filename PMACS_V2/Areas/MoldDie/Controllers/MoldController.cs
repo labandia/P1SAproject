@@ -154,9 +154,9 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
 
 
         [HttpGet]
-        public async Task<JsonResult> CheckDialyMoldExist(string PartNo, string DateInput)
+        public async Task<JsonResult> CheckDialyMoldExist(string srcval, string DateInput)
         {
-            bool result = await _dieV2.CheckMoldieExist(PartNo, DateInput);
+            bool result = await _dieV2.CheckMoldieExist(srcval, DateInput);
             return Json(result, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]

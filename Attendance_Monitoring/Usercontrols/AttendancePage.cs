@@ -186,12 +186,12 @@ namespace Attendance_Monitoring.Usercontrols
             try
             {
                 shiftselect.SelectedIndex = 0;
-
-                label7.Text  = "Daily Attendance : " + SectionName[DepartmentID + 1];
+                int intdepID = DepartmentID + 1;
+                label7.Text  = "Daily Attendance : " + SectionName[intdepID];
 
                 selecttime.DropDownStyle = ComboBoxStyle.DropDownList;
                 Timeclock.Text = DateTime.Now.ToLongTimeString();
-                emplist = await _emp.GetEmployees();
+                emplist = await _emp.GetEmployees("", intdepID);
             }
             catch (FormatException)
             {

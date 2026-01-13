@@ -32,16 +32,7 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.cartesianChart1 = new LiveCharts.WinForms.CartesianChart();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.cartesianChart2 = new LiveCharts.WinForms.CartesianChart();
             this.label3 = new System.Windows.Forms.Label();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.cartesianChart3 = new LiveCharts.WinForms.CartesianChart();
-            this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
-            this.panel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // label2
@@ -89,52 +80,6 @@
             this.label5.TabIndex = 25;
             this.label5.Text = "NCR (Non Comformity Report)";
             // 
-            // panel1
-            // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel1.BackColor = System.Drawing.Color.White;
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.cartesianChart1);
-            this.panel1.Location = new System.Drawing.Point(35, 252);
-            this.panel1.Margin = new System.Windows.Forms.Padding(0);
-            this.panel1.Name = "panel1";
-            this.panel1.Padding = new System.Windows.Forms.Padding(10);
-            this.panel1.Size = new System.Drawing.Size(553, 157);
-            this.panel1.TabIndex = 27;
-            // 
-            // cartesianChart1
-            // 
-            this.cartesianChart1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cartesianChart1.Location = new System.Drawing.Point(10, 10);
-            this.cartesianChart1.Name = "cartesianChart1";
-            this.cartesianChart1.Size = new System.Drawing.Size(531, 135);
-            this.cartesianChart1.TabIndex = 23;
-            this.cartesianChart1.Text = "cartesianChart1";
-            // 
-            // panel2
-            // 
-            this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel2.BackColor = System.Drawing.Color.White;
-            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel2.Controls.Add(this.cartesianChart2);
-            this.panel2.Location = new System.Drawing.Point(706, 257);
-            this.panel2.Margin = new System.Windows.Forms.Padding(0);
-            this.panel2.Name = "panel2";
-            this.panel2.Padding = new System.Windows.Forms.Padding(10);
-            this.panel2.Size = new System.Drawing.Size(553, 157);
-            this.panel2.TabIndex = 28;
-            // 
-            // cartesianChart2
-            // 
-            this.cartesianChart2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cartesianChart2.Location = new System.Drawing.Point(10, 10);
-            this.cartesianChart2.Name = "cartesianChart2";
-            this.cartesianChart2.Size = new System.Drawing.Size(531, 135);
-            this.cartesianChart2.TabIndex = 23;
-            this.cartesianChart2.Text = "cartesianChart2";
-            // 
             // label3
             // 
             this.label3.AutoSize = true;
@@ -145,46 +90,17 @@
             this.label3.TabIndex = 29;
             this.label3.Text = "Open Issues By Section";
             // 
-            // panel3
-            // 
-            this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel3.BackColor = System.Drawing.Color.White;
-            this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel3.Controls.Add(this.cartesianChart3);
-            this.panel3.Location = new System.Drawing.Point(35, 530);
-            this.panel3.Margin = new System.Windows.Forms.Padding(0);
-            this.panel3.Name = "panel3";
-            this.panel3.Padding = new System.Windows.Forms.Padding(10);
-            this.panel3.Size = new System.Drawing.Size(553, 157);
-            this.panel3.TabIndex = 30;
-            // 
-            // cartesianChart3
-            // 
-            this.cartesianChart3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cartesianChart3.Location = new System.Drawing.Point(10, 10);
-            this.cartesianChart3.Name = "cartesianChart3";
-            this.cartesianChart3.Size = new System.Drawing.Size(531, 135);
-            this.cartesianChart3.TabIndex = 23;
-            this.cartesianChart3.Text = "cartesianChart3";
-            // 
             // Dashboard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.panel3);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.panel2);
-            this.Controls.Add(this.panel1);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.label2);
             this.Name = "Dashboard";
             this.Size = new System.Drawing.Size(1349, 806);
-            this.panel1.ResumeLayout(false);
-            this.panel2.ResumeLayout(false);
-            this.panel3.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -196,12 +112,6 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Panel panel1;
-        private LiveCharts.WinForms.CartesianChart cartesianChart1;
-        private System.Windows.Forms.Panel panel2;
-        private LiveCharts.WinForms.CartesianChart cartesianChart2;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Panel panel3;
-        private LiveCharts.WinForms.CartesianChart cartesianChart3;
     }
 }

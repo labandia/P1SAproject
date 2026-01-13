@@ -59,8 +59,8 @@ namespace NCR_system
             //this.WindowState = FormWindowState.Maximized;
 
 
-            _cc.BringToFront();
-            await _cc.DisplayCustomer(0);
+            //_cc.BringToFront();
+            //await _cc.DisplayCustomer(0);
         }
 
         private async void Customerbtn_Click(object sender, EventArgs e)

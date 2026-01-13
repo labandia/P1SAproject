@@ -223,7 +223,6 @@ namespace FootWristStrapsAnalysis
         {
             try
             {
-                dateTimePicker1.Value = DateTime.Today;
 
                 string folderPath = folderText.Text;
 
@@ -286,7 +285,7 @@ namespace FootWristStrapsAnalysis
                     // ✅ SKIP IF SAME COUNT
                     if (excelRowCount == dbRowCount)
                     {
-                        Debug.WriteLine("⏭ Excel and DB row counts are equal — skipping import.");
+                        Debug.WriteLine("⏭ Excel and DB row counts are equal — skipping import.");            
                         return;
                     }
 
@@ -294,6 +293,7 @@ namespace FootWristStrapsAnalysis
                     if (excelRowCount > dbRowCount)
                     {
                         Debug.WriteLine($"🗑 Deleting records for date: {today:yyyy-MM-dd}");
+                        dateTimePicker1.Value = DateTime.Today;
                         await _foot.DeleteByTestDate(today);
                     }
 

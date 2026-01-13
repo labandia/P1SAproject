@@ -25,9 +25,15 @@ namespace FootWristStrapsAnalysis
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            var services = new ServiceCollection();
-            services.AddSingleton<IFootWrist, FootWristServices>();
 
+            var services = new ServiceCollection();
+
+            services.AddSingleton<IFootWrist>(sp => { 
+                var service = new FootWristServices(); 
+                return new CachedFootWristServices(service); 
+            });
+
+            // 🔹 Register Forms
             services.AddTransient<Startup>();
 
             ServiceProvider = services.BuildServiceProvider();

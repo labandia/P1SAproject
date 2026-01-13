@@ -31,18 +31,20 @@ namespace FootWristStrapsAnalysis
         private List<int> selectedRecordIds = new List<int>();
         private List<string> selectedEmployeeID = new List<string>();
 
-        private static IEnumerable<IFootWristModel> footlist;   
+        private static IEnumerable<IFootWristModel> footlist;
+
+        private readonly System.Windows.Forms.Timer _debounceTimer = new Timer();
 
         public Startup(IFootWrist foot)
         {
             InitializeComponent();
-          
             _foot = foot;
 
             // 🔁 Run every 15 minutes (900,000 ms)
             //_importTimer = new System.Timers.Timer(15 * 60 * 1000);
             // 🔁 Run every 1s (900,000 ms)
             _importTimer = new System.Timers.Timer(2000);
+            _importTimer.AutoReset = false; // IMPORTANT
             _importTimer.Elapsed += async (s, e) =>
             {
                 _importTimer.Stop();
@@ -50,10 +52,23 @@ namespace FootWristStrapsAnalysis
                 {
                     await AutomaticImportData();
                 }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                }
                 finally
                 {
                     _importTimer.Start();
                 }
+            };
+
+            _importTimer.Start();
+
+            _debounceTimer.Interval = 300;
+            _debounceTimer.Tick += async (s, e) =>
+            {
+                _debounceTimer.Stop();
+                await FootwristReloadFilterData();
             };
 
         }
@@ -202,7 +217,6 @@ namespace FootWristStrapsAnalysis
         {
             await AutomaticImportData();  // initial run
             _importTimer.Start();         // start 15-min loop
-            Debug.WriteLine("⏰ Auto import timer started (every 15 minutes).");
         }
 
         public async Task AutomaticImportData()
@@ -267,7 +281,7 @@ namespace FootWristStrapsAnalysis
                     string[] lines = File.ReadAllLines(file);
                     int excelRowCount = lines.Length - 1; // minus header
                     int dbRowCount = await _foot.GetRowCountByDate(today);
-                    Debug.WriteLine($"📊 Excel Rows: {excelRowCount}, DB Rows: {dbRowCount}");
+                    //Debug.WriteLine($"📊 Excel Rows: {excelRowCount}, DB Rows: {dbRowCount}");
 
                     // ✅ SKIP IF SAME COUNT
                     if (excelRowCount == dbRowCount)
@@ -363,7 +377,6 @@ namespace FootWristStrapsAnalysis
 
                 await _foot.ImportSetFootAnalysis(data);
 
-                Debug.WriteLine($@"Employee ID : {strEmployee} -  LeftResult : {strleft} - Count : {count}");
             }
 
                   
@@ -1428,14 +1441,16 @@ namespace FootWristStrapsAnalysis
             }
         }
 
-        private async void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            await FootwristReloadFilterData();
+            _debounceTimer.Stop();
+            _debounceTimer.Start();
         }
 
-        private async void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            await FootwristReloadFilterData();
+            _debounceTimer.Stop();
+            _debounceTimer.Start();
         }
 
 

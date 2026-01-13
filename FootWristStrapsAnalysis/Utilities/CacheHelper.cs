@@ -28,13 +28,24 @@ namespace ProductConfirm.Utilities
         public static void Remove(string key)
         {
             if (_cache.Contains(key))
-            {
                 _cache.Remove(key);
-            }
         }
 
 
-
+        public static void RefreshInBackground<T>(
+               string key,
+               Func<Task<T>> getDataAsync,
+               int minutes = 15)
+        {
+            _ = Task.Run(async () =>
+            {
+                var data = await getDataAsync();
+                if (data != null)
+                {
+                    _cache.Set(key, data, DateTimeOffset.Now.AddMinutes(minutes));
+                }
+            });
+        }
 
         //public static T GetOrSet<T>(string key, Func<T> getData, int expirationMinutes = 10)
         //{

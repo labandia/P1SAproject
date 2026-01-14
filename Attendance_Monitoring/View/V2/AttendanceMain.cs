@@ -31,9 +31,9 @@ namespace Attendance_Monitoring.View.V2
         private void ExitButton(object sender, EventArgs e) => Application.Exit();
 
 
-        public void EnterPageAttendance(int id)
+        public void EnterPageAttendance(int DepartmentID)
         {
-            MainLayout page = new MainLayout(id, _attend, _cr, _emp);
+            MainLayout page = new MainLayout(DepartmentID, _attend, _cr, _emp);
             page.Show();
             Visible = false;
         }

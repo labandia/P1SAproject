@@ -27,10 +27,11 @@ namespace PMACS_V2.Areas.MoldDie.Interface
         Task<bool> CheckMoldieExist(string partnum, string Dateinput);
         Task<bool> AddUpdateMainMoldie(DieMoldMonitoringModel mold, int action);
         Task<bool> AddUpdateDailyMoldie(DieMoldMonitoringModel mold, int action); // -- Both Add and Update 
-      
 
+        Task<bool> AddUpdateDailySerialMoldie(DieMoldMonitoringModel mold);
 
         Task<bool> ChangeStatsDaily(int ID, int Stats); // Change the Staus of the Daily Molding Data
+        Task<bool> ChangeStatsSerialDaily(string datestring, string dieSerial, int Stats);
         Task<bool> DeleteDailyMoldie(int ID);
         Task<bool> UpdateDailyLastCycle(int recordID, int lastcycle);
 

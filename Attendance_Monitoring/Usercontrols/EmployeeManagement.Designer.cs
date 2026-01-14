@@ -33,13 +33,6 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.Delete = new System.Windows.Forms.DataGridViewImageColumn();
-            this.Edit = new System.Windows.Forms.DataGridViewImageColumn();
-            this.Affiliation = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Process = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Fullname = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.EmployeeID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DepartmentID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label1 = new System.Windows.Forms.Label();
             this.searchbox = new System.Windows.Forms.TextBox();
             this.Employeetable = new System.Windows.Forms.DataGridView();
@@ -49,6 +42,13 @@
             this.Addbtn = new System.Windows.Forms.Button();
             this.exportbtn = new System.Windows.Forms.Button();
             this.DisplayTotal = new System.Windows.Forms.Label();
+            this.Employee_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Fullname = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Process = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Affiliation = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Edit = new System.Windows.Forms.DataGridViewImageColumn();
+            this.Delete = new System.Windows.Forms.DataGridViewImageColumn();
+            this.DepartmentID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.Employeetable)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -56,65 +56,6 @@
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // Delete
-            // 
-            this.Delete.FillWeight = 30F;
-            this.Delete.HeaderText = "Delete";
-            this.Delete.Image = ((System.Drawing.Image)(resources.GetObject("Delete.Image")));
-            this.Delete.Name = "Delete";
-            this.Delete.ReadOnly = true;
-            this.Delete.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            // 
-            // Edit
-            // 
-            this.Edit.FillWeight = 30F;
-            this.Edit.HeaderText = "Edit";
-            this.Edit.Image = ((System.Drawing.Image)(resources.GetObject("Edit.Image")));
-            this.Edit.Name = "Edit";
-            this.Edit.ReadOnly = true;
-            this.Edit.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Edit.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            // 
-            // Affiliation
-            // 
-            this.Affiliation.DataPropertyName = "Affiliation";
-            this.Affiliation.FillWeight = 78.53725F;
-            this.Affiliation.HeaderText = "Affiliation";
-            this.Affiliation.Name = "Affiliation";
-            this.Affiliation.ReadOnly = true;
-            // 
-            // Process
-            // 
-            this.Process.DataPropertyName = "Process";
-            this.Process.FillWeight = 78.53725F;
-            this.Process.HeaderText = "Process";
-            this.Process.Name = "Process";
-            this.Process.ReadOnly = true;
-            // 
-            // Fullname
-            // 
-            this.Fullname.DataPropertyName = "FullName";
-            this.Fullname.FillWeight = 78.53725F;
-            this.Fullname.HeaderText = "Fullname";
-            this.Fullname.Name = "Fullname";
-            this.Fullname.ReadOnly = true;
-            // 
-            // EmployeeID
-            // 
-            this.EmployeeID.DataPropertyName = "EmployeeID";
-            this.EmployeeID.FillWeight = 78.53725F;
-            this.EmployeeID.HeaderText = "EmployeeID";
-            this.EmployeeID.Name = "EmployeeID";
-            this.EmployeeID.ReadOnly = true;
-            // 
-            // DepartmentID
-            // 
-            this.DepartmentID.DataPropertyName = "Department_ID";
-            this.DepartmentID.HeaderText = "DepartmentID";
-            this.DepartmentID.Name = "DepartmentID";
-            this.DepartmentID.ReadOnly = true;
-            this.DepartmentID.Visible = false;
             // 
             // label1
             // 
@@ -161,7 +102,7 @@
             this.Employeetable.ColumnHeadersHeight = 35;
             this.Employeetable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.Employeetable.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.EmployeeID,
+            this.Employee_ID,
             this.Fullname,
             this.Process,
             this.Affiliation,
@@ -187,6 +128,7 @@
             this.Employeetable.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.Employeetable.Size = new System.Drawing.Size(1093, 340);
             this.Employeetable.TabIndex = 16;
+            this.Employeetable.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Employeetable_CellClick);
             // 
             // button1
             // 
@@ -280,6 +222,65 @@
             this.DisplayTotal.TabIndex = 20;
             this.DisplayTotal.Text = "Total Attendence: ";
             // 
+            // Employee_ID
+            // 
+            this.Employee_ID.DataPropertyName = "Employee_ID";
+            this.Employee_ID.FillWeight = 78.53725F;
+            this.Employee_ID.HeaderText = "EmployeeID";
+            this.Employee_ID.Name = "Employee_ID";
+            this.Employee_ID.ReadOnly = true;
+            // 
+            // Fullname
+            // 
+            this.Fullname.DataPropertyName = "FullName";
+            this.Fullname.FillWeight = 78.53725F;
+            this.Fullname.HeaderText = "Fullname";
+            this.Fullname.Name = "Fullname";
+            this.Fullname.ReadOnly = true;
+            // 
+            // Process
+            // 
+            this.Process.DataPropertyName = "Process";
+            this.Process.FillWeight = 78.53725F;
+            this.Process.HeaderText = "Process";
+            this.Process.Name = "Process";
+            this.Process.ReadOnly = true;
+            // 
+            // Affiliation
+            // 
+            this.Affiliation.DataPropertyName = "Affiliation";
+            this.Affiliation.FillWeight = 78.53725F;
+            this.Affiliation.HeaderText = "Affiliation";
+            this.Affiliation.Name = "Affiliation";
+            this.Affiliation.ReadOnly = true;
+            // 
+            // Edit
+            // 
+            this.Edit.FillWeight = 30F;
+            this.Edit.HeaderText = "Edit";
+            this.Edit.Image = ((System.Drawing.Image)(resources.GetObject("Edit.Image")));
+            this.Edit.Name = "Edit";
+            this.Edit.ReadOnly = true;
+            this.Edit.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Edit.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // Delete
+            // 
+            this.Delete.FillWeight = 30F;
+            this.Delete.HeaderText = "Delete";
+            this.Delete.Image = ((System.Drawing.Image)(resources.GetObject("Delete.Image")));
+            this.Delete.Name = "Delete";
+            this.Delete.ReadOnly = true;
+            this.Delete.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            // 
+            // DepartmentID
+            // 
+            this.DepartmentID.DataPropertyName = "Department_ID";
+            this.DepartmentID.HeaderText = "DepartmentID";
+            this.DepartmentID.Name = "DepartmentID";
+            this.DepartmentID.ReadOnly = true;
+            this.DepartmentID.Visible = false;
+            // 
             // EmployeeManagement
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -304,13 +305,6 @@
         #endregion
 
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        private System.Windows.Forms.DataGridViewImageColumn Delete;
-        private System.Windows.Forms.DataGridViewImageColumn Edit;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Affiliation;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Process;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Fullname;
-        private System.Windows.Forms.DataGridViewTextBoxColumn EmployeeID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn DepartmentID;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox searchbox;
         private System.Windows.Forms.DataGridView Employeetable;
@@ -320,5 +314,12 @@
         private System.Windows.Forms.Button Addbtn;
         private System.Windows.Forms.Button exportbtn;
         private System.Windows.Forms.Label DisplayTotal;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Employee_ID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Fullname;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Process;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Affiliation;
+        private System.Windows.Forms.DataGridViewImageColumn Edit;
+        private System.Windows.Forms.DataGridViewImageColumn Delete;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DepartmentID;
     }
 }

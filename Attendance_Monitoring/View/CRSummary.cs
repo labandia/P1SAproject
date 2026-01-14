@@ -1,5 +1,4 @@
-﻿using Attendance_Monitoring.Controller;
-using Attendance_Monitoring.Models;
+﻿using Attendance_Monitoring.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,7 +17,6 @@ namespace Attendance_Monitoring.View
     public partial class CRSummary : Form
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly AdminController _admin;
         private static List<CRmodel> critemlist;
 
         public int sec;
@@ -27,7 +25,6 @@ namespace Attendance_Monitoring.View
         public CRSummary(int section, IServiceProvider serviceProvider)
         {
             InitializeComponent();
-            _admin = new AdminController();
             sec = section;
             _serviceProvider=serviceProvider;
         }
@@ -50,11 +47,11 @@ namespace Attendance_Monitoring.View
         //  ####################  DISPLAY  CR MONITORING  #################### //
         public async void DisplayCRMonitor()
         {
-            string newDateString = dstart.Value.ToString("yyyy-MM-dd");
-            critemlist = await _admin.GetCRMonitorSummarylist(sec, newDateString, newDateString);
+            //string newDateString = dstart.Value.ToString("yyyy-MM-dd");
+            //critemlist = await _admin.GetCRMonitorSummarylist(sec, newDateString, newDateString);
 
-            CRtable.DataSource = critemlist;
-            DisplayTotal.Text = "Total Attendence: " + CRtable.RowCount;
+            //CRtable.DataSource = critemlist;
+            //DisplayTotal.Text = "Total Attendence: " + CRtable.RowCount;
         }
 
         private void searchbox_TextChanged(object sender, EventArgs e)
@@ -71,30 +68,30 @@ namespace Attendance_Monitoring.View
 
         private async void exportbtn_Click(object sender, EventArgs e)
         {
-            DateTime startd, enddate;
-            if (!DateTime.TryParse(dstart.Text, out startd) || !DateTime.TryParse(dend.Text, out enddate))
-            {
-                MessageBox.Show("Invalid date format.");
-                return;
-            }
-            string formattedStartDate = startd.ToString("yyyy-MM-dd");
-            string formattedEndDate = enddate.ToString("yyyy-MM-dd");
+            //DateTime startd, enddate;
+            //if (!DateTime.TryParse(dstart.Text, out startd) || !DateTime.TryParse(dend.Text, out enddate))
+            //{
+            //    MessageBox.Show("Invalid date format.");
+            //    return;
+            //}
+            //string formattedStartDate = startd.ToString("yyyy-MM-dd");
+            //string formattedEndDate = enddate.ToString("yyyy-MM-dd");
 
-            string sqlquery = GenerateSQLQuery(startd, enddate, searchbox.Text, shifts.Text);
+            //string sqlquery = GenerateSQLQuery(startd, enddate, searchbox.Text, shifts.Text);
 
-            //Debug.WriteLine(sqlquery);
+            ////Debug.WriteLine(sqlquery);
 
-            // DataTable dt = await connect.GetData(sqlquery);
-            var explist = await _admin.GetExportCRMonitorSummarylist(sqlquery, formattedStartDate, formattedEndDate, shifts.Text, searchbox.Text);
+            //// DataTable dt = await connect.GetData(sqlquery);
+            //var explist = await _admin.GetExportCRMonitorSummarylist(sqlquery, formattedStartDate, formattedEndDate, shifts.Text, searchbox.Text);
 
-            if (explist.Any())
-            {
-                ExportToExcel(explist, sec);
-            }
-            else
-            {
-                MessageBox.Show("No data found.");
-            }
+            //if (explist.Any())
+            //{
+            //    ExportToExcel(explist, sec);
+            //}
+            //else
+            //{
+            //    MessageBox.Show("No data found.");
+            //}
 
 
         }
@@ -213,23 +210,23 @@ namespace Attendance_Monitoring.View
 
         private async void Filterbtn_Click(object sender, EventArgs e)
         {
-            DateTime startd, enddate;
-            if (!DateTime.TryParse(dstart.Text, out startd) || !DateTime.TryParse(dend.Text, out enddate))
-            {
-                MessageBox.Show("Invalid date format.");
-                return;
-            }
-            string formattedStartDate = startd.ToString("yyyy-MM-dd");
-            string formattedEndDate = enddate.ToString("yyyy-MM-dd");
+            //DateTime startd, enddate;
+            //if (!DateTime.TryParse(dstart.Text, out startd) || !DateTime.TryParse(dend.Text, out enddate))
+            //{
+            //    MessageBox.Show("Invalid date format.");
+            //    return;
+            //}
+            //string formattedStartDate = startd.ToString("yyyy-MM-dd");
+            //string formattedEndDate = enddate.ToString("yyyy-MM-dd");
 
-            string sqlquery = GenerateSQLQuery(startd, enddate, searchbox.Text, shifts.Text);
+            //string sqlquery = GenerateSQLQuery(startd, enddate, searchbox.Text, shifts.Text);
 
-            //Debug.WriteLine(sqlquery);
+            ////Debug.WriteLine(sqlquery);
 
-            // DataTable dt = await connect.GetData(sqlquery);
-            var sumlist = await _admin.GetExportCRMonitorSummarylist(sqlquery, formattedStartDate, formattedEndDate, shifts.Text, searchbox.Text);
-            CRtable.DataSource = sumlist;
-            DisplayTotal.Text = "Total Results: " + CRtable.RowCount;
+            //// DataTable dt = await connect.GetData(sqlquery);
+            //var sumlist = await _admin.GetExportCRMonitorSummarylist(sqlquery, formattedStartDate, formattedEndDate, shifts.Text, searchbox.Text);
+            //CRtable.DataSource = sumlist;
+            //DisplayTotal.Text = "Total Results: " + CRtable.RowCount;
         }
 
         

@@ -45,52 +45,52 @@ namespace Attendance_Monitoring.View
 
         public async Task Displayemployee(int depid)
         {
-            var items = await _emp.GetEmployees("", depid);
+            //var items = await _emp.GetEmployees("", depid);
 
 
-            emplist = items.ToList();
-            Employeetable.AutoGenerateColumns = false;
-            //Employeetable.DataSource =  emplist;
-            if (depid != 0)
-            {
-                var filteredList = emplist.Where(p => p.Department_ID == depid).ToList();
-                Employeetable.DataSource = filteredList;
-            }
-            else
-            {
-                Employeetable.DataSource = emplist;
-            }
+            //emplist = items.ToList();
+            //Employeetable.AutoGenerateColumns = false;
+            ////Employeetable.DataSource =  emplist;
+            //if (depid != 0)
+            //{
+            //    var filteredList = emplist.Where(p => p.Department_ID == depid).ToList();
+            //    Employeetable.DataSource = filteredList;
+            //}
+            //else
+            //{
+            //    Employeetable.DataSource = emplist;
+            //}
 
-            DisplayTotal.Text = "Total Records: " + Employeetable.RowCount;
+            //DisplayTotal.Text = "Total Records: " + Employeetable.RowCount;
         }
 
 
         private async void PopulateComboBox()
         {
-            // 1. Get all employees
-            var items = await _emp.GetEmployees("", 0);
+            //// 1. Get all employees
+            //var items = await _emp.GetEmployees("", 0);
 
-            // 2. Group by Department_ID and project into Department objects
-            var itemlist = items
-                .GroupBy(emp => emp.Department_ID)   // group by ID to remove duplicates
-                .Select(g => new Department
-                {
-                    Department_ID = g.Key,
-                    Department_name = GetDepartmentName(g.Key)
-                })
-                .ToList();
-
-
+            //// 2. Group by Department_ID and project into Department objects
+            //var itemlist = items
+            //    .GroupBy(emp => emp.Department_ID)   // group by ID to remove duplicates
+            //    .Select(g => new Department
+            //    {
+            //        Department_ID = g.Key,
+            //        Department_name = GetDepartmentName(g.Key)
+            //    })
+            //    .ToList();
 
 
-            // 3. Add "All Section" at the top
-            itemlist.Insert(0, new Department { Department_ID = 0, Department_name = "All Section" });
 
-            // 4. Bind to ComboBox
-            comboBox1.DataSource = itemlist;
-            comboBox1.DisplayMember = "Department_name";
-            comboBox1.ValueMember = "Department_ID";
-            comboBox1.SelectedIndex = 0;
+
+            //// 3. Add "All Section" at the top
+            //itemlist.Insert(0, new Department { Department_ID = 0, Department_name = "All Section" });
+
+            //// 4. Bind to ComboBox
+            //comboBox1.DataSource = itemlist;
+            //comboBox1.DisplayMember = "Department_name";
+            //comboBox1.ValueMember = "Department_ID";
+            //comboBox1.SelectedIndex = 0;
 
 
             //var items = await _emp.GetEmployees();

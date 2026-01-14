@@ -1,5 +1,4 @@
-﻿using Attendance_Monitoring.Controller;
-using Attendance_Monitoring.Global;
+﻿using Attendance_Monitoring.Global;
 using Attendance_Monitoring.Models;
 using System;
 using System.Collections.Generic;
@@ -13,7 +12,6 @@ namespace Attendance_Monitoring.View
     public partial class Summary : Form
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly AdminController _admin;
         private static List<SummaryAttendanceModel> sumlist;
 
 
@@ -30,7 +28,6 @@ namespace Attendance_Monitoring.View
             InitializeComponent();
             sec = section;
             tb = tablename;
-            _admin = new AdminController();
             _serviceProvider=serviceProvider;
         }
 
@@ -40,8 +37,8 @@ namespace Attendance_Monitoring.View
             try
             {
                 string newDateString = dstart.Value.ToString("yyyy-MM-dd");
-                sumlist = await _admin.GetSummaryList(tb, newDateString, newDateString);
-                summarytable.DataSource = sumlist;
+                //sumlist = await _admin.GetSummaryList(tb, newDateString, newDateString);
+                //summarytable.DataSource = sumlist;
 
                 summarytable.Columns["Date_today"].DisplayIndex = 0;
                 summarytable.Columns["Employee_ID"].DisplayIndex = 1;
@@ -78,16 +75,16 @@ namespace Attendance_Monitoring.View
             string formattedStartDate = startd.ToString("yyyy-MM-dd");
             string formattedEndDate = enddate.ToString("yyyy-MM-dd");
 
-            string sqlquery = GenerateSQLQuery(startd, enddate, searchbox.Text, shifts.Text);
-            var  explist = await _admin.GetExportSummaryList(sqlquery, formattedStartDate, formattedEndDate, shifts.Text, searchbox.Text);
+            //string sqlquery = GenerateSQLQuery(startd, enddate, searchbox.Text, shifts.Text);
+            //var  explist = await _admin.GetExportSummaryList(sqlquery, formattedStartDate, formattedEndDate, shifts.Text, searchbox.Text);
 
-            if (explist == null)
-            {
-                MessageBox.Show("No data found.");
-                return;
-            }
+            //if (explist == null)
+            //{
+            //    MessageBox.Show("No data found.");
+            //    return;
+            //}
            
-            ExportToExcel(explist, sec);
+            //ExportToExcel(explist, sec);
         }
 
         private string GenerateSQLQuery(DateTime startd, DateTime enddate, string searchText, string shiftText)
@@ -136,11 +133,11 @@ namespace Attendance_Monitoring.View
 
    
 
-            string sqlquery = GenerateSQLQuery(startd, enddate, searchbox.Text, shifts.Text);
-            sumlist = await _admin.GetExportSummaryList(sqlquery, formattedStartDate, formattedEndDate, shifts.Text, searchbox.Text);
-            summarytable.DataSource = sumlist;
-            summarytable.Columns["Action"].DisplayIndex = 10;
-            label4.Text = "Total Results: " + summarytable.RowCount;
+            //string sqlquery = GenerateSQLQuery(startd, enddate, searchbox.Text, shifts.Text);
+            //sumlist = await _admin.GetExportSummaryList(sqlquery, formattedStartDate, formattedEndDate, shifts.Text, searchbox.Text);
+            //summarytable.DataSource = sumlist;
+            //summarytable.Columns["Action"].DisplayIndex = 10;
+            //label4.Text = "Total Results: " + summarytable.RowCount;
         }
 
       

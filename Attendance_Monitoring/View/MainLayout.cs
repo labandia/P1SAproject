@@ -93,7 +93,7 @@ namespace Attendance_Monitoring.View
             CRMonitor.BackColor = Color.Transparent;
             CRMonitor.ForeColor = Color.FromArgb(170, 176, 192);
             _emp.DepartID = _DepartmentID;
-            await _emp.InitializePage();
+            await _emp.Displayemployee(_DepartmentID);
             _emp.BringToFront();
         }
 

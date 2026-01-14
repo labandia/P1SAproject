@@ -191,7 +191,7 @@ namespace Attendance_Monitoring.Usercontrols
 
                 selecttime.DropDownStyle = ComboBoxStyle.DropDownList;
                 Timeclock.Text = DateTime.Now.ToLongTimeString();
-                emplist = await _emp.GetEmployees("", intdepID);
+                //emplist = await _emp.GetEmployees("", intdepID);
             }
             catch (FormatException)
             {

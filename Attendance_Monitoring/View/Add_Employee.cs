@@ -25,30 +25,30 @@ namespace Attendance_Monitoring.View
         {
             try
             {
-                // 1. Get all employees
-                var items = await _admin.GetEmployees("", 0);
+                //// 1. Get all employees
+                //var items = await _admin.GetEmployees("", 0);
 
-                // 2. Group by Department_ID and project into Department objects
-                var itemlist = items
-                    .GroupBy(emp => emp.Department_ID)   // group by ID to remove duplicates
-                    .Select(g => new Department
-                    {
-                        Department_ID = g.Key,
-                        Department_name = GetDepartmentName(g.Key)
-                    })
-                    .ToList();
+                //// 2. Group by Department_ID and project into Department objects
+                //var itemlist = items
+                //    .GroupBy(emp => emp.Department_ID)   // group by ID to remove duplicates
+                //    .Select(g => new Department
+                //    {
+                //        Department_ID = g.Key,
+                //        Department_name = GetDepartmentName(g.Key)
+                //    })
+                //    .ToList();
 
              
 
 
-                // 3. Add "All Section" at the top
-                itemlist.Insert(0, new Department { Department_ID = 0, Department_name = "All Section" });
+                //// 3. Add "All Section" at the top
+                //itemlist.Insert(0, new Department { Department_ID = 0, Department_name = "All Section" });
 
-                // 4. Bind to ComboBox
-                selectsection.DataSource = itemlist;
-                selectsection.DisplayMember = "Department_name";
-                selectsection.ValueMember = "Department_ID";
-                selectsection.SelectedIndex = 0;
+                //// 4. Bind to ComboBox
+                //selectsection.DataSource = itemlist;
+                //selectsection.DisplayMember = "Department_name";
+                //selectsection.ValueMember = "Department_ID";
+                //selectsection.SelectedIndex = 0;
             }
             catch (FormatException)
             {

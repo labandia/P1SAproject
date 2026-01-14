@@ -1,5 +1,4 @@
-﻿using Attendance_Monitoring.Controller;
-using Attendance_Monitoring.Global;
+﻿using Attendance_Monitoring.Global;
 using Attendance_Monitoring.Models;
 using Attendance_Monitoring.Utilities;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,7 +18,6 @@ namespace Attendance_Monitoring.View
     public partial class Attendance : Form
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly AdminController _admin;
         private static List<AttendanceModel> itemattends;
         private static List<Employee> emplist;
  
@@ -39,48 +37,47 @@ namespace Attendance_Monitoring.View
             timer = new Timer();
             timer.Interval = 1000;
             timer.Tick += Timer_Tick;
-            _admin = new AdminController();
             _serviceProvider=serviceProvider;
         }
 
         //  ####################  DISPLAY  THE TIME IN AND OUT  #################### //
         public async void TimeAttendanceDisplay(int selectime)
         {
-            try
-            {
-                string shift;
-                string timecheck;
-                string Timeout_date;
+            //try
+            //{
+            //    string shift;
+            //    string timecheck;
+            //    string Timeout_date;
 
 
-                // TIME OUT NIGHT SHIFT DATE TIME
-                DateTime yesterday = DateTime.Today.AddDays(-1);
-                // Change format of the date and time
-                string yest = yesterday.ToString("yyyy-MM-dd HH:mm:ss.fff");
+            //    // TIME OUT NIGHT SHIFT DATE TIME
+            //    DateTime yesterday = DateTime.Today.AddDays(-1);
+            //    // Change format of the date and time
+            //    string yest = yesterday.ToString("yyyy-MM-dd HH:mm:ss.fff");
 
-                if (selectime == 0)
-                {
-                    shift = Timeprocess.TimeIncheck(DateTime.Now);
-                    timecheck = tdate;
-                }
-                else
-                {
-                    shift = Timeprocess.Timeoutcheck(DateTime.Now);
-                    Timeout_date = shift == "DAYSHIFT" ? tdate : yest;
-                    timecheck = Timeout_date;
-                }
+            //    if (selectime == 0)
+            //    {
+            //        shift = Timeprocess.TimeIncheck(DateTime.Now);
+            //        timecheck = tdate;
+            //    }
+            //    else
+            //    {
+            //        shift = Timeprocess.Timeoutcheck(DateTime.Now);
+            //        Timeout_date = shift == "DAYSHIFT" ? tdate : yest;
+            //        timecheck = Timeout_date;
+            //    }
 
-                itemattends = await _admin.GetAttendanceMonitor(tb, timecheck, shift, selectime);
-                //DataTable dt = await connect.GetData(query);
-                attendancetable.DataSource = itemattends;
+            //    itemattends = await _admin.GetAttendanceMonitor(tb, timecheck, shift, selectime);
+            //    //DataTable dt = await connect.GetData(query);
+            //    attendancetable.DataSource = itemattends;
 
 
-                DisplayTotal.Text = "Total Attendence: " + attendancetable.RowCount;
-                EmployID.Focus();
-            }
-            catch(FormatException) {
-                MessageBox.Show("Error found at Retreiving Employee Data", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            //    DisplayTotal.Text = "Total Attendence: " + attendancetable.RowCount;
+            //    EmployID.Focus();
+            //}
+            //catch(FormatException) {
+            //    MessageBox.Show("Error found at Retreiving Employee Data", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //}
         }
 
         //  ####################  SELECT TIME IN AND OUT DISPLAY  #################### //
@@ -92,83 +89,83 @@ namespace Attendance_Monitoring.View
         //  ####################  PERFORMS THE TIME IN AND OUT  #################### //
         private async void EnterTime(object sender, KeyEventArgs e)
         {
-            try
-            {
-                if (e.KeyCode != Keys.Enter) return;
+            //try
+            //{
+            //    if (e.KeyCode != Keys.Enter) return;
 
-                // Process Employee ID
-                string empid = EmployID.Text.Replace("-", "").Trim();
-                string shift = Timeprocess.TimeIncheck(DateTime.Now);
+            //    // Process Employee ID
+            //    string empid = EmployID.Text.Replace("-", "").Trim();
+            //    string shift = Timeprocess.TimeIncheck(DateTime.Now);
 
-                // Filter employee once
-                var employee = emplist.FirstOrDefault(p => p.Employee_ID.Equals(empid, StringComparison.OrdinalIgnoreCase) &&
-                                                      p.Department_ID == sec);
+            //    // Filter employee once
+            //    var employee = emplist.FirstOrDefault(p => p.Employee_ID.Equals(empid, StringComparison.OrdinalIgnoreCase) &&
+            //                                          p.Department_ID == sec);
 
-                if (employee == null)
-                {
-                    Statustext.BackColor = Color.FromArgb(198, 17, 17);
-                    Statustext.Text = "Wrong ID number ";
+            //    if (employee == null)
+            //    {
+            //        Statustext.BackColor = Color.FromArgb(198, 17, 17);
+            //        Statustext.Text = "Wrong ID number ";
 
-                    // Reuse Timer instead of creating a new one every time
-                    timer.Start();
+            //        // Reuse Timer instead of creating a new one every time
+            //        timer.Start();
 
-                    EmployID.Focus();
-                    return;
-                }
+            //        EmployID.Focus();
+            //        return;
+            //    }
 
-                // Time In Process
-                if (selecttime.SelectedIndex == 0)
-                {
-                    // Check if employee has already timed in
-                    bool alreadyTimedIn = await _admin.CheckAttendanceTimeIN(empid, shift, tb);
-                    if (alreadyTimedIn)
-                    {
-                        MessageBox.Show("YOU ALREADY TIME IN", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
-                    }
+            //    // Time In Process
+            //    if (selecttime.SelectedIndex == 0)
+            //    {
+            //        // Check if employee has already timed in
+            //        bool alreadyTimedIn = await _admin.CheckAttendanceTimeIN(empid, shift, tb);
+            //        if (alreadyTimedIn)
+            //        {
+            //            MessageBox.Show("YOU ALREADY TIME IN", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //            return;
+            //        }
 
-                    // Perform Time In
-                    bool result = await _admin.AttendanceTimeINandOut(empid, shift, Timeprocess.CalculateLateTime(), tb);
+            //        // Perform Time In
+            //        bool result = await _admin.AttendanceTimeINandOut(empid, shift, Timeprocess.CalculateLateTime(), tb);
 
-                    if (result)
-                    {
-                        TextName.Text = employee.Fullname;
-                        Statustext.BackColor = Color.FromArgb(50, 181, 111);
-                        Statustext.Text = "Successfully Time In";
+            //        if (result)
+            //        {
+            //            TextName.Text = employee.Fullname;
+            //            Statustext.BackColor = Color.FromArgb(50, 181, 111);
+            //            Statustext.Text = "Successfully Time In";
 
                      
-                        timer.Start();
-                        TimeAttendanceDisplay(selecttime.SelectedIndex);
-                    }
-                    else
-                    {
-                        MessageBox.Show("YOU ALREADY TIME IN", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
-                    }
-                }
-                // Time Out Process
-                else if (selecttime.SelectedIndex == 1)
-                {
-                    string shiftname = Timeprocess.Timeoutcheck(DateTime.Now);
+            //            timer.Start();
+            //            TimeAttendanceDisplay(selecttime.SelectedIndex);
+            //        }
+            //        else
+            //        {
+            //            MessageBox.Show("YOU ALREADY TIME IN", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //            return;
+            //        }
+            //    }
+            //    // Time Out Process
+            //    else if (selecttime.SelectedIndex == 1)
+            //    {
+            //        string shiftname = Timeprocess.Timeoutcheck(DateTime.Now);
 
-                    if (shiftname == "DAYSHIFT")
-                    {
-                        TimeoutDay(empid, employee.Fullname);
-                    }
-                    else
-                    {
-                        TimeoutNight(empid, employee.Fullname);
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("SELECT TIME IN / OUT");
-                }
-            }
-            catch (FormatException)
-            {
-                MessageBox.Show("Error Encounter During Time IN / OUT.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            //        if (shiftname == "DAYSHIFT")
+            //        {
+            //            TimeoutDay(empid, employee.Fullname);
+            //        }
+            //        else
+            //        {
+            //            TimeoutNight(empid, employee.Fullname);
+            //        }
+            //    }
+            //    else
+            //    {
+            //        MessageBox.Show("SELECT TIME IN / OUT");
+            //    }
+            //}
+            //catch (FormatException)
+            //{
+            //    MessageBox.Show("Error Encounter During Time IN / OUT.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //}
         }
 
 
@@ -471,16 +468,16 @@ namespace Attendance_Monitoring.View
 
         private async void Attendance_Load(object sender, EventArgs e)
         {
-            try
-            {
-                selecttime.DropDownStyle = ComboBoxStyle.DropDownList;
-                Timeclock.Text = DateTime.Now.ToLongTimeString();
-                emplist = await _admin.GetAllEmployees(); 
-            }
-            catch (FormatException)
-            {
-                MessageBox.Show("Error from retrieve Employee Data", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            //try
+            //{
+            //    selecttime.DropDownStyle = ComboBoxStyle.DropDownList;
+            //    Timeclock.Text = DateTime.Now.ToLongTimeString();
+            //    emplist = await _admin.GetAllEmployees(); 
+            //}
+            //catch (FormatException)
+            //{
+            //    MessageBox.Show("Error from retrieve Employee Data", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //}
         }
 
         private void Timer1_Tick(object sender, EventArgs e)

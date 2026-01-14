@@ -1,5 +1,4 @@
-﻿using Attendance_Monitoring.Controller;
-using Attendance_Monitoring.Global;
+﻿using Attendance_Monitoring.Global;
 using Attendance_Monitoring.Models;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -13,7 +12,6 @@ namespace Attendance_Monitoring.View
     public partial class CR_Monitoring : Form
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly AdminController _admin;
         private static List<CRmodel> critemlist;
         private static List<Employee> emplist;
         private readonly Timer timer;
@@ -25,7 +23,6 @@ namespace Attendance_Monitoring.View
             InitializeComponent();
             sec = section;
 
-            _admin = new AdminController();
             timer = new Timer();
             _serviceProvider=serviceProvider;
         }
@@ -33,7 +30,6 @@ namespace Attendance_Monitoring.View
         private async void CR_Monitoring_Load(object sender, EventArgs e)
         {
             // Use for checking Employee ID if exist
-            emplist = await _admin.GetAllEmployees();
 
             DisplayCRMonitor();
             EmployID.Focus();
@@ -46,7 +42,7 @@ namespace Attendance_Monitoring.View
             var dateToday = DateTime.Now.ToString("yyyy-MM-dd");
             string shift = Timeprocess.TimeIncheck(DateTime.Now);
 
-            critemlist = await _admin.GetCRMonitorlist(dateToday, shift, sec);
+            //critemlist = await _admin.GetCRMonitorlist(dateToday, shift, sec);
 
             CRtable.DataSource = critemlist;
             DisplayTotal.Text = "Total Attendence: " + CRtable.RowCount;
@@ -96,21 +92,21 @@ namespace Attendance_Monitoring.View
                 var duration = Duration.ToString(@"hh\:mm");
                 var dateToday = DateTime.Now.ToString("yyyy-MM-dd");
                 
-                bool updateresult = await _admin.CRMonitoringOut(empid, Timeout, duration, dateToday);
+                //bool updateresult = await _admin.CRMonitoringOut(empid, Timeout, duration, dateToday);
    
-                if (updateresult)
-                {       
-                    TextName.Text = employee.Fullname;
-                    if (timer == null)
-                    {
-                        timer.Interval = 1000;
-                        timer.Tick += Timer_Tick;
-                    }
+                //if (updateresult)
+                //{       
+                //    TextName.Text = employee.Fullname;
+                //    if (timer == null)
+                //    {
+                //        timer.Interval = 1000;
+                //        timer.Tick += Timer_Tick;
+                //    }
 
-                    timer.Start();
+                //    timer.Start();
 
-                    DisplayCRMonitor();
-                }
+                //    DisplayCRMonitor();
+                //}
                 
                 
 
@@ -125,24 +121,24 @@ namespace Attendance_Monitoring.View
             else
             {
                 // Perform GOING TIME
-                bool result = await _admin.CRMonitoringIN(empid, shift);
+                //bool result = await _admin.CRMonitoringIN(empid, shift);
 
-                if (result)
-                {
-                    TextName.Text = employee.Fullname;
-                    //Statustext.BackColor = Color.FromArgb(50, 181, 111);
-                    //Statustext.Text = "Successfully Going Out";
+                //if (result)
+                //{
+                //    TextName.Text = employee.Fullname;
+                //    //Statustext.BackColor = Color.FromArgb(50, 181, 111);
+                //    //Statustext.Text = "Successfully Going Out";
 
-                    // Reuse Timer instead of creating a new one every time
-                    if (timer == null)
-                    {
-                        timer.Interval = 1000;
-                        timer.Tick += Timer_Tick;
-                    }
+                //    // Reuse Timer instead of creating a new one every time
+                //    if (timer == null)
+                //    {
+                //        timer.Interval = 1000;
+                //        timer.Tick += Timer_Tick;
+                //    }
 
-                    timer.Start();
-                    DisplayCRMonitor();
-                }
+                //    timer.Start();
+                //    DisplayCRMonitor();
+                //}
                  
             }    
         }

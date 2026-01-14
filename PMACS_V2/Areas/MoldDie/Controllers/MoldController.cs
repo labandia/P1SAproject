@@ -174,6 +174,23 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
             if (!update) return JsonValidationError();
             return JsonCreated(add, "Update Data Successfully");
         }
+
+        [HttpPost]
+        public async Task<ActionResult> UpdateDieSerialMoldDieMonitor(DieMoldMonitoringModel add)
+        {
+            //Debug.WriteLine("Date " + add.DateInput);
+
+
+            //string lastDate = add.DateInput
+            //    .Date
+            //    .AddDays(-1)
+            //    .ToString("yyyy-MM-dd");
+
+            bool update = await _dieV2.AddUpdateDailySerialMoldie(add);
+            if (!update) return JsonValidationError();
+            return JsonCreated(update, "Update Data Successfully");
+        }
+
         [HttpPost]
         public async Task<ActionResult> DeleteDailyMoldDieMonitor(int ID)
         {
@@ -188,6 +205,15 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
             if (!update) return JsonValidationError();
             return JsonCreated(update, "Add Data Successfully");
         }
+        [HttpPost]
+        public async Task<ActionResult> UpdateDailySerialStatus(string Datestring, string DieSerial, int Status)
+        {
+            bool update = await _dieV2.ChangeStatsSerialDaily(Datestring, DieSerial, Status);
+            if (!update) return JsonValidationError();
+            return JsonCreated(update, "Add Data Successfully");
+        }
+
+
         [HttpPost]
         public async Task<ActionResult> UpdateDailyCycleShot(int RecordID, int Cycleshot)
         {

@@ -12,7 +12,7 @@ namespace Attendance_Monitoring.Models
 {
     public class EmployeeRespository : IEmployee
     {
-        public Task<List<Employee>> GetEmployees(string emp = "", int dep = 0)
+        public Task<List<Employee>> GetEmployees(string emp = "", int dep = 0, string search = "")
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -32,6 +32,16 @@ namespace Attendance_Monitoring.Models
             {
                 strquery += " AND Department_ID = @Department_ID";
                 parameters.Add("@Department_ID", dep);
+            }
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                strquery += $@" AND (
+                                @Search IS NULL
+                                OR Employee_ID LIKE '%' + @Search + '%'
+                                OR FullName LIKE '%' + @Search + '%'
+                              )";
+                parameters.Add("@Search", search);
             }
 
             strquery += " ORDER BY FullName ASC";

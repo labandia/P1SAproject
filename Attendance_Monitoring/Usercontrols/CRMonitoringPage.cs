@@ -1,5 +1,4 @@
-﻿using Attendance_Monitoring.Controller;
-using Attendance_Monitoring.Global;
+﻿using Attendance_Monitoring.Global;
 using Attendance_Monitoring.Models;
 using System;
 using System.Collections.Generic;
@@ -13,7 +12,6 @@ namespace Attendance_Monitoring.Usercontrols
     public partial class CRMonitoringPage : UserControl
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly AdminController _admin;
         private static List<Employee> emplist;
         private readonly Timer timer;
 
@@ -26,7 +24,6 @@ namespace Attendance_Monitoring.Usercontrols
         public CRMonitoringPage(IServiceProvider serviceProvider)
         {
             InitializeComponent();
-            _admin = new AdminController();
             timer = new Timer();
             timer.Interval = 1000;
             timer.Tick += Timer_Tick;
@@ -35,7 +32,6 @@ namespace Attendance_Monitoring.Usercontrols
 
         private async void CRMonitoringPage_Load(object sender, EventArgs e)
         {
-            emplist = await _admin.GetAllEmployees();
             EmployID.Focus();
         }
 
@@ -51,7 +47,6 @@ namespace Attendance_Monitoring.Usercontrols
             var dateToday = DateTime.Now.ToString("yyyy-MM-dd");
             string shift = Timeprocess.TimeIncheck(DateTime.Now);
 
-            critemlist = await _admin.GetCRMonitorlist(dateToday, shift, DepartmentID);
 
             CRtable.DataSource = critemlist;
             DisplayTotal.Text = "Total Attendence: " + CRtable.RowCount;
@@ -100,21 +95,21 @@ namespace Attendance_Monitoring.Usercontrols
                 var duration = Duration.ToString(@"hh\:mm");
                 var dateToday = DateTime.Now.ToString("yyyy-MM-dd");
 
-                bool updateresult = await _admin.CRMonitoringOut(empid, Timeout, duration, dateToday);
+                //bool updateresult = await _admin.CRMonitoringOut(empid, Timeout, duration, dateToday);
 
-                if (updateresult)
-                {
-                    TextName.Text = employee.Fullname;
-                    if (timer == null)
-                    {
-                        timer.Interval = 1000;
-                        timer.Tick += Timer_Tick;
-                    }
+                //if (updateresult)
+                //{
+                //    TextName.Text = employee.Fullname;
+                //    if (timer == null)
+                //    {
+                //        timer.Interval = 1000;
+                //        timer.Tick += Timer_Tick;
+                //    }
 
-                    timer.Start();
+                //    timer.Start();
 
-                    await DisplayCRMonitor();
-                }
+                //    await DisplayCRMonitor();
+                //}
 
 
 
@@ -129,24 +124,24 @@ namespace Attendance_Monitoring.Usercontrols
             else
             {
                 // Perform GOING TIME
-                bool result = await _admin.CRMonitoringIN(empid, shift);
+                //bool result = await _admin.CRMonitoringIN(empid, shift);
 
-                if (result)
-                {
-                    TextName.Text = employee.Fullname;
-                    //Statustext.BackColor = Color.FromArgb(50, 181, 111);
-                    //Statustext.Text = "Successfully Going Out";
+                //if (result)
+                //{
+                //    TextName.Text = employee.Fullname;
+                //    //Statustext.BackColor = Color.FromArgb(50, 181, 111);
+                //    //Statustext.Text = "Successfully Going Out";
 
-                    // Reuse Timer instead of creating a new one every time
-                    if (timer == null)
-                    {
-                        timer.Interval = 1000;
-                        timer.Tick += Timer_Tick;
-                    }
+                //    // Reuse Timer instead of creating a new one every time
+                //    if (timer == null)
+                //    {
+                //        timer.Interval = 1000;
+                //        timer.Tick += Timer_Tick;
+                //    }
 
-                    timer.Start();
-                    await DisplayCRMonitor();
-                }
+                //    timer.Start();
+                //    await DisplayCRMonitor();
+                //}
 
             }
         }

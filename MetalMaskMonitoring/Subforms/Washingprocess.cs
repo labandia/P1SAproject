@@ -8,13 +8,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace MetalMaskMonitoring
+namespace MetalMaskMonitoring.Subforms
 {
-    public partial class Form1 : Form
+    public partial class Washingprocess : UserControl
     {
-        public Form1()
+        private readonly int _ID;
+        public Washingprocess(int ID)
         {
             InitializeComponent();
+            _ID = ID;
         }
     }
 }

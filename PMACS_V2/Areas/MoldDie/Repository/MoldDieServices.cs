@@ -1,14 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing.Printing;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
-using System.Web.Services.Description;
-using System.Web.UI.WebControls.WebParts;
 using PMACS_V2.Areas.MoldDie.Interface;
 using PMACS_V2.Areas.P1SA.Models;
 using PMACS_V2.Helper;
@@ -303,14 +297,34 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             }
             else
             {
+                string lastDate = mold.DateInput
+                     .Date
+                     .AddDays(-1)
+                     .ToString("MM/dd/yyyy");
+
+                string getlastCycle = $@"SELECT ISNULL(SUM(CycleShot), 0)
+                             FROM DieMold_Daily d 
+                            INNER JOIN DieMold_MoldingMainParts p
+                            ON d.PartNo = p.PartNo
+                            WHERE p.PartNo = @PartNo AND CAST(d.DateInput AS DATE) = CAST(@DateInput  AS DATE);";
+
+                int lastCycle = await SqlDataAccess.GetCountData(getlastCycle,
+                               new
+                               {
+                                   PartNo = mold.PartNo,
+                                   DateInput = lastDate
+                               });
+
+                int newCycle = lastCycle + mold.CycleShot;
+
+                string CurrentDate = mold.DateInput.Date.ToString("MM/dd/yyyy");
+
+
                 string dailyUpdate = @"
                     UPDATE DieMold_Daily
                     SET 
-                        DateInput = @DateInput,
-                        PartNo = @PartNo,
                         CycleShot = @CycleShot,
                         Total = @Total,
-                        Status = @Status,
                         MachineNo = @MachineNo,
                         Remarks = @Remarks,
                         Mincharge = @Mincharge
@@ -319,9 +333,8 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                 var parameters = new
                 {
                     RecordID = mold.RecordID,
-                    DateInput = mold.DateInput,
-                    PartNo = mold.PartNo,
                     CycleShot = mold.CycleShot,
+                    Total = newCycle,
                     MachineNo = mold.MachineNo,
                     Remarks = mold.Remarks,
                     Mincharge = mold.Mincharge
@@ -329,25 +342,30 @@ namespace PMACS_V2.Areas.MoldDie.Repository
 
                 bool dailyUpdated = await SqlDataAccess.UpdateInsertQuery(dailyUpdate, parameters);
                 if (!dailyUpdated) return false;
-
+         
                 string monitorUpdate = @"
-                UPDATE DieMoldMonitor
-                SET TotalDie = @TotalDie
-                WHERE PartNo = @PartNo
-                  AND DateAction >= @DateAction
-                  AND DateAction < DATEADD(DAY, 1, @DateAction);
+                      UPDATE DieMoldMonitor
+                                SET TotalDie = @TotalDie
+                                WHERE PartNo = @PartNo
+                                  AND CAST(DateAction AS DATE) = @DateAction;
 
-                IF @@ROWCOUNT = 0
-                BEGIN
-                    INSERT INTO DieMoldMonitor (PartNo, DateAction, TotalDie)
-                    VALUES (@PartNo, @DateAction, @TotalDie);
-                END";
+                        IF @@ROWCOUNT = 0
+                        BEGIN
+                           INSERT INTO DieMoldMonitor (PartNo, DateAction, TotalDie)
+                            SELECT @PartNo, @DateAction, @TotalDie
+                            WHERE NOT EXISTS (
+                                SELECT 1
+                                FROM DieMoldMonitor
+                                WHERE PartNo = @PartNo
+                                  AND CAST(DateAction AS DATE) = @DateAction
+                            );
+                      END";
 
                 return await SqlDataAccess.UpdateInsertQuery(monitorUpdate, new
                 {
+                    PartNo = mold.PartNo,
                     TotalDie = mold.CycleShot,
-                    DateAction = mold.DateInput.Date,
-                    mold.PartNo
+                    DateAction = mold.DateInput.Date
                 });
             }
         }
@@ -456,6 +474,11 @@ namespace PMACS_V2.Areas.MoldDie.Repository
 
         public async Task UpsertDailyAsync(string partNo, DateTime date, int cycleShot, int total, int status, DieMoldMonitoringModel mold)
         {
+            bool checkCycle = cycleShot == 0;
+
+            int TotalCycle = checkCycle ? 0 : total;
+            int NewStats = checkCycle ? 2 : status;
+
             string sql = @"
                 UPDATE DieMold_Daily
                 SET 
@@ -481,11 +504,11 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                 PartNo = partNo,
                 DateInput = date,
                 CycleShot = cycleShot,
-                Total = total,
+                Total = TotalCycle,
                 MachineNo = mold.MachineNo,
                 Remarks = mold.Remarks,
                 Mincharge = mold.Mincharge,
-                Status = status
+                Status = NewStats
             });
         }
 

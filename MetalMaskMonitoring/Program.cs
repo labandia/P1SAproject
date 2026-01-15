@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using MetalMaskMonitoring.Interface;
+using MetalMaskMonitoring.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MetalMaskMonitoring
 {
     internal static class Program
     {
+        public static IServiceProvider ServiceProvider { get; private set; }
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -16,7 +17,16 @@ namespace MetalMaskMonitoring
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+
+            var services = new ServiceCollection();
+            services.AddSingleton<IMaskMasterlist, MasterlistServices>();
+            // 🔹 Register Forms
+            services.AddTransient<Masterlist>();
+            services.AddTransient<MetalMaskMonitoring>();
+
+            ServiceProvider = services.BuildServiceProvider();
+            var mainForm = ServiceProvider.GetRequiredService<MetalMaskMonitoring>();
+            Application.Run(mainForm);
         }
     }
 }

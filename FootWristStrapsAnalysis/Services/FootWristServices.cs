@@ -53,7 +53,7 @@ namespace FootWristStrapsAnalysis.Services
         }
         public async Task<List<SummaryCount>> GetTotalSummary(DateTime testDate, List<string> prefixes)
         {
-            Debug.WriteLine("CALL");
+           
             var conditions = new List<string>();
             var parameters = new Dictionary<string, object>();
             

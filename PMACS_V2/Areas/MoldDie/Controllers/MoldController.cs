@@ -178,14 +178,6 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
         [HttpPost]
         public async Task<ActionResult> UpdateDieSerialMoldDieMonitor(DieMoldMonitoringModel add)
         {
-            //Debug.WriteLine("Date " + add.DateInput);
-
-
-            //string lastDate = add.DateInput
-            //    .Date
-            //    .AddDays(-1)
-            //    .ToString("yyyy-MM-dd");
-
             bool update = await _dieV2.AddUpdateDailySerialMoldie(add);
             if (!update) return JsonValidationError();
             return JsonCreated(update, "Update Data Successfully");

@@ -55,7 +55,7 @@
                 <!-- Cycle Shot -->
                 <div class="formcustomgroup with-icon">
                     <label class="form-label required" for="cycleShot">Cycle Shot</label>
-                    <input type="number" id="CycleShot" name="CycleShot" placeholder="Enter Cycle Shot" required min="1">
+                    <input type="number" id="CycleShot" name="CycleShot" placeholder="Enter Cycle Shot" required min="0">
                 </div>
 
                 <!-- Machine No -->
@@ -180,7 +180,7 @@
                     <h3 style="margin: 0;">Product Details</h3>
                     <button id="Originalback"><i class="fa-solid fa-arrow-rotate-right"></i>Daily</button>
                 </div>
-              
+
 
                 <div class="DetailSerialMain" id="DetailSerialcard">
                     <table class="DetailSerialcard">
@@ -242,7 +242,7 @@
 
 
 
-<!--########################## Edit Daily Mold Die  DATA #############################-->
+<!--########################## Edit DIe Serial Daily Mold Die  DATA #############################-->
 <div class="modal fade modal-l" id="EditDailyMold" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -310,6 +310,80 @@
         </div>
     </div>
 </div>
+
+
+<!--########################## Edit DIe Partnum Daily Mold Die  DATA #############################-->
+<div class="modal fade modal-l" id="EditPartnumMold" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Edit Die Shot Cycle Control</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <form id="EditPartnumforms" class="addformcontainer" autocomplete="off">
+                    <input type="hidden" name="RecordID" id="DailyPartnumRecordID"/>
+                    <input type="hidden" name="DateInput" id="DailyPartnumDateInput">
+                    <input type="hidden" name="PartNo" id="DailyEditPartNo">
+                    <div class="form_group col-12 col-lg-12 col-sm-12">
+                        <label for="">Cycle shot</label>
+                        <input type="number" name="CycleShot" id="DailyPartnumCycleShot" placeholder="Enter Cycle Shot" onkeypress='return restrictChars(event)' required>
+                    </div>
+
+                    <div class="form_group col-12 col-lg-12 col-sm-12">
+                        <label for="">Machine No</label>
+                        <input type="number" name="MachineNo" id="DailyPartnumMachineNo" required>
+                    </div>
+
+                    <div class="form_group col-12 col-lg-12 col-sm-12">
+                        <label for="">Remarks</label>
+
+
+                        <div class="select-container" style="width: 100% !important;">
+                            <select name="Remarks" id="DailyPartnumRemarks">
+                                <option value="N/A">N/A</option>
+                                <option value="Shot cycle cleaning">Shot cycle cleaning</option>
+                                <option value="Die Cleaning Due To 1 Month No operation">Die Cleaning Due To 1 Month No operation</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form_group col-12 col-lg-12 col-sm-12">
+                        <label for="">Maintenance incharge</label>
+
+
+                        <div class="select-container" style="width: 100% !important;">
+                            <select name="Mincharge" id="DailyPartnumMincharge">
+                                <option value="N.AMLOG">N.AMLOG</option>
+                                <option value="J.ORO">J.ORO</option>
+                                <option value="R.AGACOSCOS">R.AGACOSCOS</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <hr />
+
+
+                    <div class="flex_space " id="editsdisplay">
+                        <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                        <button type="submit" class="primary_button_color">
+                            <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
+                        </button>
+                    </div>
+                </form>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
 
 <!-- Success Message -->
 <div class="success-message" id="successMessage">
@@ -411,15 +485,41 @@
 
      });
 
+    $("#EditPartnumforms").on('submit', async (e) => {
+      e.preventDefault();
+         let formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+         let res = await postData('@Url.Action("UpdateDailyMoldDieMonitor", "Mold")', data);
+         console.log(res);
 
+         if (res?.Success) {
+           Swal.fire({
+               title: "Success",
+               text: res.Message,
+               icon: "success",
+               confirmButtonColor: "#0d97c9",
+               timer: 1500
+           }).then(() => {
+               SearchMoldiePartno();
+               $("#EditPartnumforms")[0].reset();
+               $("#EditPartnumMold").modal("hide");
+           });
+       } else {
+           Swal.fire({
+               icon: "error",
+               text: data.ToolNo + " is already Exist",
+               timer: 1500,
+               showConfirmButton: false
+           });
+       }
+    });
 
      $("#EditDailyforms").on('submit', async (e) => {
-          e.preventDefault();
+         e.preventDefault();
          let formData = new FormData(e.target);
          formData.append('DieSerial', strDieSerial);
          const data = Object.fromEntries(formData);
          let res = await postData('@Url.Action("UpdateDieSerialMoldDieMonitor", "Mold")', data);
-         console.log(res);
 
          if (res?.Success) {
            Swal.fire({
@@ -550,25 +650,22 @@
                  SearchInput: strpartnum
              });
 
-             console.log(res);
              if (res && res.Success) {
-                 let addDetails = [];
-                 addDetails.push(res.Data.Details);
+                 let PartObj = res.Data.Details;
                  GetData = res.Data.GetList;
+
 
                  $("#DieSerialMasterlist").empty();
 
-                 addDetails.forEach((rowData, index) => {
-                     const rowHtml = `
-                        <tr>
-                            <td>${rowData.PartNo}</td>
-                            <td>${rowData.Dimension_Quality}</td>
-                            <td>${rowData.DieSerial}</td>
-                            <td>${getStatusHtml(rowData.Status)}</td>
-                        </tr>`;
+                 const rowHtml = `
+                     <tr>
+                         <td>${PartObj.PartNo}</td>
+                         <td>${PartObj.Dimension_Quality}</td>
+                         <td>${PartObj.DieSerial}</td>
+                         <td>${getStatusHtml(PartObj.Status)}</td>
+                     </tr>`;
 
-                     $("#DieSerialMasterlist").append(rowHtml);
-                 });
+                 $("#DieSerialMasterlist").append(rowHtml);
 
 
 
@@ -772,6 +869,24 @@
      function PopulateDatalist(data) {
          $("#dieMoldMasterlist").empty();
          data.forEach((rowData, index) => {
+             let ActionButton = "";
+
+             if (index === 0) {
+                 ActionButton = ` <div style='display: grid; grid-template-columns: 50% 50%; gap: 5px;'>
+                           <button type="button" class="text-primary actionicon EditDailypartnum"
+                               id="editButton_${rowData.RecordID}">
+                               <i class="fa-regular fa-pen-to-square action_btn"></i>
+                           </button>
+
+                           <button type="button" class="text-danger actionicon  deleteDailypartnumButn"
+                               id="deleteDailyButton_${rowData.RecordID}">
+                               <i class="fa-regular fa-trash-can"></i>
+                           </button>
+                     </div>`;
+            }
+
+
+
 
              // Continue Status (0)
              let continueHtml = `
@@ -838,18 +953,7 @@
                         </div>
                       </td>
                      <td >
-                        <div style='display: grid; grid-template-columns: 50% 50%; gap: 5px;'>
-                              <button type="button" class="text-primary actionicon EditDailypartnum"
-                                  id="editButton_${rowData.RecordID}">
-                                  <i class="fa-regular fa-pen-to-square action_btn"></i>
-                              </button>
-
-                              <button type="button" class="text-danger actionicon  deleteDailypartnumButn"
-                                  id="deleteDailyButton_${rowData.RecordID}">
-                                  <i class="fa-regular fa-trash-can"></i>
-                              </button>
-                        </div>
-
+                           ${ActionButton}
                      </td>
                  </tr>`;
 
@@ -864,24 +968,22 @@
 
              const buttonId = $(this).attr('id');
              const rowIndex = buttonId.split('_')[1];
-             const filterdata = GetData.find(res => res.RecordID === parseInt(rowIndex));
-             console.log("HERE");
-
+             let filterdata = GetData.filter(res => res.RecordID === parseInt(rowIndex));
              console.log(filterdata);
 
-             //if (filterdata) {
-             //    let setDate = formatJsonDate(filterdata.DateInput);
-             //    console.log(setDate);
-             //    $("#DailyRecordiD").val(filterdata.RecordID);
-             //    setDateInput("DailyEditDateInput", setDate);
-             //    $("#Editdailypartno").val(filterdata.PartNo);
-             //    $("#DailyeditCycleShot").val(filterdata.CycleShot);
-             //    $("#DailyEditMachineNo").val(filterdata.MachineNo);
-             //    $("#DailyEditRemarks").val(filterdata.Remarks);
-             //    $("#DailyEditMincharge").val(filterdata.Mincharge);
-             //    $("#EditDailyMold").modal("show");
+             if (filterdata) {
+                 $("#DailyPartnumRecordID").val(parseInt(rowIndex));
+                 $("#DailyEditPartNo").val(filterdata[0].PartNo);
+                 $("#DailyPartnumDateInput").val(formatJsonDateV2(filterdata[0].DateInput));
 
-             //}
+                 $("#DailyPartnumCycleShot").val(filterdata[0].CycleShot);
+                 $("#DailyPartnumMachineNo").val(filterdata[0].MachineNo);
+                 $("#DailyPartnumRemarks").val(filterdata[0].Remarks);
+                 $("#DailyPartnumMincharge").val(filterdata[0].Mincharge);
+                 $("#EditPartnumMold").modal("show");
+             }
+
+
          });
 
 
@@ -902,7 +1004,7 @@
                    confirmButtonText: "Yes, delete it!"
                }).then( async (result) => {
                    if (result.isConfirmed) {
-                       let res = await postData('@Url.Action("DeleteDailyMoldDieMonitor", "Mold")', { ID: rowIndex });
+                       @*let res = await postData('@Url.Action("DeleteDailyMoldDieMonitor", "Mold")', { ID: rowIndex });
                        if (res.Success && res) {
 
                            Swal.fire({
@@ -916,7 +1018,7 @@
                            });
 
 
-                       }
+                       }*@
                    }
                });
 
@@ -930,7 +1032,7 @@
     function PopulateDieSerialist(data) {
         $("#dieMoldMasterlist").empty();
         data.forEach((rowData, index) => {
-            let ActionButton = "";  
+            let ActionButton = "";
 
             if (index === 0) {
                 ActionButton = `<div style='display: grid; grid-template-columns: 50% 50%; gap: 5px;'>
@@ -1026,7 +1128,6 @@
 
             const buttonId = $(this).attr('id');
             const rowIndex = buttonId.split('_')[1];
-            console.log("HERE");
             console.log(getDieObj);
             $("#DailyEditDateInput").val(formatJsonDateV2(getDieObj.DateInput));
 
@@ -1036,7 +1137,6 @@
             $("#DailyEditMincharge").val(getDieObj.Mincharge);
             $("#EditDailyMold").modal("show");
 
-            //}
         });
 
         // Handle click event for edit button

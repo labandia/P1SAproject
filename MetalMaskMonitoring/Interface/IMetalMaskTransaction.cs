@@ -8,5 +8,6 @@ namespace MetalMaskMonitoring.Interface
 {
     internal interface IMetalMaskTransaction
     {
+       
     }
 }

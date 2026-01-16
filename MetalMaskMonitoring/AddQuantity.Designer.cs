@@ -36,24 +36,25 @@
             // 
             // txtInput
             // 
-            this.txtInput.Location = new System.Drawing.Point(52, 119);
+            this.txtInput.Location = new System.Drawing.Point(52, 109);
             this.txtInput.Name = "txtInput";
-            this.txtInput.Size = new System.Drawing.Size(170, 20);
+            this.txtInput.Size = new System.Drawing.Size(381, 20);
             this.txtInput.TabIndex = 2;
+            this.txtInput.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtInput_KeyPress);
             // 
             // lblMessage
             // 
             this.lblMessage.AutoSize = true;
             this.lblMessage.Font = new System.Drawing.Font("Segoe UI", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblMessage.Location = new System.Drawing.Point(45, 51);
+            this.lblMessage.Location = new System.Drawing.Point(45, 45);
             this.lblMessage.Name = "lblMessage";
-            this.lblMessage.Size = new System.Drawing.Size(115, 37);
+            this.lblMessage.Size = new System.Drawing.Size(203, 37);
             this.lblMessage.TabIndex = 7;
-            this.lblMessage.Text = "Tension";
+            this.lblMessage.Text = "Enter Quantity";
             // 
             // btnOK
             // 
-            this.btnOK.Location = new System.Drawing.Point(286, 158);
+            this.btnOK.Location = new System.Drawing.Point(266, 158);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(147, 50);
             this.btnOK.TabIndex = 8;
@@ -63,7 +64,7 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(88, 158);
+            this.btnCancel.Location = new System.Drawing.Point(69, 158);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(147, 50);
             this.btnCancel.TabIndex = 9;

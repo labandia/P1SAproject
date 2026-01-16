@@ -78,6 +78,12 @@
     <Compile Include="AddQuantity.Designer.cs">
       <DependentUpon>AddQuantity.cs</DependentUpon>
     </Compile>
+    <Compile Include="DuplicateForms.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DuplicateForms.Designer.cs">
+      <DependentUpon>DuplicateForms.cs</DependentUpon>
+    </Compile>
     <Compile Include="Interface\IMaskMasterlist.cs" />
     <Compile Include="Interface\IMetalMaskTransaction.cs" />
     <Compile Include="Masterlist.cs">
@@ -130,6 +136,9 @@
     <Compile Include="Utilities\UsersAccess.cs" />
     <EmbeddedResource Include="AddQuantity.resx">
       <DependentUpon>AddQuantity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DuplicateForms.resx">
+      <DependentUpon>DuplicateForms.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Masterlist.resx">
       <DependentUpon>Masterlist.cs</DependentUpon>

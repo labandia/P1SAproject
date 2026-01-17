@@ -48,7 +48,7 @@ namespace MetalMaskMonitoring
             _debounceTimer.Start();
         }
 
-        private async void Modelselect_SelectedIndexChanged(object sender, EventArgs e)
+        private  void Modelselect_SelectedIndexChanged(object sender, EventArgs e)
         {
             _debounceTimer.Stop();
             _debounceTimer.Start();

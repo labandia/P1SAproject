@@ -72,36 +72,42 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddQuantity.cs">
+    <Compile Include="View\Modals\AddQuantity.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AddQuantity.Designer.cs">
+    <Compile Include="View\Modals\AddQuantity.Designer.cs">
       <DependentUpon>AddQuantity.cs</DependentUpon>
     </Compile>
-    <Compile Include="DuplicateForms.cs">
+    <Compile Include="View\Modals\DuplicateForms.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DuplicateForms.Designer.cs">
+    <Compile Include="View\Modals\DuplicateForms.Designer.cs">
       <DependentUpon>DuplicateForms.cs</DependentUpon>
     </Compile>
     <Compile Include="Interface\IMaskMasterlist.cs" />
     <Compile Include="Interface\IMetalMaskTransaction.cs" />
-    <Compile Include="Masterlist.cs">
+    <Compile Include="View\Pages\Masterlist.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Masterlist.Designer.cs">
+    <Compile Include="View\Pages\Masterlist.Designer.cs">
       <DependentUpon>Masterlist.cs</DependentUpon>
     </Compile>
-    <Compile Include="MetalMaskFormOut.cs">
+    <Compile Include="View\Pages\MetalMaskFormOut.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MetalMaskFormOut.Designer.cs">
+    <Compile Include="View\Pages\MetalMaskFormOut.Designer.cs">
       <DependentUpon>MetalMaskFormOut.cs</DependentUpon>
     </Compile>
-    <Compile Include="MetalMaskMonitoring.cs">
+    <Compile Include="View\Pages\MetalMaskHistory.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MetalMaskMonitoring.Designer.cs">
+    <Compile Include="View\Pages\MetalMaskHistory.Designer.cs">
+      <DependentUpon>MetalMaskHistory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Pages\MetalMaskMonitoring.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Pages\MetalMaskMonitoring.Designer.cs">
       <DependentUpon>MetalMaskMonitoring.cs</DependentUpon>
     </Compile>
     <Compile Include="Model\MetalMaskModel.cs" />
@@ -134,19 +140,22 @@
     <Compile Include="Utilities\PasswordHasher.cs" />
     <Compile Include="Utilities\SqlDataAccess.cs" />
     <Compile Include="Utilities\UsersAccess.cs" />
-    <EmbeddedResource Include="AddQuantity.resx">
+    <EmbeddedResource Include="View\Modals\AddQuantity.resx">
       <DependentUpon>AddQuantity.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DuplicateForms.resx">
+    <EmbeddedResource Include="View\Modals\DuplicateForms.resx">
       <DependentUpon>DuplicateForms.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Masterlist.resx">
+    <EmbeddedResource Include="View\Pages\Masterlist.resx">
       <DependentUpon>Masterlist.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MetalMaskFormOut.resx">
+    <EmbeddedResource Include="View\Pages\MetalMaskFormOut.resx">
       <DependentUpon>MetalMaskFormOut.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MetalMaskMonitoring.resx">
+    <EmbeddedResource Include="View\Pages\MetalMaskHistory.resx">
+      <DependentUpon>MetalMaskHistory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Pages\MetalMaskMonitoring.resx">
       <DependentUpon>MetalMaskMonitoring.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

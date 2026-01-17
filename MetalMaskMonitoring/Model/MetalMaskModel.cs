@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MetalMaskMonitoring.Model
 {
@@ -19,7 +15,8 @@ namespace MetalMaskMonitoring.Model
         public string Remarks { get;  set; }
         public int? ModelType { get;  set; }
 
-       
+        public DateTime DateReceived { get; set; }
+        public DateTime DateManufacture { get; set; }
 
     }
 }

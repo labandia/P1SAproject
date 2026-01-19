@@ -1,0 +1,125 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Circuit/Views/Shared/_MaskLayout.cshtml";
+}
+
+
+<!-- Controls Section -->
+<div class="controls-section">
+    <div class="control-group">
+        <label class="control-label">
+            <i class="fas fa-search"></i> Search Partnumber
+        </label>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Enter Partnumber ..." autocomplete="off">
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label">
+            <i class="fas fa-calendar"></i> Area
+        </label>
+        <input type="text" placeholder="">
+    </div>
+
+
+    <div class="control-group">
+        <label class="control-label">
+            <i class="fas fa-calendar"></i> SMT Line
+        </label>
+        <input type="text" placeholder="">
+    </div>
+
+    <div class="control-group">
+        <label class="control-label">
+            <i class="fas fa-calendar"></i> Block no.
+        </label>
+        <input type="text">
+    </div>
+
+    <div class="control-group">
+        <button>Save </button>
+    </div>
+</div>
+
+<hr  style="margin: 0;" />
+
+
+
+<div class="modal fade modal-xl" id="OpenDuplicatePartnum" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Partnumber  Code :  <span id="letterdisplay"></span> </h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <table>
+                    <tr>
+                        <th align="left">Part Number / Revision</th>
+                        <th align="left">Area</th>
+                        <th align="left">Side</th>
+                        <th align="left">Thickness</th>
+                        <th align="left">Blocks</th>
+                        <th align="left">PWB part number</th>
+                    </tr>
+                    <tbody id="DuplicatePartnum">
+                    </tbody>
+                </table>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+    const searchInput = document.getElementById('searchInput');
+
+
+    searchInput.addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') {
+            const searchValue = e.target.value;
+            MetalMaskSearch(searchValue);
+        }
+    });
+
+    // ================= SEARCH FUNCTION ================ //
+    async function MetalMaskSearch(partnum) {
+        alert("Use Enter key : " + partnum);
+        let res = await fetchData('@Url.Action("SearchMetalMaskPartnum", "MetalMask")', { Partnumber: partnum });
+        console.log(res);
+        if (res?.Success) {
+            let tableData = res.Data;
+
+            if (tableData.length > 1) {
+                // Show a Dialog if the partnumber has same 
+                $("#DuplicatePartnum").empty();
+
+                tableData.forEach((row, index) => {
+                    var setdata = `<tr class="fade-in">
+                         <td>${row.Partnumber}</td>
+                         <td>${row.AREA}</td>
+                         <td>${row.Side}</td>
+                         <td>${row.Thickness}</td>
+                         <td>${row.Blocks}</td>
+                         <td>${row.PWB_Blocks}</td>
+                     </tr>;`
+
+                    $("#DuplicatePartnum").append(setdata);
+                });
+
+                $("#OpenDuplicatePartnum").modal("show");   
+            }
+        }
+    }
+</script>

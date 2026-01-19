@@ -618,12 +618,18 @@
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\DashboardController.cs" />
     <Compile Include="Areas\Circuit\CircuitAreaRegistration.cs" />
+    <Compile Include="Areas\Circuit\Controllers\MetalMaskController.cs" />
     <Compile Include="Areas\Circuit\Controllers\ProgramPartListController.cs" />
     <Compile Include="Areas\Circuit\Interface\IComponents.cs" />
+    <Compile Include="Areas\Circuit\Interface\IMaskMasterlist.cs" />
+    <Compile Include="Areas\Circuit\Interface\IMetalMast_Transaction.cs" />
     <Compile Include="Areas\Circuit\Interface\IPlanSchedule.cs" />
     <Compile Include="Areas\Circuit\Interface\IReelIDSummary.cs" />
     <Compile Include="Areas\Circuit\Interface\ISupplier.cs" />
+    <Compile Include="Areas\Circuit\Models\MertalMaskModel.cs" />
     <Compile Include="Areas\Circuit\Models\PartlistModels.cs" />
+    <Compile Include="Areas\Circuit\Repository\MetalMaskServices.cs" />
+    <Compile Include="Areas\Circuit\Repository\MetalMaskTransactionServices.cs" />
     <Compile Include="Areas\Circuit\Repository\PlanScheduleRepository.cs" />
     <Compile Include="Areas\Hydroponics\Controllers\HydroController.cs" />
     <Compile Include="Areas\Hydroponics\Controllers\StockController.cs" />
@@ -714,6 +720,7 @@
       <DependentUpon>HydroDesign.css</DependentUpon>
     </Content>
     <Content Include="Content\css\HydroLogin.css" />
+    <Content Include="Content\css\MetalMask.css" />
     <Content Include="Content\css\OrderDetails.css" />
     <Content Include="Content\css\Patrolforms.css" />
     <Content Include="Content\css\Programpartlist.min.css">
@@ -796,6 +803,8 @@
     <Content Include="Areas\PC\Views\Patrol\DivisionApproval.cshtml" />
     <Content Include="Areas\Hydroponics\Views\Hydro\InventSummary.cshtml" />
     <Content Include="Areas\Circuit\Views\ProgramPartList\Dashboard.cshtml" />
+    <Content Include="Areas\Circuit\Views\Shared\_MaskLayout.cshtml" />
+    <Content Include="Areas\Circuit\Views\MetalMask\Index.cshtml" />
     <None Include="Content\Images\.editorconfig" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\chart.js" />

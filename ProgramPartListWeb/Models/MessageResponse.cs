@@ -1,7 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace ProgramPartListWeb.Models
 {
+    public class PagedResult<T>
+    {
+        public List<T> Items { get; set; }
+        public int PageNumber { get; set; }
+        public int PageSize { get; set; }
+        public int TotalRecords { get; set; }
+
+        public int TotalPages =>
+            (int)Math.Ceiling((double)TotalRecords / PageSize);
+    }
+
     public class DataMessageResponse<T>
     {
         public bool Success { get; set; }   

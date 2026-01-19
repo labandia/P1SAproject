@@ -170,11 +170,14 @@ namespace ProgramPartListWeb
             container.RegisterType<IAluminumProducts, PressRepository>();
             container.RegisterType<IInspector, InpectorRepository>();
             container.RegisterType<IHyrdoParts, HydroPartsRepository>();
-
+           
             container.RegisterType<IRegistration, RegistrationRepository>();
 
             // ProgramPartlist
             container.RegisterType<IPlanSchedule, PlanScheduleRepository>();
+
+            container.RegisterType<IMaskMasterlist, MetalMaskServices>();
+            container.RegisterType<IMetalMast_Transaction, MetalMaskTransactionServices>();
 
 
             // Hydroponics

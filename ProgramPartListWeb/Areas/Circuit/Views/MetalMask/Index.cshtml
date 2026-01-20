@@ -9,45 +9,165 @@
 <div class="controls-section">
     <div class="control-group">
         <label class="control-label">
-            <i class="fas fa-search"></i> Search Partnumber
+            <i class="fas fa-search"></i> Search Partnumber 
+            <i class="fa-solid fa-circle-check" style="color: #33C9BB;" id="CheckID"></i>
+            <i class="fa-solid fa-circle-xmark" style="color: #FF2C2C;" id="WrongID"></i>
         </label>
+
+
+
         <div class="search-box">
             <input type="text" id="searchInput" placeholder="Enter Partnumber ..." autocomplete="off">
         </div>
     </div>
 
-    <div class="control-group">
-        <label class="control-label">
-            <i class="fas fa-calendar"></i> Area
-        </label>
-        <input type="text" placeholder="">
-    </div>
+
 
 
     <div class="control-group">
         <label class="control-label">
             <i class="fas fa-calendar"></i> SMT Line
         </label>
-        <input type="text" placeholder="">
+        <select id="SMTLine" class="filter-select">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+        </select>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label">
+            <i class="fas fa-calendar"></i> Area
+        </label>
+        <input type="text" id="AreaText" placeholder="-- N/A --" readonly>
     </div>
 
     <div class="control-group">
         <label class="control-label">
             <i class="fas fa-calendar"></i> Block no.
         </label>
-        <input type="text">
+        <input type="text" id="BlockText" placeholder="-- N/A --" readonly>
     </div>
 
     <div class="control-group">
-        <button>Save </button>
+        <button type="button"  id="btnSave">Save </button>
     </div>
 </div>
 
 <hr  style="margin: 0;" />
 
+<div class="flex_space" style="padding: 1em 0;">
+    <span>Total Mask Out: </span>
+
+    <select id="SMTLineFilter" >
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+    </select>
+</div>
 
 
-<div class="modal fade modal-xl" id="OpenDuplicatePartnum" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+<section class="Maskcardcontainer">
+    <div class="Maskcard">
+        <div class="MaskHeader">
+            <h5>Partnumber : <span>asdasds</span></h5>
+            <span>Metal mask rev : </span>
+        </div>
+        <div class="MaskContent">
+            <div>
+                <label>SMT Line</label>
+                <p>DS</p>
+            </div>
+            <div>
+                <label>Area </label>
+                <p>DS</p>
+            </div>
+            <div>
+                <label>Shift</label>
+                <p>DS</p>
+            </div>
+
+            <div>
+                <label>Status</label>
+                <p>DS</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="Maskcard">
+        <div class="MaskHeader">
+            <h5>Partnumber : <span>asdasds</span></h5>
+            <span>Metal mask rev : </span>
+        </div>
+        <div class="MaskContent">
+            <div>
+                <label>SMT Line</label>
+                <p>DS</p>
+            </div>
+            <div>
+                <label>Area </label>
+                <p>DS</p>
+            </div>
+            <div>
+                <label>Shift</label>
+                <p>DS</p>
+            </div>
+
+            <div>
+                <label>Status</label>
+                <p>DS</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="Maskcard">
+        <div class="MaskHeader">
+            <h5>Partnumber : <span>asdasds</span></h5>
+            <span>Metal mask rev : </span>
+        </div>
+        <div class="MaskContent">
+            <div>
+                <label>SMT Line</label>
+                <p>DS</p>
+            </div>
+            <div>
+                <label>Area </label>
+                <p>DS</p>
+            </div>
+            <div>
+                <label>Shift</label>
+                <p>DS</p>
+            </div>
+
+            <div>
+                <label>Status</label>
+                <p>DS</p>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+<div class="modal fade modal-m" id="OpenDuplicatePartnum" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-body modalwrap">
@@ -61,12 +181,10 @@
 
                 <table>
                     <tr>
-                        <th align="left">Part Number / Revision</th>
                         <th align="left">Area</th>
                         <th align="left">Side</th>
                         <th align="left">Thickness</th>
                         <th align="left">Blocks</th>
-                        <th align="left">PWB part number</th>
                     </tr>
                     <tbody id="DuplicatePartnum">
                     </tbody>
@@ -84,10 +202,36 @@
 
 <script>
     const searchInput = document.getElementById('searchInput');
+    const submitBtn = document.getElementById('btnSave');
 
+    $("#CheckID").hide();
+    $("#WrongID").hide();
+
+
+    submitBtn.addEventListener('click', async function (e) {
+        e.preventDefault();
+        const partnum = $("#searchInput").val();
+        const Area = $("#AreaText").val();
+        const SMT = $("#SMTLine").val();
+        
+
+        let formdata = new FormData();
+        formdata.append('Partnumber', partnum);
+        formdata.append('AREA', Area);
+        formdata.append('SMTLine', SMT);
+
+        const data = Object.fromEntries(formdata);
+
+        let res = await postData('@Url.Action("SubmitMetalMaskInfo", "MetalMask")', formdata);
+
+        console.log(res);
+
+    })
 
     searchInput.addEventListener('keyup', function (e) {
         if (e.key === 'Enter') {
+            $("#CheckID").hide();
+            $("#WrongID").hide();
             const searchValue = e.target.value;
             MetalMaskSearch(searchValue);
         }
@@ -95,31 +239,40 @@
 
     // ================= SEARCH FUNCTION ================ //
     async function MetalMaskSearch(partnum) {
-        alert("Use Enter key : " + partnum);
         let res = await fetchData('@Url.Action("SearchMetalMaskPartnum", "MetalMask")', { Partnumber: partnum });
         console.log(res);
         if (res?.Success) {
             let tableData = res.Data;
+            $("#CheckID").show();
+            $("#WrongID").hide();
+            $("#searchInput").css("border", "1px solid #33C9BB");
 
             if (tableData.length > 1) {
-                // Show a Dialog if the partnumber has same 
+                // Show a Dialog if the partnumber has same
                 $("#DuplicatePartnum").empty();
 
                 tableData.forEach((row, index) => {
                     var setdata = `<tr class="fade-in">
-                         <td>${row.Partnumber}</td>
                          <td>${row.AREA}</td>
                          <td>${row.Side}</td>
                          <td>${row.Thickness}</td>
                          <td>${row.Blocks}</td>
-                         <td>${row.PWB_Blocks}</td>
                      </tr>;`
 
                     $("#DuplicatePartnum").append(setdata);
                 });
 
-                $("#OpenDuplicatePartnum").modal("show");   
+                $("#OpenDuplicatePartnum").modal("show");
+            } else {
+                $("#AreaText").val(tableData[0].AREA);
+                $("#BlockText").val(tableData[0].Blocks);
             }
+        } else {
+            $("#CheckID").hide();
+            $("#WrongID").show();
+            $("#searchInput").css("border", "1px solid #FF2C2C");
         }
     }
+
+
 </script>

@@ -121,6 +121,8 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
 
         public Task<bool> AddNewLocation(string Area, string partnum, int Quantity)
         {
+            Area = Area.StartsWith("R") ? Area.Substring(1) : Area;
+
 
             string strsql = @"
                         IF EXISTS (

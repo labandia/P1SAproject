@@ -6,6 +6,10 @@ namespace ProgramPartListWeb.Areas.Circuit.Interface
 {
     public interface IMetalMast_Transaction
     {
+        Task<List<MetalMaskTransaction>> GetMetalMaskSMTransaction(
+            string partnum,
+            int SMTLine);
+
         Task<List<MetalMaskTransaction>> GetMetalMaskTransaction(
             string search,
             int Stats,

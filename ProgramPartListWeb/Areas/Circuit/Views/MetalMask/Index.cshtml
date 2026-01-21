@@ -85,86 +85,7 @@
 </div>
 
 
-<section class="Maskcardcontainer">
-    <div class="Maskcard">
-        <div class="MaskHeader">
-            <h5>Partnumber : <span>asdasds</span></h5>
-            <span>Metal mask rev : </span>
-        </div>
-        <div class="MaskContent">
-            <div>
-                <label>SMT Line</label>
-                <p>DS</p>
-            </div>
-            <div>
-                <label>Area </label>
-                <p>DS</p>
-            </div>
-            <div>
-                <label>Shift</label>
-                <p>DS</p>
-            </div>
-
-            <div>
-                <label>Status</label>
-                <p>DS</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="Maskcard">
-        <div class="MaskHeader">
-            <h5>Partnumber : <span>asdasds</span></h5>
-            <span>Metal mask rev : </span>
-        </div>
-        <div class="MaskContent">
-            <div>
-                <label>SMT Line</label>
-                <p>DS</p>
-            </div>
-            <div>
-                <label>Area </label>
-                <p>DS</p>
-            </div>
-            <div>
-                <label>Shift</label>
-                <p>DS</p>
-            </div>
-
-            <div>
-                <label>Status</label>
-                <p>DS</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="Maskcard">
-        <div class="MaskHeader">
-            <h5>Partnumber : <span>asdasds</span></h5>
-            <span>Metal mask rev : </span>
-        </div>
-        <div class="MaskContent">
-            <div>
-                <label>SMT Line</label>
-                <p>DS</p>
-            </div>
-            <div>
-                <label>Area </label>
-                <p>DS</p>
-            </div>
-            <div>
-                <label>Shift</label>
-                <p>DS</p>
-            </div>
-
-            <div>
-                <label>Status</label>
-                <p>DS</p>
-            </div>
-        </div>
-    </div>
-
-</section>
+<section class="Maskcardcontainer" id="Maskcardcontainer"></section>
 
 
 <div class="modal fade modal-m" id="OpenDuplicatePartnum" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
@@ -213,7 +134,7 @@
         const partnum = $("#searchInput").val();
         const Area = $("#AreaText").val();
         const SMT = $("#SMTLine").val();
-        
+
 
         let formdata = new FormData();
         formdata.append('Partnumber', partnum);
@@ -223,8 +144,9 @@
         const data = Object.fromEntries(formdata);
 
         let res = await postData('@Url.Action("SubmitMetalMaskInfo", "MetalMask")', formdata);
-
-        console.log(res);
+        if (res?.Success) {
+            GetMetalMaskTransaction();
+        }
 
     })
 
@@ -274,5 +196,50 @@
         }
     }
 
+    const GetMetalMaskTransaction = async () => {
+        let res = await fetchData('@Url.Action("GetMetalMaskInformation", "MetalMask")', { Stats: 1 });
+        $("#Maskcardcontainer").empty();
+
+        if (res?.Success) {
+            let TableData = res.Data;
+            let html = "";
+
+          
+            TableData.forEach(rowData => { 
+                html += ` <div class="Maskcard">
+                <div class="MaskHeader">
+                    <h5>Metal mask rev partnum : <span>${rowData.Partnumber}</span></h5>
+                </div>
+                    <div class="MaskContent">
+                        <div>
+                            <label>SMT Line</label>
+                            <p>${rowData.SMTLine}</p>
+                        </div>
+                        <div>
+                            <label>Area </label>
+                            <p>${rowData.AREA}</p>
+                        </div>
+                        <div>
+                            <label>Shift</label>
+                            <p>${rowData.Status}</p>
+                        </div>
+
+                        <div>
+                            <label>Blocks</label>
+                            <p>${rowData.Blocks}</p>
+                        </div>
+                    </div>
+                </div>`;
+
+               
+            });
+
+            $("#Maskcardcontainer").append(html);
+        }
+    };
+
+   
+
+    GetMetalMaskTransaction();
 
 </script>

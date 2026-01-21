@@ -805,6 +805,7 @@
     <Content Include="Areas\Circuit\Views\ProgramPartList\Dashboard.cshtml" />
     <Content Include="Areas\Circuit\Views\Shared\_MaskLayout.cshtml" />
     <Content Include="Areas\Circuit\Views\MetalMask\Index.cshtml" />
+    <Content Include="Areas\Circuit\Views\MetalMask\SMTLine.cshtml" />
     <None Include="Content\Images\.editorconfig" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\chart.js" />

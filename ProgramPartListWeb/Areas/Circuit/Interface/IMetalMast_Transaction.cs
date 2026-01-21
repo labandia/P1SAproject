@@ -6,21 +6,25 @@ namespace ProgramPartListWeb.Areas.Circuit.Interface
 {
     public interface IMetalMast_Transaction
     {
-        Task<List<MetalMaskTransaction>> GetMetalMaskSMTransaction(
-            string partnum,
-            int SMTLine);
-
+   
         Task<List<MetalMaskTransaction>> GetMetalMaskTransaction(
             string search,
+            string partnum,
+            int SMTLine,
             int Stats,
             int ModelType,
             int pageNumber,
             int pageSize);
 
-        Task<MetalMaskTransaction> GetMetalMaskTransacDetails();
+        Task<MetalMaskTransaction> GetMetalMaskTransacDetails(int RecordID);
+
+        Task<bool> StartOperation(int ID);
+        Task<bool> EndOperation(int ID);
 
         Task<bool> AddMetalMastTransaction(MetalMaskTransaction metal);
         Task<bool> EditMetalMastTransaction(MetalMaskTransaction metal);
         Task<bool> DeleteMetalMastTransaction(int ID);
+
+        Task<bool> SMTsubmitTransaction(MetalMaskTransaction metal);
     }
 }

@@ -1,4 +1,5 @@
-﻿using ProgramPartListWeb.Areas.Circuit.Interface;
+﻿using Aspose.Cells.Drawing;
+using ProgramPartListWeb.Areas.Circuit.Interface;
 using ProgramPartListWeb.Areas.Circuit.Models;
 using ProgramPartListWeb.Helper;
 using System;
@@ -9,19 +10,63 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
 {
     public class MetalMaskTransactionServices : IMetalMast_Transaction
     {
-        public Task<List<MetalMaskTransaction>> GetMetalMaskSMTransaction(string partnum, int SMTLine)
+        public Task<bool> AddMetalMastTransaction(MetalMaskTransaction metal)
+        {
+            string strsql = $@"INSERT INTO MetalMask_Transaction(Partnumber, Shift, AREA, SMTLine, Status)
+                            VALUES(@Partnumber, @Shift, @AREA, @SMTLine, @Status)";
+            return SqlDataAccess.UpdateInsertQuery(strsql, metal);
+        }
+
+        public Task<bool> DeleteMetalMastTransaction(int ID)
+        {
+            string strsql = $@"UPDATE MetalMask_Transaction SET IsDelete = 1
+                               WHERE RecordID =@RecordID";
+            return SqlDataAccess.UpdateInsertQuery(strsql, new { RecordID  = ID });
+        }
+
+        public Task<bool> EditMetalMastTransaction(MetalMaskTransaction metal)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<MetalMaskTransaction>> GetMetalMaskTransaction(
-            string partnum, 
-            int Stats, 
-            int SMTLine)
+       
+
+        public Task<MetalMaskTransaction> GetMetalMaskTransacDetails(int RecordID)
         {
-            string strsql = $@"SELECT t.RecordID, t.DateInput
+            string strquery = $@"SELECT t.RecordID, t.DateInput
                                       ,t.Shift, t.SMTLine
-                                      ,t.Partnumber, t.AREA
+                                      ,t.Partnumber, t.AREA, m.Blocks
+                                      ,t.SMT_start, t.SMT_end
+                                      ,t.TotalTime, t.TotalPrintBoard
+                                      ,t.SMT_Operator, t.CleanDate
+                                      ,t.Pattern, t.Frame
+                                      ,t.RevisionNo,t.ReadOne
+                                      ,t.ReadTwo,t.ReadThree
+                                      ,t.ReadFour,t.Result
+                                      ,t.Remarks,t.PIC, t.Status
+                                  FROM MetalMask_Transaction t 
+                                  INNER JOIN MetalMask_Masterlist m ON t.Partnumber = m.Partnumber
+                                  WHERE t.IsDelete = 0 AND t.RecordID =@RecordID";
+
+            return SqlDataAccess.GetObjectOnly<MetalMaskTransaction>(strquery, new { RecordID = RecordID });
+        }
+
+        public Task<List<MetalMaskTransaction>> GetMetalMaskTransaction(
+            string search,
+            string partnum,
+            int SMTLine,
+            int Stats,
+            int ModelType,
+            int pageNumber,
+            int pageSize)
+        {
+            int offset = (pageNumber - 1) * pageSize;
+
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+            string strquery = $@"SELECT t.RecordID, t.DateInput
+                                      ,t.Shift, t.SMTLine
+                                      ,t.Partnumber, t.AREA, m.Blocks
                                       ,t.SMT_start, t.SMT_end
                                       ,t.TotalTime, t.TotalPrintBoard
                                       ,t.SMT_Operator, t.CleanDate
@@ -34,36 +79,97 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                                   INNER JOIN MetalMask_Masterlist m ON t.Partnumber = m.Partnumber
                                   WHERE t.IsDelete = 0 ";
 
-            return SqlDataAccess.GetData<MetalMaskTransaction>(strsql);
+            // Filter By Partnumber
+            if (!string.IsNullOrEmpty(partnum))
+            {
+                strquery += "AND t.Partnumber = @Partnumber";
+                parameters.Add("@Partnumber", partnum);
+            }
+
+            // Filter By SMT Line
+            if (SMTLine != 0)
+            {
+                strquery += "AND t.SMTLine = @SMTLine";
+                parameters.Add("@SMTLine", SMTLine);
+            }
+
+            // Filter By Model Type
+            if (ModelType != 0)
+            {
+                strquery += "AND m.ModelType = @ModelType";
+                parameters.Add("@ModelType", ModelType);
+            }
+
+            // Filter By Status 
+            strquery += $@" AND t.Status = @Status";
+            parameters.Add("@Status", Stats);
+
+            // Search Partnumber
+            if (!string.IsNullOrEmpty(search))
+            {
+                strquery += $@" AND (
+                                @Search IS NULL
+                                OR t.Partnumber LIKE '%' + @Search + '%'
+                              )";
+                parameters.Add("@Search", search);
+            }
+
+            strquery += $@" ORDER BY t.RecordID DESC";
+
+            // If the Get Data has a Pagination function
+            if (pageSize != 0)
+            {
+                strquery += $@" OFFSET @Offset ROWS
+                            FETCH NEXT @PageSize ROWS ONLY";
+                parameters.Add("@Offset", offset);
+                parameters.Add("@PageSize", pageSize);
+            }
+
+            return SqlDataAccess.GetData<MetalMaskTransaction>(strquery, parameters);
         }
 
-        public Task<List<MetalMaskTransaction>> GetMetalMaskTransaction(string search, int Stats, int ModelType, int pageNumber, int pageSize)
+        public Task<bool> StartOperation(int ID)
         {
-            throw new NotImplementedException();
+            TimeSpan startTime = DateTime.Now.TimeOfDay;
+
+            string strsql = $@"UPDATE MetalMask_Transaction SET SMT_start =@SMT_start 
+                               WHERE RecordID =@RecordID";
+
+            return SqlDataAccess.UpdateInsertQuery(strsql, new
+            {
+                SMT_start = startTime,
+                RecordID = ID
+            });
         }
-        public Task<MetalMaskTransaction> GetMetalMaskTransacDetails()
+
+        public Task<bool> EndOperation(int ID)
         {
-            throw new NotImplementedException();
+            TimeSpan startTime = DateTime.Now.TimeOfDay;
+
+            string strsql = $@"UPDATE MetalMask_Transaction SET SMT_end =@SMT_end 
+                               WHERE RecordID =@RecordID";
+
+            return SqlDataAccess.UpdateInsertQuery(strsql, new
+            {
+                SMT_end = startTime,
+                RecordID = ID
+            });
         }
 
-
-        public Task<bool> AddMetalMastTransaction(MetalMaskTransaction metal)
+        public Task<bool> SMTsubmitTransaction(
+            MetalMaskTransaction metal)
         {
-            string strsql = $@"INSERT INTO MetalMask_Transaction(Partnumber, AREA, SMTLine)
-                            VALUES(@Partnumber, @AREA, @SMTLine)";
-            return SqlDataAccess.UpdateInsertQuery(strsql, metal);
-        }
+            string strsql = $@"UPDATE MetalMask_Transaction SET 
+                            TotalPrintBoard =@TotalPrintBoard, Status = 2,
+                            SMT_Operator =@SMT_Operator
+                               WHERE RecordID =@RecordID";
 
-        public Task<bool> DeleteMetalMastTransaction(int ID)
-        {
-            throw new NotImplementedException();
+            return SqlDataAccess.UpdateInsertQuery(strsql, new
+            {
+                TotalPrintBoard = metal.TotalPrintBoard,
+                SMT_Operator = metal.SMT_Operator,
+                RecordID = metal.RecordID
+            });
         }
-
-        public Task<bool> EditMetalMastTransaction(MetalMaskTransaction metal)
-        {
-            throw new NotImplementedException();
-        }
-
-        
     }
 }

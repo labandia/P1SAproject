@@ -1,0 +1,317 @@
+﻿
+@{
+    ViewBag.Title = "SMTLine";
+    Layout = "~/Areas/Circuit/Views/Shared/_MaskLayout.cshtml";
+}
+
+<!-- Controls Section -->
+<div class="controls-section">
+    <div class="control-group">
+        <label class="control-label">
+            <i class="fas fa-search"></i> Search Partnumber
+            <i class="fa-solid fa-circle-check" style="color: #33C9BB;" id="CheckID"></i>
+            <i class="fa-solid fa-circle-xmark" style="color: #FF2C2C;" id="WrongID"></i>
+        </label>
+
+
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Enter Partnumber ..." autocomplete="off">
+        </div>
+    </div>
+
+
+
+
+    <div class="control-group">
+        <label class="control-label">
+            <i class="fas fa-calendar"></i> SMT Line
+        </label>
+        <select id="SMTLine" class="filter-select">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+        </select>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label">
+            <i class="fas fa-calendar"></i> Area
+        </label>
+        <input type="text" id="AreaText" placeholder="-- N/A --" readonly>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label">
+            <i class="fas fa-calendar"></i> Block no.
+        </label>
+        <input type="text" id="BlockText" placeholder="-- N/A --" readonly>
+    </div>
+
+
+</div>
+
+
+<section class="Maskcardcontainer" id="Maskcardcontainer"></section>
+
+
+<div class="modal fade modal-m" id="OpenSMTlineTime" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Partnumber  Code :  <span id="letterdisplay"></span> </h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal_Content">
+                    <label>Total Print Board </label>
+                    <input type="text" id="TotalPrintBoard" placeholder="Enter Total Print Board" />
+                    <label>Operator </label>
+                    <input type="text" id="SMT_Operator" placeholder="Enter Operator" />
+
+                    <button type="button" id="startbtn">Start Operation</button>
+                    <button type="button" id="endbtn">End</button>
+
+
+                    <button type="button" id="saveSMT">SMT END Operation</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+    let selectedID = 0;
+    const activeTimers = [];
+    const startbtn = document.getElementById("startbtn");
+    const endbtn = document.getElementById("endbtn");
+    const saveSMT = document.getElementById("saveSMT");
+
+    saveSMT.addEventListener('click', async function (e) {
+          e.preventDefault();
+
+
+          let formdata = new FormData();
+          formdata.append('TotalPrintBoard', $("#TotalPrintBoard").val());
+          formdata.append('SMT_Operator', $("#SMT_Operator").val());
+          formdata.append('RecordID', selectedID);
+
+          let res = await postData('@Url.Action("FinalSubmitSMTLineinfo", "MetalMask")', formdata);
+          if (res?.Success) {
+              GetMetalMaskTransaction();
+              $("#TotalPrintBoard").val("");
+              $("#SMT_Operator").val("");
+              $("#OpenSMTlineTime").modal('hide');
+          }
+
+     });
+
+
+    startbtn.addEventListener('click', async function (e) {
+        e.preventDefault();
+
+         let formdata = new FormData();
+         formdata.append('ID', selectedID);
+
+         let res = await postData('@Url.Action("StartSMTOperation", "MetalMask")', formdata);
+         if (res?.Success) {
+             GetMetalMaskTransaction();
+             $("#OpenSMTlineTime").modal('hide');
+         }
+
+    });
+
+    endbtn.addEventListener('click', async function (e) {
+        e.preventDefault();
+         let formdata = new FormData();
+         formdata.append('ID', selectedID);
+
+         let res = await postData('@Url.Action("EndSMTOperation", "MetalMask")', formdata);
+         if (res?.Success) {
+             GetMetalMaskTransaction();
+             $("#OpenSMTlineTime").modal('hide');
+         }
+    });
+
+    const GetMetalMaskTransaction = async () => {
+        // STOP old timers
+        activeTimers.forEach(clearInterval);
+        activeTimers.length = 0;
+
+
+         let res = await fetchData('@Url.Action("GetMetalMaskInformation", "MetalMask")', { Stats: 1 });
+         $("#Maskcardcontainer").empty();
+
+        if (res?.Success) {
+
+             let TableData = res.Data;
+             let html = "";
+
+             res.Data.forEach(rowData => {
+
+                html += `
+                        <div class="Maskcard" data-id="${rowData.RecordID}">
+                            <div class="MaskHeader">
+                                <h5>Metal mask rev partnum : <span>${rowData.Partnumber}</span></h5>
+                            </div>
+
+                            <div class="MaskContent">
+                                <div><label>SMT Line</label><p>${rowData.SMTLine}</p></div>
+                                <div><label>Area</label><p>${rowData.AREA}</p></div>
+                                <div><label>Shift</label><p>${rowData.Shift != false ? "DS" : "NS"}</p></div>
+                                <div><label>Blocks</label><p>${rowData.Blocks}</p></div>
+                            </div>
+
+                            <div class="MaskContent">
+                                <div>
+                                    <label>Start Time</label>
+                                     <p>${rowData.SMT_start === "00:00" ? "--:--" : rowData.SMT_start}</p>
+                                </div>
+
+                                <div>
+                                    <label>End Time</label>
+                                   <p>${rowData.SMT_end === "00:00" ? "--:--" : rowData.SMT_end}</p>
+                                </div>
+
+                                <div>
+                                    <label>Total Time</label>
+                                      <p class="total-time">${rowData.TotalTimeHHMM}</p>
+                                </div>
+                            </div>
+                        </div>`;
+            });
+
+            $("#Maskcardcontainer").append(html);
+
+
+
+            /* ============================
+                  START REALTIME TIMERS
+               ============================ */
+
+            document.querySelectorAll(".Maskcard").forEach((card, i) => {
+
+                const row = res.Data[i];
+
+                // Only run if still active
+                if (row.SMT_end !== "00:00") return;
+                const changeDate = formatJsonDate(row.DateInput);
+                const startDate = parseTime(changeDate, row.SMT_start);
+                const timer = startRealtimeTimer(card, changeDate, row.SMT_start);
+
+                activeTimers.push(timer);
+            });
+
+
+         }
+    };
+
+    /* ============================
+         CLICK HANDLER
+        ============================ */
+
+    document.addEventListener("click", e => {
+        const card = e.target.closest(".Maskcard");
+        if (!card) return;
+
+        selectedID = card.dataset.id;
+        $("#OpenSMTlineTime").modal('show');
+    });
+
+    GetMetalMaskTransaction();
+
+
+
+    /* ============================
+     HELPERS
+  ============================ */
+    function buildStartDate(dateInput, smtStart) {
+        const d = new Date(dateInput);
+        const [h, m] = smtStart.split(":").map(Number);
+
+        return new Date(
+            d.getFullYear(),
+            d.getMonth(),
+            d.getDate(),
+            h,
+            m,
+            0
+        );
+    }
+
+
+
+    function parseTime(dateInput, timeStr) {
+        const d = new Date(dateInput);
+        const [h, m] = timeStr.split(":").map(Number);
+
+        return new Date(
+            d.getFullYear(),
+            d.getMonth(),
+            d.getDate(),
+            h,
+            m,
+            0
+        );
+    }
+
+    function formatDuration(minutes) {
+        const h = Math.floor(minutes / 60);
+        const m = minutes % 60;
+        return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+    }
+
+    /* ============================
+       REALTIME TIMER
+    ============================ */
+
+    function startRealtimeTimer(cardEl, dateInput, smtStart) {
+
+        const startDate = buildStartDate(dateInput, smtStart);
+
+        console.log("StartDate:", startDate);
+
+        function update() {
+            const now = new Date();
+            let diffMin = Math.floor((now - startDate) / 60000);
+
+            // Safety guard
+            if (diffMin < 0) diffMin = 0;
+
+            cardEl.querySelector(".total-time")
+                .textContent = formatDuration(diffMin);
+        }
+
+        update();
+        return setInterval(update, 1000);
+    }
+
+
+
+    const formatJsonDate = function (value) {
+        if (!value) return "";
+
+        const ms = parseInt(value.replace("/Date(", "").replace(")/", ""));
+        if (isNaN(ms)) return "";
+
+        const date = new Date(ms);
+        return date.toLocaleDateString();
+    };
+</script>

@@ -33,6 +33,42 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
             return JsonSuccess(data);
         }
 
+        [HttpGet]
+        public async Task<ActionResult> GetMetalMaskInformation(int Stats)
+        {
+            var data = await _trans.GetMetalMaskTransaction("", "", 0, 1, 0, 0,  0);
+
+            var result = data.Select(x => new
+            {
+                x.RecordID,
+                x.DateInput,
+                x.Shift,
+                x.SMTLine,
+                x.Partnumber,
+                x.AREA,
+                x.Blocks,
+                SMT_start = x.SMT_start.ToString(@"hh\:mm"),
+                SMT_end = x.SMT_end.ToString(@"hh\:mm"),
+                TotalTimeHHMM = $"{x.TotalTime / 60:D2}:{x.TotalTime % 60:D2}",
+                x.TotalTime,
+                x.TotalPrintBoard,
+                x.SMT_Operator,
+                x.CleanDate,
+                x.Pattern,
+                x.Frame,
+                x.ReadOne,
+                x.ReadTwo,
+                x.ReadThree,
+                x.ReadFour,
+                x.Result,
+                x.Remarks,
+                x.PIC
+            });
+
+            if (result == null || !result.Any()) return JsonNotFound("No Tranasctioon Data.");
+            return JsonSuccess(result);
+        }
+
 
         [HttpPost]
         public async Task<ActionResult> SubmitMetalMaskInfo(MetalMaskTransaction metal)
@@ -42,7 +78,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
 
             bool result = await _trans.AddMetalMastTransaction(metal);
             if (!result) return JsonPostError("INSERT failed.", 500);
-            return JsonCreated(result, "INSERT new Parts Successfully");
+            return JsonCreated(metal, "INSERT new Parts Successfully");
         }
 
 
@@ -52,6 +88,31 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
         {
             bool result = await _trans.AddMetalMastTransaction(metal);
             //if (data == null || !data.Any()) return JsonNotFound("No Masterlist Data.");
+            if (!result) return JsonPostError("INSERT failed.", 500);
+            return JsonCreated(result, "INSERT new Parts Successfully");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> FinalSubmitSMTLineinfo(MetalMaskTransaction metal)
+        {
+            bool result = await _trans.SMTsubmitTransaction(metal);
+            //if (data == null || !data.Any()) return JsonNotFound("No Masterlist Data.");
+            if (!result) return JsonPostError("INSERT failed.", 500);
+            return JsonCreated(result, "INSERT new Parts Successfully");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> StartSMTOperation(int ID)
+        {
+            bool result = await _trans.StartOperation(ID);
+            if (!result) return JsonPostError("INSERT failed.", 500);
+            return JsonCreated(result, "INSERT new Parts Successfully");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> EndSMTOperation(int ID)
+        {
+            bool result = await _trans.EndOperation(ID);
             if (!result) return JsonPostError("INSERT failed.", 500);
             return JsonCreated(result, "INSERT new Parts Successfully");
         }
@@ -68,9 +129,10 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
 
 
         // GET: Circuit/MetalMask
-        public ActionResult Index()
-        {
-            return View();
-        }
+        public ActionResult Index() => View();
+        // GET: Circuit/MetalMask/SMTLine
+        public ActionResult SMTLine() => View();
+        // GET: Circuit/MetalMask/Cleaning
+        public ActionResult Cleaning() => View();
     }
 }

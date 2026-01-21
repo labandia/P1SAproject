@@ -24,23 +24,31 @@ namespace ProgramPartListWeb.Areas.Circuit.Models
 
     public class MetalMaskTransaction
     {
-        public int RecordID { get; private set; }
+        public int RecordID { get; set; }
 
+        // Base operation date (DATE only in SQL)
         public DateTime DateInput { get; set; }
-        public bool? Shift { get; set; }        // false = Day, true = Night
-        public int SMTLine { get; set; } = 0;
+
+        // 0 = Day, 1 = Night
+        public bool? Shift { get; set; }
+
+        public int? SMTLine { get; set; }
 
         public string Partnumber { get; set; } = string.Empty;
-        public int AREA { get; set; } = 0;
+        public int AREA { get; set; }
+        public int Blocks { get; set; }
+        // TIME columns
+        public TimeSpan SMT_start { get; set; }
+        public TimeSpan SMT_end { get; set; }
 
-        // SMT Line Timing
-        public DateTime SMT_start { get; set; }
-        public DateTime SMT_end { get; set; }
-
-        // Computed column (read-only)
+        // Duration in minutes (computed by SQL)
         public int TotalTime { get; private set; }
 
-        public int TotalPrintBoard { get; set; }
+        // Display-only (HH:MM)
+        public string TotalTimeHHMM =>
+            $"{TotalTime / 60:00}:{TotalTime % 60:00}";
+
+        public int? TotalPrintBoard { get; set; }
         public string SMT_Operator { get; set; }
 
         public DateTime CleanDate { get; set; }
@@ -63,7 +71,6 @@ namespace ProgramPartListWeb.Areas.Circuit.Models
         public int Status { get; set; }
 
         public bool IsDelete { get; set; }
-
     }
 
 

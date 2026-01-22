@@ -217,19 +217,27 @@ namespace FootWristStrapsAnalysis.Services
 
         public async Task<bool> DeleteByTestDate(DateTime testDate)
         {
-            string sql = "DELETE FROM FootWristStrapTestResults WHERE TestDate =@TestDate";
-            return  await SqlDataAccess.UpdateInsertQuery(sql, new { TestDate = testDate.Date });
+            string sql = @"
+                DELETE FROM FootWristStrapTestResults
+                WHERE TestDate >= CAST(@StartDate AS DATE)
+                  AND TestDate < DATEADD(DAY, 1, @StartDate);
+            ";
+
+            return await SqlDataAccess.UpdateInsertQuery(sql, new
+            {
+                StartDate = testDate.Date
+            });
         }
 
-        public Task<int> GetRowCountByDate(DateTime testDate)
+        public Task<int> GetRowCountByDate(string testDate)
         {
             string sql = @"SELECT COUNT(*) 
                    FROM FootWristStrapTestResults 
-                   WHERE TestDate = @TestDate";
+                   WHERE  CAST(TestDate AS DATE)  = CAST(@TestDate AS DATE)";
 
             return  SqlDataAccess.GetCountData(
                 sql,
-                new { TestDate = testDate.Date }
+                new { TestDate = testDate }
             );
         }
 

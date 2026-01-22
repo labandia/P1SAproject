@@ -17,7 +17,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Interface
 
 
 
-        Task<bool> IncrementAndDecreaseStocks(int StockID, int CurrentQty, int Required);
+        Task<bool> IncrementAndDecreaseStocks(int StockID, double CurrentQty, int Required);
 
 
 

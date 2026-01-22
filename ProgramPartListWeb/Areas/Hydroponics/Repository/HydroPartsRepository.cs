@@ -212,7 +212,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             return SqlDataAccess.GetData<StockPartsModel>(strquery, null);
         }
 
-        public Task<bool> IncrementAndDecreaseStocks(int StockID, int CurrentQty, int Required)
+        public Task<bool> IncrementAndDecreaseStocks(int StockID, double CurrentQty, int Required)
         {
             return SqlDataAccess.UpdateInsertQuery("UPDATE Hydro_Stocks SET CurrentQty =@CurrentQty WHERE StockID =@StockID",
                 new

@@ -16,8 +16,8 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         public string Unit { get; set; }
         public string ImageParts { get; set; }
         public int CurrentQty { get; set; } 
-        public int ReorderLevel { get; set; }
-        public int WarningLevel { get; set; }
+        public double ReorderLevel { get; set; }
+        public double WarningLevel { get; set; }
         public double Unit_Price { get; set; }
     }
 

@@ -7,13 +7,10 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Media;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using Color = System.Drawing.Color;
 
 
@@ -64,7 +61,7 @@ namespace FootWristStrapsAnalysis
 
             _importTimer.Start();
 
-            _debounceTimer.Interval = 300;
+            _debounceTimer.Interval = 2000;
             _debounceTimer.Tick += async (s, e) =>
             {
                 _debounceTimer.Stop();
@@ -274,19 +271,20 @@ namespace FootWristStrapsAnalysis
                     }
 
                     todayFileFound = true;
-                    Debug.WriteLine($"✅ Processing TODAY'S file: {fileName}");
+                    string strDate = today.ToString("yyyy-MM-dd");
+                    Debug.WriteLine($"✅ Processing TODAY'S file: {fileName}  - Date : {strDate}");
 
                     // ===== STEP 3: VALIDATE ROW COUNT =====
                     string[] lines = File.ReadAllLines(file);
                     int excelRowCount = lines.Length - 1; // minus header
-                    int dbRowCount = await _foot.GetRowCountByDate(today);
-                    //Debug.WriteLine($"📊 Excel Rows: {excelRowCount}, DB Rows: {dbRowCount}");
+                    int dbRowCount = await _foot.GetRowCountByDate(strDate);
+                    Debug.WriteLine($"📊 Excel Rows: {excelRowCount}, DB Rows: {dbRowCount}");
 
                     // ✅ SKIP IF SAME COUNT
                     if (excelRowCount == dbRowCount)
                     {
-                        Debug.WriteLine("⏭ Excel and DB row counts are equal — skipping import.");            
-                        return;
+                        Debug.WriteLine("⏭ Excel and DB row counts are equal — skipping import.");
+                        break;
                     }
 
                     // 🔥 DELETE ONLY IF EXCEL HAS MORE ROWS

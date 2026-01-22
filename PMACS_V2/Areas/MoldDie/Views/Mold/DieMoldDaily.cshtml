@@ -450,6 +450,7 @@
              DateInput: data.DateInput
          });
 
+
          if (checkduplicate) {
              Swal.fire({
                  icon: "error",
@@ -488,7 +489,7 @@
     $("#EditPartnumforms").on('submit', async (e) => {
       e.preventDefault();
          let formData = new FormData(e.target);
-        const data = Object.fromEntries(formData);
+         const data = Object.fromEntries(formData);
          let res = await postData('@Url.Action("UpdateDailyMoldDieMonitor", "Mold")', data);
          console.log(res);
 
@@ -866,7 +867,7 @@
 
 
 
-     function PopulateDatalist(data) {
+    function PopulateDatalist(data) {
          $("#dieMoldMasterlist").empty();
          data.forEach((rowData, index) => {
              let ActionButton = "";
@@ -1027,8 +1028,6 @@
 
 
      }
-
-
     function PopulateDieSerialist(data) {
         $("#dieMoldMasterlist").empty();
         data.forEach((rowData, index) => {
@@ -1167,8 +1166,7 @@
 
     }
 
-
-     async function ChangeStatus(recordId, status) {
+    async function ChangeStatus(recordId, status) {
 
          let res = await postData('@Url.Action("UpdateDailyStatus", "Mold")', {
              RecordID: recordId,

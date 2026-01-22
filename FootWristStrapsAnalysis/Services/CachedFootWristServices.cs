@@ -49,8 +49,10 @@ namespace FootWristStrapsAnalysis.Services
             );
         }
 
-        public Task<int> GetRowCountByDate(DateTime testDate)
-          => _inner.GetRowCountByDate(testDate);
+        public Task<int> GetRowCountByDate(string testDate)
+        {
+            return _inner.GetRowCountByDate(testDate);
+        }
         public Task<List<string>> GetSelectedEmployeeID(int month, int year)
             => _inner.GetSelectedEmployeeID(month, year);
 

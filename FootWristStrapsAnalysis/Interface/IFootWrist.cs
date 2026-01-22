@@ -18,7 +18,7 @@ namespace FootWristStrapsAnalysis.Interface
         Task<bool> CheckIfEmployeeIDImportPrevious(string EmployeeID, DateTime today);
         Task<bool> ImportSetFootAnalysis(IFootWristModel foot);
 
-        Task<int> GetRowCountByDate(DateTime testDate);
+        Task<int> GetRowCountByDate(string TestDate);
         Task<bool> DeleteByTestDate(DateTime testDate);
     }
 }

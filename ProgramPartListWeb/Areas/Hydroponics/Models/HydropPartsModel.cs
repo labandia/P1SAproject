@@ -418,7 +418,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         private string _CategoryName;
         private string _Supplier;
         private string _Unit;
-        private int _CurrentQty;
+        private double _CurrentQty;
         private double _ReorderLevel;
         private double _WarningLevel;
         private string _Status;
@@ -464,7 +464,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
             set => _Unit = value;
         }
 
-        public int CurrentQty
+        public double CurrentQty
         {
             get => _CurrentQty;
             set => _CurrentQty = value;

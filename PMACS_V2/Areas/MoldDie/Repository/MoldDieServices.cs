@@ -230,7 +230,6 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                 bool partExists = await SqlDataAccess.Checkdata(
                            "SELECT 1 FROM DieMold_Daily WHERE PartNo = @PartNo",
                            new { PartNo = mold.PartNo });
-                Debug.WriteLine("Done Checking Daily Input ... ");
 
                 // Get last total shot
                 int lasttotal = partExists ? await SqlDataAccess.GetCountData($@"
@@ -374,19 +373,28 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             string strsql = $@"UPDATE DieMold_Daily SET Status =@Status WHERE RecordID =@RecordID";
             return SqlDataAccess.UpdateInsertQuery(strsql, new { Status = Stats, RecordID = ID });
         }
-        public Task<bool> CheckMoldieExist(string searchValue, string Dateinput)
+        public async Task<bool> CheckMoldieExist(string searchValue, string Dateinput)
         {
             bool isPartNo = !string.IsNullOrWhiteSpace(searchValue)
                            && searchValue.StartsWith("0");
 
             string filter = isPartNo ? "p.PartNo =@Searchval" : "p.DieSerial =@Searchval";
 
-            string sql = $@"SELECT COUNT(p.PartNo) FROM DieMold_Daily d
-                            INNER JOIN DieMold_MoldingMainParts p ON p.PartNo = d.PartNo
-                            WHERE {filter} AND CAST(DateInput AS DATE) = @DateInput";
+            string sql = $@"
+                    SELECT COUNT(*)
+                    FROM DieMold_Daily d
+                    INNER JOIN DieMold_MoldingMainParts p 
+                        ON p.PartNo = d.PartNo
+                    WHERE {filter}
+                      AND CAST(d.DateInput AS DATE) = @DateInput;
+                ";
 
+            int count = await SqlDataAccess.GetCountData(
+                sql,
+                new { Searchval = searchValue, DateInput = Dateinput }
+            );
 
-            return SqlDataAccess.Checkdata(sql, new { Searchval = searchValue, DateInput = Dateinput });
+            return count > 1;
         }
         public Task<bool> DeleteDailyMoldie(int ID)
         {
@@ -479,25 +487,31 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             int TotalCycle = checkCycle ? 0 : total;
             int NewStats = checkCycle ? 2 : status;
 
-            string sql = @"
-                UPDATE DieMold_Daily
-                SET 
-                    CycleShot = @CycleShot,
-                    Total = @Total,
-                    MachineNo = @MachineNo,
-                    Remarks = @Remarks,
-                    Mincharge = @Mincharge,
-                    Status = @Status
-                WHERE PartNo = @PartNo
-                  AND CAST(DateInput AS DATE) = CAST(@DateInput AS DATE);
+            //string sql = @"
+            //    UPDATE DieMold_Daily
+            //    SET 
+            //        CycleShot = @CycleShot,
+            //        Total = @Total,
+            //        MachineNo = @MachineNo,
+            //        Remarks = @Remarks,
+            //        Mincharge = @Mincharge,
+            //        Status = @Status
+            //    WHERE PartNo = @PartNo
+            //      AND CAST(DateInput AS DATE) = CAST(@DateInput AS DATE);
 
-                IF @@ROWCOUNT = 0
-                BEGIN
+            //    IF @@ROWCOUNT = 0
+            //    BEGIN
+            //        INSERT INTO DieMold_Daily
+            //        (PartNo, DateInput, CycleShot, Total, MachineNo, Remarks, Mincharge, Status)
+            //        VALUES
+            //        (@PartNo, @DateInput, @CycleShot, @Total, @MachineNo, @Remarks, @Mincharge, @Status);
+            //    END";
+
+            string sql = @"
                     INSERT INTO DieMold_Daily
                     (PartNo, DateInput, CycleShot, Total, MachineNo, Remarks, Mincharge, Status)
                     VALUES
-                    (@PartNo, @DateInput, @CycleShot, @Total, @MachineNo, @Remarks, @Mincharge, @Status);
-                END";
+                    (@PartNo, @DateInput, @CycleShot, @Total, @MachineNo, @Remarks, @Mincharge, @Status);";
 
             await SqlDataAccess.UpdateInsertQuery(sql, new
             {

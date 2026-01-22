@@ -379,8 +379,8 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
                 Supplier = Request.Form["EditSupplier"],
                 Unit = Request.Form["EditUnit"],
                 Unit_Price = Convert.ToDouble(Request.Form["EditUnit_Price"]),
-                WarningLevel = Convert.ToInt32(Request.Form["EditWarningLevel"]),
-                ReorderLevel = Convert.ToInt32(Request.Form["EditReorderLevel"]),
+                WarningLevel = Convert.ToDouble(Request.Form["EditWarningLevel"]),
+                ReorderLevel = Convert.ToDouble(Request.Form["EditReorderLevel"]),
                 ImageParts = fullnamefile   // Save new or existing filename
             };
 
@@ -488,11 +488,10 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> AddOneStocksQuantity(int StockID, int CurrentQty, int Required)
+        public async Task<ActionResult> AddOneStocksQuantity(int StockID, double CurrentQty, int Required)
         {
             try
             {
-                Debug.WriteLine($@"Stock : {StockID} - Current Qty : {CurrentQty} - Required : {Required}");
 
                 bool result = await _hydro.IncrementAndDecreaseStocks(StockID, CurrentQty, Required);
 

@@ -552,10 +552,15 @@
         }
 
         const renderTable = () => {
+            console.log(filteredData);
             const tableBody = document.getElementById(tableBodyId);
             tableBody.innerHTML = "";
 
             $.each(filteredData, function (index, row) {
+                let qty = formatQuantity(row.CurrentQty, row.Unit);
+                let warn = formatQuantity(row.WarningLevel, row.Unit)
+
+
                     // Image Display
                 let imagePath = row.ImageParts
                                     ? `/Hydro/DisplaytheImage?filename=${encodeURIComponent(row.ImageParts)}`
@@ -569,12 +574,12 @@
 
                 let IsAccessIncrement = (ActionRestrict() === false) ?
                     `<button id="decrement" class="btn btn-secondary" ><i class="fa-solid fa-plus"></i></button>`
-                    : ` <button id="increment" class="btn btn-increment" onclick="incrementPart('${row.StockID}',  ${row.CurrentQty}, ${row.ReorderLevel})"><i class="fa-solid fa-plus"></i></button>`;
+                    : ` <button id="increment" class="btn btn-increment" onclick="incrementPart('${row.StockID}',  ${row.CurrentQty}, ${row.ReorderLevel}, '${row.Unit}')"><i class="fa-solid fa-plus"></i></button>`;
 
 
                 let IsAccessdecrease = (ActionRestrict() === false) ?
                     `<button id="decrement" class="btn btn-secondary" ><i class="fa-solid fa-minus"></i></button>`
-                    : `<button id="decrement" class="btn btn-decrement" onclick="decrementPart('${row.StockID}', ${row.CurrentQty}, ${row.ReorderLevel})"><i class="fa-solid fa-minus"></i></button>`;
+                    : `<button id="decrement" class="btn btn-decrement" onclick="decrementPart('${row.StockID}', ${row.CurrentQty}, ${row.ReorderLevel}, '${row.Unit}')"><i class="fa-solid fa-minus"></i></button>`;
 
 
                
@@ -598,10 +603,10 @@
                                          <td data-cell="Supplier">${row.Supplier ? row.Supplier : "-"}</td>
                                          <td data-cell="CurrentQty" style="font-weight: 600; color: #185d8b;">
                                                 ${IsAccessdecrease}
-                                                    ${row.CurrentQty}
+                                                    ${qty}
                                                ${IsAccessIncrement}
                                          </td>
-                                         <td data-cell="WarningLevel" style="font-weight: 600;">${row.WarningLevel}</td>
+                                         <td data-cell="WarningLevel" style="font-weight: 600;">${warn}</td>
                                          <td data-cell="Approval" >
                                            <div class='${getStatusClass(row.Status)}'>
                                              ${row.Status}
@@ -1111,19 +1116,18 @@
     }
 
 
-    async function incrementPart(stockID, currentQty, Required) {
+    async function incrementPart(stockID, currentQty, Required, Unit) {
         //alert(`Stock ID : ${stockID} - CurrentQty : ${currentQty} - Required: ${Required}`);
-
-        let incrementstocks = currentQty + 1;
-
+        let changeEqui = getStepByUnit(Unit);
+        let incrementstocks = currentQty + changeEqui;
 
         let formData = new FormData();
         formData.append('StockID', parseInt(stockID));
-        formData.append('CurrentQty', parseInt(incrementstocks));
+        formData.append('CurrentQty', incrementstocks);
         formData.append('Required', parseInt(Required));
 
         const data = Object.fromEntries(formData);
-        console.log(data);
+     
 
         let res = await postData('@Url.Action("AddOneStocksQuantity", "Hydro")', formData);
         console.log(res);
@@ -1143,15 +1147,15 @@
         }
     }
 
-    async function decrementPart(stockID, currentQty, Required) {
+    async function decrementPart(stockID, currentQty, Required, Unit) {
         //alert(`Stock ID : ${stockID} - CurrentQty : ${currentQty} - Required: ${Required}`);
-
-         let incrementstocks = currentQty - 1;
+        let changeEqui = getStepByUnit(Unit);
+        let incrementstocks = currentQty - changeEqui;
 
 
          let formData = new FormData();
          formData.append('StockID', parseInt(stockID));
-         formData.append('CurrentQty', parseInt(incrementstocks));
+         formData.append('CurrentQty', incrementstocks);
          formData.append('Required', parseInt(Required));
 
          const data = Object.fromEntries(formData);
@@ -1268,6 +1272,30 @@
             clearTimeout(timeout);
             timeout = setTimeout(() => func.apply(this, args), delay);
         };
+    }
+
+
+    const decimalUnits = ["meter", "meters", "m", "liter", "liters", "l"];
+
+    function formatQuantity(value, unit) {
+        if (!value) return "0";
+
+        // units that require decimals
+
+        if (decimalUnits.includes(unit.toLowerCase())) {
+            return Number(value).toFixed(1);
+        }
+
+        // default: no decimals
+        return parseInt(value);
+    }
+
+    function getStepByUnit(unit) {
+        if (!unit) return 1;
+
+        return decimalUnits.includes(unit.toLowerCase())
+            ? 0.1
+            : 1;
     }
 
     // ############## DISPLAY ALL THE DATA TO THE PAGE ########################

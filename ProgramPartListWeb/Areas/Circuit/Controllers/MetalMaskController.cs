@@ -121,7 +121,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
         [HttpPost]
         public async Task<ActionResult> SubmitTensionAndCleaning(MetalMaskTransaction metal)
         {
-            bool result = await _trans.AddMetalMastTransaction(metal);
+            bool result = await _trans.TensionsubmitTransaction(metal);
             //if (data == null || !data.Any()) return JsonNotFound("No Masterlist Data.");
             if (!result) return JsonPostError("INSERT failed.", 500);
             return JsonCreated(result, "INSERT new Parts Successfully");

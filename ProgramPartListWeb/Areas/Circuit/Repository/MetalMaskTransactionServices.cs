@@ -171,5 +171,28 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                 RecordID = metal.RecordID
             });
         }
+
+        public Task<bool> TensionsubmitTransaction(MetalMaskTransaction metal)
+        {
+            string strsql = $@"UPDATE MetalMask_Transaction SET 
+                            Pattern =@Pattern, Frame =@Frame, ReadOne =@ReadOne, ReadTwo =@ReadTwo,
+                            ReadThree =@ReadThree, ReadFour =@ReadFour, Result =@Result,    
+                            Remarks =@Remarks, PIC =@PIC, Status = 3
+                            WHERE RecordID =@RecordID";
+
+            return SqlDataAccess.UpdateInsertQuery(strsql, new
+            {
+                Pattern = metal.TotalPrintBoard,
+                Frame = metal.SMT_Operator,
+                ReadOne = metal.RecordID,
+                ReadTwo = metal.ReadTwo,
+                ReadThree = metal.ReadThree,
+                ReadFour = metal.ReadFour,
+                Result = metal.Result,
+                Remarks = metal.Remarks,
+                PIC = metal.PIC,
+                RecordID = metal.RecordID
+            });
+        }
     }
 }

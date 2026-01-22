@@ -186,3 +186,16 @@ body{
 .MaskContent label{
     font-weight: 600;
 }
+
+.modal_Content input{
+    width: 100%;
+    border: 1px solid #334155;
+    padding: 1em;
+
+}
+
+.modal_Content button{
+    padding: 1em 1.5em;
+    background: #4361ee;
+    color: #fff;
+}

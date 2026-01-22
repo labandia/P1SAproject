@@ -26,5 +26,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Interface
         Task<bool> DeleteMetalMastTransaction(int ID);
 
         Task<bool> SMTsubmitTransaction(MetalMaskTransaction metal);
+
+        Task<bool> TensionsubmitTransaction(MetalMaskTransaction metal);
     }
 }

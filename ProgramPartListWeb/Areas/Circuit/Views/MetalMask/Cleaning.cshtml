@@ -1,0 +1,147 @@
+﻿
+@{
+    ViewBag.Title = "Cleaning";
+    Layout = "~/Areas/Circuit/Views/Shared/_MaskLayout.cshtml";
+}
+
+<h2>Cleaning</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Partnumber</th>
+            <th>Clean Date</th>
+            <th>Pattern</th>
+            <th>Frame</th>
+            <th>Point 1</th>
+            <th>Point 2</th>
+            <th>Point 3</th>
+            <th>Point 4</th>
+            <th>Result</th>
+            <th>Tension Condition</th>
+            <th>PIC</th>
+        </tr>
+    </thead>
+    <tbody id="TransactionTable">
+    </tbody>
+</table>
+
+
+
+<div class="modal fade modal-xl" id="OpenMetalMaskCleaning" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Partnumber :  <span id="letterdisplay"></span> </h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal_Content">
+                    <form id="addMetalMask" >
+                        <label>Pattern </label>
+                        <input type="text" id="Pattern" name="Pattern" placeholder="Enter Total Print Board" />
+                        <label>Frame </label>
+                        <input type="text" id="Frame" name="Frame" placeholder="Enter Operator" />
+
+                        <label>Point 1 </label>
+                        <input type="text" id="ReadOne" name="ReadOne" placeholder="Enter Operator" />
+                        <label>Point 2 </label>
+                        <input type="text" id="ReadTwo" name="ReadTwo" placeholder="Enter Operator" />
+                        <label>Point 3 </label>
+                        <input type="text" id="ReadThree" name="ReadThree" placeholder="Enter Operator" />
+                        <label>Point 4 </label>
+                        <input type="text" id="ReadFour" name="ReadFour" placeholder="Enter Operator" />
+
+
+                        <label>Tension Condition </label>
+                        <input type="text" id="Remarks" name="Remarks" placeholder="Enter Operator" />
+                        <label>Person In Charge </label>
+                        <input type="text" id="PIC" name="PIC" placeholder="Enter Operator" />
+
+
+                        <button type="submit" id="saveSMT">SMT END Operation</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+   let selectedID = 0;
+
+   const transactionform = document.getElementById('addMetalMask');
+
+    transactionform.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        let formdata = new FormData(e.target);
+        formdata.append('RecordID', selectedID);
+        const data = Object.fromEntries(formdata);
+
+        let res = await postData('@Url.Action("SubmitTensionAndCleaning", "MetalMask")', formdata);
+        console.log(res);
+
+         if (res?.Success) {
+             GetMetalMaskTransaction();
+              $("#OpenMetalMaskCleaning").modal('hide');
+         }
+    });
+
+
+   const GetMetalMaskTransaction = async () => {
+       let res = await fetchData('@Url.Action("GetMetalMaskInformation", "MetalMask")', { Stats: 2 });
+        console.log(res);
+       if (res?.Success) {
+             let tableBody = $("#TransactionTable");
+             tableBody.empty();
+             let TableData = res.Data;
+             let html = "";
+
+
+             $.each(TableData, function (index, row) {
+                 // Image Display
+
+
+                 html += `
+                      <tr class='cleanTable' data-id="${row.RecordID}">
+                            <td >${row.Partnumber ? row.Partnumber : "-"}</td>
+                            <td >${row.CleanDate ? row.CleanDate : "-"}</td>
+                            <td >${row.Frame ? row.Frame : "-"}</td>
+                            <td >${row.Pattern ? row.Pattern : "-"}</td>
+                            <td >${row.ReadOne ? row.ReadOne : "-"}</td>
+                            <td >${row.ReadTwo ? row.ReadTwo : "-"}</td>
+                            <td >${row.ReadThree ? row.ReadThree : "-"}</td>
+                            <td >${row.ReadFour ? row.ReadFour : "-"}</td>
+                            <td >${row.Result ? row.Result : "-"}</td>
+                            <td >${row.Remarks ? row.Remarks : "-"}</td>
+                            <td >${row.PIC ? row.PIC : "-"}</td>
+                      </tr>
+                  `;
+             });
+
+             tableBody.append(html);
+         }
+    };
+
+    /* ============================
+     CLICK HANDLER
+    ============================ */
+
+    document.addEventListener("click", e => {
+        const card = e.target.closest(".cleanTable");
+        if (!card) return;
+
+        selectedID = card.dataset.id;
+        $("#OpenMetalMaskCleaning").modal('show');
+    });
+
+
+    GetMetalMaskTransaction();
+</script>

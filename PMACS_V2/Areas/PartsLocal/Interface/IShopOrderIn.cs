@@ -1,4 +1,5 @@
 ﻿using PMACS_V2.Areas.PartsLocal.Model;
+using PMACS_V2.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace PMACS_V2.Areas.PartsLocal.Interface
 {
     public interface IShopOrderIn
     {
-        Task<IEnumerable<ShopOrderInModel>> GetShopOderInlist(DateTime startDate,
+        Task<PagedResult<ShopOrderInModel>> GetShopOderInlist(DateTime startDate,
               DateTime endDate,
               string search,
               int pageNumber,

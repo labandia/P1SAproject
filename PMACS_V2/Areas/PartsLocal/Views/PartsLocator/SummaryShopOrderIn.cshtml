@@ -287,12 +287,15 @@
     $("#SortByAction").on('change', function (e) {
         e.preventDefault();
         shopStats = e.target.value;
+        currentPage = 1;
         if (shopStats == 0) {
             $("#SummaryINdisplay").show();
             $("#SummaryOutdisplay").hide();
+            GetTransactionSummaryIN();
         } else {
             $("#SummaryINdisplay").hide();
             $("#SummaryOutdisplay").show();
+            GetTransactionSummaryOUT();
         }
 
     });
@@ -350,8 +353,6 @@
          const startDate = $("#startDate").val();
          const endDate = $("#endDate").val();
 
-         console.log("Sending startDate:", startDate);
-         console.log("Sending endDate:", endDate);
 
           const params = new URLSearchParams({
               search: search || "",
@@ -365,11 +366,10 @@
 
         let res = await FetchAuthenticate(url, {});
 
-        console.log(res);
 
         if (res && res.Success) {
               $("#ShopOrderSummaryIn").empty();
-              let dataArray = res.Data;
+            let dataArray = res.Data.Items;
 
 
               dataArray.forEach((row, index) => {
@@ -399,6 +399,7 @@
                   $("#ShopOrderSummaryIn").append(setdata);
               });
 
+               renderPagination(res.Data);
 
               // Handle click event for edit button
               $(document).on('click', '.EditToolClick', function (e) {
@@ -574,12 +575,14 @@
     function renderPagination(data) {
         const pager = document.getElementById("pagination");
         pager.innerHTML = "";
+        console.log(currentPage);
+        let pnumber = currentPage === 1 ? 1 : data.PageNumber;
 
         if (data.PageNumber > 1) {
             pager.innerHTML += `<button onclick="goPage(${data.PageNumber - 1})">Prev</button>`;
         }
 
-        pager.innerHTML += ` Page ${data.PageNumber} of ${data.TotalRecords} `;
+        pager.innerHTML += ` Page ${pnumber} of ${data.TotalRecords} `;
 
         if (data.PageNumber < data.TotalRecords) {
             pager.innerHTML += `<button onclick="goPage(${data.PageNumber + 1})">Next</button>`;

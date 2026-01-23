@@ -34,13 +34,14 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
         public Task<MetalMaskTransaction> GetMetalMaskTransacDetails(int RecordID)
         {
             string strquery = $@"SELECT t.RecordID, t.DateInput
-                                      ,t.Shift, t.SMTLine
+                                      ,t.Shift
+                                      ,t.SMTLine
                                       ,t.Partnumber, t.AREA, m.Blocks
                                       ,t.SMT_start, t.SMT_end
                                       ,t.TotalTime, t.TotalPrintBoard
                                       ,t.SMT_Operator, t.CleanDate
                                       ,t.Pattern, t.Frame
-                                      ,t.RevisionNo,t.ReadOne
+                                      ,t.ReadOne
                                       ,t.ReadTwo,t.ReadThree
                                       ,t.ReadFour,t.Result
                                       ,t.Remarks,t.PIC, t.Status
@@ -65,13 +66,14 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
             Dictionary<string, object> parameters = new Dictionary<string, object>();
 
             string strquery = $@"SELECT t.RecordID, t.DateInput
-                                      ,t.Shift, t.SMTLine
+                                      ,t.Shift
+                                      ,t.SMTLine
                                       ,t.Partnumber, t.AREA, m.Blocks
                                       ,t.SMT_start, t.SMT_end
                                       ,t.TotalTime, t.TotalPrintBoard
                                       ,t.SMT_Operator, t.CleanDate
                                       ,t.Pattern, t.Frame
-                                      ,t.RevisionNo,t.ReadOne
+                                      ,t.ReadOne
                                       ,t.ReadTwo,t.ReadThree
                                       ,t.ReadFour,t.Result
                                       ,t.Remarks,t.PIC, t.Status
@@ -174,7 +176,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
 
         public Task<bool> TensionsubmitTransaction(MetalMaskTransaction metal)
         {
-            string strsql = $@"UPDATE MetalMask_Transaction SET 
+            string strsql = $@"UPDATE MetalMask_Transaction SET CleanDate =@CleanDate,
                             Pattern =@Pattern, Frame =@Frame, ReadOne =@ReadOne, ReadTwo =@ReadTwo,
                             ReadThree =@ReadThree, ReadFour =@ReadFour, Result =@Result,    
                             Remarks =@Remarks, PIC =@PIC, Status = 3
@@ -182,8 +184,9 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
 
             return SqlDataAccess.UpdateInsertQuery(strsql, new
             {
-                Pattern = metal.TotalPrintBoard,
-                Frame = metal.SMT_Operator,
+                CleanDate = DateTime.Now,
+                Pattern = metal.Pattern,
+                Frame = metal.Frame,
                 ReadOne = metal.RecordID,
                 ReadTwo = metal.ReadTwo,
                 ReadThree = metal.ReadThree,

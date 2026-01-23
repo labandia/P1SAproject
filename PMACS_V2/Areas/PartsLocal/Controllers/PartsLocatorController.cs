@@ -184,7 +184,7 @@ namespace PMACS_V2.Areas.PartsLocal.Controllers
             DateTime? endDate,
             string search,
             int pageNumber = 1,
-            int pageSize = 10)
+            int pageSize = 100)
         {
             var from = startDate ?? DateTime.Today;
             var to = endDate ?? DateTime.Today;
@@ -194,8 +194,8 @@ namespace PMACS_V2.Areas.PartsLocal.Controllers
                     to.Date,
                     search,
                     pageNumber,
-                    pageSize) ?? new List<ShopOrderInModel>();
-            if (data == null && data.Any()) return JsonNotFound("No Shop Summary In Data.");
+                    pageSize);
+            if (data == null && data.Items.Any()) return JsonNotFound("No Shop Summary In Data.");
             return JsonSuccess(data);
         }
 
@@ -205,7 +205,7 @@ namespace PMACS_V2.Areas.PartsLocal.Controllers
             DateTime? endDate,
             string search,
             int pageNumber = 1,
-            int pageSize = 10)
+            int pageSize = 100)
         {
             var from = startDate ?? DateTime.Today;
             var to = endDate ?? DateTime.Today;

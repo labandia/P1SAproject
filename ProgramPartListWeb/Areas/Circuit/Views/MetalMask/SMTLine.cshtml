@@ -9,8 +9,6 @@
     <div class="control-group">
         <label class="control-label">
             <i class="fas fa-search"></i> Search Partnumber
-            <i class="fa-solid fa-circle-check" style="color: #33C9BB;" id="CheckID"></i>
-            <i class="fa-solid fa-circle-xmark" style="color: #FF2C2C;" id="WrongID"></i>
         </label>
 
 
@@ -43,19 +41,7 @@
         </select>
     </div>
 
-    <div class="control-group">
-        <label class="control-label">
-            <i class="fas fa-calendar"></i> Area
-        </label>
-        <input type="text" id="AreaText" placeholder="-- N/A --" readonly>
-    </div>
-
-    <div class="control-group">
-        <label class="control-label">
-            <i class="fas fa-calendar"></i> Block no.
-        </label>
-        <input type="text" id="BlockText" placeholder="-- N/A --" readonly>
-    </div>
+  
 
 
 </div>
@@ -64,7 +50,7 @@
 <section class="Maskcardcontainer" id="Maskcardcontainer"></section>
 
 
-<div class="modal fade modal-m" id="OpenSMTlineTime" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+<div class="modal fade modal-lg" id="OpenSMTlineTime" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-body modalwrap">
@@ -78,15 +64,15 @@
 
                 <div class="modal_Content">
                     <label>Total Print Board </label>
-                    <input type="text" id="TotalPrintBoard" placeholder="Enter Total Print Board" />
+                    <input type="number" id="TotalPrintBoard" placeholder="Enter Total Print Board" />
                     <label>Operator </label>
                     <input type="text" id="SMT_Operator" placeholder="Enter Operator" />
 
-                    <button type="button" id="startbtn">Start Operation</button>
-                    <button type="button" id="endbtn">End</button>
-
-
-                    <button type="button" id="saveSMT">SMT END Operation</button>
+                    <div class="flex_align">
+                        <button type="button" id="startbtn">Start Operation</button>
+                        <button type="button" id="endbtn">End</button>
+                        <button type="button" id="saveSMT">SMT END Operation</button>
+                    </div>
                 </div>
 
             </div>

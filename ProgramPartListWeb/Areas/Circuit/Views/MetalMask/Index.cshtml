@@ -199,13 +199,15 @@
     const GetMetalMaskTransaction = async () => {
         let res = await fetchData('@Url.Action("GetMetalMaskInformation", "MetalMask")', { Stats: 1 });
         $("#Maskcardcontainer").empty();
-
+        console.log(res);
         if (res?.Success) {
             let TableData = res.Data;
             let html = "";
 
           
-            TableData.forEach(rowData => { 
+            TableData.forEach(rowData => {
+                let Shifts = rowData.Shift ? "NS" : "DS";
+
                 html += ` <div class="Maskcard">
                 <div class="MaskHeader">
                     <h5>Metal mask rev partnum : <span>${rowData.Partnumber}</span></h5>
@@ -221,7 +223,7 @@
                         </div>
                         <div>
                             <label>Shift</label>
-                            <p>${rowData.Status}</p>
+                            <p>${Shifts}</p>
                         </div>
 
                         <div>

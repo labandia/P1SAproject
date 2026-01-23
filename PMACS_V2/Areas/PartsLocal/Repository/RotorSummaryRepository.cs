@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using PMACS_V2.Areas.PartsLocal.Interface;
 using PMACS_V2.Areas.PartsLocal.Model;
 using PMACS_V2.Helper;
+using PMACS_V2.Models;
 
 namespace PMACS_V2.Areas.PartsLocal.Repository
 {
@@ -63,7 +64,8 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
         }
 
 
-        public async Task<IEnumerable<ShopOrderInModel>> GetShopOderInlist(DateTime startDate,
+        public async Task<PagedResult<ShopOrderInModel>> GetShopOderInlist(
+            DateTime startDate,
             DateTime endDate,
             string search,
             int pageNumber,
@@ -84,7 +86,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                           FROM PartsLocatorRotor_Transaction t
                           INNER JOIN PartsLocatorRotor_Masterlist m 
                           ON t.Partnumber = m.Partnumber
-                          WHERE  t.TransactionType = 0 AND t.IsDelete = 0
+                          WHERE   t.TransactionType = 0 AND t.IsDelete = 0
                           AND t.TransactionDate >= @StartDate
                           AND t.TransactionDate < DATEADD(DAY, 1, @EndDate)
                           AND (
@@ -97,7 +99,8 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                           OFFSET @Offset ROWS
                           FETCH NEXT @PageSize ROWS ONLY";
 
-            return await SqlDataAccess.GetData<ShopOrderInModel>(
+       
+            var items = await SqlDataAccess.GetData<ShopOrderInModel>(
                    strsql,
                    new
                    {
@@ -107,6 +110,16 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                        Offset = offset,
                        PageSize = pageSize
                    });
+
+            int TotalRecords = items.Count;
+
+            return new PagedResult<ShopOrderInModel>
+            {
+                Items = items,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalRecords = TotalRecords
+            };
         }
 
       

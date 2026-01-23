@@ -1,0 +1,177 @@
+﻿
+@{
+    ViewBag.Title = "History";
+    Layout = "~/Areas/Circuit/Views/Shared/_MaskLayout.cshtml";
+}
+
+<h2>History</h2>
+
+<button id="btnExport" class="btn btn-success">
+    Export Selected
+</button>
+
+<table>
+    <thead>
+        <tr>
+            <th></th>
+            <th>Date </th>
+            <th>Shift</th>
+            <th>SMT Line</th>
+            <th>Area </th>
+            <th>Metal Mask Partno.</th>
+            <th>Block No.</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Total Time</th>
+            <th>Total Printed Board</th>
+            <th>SMT operator</th>
+            <th>Date cleaning</th>
+
+            <th>Time of Cleaning </th>
+            <th>Pattern</th>
+            <th>Frame</th>
+            <th>Point 1 </th>
+            <th>Point 2</th>
+            <th>Point 3</th>
+            <th>Point 4</th>
+            <th>Result</th>
+            <th>Tension Condition</th>
+            <th>Person in charge</th>
+        </tr>
+    </thead>
+    <tbody id="TransactionTable">
+    </tbody>
+</table>
+
+
+
+
+
+
+<script>
+   let selectedID = 0;
+
+    $("#btnExport").on("click", function () {
+
+        let selectedIds = [];
+
+        $(".row-check:checked").each(function () {
+            selectedIds.push($(this).val());
+        });
+
+        if (selectedIds.length === 0) {
+            alert("Please select at least one record to export.");
+            return;
+        }
+
+        console.log("Selected IDs:", selectedIds);
+
+        exportSelected(selectedIds);
+    });
+
+    async function exportSelected(ids) {
+       let formData = new FormData();
+
+        ids.forEach((id, index) => {
+            formData.append(`recordIds[${index}]`, id);
+        });
+
+        const response = await fetch('@Url.Action("ExportMetalMask", "MetalMask")', {
+            method: "POST",
+            body: formData
+        });
+
+        if (response.status === 204) {
+            alert("No data to export.");
+            return;
+        }
+
+        if (!response.ok) {
+            alert("Export failed.");
+            return;
+        }
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "MetalMask.xlsx";
+        document.body.appendChild(a);
+        a.click();
+
+        a.remove();
+        window.URL.revokeObjectURL(url);
+
+    }
+
+   const GetMetalMaskTransaction = async () => {
+       let res = await fetchData('@Url.Action("GetMetalMaskInformation", "MetalMask")', { Stats: 3 });
+
+       if (res?.Success) {
+             let tableBody = $("#TransactionTable");
+             tableBody.empty();
+             let TableData = res.Data;
+             let html = "";
+
+
+             $.each(TableData, function (index, row) {
+                 // Image Display
+
+
+                 html += `
+                      <tr class='cleanTable'>
+                            <td>
+                                   <input type="checkbox"
+                                   class="row-check"
+                                   name="checkID"
+                                   value="${row.RecordID}">
+                            </td>
+
+                            <td >${row.DateInput ? formatJsonDate(row.DateInput) : "-"}</td>
+                            <td >${row.Shift ? row.Shift : "-"}</td>
+                            <td >${row.SMTLine ? row.SMTLine : "-"}</td>
+                            <td >${row.AREA ? row.AREA : "-"}</td>
+                            <td >${row.Partnumber ? row.Partnumber : "-"}</td>
+                            <td >${row.Blocks ? row.Blocks : "-"}</td>
+                            <td >${row.SMT_start ? row.SMT_start : "-"}</td>
+                            <td >${row.SMT_end ? row.SMT_end : "-"}</td>
+                            <td >${row.TotalTime ? row.TotalTime : "-"}</td>
+                            <td >${row.TotalPrintBoard ? row.TotalPrintBoard : "-"}</td>
+                            <td >${row.SMT_Operator ? row.SMT_Operator : "-"}</td>
+
+                           <td >${row.CleanDate ? formatJsonDate(row.CleanDate) : "-"}</td>
+                           <td >${row.CleanDate ? formatJsonDate(row.CleanDate) : "-"}</td>
+                           <td >${row.Pattern ? row.Pattern : "-"}</td>
+                           <td >${row.Frame ? row.Frame : "-"}</td>
+                           <td >${row.ReadOne ? row.ReadOne : "-"}</td>
+                           <td >${row.ReadTwo ? row.ReadTwo : "-"}</td>
+                           <td >${row.ReadThree ? row.ReadThree : "-"}</td>
+                           <td >${row.ReadFour ? row.ReadFour : "-"}</td>
+                           <td >${row.Result ? row.Result : "-"}</td>
+                           <td >${row.Remarks ? row.Remarks : "-"}</td>
+                           <td >${row.PIC ? row.PIC : "-"}</td> "-"}</td>
+                      </tr>
+                  `;
+             });
+
+             tableBody.append(html);
+         }
+
+    }
+
+
+    const formatJsonDate = function (value) {
+        if (!value) return "";
+
+        const ms = parseInt(value.replace("/Date(", "").replace(")/", ""));
+        if (isNaN(ms)) return "";
+
+        const date = new Date(ms);
+        return date.toLocaleDateString();
+
+    };
+
+
+    GetMetalMaskTransaction();
+</script>

@@ -121,6 +121,7 @@ namespace PMACS_V2.Helper
             catch (Exception ex)
             {
                 Logger.Error(ex, $"SQL Exception while executing query. Query: {query}");
+                Debug.WriteLine(ex.Message);
                 return "";
             }
         }
@@ -137,7 +138,9 @@ namespace PMACS_V2.Helper
             }
             catch (Exception ex)
             {
+                Debug.WriteLine(ex.Message);
                 throw new Exception($"Database error: {ex.Message}");
+
             }
         }
 
@@ -238,6 +241,7 @@ namespace PMACS_V2.Helper
             }
             catch (SqlException ex)
             {
+                Debug.WriteLine(ex.Message);
                 Logger.Error(ex, $"SQL Exception while executing query. Query: {query}");
             }
 
@@ -284,6 +288,7 @@ namespace PMACS_V2.Helper
             }
             catch (Exception ex)
             {
+                Debug.WriteLine(ex.Message);
                 Logger.Error(ex, $"SQL Exception while executing query. Query: {query}");
             }
 

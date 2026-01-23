@@ -112,7 +112,7 @@
                  html += `
                       <tr class='cleanTable' data-id="${row.RecordID}">
                             <td >${row.Partnumber ? row.Partnumber : "-"}</td>
-                            <td >${row.CleanDate ? row.CleanDate : "-"}</td>
+                            <td >${row.CleanDate ? formatJsonDate(row.CleanDate) : "-"}</td>
                             <td >${row.Frame ? row.Frame : "-"}</td>
                             <td >${row.Pattern ? row.Pattern : "-"}</td>
                             <td >${row.ReadOne ? row.ReadOne : "-"}</td>
@@ -144,4 +144,14 @@
 
 
     GetMetalMaskTransaction();
+
+    const formatJsonDate = function (value) {
+        if (!value) return "";
+
+        const ms = parseInt(value.replace("/Date(", "").replace(")/", ""));
+        if (isNaN(ms)) return "";
+
+        const date = new Date(ms);
+        return date.toLocaleDateString();
+    };
 </script>

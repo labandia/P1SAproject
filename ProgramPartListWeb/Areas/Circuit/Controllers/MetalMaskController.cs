@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using ClosedXML.Excel;
 
 namespace ProgramPartListWeb.Areas.Circuit.Controllers
 {
@@ -146,65 +147,67 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
                 if (details != null)
                     getData.Add(details);
             }
-            Debug.WriteLine("Done Getting Data ... ");
 
             if (!getData.Any())
                 return new HttpStatusCodeResult(204);
 
-            //string templatePath = Server.MapPath("~/Content/Uploads/PCFY-81013Form1L.xlsx");
-            string templatePath = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Uploads/PGFY-00031FORM_1.xlsx");
+            string templatePath = Server.MapPath("~/Content/Uploads/PCFY-81013Form1L.xlsx");
+            //string templatePath = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/Uploads/PGFY-00031FORM_1.xlsx");
 
             if (!System.IO.File.Exists(templatePath))
                 throw new Exception("Template not found: " + templatePath);
 
-            Debug.WriteLine("Get the Excel Template  ");
 
-            using (var package = new ExcelPackage(new FileInfo(templatePath)))
+            using (var workbook = new XLWorkbook(templatePath))
             {
-                Debug.WriteLine("Inside the Files");
-                Debug.WriteLine("Count:  " + getData.Count());
-                //var ws = package.Workbook.Worksheets["TensionMonitor"];
-                foreach (var sheet in package.Workbook.Worksheets)
-                {
-                    Debug.WriteLine("Sheet name: [" + sheet.Name + "]");
-                }
-
+                var ws = workbook.Worksheet(1); // first sheet
                 int row = 6;
 
                 foreach (var item in getData)
                 {
-                    Debug.WriteLine($@"Partnumber : {item.Partnumber} - Shift {item.Shift}");
+                    ws.Cell(3, 22).Value = item.Partnumber;
 
-                    //ws.Cells[row, 1].Value = item.RecordID;
-                    ////ws.Cells[row, 2].Value = item.DateInput.ToString("yyyy-MM-dd");
-                    //ws.Cells[row, 3].Value = item.Shift;
-                    //ws.Cells[row, 4].Value = item.SMTLine;
-                    //ws.Cells[row, 5].Value = item.Partnumber;
-                    //ws.Cells[row, 6].Value = item.AREA;
-                    //ws.Cells[row, 7].Value = item.Blocks;
-                    //ws.Cells[row, 8].Value = item.SMT_start.ToString();
-                    //ws.Cells[row, 9].Value = item.SMT_end.ToString();
-                    //ws.Cells[row, 10].Value = item.TotalTime;
-                    //ws.Cells[row, 11].Value = item.TotalPrintBoard;
-                    //ws.Cells[row, 12].Value = item.SMT_Operator;
-                    //ws.Cells[row, 13].Value = item.CleanDate.ToString("yyyy-MM-dd");
-                    //ws.Cells[row, 14].Value = item.Pattern;
-                    //ws.Cells[row, 15].Value = item.Frame;
-                    //ws.Cells[row, 16].Value = item.RevisionNo;
-                    //ws.Cells[row, 17].Value = item.ReadOne;
-                    //ws.Cells[row, 18].Value = item.ReadTwo;
-                    //ws.Cells[row, 19].Value = item.ReadThree;
-                    //ws.Cells[row, 20].Value = item.ReadFour;
-                    //ws.Cells[row, 21].Value = item.Result;
-                    //ws.Cells[row, 22].Value = item.Remarks;
+                    ws.Cell(row, 1).Value = item.DateInput.ToString("yyyy-MM-dd");
+                    ws.Cell(row, 2).Value = item.Shift == false ? "DS" : "NS";
+                    ws.Cell(row, 3).Value = item.SMTLine.ToString();
+                    ws.Cell(row, 4).Value = item.AREA.ToString();
+                    ws.Cell(row, 5).Value = item.Partnumber;
+                    ws.Cell(row, 6).Value = item.Blocks.ToString();
+                    ws.Cell(row, 7).Value = item.SMT_start.ToString();
+                    ws.Cell(row, 8).Value = item.SMT_end.ToString();
+                    ws.Cell(row, 9).Value = item.TotalTime.ToString();
+                    ws.Cell(row, 10).Value = item.TotalPrintBoard.ToString();
+                    ws.Cell(row, 11).Value = item.SMT_Operator;
+                    ws.Cell(row, 12).Value = item.CleanDate.ToString("yyyy-MM-dd");
+                    ws.Cell(row, 13).Value = item.CleanDate.ToString("HH:mm");
+                    ws.Cell(row, 14).Value = item.Pattern;
+                    ws.Cell(row, 15).Value = item.Frame;
+                    ws.Cell(row, 16).Value = item.ReadOne.ToString();
+                    ws.Cell(row, 17).Value = item.ReadTwo.ToString();
+                    ws.Cell(row, 18).Value = item.ReadThree.ToString();
+                    ws.Cell(row, 19).Value = item.ReadFour.ToString();
+                    ws.Cell(row, 20).Value = item.Result;
+                    ws.Cell(row, 21).Value = item.Remarks;
+                    ws.Cell(row, 22).Value = item.PIC;
+
+                  
                     row++;
                 }
 
-                return File(
-                    package.GetAsByteArray(),
-                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                    $"MetalMask_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx"
-                );
+                // 4️⃣ Return file
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    stream.Position = 0;
+
+                    string fileName = $"MetalMask_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+
+                    return File(
+                        stream.ToArray(),
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        fileName
+                    );
+                }
             }
 
         }

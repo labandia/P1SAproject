@@ -25,16 +25,16 @@
     <header id="MaskHead">
         <div class="customcontainer nav-container">
             <a href="#" class="logo">
-                <i class="fas fa-seedling"></i>
                 <span>Metal Mask Monitoring System</span>
             </a>
 
 
             <nav class="nav-links">
-                <a href="/Circuit/MetalMask/index" class="nav-link" data-en="Mask">Metal Mask info</a>
-                <a href="/Circuit/MetalMask/SMTLine" class="nav-link" data-en="SMT">SMT Line</a>
-                <a href="/Circuit/MetalMask/Cleaning" class="nav-link" data-en="Cleaning">Cleaning</a>
-                <a href="/Circuit/MetalMask/History" class="nav-link" data-en="History">History </a>
+                <a href="/Circuit/MetalMask/History" class="nav-link" data-en="History">Daily Summary </a>
+                <a href="/Circuit/MetalMask/SMTLine" class="nav-link" data-en="SMT"><span class="tab-badge" id="config-badge">0</span> SMT Line</a>
+                <a href="/Circuit/MetalMask/Cleaning" class="nav-link" data-en="Cleaning"><span class="tab-badge" id="config-badge">0</span> Tension & Cleaning</a>
+                <button type="button" id="OpenMetal"><i class="fa-solid fa-plus"></i>Add Metal Mask</button>
+
             </nav>
         </div>
     </header>
@@ -44,5 +44,81 @@
             @RenderBody()
         </div>
     </main>
+
+
+
+    @*=================================================================================*@
+    @*=========================== ADD NEW INSPECTORS ==================================*@
+    @*=================================================================================*@
+    <div class="modal fade modal-l" id="AddProductModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+
+                <div class="modal-body modalwrap">
+                    <div class="custom_modal_header">
+                        <h5>Add Inspectors</h5>
+
+                        <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+
+
+                    <form method="post" enctype="multipart/form-data" class="addformcontainer" id="addnewform" autocomplete="off">
+                        <div class="row">
+                            @*<div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
+                                    <label>Employee ID </label> <br />
+                                    <input type="text" placeholder="type Employee ID" name="Employee_ID" id="Employee_ID" required />
+                                    <small class="text-danger" id="Noemployee"></small>
+                                </div>*@
+                            <div class="form_group col-12 col-sm-12 col-lg-12 mb-2">
+                                <label>Employee Name  <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                                @*<input type="text" placeholder="N/A" name="Fullname" id="Fullname" />*@
+                                <div class="search-box">
+                                    <input type="hidden" name="Employee_ID" id="Employee_ID">
+                                    <input type="text" placeholder="Type Name or ID no." name="EmployeeSearch" id="EmployeeSearch" required>
+                                    <div class="namesdisplay"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form_group col-12 col-sm-12">
+                            <label>OJT Registration No.  <small style="color: #a81818; font-weight: 600;">*</small></label>
+                            <input type="text" placeholder="type Ojt registration No." name="OJTRegistration" id="OJTRegistration" required />
+                        </div>
+
+                        <div class="form_group col-12 col-sm-12 ">
+                            <label>Date Qualified <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                            <input type="date" placeholder="Select Date Qualified" name="DateQualified" id="DateQualified" required />
+                        </div>
+
+                        <div class="form_group col-12 col-sm-12">
+                            <label>Remarks  </label> <br />
+                            <textarea placeholder="Type any remarks" name="Remarks" id="Remarks" rows="3" cols="50" required></textarea>
+                        </div>
+
+
+
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <div>
+                                <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                            </div>
+                            <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        $("#OpenMetal").on('click', function (e) {
+            e.preventDefault();
+            $("#AddProductModal").modal("show");
+        });
+    </script>
 </body>
 </html>
+
+

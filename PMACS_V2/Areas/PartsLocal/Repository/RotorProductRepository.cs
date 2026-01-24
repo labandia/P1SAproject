@@ -157,6 +157,8 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
 
         public Task<bool> ChangeLocation(int ID, string Area, int Quan)
         {
+            Area = Area.StartsWith("R") ? Area.Substring(1) : Area;
+
             string strsql = $@"UPDATE PartsLocatorRotor_Location
                             SET Area = @Area, Quantity =@Quantity
                             WHERE RecordID =@RecordID AND IsRemove = 0";

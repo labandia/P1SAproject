@@ -617,7 +617,9 @@
 .GridColumnInfo h2{
     font-size: 1.5rem;
 }
-
+.EditToolOOutClick i {
+    font-size: 2rem;
+}
 
 .stepper {
     display: flex;
@@ -1176,4 +1178,13 @@
             flex: 1;
         }
 
-       
+    .TrackTable {
+        overflow-x: auto;
+        cursor: grab;
+        user-select: none;
+    }
+
+    .TrackTable:active {
+        cursor: grabbing;
+    }
+

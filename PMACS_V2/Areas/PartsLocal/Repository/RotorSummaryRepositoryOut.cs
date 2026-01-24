@@ -45,7 +45,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
         {
             string strsql = $@"UPDATE PartsLocatorRotor_Transaction 
                               SET RotorOrder =@RotorOrder, ShopOrder =@ShopOrder, PlanQuantity =@PlanQuantity,
-                                  ModelBase =@ModelBase, 
+                                  ModelBase =@ModelBase, PreviousQuantity =@PreviousQuantity, 
                                   Status =@Status, 
                                   BushType =@BushType
                               WHERE TransactionID =@TransactionID";
@@ -54,6 +54,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
             {
                 RotorOrder = shop.RotorOrder,
                 ShopOrder = shop.ShopOrder,
+                PreviousQuantity = shop.PreviousQuantity,   
                 PlanQuantity = shop.PlanQuantity,
                 ModelBase = shop.ModelBase,
                 Status = shop.Status,

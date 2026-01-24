@@ -6,6 +6,8 @@
 
 <h2>History</h2>
 
+<input type="text" id="searchID" placeholder="Search here ... "/>
+
 <button id="btnExport" class="btn btn-success">
     Export Selected
 </button>
@@ -64,9 +66,40 @@
             return;
         }
 
-        console.log("Selected IDs:", selectedIds);
 
-        exportSelected(selectedIds);
+          $.ajax({
+              url: '@Url.Action("ExportMetalMask", "MetalMask")',
+              type: 'POST',
+              data: JSON.stringify({ recordIds: selectedIds }),
+              contentType: 'application/json; charset=utf-8',
+              xhrFields: {
+                  responseType: 'blob' // IMPORTANT for file download
+              },
+              success: function (data, status, xhr) {
+
+                  // Get filename from response header
+                  var filename = "MetalMask.xlsx";
+                  var disposition = xhr.getResponseHeader('Content-Disposition');
+                  if (disposition && disposition.indexOf('filename=') !== -1) {
+                      filename = disposition.split('filename=')[1].replace(/"/g, '');
+                  }
+
+                  // Create download
+                  var blob = new Blob([data], {
+                      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                  });
+
+                  var link = document.createElement('a');
+                  link.href = window.URL.createObjectURL(blob);
+                  link.download = filename;
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+              },
+              error: function () {
+                  alert("Export failed.");
+              }
+          });
     });
 
     async function exportSelected(ids) {

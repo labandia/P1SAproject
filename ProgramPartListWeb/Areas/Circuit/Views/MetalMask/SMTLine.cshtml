@@ -41,7 +41,7 @@
         </select>
     </div>
 
-  
+
 
 
 </div>
@@ -89,6 +89,9 @@
     const startbtn = document.getElementById("startbtn");
     const endbtn = document.getElementById("endbtn");
     const saveSMT = document.getElementById("saveSMT");
+
+
+  
 
     saveSMT.addEventListener('click', async function (e) {
           e.preventDefault();
@@ -291,13 +294,4 @@
 
 
 
-    const formatJsonDate = function (value) {
-        if (!value) return "";
-
-        const ms = parseInt(value.replace("/Date(", "").replace(")/", ""));
-        if (isNaN(ms)) return "";
-
-        const date = new Date(ms);
-        return date.toLocaleDateString();
-    };
 </script>

@@ -51,7 +51,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
         {
             string strsql = $@"UPDATE PartsLocatorRotor_Transaction 
                               SET RotorOrder =@RotorOrder, Quantity =@Quantity, 
-                                Remarks =@Remarks
+                                Remarks =@Remarks, PreviousQuantity =@PreviousQuantity, 
                               WHERE TransactionID =@TransactionID";
 
             return SqlDataAccess.UpdateInsertQuery(strsql, new
@@ -59,6 +59,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                 RotorOrder = shop.RotorOrder,
                 Quantity = shop.Quantity,
                 Remarks = shop.Remarks,
+                PreviousQuantity = shop.PreviousQuantity,
                 TransactionID = shop.TransactionID
             });
         }

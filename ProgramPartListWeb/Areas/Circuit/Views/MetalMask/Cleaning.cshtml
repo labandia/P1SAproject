@@ -41,7 +41,7 @@
                 </div>
 
                 <div class="modal_Content">
-                    <form id="addMetalMask" >
+                    <form id="addMetalMask">
                         <label>Pattern </label>
                         <input type="text" id="Pattern" name="Pattern" placeholder="Enter Total Print Board" />
                         <label>Frame </label>
@@ -55,6 +55,9 @@
                         <input type="text" id="ReadThree" name="ReadThree" placeholder="Enter Operator" />
                         <label>Point 4 </label>
                         <input type="text" id="ReadFour" name="ReadFour" placeholder="Enter Operator" />
+
+                        <label>Results </label>
+                        <input type="text" id="Result" name="Result" placeholder="Enter Operator" />
 
 
                         <label>Tension Condition </label>
@@ -77,23 +80,20 @@
 <script>
    let selectedID = 0;
 
-   const transactionform = document.getElementById('addMetalMask');
 
-    transactionform.addEventListener('submit', async function (e) {
+   $("addMetalMask").on('submit', async function (e) {
         e.preventDefault();
         let formdata = new FormData(e.target);
         formdata.append('RecordID', selectedID);
         const data = Object.fromEntries(formdata);
 
         let res = await postData('@Url.Action("SubmitTensionAndCleaning", "MetalMask")', formdata);
-        console.log(res);
 
          if (res?.Success) {
              GetMetalMaskTransaction();
-              $("#OpenMetalMaskCleaning").modal('hide');
+             $("#OpenMetalMaskCleaning").modal('hide');
          }
     });
-
 
    const GetMetalMaskTransaction = async () => {
        let res = await fetchData('@Url.Action("GetMetalMaskInformation", "MetalMask")', { Stats: 2 });
@@ -145,13 +145,5 @@
 
     GetMetalMaskTransaction();
 
-    const formatJsonDate = function (value) {
-        if (!value) return "";
-
-        const ms = parseInt(value.replace("/Date(", "").replace(")/", ""));
-        if (isNaN(ms)) return "";
-
-        const date = new Date(ms);
-        return date.toLocaleDateString();
-    };
+  
 </script>

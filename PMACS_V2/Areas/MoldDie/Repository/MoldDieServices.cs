@@ -136,6 +136,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             bool isPartNo = !string.IsNullOrWhiteSpace(searchValue)
                             && searchValue.StartsWith("0");
 
+            Debug.WriteLine($@"Input Type : " + isPartNo);
 
             string sql = isPartNo
                 ? @"SELECT 

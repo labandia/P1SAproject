@@ -790,7 +790,6 @@
     <Content Include="Content\font-awesome\css\fontawesome.css" />
     <Content Include="Content\font-awesome\css\fontawesome.min.css" />
     <Content Include="Content\font-awesome\js\all.js" />
-    <Content Include="Content\Uploads\PCFY-81013Form1L.xls" />
     <Content Include="Scripts\all.min.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -998,6 +997,7 @@
     <Content Include="Scripts\Shared\jquery-3.7.1.min.js" />
     <Content Include="Scripts\Shared\jquery-3.7.1.slim.js" />
     <Content Include="Scripts\Shared\jquery-3.7.1.slim.min.js" />
+    <Content Include="Scripts\Shared\MetalMask.js" />
     <Content Include="Scripts\Shared\Utilities.js" />
     <Content Include="Scripts\Shared\Utilities.min.js">
       <DependentUpon>Utilities.js</DependentUpon>
@@ -1020,7 +1020,6 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
-    <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Shared\_Mainlayout.cshtml" />
     <Content Include="Views\P1SAportalweb\Index.cshtml" />
     <Content Include="Views\Error\Unauthorized.cshtml" />

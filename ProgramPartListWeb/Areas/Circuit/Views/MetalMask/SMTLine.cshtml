@@ -4,81 +4,124 @@
     Layout = "~/Areas/Circuit/Views/Shared/_MaskLayout.cshtml";
 }
 
-<!-- Controls Section -->
-<div class="controls-section">
-    <div class="control-group">
-        <label class="control-label">
-            <i class="fas fa-search"></i> Search Partnumber
-        </label>
+
+<div class="SMTGrid_container">
+    <div class="SMT_tables">
+        <!-- Controls Section -->
+        <div class="controls-section">
+            <div class="control-group">
+                <label class="control-label">
+                    <i class="fas fa-search"></i> Search Partnumber
+                </label>
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Enter Partnumber ..." autocomplete="off">
+                </div>
+            </div>
 
 
 
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Enter Partnumber ..." autocomplete="off">
+
+            <div class="control-group">
+                <label class="control-label">
+                    <i class="fas fa-calendar"></i> SMT Line
+                </label>
+                <select id="SMTLine" class="filter-select">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                </select>
+            </div>
+
+
+
+
         </div>
+
+        <hr  style="margin: 0;" />
+      
+        <section class="Maskcardcontainer mt-3" id="Maskcardcontainer"></section>
+
+
+
     </div>
-
-
-
-
-    <div class="control-group">
-        <label class="control-label">
-            <i class="fas fa-calendar"></i> SMT Line
-        </label>
-        <select id="SMTLine" class="filter-select">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-        </select>
-    </div>
-
-
-
-
-</div>
-
-
-<section class="Maskcardcontainer" id="Maskcardcontainer"></section>
-
-
-<div class="modal fade modal-lg" id="OpenSMTlineTime" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-body modalwrap">
-                <div class="custom_modal_header">
-                    <h5>Partnumber  Code :  <span id="letterdisplay"></span> </h5>
-
-                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
-                        <span>&times;</span>
-                    </button>
+    <div class="SMT_Timer">
+        <div class="StopWatchContainer">
+            <div class="StopWatch_header">
+                <h6><i class="fas fa-stopwatch"></i> SMT Line Timer</h6>
+            </div>
+            <div class="StopWatch_Content">
+                <div class="Stopwatchgroup">
+                    <label>Partnumber </label> <br />
+                    <span id="partnumText"> -- N/A -- </span>
                 </div>
 
-                <div class="modal_Content">
-                    <label>Total Print Board </label>
-                    <input type="number" id="TotalPrintBoard" placeholder="Enter Total Print Board" />
-                    <label>Operator </label>
-                    <input type="text" id="SMT_Operator" placeholder="Enter Operator" />
+                <div class="Stopwatchgroup">
+                    <label>Area </label> <br />
+                    <span id="AreaV2Text"> -- N/A -- </span>
+                </div>
 
-                    <div class="flex_align">
-                        <button type="button" id="startbtn">Start Operation</button>
-                        <button type="button" id="endbtn">End</button>
-                        <button type="button" id="saveSMT">SMT END Operation</button>
+                <div class="Stopwatchgroup">
+                    <label>Blocks </label> <br />
+                    <span id="BlockV2Text"> -- N/A -- </span>
+                </div>
+
+                <div class="timercontainer">
+                    <div class="flex_align" style="gap:30px;">
+                        <div class="timerwatchform">
+                            <label><i class="fas fa-play-circle"></i>  Start Time</label>
+                            <p id="StartText">--:--</p>
+                        </div>
+
+                        <div class="timerwatchform">
+                            <label><i class="fas fa-stop-circle"></i> End Time</label>
+                            <p id="EndText">--:--</p>
+                        </div>
+
+
+                        <div class="timerwatchform">
+                            <label><i class="fas fa-hourglass-half"></i>  Total Time</label>
+                            <p id="TotalTimeText">--:--</p>
+                        </div>
+                    </div>
+
+
+                    <div class="flex_align TimeAction">
+                        <button type="button" id="startbtn"> <i class="fas fa-play"></i>Start </button>
+                        <button type="button" id="endbtn">  <i class="fas fa-stop"></i> End </button>
                     </div>
                 </div>
 
+                <hr />
+                <div class="Stopwatchform">
+                    <label>Print Board :</label> <br />
+                    <input type="number" id="TotalPrintBoard" placeholder="Enter Total Print Board" /> <br />
+                </div>
+
+                <div class="Stopwatchform">
+                    <label>Operator name:  </label><br />
+                    <input type="text" id="SMT_Operator" placeholder="Enter Operator" />
+                </div>
+
+                    
+
+                    <button type="button" id="saveSMT" disabled><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                </div>
             </div>
-        </div>
     </div>
 </div>
+
+
+
+
 
 
 
@@ -86,12 +129,14 @@
 <script>
     let selectedID = 0;
     const activeTimers = [];
+    let SMTData = [];
     const startbtn = document.getElementById("startbtn");
     const endbtn = document.getElementById("endbtn");
     const saveSMT = document.getElementById("saveSMT");
+    let selectedTimer = null;
 
 
-  
+
 
     saveSMT.addEventListener('click', async function (e) {
           e.preventDefault();
@@ -105,9 +150,16 @@
           let res = await postData('@Url.Action("FinalSubmitSMTLineinfo", "MetalMask")', formdata);
           if (res?.Success) {
               GetMetalMaskTransaction();
+              GetTheTotalCount();
+
+              $("#partnumText").text("-- N/A --");
+              $("#AreaV2Text").text("-- N/A --");
+              $("#BlockV2Text").text("-- N/A --");
+              $("#StartText").text("--:--");
+              $("#EndText").text("--:--");
+              $("#TotalTimeText").text("--:--");
               $("#TotalPrintBoard").val("");
               $("#SMT_Operator").val("");
-              $("#OpenSMTlineTime").modal('hide');
           }
 
      });
@@ -121,8 +173,35 @@
 
          let res = await postData('@Url.Action("StartSMTOperation", "MetalMask")', formdata);
          if (res?.Success) {
+            $("#startbtn").prop("disabled", false);
+            $("#endbtn").prop("disabled", true);
+
+             // ▶ Set start time
+             const startTime = timeNow();
+             $("#StartText").text(startTime);
+             $("#EndText").text("--:--");
+             $("#TotalTimeText").text("00:00");
+
+
+             // ❌ Stop old timer
+             if (selectedTimer) clearInterval(selectedTimer);
+
+             // ▶ Start stopwatch immediately
+             const startDate = new Date();
+             startDate.setSeconds(0, 0);
+
+             selectedTimer = setInterval(() => {
+                 const now = new Date();
+                 let diffMin = Math.floor((now - startDate) / 60000);
+                 if (diffMin < 0) diffMin = 0;
+
+                 $("#TotalTimeText").text(formatDuration(diffMin));
+             }, 1000);
+
+
              GetMetalMaskTransaction();
-             $("#OpenSMTlineTime").modal('hide');
+
+
          }
 
     });
@@ -131,12 +210,28 @@
         e.preventDefault();
          let formdata = new FormData();
          formdata.append('ID', selectedID);
-
+        $("#startbtn").prop("disabled", true);
+        $("#endbtn").prop("disabled", true);
+        GetMetalMaskTransaction();
          let res = await postData('@Url.Action("EndSMTOperation", "MetalMask")', formdata);
          if (res?.Success) {
              GetMetalMaskTransaction();
-             $("#OpenSMTlineTime").modal('hide');
+             $('#TotalPrintBoard').focus();
+
+             $("#EndText").text(timeNow());
          }
+    });
+
+    $("#SMT_Operator").on('keyup', function () {
+        let textType = $(this).val().trim();
+
+        if (textType === "" && selectedID === 0) {
+            $("#saveSMT").prop("disabled", false);
+
+        } else {
+            $("#saveSMT").prop("disabled", true);
+        }
+
     });
 
     const GetMetalMaskTransaction = async () => {
@@ -151,40 +246,40 @@
         if (res?.Success) {
 
              let TableData = res.Data;
+             SMTData = TableData;
              let html = "";
 
              res.Data.forEach(rowData => {
 
-                html += `
-                        <div class="Maskcard" data-id="${rowData.RecordID}">
-                            <div class="MaskHeader">
-                                <h5>Metal mask rev partnum : <span>${rowData.Partnumber}</span></h5>
+                 html += `<div class="Maskcard" data-id="${rowData.RecordID}">
+                        <div class="MaskHeader">
+                            <h5>Metal mask rev partnum : <span>${rowData.Partnumber}</span></h5>
+                        </div>
+
+                        <div class="MaskContent">
+                            <div><label>SMT Line</label><p>${rowData.SMTLine}</p></div>
+                            <div><label>Area</label><p>${rowData.AREA}</p></div>
+                            <div><label>Shift</label><p>${rowData.Shift != false ? "DS" : "NS"}</p></div>
+                            <div><label>Blocks</label><p>${rowData.Blocks}</p></div>
+                        </div>
+
+                        <div class="MaskContent">
+                            <div>
+                                <label>Start Time</label>
+                                 <p>${rowData.SMT_start === "00:00" ? "--:--" : rowData.SMT_start}</p>
                             </div>
 
-                            <div class="MaskContent">
-                                <div><label>SMT Line</label><p>${rowData.SMTLine}</p></div>
-                                <div><label>Area</label><p>${rowData.AREA}</p></div>
-                                <div><label>Shift</label><p>${rowData.Shift != false ? "DS" : "NS"}</p></div>
-                                <div><label>Blocks</label><p>${rowData.Blocks}</p></div>
+                            <div>
+                                <label>End Time</label>
+                               <p>${rowData.SMT_end === "00:00" ? "--:--" : rowData.SMT_end}</p>
                             </div>
 
-                            <div class="MaskContent">
-                                <div>
-                                    <label>Start Time</label>
-                                     <p>${rowData.SMT_start === "00:00" ? "--:--" : rowData.SMT_start}</p>
-                                </div>
-
-                                <div>
-                                    <label>End Time</label>
-                                   <p>${rowData.SMT_end === "00:00" ? "--:--" : rowData.SMT_end}</p>
-                                </div>
-
-                                <div>
-                                    <label>Total Time</label>
-                                      <p class="total-time">${rowData.TotalTimeHHMM}</p>
-                                </div>
+                            <div>
+                                <label>Total Time</label>
+                                  <p class="total-time">${rowData.TotalTimeHHMM}</p>
                             </div>
-                        </div>`;
+                        </div>
+                    </div>`;
             });
 
             $("#Maskcardcontainer").append(html);
@@ -216,13 +311,49 @@
          CLICK HANDLER
         ============================ */
 
+
     document.addEventListener("click", e => {
         const card = e.target.closest(".Maskcard");
         if (!card) return;
+        $("#startbtn").prop("disabled", false);
+        $("#endbtn").prop("disabled", false);
 
         selectedID = card.dataset.id;
-        $("#OpenSMTlineTime").modal('show');
+        let filterData = SMTData.find(res => res.RecordID == selectedID);
+        console.log(filterData);
+
+        // ❌ stop previous stopwatch
+        if (selectedTimer) clearInterval(selectedTimer);
+
+        if (filterData) {
+            $("#partnumText").text(filterData.Partnumber);
+            $("#AreaV2Text").text(filterData.AREA);
+            $("#BlockV2Text").text(filterData.Blocks);
+            $("#StartText").text(filterData.SMT_start === "00:00" ? "--:--" : filterData.SMT_start);
+            $("#EndText").text(filterData.SMT_end === "00:00" ? "--:--" : filterData.SMT_end);
+            $("#TotalTimeText").text(filterData.TotalTimeHHMM === "00:00" ? "--:--" : filterData.TotalTimeHHMM);
+
+            if (filterData.SMT_start !== "00:00" && filterData.SMT_end === "00:00") {
+                $("#startbtn").prop("disabled", true);
+                $("#endbtn").prop("disabled", false);
+
+                startSelectedStopwatch(formatJsonDate(filterData.DateInput), filterData.SMT_start);
+
+                return;
+            }
+
+
+            if (filterData.TotalTimeHHMM !== "00:00") {
+                $("#startbtn").prop("disabled", true);
+                $("#endbtn").prop("disabled", true);
+                $('#TotalPrintBoard').focus();
+                return;
+            }
+        }
     });
+
+    $("#startbtn").prop("disabled", true);
+    $("#endbtn").prop("disabled", true);
 
     GetMetalMaskTransaction();
 
@@ -245,7 +376,16 @@
         );
     }
 
+    function timeNow() {
+        const now = new Date();
+        const hh = String(now.getHours()).padStart(2, '0');
+        const mm = String(now.getMinutes()).padStart(2, '0');
 
+        const time = `${hh}:${mm}`;
+        console.log(time);
+
+        return time;
+    }
 
     function parseTime(dateInput, timeStr) {
         const d = new Date(dateInput);
@@ -293,5 +433,24 @@
     }
 
 
+    function startSelectedStopwatch(dateInput, smtStart) {
+
+        // stop old timer
+        if (selectedTimer) clearInterval(selectedTimer);
+
+        const startDate = buildStartDate(dateInput, smtStart);
+
+        function update() {
+            const now = new Date();
+            let diffMin = Math.floor((now - startDate) / 60000);
+            if (diffMin < 0) diffMin = 0;
+
+            const formatted = formatDuration(diffMin);
+            $("#TotalTimeText").text(formatted);
+        }
+
+        update();
+        selectedTimer = setInterval(update, 1000);
+    }
 
 </script>

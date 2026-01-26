@@ -95,7 +95,7 @@
          }
     });
 
-   const GetMetalMaskTransaction = async () => {
+   const GetMetalMaskTransactionV2 = async () => {
        let res = await fetchData('@Url.Action("GetMetalMaskInformation", "MetalMask")', { Stats: 2 });
         console.log(res);
        if (res?.Success) {
@@ -143,7 +143,7 @@
     });
 
 
-    GetMetalMaskTransaction();
+    GetMetalMaskTransactionV2();
 
   
 </script>

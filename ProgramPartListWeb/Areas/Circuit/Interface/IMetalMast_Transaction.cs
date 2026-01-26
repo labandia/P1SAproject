@@ -18,6 +18,9 @@ namespace ProgramPartListWeb.Areas.Circuit.Interface
 
         Task<MetalMaskTransaction> GetMetalMaskTransacDetails(int RecordID);
 
+        Task<MetalMasKCountTransact> GetTheTotalCount();
+
+
         Task<bool> StartOperation(int ID);
         Task<bool> EndOperation(int ID);
 

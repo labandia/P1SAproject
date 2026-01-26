@@ -394,16 +394,14 @@
                       <td>${row.PreviousQuantity}</td>
                       <td>${row.Quantity}</td>
                       <td>${row.Remarks}</td>
-                      <td>
-                          <div style='display: flex; align-items: center; column-gap: 5px;'>
-                             <button type='button' class='btn actionicon text-primary EditToolClick' id='editButton_${row.TransactionID}' >
-                                <i class='fa-regular fa-pen-to-square action_btn'></i>
-                             </button>
+                      <td>                   
+                           <button type='button' class='actionicon text-primary EditToolClick' id='editButton_${row.TransactionID}' >
+                              <i class='fa-regular fa-pen-to-square action_btn'></i>
+                           </button>
 
-                             <button type='button' class='btn actionicon text-danger deleteButton' id='deleteButton_${row.TransactionID}' >
-                                <i class='fa-regular fa-trash-can action_btn'></i>
-                             </button>
-                          </div>
+                             <button type='button' class='actionicon text-danger deleteButton' id='deleteButton_${row.TransactionID}' >
+                               <i class='fa-regular fa-trash-can action_btn'></i>
+                            </button>
                       </td>
                   </tr>;`
 

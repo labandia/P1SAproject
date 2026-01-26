@@ -74,4 +74,10 @@ namespace ProgramPartListWeb.Areas.Circuit.Models
     }
 
 
+    public class MetalMasKCountTransact
+    {
+        public int SMTCount { get; set; }
+        public int TensionCount { get; set; }
+    }
+
 }

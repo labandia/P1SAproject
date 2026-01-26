@@ -75,6 +75,15 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
             return JsonSuccess(result);
         }
 
+        [HttpGet]
+        public async Task<ActionResult> GetMetalMaskCurrentCount()
+        {
+            var data = await _trans.GetTheTotalCount();
+
+            if (data == null) return JsonNotFound("No Count Data.");
+            return JsonSuccess(data);
+        }
+
 
         [HttpPost]
         public async Task<ActionResult> SubmitMetalMaskInfo(MetalMaskTransaction metal)

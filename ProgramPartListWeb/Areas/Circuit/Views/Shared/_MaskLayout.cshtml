@@ -30,9 +30,10 @@
 
 
             <nav class="nav-links">
+                <a href="/Circuit/MetalMask/SMTLine" class="nav-link" data-en="SMT"><span class="tab-badge" id="SMTcount">0</span> SMT Line</a>
+                <a href="/Circuit/MetalMask/Cleaning" class="nav-link" data-en="Cleaning"><span class="tab-badge" id="Tension">0</span> Tension & Cleaning</a>
                 <a href="/Circuit/MetalMask/History" class="nav-link" data-en="History">Daily Summary </a>
-                <a href="/Circuit/MetalMask/SMTLine" class="nav-link" data-en="SMT"><span class="tab-badge" id="config-badge">0</span> SMT Line</a>
-                <a href="/Circuit/MetalMask/Cleaning" class="nav-link" data-en="Cleaning"><span class="tab-badge" id="config-badge">0</span> Tension & Cleaning</a>
+
                 <button type="button" id="OpenMetal"><i class="fa-solid fa-plus"></i>Add Metal Mask</button>
 
             </nav>
@@ -48,7 +49,7 @@
 
 
     @*=================================================================================*@
-    @*=========================== ADD NEW INSPECTORS ==================================*@
+    @*=========================== ADD METAL MASK INFO ==================================*@
     @*=================================================================================*@
     <div class="modal fade modal-l" id="AddProductModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -56,7 +57,7 @@
 
                 <div class="modal-body modalwrap">
                     <div class="custom_modal_header">
-                        <h5>Add Inspectors</h5>
+                        <h5>Add Metal Mask Info</h5>
 
                         <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
                             <span>&times;</span>
@@ -64,39 +65,47 @@
                     </div>
 
 
-                    <form method="post" enctype="multipart/form-data" class="addformcontainer" id="addnewform" autocomplete="off">
+                    <form method="post" enctype="multipart/form-data" class="addformcontainer" id="addMaskform" autocomplete="off">
+                        <div class="form_group col-12 col-sm-12 col-lg-12">
+                            <label>
+                                Part number
+                                <i class="fa-solid fa-circle-check" style="color: #33C9BB;" id="CheckID"></i>
+                                <i class="fa-solid fa-circle-xmark" style="color: #FF2C2C;" id="WrongID"></i>
+                            </label>
+                            <input type="text" placeholder="Scan or Type Manually input" name="Partnumber" id="PartSearch" required>
+                        </div>
+
                         <div class="row">
-                            @*<div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
-                                    <label>Employee ID </label> <br />
-                                    <input type="text" placeholder="type Employee ID" name="Employee_ID" id="Employee_ID" required />
-                                    <small class="text-danger" id="Noemployee"></small>
-                                </div>*@
-                            <div class="form_group col-12 col-sm-12 col-lg-12 mb-2">
-                                <label>Employee Name  <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
-                                @*<input type="text" placeholder="N/A" name="Fullname" id="Fullname" />*@
-                                <div class="search-box">
-                                    <input type="hidden" name="Employee_ID" id="Employee_ID">
-                                    <input type="text" placeholder="Type Name or ID no." name="EmployeeSearch" id="EmployeeSearch" required>
-                                    <div class="namesdisplay"></div>
-                                </div>
+                            <div class="form_group col-6 col-sm-6 ">
+                                <label>Area </label>
+                                <input type="text" placeholder="-- N/A --" name="AREA" id="AreaText" readonly />
+                            </div>
+
+                            <div class="form_group col-6 col-sm-6">
+                                <label>Block  </label>
+                                <input type="text" placeholder="-- N/A --" name="Blocks" id="BlockText" readonly />
                             </div>
                         </div>
-                        <div class="form_group col-12 col-sm-12">
-                            <label>OJT Registration No.  <small style="color: #a81818; font-weight: 600;">*</small></label>
-                            <input type="text" placeholder="type Ojt registration No." name="OJTRegistration" id="OJTRegistration" required />
-                        </div>
 
-                        <div class="form_group col-12 col-sm-12 ">
-                            <label>Date Qualified <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
-                            <input type="date" placeholder="Select Date Qualified" name="DateQualified" id="DateQualified" required />
-                        </div>
+
 
                         <div class="form_group col-12 col-sm-12">
-                            <label>Remarks  </label> <br />
-                            <textarea placeholder="Type any remarks" name="Remarks" id="Remarks" rows="3" cols="50" required></textarea>
+                            <label>Select SMT Line  <small style="color: #a81818; font-weight: 600;">*</small></label>
+                            <select id="SMTLine" name="SMTLine" class="filter-select">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                            </select>
                         </div>
-
-
 
                         <div class="d-flex justify-content-between align-items-center mt-4">
                             <div>
@@ -112,11 +121,170 @@
     </div>
 
 
+
+    <div class="modal fade modal-m" id="OpenDuplicatePartnum" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body modalwrap">
+                    <div class="custom_modal_header">
+                        <h5>Partnumber  Code :  <span id="letterdisplay"></span> </h5>
+
+                        <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+
+                    <table>
+                        <tr>
+                            <th align="left">Area</th>
+                            <th align="left">Side</th>
+                            <th align="left">Thickness</th>
+                            <th align="left">Blocks</th>
+                        </tr>
+                        <tbody id="DuplicatePartnum">
+                        </tbody>
+                    </table>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+
     <script>
+        const searchInput = document.getElementById('PartSearch');
+        const maskform = document.getElementById('addMaskform');
+
+        $("#CheckID").hide();
+        $("#WrongID").hide();
+        $("#SMTcount").hide();
+        $("#Tension").hide();
+
+        let refreshData = 0;
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var currentUrl = window.location.pathname.toLowerCase();
+            document.querySelectorAll(".nav-link").forEach(function (link) {
+                if (link.getAttribute("href").toLowerCase() === currentUrl) {
+                    link.classList.add("active");
+
+                    let actionpage = currentUrl.substring(currentUrl.lastIndexOf("/") + 1);
+
+                    refreshData = (actionpage === "smtline") ? 1 : 0;
+
+                }
+            });
+        });
+
+
         $("#OpenMetal").on('click', function (e) {
             e.preventDefault();
             $("#AddProductModal").modal("show");
         });
+
+        maskform.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            let formdata = new FormData(e.target);
+            const data = Object.fromEntries(formdata);
+            let res = await postData('@Url.Action("SubmitMetalMaskInfo", "MetalMask")', formdata);
+            if (res?.Success) {
+                if (refreshData == 1) {
+                    GetMetalMaskTransaction();
+                }
+                GetTheTotalCount();
+
+                $("#PartSearch").val("");
+                $("#AreaText").val("-- N/A --");
+                $("#BlockText").val("-- N/A --");
+                $("#AddProductModal").modal("hide");
+            }
+
+        })
+
+        searchInput.addEventListener('keyup', function (e) {
+            if (e.key === 'Enter') {
+                $("#CheckID").hide();
+                $("#WrongID").hide();
+                const searchValue = e.target.value;
+                MetalMaskSearch(searchValue);
+            }
+        });
+
+
+         // ================= SEARCH FUNCTION ================ //
+         async function MetalMaskSearch(partnum) {
+             let res = await fetchData('@Url.Action("SearchMetalMaskPartnum", "MetalMask")', { Partnumber: partnum });
+
+             if (res?.Success) {
+                 let tableData = res.Data;
+                 $("#CheckID").show();
+                 $("#WrongID").hide();
+                 $("#PartSearch").css("border", "1px solid #33C9BB");
+                 $("#PartSearch").css("outline", "none");
+
+                 if (tableData.length > 1) {
+                     // Show a Dialog if the partnumber has same
+                     $("#DuplicatePartnum").empty();
+
+                     tableData.forEach((row, index) => {
+                         var setdata = `<tr class="fade-in">
+                              <td>${row.AREA}</td>
+                              <td>${row.Side}</td>
+                              <td>${row.Thickness}</td>
+                              <td>${row.Blocks}</td>
+                          </tr>;`
+
+                         $("#DuplicatePartnum").append(setdata);
+                     });
+
+                     $("#OpenDuplicatePartnum").modal("show");
+                 } else {
+                     $("#AreaText").val(tableData[0].AREA);
+                     $("#BlockText").val(tableData[0].Blocks);
+                 }
+             } else {
+                 $("#CheckID").hide();
+                 $("#WrongID").show();
+                 $("#PartSearch").css("outline", "none");
+                 $("#PartSearch").val("");
+                 $("#AreaText").val("-- N/A --");
+                 $("#BlockText").val("-- N/A --");
+                 $("#PartSearch").css("border", "1px solid #FF2C2C");
+             }
+        }
+
+
+
+        const GetTheTotalCount = async () => {
+            let res = await fetchData('@Url.Action("GetMetalMaskCurrentCount", "MetalMask")');
+            if (res?.Success) {
+                $("#SMTcount").show();
+                $("#Tension").show();
+
+                let counts = res.Data;
+                console.log(counts.SMTCount);
+
+                if (counts.SMTCount !== 0) {
+                    $("#SMTcount").text(counts.SMTCount);
+                } else {
+                    $("#SMTcount").hide();
+                }
+
+
+                if (counts.TensionCount !== 0) {
+                    $("#Tension").text(counts.TensionCount);
+                } else {       
+                    $("#Tension").hide();
+                }
+            } 
+        }
+
+        GetTheTotalCount();
     </script>
 </body>
 </html>

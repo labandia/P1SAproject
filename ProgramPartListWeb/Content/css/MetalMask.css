@@ -66,10 +66,10 @@ body{
     padding: 1em;
 }
 
-.Maskcardcontainer {
+/*.Maskcardcontainer {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-}
+}*/
 /* ============= BOX INPUT =============== */
 /* Controls Section */
 .controls-section {
@@ -85,7 +85,6 @@ body{
         .control-group {
             display: flex;
             flex-direction: column;
-            gap: 8px;
         }
         .control-group input{
             width: 100%;
@@ -185,9 +184,9 @@ body{
 
 
 .Maskcardcontainer {
-    display: grid;
+/*    display: grid;
     grid-template-columns: repeat(auto-fit, minmax(20%, 1fr));
-    gap: 30px;
+    gap: 30px;*/
 }
 
 .Maskcard {
@@ -221,4 +220,163 @@ body{
     padding: 1em 1.5em;
     background: #4361ee;
     color: #fff;
+}
+
+
+.custom_modal_header h5{
+    font-weight: 600;
+    margin: 0;
+}
+
+.addformcontainer {
+    padding: .5em;
+}
+
+.addformcontainer .form_group{
+    margin-bottom: .5em;
+}
+
+.addformcontainer h5, .addformcontainer label {
+    font-weight: 500;
+    color: #222;
+}
+
+
+    .addformcontainer input, .addformcontainer textarea {
+        width: 100%;
+        margin: .2em 0 .5em 0;
+        border: 1px solid #A5A1AA;
+        padding: .5em 1em;
+        font-size: .935rem;
+        border-radius: .3em;
+    }
+
+ .addformcontainer input:focus {
+         outline: 1px solid #4361ee;
+}
+
+ .addformcontainer .primarybtn{
+     background: #4361ee;
+     padding: .5em 1.5em;
+     border-radius: .2em;
+     color: #fff;
+     transition: .5s ease;
+ }
+
+  .addformcontainer .primarybtn:hover{
+     background: hsl(248, 65%, 44%);
+ }
+
+.SMTGrid_container{
+    display:grid;
+    grid-template-columns: 1fr 30%;
+    gap: 30px;
+}
+
+.StopWatchContainer {
+    margin-top: 1.5em;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    border-radius: .5em .5em 0 0;
+}
+
+.StopWatch_header {
+    background: #4361ee;
+    padding: 1.2em 1.5em;
+    border-radius: .5em .5em 0 0;
+    color: #fff;
+    font-weight: 500;
+}
+.StopWatch_Content{
+    padding: 1.2em 1.5em 1.5em;
+}
+
+.StopWatch_header h2 {
+    font-weight: 500;
+}
+
+
+.TimeAction {
+    margin-top: 1em;
+}
+
+.TimeAction button{
+    width: 100%;
+    padding: .6em 1.5em;
+    border-radius: .5em;
+    border: 1px solid rgba(67, 97, 238, 0.15);
+}
+
+    .TimeAction button:disabled {
+        background: #cccccc !important;
+        color: #848484 !important;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+.TimeAction #startbtn{
+    background: #0f766e;
+    color: #fff;
+}
+.TimeAction #endbtn{
+    background: #ff2c2c; 
+    color: #fff;
+}
+
+.StopWatch_Content #saveSMT{
+    background: #4361ee;
+    width: 100%;
+    padding: 1em 1em;
+    border-radius: .2em;
+    color: #fff;
+    margin-top: 1.5em;
+}
+
+.StopWatch_Content #saveSMT:disabled{
+      background: #cccccc !important;
+        color: #848484 !important;
+        cursor: not-allowed;
+        transform: none;
+}
+
+.Stopwatchform{
+    margin-bottom: 1em;
+}
+
+.Stopwatchform label, .timerwatchform label{
+    font-weight: 600;
+}
+.timercontainer {
+    border: 1px solid #cbd5e1;
+    padding: 1em;
+    border-radius: .2em;
+}
+.timercontainer label{
+    font-size: .8rem;
+}
+
+.Stopwatchform input {
+    width: 100%;
+    padding: .5em 1em;
+    border: 1px solid #cbd5e1;
+    border-radius: .5em;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background-color: white;
+}
+
+.Stopwatchform input:focus {
+    outline: none;
+    border-color: #4361ee;
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+}
+
+
+
+.control-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #334155;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }

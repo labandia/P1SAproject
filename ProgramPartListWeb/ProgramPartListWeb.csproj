@@ -691,11 +691,9 @@
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\ExtendController.cs" />
     <Compile Include="Controllers\P1SAportalwebController.cs" />
-    <Compile Include="Controllers\StockController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Interfaces\IAuthRepository.cs" />
     <Compile Include="Interfaces\ICRUD_Repository.cs" />
-    <Compile Include="Interfaces\IStockClient.cs" />
     <Compile Include="Models\SignatureModel.cs" />
     <Compile Include="Repository\AuthRepository.cs" />
     <Compile Include="Repository\CRUD_Repository.cs" />
@@ -712,6 +710,7 @@
     </Compile>
     <Compile Include="signalr\hubs\MyHub1.cs" />
     <Compile Include="Utilities\Common\ResultMessageResponce.cs" />
+    <Compile Include="Utilities\DataAccess\NetworkHelper.cs" />
     <Compile Include="Utilities\DataAccess\NetworkShareAccesser.cs" />
     <Compile Include="Utilities\Security\AesEncryption.cs" />
     <Compile Include="Utilities\Caching\CacheHelper.cs" />

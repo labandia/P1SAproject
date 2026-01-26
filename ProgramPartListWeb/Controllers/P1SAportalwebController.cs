@@ -126,31 +126,17 @@ namespace ProgramPartListWeb.Controllers
         }
 
 
-        public ActionResult ReadExcel()
+        public JsonResult GetClientInfo()
         {
-            string networkFolder = @"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\PatrolCountermeasure";
-            string fileName = "CM_250812_20250812_171539.xlsx";
-            string fullPath = Path.Combine(networkFolder, fileName);
+            string ip = Request.UserHostAddress;
+            string hostName = Request.ServerVariables["REMOTE_HOST"];
 
-            string networkUser = @"Jaye-labandia";   // ← Put your network account
-            string networkPass = "p1saprocess@19";                  // ← Put password here
-
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-
-            // Connect to the network share
-            using (NetworkShareAccesser.Access(networkFolder, networkUser, networkPass))
+            return Json(new
             {
-                if (!System.IO.File.Exists(fullPath))
-                    return Content("Excel file not found in network folder.");
-
-                using (var package = new ExcelPackage(new FileInfo(fullPath)))
-                {
-                    var sheet = package.Workbook.Worksheets[0];
-                    string value = sheet.Cells["A1"].Text;
-
-                    return Content("Cell A1 Value: " + value);
-                }
-            }
+                User = User.Identity.Name,
+                IP = ip,
+                HostName = hostName
+            }, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -160,6 +146,14 @@ namespace ProgramPartListWeb.Controllers
         public ActionResult GuideInstall() => View();
 
         public ActionResult SampleView() => View();
-        public ActionResult Chat() => View();
+        public ActionResult Chat()
+        {
+            var domainInfo = NetworkHelper.GetDomainInfo(Request);
+
+            ViewBag.HostName = domainInfo.HostName;
+            ViewBag.ServerIPs = string.Join(", ", domainInfo.ServerIPs);
+
+            return View();
+        }
     }
 }

@@ -180,14 +180,14 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
         {
             bool update = await _dieV2.AddUpdateDailySerialMoldie(add);
             if (!update) return JsonValidationError();
-            return JsonCreated(update, "Update Data Successfully");
+            return JsonCreated(update, "Update Die Serial Successfully");
         }
 
         [HttpPost]
         public async Task<ActionResult> DeleteDailyMoldDieMonitor(int ID)
         {
-            //bool update = await _die.DeleteDailyMoldie(ID);
-            //if (!update) return JsonValidationError();
+            bool update = await _dieV2.DeleteDailyMoldie(ID);
+            if (!update) return JsonValidationError();
             return JsonCreated(ID, "Delete Data Successfully");
         }
         [HttpPost]
@@ -325,18 +325,18 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
 
 
 
-        public async Task<ActionResult> LoadMoldDieToolingView()
-        {
-            //var data = await _dieV2.GetMoldToolingData() ?? new List<DieMoldToolingModelDisplay>();
+        //public async Task<ActionResult> LoadMoldDieToolingView()
+        //{
+        //    //var data = await _dieV2.GetMoldToolingData() ?? new List<DieMoldToolingModelDisplay>();
 
-            //var model = new RequestData<DieMoldToolingModelDisplay>
-            //{
-            //    Items = data,
-            //    Page = 1,
-            //    TotalPages = 1,
-            //};
+        //    //var model = new RequestData<DieMoldToolingModelDisplay>
+        //    //{
+        //    //    Items = data,
+        //    //    Page = 1,
+        //    //    TotalPages = 1,
+        //    //};
 
-            return PartialView("_ToolingTable", null);
-        }
+        //    return PartialView("_ToolingTable", null);
+        //}
     }
 }

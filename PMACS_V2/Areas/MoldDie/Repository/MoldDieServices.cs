@@ -769,17 +769,17 @@ namespace PMACS_V2.Areas.MoldDie.Repository
 
         public async Task<bool> AddUpdateDailySerialMoldie(DieMoldMonitoringModel mold)
         {
-           
-            string lastDate = mold.DateInput
-               .Date
-               .AddDays(-1)
-               .ToString("MM/dd/yyyy");
+
+            DateTime lastDate = mold.DateInput.Date.AddDays(-1);
+            DateTime currentDate = mold.DateInput.Date;
+
 
             string getlastCycle = $@"SELECT TOP 1 d.CycleShot
                                      FROM DieMold_Daily d 
                                     INNER JOIN DieMold_MoldingMainParts p
                                     ON d.PartNo = p.PartNo
-                                    WHERE p.DieSerial = @DieSerial AND CAST(d.DateInput AS DATE) = CAST(@DateInput  AS DATE);";
+                                    WHERE p.DieSerial = @DieSerial AND 
+                                    CAST(d.DateInput AS DATE) = CAST(@DateInput  AS DATE);";
 
             int lastCycle = await SqlDataAccess.GetCountData(getlastCycle,
                            new
@@ -793,6 +793,9 @@ namespace PMACS_V2.Areas.MoldDie.Repository
 
             Debug.WriteLine("Last Cycle : " + lastCycle);
 
+            // =========================
+            // 2️⃣ Update daily table
+            // =========================
             string dailyUpdate = @"UPDATE d
                                     SET 
 	                                      d.CycleShot = @CycleShot,
@@ -805,14 +808,13 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                                         ON d.PartNo = p.PartNo
                                     WHERE p.DieSerial = @DieSerial AND CAST(d.DateInput AS DATE) = CAST(@DateInput  AS DATE);";
 
-            string CurrentDate = mold.DateInput.Date.ToString("MM/dd/yyyy");
 
 
             var parameters = new
             {
                 DieSerial = mold.DieSerial,
                 Total = newCycle, 
-                DateInput = CurrentDate,
+                DateInput = currentDate,
                 CycleShot = mold.CycleShot,
                 MachineNo = mold.MachineNo,
                 Remarks = mold.Remarks,
@@ -823,6 +825,9 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             if (!dailyUpdated) return false;
 
 
+            // =========================
+            // 3️⃣ Update / Insert monitor table
+            // =========================
             string monitorUpdate = @"
                UPDATE d
                 SET d.TotalDie = @TotalDie

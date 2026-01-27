@@ -26,18 +26,10 @@
                     <i class="fas fa-calendar"></i> SMT Line
                 </label>
                 <select id="SMTLine" class="filter-select">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                    <option value="11">11</option>
-                    <option value="12">12</option>
+                    @for (int i = 1; i <= 12; i++)
+                    {
+                        <option value="@i">Line @i</option>
+                    }
                 </select>
             </div>
 
@@ -59,44 +51,51 @@
                 <h6><i class="fas fa-stopwatch"></i> SMT Line Timer</h6>
             </div>
             <div class="StopWatch_Content">
-                <div class="Stopwatchgroup">
-                    <label>Partnumber </label> <br />
-                    <span id="partnumText"> -- N/A -- </span>
-                </div>
-
-                <div class="Stopwatchgroup">
-                    <label>Area </label> <br />
-                    <span id="AreaV2Text"> -- N/A -- </span>
-                </div>
-
-                <div class="Stopwatchgroup">
-                    <label>Blocks </label> <br />
-                    <span id="BlockV2Text"> -- N/A -- </span>
+                <!-- Selected Operation Info -->
+                <div class="selected-operation">
+                    <div class="operation-header">
+                        <h4 id="partnumText">-- Select Operation --</h4>
+                        <span class="operation-badge" id="operationBadge">IDLE</span>
+                    </div>
+                    <div class="operation-details">
+                        <div class="detail-item">
+                            <label><i class="fas fa-map-marker-alt"></i> Area</label>
+                            <span id="AreaV2Text">--</span>
+                        </div>
+                        <div class="detail-item">
+                            <label><i class="fas fa-cube"></i> Blocks</label>
+                            <span id="BlockV2Text">--</span>
+                        </div>
+                        <div class="detail-item">
+                            <label><i class="fas fa-industry"></i> Line</label>
+                            <span id="lineText">--</span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="timercontainer">
                     <div class="flex_align" style="gap:30px;">
                         <div class="timerwatchform">
-                            <label><i class="fas fa-play-circle"></i>  Start Time</label>
+                            <label>  Start Time</label>
                             <p id="StartText">--:--</p>
                         </div>
 
                         <div class="timerwatchform">
-                            <label><i class="fas fa-stop-circle"></i> End Time</label>
+                            <label> End Time</label>
                             <p id="EndText">--:--</p>
                         </div>
 
 
                         <div class="timerwatchform">
                             <label><i class="fas fa-hourglass-half"></i>  Total Time</label>
-                            <p id="TotalTimeText">--:--</p>
+                            <p id="TotalTimeText">00:00</p>
                         </div>
                     </div>
 
 
                     <div class="flex_align TimeAction">
-                        <button type="button" id="startbtn"> <i class="fas fa-play"></i>Start </button>
-                        <button type="button" id="endbtn">  <i class="fas fa-stop"></i> End </button>
+                        <button type="button" id="startbtn"> <i class="fas fa-play"></i> </button>
+                        <button type="button" id="endbtn">  <i class="fas fa-stop"></i>  </button>
                     </div>
                 </div>
 
@@ -111,10 +110,10 @@
                     <input type="text" id="SMT_Operator" placeholder="Enter Operator" />
                 </div>
 
-                    
 
-                    <button type="button" id="saveSMT" disabled><i class="fa-regular fa-floppy-disk"></i> Save</button>
-                </div>
+
+                <button type="button" id="saveSMT" disabled><i class="fa-regular fa-floppy-disk"></i> Save</button>
+            </div>
             </div>
     </div>
 </div>
@@ -133,6 +132,9 @@
     const startbtn = document.getElementById("startbtn");
     const endbtn = document.getElementById("endbtn");
     const saveSMT = document.getElementById("saveSMT");
+
+    const operationBadge = document.getElementById('operationBadge');
+
     let selectedTimer = null;
 
 
@@ -157,75 +159,98 @@
               $("#BlockV2Text").text("-- N/A --");
               $("#StartText").text("--:--");
               $("#EndText").text("--:--");
-              $("#TotalTimeText").text("--:--");
+              $("#TotalTimeText").text("00:00");
               $("#TotalPrintBoard").val("");
               $("#SMT_Operator").val("");
           }
-
+          updateOperationStatus(2);
      });
 
 
     startbtn.addEventListener('click', async function (e) {
         e.preventDefault();
 
-         let formdata = new FormData();
-         formdata.append('ID', selectedID);
+        if (!selectedID) {
+            alert('Please select an operation first');
+            return;
+        }
 
-         let res = await postData('@Url.Action("StartSMTOperation", "MetalMask")', formdata);
-         if (res?.Success) {
-            $("#startbtn").prop("disabled", false);
-            $("#endbtn").prop("disabled", true);
+        try {
+            let formdata = new FormData();
+            formdata.append('ID', selectedID);
 
-             // ▶ Set start time
-             const startTime = timeNow();
-             $("#StartText").text(startTime);
-             $("#EndText").text("--:--");
-             $("#TotalTimeText").text("00:00");
+            const res = await postData('@Url.Action("StartSMTOperation", "MetalMask")', formdata);
 
+            if (res?.Success) {
+                $("#startbtn").prop("disabled", true);
+                $("#endbtn").prop("disabled", false);
 
-             // ❌ Stop old timer
-             if (selectedTimer) clearInterval(selectedTimer);
-
-             // ▶ Start stopwatch immediately
-             const startDate = new Date();
-             startDate.setSeconds(0, 0);
-
-             selectedTimer = setInterval(() => {
-                 const now = new Date();
-                 let diffMin = Math.floor((now - startDate) / 60000);
-                 if (diffMin < 0) diffMin = 0;
-
-                 $("#TotalTimeText").text(formatDuration(diffMin));
-             }, 1000);
+                // ▶ Set start time
+                const startTime = timeNow();
+                $("#StartText").text(startTime);
+                $("#EndText").text("--:--");
+                $("#TotalTimeText").text("00:00");
 
 
-             GetMetalMaskTransaction();
+                updateOperationStatus(1);
+                if (selectedTimer) clearInterval(selectedTimer);
+
+                // ▶ Start stopwatch immediately
+                const startDate = new Date();
+                startDate.setSeconds(0, 0);
+
+                selectedTimer = setInterval(() => {
+                    const now = new Date();
+                    let diffMin = Math.floor((now - startDate) / 60000);
+                    if (diffMin < 0) diffMin = 0;
+
+                    $("#TotalTimeText").text(formatDuration(diffMin));
+                }, 1000);
 
 
-         }
+                GetMetalMaskTransaction();
 
+            }
+        } catch (error) {
+            console.error('Failed to start operation:', error);
+        }
     });
 
     endbtn.addEventListener('click', async function (e) {
         e.preventDefault();
-         let formdata = new FormData();
-         formdata.append('ID', selectedID);
-        $("#startbtn").prop("disabled", true);
-        $("#endbtn").prop("disabled", true);
-        GetMetalMaskTransaction();
-         let res = await postData('@Url.Action("EndSMTOperation", "MetalMask")', formdata);
-         if (res?.Success) {
-             GetMetalMaskTransaction();
-             $('#TotalPrintBoard').focus();
 
-             $("#EndText").text(timeNow());
-         }
+        if (!selectedID) {
+            alert('Please select an operation first');
+            return;
+        }
+
+        try {
+            let formdata = new FormData();
+            formdata.append('ID', selectedID);
+
+            $("#startbtn").prop("disabled", true);
+            $("#endbtn").prop("disabled", true);
+
+            let res = await postData('@Url.Action("EndSMTOperation", "MetalMask")', formdata);
+
+            if (res?.Success) {
+                $("#EndText").text(timeNow());
+
+
+                 GetMetalMaskTransaction();
+                 updateOperationStatus(2);
+                 $('#TotalPrintBoard').focus();
+            }
+        } catch (error) {
+            console.error('Failed to end operation:', error);
+        }
+
     });
 
     $("#SMT_Operator").on('keyup', function () {
         let textType = $(this).val().trim();
 
-        if (textType === "" && selectedID === 0) {
+        if (textType !== "" && selectedID !== 0) {
             $("#saveSMT").prop("disabled", false);
 
         } else {
@@ -315,12 +340,14 @@
     document.addEventListener("click", e => {
         const card = e.target.closest(".Maskcard");
         if (!card) return;
+
+        const id = parseInt(card.dataset.id);
+        selectedID = id;
+
         $("#startbtn").prop("disabled", false);
         $("#endbtn").prop("disabled", false);
 
-        selectedID = card.dataset.id;
         let filterData = SMTData.find(res => res.RecordID == selectedID);
-        console.log(filterData);
 
         // ❌ stop previous stopwatch
         if (selectedTimer) clearInterval(selectedTimer);
@@ -331,12 +358,19 @@
             $("#BlockV2Text").text(filterData.Blocks);
             $("#StartText").text(filterData.SMT_start === "00:00" ? "--:--" : filterData.SMT_start);
             $("#EndText").text(filterData.SMT_end === "00:00" ? "--:--" : filterData.SMT_end);
-            $("#TotalTimeText").text(filterData.TotalTimeHHMM === "00:00" ? "--:--" : filterData.TotalTimeHHMM);
+            $("#TotalTimeText").text(filterData.TotalTimeHHMM === "00:00" ? "00:00" : filterData.TotalTimeHHMM);
+
+
+            if (filterData.SMT_start === "00:00" && filterData.SMT_end === "00:00" && filterData.TotalTimeHHMM === "00:00") {
+                updateOperationStatus(0);
+            }
+
+
 
             if (filterData.SMT_start !== "00:00" && filterData.SMT_end === "00:00") {
                 $("#startbtn").prop("disabled", true);
                 $("#endbtn").prop("disabled", false);
-
+                updateOperationStatus(1);
                 startSelectedStopwatch(formatJsonDate(filterData.DateInput), filterData.SMT_start);
 
                 return;
@@ -347,6 +381,7 @@
                 $("#startbtn").prop("disabled", true);
                 $("#endbtn").prop("disabled", true);
                 $('#TotalPrintBoard').focus();
+                updateOperationStatus(2);
                 return;
             }
         }
@@ -382,7 +417,6 @@
         const mm = String(now.getMinutes()).padStart(2, '0');
 
         const time = `${hh}:${mm}`;
-        console.log(time);
 
         return time;
     }
@@ -415,7 +449,6 @@
 
         const startDate = buildStartDate(dateInput, smtStart);
 
-        console.log("StartDate:", startDate);
 
         function update() {
             const now = new Date();
@@ -453,4 +486,25 @@
         selectedTimer = setInterval(update, 1000);
     }
 
+
+    function updateOperationStatus(status){
+        const labels = [
+            'NOT STARTED',  // 0
+            'IN PROGRESS',  // 1
+            'COMPLETED'     // 2
+        ];
+
+        const colors = [
+            '#fbbf24', // 0 - pending
+            '#4cc9f0', // 1 - running
+            '#4ade80'  // 2 - completed
+        ];
+
+        operationBadge.textContent = labels[status] ?? 'UNKNOWN';
+        operationBadge.style.background = colors[status] ?? '#6c757d';
+    }
+
+
+
 </script>
+

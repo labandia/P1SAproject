@@ -9,7 +9,12 @@ body{
     font-family: Poppins, sans-serif !important;
 }
 
-
+button:disabled {
+    background: #cccccc !important;
+    color: #848484 !important;
+    cursor: not-allowed;
+    transform: none;
+}
 
 #MaskHead {
     color: #fff;
@@ -331,24 +336,32 @@ body{
     margin-top: 1.5em;
 }
 
-.StopWatch_Content #saveSMT:disabled{
-      background: #cccccc !important;
-        color: #848484 !important;
-        cursor: not-allowed;
-        transform: none;
-}
+
 
 .Stopwatchform{
     margin-bottom: 1em;
 }
 
 .Stopwatchform label, .timerwatchform label{
+    font-weight: 500;
+}
+
+.Stopwatchform label{
     font-weight: 600;
 }
+
+.timerwatchform{
+    text-align:center;
+}
+
+.timerwatchform p {
+    font-size: 28px;
+}
+
 .timercontainer {
     border: 1px solid #cbd5e1;
-    padding: 1em;
-    border-radius: .2em;
+    border-radius: 12px;
+    padding: 20px;
 }
 .timercontainer label{
     font-size: .8rem;
@@ -379,4 +392,141 @@ body{
     display: flex;
     align-items: center;
     gap: 6px;
+}
+
+
+
+
+/* ============= SELECTED OPERATION =============== */
+.selected-operation {
+    background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+    border: 2px solid #e0e0e0;
+}
+
+.operation-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.operation-header h4 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #212529;
+}
+
+.operation-badge {
+    background: #4361ee;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.operation-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+    gap: 16px;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.detail-item label {
+    font-size: 12px;
+    color: #6c757d;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.detail-item span {
+    font-weight: 600;
+    color: #212529;
+    font-size: 14px;
+}
+
+
+#TotalTimeText {
+    color: #4361ee;
+    font-size: 28px;
+}
+
+
+
+
+/* ============= TENSION AND CLEANING ==================== */
+.TensionContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.Maskboard {
+    width: 150px;
+    height: 150px;
+}
+
+
+.MaskContainer {
+    display: grid;
+    width: calc(400px + 3em);
+    grid-template-columns: repeat(2, 200px);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 20px;
+    padding: 1.5em;
+    border: 15px solid #848484;
+}
+
+.MaskCircle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    height: 150px;
+    border: 1px solid #222;
+    border-radius: 50%;
+}
+
+.MaskCircle input{
+    background: transparent;
+    width: 100px;   
+    text-align: center;
+    font-size: 3rem;
+    color: #222;
+    margin-left: 5px;
+}
+
+.MaskCircle span{
+    font-size: 3rem;
+    font-weight: bolder;
+}
+
+
+/* Chrome, Edge, Safari */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+
+
+.CleaningContainer table th{
+    background: #cbd5e1;
 }

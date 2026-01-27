@@ -248,7 +248,7 @@
         <div class="modal-content">
             <div class="modal-body modalwrap">
                 <div class="custom_modal_header">
-                    <h5>Edit Die Shot Cycle Control</h5>
+                    <h5>Edit Die Serial Mold</h5>
 
                     <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
                         <span>&times;</span>
@@ -318,7 +318,7 @@
         <div class="modal-content">
             <div class="modal-body modalwrap">
                 <div class="custom_modal_header">
-                    <h5>Edit Die Shot Cycle Control</h5>
+                    <h5>Edit Die Partnumber</h5>
 
                     <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
                         <span>&times;</span>
@@ -488,60 +488,55 @@
 
     $("#EditPartnumforms").on('submit', async (e) => {
       e.preventDefault();
-         let formData = new FormData(e.target);
-         const data = Object.fromEntries(formData);
-         let res = await postData('@Url.Action("UpdateDailyMoldDieMonitor", "Mold")', data);
-         console.log(res);
+        try {
+              let formData = new FormData(e.target);
+              const data = Object.fromEntries(formData);
+              let res = await postData('@Url.Action("UpdateDailyMoldDieMonitor", "Mold")', data);
+              console.log(res);
 
-         if (res?.Success) {
-           Swal.fire({
-               title: "Success",
-               text: res.Message,
-               icon: "success",
-               confirmButtonColor: "#0d97c9",
-               timer: 1500
-           }).then(() => {
-               SearchMoldiePartno();
-               $("#EditPartnumforms")[0].reset();
-               $("#EditPartnumMold").modal("hide");
-           });
-       } else {
-           Swal.fire({
-               icon: "error",
-               text: data.ToolNo + " is already Exist",
-               timer: 1500,
-               showConfirmButton: false
-           });
-       }
+              if (res?.Success) {
+                Swal.fire({
+                    title: "Success",
+                    text: res.Message,
+                    icon: "success",
+                    confirmButtonColor: "#0d97c9",
+                    timer: 1500
+                }).then(() => {
+                    SearchMoldiePartno();
+                    $("#EditPartnumforms")[0].reset();
+                    $("#EditPartnumMold").modal("hide");
+                });
+            }
+        } catch (error) {
+            console.error('Failed to start operation:', error);
+        }
     });
 
      $("#EditDailyforms").on('submit', async (e) => {
          e.preventDefault();
-         let formData = new FormData(e.target);
-         formData.append('DieSerial', strDieSerial);
-         const data = Object.fromEntries(formData);
-         let res = await postData('@Url.Action("UpdateDieSerialMoldDieMonitor", "Mold")', data);
+         try {
+              let formData = new FormData(e.target);
+                 formData.append('DieSerial', strDieSerial);
+                 const data = Object.fromEntries(formData);
 
-         if (res?.Success) {
-           Swal.fire({
-               title: "Success",
-               text: res.Message,
-               icon: "success",
-               confirmButtonColor: "#0d97c9",
-               timer: 1500
-           }).then(() => {
-               SearchByDieNo(strDieSerial);
-               $("#EditDailyforms")[0].reset();
-               $("#EditDailyMold").modal("hide");
-           });
-       } else {
-           Swal.fire({
-               icon: "error",
-               text: data.ToolNo + " is already Exist",
-               timer: 1500,
-               showConfirmButton: false
-           });
-       }
+             let res = await postData('@Url.Action("UpdateDieSerialMoldDieMonitor", "Mold")', data);
+                     if (res?.Success) {
+                       Swal.fire({
+                           title: "Success",
+                           text: res.Message,
+                           icon: "success",
+                           confirmButtonColor: "#0d97c9",
+                           timer: 1500
+                       }).then(() => {
+                           SearchByDieNo(strDieSerial);
+                           $("#EditDailyforms")[0].reset();
+                           $("#EditDailyMold").modal("hide");
+                       });
+                 }
+         } catch (error) {
+             console.error('Failed to start operation:', error);
+         }
+        
       });
 
       // Back to Daily Summary

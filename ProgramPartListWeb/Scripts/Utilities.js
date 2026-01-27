@@ -230,3 +230,146 @@ window.ActionButtons = function () {
         return false;
     }
 };
+
+
+
+
+
+
+
+
+
+window.postDataV2 = async (url, data, options = {}) => {
+    const {
+        headers = {},
+        contentType = null,
+        throwOnError = false,
+        includeCredentials = false,
+        timeout = 30000,
+        responseType = 'json'
+    } = options;
+
+    // Configuration object
+    const config = {
+        method: 'POST',
+        headers: { ...headers },
+        credentials: includeCredentials ? 'include' : 'same-origin',
+        signal: AbortSignal.timeout ? AbortSignal.timeout(timeout) : createTimeoutSignal(timeout)
+    };
+
+    // Handle different data types
+    if (data instanceof FormData) {
+        // FormData - let the browser set the Content-Type with boundary
+        config.body = data;
+    } else if (typeof data === 'object' && data !== null) {
+        // Object data - stringify as JSON
+        config.body = JSON.stringify(data);
+        config.headers['Content-Type'] = contentType || 'application/json';
+    } else if (typeof data === 'string') {
+        // String data - assume it's already formatted
+        config.body = data;
+        config.headers['Content-Type'] = contentType || 'application/json';
+    } else if (data !== undefined && data !== null) {
+        // Other data types (ArrayBuffer, Blob, URLSearchParams, etc.)
+        config.body = data;
+        if (contentType) {
+            config.headers['Content-Type'] = contentType;
+        }
+    }
+
+    try {
+        const response = await fetch(url, config);
+
+        // Check if response is OK
+        if (!response.ok) {
+            const error = new Error(`HTTP ${response.status}: ${response.statusText}`);
+            error.status = response.status;
+            error.response = response;
+
+            if (throwOnError) {
+                throw error;
+            }
+
+            console.error(`HTTP error ${response.status} for ${url}:`, response.statusText);
+        }
+
+        // Parse response based on requested type
+        let responseData;
+        switch (responseType) {
+            case 'text':
+                responseData = await response.text();
+                break;
+            case 'blob':
+                responseData = await response.blob();
+                break;
+            case 'arraybuffer':
+                responseData = await response.arrayBuffer();
+                break;
+            case 'formdata':
+                responseData = await response.formData();
+                break;
+            case 'json':
+            default:
+                try {
+                    responseData = await response.json();
+                } catch (e) {
+                    // If JSON parsing fails, try to get text for debugging
+                    const text = await response.text();
+                    console.warn('Response is not valid JSON, received:', text.substring(0, 200));
+                    responseData = { rawText: text };
+                }
+        }
+
+        // Check for custom success flag if response is an object
+        if (typeof responseData === 'object' && responseData !== null) {
+            if (responseData.Success === false) {
+                const error = new Error(responseData.Message || 'Operation failed');
+                error.data = responseData;
+                error.response = response;
+
+                if (throwOnError) {
+                    throw error;
+                }
+
+                console.error("Server reported failure:", responseData.Message || "Unknown error");
+            }
+        }
+
+        return responseData;
+    } catch (error) {
+        // Handle timeout
+        if (error.name === 'TimeoutError' || error.name === 'AbortError') {
+            console.error(`Request timeout for ${url} after ${timeout}ms`);
+            error.message = `Request timed out after ${timeout}ms`;
+        }
+
+        // Handle network errors
+        if (error.name === 'TypeError' && error.message.includes('fetch')) {
+            console.error('Network error or CORS issue:', error.message);
+        }
+
+        // Re-throw if throwOnError is true
+        if (throwOnError) {
+            throw error;
+        }
+
+        // Return structured error object
+        return {
+            Success: false,
+            Error: true,
+            Message: error.message || 'Request failed',
+            Status: error.status,
+            OriginalError: error.name
+        };
+    }
+};
+
+
+
+
+// Fallback timeout function for browsers without AbortSignal.timeout
+function createTimeoutSignal(timeout) {
+    const controller = new AbortController();
+    setTimeout(() => controller.abort(new DOMException('Request timed out', 'TimeoutError')), timeout);
+    return controller.signal;
+}

@@ -217,218 +217,6 @@ window.formatJsonDate = function (value) {
 
 
 
-window.GetMethod = function (url, fdata = {}, options = {}) {
-    // Configuration
-    const config = {
-        loginUrl: localStorage.getItem('Logout') || window.AppConfig?.loginUrl || '/login',
-        accessTokenKey: 'accessToken',
-        refreshTokenKey: 'refreshToken',
-        tokenExpiryKey: 'tokenExpiry',
-        tokenRefreshThreshold: 5 * 60 * 1000, // 5 minutes before expiry
-        ...options
-    };
-
-    // Build URL with query parameters
-    function buildUrl(url, params) {
-        if (!params || Object.keys(params).length === 0) return url;
-
-        const queryString = Object.entries(params)
-            .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-            .join('&');
-
-        return `${url}${url.includes('?') ? '&' : '?'}${queryString}`;
-    }
-
-    // Check if token is expired or about to expire
-    function isTokenExpiredOrNearExpiry() {
-        const expiryTime = localStorage.getItem(config.tokenExpiryKey);
-        if (!expiryTime) return true;
-
-        const now = Date.now();
-        const expiry = parseInt(expiryTime, 10);
-
-        // Return true if expired or within refresh threshold
-        return now >= (expiry - config.tokenRefreshThreshold);
-    }
-
-    // Make fetch request with token
-    function makeRequest(tokenToUse, retryCount = 0) {
-        const headers = {
-            'Content-Type': 'application/json',
-            ...options.headers
-        };
-
-        if (tokenToUse) {
-            headers['Authorization'] = `Bearer ${tokenToUse}`;
-        }
-
-        return fetch(buildUrl(url, fdata), {
-            method: 'GET',
-            headers,
-            credentials: 'same-origin',
-            ...options,
-            method: 'GET' // Ensure GET method
-        });
-    }
-
-    // Handle response with token refresh logic
-    async function handleResponse(response, token, retryCount = 0) {
-        const logout = () => {
-            localStorage.clear();
-            window.location.href = config.loginUrl;
-        };
-
-        // If unauthorized and we have a token, try to refresh
-        if (response.status === 401 && token && retryCount === 0) {
-            try {
-                const refreshSuccess = await refreshAccessToken();
-
-                if (refreshSuccess) {
-                    const newToken = localStorage.getItem(config.accessTokenKey);
-                    // Retry the request with new token
-                    const retryResponse = await makeRequest(newToken, 1);
-                    return await handleResponse(retryResponse, newToken, 1);
-                } else {
-                    logout();
-                    return null;
-                }
-            } catch (error) {
-                console.error('Token refresh error:', error);
-                logout();
-                return null;
-            }
-        }
-
-        // If still unauthorized after refresh, logout
-        if (response.status === 401) {
-            logout();
-            return null;
-        }
-
-        // Check if response is OK
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        // Parse and return JSON response
-        try {
-            return await response.json();
-        } catch (error) {
-            console.error('Error parsing JSON:', error);
-            return null;
-        }
-    }
-
-    // Refresh token function
-    async function refreshAccessToken() {
-        const refreshToken = localStorage.getItem(config.refreshTokenKey);
-
-        if (!refreshToken) {
-            console.warn('No refresh token available');
-            return false;
-        }
-
-        try {
-            const response = await fetch("/User/RefreshToken", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
-                },
-                body: JSON.stringify({ refreshToken: refreshToken })
-            });
-
-            if (!response.ok) {
-                throw new Error(`Refresh token request failed: ${response.status}`);
-            }
-
-            const result = await response.json();
-
-            if (result.accessToken) {
-                // Store new access token
-                localStorage.setItem(config.accessTokenKey, result.accessToken);
-
-                // Store token expiry if provided
-                if (result.expiresIn) {
-                    const expiryTime = Date.now() + (result.expiresIn * 1000);
-                    localStorage.setItem(config.tokenExpiryKey, expiryTime.toString());
-                }
-
-                return true;
-            } else {
-                console.warn('Refresh token response missing accessToken');
-                return false;
-            }
-        } catch (error) {
-            console.error("Error refreshing token:", error);
-            return false;
-        }
-    }
-
-    // Main execution flow
-    return (async () => {
-        try {
-            let token = localStorage.getItem(config.accessTokenKey);
-
-            // Check if token needs refresh before making request
-            if (token && isTokenExpiredOrNearExpiry()) {
-                const refreshSuccess = await refreshAccessToken();
-                if (refreshSuccess) {
-                    token = localStorage.getItem(config.accessTokenKey);
-                } else if (token) {
-                    // If we couldn't refresh but have an expired token, continue anyway
-                    // The server will reject it and trigger the 401 flow
-                }
-            }
-
-            // Make initial request
-            const response = await makeRequest(token);
-            return await handleResponse(response, token);
-
-        } catch (error) {
-            console.error('Error in FetchAuthenticate:', error);
-
-            // Only logout for network errors if we have no token
-            const token = localStorage.getItem(config.accessTokenKey);
-            if (!token && error instanceof TypeError) {
-                // Network error without token - could redirect to login
-                // but we'll just return null to let the caller handle it
-                return null;
-            }
-
-            throw error; // Re-throw for caller to handle
-        }
-    })();
-};
-
-// Optional: Add utility method for checking auth status
-window.GetMethod.isAuthenticated = function () {
-    const token = localStorage.getItem('accessToken');
-    const expiryTime = localStorage.getItem('tokenExpiry');
-
-    if (!token) return false;
-
-    if (expiryTime) {
-        const now = Date.now();
-        const expiry = parseInt(expiryTime, 10);
-        return now < expiry;
-    }
-
-    return true; // Assume valid if no expiry time
-};
-
-// Optional: Add method to manually refresh token
-window.GetMethod.refreshToken = async function () {
-    return await refreshAccessToken();
-};
-
-// Optional: Add method to clear tokens
-window.GetMethod.clearTokens = function () {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('tokenExpiry');
-};
-
 
 
 
@@ -523,4 +311,589 @@ window.postMethod = async function (url, data, options = {}) {
             Status: error.status || 0
         };
     }
+};
+
+
+
+
+//window.GetMethod = function (url, fdata = {}, options = {}) {
+//    // Configuration
+//    const config = {
+//        loginUrl: localStorage.getItem('Logout') || window.AppConfig?.loginUrl || '/login',
+//        accessTokenKey: 'accessToken',
+//        refreshTokenKey: 'refreshToken',
+//        tokenExpiryKey: 'tokenExpiry',
+//        tokenRefreshThreshold: 5 * 60 * 1000, // 5 minutes before expiry
+//        ...options
+//    };
+
+//    // Build URL with query parameters
+//    function buildUrl(url, params) {
+//        if (!params || Object.keys(params).length === 0) return url;
+
+//        const queryString = Object.entries(params)
+//            .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+//            .join('&');
+
+//        return `${url}${url.includes('?') ? '&' : '?'}${queryString}`;
+//    }
+
+//    // Check if token is expired or about to expire
+//    function isTokenExpiredOrNearExpiry() {
+//        const expiryTime = localStorage.getItem(config.tokenExpiryKey);
+//        if (!expiryTime) return true;
+
+//        const now = Date.now();
+//        const expiry = parseInt(expiryTime, 10);
+
+//        // Return true if expired or within refresh threshold
+//        return now >= (expiry - config.tokenRefreshThreshold);
+//    }
+
+//    // Make fetch request with token
+//    function makeRequest(tokenToUse, retryCount = 0) {
+//        const headers = {
+//            'Content-Type': 'application/json',
+//            ...options.headers
+//        };
+
+//        if (tokenToUse) {
+//            headers['Authorization'] = `Bearer ${tokenToUse}`;
+//        }
+
+//        return fetch(buildUrl(url, fdata), {
+//            method: 'GET',
+//            headers,
+//            credentials: 'same-origin',
+//            ...options,
+//            method: 'GET' // Ensure GET method
+//        });
+//    }
+
+//    // Handle response with token refresh logic
+//    async function handleResponse(response, token, retryCount = 0) {
+//        const logout = () => {
+//            localStorage.clear();
+//            window.location.href = config.loginUrl;
+//        };
+
+//        // If unauthorized and we have a token, try to refresh
+//        if (response.status === 401 && token && retryCount === 0) {
+//            try {
+//                const refreshSuccess = await refreshAccessToken();
+
+//                if (refreshSuccess) {
+//                    const newToken = localStorage.getItem(config.accessTokenKey);
+//                    // Retry the request with new token
+//                    const retryResponse = await makeRequest(newToken, 1);
+//                    return await handleResponse(retryResponse, newToken, 1);
+//                } else {
+//                    logout();
+//                    return null;
+//                }
+//            } catch (error) {
+//                console.error('Token refresh error:', error);
+//                logout();
+//                return null;
+//            }
+//        }
+
+//        // If still unauthorized after refresh, logout
+//        if (response.status === 401) {
+//            logout();
+//            return null;
+//        }
+
+//        // Check if response is OK
+//        if (!response.ok) {
+//            throw new Error(`HTTP error! status: ${response.status}`);
+//        }
+
+//        // Parse and return JSON response
+//        try {
+//            return await response.json();
+//        } catch (error) {
+//            console.error('Error parsing JSON:', error);
+//            return null;
+//        }
+//    }
+
+//    // Refresh token function
+//    async function refreshAccessToken() {
+//        const refreshToken = localStorage.getItem(config.refreshTokenKey);
+
+//        if (!refreshToken) {
+//            console.warn('No refresh token available');
+//            return false;
+//        }
+
+//        try {
+//            const response = await fetch("/User/RefreshToken", {
+//                method: "POST",
+//                headers: {
+//                    "Content-Type": "application/json",
+//                    "Accept": "application/json"
+//                },
+//                body: JSON.stringify({ refreshToken: refreshToken })
+//            });
+
+//            if (!response.ok) {
+//                throw new Error(`Refresh token request failed: ${response.status}`);
+//            }
+
+//            const result = await response.json();
+
+//            if (result.accessToken) {
+//                // Store new access token
+//                localStorage.setItem(config.accessTokenKey, result.accessToken);
+
+//                // Store token expiry if provided
+//                if (result.expiresIn) {
+//                    const expiryTime = Date.now() + (result.expiresIn * 1000);
+//                    localStorage.setItem(config.tokenExpiryKey, expiryTime.toString());
+//                }
+
+//                return true;
+//            } else {
+//                console.warn('Refresh token response missing accessToken');
+//                return false;
+//            }
+//        } catch (error) {
+//            console.error("Error refreshing token:", error);
+//            return false;
+//        }
+//    }
+
+//    // Main execution flow
+//    return (async () => {
+//        try {
+//            let token = localStorage.getItem(config.accessTokenKey);
+
+//            // Check if token needs refresh before making request
+//            if (token && isTokenExpiredOrNearExpiry()) {
+//                const refreshSuccess = await refreshAccessToken();
+//                if (refreshSuccess) {
+//                    token = localStorage.getItem(config.accessTokenKey);
+//                } else if (token) {
+//                    // If we couldn't refresh but have an expired token, continue anyway
+//                    // The server will reject it and trigger the 401 flow
+//                }
+//            }
+
+//            // Make initial request
+//            const response = await makeRequest(token);
+//            return await handleResponse(response, token);
+
+//        } catch (error) {
+//            console.error('Error in FetchAuthenticate:', error);
+
+//            // Only logout for network errors if we have no token
+//            const token = localStorage.getItem(config.accessTokenKey);
+//            if (!token && error instanceof TypeError) {
+//                // Network error without token - could redirect to login
+//                // but we'll just return null to let the caller handle it
+//                return null;
+//            }
+
+//            throw error; // Re-throw for caller to handle
+//        }
+//    })();
+//};
+
+//// Optional: Add utility method for checking auth status
+//window.GetMethod.isAuthenticated = function () {
+//    const token = localStorage.getItem('accessToken');
+//    const expiryTime = localStorage.getItem('tokenExpiry');
+
+//    if (!token) return false;
+
+//    if (expiryTime) {
+//        const now = Date.now();
+//        const expiry = parseInt(expiryTime, 10);
+//        return now < expiry;
+//    }
+
+//    return true; // Assume valid if no expiry time
+//};
+
+//// Optional: Add method to manually refresh token
+//window.GetMethod.refreshToken = async function () {
+//    return await refreshAccessToken();
+//};
+
+//// Optional: Add method to clear tokens
+//window.GetMethod.clearTokens = function () {
+//    localStorage.removeItem('accessToken');
+//    localStorage.removeItem('refreshToken');
+//    localStorage.removeItem('tokenExpiry');
+//};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+window.GetMethod = function (url, fdata = {}, options = {}) {
+    // Configuration with error handling options
+    const config = {
+        loginUrl: localStorage.getItem('Logout') || window.AppConfig?.loginUrl || '/login',
+        accessTokenKey: 'accessToken',
+        refreshTokenKey: 'refreshToken',
+        tokenExpiryKey: 'tokenExpiry',
+        tokenRefreshThreshold: 5 * 60 * 1000, // 5 minutes before expiry
+        timeout: 30000, // Default 30 seconds timeout
+        errorMessages: {
+            network: 'Network error. Please check your connection.',
+            timeout: 'Request timeout. Please try again.',
+            unauthorized: 'Session expired. Please log in again.',
+            forbidden: 'You do not have permission to access this resource.',
+            server: 'Server error. Please try again later.',
+            notFound: 'Requested resource not found.',
+            badRequest: 'Invalid request. Please check your input.',
+            refreshFailed: 'Unable to refresh session. Please log in again.',
+            jsonParse: 'Failed to parse server response.',
+            general: 'An error occurred. Please try again.'
+        },
+        ...options
+    };
+
+    // Build URL with query parameters
+    function buildUrl(url, params) {
+        if (!params || Object.keys(params).length === 0) return url;
+
+        const queryString = Object.entries(params)
+            .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+            .join('&');
+
+        return `${url}${url.includes('?') ? '&' : '?'}${queryString}`;
+    }
+
+    // Check if token is expired or about to expire
+    function isTokenExpiredOrNearExpiry() {
+        const expiryTime = localStorage.getItem(config.tokenExpiryKey);
+        if (!expiryTime) return true;
+
+        const now = Date.now();
+        const expiry = parseInt(expiryTime, 10);
+
+        // Return true if expired or within refresh threshold
+        return now >= (expiry - config.tokenRefreshThreshold);
+    }
+
+    // Make fetch request with token and timeout
+    async function makeRequest(tokenToUse, retryCount = 0) {
+        const headers = {
+            'Content-Type': 'application/json',
+            ...options.headers
+        };
+
+        if (tokenToUse) {
+            headers['Authorization'] = `Bearer ${tokenToUse}`;
+        }
+
+        // Add timeout to request
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), config.timeout);
+
+        try {
+            const response = await fetch(buildUrl(url, fdata), {
+                method: 'GET',
+                headers,
+                credentials: 'same-origin',
+                signal: controller.signal,
+                ...options,
+                method: 'GET' // Ensure GET method
+            });
+
+            clearTimeout(timeoutId);
+            return response;
+        } catch (error) {
+            clearTimeout(timeoutId);
+            throw error;
+        }
+    }
+
+    // Handle HTTP error responses
+    function createErrorResponse(status, retryCount = 0) {
+        let message = config.errorMessages.general;
+        let errorType = 'GeneralError';
+
+        switch (status) {
+            case 400:
+                message = config.errorMessages.badRequest;
+                errorType = 'BadRequestError';
+                break;
+            case 401:
+                message = retryCount === 0 ? config.errorMessages.unauthorized : config.errorMessages.refreshFailed;
+                errorType = 'UnauthorizedError';
+                break;
+            case 403:
+                message = config.errorMessages.forbidden;
+                errorType = 'ForbiddenError';
+                break;
+            case 404:
+                message = config.errorMessages.notFound;
+                errorType = 'NotFoundError';
+                break;
+            case 500:
+                message = config.errorMessages.server;
+                errorType = 'ServerError';
+                break;
+            case 502:
+            case 503:
+            case 504:
+                message = config.errorMessages.server;
+                errorType = 'ServiceUnavailableError';
+                break;
+            default:
+                if (status >= 400 && status < 500) {
+                    errorType = 'ClientError';
+                } else if (status >= 500) {
+                    errorType = 'ServerError';
+                }
+        }
+
+        return {
+            success: false,
+            message,
+            status,
+            errorType,
+            timestamp: new Date().toISOString()
+        };
+    }
+
+    // Handle response with token refresh logic
+    async function handleResponse(response, token, retryCount = 0) {
+        const logout = () => {
+            localStorage.clear();
+            setTimeout(() => {
+                window.location.href = config.loginUrl;
+            }, 100);
+        };
+
+        // If unauthorized and we have a token, try to refresh
+        if (response.status === 401 && token && retryCount === 0) {
+            try {
+                const refreshSuccess = await refreshAccessToken();
+
+                if (refreshSuccess) {
+                    const newToken = localStorage.getItem(config.accessTokenKey);
+                    // Retry the request with new token
+                    const retryResponse = await makeRequest(newToken, 1);
+                    return await handleResponse(retryResponse, newToken, 1);
+                } else {
+                    logout();
+                    return createErrorResponse(401, 1);
+                }
+            } catch (error) {
+                console.error('Token refresh error:', error);
+                logout();
+                return createErrorResponse(401, 1);
+            }
+        }
+
+        // If still unauthorized after refresh, logout
+        if (response.status === 401) {
+            logout();
+            return createErrorResponse(401, 1);
+        }
+
+        // Check if response is OK
+        if (!response.ok) {
+            return createErrorResponse(response.status, retryCount);
+        }
+
+        // Parse and return JSON response
+        try {
+            const data = await response.json();
+
+            // Check if server returned error in response body
+            if (data && (data.error || data.errorMessage || data.message)) {
+                const serverErrorMessage = data.error?.message || data.errorMessage || data.message;
+                return {
+                    success: false,
+                    message: serverErrorMessage || config.errorMessages.general,
+                    status: response.status,
+                    errorType: 'ServerResponseError',
+                    serverError: data.error,
+                    timestamp: new Date().toISOString()
+                };
+            }
+
+            return {
+                success: true,
+                data,
+                status: response.status,
+                timestamp: new Date().toISOString()
+            };
+        } catch (error) {
+            console.error('Error parsing JSON:', error);
+            return {
+                success: false,
+                message: config.errorMessages.jsonParse,
+                status: response.status,
+                errorType: 'JSONParseError',
+                originalError: error.message,
+                timestamp: new Date().toISOString()
+            };
+        }
+    }
+
+    // Refresh token function
+    async function refreshAccessToken() {
+        const refreshToken = localStorage.getItem(config.refreshTokenKey);
+
+        if (!refreshToken) {
+            console.warn('No refresh token available');
+            return false;
+        }
+
+        try {
+            const response = await fetch("/User/RefreshToken", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify({ refreshToken: refreshToken })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Refresh token request failed: ${response.status}`);
+            }
+
+            const result = await response.json();
+
+            if (result.accessToken) {
+                // Store new access token
+                localStorage.setItem(config.accessTokenKey, result.accessToken);
+
+                // Store token expiry if provided
+                if (result.expiresIn) {
+                    const expiryTime = Date.now() + (result.expiresIn * 1000);
+                    localStorage.setItem(config.tokenExpiryKey, expiryTime.toString());
+                }
+
+                return true;
+            } else {
+                console.warn('Refresh token response missing accessToken');
+                return false;
+            }
+        } catch (error) {
+            console.error("Error refreshing token:", error);
+            return false;
+        }
+    }
+
+    // Main execution flow
+    return (async () => {
+        try {
+            let token = localStorage.getItem(config.accessTokenKey);
+
+            // Check if token needs refresh before making request
+            if (token && isTokenExpiredOrNearExpiry()) {
+                const refreshSuccess = await refreshAccessToken();
+                if (refreshSuccess) {
+                    token = localStorage.getItem(config.accessTokenKey);
+                } else if (token) {
+                    // If we couldn't refresh but have an expired token, continue anyway
+                    // The server will reject it and trigger the 401 flow
+                }
+            }
+
+            // Make initial request
+            const response = await makeRequest(token);
+            return await handleResponse(response, token);
+
+        } catch (error) {
+            console.error('Error in FetchAuthenticate:', error);
+
+            // Create error response based on error type
+            let errorResponse = {
+                success: false,
+                message: config.errorMessages.general,
+                errorType: 'UnknownError',
+                timestamp: new Date().toISOString()
+            };
+
+            if (error.name === 'AbortError') {
+                errorResponse.message = config.errorMessages.timeout;
+                errorResponse.errorType = 'TimeoutError';
+            } else if (error instanceof TypeError) {
+                errorResponse.message = config.errorMessages.network;
+                errorResponse.errorType = 'NetworkError';
+                errorResponse.details = 'This could be due to network connectivity issues or CORS restrictions.';
+            } else if (error.message) {
+                errorResponse.message = error.message;
+                errorResponse.originalError = error;
+            }
+
+            return errorResponse;
+        }
+    })();
+};
+
+// Add utility method for checking auth status
+window.GetMethod.isAuthenticated = function () {
+    const token = localStorage.getItem('accessToken');
+    const expiryTime = localStorage.getItem('tokenExpiry');
+
+    if (!token) return false;
+
+    if (expiryTime) {
+        const now = Date.now();
+        const expiry = parseInt(expiryTime, 10);
+        return now < expiry;
+    }
+
+    return true; // Assume valid if no expiry time
+};
+
+// Add method to manually refresh token
+window.GetMethod.refreshToken = async function () {
+    return await refreshAccessToken();
+};
+
+// Add method to clear tokens
+window.GetMethod.clearTokens = function () {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('tokenExpiry');
+};
+
+// Add method to get default configuration
+window.GetMethod.getDefaultConfig = function () {
+    return {
+        timeout: 30000,
+        errorMessages: {
+            network: 'Network error. Please check your connection.',
+            timeout: 'Request timeout. Please try again.',
+            unauthorized: 'Session expired. Please log in again.',
+            forbidden: 'You do not have permission to access this resource.',
+            server: 'Server error. Please try again later.',
+            notFound: 'Requested resource not found.',
+            badRequest: 'Invalid request. Please check your input.',
+            refreshFailed: 'Unable to refresh session. Please log in again.',
+            jsonParse: 'Failed to parse server response.',
+            general: 'An error occurred. Please try again.'
+        }
+    };
+};
+
+// Add method to override default error messages
+window.GetMethod.setErrorMessages = function (customMessages = {}) {
+    window.GetMethod.defaultErrorMessages = {
+        ...window.GetMethod.getDefaultConfig().errorMessages,
+        ...customMessages
+    };
 };

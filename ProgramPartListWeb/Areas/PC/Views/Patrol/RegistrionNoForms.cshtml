@@ -671,7 +671,7 @@
                   // Reset steps
                   resetSteps();
 
-                  let res = await postData('@Url.Action("AddRegistration", "Patrol")', finalformData);
+                  let res = await postMethod('@Url.Action("AddRegistration", "Patrol")', finalformData);
                   if (res && res.Success) {
                       // Start the sequential loading process
                       startSequentialLoading();
@@ -781,14 +781,14 @@
 
 
         const RegistrationTable = async() => {
-            let res = await fetchData('@Url.Action("GetRegistrationNo", "Patrol")', {});
+            let res = await GetMethod('@Url.Action("GetRegistrationNo", "Patrol")', {});
             if (res && res.Success) {
                 regisTable = res.Data;
                 disableUsedDates(regisTable);
             }
         }
         const GetEmailList = async () => {
-            let res = await fetchData('@Url.Action("GetEmaiRegistration", "Patrol")', {});
+            let res = await GetMethod('@Url.Action("GetEmaiRegistration", "Patrol")', {});
             if (res && res.Success) {
                 let selectV2 = $("#Employee_IDV2");
 

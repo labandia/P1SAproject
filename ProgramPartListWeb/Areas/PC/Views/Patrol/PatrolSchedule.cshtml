@@ -150,7 +150,7 @@
         Loadingsteps(async () => {
             let filterValue = $("#DepartmentID").val();
 
-            let res = await FetchAuthenticate('@Url.Action("GetInpectsByApproval", "Patrol")', {});
+            let res = await GetMethod('@Url.Action("GetInpectsByApproval", "Patrol")', {});
             if (res && res.Success) {
                      let filteredData = res.Data;
                      TableDisplay.empty(); // Removing the Loading Display
@@ -235,7 +235,7 @@
 
     };
     const fetchAndRenderEvents =  async(employeeId) =>{
-        let res = await FetchAuthenticate('@Url.Action("GetCalendarEvents", "Patrol")', { Employee_ID : employeeId });
+        let res = await GetMethod('@Url.Action("GetCalendarEvents", "Patrol")', { Employee_ID : employeeId });
 
         if (res && res.Success) {
 
@@ -256,7 +256,7 @@
         }
     }
     const PopulateComboxProccess = async (ID, mode) => {
-        let res = await FetchAuthenticate('@Url.Action("GetProcesslist", "Patrol")', { depid: ID });
+        let res = await GetMethod('@Url.Action("GetProcesslist", "Patrol")', { depid: ID });
 
         if (res && res.Success) {
             if (mode === 0) {
@@ -300,7 +300,7 @@
         formData.append('Employee_ID', employVal);
         formData.append('ModeID', 0);
         //console.log(data);
-        let res = await postData('@Url.Action("SetActiveDateSchedule", "Patrol")', formData);
+        let res = await postMethod('@Url.Action("SetActiveDateSchedule", "Patrol")', formData);
         if (res && res.Success) {
             $("#AddScheduleModal").modal("hide");
             // ✅ Refresh the calendar with updated events
@@ -312,7 +312,7 @@
         let formData = new FormData(e.target);
         formData.append('Employee_ID', employVal);
         formData.append('ModeID', 1);
-        let res = await postData('@Url.Action("SetActiveDateSchedule", "Patrol")', formData);
+        let res = await postMethod('@Url.Action("SetActiveDateSchedule", "Patrol")', formData);
         //console.log(res);
 
     });
@@ -321,7 +321,7 @@
         let formData = new FormData();
         formData.append('ScheduleID', $("#EditScheduleID").val());
         var data = Object.fromEntries(formData);
-        let res = await postData('@Url.Action("RemoveDateSchedule", "Patrol")', formData);
+        let res = await postMethod('@Url.Action("RemoveDateSchedule", "Patrol")', formData);
         if (res.StatusCode === 200) {
             $("#EditScheduleModal").modal("hide");
             await fetchAndRenderEvents(employVal);

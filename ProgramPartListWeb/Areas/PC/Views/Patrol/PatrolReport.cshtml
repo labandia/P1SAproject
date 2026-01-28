@@ -85,7 +85,7 @@
     const RegistrationTable = async () => {
         loadingDisplay();
         Loadingsteps(async () => {
-            let res = await FetchAuthenticate('@Url.Action("GetRegistrationNo", "Patrol")', {});
+            let res = await GetMethod('@Url.Action("GetRegistrationNo", "Patrol")', {});
             console.log(res);
             if (res && res.Success) {
                 regisTable = res.Data;
@@ -366,7 +366,7 @@
             const buttonId = $(this).attr('id');
             const rowIndex = buttonId.split('_')[1];
 
-            const response = await FetchAuthenticate('@Url.Action("HandleReportRoutingAsync", "Patrol")', { Regno: rowIndex });
+            const response = await GetMethod('@Url.Action("HandleReportRoutingAsync", "Patrol")', { Regno: rowIndex });
 
             window.location.href = response.Data;
         });
@@ -406,7 +406,7 @@
                     formdata.append('Registration', rowIndex);
                     formdata.append('Filepath', searchData[0].Filepath);
 
-                    let res = await postData('@Url.Action("DeleteRegistration", "Patrol")', formdata);
+                    let res = await postMethod('@Url.Action("DeleteRegistration", "Patrol")', formdata);
                     if (res.StatusCode == 422) {
                          Swal.fire({
                              title: "Success",

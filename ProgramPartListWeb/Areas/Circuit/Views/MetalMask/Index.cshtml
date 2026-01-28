@@ -143,7 +143,7 @@
 
         const data = Object.fromEntries(formdata);
 
-        let res = await postData('@Url.Action("SubmitMetalMaskInfo", "MetalMask")', formdata);
+        let res = await postMethod('@Url.Action("SubmitMetalMaskInfo", "MetalMask")', formdata);
         if (res?.Success) {
             GetMetalMaskTransaction();
         }
@@ -161,7 +161,7 @@
 
     // ================= SEARCH FUNCTION ================ //
     async function MetalMaskSearch(partnum) {
-        let res = await fetchData('@Url.Action("SearchMetalMaskPartnum", "MetalMask")', { Partnumber: partnum });
+        let res = await GetMethod('@Url.Action("SearchMetalMaskPartnum", "MetalMask")', { Partnumber: partnum });
         console.log(res);
         if (res?.Success) {
             let tableData = res.Data;
@@ -197,7 +197,7 @@
     }
 
     const GetMetalMaskTransaction = async () => {
-        let res = await fetchData('@Url.Action("GetMetalMaskInformation", "MetalMask")', { Stats: 1 });
+        let res = await GetMethod('@Url.Action("GetMetalMaskInformation", "MetalMask")', { Stats: 1 });
         $("#Maskcardcontainer").empty();
         console.log(res);
         if (res?.Success) {

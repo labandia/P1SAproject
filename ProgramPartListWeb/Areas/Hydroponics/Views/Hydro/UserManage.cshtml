@@ -200,7 +200,7 @@
         loadingDisplay();
 
         Loadingsteps(async () => {
-            let res = await FetchAuthenticate('@Url.Action("GetUsersData", "Hydro")', {});
+            let res = await GetMethod('@Url.Action("GetUsersData", "Hydro")', {});
             if (res && res.Success) {
                 userData = res.Data;
                 TableDisplay.empty(); // Removing the Loading Display
@@ -227,7 +227,7 @@
         formData.append('ProjectID', 10);
 
         const data = Object.fromEntries(formData);
-        let res = await postData('/User/CreateNewUser', formData);
+        let res = await postMethod('/User/CreateNewUser', formData);
         if (res && res.Success) {
             Swal.fire({
                 title: "Success",

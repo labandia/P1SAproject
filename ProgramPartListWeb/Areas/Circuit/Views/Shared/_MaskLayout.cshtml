@@ -191,7 +191,7 @@
 
             let formdata = new FormData(e.target);
             const data = Object.fromEntries(formdata);
-            let res = await postData('@Url.Action("SubmitMetalMaskInfo", "MetalMask")', formdata);
+            let res = await postMethod('@Url.Action("SubmitMetalMaskInfo", "MetalMask")', formdata);
             if (res?.Success) {
                 if (refreshData == 1) {
                     GetMetalMaskTransaction();
@@ -218,7 +218,7 @@
 
          // ================= SEARCH FUNCTION ================ //
          async function MetalMaskSearch(partnum) {
-             let res = await fetchData('@Url.Action("SearchMetalMaskPartnum", "MetalMask")', { Partnumber: partnum });
+             let res = await GetMethod('@Url.Action("SearchMetalMaskPartnum", "MetalMask")', { Partnumber: partnum });
 
              if (res?.Success) {
                  let tableData = res.Data;
@@ -261,7 +261,7 @@
 
 
         const GetTheTotalCount = async () => {
-            let res = await fetchData('@Url.Action("GetMetalMaskCurrentCount", "MetalMask")');
+            let res = await GetMethod('@Url.Action("GetMetalMaskCurrentCount", "MetalMask")');
             if (res?.Success) {
                 $("#SMTcount").show();
                 $("#Tension").show();

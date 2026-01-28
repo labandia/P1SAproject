@@ -140,7 +140,7 @@
 
     <script type="text/javascript">
         const GetNotification = async () => {
-            let res = await FetchAuthenticate('@Url.Action("GetNotificationList", "Notification")', {});
+            let res = await GetMethod('@Url.Action("GetNotificationList", "Notification")', {});
             if (res && res.Success) {
 
             }

@@ -282,4 +282,17 @@ namespace PMACS_V2.Areas.P1SA.Models
 
     }
 
+
+
+
+
+    public class DieMoldDieSerialInput
+    {
+        public string DieSerial { get; set; }
+        public string DateInput { get; set; }
+        public int CycleShot { get; set; }
+        public int MachineNo { get; set; }
+        public string Remarks { get; set; }
+        public string Mincharge { get; set; }
+    }
 }

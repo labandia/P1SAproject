@@ -17,7 +17,7 @@
     let chamberlist = [];
 
     const ChambercardDisplay = async () => {
-        let res = await FetchAuthenticate('@Url.Action("GetAllChambers", "Hydro")', {});
+        let res = await GetMethod('@Url.Action("GetAllChambers", "Hydro")', {});
         $("#chambercontain").empty();
 
         if (res && res.Success) {

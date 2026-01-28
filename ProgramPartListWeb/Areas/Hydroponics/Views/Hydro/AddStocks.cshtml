@@ -249,7 +249,7 @@
         formData.append("items", JSON.stringify(additems));
 
 
-        let res = await postData('@Url.Action("SaveStocks", "Hydro")', formData);
+        let res = await postMethod('@Url.Action("SaveStocks", "Hydro")', formData);
         if (res && res.Success) {
              Swal.fire({
                  title: "Success",

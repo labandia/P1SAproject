@@ -368,7 +368,7 @@
 
        
          const GetRegistrationDetails = async () => {
-             let res = await fetchData('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
+             let res = await GetMethod('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
                  if (res && res.Success) {
                      $("#regtext").text(strRegno);
                      //$("#InspectorName").val(res.Data.InspectName);
@@ -412,7 +412,7 @@
             };
 
              const GetRegistrationFindingsID = async () => {
-                 let res = await fetchData('@Url.Action("GetRegistrationFindings", "Patrol")', { Regno: strRegno });
+                 let res = await GetMethod('@Url.Action("GetRegistrationFindings", "Patrol")', { Regno: strRegno });
 
                  if (res && res.Success) {
                      res.Data.forEach(item => {
@@ -424,7 +424,7 @@
 
              const GetRegistratioFiles = async () => {
                  let filesSelect = [];
-                 let res = await fetchData('@Url.Action("GetRegistrationAllFiles", "Patrol")', { Regno: strRegno });
+                 let res = await GetMethod('@Url.Action("GetRegistrationAllFiles", "Patrol")', { Regno: strRegno });
                  if (res.Success && res) {
                      filesSelect = res.Data;
 

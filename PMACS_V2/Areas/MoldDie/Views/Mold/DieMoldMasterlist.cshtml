@@ -238,7 +238,7 @@
 
 
 
-       
+
 
         let res = await postData('@Url.Action("AddMoldDieMasterlist", "Mold")', data);
         if (res && res.Success) {
@@ -266,28 +266,55 @@
         let formData = new FormData(e.target);
 
         const data = Object.fromEntries(formData);
+       // const res = await postDataV2('@Url.Action("UpdateMoldMasterlist", "Mold")', data);
 
-        let res = await postData('@Url.Action("UpdateMoldMasterlist", "Mold")', data);
-         if (res.StatusCode === 201) {
-             Swal.fire({
-                 title: "Success",
-                 text: res.Message,
-                 icon: "success",
-                 confirmButtonColor: "#0d97c9",
-                 timer: 1500
-             }).then(() => {
-                 GetMoldDieMasterlist();
-                 $("#EditTooling").modal('hide');
-                 $("#editnewform")[0].reset();
-             });
-         } else {
-             Swal.fire({
-                 icon: "error",
-                 text: res?.Message ?? "Update data Failed",
-                 timer: 1500,
-                 showConfirmButton: false
-             });
-         }
+        let result = await postDataV2('@Url.Action("UpdateMoldMasterlist", "Mold")', formData);
+
+        if (result && result.Error) {
+            // Network or client-side error
+            console.error('Request failed:', result.Message);
+        } else if (result && result.Success === false) {
+            // Server returned error (Success: false)
+            console.error('Server error:', result.Message);
+            alert(result.Message || 'Operation failed');
+        } else {
+            // Success!
+            console.log('User created:', result);
+
+            Swal.fire({
+                title: "Success",
+                text: result.Message,
+                icon: "success",
+                confirmButtonColor: "#0d97c9",
+                timer: 1500
+            }).then(() => {
+                GetMoldDieMasterlist();
+                $("#EditTooling").modal('hide');
+                $("#editnewform")[0].reset();
+            });
+        }
+
+
+         //if (res.StatusCode === 201) {
+         //    Swal.fire({
+         //        title: "Success",
+         //        text: res.Message,
+         //        icon: "success",
+         //        confirmButtonColor: "#0d97c9",
+         //        timer: 1500
+         //    }).then(() => {
+         //        GetMoldDieMasterlist();
+         //        $("#EditTooling").modal('hide');
+         //        $("#editnewform")[0].reset();
+         //    });
+         //} else {
+         //    Swal.fire({
+         //        icon: "error",
+         //        text: res?.Message ?? "Update data Failed",
+         //        timer: 1500,
+         //        showConfirmButton: false
+         //    });
+         //}
      });
 
     const GetMoldieDescription = async () => {

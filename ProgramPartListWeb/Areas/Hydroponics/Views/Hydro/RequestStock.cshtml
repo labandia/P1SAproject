@@ -184,7 +184,7 @@
       loadingDisplay();
 
       Loadingsteps(async () => {
-          let res = await FetchAuthenticate('@Url.Action("GetAddStockList", "Hydro")', {});
+          let res = await GetMethod('@Url.Action("GetAddStockList", "Hydro")', {});
           if (res && res.Success) {
               StockItems = res.Data;
               TableDisplay.empty(); // Removing the Loading Display
@@ -206,7 +206,7 @@
 
 
      const InventoryTable = async () => {
-        let res = await FetchAuthenticate('@Url.Action("GetHydroInventory", "Hydro")', {});
+         let res = await GetMethod('@Url.Action("GetHydroInventory", "Hydro")', {});
         if (res && res.Success) {
             InventItems = res.Data;
             $.each(InventItems, function (index, row) {
@@ -265,7 +265,7 @@ function InventoryPagination(dataArray, tableBodyId) {
             $("#PurposeText").text(selected.Purpose);
             $("#DateInputText").val(selected.RequestDate);
 
-                  let res = await FetchAuthenticate('@Url.Action("GetAddDetailsList", "Hydro")', { ID: rowIndex });
+            let res = await GetMethod('@Url.Action("GetAddDetailsList", "Hydro")', { ID: rowIndex });
                   let detailsTable = $("#itemsDetailsTableBody");
                   detailsTable.empty();
                   if (res && res.Success) {

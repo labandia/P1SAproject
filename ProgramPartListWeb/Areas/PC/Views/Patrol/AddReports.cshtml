@@ -361,7 +361,7 @@
 
     // ================= LOAD DATA =======================
     const EmailsTablelist = async () => {
-      let res = await FetchAuthenticate('@Url.Action("GetEmailList", "Patrol")', {});
+        let res = await GetMethod('@Url.Action("GetEmailList", "Patrol")', {});
        if (res && res.Success) {
            let selectManager = $("#ManagerSelect");
            let selectPIC = $("#PICselect");
@@ -397,21 +397,21 @@
       }
    }
     const RegistrationTable = async() => {
-        let res = await FetchAuthenticate('@Url.Action("GetRegistrationNo", "Patrol")', {});
+        let res = await GetMethod('@Url.Action("GetRegistrationNo", "Patrol")', {});
         if (res && res.Success) {
             regisTable = res.Data;
         }
     }
     const PopulateComboxInspector = async () => {
         Resetforms();
-        let res = await FetchAuthenticate('@Url.Action("GetInspectorsByAdd", "Patrol")', {});
+        let res = await GetMethod('@Url.Action("GetInspectorsByAdd", "Patrol")', {});
         if (res && res.Success) {
             loadData = res.Data;
         }
     }
     const Getuserinfo = async () => {
         const accessToken = localStorage.getItem('accessToken');
-        const result = await FetchAuthenticate('/User/GetUserInformation', { accessToken });
+        const result = await GetMethod('/User/GetUserInformation', { accessToken });
         EmpID = result.Employee_ID;
     }
     // ================= OPEN MODAL ======================
@@ -525,7 +525,7 @@
         savebtn.innerHTML = " <div class='buttonloading'></div> Generating PDF Please wait...";
 
         // Send form data with file to controller
-        let res = await postData('@Url.Action("AddRegistration", "Patrol")', finalformData);
+        let res = await postMethod('@Url.Action("AddRegistration", "Patrol")', finalformData);
         if (res.StatusCode === 201) {
             Swal.fire({
                 title: "Success",
@@ -566,7 +566,7 @@
 
         const data = Object.fromEntries(finalformData);
 
-        let res = await postData('@Url.Action("SendingEmails", "Patrol")', finalformData);
+        let res = await postMethod('@Url.Action("SendingEmails", "Patrol")', finalformData);
         console.log(res);
 
     });

@@ -80,8 +80,8 @@
 
 
 
-<script src="~/Scripts/Utilities.js"></script>
-<script src="~/Scripts/jquery-3.7.1.min.js"></script>
+<script src="~/Scripts/Shared/Utilities.js"></script>
+<script src="~/Scripts/Shared/jquery-3.7.1.min.js"></script>
 <script type="text/javascript">
     const container = document.getElementById('Web_contain');
 
@@ -95,7 +95,7 @@
         var SetData = $("#Web_contain");
         SetData.empty();
 
-        let res = await fetchData('@Url.Action("GetProjectList", "P1SAportalweb")', {});
+        let res = await GetMethod('@Url.Action("GetProjectList", "P1SAportalweb")', {});
         if (res && res.Success) {
             let filteredData = res.Data;
 

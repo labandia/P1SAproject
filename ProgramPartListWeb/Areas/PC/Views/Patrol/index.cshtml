@@ -202,7 +202,7 @@
         formData.append("proj", 9);
 
         const data = Object.fromEntries(formData);
-        let res = await postrawData('/Auth/Authenticate', data);
+        let res = await postMethod('/Auth/Authenticate', data);
 
         if (res && res.StatusCode === 200) {
             Swal.fire({
@@ -248,7 +248,7 @@
         if (!RegisterValidationForm()) {
             //const savebtn = document.querySelector("#Regisbtn");
             //savebtn.innerHTML = " <div class='buttonloading'></div>";
-            let res = await postData('/User/CreateNewUser', formData);
+            let res = await postMethod('/User/CreateNewUser', formData);
             if (res && res.Success) {
                 Swal.fire({
                     title: "Success",
@@ -282,7 +282,7 @@
         const data = Object.fromEntries(formData);
 
         if (ChangeValidationForm()) {
-            let res = await postData('/User/ChangePassword', formData);
+            let res = await postMethod('/User/ChangePassword', formData);
             if (res && res.Success) {
                 Swal.fire({
                     title: "Success",
@@ -328,7 +328,7 @@
         let employeeID = $("#CEmployee_ID").val();
         $("#ChangeErrormessage").show();
 
-        let res = await fetchData('/User/CheckEmployeeID', { empID: employeeID });
+        let res = await GetMethod('/User/CheckEmployeeID', { empID: employeeID });
 
         if (res == false) {
             $("#ChangeErrormessage").text("Employee ID is Incorrect");

@@ -224,7 +224,7 @@
             return;
         }
 
-        let res = await postData('@Url.Action("AddInspectors", "Patrol")', formData);
+        let res = await postMethod('@Url.Action("AddInspectors", "Patrol")', formData);
         if (res.StatusCode === 201) {
             Swal.fire({
                 title: "Success",
@@ -244,7 +244,7 @@
         e.preventDefault();
         let formData = new FormData(e.target);
         var data = Object.fromEntries(formData);
-        let res = await postData('@Url.Action("EditInspectors", "Patrol")', formData);
+        let res = await postMethod('@Url.Action("EditInspectors", "Patrol")', formData);
         if (res && res.Success) {
             Swal.fire({
                 title: "Success",
@@ -264,7 +264,7 @@
         loadingDisplay();
 
         Loadingsteps(async () => {
-            let res = await FetchAuthenticate('@Url.Action("GetQualifiedInspector", "Patrol")', {});
+            let res = await GetMethod('@Url.Action("GetQualifiedInspector", "Patrol")', {});
             if (res && res.Success) {
                 masterlist = res.Data;
                 TableDisplay.empty(); // Removing the Loading Display
@@ -283,7 +283,7 @@
         });
     }
     const GetEmployeeData = async() => {
-        let res = await FetchAuthenticate('@Url.Action("GetEmployeelist", "Patrol")', {});
+        let res = await GetMethod('@Url.Action("GetEmployeelist", "Patrol")', {});
         if (res && res.Success) {
             loadData = res.Data;
         }
@@ -448,7 +448,7 @@
                 case 'disapprove':
                     formData.append('ID', rowIndex);
                     formData.append('stats', action === 'approve' ? 1 : 0);
-                    let res = await postData('@Url.Action("ChangeApprovalInspect", "Patrol")', formData);
+                    let res = await postMethod('@Url.Action("ChangeApprovalInspect", "Patrol")', formData);
                     if (res && res.Success) {
                         InspectTable(); // Assumes re-rendering table
                     }

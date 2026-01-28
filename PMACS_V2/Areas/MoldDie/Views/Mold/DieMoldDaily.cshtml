@@ -519,20 +519,47 @@
                  formData.append('DieSerial', strDieSerial);
                  const data = Object.fromEntries(formData);
 
-             let res = await postData('@Url.Action("UpdateDieSerialMoldDieMonitor", "Mold")', data);
-                     if (res?.Success) {
-                       Swal.fire({
-                           title: "Success",
-                           text: res.Message,
-                           icon: "success",
-                           confirmButtonColor: "#0d97c9",
-                           timer: 1500
-                       }).then(() => {
-                           SearchByDieNo(strDieSerial);
-                           $("#EditDailyforms")[0].reset();
-                           $("#EditDailyMold").modal("hide");
-                       });
-                 }
+             let result = await postDataV2('@Url.Action("UpdateDieSerialMoldDieMonitor", "Mold")', formData);
+             if (result && result.Error) {
+                 // Network or client-side error
+                 console.error('Request failed:', result.Message);
+             } else if (result && result.Success === false) {
+                 // Server returned error (Success: false)
+                 console.error('Server error:', result.Message);
+                 alert(result.Message || 'Operation failed');
+             } else {
+                 // Success!
+                 console.log('User created:', result);
+
+                 Swal.fire({
+                     title: "Success",
+                     text: result.Message,
+                     icon: "success",
+                     confirmButtonColor: "#0d97c9",
+                     timer: 1500
+                 }).then(() => {
+                                   SearchByDieNo(strDieSerial);
+                                   $("#EditDailyforms")[0].reset();
+                                   $("#EditDailyMold").modal("hide");
+                 });
+             }
+
+
+
+             //console.log(res);
+             //        if (res?.Success) {
+             //          Swal.fire({
+             //              title: "Success",
+             //              text: res.Message,
+             //              icon: "success",
+             //              confirmButtonColor: "#0d97c9",
+             //              timer: 1500
+             //          }).then(() => {
+             //              SearchByDieNo(strDieSerial);
+             //              $("#EditDailyforms")[0].reset();
+             //              $("#EditDailyMold").modal("hide");
+             //          });
+             //    }
          } catch (error) {
              console.error('Failed to start operation:', error);
          }

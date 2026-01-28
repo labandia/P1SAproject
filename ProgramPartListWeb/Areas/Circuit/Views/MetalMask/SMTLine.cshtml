@@ -149,7 +149,7 @@
           formdata.append('SMT_Operator', $("#SMT_Operator").val());
           formdata.append('RecordID', selectedID);
 
-          let res = await postData('@Url.Action("FinalSubmitSMTLineinfo", "MetalMask")', formdata);
+          let res = await postMethod('@Url.Action("FinalSubmitSMTLineinfo", "MetalMask")', formdata);
           if (res?.Success) {
               GetMetalMaskTransaction();
               GetTheTotalCount();
@@ -179,7 +179,7 @@
             let formdata = new FormData();
             formdata.append('ID', selectedID);
 
-            const res = await postData('@Url.Action("StartSMTOperation", "MetalMask")', formdata);
+            const res = await postMethod('@Url.Action("StartSMTOperation", "MetalMask")', formdata);
 
             if (res?.Success) {
                 $("#startbtn").prop("disabled", true);
@@ -231,7 +231,7 @@
             $("#startbtn").prop("disabled", true);
             $("#endbtn").prop("disabled", true);
 
-            let res = await postData('@Url.Action("EndSMTOperation", "MetalMask")', formdata);
+            let res = await postMethod('@Url.Action("EndSMTOperation", "MetalMask")', formdata);
 
             if (res?.Success) {
                 $("#EndText").text(timeNow());
@@ -265,7 +265,7 @@
         activeTimers.length = 0;
 
 
-         let res = await fetchData('@Url.Action("GetMetalMaskInformation", "MetalMask")', { Stats: 1 });
+        let res = await GetMethod('@Url.Action("GetMetalMaskInformation", "MetalMask")', { Stats: 1 });
          $("#Maskcardcontainer").empty();
 
         if (res?.Success) {

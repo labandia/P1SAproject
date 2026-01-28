@@ -481,14 +481,15 @@
     const InventoryTable = async () => {
         $("#Countlist").text("0");
         $("#lowStockItems").text("0");
-        $("#outOfStockItems").text("0");
+        $("#outOfStockItems").text("0"); 
 
         loadingDisplay();
 
         Loadingsteps(async () => {
-            let res = await fetchData('@Url.Action("GetHydroInventory", "Hydro")', {});
-            if (res && res.Success) {
-                Inventlist = res.Data;
+            let result = await GetMethod('@Url.Action("GetHydroInventory", "Hydro")', {});
+
+            if (result && result.Success) {
+                Inventlist = result.Data;
 
                 const lowStockCount = Inventlist.filter(item => item.Status === "Restock").length;
                 const OutStockCount = Inventlist.filter(item => item.Status === "Out of stocks").length;
@@ -505,7 +506,7 @@
             } else {
                 const loadData = `<tr>
                   <td colspan='9'>
-                      🔍 ${res.Message}
+                      🔍 ${result.Message}
                   </td>
               </tr>`;
 
@@ -517,7 +518,7 @@
     }
 
     const GetCategoryDatalist = async () => {
-         let res = await FetchAuthenticate('@Url.Action("GetCategorylist", "Hydro")', {});
+        let res = await GetMethod('@Url.Action("GetCategorylist", "Hydro")', {});
 
           if (res && res.Success) {
 
@@ -749,7 +750,7 @@
     changeWarn.addEventListener('submit', async function (e) {
         e.preventDefault();
         let forms = new FormData(e.target);
-        let res = await postData('@Url.Action("updateWarningStock", "Hydro")', forms);
+        let res = await postMethod('@Url.Action("updateWarningStock", "Hydro")', forms);
          if (res && res.Success) {
               Swal.fire({
                   title: "Success",
@@ -781,7 +782,7 @@
             return;
         }
 
-        let res = await postData('@Url.Action("AddInventoryParts", "Hydro")', formData);
+        let res = await postMethod('@Url.Action("AddInventoryParts", "Hydro")', formData);
           if (res && res.Success) {
                Swal.fire({
                    title: "Success",
@@ -803,7 +804,7 @@
         e.preventDefault();
         let formData = new FormData(e.target);
         const data = Object.fromEntries(formData);
-        let res = await postData('@Url.Action("EditInventoryParts", "Hydro")', formData);
+        let res = await postMethod('@Url.Action("EditInventoryParts", "Hydro")', formData);
         if (res && res.Success) {
             Swal.fire({
                 title: "Success",
@@ -825,7 +826,7 @@
          formData.append('Items', JSON.stringify(requestItems));
 
          const data = Object.fromEntries(formData);
-         let res = await postData('@Url.Action("AddNewStocks", "Hydro")', formData);
+         let res = await postMethod('@Url.Action("AddNewStocks", "Hydro")', formData);
          if (res && res.Success) {
              Swal.fire({
                  title: "Success",
@@ -1129,10 +1130,13 @@
         const data = Object.fromEntries(formData);
      
 
-        let res = await postData('@Url.Action("AddOneStocksQuantity", "Hydro")', formData);
-        console.log(res);
-        if (res && res.Success) {
-            Inventlist = res.Data;
+        let result = await postMethod('@Url.Action("AddOneStocksQuantity", "Hydro")', data, {
+            responseType: "json",
+            throwOnError: true
+        });
+
+        if (result && result.Success) {
+            Inventlist = result.Data;
 
             const lowStockCount = Inventlist.filter(item => item.Status === "Restock").length;
             const OutStockCount = Inventlist.filter(item => item.Status === "Out of stocks").length;
@@ -1144,7 +1148,11 @@
             TableDisplay.empty(); // Removing the Loading Display
 
             InventoryPagination(Inventlist, 'InventorylistData');
+        } else {
+            // Handle error
+            console.error(result ? result.Message : 'Request failed');
         }
+
     }
 
     async function decrementPart(stockID, currentQty, Required, Unit) {
@@ -1160,9 +1168,13 @@
 
          const data = Object.fromEntries(formData);
 
-         let res = await postData('@Url.Action("AddOneStocksQuantity", "Hydro")', formData);
-         if (res && res.Success) {
-             Inventlist = res.Data;
+         let result = await postMethod('@Url.Action("AddOneStocksQuantity", "Hydro")', data, {
+            responseType: "json",
+            throwOnError: true
+         });
+
+         if (result && result.Success) {
+             Inventlist = result.Data;
 
              const lowStockCount = Inventlist.filter(item => item.Status === "Restock").length;
              const OutStockCount = Inventlist.filter(item => item.Status === "Out of stocks").length;
@@ -1174,6 +1186,9 @@
              TableDisplay.empty(); // Removing the Loading Display
 
              InventoryPagination(Inventlist, 'InventorylistData');
+         } else {
+             // Handle error
+             console.error(result ? result.Message : 'Request failed');
          }
     }
 

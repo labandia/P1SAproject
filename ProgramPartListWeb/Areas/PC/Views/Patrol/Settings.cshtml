@@ -192,7 +192,7 @@
             let formData = new FormData();
             formData.append("userID", UserID);
             formData.append("newpass", newpass);
-            let res = await postData('/Auth/ChangePasswordUser', formData);
+            let res = await postMethod('/Auth/ChangePasswordUser', formData);
             if (res.StatusCode === 201) {
                 Swal.fire({
                     title: "Success",
@@ -360,7 +360,7 @@
         let formData = new FormData();
         formData.append('datapass', nowpass);
         formData.append('currentpass', current);
-        let res = await postData('/Auth/MatchPassword', formData);
+        let res = await postMethod('/Auth/MatchPassword', formData);
         if (res.Data == false) {
             err.textContent = "Current password is incorrect.";
             return;
@@ -372,7 +372,7 @@
     }
     async function Getuserinfo() {
         const accessToken = localStorage.getItem('accessToken');
-        const result = await FetchAuthenticate('/User/GetUserInformation', { accessToken });
+        const result = await GetMethod('/User/GetUserInformation', { accessToken });
         console.log(result);
         nowpass = result.Password;
         UserID = result.userId;

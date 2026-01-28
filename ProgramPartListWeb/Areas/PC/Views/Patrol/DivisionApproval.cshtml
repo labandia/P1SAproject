@@ -525,7 +525,7 @@
            // Step 1: Simulate "Saving data..."
            await new Promise(resolve => setTimeout(resolve, 1200)); // 1.2s delay for animation
 
-            let res = await postData('@Url.Action("DivisionApproveSubmit", "Patrol")', fomdata);
+           let res = await postMethod('@Url.Action("DivisionApproveSubmit", "Patrol")', fomdata);
            if (res.StatusCode === 201) {
                await new Promise(resolve => setTimeout(resolve, 1000));
                savebtn.innerHTML = originalText;
@@ -597,7 +597,7 @@
 
 
          const GetRegistrationDetails = async () => {
-             let res = await fetchData('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
+             let res = await GetMethod('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
              if (res && res.Success) {
                  strManagerID = res.Data.Manager_ID;
 
@@ -653,7 +653,7 @@
 
 
              const GetEmailList = async () => {
-                 let res = await fetchData('@Url.Action("GetEmaiRegistration", "Patrol")', {});
+                 let res = await GetMethod('@Url.Action("GetEmaiRegistration", "Patrol")', {});
                   if (res && res.Success) {
                       emailTable = res.Data;
                   }
@@ -669,7 +669,7 @@
             };
 
              const GetRegistrationFindingsID = async () => {
-                 let res = await fetchData('@Url.Action("GetRegistrationFindings", "Patrol")', { Regno: strRegno });
+                 let res = await GetMethod('@Url.Action("GetRegistrationFindings", "Patrol")', { Regno: strRegno });
 
                  if (res && res.Success) {
                      res.Data.forEach(item => {
@@ -681,7 +681,7 @@
 
              const GetRegistratioFiles = async () => {
                  let filesSelect = [];
-                 let res = await fetchData('@Url.Action("GetRegistrationAllFiles", "Patrol")', { Regno: strRegno });
+                 let res = await GetMethod('@Url.Action("GetRegistrationAllFiles", "Patrol")', { Regno: strRegno });
                  if (res.Success && res) {
                      filesSelect = res.Data;
 

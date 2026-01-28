@@ -139,7 +139,7 @@
         loadingDisplay();
 
         Loadingsteps(async () => {
-            let res = await FetchAuthenticate('@Url.Action("GetPartlistData", "Hydro")', {});
+            let res = await GetMethod('@Url.Action("GetPartlistData", "Hydro")', {});
             if (res && res.Success) {
                 partlistData = res.Data;
                 TableDisplay.empty(); // Removing the Loading Display
@@ -159,7 +159,7 @@
     }
 
     const GetCategoryDatalist = async () => {
-        let res = await FetchAuthenticate('@Url.Action("GetCategorylist", "Hydro")', {});
+        let res = await GetMethod('@Url.Action("GetCategorylist", "Hydro")', {});
 
           if (res && res.Success) {
 

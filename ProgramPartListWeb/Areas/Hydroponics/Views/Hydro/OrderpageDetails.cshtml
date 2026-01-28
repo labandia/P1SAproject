@@ -250,7 +250,7 @@
 
 
     const RequestMain = async () => {
-        let res = await FetchAuthenticate('@Url.Action("GetMainRequestList", "Hydro")', { orderID: ID });
+        let res = await GetMethod('@Url.Action("GetMainRequestList", "Hydro")', { orderID: ID });
         if (res && res.Success) {
             let status = res.Data.RequestStatus;
             $("#ChamberName").text(`Chamber selected : ${res.Data.ChamberName}`);
@@ -290,7 +290,7 @@
     // Populate the required parts table
      const populateRequiredTable = async () => {
 
-       let res = await FetchAuthenticate('@Url.Action("GetRequestDetails", "Hydro")', { orderID: ID });
+         let res = await GetMethod('@Url.Action("GetRequestDetails", "Hydro")', { orderID: ID });
         if (res && res.Success) {
             requestData = res.Data;
             // FROM COMPLETE DATAW

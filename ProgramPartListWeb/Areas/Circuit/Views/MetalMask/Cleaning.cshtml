@@ -17,20 +17,32 @@
             </div>
         </div>
 
-
-
-
         <div class="control-group">
             <label class="control-label">
                 <i class="fas fa-calendar"></i> SMT Line
             </label>
             <select id="SMTLine" class="filter-select">
+                <option value="0">-- All Lines --  </option>
                 @for (int i = 1; i <= 12; i++)
                 {
                     <option value="@i">Line @i</option>
                 }
             </select>
         </div>
+
+
+        <div class="control-group">
+            <label class="control-label">
+                <i class="fas fa-calendar"></i>Model Type
+            </label>
+            <select id="SMTLine" class="filter-select">
+                <option value="0">-- All Types --  </option>
+                <option value="1">FAN </option>
+                <option value="2">UPS </option>
+                <option value="3">Servo </option>
+            </select>
+        </div>
+
     </div>
 
     <table>
@@ -44,35 +56,66 @@
                 <th>Model type</th>
             </tr>
         </thead>
-        <tbody>
-            <tr>
-                <td>0055329F</td>
-                <td>22</td>
-                <td>Line 3</td>
-                <td>Dayshift</td>
-                <td>12</td>
-                <td>FAN</td>
-            </tr>
-
-            <tr>
-                <td>0055329F</td>
-                <td>22</td>
-                <td>Line 3</td>
-                <td>Dayshift</td>
-                <td>12</td>
-                <td>FAN</td>
-            </tr>
-
-            <tr>
-                <td>0055329F</td>
-                <td>22</td>
-                <td>Line 3</td>
-                <td>Dayshift</td>
-                <td>12</td>
-                <td>FAN</td>
-            </tr>
+        <tbody id="TransactionTable">
+           
         </tbody>
     </table>
 
 </section>
 
+
+<script>
+
+
+
+
+    const GetMetalMaskTensionCleaning = async () => {
+        try {
+             const url = '@Url.Action("GetMetalMaskInformation", "MetalMask")';
+
+             let res = await GetMethod(url, { Stats: 2 });
+
+             if (res?.Success) {
+                   let tableBody = $("#TransactionTable");
+                   tableBody.empty();
+                   let TableData = res.data;
+                   let html = "";
+
+                   $.each(TableData, function (index, row) {
+                       // Image Display
+                       html += `
+                            <tr class='cleanTable' data-id="${row.RecordID}">
+                                  <td >${row.Partnumber ? row.Partnumber : "-"}</td>
+                                  <td >${row.AREA ? row.AREA : "-"}</td>
+                                  <td >${row.SMTLine ? row.SMTLine : "-"}</td>
+                                  <td >${row.Shift ? row.Shift : "-"}</td>
+                                  <td >${row.Blocks ? row.Blocks : "-"}</td>
+                                  <td >${row.ModelType ? row.ModelType : "-"}</td>
+                            </tr>
+                        `;
+                   });
+
+                   tableBody.append(html);
+             } else {
+                 // handle specific error types 
+                 let TableBody = $("#TransactionTable");
+                 let errorMessage = res?.Message || 'failed to load data';
+
+                 if (res?.errorType === 'NotFoundError') {
+                     errorMessage = 'Api endpoint not found. Please contact the Administrator';
+                 } else if (res?.errorType === 'UnauthorizedError') {
+                     errorMessage = 'Your Session Token is expired. please refresh the page';
+                 }
+
+                 TableBody.html(`<tr><td colspan="24" class="text-center text-danger">${errorMessage}</td></tr>`);
+
+                 // Optional show a Toast 
+                 console.error("API Error : ", errorMessage, res);
+             }
+        } catch (error) {
+            console.error('Unexpected error in GetMetalMaskTransaction:', error);
+        }
+    };
+
+    GetMetalMaskTensionCleaning();
+</script>

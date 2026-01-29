@@ -241,20 +241,24 @@ button:disabled {
     margin-bottom: .5em;
 }
 
-.addformcontainer h5, .addformcontainer label {
+.addformcontainer h5, .addformcontainer label, .search_group label{
     font-weight: 500;
     color: #222;
 }
 
+.search_group  {
+    padding: .5em ;
+}
 
-    .addformcontainer input, .addformcontainer textarea {
-        width: 100%;
-        margin: .2em 0 .5em 0;
-        border: 1px solid #A5A1AA;
-        padding: .5em 1em;
-        font-size: .935rem;
-        border-radius: .3em;
-    }
+
+.addformcontainer input, .addformcontainer textarea, .search_group input {
+    width: 100%;
+    margin: .2em 0 .5em 0;
+    border: 1px solid #A5A1AA;
+    padding: .5em 1em;
+    font-size: .935rem;
+    border-radius: .3em;
+}
 
  .addformcontainer input:focus {
          outline: 1px solid #4361ee;

@@ -102,7 +102,6 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
         public async Task<ActionResult> SubmitSMTLineinfo(MetalMaskTransaction metal)
         {
             bool result = await _trans.AddMetalMastTransaction(metal);
-            //if (data == null || !data.Any()) return JsonNotFound("No Masterlist Data.");
             if (!result) return JsonPostError("INSERT failed.", 500);
             return JsonCreated(result, "INSERT new Parts Successfully");
         }

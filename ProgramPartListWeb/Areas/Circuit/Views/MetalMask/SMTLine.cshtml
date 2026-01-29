@@ -139,7 +139,7 @@
 
 
 
-
+    // FINISH ALL THE REQUIRED PRINTED BOARD AND PIC
     saveSMT.addEventListener('click', async function (e) {
           e.preventDefault();
 
@@ -166,7 +166,7 @@
           updateOperationStatus(2);
      });
 
-
+    // START THE TIME OF THE DATA
     startbtn.addEventListener('click', async function (e) {
         e.preventDefault();
 
@@ -215,7 +215,7 @@
             console.error('Failed to start operation:', error);
         }
     });
-
+    // END THE TIME OF THE DATA
     endbtn.addEventListener('click', async function (e) {
         e.preventDefault();
 
@@ -247,6 +247,7 @@
 
     });
 
+    // Enables the the Save Button
     $("#SMT_Operator").on('keyup', function () {
         let textType = $(this).val().trim();
 
@@ -260,76 +261,94 @@
     });
 
     const GetMetalMaskTransaction = async () => {
-        // STOP old timers
-        activeTimers.forEach(clearInterval);
-        activeTimers.length = 0;
+        try {
+            // STOP old timers
+            activeTimers.forEach(clearInterval);
+            activeTimers.length = 0;
+            $("#Maskcardcontainer").empty();
 
 
-        let res = await GetMethod('@Url.Action("GetMetalMaskInformation", "MetalMask")', { Stats: 1 });
-         $("#Maskcardcontainer").empty();
+            const url = '@Url.Action("GetMetalMaskInformation", "MetalMask")';
 
-        if (res?.Success) {
+            let res = await GetMethod(url, { Stats: 1 });
 
-             let TableData = res.Data;
-             SMTData = TableData;
-             let html = "";
+            if (res?.Success) {
+                SMTData = res.data;
+                let html = "";
 
-             res.Data.forEach(rowData => {
+                SMTData.forEach(rowData => {
 
-                 html += `<div class="Maskcard" data-id="${rowData.RecordID}">
-                        <div class="MaskHeader">
-                            <h5>Metal mask rev partnum : <span>${rowData.Partnumber}</span></h5>
-                        </div>
+                    html += `<div class="Maskcard" data-id="${rowData.RecordID}">
+                                <div class="MaskHeader">
+                                    <h5>Metal mask rev partnum : <span>${rowData.Partnumber}</span></h5>
+                                </div>
 
-                        <div class="MaskContent">
-                            <div><label>SMT Line</label><p>${rowData.SMTLine}</p></div>
-                            <div><label>Area</label><p>${rowData.AREA}</p></div>
-                            <div><label>Shift</label><p>${rowData.Shift != false ? "DS" : "NS"}</p></div>
-                            <div><label>Blocks</label><p>${rowData.Blocks}</p></div>
-                        </div>
+                                <div class="MaskContent">
+                                    <div><label>SMT Line</label><p>${rowData.SMTLine}</p></div>
+                                    <div><label>Area</label><p>${rowData.AREA}</p></div>
+                                    <div><label>Shift</label><p>${rowData.Shift != false ? "DS" : "NS"}</p></div>
+                                    <div><label>Blocks</label><p>${rowData.Blocks}</p></div>
+                                </div>
 
-                        <div class="MaskContent">
-                            <div>
-                                <label>Start Time</label>
-                                 <p>${rowData.SMT_start === "00:00" ? "--:--" : rowData.SMT_start}</p>
-                            </div>
+                                <div class="MaskContent">
+                                    <div>
+                                        <label>Start Time</label>
+                                         <p>${rowData.SMT_start === "00:00" ? "--:--" : rowData.SMT_start}</p>
+                                    </div>
 
-                            <div>
-                                <label>End Time</label>
-                               <p>${rowData.SMT_end === "00:00" ? "--:--" : rowData.SMT_end}</p>
-                            </div>
+                                    <div>
+                                        <label>End Time</label>
+                                       <p>${rowData.SMT_end === "00:00" ? "--:--" : rowData.SMT_end}</p>
+                                    </div>
 
-                            <div>
-                                <label>Total Time</label>
-                                  <p class="total-time">${rowData.TotalTimeHHMM}</p>
-                            </div>
-                        </div>
-                    </div>`;
-            });
+                                    <div>
+                                        <label>Total Time</label>
+                                          <p class="total-time">${rowData.TotalTimeHHMM}</p>
+                                    </div>
+                                </div>
+                            </div>`;
+                });
+                $("#Maskcardcontainer").append(html);
 
-            $("#Maskcardcontainer").append(html);
+                ///* ============================
+                //      START REALTIME TIMERS
+                //   ============================ */
 
+                document.querySelectorAll(".Maskcard").forEach((card, i) => {
 
+                        const row = res.data[i];
 
-            /* ============================
-                  START REALTIME TIMERS
-               ============================ */
+                        // Only run if still active
+                        if (row.SMT_end !== "00:00") return;
+                        const changeDate = formatJsonDate(row.DateInput);
+                        const startDate = parseTime(changeDate, row.SMT_start);
+                        const timer = startRealtimeTimer(card, changeDate, row.SMT_start);
 
-            document.querySelectorAll(".Maskcard").forEach((card, i) => {
-
-                const row = res.Data[i];
-
-                // Only run if still active
-                if (row.SMT_end !== "00:00") return;
-                const changeDate = formatJsonDate(row.DateInput);
-                const startDate = parseTime(changeDate, row.SMT_start);
-                const timer = startRealtimeTimer(card, changeDate, row.SMT_start);
-
-                activeTimers.push(timer);
-            });
+                        activeTimers.push(timer);
+                });
 
 
-         }
+            } else {
+                // handle specific error types 
+                let TableBody = $("#Maskcardcontainer");
+                let errorMessage = res?.Message || 'failed to load data';
+
+                if (res?.errorType === 'NotFoundError') {
+                    errorMessage = 'Api endpoint not found. Please contact the Administrator';
+                } else if (res?.errorType === 'UnauthorizedError') {
+                    errorMessage = 'Your Session Token is expired. please refresh the page';
+                }
+
+                TableBody.html(`<span class="text-center text-danger">${errorMessage}</span>`);
+
+                // Optional show a Toast 
+                console.error("API Error : ", errorMessage, res);
+            }
+
+        } catch (error) {
+            console.error('Unexpected error in GetMetalMaskTransaction:', error);
+        }
+      
     };
 
     /* ============================

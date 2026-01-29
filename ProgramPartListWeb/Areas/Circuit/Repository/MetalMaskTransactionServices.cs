@@ -162,7 +162,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
             MetalMaskTransaction metal)
         {
             string strsql = $@"UPDATE MetalMask_Transaction SET 
-                            TotalPrintBoard =@TotalPrintBoard, Status = 2,
+                            TotalPrintBoard =@TotalPrintBoard, Status = Status + 1,
                             SMT_Operator =@SMT_Operator
                                WHERE RecordID =@RecordID";
 

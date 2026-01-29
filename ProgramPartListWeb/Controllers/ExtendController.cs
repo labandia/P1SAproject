@@ -47,7 +47,7 @@ namespace ProgramPartListWeb.Controllers
                 Success = true,
                 StatusCode = statusCode,
                 Message = message,
-                Data = data
+                data
             }, JsonRequestBehavior.AllowGet);
         }
 

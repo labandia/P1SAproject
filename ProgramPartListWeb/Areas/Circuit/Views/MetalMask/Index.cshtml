@@ -197,6 +197,10 @@
     }
 
     const GetMetalMaskTransaction = async () => {
+        
+
+
+
         let res = await GetMethod('@Url.Action("GetMetalMaskInformation", "MetalMask")', { Stats: 1 });
         $("#Maskcardcontainer").empty();
         console.log(res);

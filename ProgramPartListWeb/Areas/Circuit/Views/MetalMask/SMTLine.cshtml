@@ -26,6 +26,7 @@
                     <i class="fas fa-calendar"></i> SMT Line
                 </label>
                 <select id="SMTLine" class="filter-select">
+                    <option value="0">-- All Lines --  </option>
                     @for (int i = 1; i <= 12; i++)
                     {
                         <option value="@i">Line @i</option>
@@ -33,7 +34,17 @@
                 </select>
             </div>
 
-
+            <div class="control-group">
+                <label class="control-label">
+                    <i class="fas fa-calendar"></i>Model Type
+                </label>
+                <select id="ModelSelect" class="filter-select">
+                    <option value="0">-- All Types --  </option>
+                    <option value="1">FAN </option>
+                    <option value="2">UPS </option>
+                    <option value="3">Servo </option>
+                </select>
+            </div>
 
 
         </div>
@@ -261,6 +272,10 @@
     });
 
     const GetMetalMaskTransaction = async () => {
+        let partText = $("#searchInput").val();
+        let SMTval = $("#SMTLine").val();
+        let Modelval = $("#ModelSelect").val();
+
         try {
             // STOP old timers
             activeTimers.forEach(clearInterval);
@@ -270,7 +285,12 @@
 
             const url = '@Url.Action("GetMetalMaskInformation", "MetalMask")';
 
-            let res = await GetMethod(url, { Stats: 1 });
+            let res = await GetMethod(url, {
+                search: partText,
+                SMTLine: parseInt(SMTval),
+                Stats: 2,
+                ModelType: Modelval
+            });
 
             if (res?.Success) {
                 SMTData = res.data;

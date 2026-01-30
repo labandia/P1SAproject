@@ -35,7 +35,7 @@
             <label class="control-label">
                 <i class="fas fa-calendar"></i>Model Type
             </label>
-            <select id="SMTLine" class="filter-select">
+            <select id="ModelSelect" class="filter-select">
                 <option value="0">-- All Types --  </option>
                 <option value="1">FAN </option>
                 <option value="2">UPS </option>
@@ -57,25 +57,261 @@
             </tr>
         </thead>
         <tbody id="TransactionTable">
-           
         </tbody>
     </table>
 
 </section>
 
 
+<div class="modal fade" id="cleaningStepperModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="cleaningStepperModalLabel">
+                    <i class="fas fa-broom me-2"></i> Surface Cleaning Analysis
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <!-- Modal Content -->
+            <div class="stepper-container">
+                <!-- Steps panel on the left -->
+                <div class="steps-panel">
+                    <div class="steps-title">Process Steps</div>
+                    <div class="steps-list">
+                        <div class="step-item active" data-step="1">
+                            <div class="step-number">1</div>
+                            <div class="step-info">
+                                <div class="step-label">Cleaning Info</div>
+                                <div class="step-description">Cleaning details</div>
+                            </div>
+                        </div>
+                        <div class="step-item" data-step="2">
+                            <div class="step-number">2</div>
+                            <div class="step-info">
+                                <div class="step-label">Tension Mask</div>
+                                <div class="step-description">Configure </div>
+                            </div>
+                        </div>
+                        <div class="step-item" data-step="3">
+                            <div class="step-number">3</div>
+                            <div class="step-info">
+                                <div class="step-label">Results</div>
+                                <div class="step-description">View analysis </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Progress bar -->
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+
+                    <div style="color: #5a7184; font-size: 0.9rem; text-align: center;">
+                        <i class="fas fa-info-circle" style="margin-right: 5px;"></i>
+                        Click on any step to navigate directly
+                    </div>
+                </div>
+
+                <!-- Content panel on the right -->
+                <div class="content-panel">
+                    <!-- Step 1: Cleaning Info -->
+                    <div class="step-content active" id="step-1">
+                        <div class="step-header">
+                            <h2 class="step-title">
+                                <i class="fas fa-broom step-icon"></i> Cleaning Information
+                            </h2>
+                            <p class="step-subtitle">Enter details about the surface and cleaning parameters to begin analysis</p>
+                        </div>
+
+                        <div class="step-body">
+                            <div class="form-group">
+                                <label for="cleaning-solution"> Date of Cleaning </label>
+                                <input type="date" id="cleaning-solution" placeholder="e.g., Isopropyl Alcohol, DI Water, etc.">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="cleaning-solution"> Time of Cleaning </label>
+                                <input type="time" id="cleaning-solution" placeholder="e.g., Isopropyl Alcohol, DI Water, etc.">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="cleaning-solution"> Pattern</label>
+                                <input type="text" id="cleaning-solution" placeholder="e.g., Isopropyl Alcohol, DI Water, etc.">
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="cleaning-solution">Frame</label>
+                                <input type="text" id="cleaning-solution" placeholder="e.g., Isopropyl Alcohol, DI Water, etc.">
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Tension Mask -->
+                    <div class="step-content" id="step-2">
+                        <div class="step-header">
+                            <h2 class="step-title">
+                                <i class="fas fa-mask step-icon"></i> Tension Mask Configuration
+                            </h2>
+                            <p class="step-subtitle">Configure surface tension parameters and masking requirements</p>
+                        </div>
+
+                        <div class="step-body">
+                            <div class="MaskContainer">
+                                <div class="MaskCircle">
+                                    <input type="number" placeholder="1" id="MaskPoint_1" class="MaskPoint_1" />
+                                    <p>Point 1</p>
+                                </div>
+                                <div class="MaskCircle">
+                                    <input type="number" placeholder="2" id="MaskPoint_2" class="MaskPoint_2"  />
+                                    <p>Point 2</p>
+                                </div>
+                                <div class="MaskCircle">
+                                    <input type="number" placeholder="4" id="MaskPoint_4" class="MaskPoint_4"  />
+                                    <p>Point 4</p>
+                                </div>
+                                <div class="MaskCircle">
+                                    <input type="number" placeholder="3" id="MaskPoint_3" class="MaskPoint_3"  />
+                                    <p>Point 3</p>
+                                </div>
+                            </div>
+
+                           
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Results -->
+                    <div class="step-content" id="step-3">
+                        <div class="step-header">
+                            <h2 class="step-title">
+                                <i class="fas fa-chart-line step-icon"></i> Analysis Results
+                            </h2>
+                            <p class="step-subtitle">Cleaning process analysis and optimization recommendations</p>
+                        </div>
+
+                        <div class="step-body">
+                            <div class="results-container">
+                                <div class="results-header">
+                                    <div>
+                                        <h3 style="color: #1a3a5f; margin-bottom: 5px;">Cleaning Effectiveness</h3>
+                                        <p style="color: #5a7184;">Based on your input parameters</p>
+                                    </div>
+                                    <div class="result-value" id="effectiveness-score">84%</div>
+                                    <div class="result-status status-good" id="status-text">GOOD</div>
+                                </div>
+
+                                <div class="results-details">
+                                    <div class="result-item">
+                                        <div class="result-item-title">Contaminant Removal</div>
+                                        <div class="result-item-value" id="removal-rate">92%</div>
+                                    </div>
+                                    <div class="result-item">
+                                        <div class="result-item-title">Surface Integrity</div>
+                                        <div class="result-item-value" id="integrity-score">88%</div>
+                                    </div>
+                                    <div class="result-item">
+                                        <div class="result-item-title">Process Efficiency</div>
+                                        <div class="result-item-value" id="efficiency-score">76%</div>
+                                    </div>
+                                    <div class="result-item">
+                                        <div class="result-item-title">Resource Utilization</div>
+                                        <div class="result-item-value" id="resource-score">81%</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="margin-top: 30px;">
+                                <h3 style="color: #1a3a5f; margin-bottom: 15px;">
+                                    <i class="fas fa-lightbulb" style="margin-right: 10px; color: #2962ff;"></i>
+                                    Optimization Recommendations
+                                </h3>
+                                <div id="recommendations">
+                                    <ul style="color: #5a7184; line-height: 1.8;">
+                                        <li>Increase cleaning solution temperature by 5-10°C to improve contaminant removal</li>
+                                        <li>Consider adding a surfactant to reduce surface tension to 30-35 mN/m range</li>
+                                        <li>Extend cleaning duration by 15% to reach optimal cleaning effectiveness</li>
+                                        <li>Implement patterned masking to protect sensitive surface features</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step Navigation -->
+                    <div class="step-navigation">
+                        <button class="btn btn-prev" id="prev-btn" disabled>
+                            <i class="fas fa-arrow-left"></i> Previous Step
+                        </button>
+
+                        <button class="btn btn-next" id="next-btn">
+                            Next Step <i class="fas fa-arrow-right"></i>
+                        </button>
+
+                        <button class="btn btn-submit" id="submit-btn" style="display: none;">
+                            <i class="fas fa-check-circle"></i> Complete Analysis
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
 <script>
+     let debounceTimer;
+
+     // ==== FILER by ModelType ===========
+     $("#ModelSelect").on("change", function () {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            GetMetalMaskTensionCleaning();
+        }, 400);
+     });
 
 
+     // ==== FILER by SMTLine ===========
+     $("#SMTLine").on("change", function () {
+         clearTimeout(debounceTimer);
+         debounceTimer = setTimeout(() => {
+             GetMetalMaskTensionCleaning();
+         }, 400);
+     });
+
+
+     // ==== SEARCH FUNCTIONALITY =======
+     $("#searchInput").on('keyup', () => {
+         clearTimeout(debounceTimer);
+         debounceTimer = setTimeout(() => {
+             GetMetalMaskTensionCleaning();
+         }, 400);
+     });
 
 
     const GetMetalMaskTensionCleaning = async () => {
+        let partText = $("#searchInput").val();
+        let SMTval = $("#SMTLine").val();
+        let Modelval = $("#ModelSelect").val();
+        console.log(Modelval);
         try {
              const url = '@Url.Action("GetMetalMaskInformation", "MetalMask")';
 
-             let res = await GetMethod(url, { Stats: 2 });
+             let res = await GetMethod(url,
+                 {
+                     search: partText,
+                     SMTLine: SMTval,
+                     Stats: 2,
+                     ModelType: Modelval
+                 });
 
              if (res?.Success) {
+                   console.clear();
                    let tableBody = $("#TransactionTable");
                    tableBody.empty();
                    let TableData = res.data;
@@ -97,7 +333,7 @@
 
                    tableBody.append(html);
              } else {
-                 // handle specific error types 
+                 // handle specific error types
                  let TableBody = $("#TransactionTable");
                  let errorMessage = res?.Message || 'failed to load data';
 
@@ -109,7 +345,7 @@
 
                  TableBody.html(`<tr><td colspan="24" class="text-center text-danger">${errorMessage}</td></tr>`);
 
-                 // Optional show a Toast 
+                 // Optional show a Toast
                  console.error("API Error : ", errorMessage, res);
              }
         } catch (error) {
@@ -117,5 +353,323 @@
         }
     };
 
+    /* ============================
+            CLICK HANDLER
+    ============================ */
+    $(document).on("click", ".cleanTable", function () {
+        let recordId = $(this).data("id");
+        alert("Clicked RecordID: " + recordId);
+
+        $("#cleaningStepperModal").modal("show");
+        // example:
+        // LoadDetails(recordId);
+    });
+
+
+
     GetMetalMaskTensionCleaning();
+
+
+    // === TENSION MASK INPUTS ===========
+    document.addEventListener("DOMContentLoaded", () => {
+        const inputs = document.querySelectorAll(".MaskCircle input");
+
+        inputs.forEach((input, index) => {
+            input.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+
+                    validateInput(input);
+
+                    // focus next input
+                    if (index + 1 < inputs.length) {
+                        inputs[index + 1].focus();
+                    }
+                }
+            });
+
+            // validate on blur / change too
+            input.addEventListener("input", () => {
+                validateInput(input);
+            });
+        });
+
+        function validateInput(input) {
+            const value = Number(input.value);
+            const circle = input.closest(".MaskCircle");
+
+            if (value < 30 || value > 50 || input.value === "") {
+                circle.classList.add("invalid");
+            } else {
+                circle.classList.remove("invalid");
+            }
+        }
+    });
+
+
+
+
+
+    // ==== MODAL STEPPER  ===========
+
+    const stepItems = document.querySelectorAll('.step-item');
+    const stepContents = document.querySelectorAll('.step-content');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const submitBtn = document.getElementById('submit-btn');
+    const progressFill = document.getElementById('progress-fill');
+    const tensionSlider = document.getElementById('surface-tension');
+    const tensionValue = document.getElementById('tension-value');
+
+    // Current step tracker
+    let currentStep = 1;
+    const totalSteps = stepItems.length;
+
+
+    // Initialize the stepper
+    function initStepper() {
+        updateStepper();
+        addEventListeners();
+
+        // Initialize tension slider display
+        if (tensionSlider) {
+            tensionValue.textContent = tensionSlider.value + ' mN/m';
+        }
+    }
+
+    // Update stepper UI based on current step
+    function updateStepper() {
+        // Update step items
+        stepItems.forEach((item, index) => {
+            const stepNumber = index + 1;
+
+            // Remove all classes
+            item.classList.remove('active', 'completed');
+
+            // Add appropriate classes
+            if (stepNumber === currentStep) {
+                item.classList.add('active');
+            } else if (stepNumber < currentStep) {
+                item.classList.add('completed');
+            }
+        });
+
+        // Update step contents
+        stepContents.forEach((content, index) => {
+            const stepNumber = index + 1;
+            content.classList.toggle('active', stepNumber === currentStep);
+        });
+
+        // Update navigation buttons
+        prevBtn.disabled = currentStep === 1;
+
+        // Update progress bar
+        progressFill.style.width = ((currentStep - 1) / (totalSteps - 1)) * 100 + '%';
+
+        // Show/hide next and submit buttons
+        if (currentStep === totalSteps) {
+            nextBtn.style.display = 'none';
+            submitBtn.style.display = 'block';
+            updateResults();
+        } else {
+            nextBtn.style.display = 'block';
+            submitBtn.style.display = 'none';
+        }
+
+        // Update step numbers with icons for completed steps
+        stepItems.forEach((item, index) => {
+            const stepNumber = item.querySelector('.step-number');
+            const step = index + 1;
+
+            if (step < currentStep) {
+                stepNumber.innerHTML = '<i class="fas fa-check"></i>';
+            } else {
+                stepNumber.textContent = step;
+            }
+        });
+    }
+
+    // Navigate to a specific step
+    function goToStep(step) {
+        if (step < 1 || step > totalSteps) return;
+
+        currentStep = step;
+        updateStepper();
+    }
+
+    // Navigate to next step
+    function nextStep() {
+        if (currentStep < totalSteps) {
+            currentStep++;
+            updateStepper();
+            if (currentStep === 2) {
+                $("#MaskPoint_1").focus();
+            }
+        }
+    }
+
+    // Navigate to previous step
+    function prevStep() {
+        if (currentStep > 1) {
+            currentStep--;
+            updateStepper();
+        }
+    }
+
+    // Update results based on inputs
+    function updateResults() {
+        // Get values from form inputs
+        const surfaceType = document.getElementById('surface-type').value;
+        const cleaningMethod = document.querySelector('input[name="cleaning-method"]:checked').value;
+        const cleaningSolution = document.getElementById('cleaning-solution').value || "Generic";
+        const surfaceTension = parseInt(document.getElementById('surface-tension').value);
+        const contactAngle = parseInt(document.getElementById('contact-angle').value) || 75;
+        const maskingType = document.getElementById('masking-type').value;
+
+        // Calculate scores based on inputs
+        let effectiveness = 75; // Base score
+
+        // Adjust based on surface type
+        if (surfaceType === "glass" || surfaceType === "semiconductor") effectiveness += 5;
+        if (surfaceType === "metal") effectiveness += 3;
+
+        // Adjust based on cleaning method
+        if (cleaningMethod === "ultrasonic") effectiveness += 8;
+        if (cleaningMethod === "immersion") effectiveness += 5;
+
+        // Adjust based on surface tension (optimal range 25-45)
+        if (surfaceTension >= 25 && surfaceTension <= 45) effectiveness += 10;
+        else if (surfaceTension >= 20 && surfaceTension <= 50) effectiveness += 5;
+
+        // Adjust based on contact angle (optimal < 90°)
+        if (contactAngle < 60) effectiveness += 8;
+        else if (contactAngle < 90) effectiveness += 4;
+
+        // Cap at 100
+        effectiveness = Math.min(100, effectiveness);
+
+        // Calculate other scores
+        const removalRate = Math.min(100, effectiveness + 8);
+        const integrityScore = Math.min(100, effectiveness - 5);
+        const efficiencyScore = Math.min(100, effectiveness - 8);
+        const resourceScore = Math.min(100, effectiveness - 3);
+
+        // Update result displays
+        document.getElementById('effectiveness-score').textContent = effectiveness + '%';
+        document.getElementById('removal-rate').textContent = removalRate + '%';
+        document.getElementById('integrity-score').textContent = integrityScore + '%';
+        document.getElementById('efficiency-score').textContent = efficiencyScore + '%';
+        document.getElementById('resource-score').textContent = resourceScore + '%';
+
+        // Update status
+        const statusElement = document.getElementById('status-text');
+        if (effectiveness >= 85) {
+            statusElement.textContent = "EXCELLENT";
+            statusElement.className = "result-status status-good";
+        } else if (effectiveness >= 70) {
+            statusElement.textContent = "GOOD";
+            statusElement.className = "result-status status-good";
+        } else if (effectiveness >= 60) {
+            statusElement.textContent = "FAIR";
+            statusElement.className = "result-status status-warning";
+        } else {
+            statusElement.textContent = "NEEDS IMPROVEMENT";
+            statusElement.className = "result-status status-warning";
+        }
+
+        // Generate recommendations
+        const recommendations = document.getElementById('recommendations');
+        let recommendationHTML = '<ul style="color: #5a7184; line-height: 1.8;">';
+
+        // Surface tension recommendation
+        if (surfaceTension < 25) {
+            recommendationHTML += '<li>Surface tension is too low. Consider using a less aggressive cleaning solution to prevent surface damage.</li>';
+        } else if (surfaceTension > 45) {
+            recommendationHTML += '<li>Surface tension is too high. Add a surfactant to improve wetting and cleaning effectiveness.</li>';
+        }
+
+        // Contact angle recommendation
+        if (contactAngle > 90) {
+            recommendationHTML += '<li>High contact angle indicates poor wetting. Consider surface pretreatment or different cleaning solution.</li>';
+        }
+
+        // Masking recommendation
+        if (maskingType === "none" && (surfaceType === "semiconductor" || surfaceType === "ceramic")) {
+            recommendationHTML += '<li>Consider implementing selective area masking to protect sensitive surface features during cleaning.</li>';
+        }
+
+        // General recommendations
+        recommendationHTML += '<li>For ' + cleaningSolution + ', optimal temperature range is typically 40-60°C for best results.</li>';
+        recommendationHTML += '<li>Regularly validate cleaning effectiveness with contact angle measurements.</li>';
+
+        recommendationHTML += '</ul>';
+        recommendations.innerHTML = recommendationHTML;
+    }
+
+    // Complete the analysis
+    function completeAnalysis() {
+        // Show completion message
+        alert("Analysis completed successfully! Your cleaning process has been evaluated and optimized.");
+
+        // Reset to first step
+        currentStep = 1;
+        updateStepper();
+    }
+
+    // Add event listeners
+    function addEventListeners() {
+        // Previous button
+        prevBtn.addEventListener('click', prevStep);
+
+        // Next button
+        nextBtn.addEventListener('click', nextStep);
+
+        // Submit button
+        submitBtn.addEventListener('click', completeAnalysis);
+
+        // Step items click to navigate directly
+        stepItems.forEach(item => {
+            item.addEventListener('click', function () {
+                const step = parseInt(this.getAttribute('data-step'));
+                goToStep(step);
+            });
+        });
+
+        // Tension slider
+        if (tensionSlider) {
+            tensionSlider.addEventListener('input', function () {
+                tensionValue.textContent = this.value + ' mN/m';
+            });
+        }
+
+        // Update results when inputs change on step 3
+        const formInputs = document.querySelectorAll('input, select, textarea');
+        formInputs.forEach(input => {
+            input.addEventListener('change', function () {
+                if (currentStep === 3) {
+                    updateResults();
+                }
+            });
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'ArrowRight' || event.key === ' ') {
+                // Next on right arrow or space
+                if (currentStep < totalSteps) {
+                    event.preventDefault();
+                    nextStep();
+                }
+            } else if (event.key === 'ArrowLeft') {
+                // Previous on left arrow
+                if (currentStep > 1) {
+                    event.preventDefault();
+                    prevStep();
+                }
+            }
+        });
+    }
+
+    // Initialize when the page loads
+    document.addEventListener('DOMContentLoaded', initStepper);
 </script>

@@ -39,10 +39,14 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetMetalMaskInformation(int Stats)
+        public async Task<ActionResult> GetMetalMaskInformation(
+            string search, 
+            int SMTLine,  
+            int Stats, 
+            int ModelType)
         {
             
-            var data = await _trans.GetMetalMaskTransaction("", "", 0, Stats, 0, 0,  0);
+            var data = await _trans.GetMetalMaskTransaction(search, "", SMTLine, Stats, ModelType, 0,  0);
 
             var result = data.Select(x => new
             {

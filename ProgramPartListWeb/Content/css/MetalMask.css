@@ -525,6 +525,12 @@ button:disabled {
         background-color: #ffe5e5; /* light red */
     }
 
+    .MaskCircle input[readonly] {
+        color: #555;
+        cursor: not-allowed;
+    }
+
+
 /* Chrome, Edge, Safari */
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {

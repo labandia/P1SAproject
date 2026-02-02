@@ -194,17 +194,17 @@
                         <div class="step-body">
                             <div class="form-group">
                                 <label for="cleaning-solution"> Result</label>
-                                <input type="text" id="cleaning-solution" placeholder="e.g., Isopropyl Alcohol, DI Water, etc.">
+                                <input type="text" id="Result" placeholder="e.g., Isopropyl Alcohol, DI Water, etc.">
                             </div>
 
                             <div class="form-group">
                                 <label for="cleaning-solution"> Person In Charge</label>
-                                <input type="text" id="cleaning-solution" placeholder="e.g., Isopropyl Alcohol, DI Water, etc.">
+                                <input type="text" id="PIC" placeholder="e.g., Isopropyl Alcohol, DI Water, etc.">
                             </div>
 
                             <div class="form-group">
                                 <label for="cleaning-solution"> Remarks</label>
-                                <input type="text" id="cleaning-solution" placeholder="e.g., Isopropyl Alcohol, DI Water, etc.">
+                                <input type="text" id="Remarks" placeholder="e.g., Isopropyl Alcohol, DI Water, etc.">
                             </div>
 
                             <div style="margin-top: 30px;">
@@ -250,6 +250,7 @@
 
 
 <script>
+     let selectID = 0;
      let debounceTimer;
 
      // ==== FILER by ModelType ===========
@@ -283,7 +284,6 @@
         let partText = $("#searchInput").val();
         let SMTval = $("#SMTLine").val();
         let Modelval = $("#ModelSelect").val();
-        console.log(Modelval);
         try {
              const url = '@Url.Action("GetMetalMaskInformation", "MetalMask")';
 
@@ -343,11 +343,9 @@
     ============================ */
     $(document).on("click", ".cleanTable", function () {
         let recordId = $(this).data("id");
-        alert("Clicked RecordID: " + recordId);
+        selectID = recordId;
 
         $("#cleaningStepperModal").modal("show");
-        // example:
-        // LoadDetails(recordId);
     });
 
 
@@ -512,8 +510,9 @@
         }
     }
 
-    function updateResults() {
+    async function updateResults() {
         let formData = new FormData();
+        formData.append('RecordID', parseInt(selectID));
         formData.append('Pattern', $("#Pattern").val() ||"");
         formData.append('Frame', $("#Frame").val() || "");
         formData.append('ReadOne', $("#MaskPoint_1").val() || "");
@@ -525,8 +524,29 @@
         formData.append('PIC', $("#PIC").val() || "");
 
         const data = Object.fromEntries(formData);
+        console.log(data);
 
+        let res = await postMethod('@Url.Action("SubmitTensionAndCleaning", "MetalMask")', formData);
+        if (res?.Success) {
+            GetMetalMaskTensionCleaning();
+            alert("UPdate Successfully");
+            ResetFormsSepper();
+        }
+    }
 
+    function ResetFormsSepper() {
+        selectID = 0;
+        $("#Pattern").val("");
+        $("#Frame").val("");
+        $("#MaskPoint_1").val("");
+        $("#MaskPoint_2").val("");
+        $("#MaskPoint_3").val("");
+        $("#MaskPoint_4").val("");
+        $("#Result").val("");
+        $("#Remarks").val("");
+        $("#PIC").val("");
+
+        $("#cleaningStepperModal").modal('hide');
     }
 
 
@@ -622,9 +642,10 @@
 
     // Complete the analysis
     function completeAnalysis() {
+        updateResults();
+
         // Show completion message
         alert("Analysis completed successfully! Your cleaning process has been evaluated and optimized.");
-
         // Reset to first step
         currentStep = 1;
         updateStepper();
@@ -657,14 +678,14 @@
         }
 
         // Update results when inputs change on step 3
-        const formInputs = document.querySelectorAll('input, select, textarea');
-        formInputs.forEach(input => {
-            input.addEventListener('change', function () {
-                if (currentStep === 3) {
-                    updateResults();
-                }
-            });
-        });
+        //const formInputs = document.querySelectorAll('input, select, textarea');
+        //formInputs.forEach(input => {
+        //    input.addEventListener('change', function () {
+        //        if (currentStep === 3) {
+        //            updateResults();
+        //        }
+        //    });
+        //});
 
         // Keyboard navigation
         document.addEventListener('keydown', function (event) {

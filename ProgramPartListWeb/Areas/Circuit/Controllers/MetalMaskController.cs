@@ -93,7 +93,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
         public async Task<ActionResult> SubmitMetalMaskInfo(MetalMaskTransaction metal)
         {
             metal.Shift = GlobalUtilities.GetTheShiftSchedule() == "DS" ? false : true;
-            metal.Status = 1;
+            metal.Status = 0;
 
             bool result = await _trans.AddMetalMastTransaction(metal);
             if (!result) return JsonPostError("INSERT failed.", 500);

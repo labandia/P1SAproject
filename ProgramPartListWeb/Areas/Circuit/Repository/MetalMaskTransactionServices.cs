@@ -202,8 +202,8 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
         {
             return SqlDataAccess.GetObjectOnly<MetalMasKCountTransact>($@"SELECT 
 	                TOP 1
-	                (SELECT COUNT(Status) FROM MetalMask_Transaction WHERE Status = 1) as SMTCount, 
-	                (SELECT COUNT(Status) FROM MetalMask_Transaction WHERE Status = 2) as TensionCount
+	                (SELECT COUNT(Status) FROM MetalMask_Transaction WHERE Status = 0) as SMTCount, 
+	                (SELECT COUNT(Status) FROM MetalMask_Transaction WHERE Status = 1) as TensionCount
                 FROM MetalMask_Transaction
                 GROUP BY Status");
         }

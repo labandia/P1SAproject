@@ -551,6 +551,65 @@ input[type=number] {
 
 
 
+/* Table Styling - Full Width with Auto Layout */
+.TrackTable {
+    overflow-x: auto;
+    padding: 0;
+    width: 100%;
+}
+
+    .TrackTable table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: auto; /* Auto-adjust based on content */
+    }
+
+    .TrackTable thead {
+        background-color: #f1f5f9;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .TrackTable th {
+        padding: 18px 20px;
+        text-align: center;
+        font-weight: 600;
+        color: #334155;
+        font-size: 14px;
+        letter-spacing: 0.03em;
+        border-bottom: 2px solid #e2e8f0;
+        white-space: nowrap;
+    }
+
+
+
+    .TrackTable tbody tr {
+        border-bottom: 1px solid #e2e8f0;
+        transition: all 0.3s ease;
+    }
+
+        .TrackTable tbody tr:hover {
+            background-color: #eef2ff;
+        }
+
+/* Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
 
 
 
@@ -969,3 +1028,33 @@ input[type=number] {
             min-height: 120px;
             resize: vertical;
         }
+
+
+
+
+
+
+
+.headerMask {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 1.5em 0;
+}
+
+.headerMask input{
+    width: auto;
+}
+
+
+
+.Incomplete_container {
+    display: grid;
+    grid-template-columns: 60% 1fr;
+    gap: 30px;
+}
+
+.TensionContainer{
+    padding: 1.5em 1em;
+}

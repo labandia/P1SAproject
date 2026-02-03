@@ -4,46 +4,62 @@
     Layout = "~/Areas/Circuit/Views/Shared/_MaskLayout.cshtml";
 }
 
-<h2>History</h2>
 
-<input type="text" id="searchID" placeholder="Search here ... "/>
+<div class="headerMask">
+    <div class="flex_align">
+        <input type="text" id="searchID" placeholder="Search here ... " />
+        <p style="font-weight: 600;">Search Partnumber : <span id="searchText">-- N/A --</span></p>
+    </div>
+    <div class="flex_align">
+        <button id="btnNGpage" class="btn btn-success">
+            NG Data <span id="NGcount"></span>
+        </button>
+        <button id="btnExport" class="btn btn-success">
+            Export Selected
+        </button>
+    </div>
+</div>
 
-<button id="btnExport" class="btn btn-success">
-    Export Selected
-</button>
+<div>
+    
+</div>
 
-<table>
-    <thead>
-        <tr>
-            <th></th>
-            <th>Date </th>
-            <th>Shift</th>
-            <th>SMT Line</th>
-            <th>Area </th>
-            <th>Metal Mask Partno.</th>
-            <th>Block No.</th>
-            <th>Start Time</th>
-            <th>End Time</th>
-            <th>Total Time</th>
-            <th>Total Printed Board</th>
-            <th>SMT operator</th>
-            <th>Date cleaning</th>
+<div class="TrackTable" style="margin-top: 1em;">
+    <table>
+        <thead>
+            <tr>
+                <th></th>
+                <th>Date </th>
+                <th>Shift</th>
+                <th>SMT Line</th>
+                <th>Area </th>
+                <th>Metal Mask Partno.</th>
+                <th>Block No.</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Total Time</th>
+                <th>Total Printed Board</th>
+                <th>SMT operator</th>
+                <th>Date cleaning</th>
 
-            <th>Time of Cleaning </th>
-            <th>Pattern</th>
-            <th>Frame</th>
-            <th>Point 1 </th>
-            <th>Point 2</th>
-            <th>Point 3</th>
-            <th>Point 4</th>
-            <th>Result</th>
-            <th>Tension Condition</th>
-            <th>Person in charge</th>
-        </tr>
-    </thead>
-    <tbody id="TransactionTable">
-    </tbody>
-</table>
+                <th>Time of Cleaning </th>
+                <th>Pattern</th>
+                <th>Frame</th>
+                <th>Point 1 </th>
+                <th>Point 2</th>
+                <th>Point 3</th>
+                <th>Point 4</th>
+                <th>Result</th>
+                <th>Tension Condition</th>
+                <th>Person in charge</th>
+            </tr>
+        </thead>
+        <tbody id="TransactionTable">
+        </tbody>
+    </table>
+
+</div>
+
 
 
 
@@ -51,7 +67,30 @@
 
 
 <script>
-   let selectedID = 0;
+    let selectedID = 0;
+    let searchCount = 0;
+    let debounceTimer;
+    let tempPartnum = "";
+
+    let TableBody = $("#TransactionTable");
+
+    // ==== SEARCH FUNCTIONALITY =======
+    $("#searchID").on('keyup', (e) => {
+        if (e.key !== "Enter") return;
+        let tempText = $("#searchID").val();
+
+
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            GetMetalMaskTransaction();
+            $("#searchID").val("");
+            $("#searchText").text(tempText);
+            tempPartnum = tempText; 
+            GetTotalIncompleteMask(tempText);
+        }, 400);
+    });
+
+
 
     $("#btnExport").on("click", function () {
 
@@ -102,6 +141,16 @@
           });
     });
 
+
+    $("#btnNGpage").on('click', () => {
+        if (tempPartnum === "" || searchCount === 0) {
+            $("#searchID").focus();
+            return;
+        }
+        window.location.href = "/Circuit/MetalMask/IncompleteMaskInfo?partnum=" + tempPartnum;
+    });
+
+
     async function exportSelected(ids) {
        let formData = new FormData();
 
@@ -140,18 +189,24 @@
 
     const GetMetalMaskTransaction = async () => {
         try {
+            searchCount = 0;
 
            const url = '@Url.Action("GetMetalMaskInformation", "MetalMask")';
             // Add spinner/loading indicator
             $("#TransactionTable").html('<tr><td colspan="24" class="text-center"><div class="spinner-border" role="status"></div> Loading...</td></tr>');
 
-            let res = await GetMethod(url, { Stats: 3 });
-
+            let res = await GetMethod(url, {
+                search: $("#searchID").val() || "",
+                SMTLine: 0,
+                Stats: 2,
+                ModelType: 0
+            });
 
             if (res?.Success) {
                 let tableBody = $("#TransactionTable");
                 tableBody.empty();
-                let TableData = res.Data;
+                let TableData = res.data;
+                searchCount = TableData.length;
                 let html = "";
 
 
@@ -160,7 +215,7 @@
 
 
                     html += `
-                      <tr class='cleanTable'>
+                      <tr class="fade-in">
                             <td>
                                    <input type="checkbox"
                                    class="row-check"
@@ -197,8 +252,8 @@
 
                 tableBody.append(html);
             } else {
-                // handle specific error types 
-                let TableBody = $("#TransactionTable");
+                // handle specific error types
+
                 let errorMessage = res?.Message || 'failed to load data';
 
                 if (res?.errorType === 'NotFoundError') {
@@ -207,9 +262,13 @@
                     errorMessage = 'Your Session Token is expired. please refresh the page';
                 }
 
-                TableBody.html(`<tr><td colspan="24" class="text-center text-danger">${errorMessage}</td></tr>`);
+                TableBody.html(`<tr>
+                       <td colspan='23'>
+                           🔍 ${errorMessage}
+                       </td>
+                   </tr>`);
 
-                // Optional show a Toast 
+                // Optional show a Toast
                 console.error("API Error : ", errorMessage, res);
             }
 
@@ -218,28 +277,34 @@
             $("#TransactionTable").html('<tr><td colspan="24" class="text-center text-danger">An unexpected error occurred</td></tr>');
         }
 
-
-
-       @*let res = await GetMethod('@Url.Action("GetMetalMaskInformation", "MetalMask")', { Stats: 3 });
-
-       if (res?.Success) {
-            
-         }*@
-
     }
 
 
-    const formatJsonDate = function (value) {
-        if (!value) return "";
+    const GetTotalIncompleteMask = async (partnumText) => {
+        try {
 
-        const ms = parseInt(value.replace("/Date(", "").replace(")/", ""));
-        if (isNaN(ms)) return "";
+           const url = '@Url.Action("GetMetalMaskINCOMPLETE", "MetalMask")';
 
-        const date = new Date(ms);
-        return date.toLocaleDateString();
+            let res = await GetMethod(url, {
+                partnum: partnumText
+            });
 
-    };
+            let countpart = res?.Success ? res.data.length : 0;
+            $("#NGcount").show();
+            $("#NGcount").text(`(${countpart})`);
+            
 
+        } catch (error) {
+            $("#NGcount").hide();
+            $("#NGcount").text("(0)");
+        }
+    }
 
-    GetMetalMaskTransaction();
+    TableBody.empty();
+
+    TableBody.html(`<tr class='cleanTable'>
+          <td colspan='23'>
+              🔍 No Partnumber Found
+          </td>
+      </tr>`);
 </script>

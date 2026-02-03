@@ -147,8 +147,31 @@
     const operationBadge = document.getElementById('operationBadge');
 
     let selectedTimer = null;
+    let debounceTimer;
 
+    // ==== FILER by ModelType ===========
+    $("#ModelSelect").on("change", function () {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            GetMetalMaskTransaction();
+        }, 400);
+    });
 
+    // ==== SEARCH FUNCTIONALITY =======
+    $("#searchInput").on('keyup', () => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            GetMetalMaskTransaction();
+        }, 400);
+    });
+
+    // ==== FILER by SMTLine ===========
+    $("#SMTLine").on("change", function () {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            GetMetalMaskTransaction();
+        }, 400);
+    });
 
     // FINISH ALL THE REQUIRED PRINTED BOARD AND PIC
     saveSMT.addEventListener('click', async function (e) {

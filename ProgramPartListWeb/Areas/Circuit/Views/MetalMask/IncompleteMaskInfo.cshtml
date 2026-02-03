@@ -1,0 +1,174 @@
+﻿
+@{
+    ViewBag.Title = "IncompleteMaskInfo";
+    var partText = Request.QueryString["partnum"];
+    Layout = "~/Areas/Circuit/Views/Shared/_MaskLayout.cshtml";
+}
+
+<input type="hidden" id="partID" value="@partText" />
+
+
+<div class="Incomplete_container">
+    <div class="SMT_tables" style="padding: 2em 0;">
+        <h5>MetalMask Partnum : @partText</h5>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Area</th>
+                    <th>SMT </th>
+                    <th>Shifts </th>
+                    <th>Blocks</th>
+                </tr>
+            </thead>
+            <tbody id="TransactionTable">
+            </tbody>
+        </table>
+    </div>
+    <div class="SMT_Timer">
+        <div class="TensionContainer">
+
+            <div class="MaskContainer">
+                <div class="MaskCircle">
+                    <input type="number" placeholder="1" id="MaskPoint_1" class="MaskPoint_1" />
+                    <p>Point 1</p>
+                </div>
+                <div class="MaskCircle">
+                    <input type="number" placeholder="2" id="MaskPoint_2" class="MaskPoint_2" />
+                    <p>Point 2</p>
+                </div>
+                <div class="MaskCircle">
+                    <input type="number" placeholder="4" id="MaskPoint_4" class="MaskPoint_4" />
+                    <p>Point 4</p>
+                </div>
+                <div class="MaskCircle">
+                    <input type="number" placeholder="3" id="MaskPoint_3" class="MaskPoint_3" />
+                    <p>Point 3</p>
+                </div>
+            </div>
+
+        </div>
+        <button  id="NGsave">Save Changes</button>
+
+
+
+    </div>
+</div>
+
+
+
+<script>
+    const partnumText = $("#partID").val();
+    let selectID = 0;
+    let TableData = [];
+
+    $("#NGsave").on('click', async (e) => {
+        e.preventDefault();
+        let formData = new FormData();
+        formData.append('RecordID', parseInt(selectID));
+        formData.append('ReadOne', $("#MaskPoint_1").val() || "");
+        formData.append('ReadTwo', $("#MaskPoint_2").val() || "");
+        formData.append('ReadThree', $("#MaskPoint_3").val() || "");
+        formData.append('ReadFour', $("#MaskPoint_4").val() || "");
+
+        const data = Object.fromEntries(formData);
+
+        let res = await postMethod('@Url.Action("UpdateIncompleteData", "MetalMask")', formData);
+        if (res?.Success) {
+            GetTotalIncompleteMask();
+            alert("UPdate Successfully");
+        }
+    });
+
+
+    const GetTotalIncompleteMask = async () => {
+        try {
+
+           const url = '@Url.Action("GetMetalMaskINCOMPLETE", "MetalMask")';
+
+            let res = await GetMethod(url, {
+                partnum: partnumText
+            });
+
+            if (res?.Success) {
+                console.clear();
+                let tableBody = $("#TransactionTable");
+                tableBody.empty();
+                TableData = res.data;
+                console.log(TableData);
+                let html = "";
+
+                $.each(TableData, function (index, row) {
+                    // Image Display
+                    html += `
+                         <tr class='cleanTable' data-id="${row.RecordID}">
+                               <td >${row.DateInput ? formatJsonDate(row.DateInput) : "-"}</td>
+                               <td >${row.AREA ? row.AREA : "-"}</td>
+                               <td >${row.SMTLine ? row.SMTLine : "-"}</td>
+                               <td >${row.Shift ? row.Shift : "-"}</td>
+                               <td >${row.Blocks ? row.Blocks : "-"}</td>
+                         </tr>
+                     `;
+                });
+
+                tableBody.append(html);
+            }
+
+
+        } catch (error) {
+            console.error('Unexpected error in GetMetalMaskTransaction:', error);
+        }
+    }
+
+    const order = [
+        "MaskPoint_1",
+        "MaskPoint_2",
+        "MaskPoint_3",
+        "MaskPoint_4"
+    ];
+
+
+    /* ============================
+        CLICK HANDLER
+    ============================ */
+    $(document).on("click", ".cleanTable", function () {
+        let recordId = $(this).data("id");
+        selectID = recordId;
+        console.log("RecordID : " + recordId);
+        let filterData = TableData.find(res => res.RecordID === recordId);
+
+        console.log(filterData);
+        if (filterData) {
+            $("#MaskPoint_1").val(filterData.ReadOne);
+            $("#MaskPoint_2").val(filterData.ReadTwo);
+            $("#MaskPoint_3").val(filterData.ReadThree);
+            $("#MaskPoint_4").val(filterData.ReadFour);
+
+            setRangeClass($("#MaskPoint_1"), filterData.ReadOne);
+            setRangeClass($("#MaskPoint_2"), filterData.ReadTwo);
+            setRangeClass($("#MaskPoint_3"), filterData.ReadThree);
+            setRangeClass($("#MaskPoint_4"), filterData.ReadFour);
+        }
+    });
+
+    // 🔥 Apply to ALL inputs
+    $(document).on("input", ".MaskContainer input[type='number']", function () {
+        setRangeClass($(this), this.value);
+    });
+
+    function setRangeClass($input, value) {
+        value = Number(value);
+
+        const $circle = $input.closest(".MaskCircle");
+
+        if (isNaN(value) || value < 30 || value > 50) {
+            $circle.addClass("invalid");
+        } else {
+            $circle.removeClass("invalid");
+        }
+    }
+
+
+    GetTotalIncompleteMask();
+</script>

@@ -70,18 +70,22 @@
 
                         <select id="ModelType" name="ModelType" class="filter-select">
                             <option value="0">-- Select Model -- </option>
-                            <option value="1">UPS</option>
-                            <option value="2">FAN</option>
-                            <option value="3">SERVO</option>
+                            <option value="1">FAN </option>
+                            <option value="2">UPS </option>
+                            <option value="3">Servo </option>
                         </select>
 
                     </div>
                     <div class="search_group col-12 col-sm-12 col-lg-12">
-                        <label>
-                            Part number
-                            <i class="fa-solid fa-circle-check" style="color: #33C9BB;" id="CheckID"></i>
-                            <i class="fa-solid fa-circle-xmark" style="color: #FF2C2C;" id="WrongID"></i>
-                        </label>
+                        <div class="flex_space">
+                            <label>
+                                Part number
+                                <i class="fa-solid fa-circle-check" style="color: #33C9BB;" id="CheckID"></i>
+                                <i class="fa-solid fa-circle-xmark" style="color: #FF2C2C;" id="WrongID"></i>
+                            </label>
+
+                            <small>Press enter to Check if Exist</small>
+                        </div>
                         <input type="text" placeholder="Scan or Type Manually input" name="Partnumber" id="PartSearch" required>
                     </div>
 

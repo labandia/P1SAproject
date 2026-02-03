@@ -44,7 +44,7 @@ namespace ProgramPartListWeb.Helper
             {
                 connectionKey = "LiveDevelopment";
             }
-            LogConnectionChoice(host, Hostname, connectionKey);
+            //LogConnectionChoice(host, Hostname, connectionKey);
 
             return AesEncryption.DecodeBase64ToString(
                 ConfigurationManager.ConnectionStrings[connectionKey].ConnectionString

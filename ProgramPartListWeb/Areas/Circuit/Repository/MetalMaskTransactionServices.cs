@@ -1,4 +1,5 @@
 ﻿using Aspose.Cells.Drawing;
+using DocumentFormat.OpenXml.Wordprocessing;
 using ProgramPartListWeb.Areas.Circuit.Interface;
 using ProgramPartListWeb.Areas.Circuit.Models;
 using ProgramPartListWeb.Helper;
@@ -179,7 +180,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
             string strsql = $@"UPDATE MetalMask_Transaction SET CleanDate =@CleanDate,
                             Pattern =@Pattern, Frame =@Frame, ReadOne =@ReadOne, ReadTwo =@ReadTwo,
                             ReadThree =@ReadThree, ReadFour =@ReadFour, Result =@Result,    
-                            Remarks =@Remarks, PIC =@PIC, Status = 3
+                            Remarks =@Remarks, PIC =@PIC, Status = 2
                             WHERE RecordID =@RecordID";
 
             return SqlDataAccess.UpdateInsertQuery(strsql, new
@@ -206,6 +207,59 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
 	                (SELECT COUNT(Status) FROM MetalMask_Transaction WHERE Status = 1) as TensionCount
                 FROM MetalMask_Transaction
                 GROUP BY Status");
+        }
+
+        public Task<List<MetalMaskTransaction>> GetTransactINComplete(string partnum)
+        {
+            return SqlDataAccess.GetData<MetalMaskTransaction>($@"SELECT RecordID,
+                           DateInput,
+                           Shift,
+                           SMTLine,
+                           Partnumber,
+                           AREA,
+                           SMT_start,
+                           SMT_end,
+                           TotalTime,
+                           TotalPrintBoard,
+                           SMT_Operator,
+                           CleanDate,
+                           Pattern,
+                           Frame,
+                           ReadOne,
+                           ReadTwo,
+                           ReadThree,
+                           ReadFour,
+                           Result,
+                           Remarks,
+                           PIC,
+                           Status,
+                           IsDelete
+                    FROM MetalMask_Transaction
+                    WHERE 
+                          Status = 2
+                      AND Partnumber = @Partnumber
+                      AND (
+                             ReadOne   NOT BETWEEN 30 AND 50
+                          OR ReadTwo   NOT BETWEEN 30 AND 50
+                          OR ReadThree NOT BETWEEN 30 AND 50
+                          OR ReadFour  NOT BETWEEN 30 AND 50
+                          );", new { Partnumber  = partnum });
+        }
+
+        public Task<bool> UpdateMetalMaskIncomplete(MetalMaskTransaction metal)
+        {
+            string strsql = $@"UPDATE MetalMask_Transaction SET  ReadOne =@ReadOne, ReadTwo =@ReadTwo,
+                            ReadThree =@ReadThree, ReadFour =@ReadFour
+                            WHERE RecordID =@RecordID";
+
+            return SqlDataAccess.UpdateInsertQuery(strsql, new
+            {
+                ReadOne = metal.ReadOne,
+                ReadTwo = metal.ReadTwo,
+                ReadThree = metal.ReadThree,
+                ReadFour = metal.ReadFour,
+                RecordID = metal.RecordID
+            });
         }
     }
 }

@@ -16,6 +16,10 @@ namespace ProgramPartListWeb.Areas.Circuit.Interface
             int pageNumber,
             int pageSize);
 
+        Task<List<MetalMaskTransaction>> GetTransactINComplete(string partnum);
+
+        Task<bool> UpdateMetalMaskIncomplete(MetalMaskTransaction metal);
+
         Task<MetalMaskTransaction> GetMetalMaskTransacDetails(int RecordID);
 
         Task<MetalMasKCountTransact> GetTheTotalCount();

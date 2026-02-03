@@ -291,7 +291,7 @@
                  {
                      search: partText,
                      SMTLine: SMTval,
-                     Stats: 2,
+                     Stats: 1,
                      ModelType: Modelval
                  });
 
@@ -344,6 +344,9 @@
     $(document).on("click", ".cleanTable", function () {
         let recordId = $(this).data("id");
         selectID = recordId;
+
+        currentStep = 1;
+        updateStepper();
 
         $("#cleaningStepperModal").modal("show");
     });
@@ -524,7 +527,6 @@
         formData.append('PIC', $("#PIC").val() || "");
 
         const data = Object.fromEntries(formData);
-        console.log(data);
 
         let res = await postMethod('@Url.Action("SubmitTensionAndCleaning", "MetalMask")', formData);
         if (res?.Success) {
@@ -647,8 +649,7 @@
         // Show completion message
         alert("Analysis completed successfully! Your cleaning process has been evaluated and optimized.");
         // Reset to first step
-        currentStep = 1;
-        updateStepper();
+     
     }
 
     // Add event listeners

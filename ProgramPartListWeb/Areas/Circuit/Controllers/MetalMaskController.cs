@@ -79,6 +79,24 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
             return JsonSuccess(result);
         }
 
+
+        [HttpGet]
+        public async Task<ActionResult> GetMetalMaskINCOMPLETE(string partnum)
+        {
+            var data = await _trans.GetTransactINComplete(partnum);
+            if (data == null) return JsonNotFound("No Data Found.");
+            return JsonSuccess(data);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> UpdateIncompleteData(MetalMaskTransaction metal)
+        {
+            bool result = await _trans.UpdateMetalMaskIncomplete(metal);
+            //if (data == null || !data.Any()) return JsonNotFound("No Masterlist Data.");
+            if (!result) return JsonPostError("Updated failed.", 500);
+            return JsonCreated(result, "Update Metal Mask Data Successfully");
+        }
+
         [HttpGet]
         public async Task<ActionResult> GetMetalMaskCurrentCount()
         {
@@ -233,5 +251,14 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
         public ActionResult Cleaning() => View();
         // GET: Circuit/MetalMask/History
         public ActionResult History() => View();
+        // GET: Circuit/MetalMask/History
+        public ActionResult IncompleteMaskInfo(string partnum)
+        {
+            if (partnum == "")
+            {
+                return RedirectToAction("IncompleteMaskInfo", "MetalMask", new { area = "Circuit" });
+            }
+            return View();
+        }
     }
 }

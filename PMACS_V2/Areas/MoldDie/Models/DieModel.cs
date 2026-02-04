@@ -243,7 +243,7 @@ namespace PMACS_V2.Areas.P1SA.Models
            DAILY (DieMold_Daily)
            ======================= */
         public int RecordID { get; set; }
-        public DateTime DateInput { get; set; }
+        public string DateInput { get; set; }
         public int CycleShot { get; set; }
         public int Total { get; set; }
         public int MachineNo { get; set; }

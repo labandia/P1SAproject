@@ -512,6 +512,8 @@
         }
     });
 
+
+    // EDIT DIE SERIAL DAILY
      $("#EditDailyforms").on('submit', async (e) => {
          e.preventDefault();
          try {
@@ -964,7 +966,7 @@
 
              const rowHtml = `
                  <tr>
-                     <td>${formatJsonDate(rowData.DateInput)}</td>
+                     <td>${rowData.DateInput}</td>
                      <td>${rowData.CycleShot}</td>
                      <td>${rowData.Total}</td>
                      <td>${rowData.MachineNo}</td>
@@ -997,7 +999,7 @@
              if (filterdata) {
                  $("#DailyPartnumRecordID").val(parseInt(rowIndex));
                  $("#DailyEditPartNo").val(filterdata[0].PartNo);
-                 $("#DailyPartnumDateInput").val(formatJsonDateV2(filterdata[0].DateInput));
+                 $("#DailyPartnumDateInput").val(filterdata[0].DateInput);
 
                  $("#DailyPartnumCycleShot").val(filterdata[0].CycleShot);
                  $("#DailyPartnumMachineNo").val(filterdata[0].MachineNo);
@@ -1123,7 +1125,7 @@
 
             const rowHtml = `
                <tr>
-                   <td>${formatJsonDate(rowData.DateInput)}</td>
+                   <td>${rowData.DateInput}</td>
                    <td>${rowData.CycleShot}</td>
                    <td>${rowData.Total}</td>
                    <td>${rowData.MachineNo}</td>
@@ -1150,7 +1152,7 @@
             const buttonId = $(this).attr('id');
             const rowIndex = buttonId.split('_')[1];
             console.log(getDieObj);
-            $("#DailyEditDateInput").val(formatJsonDateV2(getDieObj.DateInput));
+            $("#DailyEditDateInput").val(getDieObj.DateInput);
 
             $("#DailyeditCycleShot").val(getDieObj.CycleShot);
             $("#DailyEditMachineNo").val(getDieObj.MachineNo);
@@ -1212,7 +1214,8 @@
         const day = String(date.getDate()).padStart(2, '0');
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const year = date.getFullYear();
-
+        let text = `${day}/${month}/${year}`;
+        alert(text);
         return `${day}/${month}/${year}`;
     };
 

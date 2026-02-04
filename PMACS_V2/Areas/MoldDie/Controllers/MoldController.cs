@@ -172,14 +172,14 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
         {
             bool update = await _dieV2.AddUpdateDailyMoldie(add, 1);
             if (!update) return JsonValidationError();
-            return JsonCreated(add, "Update Data Successfully");
+            return JsonCreated(update, "Update Data Successfully");
         }
 
         [HttpPost]
         public async Task<ActionResult> UpdateDieSerialMoldDieMonitor(DieMoldDieSerialInput add)
         {
             bool update = await _dieV2.AddUpdateDailySerialMoldie(add);
-            //if (!update) return JsonValidationError();
+            if (!update) return JsonValidationError();
             return JsonCreated(add, "Update Die Serial Successfully");
         }
 

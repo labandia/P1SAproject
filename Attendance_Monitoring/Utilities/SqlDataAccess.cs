@@ -35,8 +35,8 @@ namespace Attendance_Monitoring.Utilities
 
                 LogConnectionChoice(machineName, connectionKey);
 
-                return AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings[connectionKey].ConnectionString);
-                //return _cons;
+                //return AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings["live_connect"].ConnectionString);
+                return _cons;
             }
             catch (Exception ex)
             {

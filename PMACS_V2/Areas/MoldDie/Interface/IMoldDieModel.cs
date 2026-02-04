@@ -44,13 +44,13 @@ namespace PMACS_V2.Areas.MoldDie.Interface
 
         Task UpsertDailyAsync(
                string partNo,
-               DateTime date,
+               string date,
                int cycleShot,
                int total,
                int status,
                DieMoldMonitoringModel mold);
 
-        Task UpsertMonitor(string partNo, DateTime date, int cycleShot);
+        Task UpsertMonitor(string partNo, string date, int cycleShot);
 
         // ===========================================================
         // MOLD DIE TOOLING DATA 

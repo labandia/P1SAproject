@@ -211,7 +211,8 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
 
         public Task<List<MetalMaskTransaction>> GetTransactINComplete(string partnum)
         {
-            return SqlDataAccess.GetData<MetalMaskTransaction>($@"SELECT RecordID,
+            return SqlDataAccess.GetData<MetalMaskTransaction>($@"SELECT 
+                           RecordID,
                            DateInput,
                            Shift,
                            SMTLine,

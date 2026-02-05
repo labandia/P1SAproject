@@ -83,16 +83,79 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
         [HttpGet]
         public async Task<ActionResult> GetMetalMaskINCOMPLETE(string partnum)
         {
-            var data = await _trans.GetTransactINComplete(partnum);
-            if (data == null) return JsonNotFound("No Data Found.");
-            return JsonSuccess(data);
+            var data = await _trans.GetTransactINComplete(partnum, 0);
+
+            var result = data.Select(x => new
+            {
+                x.RecordID,
+                x.DateInput,
+                x.Shift,
+                x.SMTLine,
+                x.Partnumber,
+                x.AREA,
+                x.Blocks,
+                SMT_start = x.SMT_start.ToString(@"hh\:mm"),
+                SMT_end = x.SMT_end.ToString(@"hh\:mm"),
+                TotalTimeHHMM = $"{x.TotalTime / 60:D2}:{x.TotalTime % 60:D2}",
+                x.TotalTime,
+                x.TotalPrintBoard,
+                x.SMT_Operator,
+                x.CleanDate,
+                x.Pattern,
+                x.Frame,
+                x.ReadOne,
+                x.ReadTwo,
+                x.ReadThree,
+                x.ReadFour,
+                x.Result,
+                x.Remarks,
+                x.PIC
+            });
+
+            if (result == null || !result.Any()) return JsonNotFound("No Data Found.");
+            return JsonSuccess(result);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetMetalMaskCOMPLETE(string partnum)
+        {
+            var data = await _trans.GetTransactINComplete(partnum, 1);
+
+            var result = data.Select(x => new
+            {
+                x.RecordID,
+                x.DateInput,
+                x.Shift,
+                x.SMTLine,
+                x.Partnumber,
+                x.AREA,
+                x.Blocks,
+                SMT_start = x.SMT_start.ToString(@"hh\:mm"),
+                SMT_end = x.SMT_end.ToString(@"hh\:mm"),
+                TotalTimeHHMM = $"{x.TotalTime / 60:D2}:{x.TotalTime % 60:D2}",
+                x.TotalTime,
+                x.TotalPrintBoard,
+                x.SMT_Operator,
+                x.CleanDate,
+                x.Pattern,
+                x.Frame,
+                x.ReadOne,
+                x.ReadTwo,
+                x.ReadThree,
+                x.ReadFour,
+                x.Result,
+                x.Remarks,
+                x.PIC
+            });
+
+            if (result == null || !result.Any()) return JsonNotFound("No Data Found.");
+            return JsonSuccess(result);
         }
 
         [HttpPost]
         public async Task<ActionResult> UpdateIncompleteData(MetalMaskTransaction metal)
         {
             bool result = await _trans.UpdateMetalMaskIncomplete(metal);
-            //if (data == null || !data.Any()) return JsonNotFound("No Masterlist Data.");
             if (!result) return JsonPostError("Updated failed.", 500);
             return JsonCreated(result, "Update Metal Mask Data Successfully");
         }

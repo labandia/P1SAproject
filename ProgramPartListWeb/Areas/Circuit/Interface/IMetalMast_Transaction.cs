@@ -16,7 +16,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Interface
             int pageNumber,
             int pageSize);
 
-        Task<List<MetalMaskTransaction>> GetTransactINComplete(string partnum);
+        Task<List<MetalMaskTransaction>> GetTransactINComplete(string partnum, int com);
 
         Task<bool> UpdateMetalMaskIncomplete(MetalMaskTransaction metal);
 

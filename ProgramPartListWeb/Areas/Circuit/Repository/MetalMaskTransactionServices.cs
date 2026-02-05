@@ -5,6 +5,7 @@ using ProgramPartListWeb.Areas.Circuit.Models;
 using ProgramPartListWeb.Helper;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace ProgramPartListWeb.Areas.Circuit.Repository
@@ -162,7 +163,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
         public Task<bool> SMTsubmitTransaction(
             MetalMaskTransaction metal)
         {
-            string strsql = $@"UPDATE MetalMask_Transaction SET 
+            string strsql = $@"UPDATE MetalMask_Transaction SET CleanDate = GETDATE(),
                             TotalPrintBoard =@TotalPrintBoard, Status = Status + 1,
                             SMT_Operator =@SMT_Operator
                                WHERE RecordID =@RecordID";
@@ -188,7 +189,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                 CleanDate = DateTime.Now,
                 Pattern = metal.Pattern,
                 Frame = metal.Frame,
-                ReadOne = metal.RecordID,
+                ReadOne = metal.ReadOne,
                 ReadTwo = metal.ReadTwo,
                 ReadThree = metal.ReadThree,
                 ReadFour = metal.ReadFour,
@@ -209,42 +210,46 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                 GROUP BY Status");
         }
 
-        public Task<List<MetalMaskTransaction>> GetTransactINComplete(string partnum)
+        public Task<List<MetalMaskTransaction>> GetTransactINComplete(string partnum, int com)
         {
-            return SqlDataAccess.GetData<MetalMaskTransaction>($@"SELECT 
-                           RecordID,
-                           DateInput,
-                           Shift,
-                           SMTLine,
-                           Partnumber,
-                           AREA,
-                           SMT_start,
-                           SMT_end,
-                           TotalTime,
-                           TotalPrintBoard,
-                           SMT_Operator,
-                           CleanDate,
-                           Pattern,
-                           Frame,
-                           ReadOne,
-                           ReadTwo,
-                           ReadThree,
-                           ReadFour,
-                           Result,
-                           Remarks,
-                           PIC,
-                           Status,
-                           IsDelete
-                    FROM MetalMask_Transaction
+            string condition = com != 0
+            ? @" AND t.ReadOne   BETWEEN 30 AND 50
+                 AND t.ReadTwo   BETWEEN 30 AND 50
+                 AND t.ReadThree BETWEEN 30 AND 50
+                 AND t.ReadFour  BETWEEN 30 AND 50"
+            : @" AND (
+                    t.ReadOne   NOT BETWEEN 30 AND 50
+                 OR t.ReadTwo   NOT BETWEEN 30 AND 50
+                 OR t.ReadThree NOT BETWEEN 30 AND 50
+                 OR t.ReadFour  NOT BETWEEN 30 AND 50
+                )";
+
+
+
+            string strsql = $@" SELECT
+                            t.RecordID
+                            ,t.DateInput
+                            ,t.Shift
+                            ,t.SMTLine
+                            ,t.Partnumber, t.AREA, m.Blocks
+                            ,t.SMT_start, t.SMT_end
+                            ,t.TotalTime, t.TotalPrintBoard
+                            ,t.SMT_Operator, t.CleanDate
+                            ,t.Pattern, t.Frame
+                            ,t.ReadOne
+                            ,t.ReadTwo,t.ReadThree
+                            ,t.ReadFour,t.Result
+                            ,t.Remarks,t.PIC, t.Status
+                    FROM MetalMask_Transaction t
+                    INNER JOIN MetalMask_Masterlist m ON t.Partnumber = m.Partnumber
                     WHERE 
-                          Status = 2
-                      AND Partnumber = @Partnumber
-                      AND (
-                             ReadOne   NOT BETWEEN 30 AND 50
-                          OR ReadTwo   NOT BETWEEN 30 AND 50
-                          OR ReadThree NOT BETWEEN 30 AND 50
-                          OR ReadFour  NOT BETWEEN 30 AND 50
-                          );", new { Partnumber  = partnum });
+                          t.Status = 2
+                      AND t.Partnumber = @Partnumber
+                      {condition}";
+
+            Debug.WriteLine(strsql);
+
+            return SqlDataAccess.GetData<MetalMaskTransaction>(strsql, new { Partnumber  = partnum });
         }
 
         public Task<bool> UpdateMetalMaskIncomplete(MetalMaskTransaction metal)

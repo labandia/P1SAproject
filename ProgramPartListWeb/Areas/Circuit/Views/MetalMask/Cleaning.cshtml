@@ -161,19 +161,26 @@
                         <div class="step-body">
                             <div class="MaskContainer">
                                 <div class="MaskCircle">
-                                    <input type="number" placeholder="1" id="MaskPoint_1" class="MaskPoint_1" />
+                                    <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2"
+                                           placeholder="1" id="MaskPoint_1" class="MaskPoint" />
                                     <p>Point 1</p>
                                 </div>
+
                                 <div class="MaskCircle">
-                                    <input type="number" placeholder="2" id="MaskPoint_2" class="MaskPoint_2"  />
+                                    <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2"
+                                           placeholder="2" id="MaskPoint_2" class="MaskPoint" />
                                     <p>Point 2</p>
                                 </div>
+
                                 <div class="MaskCircle">
-                                    <input type="number" placeholder="4" id="MaskPoint_4" class="MaskPoint_4"  />
+                                    <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2"
+                                           placeholder="4" id="MaskPoint_4" class="MaskPoint" />
                                     <p>Point 4</p>
                                 </div>
+
                                 <div class="MaskCircle">
-                                    <input type="number" placeholder="3" id="MaskPoint_3" class="MaskPoint_3"  />
+                                    <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2"
+                                           placeholder="3" id="MaskPoint_3" class="MaskPoint" />
                                     <p>Point 3</p>
                                 </div>
                             </div>
@@ -251,7 +258,8 @@
 
 <script>
      let selectID = 0;
-     let debounceTimer;
+    let debounceTimer;
+    let setData = [];
 
      // ==== FILER by ModelType ===========
      $("#ModelSelect").on("change", function () {
@@ -299,10 +307,10 @@
                    console.clear();
                    let tableBody = $("#TransactionTable");
                    tableBody.empty();
-                   let TableData = res.data;
+                   setData = res.data;
                    let html = "";
 
-                   $.each(TableData, function (index, row) {
+                  $.each(setData, function (index, row) {
                        // Image Display
                        html += `
                             <tr class='cleanTable' data-id="${row.RecordID}">
@@ -320,7 +328,7 @@
              } else {
                  // handle specific error types
                  let TableBody = $("#TransactionTable");
-                 let errorMessage = res?.Message || 'failed to load data';
+                 let errorMessage = res?.Message || 'No Data found';
 
                  if (res?.errorType === 'NotFoundError') {
                      errorMessage = 'Api endpoint not found. Please contact the Administrator';
@@ -348,7 +356,36 @@
         currentStep = 1;
         updateStepper();
 
+        let filtertable = setData.find(res => res.RecordID === selectID);
+        console.log(filtertable);
+
+        if (filtertable) {
+            let cleanDate = filtertable.CleanDate
+            // extract milliseconds
+            let timestamp = parseInt(cleanDate.replace(/[^0-9]/g, ''));
+
+            // create Date object
+            let d = new Date(timestamp);
+
+            // helpers
+            const pad = n => n.toString().padStart(2, '0');
+
+            // format for input[type="date"]
+            let dateValue = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+            console.log("Date " + dateValue);
+            // format for input[type="time"]
+            let timeValue = `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+            console.log("Time " + timeValue);
+            // set inputs
+            document.getElementById("DateClean").value = dateValue;
+            document.getElementById("DateTime").value = timeValue;
+            document.getElementById("DateClean").readOnly = true;
+            document.getElementById("DateTime").readOnly = true;
+
+        }
+
         $("#cleaningStepperModal").modal("show");
+       
     });
 
 
@@ -390,6 +427,12 @@
             validateInput(input);
         });
     });
+
+        document.querySelectorAll(".MaskPoint").forEach(input => {
+            input.addEventListener("input", () => {
+                input.value = input.value.replace(/\D/g, "").slice(0, 2);
+            });
+        });
 
     function validateInput(input) {
         const value = Number(input.value);
@@ -531,7 +574,7 @@
         let res = await postMethod('@Url.Action("SubmitTensionAndCleaning", "MetalMask")', formData);
         if (res?.Success) {
             GetMetalMaskTensionCleaning();
-            alert("UPdate Successfully");
+            GetTheTotalCount();
             ResetFormsSepper();
         }
     }
@@ -552,104 +595,9 @@
     }
 
 
-    // Update results based on inputs
-    //function updateResults() {
-    //    // Get values from form inputs
-    //    const surfaceType = document.getElementById('surface-type').value;
-    //    const cleaningMethod = document.querySelector('input[name="cleaning-method"]:checked').value;
-    //    const cleaningSolution = document.getElementById('cleaning-solution').value || "Generic";
-    //    const surfaceTension = parseInt(document.getElementById('surface-tension').value);
-    //    const contactAngle = parseInt(document.getElementById('contact-angle').value) || 75;
-    //    const maskingType = document.getElementById('masking-type').value;
-
-    //    // Calculate scores based on inputs
-    //    let effectiveness = 75; // Base score
-
-    //    // Adjust based on surface type
-    //    if (surfaceType === "glass" || surfaceType === "semiconductor") effectiveness += 5;
-    //    if (surfaceType === "metal") effectiveness += 3;
-
-    //    // Adjust based on cleaning method
-    //    if (cleaningMethod === "ultrasonic") effectiveness += 8;
-    //    if (cleaningMethod === "immersion") effectiveness += 5;
-
-    //    // Adjust based on surface tension (optimal range 25-45)
-    //    if (surfaceTension >= 25 && surfaceTension <= 45) effectiveness += 10;
-    //    else if (surfaceTension >= 20 && surfaceTension <= 50) effectiveness += 5;
-
-    //    // Adjust based on contact angle (optimal < 90°)
-    //    if (contactAngle < 60) effectiveness += 8;
-    //    else if (contactAngle < 90) effectiveness += 4;
-
-    //    // Cap at 100
-    //    effectiveness = Math.min(100, effectiveness);
-
-    //    // Calculate other scores
-    //    const removalRate = Math.min(100, effectiveness + 8);
-    //    const integrityScore = Math.min(100, effectiveness - 5);
-    //    const efficiencyScore = Math.min(100, effectiveness - 8);
-    //    const resourceScore = Math.min(100, effectiveness - 3);
-
-    //    // Update result displays
-    //    document.getElementById('effectiveness-score').textContent = effectiveness + '%';
-    //    document.getElementById('removal-rate').textContent = removalRate + '%';
-    //    document.getElementById('integrity-score').textContent = integrityScore + '%';
-    //    document.getElementById('efficiency-score').textContent = efficiencyScore + '%';
-    //    document.getElementById('resource-score').textContent = resourceScore + '%';
-
-    //    // Update status
-    //    const statusElement = document.getElementById('status-text');
-    //    if (effectiveness >= 85) {
-    //        statusElement.textContent = "EXCELLENT";
-    //        statusElement.className = "result-status status-good";
-    //    } else if (effectiveness >= 70) {
-    //        statusElement.textContent = "GOOD";
-    //        statusElement.className = "result-status status-good";
-    //    } else if (effectiveness >= 60) {
-    //        statusElement.textContent = "FAIR";
-    //        statusElement.className = "result-status status-warning";
-    //    } else {
-    //        statusElement.textContent = "NEEDS IMPROVEMENT";
-    //        statusElement.className = "result-status status-warning";
-    //    }
-
-    //    // Generate recommendations
-    //    const recommendations = document.getElementById('recommendations');
-    //    let recommendationHTML = '<ul style="color: #5a7184; line-height: 1.8;">';
-
-    //    // Surface tension recommendation
-    //    if (surfaceTension < 25) {
-    //        recommendationHTML += '<li>Surface tension is too low. Consider using a less aggressive cleaning solution to prevent surface damage.</li>';
-    //    } else if (surfaceTension > 45) {
-    //        recommendationHTML += '<li>Surface tension is too high. Add a surfactant to improve wetting and cleaning effectiveness.</li>';
-    //    }
-
-    //    // Contact angle recommendation
-    //    if (contactAngle > 90) {
-    //        recommendationHTML += '<li>High contact angle indicates poor wetting. Consider surface pretreatment or different cleaning solution.</li>';
-    //    }
-
-    //    // Masking recommendation
-    //    if (maskingType === "none" && (surfaceType === "semiconductor" || surfaceType === "ceramic")) {
-    //        recommendationHTML += '<li>Consider implementing selective area masking to protect sensitive surface features during cleaning.</li>';
-    //    }
-
-    //    // General recommendations
-    //    recommendationHTML += '<li>For ' + cleaningSolution + ', optimal temperature range is typically 40-60°C for best results.</li>';
-    //    recommendationHTML += '<li>Regularly validate cleaning effectiveness with contact angle measurements.</li>';
-
-    //    recommendationHTML += '</ul>';
-    //    recommendations.innerHTML = recommendationHTML;
-    //}
-
     // Complete the analysis
     function completeAnalysis() {
         updateResults();
-
-        // Show completion message
-        alert("Analysis completed successfully! Your cleaning process has been evaluated and optimized.");
-        // Reset to first step
-     
     }
 
     // Add event listeners

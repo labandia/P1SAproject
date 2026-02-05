@@ -14,7 +14,7 @@
         <button id="btnNGpage" class="btn btn-success">
             NG Data <span id="NGcount"></span>
         </button>
-        <button id="btnExport" class="btn btn-success">
+        <button id="btnExport" class="btn btn-success" style="display: none;">
             Export Selected
         </button>
     </div>
@@ -81,12 +81,12 @@
 
 
         clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => {
-            GetMetalMaskTransaction();
+        debounceTimer = setTimeout(async () => {
+            await GetMetalMaskTransaction();
             $("#searchID").val("");
             $("#searchText").text(tempText);
             tempPartnum = tempText; 
-            GetTotalIncompleteMask(tempText);
+            await GetTotalIncompleteMask(tempText);
         }, 400);
     });
 
@@ -191,29 +191,24 @@
         try {
             searchCount = 0;
 
-           const url = '@Url.Action("GetMetalMaskInformation", "MetalMask")';
+           const url = '@Url.Action("GetMetalMaskCOMPLETE", "MetalMask")';
             // Add spinner/loading indicator
             $("#TransactionTable").html('<tr><td colspan="24" class="text-center"><div class="spinner-border" role="status"></div> Loading...</td></tr>');
 
-            let res = await GetMethod(url, {
-                search: $("#searchID").val() || "",
-                SMTLine: 0,
-                Stats: 2,
-                ModelType: 0
-            });
+            let res = await GetMethod(url, { partnum: $("#searchID").val() || "" });
 
+            //console.log(res);
             if (res?.Success) {
                 let tableBody = $("#TransactionTable");
                 tableBody.empty();
                 let TableData = res.data;
-                searchCount = TableData.length;
                 let html = "";
-
+                $("#NGcount").text(``);
 
                 $.each(TableData, function (index, row) {
                     // Image Display
                     html += `
-                      <tr class="fade-in">
+                      <tr class="fade-in MaskTable">
                             <td>
                                    <input type="checkbox"
                                    class="row-check"
@@ -222,13 +217,13 @@
                             </td>
 
                             <td >${row.DateInput ? formatJsonDate(row.DateInput) : "-"}</td>
-                            <td >${row.Shift ? row.Shift : "-"}</td>
+                            <td >${row.Shift ? "NS" : "DS"}</td>
                             <td >${row.SMTLine ? row.SMTLine : "-"}</td>
                             <td >${row.AREA ? row.AREA : "-"}</td>
                             <td >${row.Partnumber ? row.Partnumber : "-"}</td>
                             <td >${row.Blocks ? row.Blocks : "-"}</td>
-                            <td >${row.SMT_start ? row.SMT_start : "-"}</td>
-                            <td >${row.SMT_end ? row.SMT_end : "-"}</td>
+                            <td >${row.SMT_start === "00:00" ? "--:--" : row.SMT_start}</td>
+                            <td >${row.SMT_end === "00:00" ? "--:--" : row.SMT_end}</td>
                             <td >${row.TotalTime ? row.TotalTime : "-"}</td>
                             <td >${row.TotalPrintBoard ? row.TotalPrintBoard : "-"}</td>
                             <td >${row.SMT_Operator ? row.SMT_Operator : "-"}</td>
@@ -249,10 +244,27 @@
                 });
 
                 tableBody.append(html);
+
+
+                ///* ============================
+                //      START REALTIME TIMERS
+                //   ============================ */
+
+                //document.querySelectorAll(".MaskTable").forEach((card, i) => {
+
+                //    const row = res.data[i];
+
+                //    // Only run if still active
+                //    if (row.SMT_end !== "00:00") return;
+                //    const changeDate = formatJsonDate(row.DateInput);
+                //    const startDate = parseTime(changeDate, row.SMT_start);
+
+                //    activeTimers.push(timer);
+                //});
             } else {
                 // handle specific error types
 
-                let errorMessage = res?.Message || 'failed to load data';
+                let errorMessage = res?.Message || 'No Data Found';
 
                 if (res?.errorType === 'NotFoundError') {
                     errorMessage = 'Api endpoint not found. Please contact the Administrator';
@@ -265,6 +277,7 @@
                            🔍 ${errorMessage}
                        </td>
                    </tr>`);
+
 
                 // Optional show a Toast
                 console.error("API Error : ", errorMessage, res);
@@ -280,21 +293,23 @@
 
     const GetTotalIncompleteMask = async (partnumText) => {
         try {
+            console.log("Partnumber : " + partnumText);
+            const url = '@Url.Action("GetMetalMaskINCOMPLETE", "MetalMask")';
 
-           const url = '@Url.Action("GetMetalMaskINCOMPLETE", "MetalMask")';
 
-            let res = await GetMethod(url, {
-                partnum: partnumText
-            });
-
+            let res = await GetMethod(url, { partnum: partnumText });
             let countpart = res?.Success ? res.data.length : 0;
-            $("#NGcount").show();
-            $("#NGcount").text(`(${countpart})`);
+            searchCount = countpart;
+            console.log(searchCount);
+
+            if (searchCount > 0) {
+                $("#NGcount").text(`(${searchCount})`);
+            } 
             
 
         } catch (error) {
             $("#NGcount").hide();
-            $("#NGcount").text("(0)");
+            $("#NGcount").text("");
         }
     }
 
@@ -305,4 +320,123 @@
               🔍 No Partnumber Found
           </td>
       </tr>`);
+
+
+
+
+
+
+
+
+
+
+    /* ============================
+     HELPERS
+  ============================ */
+    function buildStartDate(dateInput, smtStart) {
+        const d = new Date(dateInput);
+        const [h, m] = smtStart.split(":").map(Number);
+
+        return new Date(
+            d.getFullYear(),
+            d.getMonth(),
+            d.getDate(),
+            h,
+            m,
+            0
+        );
+    }
+
+    function timeNow() {
+        const now = new Date();
+        const hh = String(now.getHours()).padStart(2, '0');
+        const mm = String(now.getMinutes()).padStart(2, '0');
+
+        const time = `${hh}:${mm}`;
+
+        return time;
+    }
+
+    function parseTime(dateInput, timeStr) {
+        const d = new Date(dateInput);
+        const [h, m] = timeStr.split(":").map(Number);
+
+        return new Date(
+            d.getFullYear(),
+            d.getMonth(),
+            d.getDate(),
+            h,
+            m,
+            0
+        );
+    }
+
+    function formatDuration(minutes) {
+        const h = Math.floor(minutes / 60);
+        const m = minutes % 60;
+        return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+    }
+
+    /* ============================
+       REALTIME TIMER
+    ============================ */
+
+    function startRealtimeTimer(cardEl, dateInput, smtStart) {
+
+        const startDate = buildStartDate(dateInput, smtStart);
+
+
+        function update() {
+            const now = new Date();
+            let diffMin = Math.floor((now - startDate) / 60000);
+
+            // Safety guard
+            if (diffMin < 0) diffMin = 0;
+
+            cardEl.querySelector(".total-time")
+                .textContent = formatDuration(diffMin);
+        }
+
+        update();
+        return setInterval(update, 1000);
+    }
+
+
+    function startSelectedStopwatch(dateInput, smtStart) {
+
+        // stop old timer
+        if (selectedTimer) clearInterval(selectedTimer);
+
+        const startDate = buildStartDate(dateInput, smtStart);
+
+        function update() {
+            const now = new Date();
+            let diffMin = Math.floor((now - startDate) / 60000);
+            if (diffMin < 0) diffMin = 0;
+
+            const formatted = formatDuration(diffMin);
+            $("#TotalTimeText").text(formatted);
+        }
+
+        update();
+        selectedTimer = setInterval(update, 1000);
+    }
+
+
+    function updateOperationStatus(status) {
+        const labels = [
+            'NOT STARTED',  // 0
+            'IN PROGRESS',  // 1
+            'COMPLETED'     // 2
+        ];
+
+        const colors = [
+            '#fbbf24', // 0 - pending
+            '#4cc9f0', // 1 - running
+            '#4ade80'  // 2 - completed
+        ];
+
+        operationBadge.textContent = labels[status] ?? 'UNKNOWN';
+        operationBadge.style.background = colors[status] ?? '#6c757d';
+    }
 </script>

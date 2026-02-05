@@ -73,6 +73,8 @@ namespace ProgramPartListWeb.Areas.Circuit.Models
         public bool IsDelete { get; set; }
     }
 
+   
+
 
     public class MetalMasKCountTransact
     {

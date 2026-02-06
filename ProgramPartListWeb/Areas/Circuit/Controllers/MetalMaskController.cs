@@ -29,6 +29,18 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
             _trans = trans;
         }
 
+        //-----------------------------------------------------------------------------------------
+        //---------------------------- MASTERLIST METHODS  ----------------------------------------
+        //-----------------------------------------------------------------------------------------
+        [HttpGet]
+        public async Task<ActionResult> GetMastetlistData(
+            string search,
+            int ModelType)
+        {
+            var data = await _mas.GetMetalMaskMasterlist(search, 0, ModelType, 0, 0);
+            if (data == null || !data.Items.Any()) return JsonNotFound("No Masterlist Data.");
+            return JsonSuccess(data);
+        }
 
         [HttpGet]
         public async Task<ActionResult> SearchMetalMaskPartnum(string Partnumber)
@@ -37,6 +49,27 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
             if (data == null || !data.Any()) return JsonNotFound("No Masterlist Data.");
             return JsonSuccess(data);
         }
+
+        [HttpPost]
+        public async Task<ActionResult> UpsertMasterlist(MetalMaskModel model)
+        {
+            bool result = await _mas.AddMasterlist(model);
+            if (!result) return JsonPostError("failed to add a new Masterlist.", 500);
+            return JsonCreated(result, "Add Partnum Data Successfully");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult>EditMasterlist(MetalMaskModel model)
+        {
+            bool result = await _mas.EditMasterlist(model);
+            if (!result) return JsonPostError("failed to add a new Masterlist.", 500);
+            return JsonCreated(result, "Add Partnum Data Successfully");
+        }
+
+
+        //-----------------------------------------------------------------------------------------
+        //---------------------------- TRANSACTION OR SUMMARY METHODS  ----------------------------
+        //-----------------------------------------------------------------------------------------
 
         [HttpGet]
         public async Task<ActionResult> GetMetalMaskInformation(
@@ -314,6 +347,8 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
         public ActionResult Cleaning() => View();
         // GET: Circuit/MetalMask/History
         public ActionResult History() => View();
+        // GET: Circuit/MetalMask/Masterlist
+        public ActionResult Masterlist() => View();
         // GET: Circuit/MetalMask/History
         public ActionResult IncompleteMaskInfo(string partnum)
         {

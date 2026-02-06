@@ -17,9 +17,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Models
         public string Condition { get; set; }
         public string Remarks { get; set; }
         public int? ModelType { get; set; }
-        public string PWB_Blocks { get; set; }
         public DateTime DateReceived { get; set; }
-        public DateTime DateManufacture { get; set; }
     }
 
     public class MetalMaskTransaction

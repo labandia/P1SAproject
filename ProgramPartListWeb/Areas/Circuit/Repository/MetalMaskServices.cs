@@ -58,12 +58,17 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                 parameters.Add("@Search", search);
             }
 
-            strquery += $@" ORDER BY RecordID ASC
+            // If the Get Data has a Pagination function
+            if (pageSize != 0)
+            {
+                strquery += $@" ORDER BY RecordID ASC
                             OFFSET @Offset ROWS
                             FETCH NEXT @PageSize ROWS ONLY";
-            parameters.Add("@Offset", offset);
-            parameters.Add("@PageSize", pageSize);
+                parameters.Add("@Offset", offset);
+                parameters.Add("@PageSize", pageSize);
+            }
 
+           
             var items = await SqlDataAccess.GetData<MetalMaskModel>(strquery, parameters);
 
             int TotalRecords = items.Count;
@@ -139,9 +144,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                                     Thickness    = @Thickness,
                                     Blocks       = @Blocks,
                                     [Condition]  = @Condition,
-                                    Remarks      = @Remarks,
-                                    DateReceived = @DateReceived,
-                                    ModelType    = @ModelType
+                                    Remarks      = @Remarks
                                 WHERE Partnumber = @Partnumber
                                   AND AREA = @AREA
                                   AND IsDelete = 0;
@@ -203,10 +206,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                             Thickness    = @Thickness,
                             Blocks       = @Blocks,
                             [Condition]  = @Condition,
-                            Remarks      = @Remarks,
-                            DateReceived = @DateReceived,
-                            ModelType    = @ModelType,
-                            AREA         = @AREA
+                            Remarks      = @Remarks
                         WHERE RecordID = @RecordID";
 
             return SqlDataAccess.UpdateInsertQuery(strquery, masterlist);

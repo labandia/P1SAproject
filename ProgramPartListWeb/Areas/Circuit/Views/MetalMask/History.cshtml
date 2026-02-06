@@ -55,6 +55,7 @@
             </tr>
         </thead>
         <tbody id="TransactionTable">
+            
         </tbody>
     </table>
 
@@ -82,11 +83,11 @@
 
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(async () => {
-            await GetMetalMaskTransaction();
+            //await GetMetalMaskTransaction();
             $("#searchID").val("");
             $("#searchText").text(tempText);
             tempPartnum = tempText; 
-            await GetTotalIncompleteMask(tempText);
+            //await GetTotalIncompleteMask(tempText);
         }, 400);
     });
 
@@ -199,8 +200,7 @@
 
             //console.log(res);
             if (res?.Success) {
-                let tableBody = $("#TransactionTable");
-                tableBody.empty();
+                TableBody.empty();
                 let TableData = res.data;
                 let html = "";
                 $("#NGcount").text(``);
@@ -272,11 +272,12 @@
                     errorMessage = 'Your Session Token is expired. please refresh the page';
                 }
 
-                TableBody.html(`<tr>
-                       <td colspan='23'>
-                           🔍 ${errorMessage}
-                       </td>
-                   </tr>`);
+                TableBody.append(`<tr >
+                        <td colspan="23" style="text-align:center; font-weight:500;">
+                            🔍 ${errorMessage}
+                        </td>
+                    </tr>`);
+
 
 
                 // Optional show a Toast
@@ -285,7 +286,11 @@
 
         } catch (error) {
             console.error('Unexpected error in GetMetalMaskTransaction:', error);
-            $("#TransactionTable").html('<tr><td colspan="24" class="text-center text-danger">An unexpected error occurred</td></tr>');
+            TableBody.append(`<tr >
+                <td colspan="23" style="text-align:center; font-weight:500;">
+                    🔍 ${error.Message}
+                </td>
+            </tr>`);
         }
 
     }
@@ -315,11 +320,11 @@
 
     TableBody.empty();
 
-    TableBody.html(`<tr class='cleanTable'>
-          <td colspan='23'>
-              🔍 No Partnumber Found
-          </td>
-      </tr>`);
+    TableBody.append(`<tr >
+       <td colspan="23" style="text-align:center; font-weight:500;">
+           🔍 No partnumber found
+       </td>
+   </tr>`);
 
 
 

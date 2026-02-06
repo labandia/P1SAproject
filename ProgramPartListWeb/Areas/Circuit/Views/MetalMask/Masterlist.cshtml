@@ -1,0 +1,289 @@
+﻿
+@{
+    ViewBag.Title = "Masterlist";
+    Layout = "~/Areas/Circuit/Views/Shared/_MaskLayout.cshtml";
+}
+
+
+<!-- Controls Section -->
+<div class="controls-section">
+    <div class="control-group">
+        <label class="control-label">
+            <i class="fas fa-search"></i> Search Partnumber
+        </label>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Enter Partnumber ..." autocomplete="off">
+        </div>
+    </div>
+
+  
+
+
+    <div class="control-group">
+        <label class="control-label">
+            <i class="fas fa-calendar"></i>Model Type
+        </label>
+        <select id="ModelSelect" class="filter-select">
+            <option value="0">-- All Types --  </option>
+            <option value="1">FAN </option>
+            <option value="2">UPS </option>
+            <option value="3">Servo </option>
+        </select>
+    </div>
+
+    <div class="control-group">
+        <button id="addbtn">Add Data</button>
+    </div>
+</div>
+
+
+<div class="TrackTable" style="margin-top: 1em;">
+    <table>
+        <thead>
+            <tr>
+                <th>Partnumber </th>
+                <th>Date Received</th>
+                <th>Area </th>
+                <th>Alternate</th>
+                <th>Side</th>
+                <th>Thickness</th>
+                <th>Blocks</th>
+                <th>Condition</th>
+                <th>Remarks</th>
+
+            </tr>
+        </thead>
+        <tbody id="TransactionTable">
+        </tbody>
+    </table>
+
+</div>
+
+
+@*=================================================================================*@
+@*=========================== ADD METAL MASK Masterlist ============================*@
+@*=================================================================================*@
+<div class="modal fade modal-lg" id="AddMasterlist" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Add Materlist Data</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+
+                <form method="post" enctype="multipart/form-data" class="addformcontainer" id="addMasterlistform" autocomplete="off">
+                    <input type="hidden" name="RecordID" id="RecordID" />
+                    <div class="row">
+                        <div class="form_group col-6 col-sm-6 ">
+                            <label>Partnumber : </label>
+                            <input type="text" placeholder="-- N/A --" name="Partnumber" id="Partnumber" required />
+                        </div>
+
+                        <div class="form_group col-6 col-sm-6 ">
+                            <label>Area : </label>
+                            <input type="number" placeholder="-- N/A --" name="AREA" id="AREA" required />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form_group col-6 col-sm-6 ">
+                            <label>Alternate : </label>
+                            <input type="text" placeholder="-- N/A --" name="Alternate" id="Alternate"  />
+                        </div>
+
+                        <div class="form_group col-6 col-sm-6">
+                            <label>Side : </label>
+                            <select id="Side" name="Side">
+                                <option value="Single">Single</option>
+                                <option value="Double">Double </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form_group col-6 col-sm-6 ">
+                            <label>Thickness : </label>
+                            <input type="text" placeholder="-- N/A --" name="Thickness" id="Thickness"  />
+                        </div>
+
+                        <div class="form_group col-6 col-sm-6">
+                            <label>Blocks :  </label>
+                            <input type="number" placeholder="-- N/A --" name="Blocks" id="Blocks"  />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form_group col-6 col-sm-6 ">
+                            <label>Condition : </label>
+                            <input type="text" placeholder="-- N/A --" name="Condition" id="Condition"  />
+                        </div>
+
+                        <div class="form_group col-6 col-sm-6">
+                            <label>Remarks : </label>
+                            <input type="text" placeholder="-- N/A --" name="Remarks" id="Remarks"  />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form_group col-6 col-sm-6 ">
+                            <label>Date Received: </label>
+                            <input type="date" placeholder="-- N/A --" name="DateReceived" id="DateReceived" />
+                        </div>
+
+                        <select id="ModelType" name="ModelType" class="filter-select">
+                            <option value="0">-- All Types --  </option>
+                            <option value="1">FAN </option>
+                            <option value="2">UPS </option>
+                            <option value="3">Servo </option>
+                        </select>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div>
+                            <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                        </div>
+                        <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+    let setData = [];
+    let debounceTimer;
+    let selectID = 0;
+    let isAction = 0;
+
+    $("#addMasterlistform").on('submit', async function (e) {
+        e.preventDefault();
+
+        let url = isAction === 0 ? '@Url.Action("UpsertMasterlist", "MetalMask")' : '@Url.Action("EditMasterlist", "MetalMask")';
+
+        let formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+        console.log(data);
+        let res = await postMethod(url, formData);
+        console.log(res);
+        if (res?.Success) {
+            GetMetalMaskMasterlist();
+            $("#AddMasterlist").modal("hide");
+        }
+    });
+
+
+    $("#addbtn").on('click', (e) => {
+        e.preventDefault();
+        $("#AddMasterlist").modal("show");
+    });
+
+    // ==== SEARCH FUNCTIONALITY =======
+    $("#searchInput").on('keyup', () => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            GetMetalMaskMasterlist();
+        }, 400);
+    });
+
+
+   const GetMetalMaskMasterlist = async () => {
+     let partText = $("#searchInput").val();
+     let Modelval = $("#ModelSelect").val();
+     try {
+          const url = '@Url.Action("GetMastetlistData", "MetalMask")';
+
+         let res = await GetMethod(url, {
+             search: partText,
+             ModelType: Modelval
+         });
+
+         console.log(res);
+
+          if (res?.Success) {
+                console.clear();
+                let tableBody = $("#TransactionTable");
+                tableBody.empty();
+                setData = res.data.Items;
+                let html = "";
+
+               $.each(setData, function (index, row) {
+                    // Image Display
+                    html += `
+                         <tr class='cleanTable' data-id="${row.RecordID}">
+                               <td style='font-weight: 600;'>${row.Partnumber ? row.Partnumber : "-"}</td>
+                               <td >${row.DateReceived ? formatJsonDate(row.DateReceived) : "-"} </td>
+                               <td >${row.AREA ? row.AREA : "-"}</td>
+                               <td style='text-align: center;'>${row.Alternate ? row.Alternate : "-"}</td>
+                               <td style='text-align: center;'>${row.Side ? row.Side : "-"}</td>
+                               <td style='text-align: center;'>${row.Thickness ? row.Thickness : "-"}</td>
+                               <td style='text-align: center;'>${row.Blocks ? row.Blocks : "-"}</td>
+                               <td style='text-align: center;'>${row.Condition ? row.Condition : "-"}</td>
+                               <td >${row.Remarks ? row.Remarks : "-"}</td>
+
+                         </tr>
+                     `;
+                });
+
+                tableBody.append(html);
+          } else {
+              // handle specific error types
+              let TableBody = $("#TransactionTable");
+              let errorMessage = res?.Message || 'No Data found';
+
+              if (res?.errorType === 'NotFoundError') {
+                  errorMessage = 'Api endpoint not found. Please contact the Administrator';
+              } else if (res?.errorType === 'UnauthorizedError') {
+                  errorMessage = 'Your Session Token is expired. please refresh the page';
+              }
+
+              TableBody.html(`<tr><td colspan="24" class="text-center text-danger">${errorMessage}</td></tr>`);
+
+              // Optional show a Toast
+              console.error("API Error : ", errorMessage, res);
+          }
+     } catch (error) {
+         console.error('Unexpected error in GetMetalMaskTransaction:', error);
+     }
+    };
+
+
+    /* ============================
+        CLICK HANDLER
+    ============================ */
+    $(document).on("click", ".cleanTable", function () {
+        let recordId = $(this).data("id");
+        selectID = recordId;
+        isAction = 1;
+        let filtertable = setData.find(res => res.RecordID === selectID);
+        console.log(filtertable);
+
+        if (filtertable) {
+            $("#RecordID").val(selectID);
+            $("#Partnumber").val(filtertable.Partnumber);
+            $("#AREA").val(filtertable.AREA);
+            $("#Alternate").val(filtertable.Alternate);
+            $("#Side").val(filtertable.Side);
+            $("#Thickness").val(filtertable.Thickness);
+            $("#Blocks").val(filtertable.Blocks);
+            $("#Condition").val(filtertable.Condition);
+            $("#Remarks").val(filtertable.Remarks);
+            $("#ModelType").val(filtertable.ModelType);
+
+
+            $("#AddMasterlist").modal('show');
+        }
+    });
+
+
+
+    GetMetalMaskMasterlist();
+</script>

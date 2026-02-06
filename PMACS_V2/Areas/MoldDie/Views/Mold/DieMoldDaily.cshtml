@@ -469,9 +469,9 @@
               } else {
                   SearchByDieNo(strDieSerial);
               }
-              document.getElementById("addDailyForm").reset();
-              $("#searchInput").val("");
-              $("#searchDie").val("");
+              //document.getElementById("addDailyForm").reset();
+              //$("#searchInput").val("");
+              //$("#searchDie").val("");
            } else {
                Swal.fire({
                    icon: "error",
@@ -503,7 +503,7 @@
                     timer: 1500
                 }).then(() => {
                     SearchMoldiePartno();
-                    $("#EditPartnumforms")[0].reset();
+                    //$("#EditPartnumforms")[0].reset();
                     $("#EditPartnumMold").modal("hide");
                 });
             }

@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/x-icon" href="~/Content/Images/patrol .ico">
+    <meta name="description" content="Learn how to improve your website with caching, accessibility, and SEO best practices.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>San Hydro application</title>
+    <link rel="preload" href="@Url.Content("~/Content/fonts/Poppins-Regular.ttf")" as="font" type="font/ttf" crossorigin="anonymous">
+    <link href="~/Content/css/RotorRegister.css" rel="stylesheet" />
+
+    <script src="~/Scripts/Shared/bootstrap.bundle.min.js"></script>
+    <link href="~/Content/Shared/bootstrap.min.css" rel="stylesheet" />
+
+    @Styles.Render("~/Content/shared-css")
+
+    @Scripts.Render("~/bundles/shared-js")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+
+<body>
+    @RenderBody()   
+</body>
+</html>

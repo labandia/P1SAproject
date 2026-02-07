@@ -384,6 +384,16 @@
 
         }
 
+        currentStep = 1;
+        $("#Pattern").val("");
+        $("#Frame").val("");
+        $("#MaskPoint_1").val("");
+        $("#MaskPoint_2").val("");
+        $("#MaskPoint_3").val("");
+        $("#MaskPoint_4").val("");
+        $("#Result").val("");
+        $("#Remarks").val("");
+        $("#PIC").val("");
         $("#cleaningStepperModal").modal("show");
        
     });
@@ -532,19 +542,22 @@
     // Navigate to a specific step
     function goToStep(step) {
         if (step < 1 || step > totalSteps) return;
-
         currentStep = step;
+
+
         updateStepper();
     }
 
     // Navigate to next step
     function nextStep() {
+
+        if (!ValidationForm()) {
+            return;
+        }
+
         if (currentStep < totalSteps) {
             currentStep++;
             updateStepper();
-            if (currentStep === 2) {
-                $("#MaskPoint_1").focus();
-            }
         }
     }
 
@@ -594,9 +607,48 @@
         $("#cleaningStepperModal").modal('hide');
     }
 
+    function ValidationForm() {
+        // ====================================
+        // ========  Validation Input =========
+        // ====================================
+
+        // FRAME 1
+        if (currentStep === 1) {
+            let patText = $("#Pattern").val();
+            let frameText = $("#Frame").val();
+
+            if (patText === "" || frameText === "") {
+                alert("fill up the form first");
+                return false;
+            }
+        }
+        // FRAME 2
+        if (currentStep === 2) {
+            if ($("#MaskPoint_1").val() === "" || $("#MaskPoint_2").val() === "" || $("#MaskPoint_3").val() === "" || $("#MaskPoint_4").val() === "") {
+                alert("fill up the Tension form ");
+                return false;
+            }
+        }
+
+        // FRAME 3
+        if (currentStep === 3) {
+            if ($("#Result").val() === "" || $("#PIC").val() === "" || $("#Remarks").val() === "" ) {
+                alert("fill up the TEst result first");
+                return false;
+            }
+        }
+
+        return true;
+        // ====================================
+    }
+   
 
     // Complete the analysis
     function completeAnalysis() {
+
+        if (!ValidationForm()) {
+            return;
+        }
         updateResults();
     }
 

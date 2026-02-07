@@ -16,6 +16,11 @@ button:disabled {
     transform: none;
 }
 
+.erromessage {
+    color: #a81818;
+    display: none;
+}
+
 #MaskHead {
     color: #fff;
     background: hsl(210, 29%, 9%);
@@ -47,8 +52,8 @@ button:disabled {
     border-radius: .2em;
 }
 
-.nav-link {
-/*    position: relative;*/
+.nav-link.active{
+    color: #4361ee;
 }
 
 .tab-badge {

@@ -66,7 +66,10 @@
 
 
                     <div class="search_group col-12 col-sm-12 col-lg-12">
-                        <label>Select Model Type : </label>
+                        <div class="flex_space">
+                            <label>Select Model Type : </label>
+                            <small class="erromessage errormodel">Select Model Type Required *</small>
+                        </div>
 
                         <select id="ModelType" name="ModelType" class="filter-select">
                             <option value="0">-- Select Model -- </option>
@@ -84,9 +87,9 @@
                                 <i class="fa-solid fa-circle-xmark" style="color: #FF2C2C;" id="WrongID"></i>
                             </label>
 
-                            <small>Press enter to Check if Exist</small>
+                            <small class="erromessage errorpartno">Partnumber is Required *</small>
                         </div>
-                        <input type="text" placeholder="Scan or Type Manually input" name="Partnumber" id="PartSearch" required>
+                        <input type="text" placeholder="Ex. 009XXXXXX-01" name="Partnumber" id="PartSearch" required>
                     </div>
 
 
@@ -110,7 +113,7 @@
 
 
                         <div class="form_group col-12 col-sm-12">
-                            <label>Select SMT Line  <small style="color: #a81818; font-weight: 600;">*</small></label>
+                            <label>Select SMT Line </label>
                             <select id="SMTLine" name="SMTLine" class="filter-select">
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -177,7 +180,6 @@
 
     <script>
         const searchInput = document.getElementById('PartSearch');
-        const maskform = document.getElementById('addMaskform');
 
         $("#CheckID").hide();
         $("#WrongID").hide();
@@ -185,6 +187,17 @@
         $("#Tension").hide();
 
         let refreshData = 0;
+
+        /*==================== LINK ACTIVE ====================*/
+        const linkColor = document.querySelectorAll('.nav-link');
+
+        function colorLink() {
+            linkColor.forEach(l => l.classList.remove('active'))
+            this.classList.add('active')
+        }
+
+        linkColor.forEach(l => l.addEventListener('click', colorLink))
+
 
         document.addEventListener("DOMContentLoaded", function () {
             var currentUrl = window.location.pathname.toLowerCase();
@@ -206,22 +219,26 @@
             $("#AddProductModal").modal("show");
         });
 
-        maskform.addEventListener('submit', async function (e) {
+        $("#addMaskform").on('submit', async function (e) {
             e.preventDefault();
 
             let partText = $("#PartSearch").val().trim(); 
             let selectModel = $("#ModelType").val();
 
             if (parseInt(selectModel) === 0) {
-                alert("Please select a model");
+                $(".errormodel").show();
                 $("#ModelType").focus();
                 return;
+            } else {
+                $(".erromessage").hide();
             }
 
             if (!partText) {
-                alert("Please enter part text");
+                $(".errorpartno").show();
                 $("#PartSearch").focus();
                 return;
+            } else {
+                $(".errorpartno").hide();
             }
 
 
@@ -333,8 +350,7 @@
         }
 
 
-        /*==================== LINK ACTIVE ====================*/
-        //const linkColor = document.querySelectorAll('.nav-item')
+    
 
 
         GetTheTotalCount();

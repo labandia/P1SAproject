@@ -22,6 +22,8 @@ using ProgramPartListWeb.Areas.Circuit.Interface;
 using ProgramPartListWeb.Areas.Circuit.Repository;
 using ProgramPartListWeb.Areas.Hydroponics.Interface;
 using ProgramPartListWeb.Areas.Hydroponics.Repository;
+using ProgramPartListWeb.Areas.Rotor.Data;
+using ProgramPartListWeb.Areas.Rotor.Interface;
 
 namespace ProgramPartListWeb
 {
@@ -172,6 +174,8 @@ namespace ProgramPartListWeb
             container.RegisterType<IHyrdoParts, HydroPartsRepository>();
            
             container.RegisterType<IRegistration, RegistrationRepository>();
+
+            container.RegisterType<IRotorRegistration, RegistrationServices>();
 
             // ProgramPartlist
             container.RegisterType<IPlanSchedule, PlanScheduleRepository>();

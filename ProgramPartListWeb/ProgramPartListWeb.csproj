@@ -687,6 +687,11 @@
     <Compile Include="Areas\Press\Controllers\PartsLocatorController.cs" />
     <Compile Include="Areas\Press\Interfaces\IAluminumProducts.cs" />
     <Compile Include="Areas\Press\PressAreaRegistration.cs" />
+    <Compile Include="Areas\Rotor\Controllers\RegisterController.cs" />
+    <Compile Include="Areas\Rotor\Data\RegistrationServices.cs" />
+    <Compile Include="Areas\Rotor\Interface\IRegistration.cs" />
+    <Compile Include="Areas\Rotor\Model\RegistrationModel.cs" />
+    <Compile Include="Areas\Rotor\RotorAreaRegistration.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\ExtendController.cs" />
@@ -748,6 +753,7 @@
       <DependentUpon>Programpartlist.css</DependentUpon>
     </Content>
     <Content Include="Content\css\RegistrationUI.css" />
+    <Content Include="Content\css\RotorRegister.css" />
     <Content Include="Content\Images\Electrical.png" />
     <Content Include="Content\Images\FrontImage.png" />
     <Content Include="Content\Images\HydroChamber.png" />
@@ -831,6 +837,9 @@
     <Content Include="Areas\Circuit\Views\MetalMask\History.cshtml" />
     <Content Include="Areas\Circuit\Views\MetalMask\IncompleteMaskInfo.cshtml" />
     <Content Include="Areas\Circuit\Views\MetalMask\Masterlist.cshtml" />
+    <Content Include="Areas\Rotor\Views\web.config" />
+    <Content Include="Areas\Rotor\Views\Shared\_RegisterLayout.cshtml" />
+    <Content Include="Areas\Rotor\Views\Register\Index.cshtml" />
     <None Include="Content\Images\.editorconfig" />
     <Content Include="Content\Uploads\PCFY-81013Form1L.xlsx" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />

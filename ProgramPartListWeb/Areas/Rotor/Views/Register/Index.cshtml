@@ -196,8 +196,8 @@
     const year = new Date().getFullYear();
     const currentMonth = new Date().getMonth() + 1;
     const emptyState = document.getElementById('emptyState');
+    const tableBody = document.getElementById('tableBody');
 
-    // Sample data based on the provided SQL structure
     const categories = {
         1: "Quality",
         2: "Process",
@@ -239,7 +239,6 @@
 
     const GetRegistrationData = async () => {
         showLoading(true);
-        let tableBody = $("#tableBody");
         tableBody.empty();
         let searchText = $("#searchInput").val();
         let filtermonth = $("#monthFilter").val() === "all" ? currentMonth : $("#monthFilter").val();

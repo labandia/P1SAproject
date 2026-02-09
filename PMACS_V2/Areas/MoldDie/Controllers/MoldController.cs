@@ -301,6 +301,8 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
         [HttpPost]
         public async Task<ActionResult> DeleteMoldMasterlist(string partno)
         {
+
+
             bool update = await _dieV2.DeleteMoldieMasterlist(partno);
             if (!update) return JsonValidationError();
 

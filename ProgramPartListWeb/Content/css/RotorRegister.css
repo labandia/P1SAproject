@@ -272,17 +272,21 @@ tr:hover {
     border-top: 1px solid #e0e3ff;
 }
 
-    .pagination button {
-        width: 30px;
-        height: 30px;
-        border-radius: 8px;
-        border: 1px solid var(--gray-light);
-        background-color: white;
-        color: var(--dark);
-        font-weight: 500;
-        cursor: pointer;
-        transition: var(--transition);
-    }
+.pagination-items{
+    display: flex;
+}
+
+.pagination button {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    border: 1px solid var(--gray-light);
+    background-color: white;
+    color: var(--dark);
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+}
 
         .pagination button:hover {
             background-color: var(--primary);

@@ -1039,6 +1039,7 @@
     <Content Include="Views\P1SAportalweb\Chat.cshtml" />
     <Content Include="Views\Stock\Chat.cshtml" />
     <Content Include="Views\Shared\_SystemConfig.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

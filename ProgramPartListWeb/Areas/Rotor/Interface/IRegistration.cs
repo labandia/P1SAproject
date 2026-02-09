@@ -11,10 +11,13 @@ namespace ProgramPartListWeb.Areas.Rotor.Interface
         Task<PagedResult<RotorRegistrationModel>> GetRegistrationsList(
             string search, 
             int monthfilter,
+            int intyear, 
             int catID, 
             int Department,
             int pageNumber,
             int pageSize);
+
+        Task<List<string>> GetRegistrationYear();
 
         Task<bool> AddRegistration(RotorRegistrationModel masterlist);
 

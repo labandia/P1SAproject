@@ -74,6 +74,13 @@
         </div>
     </section>
 
+    <a href="file:////sdp01034s/SYSTEM%20EXECUTABLE/P1SA-PC_System/P1SA-PC_System.application">
+        Launch P1SA System
+    </a>
+
+
+
+
 
 </body>
 </html>
@@ -97,7 +104,7 @@
 
         let res = await GetMethod('@Url.Action("GetProjectList", "P1SAportalweb")', {});
         if (res && res.Success) {
-            let filteredData = res.Data;
+            let filteredData = res.data;
 
             if (projectList.length > 0 && !projectList.includes(0)) {
                 filteredData = filteredData.filter(project => projectList.includes(project.DepartmentID));

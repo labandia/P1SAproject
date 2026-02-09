@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.EMMA;
+﻿using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.EMMA;
 using ProgramPartListWeb.Areas.Rotor.Interface;
 using ProgramPartListWeb.Areas.Rotor.Model;
 using ProgramPartListWeb.Helper;
@@ -31,7 +32,7 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
                                     VALUES
                                     (
                                         @RegistrationNo,
-                                        @Description,
+                                        @Desciprtion,
                                         @Remarks,
                                         @CategoryID,
                                         @DepartmentID
@@ -66,9 +67,10 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
         }
 
         public async Task<PagedResult<RotorRegistrationModel>> GetRegistrationsList(
-            string search, 
-            int monthfilter,    
-            int catID, 
+            string search,
+            int monthfilter,
+            int intyear,
+            int catID,
             int Department,
             int pageNumber,
             int pageSize)
@@ -85,6 +87,13 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
                                   ,DepartmentID
                               FROM Registration WHERE IsDeleted = 0 ";
 
+            if (monthfilter != 0 && intyear != 0)
+            {
+                strquery += "AND MONTH(DateCreated) = @Month AND YEAR(DateCreated) = @strYear;";
+                parameters.Add("@Month", monthfilter);
+                parameters.Add("@strYear", intyear);
+            }
+
             // Filter By Area 
             if (catID != 0)
             {
@@ -99,19 +108,7 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
                 parameters.Add("@DepartmentID", Department);
             }
 
-            // Filter By Month (DateCreated)
-            if (monthfilter != 0)
-            {
-                strquery += @" AND DateCreated >= @StartDate
-                   AND DateCreated <  @EndDate";
 
-                var year = DateTime.Now.Year; // or pass year as parameter if needed
-                var startDate = new DateTime(year, monthfilter, 1);
-                var endDate = startDate.AddMonths(1);
-
-                parameters.Add("@StartDate", startDate);
-                parameters.Add("@EndDate", endDate);
-            }
 
             // Search Partnumber
             if (!string.IsNullOrEmpty(search))
@@ -126,11 +123,16 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
             // If the Get Data has a Pagination function
             if (pageSize != 0)
             {
-                strquery += $@" ORDER BY RegistrationID ASC
+                strquery += $@" ORDER BY RegistrationID DESC
                             OFFSET @Offset ROWS
                             FETCH NEXT @PageSize ROWS ONLY";
                 parameters.Add("@Offset", offset);
                 parameters.Add("@PageSize", pageSize);
+            }
+
+            if (pageSize == 0 && pageNumber == 0)
+            {
+                strquery += $@" ORDER BY RegistrationID DESC";
             }
 
 
@@ -145,6 +147,15 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
                 PageSize = pageSize,
                 TotalRecords = TotalRecords
             };
+        }
+
+        public Task<List<string>> GetRegistrationYear()
+        {
+            return SqlDataAccess.StringList($@"SELECT 
+                            YEAR(DateCreated) AS GetYear
+                        FROM Registration
+                        GROUP BY YEAR(DateCreated)
+                        ORDER BY [GetYear];");
         }
     }
 }

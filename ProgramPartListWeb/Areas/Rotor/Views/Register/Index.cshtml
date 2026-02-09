@@ -15,22 +15,22 @@
 
                 <div class="form-group">
                     <label for="regNo"><i class="fas fa-hashtag"></i> Registration No</label>
-                    <input type="text" id="regNo" name="regNo" placeholder="REG-00125" required>
+                    <input type="text" id="regNo" name="RegistrationNo" placeholder="REG-00125" required>
                 </div>
 
                 <div class="form-group full-width">
                     <label for="description"><i class="fas fa-align-left"></i> Description</label>
-                    <textarea id="description" name="description" placeholder="Enter detailed description..." required></textarea>
+                    <textarea id="description" name="Desciprtion" placeholder="Enter detailed description..." required></textarea>
                 </div>
 
                 <div class="form-group full-width">
                     <label for="remarks"><i class="fas fa-sticky-note"></i> Remarks</label>
-                    <textarea id="remarks" name="remarks" placeholder="Additional remarks or notes..."></textarea>
+                    <textarea id="remarks" name="Remarks" placeholder="Additional remarks or notes..."></textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="category"><i class="fas fa-tag"></i> Category</label>
-                    <select id="category" name="category" required>
+                    <select id="category" name="CategoryID" required>
                         <option value="">Select Category</option>
                         <option value="1">🟦 Quality</option>
                         <option value="2">🟩 Process</option>
@@ -42,7 +42,7 @@
 
                 <div class="form-group">
                     <label for="department"><i class="fas fa-building"></i> Department</label>
-                    <select id="department" name="department" required>
+                    <select id="department" name="DepartmentID" required>
                         <option value="">Select Department</option>
                         <option value="1">Molding</option>
                         <option value="2">Press</option>
@@ -74,7 +74,6 @@
                 <div class="filter-group">
                     <label for="yearFilter"><i class="fas fa-calendar-alt"></i> Year  </label>
                     <select id="yearFilter" class="filter-select">
-                        <option value="all">All Years</option>
                         <!-- Years will be populated by JavaScript -->
                     </select>
                 </div>
@@ -101,11 +100,11 @@
                     <label for="categoryFilter"><i class="fas fa-tag"></i> Category</label>
                     <select id="categoryFilter" class="filter-select">
                         <option value="all">All Categories</option>
-                        <option value="1">Quality</option>
-                        <option value="2">Process</option>
-                        <option value="3">Safety</option>
-                        <option value="4">Maintenance</option>
-                        <option value="5">Documentation</option>
+                        <option value="1">🟦 Quality</option>
+                        <option value="2">🟩 Process</option>
+                        <option value="3">🟥 Safety</option>
+                        <option value="4">🟨 Maintenance</option>
+                        <option value="5">🟪 Documentation</option>
                     </select>
                 </div>
                 <div class="filter-group">
@@ -124,7 +123,7 @@
 
 
 
-        <div class="table-container">
+        <div class="table-container" style="position: relative; height: 100%;">
             <!-- Loading Overlay -->
             <div class="loading" id="loading">
                 <div class="spinner"></div>
@@ -142,14 +141,15 @@
                         </tr>
                     </thead>
                     <tbody id="tableBody">
+                      
                     </tbody>
                 </table>
             </div>
 
             <!-- Empty State -->
             <div class="empty-state" id="emptyState" style="display: none;">
-                <i class="fas fa-inbox"></i>
-                <h3>No Registrations Found</h3>
+                <i class="fas fa-inbox" style="transform: scale(2.5);"></i>
+                <h3 style="margin: 1em 0 .5em;">No Registrations Found</h3>
                 <p>Add your first Registration No using the form on the left.</p>
             </div>
         </div>
@@ -193,109 +193,138 @@
 
 <script>
     let debounceTimer;
+    const year = new Date().getFullYear();
+    const currentMonth = new Date().getMonth() + 1;
+    const emptyState = document.getElementById('emptyState');
+
+    // Sample data based on the provided SQL structure
+    const categories = {
+        1: "Quality",
+        2: "Process",
+        3: "Safety",
+        4: "Maintenance",
+        5: "Documentation"
+    };
+
+    const departments = {
+        1: "Molding",
+        2: "Press",
+        3: "Rotor",
+        4: "Winding",
+        5: "Circuit"
+    };
+
+
 
     // ==== SEARCH FUNCTIONALITY =======
-    $("#searchInput").on('keyup', () => {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => {
-            GetRegistrationData();
-        }, 400);
-    });
+    $("#searchInput").on('keyup', debounce(() => {
+        GetRegistrationData();
+    }, 300));
 
-    // ==== FILER by month ===========
-    $("#monthFilter").on("change", function () {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => {
-            GetRegistrationData();
-        }, 400);
-    });
+    //// ==== FILER by month ===========
+    $("#monthFilter").on("change", debounce(() => {
+        GetRegistrationData();
+    }, 300));
 
-    // ==== FILER by category ===========
-    $("#categoryFilter").on("change", function () {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => {
-            GetRegistrationData();
-        }, 400);
-    });
+    //// ==== FILER by category ===========
+    $("#categoryFilter").on("change", debounce(() => {
+        GetRegistrationData();
+    }, 300));
 
-    // ==== FILER by departnetb ===========
-    $("#departmentFilter").on("change", function () {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => {
-            GetMetalMaskTensionCleaning();
-        }, 400);
-    });
+    //// ==== FILER by departnetb ===========
+    $("#departmentFilter").on("change", debounce(() => {
+        GetRegistrationData();
+    }, 300));
 
 
     const GetRegistrationData = async () => {
+        showLoading(true);
+        let tableBody = $("#tableBody");
+        tableBody.empty();
         let searchText = $("#searchInput").val();
-        let filtermonth = $("#monthFilter").val();
-        let category = $("#categoryFilter").val();
-        let depId = $("#departmentFilter").val();
+        let filtermonth = $("#monthFilter").val() === "all" ? currentMonth : $("#monthFilter").val();
+        let stryear = !$("#yearFilter").val() ? year : $("#yearFilter").val();
+        let category = $("#categoryFilter").val() === "all" ? 0 : $("#categoryFilter").val();
+        let depId = $("#departmentFilter").val() === "all" ? 0 : $("#departmentFilter").val();
+
 
           try {
-               const url = '@Url.Action("GetRegistrationInformation", "Register")';
+              const url = '@Url.Action("GetRegistrationInformation", "Register")';
 
               let res = await GetMethod(url, {
                   search: searchText,
                   monthfilter: filtermonth,
+                  yearint: stryear,
                   catID: category,
                   depID: depId
               });
 
-              console.log(res);
 
                if (res?.Success) {
-                     console.clear();
-                     let tableBody = $("#TransactionTable");
-                     tableBody.empty();
+                   console.clear();
+                    emptyState.style.display = 'none';
+
                      setData = res.data.Items;
                      let html = "";
 
-                    $.each(setData, function (index, row) {
-                         // Image Display
-                         html += `
+                   setTimeout(() => {
+                       $.each(setData, function (index, row) {
+                           // Image Display
+                           html += `
                               <tr class='cleanTable' data-id="${row.RegistrationID}">
-                                    <td style='font-weight: 600;'>${row.DateCreated ? row.DateCreated : "-"}</td>
-                                    <td >${row.RegistrationNo ? row.RegistrationNo : "-"} </td>
-                                    <td >${row.Desciprtion ? row.Desciprtion : "-"}</td>
-                                    <td style='text-align: center;'>${row.Remarks ? row.Remarks : "-"}</td>
-                                    <td >${row.DepartmentID ? row.DepartmentID : "-"}</td>
-
+                                    <td style='font-weight: 600;'>${row.RegistrationNo ? row.RegistrationNo : "-"}</td>
+                                    <td >${row.Desciprtion ? row.Desciprtion : "-"} </td>
+                                    <td >${row.Remarks ? row.Remarks : "-"}</td>
+                                     <td><span class="category-badge ${categories[row.CategoryID]}">${row.CategoryID ? categories[row.CategoryID] : "-"}</span></td>
+                                     <td><span class="department-badge ${departments[row.DepartmentID].toLowerCase()}">Press</span></td>
                               </tr>
                           `;
-                     });
+                       });
 
-                     tableBody.append(html);
+                       tableBody.append(html);
+
+                       showLoading(false);
+                   }, 500);
                } else {
-                   // handle specific error types
-                   let TableBody = $("#TransactionTable");
-                   let errorMessage = res?.Message || 'No Data found';
+                   setTimeout(() => {
+                       // handle specific error types
 
-                   if (res?.errorType === 'NotFoundError') {
-                       errorMessage = 'Api endpoint not found. Please contact the Administrator';
-                   } else if (res?.errorType === 'UnauthorizedError') {
-                       errorMessage = 'Your Session Token is expired. please refresh the page';
-                   }
+                       let errorMessage = res?.Message || 'No Data found';
 
-                   TableBody.html(`<tr><td colspan="24" class="text-center text-danger">${errorMessage}</td></tr>`);
+                       if (res?.errorType === 'NotFoundError') {
+                           errorMessage = 'Api endpoint not found. Please contact the Administrator';
+                       } else if (res?.errorType === 'UnauthorizedError') {
+                           errorMessage = 'Your Session Token is expired. please refresh the page';
+                       }
+                       emptyState.style.display = 'block';
 
-                   // Optional show a Toast
-                   console.error("API Error : ", errorMessage, res);
+                       // Optional show a Toast
+                       console.error("API Error : ", errorMessage, res);
+
+                       showLoading(false);
+                   }, 500);
                }
           } catch (error) {
               console.error('Unexpected error in GetMetalMaskTransaction:', error);
           }
     };
 
+    const GetRegistrationYearData = async () => {
+        const url = '@Url.Action("GetRegistrationList", "Register")';
 
+        let res = await GetMethod(url, {});
 
-    GetRegistrationData();
-
-
-
-
-
+        if (res?.Success) {
+            let data = res.data;
+            if (data.length > 0) {
+                $.each(data, function (index, year) {
+                    $("#yearFilter").append(`<option value='${year}'>${year}</option>`);
+                });
+            } else {
+                $("#yearFilter").append(`<option value="${year}">${year}</option>`)
+            }
+        }
+    };
 
 
 
@@ -303,19 +332,22 @@
 
     const registrationForm = document.getElementById('registrationForm');
     const loading = document.getElementById('loading');
-    const emptyState = document.getElementById('emptyState');
     const toast = document.getElementById('toast');
 
 
-    registrationForm.addEventListener('submit', function (e) {
+    registrationForm.addEventListener('submit', async function (e) {
         e.preventDefault();
         const formData = new FormData(e.target);
 
+         let res = await postMethod('@Url.Action("AddNewRegistration", "Register")', formData);
+         if (res?.Success) {
+             GetRegistrationData();
+             // Reset form
+             registrationForm.reset();
 
-        // Reset form
-        registrationForm.reset();
+             showToast('Registration added successfully!');
+         }
 
-        showToast('Registration added successfully!');
     });
 
 
@@ -343,7 +375,7 @@
         loading.classList.toggle('active', show);
 
         // Update empty state
-        emptyState.style.display = filtered.length === 0 ? 'block' : 'none';
+        //emptyState.style.display = filtered.length === 0 ? 'block' : 'none';
     }
 
     // Debounce function for search
@@ -360,4 +392,12 @@
     }
 
     // renderTable();
+
+    document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("monthFilter").value = currentMonth;
+    });
+
+
+    GetRegistrationYearData();
+    GetRegistrationData();
 </script>

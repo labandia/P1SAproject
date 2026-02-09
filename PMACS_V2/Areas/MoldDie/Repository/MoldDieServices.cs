@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using PMACS_V2.Areas.MoldDie.Interface;
 using PMACS_V2.Areas.P1SA.Models;
@@ -849,5 +850,109 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             });
 
         }
+
+
+
+
+        public async void UpdatesAlltheTotalCycle(string partnum = "", string Die = "")
+        {
+            int TempValue = 0;
+            List<DieMoldMonitoringModel> data = new List<DieMoldMonitoringModel>();
+            // 1. Get the Data first
+            if(partnum != "")
+            {
+                data = await GetPreviousMoldDieData(partnum);
+            }
+
+            if(Die != "")
+            {
+                data = await GetPreviousMoldieDataSerial(partnum);
+            }
+
+            for (int i = 0; i < data.Count(); i++)
+            {
+                // 2. Store the first value of data to the TempValue and then Skip to the next loop
+                if (i == 0)
+                {
+                    TempValue = data[0].CycleShot;
+                    // proceed to the next loop
+                    continue;
+                }
+
+                // 3. Add the previous to the next value record
+                TempValue += data[i].CycleShot;
+
+                //  4. Updates to the Query  Record by ID
+                // Updates the 
+                string updatemold = $@"UPDATE DieMold_Daily SET CycleShot =@CycleShot, Total =@Total
+                           WHERE RecordID =@RecordID";
+
+                await SqlDataAccess.UpdateInsertQuery(updatemold, new
+                {
+                    CycleShot = data[i].CycleShot,
+                    Total = TempValue,
+                    RecordID = data[i].RecordID
+                });
+
+            }
+        }
+
+
+
+
+
+
+
+        // =================== FOR THE UPDATE PROCESS ============================
+        public Task<List<DieMoldMonitoringModel>> GetPreviousMoldDieData(string partnum)
+        {
+            string strsql = @"WITH OrderedData AS (
+                            SELECT *,
+                                   ROW_NUMBER() OVER (ORDER BY DateInput DESC, RecordID DESC) AS rn
+                            FROM PMACS_LIVE.dbo.DieMold_Daily
+	                        WHERE PartNo = @PartNo
+                        ),
+                        StopPoint AS (
+                            SELECT MIN(rn) AS stop_rn
+                            FROM OrderedData
+                            WHERE Total = 0
+                        )
+                        SELECT o.*
+                        FROM OrderedData o
+                        CROSS JOIN StopPoint s
+                        WHERE o.rn < s.stop_rn
+                        ORDER BY o.DateInput ASC, o.RecordID ASC;";
+
+            return SqlDataAccess.GetData<DieMoldMonitoringModel>(strsql, new { PartNo = partnum });
+
+        }
+
+
+        public Task<List<DieMoldMonitoringModel>> GetPreviousMoldieDataSerial(string DieSerial)
+        {
+            string strsql = @"WITH OrderedData AS (
+                                SELECT d.*,
+                                       ROW_NUMBER() OVER (
+                                           ORDER BY d.DateInput DESC, d.RecordID DESC
+                                       ) AS rn
+                                FROM PMACS_LIVE.dbo.DieMold_Daily d
+                                INNER JOIN PMACS_LIVE.dbo.DieMold_MoldingMainParts m
+                                    ON m.PartNo = d.PartNo
+                                WHERE m.DieSerial = @DieSerial
+                            ),
+                            StopPoint AS (
+                                SELECT MIN(rn) AS stop_rn
+                                FROM OrderedData
+                                WHERE Total = 0
+                            )
+                            SELECT o.*
+                            FROM OrderedData o
+                            CROSS JOIN StopPoint s
+                            ORDER BY o.DateInput DESC, o.RecordID DESC;"
+            ;
+
+            return SqlDataAccess.GetData<DieMoldMonitoringModel>(strsql, new { DieSerial = DieSerial });
+        }
+
     }
 }

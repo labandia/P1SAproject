@@ -49,9 +49,16 @@
 
         </div>
 
-        <hr  style="margin: 0;" />
-      
-        <section class="Maskcardcontainer mt-3" id="Maskcardcontainer"></section>
+        <hr style="margin: 0;" />
+
+        <div class="DataContainer" style="position: relative;">
+            <!-- Loading Overlay -->
+            <div class="loading" id="loading" style="padding: 2em 0; height: 300px;">
+                <div class="spinner"></div>
+            </div>
+
+            <section class="Maskcardcontainer mt-3" id="Maskcardcontainer"></section>
+        </div>
 
 
 
@@ -145,6 +152,7 @@
     const saveSMT = document.getElementById("saveSMT");
 
     const operationBadge = document.getElementById('operationBadge');
+    const loading = document.getElementById('loading');
 
     let selectedTimer = null;
     let debounceTimer;
@@ -295,6 +303,8 @@
     });
 
     const GetMetalMaskTransaction = async () => {
+        showLoading(true);
+
         let partText = $("#searchInput").val();
         let SMTval = $("#SMTLine").val();
         let Modelval = $("#ModelSelect").val();
@@ -319,45 +329,46 @@
                 SMTData = res.data;
                 let html = "";
 
-                SMTData.forEach(rowData => {
+                setTimeout(() => {
+                    SMTData.forEach(rowData => {
 
-                    html += `<div class="Maskcard" data-id="${rowData.RecordID}">
-                                <div class="MaskHeader">
-                                    <h5>Metal mask rev partnum : <span>${rowData.Partnumber}</span></h5>
-                                </div>
+                        html += `<div class="Maskcard" data-id="${rowData.RecordID}">
+                             <div class="MaskHeader">
+                                 <h5>Part number : <span>${rowData.Partnumber}</span></h5>
+                             </div>
 
-                                <div class="MaskContent">
-                                    <div><label>SMT Line</label><p>${rowData.SMTLine}</p></div>
-                                    <div><label>Area</label><p>${rowData.AREA}</p></div>
-                                    <div><label>Shift</label><p>${rowData.Shift != false ? "DS" : "NS"}</p></div>
-                                    <div><label>Blocks</label><p>${rowData.Blocks}</p></div>
-                                </div>
+                             <div class="MaskContent">
+                                 <div><label>SMT Line</label><p>${rowData.SMTLine}</p></div>
+                                 <div><label>Area</label><p>${rowData.AREA}</p></div>
+                                 <div><label>Shift</label><p>${rowData.Shift != false ? "DS" : "NS"}</p></div>
+                                 <div><label>Blocks</label><p>${rowData.Blocks}</p></div>
+                             </div>
 
-                                <div class="MaskContent">
-                                    <div>
-                                        <label>Start Time</label>
-                                         <p>${rowData.SMT_start === "00:00" ? "--:--" : rowData.SMT_start}</p>
-                                    </div>
+                             <div class="MaskContent">
+                                 <div>
+                                     <label>Start Time</label>
+                                      <p>${rowData.SMT_start === "00:00" ? "--:--" : rowData.SMT_start}</p>
+                                 </div>
 
-                                    <div>
-                                        <label>End Time</label>
-                                       <p>${rowData.SMT_end === "00:00" ? "--:--" : rowData.SMT_end}</p>
-                                    </div>
+                                 <div>
+                                     <label>End Time</label>
+                                    <p>${rowData.SMT_end === "00:00" ? "--:--" : rowData.SMT_end}</p>
+                                 </div>
 
-                                    <div>
-                                        <label>Total Time</label>
-                                          <p class="total-time">${rowData.TotalTimeHHMM}</p>
-                                    </div>
-                                </div>
-                            </div>`;
-                });
-                $("#Maskcardcontainer").append(html);
+                                 <div>
+                                     <label>Total Time</label>
+                                       <p class="total-time">${rowData.TotalTimeHHMM}</p>
+                                 </div>
+                             </div>
+                         </div>`;
+                    });
+                    $("#Maskcardcontainer").append(html);
 
-                ///* ============================
-                //      START REALTIME TIMERS
-                //   ============================ */
+                    ///* ============================
+                    //      START REALTIME TIMERS
+                    //   ============================ */
 
-                document.querySelectorAll(".Maskcard").forEach((card, i) => {
+                    document.querySelectorAll(".Maskcard").forEach((card, i) => {
 
                         const row = res.data[i];
 
@@ -368,9 +379,13 @@
                         const timer = startRealtimeTimer(card, changeDate, row.SMT_start);
 
                         activeTimers.push(timer);
-                });
+                    });
 
 
+                    showLoading(false);
+                }, 500);
+
+               
             } else {
                 // handle specific error types 
                 let TableBody = $("#Maskcardcontainer");
@@ -418,6 +433,7 @@
             $("#partnumText").text(filterData.Partnumber);
             $("#AreaV2Text").text(filterData.AREA);
             $("#BlockV2Text").text(filterData.Blocks);
+            $("#lineText").text(filterData.SMTLine);
             $("#StartText").text(filterData.SMT_start === "00:00" ? "--:--" : filterData.SMT_start);
             $("#EndText").text(filterData.SMT_end === "00:00" ? "--:--" : filterData.SMT_end);
             $("#TotalTimeText").text(filterData.TotalTimeHHMM === "00:00" ? "00:00" : filterData.TotalTimeHHMM);
@@ -566,7 +582,10 @@
         operationBadge.style.background = colors[status] ?? '#6c757d';
     }
 
-
+    // Show loading state
+    function showLoading(show = true) {
+        loading.classList.toggle('active', show);
+    }
 
 </script>
 

@@ -45,20 +45,35 @@
 
     </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Part number</th>
-                <th>Area</th>
-                <th>SMT </th>
-                <th>Shifts </th>
-                <th>Blocks</th>
-                <th>Model type</th>
-            </tr>
-        </thead>
-        <tbody id="TransactionTable">
-        </tbody>
-    </table>
+    <div style="position: relative;">
+        <!-- Loading Overlay -->
+        <div class="loading" id="loading" style="padding: 2em 0; height: 300px;">
+            <div class="spinner"></div>
+        </div>
+
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Part number</th>
+                    <th>Area</th>
+                    <th>SMT </th>
+                    <th>Shifts </th>
+                    <th>Blocks</th>
+                    <th>Model type</th>
+                </tr>
+            </thead>
+            <tbody id="TransactionTable">
+            </tbody>
+        </table>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState">
+            <i class="fas fa-inbox" style="transform:scale(1.8)"></i>
+            <h3 id="Errormessage">No Registrations Found</h3>
+            <p>Add data to get started</p>
+        </div>
+    </div>
 
 </section>
 
@@ -257,9 +272,12 @@
 
 
 <script>
-     let selectID = 0;
+    let selectID = 0;
     let debounceTimer;
     let setData = [];
+
+    const loading = document.getElementById('loading');
+    const emptyState = document.getElementById('emptyState');
 
      // ==== FILER by ModelType ===========
      $("#ModelSelect").on("change", function () {
@@ -289,6 +307,8 @@
 
 
     const GetMetalMaskTensionCleaning = async () => {
+        showLoading(true);
+
         let partText = $("#searchInput").val();
         let SMTval = $("#SMTLine").val();
         let Modelval = $("#ModelSelect").val();
@@ -304,45 +324,63 @@
                  });
 
              if (res?.Success) {
-                   console.clear();
+                  console.clear();
+                   emptyState.style.display = 'none';
                    let tableBody = $("#TransactionTable");
                    tableBody.empty();
                    setData = res.data;
                    let html = "";
 
-                  $.each(setData, function (index, row) {
-                       // Image Display
-                       html += `
-                            <tr class='cleanTable' data-id="${row.RecordID}">
-                                  <td >${row.Partnumber ? row.Partnumber : "-"}</td>
-                                  <td >${row.AREA ? row.AREA : "-"}</td>
-                                  <td >${row.SMTLine ? row.SMTLine : "-"}</td>
-                                  <td >${row.Shift ? row.Shift : "-"}</td>
-                                  <td >${row.Blocks ? row.Blocks : "-"}</td>
-                                  <td >${row.ModelType ? row.ModelType : "-"}</td>
-                            </tr>
-                        `;
-                   });
+                 setTimeout(() => {
+                     $.each(setData, function (index, row) {
+                         // Image Display
+                         html += `
+                           <tr class='cleanTable' data-id="${row.RecordID}">
+                                 <td >${row.Partnumber ? row.Partnumber : "-"}</td>
+                                 <td >${row.AREA ? row.AREA : "-"}</td>
+                                 <td >${row.SMTLine ? row.SMTLine : "-"}</td>
+                                 <td >${row.Shift ? row.Shift : "-"}</td>
+                                 <td >${row.Blocks ? row.Blocks : "-"}</td>
+                                 <td >${row.ModelType ? row.ModelType : "-"}</td>
+                           </tr>
+                       `;
+                     });
 
-                   tableBody.append(html);
+                     tableBody.append(html);
+                     showLoading(false);
+
+                 }, 500);
+
              } else {
-                 // handle specific error types
-                 let TableBody = $("#TransactionTable");
-                 let errorMessage = res?.Message || 'No Data found';
 
-                 if (res?.errorType === 'NotFoundError') {
-                     errorMessage = 'Api endpoint not found. Please contact the Administrator';
-                 } else if (res?.errorType === 'UnauthorizedError') {
-                     errorMessage = 'Your Session Token is expired. please refresh the page';
-                 }
+                 setTimeout(() => {
+                     // handle specific error types
+                     //let TableBody = $("#TransactionTable");
+                     let errorMessage = res?.Message || 'No Data found';
 
-                 TableBody.html(`<tr><td colspan="24" class="text-center text-danger">${errorMessage}</td></tr>`);
+                     if (res?.errorType === 'NotFoundError') {
+                         errorMessage = 'Api endpoint not found. Please contact the Administrator';
+                     } else if (res?.errorType === 'UnauthorizedError') {
+                         errorMessage = 'Your Session Token is expired. please refresh the page';
+                     }
+                     emptyState.style.display = 'block';
+                     $("#Errormessage").text(errorMessage);
 
-                 // Optional show a Toast
-                 console.error("API Error : ", errorMessage, res);
+                     //TableBody.html(`<tr><td colspan="24" class="text-center text-danger">${errorMessage}</td></tr>`);
+
+                     // Optional show a Toast
+                     console.error("API Error : ", errorMessage, res);
+
+                     showLoading(false);
+
+                 }, 500);
+
              }
         } catch (error) {
+            emptyState.style.display = 'block';
+            $("#Errormessage").text('Unexpected error in GetMetalMaskTransaction:', error);
             console.error('Unexpected error in GetMetalMaskTransaction:', error);
+
         }
     };
 
@@ -708,4 +746,10 @@
 
     // Initialize when the page loads
     document.addEventListener('DOMContentLoaded', initStepper);
+
+
+    // Show loading state
+    function showLoading(show = true) {
+        loading.classList.toggle('active', show);
+    }
 </script>

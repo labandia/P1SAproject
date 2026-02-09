@@ -130,10 +130,10 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
                 parameters.Add("@PageSize", pageSize);
             }
 
-            if (pageSize == 0 && pageNumber == 0)
-            {
-                strquery += $@" ORDER BY RegistrationID DESC";
-            }
+            //if (pageSize == 0 && pageNumber == 0)
+            //{
+            //    strquery += $@" ORDER BY RegistrationID DESC";
+            //}
 
 
             var items = await SqlDataAccess.GetData<RotorRegistrationModel>(strquery, parameters);

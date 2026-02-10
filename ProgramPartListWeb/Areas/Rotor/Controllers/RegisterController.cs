@@ -2,12 +2,8 @@
 using ProgramPartListWeb.Areas.Rotor.Interface;
 using ProgramPartListWeb.Areas.Rotor.Model;
 using ProgramPartListWeb.Controllers;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 
 namespace ProgramPartListWeb.Areas.Rotor.Controllers
@@ -32,11 +28,12 @@ namespace ProgramPartListWeb.Areas.Rotor.Controllers
            int monthfilter,
            int yearint, 
            int catID,
-           int depID)
+           int depID, 
+           int pageNumber, 
+           int pageSize)
         {
 
-            Debug.WriteLine($@"Month2: {monthfilter} - Year : {yearint} - category : {catID} - Depart : {depID}");
-            var result = await _reg.GetRegistrationsList(search, monthfilter, yearint, catID, depID, 0, 0);
+            var result = await _reg.GetRegistrationsList(search, monthfilter, yearint, catID, depID, pageNumber, pageSize);
 
             if (result == null || !result.Items.Any()) return JsonNotFound("No Tranasctioon Data.");
             return JsonSuccess(result);
@@ -45,6 +42,26 @@ namespace ProgramPartListWeb.Areas.Rotor.Controllers
         [HttpPost]
         public async Task<ActionResult> AddNewRegistration(RotorRegistrationModel model) { 
             var result = await _reg.AddRegistration(model);
+
+            if (!result) return JsonPostError("Error Post Data");
+
+            return JsonCreated(result, "Add new Registraiton No successfully");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> EditRegistrationNo(RotorRegistrationModel model)
+        {
+            var result = await _reg.EditRegistration(model);
+
+            if (!result) return JsonPostError("Error Post Data");
+
+            return JsonCreated(result, "Add new Registraiton No successfully");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteRegistrationNo(int ID)
+        {
+            var result = await _reg.DeleteRegistration(ID);
 
             if (!result) return JsonPostError("Error Post Data");
 

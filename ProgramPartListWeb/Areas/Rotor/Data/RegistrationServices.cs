@@ -1,11 +1,10 @@
-﻿using DocumentFormat.OpenXml.Bibliography;
-using DocumentFormat.OpenXml.EMMA;
-using ProgramPartListWeb.Areas.Rotor.Interface;
+﻿using ProgramPartListWeb.Areas.Rotor.Interface;
 using ProgramPartListWeb.Areas.Rotor.Model;
 using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ProgramPartListWeb.Areas.Rotor.Data
@@ -14,30 +13,47 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
     {
         public Task<bool> AddRegistration(RotorRegistrationModel masterlist)
         {
-            string strquery = $@"IF NOT EXISTS (
-                                    SELECT 1
-                                    FROM Registration
-                                    WHERE RegistrationNo = @RegistrationNo
-                                      AND IsDeleted = 0
-                                )
-                                BEGIN
-                                    INSERT INTO Registration
-                                    (
-                                        RegistrationNo,
-                                        Desciprtion,
-                                        Remarks,
-                                        CategoryID,
-                                        DepartmentID
-                                    )
-                                    VALUES
-                                    (
-                                        @RegistrationNo,
-                                        @Desciprtion,
-                                        @Remarks,
-                                        @CategoryID,
-                                        @DepartmentID
-                                    );
-                                END";
+            string strquery = @"
+                IF EXISTS (
+                    SELECT 1
+                    FROM Registration
+                    WHERE RegistrationNo = @RegistrationNo
+                      AND IsDeleted = 1
+                )
+                BEGIN
+                    UPDATE Registration
+                    SET
+                        IsDeleted = 0,
+                        Desciprtion = @Desciprtion,
+                        Remarks = @Remarks,
+                        CategoryID = @CategoryID,
+                        DepartmentID = @DepartmentID,
+                        DateCreated = GETDATE()
+                    WHERE RegistrationNo = @RegistrationNo;
+                END
+                ELSE IF NOT EXISTS (
+                    SELECT 1
+                    FROM Registration
+                    WHERE RegistrationNo = @RegistrationNo
+                )
+                BEGIN
+                    INSERT INTO Registration
+                    (
+                        RegistrationNo,
+                        Desciprtion,
+                        Remarks,
+                        CategoryID,
+                        DepartmentID
+                    )
+                    VALUES
+                    (
+                        @RegistrationNo,
+                        @Desciprtion,
+                        @Remarks,
+                        @CategoryID,
+                        @DepartmentID
+                    );
+                END";
 
             return SqlDataAccess.UpdateInsertQuery(strquery, masterlist);
 
@@ -56,7 +72,7 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
             return SqlDataAccess.UpdateInsertQuery(@"
                         UPDATE Registration
                         SET
-                            RegistrationNo = @NewRegistrationNo,
+                            RegistrationNo = @RegistrationNo,
                             Desciprtion    = @Desciprtion,
                             Remarks        = @Remarks,
                             CategoryID     = @CategoryID,
@@ -78,6 +94,10 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
             int offset = (pageNumber - 1) * pageSize;
             Dictionary<string, object> parameters = new Dictionary<string, object>();
 
+            string countQuery = "SELECT COUNT(*) FROM Registration WHERE IsDeleted = 0 ";
+
+
+
             string strquery = @"SELECT RegistrationID
                                   ,DateCreated
                                   ,RegistrationNo
@@ -89,7 +109,8 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
 
             if (monthfilter != 0 && intyear != 0)
             {
-                strquery += "AND MONTH(DateCreated) = @Month AND YEAR(DateCreated) = @strYear;";
+                strquery += "AND MONTH(DateCreated) = @Month AND YEAR(DateCreated) = @strYear";
+                countQuery += "AND MONTH(DateCreated) = @Month AND YEAR(DateCreated) = @strYear ";
                 parameters.Add("@Month", monthfilter);
                 parameters.Add("@strYear", intyear);
             }
@@ -98,13 +119,16 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
             if (catID != 0)
             {
                 strquery += "AND CategoryID = @CategoryID";
+                countQuery += "AND CategoryID = @CategoryID ";
+
                 parameters.Add("@CategoryID", catID);
             }
 
             // Filter By Model Type 
             if (Department != 0)
             {
-                strquery += "AND DepartmentID = @DepartmentID";
+                strquery += " AND DepartmentID = @DepartmentID";
+                countQuery += " AND DepartmentID = @DepartmentID ";
                 parameters.Add("@DepartmentID", Department);
             }
 
@@ -117,28 +141,29 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
                                 @Search IS NULL
                                 OR RegistrationNo LIKE '%' + @Search + '%'
                               )";
+                countQuery += $@" AND (
+                             @Search IS NULL
+                             OR RegistrationNo LIKE '%' + @Search + '%'
+                           )";
                 parameters.Add("@Search", search);
             }
+
+            strquery += $@" ORDER BY RegistrationID DESC";
 
             // If the Get Data has a Pagination function
             if (pageSize != 0)
             {
-                strquery += $@" ORDER BY RegistrationID DESC
-                            OFFSET @Offset ROWS
+                strquery += $@" OFFSET @Offset ROWS
                             FETCH NEXT @PageSize ROWS ONLY";
                 parameters.Add("@Offset", offset);
                 parameters.Add("@PageSize", pageSize);
             }
 
-            //if (pageSize == 0 && pageNumber == 0)
-            //{
-            //    strquery += $@" ORDER BY RegistrationID DESC";
-            //}
-
 
             var items = await SqlDataAccess.GetData<RotorRegistrationModel>(strquery, parameters);
 
-            int TotalRecords = items.Count;
+            // Now get the total count
+            int TotalRecords = await SqlDataAccess.GetCountDataSync(countQuery, parameters);
 
             return new PagedResult<RotorRegistrationModel>
             {

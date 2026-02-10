@@ -138,10 +138,10 @@
                             <th>Remarks</th>
                             <th>Category</th>
                             <th>Section</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody">
-                      
                     </tbody>
                 </table>
             </div>
@@ -177,11 +177,7 @@
                 </div>
             </div>
             <div class="pagination-items">
-                <button class="active">1</button>
-                <button>2</button>
-                <button>3</button>
-                <button>4</button>
-                <button>5</button>
+                <!-- Pagination buttons will be inserted here -->
             </div>
         </div>
     </section>
@@ -191,12 +187,103 @@
 <div class="toast" id="toast"></div>
 
 
+
+
+@*=================================================================================*@
+@*=========================== ADD METAL MASK INFO ==================================*@
+@*=================================================================================*@
+<div class="modal fade modal-l" id="AddProductModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Edit Registration No</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+     
+                <form method="post" enctype="multipart/form-data" class="addformcontainer" id="addMaskform" autocomplete="off">
+                    <input type="hidden" id="EditRegistrationID" name="RegistrationID" >
+                    <input type="hidden" id="EditNewRegistrationNo" name="NewRegistrationNo" />
+                    <div class="form-group">
+                        <label for="regNo"><i class="fas fa-hashtag"></i> Registration No  <span id="errormessage" style="color: #a81818;"></span></label>
+                        <input type="text" id="EditregNo" name="RegistrationNo" placeholder="REG-00125" required>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="description"><i class="fas fa-align-left"></i> Description</label>
+                        <textarea id="EditDesciprtion" name="Desciprtion" placeholder="Enter detailed description..." required></textarea>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="remarks"><i class="fas fa-sticky-note"></i> Remarks</label>
+                        <textarea id="EditRemarks" name="remarks" placeholder="Additional remarks or notes..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category"><i class="fas fa-tag"></i> Category</label>
+                        <select id="Editcategory" name="CategoryID" required>
+                            <option value="">Select Category</option>
+                            <option value="1">🟦 Quality</option>
+                            <option value="2">🟩 Process</option>
+                            <option value="3">🟥 Safety</option>
+                            <option value="4">🟨 Maintenance</option>
+                            <option value="5">🟪 Documentation</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="department"><i class="fas fa-building"></i> Department</label>
+                        <select id="Editdepartment" name="DepartmentID" required>
+                            <option value="">Select Department</option>
+                            <option value="1">Molding</option>
+                            <option value="2">Press</option>
+                            <option value="3">Rotor</option>
+                            <option value="4">Winding</option>
+                            <option value="5">Circuit</option>
+                        </select>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div>
+                            <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                        </div>
+                        <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
 <script>
+    let setData = [];
     let debounceTimer;
+    // Add pagination state variables
+    let currentPage = 1;
+    let totalRecords = 0;
+    let totalPages = 0;
+    const pageSize = 10; // Set your desired page size (8 or 10)
+
+
+
     const year = new Date().getFullYear();
     const currentMonth = new Date().getMonth() + 1;
+
+    const registrationForm = document.getElementById('registrationForm');
+    const loading = document.getElementById('loading');
+    const toast = document.getElementById('toast');
+    const editform = document.getElementById('addMaskform');
     const emptyState = document.getElementById('emptyState');
-    const tableBody = document.getElementById('tableBody');
+    let tableBody = $("#tableBody");
 
     const categories = {
         1: "Quality",
@@ -237,9 +324,33 @@
     }, 300));
 
 
+    editform.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        let formData = new FormData(e.target);
+        const dat = Object.fromEntries(formData);
+         let res = await postMethod('@Url.Action("EditRegistrationNo", "Register")', formData);
+        if (res?.Success) {
+            $("#errormessage").hide();
+            showToast('Update Data successfully!');
+            $("#AddProductModal").modal("hide");
+
+            GetRegistrationData();
+            // Reset form
+            editform.reset();
+        } else {
+            $("#errormessage").show();
+            $("#errormessage").text(`Registration No : ${dat.RegistrationNo} is already Input`)
+        }
+    });
+
+
     const GetRegistrationData = async () => {
         showLoading(true);
         tableBody.empty();
+
+        // Reset dropdown initialization flag
+        dropdownInitialized = false;
+
         let searchText = $("#searchInput").val();
         let filtermonth = $("#monthFilter").val() === "all" ? currentMonth : $("#monthFilter").val();
         let stryear = !$("#yearFilter").val() ? year : $("#yearFilter").val();
@@ -255,32 +366,79 @@
                   monthfilter: filtermonth,
                   yearint: stryear,
                   catID: category,
-                  depID: depId
+                  depID: depId, 
+                  pageNumber: currentPage,
+                  pageSize: pageSize      
               });
 
-
+              console.log(res);
                if (res?.Success) {
-                   console.clear();
+                   //console.clear();
                     emptyState.style.display = 'none';
 
-                     setData = res.data.Items;
-                     let html = "";
+                   setData = res.data.Items;
+                   totalRecords = res.data.TotalRecords || 0;
+                   totalPages = Math.ceil(totalRecords / pageSize);
+                   console.log("Total Recorrs : " + totalRecords + " Page Size : " + pageSize + "totalPages : " + totalPages);
+                   if (setData.length === 0 && totalRecords > 0 && currentPage > 1) {
+                       currentPage = totalPages;
+                       GetRegistrationData(); 
+                       return;
+                   }
+
+
+                    let html = "";
 
                    setTimeout(() => {
-                       $.each(setData, function (index, row) {
-                           // Image Display
-                           html += `
-                              <tr class='cleanTable' data-id="${row.RegistrationID}">
-                                    <td style='font-weight: 600;'>${row.RegistrationNo ? row.RegistrationNo : "-"}</td>
-                                    <td >${row.Desciprtion ? row.Desciprtion : "-"} </td>
-                                    <td >${row.Remarks ? row.Remarks : "-"}</td>
-                                     <td><span class="category-badge ${categories[row.CategoryID]}">${row.CategoryID ? categories[row.CategoryID] : "-"}</span></td>
-                                     <td><span class="department-badge ${departments[row.DepartmentID].toLowerCase()}">Press</span></td>
-                              </tr>
-                          `;
-                       });
+                       if (setData.length > 0) {
+                           $.each(setData, function (index, row) {
+                               // Simple dropdown with only Edit and Delete
+                               const dropdownMenu = `
+                                       <div class="dropdown">
+                                           <button class="dropdown-btn" aria-label="Open menu">
+                                               <i class="fas fa-ellipsis-v"></i>
+                                           </button>
+                                           <div class="dropdown-content">
+                                               <a href="#" class="edit-action" data-id="${row.RegistrationID}">
+                                                   <i class="fas fa-edit"></i> Edit
+                                               </a>
+                                               <a href="#" class="delete-action" data-id="${row.RegistrationID}">
+                                                   <i class="fas fa-trash"></i> Delete
+                                               </a>
+                                           </div>
+                                       </div>
+                                   `;
 
-                       tableBody.append(html);
+
+                               // Image Display
+                               html += `
+                                     <tr class='cleanTable' data-id="${row.RegistrationID}">
+                                           <td style='font-weight: 600;'>${row.RegistrationNo ? row.RegistrationNo : "-"}</td>
+                                           <td >${row.Desciprtion ? row.Desciprtion : "-"} </td>
+                                           <td >${row.Remarks ? row.Remarks : "-"}</td>
+                                           <td><span class="category-badge ${categories[row.CategoryID]}">${row.CategoryID ? categories[row.CategoryID] : "-"}</span></td>
+                                           <td><span class="department-badge ${departments[row.DepartmentID].toLowerCase()}">${departments[row.DepartmentID] || "-"}</span></td>
+                                           <td class="actions-cell">
+                                               ${dropdownMenu}
+                                           </td>
+                                     </tr>
+                                 `;
+                           });
+
+                           tableBody.append(html);
+
+                           // Initialize dropdown functionality
+                           initDropdownActions();
+
+                          
+
+                           // Update pagination UI
+                           updatePaginationUI();
+                       } else {
+                           emptyState.style.display = 'block';
+                           // Hide pagination if no data
+                           $("#pagination").hide();
+                       }
 
                        showLoading(false);
                    }, 500);
@@ -296,7 +454,7 @@
                            errorMessage = 'Your Session Token is expired. please refresh the page';
                        }
                        emptyState.style.display = 'block';
-
+                       $("#pagination").hide();
                        // Optional show a Toast
                        console.error("API Error : ", errorMessage, res);
 
@@ -329,9 +487,6 @@
 
 
 
-    const registrationForm = document.getElementById('registrationForm');
-    const loading = document.getElementById('loading');
-    const toast = document.getElementById('toast');
 
 
     registrationForm.addEventListener('submit', async function (e) {
@@ -395,6 +550,166 @@
     document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("monthFilter").value = currentMonth;
     });
+
+
+    // Initialize dropdown functionality - FIXED VERSION
+    let dropdownInitialized = false;
+        // Initialize dropdown functionality
+    function initDropdownActions() {
+        // Prevent multiple initializations
+        if (dropdownInitialized) {
+            return;
+        }
+        dropdownInitialized = true;
+
+        console.log('Initializing dropdown actions...');
+
+        // Use event delegation on document instead of document
+        $(document)
+            .off('click', '.dropdown-btn') // Remove previous handlers
+            .on('click', '.dropdown-btn', function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+                console.log('Dropdown button clicked');
+
+                const $dropdown = $(this).closest('.dropdown');
+                const isActive = $dropdown.hasClass('active');
+
+                // Close all other dropdowns
+                $('.dropdown').removeClass('active');
+
+                // Toggle current dropdown
+                if (!isActive) {
+                    $dropdown.addClass('active');
+                }
+            })
+            .off('click', '.edit-action') // Remove previous handlers
+            .on('click', '.edit-action', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Edit action clicked');
+
+                const registrationId = $(this).data('id');
+
+                // Close dropdown
+                $(this).closest('.dropdown').removeClass('active');
+
+                // Call your edit function
+                editRegistration(registrationId);
+            })
+            .off('click', '.delete-action') // Remove previous handlers
+            .on('click', '.delete-action', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Delete action clicked');
+
+                const registrationId = $(this).data('id');
+                const $row = $(this).closest('tr');
+
+                // Close dropdown
+                $(this).closest('.dropdown').removeClass('active');
+
+                // Show confirmation dialog
+                if (confirm('Are you sure you want to delete this registration?')) {
+                    deleteRegistration(registrationId, $row);
+                }
+            });
+
+        // Close dropdown when clicking outside
+        $(document).on('click', function (e) {
+            if (!$(e.target).closest('.dropdown').length) {
+                $('.dropdown').removeClass('active');
+            }
+        });
+    }
+
+    // Edit function
+    function editRegistration(id) {
+        console.log('Opening edit form for ID:', id);
+        let filterData = setData.find(res => res.RegistrationID === id);
+        if (filterData) {
+            $("#EditRegistrationID").val(id);
+            $("#EditNewRegistrationNo").val(filterData.RegistrationNo);
+            $("#EditregNo").val(filterData.RegistrationNo);
+            $("#EditDesciprtion").val(filterData.Desciprtion);
+            $("#EditRemarks").val(filterData.Remarks);
+            $("#Editcategory").val(filterData.CategoryID);
+            $("#Editdepartment").val(filterData.DepartmentID);
+        }
+        $("#AddProductModal").modal("show");
+    }
+
+    // Delete function
+    async function deleteRegistration(id, $row) {
+        console.log('Deleting registration with ID:', id);
+
+        let res = await postMethod('@Url.Action("DeleteRegistrationNo", "Register")', { ID: id });
+         if (res?.Success) {
+             GetRegistrationData();
+
+             showToast('Delete Data successfully!');
+         }
+
+    }
+
+    // Optional: Add this to your document ready
+    $(document).ready(function() {
+        // Initialize if not already done
+        if (typeof initDropdownActions === 'function') {
+            // It will be initialized when data loads
+        }
+    });
+
+
+
+    function updatePaginationUI() {
+        console.log('updatePaginationUI called');
+        console.log('Total records:', totalRecords, 'Total pages:', totalPages);
+
+        const $pagination = $("#pagination");
+        const $paginationItems = $(".pagination-items");
+
+        // Clear existing buttons
+        $paginationItems.empty();
+
+        // Always show pagination for debugging
+        $pagination.css({
+            'display': 'flex',
+            'visibility': 'visible',
+            'opacity': '1',
+            'position': 'relative'
+        });
+
+        // Show/hide based on total pages
+        if (totalPages > 1) {
+            console.log('Creating', totalPages, 'page buttons');
+
+            for (let i = 1; i <= totalPages; i++) {
+                const active = i === currentPage ? 'active' : '';
+                $paginationItems.append(`
+                <button class="page-btn ${active}" data-page="${i}">${i}</button>
+            `);
+            }
+
+            // Add click handlers
+            $(".page-btn").off('click').on('click', function () {
+                const pageNum = parseInt($(this).data('page'));
+                console.log('Page button clicked:', pageNum);
+                if (pageNum !== currentPage) {
+                    currentPage = pageNum;
+                    GetRegistrationData();
+                }
+            });
+
+            console.log('Pagination should be visible now');
+        } else {
+            console.log('Hiding pagination - only 1 page or less');
+            $pagination.hide();
+        }
+
+        // Force redraw
+        $pagination[0].offsetHeight;
+    }
 
 
     GetRegistrationYearData();

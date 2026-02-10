@@ -32,7 +32,7 @@
      const InventoryTable = async () => {
          let res = await GetMethod('@Url.Action("GetHydroInventory", "Hydro")', {});
          if (res && res.Success) {
-             Inventlist = res.Data;
+             Inventlist = res.data;
 
              console.log(Inventlist);
 

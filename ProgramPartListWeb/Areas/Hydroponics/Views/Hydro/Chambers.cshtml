@@ -21,7 +21,7 @@
         $("#chambercontain").empty();
 
         if (res && res.Success) {
-            chamberlist = res.Data;
+            chamberlist = res.data;
             //let priceobj = res.Data.TotalPrice;
             $.each(chamberlist, function (index, row) {
                   const imageUrl = '@Url.Content("~/Content/Images/HydroPhonics.png")';

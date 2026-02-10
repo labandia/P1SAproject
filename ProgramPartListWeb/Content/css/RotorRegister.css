@@ -557,59 +557,199 @@ tr {
     color: #6c757d;
 }
 
-
-
+/* Pagination Container */
 .pagination {
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1em;
+    padding: 12px 20px;
     background-color: #fff;
     border-top: 1px solid #e0e3ff;
-    flex-shrink: 0; /* Don't shrink */
-    position: relative; /* Not absolute */
+    flex-shrink: 0;
+    position: relative;
+    min-height: 60px;
+    box-sizing: border-box;
 }
 
-/* Remove the old absolute positioning from pagination */
-.pagination {
-    display: flex !important;
-    position: relative !important;
-    bottom: auto !important;
-}
-
+/* Pagination Items */
 .pagination-items {
     display: flex;
-    gap: 5px;
     align-items: center;
+    gap: 15px;
+    justify-content: center;
+    flex: 1;
 }
 
+/* Page Buttons */
 .page-btn {
-    min-width: 35px;
-    height: 35px;
-    border-radius: 6px;
+    padding: 8px 16px;
     border: 1px solid #e0e3ff;
     background-color: white;
     color: #495057;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
+    border-radius: 6px;
     display: flex;
     align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    min-width: 100px;
     justify-content: center;
-    padding: 0 10px;
 }
 
-    .page-btn:hover:not(.active) {
+    .page-btn:hover:not(:disabled) {
         background-color: #f8f9fa;
         border-color: #adb5bd;
+        transform: translateY(-1px);
     }
 
-    .page-btn.active {
-        background-color: #4361ee;
-        color: white;
-        border-color: #4361ee;
+    .page-btn:active:not(:disabled) {
+        transform: translateY(0);
     }
+
+    .page-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background-color: #f8f9fa;
+    }
+
+/* Previous/Next specific styles */
+.prev-btn i, .next-btn i {
+    font-size: 12px;
+}
+
+.prev-btn {
+    background-color: #f8f9fa;
+}
+
+.next-btn {
+    background-color: #4361ee;
+    color: white;
+    border-color: #4361ee;
+}
+
+    .next-btn:hover:not(:disabled) {
+        background-color: #3a56d4;
+        border-color: #3a56d4;
+    }
+
+/* Page Info */
+.page-info {
+    font-weight: 500;
+    color: #495057;
+    text-align: center;
+    min-width: 150px;
+    padding: 8px 12px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    border: 1px solid #e0e3ff;
+}
+
+.record-info {
+    font-size: 11px;
+    color: #6c757d;
+    display: block;
+    margin-top: 2px;
+    font-weight: normal;
+}
+
+/* Page Jump (Optional) */
+.page-jump {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 10px;
+}
+
+.jump-btn {
+    min-width: auto;
+    padding: 6px 12px;
+    background-color: #28a745;
+    color: white;
+    border-color: #28a745;
+}
+
+    .jump-btn:hover:not(:disabled) {
+        background-color: #218838;
+        border-color: #1e7e34;
+    }
+
+/* Legends section */
+.legends {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .pagination-items {
+        gap: 10px;
+    }
+
+    .page-btn {
+        min-width: 80px;
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+
+    .page-info {
+        min-width: 120px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 768px) {
+    .pagination {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+    }
+
+    .legends {
+        order: 2;
+        justify-content: center;
+    }
+
+    .pagination-items {
+        order: 1;
+        width: 100%;
+    }
+
+    .page-jump {
+        margin-left: 0;
+        margin-top: 10px;
+        justify-content: center;
+        width: 100%;
+    }
+}
+
+
+/* Enhanced loading states */
+.page-btn.loading {
+    position: relative;
+    color: transparent;
+}
+
+.page-btn.loading:after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #4361ee;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Loading animation for pagination */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
 
 /* Ensure table container has space for pagination */
 .table-container {

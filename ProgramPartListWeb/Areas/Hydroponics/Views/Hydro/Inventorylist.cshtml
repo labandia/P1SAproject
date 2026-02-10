@@ -489,7 +489,7 @@
             let result = await GetMethod('@Url.Action("GetHydroInventory", "Hydro")', {});
 
             if (result && result.Success) {
-                Inventlist = result.Data;
+                Inventlist = result.data;
 
                 const lowStockCount = Inventlist.filter(item => item.Status === "Restock").length;
                 const OutStockCount = Inventlist.filter(item => item.Status === "Out of stocks").length;
@@ -1134,9 +1134,9 @@
             responseType: "json",
             throwOnError: true
         });
-
+        console.log(result);
         if (result && result.Success) {
-            Inventlist = result.Data;
+            Inventlist = result.data;
 
             const lowStockCount = Inventlist.filter(item => item.Status === "Restock").length;
             const OutStockCount = Inventlist.filter(item => item.Status === "Out of stocks").length;
@@ -1174,7 +1174,7 @@
          });
 
          if (result && result.Success) {
-             Inventlist = result.Data;
+             Inventlist = result.data;
 
              const lowStockCount = Inventlist.filter(item => item.Status === "Restock").length;
              const OutStockCount = Inventlist.filter(item => item.Status === "Out of stocks").length;

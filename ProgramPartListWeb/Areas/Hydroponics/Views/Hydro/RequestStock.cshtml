@@ -186,7 +186,7 @@
       Loadingsteps(async () => {
           let res = await GetMethod('@Url.Action("GetAddStockList", "Hydro")', {});
           if (res && res.Success) {
-              StockItems = res.Data;
+              StockItems = res.data;
               TableDisplay.empty(); // Removing the Loading Display
               InventoryPagination(StockItems, 'requestsTableBody');
           } else {
@@ -208,7 +208,7 @@
      const InventoryTable = async () => {
          let res = await GetMethod('@Url.Action("GetHydroInventory", "Hydro")', {});
         if (res && res.Success) {
-            InventItems = res.Data;
+            InventItems = res.data;
             $.each(InventItems, function (index, row) {
                 $("#partSelect").append("<option value='" + row.PartNo + "'>" + row.PartName + "</option>");
             });
@@ -270,9 +270,9 @@ function InventoryPagination(dataArray, tableBodyId) {
                   detailsTable.empty();
                   if (res && res.Success) {
 
-                      $("#countreq").text(res.Data.length);
+                      $("#countreq").text(res.data.length);
 
-                      $.each(res.Data, function (index, row) {
+                      $.each(res.data, function (index, row) {
 
                           const rowHtml = `
                              <tr data-id="${row.PartNo}">

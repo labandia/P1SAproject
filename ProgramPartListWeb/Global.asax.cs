@@ -172,7 +172,8 @@ namespace ProgramPartListWeb
             container.RegisterType<IAluminumProducts, PressRepository>();
             container.RegisterType<IInspector, InpectorRepository>();
             container.RegisterType<IHyrdoParts, HydroPartsRepository>();
-           
+
+            container.RegisterType<ICategory, CategoryServices>();
             container.RegisterType<IRegistration, RegistrationRepository>();
 
             container.RegisterType<IRotorRegistration, RegistrationServices>();

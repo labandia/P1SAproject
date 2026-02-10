@@ -29,14 +29,11 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="category"><i class="fas fa-tag"></i> Category</label>
-                    <select id="category" name="CategoryID" required>
-                        <option value="">Select Category</option>
-                        <option value="1">🟦 Quality</option>
-                        <option value="2">🟩 Process</option>
-                        <option value="3">🟥 Safety</option>
-                        <option value="4">🟨 Maintenance</option>
-                        <option value="5">🟪 Documentation</option>
+                    <div class="flex_space">
+                        <label for="category"><i class="fas fa-tag"></i> Category   </label>
+                        <button type="button" id="AddCategory">Add</button>
+                    </div>
+                    <select id="addnewcategory" name="CategoryID" required>
                     </select>
                 </div>
 
@@ -99,12 +96,6 @@
                 <div class="filter-group">
                     <label for="categoryFilter"><i class="fas fa-tag"></i> Category</label>
                     <select id="categoryFilter" class="filter-select">
-                        <option value="all">All Categories</option>
-                        <option value="1">🟦 Quality</option>
-                        <option value="2">🟩 Process</option>
-                        <option value="3">🟥 Safety</option>
-                        <option value="4">🟨 Maintenance</option>
-                        <option value="5">🟪 Documentation</option>
                     </select>
                 </div>
                 <div class="filter-group">
@@ -205,9 +196,9 @@
                     </button>
                 </div>
 
-     
+
                 <form method="post" enctype="multipart/form-data" class="addformcontainer" id="addMaskform" autocomplete="off">
-                    <input type="hidden" id="EditRegistrationID" name="RegistrationID" >
+                    <input type="hidden" id="EditRegistrationID" name="RegistrationID">
                     <input type="hidden" id="EditNewRegistrationNo" name="NewRegistrationNo" />
                     <div class="form-group">
                         <label for="regNo"><i class="fas fa-hashtag"></i> Registration No  <span id="errormessage" style="color: #a81818;"></span></label>
@@ -261,7 +252,41 @@
     </div>
 </div>
 
+@*=================================================================================*@
+@*=========================== ADD CATEOGORY      ==================================*@
+@*=================================================================================*@
+<div class="modal fade modal-l" id="AddCategoryModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
 
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Add Category</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+
+                <form method="post" class="addformcontainer" id="AddCategoryform" autocomplete="off">
+                    <div class="form-group">
+                        <label for="regNo"><i class="fas fa-hashtag"></i> Set Category  </label>
+                        <input type="text" id="Addcatname" name="catname" placeholder="REG-00125" required>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div>
+                            <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                        </div>
+                        <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
 
 
 <script>
@@ -271,7 +296,7 @@
     let currentPage = 1;
     let totalRecords = 0;
     let totalPages = 0;
-    const pageSize = 10; // Set your desired page size (8 or 10)
+    const pageSize = 8; // Set your desired page size (8 or 10)
 
 
 
@@ -279,6 +304,8 @@
     const currentMonth = new Date().getMonth() + 1;
 
     const registrationForm = document.getElementById('registrationForm');
+    const Categoryform = document.getElementById('AddCategoryform');
+
     const loading = document.getElementById('loading');
     const toast = document.getElementById('toast');
     const editform = document.getElementById('addMaskform');
@@ -301,6 +328,9 @@
         5: "Circuit"
     };
 
+    $("#AddCategory").on('click', function () {
+        $("#AddCategoryModal").modal('show');
+    });
 
 
     // ==== SEARCH FUNCTIONALITY =======
@@ -322,6 +352,8 @@
     $("#departmentFilter").on("change", debounce(() => {
         GetRegistrationData();
     }, 300));
+
+ 
 
 
     editform.addEventListener('submit', async function (e) {
@@ -366,9 +398,9 @@
                   monthfilter: filtermonth,
                   yearint: stryear,
                   catID: category,
-                  depID: depId, 
+                  depID: depId,
                   pageNumber: currentPage,
-                  pageSize: pageSize      
+                  pageSize: pageSize
               });
 
               console.log(res);
@@ -382,7 +414,7 @@
                    console.log("Total Recorrs : " + totalRecords + " Page Size : " + pageSize + "totalPages : " + totalPages);
                    if (setData.length === 0 && totalRecords > 0 && currentPage > 1) {
                        currentPage = totalPages;
-                       GetRegistrationData(); 
+                       GetRegistrationData();
                        return;
                    }
 
@@ -416,7 +448,7 @@
                                            <td style='font-weight: 600;'>${row.RegistrationNo ? row.RegistrationNo : "-"}</td>
                                            <td >${row.Desciprtion ? row.Desciprtion : "-"} </td>
                                            <td >${row.Remarks ? row.Remarks : "-"}</td>
-                                           <td><span class="category-badge ${categories[row.CategoryID]}">${row.CategoryID ? categories[row.CategoryID] : "-"}</span></td>
+                                           <td><span class="category-badge ">${row.CategoryName ? row.CategoryName : "-"}</span></td>
                                            <td><span class="department-badge ${departments[row.DepartmentID].toLowerCase()}">${departments[row.DepartmentID] || "-"}</span></td>
                                            <td class="actions-cell">
                                                ${dropdownMenu}
@@ -430,7 +462,7 @@
                            // Initialize dropdown functionality
                            initDropdownActions();
 
-                          
+
 
                            // Update pagination UI
                            updatePaginationUI();
@@ -483,7 +515,34 @@
         }
     };
 
+    const GetCategoryList = async () => {
+        
+        $("#addnewcategory").empty();
+        $("#categoryFilter").empty();
+        $("#Editcategory").empty();
+        $("#addnewcategory").append(`<option value="">Select Category</option>`);
+        $("#categoryFilter").append(`<option value="all">Select Category</option>`);
+        $("#Editcategory").append(`<option value="">Select Category</option>`);
 
+          const url = '@Url.Action("GetCategory", "Register")';
+
+          let res = await GetMethod(url, {});
+          console.log(res);
+          if (res?.Success) {
+              let data = res.data;
+              if (data.length > 0) {
+                  $.each(data, function (index, row) {
+                      $("#addnewcategory").append(`<option value='${row.CategoryID}'>${row.CategoryName}</option>`);
+                      $("#categoryFilter").append(`<option value='${row.CategoryID}'>${row.CategoryName}</option>`);
+                      $("#Editcategory").append(`<option value='${row.CategoryID}'>${row.CategoryName}</option>`);
+                  });
+              } else {
+                  $("#addnewcategory").append(`<option value="${row.CategoryID}">${row.CategoryName}</option>`);
+                  $("#categoryFilter").append(`<option value='${row.CategoryID}'>${row.CategoryName}</option>`);
+                  $("#Editcategory").append(`<option value='${row.CategoryID}'>${row.CategoryName}</option>`);
+              }
+          }
+      };
 
 
 
@@ -504,7 +563,17 @@
 
     });
 
+    Categoryform.addEventListener('submit', async function (e) {
+        e.preventDefault();
 
+        let res = await postMethod('@Url.Action("AddCategory", "Register")', { catname: $("#Addcatname").val()});
+        if (res?.Success) {
+             GetCategoryList();
+             $("#AddCategoryModal").modal('hide');
+             showToast('Registration added successfully!');
+         }
+
+    });
 
     function renderTable() {
         // SHOW LOADING INDICATOR
@@ -680,38 +749,99 @@
             'position': 'relative'
         });
 
-        // Show/hide based on total pages
-        if (totalPages > 1) {
-            console.log('Creating', totalPages, 'page buttons');
+        // Show/hide pagination based on total records
+        if (totalRecords > pageSize) {
+            $pagination.show();
 
-            for (let i = 1; i <= totalPages; i++) {
-                const active = i === currentPage ? 'active' : '';
+            // Create pagination buttons
+            const prevDisabled = currentPage === 1 ? 'disabled' : '';
+            const nextDisabled = currentPage === totalPages || totalPages === 0 ? 'disabled' : '';
+
+            $paginationItems.html(`
+            <button class="page-btn prev-btn" ${prevDisabled} data-page="${currentPage - 1}">
+                <i class="fas fa-chevron-left"></i> Previous
+            </button>
+
+            <div class="page-info">
+                Page ${currentPage} of ${totalPages || 1}
+                <span class="record-info"></span>
+            </div>
+
+            <button class="page-btn next-btn" ${nextDisabled} data-page="${currentPage + 1}">
+                Next <i class="fas fa-chevron-right"></i>
+            </button>
+        `);
+
+            // Add page number input for direct navigation (optional)
+            if (totalPages > 10) {
                 $paginationItems.append(`
-                <button class="page-btn ${active}" data-page="${i}">${i}</button>
+                <div class="page-jump">
+                    <input type="number" id="pageJumpInput" min="1" max="${totalPages}" value="${currentPage}"
+                           style="width: 60px; padding: 5px; border: 1px solid #ddd; border-radius: 4px;">
+                    <button class="page-btn jump-btn" id="pageJumpBtn">Go</button>
+                </div>
             `);
             }
 
             // Add click handlers
             $(".page-btn").off('click').on('click', function () {
+                if ($(this).is(':disabled')) return;
+
                 const pageNum = parseInt($(this).data('page'));
-                console.log('Page button clicked:', pageNum);
-                if (pageNum !== currentPage) {
+                console.log('Navigating to page:', pageNum);
+
+                if (pageNum >= 1 && pageNum <= totalPages && pageNum !== currentPage) {
                     currentPage = pageNum;
                     GetRegistrationData();
                 }
             });
 
-            console.log('Pagination should be visible now');
-        } else {
-            console.log('Hiding pagination - only 1 page or less');
-            $pagination.hide();
-        }
+            // Add handler for jump button if exists
+            $("#pageJumpBtn").off('click').on('click', function () {
+                const jumpPage = parseInt($("#pageJumpInput").val());
+                if (jumpPage >= 1 && jumpPage <= totalPages && jumpPage !== currentPage) {
+                    currentPage = jumpPage;
+                    GetRegistrationData();
+                }
+            });
 
-        // Force redraw
-        $pagination[0].offsetHeight;
+            // Add enter key handler for jump input
+            $("#pageJumpInput").off('keypress').on('keypress', function (e) {
+                if (e.which === 13) { // Enter key
+                    $("#pageJumpBtn").click();
+                }
+            });
+
+            console.log('Pagination created with Next/Previous buttons');
+        } else {
+            $pagination.hide();
+            console.log('Hiding pagination - not enough records');
+        }
     }
 
 
-    GetRegistrationYearData();
-    GetRegistrationData();
+    // Add tooltip for keyboard shortcuts
+    function addPaginationTooltips() {
+        const prevBtn = $('.prev-btn');
+        const nextBtn = $('.next-btn');
+
+        if (prevBtn.length) {
+            prevBtn.attr('title', 'Previous Page (← Arrow Key)');
+        }
+        if (nextBtn.length) {
+            nextBtn.attr('title', 'Next Page (→ Arrow Key)');
+        }
+    }
+
+    async function loadPageData() {
+        await Promise.all([
+            GetCategoryList(),
+            GetRegistrationYearData(),
+            GetRegistrationData()
+        ]);
+
+        console.log("All data loaded");
+    }
+
+    loadPageData();
 </script>

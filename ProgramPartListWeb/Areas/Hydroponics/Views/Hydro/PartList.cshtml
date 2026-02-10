@@ -141,7 +141,7 @@
         Loadingsteps(async () => {
             let res = await GetMethod('@Url.Action("GetPartlistData", "Hydro")', {});
             if (res && res.Success) {
-                partlistData = res.Data;
+                partlistData = res.data;
                 TableDisplay.empty(); // Removing the Loading Display
                 InventoryPagination(partlistData, 'PartlistData');
             } else {
@@ -163,7 +163,7 @@
 
           if (res && res.Success) {
 
-              $.each(res.Data, function (index, row) {
+              $.each(res.data, function (index, row) {
                   $("#Categoryselect").append("<option value='" + row.CategoryID + "'>" + row.CategoryName + "</option>");
               });
 

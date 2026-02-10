@@ -11,8 +11,13 @@ namespace ProgramPartListWeb.Areas.Rotor.Controllers
     public class RegisterController : ExtendController
     {
         private readonly IRotorRegistration _reg;
+        private readonly ICategory _cat;
 
-        public RegisterController(IRotorRegistration reg) => _reg = reg;
+        public RegisterController(IRotorRegistration reg, ICategory cat)
+        {
+             _reg = reg;
+            _cat = cat;
+        }
 
         [HttpGet] 
         public async Task<ActionResult> GetRegistrationList()
@@ -62,6 +67,46 @@ namespace ProgramPartListWeb.Areas.Rotor.Controllers
         public async Task<ActionResult> DeleteRegistrationNo(int ID)
         {
             var result = await _reg.DeleteRegistration(ID);
+
+            if (!result) return JsonPostError("Error Post Data");
+
+            return JsonCreated(result, "Add new Registraiton No successfully");
+        }
+
+        //====================================================================
+        //===================== CATEGORY SECTION ===========================    
+        //====================================================================
+        [HttpGet]
+        public async Task<ActionResult> GetCategory()
+        {
+            var result = await _cat.GetCategoryList();
+            if (result == null || !result.Any()) return JsonNotFound("No Tranasctioon Data.");
+            return JsonCreated(result);
+        }
+        [HttpPost]
+        public async Task<ActionResult> AddCategory(string catname)
+        {
+            bool result = await _cat.AddCategory(catname);
+
+            if (!result) return JsonPostError("Error Post Data");
+
+            return JsonCreated(result, "Add new Registraiton No successfully");
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> EditCategory(string catname, int ID)
+        {
+            var result = await _cat.EditCategory(ID, catname);
+
+            if (!result) return JsonPostError("Error Post Data");
+
+            return JsonCreated(result, "Add new Registraiton No successfully");
+        }
+        [HttpPost]
+        public async Task<ActionResult> DeleteCategory(int ID)
+        {
+            var result = await _cat.DeleteCategory(ID);
 
             if (!result) return JsonPostError("Error Post Data");
 

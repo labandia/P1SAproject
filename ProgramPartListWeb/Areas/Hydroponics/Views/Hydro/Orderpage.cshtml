@@ -370,8 +370,8 @@
             });
 
             if (res && res.Success) {
-                requestData = res.Data.Data || res.Data || [];
-                const total = res.Data?.Total ?? requestData.length;
+                requestData = res.data.Data || res.Data || [];
+                const total = res.data?.Total ?? requestData.length;
 
                 if (total > 0) {
                     console.clear();
@@ -569,7 +569,7 @@
         let res = await GetMethod('@Url.Action("GetChamberList", "Hydro")', {});
         if (res && res.Success) {
             const select = $("#ChamberID").empty().append(`<option value="0">-- select Chamber --</option>`);
-            res.Data.forEach(row => {
+            res.data.forEach(row => {
                 select.append(`<option value="${row.ChamberID}">${row.ChamberName}</option>`);
             });
         }

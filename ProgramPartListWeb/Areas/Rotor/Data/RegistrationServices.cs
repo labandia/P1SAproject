@@ -98,18 +98,22 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
 
 
 
-            string strquery = @"SELECT RegistrationID
-                                  ,DateCreated
-                                  ,RegistrationNo
-                                  ,Desciprtion
-                                  ,Remarks
-                                  ,CategoryID
-                                  ,DepartmentID
-                              FROM Registration WHERE IsDeleted = 0 ";
+            string strquery = @"SELECT r.RegistrationID
+                                        ,r.DateCreated
+                                        ,r.RegistrationNo
+                                        ,r.Desciprtion
+                                        ,r.Remarks
+                                        ,r.CategoryID
+                                        ,c.CategoryName
+                                        ,r.DepartmentID
+                                    FROM Registration r 
+                                    INNER JOIN Register_Category c 
+                                    ON c.CategoryID = r.CategoryID
+                                    WHERE r.IsDeleted = 0 ";
 
             if (monthfilter != 0 && intyear != 0)
             {
-                strquery += "AND MONTH(DateCreated) = @Month AND YEAR(DateCreated) = @strYear";
+                strquery += "AND MONTH(r.DateCreated) = @Month AND YEAR(r.DateCreated) = @strYear";
                 countQuery += "AND MONTH(DateCreated) = @Month AND YEAR(DateCreated) = @strYear ";
                 parameters.Add("@Month", monthfilter);
                 parameters.Add("@strYear", intyear);
@@ -118,7 +122,7 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
             // Filter By Area 
             if (catID != 0)
             {
-                strquery += "AND CategoryID = @CategoryID";
+                strquery += "AND r.CategoryID = @CategoryID";
                 countQuery += "AND CategoryID = @CategoryID ";
 
                 parameters.Add("@CategoryID", catID);
@@ -127,7 +131,7 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
             // Filter By Model Type 
             if (Department != 0)
             {
-                strquery += " AND DepartmentID = @DepartmentID";
+                strquery += " AND r.DepartmentID = @DepartmentID";
                 countQuery += " AND DepartmentID = @DepartmentID ";
                 parameters.Add("@DepartmentID", Department);
             }
@@ -139,7 +143,7 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
             {
                 strquery += $@" AND (
                                 @Search IS NULL
-                                OR RegistrationNo LIKE '%' + @Search + '%'
+                                OR r.RegistrationNo LIKE '%' + @Search + '%'
                               )";
                 countQuery += $@" AND (
                              @Search IS NULL
@@ -148,7 +152,7 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
                 parameters.Add("@Search", search);
             }
 
-            strquery += $@" ORDER BY RegistrationID DESC";
+            strquery += $@" ORDER BY r.RegistrationID DESC";
 
             // If the Get Data has a Pagination function
             if (pageSize != 0)

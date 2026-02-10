@@ -190,11 +190,11 @@
             let res = await GetMethod('@Url.Action("GetAllChamberList", "Hydro")', { chamber: ID });
             console.log(res);
             if (res && res.Success) {
-                let priceobj = res.Data.TotalPrice;
+                let priceobj = res.data.TotalPrice;
 
 
                 // Renders the TableData
-                chamberlist = res.Data.GetList;
+                chamberlist = res.data.GetList;
                 TableDisplay.empty(); // Removing the Loading Display
                 ChamberPagination(chamberlist, 'ChamberlistData');
 
@@ -226,7 +226,7 @@
         $("#addPartNo").empty();
         let res = await GetMethod('@Url.Action("GetPartlistData", "Hydro")', {});
         if (res && res.Success) {
-            const filteredParts = res.Data.filter(part =>
+            const filteredParts = res.data.filter(part =>
                 !chamberlist.some(chamber => chamber.PartNo === part.PartNo)
             );
 

@@ -688,7 +688,9 @@
     <Compile Include="Areas\Press\Interfaces\IAluminumProducts.cs" />
     <Compile Include="Areas\Press\PressAreaRegistration.cs" />
     <Compile Include="Areas\Rotor\Controllers\RegisterController.cs" />
+    <Compile Include="Areas\Rotor\Data\CategoryServices.cs" />
     <Compile Include="Areas\Rotor\Data\RegistrationServices.cs" />
+    <Compile Include="Areas\Rotor\Interface\ICategory.cs" />
     <Compile Include="Areas\Rotor\Interface\IRegistration.cs" />
     <Compile Include="Areas\Rotor\Model\RegistrationModel.cs" />
     <Compile Include="Areas\Rotor\RotorAreaRegistration.cs" />

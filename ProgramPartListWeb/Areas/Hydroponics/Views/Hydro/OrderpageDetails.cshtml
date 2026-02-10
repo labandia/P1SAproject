@@ -252,16 +252,16 @@
     const RequestMain = async () => {
         let res = await GetMethod('@Url.Action("GetMainRequestList", "Hydro")', { orderID: ID });
         if (res && res.Success) {
-            let status = res.Data.RequestStatus;
-            $("#ChamberName").text(`Chamber selected : ${res.Data.ChamberName}`);
+            let status = res.data.RequestStatus;
+            $("#ChamberName").text(`Chamber selected : ${res.data.ChamberName}`);
             $("#RequestStatus")
                 .removeClass("COMPLETED ONGOING")
                 .addClass(status)
                 .text(status);
-            $("#MaterialStatus").text(res.Data.MaterialStatus);
+            $("#MaterialStatus").text(res.data.MaterialStatus);
 
 
-            const percent = parseFloat(res.Data.CompletionPercent) || 0;
+            const percent = parseFloat(res.data.CompletionPercent) || 0;
             let displaypercent = Math.round(percent);
 
             let barColor = "linear-gradient(90deg, #e74c3c, #c0392b)"; // red
@@ -292,7 +292,7 @@
 
          let res = await GetMethod('@Url.Action("GetRequestDetails", "Hydro")', { orderID: ID });
         if (res && res.Success) {
-            requestData = res.Data;
+            requestData = res.data;
             // FROM COMPLETE DATAW
             let CompletedData = requestData.filter(res => res.MaterialStatus === "COMPLETED");
             let NotCompletedData = requestData.filter(res => res.MaterialStatus === "INCOMPLETED");

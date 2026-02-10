@@ -201,6 +201,7 @@
 
         Loadingsteps(async () => {
             let res = await GetMethod('@Url.Action("GetUsersData", "Hydro")', {});
+            console.log(res);
             if (res && res.Success) {
                 userData = res.Data;
                 TableDisplay.empty(); // Removing the Loading Display

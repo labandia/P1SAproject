@@ -6,10 +6,17 @@
 
 
 <div class="headerMask">
-    <div class="flex_align">
-        <input type="text" id="searchID" placeholder="Search here ... " />
-        <p style="font-weight: 600;">Search Partnumber : <span id="searchText">-- N/A --</span></p>
+    <div class="control-group">
+        <label class="control-label">
+            <i class="fas fa-search"></i> Search Partnumber
+        </label>
+        <div class="search-box">
+            <input type="text" id="searchID" placeholder="Search here ... " />
+        </div>
     </div>
+    <p style="font-weight: 600;">Search Partnumber : <span id="searchText">-- N/A --</span></p>
+
+    
     <div class="flex_align">
         <button id="btnNGpage" class="btn btn-success">
             NG Data <span id="NGcount"></span>

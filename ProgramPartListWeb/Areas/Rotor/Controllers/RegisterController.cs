@@ -47,7 +47,6 @@ namespace ProgramPartListWeb.Areas.Rotor.Controllers
         [HttpPost]
         public async Task<ActionResult> AddNewRegistration(RotorRegistrationModel model) { 
             var result = await _reg.AddRegistration(model);
-
             if (!result) return JsonPostError("Error Post Data");
 
             return JsonCreated(result, "Add new Registraiton No successfully");

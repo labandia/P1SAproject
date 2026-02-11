@@ -363,7 +363,7 @@
         let formData = new FormData(e.target);
         const data = Object.fromEntries(formData);
         console.log(data);
-        let res = await postData('@Url.Action("EditPartslist", "Hydro")', formData);
+        let res = await postMethod('@Url.Action("EditPartslist", "Hydro")', formData);
          if (res && res.Success) {
               Swal.fire({
                   title: "Success",

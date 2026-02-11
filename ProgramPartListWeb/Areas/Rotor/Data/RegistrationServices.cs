@@ -40,6 +40,7 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
                     INSERT INTO Registration
                     (
                         RegistrationNo,
+                        DateCreated,
                         Desciprtion,
                         Remarks,
                         CategoryID,
@@ -47,7 +48,8 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
                     )
                     VALUES
                     (
-                        @RegistrationNo,
+                        LTRIM(RTRIM(@RegistrationNo)),
+                        @DateCreated,
                         @Desciprtion,
                         @Remarks,
                         @CategoryID,

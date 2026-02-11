@@ -583,7 +583,7 @@
     addforms.addEventListener('submit', async function (e) {
         e.preventDefault();
         let formdata = new FormData(e.target);
-        let res = await postData('@Url.Action("NewAddRequestData", "Hydro")', formdata);
+        let res = await postMethod('@Url.Action("NewAddRequestData", "Hydro")', formdata);
         if (res && res.Success) {
             RequesDataList();
             e.target.reset();
@@ -595,7 +595,7 @@
         e.preventDefault();
         let formdata = new FormData(e.target);
         const data = Object.fromEntries(formdata);
-        let res = await postData('@Url.Action("ChangeStatusRequest", "Hydro")', formdata);
+        let res = await postMethod('@Url.Action("ChangeStatusRequest", "Hydro")', formdata);
         if (res && res.Success) {
             RequesDataList();
             e.target.reset();

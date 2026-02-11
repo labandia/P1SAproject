@@ -399,7 +399,7 @@ function InventoryPagination(dataArray, tableBodyId) {
         formData.append('Items', JSON.stringify(requestItems));
 
         const data = Object.fromEntries(formData);
-        let res = await postData('@Url.Action("AddNewStocks", "Hydro")', formData);
+        let res = await postMethod('@Url.Action("AddNewStocks", "Hydro")', formData);
         if (res && res.Success) {
             Swal.fire({
                 title: "Success",

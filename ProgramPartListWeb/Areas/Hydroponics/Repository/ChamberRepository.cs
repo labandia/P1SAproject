@@ -200,8 +200,13 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             // GENERATE A UNIQUE ID FOR THE ORDER
             string OrderID = GlobalUtilities.GenerateID("CR");
 
-            string strsql = $@"INSERT INTO Hydro_Orders(OrderID, ChamberID, OrderedBy, Quantity, PIC, TargetDate, OrderDate, CustomerName, Remarks)
-                               VALUES(@OrderID, @ChamberID, @OrderedBy, @Quantity, @PIC, @TargetDate, @OrderDate, @CustomerName, @Remarks)";
+            string strsql = $@"INSERT INTO Hydro_Orders(OrderID, 
+                                        ChamberID, OrderedBy, Quantity, PIC, TargetDate, OrderDate, CustomerName, Remarks)
+                               VALUES(@OrderID, 
+                                @ChamberID, 
+                                @OrderedBy, @Quantity, 
+                                @PIC, @TargetDate, 
+                                @OrderDate, @CustomerName, @Remarks)";
 
             bool result = await SqlDataAccess.UpdateInsertQuery(strsql, new
             {

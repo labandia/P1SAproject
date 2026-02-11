@@ -38,7 +38,6 @@
             this.Rejectedbtn = new System.Windows.Forms.Button();
             this.ncrbtn = new System.Windows.Forms.Button();
             this.processbtn = new System.Windows.Forms.Button();
-            this.dashboard1 = new NCR_system.View.Module.Dashboard();
             this.panelContainer.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.Headerpanel.SuspendLayout();
@@ -60,7 +59,6 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 88F));
             this.tableLayoutPanel1.Controls.Add(this.Headerpanel, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.dashboard1, 1, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -221,14 +219,6 @@
             this.processbtn.UseVisualStyleBackColor = false;
             this.processbtn.Click += new System.EventHandler(this.processbtn_Click);
             // 
-            // dashboard1
-            // 
-            this.dashboard1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dashboard1.Location = new System.Drawing.Point(167, 3);
-            this.dashboard1.Name = "dashboard1";
-            this.dashboard1.Size = new System.Drawing.Size(1200, 712);
-            this.dashboard1.TabIndex = 0;
-            // 
             // Mainpage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -249,7 +239,6 @@
 
         private System.Windows.Forms.Panel panelContainer;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private View.Module.Dashboard dashboard1;
         private System.Windows.Forms.Panel Headerpanel;
         private System.Windows.Forms.Button Customerbtn;
         private System.Windows.Forms.Button button1;

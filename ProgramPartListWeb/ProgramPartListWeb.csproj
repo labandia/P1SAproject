@@ -756,6 +756,7 @@
     </Content>
     <Content Include="Content\css\RegistrationUI.css" />
     <Content Include="Content\css\RotorRegister.css" />
+    <Content Include="Content\Images\contact-form.ico" />
     <Content Include="Content\Images\Electrical.png" />
     <Content Include="Content\Images\FrontImage.png" />
     <Content Include="Content\Images\HydroChamber.png" />

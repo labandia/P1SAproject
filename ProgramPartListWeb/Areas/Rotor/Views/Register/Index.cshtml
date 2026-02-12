@@ -46,6 +46,7 @@
                         <option value="3">Rotor</option>
                         <option value="4">Winding</option>
                         <option value="5">Circuit</option>
+                        <option value="8">P1SA Sub Assembly</option>
                     </select>
                 </div>
 
@@ -106,6 +107,7 @@
                         <option value="3">Rotor</option>
                         <option value="4">Winding</option>
                         <option value="5">Circuit</option>
+                        <option value="8">P1SA Sub Assembly</option>
                     </select>
                 </div>
             </div>
@@ -214,6 +216,7 @@
                             <option value="3">Rotor</option>
                             <option value="4">Winding</option>
                             <option value="5">Circuit</option>
+                            <option value="8">P1SA Sub Assembly</option>
                         </select>
                     </div>
 
@@ -290,20 +293,15 @@
     const emptyState = document.getElementById('emptyState');
     let tableBody = $("#tableBody");
 
-    const categories = {
-        1: "Quality",
-        2: "Process",
-        3: "Safety",
-        4: "Maintenance",
-        5: "Documentation"
-    };
+  
 
     const departments = {
         1: "Molding",
         2: "Press",
         3: "Rotor",
         4: "Winding",
-        5: "Circuit"
+        5: "Circuit", 
+        8: "P1SA-Sub Assembly"
     };
 
     $("#AddCategory").on('click', function () {
@@ -529,12 +527,24 @@
     registrationForm.addEventListener('submit', async function (e) {
         e.preventDefault();
         const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
 
-         let res = await postMethod('@Url.Action("AddNewRegistration", "Register")', formData);
+        const regNo = data.RegistrationNo?.trim();
+
+        // Validate format: must end with YYMMDD
+        const regex = /(\d{2})(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])$/;
+
+        if (!regex.test(regNo)) {
+            alert("Registration No must end with YYMMDD format (Example: P1SA-260126)");
+            return; // 🚫 STOP submission
+        }
+
+        let res = await postMethod('@Url.Action("AddNewRegistration", "Register")', formData);
         if (res?.Success) {
             if (yearData.length == 0) {
                 GetRegistrationYearData();
             }
+            setYearMonthFromCode(data.RegistrationNo);  
             GetRegistrationData();
             // Reset form
             registrationForm.reset();
@@ -558,6 +568,25 @@
          }
 
     });
+
+    function setYearMonthFromCode(code) {
+        if (!code || !code.includes("-")) return;
+
+        // Get the numeric part after "-"
+        const datePart = code.split("-")[1]; // 260126
+
+        if (datePart.length !== 6) return;
+
+        const yearShort = datePart.substring(0, 2);  // 26
+        const month = parseInt(datePart.substring(2, 4), 10); // 01 -> 1
+
+        // Convert to full year (assume 2000+)
+        const fullYear = 2000 + parseInt(yearShort, 10);
+
+        // Set dropdown values
+        document.getElementById("yearFilter").value = fullYear;
+        document.getElementById("monthFilter").value = month;
+    }
 
     function renderTable() {
         // SHOW LOADING INDICATOR

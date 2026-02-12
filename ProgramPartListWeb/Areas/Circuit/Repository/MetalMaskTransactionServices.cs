@@ -247,7 +247,6 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                       AND t.Partnumber = @Partnumber
                       {condition}";
 
-            Debug.WriteLine(strsql);
 
             return SqlDataAccess.GetData<MetalMaskTransaction>(strsql, new { Partnumber  = partnum });
         }

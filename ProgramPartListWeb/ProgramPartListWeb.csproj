@@ -762,6 +762,7 @@
     <Content Include="Content\Images\HydroChamber.png" />
     <Content Include="Content\Images\HydrochamberPart2.png" />
     <Content Include="Content\Images\HydroPhonics.png" />
+    <Content Include="Content\Images\MetalMask.ico" />
     <Content Include="Content\Images\no-image.png" />
     <Content Include="Content\Images\SideImage.png" />
     <Content Include="Content\OpenExcelApp.exe" />

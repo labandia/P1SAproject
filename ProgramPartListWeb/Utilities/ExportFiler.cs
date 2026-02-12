@@ -185,7 +185,7 @@ namespace ProgramPartListWeb.Utilities
                 var findings = JsonConvert.DeserializeObject<List<FindingModel>>(json);
                 if (findings == null) findings = new List<FindingModel>();
 
-                await Task.Run(async () =>
+                await Task.Run(() =>
                 {
                     byte[] excelBytes;
 
@@ -273,7 +273,7 @@ namespace ProgramPartListWeb.Utilities
 
                         //string data = await SqlDataAccess.GetOneData(strquery, new { ID = reg.Employee_ID });
                         //string imageName = (!string.IsNullOrEmpty(data)) ? data : "";
-                        
+
                         //Debug.WriteLine("Image file : " + imageName);
 
                         // Save PDF

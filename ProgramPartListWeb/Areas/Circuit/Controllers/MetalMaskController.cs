@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using ClosedXML.Excel;
+using System.Runtime.InteropServices;
 
 namespace ProgramPartListWeb.Areas.Circuit.Controllers
 {
@@ -43,9 +44,10 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> SearchMetalMaskPartnum(string Partnumber)
+        public async Task<ActionResult> SearchMetalMaskPartnum(string Partnumber, int model)
         {
-            var data = await _mas.SearchMetalMaskData(Partnumber);
+
+            var data = await _mas.SearchMetalMaskData(Partnumber, model);
             if (data == null || !data.Any()) return JsonNotFound("No Masterlist Data.");
             return JsonSuccess(data);
         }

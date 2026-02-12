@@ -215,8 +215,8 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             string emailType = "default")
         {
             string messageContent = "";
-            string subjectLine = "";
-            string buttonText = "";
+            //string subjectLine = "";
+            //string buttonText = "";
             string headerColor = "";
 
 
@@ -241,8 +241,8 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                                     <td> <a href='{link}' class='button'> Patrol inspection report </a></td>
                                 </tr>
                             </table>";
-                    subjectLine = "[FOLLOW UP - REGISTRATION REPORT] 'For Review/Submit CounterMeasure'";
-                    buttonText = "Submit Countermeasure";
+                    //subjectLine = "[FOLLOW UP - REGISTRATION REPORT] 'For Review/Submit CounterMeasure'";
+                    //buttonText = "Submit Countermeasure";
                     headerColor = "linear-gradient(135deg, #dc3545, #c82333)";
                     break;
                 case "inpectorapproval":
@@ -267,8 +267,8 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                                     <td> <a href='{link}' class='button'> Patrol inspection report </a></td>
                                 </tr>
                             </table>";
-                    subjectLine = "[FOLLOW UP - NONCON REPORT] 'For Review/Approval'";
-                    buttonText = "For Review Registration";
+                    //subjectLine = "[FOLLOW UP - NONCON REPORT] 'For Review/Approval'";
+                    //buttonText = "For Review Registration";
                     headerColor = "linear-gradient(135deg, #dc3545, #c82333)";
                     break;
 
@@ -296,8 +296,8 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                                     <td>Registration System</td>
                                 </tr>
                             </table>";
-                    subjectLine = "[REGISTRATION VERIFICATION] 'Action Required'";
-                    buttonText = "Complete Registration";
+                    //subjectLine = "[REGISTRATION VERIFICATION] 'Action Required'";
+                    //buttonText = "Complete Registration";
                     headerColor = "linear-gradient(135deg, #007bff, #0056b3)";
                     break;
             }

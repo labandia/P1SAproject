@@ -6,20 +6,25 @@
 
 
 <div class="headerMask">
-    <div class="control-group">
-        <label class="control-label">
-            <i class="fas fa-search"></i> Search Partnumber
-        </label>
-        <div class="search-box">
-            <input type="text" id="searchID" placeholder="Search here ... " />
+    <div class="flex_align" style="align-items: flex-end;">
+        <div class="control-group">
+            <label class="control-label">
+                <i class="fas fa-search"></i> Search Partnumber
+            </label>
+            <div class="search-box">
+                <input type="text" id="searchID" placeholder="Search here ... " />
+            </div>
+        </div>
+        <div class="search-tag">
+            <i class="fas fa-tag"></i> Current: <span id="searchText">-- N/A --</span>
         </div>
     </div>
-    <p style="font-weight: 600;">Search Partnumber : <span id="searchText">-- N/A --</span></p>
 
-    
+
     <div class="flex_align">
-        <button id="btnNGpage" class="btn btn-success">
-            NG Data <span id="NGcount"></span>
+        <button id="btnNGpage" class="ButtonNG">
+            <i class="fas fa-exclamation-triangle"></i> NG Data
+            <span id="NGcount" class="badge">0</span>
         </button>
         <button id="btnExport" class="btn btn-success" style="display: none;">
             Export Selected
@@ -31,7 +36,13 @@
     
 </div>
 
-<div class="TrackTable" style="margin-top: 1em;">
+<div class="TrackTable" style=" margin-top: 1em;">
+    <!-- Loading Overlay -->
+    <div class="loading" id="loading" style="padding: 2em 0; height: 300px;">
+        <div class="spinner"></div>
+        <p>Loading transactions...</p>
+    </div>
+
     <table>
         <thead>
             <tr>
@@ -62,7 +73,6 @@
             </tr>
         </thead>
         <tbody id="TransactionTable">
-            
         </tbody>
     </table>
 
@@ -81,20 +91,21 @@
     let tempPartnum = "";
 
     let TableBody = $("#TransactionTable");
+    const loading = document.getElementById('loading');
 
     // ==== SEARCH FUNCTIONALITY =======
     $("#searchID").on('keyup', (e) => {
         if (e.key !== "Enter") return;
-        let tempText = $("#searchID").val();
+        let tempText = e.target.value;
 
 
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(async () => {
-            //await GetMetalMaskTransaction();
+            await GetMetalMaskTransaction();
             $("#searchID").val("");
             $("#searchText").text(tempText);
             tempPartnum = tempText; 
-            //await GetTotalIncompleteMask(tempText);
+            await GetTotalIncompleteMask(tempText);
         }, 400);
     });
 
@@ -196,108 +207,121 @@
     }
 
     const GetMetalMaskTransaction = async () => {
+        showLoading(true);
+        TableBody.empty();
+
+
         try {
             searchCount = 0;
 
            const url = '@Url.Action("GetMetalMaskCOMPLETE", "MetalMask")';
             // Add spinner/loading indicator
-            $("#TransactionTable").html('<tr><td colspan="24" class="text-center"><div class="spinner-border" role="status"></div> Loading...</td></tr>');
+            //$("#TransactionTable").html('<tr><td colspan="24" class="text-center"><div class="spinner-border" role="status"></div> Loading...</td></tr>');
 
             let res = await GetMethod(url, { partnum: $("#searchID").val() || "" });
 
             //console.log(res);
             if (res?.Success) {
-                TableBody.empty();
                 let TableData = res.data;
                 let html = "";
                 $("#NGcount").text(``);
 
-                $.each(TableData, function (index, row) {
-                    // Image Display
-                    html += `
-                      <tr class="fade-in MaskTable">
-                            <td>
-                                   <input type="checkbox"
-                                   class="row-check"
-                                   name="checkID"
-                                   value="${row.RecordID}">
-                            </td>
+                setTimeout(() => {
+                    $.each(TableData, function (index, row) {
+                        // Image Display
+                        html += `
+                           <tr class="fade-in MaskTable">
+                                 <td>
+                                        <input type="checkbox"
+                                        class="row-check"
+                                        name="checkID"
+                                        value="${row.RecordID}">
+                                 </td>
 
-                            <td >${row.DateInput ? formatJsonDate(row.DateInput) : "-"}</td>
-                            <td >${row.Shift ? "NS" : "DS"}</td>
-                            <td >${row.SMTLine ? row.SMTLine : "-"}</td>
-                            <td >${row.AREA ? row.AREA : "-"}</td>
-                            <td >${row.Partnumber ? row.Partnumber : "-"}</td>
-                            <td >${row.Blocks ? row.Blocks : "-"}</td>
-                            <td >${row.SMT_start === "00:00" ? "--:--" : row.SMT_start}</td>
-                            <td >${row.SMT_end === "00:00" ? "--:--" : row.SMT_end}</td>
-                            <td >${row.TotalTime ? row.TotalTime : "-"}</td>
-                            <td >${row.TotalPrintBoard ? row.TotalPrintBoard : "-"}</td>
-                            <td >${row.SMT_Operator ? row.SMT_Operator : "-"}</td>
+                                 <td >${row.DateInput ? formatJsonDate(row.DateInput) : "-"}</td>
+                                 <td >${row.Shift ? "NS" : "DS"}</td>
+                                 <td >${row.SMTLine ? row.SMTLine : "-"}</td>
+                                 <td >${row.AREA ? row.AREA : "-"}</td>
+                                 <td >${row.Partnumber ? row.Partnumber : "-"}</td>
+                                 <td >${row.Blocks ? row.Blocks : "-"}</td>
+                                 <td >${row.SMT_start === "00:00" ? "--:--" : row.SMT_start}</td>
+                                 <td >${row.SMT_end === "00:00" ? "--:--" : row.SMT_end}</td>
+                                 <td >${row.TotalTime ? row.TotalTime : "-"}</td>
+                                 <td >${row.TotalPrintBoard ? row.TotalPrintBoard : "-"}</td>
+                                 <td >${row.SMT_Operator ? row.SMT_Operator : "-"}</td>
 
-                           <td >${row.CleanDate ? formatJsonDate(row.CleanDate) : "-"}</td>
-                           <td >${row.CleanDate ? formatJsonDate(row.CleanDate) : "-"}</td>
-                           <td >${row.Pattern ? row.Pattern : "-"}</td>
-                           <td >${row.Frame ? row.Frame : "-"}</td>
-                           <td >${row.ReadOne ? row.ReadOne : "-"}</td>
-                           <td >${row.ReadTwo ? row.ReadTwo : "-"}</td>
-                           <td >${row.ReadThree ? row.ReadThree : "-"}</td>
-                           <td >${row.ReadFour ? row.ReadFour : "-"}</td>
-                           <td >${row.Result ? row.Result : "-"}</td>
-                           <td >${row.Remarks ? row.Remarks : "-"}</td>
-                           <td >${row.PIC ? row.PIC : "-"}</td> "-"}</td>
-                      </tr>
-                  `;
-                });
+                                <td >${row.CleanDate ? formatJsonDate(row.CleanDate) : "-"}</td>
+                                <td >${row.CleanDate ? formatJsonDate(row.CleanDate) : "-"}</td>
+                                <td >${row.Pattern ? row.Pattern : "-"}</td>
+                                <td >${row.Frame ? row.Frame : "-"}</td>
+                                <td >${row.ReadOne ? row.ReadOne : "-"}</td>
+                                <td >${row.ReadTwo ? row.ReadTwo : "-"}</td>
+                                <td >${row.ReadThree ? row.ReadThree : "-"}</td>
+                                <td >${row.ReadFour ? row.ReadFour : "-"}</td>
+                                <td >${row.Result ? row.Result : "-"}</td>
+                                <td >${row.Remarks ? row.Remarks : "-"}</td>
+                                <td >${row.PIC ? row.PIC : "-"}</td> "-"}</td>
+                           </tr>
+                       `;
+                    });
 
-                tableBody.append(html);
+                    TableBody.append(html);
 
 
-                ///* ============================
-                //      START REALTIME TIMERS
-                //   ============================ */
+                    ///* ============================
+                    //      START REALTIME TIMERS
+                    //   ============================ */
 
-                //document.querySelectorAll(".MaskTable").forEach((card, i) => {
+                    //document.querySelectorAll(".MaskTable").forEach((card, i) => {
 
-                //    const row = res.data[i];
+                    //    const row = res.data[i];
 
-                //    // Only run if still active
-                //    if (row.SMT_end !== "00:00") return;
-                //    const changeDate = formatJsonDate(row.DateInput);
-                //    const startDate = parseTime(changeDate, row.SMT_start);
+                    //    // Only run if still active
+                    //    if (row.SMT_end !== "00:00") return;
+                    //    const changeDate = formatJsonDate(row.DateInput);
+                    //    const startDate = parseTime(changeDate, row.SMT_start);
 
-                //    activeTimers.push(timer);
-                //});
+                    //    activeTimers.push(timer);
+                    //});
+
+                    showLoading(false);
+                }, 500);
+                
             } else {
                 // handle specific error types
 
-                let errorMessage = res?.Message || 'No Data Found';
+                setTimeout(() => {
+                    let errorMessage = res?.Message || 'No Data Found';
 
-                if (res?.errorType === 'NotFoundError') {
-                    errorMessage = 'Api endpoint not found. Please contact the Administrator';
-                } else if (res?.errorType === 'UnauthorizedError') {
-                    errorMessage = 'Your Session Token is expired. please refresh the page';
-                }
+                    if (res?.errorType === 'NotFoundError') {
+                        errorMessage = 'Api endpoint not found. Please contact the Administrator';
+                    } else if (res?.errorType === 'UnauthorizedError') {
+                        errorMessage = 'Your Session Token is expired. please refresh the page';
+                    }
 
-                TableBody.append(`<tr >
+                    TableBody.append(`<tr >
                         <td colspan="23" style="text-align:center; font-weight:500;">
                             🔍 ${errorMessage}
                         </td>
                     </tr>`);
 
-
-
+                    showLoading(false);
+                    console.error("API Error : ", errorMessage, res);
+                }, 500);
                 // Optional show a Toast
-                console.error("API Error : ", errorMessage, res);
+               
             }
 
         } catch (error) {
-            console.error('Unexpected error in GetMetalMaskTransaction:', error);
-            TableBody.append(`<tr >
-                <td colspan="23" style="text-align:center; font-weight:500;">
-                    🔍 ${error.Message}
-                </td>
-            </tr>`);
+            setTimeout(() => {
+                console.error('Unexpected error in GetMetalMaskTransaction:', error);
+                TableBody.append(`<tr >
+                      <td colspan="23" style="text-align:center; font-weight:500;">
+                          🔍 ${error.Message}
+                      </td>
+                  </tr>`);
+                showLoading(false);
+            }, 500);
         }
 
     }
@@ -315,7 +339,7 @@
             console.log(searchCount);
 
             if (searchCount > 0) {
-                $("#NGcount").text(`(${searchCount})`);
+                $("#NGcount").text(`${searchCount}`);
             } 
             
 
@@ -450,5 +474,10 @@
 
         operationBadge.textContent = labels[status] ?? 'UNKNOWN';
         operationBadge.style.background = colors[status] ?? '#6c757d';
+    }
+
+    // Show loading state
+    function showLoading(show = true) {
+        loading.classList.toggle('active', show);
     }
 </script>

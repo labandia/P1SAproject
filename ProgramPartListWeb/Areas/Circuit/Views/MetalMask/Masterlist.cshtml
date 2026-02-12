@@ -24,7 +24,6 @@
             <i class="fas fa-calendar"></i>Model Type
         </label>
         <select id="ModelSelect" class="filter-select">
-            <option value="0">-- All Types --  </option>
             <option value="1">FAN </option>
             <option value="2">UPS </option>
             <option value="3">Servo </option>
@@ -37,7 +36,12 @@
 </div>
 
 
-<div class="TrackTable" style="margin-top: 1em;">
+<div class="TrackTable" style="position: relative; margin-top: 1em; box-shadow: 0 3px 5px rgba(0, 0, 0, 0.08);">
+    <!-- Loading Overlay -->
+    <div class="loading" id="loading" style="padding: 2em 0; height: 300px;">
+        <div class="spinner"></div>
+    </div>
+
     <table>
         <thead>
             <tr>
@@ -57,6 +61,13 @@
         </tbody>
     </table>
 
+
+    <!-- Empty State -->
+    <div class="empty-state" id="emptyState">
+        <i class="fas fa-inbox" style="transform:scale(1.8)"></i>
+        <h3 id="Errormessage">No Data found</h3>
+        <p>Add data to get started</p>
+    </div>
 </div>
 
 
@@ -164,6 +175,18 @@
     let selectID = 0;
     let isAction = 0;
 
+    const loading = document.getElementById('loading');
+    const emptyState = document.getElementById('emptyState');
+
+
+    // ==== FILER by ModelType ===========
+    $("#ModelSelect").on("change", function () {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            GetMetalMaskMasterlist();
+        }, 400);
+    });
+
     $("#addMasterlistform").on('submit', async function (e) {
         e.preventDefault();
 
@@ -196,62 +219,76 @@
 
 
    const GetMetalMaskMasterlist = async () => {
-     let partText = $("#searchInput").val();
-     let Modelval = $("#ModelSelect").val();
+     showLoading(true);
+
      try {
           const url = '@Url.Action("GetMastetlistData", "MetalMask")';
 
          let res = await GetMethod(url, {
-             search: partText,
-             ModelType: Modelval
+             search: $("#searchInput").val() || "",
+             ModelType: $("#ModelSelect").val() || 0
          });
 
          console.log(res);
 
           if (res?.Success) {
-                console.clear();
+                //console.clear();
                 let tableBody = $("#TransactionTable");
                 tableBody.empty();
                 setData = res.data.Items;
                 let html = "";
 
-               $.each(setData, function (index, row) {
-                    // Image Display
-                    html += `
-                         <tr class='cleanTable' data-id="${row.RecordID}">
-                               <td style='font-weight: 600;'>${row.Partnumber ? row.Partnumber : "-"}</td>
-                               <td >${row.DateReceived ? formatJsonDate(row.DateReceived) : "-"} </td>
-                               <td >${row.AREA ? row.AREA : "-"}</td>
-                               <td style='text-align: center;'>${row.Alternate ? row.Alternate : "-"}</td>
-                               <td style='text-align: center;'>${row.Side ? row.Side : "-"}</td>
-                               <td style='text-align: center;'>${row.Thickness ? row.Thickness : "-"}</td>
-                               <td style='text-align: center;'>${row.Blocks ? row.Blocks : "-"}</td>
-                               <td style='text-align: center;'>${row.Condition ? row.Condition : "-"}</td>
-                               <td >${row.Remarks ? row.Remarks : "-"}</td>
 
-                         </tr>
-                     `;
-                });
+              setTimeout(() => {
+                  $.each(setData, function (index, row) {
+                      // Image Display
+                      html += `
+                          <tr class='cleanTable' data-id="${row.RecordID}">
+                                <td style='font-weight: 600;'>${row.Partnumber ? row.Partnumber : "-"}</td>
+                                <td >${row.DateReceived ? formatJsonDate(row.DateReceived) : "-"} </td>
+                                <td >${row.AREA ? row.AREA : "-"}</td>
+                                <td style='text-align: center;'>${row.Alternate ? row.Alternate : "-"}</td>
+                                <td style='text-align: center;'>${row.Side ? row.Side : "-"}</td>
+                                <td style='text-align: center;'>${row.Thickness ? row.Thickness : "-"}</td>
+                                <td style='text-align: center;'>${row.Blocks ? row.Blocks : "-"}</td>
+                                <td style='text-align: center;'>${row.Condition ? row.Condition : "-"}</td>
+                                <td >${row.Remarks ? row.Remarks : "-"}</td>
 
-                tableBody.append(html);
+                          </tr>
+                      `;
+                  });
+
+                  tableBody.append(html);
+
+                  showLoading(false);
+              }, 500);
+
           } else {
-              // handle specific error types
-              let TableBody = $("#TransactionTable");
-              let errorMessage = res?.Message || 'No Data found';
+              setTimeout(() => {
+                  // handle specific error types
+                  let TableBody = $("#TransactionTable");
+                  let errorMessage = res?.Message || 'No Data found';
 
-              if (res?.errorType === 'NotFoundError') {
-                  errorMessage = 'Api endpoint not found. Please contact the Administrator';
-              } else if (res?.errorType === 'UnauthorizedError') {
-                  errorMessage = 'Your Session Token is expired. please refresh the page';
-              }
+                  if (res?.errorType === 'NotFoundError') {
+                      errorMessage = 'Api endpoint not found. Please contact the Administrator';
+                  } else if (res?.errorType === 'UnauthorizedError') {
+                      errorMessage = 'Your Session Token is expired. please refresh the page';
+                  }
 
-              TableBody.html(`<tr><td colspan="24" class="text-center text-danger">${errorMessage}</td></tr>`);
+                  TableBody.html(`<tr><td colspan="24" class="text-center text-danger">${errorMessage}</td></tr>`);
 
-              // Optional show a Toast
-              console.error("API Error : ", errorMessage, res);
+                  showLoading(false);
+                  // Optional show a Toast
+                  console.error("API Error : ", errorMessage, res);
+              }, 500);
           }
      } catch (error) {
-         console.error('Unexpected error in GetMetalMaskTransaction:', error);
+         setTimeout(() => {
+             console.error('Unexpected error in GetMetalMaskTransaction:', error);
+             TableBody.html(`<tr><td colspan="24" class="text-center text-danger">${error}</td></tr>`);
+
+             showLoading(false);
+         }, 500);
      }
     };
 
@@ -286,4 +323,11 @@
 
 
     GetMetalMaskMasterlist();
+
+
+
+    // Show loading state
+    function showLoading(show = true) {
+        loading.classList.toggle('active', show);
+    }
 </script>

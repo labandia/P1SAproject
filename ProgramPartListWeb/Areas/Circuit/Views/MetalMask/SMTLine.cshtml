@@ -58,6 +58,13 @@
             </div>
 
             <section class="Maskcardcontainer mt-3" id="Maskcardcontainer"></section>
+
+            <!-- Empty State -->
+            <div class="empty-state" id="emptyState">
+                <i class="fas fa-inbox" style="transform:scale(1.8)"></i>
+                <h3 id="Errormessage">No Data found</h3>
+                <p>Add data to get started</p>
+            </div>
         </div>
 
 
@@ -153,6 +160,7 @@
 
     const operationBadge = document.getElementById('operationBadge');
     const loading = document.getElementById('loading');
+    const emptyState = document.getElementById('emptyState');
 
     let selectedTimer = null;
     let debounceTimer;
@@ -195,17 +203,18 @@
           if (res?.Success) {
               GetMetalMaskTransaction();
               GetTheTotalCount();
-
+              
               $("#partnumText").text("-- N/A --");
               $("#AreaV2Text").text("-- N/A --");
               $("#BlockV2Text").text("-- N/A --");
+              $("#lineText").text("-- N/A --");
               $("#StartText").text("--:--");
               $("#EndText").text("--:--");
               $("#TotalTimeText").text("00:00");
               $("#TotalPrintBoard").val("");
               $("#SMT_Operator").val("");
           }
-          updateOperationStatus(2);
+          updateOperationStatus(4);
      });
 
     // START THE TIME OF THE DATA
@@ -328,7 +337,7 @@
             if (res?.Success) {
                 SMTData = res.data;
                 let html = "";
-
+                emptyState.style.display = 'none';
                 setTimeout(() => {
                     SMTData.forEach(rowData => {
 
@@ -387,21 +396,22 @@
 
                
             } else {
-                showLoading(false);
-                // handle specific error types 
-                let TableBody = $("#Maskcardcontainer");
-                let errorMessage = res?.Message || 'failed to load data';
+                setTimeout(() => {
+                    // handle specific error types 
+                    let TableBody = $("#Maskcardcontainer");
+                    let errorMessage = res?.Message || 'failed to load data';
 
-                if (res?.errorType === 'NotFoundError') {
-                    errorMessage = 'Api endpoint not found. Please contact the Administrator';
-                } else if (res?.errorType === 'UnauthorizedError') {
-                    errorMessage = 'Your Session Token is expired. please refresh the page';
-                }
+                    if (res?.errorType === 'NotFoundError') {
+                        errorMessage = 'Api endpoint not found. Please contact the Administrator';
+                    } else if (res?.errorType === 'UnauthorizedError') {
+                        errorMessage = 'Your Session Token is expired. please refresh the page';
+                    }
+                    emptyState.style.display = 'block';
 
-                TableBody.html(`<span class="text-center text-danger">${errorMessage}</span>`);
-
-                // Optional show a Toast 
-                console.error("API Error : ", errorMessage, res);
+                    // Optional show a Toast 
+                    console.error("API Error : ", errorMessage, res);
+                    showLoading(false);
+                }, 500);
             }
 
         } catch (error) {
@@ -579,8 +589,8 @@
             '#4ade80'  // 2 - completed
         ];
 
-        operationBadge.textContent = labels[status] ?? 'UNKNOWN';
-        operationBadge.style.background = colors[status] ?? '#6c757d';
+        operationBadge.textContent = labels[status] ?? 'IDLE';
+        operationBadge.style.background = colors[status] ?? '#4361ee';
     }
 
     // Show loading state

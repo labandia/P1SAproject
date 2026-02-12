@@ -186,7 +186,7 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
                             YEAR(DateCreated) AS GetYear
                         FROM Registration
                         GROUP BY YEAR(DateCreated)
-                        ORDER BY [GetYear];");
+                        ORDER BY [GetYear] DESC;");
         }
     }
 }

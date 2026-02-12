@@ -15,7 +15,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Interface
             int pageSize);
 
         Task<MetalMaskModel> GetMetalMaskByID(int ID);
-        Task<List<MetalMaskModel>> SearchMetalMaskData(string partnum);
+        Task<List<MetalMaskModel>> SearchMetalMaskData(string partnum, int model);
 
         Task<bool> AddMasterlist(MetalMaskModel masterlist);
         Task<bool> EditMasterlist(MetalMaskModel masterlist);

@@ -8,6 +8,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="~/Content/Images/MetalMask.ico">
     <title>Metal Mask Monitoring System</title>
     <meta name="description" content="Learn how to improve your website with caching, accessibility, and SEO best practices.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,7 +25,8 @@
 <body>
     <header id="MaskHead">
         <div class="customcontainer nav-container">
-            <a href="#" class="logo">
+            <a href="#" class="c">
+                <img src="~/Content/Images/MetalMask.ico" />
                 <span>Metal Mask Monitoring System</span>
             </a>
 
@@ -71,7 +73,7 @@
                             <small class="erromessage errormodel">Select Model Type Required *</small>
                         </div>
 
-                        <select id="ModelType" name="ModelType" class="filter-select">
+                        <select id="AddModelType" name="ModelType" class="filter-select">
                             <option value="0">-- Select Model -- </option>
                             <option value="1">FAN </option>
                             <option value="2">UPS </option>
@@ -223,7 +225,7 @@
             e.preventDefault();
 
             let partText = $("#PartSearch").val().trim(); 
-            let selectModel = $("#ModelType").val();
+            let selectModel = $("#AddModelType").val();
 
             if (parseInt(selectModel) === 0) {
                 $(".errormodel").show();
@@ -266,17 +268,18 @@
                 $("#CheckID").hide();
                 $("#WrongID").hide();
                 const searchValue = e.target.value;
-                MetalMaskSearch(searchValue);
+                MetalMaskSearch(searchValue, $("#AddModelType").val());
             }
         });
 
 
          // ================= SEARCH FUNCTION ================ //
-        async function MetalMaskSearch(partnum) {
+        async function MetalMaskSearch(partnum, model) {
+            console.log(`Partnumber : ${partnum} - Model : ${model}`)
             try {
                 let url = '@Url.Action("SearchMetalMaskPartnum", "MetalMask")';
 
-                let res = await GetMethod(url, { Partnumber: partnum });
+                let res = await GetMethod(url, { Partnumber: partnum, model: model });
 
                 if (res?.Success) {
                     let tableData = res.data;
@@ -309,7 +312,6 @@
                     $("#CheckID").hide();
                     $("#WrongID").show();
                     $("#PartSearch").css("outline", "none");
-                    $("#PartSearch").val("");
                     $("#AreaText").val("-- N/A --");
                     $("#BlockText").val("-- N/A --");
                     $("#PartSearch").css("border", "1px solid #FF2C2C");

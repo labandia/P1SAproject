@@ -102,7 +102,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
             return SqlDataAccess.GetObjectOnly<MetalMaskModel>(strquery, parameter);
         }
 
-        public async Task<List<MetalMaskModel>> SearchMetalMaskData(string partnum)
+        public async Task<List<MetalMaskModel>> SearchMetalMaskData(string partnum, int model)
         {
             string strquery = @"SELECT RecordID
                                     ,Partnumber
@@ -129,8 +129,8 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                                             PATINDEX('%[0-9]%', Partnumber),
                                             PATINDEX('%[^0-9]%', SUBSTRING(Partnumber, PATINDEX('%[0-9]%', Partnumber), 50) + 'X') - 1
                                         ) AS NumPart
-                                ) p WHERE Partnumber =@Partnumber ";
-            var parameter = new { Partnumber = partnum };
+                                ) p WHERE Partnumber =@Partnumber AND ModelType = @model";
+            var parameter = new { Partnumber = partnum, model = model };
 
             return await SqlDataAccess.GetData<MetalMaskModel>(strquery, parameter);
         }

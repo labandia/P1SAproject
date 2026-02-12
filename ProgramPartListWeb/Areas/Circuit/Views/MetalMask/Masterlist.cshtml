@@ -194,9 +194,7 @@
 
         let formData = new FormData(e.target);
         const data = Object.fromEntries(formData);
-        console.log(data);
         let res = await postMethod(url, formData);
-        console.log(res);
         if (res?.Success) {
             GetMetalMaskMasterlist();
             $("#AddMasterlist").modal("hide");
@@ -229,7 +227,6 @@
              ModelType: $("#ModelSelect").val() || 0
          });
 
-         console.log(res);
 
           if (res?.Success) {
                 //console.clear();
@@ -238,6 +235,7 @@
                 setData = res.data.Items;
                 let html = "";
 
+              emptyState.style.display = 'none';
 
               setTimeout(() => {
                   $.each(setData, function (index, row) {
@@ -275,7 +273,7 @@
                       errorMessage = 'Your Session Token is expired. please refresh the page';
                   }
 
-                  TableBody.html(`<tr><td colspan="24" class="text-center text-danger">${errorMessage}</td></tr>`);
+                  emptyState.style.display = 'block';
 
                   showLoading(false);
                   // Optional show a Toast
@@ -285,7 +283,7 @@
      } catch (error) {
          setTimeout(() => {
              console.error('Unexpected error in GetMetalMaskTransaction:', error);
-             TableBody.html(`<tr><td colspan="24" class="text-center text-danger">${error}</td></tr>`);
+             emptyState.style.display = 'block';
 
              showLoading(false);
          }, 500);
@@ -301,7 +299,6 @@
         selectID = recordId;
         isAction = 1;
         let filtertable = setData.find(res => res.RecordID === selectID);
-        console.log(filtertable);
 
         if (filtertable) {
             $("#RecordID").val(selectID);

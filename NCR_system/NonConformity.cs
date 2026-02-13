@@ -22,6 +22,7 @@ namespace NCR_system
         {
             //await webView21.EnsureCoreWebView2Async(null);
             //webView21.CoreWebView2.Navigate("http://p1saportalweb.sdp.com/");
+        
         }
     }
 }

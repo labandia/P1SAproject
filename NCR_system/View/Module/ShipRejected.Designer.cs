@@ -292,7 +292,7 @@
             this.panel6.Location = new System.Drawing.Point(35, 92);
             this.panel6.Name = "panel6";
             this.panel6.Padding = new System.Windows.Forms.Padding(30);
-            this.panel6.Size = new System.Drawing.Size(1269, 241);
+            this.panel6.Size = new System.Drawing.Size(1279, 241);
             this.panel6.TabIndex = 25;
             // 
             // ShipmentChart
@@ -300,7 +300,7 @@
             this.ShipmentChart.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ShipmentChart.Location = new System.Drawing.Point(30, 30);
             this.ShipmentChart.Name = "ShipmentChart";
-            this.ShipmentChart.Size = new System.Drawing.Size(1207, 179);
+            this.ShipmentChart.Size = new System.Drawing.Size(1217, 179);
             this.ShipmentChart.TabIndex = 23;
             this.ShipmentChart.Text = "cartesianChart1";
             // 

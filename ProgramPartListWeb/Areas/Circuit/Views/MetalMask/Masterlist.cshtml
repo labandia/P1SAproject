@@ -80,7 +80,7 @@
 
             <div class="modal-body modalwrap">
                 <div class="custom_modal_header">
-                    <h5>Add Materlist Data</h5>
+                    <h5 id="changeAction">Add Materlist Data</h5>
 
                     <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
                         <span>&times;</span>
@@ -204,6 +204,7 @@
 
     $("#addbtn").on('click', (e) => {
         e.preventDefault();
+        $("#changeAction").text("Add Materlist Data");
         $("#AddMasterlist").modal("show");
     });
 
@@ -218,6 +219,7 @@
 
    const GetMetalMaskMasterlist = async () => {
      showLoading(true);
+     let tableBody = $("#TransactionTable");
 
      try {
           const url = '@Url.Action("GetMastetlistData", "MetalMask")';
@@ -230,7 +232,6 @@
 
           if (res?.Success) {
                 //console.clear();
-                let tableBody = $("#TransactionTable");
                 tableBody.empty();
                 setData = res.data.Items;
                 let html = "";
@@ -263,6 +264,7 @@
 
           } else {
               setTimeout(() => {
+                  tableBody.empty();
                   // handle specific error types
                   let TableBody = $("#TransactionTable");
                   let errorMessage = res?.Message || 'No Data found';
@@ -282,6 +284,7 @@
           }
      } catch (error) {
          setTimeout(() => {
+             tableBody.empty();
              console.error('Unexpected error in GetMetalMaskTransaction:', error);
              emptyState.style.display = 'block';
 

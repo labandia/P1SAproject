@@ -695,10 +695,12 @@
     <Compile Include="Areas\Rotor\Model\RegistrationModel.cs" />
     <Compile Include="Areas\Rotor\RotorAreaRegistration.cs" />
     <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Controllers\ChatController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\ExtendController.cs" />
     <Compile Include="Controllers\P1SAportalwebController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Hubs\ChatHub.cs" />
     <Compile Include="Interfaces\IAuthRepository.cs" />
     <Compile Include="Interfaces\ICRUD_Repository.cs" />
     <Compile Include="Models\SignatureModel.cs" />
@@ -715,7 +717,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="signalr\hubs\MyHub1.cs" />
     <Compile Include="Utilities\Common\ResultMessageResponce.cs" />
     <Compile Include="Utilities\DataAccess\NetworkHelper.cs" />
     <Compile Include="Utilities\DataAccess\NetworkShareAccesser.cs" />
@@ -860,6 +861,8 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\jspdf.umd.min.js" />
+    <Content Include="Scripts\microsoft-signalr\signalr.js" />
+    <Content Include="Scripts\microsoft-signalr\signalr.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.min.js">
       <DependentUpon>modernizr-2.8.3.js</DependentUpon>
     </Content>
@@ -984,8 +987,6 @@
     <Content Include="Scripts\fullcalendar%406.1.17\timegrid\index.global.min.js" />
     <Content Include="Scripts\html5-qrcode.min.js" />
     <Content Include="Scripts\jquery-barcode.js" />
-    <Content Include="Scripts\jquery.signalR-2.4.3.js" />
-    <Content Include="Scripts\jquery.signalR-2.4.3.min.js" />
     <Content Include="Scripts\live_w_locator.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\quagga.js" />
@@ -1016,7 +1017,6 @@
     <Content Include="Scripts\Shared\Utilities.min.js">
       <DependentUpon>Utilities.js</DependentUpon>
     </Content>
-    <Content Include="Scripts\signalr.min.js" />
     <Content Include="Scripts\signature_pad.umd.min.js" />
     <Content Include="Scripts\sweetalert2.min.js" />
     <Content Include="Scripts\xlsx.full.min.js" />
@@ -1044,6 +1044,7 @@
     <Content Include="Views\Stock\Chat.cshtml" />
     <Content Include="Views\Shared\_SystemConfig.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Chat\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

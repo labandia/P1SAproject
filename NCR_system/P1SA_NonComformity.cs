@@ -16,5 +16,17 @@ namespace NCR_system
         {
             InitializeComponent();
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Application.Exit(); 
+        }
+
+        private void P1SA_NonComformity_Load(object sender, EventArgs e)
+        {
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.WindowState = FormWindowState.Maximized;
+            this.TopMost = true; // optional
+        }
     }
 }

@@ -32,6 +32,7 @@ namespace NCR_system
             services.AddSingleton<INCR, NCR_Repository>();
 
             // Import Modules Usercontrols
+            services.AddSingleton<P1SA_NonComformity>();    
             services.AddSingleton<Mainpage>();
             services.AddSingleton<NonConformity>();
             services.AddSingleton<AddCustomerComplaint>();
@@ -49,7 +50,7 @@ namespace NCR_system
             services.AddTransient<ShipRejected>();
 
             ServiceProvider = services.BuildServiceProvider();
-            var mainForm = ServiceProvider.GetRequiredService<NonConformity>();
+            var mainForm = ServiceProvider.GetRequiredService<Mainpage>();
             Application.Run(mainForm);
         }
     }

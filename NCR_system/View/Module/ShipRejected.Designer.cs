@@ -129,7 +129,7 @@
             this.RejectedGrid.RowHeadersVisible = false;
             this.RejectedGrid.RowTemplate.Height = 30;
             this.RejectedGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.RejectedGrid.Size = new System.Drawing.Size(1279, 414);
+            this.RejectedGrid.Size = new System.Drawing.Size(1279, 354);
             this.RejectedGrid.TabIndex = 8;
             this.RejectedGrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.RejectedGrid_CellClick);
             this.RejectedGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.RejectedGrid_CellFormatting);

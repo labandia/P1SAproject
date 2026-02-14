@@ -325,6 +325,13 @@
         animation: pulse 1.5s infinite;
     }
 
+    /* Verified (correct barcode match) */
+    .grid-cell.verified {
+        background-color: #28a745;
+        color: #fff;
+        border: 2px solid #1e7e34;
+    }
+
 @keyframes pulse {
     0% {
         box-shadow: 0 0 0 0 rgba(253, 203, 110, 0.7);

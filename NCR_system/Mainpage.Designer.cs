@@ -32,6 +32,8 @@
             this.panelContainer = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.Headerpanel = new System.Windows.Forms.Panel();
+            this.button5 = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             this.button4 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.Customerbtn = new System.Windows.Forms.Button();
@@ -42,8 +44,6 @@
             this.processbtn = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.button2 = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.button5 = new System.Windows.Forms.Button();
             this.panelContainer.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.Headerpanel.SuspendLayout();
@@ -56,7 +56,7 @@
             this.panelContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelContainer.Location = new System.Drawing.Point(0, 0);
             this.panelContainer.Name = "panelContainer";
-            this.panelContainer.Size = new System.Drawing.Size(1514, 718);
+            this.panelContainer.Size = new System.Drawing.Size(1350, 729);
             this.panelContainer.TabIndex = 3;
             this.panelContainer.Paint += new System.Windows.Forms.PaintEventHandler(this.panelContainer_Paint);
             // 
@@ -73,7 +73,7 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1514, 718);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1350, 729);
             this.tableLayoutPanel1.TabIndex = 2;
             // 
             // Headerpanel
@@ -92,8 +92,41 @@
             this.Headerpanel.Dock = System.Windows.Forms.DockStyle.Left;
             this.Headerpanel.Location = new System.Drawing.Point(3, 3);
             this.Headerpanel.Name = "Headerpanel";
-            this.Headerpanel.Size = new System.Drawing.Size(273, 712);
+            this.Headerpanel.Size = new System.Drawing.Size(243, 723);
             this.Headerpanel.TabIndex = 2;
+            // 
+            // button5
+            // 
+            this.button5.AutoSize = true;
+            this.button5.BackColor = System.Drawing.Color.Transparent;
+            this.button5.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button5.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(7)))), ((int)(((byte)(4)))), ((int)(((byte)(39)))));
+            this.button5.FlatAppearance.BorderSize = 0;
+            this.button5.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
+            this.button5.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
+            this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button5.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(111)))), ((int)(((byte)(126)))));
+            this.button5.Image = ((System.Drawing.Image)(resources.GetObject("button5.Image")));
+            this.button5.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button5.Location = new System.Drawing.Point(15, 120);
+            this.button5.Name = "button5";
+            this.button5.Padding = new System.Windows.Forms.Padding(10, 0, 85, 0);
+            this.button5.Size = new System.Drawing.Size(216, 46);
+            this.button5.TabIndex = 21;
+            this.button5.Text = "DashBoard";
+            this.button5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.button5.UseVisualStyleBackColor = false;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(28, 193);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(84, 17);
+            this.label1.TabIndex = 20;
+            this.label1.Text = "CATEGORIES";
             // 
             // button4
             // 
@@ -112,7 +145,7 @@
             this.button4.Location = new System.Drawing.Point(54, 25);
             this.button4.Name = "button4";
             this.button4.Padding = new System.Windows.Forms.Padding(0, 0, 0, 10);
-            this.button4.Size = new System.Drawing.Size(207, 58);
+            this.button4.Size = new System.Drawing.Size(177, 58);
             this.button4.TabIndex = 19;
             this.button4.Text = "P1SA Nonconformity Monitor System";
             this.button4.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -125,7 +158,7 @@
             this.button3.AutoSize = true;
             this.button3.BackColor = System.Drawing.Color.Transparent;
             this.button3.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button3.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(7)))), ((int)(((byte)(4)))), ((int)(((byte)(39)))));
+            this.button3.FlatAppearance.BorderColor = System.Drawing.Color.White;
             this.button3.FlatAppearance.BorderSize = 0;
             this.button3.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
             this.button3.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
@@ -134,10 +167,10 @@
             this.button3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(111)))), ((int)(((byte)(126)))));
             this.button3.Image = ((System.Drawing.Image)(resources.GetObject("button3.Image")));
             this.button3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button3.Location = new System.Drawing.Point(19, 547);
+            this.button3.Location = new System.Drawing.Point(13, 547);
             this.button3.Name = "button3";
-            this.button3.Padding = new System.Windows.Forms.Padding(20, 0, 80, 0);
-            this.button3.Size = new System.Drawing.Size(235, 46);
+            this.button3.Padding = new System.Windows.Forms.Padding(10, 0, 80, 0);
+            this.button3.Size = new System.Drawing.Size(218, 46);
             this.button3.TabIndex = 18;
             this.button3.Text = "Recurrence";
             this.button3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -150,7 +183,7 @@
             this.Customerbtn.AutoSize = true;
             this.Customerbtn.BackColor = System.Drawing.Color.Transparent;
             this.Customerbtn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.Customerbtn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(7)))), ((int)(((byte)(4)))), ((int)(((byte)(39)))));
+            this.Customerbtn.FlatAppearance.BorderColor = System.Drawing.Color.White;
             this.Customerbtn.FlatAppearance.BorderSize = 0;
             this.Customerbtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
             this.Customerbtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
@@ -159,12 +192,12 @@
             this.Customerbtn.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(111)))), ((int)(((byte)(126)))));
             this.Customerbtn.Image = ((System.Drawing.Image)(resources.GetObject("Customerbtn.Image")));
             this.Customerbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Customerbtn.Location = new System.Drawing.Point(19, 285);
+            this.Customerbtn.Location = new System.Drawing.Point(13, 285);
             this.Customerbtn.Name = "Customerbtn";
-            this.Customerbtn.Padding = new System.Windows.Forms.Padding(20, 0, 0, 0);
-            this.Customerbtn.Size = new System.Drawing.Size(235, 46);
+            this.Customerbtn.Padding = new System.Windows.Forms.Padding(10, 0, 105, 0);
+            this.Customerbtn.Size = new System.Drawing.Size(218, 46);
             this.Customerbtn.TabIndex = 17;
-            this.Customerbtn.Text = "SDC customer complaint";
+            this.Customerbtn.Text = "SDC CC";
             this.Customerbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.Customerbtn.UseVisualStyleBackColor = false;
             this.Customerbtn.Click += new System.EventHandler(this.Customerbtn_Click_1);
@@ -176,7 +209,7 @@
             this.button1.AutoSize = true;
             this.button1.BackColor = System.Drawing.Color.Transparent;
             this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button1.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(7)))), ((int)(((byte)(4)))), ((int)(((byte)(39)))));
+            this.button1.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
             this.button1.FlatAppearance.BorderSize = 0;
             this.button1.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
             this.button1.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
@@ -185,10 +218,10 @@
             this.button1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(111)))), ((int)(((byte)(126)))));
             this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
             this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.Location = new System.Drawing.Point(19, 231);
+            this.button1.Location = new System.Drawing.Point(13, 231);
             this.button1.Name = "button1";
-            this.button1.Padding = new System.Windows.Forms.Padding(20, 0, 80, 0);
-            this.button1.Size = new System.Drawing.Size(235, 46);
+            this.button1.Padding = new System.Windows.Forms.Padding(10, 0, 80, 0);
+            this.button1.Size = new System.Drawing.Size(218, 46);
             this.button1.TabIndex = 16;
             this.button1.Text = " External CC";
             this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -202,7 +235,7 @@
             this.Shipmentbtn.AutoSize = true;
             this.Shipmentbtn.BackColor = System.Drawing.Color.Transparent;
             this.Shipmentbtn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.Shipmentbtn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(7)))), ((int)(((byte)(4)))), ((int)(((byte)(39)))));
+            this.Shipmentbtn.FlatAppearance.BorderColor = System.Drawing.Color.White;
             this.Shipmentbtn.FlatAppearance.BorderSize = 0;
             this.Shipmentbtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
             this.Shipmentbtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
@@ -211,10 +244,10 @@
             this.Shipmentbtn.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(111)))), ((int)(((byte)(126)))));
             this.Shipmentbtn.Image = ((System.Drawing.Image)(resources.GetObject("Shipmentbtn.Image")));
             this.Shipmentbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Shipmentbtn.Location = new System.Drawing.Point(19, 495);
+            this.Shipmentbtn.Location = new System.Drawing.Point(13, 495);
             this.Shipmentbtn.Name = "Shipmentbtn";
-            this.Shipmentbtn.Padding = new System.Windows.Forms.Padding(20, 0, 40, 0);
-            this.Shipmentbtn.Size = new System.Drawing.Size(235, 46);
+            this.Shipmentbtn.Padding = new System.Windows.Forms.Padding(10, 0, 40, 0);
+            this.Shipmentbtn.Size = new System.Drawing.Size(218, 46);
             this.Shipmentbtn.TabIndex = 15;
             this.Shipmentbtn.Text = "Main Registration";
             this.Shipmentbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -228,7 +261,7 @@
             this.Rejectedbtn.AutoSize = true;
             this.Rejectedbtn.BackColor = System.Drawing.Color.Transparent;
             this.Rejectedbtn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.Rejectedbtn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(7)))), ((int)(((byte)(4)))), ((int)(((byte)(39)))));
+            this.Rejectedbtn.FlatAppearance.BorderColor = System.Drawing.Color.White;
             this.Rejectedbtn.FlatAppearance.BorderSize = 0;
             this.Rejectedbtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
             this.Rejectedbtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
@@ -237,10 +270,10 @@
             this.Rejectedbtn.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(111)))), ((int)(((byte)(126)))));
             this.Rejectedbtn.Image = ((System.Drawing.Image)(resources.GetObject("Rejectedbtn.Image")));
             this.Rejectedbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Rejectedbtn.Location = new System.Drawing.Point(19, 446);
+            this.Rejectedbtn.Location = new System.Drawing.Point(13, 446);
             this.Rejectedbtn.Name = "Rejectedbtn";
-            this.Rejectedbtn.Padding = new System.Windows.Forms.Padding(20, 0, 50, 0);
-            this.Rejectedbtn.Size = new System.Drawing.Size(235, 46);
+            this.Rejectedbtn.Padding = new System.Windows.Forms.Padding(10, 0, 50, 0);
+            this.Rejectedbtn.Size = new System.Drawing.Size(218, 46);
             this.Rejectedbtn.TabIndex = 14;
             this.Rejectedbtn.Text = " Shipment Delay";
             this.Rejectedbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -254,7 +287,7 @@
             this.ncrbtn.AutoSize = true;
             this.ncrbtn.BackColor = System.Drawing.Color.Transparent;
             this.ncrbtn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.ncrbtn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(7)))), ((int)(((byte)(4)))), ((int)(((byte)(39)))));
+            this.ncrbtn.FlatAppearance.BorderColor = System.Drawing.Color.White;
             this.ncrbtn.FlatAppearance.BorderSize = 0;
             this.ncrbtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
             this.ncrbtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
@@ -263,10 +296,10 @@
             this.ncrbtn.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(111)))), ((int)(((byte)(126)))));
             this.ncrbtn.Image = ((System.Drawing.Image)(resources.GetObject("ncrbtn.Image")));
             this.ncrbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.ncrbtn.Location = new System.Drawing.Point(19, 393);
+            this.ncrbtn.Location = new System.Drawing.Point(13, 393);
             this.ncrbtn.Name = "ncrbtn";
-            this.ncrbtn.Padding = new System.Windows.Forms.Padding(20, 0, 80, 0);
-            this.ncrbtn.Size = new System.Drawing.Size(235, 46);
+            this.ncrbtn.Padding = new System.Windows.Forms.Padding(10, 0, 75, 0);
+            this.ncrbtn.Size = new System.Drawing.Size(218, 46);
             this.ncrbtn.TabIndex = 13;
             this.ncrbtn.Text = "Rejected Lot";
             this.ncrbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -280,7 +313,7 @@
             this.processbtn.AutoSize = true;
             this.processbtn.BackColor = System.Drawing.Color.Transparent;
             this.processbtn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.processbtn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(7)))), ((int)(((byte)(4)))), ((int)(((byte)(39)))));
+            this.processbtn.FlatAppearance.BorderColor = System.Drawing.Color.White;
             this.processbtn.FlatAppearance.BorderSize = 0;
             this.processbtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
             this.processbtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
@@ -289,10 +322,10 @@
             this.processbtn.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(111)))), ((int)(((byte)(126)))));
             this.processbtn.Image = ((System.Drawing.Image)(resources.GetObject("processbtn.Image")));
             this.processbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.processbtn.Location = new System.Drawing.Point(19, 339);
+            this.processbtn.Location = new System.Drawing.Point(13, 339);
             this.processbtn.Name = "processbtn";
-            this.processbtn.Padding = new System.Windows.Forms.Padding(20, 0, 50, 0);
-            this.processbtn.Size = new System.Drawing.Size(235, 46);
+            this.processbtn.Padding = new System.Windows.Forms.Padding(10, 0, 50, 0);
+            this.processbtn.Size = new System.Drawing.Size(218, 46);
             this.processbtn.TabIndex = 9;
             this.processbtn.Text = "Inprocess Defect";
             this.processbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -304,9 +337,9 @@
             this.panel2.BackColor = System.Drawing.Color.White;
             this.panel2.Controls.Add(this.button2);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(282, 3);
+            this.panel2.Location = new System.Drawing.Point(252, 3);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1229, 712);
+            this.panel2.Size = new System.Drawing.Size(1095, 723);
             this.panel2.TabIndex = 3;
             // 
             // button2
@@ -319,44 +352,11 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(22, 193);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(84, 17);
-            this.label1.TabIndex = 20;
-            this.label1.Text = "CATEGORIES";
-            // 
-            // button5
-            // 
-            this.button5.AutoSize = true;
-            this.button5.BackColor = System.Drawing.Color.Transparent;
-            this.button5.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button5.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(7)))), ((int)(((byte)(4)))), ((int)(((byte)(39)))));
-            this.button5.FlatAppearance.BorderSize = 0;
-            this.button5.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
-            this.button5.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
-            this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button5.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(111)))), ((int)(((byte)(126)))));
-            this.button5.Image = ((System.Drawing.Image)(resources.GetObject("button5.Image")));
-            this.button5.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button5.Location = new System.Drawing.Point(21, 120);
-            this.button5.Name = "button5";
-            this.button5.Padding = new System.Windows.Forms.Padding(20, 0, 85, 0);
-            this.button5.Size = new System.Drawing.Size(235, 46);
-            this.button5.TabIndex = 21;
-            this.button5.Text = "DashBoard";
-            this.button5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.button5.UseVisualStyleBackColor = false;
-            // 
             // Mainpage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1514, 718);
+            this.ClientSize = new System.Drawing.Size(1350, 729);
             this.Controls.Add(this.panelContainer);
             this.Name = "Mainpage";
             this.Text = "Mainpage";

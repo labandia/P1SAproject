@@ -9,7 +9,14 @@ namespace NCR_system.Interface
 {
     public  interface ICustomerComplaint 
     {
-        Task<IEnumerable<CustomerModel>> GetCustomerData(int type);
+        Task<List<CustomerModel>> GetCustomerData(
+            string search, 
+            int departmentID,
+            int type, 
+            int Stats,
+            int pageNumber,
+            int pageSize);
+
         Task<List<CustomerTotalModel>> GetCustomersOpenItem(int type = 0);
         Task<CustomerModel> GetCustomerDataByID(int recordID);
         Task<bool> InsertCustomerData(CustomerModel customer, int type);

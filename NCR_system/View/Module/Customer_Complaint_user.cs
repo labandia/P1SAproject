@@ -35,30 +35,16 @@ namespace NCR_system.View.Module
         {
             try
             {
+                string search = searchText.Text.Trim();
+                int depId = sectionfilter.SelectedIndex > 0 ? sectionfilter.SelectedIndex : 0;
+                int stats = filteritems.SelectedIndex > 0 ? filteritems.SelectedIndex : 0;
+
+                var filtered = await _cust.GetCustomerData(search, depId, proc, stats, 0, 0);
+
                 // For Displaying Customer
-                var getdata = (await _cust.GetCustomerData(proc)).ToList();
-                cuslist = getdata;
+                cuslist = filtered;
 
-                //var filterdata = cuslist.Where(c => c.SectionID == 1 || c.Status == 1).ToList();
-
-
-                //CustomDatagrid.DataSource = cuslist;
-
-                // 🔹 Prepare filtered list
-                var filtered = cuslist.AsEnumerable();
-
-                // 🔹 Filter by Section
-                if (sectionfilter.SelectedIndex > 0)
-                {
-                    filtered = filtered.Where(c => c.SectionID == sectionfilter.SelectedIndex);
-                }
-
-                // 🔹 Filter by Status
-                if (filteritems.SelectedIndex > 0)
-                {
-                    filtered = filtered.Where(c => c.Status == filteritems.SelectedIndex);
-                }
-
+               
                 // 🔹 Apply final result
                 CustomDatagrid.DataSource = filtered.ToList();
 
@@ -289,8 +275,11 @@ namespace NCR_system.View.Module
 
         private void OpenCC_Click(object sender, EventArgs e)
         {
-            var add = new AddCustomerComplaint(_cust, this);
-            add.ShowDialog();
+            using (var add = new AddCustomerComplaint(_cust, this))
+            {
+                add.StartPosition = FormStartPosition.CenterParent;
+                add.ShowDialog(this);   // <-- modal + always in front of parent
+            }
         }
 
         private void Customer_Complaint_user_Load(object sender, EventArgs e)
@@ -310,8 +299,11 @@ namespace NCR_system.View.Module
 
         private void Externalbtn_Click(object sender, EventArgs e)
         {
-            var add = new AddExternalCC(_cust, this);
-            add.ShowDialog();
+            using (var add = new AddExternalCC(_cust, this))
+            {
+                add.StartPosition = FormStartPosition.CenterParent;
+                add.ShowDialog(this);   // <-- modal + always in front of parent
+            }
         }
 
         private void CustomDatagrid_CellClick(object sender, DataGridViewCellEventArgs e)

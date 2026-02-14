@@ -28,7 +28,7 @@
     <MinimumRequiredVersion>1.0.0.0</MinimumRequiredVersion>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>15</ApplicationRevision>
+    <ApplicationRevision>16</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -324,6 +324,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\AddForms\AddShipment.resx">
       <DependentUpon>AddShipment.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Details\CustomerDetails.resx">
+      <DependentUpon>CustomerDetails.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\EditForms\EditCC_External.resx">
       <DependentUpon>EditCC_External.cs</DependentUpon>

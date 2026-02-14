@@ -8,17 +8,59 @@ namespace NCR_system.Repository
 {
     internal class CustomerRepository : ICustomerComplaint, ISummary
     {
-        public async Task<IEnumerable<CustomerModel>> GetCustomerData(int type)
+        public async Task<List<CustomerModel>> GetCustomerData(
+            string search,
+            int departmentID,
+            int type,
+            int Stats,
+            int pageNumber,
+            int pageSize)
         {
-            string strsql = $@"SELECT RecordID,
+            int offset = (pageNumber - 1) * pageSize;
+
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+            string strquery = $@"SELECT RecordID,
 		                        FORMAT(DateCreated, 'MM/dd/yy') as DateCreated,
 		                        ModelNo,LotNo,NGQty,
 		                        Details,Status,SectionID
                                 ,RegNo,CustomerName,CCtype
                             FROM PC_CustomerConplaint
-                            WHERE CCtype = @CCtype AND IsDelete = 1
-                            ORDER BY RecordID DESC";
-            return await SqlDataAccess.GetData<CustomerModel>(strsql, new { CCtype  = type});
+                            WHERE IsDelete = 1 ";
+
+            // Filter By SMT Line
+            if (departmentID != 0)
+            {
+                strquery += " AND SectionID = @SectionID";
+                parameters.Add("@SectionID", departmentID);
+            }
+
+
+            // Search Text
+            if (!string.IsNullOrEmpty(search))
+            {
+                strquery += $@" AND (
+                                @Search IS NULL
+                                OR ModelNo LIKE '%' + @Search + '%'
+                              )";
+                parameters.Add("@Search", search);
+            }
+
+            strquery += $@" AND CCtype = @CCtype";
+            parameters.Add("@CCtype", Stats);
+
+            strquery += $@" ORDER BY RecordID DESC";
+
+            // If the Get Data has a Pagination function
+            if (pageSize != 0)
+            {
+                strquery += $@" OFFSET @Offset ROWS
+                            FETCH NEXT @PageSize ROWS ONLY";
+                parameters.Add("@Offset", offset);
+                parameters.Add("@PageSize", pageSize);
+            }
+
+            return await SqlDataAccess.GetData<CustomerModel>(strquery, parameters);
         }
 
         public Task<CustomerModel> GetCustomerDataByID(int recordID)
@@ -74,7 +116,7 @@ namespace NCR_system.Repository
                     customer.CustomerName,
                     customer.CCtype
                 };
-                result =  await SqlDataAccess.UpdateInsertQuery(strsql, parameter);
+                result = await SqlDataAccess.UpdateInsertQuery(strsql, parameter);
             }
             else
             {
@@ -102,7 +144,8 @@ namespace NCR_system.Repository
             if (type == 0)
             {
                 string strsql = $@"UPDATE PC_CustomerConplaint SET ModelNo =@ModelNo, LotNo =@LotNo ,NGQty =@NGQty,
-                             Details =@Details,Status =@Status,SectionID =@SectionID,RegNo =@RegNo,CustomerName =@CustomerName
+                             Details =@Details, Status =@Status, SectionID =@SectionID, RegNo =@RegNo,
+                             CustomerName =@CustomerName
                              WHERE RecordID = @RecordID";
 
                 var parameter = new
@@ -118,11 +161,13 @@ namespace NCR_system.Repository
                     customer.CustomerName,
                     customer.CCtype
                 };
+
                 result = await SqlDataAccess.UpdateInsertQuery(strsql, parameter);
             }
             else
             {
-                string strsql = $@"UPDATE PC_CustomerConplaint SET ModelNo =@ModelNo, LotNo =@LotNo ,NGQty =@NGQty, Status =@Status,
+                string strsql = $@"UPDATE PC_CustomerConplaint SET ModelNo =@ModelNo, 
+                             LotNo =@LotNo ,NGQty =@NGQty, Status =@Status,
                              Details =@Details,SectionID =@SectionID
                              WHERE RecordID = @RecordID";
 

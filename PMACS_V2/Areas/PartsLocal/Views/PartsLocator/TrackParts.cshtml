@@ -533,6 +533,7 @@
         } else {
             showLocationDetails(locationCode);
         }
+        //console.log(locationCode);
         highlightBoxOnly(locationCode);
     };
 
@@ -699,13 +700,26 @@
         document.querySelectorAll(".grid-cell").forEach(cell => {
             const area = cell.getAttribute("data-area");
             cell.classList.toggle("highlighted", matchAreas.includes(area));
+            cell.classList.remove("verified"); // reset verification
+        });
+    }
+
+    function highlightVerifiedArea(area) {
+        document.querySelectorAll(".grid-cell").forEach(cell => {
+            const isMatch = cell.getAttribute("data-area") === area;
+            cell.classList.toggle("verified", isMatch);
+            cell.classList.remove("highlighted");
         });
     }
 
     // Highlight ONLY selected letter
     function highlightBoxOnly(selectedArea) {
+        console.log("HERE");
+        console.log("DDDD : " + selectedArea);
         document.querySelectorAll(".grid-cell").forEach(cell => {
+            console.log("HER2");
             const isActive = cell.getAttribute("data-area") === selectedArea;
+            console.log("IsActive : " + isActive);
             cell.classList.toggle("active", isActive);
 
             // Remove highlighted class when selecting a box
@@ -733,10 +747,16 @@
             item.Partnumber.toUpperCase().includes(searchValue)
         );
 
+        $("#RequireInput").val(searchValue);
+
 
         if (matchedItems.length > 0) {
             const matchedAreas = [...new Set(matchedItems.map(item => item.Area))];
-            highlightMatchingAreas(matchedAreas);
+            //console.log("MATCHING : " + matchedAreas);
+            //highlightMatchingAreas(matchedAreas);
+
+            // ✅ GREEN VERIFIED HIGHLIGHT
+            highlightVerifiedArea(matchedAreas);
 
             // Show results info
             resultsInfo.textContent = `Found ${matchedItems.length} match(es) for "${searchValue}"`;
@@ -745,6 +765,8 @@
             // Show results table
             resultsTitle.textContent = `Matches for Partnumber: ${searchValue}`;
             resultsBody.innerHTML = '';
+
+            
 
             matchedItems.forEach(item => {
                 const row = document.createElement('tr');

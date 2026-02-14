@@ -51,6 +51,9 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
             this.NGText = new System.Windows.Forms.NumericUpDown();
+            this.label8 = new System.Windows.Forms.Label();
+            this.panel9 = new System.Windows.Forms.Panel();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.panel5.SuspendLayout();
             this.panel6.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -133,7 +136,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(25, 313);
+            this.label6.Location = new System.Drawing.Point(25, 295);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(132, 17);
             this.label6.TabIndex = 76;
@@ -141,8 +144,8 @@
             // 
             // ProblemText
             // 
-            this.ProblemText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ProblemText.Location = new System.Drawing.Point(28, 336);
+            this.ProblemText.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.ProblemText.Location = new System.Drawing.Point(28, 321);
             this.ProblemText.Name = "ProblemText";
             this.ProblemText.Size = new System.Drawing.Size(570, 96);
             this.ProblemText.TabIndex = 77;
@@ -158,7 +161,7 @@
             this.Save_btn.ForeColor = System.Drawing.Color.White;
             this.Save_btn.Image = ((System.Drawing.Image)(resources.GetObject("Save_btn.Image")));
             this.Save_btn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Save_btn.Location = new System.Drawing.Point(433, 490);
+            this.Save_btn.Location = new System.Drawing.Point(435, 629);
             this.Save_btn.Name = "Save_btn";
             this.Save_btn.Padding = new System.Windows.Forms.Padding(45, 0, 50, 0);
             this.Save_btn.Size = new System.Drawing.Size(165, 39);
@@ -172,7 +175,7 @@
             // 
             this.Cancel_btn.Cursor = System.Windows.Forms.Cursors.Hand;
             this.Cancel_btn.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Cancel_btn.Location = new System.Drawing.Point(266, 490);
+            this.Cancel_btn.Location = new System.Drawing.Point(268, 629);
             this.Cancel_btn.Name = "Cancel_btn";
             this.Cancel_btn.Size = new System.Drawing.Size(148, 39);
             this.Cancel_btn.TabIndex = 78;
@@ -248,7 +251,7 @@
             this.panel1.BackColor = System.Drawing.Color.Gainsboro;
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Controls.Add(this.panel4);
-            this.panel1.Location = new System.Drawing.Point(26, 459);
+            this.panel1.Location = new System.Drawing.Point(25, 608);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(570, 1);
             this.panel1.TabIndex = 141;
@@ -281,17 +284,41 @@
             // NGText
             // 
             this.NGText.AutoSize = true;
-            this.NGText.Location = new System.Drawing.Point(28, 249);
+            this.NGText.Location = new System.Drawing.Point(28, 244);
             this.NGText.Name = "NGText";
             this.NGText.Size = new System.Drawing.Size(200, 20);
             this.NGText.TabIndex = 143;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold);
+            this.label8.Location = new System.Drawing.Point(22, 456);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(102, 17);
+            this.label8.TabIndex = 144;
+            this.label8.Text = "Upload Image :";
+            // 
+            // panel9
+            // 
+            this.panel9.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.panel9.Location = new System.Drawing.Point(20, 481);
+            this.panel9.Name = "panel9";
+            this.panel9.Size = new System.Drawing.Size(577, 107);
+            this.panel9.TabIndex = 145;
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
             // 
             // AddCustomerComplaint
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(630, 567);
+            this.ClientSize = new System.Drawing.Size(635, 706);
             this.ControlBox = false;
+            this.Controls.Add(this.panel9);
+            this.Controls.Add(this.label8);
             this.Controls.Add(this.NGText);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel5);
@@ -312,6 +339,7 @@
             this.Name = "AddCustomerComplaint";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "-";
+            this.Load += new System.EventHandler(this.AddCustomerComplaint_Load);
             this.panel5.ResumeLayout(false);
             this.panel6.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
@@ -345,5 +373,8 @@
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.NumericUpDown NGText;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Panel panel9;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }

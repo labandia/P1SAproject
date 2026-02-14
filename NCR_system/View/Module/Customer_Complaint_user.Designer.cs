@@ -78,6 +78,14 @@
             this.label8 = new System.Windows.Forms.Label();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.pictureBox6 = new System.Windows.Forms.PictureBox();
+            this.searchText = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.CustomDatagrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
@@ -90,6 +98,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
+            this.panel6.SuspendLayout();
+            this.tableLayoutPanel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
             this.SuspendLayout();
             // 
             // CustomDatagrid
@@ -133,7 +144,7 @@
             dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.CustomDatagrid.DefaultCellStyle = dataGridViewCellStyle8;
-            this.CustomDatagrid.Location = new System.Drawing.Point(32, 253);
+            this.CustomDatagrid.Location = new System.Drawing.Point(32, 283);
             this.CustomDatagrid.Name = "CustomDatagrid";
             this.CustomDatagrid.ReadOnly = true;
             dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -147,7 +158,7 @@
             this.CustomDatagrid.RowHeadersVisible = false;
             this.CustomDatagrid.RowTemplate.Height = 30;
             this.CustomDatagrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.CustomDatagrid.Size = new System.Drawing.Size(1282, 512);
+            this.CustomDatagrid.Size = new System.Drawing.Size(1282, 482);
             this.CustomDatagrid.TabIndex = 4;
             this.CustomDatagrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.CustomDatagrid_CellClick);
             this.CustomDatagrid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.CustomDatagrid_CellDoubleClick);
@@ -277,7 +288,7 @@
             this.OpenCC.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.OpenCC.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.OpenCC.ForeColor = System.Drawing.Color.White;
-            this.OpenCC.Location = new System.Drawing.Point(1178, 193);
+            this.OpenCC.Location = new System.Drawing.Point(1178, 213);
             this.OpenCC.Name = "OpenCC";
             this.OpenCC.Size = new System.Drawing.Size(136, 41);
             this.OpenCC.TabIndex = 6;
@@ -295,7 +306,7 @@
             this.SelectedProcess.Items.AddRange(new object[] {
             "External",
             "SDC"});
-            this.SelectedProcess.Location = new System.Drawing.Point(169, 203);
+            this.SelectedProcess.Location = new System.Drawing.Point(362, 231);
             this.SelectedProcess.Name = "SelectedProcess";
             this.SelectedProcess.Size = new System.Drawing.Size(159, 23);
             this.SelectedProcess.TabIndex = 7;
@@ -312,7 +323,7 @@
             this.Externalbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Externalbtn.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold);
             this.Externalbtn.ForeColor = System.Drawing.Color.White;
-            this.Externalbtn.Location = new System.Drawing.Point(1026, 193);
+            this.Externalbtn.Location = new System.Drawing.Point(1026, 213);
             this.Externalbtn.Name = "Externalbtn";
             this.Externalbtn.Size = new System.Drawing.Size(137, 41);
             this.Externalbtn.TabIndex = 8;
@@ -328,7 +339,7 @@
             "-- Filter Status --",
             "Open",
             "Close"});
-            this.filteritems.Location = new System.Drawing.Point(351, 203);
+            this.filteritems.Location = new System.Drawing.Point(547, 231);
             this.filteritems.Name = "filteritems";
             this.filteritems.Size = new System.Drawing.Size(121, 23);
             this.filteritems.TabIndex = 11;
@@ -348,7 +359,7 @@
             "Rotor",
             "Winding",
             "Circuit"});
-            this.sectionfilter.Location = new System.Drawing.Point(32, 203);
+            this.sectionfilter.Location = new System.Drawing.Point(222, 231);
             this.sectionfilter.MaxDropDownItems = 30;
             this.sectionfilter.Name = "sectionfilter";
             this.sectionfilter.Size = new System.Drawing.Size(121, 23);
@@ -497,7 +508,7 @@
             this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.panel4, 2, 0);
             this.tableLayoutPanel1.Controls.Add(this.panel3, 1, 0);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(32, 81);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(32, 89);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -591,19 +602,108 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(30, 37);
+            this.label2.BackColor = System.Drawing.Color.Transparent;
+            this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label2.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(97)))), ((int)(((byte)(238)))));
+            this.label2.Location = new System.Drawing.Point(39, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(215, 30);
+            this.label2.Size = new System.Drawing.Size(179, 31);
             this.label2.TabIndex = 19;
-            this.label2.Text = "Customer Complaint";
+            this.label2.Text = "SDP Customer Complaint";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.label2.Click += new System.EventHandler(this.label2_Click_1);
+            // 
+            // panel6
+            // 
+            this.panel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(246)))), ((int)(((byte)(255)))));
+            this.panel6.Controls.Add(this.tableLayoutPanel2);
+            this.panel6.Location = new System.Drawing.Point(32, 41);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(230, 35);
+            this.panel6.TabIndex = 20;
+            // 
+            // tableLayoutPanel2
+            // 
+            this.tableLayoutPanel2.ColumnCount = 2;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 83.33334F));
+            this.tableLayoutPanel2.Controls.Add(this.label2, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.pictureBox6, 0, 0);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(9, 1);
+            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+            this.tableLayoutPanel2.RowCount = 1;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(221, 31);
+            this.tableLayoutPanel2.TabIndex = 21;
+            // 
+            // pictureBox6
+            // 
+            this.pictureBox6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBox6.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox6.Image")));
+            this.pictureBox6.Location = new System.Drawing.Point(3, 3);
+            this.pictureBox6.Name = "pictureBox6";
+            this.pictureBox6.Size = new System.Drawing.Size(30, 25);
+            this.pictureBox6.TabIndex = 21;
+            this.pictureBox6.TabStop = false;
+            // 
+            // searchText
+            // 
+            this.searchText.Location = new System.Drawing.Point(32, 234);
+            this.searchText.Name = "searchText";
+            this.searchText.Size = new System.Drawing.Size(157, 20);
+            this.searchText.TabIndex = 21;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(38, 208);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(48, 15);
+            this.label3.TabIndex = 22;
+            this.label3.Text = "Search ";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(224, 208);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(97, 15);
+            this.label5.TabIndex = 23;
+            this.label5.Text = "Filter by Section";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(359, 208);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(55, 15);
+            this.label7.TabIndex = 24;
+            this.label7.Text = "Filter by ";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Location = new System.Drawing.Point(544, 208);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(119, 15);
+            this.label9.TabIndex = 25;
+            this.label9.Text = "Filter by Open/Close";
             // 
             // Customer_Complaint_user
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.searchText);
+            this.Controls.Add(this.panel6);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.sectionfilter);
             this.Controls.Add(this.filteritems);
@@ -631,6 +731,10 @@
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
+            this.panel6.ResumeLayout(false);
+            this.tableLayoutPanel2.ResumeLayout(false);
+            this.tableLayoutPanel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -677,5 +781,13 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Status;
         private System.Windows.Forms.DataGridViewTextBoxColumn CCtype;
         private System.Windows.Forms.DataGridViewImageColumn Delete;
+        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.PictureBox pictureBox6;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.TextBox searchText;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label9;
     }
 }

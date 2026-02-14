@@ -339,7 +339,7 @@
             this.SummaryInprocess.Location = new System.Drawing.Point(765, 12);
             this.SummaryInprocess.Name = "SummaryInprocess";
             this.SummaryInprocess.ReadOnly = true;
-            this.SummaryInprocess.Size = new System.Drawing.Size(175, 119);
+            this.SummaryInprocess.Size = new System.Drawing.Size(175, 53);
             this.SummaryInprocess.TabIndex = 7;
             // 
             // tableLayoutPanel1

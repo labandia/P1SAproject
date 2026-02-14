@@ -74,5 +74,10 @@ namespace NCR_system.View.AddForms
 
             return true;
         }
+
+        private void AddCustomerComplaint_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

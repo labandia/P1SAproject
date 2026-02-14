@@ -66,9 +66,9 @@ namespace NCR_system
 
         private async void Mainpage_Load(object sender, EventArgs e)
         {
-            this.FormBorderStyle = FormBorderStyle.None;
-            this.WindowState = FormWindowState.Maximized;
-            this.TopMost = true; // optional
+            //this.FormBorderStyle = FormBorderStyle.None;
+            //this.WindowState = FormWindowState.Maximized;
+            //this.TopMost = true; // optional
 
 
             _cc.BringToFront();

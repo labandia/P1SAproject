@@ -18,6 +18,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Models
         public string Remarks { get; set; }
         public int? ModelType { get; set; }
         public DateTime DateReceived { get; set; }
+        public DateTime DateManufacture { get; set; }
     }
 
     public class MetalMaskTransaction
@@ -67,7 +68,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Models
         /// 0 = Washing, 1 = Tension, 2 = Brushing, 3 = Completed
         /// </summary>
         public int Status { get; set; }
-
+        public int ModelType { get; set;  }
         public bool IsDelete { get; set; }
     }
 

@@ -31,6 +31,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                                   ,Remarks
                                   ,DateReceived
                                   ,ModelType
+                                  ,DateManufacture
                               FROM MetalMask_Masterlist
                               WHERE IsDelete = 0 ";
 

@@ -197,7 +197,7 @@
 
                     <div class="form-group">
                         <label for="category"><i class="fas fa-tag"></i> Category</label>
-                        <select id="Editcategory" name="CategoryID" required>
+                        <select id="Editcategory" name="CategoryID" required >
                             <option value="">Select Category</option>
                             <option value="1">🟦 Quality</option>
                             <option value="2">🟩 Process</option>
@@ -476,7 +476,7 @@
 
     const GetRegistrationYearData = async () => {
         const url = '@Url.Action("GetRegistrationList", "Register")';
-
+        $("#yearFilter").empty();
         let res = await GetMethod(url, {});
 
         if (res?.Success) {
@@ -541,9 +541,7 @@
 
         let res = await postMethod('@Url.Action("AddNewRegistration", "Register")', formData);
         if (res?.Success) {
-            if (yearData.length == 0) {
-                GetRegistrationYearData();
-            }
+            GetRegistrationYearData();
             setYearMonthFromCode(data.RegistrationNo);  
             GetRegistrationData();
             // Reset form

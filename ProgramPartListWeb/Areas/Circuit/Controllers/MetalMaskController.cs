@@ -15,6 +15,8 @@ using System.Web;
 using System.Web.Mvc;
 using ClosedXML.Excel;
 using System.Runtime.InteropServices;
+using DocumentFormat.OpenXml.Spreadsheet;
+using ProgramPartListWeb.Models;
 
 namespace ProgramPartListWeb.Areas.Circuit.Controllers
 {
@@ -107,7 +109,8 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
                 x.ReadFour,
                 x.Result,
                 x.Remarks,
-                x.PIC
+                x.PIC, 
+                x.ModelType
             });
 
             if (result == null || !result.Any()) return JsonNotFound("No Tranasctioon Data.");
@@ -118,9 +121,9 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
         [HttpGet]
         public async Task<ActionResult> GetMetalMaskINCOMPLETE(string partnum)
         {
-            var data = await _trans.GetTransactINComplete(partnum, 0);
+            var data = await _trans.GetTransactINComplete(partnum, 0, 0, 0);
 
-            var result = data.Select(x => new
+            var result = data.Items.Select(x => new
             {
                 x.RecordID,
                 x.DateInput,
@@ -148,15 +151,27 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
             });
 
             if (result == null || !result.Any()) return JsonNotFound("No Data Found.");
-            return JsonSuccess(result);
+            return JsonSuccess(new
+            {
+                Items = result,
+                PageNumber = data.PageNumber,
+                PageSize = data.PageSize,
+                TotalRecords = data.TotalRecords
+            });
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetMetalMaskCOMPLETE(string partnum)
+        public async Task<ActionResult> GetMetalMaskCOMPLETE(
+            string partnum,
+            int pageNumber = 1,
+            int pageSize = 100)
         {
-            var data = await _trans.GetTransactINComplete(partnum, 1);
+            var data = await _trans.GetTransactINComplete(
+                    partnum, 1,
+                    pageNumber,
+                    pageSize);
 
-            var result = data.Select(x => new
+            var result = data.Items.Select(x => new
             {
                 x.RecordID,
                 x.DateInput,
@@ -184,7 +199,21 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
             });
 
             if (result == null || !result.Any()) return JsonNotFound("No Data Found.");
-            return JsonSuccess(result);
+            return JsonSuccess(new {
+                Items = result,
+                PageNumber = data.PageNumber,
+                PageSize = data.PageSize,
+                TotalRecords = data.TotalRecords
+            });
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteSTMTLine(int id)
+        {
+            bool result = await _trans.DeleteMetalMastTransaction(id);
+            if (!result) return JsonPostError("Updated failed.", 500);
+            return JsonCreated(result, "Update Metal Mask Data Successfully");
         }
 
         [HttpPost]

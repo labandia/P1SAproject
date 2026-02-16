@@ -1,8 +1,11 @@
 ﻿using Aspose.Cells.Drawing;
+using DocumentFormat.OpenXml.Drawing;
+using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
 using ProgramPartListWeb.Areas.Circuit.Interface;
 using ProgramPartListWeb.Areas.Circuit.Models;
 using ProgramPartListWeb.Helper;
+using ProgramPartListWeb.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -79,6 +82,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                                       ,t.ReadTwo,t.ReadThree
                                       ,t.ReadFour,t.Result
                                       ,t.Remarks,t.PIC, t.Status
+                                      ,m.ModelType
                                   FROM MetalMask_Transaction t 
                                   INNER JOIN MetalMask_Masterlist m ON t.Partnumber = m.Partnumber
                                   WHERE t.IsDelete = 0 ";
@@ -210,8 +214,16 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                 GROUP BY Status");
         }
 
-        public Task<List<MetalMaskTransaction>> GetTransactINComplete(string partnum, int com)
+        public async Task<PagedResult<MetalMaskTransaction>> GetTransactINComplete(
+            string partnum, 
+            int com,
+            int pageNumber,
+            int pageSize)
         {
+            int offset = (pageNumber - 1) * pageSize;
+
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+
             string condition = com != 0
             ? @" AND t.ReadOne   BETWEEN 30 AND 50
                  AND t.ReadTwo   BETWEEN 30 AND 50
@@ -224,9 +236,12 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                  OR t.ReadFour  NOT BETWEEN 30 AND 50
                 )";
 
+            string countQuery = $@" SELECT COUNT(*) 
+                                    FROM MetalMask_Transaction t
+                                    WHERE IsDelete = 0 
+                                      AND Status = 2 {condition}";
 
-
-            string strsql = $@" SELECT
+            string strquery = $@" SELECT
                             t.RecordID
                             ,t.DateInput
                             ,t.Shift
@@ -242,13 +257,38 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                             ,t.Remarks,t.PIC, t.Status
                     FROM MetalMask_Transaction t
                     INNER JOIN MetalMask_Masterlist m ON t.Partnumber = m.Partnumber
-                    WHERE 
-                          t.Status = 2
-                      AND t.Partnumber = @Partnumber
-                      {condition}";
+                    WHERE t.IsDelete = 0 AND t.Status = 2 {condition} ";
 
 
-            return SqlDataAccess.GetData<MetalMaskTransaction>(strsql, new { Partnumber  = partnum });
+            // Filter By Partnumber
+            if (!string.IsNullOrEmpty(partnum))
+            {
+                strquery += " AND t.Partnumber = @Partnumber";
+                parameters.Add("@Partnumber", partnum);
+            }
+
+            // If the Get Data has a Pagination function
+            if (pageSize != 0)
+            {
+                strquery += $@" ORDER BY t.RecordID OFFSET @Offset ROWS
+                            FETCH NEXT @PageSize ROWS ONLY";
+                parameters.Add("@Offset", offset);
+                parameters.Add("@PageSize", pageSize);
+            }
+
+            var items = await SqlDataAccess.GetData<MetalMaskTransaction>(strquery, parameters);
+
+
+            // Now get the total count
+            int TotalRecords = await SqlDataAccess.GetCountDataSync(countQuery, parameters);
+
+            return new PagedResult<MetalMaskTransaction>
+            {
+                Items = items,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalRecords = TotalRecords
+            };
         }
 
         public Task<bool> UpdateMetalMaskIncomplete(MetalMaskTransaction metal)

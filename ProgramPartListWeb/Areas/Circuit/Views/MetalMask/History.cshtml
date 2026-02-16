@@ -33,20 +33,15 @@
 </div>
 
 <div>
-    
+
 </div>
 
-<div class="TrackTable" style=" margin-top: 1em;">
-    <!-- Loading Overlay -->
-    <div class="loading" id="loading" style="padding: 2em 0; height: 300px;">
-        <div class="spinner"></div>
-        <p>Loading transactions...</p>
-    </div>
+<div class="TrackTable" style="position: relative; margin-top: 1em;">
+
 
     <table>
         <thead>
             <tr>
-                <th></th>
                 <th>Date </th>
                 <th>Shift</th>
                 <th>SMT Line</th>
@@ -76,10 +71,23 @@
         </tbody>
     </table>
 
+
+    <div class="pagination" id="pagination">
+
+        <div class="pagination-items">
+            <!-- Pagination buttons will be inserted here -->
+        </div>
+    </div>
 </div>
 
+<section style="position: relative;">
+    <!-- Loading Overlay -->
+    <div class="loading" id="loading" style="padding: 2em 0; height: 300px;">
+        <div class="spinner"></div>
+        <p>Loading transactions...</p>
+    </div>
 
-
+</section>
 
 
 
@@ -87,6 +95,10 @@
 <script>
     let selectedID = 0;
     let searchCount = 0;
+    let currentPage = 1;
+    const pageSize = 20;
+    let totalRecords = 0;
+    let totalPages = 0;
     let debounceTimer;
     let tempPartnum = "";
 
@@ -98,13 +110,12 @@
         if (e.key !== "Enter") return;
         let tempText = e.target.value;
 
-
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(async () => {
-            await GetMetalMaskTransaction();
+            await GetMetalMaskIncompleteTransaction();
             $("#searchID").val("");
             $("#searchText").text(tempText);
-            tempPartnum = tempText; 
+            tempPartnum = tempText;
             await GetTotalIncompleteMask(tempText);
         }, 400);
     });
@@ -206,7 +217,9 @@
 
     }
 
-    const GetMetalMaskTransaction = async () => {
+
+
+    const GetMetalMaskIncompleteTransaction = async () => {
         showLoading(true);
         TableBody.empty();
 
@@ -218,25 +231,33 @@
             // Add spinner/loading indicator
             //$("#TransactionTable").html('<tr><td colspan="24" class="text-center"><div class="spinner-border" role="status"></div> Loading...</td></tr>');
 
-            let res = await GetMethod(url, { partnum: $("#searchID").val() || "" });
+            let res = await GetMethod(url, {
+                partnum: $("#searchID").val() || "",
+                pageNumber: currentPage || 1,
+                pageSize: pageSize || 10
+            });
 
             //console.log(res);
             if (res?.Success) {
-                let TableData = res.data;
+                let TableData = res.data.Items;
+                totalRecords = res.data.TotalRecords || 0;
+                totalPages = Math.ceil(totalRecords / pageSize);
                 let html = "";
                 $("#NGcount").text(``);
 
                 setTimeout(() => {
                     $.each(TableData, function (index, row) {
                         // Image Display
+                        //<td>
+                        //    <input type="checkbox"
+                        //        class="row-check"
+                        //        name="checkID"
+                        //        value="${row.RecordID}">
+                        //</td>
+
                         html += `
                            <tr class="fade-in MaskTable">
-                                 <td>
-                                        <input type="checkbox"
-                                        class="row-check"
-                                        name="checkID"
-                                        value="${row.RecordID}">
-                                 </td>
+
 
                                  <td >${row.DateInput ? formatJsonDate(row.DateInput) : "-"}</td>
                                  <td >${row.Shift ? "NS" : "DS"}</td>
@@ -283,10 +304,12 @@
 
                     //    activeTimers.push(timer);
                     //});
+                    // Update pagination UI
+                    updatePaginationUI();
 
                     showLoading(false);
                 }, 500);
-                
+
             } else {
                 // handle specific error types
 
@@ -309,7 +332,7 @@
                     console.error("API Error : ", errorMessage, res);
                 }, 500);
                 // Optional show a Toast
-               
+
             }
 
         } catch (error) {
@@ -325,23 +348,19 @@
         }
 
     }
-
-
     const GetTotalIncompleteMask = async (partnumText) => {
         try {
-            console.log("Partnumber : " + partnumText);
             const url = '@Url.Action("GetMetalMaskINCOMPLETE", "MetalMask")';
 
 
             let res = await GetMethod(url, { partnum: partnumText });
-            let countpart = res?.Success ? res.data.length : 0;
+            let countpart = res?.Success ? res.data.Items.length : 0;
             searchCount = countpart;
-            console.log(searchCount);
 
             if (searchCount > 0) {
                 $("#NGcount").text(`${searchCount}`);
-            } 
-            
+            }
+
 
         } catch (error) {
             $("#NGcount").hide();
@@ -360,7 +379,88 @@
 
 
 
+    function updatePaginationUI() {
 
+        const $pagination = $("#pagination");
+        const $paginationItems = $(".pagination-items");
+
+        // Clear existing buttons
+        $paginationItems.empty();
+
+        // Always show pagination for debugging
+        $pagination.css({
+            'display': 'flex',
+            'visibility': 'visible',
+            'opacity': '1',
+            'position': 'relative'
+        });
+
+        // Show/hide pagination based on total records
+        if (totalRecords > pageSize) {
+            $pagination.show();
+
+            // Create pagination buttons
+            const prevDisabled = currentPage === 1 ? 'disabled' : '';
+            const nextDisabled = currentPage === totalPages || totalPages === 0 ? 'disabled' : '';
+
+            $paginationItems.html(`
+        <button class="page-btn prev-btn" ${prevDisabled} data-page="${currentPage - 1}">
+            <i class="fas fa-chevron-left"></i> Previous
+        </button>
+
+        <div class="page-info">
+            Page ${currentPage} of ${totalPages || 1}
+            <span class="record-info"></span>
+        </div>
+
+        <button class="page-btn next-btn" ${nextDisabled} data-page="${currentPage + 1}">
+            Next <i class="fas fa-chevron-right"></i>
+        </button>
+    `);
+
+            // Add page number input for direct navigation (optional)
+            if (totalPages > 10) {
+                $paginationItems.append(`
+            <div class="page-jump">
+                <input type="number" id="pageJumpInput" min="1" max="${totalPages}" value="${currentPage}"
+                       style="width: 60px; padding: 5px; border: 1px solid #ddd; border-radius: 4px;">
+                <button class="page-btn jump-btn" id="pageJumpBtn">Go</button>
+            </div>
+        `);
+            }
+
+            // Add click handlers
+            $(".page-btn").off('click').on('click', function () {
+                if ($(this).is(':disabled')) return;
+
+                const pageNum = parseInt($(this).data('page'));
+
+                if (pageNum >= 1 && pageNum <= totalPages && pageNum !== currentPage) {
+                    currentPage = pageNum;
+                    GetMetalMaskIncompleteTransaction();
+                }
+            });
+
+            // Add handler for jump button if exists
+            $("#pageJumpBtn").off('click').on('click', function () {
+                const jumpPage = parseInt($("#pageJumpInput").val());
+                if (jumpPage >= 1 && jumpPage <= totalPages && jumpPage !== currentPage) {
+                    currentPage = jumpPage;
+                    GetMetalMaskIncompleteTransaction();
+                }
+            });
+
+            // Add enter key handler for jump input
+            $("#pageJumpInput").off('keypress').on('keypress', function (e) {
+                if (e.which === 13) { // Enter key
+                    $("#pageJumpBtn").click();
+                }
+            });
+
+        } else {
+            $pagination.hide();
+        }
+    }
 
 
 
@@ -480,4 +580,7 @@
     function showLoading(show = true) {
         loading.classList.toggle('active', show);
     }
+
+
+    GetMetalMaskIncompleteTransaction();
 </script>

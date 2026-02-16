@@ -1,4 +1,5 @@
 ﻿using ProgramPartListWeb.Areas.Circuit.Models;
+using ProgramPartListWeb.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -16,7 +17,11 @@ namespace ProgramPartListWeb.Areas.Circuit.Interface
             int pageNumber,
             int pageSize);
 
-        Task<List<MetalMaskTransaction>> GetTransactINComplete(string partnum, int com);
+        Task<PagedResult<MetalMaskTransaction>> GetTransactINComplete(
+            string partnum, 
+            int com,
+            int pageNumber,
+            int pageSize);
 
         Task<bool> UpdateMetalMaskIncomplete(MetalMaskTransaction metal);
 

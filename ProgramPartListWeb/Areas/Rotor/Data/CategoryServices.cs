@@ -1,8 +1,6 @@
-﻿using DocumentFormat.OpenXml.Office2010.Excel;
-using ProgramPartListWeb.Areas.Rotor.Interface;
+﻿using ProgramPartListWeb.Areas.Rotor.Interface;
 using ProgramPartListWeb.Areas.Rotor.Model;
 using ProgramPartListWeb.Helper;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

@@ -52,6 +52,7 @@
                 <th>Side</th>
                 <th>Thickness</th>
                 <th>Blocks</th>
+                <th>Date Manufacture</th>
                 <th>Condition</th>
                 <th>Remarks</th>
 
@@ -250,6 +251,7 @@
                                 <td style='text-align: center;'>${row.Side ? row.Side : "-"}</td>
                                 <td style='text-align: center;'>${row.Thickness ? row.Thickness : "-"}</td>
                                 <td style='text-align: center;'>${row.Blocks ? row.Blocks : "-"}</td>
+                                <td >${row.DateManufacture ? formatJsonDate(row.DateManufacture) : "-"} </td>
                                 <td style='text-align: center;'>${row.Condition ? row.Condition : "-"}</td>
                                 <td >${row.Remarks ? row.Remarks : "-"}</td>
 
@@ -304,6 +306,8 @@
         let filtertable = setData.find(res => res.RecordID === selectID);
 
         if (filtertable) {
+            $("#changeAction").text("Edit Masterlist Data");
+
             $("#RecordID").val(selectID);
             $("#Partnumber").val(filtertable.Partnumber);
             $("#AREA").val(filtertable.AREA);

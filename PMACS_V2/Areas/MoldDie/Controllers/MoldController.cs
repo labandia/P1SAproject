@@ -152,13 +152,27 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
             //return JsonSuccess(datalistTask, "Mold Die Month Retrieve");
         }
 
-
+        // CHECK MOLDIE INPUT IF EXISTS BUT INCLUDES ONLY TWO DATEINPUT
         [HttpGet]
         public async Task<JsonResult> CheckDialyMoldExist(string srcval, string DateInput)
         {
             bool result = await _dieV2.CheckMoldieExist(srcval, DateInput);
             return Json(result, JsonRequestBehavior.AllowGet);
         }
+
+        [HttpPost]
+        public async Task<ActionResult> SaveDailyMoldDieMonitor(DieMoldMonitoringModel model)
+        {
+            bool success = await _dieV2.AddUpdateDailyMoldie(model, model.SearchMode);
+
+            if (!success)
+                return JsonValidationError();
+
+            return JsonCreated(model,
+                model.SearchMode == 0 ? "Add Data Successfully" : "Update Data Successfully");
+        }
+
+        //  ADD MOLDIE DAILY INPUT BY PARTNO
         [HttpPost]
         public async Task<ActionResult> AddDailyMoldDieMonitor(DieMoldMonitoringModel add)
         {
@@ -175,6 +189,8 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
             return JsonCreated(update, "Update Data Successfully");
         }
 
+
+        //  UDPDATE DAILY INPUT BY DIE SERIAL
         [HttpPost]
         public async Task<ActionResult> UpdateDieSerialMoldDieMonitor(DieMoldDieSerialInput add)
         {

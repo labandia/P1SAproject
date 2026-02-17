@@ -208,8 +208,8 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
         {
             return SqlDataAccess.GetObjectOnly<MetalMasKCountTransact>($@"SELECT 
 	                TOP 1
-	                (SELECT COUNT(Status) FROM MetalMask_Transaction WHERE Status = 0) as SMTCount, 
-	                (SELECT COUNT(Status) FROM MetalMask_Transaction WHERE Status = 1) as TensionCount
+	                (SELECT COUNT(Status) FROM MetalMask_Transaction WHERE Status = 0 AND IsDelete = 0) as SMTCount, 
+	                (SELECT COUNT(Status) FROM MetalMask_Transaction WHERE Status = 1 AND IsDelete = 0) as TensionCount
                 FROM MetalMask_Transaction
                 GROUP BY Status");
         }
@@ -270,7 +270,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
             // If the Get Data has a Pagination function
             if (pageSize != 0)
             {
-                strquery += $@" ORDER BY t.RecordID OFFSET @Offset ROWS
+                strquery += $@" ORDER BY t.RecordID DESC OFFSET @Offset ROWS
                             FETCH NEXT @PageSize ROWS ONLY";
                 parameters.Add("@Offset", offset);
                 parameters.Add("@PageSize", pageSize);

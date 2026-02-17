@@ -296,20 +296,22 @@ namespace NCR_system.View.Module
 
                     Fill = new SolidColorBrush(System.Windows.Media.Color.FromRgb(66, 133, 244)), // Blue
                     ColumnPadding = 20
-                },
-                new ColumnSeries
-                {
-                    Title = "Closed Items",
-                    Values = new ChartValues<int>(outputData2),
-                    MaxColumnWidth = 150,
-
-                     DataLabels = true,                            // <--- VALUE LABELS
-                    LabelPoint = p => p.Y.ToString("N0"),
-
-                    Fill = new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 128, 0)),  // Orange
-                    ColumnPadding = 20                               // <--- spacing inside the group
                 }
             };
+
+            //,
+            //    new ColumnSeries
+            //    {
+            //        Title = "Closed Items",
+            //        Values = new ChartValues<int>(outputData2),
+            //        MaxColumnWidth = 150,
+
+            //        DataLabels = true,                            // <--- VALUE LABELS
+            //        LabelPoint = p => p.Y.ToString("N0"),
+
+            //        Fill = new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 128, 0)),  // Orange
+            //        ColumnPadding = 20                               // <--- spacing inside the group
+            //    }
 
             // ----------------- AXIS X (CATEGORIES) -----------------
             ShipmentChart.AxisX.Add(new Axis

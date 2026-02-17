@@ -269,7 +269,13 @@ namespace PMACS_V2.Areas.P1SA.Models
         public string ProcessID { get; set; }
         public string ProcessName { get; set; }
 
-    
+        /* =======================
+          SEARCH CONTROL
+          ======================= */
+        public int SearchMode { get; set; }
+        // 0 = PartNo
+        // 1 = DieSerial
+
         /* =======================
            CTE / COMPUTED VALUES
            ======================= */

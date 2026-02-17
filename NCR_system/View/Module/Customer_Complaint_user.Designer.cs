@@ -79,7 +79,6 @@
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.label2 = new System.Windows.Forms.Label();
             this.panel6 = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.pictureBox6 = new System.Windows.Forms.PictureBox();
             this.searchText = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -99,7 +98,6 @@
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             this.panel6.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
             this.SuspendLayout();
             // 
@@ -158,7 +156,7 @@
             this.CustomDatagrid.RowHeadersVisible = false;
             this.CustomDatagrid.RowTemplate.Height = 30;
             this.CustomDatagrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.CustomDatagrid.Size = new System.Drawing.Size(1282, 482);
+            this.CustomDatagrid.Size = new System.Drawing.Size(1463, 482);
             this.CustomDatagrid.TabIndex = 4;
             this.CustomDatagrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.CustomDatagrid_CellClick);
             this.CustomDatagrid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.CustomDatagrid_CellDoubleClick);
@@ -288,7 +286,7 @@
             this.OpenCC.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.OpenCC.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.OpenCC.ForeColor = System.Drawing.Color.White;
-            this.OpenCC.Location = new System.Drawing.Point(1178, 213);
+            this.OpenCC.Location = new System.Drawing.Point(1359, 213);
             this.OpenCC.Name = "OpenCC";
             this.OpenCC.Size = new System.Drawing.Size(136, 41);
             this.OpenCC.TabIndex = 6;
@@ -323,7 +321,7 @@
             this.Externalbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Externalbtn.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold);
             this.Externalbtn.ForeColor = System.Drawing.Color.White;
-            this.Externalbtn.Location = new System.Drawing.Point(1026, 213);
+            this.Externalbtn.Location = new System.Drawing.Point(1207, 213);
             this.Externalbtn.Name = "Externalbtn";
             this.Externalbtn.Size = new System.Drawing.Size(137, 41);
             this.Externalbtn.TabIndex = 8;
@@ -385,7 +383,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(250, 94);
+            this.panel1.Size = new System.Drawing.Size(286, 94);
             this.panel1.TabIndex = 14;
             // 
             // label1
@@ -417,9 +415,9 @@
             this.panel3.Controls.Add(this.label4);
             this.panel3.Controls.Add(this.pictureBox2);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(259, 3);
+            this.panel3.Location = new System.Drawing.Point(295, 3);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(250, 94);
+            this.panel3.Size = new System.Drawing.Size(286, 94);
             this.panel3.TabIndex = 16;
             // 
             // PressText
@@ -459,9 +457,9 @@
             this.panel4.Controls.Add(this.RotorText);
             this.panel4.Controls.Add(this.pictureBox3);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel4.Location = new System.Drawing.Point(515, 3);
+            this.panel4.Location = new System.Drawing.Point(587, 3);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(250, 94);
+            this.panel4.Size = new System.Drawing.Size(286, 94);
             this.panel4.TabIndex = 17;
             // 
             // label6
@@ -512,7 +510,7 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1282, 100);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1463, 100);
             this.tableLayoutPanel1.TabIndex = 18;
             // 
             // panel5
@@ -523,9 +521,9 @@
             this.panel5.Controls.Add(this.CircuitText);
             this.panel5.Controls.Add(this.pictureBox5);
             this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel5.Location = new System.Drawing.Point(1027, 3);
+            this.panel5.Location = new System.Drawing.Point(1171, 3);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(252, 94);
+            this.panel5.Size = new System.Drawing.Size(289, 94);
             this.panel5.TabIndex = 19;
             // 
             // label10
@@ -565,9 +563,9 @@
             this.panel2.Controls.Add(this.label8);
             this.panel2.Controls.Add(this.pictureBox4);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(771, 3);
+            this.panel2.Location = new System.Drawing.Point(879, 3);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(250, 94);
+            this.panel2.Size = new System.Drawing.Size(286, 94);
             this.panel2.TabIndex = 18;
             // 
             // WindText
@@ -603,12 +601,11 @@
             // 
             this.label2.AutoSize = true;
             this.label2.BackColor = System.Drawing.Color.Transparent;
-            this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label2.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(97)))), ((int)(((byte)(238)))));
-            this.label2.Location = new System.Drawing.Point(39, 0);
+            this.label2.Location = new System.Drawing.Point(42, 9);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(179, 31);
+            this.label2.Size = new System.Drawing.Size(167, 16);
             this.label2.TabIndex = 19;
             this.label2.Text = "SDP Customer Complaint";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -617,34 +614,21 @@
             // panel6
             // 
             this.panel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(246)))), ((int)(((byte)(255)))));
-            this.panel6.Controls.Add(this.tableLayoutPanel2);
+            this.panel6.Controls.Add(this.pictureBox6);
+            this.panel6.Controls.Add(this.label2);
             this.panel6.Location = new System.Drawing.Point(32, 41);
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(230, 35);
             this.panel6.TabIndex = 20;
             // 
-            // tableLayoutPanel2
-            // 
-            this.tableLayoutPanel2.ColumnCount = 2;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 83.33334F));
-            this.tableLayoutPanel2.Controls.Add(this.label2, 1, 0);
-            this.tableLayoutPanel2.Controls.Add(this.pictureBox6, 0, 0);
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(9, 1);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 1;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(221, 31);
-            this.tableLayoutPanel2.TabIndex = 21;
-            // 
             // pictureBox6
             // 
-            this.pictureBox6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBox6.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.pictureBox6.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox6.Image")));
-            this.pictureBox6.Location = new System.Drawing.Point(3, 3);
+            this.pictureBox6.Location = new System.Drawing.Point(18, 10);
             this.pictureBox6.Name = "pictureBox6";
-            this.pictureBox6.Size = new System.Drawing.Size(30, 25);
-            this.pictureBox6.TabIndex = 21;
+            this.pictureBox6.Size = new System.Drawing.Size(22, 19);
+            this.pictureBox6.TabIndex = 26;
             this.pictureBox6.TabStop = false;
             // 
             // searchText
@@ -712,7 +696,7 @@
             this.Controls.Add(this.OpenCC);
             this.Controls.Add(this.CustomDatagrid);
             this.Name = "Customer_Complaint_user";
-            this.Size = new System.Drawing.Size(1349, 806);
+            this.Size = new System.Drawing.Size(1530, 806);
             this.Load += new System.EventHandler(this.Customer_Complaint_user_Load);
             ((System.ComponentModel.ISupportInitialize)(this.CustomDatagrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -732,8 +716,7 @@
             this.panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             this.panel6.ResumeLayout(false);
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel2.PerformLayout();
+            this.panel6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -782,12 +765,11 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn CCtype;
         private System.Windows.Forms.DataGridViewImageColumn Delete;
         private System.Windows.Forms.Panel panel6;
-        private System.Windows.Forms.PictureBox pictureBox6;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.TextBox searchText;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.PictureBox pictureBox6;
     }
 }

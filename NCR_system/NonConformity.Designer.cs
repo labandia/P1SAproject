@@ -28,361 +28,360 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NonConformity));
-            this.NonComTable = new System.Windows.Forms.DataGridView();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.ExCC = new System.Windows.Forms.TabPage();
-            this.SDCCC = new System.Windows.Forms.TabPage();
-            this.ProcessMenu = new System.Windows.Forms.TabPage();
-            this.RejectedMenu = new System.Windows.Forms.TabPage();
-            this.ShipmentMenu = new System.Windows.Forms.TabPage();
-            this.RegistrationMenu = new System.Windows.Forms.TabPage();
-            this.RecurrenceMenu = new System.Windows.Forms.TabPage();
-            this.CustomDatagrid = new System.Windows.Forms.DataGridView();
-            this.RecordID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DateCreated = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SectionID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ModelNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.LotNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.NGQty = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Details = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.RegNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CustomerName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CCtype = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Delete = new System.Windows.Forms.DataGridViewImageColumn();
-            ((System.ComponentModel.ISupportInitialize)(this.NonComTable)).BeginInit();
-            this.tabControl1.SuspendLayout();
-            this.ExCC.SuspendLayout();
-            this.SDCCC.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.CustomDatagrid)).BeginInit();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.panel8 = new System.Windows.Forms.Panel();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.pictureBox7 = new System.Windows.Forms.PictureBox();
+            this.panel7 = new System.Windows.Forms.Panel();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.pictureBox6 = new System.Windows.Forms.PictureBox();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.pictureBox4 = new System.Windows.Forms.PictureBox();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.tableLayoutPanel1.SuspendLayout();
+            this.panel8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
+            this.panel7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
+            this.panel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            this.panel5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
+            this.panel4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
-            // NonComTable
+            // tableLayoutPanel1
             // 
-            this.NonComTable.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.NonComTable.BackgroundColor = System.Drawing.SystemColors.GradientActiveCaption;
-            this.NonComTable.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.NonComTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.NonComTable.Location = new System.Drawing.Point(104, 65);
-            this.NonComTable.Name = "NonComTable";
-            this.NonComTable.Size = new System.Drawing.Size(871, 439);
-            this.NonComTable.TabIndex = 0;
+            this.tableLayoutPanel1.ColumnCount = 1;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Controls.Add(this.panel8, 0, 4);
+            this.tableLayoutPanel1.Controls.Add(this.panel7, 0, 3);
+            this.tableLayoutPanel1.Controls.Add(this.panel3, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.panel5, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.panel4, 0, 2);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 5;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(232, 749);
+            this.tableLayoutPanel1.TabIndex = 0;
             // 
-            // tabControl1
+            // panel8
             // 
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl1.Controls.Add(this.ExCC);
-            this.tabControl1.Controls.Add(this.SDCCC);
-            this.tabControl1.Controls.Add(this.ProcessMenu);
-            this.tabControl1.Controls.Add(this.RejectedMenu);
-            this.tabControl1.Controls.Add(this.ShipmentMenu);
-            this.tabControl1.Controls.Add(this.RegistrationMenu);
-            this.tabControl1.Controls.Add(this.RecurrenceMenu);
-            this.tabControl1.Location = new System.Drawing.Point(12, 42);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1430, 643);
-            this.tabControl1.TabIndex = 83;
+            this.panel8.BackColor = System.Drawing.Color.White;
+            this.panel8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel8.Controls.Add(this.label13);
+            this.panel8.Controls.Add(this.label14);
+            this.panel8.Controls.Add(this.pictureBox7);
+            this.panel8.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel8.Location = new System.Drawing.Point(3, 599);
+            this.panel8.Name = "panel8";
+            this.panel8.Size = new System.Drawing.Size(226, 147);
+            this.panel8.TabIndex = 18;
             // 
-            // ExCC
+            // label13
             // 
-            this.ExCC.Controls.Add(this.CustomDatagrid);
-            this.ExCC.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ExCC.Location = new System.Drawing.Point(4, 22);
-            this.ExCC.Name = "ExCC";
-            this.ExCC.Padding = new System.Windows.Forms.Padding(3);
-            this.ExCC.Size = new System.Drawing.Size(1422, 617);
-            this.ExCC.TabIndex = 0;
-            this.ExCC.Text = "External Customer Complaint";
-            this.ExCC.UseVisualStyleBackColor = true;
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Segoe UI", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
+            this.label13.Location = new System.Drawing.Point(87, 30);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(43, 50);
+            this.label13.TabIndex = 16;
+            this.label13.Text = "0";
             // 
-            // SDCCC
+            // label14
             // 
-            this.SDCCC.Controls.Add(this.NonComTable);
-            this.SDCCC.Location = new System.Drawing.Point(4, 22);
-            this.SDCCC.Name = "SDCCC";
-            this.SDCCC.Padding = new System.Windows.Forms.Padding(3);
-            this.SDCCC.Size = new System.Drawing.Size(1111, 617);
-            this.SDCCC.TabIndex = 1;
-            this.SDCCC.Text = "SDC Customer Complaint";
-            this.SDCCC.UseVisualStyleBackColor = true;
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("Inter", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(80)))), ((int)(((byte)(87)))));
+            this.label14.Location = new System.Drawing.Point(93, 77);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(71, 27);
+            this.label14.TabIndex = 15;
+            this.label14.Text = "Circuit";
             // 
-            // ProcessMenu
+            // pictureBox7
             // 
-            this.ProcessMenu.Location = new System.Drawing.Point(4, 22);
-            this.ProcessMenu.Name = "ProcessMenu";
-            this.ProcessMenu.Padding = new System.Windows.Forms.Padding(3);
-            this.ProcessMenu.Size = new System.Drawing.Size(1111, 617);
-            this.ProcessMenu.TabIndex = 2;
-            this.ProcessMenu.Text = "INPROCESS DEFECT";
-            this.ProcessMenu.UseVisualStyleBackColor = true;
+            this.pictureBox7.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox7.Image")));
+            this.pictureBox7.Location = new System.Drawing.Point(27, 47);
+            this.pictureBox7.Name = "pictureBox7";
+            this.pictureBox7.Size = new System.Drawing.Size(50, 50);
+            this.pictureBox7.TabIndex = 14;
+            this.pictureBox7.TabStop = false;
             // 
-            // RejectedMenu
+            // panel7
             // 
-            this.RejectedMenu.Location = new System.Drawing.Point(4, 22);
-            this.RejectedMenu.Name = "RejectedMenu";
-            this.RejectedMenu.Padding = new System.Windows.Forms.Padding(3);
-            this.RejectedMenu.Size = new System.Drawing.Size(1111, 617);
-            this.RejectedMenu.TabIndex = 3;
-            this.RejectedMenu.Text = "REJECTED LOT";
-            this.RejectedMenu.UseVisualStyleBackColor = true;
+            this.panel7.BackColor = System.Drawing.Color.White;
+            this.panel7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel7.Controls.Add(this.label11);
+            this.panel7.Controls.Add(this.label12);
+            this.panel7.Controls.Add(this.pictureBox6);
+            this.panel7.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel7.Location = new System.Drawing.Point(3, 450);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(226, 143);
+            this.panel7.TabIndex = 17;
             // 
-            // ShipmentMenu
+            // label11
             // 
-            this.ShipmentMenu.Location = new System.Drawing.Point(4, 22);
-            this.ShipmentMenu.Name = "ShipmentMenu";
-            this.ShipmentMenu.Padding = new System.Windows.Forms.Padding(3);
-            this.ShipmentMenu.Size = new System.Drawing.Size(1111, 617);
-            this.ShipmentMenu.TabIndex = 4;
-            this.ShipmentMenu.Text = "SHIPMENT DELAY";
-            this.ShipmentMenu.UseVisualStyleBackColor = true;
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("Segoe UI", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
+            this.label11.Location = new System.Drawing.Point(87, 30);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(43, 50);
+            this.label11.TabIndex = 16;
+            this.label11.Text = "0";
             // 
-            // RegistrationMenu
+            // label12
             // 
-            this.RegistrationMenu.Location = new System.Drawing.Point(4, 22);
-            this.RegistrationMenu.Name = "RegistrationMenu";
-            this.RegistrationMenu.Padding = new System.Windows.Forms.Padding(3);
-            this.RegistrationMenu.Size = new System.Drawing.Size(1111, 617);
-            this.RegistrationMenu.TabIndex = 5;
-            this.RegistrationMenu.Text = "MAIN REGISTRATION";
-            this.RegistrationMenu.UseVisualStyleBackColor = true;
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Inter", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(80)))), ((int)(((byte)(87)))));
+            this.label12.Location = new System.Drawing.Point(93, 77);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(87, 27);
+            this.label12.TabIndex = 15;
+            this.label12.Text = "Winding";
             // 
-            // RecurrenceMenu
+            // pictureBox6
             // 
-            this.RecurrenceMenu.Location = new System.Drawing.Point(4, 22);
-            this.RecurrenceMenu.Name = "RecurrenceMenu";
-            this.RecurrenceMenu.Size = new System.Drawing.Size(1111, 617);
-            this.RecurrenceMenu.TabIndex = 6;
-            this.RecurrenceMenu.Text = "RECURRENCE";
-            this.RecurrenceMenu.UseVisualStyleBackColor = true;
+            this.pictureBox6.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox6.Image")));
+            this.pictureBox6.Location = new System.Drawing.Point(27, 47);
+            this.pictureBox6.Name = "pictureBox6";
+            this.pictureBox6.Size = new System.Drawing.Size(50, 50);
+            this.pictureBox6.TabIndex = 14;
+            this.pictureBox6.TabStop = false;
             // 
-            // CustomDatagrid
+            // panel3
             // 
-            this.CustomDatagrid.AllowUserToAddRows = false;
-            this.CustomDatagrid.AllowUserToDeleteRows = false;
-            this.CustomDatagrid.AllowUserToResizeColumns = false;
-            this.CustomDatagrid.AllowUserToResizeRows = false;
-            this.CustomDatagrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.CustomDatagrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.LightSteelBlue;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.CustomDatagrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            this.CustomDatagrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.CustomDatagrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.RecordID,
-            this.DateCreated,
-            this.SectionID,
-            this.ModelNo,
-            this.LotNo,
-            this.NGQty,
-            this.Details,
-            this.RegNo,
-            this.CustomerName,
-            this.Status,
-            this.CCtype,
-            this.Delete});
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle8.Padding = new System.Windows.Forms.Padding(6, 5, 6, 5);
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.CustomDatagrid.DefaultCellStyle = dataGridViewCellStyle8;
-            this.CustomDatagrid.Location = new System.Drawing.Point(6, 71);
-            this.CustomDatagrid.Name = "CustomDatagrid";
-            this.CustomDatagrid.ReadOnly = true;
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.CustomDatagrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
-            this.CustomDatagrid.RowHeadersVisible = false;
-            this.CustomDatagrid.RowTemplate.Height = 30;
-            this.CustomDatagrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.CustomDatagrid.Size = new System.Drawing.Size(1393, 512);
-            this.CustomDatagrid.TabIndex = 5;
+            this.panel3.BackColor = System.Drawing.Color.White;
+            this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel3.Controls.Add(this.label3);
+            this.panel3.Controls.Add(this.label4);
+            this.panel3.Controls.Add(this.pictureBox2);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel3.Location = new System.Drawing.Point(3, 3);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(226, 143);
+            this.panel3.TabIndex = 3;
             // 
-            // RecordID
+            // label3
             // 
-            this.RecordID.DataPropertyName = "RecordID";
-            this.RecordID.HeaderText = "RecordID";
-            this.RecordID.Name = "RecordID";
-            this.RecordID.ReadOnly = true;
-            this.RecordID.Visible = false;
-            this.RecordID.Width = 72;
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
+            this.label3.Location = new System.Drawing.Point(87, 30);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(43, 50);
+            this.label3.TabIndex = 16;
+            this.label3.Text = "0";
             // 
-            // DateCreated
+            // label4
             // 
-            this.DateCreated.DataPropertyName = "DateCreated";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.DateCreated.DefaultCellStyle = dataGridViewCellStyle2;
-            this.DateCreated.HeaderText = "Date";
-            this.DateCreated.Name = "DateCreated";
-            this.DateCreated.ReadOnly = true;
-            this.DateCreated.Width = 71;
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Inter", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(80)))), ((int)(((byte)(87)))));
+            this.label4.Location = new System.Drawing.Point(93, 77);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(90, 27);
+            this.label4.TabIndex = 15;
+            this.label4.Text = "Molding ";
             // 
-            // SectionID
+            // pictureBox2
             // 
-            this.SectionID.DataPropertyName = "SectionID";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.SectionID.DefaultCellStyle = dataGridViewCellStyle3;
-            this.SectionID.HeaderText = "Section in charge";
-            this.SectionID.Name = "SectionID";
-            this.SectionID.ReadOnly = true;
-            this.SectionID.Width = 135;
+            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
+            this.pictureBox2.Location = new System.Drawing.Point(27, 47);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(50, 50);
+            this.pictureBox2.TabIndex = 14;
+            this.pictureBox2.TabStop = false;
             // 
-            // ModelNo
+            // panel5
             // 
-            this.ModelNo.DataPropertyName = "ModelNo";
-            this.ModelNo.HeaderText = "Model No/ Part no.";
-            this.ModelNo.Name = "ModelNo";
-            this.ModelNo.ReadOnly = true;
-            this.ModelNo.Width = 126;
+            this.panel5.BackColor = System.Drawing.Color.White;
+            this.panel5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel5.Controls.Add(this.label7);
+            this.panel5.Controls.Add(this.label8);
+            this.panel5.Controls.Add(this.pictureBox4);
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel5.Location = new System.Drawing.Point(3, 152);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(226, 143);
+            this.panel5.TabIndex = 5;
             // 
-            // LotNo
+            // label7
             // 
-            this.LotNo.DataPropertyName = "LotNo";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.LotNo.DefaultCellStyle = dataGridViewCellStyle4;
-            this.LotNo.HeaderText = "Lot No.";
-            this.LotNo.Name = "LotNo";
-            this.LotNo.ReadOnly = true;
-            this.LotNo.Width = 78;
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Segoe UI", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
+            this.label7.Location = new System.Drawing.Point(87, 30);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(43, 50);
+            this.label7.TabIndex = 16;
+            this.label7.Text = "0";
             // 
-            // NGQty
+            // label8
             // 
-            this.NGQty.DataPropertyName = "NGQty";
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.NGQty.DefaultCellStyle = dataGridViewCellStyle5;
-            this.NGQty.HeaderText = "NG Qty";
-            this.NGQty.Name = "NGQty";
-            this.NGQty.ReadOnly = true;
-            this.NGQty.Width = 81;
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Inter", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(80)))), ((int)(((byte)(87)))));
+            this.label8.Location = new System.Drawing.Point(93, 77);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(62, 27);
+            this.label8.TabIndex = 15;
+            this.label8.Text = "Press";
             // 
-            // Details
+            // pictureBox4
             // 
-            this.Details.DataPropertyName = "Details";
-            this.Details.HeaderText = "Details of Problem";
-            this.Details.Name = "Details";
-            this.Details.ReadOnly = true;
-            this.Details.Width = 136;
+            this.pictureBox4.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox4.Image")));
+            this.pictureBox4.Location = new System.Drawing.Point(27, 47);
+            this.pictureBox4.Name = "pictureBox4";
+            this.pictureBox4.Size = new System.Drawing.Size(50, 50);
+            this.pictureBox4.TabIndex = 14;
+            this.pictureBox4.TabStop = false;
             // 
-            // RegNo
+            // panel4
             // 
-            this.RegNo.DataPropertyName = "RegNo";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RegNo.DefaultCellStyle = dataGridViewCellStyle6;
-            this.RegNo.HeaderText = "Registration No.";
-            this.RegNo.Name = "RegNo";
-            this.RegNo.ReadOnly = true;
-            this.RegNo.Width = 124;
+            this.panel4.BackColor = System.Drawing.Color.White;
+            this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel4.Controls.Add(this.label5);
+            this.panel4.Controls.Add(this.label6);
+            this.panel4.Controls.Add(this.pictureBox3);
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel4.Location = new System.Drawing.Point(3, 301);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(226, 143);
+            this.panel4.TabIndex = 4;
             // 
-            // CustomerName
+            // label5
             // 
-            this.CustomerName.DataPropertyName = "CustomerName";
-            this.CustomerName.HeaderText = "Customer Name";
-            this.CustomerName.Name = "CustomerName";
-            this.CustomerName.ReadOnly = true;
-            this.CustomerName.Width = 127;
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Segoe UI", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
+            this.label5.Location = new System.Drawing.Point(87, 30);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(43, 50);
+            this.label5.TabIndex = 16;
+            this.label5.Text = "0";
             // 
-            // Status
+            // label6
             // 
-            this.Status.DataPropertyName = "Status";
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Status.DefaultCellStyle = dataGridViewCellStyle7;
-            this.Status.HeaderText = "Status";
-            this.Status.Name = "Status";
-            this.Status.ReadOnly = true;
-            this.Status.Width = 76;
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Inter", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(80)))), ((int)(((byte)(87)))));
+            this.label6.Location = new System.Drawing.Point(93, 77);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(59, 27);
+            this.label6.TabIndex = 15;
+            this.label6.Text = "Rotor";
             // 
-            // CCtype
+            // pictureBox3
             // 
-            this.CCtype.DataPropertyName = "CCtype";
-            this.CCtype.HeaderText = "CCtype";
-            this.CCtype.Name = "CCtype";
-            this.CCtype.ReadOnly = true;
-            this.CCtype.Visible = false;
-            this.CCtype.Width = 81;
+            this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
+            this.pictureBox3.Location = new System.Drawing.Point(27, 47);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(50, 50);
+            this.pictureBox3.TabIndex = 14;
+            this.pictureBox3.TabStop = false;
             // 
-            // Delete
+            // panel1
             // 
-            this.Delete.DataPropertyName = "Delete";
-            this.Delete.HeaderText = "Delete";
-            this.Delete.Image = ((System.Drawing.Image)(resources.GetObject("Delete.Image")));
-            this.Delete.Name = "Delete";
-            this.Delete.ReadOnly = true;
-            this.Delete.Width = 63;
+            this.panel1.Controls.Add(this.tableLayoutPanel1);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(232, 749);
+            this.panel1.TabIndex = 1;
+            // 
+            // dataGridView1
+            // 
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Location = new System.Drawing.Point(235, 81);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.Size = new System.Drawing.Size(1216, 633);
+            this.dataGridView1.TabIndex = 2;
             // 
             // NonConformity
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.ControlLight;
             this.ClientSize = new System.Drawing.Size(1454, 749);
-            this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.dataGridView1);
+            this.Controls.Add(this.panel1);
             this.Name = "NonConformity";
-            this.Text = "NonConformity";
+            this.Text = "P1SA NonConformity Monitoring System";
             this.Load += new System.EventHandler(this.NonConformity_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.NonComTable)).EndInit();
-            this.tabControl1.ResumeLayout(false);
-            this.ExCC.ResumeLayout(false);
-            this.SDCCC.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.CustomDatagrid)).EndInit();
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.panel8.ResumeLayout(false);
+            this.panel8.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).EndInit();
+            this.panel7.ResumeLayout(false);
+            this.panel7.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            this.panel5.ResumeLayout(false);
+            this.panel5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
+            this.panel4.ResumeLayout(false);
+            this.panel4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            this.panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.DataGridView NonComTable;
-        private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage ExCC;
-        private System.Windows.Forms.TabPage SDCCC;
-        private System.Windows.Forms.TabPage ProcessMenu;
-        private System.Windows.Forms.TabPage RejectedMenu;
-        private System.Windows.Forms.TabPage ShipmentMenu;
-        private System.Windows.Forms.TabPage RegistrationMenu;
-        private System.Windows.Forms.TabPage RecurrenceMenu;
-        public System.Windows.Forms.DataGridView CustomDatagrid;
-        private System.Windows.Forms.DataGridViewTextBoxColumn RecordID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn DateCreated;
-        private System.Windows.Forms.DataGridViewTextBoxColumn SectionID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ModelNo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn LotNo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn NGQty;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Details;
-        private System.Windows.Forms.DataGridViewTextBoxColumn RegNo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CustomerName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Status;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CCtype;
-        private System.Windows.Forms.DataGridViewImageColumn Delete;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.PictureBox pictureBox3;
+        private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.PictureBox pictureBox4;
+        private System.Windows.Forms.Panel panel7;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.PictureBox pictureBox6;
+        private System.Windows.Forms.Panel panel8;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.PictureBox pictureBox7;
+        private System.Windows.Forms.DataGridView dataGridView1;
     }
 }

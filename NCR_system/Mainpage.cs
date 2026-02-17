@@ -22,6 +22,13 @@ namespace NCR_system
         private readonly ShipRejected _ship;
         private readonly IServiceProvider _serviceProvider;
 
+        public readonly Color primaryGray = Color.FromArgb(37, 99, 235);
+        public readonly Color whiteback = Color.FromArgb(94, 111, 126);
+
+        public readonly Color textColor = Color.FromArgb(255, 255, 255);
+
+        public readonly Color TransClr = Color.Transparent;
+
         public Mainpage(IServiceProvider service,
             Customer_Complaint_user cc,
             Dashboard dash, 
@@ -70,60 +77,230 @@ namespace NCR_system
             //this.WindowState = FormWindowState.Maximized;
             //this.TopMost = true; // optional
 
+            DefaultMenuHighligted();
 
-            _cc.BringToFront();
-            await _cc.DisplayCustomer(0);
+
         }
 
-        private async void Customerbtn_Click(object sender, EventArgs e)
-        {
-            _cc.BringToFront();
-            await _cc.DisplayCustomer(0);
-        }
-
+      
         private async void processbtn_Click(object sender, EventArgs e)
         {
             _proc.BringToFront();
+
+            // Set Active of the Current Button
+            processbtn.BackColor = primaryGray;
+            processbtn.ForeColor = textColor;
+
+
+
+            // Set tit Default Color of other button
+            SDCbtn.BackColor = Color.Transparent;
+            SDCbtn.ForeColor = Color.FromArgb(94, 111, 126);
+            rejectBtn.BackColor = Color.Transparent;
+            rejectBtn.ForeColor = Color.FromArgb(94, 111, 126);
+
+            Shipbtn.BackColor = Color.Transparent;
+            Shipbtn.ForeColor = Color.FromArgb(94, 111, 126);
+            Mainbtn.BackColor = Color.Transparent;
+            Mainbtn.ForeColor = Color.FromArgb(94, 111, 126);
+
+            processbtn.BackColor = Color.Transparent;
+            processbtn.ForeColor = Color.FromArgb(94, 111, 126);
+            //Externalbtn.BackColor = Color.Transparent;
+            //Externalbtn.ForeColor = Color.FromArgb(94, 111, 126);
+            Recurrencebtn.BackColor = Color.Transparent;
+            Recurrencebtn.ForeColor = Color.FromArgb(94, 111, 126);
+
             await _proc.DisplayRejected();
         }
 
-        private async void ncrbtn_Click(object sender, EventArgs e)
-        {
-            _ncr.BringToFront();
-            await _ncr.DisplayNCR(0);
-        }
-
-        private async void Rejectedbtn_Click(object sender, EventArgs e)
-        {
-            _rej.BringToFront();
-            await _rej.DisplayRejected(0);
-        }
-
-        private async void Shipmentbtn_Click(object sender, EventArgs e)
-        {
-            _ship.BringToFront();
-            await _ship.DisplayRejected(1);
-        }
-
+       
         private void panelContainer_Paint(object sender, PaintEventArgs e)
         {
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            _dash.BringToFront();
-        }
-
-        private async void Customerbtn_Click_1(object sender, EventArgs e)
-        {
-            _cc.BringToFront();
-            await _cc.DisplayCustomer(0);
-        }
-
+     
         private void button2_Click(object sender, EventArgs e)
         {
             Application.Exit(); 
+        }
+
+        private async void SDCClickbtn(object sender, EventArgs e)
+        {
+            _cc.BringToFront();
+            // Set Active of the Current Button
+            SDCbtn.BackColor = primaryGray;
+            SDCbtn.ForeColor = textColor;
+
+            // Set tit Default Color of other button
+            processbtn.BackColor = Color.Transparent;
+            processbtn.ForeColor = Color.FromArgb(94, 111, 126);
+            rejectBtn.BackColor = Color.Transparent;
+            rejectBtn.ForeColor = Color.FromArgb(94, 111, 126);
+
+            Shipbtn.BackColor = Color.Transparent;
+            Shipbtn.ForeColor = Color.FromArgb(94, 111, 126);
+            Mainbtn.BackColor = Color.Transparent;
+            Mainbtn.ForeColor = Color.FromArgb(94, 111, 126);
+
+            processbtn.BackColor = Color.Transparent;
+            processbtn.ForeColor = Color.FromArgb(94, 111, 126);
+            //Externalbtn.BackColor = Color.Transparent;
+            //Externalbtn.ForeColor = Color.FromArgb(94, 111, 126);
+            Recurrencebtn.BackColor = Color.Transparent;
+            Recurrencebtn.ForeColor = Color.FromArgb(94, 111, 126);
+
+            await _cc.DisplayCustomer(0);
+        }
+
+        private async void rejectBtn_Click(object sender, EventArgs e)
+        {
+            _ncr.BringToFront();
+
+            // Set Active of the Current Button
+
+            rejectBtn.BackColor = primaryGray;
+            rejectBtn.ForeColor = textColor;
+
+
+            // Set tit Default Color of other button
+            SDCbtn.BackColor = Color.Transparent;
+            SDCbtn.ForeColor = Color.FromArgb(94, 111, 126);
+            processbtn.BackColor = Color.Transparent;
+            processbtn.ForeColor = Color.FromArgb(94, 111, 126);
+
+            Shipbtn.BackColor = Color.Transparent;
+            Shipbtn.ForeColor = Color.FromArgb(94, 111, 126);
+            Mainbtn.BackColor = Color.Transparent;
+            Mainbtn.ForeColor = Color.FromArgb(94, 111, 126);
+
+            processbtn.BackColor = Color.Transparent;
+            processbtn.ForeColor = Color.FromArgb(94, 111, 126);
+            //Externalbtn.BackColor = Color.Transparent;
+            //Externalbtn.ForeColor = Color.FromArgb(94, 111, 126);
+            Recurrencebtn.BackColor = Color.Transparent;
+            Recurrencebtn.ForeColor = Color.FromArgb(94, 111, 126);
+
+            await _ncr.DisplayNCR(0);
+        }
+
+        private async void Shipbtn_Click(object sender, EventArgs e)
+        {
+            _rej.BringToFront();
+
+            // Set Active of the Current Button       
+            Shipbtn.BackColor = primaryGray;
+            Shipbtn.ForeColor = textColor;
+
+
+            // Set tit Default Color of other button
+            SDCbtn.BackColor = Color.Transparent;
+            SDCbtn.ForeColor = Color.FromArgb(94, 111, 126);
+            rejectBtn.BackColor = Color.Transparent;
+            rejectBtn.ForeColor = Color.FromArgb(94, 111, 126);
+
+            
+            Mainbtn.BackColor = Color.Transparent;
+            Mainbtn.ForeColor = Color.FromArgb(94, 111, 126);
+            processbtn.BackColor = Color.Transparent;
+            processbtn.ForeColor = Color.FromArgb(94, 111, 126);
+            processbtn.BackColor = Color.Transparent;
+            processbtn.ForeColor = Color.FromArgb(94, 111, 126);
+            //Externalbtn.BackColor = Color.Transparent;
+            //Externalbtn.ForeColor = Color.FromArgb(94, 111, 126);
+            Recurrencebtn.BackColor = Color.Transparent;
+            Recurrencebtn.ForeColor = Color.FromArgb(94, 111, 126);
+
+            await _rej.DisplayRejected(0);
+        }
+
+        private async void Mainbtn_Click(object sender, EventArgs e)
+        {
+            _ship.BringToFront();
+
+            // Set Active of the Current Button       
+            Mainbtn.BackColor = primaryGray;
+            Mainbtn.ForeColor = textColor;
+
+            // Set tit Default Color of other button
+            SDCbtn.BackColor = Color.Transparent;
+            SDCbtn.ForeColor = Color.FromArgb(94, 111, 126);
+            rejectBtn.BackColor = Color.Transparent;
+            rejectBtn.ForeColor = Color.FromArgb(94, 111, 126);
+            Shipbtn.BackColor = Color.Transparent;
+            Shipbtn.ForeColor = Color.FromArgb(94, 111, 126);
+
+
+            processbtn.BackColor = Color.Transparent;
+            processbtn.ForeColor = Color.FromArgb(94, 111, 126);
+            processbtn.BackColor = Color.Transparent;
+            processbtn.ForeColor = Color.FromArgb(94, 111, 126);
+            //Externalbtn.BackColor = Color.Transparent;
+            //Externalbtn.ForeColor = Color.FromArgb(94, 111, 126);
+            Recurrencebtn.BackColor = Color.Transparent;
+            Recurrencebtn.ForeColor = Color.FromArgb(94, 111, 126);
+
+            await _ship.DisplayRejected(1);
+        }
+
+        private void Recurrencebtn_Click(object sender, EventArgs e)
+        {
+            // Set Active of the Current Button       
+            Recurrencebtn.BackColor = primaryGray;
+            Recurrencebtn.ForeColor = textColor;
+
+            // Set tit Default Color of other button
+            SDCbtn.BackColor = Color.Transparent;
+            SDCbtn.ForeColor = Color.FromArgb(94, 111, 126);
+            rejectBtn.BackColor = Color.Transparent;
+            rejectBtn.ForeColor = Color.FromArgb(94, 111, 126);
+            Shipbtn.BackColor = Color.Transparent;
+            Shipbtn.ForeColor = Color.FromArgb(94, 111, 126);
+            Mainbtn.BackColor = Color.Transparent;
+            Mainbtn.ForeColor = Color.FromArgb(94, 111, 126);
+
+            processbtn.BackColor = Color.Transparent;
+            processbtn.ForeColor = Color.FromArgb(94, 111, 126);
+            processbtn.BackColor = Color.Transparent;
+            processbtn.ForeColor = Color.FromArgb(94, 111, 126);
+            //Externalbtn.BackColor = Color.Transparent;
+            //Externalbtn.ForeColor = Color.FromArgb(94, 111, 126);
+        }
+
+        private void Externalbtn_Click(object sender, EventArgs e)
+        {
+           
+        }
+
+        private void Dashbtn_Click(object sender, EventArgs e)
+        {
+            DefaultMenuHighligted();
+        }
+
+
+        public void DefaultMenuHighligted()
+        {
+            // Set Active of the Current Button       
+            Dashbtn.BackColor = primaryGray;
+            Dashbtn.ForeColor = textColor;
+
+            // Set tit Default Color of other button
+            SDCbtn.BackColor = Color.Transparent;
+            SDCbtn.ForeColor = Color.FromArgb(94, 111, 126);
+            rejectBtn.BackColor = Color.Transparent;
+            rejectBtn.ForeColor = Color.FromArgb(94, 111, 126);
+            Shipbtn.BackColor = Color.Transparent;
+            Shipbtn.ForeColor = Color.FromArgb(94, 111, 126);
+            Mainbtn.BackColor = Color.Transparent;
+            Mainbtn.ForeColor = Color.FromArgb(94, 111, 126);
+
+            processbtn.BackColor = Color.Transparent;
+            processbtn.ForeColor = Color.FromArgb(94, 111, 126);
+            processbtn.BackColor = Color.Transparent;
+            processbtn.ForeColor = Color.FromArgb(94, 111, 126);
+            Recurrencebtn.BackColor = Color.Transparent;
+            Recurrencebtn.ForeColor = Color.FromArgb(94, 111, 126);
         }
     }
 }

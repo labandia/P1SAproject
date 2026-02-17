@@ -39,7 +39,6 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Rejected));
-            this.projectitle = new System.Windows.Forms.Label();
             this.OpenReject = new System.Windows.Forms.Button();
             this.RejectedGrid = new System.Windows.Forms.DataGridView();
             this.RecordID = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -59,20 +58,14 @@
             this.filteritems = new System.Windows.Forms.ComboBox();
             this.cartesianChart1 = new LiveCharts.WinForms.CartesianChart();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.pictureBox6 = new System.Windows.Forms.PictureBox();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.RejectedGrid)).BeginInit();
             this.panel1.SuspendLayout();
+            this.panel6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
             this.SuspendLayout();
-            // 
-            // projectitle
-            // 
-            this.projectitle.AutoSize = true;
-            this.projectitle.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold);
-            this.projectitle.ForeColor = System.Drawing.Color.Black;
-            this.projectitle.Location = new System.Drawing.Point(30, 37);
-            this.projectitle.Name = "projectitle";
-            this.projectitle.Size = new System.Drawing.Size(134, 30);
-            this.projectitle.TabIndex = 5;
-            this.projectitle.Text = "Rejected Lot";
             // 
             // OpenReject
             // 
@@ -287,7 +280,7 @@
             "Rotor",
             "Winding",
             "Circuit"});
-            this.sectionfilter.Location = new System.Drawing.Point(207, 44);
+            this.sectionfilter.Location = new System.Drawing.Point(198, 38);
             this.sectionfilter.MaxDropDownItems = 30;
             this.sectionfilter.Name = "sectionfilter";
             this.sectionfilter.Size = new System.Drawing.Size(121, 23);
@@ -301,7 +294,7 @@
             "-- Filter Status --",
             "Open",
             "Close"});
-            this.filteritems.Location = new System.Drawing.Point(355, 44);
+            this.filteritems.Location = new System.Drawing.Point(342, 37);
             this.filteritems.Name = "filteritems";
             this.filteritems.Size = new System.Drawing.Size(121, 23);
             this.filteritems.TabIndex = 21;
@@ -328,29 +321,62 @@
             this.panel1.Size = new System.Drawing.Size(1269, 241);
             this.panel1.TabIndex = 24;
             // 
+            // panel6
+            // 
+            this.panel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(246)))), ((int)(((byte)(255)))));
+            this.panel6.Controls.Add(this.pictureBox6);
+            this.panel6.Controls.Add(this.label2);
+            this.panel6.Location = new System.Drawing.Point(35, 32);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(139, 35);
+            this.panel6.TabIndex = 25;
+            // 
+            // pictureBox6
+            // 
+            this.pictureBox6.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.pictureBox6.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox6.Image")));
+            this.pictureBox6.Location = new System.Drawing.Point(18, 10);
+            this.pictureBox6.Name = "pictureBox6";
+            this.pictureBox6.Size = new System.Drawing.Size(22, 19);
+            this.pictureBox6.TabIndex = 26;
+            this.pictureBox6.TabStop = false;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.BackColor = System.Drawing.Color.Transparent;
+            this.label2.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(97)))), ((int)(((byte)(238)))));
+            this.label2.Location = new System.Drawing.Point(42, 9);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(86, 16);
+            this.label2.TabIndex = 19;
+            this.label2.Text = "Rejected Lot";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // Rejected
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.panel6);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.filteritems);
             this.Controls.Add(this.sectionfilter);
             this.Controls.Add(this.RejectedGrid);
             this.Controls.Add(this.OpenReject);
-            this.Controls.Add(this.projectitle);
             this.Name = "Rejected";
             this.Size = new System.Drawing.Size(1349, 806);
             this.Load += new System.EventHandler(this.Rejected_Load);
             ((System.ComponentModel.ISupportInitialize)(this.RejectedGrid)).EndInit();
             this.panel1.ResumeLayout(false);
+            this.panel6.ResumeLayout(false);
+            this.panel6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Label projectitle;
         private System.Windows.Forms.Button OpenReject;
         private System.Windows.Forms.DataGridView RejectedGrid;
         private System.Windows.Forms.ComboBox sectionfilter;
@@ -370,5 +396,8 @@
         private System.Windows.Forms.DataGridViewImageColumn Delete;
         private LiveCharts.WinForms.CartesianChart cartesianChart1;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.PictureBox pictureBox6;
+        private System.Windows.Forms.Label label2;
     }
 }

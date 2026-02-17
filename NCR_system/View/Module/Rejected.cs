@@ -368,7 +368,7 @@ namespace NCR_system.View.Module
                     DataLabels = true,                            // <--- VALUE LABELS
                     LabelPoint = p => p.Y.ToString("N0"),
 
-                    Fill = new SolidColorBrush(System.Windows.Media.Color.FromRgb(66, 133, 244)), // Blue
+                    Fill = new SolidColorBrush(System.Windows.Media.Color.FromRgb(84, 130, 53)), // Green
                     ColumnPadding = 20
                 },
                 new ColumnSeries
@@ -380,7 +380,7 @@ namespace NCR_system.View.Module
                      DataLabels = true,                            // <--- VALUE LABELS
                     LabelPoint = p => p.Y.ToString("N0"),
 
-                    Fill = new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 128, 0)),  // Orange
+                    Fill = new SolidColorBrush(System.Windows.Media.Color.FromRgb(192, 0, 0)),  // Red
                     ColumnPadding = 20                               // <--- spacing inside the group
                 }
             };

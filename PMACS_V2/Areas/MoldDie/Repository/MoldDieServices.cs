@@ -298,79 +298,75 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             }
             else
             {
-            
+                // Get all related PartNo using DieSerial
+                var partList = await GetPartNoByDieSerial(mold.DieSerial);
+                if (!partList.Any()) return false;
 
 
-
-                string getlastCycle = $@"SELECT TOP 1 ISNULL(Total, 0)
-                                        FROM DieMold_Daily
-                                        WHERE PartNo = @PartNo
-                                        AND DateInput < @DateInput
-                                        ORDER BY DateInput DESC";
-
-                int lastCycle = await SqlDataAccess.GetCountData(getlastCycle,
-                               new
-                               {
-                                   PartNo = mold.PartNo,
-                                   DateInput = mold.DateInput
-                               });
-
-                Debug.WriteLine("Last Cycle : " + lastCycle);
-
-                int newCycle = lastCycle + mold.CycleShot;
-                Debug.WriteLine("INputed Cycle  : " + mold.CycleShot);
-                Debug.WriteLine("New Cycle : " + newCycle);
-
-
-
-                string dailyUpdate = @"
-                    UPDATE DieMold_Daily
-                    SET 
-                        CycleShot = @CycleShot,
-                        Total = @Total,
-                        MachineNo = @MachineNo,
-                        Remarks = @Remarks,
-                        Mincharge = @Mincharge
-                    WHERE RecordID = @RecordID";
-
-                var parameters = new
+                foreach (var part in partList)
                 {
-                    RecordID = mold.RecordID,
-                    CycleShot = mold.CycleShot,
-                    Total = newCycle,
-                    MachineNo = mold.MachineNo,
-                    Remarks = mold.Remarks,
-                    Mincharge = mold.Mincharge
-                };
-
-                bool dailyUpdated = await SqlDataAccess.UpdateInsertQuery(dailyUpdate, parameters);
-                if (!dailyUpdated) return false;
-
-                string monitorUpdate = @"
-                      UPDATE DieMoldMonitor
-                                SET TotalDie = @TotalDie
+                    // Get last total BEFORE this date
+                    string getLastTotal = @"
+                                SELECT TOP 1 ISNULL(Total, 0)
+                                FROM DieMold_Daily
                                 WHERE PartNo = @PartNo
-                                  AND CAST(DateAction AS DATE) = @DateAction;
+                                  AND DateInput < @DateInput
+                                ORDER BY DateInput DESC, RecordID DESC";
+
+                    int lastTotal = await SqlDataAccess.GetCountData(getLastTotal, new
+                    {
+                        PartNo = part,
+                        DateInput = mold.DateInput
+                    });
+
+                    int newTotal = lastTotal + mold.CycleShot;
+
+                    // Update DAILY
+                    string updateDaily = @"
+                            UPDATE DieMold_Daily
+                            SET
+                                CycleShot = @CycleShot,
+                                Total = @Total,
+                                MachineNo = @MachineNo,
+                                Remarks = @Remarks,
+                                Mincharge = @Mincharge
+                            WHERE RecordID = @RecordID
+                              AND PartNo = @PartNo";
+
+                    await SqlDataAccess.UpdateInsertQuery(updateDaily, new
+                    {
+                        mold.RecordID,
+                        PartNo = part,
+                        mold.CycleShot,
+                        Total = newTotal,
+                        mold.MachineNo,
+                        mold.Remarks,
+                        mold.Mincharge
+                    });
+
+                    // Update / Insert MONITOR
+                    string monitorUpdate = @"
+                        UPDATE DieMoldMonitor
+                        SET TotalDie = @TotalDie
+                        WHERE PartNo = @PartNo
+                          AND CAST(DateAction AS DATE) = @DateAction;
 
                         IF @@ROWCOUNT = 0
                         BEGIN
-                           INSERT INTO DieMoldMonitor (PartNo, DateAction, TotalDie)
-                            SELECT @PartNo, @DateAction, @TotalDie
-                            WHERE NOT EXISTS (
-                                SELECT 1
-                                FROM DieMoldMonitor
-                                WHERE PartNo = @PartNo
-                                  AND CAST(DateAction AS DATE) = @DateAction
-                            );
-                      END";
+                            INSERT INTO DieMoldMonitor (PartNo, DateAction, TotalDie)
+                            VALUES (@PartNo, @DateAction, @TotalDie)
+                        END";
 
-                return await SqlDataAccess.UpdateInsertQuery(monitorUpdate, new
-                {
-                    PartNo = mold.PartNo,
-                    TotalDie = mold.CycleShot,
-                    DateAction = mold.DateInput
-                });
+                    await SqlDataAccess.UpdateInsertQuery(monitorUpdate, new
+                    {
+                        PartNo = part,
+                        TotalDie = mold.CycleShot,
+                        DateAction = mold.DateInput
+                    });
+                }
 
+                Debug.WriteLine("✔ DieSerial update applied to ALL related PartNo");
+                return true;
             }
         }
         public Task<bool> ChangeStatsDaily(int ID, int Stats)
@@ -383,23 +379,17 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             bool isPartNo = !string.IsNullOrWhiteSpace(searchValue)
                            && searchValue.StartsWith("0");
 
-            string filter = isPartNo ? "p.PartNo =@Searchval" : "p.DieSerial =@Searchval";
+            string filter = isPartNo ? "PartNo =@Searchval" : "DieSerial =@Searchval";
 
-            string sql = $@"
-                    SELECT COUNT(*)
-                    FROM DieMold_Daily d
-                    INNER JOIN DieMold_MoldingMainParts p 
-                        ON p.PartNo = d.PartNo
-                    WHERE {filter}
-                      AND CAST(d.DateInput AS DATE) = @DateInput;
-                ";
+            string sql = $@"SELECT Count
+                       FROM DieMoldDailyInputChecker
+                       WHERE {filter}
+                      AND CAST(DateInput AS DATE) = @DateInput;";
 
-            int count = await SqlDataAccess.GetCountData(
-                sql,
-                new { Searchval = searchValue, DateInput = Dateinput }
-            );
+            int count = await SqlDataAccess.GetCountData(sql, new { Searchval = searchValue, DateInput = Dateinput });
 
-            return count > 1;
+            return count > 2;
+
         }
         public Task<bool> DeleteDailyMoldie(int ID)
         {
@@ -492,25 +482,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             int TotalCycle = checkCycle ? 0 : total;
             int NewStats = checkCycle ? 2 : status;
 
-            //string sql = @"
-            //    UPDATE DieMold_Daily
-            //    SET 
-            //        CycleShot = @CycleShot,
-            //        Total = @Total,
-            //        MachineNo = @MachineNo,
-            //        Remarks = @Remarks,
-            //        Mincharge = @Mincharge,
-            //        Status = @Status
-            //    WHERE PartNo = @PartNo
-            //      AND CAST(DateInput AS DATE) = CAST(@DateInput AS DATE);
-
-            //    IF @@ROWCOUNT = 0
-            //    BEGIN
-            //        INSERT INTO DieMold_Daily
-            //        (PartNo, DateInput, CycleShot, Total, MachineNo, Remarks, Mincharge, Status)
-            //        VALUES
-            //        (@PartNo, @DateInput, @CycleShot, @Total, @MachineNo, @Remarks, @Mincharge, @Status);
-            //    END";
+           
 
             string sql = @"
                     INSERT INTO DieMold_Daily
@@ -954,5 +926,15 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             return SqlDataAccess.GetData<DieMoldMonitoringModel>(strsql, new { DieSerial = DieSerial });
         }
 
+
+        public Task<List<string>> GetPartNoByDieSerial(string dieSerial)
+        {
+            string sql = @"
+                SELECT PartNo
+                FROM DieMold_MoldingMainParts
+                WHERE DieSerial = @DieSerial";
+
+            return SqlDataAccess.GetData<string>(sql, new { DieSerial = dieSerial });
+        }
     }
 }

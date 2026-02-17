@@ -440,6 +440,7 @@
          formData.append('ProcessID', selectionProcess);
          formData.append("PartNo", strpartnum);
          formData.append("DieSerial", searchDie);
+         formData.append("SearchMode", isSeletedSearch); // 0 = PartNo, 1 = DieSerial
 
          const data = Object.fromEntries(formData);
 
@@ -450,18 +451,21 @@
              DateInput: data.DateInput
          });
 
-
+         
          if (checkduplicate) {
+             let searchname = isSeletedSearch === 0 ? "Partnumber " : "Die Serial ";
+
              Swal.fire({
                  icon: "error",
-                 text: "Partnumber is already Input ",
+                 text: searchname + " is already Input ",
                  timer: 1500,
                  showConfirmButton: false
              });
              return;
          }
 
-         let res = await postData('@Url.Action("AddDailyMoldDieMonitor", "Mold")', data);
+
+         let res = await postData('@Url.Action("SaveDailyMoldDieMonitor", "Mold")', data);
           if (res && res.Success) {
               showSuccessMessage();
               if (isSeletedSearch === 0) {
@@ -480,9 +484,6 @@
                    showConfirmButton: false
                });
            }
-
-
-
 
      });
 

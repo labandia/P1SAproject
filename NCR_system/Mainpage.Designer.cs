@@ -32,15 +32,15 @@
             this.panelContainer = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.Headerpanel = new System.Windows.Forms.Panel();
-            this.button5 = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.Dashbtn = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.button4 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.Customerbtn = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.Shipmentbtn = new System.Windows.Forms.Button();
-            this.Rejectedbtn = new System.Windows.Forms.Button();
-            this.ncrbtn = new System.Windows.Forms.Button();
+            this.Recurrencebtn = new System.Windows.Forms.Button();
+            this.SDCbtn = new System.Windows.Forms.Button();
+            this.Mainbtn = new System.Windows.Forms.Button();
+            this.Shipbtn = new System.Windows.Forms.Button();
+            this.rejectBtn = new System.Windows.Forms.Button();
             this.processbtn = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.button2 = new System.Windows.Forms.Button();
@@ -64,8 +64,8 @@
             // 
             this.tableLayoutPanel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(246)))), ((int)(((byte)(250)))));
             this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 18.49405F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 81.50594F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.07407F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 83.92593F));
             this.tableLayoutPanel1.Controls.Add(this.Headerpanel, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.panel2, 1, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -79,52 +79,63 @@
             // Headerpanel
             // 
             this.Headerpanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(246)))), ((int)(((byte)(250)))));
-            this.Headerpanel.Controls.Add(this.button5);
+            this.Headerpanel.Controls.Add(this.label2);
+            this.Headerpanel.Controls.Add(this.SDCbtn);
+            this.Headerpanel.Controls.Add(this.Dashbtn);
             this.Headerpanel.Controls.Add(this.label1);
             this.Headerpanel.Controls.Add(this.button4);
-            this.Headerpanel.Controls.Add(this.button3);
-            this.Headerpanel.Controls.Add(this.Customerbtn);
-            this.Headerpanel.Controls.Add(this.button1);
-            this.Headerpanel.Controls.Add(this.Shipmentbtn);
-            this.Headerpanel.Controls.Add(this.Rejectedbtn);
-            this.Headerpanel.Controls.Add(this.ncrbtn);
+            this.Headerpanel.Controls.Add(this.Recurrencebtn);
+            this.Headerpanel.Controls.Add(this.Mainbtn);
+            this.Headerpanel.Controls.Add(this.Shipbtn);
+            this.Headerpanel.Controls.Add(this.rejectBtn);
             this.Headerpanel.Controls.Add(this.processbtn);
             this.Headerpanel.Dock = System.Windows.Forms.DockStyle.Left;
             this.Headerpanel.Location = new System.Drawing.Point(3, 3);
             this.Headerpanel.Name = "Headerpanel";
-            this.Headerpanel.Size = new System.Drawing.Size(243, 723);
+            this.Headerpanel.Size = new System.Drawing.Size(210, 723);
             this.Headerpanel.TabIndex = 2;
             // 
-            // button5
+            // label2
             // 
-            this.button5.AutoSize = true;
-            this.button5.BackColor = System.Drawing.Color.Transparent;
-            this.button5.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button5.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(7)))), ((int)(((byte)(4)))), ((int)(((byte)(39)))));
-            this.button5.FlatAppearance.BorderSize = 0;
-            this.button5.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
-            this.button5.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
-            this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button5.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(111)))), ((int)(((byte)(126)))));
-            this.button5.Image = ((System.Drawing.Image)(resources.GetObject("button5.Image")));
-            this.button5.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button5.Location = new System.Drawing.Point(15, 120);
-            this.button5.Name = "button5";
-            this.button5.Padding = new System.Windows.Forms.Padding(10, 0, 85, 0);
-            this.button5.Size = new System.Drawing.Size(216, 46);
-            this.button5.TabIndex = 21;
-            this.button5.Text = "DashBoard";
-            this.button5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.button5.UseVisualStyleBackColor = false;
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(28, 93);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(68, 15);
+            this.label2.TabIndex = 22;
+            this.label2.Text = "OVERVIEW";
+            // 
+            // Dashbtn
+            // 
+            this.Dashbtn.AutoSize = true;
+            this.Dashbtn.BackColor = System.Drawing.Color.Transparent;
+            this.Dashbtn.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.Dashbtn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(7)))), ((int)(((byte)(4)))), ((int)(((byte)(39)))));
+            this.Dashbtn.FlatAppearance.BorderSize = 0;
+            this.Dashbtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
+            this.Dashbtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
+            this.Dashbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Dashbtn.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Dashbtn.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(111)))), ((int)(((byte)(126)))));
+            this.Dashbtn.Image = ((System.Drawing.Image)(resources.GetObject("Dashbtn.Image")));
+            this.Dashbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Dashbtn.Location = new System.Drawing.Point(15, 120);
+            this.Dashbtn.Name = "Dashbtn";
+            this.Dashbtn.Padding = new System.Windows.Forms.Padding(10, 0, 55, 0);
+            this.Dashbtn.Size = new System.Drawing.Size(180, 46);
+            this.Dashbtn.TabIndex = 21;
+            this.Dashbtn.Text = "Dashboard";
+            this.Dashbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Dashbtn.UseVisualStyleBackColor = false;
+            this.Dashbtn.Click += new System.EventHandler(this.Dashbtn_Click);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(28, 193);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(84, 17);
+            this.label1.Size = new System.Drawing.Size(77, 15);
             this.label1.TabIndex = 20;
             this.label1.Text = "CATEGORIES";
             // 
@@ -139,172 +150,147 @@
             this.button4.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(34)))), ((int)(((byte)(200)))));
             this.button4.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(34)))), ((int)(((byte)(200)))));
             this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button4.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button4.ForeColor = System.Drawing.Color.Black;
             this.button4.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button4.Location = new System.Drawing.Point(54, 25);
+            this.button4.Location = new System.Drawing.Point(52, 25);
             this.button4.Name = "button4";
             this.button4.Padding = new System.Windows.Forms.Padding(0, 0, 0, 10);
-            this.button4.Size = new System.Drawing.Size(177, 58);
+            this.button4.Size = new System.Drawing.Size(144, 65);
             this.button4.TabIndex = 19;
             this.button4.Text = "P1SA Nonconformity Monitor System";
-            this.button4.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.button4.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.button4.UseVisualStyleBackColor = false;
             // 
-            // button3
+            // Recurrencebtn
             // 
-            this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.Recurrencebtn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.button3.AutoSize = true;
-            this.button3.BackColor = System.Drawing.Color.Transparent;
-            this.button3.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button3.FlatAppearance.BorderColor = System.Drawing.Color.White;
-            this.button3.FlatAppearance.BorderSize = 0;
-            this.button3.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
-            this.button3.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
-            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button3.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(111)))), ((int)(((byte)(126)))));
-            this.button3.Image = ((System.Drawing.Image)(resources.GetObject("button3.Image")));
-            this.button3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button3.Location = new System.Drawing.Point(13, 547);
-            this.button3.Name = "button3";
-            this.button3.Padding = new System.Windows.Forms.Padding(10, 0, 80, 0);
-            this.button3.Size = new System.Drawing.Size(218, 46);
-            this.button3.TabIndex = 18;
-            this.button3.Text = "Recurrence";
-            this.button3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.button3.UseVisualStyleBackColor = false;
+            this.Recurrencebtn.AutoSize = true;
+            this.Recurrencebtn.BackColor = System.Drawing.Color.Transparent;
+            this.Recurrencebtn.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.Recurrencebtn.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.Recurrencebtn.FlatAppearance.BorderSize = 0;
+            this.Recurrencebtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
+            this.Recurrencebtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
+            this.Recurrencebtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Recurrencebtn.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Recurrencebtn.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(111)))), ((int)(((byte)(126)))));
+            this.Recurrencebtn.Image = ((System.Drawing.Image)(resources.GetObject("Recurrencebtn.Image")));
+            this.Recurrencebtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Recurrencebtn.Location = new System.Drawing.Point(13, 489);
+            this.Recurrencebtn.Name = "Recurrencebtn";
+            this.Recurrencebtn.Padding = new System.Windows.Forms.Padding(10, 0, 55, 0);
+            this.Recurrencebtn.Size = new System.Drawing.Size(181, 46);
+            this.Recurrencebtn.TabIndex = 18;
+            this.Recurrencebtn.Text = "Recurrence";
+            this.Recurrencebtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Recurrencebtn.UseVisualStyleBackColor = false;
+            this.Recurrencebtn.Click += new System.EventHandler(this.Recurrencebtn_Click);
             // 
-            // Customerbtn
+            // SDCbtn
             // 
-            this.Customerbtn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.SDCbtn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Customerbtn.AutoSize = true;
-            this.Customerbtn.BackColor = System.Drawing.Color.Transparent;
-            this.Customerbtn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.Customerbtn.FlatAppearance.BorderColor = System.Drawing.Color.White;
-            this.Customerbtn.FlatAppearance.BorderSize = 0;
-            this.Customerbtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
-            this.Customerbtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
-            this.Customerbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Customerbtn.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Customerbtn.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(111)))), ((int)(((byte)(126)))));
-            this.Customerbtn.Image = ((System.Drawing.Image)(resources.GetObject("Customerbtn.Image")));
-            this.Customerbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Customerbtn.Location = new System.Drawing.Point(13, 285);
-            this.Customerbtn.Name = "Customerbtn";
-            this.Customerbtn.Padding = new System.Windows.Forms.Padding(10, 0, 105, 0);
-            this.Customerbtn.Size = new System.Drawing.Size(218, 46);
-            this.Customerbtn.TabIndex = 17;
-            this.Customerbtn.Text = "SDC CC";
-            this.Customerbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.Customerbtn.UseVisualStyleBackColor = false;
-            this.Customerbtn.Click += new System.EventHandler(this.Customerbtn_Click_1);
+            this.SDCbtn.AutoSize = true;
+            this.SDCbtn.BackColor = System.Drawing.Color.Transparent;
+            this.SDCbtn.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.SDCbtn.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.SDCbtn.FlatAppearance.BorderSize = 0;
+            this.SDCbtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
+            this.SDCbtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
+            this.SDCbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.SDCbtn.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SDCbtn.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(111)))), ((int)(((byte)(126)))));
+            this.SDCbtn.Image = ((System.Drawing.Image)(resources.GetObject("SDCbtn.Image")));
+            this.SDCbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.SDCbtn.Location = new System.Drawing.Point(15, 229);
+            this.SDCbtn.Name = "SDCbtn";
+            this.SDCbtn.Padding = new System.Windows.Forms.Padding(10, 0, 45, 0);
+            this.SDCbtn.Size = new System.Drawing.Size(200, 46);
+            this.SDCbtn.TabIndex = 17;
+            this.SDCbtn.Text = "Customer Complaint";
+            this.SDCbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.SDCbtn.UseVisualStyleBackColor = false;
+            this.SDCbtn.Click += new System.EventHandler(this.SDCClickbtn);
             // 
-            // button1
+            // Mainbtn
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.Mainbtn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.AutoSize = true;
-            this.button1.BackColor = System.Drawing.Color.Transparent;
-            this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button1.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
-            this.button1.FlatAppearance.BorderSize = 0;
-            this.button1.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
-            this.button1.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(111)))), ((int)(((byte)(126)))));
-            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
-            this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.Location = new System.Drawing.Point(13, 231);
-            this.button1.Name = "button1";
-            this.button1.Padding = new System.Windows.Forms.Padding(10, 0, 80, 0);
-            this.button1.Size = new System.Drawing.Size(218, 46);
-            this.button1.TabIndex = 16;
-            this.button1.Text = " External CC";
-            this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.button1.UseVisualStyleBackColor = false;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.Mainbtn.AutoSize = true;
+            this.Mainbtn.BackColor = System.Drawing.Color.Transparent;
+            this.Mainbtn.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.Mainbtn.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.Mainbtn.FlatAppearance.BorderSize = 0;
+            this.Mainbtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
+            this.Mainbtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
+            this.Mainbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Mainbtn.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Mainbtn.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(111)))), ((int)(((byte)(126)))));
+            this.Mainbtn.Image = ((System.Drawing.Image)(resources.GetObject("Mainbtn.Image")));
+            this.Mainbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Mainbtn.Location = new System.Drawing.Point(13, 437);
+            this.Mainbtn.Name = "Mainbtn";
+            this.Mainbtn.Padding = new System.Windows.Forms.Padding(10, 0, 10, 0);
+            this.Mainbtn.Size = new System.Drawing.Size(181, 46);
+            this.Mainbtn.TabIndex = 15;
+            this.Mainbtn.Text = "Main Registration";
+            this.Mainbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Mainbtn.UseVisualStyleBackColor = false;
+            this.Mainbtn.Click += new System.EventHandler(this.Mainbtn_Click);
             // 
-            // Shipmentbtn
+            // Shipbtn
             // 
-            this.Shipmentbtn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.Shipbtn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Shipmentbtn.AutoSize = true;
-            this.Shipmentbtn.BackColor = System.Drawing.Color.Transparent;
-            this.Shipmentbtn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.Shipmentbtn.FlatAppearance.BorderColor = System.Drawing.Color.White;
-            this.Shipmentbtn.FlatAppearance.BorderSize = 0;
-            this.Shipmentbtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
-            this.Shipmentbtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
-            this.Shipmentbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Shipmentbtn.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Shipmentbtn.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(111)))), ((int)(((byte)(126)))));
-            this.Shipmentbtn.Image = ((System.Drawing.Image)(resources.GetObject("Shipmentbtn.Image")));
-            this.Shipmentbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Shipmentbtn.Location = new System.Drawing.Point(13, 495);
-            this.Shipmentbtn.Name = "Shipmentbtn";
-            this.Shipmentbtn.Padding = new System.Windows.Forms.Padding(10, 0, 40, 0);
-            this.Shipmentbtn.Size = new System.Drawing.Size(218, 46);
-            this.Shipmentbtn.TabIndex = 15;
-            this.Shipmentbtn.Text = "Main Registration";
-            this.Shipmentbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.Shipmentbtn.UseVisualStyleBackColor = false;
-            this.Shipmentbtn.Click += new System.EventHandler(this.Shipmentbtn_Click);
+            this.Shipbtn.AutoSize = true;
+            this.Shipbtn.BackColor = System.Drawing.Color.Transparent;
+            this.Shipbtn.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.Shipbtn.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.Shipbtn.FlatAppearance.BorderSize = 0;
+            this.Shipbtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
+            this.Shipbtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
+            this.Shipbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Shipbtn.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Shipbtn.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(111)))), ((int)(((byte)(126)))));
+            this.Shipbtn.Image = ((System.Drawing.Image)(resources.GetObject("Shipbtn.Image")));
+            this.Shipbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Shipbtn.Location = new System.Drawing.Point(13, 388);
+            this.Shipbtn.Name = "Shipbtn";
+            this.Shipbtn.Padding = new System.Windows.Forms.Padding(10, 0, 20, 0);
+            this.Shipbtn.Size = new System.Drawing.Size(181, 46);
+            this.Shipbtn.TabIndex = 14;
+            this.Shipbtn.Text = " Shipment Delay";
+            this.Shipbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Shipbtn.UseVisualStyleBackColor = false;
+            this.Shipbtn.Click += new System.EventHandler(this.Shipbtn_Click);
             // 
-            // Rejectedbtn
+            // rejectBtn
             // 
-            this.Rejectedbtn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.rejectBtn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Rejectedbtn.AutoSize = true;
-            this.Rejectedbtn.BackColor = System.Drawing.Color.Transparent;
-            this.Rejectedbtn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.Rejectedbtn.FlatAppearance.BorderColor = System.Drawing.Color.White;
-            this.Rejectedbtn.FlatAppearance.BorderSize = 0;
-            this.Rejectedbtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
-            this.Rejectedbtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
-            this.Rejectedbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Rejectedbtn.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Rejectedbtn.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(111)))), ((int)(((byte)(126)))));
-            this.Rejectedbtn.Image = ((System.Drawing.Image)(resources.GetObject("Rejectedbtn.Image")));
-            this.Rejectedbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Rejectedbtn.Location = new System.Drawing.Point(13, 446);
-            this.Rejectedbtn.Name = "Rejectedbtn";
-            this.Rejectedbtn.Padding = new System.Windows.Forms.Padding(10, 0, 50, 0);
-            this.Rejectedbtn.Size = new System.Drawing.Size(218, 46);
-            this.Rejectedbtn.TabIndex = 14;
-            this.Rejectedbtn.Text = " Shipment Delay";
-            this.Rejectedbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.Rejectedbtn.UseVisualStyleBackColor = false;
-            this.Rejectedbtn.Click += new System.EventHandler(this.Rejectedbtn_Click);
-            // 
-            // ncrbtn
-            // 
-            this.ncrbtn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ncrbtn.AutoSize = true;
-            this.ncrbtn.BackColor = System.Drawing.Color.Transparent;
-            this.ncrbtn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.ncrbtn.FlatAppearance.BorderColor = System.Drawing.Color.White;
-            this.ncrbtn.FlatAppearance.BorderSize = 0;
-            this.ncrbtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
-            this.ncrbtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
-            this.ncrbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ncrbtn.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ncrbtn.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(111)))), ((int)(((byte)(126)))));
-            this.ncrbtn.Image = ((System.Drawing.Image)(resources.GetObject("ncrbtn.Image")));
-            this.ncrbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.ncrbtn.Location = new System.Drawing.Point(13, 393);
-            this.ncrbtn.Name = "ncrbtn";
-            this.ncrbtn.Padding = new System.Windows.Forms.Padding(10, 0, 75, 0);
-            this.ncrbtn.Size = new System.Drawing.Size(218, 46);
-            this.ncrbtn.TabIndex = 13;
-            this.ncrbtn.Text = "Rejected Lot";
-            this.ncrbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.ncrbtn.UseVisualStyleBackColor = false;
-            this.ncrbtn.Click += new System.EventHandler(this.ncrbtn_Click);
+            this.rejectBtn.AutoSize = true;
+            this.rejectBtn.BackColor = System.Drawing.Color.Transparent;
+            this.rejectBtn.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.rejectBtn.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.rejectBtn.FlatAppearance.BorderSize = 0;
+            this.rejectBtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
+            this.rejectBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
+            this.rejectBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rejectBtn.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rejectBtn.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(111)))), ((int)(((byte)(126)))));
+            this.rejectBtn.Image = ((System.Drawing.Image)(resources.GetObject("rejectBtn.Image")));
+            this.rejectBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.rejectBtn.Location = new System.Drawing.Point(13, 335);
+            this.rejectBtn.Name = "rejectBtn";
+            this.rejectBtn.Padding = new System.Windows.Forms.Padding(10, 0, 45, 0);
+            this.rejectBtn.Size = new System.Drawing.Size(181, 46);
+            this.rejectBtn.TabIndex = 13;
+            this.rejectBtn.Text = "Rejected Lot";
+            this.rejectBtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.rejectBtn.UseVisualStyleBackColor = false;
+            this.rejectBtn.Click += new System.EventHandler(this.rejectBtn_Click);
             // 
             // processbtn
             // 
@@ -318,14 +304,14 @@
             this.processbtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
             this.processbtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
             this.processbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.processbtn.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.processbtn.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.processbtn.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(111)))), ((int)(((byte)(126)))));
             this.processbtn.Image = ((System.Drawing.Image)(resources.GetObject("processbtn.Image")));
             this.processbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.processbtn.Location = new System.Drawing.Point(13, 339);
+            this.processbtn.Location = new System.Drawing.Point(13, 281);
             this.processbtn.Name = "processbtn";
-            this.processbtn.Padding = new System.Windows.Forms.Padding(10, 0, 50, 0);
-            this.processbtn.Size = new System.Drawing.Size(218, 46);
+            this.processbtn.Padding = new System.Windows.Forms.Padding(10, 0, 20, 0);
+            this.processbtn.Size = new System.Drawing.Size(181, 46);
             this.processbtn.TabIndex = 9;
             this.processbtn.Text = "Inprocess Defect";
             this.processbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -337,9 +323,9 @@
             this.panel2.BackColor = System.Drawing.Color.White;
             this.panel2.Controls.Add(this.button2);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(252, 3);
+            this.panel2.Location = new System.Drawing.Point(219, 3);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1095, 723);
+            this.panel2.Size = new System.Drawing.Size(1128, 723);
             this.panel2.TabIndex = 3;
             // 
             // button2
@@ -375,17 +361,17 @@
         private System.Windows.Forms.Panel panelContainer;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Panel Headerpanel;
-        private System.Windows.Forms.Button Customerbtn;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button Shipmentbtn;
-        private System.Windows.Forms.Button Rejectedbtn;
-        private System.Windows.Forms.Button ncrbtn;
+        private System.Windows.Forms.Button SDCbtn;
+        private System.Windows.Forms.Button Mainbtn;
+        private System.Windows.Forms.Button Shipbtn;
+        private System.Windows.Forms.Button rejectBtn;
         private System.Windows.Forms.Button processbtn;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button Recurrencebtn;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button Dashbtn;
+        private System.Windows.Forms.Label label2;
     }
 }

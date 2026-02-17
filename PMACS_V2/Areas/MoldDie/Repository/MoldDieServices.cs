@@ -559,11 +559,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                 WHERE DieSerial = @searchValue";
 
             var items = await  SqlDataAccess.GetData<DieMoldMonitoringModel>(
-                sql,
-                new
-                {
-                    SearchValue = partno?.Trim()
-                });
+                sql,new { SearchValue = partno?.Trim() });
 
             return items.FirstOrDefault();  
         }

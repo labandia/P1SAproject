@@ -277,35 +277,32 @@ namespace PMACS_V2.Areas.MoldDie.Repository
 
                 Debug.WriteLine("Last Cycle Time Die Serial : " + lastTotal);
 
+                var history = await GetMasterlistParts(part);
 
-                var histories = await GetByDieSerialAsync(mold.DieSerial);
-
-                var history = histories
-                        .OrderByDescending(x => x.PartNo)   // or DieNumber / CreatedDate
-                        .FirstOrDefault();
+ 
 
                 //if (history == null) return false;
                 Debug.WriteLine("Done Getting the Last Record History  ... ");
 
                 if (history == null) return false;
 
-                var dimensionQuality = history.Dimension_Quality;
-
-                if (!histories.Any()) return false;
+                //if (history == null) return false;
+                Debug.WriteLine("Done Getting the Last Record History  ... ");
+                Debug.WriteLine(history.Dimension_Quality);
 
                 // correct Dimension_Quality per PartNo
                 var (moldtotal, moldstatus) = CalculateTotalAndStatus(
                   lastTotal,
                   mold.CycleShot,
                   mold.ProcessID,
-                  dimensionQuality);
+                  history.Dimension_Quality);
 
                 Debug.WriteLine("Done Calculating Total and Status ... ");
 
                 // =====================================================
                 // DAILY MONITORING 
                 // =====================================================
-                await UpsertDailySerialAsync(part, mold.DateInput, mold.CycleShot, moldtotal, moldstatus, mold);
+                await UpsertDailyAsync(part, mold.DateInput, mold.CycleShot, moldtotal, moldstatus, mold);
                 Debug.WriteLine("Done Updating Daily ... ");
 
                 // =====================================================
@@ -351,43 +348,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
         }
 
 
-        public static async Task UpsertDailySerialAsync(string partNo,
-          string date,
-          int cycleShot,
-          int total,
-          int status, DieMoldMonitoringModel mold)
-        {
-            bool checkCycle = cycleShot == 0;
-
-            int TotalCycle = checkCycle ? 0 : total;
-            int NewStats = checkCycle ? 2 : status;
-
-            string sql = @"
-                IF NOT EXISTS (
-                    SELECT 1
-                    FROM DieMold_Daily
-                    WHERE PartNo = @PartNo
-                      AND DateInput = @DateInput
-                )
-                BEGIN
-                    INSERT INTO DieMold_Daily
-                    (PartNo, DateInput, CycleShot, Total, MachineNo, Remarks, Mincharge, Status)
-                    VALUES
-                    (@PartNo, @DateInput, @CycleShot, @Total, @MachineNo, @Remarks, @Mincharge, @Status)
-                END";
-
-            await SqlDataAccess.UpdateInsertQuery(sql, new
-            {
-                PartNo = partNo,
-                DateInput = date,
-                CycleShot = cycleShot,
-                Total = TotalCycle,
-                MachineNo = mold.MachineNo,
-                Remarks = mold.Remarks,
-                Mincharge = mold.Mincharge,
-                Status = NewStats
-            });
-        }
+     
 
 
         // ===========================================================
@@ -417,5 +378,52 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             await SqlDataAccess.UpdateInsertQuery(sql,
                         new { Value = value, DateInput = dateinput });
         }
+
+
+
+        public static async Task<bool> UpdateAllMoldieData(DieMoldMonitoringModel model)
+        {
+            // 1. Updated the the first row Data Baded on RecordID
+            //   - Using the RecordID to update the specific row in DieMold_Daily
+            /* --------------------------------------------------
+                * 1. Update FIRST (Selected) Record
+                * --------------------------------------------------*/
+            await SqlDataAccess.UpdateInsertQuery(@"
+                    UPDATE DieMoldDaily
+                    SET CycleShot = @CycleShot,
+                        Total      = @Total,
+                        Status     = @Status
+                    WHERE RecordID = @RecordID",
+                new
+                {
+                    model.RecordID,
+                    model.CycleShot,
+                    model.Total,
+                    model.Status
+                });
+            // 2. Get all the MoldDie_Daily records and stops if the last record is 0
+
+            /* --------------------------------------------------
+              * 2. Get ALL records (LAST → FIRST)
+              * --------------------------------------------------*/
+            var records = await SqlDataAccess.GetData<DieMoldMonitoringModel>(
+                    @"
+                    SELECT RecordID, CycleShot, Total, Status
+                    FROM DieMoldDaily
+                    WHERE PartNo = @PartNo
+                    ORDER BY RecordID DESC",
+                    new { model.PartNo });
+
+            // 3. loop through all the records and update the Total and Status based on the new CycleShot value
+            // Computation of new CycleShot is from the Total of the first record + the CycleShot of the next record not then current 
+            //  so the CycleShot is plus one to index of the loop to get the next record CycleShot value
+
+            // 4. And Update the newTotalValue to the total of the MoldDie_Daily column
+
+            // 5. next go to the next loop and repeat the same process until the last record
+
+            return await Task.FromResult(true);
+        }
+
     }
 }

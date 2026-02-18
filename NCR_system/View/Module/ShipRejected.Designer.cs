@@ -28,19 +28,22 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle31 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle39 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle40 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle32 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle33 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle34 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle35 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle36 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle37 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle38 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ShipRejected));
             this.projectitle = new System.Windows.Forms.Label();
             this.RejectedGrid = new System.Windows.Forms.DataGridView();
+            this.OpenReject = new System.Windows.Forms.Button();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.ShipmentChart = new LiveCharts.WinForms.CartesianChart();
             this.RecordID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.RegNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DateIssued = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -54,10 +57,12 @@
             this.Process = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Edit = new System.Windows.Forms.DataGridViewImageColumn();
             this.Delete = new System.Windows.Forms.DataGridViewImageColumn();
-            this.OpenShip = new System.Windows.Forms.Button();
-            this.OpenReject = new System.Windows.Forms.Button();
-            this.panel6 = new System.Windows.Forms.Panel();
-            this.ShipmentChart = new LiveCharts.WinForms.CartesianChart();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.sectionfilter = new System.Windows.Forms.ComboBox();
+            this.filteritems = new System.Windows.Forms.ComboBox();
+            this.SelectedProcess = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.RejectedGrid)).BeginInit();
             this.panel6.SuspendLayout();
             this.SuspendLayout();
@@ -83,14 +88,14 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.RejectedGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.LightSteelBlue;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.RejectedGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle31.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle31.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle31.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
+            dataGridViewCellStyle31.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle31.SelectionBackColor = System.Drawing.Color.LightSteelBlue;
+            dataGridViewCellStyle31.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle31.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.RejectedGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle31;
             this.RejectedGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.RejectedGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.RecordID,
@@ -106,33 +111,73 @@
             this.Process,
             this.Edit,
             this.Delete});
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle9.Padding = new System.Windows.Forms.Padding(6, 5, 6, 5);
-            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.RejectedGrid.DefaultCellStyle = dataGridViewCellStyle9;
-            this.RejectedGrid.Location = new System.Drawing.Point(35, 352);
+            dataGridViewCellStyle39.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle39.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle39.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            dataGridViewCellStyle39.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle39.Padding = new System.Windows.Forms.Padding(6, 5, 6, 5);
+            dataGridViewCellStyle39.SelectionBackColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle39.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle39.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.RejectedGrid.DefaultCellStyle = dataGridViewCellStyle39;
+            this.RejectedGrid.Location = new System.Drawing.Point(35, 357);
             this.RejectedGrid.Name = "RejectedGrid";
             this.RejectedGrid.ReadOnly = true;
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle10.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.Desktop;
-            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.RejectedGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle40.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle40.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle40.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F, System.Drawing.FontStyle.Bold);
+            dataGridViewCellStyle40.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle40.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle40.SelectionForeColor = System.Drawing.SystemColors.Desktop;
+            dataGridViewCellStyle40.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.RejectedGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle40;
             this.RejectedGrid.RowHeadersVisible = false;
             this.RejectedGrid.RowTemplate.Height = 30;
             this.RejectedGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.RejectedGrid.Size = new System.Drawing.Size(1279, 354);
+            this.RejectedGrid.Size = new System.Drawing.Size(1279, 398);
             this.RejectedGrid.TabIndex = 8;
             this.RejectedGrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.RejectedGrid_CellClick);
             this.RejectedGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.RejectedGrid_CellFormatting);
+            // 
+            // OpenReject
+            // 
+            this.OpenReject.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.OpenReject.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.OpenReject.FlatAppearance.BorderColor = System.Drawing.SystemColors.MenuHighlight;
+            this.OpenReject.FlatAppearance.MouseDownBackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.OpenReject.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.OpenReject.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.OpenReject.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold);
+            this.OpenReject.ForeColor = System.Drawing.Color.White;
+            this.OpenReject.Location = new System.Drawing.Point(1137, 26);
+            this.OpenReject.Name = "OpenReject";
+            this.OpenReject.Size = new System.Drawing.Size(177, 41);
+            this.OpenReject.TabIndex = 21;
+            this.OpenReject.Text = "Add Shipment Data";
+            this.OpenReject.UseVisualStyleBackColor = false;
+            this.OpenReject.Click += new System.EventHandler(this.OpenReject_Click);
+            // 
+            // panel6
+            // 
+            this.panel6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel6.BackColor = System.Drawing.Color.White;
+            this.panel6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel6.Controls.Add(this.ShipmentChart);
+            this.panel6.Location = new System.Drawing.Point(35, 92);
+            this.panel6.Name = "panel6";
+            this.panel6.Padding = new System.Windows.Forms.Padding(30);
+            this.panel6.Size = new System.Drawing.Size(567, 237);
+            this.panel6.TabIndex = 25;
+            // 
+            // ShipmentChart
+            // 
+            this.ShipmentChart.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ShipmentChart.Location = new System.Drawing.Point(30, 30);
+            this.ShipmentChart.Name = "ShipmentChart";
+            this.ShipmentChart.Size = new System.Drawing.Size(505, 175);
+            this.ShipmentChart.TabIndex = 23;
+            this.ShipmentChart.Text = "cartesianChart1";
             // 
             // RecordID
             // 
@@ -146,8 +191,8 @@
             // RegNo
             // 
             this.RegNo.DataPropertyName = "RegNo";
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RegNo.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle32.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RegNo.DefaultCellStyle = dataGridViewCellStyle32;
             this.RegNo.HeaderText = "Registration No.";
             this.RegNo.Name = "RegNo";
             this.RegNo.ReadOnly = true;
@@ -156,8 +201,8 @@
             // DateIssued
             // 
             this.DateIssued.DataPropertyName = "DateIssued";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.DateIssued.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle33.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.DateIssued.DefaultCellStyle = dataGridViewCellStyle33;
             this.DateIssued.HeaderText = "Date Issued";
             this.DateIssued.Name = "DateIssued";
             this.DateIssued.ReadOnly = true;
@@ -166,9 +211,9 @@
             // IssueGroup
             // 
             this.IssueGroup.DataPropertyName = "IssueGroup";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.IssueGroup.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle34.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle34.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.IssueGroup.DefaultCellStyle = dataGridViewCellStyle34;
             this.IssueGroup.HeaderText = "Issuing \nSection ";
             this.IssueGroup.Name = "IssueGroup";
             this.IssueGroup.ReadOnly = true;
@@ -177,11 +222,12 @@
             // SectionID
             // 
             this.SectionID.DataPropertyName = "SectionID";
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.SectionID.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle35.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.SectionID.DefaultCellStyle = dataGridViewCellStyle35;
             this.SectionID.HeaderText = "Main In-charge";
             this.SectionID.Name = "SectionID";
             this.SectionID.ReadOnly = true;
+            this.SectionID.Visible = false;
             this.SectionID.Width = 114;
             // 
             // ModelNo
@@ -195,8 +241,8 @@
             // Quantity
             // 
             this.Quantity.DataPropertyName = "Quantity";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Quantity.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle36.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Quantity.DefaultCellStyle = dataGridViewCellStyle36;
             this.Quantity.HeaderText = "Quantity";
             this.Quantity.Name = "Quantity";
             this.Quantity.ReadOnly = true;
@@ -213,8 +259,8 @@
             // DateCloseReg
             // 
             this.DateCloseReg.DataPropertyName = "DateCloseReg";
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.DateCloseReg.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle37.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.DateCloseReg.DefaultCellStyle = dataGridViewCellStyle37;
             this.DateCloseReg.HeaderText = "Date Registered";
             this.DateCloseReg.Name = "DateCloseReg";
             this.DateCloseReg.ReadOnly = true;
@@ -223,8 +269,8 @@
             // Status
             // 
             this.Status.DataPropertyName = "Status";
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Status.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle38.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Status.DefaultCellStyle = dataGridViewCellStyle38;
             this.Status.HeaderText = "Status";
             this.Status.Name = "Status";
             this.Status.ReadOnly = true;
@@ -255,63 +301,104 @@
             this.Delete.ReadOnly = true;
             this.Delete.Width = 58;
             // 
-            // OpenShip
+            // label9
             // 
-            this.OpenShip.Location = new System.Drawing.Point(1017, 44);
-            this.OpenShip.Name = "OpenShip";
-            this.OpenShip.Size = new System.Drawing.Size(75, 23);
-            this.OpenShip.TabIndex = 10;
-            this.OpenShip.Text = "OpenShip";
-            this.OpenShip.UseVisualStyleBackColor = true;
-            this.OpenShip.Click += new System.EventHandler(this.OpenShip_Click);
+            this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Location = new System.Drawing.Point(1068, 185);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(119, 15);
+            this.label9.TabIndex = 31;
+            this.label9.Text = "Filter by Open/Close";
             // 
-            // OpenReject
+            // label7
             // 
-            this.OpenReject.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.OpenReject.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(34)))), ((int)(((byte)(200)))));
-            this.OpenReject.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(34)))), ((int)(((byte)(200)))));
-            this.OpenReject.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(34)))), ((int)(((byte)(200)))));
-            this.OpenReject.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(15)))), ((int)(((byte)(168)))));
-            this.OpenReject.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.OpenReject.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold);
-            this.OpenReject.ForeColor = System.Drawing.Color.White;
-            this.OpenReject.Location = new System.Drawing.Point(1137, 26);
-            this.OpenReject.Name = "OpenReject";
-            this.OpenReject.Size = new System.Drawing.Size(177, 41);
-            this.OpenReject.TabIndex = 21;
-            this.OpenReject.Text = "Add Shipment Data";
-            this.OpenReject.UseVisualStyleBackColor = false;
+            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(883, 185);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(55, 15);
+            this.label7.TabIndex = 30;
+            this.label7.Text = "Filter by ";
             // 
-            // panel6
+            // label5
             // 
-            this.panel6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel6.BackColor = System.Drawing.Color.White;
-            this.panel6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel6.Controls.Add(this.ShipmentChart);
-            this.panel6.Location = new System.Drawing.Point(35, 92);
-            this.panel6.Name = "panel6";
-            this.panel6.Padding = new System.Windows.Forms.Padding(30);
-            this.panel6.Size = new System.Drawing.Size(1279, 241);
-            this.panel6.TabIndex = 25;
+            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(748, 185);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(97, 15);
+            this.label5.TabIndex = 29;
+            this.label5.Text = "Filter by Section";
             // 
-            // ShipmentChart
+            // sectionfilter
             // 
-            this.ShipmentChart.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ShipmentChart.Location = new System.Drawing.Point(30, 30);
-            this.ShipmentChart.Name = "ShipmentChart";
-            this.ShipmentChart.Size = new System.Drawing.Size(1217, 179);
-            this.ShipmentChart.TabIndex = 23;
-            this.ShipmentChart.Text = "cartesianChart1";
+            this.sectionfilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.sectionfilter.DropDownHeight = 200;
+            this.sectionfilter.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.sectionfilter.FormattingEnabled = true;
+            this.sectionfilter.IntegralHeight = false;
+            this.sectionfilter.ItemHeight = 15;
+            this.sectionfilter.Items.AddRange(new object[] {
+            "-- Filter Section --",
+            "Molding",
+            "Press",
+            "Rotor",
+            "Winding",
+            "Circuit"});
+            this.sectionfilter.Location = new System.Drawing.Point(746, 208);
+            this.sectionfilter.MaxDropDownItems = 30;
+            this.sectionfilter.Name = "sectionfilter";
+            this.sectionfilter.Size = new System.Drawing.Size(121, 23);
+            this.sectionfilter.TabIndex = 28;
+            // 
+            // filteritems
+            // 
+            this.filteritems.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.filteritems.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
+            this.filteritems.FormattingEnabled = true;
+            this.filteritems.Items.AddRange(new object[] {
+            "-- Filter Status --",
+            "Open",
+            "Close"});
+            this.filteritems.Location = new System.Drawing.Point(1071, 208);
+            this.filteritems.Name = "filteritems";
+            this.filteritems.Size = new System.Drawing.Size(121, 23);
+            this.filteritems.TabIndex = 27;
+            // 
+            // SelectedProcess
+            // 
+            this.SelectedProcess.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.SelectedProcess.DisplayMember = "External";
+            this.SelectedProcess.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.SelectedProcess.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
+            this.SelectedProcess.FormattingEnabled = true;
+            this.SelectedProcess.ItemHeight = 15;
+            this.SelectedProcess.Items.AddRange(new object[] {
+            "External",
+            "SDC"});
+            this.SelectedProcess.Location = new System.Drawing.Point(886, 208);
+            this.SelectedProcess.Name = "SelectedProcess";
+            this.SelectedProcess.Size = new System.Drawing.Size(159, 23);
+            this.SelectedProcess.TabIndex = 26;
+            this.SelectedProcess.ValueMember = "External";
             // 
             // ShipRejected
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.sectionfilter);
+            this.Controls.Add(this.filteritems);
+            this.Controls.Add(this.SelectedProcess);
             this.Controls.Add(this.panel6);
             this.Controls.Add(this.OpenReject);
-            this.Controls.Add(this.OpenShip);
             this.Controls.Add(this.RejectedGrid);
             this.Controls.Add(this.projectitle);
             this.Name = "ShipRejected";
@@ -328,8 +415,9 @@
 
         private System.Windows.Forms.Label projectitle;
         private System.Windows.Forms.DataGridView RejectedGrid;
-        private System.Windows.Forms.Button OpenShip;
         private System.Windows.Forms.Button OpenReject;
+        private System.Windows.Forms.Panel panel6;
+        private LiveCharts.WinForms.CartesianChart ShipmentChart;
         private System.Windows.Forms.DataGridViewTextBoxColumn RecordID;
         private System.Windows.Forms.DataGridViewTextBoxColumn RegNo;
         private System.Windows.Forms.DataGridViewTextBoxColumn DateIssued;
@@ -343,7 +431,11 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Process;
         private System.Windows.Forms.DataGridViewImageColumn Edit;
         private System.Windows.Forms.DataGridViewImageColumn Delete;
-        private System.Windows.Forms.Panel panel6;
-        private LiveCharts.WinForms.CartesianChart ShipmentChart;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ComboBox sectionfilter;
+        private System.Windows.Forms.ComboBox filteritems;
+        private System.Windows.Forms.ComboBox SelectedProcess;
     }
 }

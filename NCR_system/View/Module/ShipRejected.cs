@@ -41,45 +41,47 @@ namespace NCR_system.View.Module
                 var ShipList = (await _ship.GetRejectedShipData(proc)).ToList();
                 RejectedGrid.DataSource = ShipList;
 
+                RejectedGrid.Columns["DateCloseReg"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                RejectedGrid.Columns["DateCloseReg"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                RejectedGrid.Columns["DateCloseReg"].Width = 150;
+                RejectedGrid.Columns["DateCloseReg"].DisplayIndex = 0;
+
 
                 RejectedGrid.Columns["RegNo"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 RejectedGrid.Columns["RegNo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                RejectedGrid.Columns["RegNo"].DisplayIndex = 0;
+                RejectedGrid.Columns["RegNo"].DisplayIndex = 1;
                 RejectedGrid.Columns["RegNo"].Width = 200;
 
                 RejectedGrid.Columns["DateIssued"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 RejectedGrid.Columns["DateIssued"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
                 RejectedGrid.Columns["DateIssued"].Width = 150;
-                RejectedGrid.Columns["DateIssued"].DisplayIndex = 1;
+                RejectedGrid.Columns["DateIssued"].DisplayIndex = 2;
 
                 RejectedGrid.Columns["IssueGroup"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 RejectedGrid.Columns["IssueGroup"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
                 RejectedGrid.Columns["IssueGroup"].Width = 200;
-                RejectedGrid.Columns["IssueGroup"].DisplayIndex = 2;
+                RejectedGrid.Columns["IssueGroup"].DisplayIndex = 3;
 
 
                 RejectedGrid.Columns["SectionID"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 RejectedGrid.Columns["SectionID"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
                 RejectedGrid.Columns["SectionID"].Width = 150;
-                RejectedGrid.Columns["SectionID"].DisplayIndex = 3;
+                RejectedGrid.Columns["SectionID"].DisplayIndex = 4;
 
                 RejectedGrid.Columns["ModelNo"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 RejectedGrid.Columns["ModelNo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                RejectedGrid.Columns["ModelNo"].DisplayIndex = 4;
+                RejectedGrid.Columns["ModelNo"].DisplayIndex = 5;
 
                 RejectedGrid.Columns["Quantity"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 RejectedGrid.Columns["Quantity"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                RejectedGrid.Columns["Quantity"].DisplayIndex = 5;
+                RejectedGrid.Columns["Quantity"].DisplayIndex = 6;
 
 
                 RejectedGrid.Columns["Contents"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 RejectedGrid.Columns["Contents"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                RejectedGrid.Columns["Contents"].DisplayIndex = 6;
+                RejectedGrid.Columns["Contents"].DisplayIndex = 7;
 
-                RejectedGrid.Columns["DateCloseReg"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                RejectedGrid.Columns["DateCloseReg"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                RejectedGrid.Columns["DateCloseReg"].Width = 150;
-                RejectedGrid.Columns["DateCloseReg"].DisplayIndex = 7;
+                
 
                 RejectedGrid.Columns["Status"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 RejectedGrid.Columns["Status"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
@@ -209,10 +211,7 @@ namespace NCR_system.View.Module
 
         private void OpenShip_Click(object sender, EventArgs e)
         {
-            var rej = new Rejected(_ship);
-
-            var openmodel = new AddShipment(_ship, 1,  this, rej);
-            openmodel.ShowDialog();
+         
         }
 
         private void RejectedGrid_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -353,9 +352,15 @@ namespace NCR_system.View.Module
 
         }
 
+        private void OpenReject_Click(object sender, EventArgs e)
+        {
+            var rej = new Rejected(_ship);
 
-
-
-
+            using (var add = new AddShipment(_ship, 1, this, rej))
+            {
+                add.StartPosition = FormStartPosition.CenterParent;
+                add.ShowDialog(this);   // <-- modal + always in front of parent
+            }
+        }
     }
 }

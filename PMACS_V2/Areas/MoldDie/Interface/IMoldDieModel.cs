@@ -36,21 +36,8 @@ namespace PMACS_V2.Areas.MoldDie.Interface
         Task<bool> UpdateDailyLastCycle(int recordID, int lastcycle);
 
 
-        Task<List<string>> GetSamePartsNo(string dieSerial,
-                                        string processId,
-                                        string currentPart);
 
-
-
-        Task UpsertDailyAsync(
-               string partNo,
-               string date,
-               int cycleShot,
-               int total,
-               int status,
-               DieMoldMonitoringModel mold);
-
-        Task UpsertMonitor(string partNo, string date, int cycleShot);
+      
 
         // ===========================================================
         // MOLD DIE TOOLING DATA 

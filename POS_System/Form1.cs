@@ -16,5 +16,18 @@ namespace POS_System
         {
             InitializeComponent();
         }
+
+
+        public void DisplayProducts()
+        {
+            var getprod = POS_Services.GetProductList();
+
+            dataGridView2.DataSource = getprod; 
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            DisplayProducts();
+        }
     }
 }

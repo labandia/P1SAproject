@@ -368,6 +368,7 @@
     <Compile Include="Areas\MoldDie\Models\PressModel.cs" />
     <Compile Include="Areas\MoldDie\MoldDieAreaRegistration.cs" />
     <Compile Include="Areas\MoldDie\Repository\MoldDieServices.cs" />
+    <Compile Include="Areas\MoldDie\Repository\MoldieHelper.cs" />
     <Compile Include="Areas\P1SA\Controllers\CapacityController.cs" />
     <Compile Include="Areas\P1SA\Controllers\FanMajorController.cs" />
     <Compile Include="Areas\P1SA\Controllers\PMACSController.cs" />

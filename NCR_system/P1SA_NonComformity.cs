@@ -1,13 +1,5 @@
 ﻿using NCR_system.View.Module;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NCR_system
@@ -15,20 +7,27 @@ namespace NCR_system
     public partial class P1SA_NonComformity : Form
     {
         private readonly Customer_Complaint_user _cc;
+        private readonly ShipRejected _ship;
 
         private readonly IServiceProvider _serviceProvider;
 
-        public P1SA_NonComformity(IServiceProvider service, Customer_Complaint_user cc)
+        public P1SA_NonComformity(IServiceProvider service, 
+            Customer_Complaint_user cc,
+            ShipRejected ship)
         {
             InitializeComponent();
             _cc = cc;
+            _ship = ship;
 
             _cc.Dock = DockStyle.Fill;
+            _ship.Dock = DockStyle.Fill;
 
             Controls.Add(_cc);
 
             // IMPORTANT: Add to , not Form
             Sectionpanel.Controls.Add(_cc);
+            Sectionpanel.Controls.Add(_ship);
+          
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -41,6 +40,15 @@ namespace NCR_system
             this.FormBorderStyle = FormBorderStyle.None;
             this.WindowState = FormWindowState.Maximized;
             this.TopMost = true; // optional
+
+            _cc.BringToFront(); 
+        }
+
+        private async void Shipbtn_Click(object sender, EventArgs e)
+        {
+            _ship.BringToFront();
+
+            await _ship.DisplayRejected(1);
         }
     }
 }

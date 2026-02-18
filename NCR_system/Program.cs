@@ -50,7 +50,7 @@ namespace NCR_system
             services.AddTransient<ShipRejected>();
 
             ServiceProvider = services.BuildServiceProvider();
-            var mainForm = ServiceProvider.GetRequiredService<Mainpage>();
+            var mainForm = ServiceProvider.GetRequiredService<P1SA_NonComformity>();
             Application.Run(mainForm);
         }
     }

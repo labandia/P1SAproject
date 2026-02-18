@@ -55,8 +55,6 @@
             // 
             // Shipbtn
             // 
-            this.Shipbtn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.Shipbtn.AutoSize = true;
             this.Shipbtn.BackColor = System.Drawing.Color.Transparent;
             this.Shipbtn.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -77,11 +75,10 @@
             this.Shipbtn.Text = " Shipment Delay";
             this.Shipbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.Shipbtn.UseVisualStyleBackColor = false;
+            this.Shipbtn.Click += new System.EventHandler(this.Shipbtn_Click);
             // 
             // SDCbtn
             // 
-            this.SDCbtn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.SDCbtn.AutoSize = true;
             this.SDCbtn.BackColor = System.Drawing.Color.Transparent;
             this.SDCbtn.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -105,8 +102,6 @@
             // 
             // rejectBtn
             // 
-            this.rejectBtn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.rejectBtn.AutoSize = true;
             this.rejectBtn.BackColor = System.Drawing.Color.Transparent;
             this.rejectBtn.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -141,8 +136,6 @@
             // 
             // processbtn
             // 
-            this.processbtn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.processbtn.AutoSize = true;
             this.processbtn.BackColor = System.Drawing.Color.Transparent;
             this.processbtn.Cursor = System.Windows.Forms.Cursors.Hand;

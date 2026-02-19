@@ -3,6 +3,7 @@ using PMACS_V2.Helper;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -383,44 +384,113 @@ namespace PMACS_V2.Areas.MoldDie.Repository
 
         public static async Task<bool> UpdateAllMoldieData(DieMoldMonitoringModel model)
         {
-            // 1. Updated the the first row Data Baded on RecordID
-            //   - Using the RecordID to update the specific row in DieMold_Daily
             /* --------------------------------------------------
                 * 1. Update FIRST (Selected) Record
                 * --------------------------------------------------*/
             await SqlDataAccess.UpdateInsertQuery(@"
-                    UPDATE DieMoldDaily
-                    SET CycleShot = @CycleShot,
+                    UPDATE DieMold_Daily
+                    SET 
+                        DateInput = @DateInput,
+                        CycleShot = @CycleShot,
                         Total      = @Total,
                         Status     = @Status
                     WHERE RecordID = @RecordID",
-                new
-                {
-                    model.RecordID,
-                    model.CycleShot,
-                    model.Total,
-                    model.Status
-                });
+             new
+             {
+                 model.RecordID,
+                 model.DateInput,
+                 model.CycleShot,
+                 model.Total,
+                 model.Status
+             });
             // 2. Get all the MoldDie_Daily records and stops if the last record is 0
 
             /* --------------------------------------------------
               * 2. Get ALL records (LAST → FIRST)
               * --------------------------------------------------*/
             var records = await SqlDataAccess.GetData<DieMoldMonitoringModel>(
-                    @"
-                    SELECT RecordID, CycleShot, Total, Status
-                    FROM DieMoldDaily
+                         @"
+                        SELECT RecordID, DateInput, CycleShot, Total, Status
+                        FROM DieMold_Daily
+                        WHERE PartNo = @PartNo
+                        ORDER BY DateInput DESC",
+                         new { model.PartNo });
+
+            /* --------------------------------------------------
+            * 3. Get Only records of the Last CycleShot that is not 0 (LAST → FIRST)
+            * --------------------------------------------------*/
+            //var validRecords = records.TakeWhile(r => r.CycleShot != 0).ToList();
+
+            //List<DieMoldMonitoringModel> nonZero = records
+            //    .Where(r => r.CycleShot != 0)
+            //    .ToList();
+
+            List<DieMoldMonitoringModel> Lastrecords = new List<DieMoldMonitoringModel>();
+
+            foreach (var record in records)
+            {
+                if (record.CycleShot == 0)
+                {
+                    break;
+                }
+                Lastrecords.Add(record);
+            }
+
+            // SET ASCENDING ORDER
+
+
+            /* --------------------------------------------------
+            * 4. LOOP through the records and compute the new Total = current total + NEXT record CycleShot
+            * --------------------------------------------------*/
+            //for (int i = 0; i < Lastrecords.Count; i++)
+            //{
+            //    //if (i == 0) continue;
+
+            //    int newTotal;
+            //    // 4. Total = current total + NEXT record CycleShot
+            //    //newTotal = Lastrecords[i - 1].Total + Lastrecords[i].CycleShot;
+            //    Debug.WriteLine("Index: " + i);
+            //    //Lastrecords[i].Total = newTotal;
+            //    Debug.WriteLine("Current CycleShot: " + Lastrecords[i].CycleShot);
+
+            //    Debug.WriteLine("CycleShot: " + Lastrecords[i].CycleShot + " | Total: " + Lastrecords[i].Total );
+            //}
+            int counter = 0;
+
+            for (int i = Lastrecords.Count - 1; i >= 0; i--)
+            {
+
+                //Debug.WriteLine("Index: " + i);
+                //Debug.WriteLine("Current CycleShot: " + Lastrecords[i].CycleShot);
+                //Debug.WriteLine(
+                //    "CycleShot: " + Lastrecords[i].CycleShot +
+                //    " | Total: " + Lastrecords[i].Total
+                //);
+                if (counter == 0)
+                {
+                    counter = 1;
+                    continue;
+                }
+
+                int newTotal  = Lastrecords[i + 1].Total + Lastrecords[i].CycleShot;
+
+                Debug.WriteLine("CycleShot: " + Lastrecords[i].CycleShot + " | Total: " + Lastrecords[i].Total + " | newTotal : " + newTotal);
+                /* --------------------------------------------------
+                * 5. UPDATE the newTotalValue to the total of the MoldDie_Daily column
+                * --------------------------------------------------*/
+                await SqlDataAccess.UpdateInsertQuery(@"
+                    UPDATE DieMold_Daily
+                    SET Total = @Total
                     WHERE PartNo = @PartNo
-                    ORDER BY RecordID DESC",
-                    new { model.PartNo });
+                      AND DateInput = @DateInput",
+                   new
+                   {
+                       Total = newTotal,
+                       PartNo = model.PartNo,
+                       DateInput = Lastrecords[i].DateInput
+                   });
 
-            // 3. loop through all the records and update the Total and Status based on the new CycleShot value
-            // Computation of new CycleShot is from the Total of the first record + the CycleShot of the next record not then current 
-            //  so the CycleShot is plus one to index of the loop to get the next record CycleShot value
-
-            // 4. And Update the newTotalValue to the total of the MoldDie_Daily column
-
-            // 5. next go to the next loop and repeat the same process until the last record
+            }
 
             return await Task.FromResult(true);
         }

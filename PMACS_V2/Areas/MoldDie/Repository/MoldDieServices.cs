@@ -678,7 +678,10 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             return SqlDataAccess.GetData<DieMoldMonitoringModel>(strsql, new { DieSerial = DieSerial });
         }
 
-
-       
+        public async Task<bool> UpdateDailyMoldiePartNo(DieMoldMonitoringModel mold)
+        {
+            bool result = await MoldieHelper.UpdateAllMoldieData(mold);
+            return result;
+        }
     }
 }

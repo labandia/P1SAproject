@@ -203,7 +203,7 @@
             // 
             this.flowLayoutPanel1.Location = new System.Drawing.Point(28, 135);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(866, 136);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(866, 389);
             this.flowLayoutPanel1.TabIndex = 5;
             // 
             // button1
@@ -219,7 +219,7 @@
             // dataGridView2
             // 
             this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView2.Location = new System.Drawing.Point(28, 315);
+            this.dataGridView2.Location = new System.Drawing.Point(38, 568);
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.Size = new System.Drawing.Size(709, 150);
             this.dataGridView2.TabIndex = 7;

@@ -19,6 +19,9 @@ namespace NCR_system.View.Module
     public partial class ShipRejected : UserControl
     {
         private readonly IShipRejected _ship;
+        
+        public int depId { get; set; } = 0;
+        public int stats { get; set; } = 0;
 
         public DataGridView Customgrid { get { return RejectedGrid; } }
         List<int> outputData = new List<int>();
@@ -32,13 +35,16 @@ namespace NCR_system.View.Module
 
         public async Task DisplayRejected(int proc)
         {
+            depId = sectionfilter.SelectedIndex > 0 ? sectionfilter.SelectedIndex : 0;
+            stats = filteritems.SelectedIndex > 0 ? filteritems.SelectedIndex : 0;
+
             try
             {
                 List<int> outputData = new List<int> { };
                 List<int> outputData2 = new List<int> { };
 
                 // For Displaying Customer
-                var ShipList = (await _ship.GetRejectedShipData(proc)).ToList();
+                var ShipList = await _ship.GetRejectedShipData(depId, stats, proc, 0, 0);
                 RejectedGrid.DataSource = ShipList;
 
                 RejectedGrid.Columns["DateCloseReg"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
@@ -252,6 +258,9 @@ namespace NCR_system.View.Module
 
         private void ShipRejected_Load(object sender, EventArgs e)
         {
+            sectionfilter.SelectedIndex = 0;
+            filteritems.SelectedIndex = 0;
+
             //cartesianChart1.Series = new SeriesCollection
             //{
             //    new ColumnSeries
@@ -361,6 +370,16 @@ namespace NCR_system.View.Module
                 add.StartPosition = FormStartPosition.CenterParent;
                 add.ShowDialog(this);   // <-- modal + always in front of parent
             }
+        }
+
+        private async void sectionfilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            await DisplayRejected(0);
+        }
+
+        private async void filteritems_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            await DisplayRejected(0);
         }
     }
 }

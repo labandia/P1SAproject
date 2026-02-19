@@ -30,17 +30,59 @@ namespace NCR_system.Repository
             return SqlDataAccess.GetData<CustomerTotalModel>(strsql, new { Process = type });
         }
 
-        public async Task<IEnumerable<RejectShipmentModel>> GetRejectedShipData(int proc)
+        public async Task<List<RejectShipmentModel>> GetRejectedShipData(
+            int sectionID,
+            int stats,
+            int proc,
+            int pageNumber,
+            int pageSize)
         {
-            string strsql = $@"SELECT 
+            int offset = (pageNumber - 1) * pageSize;
+
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+            string strquery = $@"SELECT 
 	                          	RecordID,
 	                            FORMAT(DateIssued, 'MM/dd/yyyy') as DateIssued,
 	                            FORMAT(DateCloseReg, 'MM/dd/yyy') as DateCloseReg,
 	                            RegNo,IssueGroup,SectionID,
 	                            ModelNo,Quantity,Contents,Status,Process
                             FROM PC_RejectShip
-                            WHERE Process =@Process";
-            return await SqlDataAccess.GetData<RejectShipmentModel>(strsql, new { Process = proc });
+                            WHERE IsDeleted = 0";
+
+            // Filter By Process 
+            if (proc != 0)
+            {
+                strquery += " AND Process = @Process";
+                parameters.Add("@Process", proc);
+            }
+
+
+            // Filter By Section 
+            if (sectionID != 0)
+            {
+                strquery += " AND SectionID = @SectionID";
+                parameters.Add("@SectionID", sectionID);
+            }
+
+            // Filter By Status Type 
+            if (stats != 0)
+            {
+                strquery += " AND Status = @Status";
+                parameters.Add("@Status", stats);
+            }
+
+            // If the Get Data has a Pagination function
+            if (pageSize != 0)
+            {
+                strquery += $@" ORDER BY RecordID ASC
+                            OFFSET @Offset ROWS
+                            FETCH NEXT @PageSize ROWS ONLY";
+                parameters.Add("@Offset", offset);
+                parameters.Add("@PageSize", pageSize);
+            }
+
+            return await SqlDataAccess.GetData<RejectShipmentModel>(strquery, new { Process = proc });
         }
 
         public  Task<bool> InsertShipRejectData(RejectShipmentModel ncr, int Process)

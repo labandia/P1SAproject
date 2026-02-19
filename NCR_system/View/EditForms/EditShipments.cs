@@ -33,7 +33,7 @@ namespace NCR_system.View.EditForms
 
         public async void SetShipmentDetails(int RecordID, int proc)
         {
-            var data = await _ship.GetRejectedShipData(proc);
+            var data = await _ship.GetRejectedShipData(1, 1, 1, 1, proc);
             var filterdata = data.SingleOrDefault(res => res.RecordID == RecordID);
             string formattedDate = DateTime.Now.ToString("MM/dd/yyyy");
 

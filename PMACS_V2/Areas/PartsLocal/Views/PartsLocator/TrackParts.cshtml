@@ -753,10 +753,10 @@
         if (matchedItems.length > 0) {
             const matchedAreas = [...new Set(matchedItems.map(item => item.Area))];
             //console.log("MATCHING : " + matchedAreas);
-            //highlightMatchingAreas(matchedAreas);
+            highlightMatchingAreas(matchedAreas);
 
             // ✅ GREEN VERIFIED HIGHLIGHT
-            highlightVerifiedArea(matchedAreas);
+            //highlightVerifiedArea(matchedAreas);
 
             // Show results info
             resultsInfo.textContent = `Found ${matchedItems.length} match(es) for "${searchValue}"`;

@@ -36,7 +36,7 @@ namespace NCR_system.View.Module
                 List<int> outputData2 = new List<int> { };
 
                 // For Displaying Customer
-                var rejectlist = (await _ship.GetRejectedShipData(proc)).ToList();
+                var rejectlist = (await _ship.GetRejectedShipData(1, 1, 1, 1, proc)).ToList();
                 RejectedGrid.DataSource = rejectlist;
 
 

@@ -65,6 +65,9 @@
             this.TargetText = new System.Windows.Forms.TextBox();
             this.statscombo = new System.Windows.Forms.ComboBox();
             this.label17 = new System.Windows.Forms.Label();
+            this.AddImagebtn = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // label9
@@ -271,7 +274,7 @@
             // 
             this.Reporfile.BackColor = System.Drawing.Color.WhiteSmoke;
             this.Reporfile.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Reporfile.Location = new System.Drawing.Point(838, 340);
+            this.Reporfile.Location = new System.Drawing.Point(742, 340);
             this.Reporfile.Multiline = true;
             this.Reporfile.Name = "Reporfile";
             this.Reporfile.Size = new System.Drawing.Size(267, 41);
@@ -281,7 +284,7 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(835, 110);
+            this.label10.Location = new System.Drawing.Point(739, 110);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(96, 18);
             this.label10.TabIndex = 113;
@@ -296,7 +299,7 @@
             "Rotor",
             "Winding",
             "Circuit"});
-            this.comboBox1.Location = new System.Drawing.Point(838, 147);
+            this.comboBox1.Location = new System.Drawing.Point(742, 147);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(267, 21);
             this.comboBox1.TabIndex = 115;
@@ -305,7 +308,7 @@
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(835, 309);
+            this.label11.Location = new System.Drawing.Point(739, 309);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(124, 18);
             this.label11.TabIndex = 116;
@@ -315,7 +318,7 @@
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(835, 214);
+            this.label12.Location = new System.Drawing.Point(739, 214);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(209, 18);
             this.label12.TabIndex = 117;
@@ -323,7 +326,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(1145, 343);
+            this.button1.Location = new System.Drawing.Point(934, 304);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 119;
@@ -334,7 +337,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(831, 406);
+            this.label13.Location = new System.Drawing.Point(735, 406);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(116, 18);
             this.label13.TabIndex = 121;
@@ -342,7 +345,7 @@
             // 
             // Datecleared
             // 
-            this.Datecleared.Location = new System.Drawing.Point(834, 440);
+            this.Datecleared.Location = new System.Drawing.Point(738, 440);
             this.Datecleared.Name = "Datecleared";
             this.Datecleared.Size = new System.Drawing.Size(267, 20);
             this.Datecleared.TabIndex = 120;
@@ -356,7 +359,7 @@
             "Rotor",
             "Winding",
             "Circuit"});
-            this.selectCircular.Location = new System.Drawing.Point(838, 543);
+            this.selectCircular.Location = new System.Drawing.Point(742, 543);
             this.selectCircular.Name = "selectCircular";
             this.selectCircular.Size = new System.Drawing.Size(267, 21);
             this.selectCircular.TabIndex = 123;
@@ -365,7 +368,7 @@
             // 
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(835, 506);
+            this.label14.Location = new System.Drawing.Point(739, 506);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(168, 18);
             this.label14.TabIndex = 122;
@@ -380,7 +383,7 @@
             "Rotor",
             "Winding",
             "Circuit"});
-            this.comboBox4.Location = new System.Drawing.Point(834, 642);
+            this.comboBox4.Location = new System.Drawing.Point(738, 642);
             this.comboBox4.Name = "comboBox4";
             this.comboBox4.Size = new System.Drawing.Size(267, 21);
             this.comboBox4.TabIndex = 125;
@@ -389,7 +392,7 @@
             // 
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(831, 605);
+            this.label15.Location = new System.Drawing.Point(735, 605);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(110, 18);
             this.label15.TabIndex = 124;
@@ -427,7 +430,7 @@
             // 
             this.TargetText.BackColor = System.Drawing.Color.WhiteSmoke;
             this.TargetText.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TargetText.Location = new System.Drawing.Point(834, 251);
+            this.TargetText.Location = new System.Drawing.Point(738, 251);
             this.TargetText.Multiline = true;
             this.TargetText.Name = "TargetText";
             this.TargetText.Size = new System.Drawing.Size(267, 41);
@@ -457,11 +460,31 @@
             this.label17.TabIndex = 129;
             this.label17.Text = "Status :";
             // 
+            // AddImagebtn
+            // 
+            this.AddImagebtn.Location = new System.Drawing.Point(1121, 362);
+            this.AddImagebtn.Name = "AddImagebtn";
+            this.AddImagebtn.Size = new System.Drawing.Size(156, 41);
+            this.AddImagebtn.TabIndex = 161;
+            this.AddImagebtn.Text = "Add Image";
+            this.AddImagebtn.UseVisualStyleBackColor = true;
+            this.AddImagebtn.Click += new System.EventHandler(this.AddImagebtn_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(1080, 141);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(242, 186);
+            this.pictureBox1.TabIndex = 160;
+            this.pictureBox1.TabStop = false;
+            // 
             // AddMainRegistration
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1306, 790);
+            this.ClientSize = new System.Drawing.Size(1385, 790);
+            this.Controls.Add(this.AddImagebtn);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.statscombo);
             this.Controls.Add(this.label17);
             this.Controls.Add(this.TargetText);
@@ -500,6 +523,7 @@
             this.Controls.Add(this.label5);
             this.Name = "AddMainRegistration";
             this.Text = "AddMainRegistration";
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -543,5 +567,7 @@
         private System.Windows.Forms.TextBox TargetText;
         private System.Windows.Forms.ComboBox statscombo;
         private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Button AddImagebtn;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

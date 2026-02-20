@@ -16,5 +16,10 @@ namespace NCR_system.View.AddForms
         {
             InitializeComponent();
         }
+
+        private void AddImagebtn_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -1,25 +1,24 @@
 ﻿using NCR_system.Models;
+using NCR_system.Utilities;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NCR_system.View.AddForms
 {
     public partial class AddMainRegistration : Form
     {
+        string selectedImagepath = "";
+
         public AddMainRegistration()
         {
             InitializeComponent();
         }
 
-        private void Save_btn_Click(object sender, EventArgs e)
+        private async void Save_btn_Click(object sender, EventArgs e)
         {
+            string SaveImageFolder = await UploadServices.SaveImageFolder(selectedImagepath);
+            
             var obj = new NCRModels
             {
                 Category = CatSelection.SelectedText,
@@ -35,8 +34,22 @@ namespace NCR_system.View.AddForms
                 CircularStatus = selectCircular.Text,
                 TargetDate = TargetText.Text,
                 Status = statscombo.SelectedIndex,
-                Process = 0
+                Process = 0, 
+                UploadImage = SaveImageFolder
             };
+        }
+
+        private void AddImagebtn_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp";
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                selectedImagepath = ofd.FileName;
+                pictureBox1.Image = Image.FromFile(selectedImagepath);
+                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            }
         }
     }
 }

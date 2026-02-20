@@ -82,14 +82,14 @@ namespace NCR_system.Repository
                 parameters.Add("@PageSize", pageSize);
             }
 
-            return await SqlDataAccess.GetData<RejectShipmentModel>(strquery, new { Process = proc });
+            return await SqlDataAccess.GetData<RejectShipmentModel>(strquery, parameters);
         }
 
         public  Task<bool> InsertShipRejectData(RejectShipmentModel ncr, int Process)
         {
 
-            string strsql = $@"INSERT INTO PC_RejectShip(RegNo, DateIssued,  IssueGroup, SectionID, ModelNo, Quantity, Contents, DateCloseReg, Status,  Process)
-                               VALUES(@RegNo, @DateIssued,  @IssueGroup, @SectionID, @ModelNo, @Quantity, @Contents, @DateCloseReg, @Status, @Process)";
+            string strsql = $@"INSERT INTO PC_RejectShip(RegNo, DateIssued,  IssueGroup, SectionID, ModelNo, Quantity, Contents, DateCloseReg, Status,  Process, UploadImage)
+                               VALUES(@RegNo, @DateIssued,  @IssueGroup, @SectionID, @ModelNo, @Quantity, @Contents, @DateCloseReg, @Status, @Process, @UploadImage)";
             var parameter = new
             {
                 ncr.RegNo,
@@ -102,6 +102,7 @@ namespace NCR_system.Repository
                 DateCloseReg = Convert.ToDateTime(ncr.DateCloseReg),
                 ncr.Status,
                 Process,
+                ncr.UploadImage
             };
             return SqlDataAccess.UpdateInsertQuery(strsql, parameter);
         }

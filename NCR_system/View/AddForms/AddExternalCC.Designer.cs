@@ -55,11 +55,14 @@
             this.panel7 = new System.Windows.Forms.Panel();
             this.panel8 = new System.Windows.Forms.Panel();
             this.EditNGText = new System.Windows.Forms.NumericUpDown();
+            this.AddImagebtn = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel5.SuspendLayout();
             this.panel6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.EditNGText)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // EditCustomerText
@@ -328,12 +331,32 @@
             this.EditNGText.Size = new System.Drawing.Size(200, 20);
             this.EditNGText.TabIndex = 140;
             // 
+            // AddImagebtn
+            // 
+            this.AddImagebtn.Location = new System.Drawing.Point(725, 328);
+            this.AddImagebtn.Name = "AddImagebtn";
+            this.AddImagebtn.Size = new System.Drawing.Size(143, 23);
+            this.AddImagebtn.TabIndex = 149;
+            this.AddImagebtn.Text = "Add Image";
+            this.AddImagebtn.UseVisualStyleBackColor = true;
+            this.AddImagebtn.Click += new System.EventHandler(this.AddImagebtn_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(671, 89);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(242, 186);
+            this.pictureBox1.TabIndex = 148;
+            this.pictureBox1.TabStop = false;
+            // 
             // AddExternalCC
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(630, 646);
+            this.ClientSize = new System.Drawing.Size(988, 646);
             this.ControlBox = false;
+            this.Controls.Add(this.AddImagebtn);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.EditNGText);
             this.Controls.Add(this.panel5);
             this.Controls.Add(this.panel1);
@@ -363,6 +386,7 @@
             this.panel5.ResumeLayout(false);
             this.panel6.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.EditNGText)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -395,5 +419,7 @@
         private System.Windows.Forms.Panel panel7;
         private System.Windows.Forms.Panel panel8;
         private System.Windows.Forms.NumericUpDown EditNGText;
+        private System.Windows.Forms.Button AddImagebtn;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

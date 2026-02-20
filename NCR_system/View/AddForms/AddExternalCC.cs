@@ -1,5 +1,6 @@
 ﻿using NCR_system.Interface;
 using NCR_system.Models;
+using NCR_system.Utilities;
 using NCR_system.View.Module;
 using System;
 using System.Drawing;
@@ -12,6 +13,8 @@ namespace NCR_system.View.AddForms
         private readonly ICustomerComplaint _cus;
         private readonly Customer_Complaint_user _user;
 
+        string selectedImagepath = "";
+
         public AddExternalCC(ICustomerComplaint cus, Customer_Complaint_user user)
         {
             InitializeComponent();
@@ -23,7 +26,8 @@ namespace NCR_system.View.AddForms
         {
 
             if(!FormValid()) return;
-          
+
+            string ImageUpload = await UploadServices.SaveImageFolder(selectedImagepath);
 
             var obj = new CustomerModel
             {
@@ -34,7 +38,8 @@ namespace NCR_system.View.AddForms
                 LotNo = EditLotText.Text,
                 NGQty = (int)EditNGText.Value,
                 Details = EditProblemText.Text,
-                CCtype = 0
+                CCtype = 0, 
+                UploadImage = ImageUpload
             };
 
             bool result = await _cus.InsertCustomerData(obj, 0);
@@ -77,6 +82,19 @@ namespace NCR_system.View.AddForms
                 return false;
             }
             return true;
+        }
+
+        private void AddImagebtn_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp";
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                selectedImagepath = ofd.FileName;
+                pictureBox1.Image = Image.FromFile(selectedImagepath);
+                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            }
         }
     }
 }

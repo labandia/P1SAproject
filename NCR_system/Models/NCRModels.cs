@@ -24,7 +24,7 @@ namespace NCR_system.Models
         private string _TargetDate;
         private int _Process;
         private string _DateRegist;
-
+        private string _UploadImage;
 
         public int RecordID
         {
@@ -108,6 +108,12 @@ namespace NCR_system.Models
             get => _DateRegist;
             set => _DateRegist = value;
         }
+
+        public string UploadImage
+        {
+            get => _UploadImage;
+            set => _UploadImage = value;
+        }
     }
     
 
@@ -147,6 +153,7 @@ namespace NCR_system.Models
         private int _SectionID;
         private int _Status;
         private int _CCtype;
+        private string _UploadImage;
 
 
         public int RecordID
@@ -205,6 +212,11 @@ namespace NCR_system.Models
             get => _CCtype;
             set => _CCtype = value;
         }
+        public string UploadImage
+        {
+            get => _UploadImage;
+            set => _UploadImage = value;
+        }
     }
     public class InprocessModel
     {
@@ -225,6 +237,7 @@ namespace NCR_system.Models
         private string _P1saStatus;
         private string _Remarks;
         private int _SectionID;
+        private string _UploadImage;
 
         public int RecordID
         {
@@ -314,6 +327,12 @@ namespace NCR_system.Models
             get => _SectionID;
             set => _SectionID = value;
         }
+
+        public string UploadImage
+        {
+            get => _UploadImage;
+            set => _UploadImage = value;
+        }
     }
     public class RejectShipmentModel
     {
@@ -328,7 +347,7 @@ namespace NCR_system.Models
         private string _DateCloseReg;
         private int _Status;
         private int _Process;
-
+        private string _UploadImage;
 
         public int RecordID
         {
@@ -385,6 +404,12 @@ namespace NCR_system.Models
         {
             get => _Status;
             set => _Status = value;
+        }
+
+        public string UploadImage
+        {
+            get => _UploadImage;
+            set => _UploadImage = value;
         }
     }
 

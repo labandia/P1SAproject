@@ -61,6 +61,9 @@
             this.DateissuedText = new System.Windows.Forms.DateTimePicker();
             this.RegNoText = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
+            this.AddImagebtn = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // comboBox4
@@ -72,7 +75,7 @@
             "Rotor",
             "Winding",
             "Circuit"});
-            this.comboBox4.Location = new System.Drawing.Point(839, 672);
+            this.comboBox4.Location = new System.Drawing.Point(749, 672);
             this.comboBox4.Name = "comboBox4";
             this.comboBox4.Size = new System.Drawing.Size(267, 21);
             this.comboBox4.TabIndex = 157;
@@ -81,7 +84,7 @@
             // 
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(836, 635);
+            this.label15.Location = new System.Drawing.Point(746, 635);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(110, 18);
             this.label15.TabIndex = 156;
@@ -96,7 +99,7 @@
             "Rotor",
             "Winding",
             "Circuit"});
-            this.comboBox3.Location = new System.Drawing.Point(843, 573);
+            this.comboBox3.Location = new System.Drawing.Point(753, 573);
             this.comboBox3.Name = "comboBox3";
             this.comboBox3.Size = new System.Drawing.Size(267, 21);
             this.comboBox3.TabIndex = 155;
@@ -105,7 +108,7 @@
             // 
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(840, 536);
+            this.label14.Location = new System.Drawing.Point(750, 536);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(168, 18);
             this.label14.TabIndex = 154;
@@ -115,7 +118,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(836, 436);
+            this.label13.Location = new System.Drawing.Point(746, 436);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(116, 18);
             this.label13.TabIndex = 153;
@@ -123,14 +126,14 @@
             // 
             // dateTimePicker1
             // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(839, 470);
+            this.dateTimePicker1.Location = new System.Drawing.Point(749, 470);
             this.dateTimePicker1.Name = "dateTimePicker1";
             this.dateTimePicker1.Size = new System.Drawing.Size(267, 20);
             this.dateTimePicker1.TabIndex = 152;
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(1150, 373);
+            this.button1.Location = new System.Drawing.Point(884, 730);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 151;
@@ -146,7 +149,7 @@
             "Rotor",
             "Winding",
             "Circuit"});
-            this.comboBox2.Location = new System.Drawing.Point(843, 281);
+            this.comboBox2.Location = new System.Drawing.Point(753, 281);
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(267, 21);
             this.comboBox2.TabIndex = 150;
@@ -155,7 +158,7 @@
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(840, 244);
+            this.label12.Location = new System.Drawing.Point(750, 244);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(209, 18);
             this.label12.TabIndex = 149;
@@ -165,7 +168,7 @@
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(840, 339);
+            this.label11.Location = new System.Drawing.Point(750, 339);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(124, 18);
             this.label11.TabIndex = 148;
@@ -180,7 +183,7 @@
             "Rotor",
             "Winding",
             "Circuit"});
-            this.comboBox1.Location = new System.Drawing.Point(843, 177);
+            this.comboBox1.Location = new System.Drawing.Point(753, 177);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(267, 21);
             this.comboBox1.TabIndex = 147;
@@ -189,7 +192,7 @@
             // 
             this.textBox1.BackColor = System.Drawing.Color.WhiteSmoke;
             this.textBox1.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(843, 370);
+            this.textBox1.Location = new System.Drawing.Point(753, 370);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(267, 41);
@@ -199,7 +202,7 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(840, 140);
+            this.label10.Location = new System.Drawing.Point(750, 140);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(96, 18);
             this.label10.TabIndex = 145;
@@ -405,11 +408,31 @@
             this.label5.TabIndex = 126;
             this.label5.Text = "Registration No :";
             // 
+            // AddImagebtn
+            // 
+            this.AddImagebtn.Location = new System.Drawing.Point(1221, 381);
+            this.AddImagebtn.Name = "AddImagebtn";
+            this.AddImagebtn.Size = new System.Drawing.Size(156, 41);
+            this.AddImagebtn.TabIndex = 159;
+            this.AddImagebtn.Text = "Add Image";
+            this.AddImagebtn.UseVisualStyleBackColor = true;
+            this.AddImagebtn.Click += new System.EventHandler(this.AddImagebtn_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(1180, 160);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(242, 186);
+            this.pictureBox1.TabIndex = 158;
+            this.pictureBox1.TabStop = false;
+            // 
             // AddRecurrence
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1287, 827);
+            this.ClientSize = new System.Drawing.Size(1626, 827);
+            this.Controls.Add(this.AddImagebtn);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.comboBox4);
             this.Controls.Add(this.label15);
             this.Controls.Add(this.comboBox3);
@@ -444,6 +467,7 @@
             this.Controls.Add(this.label5);
             this.Name = "AddRecurrence";
             this.Text = "AddRecurrence";
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -483,5 +507,7 @@
         private System.Windows.Forms.DateTimePicker DateissuedText;
         private System.Windows.Forms.TextBox RegNoText;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button AddImagebtn;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

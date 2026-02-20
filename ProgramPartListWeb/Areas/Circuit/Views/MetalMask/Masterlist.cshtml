@@ -62,6 +62,13 @@
         </tbody>
     </table>
 
+    <div class="pagination" id="pagination">
+
+        <div class="pagination-items">
+            <!-- Pagination buttons will be inserted here -->
+        </div>
+    </div>
+
 
     <!-- Empty State -->
     <div class="empty-state" id="emptyState">
@@ -176,6 +183,11 @@
     let selectID = 0;
     let isAction = 0;
 
+    let totalPages = 0;
+    let currentPage = 1;
+    const pageSize = 20;
+    let totalRecords = 0;
+
     const loading = document.getElementById('loading');
     const emptyState = document.getElementById('emptyState');
 
@@ -227,7 +239,9 @@
 
          let res = await GetMethod(url, {
              search: $("#searchInput").val() || "",
-             ModelType: $("#ModelSelect").val() || 0
+             ModelType: $("#ModelSelect").val() || 0, 
+             pageNumber: currentPage || 1,
+             pageSize: pageSize || 10
          });
 
 
@@ -235,6 +249,8 @@
                 //console.clear();
                 tableBody.empty();
                 setData = res.data.Items;
+                totalRecords = res.data.TotalRecords || 0;
+                totalPages = Math.ceil(totalRecords / pageSize);
                 let html = "";
 
               emptyState.style.display = 'none';
@@ -260,6 +276,9 @@
                   });
 
                   tableBody.append(html);
+
+
+                  updatePaginationUI();
 
                   showLoading(false);
               }, 500);
@@ -329,6 +348,88 @@
     GetMetalMaskMasterlist();
 
 
+    function updatePaginationUI() {
+
+        const $pagination = $("#pagination");
+        const $paginationItems = $(".pagination-items");
+
+        // Clear existing buttons
+        $paginationItems.empty();
+
+        // Always show pagination for debugging
+        $pagination.css({
+            'display': 'flex',
+            'visibility': 'visible',
+            'opacity': '1',
+            'position': 'relative'
+        });
+
+        // Show/hide pagination based on total records
+        if (totalRecords > pageSize) {
+            $pagination.show();
+
+            // Create pagination buttons
+            const prevDisabled = currentPage === 1 ? 'disabled' : '';
+            const nextDisabled = currentPage === totalPages || totalPages === 0 ? 'disabled' : '';
+
+            $paginationItems.html(`
+                 <button class="page-btn prev-btn" ${prevDisabled} data-page="${currentPage - 1}">
+                     <i class="fas fa-chevron-left"></i> Previous
+                 </button>
+
+                 <div class="page-info">
+                     Page ${currentPage} of ${totalPages || 1}
+                     <span class="record-info"></span>
+                 </div>
+
+                 <button class="page-btn next-btn" ${nextDisabled} data-page="${currentPage + 1}">
+                     Next <i class="fas fa-chevron-right"></i>
+                 </button>
+             `);
+
+            // Add page number input for direct navigation (optional)
+            if (totalPages > 10) {
+                $paginationItems.append(`
+         <div class="page-jump">
+             <input type="number" id="pageJumpInput" min="1" max="${totalPages}" value="${currentPage}"
+                    style="width: 60px; padding: 5px; border: 1px solid #ddd; border-radius: 4px;">
+             <button class="page-btn jump-btn" id="pageJumpBtn">Go</button>
+         </div>
+     `);
+            }
+
+            // Add click handlers
+            $(".page-btn").off('click').on('click', function () {
+                if ($(this).is(':disabled')) return;
+
+                const pageNum = parseInt($(this).data('page'));
+
+                if (pageNum >= 1 && pageNum <= totalPages && pageNum !== currentPage) {
+                    currentPage = pageNum;
+                    GetMetalMaskMasterlist();
+                }
+            });
+
+            // Add handler for jump button if exists
+            $("#pageJumpBtn").off('click').on('click', function () {
+                const jumpPage = parseInt($("#pageJumpInput").val());
+                if (jumpPage >= 1 && jumpPage <= totalPages && jumpPage !== currentPage) {
+                    currentPage = jumpPage;
+                    GetMetalMaskMasterlist();
+                }
+            });
+
+            // Add enter key handler for jump input
+            $("#pageJumpInput").off('keypress').on('keypress', function (e) {
+                if (e.which === 13) { // Enter key
+                    $("#pageJumpBtn").click();
+                }
+            });
+
+        } else {
+            $pagination.hide();
+        }
+    }
 
     // Show loading state
     function showLoading(show = true) {

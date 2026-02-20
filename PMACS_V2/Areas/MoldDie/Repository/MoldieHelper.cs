@@ -136,39 +136,39 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             dimensionQuality = dimensionQuality ?? "";
 
             // Highest priority rules first
-            if (dimensionQuality.Contains("R60-25") && processId == "M002")
-            {
-                if (newTotal >= 38000 && newTotal <= 39999) status = 1;
-                else if (newTotal > 40000) { status = 2; newTotal = 0; }
-                return (newTotal, status);
-            }
+            //if (dimensionQuality.Contains("R60-25") && processId == "M002")
+            //{
+            //    if (newTotal >= 38000 && newTotal <= 39999) status = 1;
+            //    else if (newTotal > 40000) { status = 2; newTotal = 0; }
+            //    return (newTotal, status);
+            //}
 
-            if (dimensionQuality.Contains("CRV40-56"))
-            {
-                if (newTotal >= 28000 && newTotal <= 29999) status = 1;
-                else if (newTotal > 30000) { status = 2; newTotal = 0; }
-                return (newTotal, status);
-            }
+            //if (dimensionQuality.Contains("CRV40-56"))
+            //{
+            //    if (newTotal >= 28000 && newTotal <= 29999) status = 1;
+            //    else if (newTotal > 30000) { status = 2; newTotal = 0; }
+            //    return (newTotal, status);
+            //}
 
-            if (processId == "M003")
-            {
-                if (newTotal >= 68000 && newTotal <= 69999) status = 1;
-                else if (newTotal > 70000) { status = 2; newTotal = 0; }
-                return (newTotal, status);
-            }
+            //if (processId == "M003")
+            //{
+            //    if (newTotal >= 68000 && newTotal <= 69999) status = 1;
+            //    else if (newTotal > 70000) { status = 2; newTotal = 0; }
+            //    return (newTotal, status);
+            //}
 
-            if (processId == "M005")
-            {
-                if (newTotal >= 28000 && newTotal <= 29999) status = 1;
-                else if (newTotal > 30000) { status = 2; newTotal = 0; }
-                return (newTotal, status);
-            }
+            //if (processId == "M005")
+            //{
+            //    if (newTotal >= 28000 && newTotal <= 29999) status = 1;
+            //    else if (newTotal > 30000) { status = 2; newTotal = 0; }
+            //    return (newTotal, status);
+            //}
 
-            if (processId == "M002" || processId == "M003")
-            {
-                if (newTotal >= 48000 && newTotal <= 49999) status = 1;
-                else if (newTotal > 50000) { status = 2; newTotal = 0; }
-            }
+            //if (processId == "M002" || processId == "M003")
+            //{
+            //    if (newTotal >= 48000 && newTotal <= 49999) status = 1;
+            //    else if (newTotal > 50000) { status = 2; newTotal = 0; }
+            //}
 
             return (newTotal, status);
         }

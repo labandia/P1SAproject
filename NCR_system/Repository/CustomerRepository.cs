@@ -103,8 +103,8 @@ namespace NCR_system.Repository
 
             if(type == 0)
             {
-                string strsql = $@"INSERT INTO PC_CustomerConplaint(ModelNo,LotNo,NGQty,Details,SectionID,RegNo,CustomerName,CCtype)
-                               VALUES(@ModelNo, @LotNo, @NGQty, @Details, @SectionID, @RegNo, @CustomerName, @CCtype)";
+                string strsql = $@"INSERT INTO PC_CustomerConplaint(ModelNo,LotNo,NGQty,Details,SectionID,RegNo,CustomerName,CCtype, UploadImage)
+                               VALUES(@ModelNo, @LotNo, @NGQty, @Details, @SectionID, @RegNo, @CustomerName, @CCtype, @UploadImage)";
                 var parameter = new
                 {
                     customer.ModelNo,
@@ -114,14 +114,15 @@ namespace NCR_system.Repository
                     customer.SectionID,
                     customer.RegNo,
                     customer.CustomerName,
-                    customer.CCtype
+                    customer.CCtype, 
+                    customer.UploadImage
                 };
                 result = await SqlDataAccess.UpdateInsertQuery(strsql, parameter);
             }
             else
             {
-                string strsql = $@"INSERT INTO PC_CustomerConplaint(ModelNo,LotNo,NGQty,Details,SectionID,CCtype)
-                               VALUES(@ModelNo, @LotNo, @NGQty, @Details, @SectionID, @CCtype)";
+                string strsql = $@"INSERT INTO PC_CustomerConplaint(ModelNo,LotNo,NGQty,Details,SectionID,CCtype, UploadImage)
+                               VALUES(@ModelNo, @LotNo, @NGQty, @Details, @SectionID, @CCtype, @UploadImage)";
                 var parameter = new
                 {
                     customer.ModelNo,
@@ -129,7 +130,8 @@ namespace NCR_system.Repository
                     customer.NGQty,
                     customer.Details,
                     customer.SectionID,
-                    customer.CCtype
+                    customer.CCtype, 
+                    customer.UploadImage
                 };
                 result = await SqlDataAccess.UpdateInsertQuery(strsql, parameter);
             }

@@ -4,14 +4,12 @@ using NCR_system.View.EditForms;
 using System;
 using System.Collections.Generic;
 
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using LiveCharts;
 using LiveCharts.Wpf;   // Yes, WPF namespace is normal for LiveCharts WinForms
 using System.Windows.Media;
 using System.Windows;
-using System.Diagnostics;
 
 
 namespace NCR_system.View.Module
@@ -22,6 +20,10 @@ namespace NCR_system.View.Module
         
         public int depId { get; set; } = 0;
         public int stats { get; set; } = 0;
+
+        bool isSelectSection = false;
+        bool isSelectStatus = false;
+        bool isChart = false;
 
         public DataGridView Customgrid { get { return RejectedGrid; } }
         List<int> outputData = new List<int>();
@@ -104,46 +106,23 @@ namespace NCR_system.View.Module
                 RejectedGrid.Columns["Delete"].Width = 100;
                 RejectedGrid.Columns["Delete"].DisplayIndex = 10;
 
-                var countItems = await _ship.GetCustomersOpenItem(proc);
 
-                foreach (var items in countItems)
+                if(isChart == false)
                 {
-                    outputData.Add(items.totalOpen);
-                    outputData2.Add(items.TotalClosed);
+                    var countItems = await _ship.GetCustomersOpenItem(proc);
+
+                    foreach (var items in countItems)
+                    {
+                        outputData.Add(items.totalOpen);
+                        outputData2.Add(items.TotalClosed);
+                    }
                 }
 
-
-                DisplayCharts(outputData, outputData2);
-
-                //var countItems = await _ship.GetCustomersOpenItem(proc);
-
-
-                //foreach (var items in countItems)
-                //{
-                //    outputData.Add(items.totalOpen);
-
-                //    switch (items.DepartmentName)
-                //    {
-                //        case "Molding":
-                //            MoldText.Text = items.totalOpen.ToString();
-                //            break;
-                //        case "Press":
-                //            PressText.Text = items.totalOpen.ToString();
-                //            break;
-                //        case "Rotor":
-                //            RotorText.Text = items.totalOpen.ToString();
-                //            break;
-                //        case "Winding":
-                //            WindText.Text = items.totalOpen.ToString();
-                //            break;
-                //        default:
-                //            CircuitText.Text = items.totalOpen.ToString();
-                //            break;
-                //    }
-
-                //}
-
-
+               
+                if(isSelectSection != false || isSelectStatus != false)
+                {
+                    DisplayCharts(outputData, outputData2);
+                }
             }
             catch (Exception ex)
             {
@@ -374,11 +353,13 @@ namespace NCR_system.View.Module
 
         private async void sectionfilter_SelectedIndexChanged(object sender, EventArgs e)
         {
+            isSelectSection = true;
             await DisplayRejected(0);
         }
 
         private async void filteritems_SelectedIndexChanged(object sender, EventArgs e)
         {
+            isSelectStatus = true;
             await DisplayRejected(0);
         }
     }

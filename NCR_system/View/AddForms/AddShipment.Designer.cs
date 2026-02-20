@@ -50,6 +50,9 @@
             this.label9 = new System.Windows.Forms.Label();
             this.StatsText = new System.Windows.Forms.ComboBox();
             this.label10 = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.AddImagebtn = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // RegNoText
@@ -276,11 +279,31 @@
             this.label10.TabIndex = 94;
             this.label10.Text = "Status :";
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(747, 141);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(242, 186);
+            this.pictureBox1.TabIndex = 96;
+            this.pictureBox1.TabStop = false;
+            // 
+            // AddImagebtn
+            // 
+            this.AddImagebtn.Location = new System.Drawing.Point(766, 429);
+            this.AddImagebtn.Name = "AddImagebtn";
+            this.AddImagebtn.Size = new System.Drawing.Size(143, 23);
+            this.AddImagebtn.TabIndex = 97;
+            this.AddImagebtn.Text = "Add Image";
+            this.AddImagebtn.UseVisualStyleBackColor = true;
+            this.AddImagebtn.Click += new System.EventHandler(this.AddImagebtn_Click);
+            // 
             // AddShipment
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(727, 760);
+            this.ClientSize = new System.Drawing.Size(1130, 760);
+            this.Controls.Add(this.AddImagebtn);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.StatsText);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.label9);
@@ -305,6 +328,7 @@
             this.Name = "AddShipment";
             this.Text = "AddShipment";
             this.Load += new System.EventHandler(this.AddShipment_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -333,5 +357,7 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.ComboBox StatsText;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Button AddImagebtn;
     }
 }

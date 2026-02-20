@@ -54,11 +54,14 @@
             this.label8 = new System.Windows.Forms.Label();
             this.panel9 = new System.Windows.Forms.Panel();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.AddImagebtn = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel5.SuspendLayout();
             this.panel6.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NGText)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // ModelText
@@ -311,12 +314,32 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // AddImagebtn
+            // 
+            this.AddImagebtn.Location = new System.Drawing.Point(747, 353);
+            this.AddImagebtn.Name = "AddImagebtn";
+            this.AddImagebtn.Size = new System.Drawing.Size(143, 23);
+            this.AddImagebtn.TabIndex = 147;
+            this.AddImagebtn.Text = "Add Image";
+            this.AddImagebtn.UseVisualStyleBackColor = true;
+            this.AddImagebtn.Click += new System.EventHandler(this.AddImagebtn_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(693, 114);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(242, 186);
+            this.pictureBox1.TabIndex = 146;
+            this.pictureBox1.TabStop = false;
+            // 
             // AddCustomerComplaint
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(635, 706);
+            this.ClientSize = new System.Drawing.Size(1070, 706);
             this.ControlBox = false;
+            this.Controls.Add(this.AddImagebtn);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.panel9);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.NGText);
@@ -345,6 +368,7 @@
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.NGText)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -376,5 +400,7 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Panel panel9;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.Button AddImagebtn;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

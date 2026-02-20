@@ -20,6 +20,10 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
 
             Dictionary<string, object> parameters = new Dictionary<string, object>();
 
+            string countstring = @"SELECT COUNT(*) FROM MetalMask_Masterlist 
+                                   WHERE IsDelete = 0 ";
+
+
             string strquery = @"SELECT RecordID
                                   ,Partnumber
                                   ,AREA
@@ -35,10 +39,13 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                               FROM MetalMask_Masterlist
                               WHERE IsDelete = 0 ";
 
+            
+
             // Filter By Area 
             if (Area != 0)
             {
                 strquery += "AND AREA = @AREA";
+                countstring += "AND AREA = @AREA";
                 parameters.Add("@AREA", Area);
             }
 
@@ -46,6 +53,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
             if (ModelType != 0)
             {
                 strquery += "AND ModelType = @ModelType";
+                countstring += "AND ModelType = @ModelType";
                 parameters.Add("@ModelType", ModelType);
             }
 
@@ -53,6 +61,10 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
             if (!string.IsNullOrEmpty(search))
             {
                 strquery += $@" AND (
+                                @Search IS NULL
+                                OR Partnumber LIKE '%' + @Search + '%'
+                              )";
+                countstring += $@" AND (
                                 @Search IS NULL
                                 OR Partnumber LIKE '%' + @Search + '%'
                               )";
@@ -72,7 +84,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
            
             var items = await SqlDataAccess.GetData<MetalMaskModel>(strquery, parameters);
 
-            int TotalRecords = items.Count;
+            int TotalRecords = await SqlDataAccess.GetCountData(countstring, parameters);
 
             return new PagedResult<MetalMaskModel>
             {

@@ -1,22 +1,14 @@
-﻿using OfficeOpenXml;
-using ProgramPartListWeb.Areas.Circuit.Interface;
+﻿using ProgramPartListWeb.Areas.Circuit.Interface;
 using ProgramPartListWeb.Areas.Circuit.Models;
-using ProgramPartListWeb.Areas.Hydroponics.Interface;
 using ProgramPartListWeb.Controllers;
 using ProgramPartListWeb.Helper;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using ClosedXML.Excel;
-using System.Runtime.InteropServices;
-using DocumentFormat.OpenXml.Spreadsheet;
-using ProgramPartListWeb.Models;
 
 namespace ProgramPartListWeb.Areas.Circuit.Controllers
 {
@@ -38,9 +30,11 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
         [HttpGet]
         public async Task<ActionResult> GetMastetlistData(
             string search,
-            int ModelType)
+            int ModelType,
+            int pageNumber,
+            int pageSize)
         {
-            var data = await _mas.GetMetalMaskMasterlist(search, 0, ModelType, 0, 0);
+            var data = await _mas.GetMetalMaskMasterlist(search, 0, ModelType, pageNumber, pageSize);
             if (data == null || !data.Items.Any()) return JsonNotFound("No Masterlist Data.");
             return JsonSuccess(data);
         }

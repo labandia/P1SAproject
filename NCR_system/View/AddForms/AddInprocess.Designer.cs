@@ -61,6 +61,9 @@
             this.label14 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
+            this.AddImagebtn = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
@@ -81,7 +84,7 @@
             "Rotor",
             "Winding",
             "Circuit"});
-            this.comboBox2.Location = new System.Drawing.Point(850, 566);
+            this.comboBox2.Location = new System.Drawing.Point(735, 566);
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(267, 21);
             this.comboBox2.TabIndex = 150;
@@ -90,7 +93,7 @@
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(847, 529);
+            this.label12.Location = new System.Drawing.Point(732, 529);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(94, 18);
             this.label12.TabIndex = 149;
@@ -160,7 +163,7 @@
             this.Save_btn.ForeColor = System.Drawing.Color.White;
             this.Save_btn.Image = ((System.Drawing.Image)(resources.GetObject("Save_btn.Image")));
             this.Save_btn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Save_btn.Location = new System.Drawing.Point(937, 679);
+            this.Save_btn.Location = new System.Drawing.Point(871, 679);
             this.Save_btn.Name = "Save_btn";
             this.Save_btn.Padding = new System.Windows.Forms.Padding(45, 0, 50, 0);
             this.Save_btn.Size = new System.Drawing.Size(180, 43);
@@ -173,7 +176,7 @@
             // 
             this.Cancel_btn.Cursor = System.Windows.Forms.Cursors.Hand;
             this.Cancel_btn.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Cancel_btn.Location = new System.Drawing.Point(732, 679);
+            this.Cancel_btn.Location = new System.Drawing.Point(666, 679);
             this.Cancel_btn.Name = "Cancel_btn";
             this.Cancel_btn.Size = new System.Drawing.Size(178, 43);
             this.Cancel_btn.TabIndex = 142;
@@ -245,7 +248,7 @@
             // 
             this.ModelText.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ModelText.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ModelText.Location = new System.Drawing.Point(850, 259);
+            this.ModelText.Location = new System.Drawing.Point(735, 259);
             this.ModelText.Multiline = true;
             this.ModelText.Name = "ModelText";
             this.ModelText.Size = new System.Drawing.Size(267, 41);
@@ -255,7 +258,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(847, 228);
+            this.label2.Location = new System.Drawing.Point(732, 228);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(46, 18);
             this.label2.TabIndex = 130;
@@ -268,7 +271,7 @@
             this.RegNoText.Location = new System.Drawing.Point(58, 155);
             this.RegNoText.Multiline = true;
             this.RegNoText.Name = "RegNoText";
-            this.RegNoText.Size = new System.Drawing.Size(1059, 41);
+            this.RegNoText.Size = new System.Drawing.Size(966, 41);
             this.RegNoText.TabIndex = 127;
             // 
             // label5
@@ -325,7 +328,7 @@
             // 
             this.textBox4.BackColor = System.Drawing.Color.WhiteSmoke;
             this.textBox4.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox4.Location = new System.Drawing.Point(850, 351);
+            this.textBox4.Location = new System.Drawing.Point(735, 351);
             this.textBox4.Multiline = true;
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(267, 41);
@@ -335,7 +338,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(847, 320);
+            this.label13.Location = new System.Drawing.Point(732, 320);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(71, 18);
             this.label13.TabIndex = 162;
@@ -365,7 +368,7 @@
             // 
             this.textBox6.BackColor = System.Drawing.Color.WhiteSmoke;
             this.textBox6.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox6.Location = new System.Drawing.Point(850, 437);
+            this.textBox6.Location = new System.Drawing.Point(735, 437);
             this.textBox6.Multiline = true;
             this.textBox6.Name = "textBox6";
             this.textBox6.Size = new System.Drawing.Size(267, 41);
@@ -375,7 +378,7 @@
             // 
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(847, 406);
+            this.label14.Location = new System.Drawing.Point(732, 406);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(63, 18);
             this.label14.TabIndex = 166;
@@ -398,11 +401,31 @@
             this.dateTimePicker1.Size = new System.Drawing.Size(267, 20);
             this.dateTimePicker1.TabIndex = 168;
             // 
+            // AddImagebtn
+            // 
+            this.AddImagebtn.Location = new System.Drawing.Point(1157, 376);
+            this.AddImagebtn.Name = "AddImagebtn";
+            this.AddImagebtn.Size = new System.Drawing.Size(156, 41);
+            this.AddImagebtn.TabIndex = 171;
+            this.AddImagebtn.Text = "Add Image";
+            this.AddImagebtn.UseVisualStyleBackColor = true;
+            this.AddImagebtn.Click += new System.EventHandler(this.AddImagebtn_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(1116, 155);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(242, 186);
+            this.pictureBox1.TabIndex = 170;
+            this.pictureBox1.TabStop = false;
+            // 
             // AddInprocess
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1195, 768);
+            this.ClientSize = new System.Drawing.Size(1542, 768);
+            this.Controls.Add(this.AddImagebtn);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dateTimePicker1);
             this.Controls.Add(this.textBox6);
@@ -437,6 +460,7 @@
             this.Controls.Add(this.label5);
             this.Name = "AddInprocess";
             this.Text = "AddInprocess";
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -475,5 +499,7 @@
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
+        private System.Windows.Forms.Button AddImagebtn;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

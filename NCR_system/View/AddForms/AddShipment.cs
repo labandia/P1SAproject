@@ -1,8 +1,11 @@
 ﻿using NCR_system.Interface;
 using NCR_system.Models;
+using NCR_system.Utilities;
 using NCR_system.View.Module;
 using System;
 using System.Diagnostics;
+using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace NCR_system.View.AddForms
@@ -14,6 +17,8 @@ namespace NCR_system.View.AddForms
         private readonly Rejected _rej;
 
         public int _proc;
+
+        string selectedImagepath = "";
 
         public AddShipment(IShipRejected ship, int proc,  ShipRejected shipcontrol = null, Rejected rej = null)
         {
@@ -31,6 +36,10 @@ namespace NCR_system.View.AddForms
 
         private async void Save_btn_Click(object sender, EventArgs e)
         {
+
+            string imagepath = await UploadServices.SaveImageFolder(selectedImagepath);
+
+
             var obj = new RejectShipmentModel
             {
                 RegNo = string.IsNullOrEmpty(RegNoText.Text) ? "" : RegNoText.Text,
@@ -41,7 +50,8 @@ namespace NCR_system.View.AddForms
                 Quantity = Convert.ToInt32(QuanText.Text),
                 Contents = string.IsNullOrEmpty(ContentText.Text) ? "" : ContentText.Text,
                 DateCloseReg = DateRegText.Text,
-                Status = StatsText.SelectedIndex + 1
+                Status = StatsText.SelectedIndex + 1, 
+                UploadImage = imagepath
             };
             bool result = false;
 
@@ -101,5 +111,21 @@ namespace NCR_system.View.AddForms
         {
 
         }
+
+        private void AddImagebtn_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp";
+
+            if(ofd.ShowDialog() == DialogResult.OK)
+            {
+                selectedImagepath = ofd.FileName;
+                pictureBox1.Image = Image.FromFile(selectedImagepath);
+                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            }
+        }
+
+
+      
     }
 }

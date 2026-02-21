@@ -38,6 +38,9 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Customer_Complaint_user));
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.CustomDatagrid = new System.Windows.Forms.DataGridView();
             this.RecordID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DateCreated = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -56,49 +59,35 @@
             this.Externalbtn = new System.Windows.Forms.Button();
             this.filteritems = new System.Windows.Forms.ComboBox();
             this.sectionfilter = new System.Windows.Forms.ComboBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.MoldText = new System.Windows.Forms.Label();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.PressText = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.panel4 = new System.Windows.Forms.Panel();
-            this.label6 = new System.Windows.Forms.Label();
-            this.RotorText = new System.Windows.Forms.Label();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.panel5 = new System.Windows.Forms.Panel();
-            this.label10 = new System.Windows.Forms.Label();
-            this.CircuitText = new System.Windows.Forms.Label();
-            this.pictureBox5 = new System.Windows.Forms.PictureBox();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.WindText = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.pictureBox4 = new System.Windows.Forms.PictureBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.panel6 = new System.Windows.Forms.Panel();
-            this.pictureBox6 = new System.Windows.Forms.PictureBox();
             this.searchText = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
+            this.panel7 = new System.Windows.Forms.Panel();
+            this.panel8 = new System.Windows.Forms.Panel();
+            this.panel9 = new System.Windows.Forms.Panel();
+            this.Circuitval = new System.Windows.Forms.Label();
+            this.windingval = new System.Windows.Forms.Label();
+            this.Rotorval = new System.Windows.Forms.Label();
+            this.Pressval = new System.Windows.Forms.Label();
+            this.moldval = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.MoldLabel = new System.Windows.Forms.Label();
+            this.button5 = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.label12 = new System.Windows.Forms.Label();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.button3 = new System.Windows.Forms.Button();
+            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             ((System.ComponentModel.ISupportInitialize)(this.CustomDatagrid)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.panel1.SuspendLayout();
-            this.panel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            this.panel4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.panel5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
-            this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
-            this.panel6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
+            this.panel7.SuspendLayout();
+            this.panel8.SuspendLayout();
+            this.panel9.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
             // 
             // CustomDatagrid
@@ -142,7 +131,7 @@
             dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.CustomDatagrid.DefaultCellStyle = dataGridViewCellStyle8;
-            this.CustomDatagrid.Location = new System.Drawing.Point(32, 283);
+            this.CustomDatagrid.Location = new System.Drawing.Point(3, 412);
             this.CustomDatagrid.Name = "CustomDatagrid";
             this.CustomDatagrid.ReadOnly = true;
             dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -156,7 +145,7 @@
             this.CustomDatagrid.RowHeadersVisible = false;
             this.CustomDatagrid.RowTemplate.Height = 30;
             this.CustomDatagrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.CustomDatagrid.Size = new System.Drawing.Size(1463, 482);
+            this.CustomDatagrid.Size = new System.Drawing.Size(1524, 374);
             this.CustomDatagrid.TabIndex = 4;
             this.CustomDatagrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.CustomDatagrid_CellClick);
             this.CustomDatagrid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.CustomDatagrid_CellDoubleClick);
@@ -286,7 +275,7 @@
             this.OpenCC.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.OpenCC.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.OpenCC.ForeColor = System.Drawing.Color.White;
-            this.OpenCC.Location = new System.Drawing.Point(1359, 213);
+            this.OpenCC.Location = new System.Drawing.Point(1342, 331);
             this.OpenCC.Name = "OpenCC";
             this.OpenCC.Size = new System.Drawing.Size(136, 41);
             this.OpenCC.TabIndex = 6;
@@ -304,7 +293,7 @@
             this.SelectedProcess.Items.AddRange(new object[] {
             "External",
             "SDC"});
-            this.SelectedProcess.Location = new System.Drawing.Point(362, 231);
+            this.SelectedProcess.Location = new System.Drawing.Point(1003, 316);
             this.SelectedProcess.Name = "SelectedProcess";
             this.SelectedProcess.Size = new System.Drawing.Size(159, 23);
             this.SelectedProcess.TabIndex = 7;
@@ -321,9 +310,9 @@
             this.Externalbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Externalbtn.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold);
             this.Externalbtn.ForeColor = System.Drawing.Color.White;
-            this.Externalbtn.Location = new System.Drawing.Point(1207, 213);
+            this.Externalbtn.Location = new System.Drawing.Point(1343, 279);
             this.Externalbtn.Name = "Externalbtn";
-            this.Externalbtn.Size = new System.Drawing.Size(137, 41);
+            this.Externalbtn.Size = new System.Drawing.Size(138, 29);
             this.Externalbtn.TabIndex = 8;
             this.Externalbtn.Text = "Add External";
             this.Externalbtn.UseVisualStyleBackColor = false;
@@ -337,7 +326,7 @@
             "-- Filter Status --",
             "Open",
             "Close"});
-            this.filteritems.Location = new System.Drawing.Point(547, 231);
+            this.filteritems.Location = new System.Drawing.Point(1188, 316);
             this.filteritems.Name = "filteritems";
             this.filteritems.Size = new System.Drawing.Size(121, 23);
             this.filteritems.TabIndex = 11;
@@ -357,283 +346,16 @@
             "Rotor",
             "Winding",
             "Circuit"});
-            this.sectionfilter.Location = new System.Drawing.Point(222, 231);
+            this.sectionfilter.Location = new System.Drawing.Point(863, 316);
             this.sectionfilter.MaxDropDownItems = 30;
             this.sectionfilter.Name = "sectionfilter";
             this.sectionfilter.Size = new System.Drawing.Size(121, 23);
             this.sectionfilter.TabIndex = 12;
             this.sectionfilter.SelectedIndexChanged += new System.EventHandler(this.sectionfilter_SelectedIndexChanged);
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(29, 23);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(50, 50);
-            this.pictureBox1.TabIndex = 13;
-            this.pictureBox1.TabStop = false;
-            // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.Color.White;
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.MoldText);
-            this.panel1.Controls.Add(this.pictureBox1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(3, 3);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(286, 94);
-            this.panel1.TabIndex = 14;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(84, 20);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(93, 25);
-            this.label1.TabIndex = 14;
-            this.label1.Text = "Molding ";
-            // 
-            // MoldText
-            // 
-            this.MoldText.AutoSize = true;
-            this.MoldText.BackColor = System.Drawing.Color.Transparent;
-            this.MoldText.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MoldText.Location = new System.Drawing.Point(85, 46);
-            this.MoldText.Name = "MoldText";
-            this.MoldText.Size = new System.Drawing.Size(24, 30);
-            this.MoldText.TabIndex = 15;
-            this.MoldText.Text = "0";
-            // 
-            // panel3
-            // 
-            this.panel3.BackColor = System.Drawing.Color.White;
-            this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel3.Controls.Add(this.PressText);
-            this.panel3.Controls.Add(this.label4);
-            this.panel3.Controls.Add(this.pictureBox2);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(295, 3);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(286, 94);
-            this.panel3.TabIndex = 16;
-            // 
-            // PressText
-            // 
-            this.PressText.AutoSize = true;
-            this.PressText.Font = new System.Drawing.Font("Segoe UI", 15.75F);
-            this.PressText.Location = new System.Drawing.Point(85, 44);
-            this.PressText.Name = "PressText";
-            this.PressText.Size = new System.Drawing.Size(24, 30);
-            this.PressText.TabIndex = 15;
-            this.PressText.Text = "0";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(85, 20);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(58, 25);
-            this.label4.TabIndex = 14;
-            this.label4.Text = "Press";
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(29, 23);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(50, 50);
-            this.pictureBox2.TabIndex = 13;
-            this.pictureBox2.TabStop = false;
-            // 
-            // panel4
-            // 
-            this.panel4.BackColor = System.Drawing.Color.White;
-            this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel4.Controls.Add(this.label6);
-            this.panel4.Controls.Add(this.RotorText);
-            this.panel4.Controls.Add(this.pictureBox3);
-            this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel4.Location = new System.Drawing.Point(587, 3);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(286, 94);
-            this.panel4.TabIndex = 17;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(90, 20);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(63, 25);
-            this.label6.TabIndex = 14;
-            this.label6.Text = "Rotor";
-            // 
-            // RotorText
-            // 
-            this.RotorText.AutoSize = true;
-            this.RotorText.Font = new System.Drawing.Font("Segoe UI", 15.75F);
-            this.RotorText.Location = new System.Drawing.Point(90, 44);
-            this.RotorText.Name = "RotorText";
-            this.RotorText.Size = new System.Drawing.Size(24, 30);
-            this.RotorText.TabIndex = 15;
-            this.RotorText.Text = "0";
-            // 
-            // pictureBox3
-            // 
-            this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
-            this.pictureBox3.Location = new System.Drawing.Point(34, 21);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(50, 50);
-            this.pictureBox3.TabIndex = 13;
-            this.pictureBox3.TabStop = false;
-            // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel1.ColumnCount = 5;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel1.Controls.Add(this.panel5, 4, 0);
-            this.tableLayoutPanel1.Controls.Add(this.panel2, 3, 0);
-            this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.panel4, 2, 0);
-            this.tableLayoutPanel1.Controls.Add(this.panel3, 1, 0);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(32, 89);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1463, 100);
-            this.tableLayoutPanel1.TabIndex = 18;
-            // 
-            // panel5
-            // 
-            this.panel5.BackColor = System.Drawing.Color.White;
-            this.panel5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel5.Controls.Add(this.label10);
-            this.panel5.Controls.Add(this.CircuitText);
-            this.panel5.Controls.Add(this.pictureBox5);
-            this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel5.Location = new System.Drawing.Point(1171, 3);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(289, 94);
-            this.panel5.TabIndex = 19;
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(90, 21);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(70, 25);
-            this.label10.TabIndex = 14;
-            this.label10.Text = "Circuit";
-            // 
-            // CircuitText
-            // 
-            this.CircuitText.AutoSize = true;
-            this.CircuitText.Font = new System.Drawing.Font("Segoe UI", 15.75F);
-            this.CircuitText.Location = new System.Drawing.Point(90, 44);
-            this.CircuitText.Name = "CircuitText";
-            this.CircuitText.Size = new System.Drawing.Size(24, 30);
-            this.CircuitText.TabIndex = 15;
-            this.CircuitText.Text = "0";
-            // 
-            // pictureBox5
-            // 
-            this.pictureBox5.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox5.Image")));
-            this.pictureBox5.Location = new System.Drawing.Point(34, 21);
-            this.pictureBox5.Name = "pictureBox5";
-            this.pictureBox5.Size = new System.Drawing.Size(50, 50);
-            this.pictureBox5.TabIndex = 13;
-            this.pictureBox5.TabStop = false;
-            // 
-            // panel2
-            // 
-            this.panel2.BackColor = System.Drawing.Color.White;
-            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel2.Controls.Add(this.WindText);
-            this.panel2.Controls.Add(this.label8);
-            this.panel2.Controls.Add(this.pictureBox4);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(879, 3);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(286, 94);
-            this.panel2.TabIndex = 18;
-            // 
-            // WindText
-            // 
-            this.WindText.AutoSize = true;
-            this.WindText.Font = new System.Drawing.Font("Segoe UI", 15.75F);
-            this.WindText.Location = new System.Drawing.Point(90, 46);
-            this.WindText.Name = "WindText";
-            this.WindText.Size = new System.Drawing.Size(24, 30);
-            this.WindText.TabIndex = 15;
-            this.WindText.Text = "0";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(90, 20);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(89, 25);
-            this.label8.TabIndex = 14;
-            this.label8.Text = "Winding";
-            // 
-            // pictureBox4
-            // 
-            this.pictureBox4.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox4.Image")));
-            this.pictureBox4.Location = new System.Drawing.Point(34, 21);
-            this.pictureBox4.Name = "pictureBox4";
-            this.pictureBox4.Size = new System.Drawing.Size(50, 50);
-            this.pictureBox4.TabIndex = 13;
-            this.pictureBox4.TabStop = false;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.BackColor = System.Drawing.Color.Transparent;
-            this.label2.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(97)))), ((int)(((byte)(238)))));
-            this.label2.Location = new System.Drawing.Point(42, 9);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(167, 16);
-            this.label2.TabIndex = 19;
-            this.label2.Text = "SDP Customer Complaint";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.label2.Click += new System.EventHandler(this.label2_Click_1);
-            // 
-            // panel6
-            // 
-            this.panel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(246)))), ((int)(((byte)(255)))));
-            this.panel6.Controls.Add(this.pictureBox6);
-            this.panel6.Controls.Add(this.label2);
-            this.panel6.Location = new System.Drawing.Point(32, 41);
-            this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(230, 35);
-            this.panel6.TabIndex = 20;
-            // 
-            // pictureBox6
-            // 
-            this.pictureBox6.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.pictureBox6.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox6.Image")));
-            this.pictureBox6.Location = new System.Drawing.Point(18, 10);
-            this.pictureBox6.Name = "pictureBox6";
-            this.pictureBox6.Size = new System.Drawing.Size(22, 19);
-            this.pictureBox6.TabIndex = 26;
-            this.pictureBox6.TabStop = false;
-            // 
             // searchText
             // 
-            this.searchText.Location = new System.Drawing.Point(32, 234);
+            this.searchText.Location = new System.Drawing.Point(682, 318);
             this.searchText.Name = "searchText";
             this.searchText.Size = new System.Drawing.Size(157, 20);
             this.searchText.TabIndex = 21;
@@ -642,7 +364,8 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(38, 208);
+            this.label3.ForeColor = System.Drawing.SystemColors.Control;
+            this.label3.Location = new System.Drawing.Point(679, 293);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(48, 15);
             this.label3.TabIndex = 22;
@@ -652,7 +375,8 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(224, 208);
+            this.label5.ForeColor = System.Drawing.SystemColors.Control;
+            this.label5.Location = new System.Drawing.Point(865, 293);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(97, 15);
             this.label5.TabIndex = 23;
@@ -662,7 +386,8 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(359, 208);
+            this.label7.ForeColor = System.Drawing.SystemColors.Control;
+            this.label7.Location = new System.Drawing.Point(1000, 293);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(55, 15);
             this.label7.TabIndex = 24;
@@ -672,54 +397,260 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(544, 208);
+            this.label9.ForeColor = System.Drawing.SystemColors.Control;
+            this.label9.Location = new System.Drawing.Point(1185, 293);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(119, 15);
             this.label9.TabIndex = 25;
             this.label9.Text = "Filter by Open/Close";
             // 
+            // panel7
+            // 
+            this.panel7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(30)))), ((int)(((byte)(54)))));
+            this.panel7.Controls.Add(this.panel8);
+            this.panel7.Controls.Add(this.label9);
+            this.panel7.Controls.Add(this.OpenCC);
+            this.panel7.Controls.Add(this.Externalbtn);
+            this.panel7.Controls.Add(this.label7);
+            this.panel7.Controls.Add(this.label5);
+            this.panel7.Controls.Add(this.label3);
+            this.panel7.Controls.Add(this.SelectedProcess);
+            this.panel7.Controls.Add(this.searchText);
+            this.panel7.Controls.Add(this.filteritems);
+            this.panel7.Controls.Add(this.sectionfilter);
+            this.panel7.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel7.Location = new System.Drawing.Point(0, 0);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(1530, 387);
+            this.panel7.TabIndex = 34;
+            // 
+            // panel8
+            // 
+            this.panel8.Controls.Add(this.panel9);
+            this.panel8.Controls.Add(this.chart1);
+            this.panel8.Location = new System.Drawing.Point(42, 20);
+            this.panel8.Name = "panel8";
+            this.panel8.Size = new System.Drawing.Size(547, 330);
+            this.panel8.TabIndex = 34;
+            // 
+            // panel9
+            // 
+            this.panel9.Controls.Add(this.Circuitval);
+            this.panel9.Controls.Add(this.windingval);
+            this.panel9.Controls.Add(this.Rotorval);
+            this.panel9.Controls.Add(this.Pressval);
+            this.panel9.Controls.Add(this.moldval);
+            this.panel9.Controls.Add(this.label11);
+            this.panel9.Controls.Add(this.MoldLabel);
+            this.panel9.Controls.Add(this.button5);
+            this.panel9.Controls.Add(this.button1);
+            this.panel9.Controls.Add(this.label12);
+            this.panel9.Controls.Add(this.button2);
+            this.panel9.Controls.Add(this.button4);
+            this.panel9.Controls.Add(this.label13);
+            this.panel9.Controls.Add(this.label14);
+            this.panel9.Controls.Add(this.button3);
+            this.panel9.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel9.Location = new System.Drawing.Point(375, 0);
+            this.panel9.Name = "panel9";
+            this.panel9.Size = new System.Drawing.Size(172, 330);
+            this.panel9.TabIndex = 34;
+            // 
+            // Circuitval
+            // 
+            this.Circuitval.AutoSize = true;
+            this.Circuitval.Font = new System.Drawing.Font("Segoe UI Semibold", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Circuitval.ForeColor = System.Drawing.SystemColors.ControlLight;
+            this.Circuitval.Location = new System.Drawing.Point(47, 290);
+            this.Circuitval.Name = "Circuitval";
+            this.Circuitval.Size = new System.Drawing.Size(25, 30);
+            this.Circuitval.TabIndex = 49;
+            this.Circuitval.Text = "0";
+            // 
+            // windingval
+            // 
+            this.windingval.AutoSize = true;
+            this.windingval.Font = new System.Drawing.Font("Segoe UI Semibold", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.windingval.ForeColor = System.Drawing.SystemColors.ControlLight;
+            this.windingval.Location = new System.Drawing.Point(47, 233);
+            this.windingval.Name = "windingval";
+            this.windingval.Size = new System.Drawing.Size(25, 30);
+            this.windingval.TabIndex = 48;
+            this.windingval.Text = "0";
+            // 
+            // Rotorval
+            // 
+            this.Rotorval.AutoSize = true;
+            this.Rotorval.Font = new System.Drawing.Font("Segoe UI Semibold", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Rotorval.ForeColor = System.Drawing.SystemColors.ControlLight;
+            this.Rotorval.Location = new System.Drawing.Point(47, 173);
+            this.Rotorval.Name = "Rotorval";
+            this.Rotorval.Size = new System.Drawing.Size(25, 30);
+            this.Rotorval.TabIndex = 47;
+            this.Rotorval.Text = "0";
+            // 
+            // Pressval
+            // 
+            this.Pressval.AutoSize = true;
+            this.Pressval.Font = new System.Drawing.Font("Segoe UI Semibold", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Pressval.ForeColor = System.Drawing.SystemColors.ControlLight;
+            this.Pressval.Location = new System.Drawing.Point(47, 110);
+            this.Pressval.Name = "Pressval";
+            this.Pressval.Size = new System.Drawing.Size(25, 30);
+            this.Pressval.TabIndex = 46;
+            this.Pressval.Text = "0";
+            // 
+            // moldval
+            // 
+            this.moldval.AutoSize = true;
+            this.moldval.Font = new System.Drawing.Font("Segoe UI Semibold", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.moldval.ForeColor = System.Drawing.SystemColors.ControlLight;
+            this.moldval.Location = new System.Drawing.Point(47, 45);
+            this.moldval.Name = "moldval";
+            this.moldval.Size = new System.Drawing.Size(25, 30);
+            this.moldval.TabIndex = 45;
+            this.moldval.Text = "0";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.ForeColor = System.Drawing.SystemColors.ControlLight;
+            this.label11.Location = new System.Drawing.Point(20, 268);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(60, 21);
+            this.label11.TabIndex = 44;
+            this.label11.Text = "Circuit";
+            // 
+            // MoldLabel
+            // 
+            this.MoldLabel.AutoSize = true;
+            this.MoldLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MoldLabel.ForeColor = System.Drawing.SystemColors.ControlLight;
+            this.MoldLabel.Location = new System.Drawing.Point(20, 22);
+            this.MoldLabel.Name = "MoldLabel";
+            this.MoldLabel.Size = new System.Drawing.Size(75, 21);
+            this.MoldLabel.TabIndex = 36;
+            this.MoldLabel.Text = "Molding";
+            // 
+            // button5
+            // 
+            this.button5.BackColor = System.Drawing.Color.Aqua;
+            this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button5.Location = new System.Drawing.Point(23, 298);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(15, 13);
+            this.button5.TabIndex = 43;
+            this.button5.UseVisualStyleBackColor = false;
+            // 
+            // button1
+            // 
+            this.button1.BackColor = System.Drawing.Color.DodgerBlue;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button1.Location = new System.Drawing.Point(23, 56);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(15, 13);
+            this.button1.TabIndex = 35;
+            this.button1.UseVisualStyleBackColor = false;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.ForeColor = System.Drawing.SystemColors.ControlLight;
+            this.label12.Location = new System.Drawing.Point(19, 211);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(76, 21);
+            this.label12.TabIndex = 42;
+            this.label12.Text = "Winding";
+            // 
+            // button2
+            // 
+            this.button2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button2.Location = new System.Drawing.Point(23, 122);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(15, 13);
+            this.button2.TabIndex = 37;
+            this.button2.UseVisualStyleBackColor = false;
+            // 
+            // button4
+            // 
+            this.button4.BackColor = System.Drawing.Color.Yellow;
+            this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button4.Location = new System.Drawing.Point(23, 242);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(15, 13);
+            this.button4.TabIndex = 41;
+            this.button4.UseVisualStyleBackColor = false;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.ForeColor = System.Drawing.SystemColors.ControlLight;
+            this.label13.Location = new System.Drawing.Point(20, 85);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(49, 21);
+            this.label13.TabIndex = 38;
+            this.label13.Text = "Press";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.ForeColor = System.Drawing.SystemColors.ControlLight;
+            this.label14.Location = new System.Drawing.Point(20, 149);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(52, 21);
+            this.label14.TabIndex = 40;
+            this.label14.Text = "Rotor";
+            // 
+            // button3
+            // 
+            this.button3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button3.Location = new System.Drawing.Point(23, 184);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(15, 13);
+            this.button3.TabIndex = 39;
+            this.button3.UseVisualStyleBackColor = false;
+            // 
+            // chart1
+            // 
+            this.chart1.BackColor = System.Drawing.Color.Transparent;
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
+            this.chart1.Dock = System.Windows.Forms.DockStyle.Left;
+            legend1.Name = "Legend1";
+            this.chart1.Legends.Add(legend1);
+            this.chart1.Location = new System.Drawing.Point(0, 0);
+            this.chart1.Name = "chart1";
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.chart1.Series.Add(series1);
+            this.chart1.Size = new System.Drawing.Size(369, 330);
+            this.chart1.TabIndex = 33;
+            this.chart1.Text = "chart1";
+            // 
             // Customer_Complaint_user
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.label9);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.searchText);
-            this.Controls.Add(this.panel6);
-            this.Controls.Add(this.tableLayoutPanel1);
-            this.Controls.Add(this.sectionfilter);
-            this.Controls.Add(this.filteritems);
-            this.Controls.Add(this.Externalbtn);
-            this.Controls.Add(this.SelectedProcess);
-            this.Controls.Add(this.OpenCC);
+            this.Controls.Add(this.panel7);
             this.Controls.Add(this.CustomDatagrid);
             this.Name = "Customer_Complaint_user";
             this.Size = new System.Drawing.Size(1530, 806);
             this.Load += new System.EventHandler(this.Customer_Complaint_user_Load);
             ((System.ComponentModel.ISupportInitialize)(this.CustomDatagrid)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            this.panel3.ResumeLayout(false);
-            this.panel3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            this.panel4.ResumeLayout(false);
-            this.panel4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.panel5.ResumeLayout(false);
-            this.panel5.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
-            this.panel6.ResumeLayout(false);
-            this.panel6.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
+            this.panel7.ResumeLayout(false);
+            this.panel7.PerformLayout();
+            this.panel8.ResumeLayout(false);
+            this.panel9.ResumeLayout(false);
+            this.panel9.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -730,28 +661,6 @@
         private System.Windows.Forms.Button Externalbtn;
         private System.Windows.Forms.ComboBox filteritems;
         private System.Windows.Forms.ComboBox sectionfilter;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label MoldText;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Label PressText;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.Panel panel4;
-        private System.Windows.Forms.Label RotorText;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.PictureBox pictureBox3;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Panel panel5;
-        private System.Windows.Forms.Label CircuitText;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.PictureBox pictureBox5;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Label WindText;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.PictureBox pictureBox4;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.DataGridViewTextBoxColumn RecordID;
         private System.Windows.Forms.DataGridViewTextBoxColumn DateCreated;
         private System.Windows.Forms.DataGridViewTextBoxColumn SectionID;
@@ -764,12 +673,29 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Status;
         private System.Windows.Forms.DataGridViewTextBoxColumn CCtype;
         private System.Windows.Forms.DataGridViewImageColumn Delete;
-        private System.Windows.Forms.Panel panel6;
         private System.Windows.Forms.TextBox searchText;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.PictureBox pictureBox6;
+        private System.Windows.Forms.Panel panel7;
+        private System.Windows.Forms.Panel panel8;
+        private System.Windows.Forms.Panel panel9;
+        private System.Windows.Forms.Label Circuitval;
+        private System.Windows.Forms.Label windingval;
+        private System.Windows.Forms.Label Rotorval;
+        private System.Windows.Forms.Label Pressval;
+        private System.Windows.Forms.Label moldval;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label MoldLabel;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
     }
 }

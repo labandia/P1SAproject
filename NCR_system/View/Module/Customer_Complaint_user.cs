@@ -11,6 +11,7 @@ using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace NCR_system.View.Module    
 {
@@ -42,11 +43,7 @@ namespace NCR_system.View.Module
                 var filtered = await _cust.GetCustomerData(search, depId, proc, stats, 0, 0);
 
                 // For Displaying Customer
-                cuslist = filtered;
-
-               
-                // 🔹 Apply final result
-                CustomDatagrid.DataSource = filtered.ToList();
+                CustomDatagrid.DataSource = filtered;
 
                 if (proc == 0)
                 {
@@ -176,44 +173,10 @@ namespace NCR_system.View.Module
                 }
 
 
-
-                // 🔹 Define all known sections
-                var sections = new List<KeyValuePair<int, string>>()
-                {
-                    new KeyValuePair<int, string>(1, "Molding"),
-                    new KeyValuePair<int, string>(2, "Press"),
-                    new KeyValuePair<int, string>(3, "Rotor"),
-                    new KeyValuePair<int, string>(4, "Winding"),
-                    new KeyValuePair<int, string>(5, "Circuit")
-                };
-
                 var countItems = await _sum.GetCustomersOpenItem(proc) ?? new List<CustomerTotalModel>();
+                DisplayPieChart(countItems);
 
-
-                foreach (var items in countItems)
-                {
-                    switch (items.DepartmentName)
-                    {
-                        case "Molding":
-                            MoldText.Text = items.totalOpen.ToString();
-                            break;
-                        case "Press":
-                            PressText.Text = items.totalOpen.ToString();
-                            break;
-                        case "Rotor":
-                            RotorText.Text = items.totalOpen.ToString();
-                            break;
-                        case "Winding":
-                            WindText.Text = items.totalOpen.ToString();
-                            break;
-                        default:
-                            CircuitText.Text = items.totalOpen.ToString();
-                            break;
-                    }
-
-                }
-
-
+          
             }
             catch (Exception ex)
             {
@@ -373,6 +336,109 @@ namespace NCR_system.View.Module
         private void label2_Click_1(object sender, EventArgs e)
         {
 
+        }
+
+        public void resetDisplayText()
+        {
+            moldval.Text = "0";
+            Pressval.Text = "0";
+            Rotorval.Text = "0";
+            windingval.Text = "0";
+            Circuitval.Text = "0";
+        }
+
+        public void DisplayPieChart(List<CustomerTotalModel> cc)
+        {
+            resetDisplayText();
+
+            chart1.Series.Clear();
+            chart1.ChartAreas.Clear();
+            chart1.Legends.Clear();
+
+            // Chart Area
+            ChartArea area = new ChartArea
+            {
+                BackColor = System.Drawing.Color.Transparent
+            };
+            chart1.ChartAreas.Add(area);
+
+            // Doughnut Series
+            System.Windows.Forms.DataVisualization.Charting.Series series = new System.Windows.Forms.DataVisualization.Charting.Series("Open Items")
+            {
+                ChartType = SeriesChartType.Doughnut, // ✅ CHANGE HERE
+                IsValueShownAsLabel = false           // ✅ No labels on ring
+            };
+
+            // Doughnut hole size (0–99)
+            series["DoughnutRadius"] = "65"; // ⭐ adjust thickness
+
+            // Legend
+            //Legend legend = new Legend
+            //{
+            //    Docking = Docking.Right,
+            //     Alignment = StringAlignment.Center, // Top aligned
+            //    LegendStyle = LegendStyle.Column, // Vertical
+            //    BackColor = System.Drawing.Color.Transparent
+            //};
+            //chart1.Legends.Add(legend);
+            // Department color map
+            Dictionary<string, Color> deptColors = new Dictionary<string, Color>
+            {
+                { "Molding", Color.DodgerBlue },
+                { "Press", Color.Orange },
+                { "Rotor", Color.Green },
+                { "Winding", Color.Yellow },
+                { "Circuit", Color.Aqua }
+            };
+
+            // Add data
+            foreach (var d in cc)
+            {
+                if (d.totalOpen > 0)
+                {
+                    int index = series.Points.AddY(d.totalOpen);
+
+                    series.Points[index].LegendText = d.DepartmentName;
+
+                    // ✅ Apply color
+                    if (deptColors.ContainsKey(d.DepartmentName))
+                        series.Points[index].Color = deptColors[d.DepartmentName];
+
+                    DisplayLabelText(d.DepartmentName, d.totalOpen);
+                }
+            }
+
+            chart1.Series.Add(series);
+
+            // Layout
+            chart1.Width = 420;
+            chart1.Height = 320;
+
+            area.Position.Auto = false;
+            area.Position = new ElementPosition(5, 5, 65, 90);
+        }
+
+        public void DisplayLabelText(string depart, int count)
+        {
+            Debug.WriteLine($" - {depart}: {count}");
+            switch (depart)
+            {
+                case "Molding":
+                    moldval.Text = count.ToString();
+                    break;
+                case "Press":
+                    Pressval.Text = count.ToString();
+                    break;
+                case "Rotor":
+                    Rotorval.Text = count.ToString();
+                    break;
+                case "Winding":
+                    windingval.Text = count.ToString();
+                    break;
+                default:
+                    Circuitval.Text = count.ToString();
+                    break;
+            }
         }
     }
 }

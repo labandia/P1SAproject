@@ -26,7 +26,7 @@ namespace NCR_system.Repository
 		                        Details,Status,SectionID
                                 ,RegNo,CustomerName,CCtype
                             FROM PC_CustomerConplaint
-                            WHERE IsDelete = 1 ";
+                            WHERE IsDelete = 0 ";
 
             // Filter By SMT Line
             if (departmentID != 0)

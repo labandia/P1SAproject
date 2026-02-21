@@ -10,24 +10,39 @@ namespace NCR_system.Repository
 {
     internal class RejectShipRepository : IShipRejected
     {
-        public Task<List<CustomerTotalModel>> GetCustomersOpenItem(int type = 0)
+        public Task<List<CustomerTotalModel>> GetCustomersOpenItem(int type = 0, int sec = 0)
         {
             string IsStatus = type == 0 ? "1" : "1, 2, 3";
 
-            string strsql = $@"SELECT 
+
+            string strquery = $@"SELECT 
                                 s.DepartmentName,
                                 SUM(CASE WHEN c.Status IN ({IsStatus}) AND c.Process = @Process THEN 1 ELSE 0 END) AS TotalOpen,
                                 SUM(CASE WHEN c.Status = 0 AND c.Process = @Process THEN 1 ELSE 0 END) AS TotalClosed
                             FROM PC_Section s
                             LEFT JOIN PC_RejectShip c
-                                ON c.SectionID = s.SectionID
-                            GROUP BY 
+                                ON c.SectionID = s.SectionID ";
+                          
+
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+            // Filter By Process 
+            if (sec != 0)
+            {
+                strquery += @"WHERE c.IsDeleted = 0 AND s.SectionID = @SectionID";
+                parameters.Add("@SectionID", sec);
+            }
+
+
+            strquery += @" GROUP BY 
                                 s.SectionID,
                                 s.DepartmentName
-                            ORDER BY 
+                            ORDER BY
                                 s.SectionID ASC;";
 
-            return SqlDataAccess.GetData<CustomerTotalModel>(strsql, new { Process = type });
+            parameters.Add("@Process", type);
+
+            return SqlDataAccess.GetData<CustomerTotalModel>(strquery, parameters);
         }
 
         public async Task<List<RejectShipmentModel>> GetRejectedShipData(

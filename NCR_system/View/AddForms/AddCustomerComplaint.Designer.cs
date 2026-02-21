@@ -318,7 +318,7 @@
             // 
             this.AddImagebtn.Location = new System.Drawing.Point(747, 353);
             this.AddImagebtn.Name = "AddImagebtn";
-            this.AddImagebtn.Size = new System.Drawing.Size(143, 23);
+            this.AddImagebtn.Size = new System.Drawing.Size(220, 23);
             this.AddImagebtn.TabIndex = 147;
             this.AddImagebtn.Text = "Add Image";
             this.AddImagebtn.UseVisualStyleBackColor = true;

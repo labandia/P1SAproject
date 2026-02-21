@@ -8,26 +8,32 @@ namespace NCR_system
     {
         private readonly Customer_Complaint_user _cc;
         private readonly ShipRejected _ship;
+        private readonly Rejected _reg;
 
         private readonly IServiceProvider _serviceProvider;
 
         public P1SA_NonComformity(IServiceProvider service, 
             Customer_Complaint_user cc,
-            ShipRejected ship)
+            ShipRejected ship, 
+            Rejected reg)
         {
             InitializeComponent();
             _cc = cc;
             _ship = ship;
+            _reg = reg;
 
             _cc.Dock = DockStyle.Fill;
             _ship.Dock = DockStyle.Fill;
+            _reg.Dock = DockStyle.Fill;
 
             Controls.Add(_cc);
+            Controls.Add(_ship);
+            Controls.Add(_reg);
 
             // IMPORTANT: Add to , not Form
             Sectionpanel.Controls.Add(_cc);
             Sectionpanel.Controls.Add(_ship);
-          
+            Sectionpanel.Controls.Add(_reg);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -49,6 +55,20 @@ namespace NCR_system
             _ship.BringToFront();
 
             await _ship.DisplayRejected(1);
+        }
+
+        private async void rejectBtn_Click(object sender, EventArgs e)
+        {
+            _reg.BringToFront();
+
+            await _reg.DisplayRejected(0);
+        }
+
+        private async void SDCbtn_Click(object sender, EventArgs e)
+        {
+            _cc.BringToFront();
+
+            await _cc.DisplayCustomer(0);
         }
     }
 }

@@ -12,6 +12,9 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.Windows.Media;
 using System.Windows;
+using NCR_system.Models;
+using System.Windows.Forms.DataVisualization.Charting;
+using Color = System.Drawing.Color;
 
 namespace NCR_system.View.Module
 {
@@ -19,8 +22,15 @@ namespace NCR_system.View.Module
     {
         private readonly IShipRejected _ship;
 
+        public int depId { get; set; } = 0;
+        public int stats { get; set; } = 0;
+
+        bool isSelectSection = false;
+        bool isSelectStatus = false;
+        bool isChart = false;
+
         public DataGridView Customgrid { get { return RejectedGrid; } }
-     
+        List<int> outputData = new List<int>();
 
         public Rejected(IShipRejected ship)
         {
@@ -30,16 +40,19 @@ namespace NCR_system.View.Module
 
         public async Task DisplayRejected(int proc)
         {
+            depId = sectionfilter.SelectedIndex > 0 ? sectionfilter.SelectedIndex : 0;
+            stats = filteritems.SelectedIndex > 0 ? filteritems.SelectedIndex : 0;
+
             try
             {
                 List<int> outputData = new List<int> { };
                 List<int> outputData2 = new List<int> { };
 
                 // For Displaying Customer
-                var rejectlist = (await _ship.GetRejectedShipData(1, 1, 1, 1, proc)).ToList();
+                var rejectlist = await _ship.GetRejectedShipData(depId, stats, proc, 0, 0);
                 RejectedGrid.DataSource = rejectlist;
 
-
+                DisplayStatusChartFromList(rejectlist);
                 RejectedGrid.Columns["RegNo"].DisplayIndex = 0;
                 RejectedGrid.Columns["RegNo"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 RejectedGrid.Columns["RegNo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
@@ -100,26 +113,13 @@ namespace NCR_system.View.Module
 
 
 
-                // 🔹 Define all known sections
-                var sections = new List<KeyValuePair<int, string>>()
-                {
-                    new KeyValuePair<int, string>(1, "Molding"),
-                    new KeyValuePair<int, string>(2, "Press"),
-                    new KeyValuePair<int, string>(3, "Rotor"),
-                    new KeyValuePair<int, string>(4, "Winding"),
-                    new KeyValuePair<int, string>(5, "Circuit")
-                };
-
-
-                var countItems = await _ship.GetCustomersOpenItem(proc);
-                int kk = 0;
+                var countItems = await _ship.GetCustomersOpenItem(proc, depId);
+                DisplayPieChart(countItems);
 
                 foreach (var items in countItems)
                 {
-                    kk++;
                     outputData.Add(items.totalOpen);
                     outputData2.Add(items.TotalClosed);
-                    Debug.WriteLine(kk);
                 }
 
 
@@ -130,60 +130,8 @@ namespace NCR_system.View.Module
 
 
 
-                DisplayCharts(outputData, outputData2);
-                //cartesianChart1.Series = new SeriesCollection();
-                //cartesianChart1.AxisX.Clear();
-                //cartesianChart1.AxisY.Clear();
-
-
-                //cartesianChart1.Series = new SeriesCollection
-                //{
-                //    new ColumnSeries
-                //    {
-                //        Title = "Open Items",
-                //        Values = new ChartValues<int>(outputData),
-                //         MaxColumnWidth = 150,   // 🔥 Bar size increased
-                //    },
-                //     new ColumnSeries
-                //    {
-                //        Title = "Production B",
-                //        Values = new ChartValues<int>(outputData2),
-                //         MaxColumnWidth = 150,          // optional color
-                //    }
-                //};
-
-                //    cartesianChart1.AxisX.Add(new Axis
-                //    {
-                //        Title = "",
-                //        Labels = new[] { "Molding", "Press", "Rotor", "Winding", "Circuit" },
-                //        Foreground = System.Windows.Media.Brushes.Black,              // label color
-                //        FontFamily = new System.Windows.Media.FontFamily("Segoe UI"), // label font
-                //        FontSize = 11,
-                //        FontWeight = FontWeights.Bold,      // <-- Added
-                //        Separator = new Separator
-                //        {
-                //            Step = 1,
-                //            Stroke = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 180, 180, 180)),
-                //            StrokeThickness = 1
-                //        }
-                //    });
-
-                //    cartesianChart1.AxisY.Add(new Axis
-                //    {
-                //        Title = "Total Open Items",
-                //        LabelFormatter = value => value.ToString("N0"),
-                //        Foreground = System.Windows.Media.Brushes.Black,              // label color
-                //        FontFamily = new System.Windows.Media.FontFamily("Segoe UI"), // label font
-                //        FontSize = 9,
-                //        FontWeight = FontWeights.Bold,      // <-- Added
-                //        Separator = new Separator
-                //        {
-                //            Stroke = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 180, 180, 180)),         // line color
-                //            StrokeThickness = 1,                 // line thickness
-                //            StrokeDashArray = new DoubleCollection { 2 }  // <-- FIXED
-                //        }
-                //    });
-
+                //DisplayCharts(outputData, outputData2);
+                
             }
             catch (Exception ex)
             {
@@ -294,7 +242,8 @@ namespace NCR_system.View.Module
 
         private void Rejected_Load(object sender, EventArgs e)
         {
-          
+            sectionfilter.SelectedIndex = 0;
+            filteritems.SelectedIndex = 0;
         }
 
         private void RejectedGrid_CellFormatting_1(object sender, DataGridViewCellFormattingEventArgs e)
@@ -350,80 +299,295 @@ namespace NCR_system.View.Module
         }
 
 
-        public void DisplayCharts(List<int> outputData, List<int> outputData2)
+        //public void DisplayCharts(List<int> outputData, List<int> outputData2)
+        //{
+        //    // RESET the chart fully
+        //    cartesianChart1.Series.Clear();
+        //    cartesianChart1.AxisX.Clear();
+        //    cartesianChart1.AxisY.Clear();
+
+        //    // ----------------- SERIES (DOUBLE BAR) -----------------
+        //    cartesianChart1.Series = new SeriesCollection
+        //    {
+        //        new ColumnSeries
+        //        {
+        //            Title = "Open Items",
+        //            Values = new ChartValues<int>(outputData),
+        //            MaxColumnWidth = 150,
+        //            DataLabels = true,                            // <--- VALUE LABELS
+        //            LabelPoint = p => p.Y.ToString("N0"),
+
+        //            Fill = new SolidColorBrush(System.Windows.Media.Color.FromRgb(84, 130, 53)), // Green
+        //            ColumnPadding = 20
+        //        },
+        //        new ColumnSeries
+        //        {
+        //            Title = "Closed Items",
+        //            Values = new ChartValues<int>(outputData2),
+        //            MaxColumnWidth = 150,
+
+        //             DataLabels = true,                            // <--- VALUE LABELS
+        //            LabelPoint = p => p.Y.ToString("N0"),
+
+        //            Fill = new SolidColorBrush(System.Windows.Media.Color.FromRgb(192, 0, 0)),  // Red
+        //            ColumnPadding = 20                               // <--- spacing inside the group
+        //        }
+        //    };
+
+        //    // ----------------- AXIS X (CATEGORIES) -----------------
+        //    cartesianChart1.AxisX.Add(new Axis
+        //    {
+        //        Title = "",
+        //        Labels = new[] { "Molding", "Press", "Rotor", "Winding", "Circuit" },
+
+        //        Foreground = System.Windows.Media.Brushes.Black,
+        //        FontFamily = new System.Windows.Media.FontFamily("Segoe UI"),
+        //        FontSize = 11,
+        //        FontWeight = FontWeights.Bold,
+
+        //        Separator = new Separator
+        //        {
+        //            Step = 1,
+        //            Stroke = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 180, 180, 180)),
+        //            StrokeThickness = 1
+        //        }
+        //    });
+
+        //    // ----------------- AXIS Y (VALUES) -----------------
+        //    cartesianChart1.AxisY.Add(new Axis
+        //    {
+        //        Title = "",
+        //        LabelFormatter = value => value.ToString("N0"),
+
+        //        Foreground = System.Windows.Media.Brushes.Black,
+        //        FontFamily = new System.Windows.Media.FontFamily("Segoe UI"),
+        //        FontSize = 9,
+        //        FontWeight = FontWeights.Bold,
+
+        //        Separator = new Separator
+        //        {
+        //            Stroke = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 180, 180, 180)),
+        //            StrokeThickness = 1,
+        //            StrokeDashArray = new DoubleCollection { 1 }
+        //        }
+        //    });
+
+        //}
+
+        public void DisplayPieChart(List<CustomerTotalModel> cc)
         {
-            // RESET the chart fully
-            cartesianChart1.Series.Clear();
-            cartesianChart1.AxisX.Clear();
-            cartesianChart1.AxisY.Clear();
+            resetDisplayText();
 
-            // ----------------- SERIES (DOUBLE BAR) -----------------
-            cartesianChart1.Series = new SeriesCollection
+            chart1.Series.Clear();
+            chart1.ChartAreas.Clear();
+            chart1.Legends.Clear();
+
+            // Chart Area
+            ChartArea area = new ChartArea
             {
-                new ColumnSeries
-                {
-                    Title = "Open Items",
-                    Values = new ChartValues<int>(outputData),
-                    MaxColumnWidth = 150,
-                    DataLabels = true,                            // <--- VALUE LABELS
-                    LabelPoint = p => p.Y.ToString("N0"),
+                BackColor = System.Drawing.Color.Transparent
+            };
+            chart1.ChartAreas.Add(area);
 
-                    Fill = new SolidColorBrush(System.Windows.Media.Color.FromRgb(84, 130, 53)), // Green
-                    ColumnPadding = 20
-                },
-                new ColumnSeries
-                {
-                    Title = "Closed Items",
-                    Values = new ChartValues<int>(outputData2),
-                    MaxColumnWidth = 150,
-
-                     DataLabels = true,                            // <--- VALUE LABELS
-                    LabelPoint = p => p.Y.ToString("N0"),
-
-                    Fill = new SolidColorBrush(System.Windows.Media.Color.FromRgb(192, 0, 0)),  // Red
-                    ColumnPadding = 20                               // <--- spacing inside the group
-                }
+            // Doughnut Series
+            System.Windows.Forms.DataVisualization.Charting.Series series = new System.Windows.Forms.DataVisualization.Charting.Series("Open Items")
+            {
+                ChartType = SeriesChartType.Doughnut, // ✅ CHANGE HERE
+                IsValueShownAsLabel = false           // ✅ No labels on ring
             };
 
-            // ----------------- AXIS X (CATEGORIES) -----------------
-            cartesianChart1.AxisX.Add(new Axis
+            // Doughnut hole size (0–99)
+            series["DoughnutRadius"] = "65"; // ⭐ adjust thickness
+
+            // Legend
+            //Legend legend = new Legend
+            //{
+            //    Docking = Docking.Right,
+            //     Alignment = StringAlignment.Center, // Top aligned
+            //    LegendStyle = LegendStyle.Column, // Vertical
+            //    BackColor = System.Drawing.Color.Transparent
+            //};
+            //chart1.Legends.Add(legend);
+            // Department color map
+            Dictionary<string, Color> deptColors = new Dictionary<string, Color>
             {
-                Title = "",
-                Labels = new[] { "Molding", "Press", "Rotor", "Winding", "Circuit" },
+                { "Molding", Color.DodgerBlue },
+                { "Press", Color.Orange },
+                { "Rotor", Color.Green },
+                { "Winding", Color.Yellow },
+                { "Circuit", Color.Aqua }
+            };
 
-                Foreground = System.Windows.Media.Brushes.Black,
-                FontFamily = new System.Windows.Media.FontFamily("Segoe UI"),
-                FontSize = 11,
-                FontWeight = FontWeights.Bold,
-
-                Separator = new Separator
-                {
-                    Step = 1,
-                    Stroke = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 180, 180, 180)),
-                    StrokeThickness = 1
-                }
-            });
-
-            // ----------------- AXIS Y (VALUES) -----------------
-            cartesianChart1.AxisY.Add(new Axis
+            // Add data
+            foreach (var d in cc)
             {
-                Title = "",
-                LabelFormatter = value => value.ToString("N0"),
-
-                Foreground = System.Windows.Media.Brushes.Black,
-                FontFamily = new System.Windows.Media.FontFamily("Segoe UI"),
-                FontSize = 9,
-                FontWeight = FontWeights.Bold,
-
-                Separator = new Separator
+                if (d.totalOpen > 0)
                 {
-                    Stroke = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 180, 180, 180)),
-                    StrokeThickness = 1,
-                    StrokeDashArray = new DoubleCollection { 1 }
+                    int index = series.Points.AddY(d.totalOpen);
+
+                    series.Points[index].LegendText = d.DepartmentName;
+
+                    // ✅ Apply color
+                    if (deptColors.ContainsKey(d.DepartmentName))
+                        series.Points[index].Color = deptColors[d.DepartmentName];
+
+                    DisplayLabelText(d.DepartmentName, d.totalOpen);
                 }
-            });
+            }
+
+            chart1.Series.Add(series);
+
+            // Layout
+            chart1.Width = 420;
+            chart1.Height = 320;
+
+            area.Position.Auto = false;
+            area.Position = new ElementPosition(5, 5, 65, 90);
+        }
+
+        public void resetDisplayText()
+        {
+            moldval.Text = "0";
+            Pressval.Text = "0";
+            Rotorval.Text = "0";
+            windingval.Text = "0";
+            Circuitval.Text = "0";
+        }
+
+        public void DisplayLabelText(string depart, int count)
+        {
+            Debug.WriteLine($" - {depart}: {count}");
+            switch (depart)
+            {
+                case "Molding":
+                    moldval.Text = count.ToString();
+                    break;
+                case "Press":
+                    Pressval.Text = count.ToString();
+                    break;
+                case "Rotor":
+                    Rotorval.Text = count.ToString();
+                    break;
+                case "Winding":
+                    windingval.Text = count.ToString();
+                    break;
+                default:
+                    Circuitval.Text = count.ToString();
+                    break;
+            }
+        }
+
+
+        private void DisplayStatusChartFromList(List<RejectShipmentModel> shipList)
+        {
+            // Group data
+            Dictionary<int, int> statusCounts = shipList
+                .GroupBy(x => x.Status)
+                .ToDictionary(g => g.Key, g => g.Count());
+
+            chartStatus.Series.Clear();
+            chartStatus.ChartAreas.Clear();
+            chartStatus.Legends.Clear();
+
+            // Chart Area
+            ChartArea area = new ChartArea();
+
+            area.AxisX.Interval = 1;
+            area.AxisX.LabelStyle.Angle = -90;     // ← THIS is the vertical position
+            area.AxisX.LabelStyle.Font = new Font("Segoe UI", 9, System.Drawing.FontStyle.Bold);
+            area.AxisX.MajorGrid.Enabled = false;
+
+            area.AxisY.Title = "Count";
+            area.AxisY.MajorGrid.LineDashStyle = ChartDashStyle.Dash;
+
+            // Axis label colors
+            area.AxisX.LabelStyle.ForeColor = Color.White;
+            area.AxisY.LabelStyle.ForeColor = Color.White;
+
+            // Axis title color
+            area.AxisX.TitleForeColor = Color.White;
+            area.AxisY.TitleForeColor = Color.White;
+
+            // Grid color (optional – subtle white)
+            area.AxisX.MajorGrid.LineColor = Color.FromArgb(60, Color.White);
+            area.AxisY.MajorGrid.LineColor = Color.FromArgb(60, Color.White);
+
+            chartStatus.ChartAreas.Add(area);
+
+            // Series (Vertical Column Chart)
+            System.Windows.Forms.DataVisualization.Charting.Series series = new System.Windows.Forms.DataVisualization.Charting.Series("Status");
+            series.ChartType = SeriesChartType.Column;
+            series.IsValueShownAsLabel = true;
+
+            // Ensure ALL statuses appear
+            int[] allStatuses = new int[] { 3, 0, 2, 1 };
+
+            foreach (int status in allStatuses)
+            {
+                int count = statusCounts.ContainsKey(status)
+                    ? statusCounts[status]
+                    : 0;
+
+                int index = series.Points.AddXY(GetStatusLabel(status), count);
+
+                // ✔ OLD-SCHOOL switch (Framework safe)
+                switch (status)
+                {
+                    case 3:
+                        series.Points[index].Color = Color.SteelBlue;   // For Circulation
+                        break;
+
+                    case 0:
+                        series.Points[index].Color = Color.DarkGray;    // Close
+                        break;
+
+                    case 2:
+                        series.Points[index].Color = Color.SeaGreen;    // Report OK
+                        break;
+
+                    case 1:
+                        series.Points[index].Color = Color.OrangeRed;   // Open
+                        break;
+
+                    default:
+                        series.Points[index].Color = Color.LightGray;
+                        break;
+                }
+            }
+
+            chartStatus.Series.Add(series);
+        }
+
+
+        private string GetStatusLabel(int status)
+        {
+            switch (status)
+            {
+                case 1:
+                    return "Open";
+                case 0:
+                    return "Close / Completed";
+                case 2:
+                    return "Report OK";
+                case 3:
+                    return "For Circulation";
+                default:
+                    return "Unknown";
+            }
+
 
         }
 
+        private async void sectionfilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            isSelectSection = true;
+            await DisplayRejected(0);
+        }
+
+        private async void filteritems_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            isSelectStatus = true;
+            await DisplayRejected(0);
+        }
     }
 }

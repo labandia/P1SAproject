@@ -99,6 +99,7 @@
             this.SDCbtn.Text = "Customer Complaint";
             this.SDCbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.SDCbtn.UseVisualStyleBackColor = false;
+            this.SDCbtn.Click += new System.EventHandler(this.SDCbtn_Click);
             // 
             // rejectBtn
             // 
@@ -122,6 +123,7 @@
             this.rejectBtn.Text = "Rejected Lot";
             this.rejectBtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.rejectBtn.UseVisualStyleBackColor = false;
+            this.rejectBtn.Click += new System.EventHandler(this.rejectBtn_Click);
             // 
             // button1
             // 

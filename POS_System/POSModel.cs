@@ -8,21 +8,43 @@ namespace POS_System
 {
     public class POSModel
     {
-    }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public decimal Price { get; set; }
+        public decimal UnitCost { get; set; }
+        public decimal Profit { get { return (decimal)(Price - UnitCost); } }
+        public int Quantity { get; set; } = 1;
+        public double TotalPrice { get { return (double)(Price * Quantity); } }
+        public double Total => (double)(Price * Quantity);
 
+        public decimal TotalProfit => (Price - UnitCost) * Quantity;
+
+    }
     public class Product
+    {
+        public int ItemNo { get; set; }
+        public string Category { get; set; }
+        public string ItemName { get; set; }
+        public decimal UnitCost { get; set; }
+        public decimal Price { get; set; }
+        public decimal Profit { get { return Price - UnitCost; } }
+    }
+    public class ProductV2
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
+        public string Category { get; set; }
         public decimal Price { get; set; }
         public int StockQuantity { get; set; }
         public int ReorderLevel { get; set; }
+        public decimal Profit { get; set; }
+        public decimal UnitCost { get; set; }
+
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
     }
 
-    public class Sale
+    public class SaleV2
     {
         public int Id { get; set; }
         public DateTime SaleDate { get; set; }
@@ -30,10 +52,10 @@ namespace POS_System
         public string PaymentMethod { get; set; } // cash, gcash, other
         public DateTime CreatedAt { get; set; }
 
-        public List<SaleItem> Items { get; set; } = new List<SaleItem>();
+        //public List<SaleItem> Items { get; set; } = new List<SaleItem>();
     }
 
-    public class SaleItem
+    public class SaleItemV2
     {
         public int Id { get; set; }
         public int SaleId { get; set; }
@@ -42,5 +64,26 @@ namespace POS_System
         public decimal UnitPrice { get; set; }
 
         public decimal Subtotal => Quantity * UnitPrice;
+    }
+
+    public class Sale
+    {
+        public int SaleID { get; set; }
+        public string InvoiceNo { get; set; }
+        public DateTime Date { get; set; }
+        public int ItemNo { get; set; }
+        public decimal Price { get; set; }
+        public int Quantity { get; set; }
+    }
+
+    public class InventoryTracking
+    {
+        public int InventoryID { get; set; }
+        public DateTime Date { get; set; }
+        public string InvoiceNo { get; set; }
+        public int ItemNo { get; set; }
+        public int QtyIN { get; set; }
+        public int QtyOut { get; set; }
+        public string Remarks { get; set; }
     }
 }

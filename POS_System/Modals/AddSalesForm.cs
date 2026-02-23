@@ -28,15 +28,6 @@ namespace POS_System
 
             _selectedItems = prods;
             _parentForm = form;
-
-
-            MessageBox.Show($"Selected Items Count: {_selectedItems.Count}");
-
-            foreach (var item in _selectedItems)
-            {
-                MessageBox.Show($"Saving Sale: InvoiceNo=INV-{DateTime.Now:yyyyMMddHHmmss}, " +
-                    $"ItemNo={item.Id}, Price={item.Price}, Quantity={item.Quantity}, Stocks = {item.StockQty}");
-            }
             UpdateTotal();
             // Bind to DataGridView
         }

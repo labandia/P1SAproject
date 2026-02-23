@@ -76,6 +76,8 @@ namespace POS_System
         public int ItemNo { get; set; }
         public decimal Price { get; set; }
         public int Quantity { get; set; }
+
+        public decimal Total => Price * Quantity;
     }
 
     public class InventoryTracking
@@ -87,5 +89,20 @@ namespace POS_System
         public int QtyIN { get; set; }
         public int QtyOut { get; set; }
         public string Remarks { get; set; }
+    }
+
+
+    public class SalesSummaryModel
+    {
+        public decimal TotalRevenue { get; set; }
+        public int TotalOrders { get; set; }
+        public int TotalUnits { get; set; }
+        public decimal AverageSale => TotalOrders == 0 ? 0 : TotalRevenue / TotalOrders;
+    }
+
+    public class BarGraphPoint
+    {
+        public string Label { get; set; }   // "8 AM", "Mon", "Week 1"
+        public decimal Total { get; set; }
     }
 }

@@ -99,5 +99,102 @@ namespace POS_System.Services
 
             _salesCache.RemoveAll(x => x.SaleID == saleID);
         }
+
+        private SalesSummaryModel BuildSummary(IEnumerable<Sale> sales)
+        {
+            var list = sales.ToList();
+
+            return new SalesSummaryModel
+            {
+                TotalRevenue = list.Sum(s => s.Total),
+                TotalOrders = list.Select(s => s.InvoiceNo).Distinct().Count(),
+                TotalUnits = list.Sum(s => s.Quantity)
+            };
+        }
+
+        public SalesSummaryModel GetTodaySummary()
+        {
+            DateTime today = DateTime.Today;
+            return BuildSummary(_salesCache.Where(s => s.Date.Date == today));
+        }
+        public SalesSummaryModel GetWeekSummary()
+        {
+            DateTime start = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek);
+            return BuildSummary(_salesCache.Where(s => s.Date >= start));
+        }
+
+        public SalesSummaryModel GetMonthSummary(int month)
+        {
+            int year = DateTime.Today.Year;
+
+            var data = _salesCache
+                .Where(s => s.Date.Year == year && s.Date.Month == month);
+
+            return BuildSummary(data);
+        }
+
+        public List<BarGraphPoint> GetHourlySalesToday()
+        {
+            return _salesCache
+                .Where(s => s.Date.Date == DateTime.Today)
+                .GroupBy(s => s.Date.Hour)
+                .OrderBy(g => g.Key)
+                .Select(g => new BarGraphPoint
+                {
+                    Label = $"{g.Key}:00",
+                    Total = g.Sum(x => x.Total)
+                })
+                .ToList();
+        }
+
+        public List<BarGraphPoint> GetDailySalesThisWeek()
+        {
+            DateTime start = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek);
+
+            return _salesCache
+                .Where(s => s.Date >= start)
+                .GroupBy(s => s.Date.Date)
+                .OrderBy(g => g.Key)
+                .Select(g => new BarGraphPoint
+                {
+                    Label = g.Key.ToString("ddd"),
+                    Total = g.Sum(x => x.Total)
+                })
+                .ToList();
+        }
+
+
+        public List<BarGraphPoint> GetDailySalesThisMonth()
+        {
+            DateTime start = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+
+            return _salesCache
+                .Where(s => s.Date >= start)
+                .GroupBy(s => s.Date.Date)
+                .OrderBy(g => g.Key)
+                .Select(g => new BarGraphPoint
+                {
+                    Label = g.Key.Day.ToString(),
+                    Total = g.Sum(x => x.Total)
+                })
+                .ToList();
+        }
+
+
+        public List<BarGraphPoint> GetDailySalesByMonth(int month)
+        {
+            int year = DateTime.Today.Year;
+
+            return _salesCache
+                .Where(s => s.Date.Year == year && s.Date.Month == month)
+                .GroupBy(s => s.Date.Day)
+                .OrderBy(g => g.Key)
+                .Select(g => new BarGraphPoint
+                {
+                    Label = g.Key.ToString(),
+                    Total = g.Sum(x => x.Total)
+                })
+                .ToList();
+        }
     }
 }

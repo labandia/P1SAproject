@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NCR_system.Repository
 {
-    internal class CustomerRepository : ICustomerComplaint, ISummary
+    internal class CustomerRepository : ICustomerComplaint
     {
         public async Task<List<CustomerModel>> GetCustomerData(
             string search,
@@ -76,9 +76,9 @@ namespace NCR_system.Repository
             return SqlDataAccess.GetDataByID<CustomerModel>(strsql, new { RecordID = recordID });
         }
 
-        public Task<List<CustomerTotalModel>> GetCustomersOpenItem(int type = 0)
+        public Task<List<CustomerTotalModel>> GetCustomersOpenItem(int type = 0, int  sec = 0)
         {
-            string strsql = $@"SELECT 
+            string strquery = $@"SELECT 
                                 s.DepartmentName,
                                 COUNT(c.Status) AS totalOpen
                             FROM PC_Section s
@@ -86,13 +86,27 @@ namespace NCR_system.Repository
                                 ON c.SectionID = s.SectionID 
                                 AND c.CCtype = @CCtype 
                                 AND c.Status = 1 
-                                AND c.IsDelete = 1
-                            GROUP BY 
-                                s.SectionID, 
+                                AND c.IsDelete = 0";
+
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+
+            // Filter By Process 
+            if (sec != 0)
+            {
+                strquery += @" WHERE c.SectionID = @SectionID";
+                parameters.Add("@SectionID", sec);
+            }
+
+            strquery += @" GROUP BY 
+                                s.SectionID,
                                 s.DepartmentName
-                            ORDER BY 
+                            ORDER BY
                                 s.SectionID ASC;";
-            return SqlDataAccess.GetData<CustomerTotalModel>(strsql, new { CCtype = type });
+
+            parameters.Add("@CCtype", type);
+
+            return SqlDataAccess.GetData<CustomerTotalModel>(strquery, parameters);
         }
 
        

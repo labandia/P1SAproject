@@ -78,6 +78,7 @@
             this.button1.TabIndex = 12;
             this.button1.Text = "Pay (0)";
             this.button1.UseVisualStyleBackColor = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // label1
             // 
@@ -91,9 +92,10 @@
             // 
             // AmountText
             // 
-            this.AmountText.Location = new System.Drawing.Point(285, 109);
+            this.AmountText.Location = new System.Drawing.Point(284, 110);
+            this.AmountText.Multiline = true;
             this.AmountText.Name = "AmountText";
-            this.AmountText.Size = new System.Drawing.Size(167, 20);
+            this.AmountText.Size = new System.Drawing.Size(167, 31);
             this.AmountText.TabIndex = 14;
             // 
             // label2
@@ -121,6 +123,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(495, 337);
+            this.ControlBox = false;
             this.Controls.Add(this.ChangeText);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.AmountText);
@@ -129,6 +132,7 @@
             this.Controls.Add(this.FinalPaymentbtn);
             this.Controls.Add(this.TotalText);
             this.Controls.Add(this.label4);
+            this.HelpButton = true;
             this.Name = "AddSalesForm";
             this.Text = "AddSalesForm";
             this.ResumeLayout(false);

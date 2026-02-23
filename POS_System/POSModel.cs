@@ -13,6 +13,7 @@ namespace POS_System
         public decimal Price { get; set; }
         public decimal UnitCost { get; set; }
         public decimal Profit { get { return (decimal)(Price - UnitCost); } }
+        public int StockQty { get; set; }   
         public int Quantity { get; set; } = 1;
         public double TotalPrice { get { return (double)(Price * Quantity); } }
         public double Total => (double)(Price * Quantity);
@@ -27,6 +28,7 @@ namespace POS_System
         public string ItemName { get; set; }
         public decimal UnitCost { get; set; }
         public decimal Price { get; set; }
+        public int StockQty { get; set; }
         public decimal Profit { get { return Price - UnitCost; } }
     }
     public class ProductV2

@@ -18,27 +18,29 @@ namespace NCR_system.View.Module
     public partial class Customer_Complaint_user : UserControl
     {
         private readonly ICustomerComplaint _cust;
-        private readonly ISummary _sum;
+
+        public int depId { get; set; } = 0;
+        public int stats { get; set; } = 0;
 
 
         public List<CustomerModel> cuslist { get; private set; } = new List<CustomerModel>();
         public DataGridView Customgrid { get { return CustomDatagrid; } }
 
-        public Customer_Complaint_user(ICustomerComplaint cust, ISummary sum)
+        public Customer_Complaint_user(ICustomerComplaint cust)
         {
             InitializeComponent();
             _cust = cust;
-            _sum = sum; 
         }
 
 
         public async Task DisplayCustomer(int proc)
         {
+            string search = searchText.Text.Trim();
+            depId = sectionfilter.SelectedIndex > 0 ? sectionfilter.SelectedIndex : 0;
+            stats = filteritems.SelectedIndex > 0 ? filteritems.SelectedIndex : 0;
+
             try
             {
-                string search = searchText.Text.Trim();
-                int depId = sectionfilter.SelectedIndex > 0 ? sectionfilter.SelectedIndex : 0;
-                int stats = filteritems.SelectedIndex > 0 ? filteritems.SelectedIndex : 0;
 
                 var filtered = await _cust.GetCustomerData(search, depId, proc, stats, 0, 0);
 
@@ -173,7 +175,7 @@ namespace NCR_system.View.Module
                 }
 
 
-                var countItems = await _sum.GetCustomersOpenItem(proc) ?? new List<CustomerTotalModel>();
+                var countItems = await _cust.GetCustomersOpenItem(proc, depId);
                 DisplayPieChart(countItems);
 
           

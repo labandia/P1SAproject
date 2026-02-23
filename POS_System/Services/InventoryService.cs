@@ -11,73 +11,111 @@ namespace POS_System.Services
 {
     public class InventoryService
     {
-        private DataTable _inventoryCache;
+        private List<InventoryTracking> _inventoryCache = new List<InventoryTracking>();
 
-        public async Task<DataTable> LoadInventoryAsync()
+        // LOAD
+        public async Task<List<InventoryTracking>> LoadInventoryAsync()
         {
-            _inventoryCache = await Task.Run(() => DBhelper.GetDataTable("SELECT * FROM InventoryTracking"));
-            _inventoryCache.PrimaryKey = new DataColumn[] { _inventoryCache.Columns["InventoryID"] };
-            return _inventoryCache;
-        }
-
-        public DataTable GetInventoryCache()
-        {
-            return _inventoryCache;
-        }
-
-        public async Task AddInventoryAsync(DateTime date, string invoiceNo, int itemNo, int qtyIn, int qtyOut, string remarks)
-        {
-            string query = "INSERT INTO InventoryTracking (Date, InvoiceNo, ItemNo, QtyIN, QtyOut, Remarks) VALUES (@Date,@InvoiceNo,@ItemNo,@QtyIN,@QtyOut,@Remarks)";
-            await DBhelper.ExecuteNonQueryAsync(query,
-                new OleDbParameter("@Date", date),
-                new OleDbParameter("@InvoiceNo", invoiceNo),
-                new OleDbParameter("@ItemNo", itemNo),
-                new OleDbParameter("@QtyIN", qtyIn),
-                new OleDbParameter("@QtyOut", qtyOut),
-                new OleDbParameter("@Remarks", remarks));
-
-            // Add to cache
-            DataRow row = _inventoryCache.NewRow();
-            row["Date"] = date;
-            row["InvoiceNo"] = invoiceNo;
-            row["ItemNo"] = itemNo;
-            row["QtyIN"] = qtyIn;
-            row["QtyOut"] = qtyOut;
-            row["Remarks"] = remarks;
-            _inventoryCache.Rows.Add(row);
-        }
-
-        public async Task UpdateInventoryAsync(int id, DateTime date, string invoiceNo, int itemNo, int qtyIn, int qtyOut, string remarks)
-        {
-            string query = "UPDATE InventoryTracking SET Date=@Date, InvoiceNo=@InvoiceNo, ItemNo=@ItemNo, QtyIN=@QtyIN, QtyOut=@QtyOut, Remarks=@Remarks WHERE InventoryID=@InventoryID";
-            await DBhelper.ExecuteNonQueryAsync(query,
-                new OleDbParameter("@Date", date),
-                new OleDbParameter("@InvoiceNo", invoiceNo),
-                new OleDbParameter("@ItemNo", itemNo),
-                new OleDbParameter("@QtyIN", qtyIn),
-                new OleDbParameter("@QtyOut", qtyOut),
-                new OleDbParameter("@Remarks", remarks),
-                new OleDbParameter("@InventoryID", id));
-
-            DataRow row = _inventoryCache.Rows.Find(id);
-            if (row != null)
+            return await Task.Run(() =>
             {
-                row["Date"] = date;
-                row["InvoiceNo"] = invoiceNo;
-                row["ItemNo"] = itemNo;
-                row["QtyIN"] = qtyIn;
-                row["QtyOut"] = qtyOut;
-                row["Remarks"] = remarks;
+                var list = new List<InventoryTracking>();
+
+                using (var conn = DBhelper.GetConnection())
+                using (var cmd = new OleDbCommand("SELECT * FROM InventoryTracking", conn))
+                {
+                    conn.Open();
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            list.Add(new InventoryTracking
+                            {
+                                InventoryID = Convert.ToInt32(reader["InventoryID"]),
+                                Date = Convert.ToDateTime(reader["Date"]),
+                                InvoiceNo = reader["InvoiceNo"].ToString(),
+                                ItemNo = Convert.ToInt32(reader["ItemNo"]),
+                                QtyIN = Convert.ToInt32(reader["QtyIN"]),
+                                QtyOut = Convert.ToInt32(reader["QtyOut"]),
+                                Remarks = reader["Remarks"].ToString()
+                            });
+                        }
+                    }
+                }
+
+                _inventoryCache = list;
+                return _inventoryCache;
+            });
+        }
+
+        public List<InventoryTracking> GetInventoryCache()
+        {
+            return _inventoryCache;
+        }
+
+        // ADD
+        public async Task AddInventoryAsync(InventoryTracking invent)
+        {
+            string query =
+                "INSERT INTO InventoryTracking ([Date], InvoiceNo, ItemNo, QtyIN, QtyOut, Remarks) " +
+                "VALUES (?, ?, ?, ?, ?, ?)";
+
+            DateTime now = invent.Date == DateTime.MinValue ? DateTime.Now : invent.Date;
+
+            await DBhelper.ExecuteNonQueryAsync(
+                query,
+                new OleDbParameter { OleDbType = OleDbType.Date, Value = now },
+                new OleDbParameter { OleDbType = OleDbType.VarChar, Value = invent.InvoiceNo },
+                new OleDbParameter { OleDbType = OleDbType.Integer, Value = invent.ItemNo },
+                new OleDbParameter { OleDbType = OleDbType.Integer, Value = invent.QtyIN },
+                new OleDbParameter { OleDbType = OleDbType.Integer, Value = invent.QtyOut },
+                new OleDbParameter { OleDbType = OleDbType.VarChar, Value = invent.Remarks }
+            );
+
+            invent.Date = now;
+            _inventoryCache.Add(invent);
+        }
+
+        // UPDATE
+        public async Task UpdateInventoryAsync(InventoryTracking invent)
+        {
+            string query =
+                "UPDATE InventoryTracking SET [Date]=?, InvoiceNo=?, ItemNo=?, QtyIN=?, QtyOut=?, Remarks=? " +
+                "WHERE InventoryID=?";
+
+            await DBhelper.ExecuteNonQueryAsync(
+                query,
+                new OleDbParameter { OleDbType = OleDbType.Date, Value = invent.Date },
+                new OleDbParameter { OleDbType = OleDbType.VarChar, Value = invent.InvoiceNo },
+                new OleDbParameter { OleDbType = OleDbType.Integer, Value = invent.ItemNo },
+                new OleDbParameter { OleDbType = OleDbType.Integer, Value = invent.QtyIN },
+                new OleDbParameter { OleDbType = OleDbType.Integer, Value = invent.QtyOut },
+                new OleDbParameter { OleDbType = OleDbType.VarChar, Value = invent.Remarks },
+                new OleDbParameter { OleDbType = OleDbType.Integer, Value = invent.InventoryID }
+            );
+
+            var existing = _inventoryCache.Find(x => x.InventoryID == invent.InventoryID);
+            if (existing != null)
+            {
+                existing.Date = invent.Date;
+                existing.InvoiceNo = invent.InvoiceNo;
+                existing.ItemNo = invent.ItemNo;
+                existing.QtyIN = invent.QtyIN;
+                existing.QtyOut = invent.QtyOut;
+                existing.Remarks = invent.Remarks;
             }
         }
 
-        public async Task DeleteInventoryAsync(int id)
+        // DELETE
+        public async Task DeleteInventoryAsync(int inventoryID)
         {
-            string query = "DELETE FROM InventoryTracking WHERE InventoryID=@InventoryID";
-            await DBhelper.ExecuteNonQueryAsync(query, new OleDbParameter("@InventoryID", id));
+            string query = "DELETE FROM InventoryTracking WHERE InventoryID=?";
 
-            DataRow row = _inventoryCache.Rows.Find(id);
-            if (row != null) _inventoryCache.Rows.Remove(row);
+            await DBhelper.ExecuteNonQueryAsync(
+                query,
+                new OleDbParameter { OleDbType = OleDbType.Integer, Value = inventoryID }
+            );
+
+            _inventoryCache.RemoveAll(x => x.InventoryID == inventoryID);
         }
     }
 }

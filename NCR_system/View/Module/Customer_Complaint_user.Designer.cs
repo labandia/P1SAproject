@@ -31,6 +31,9 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -38,22 +41,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Customer_Complaint_user));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.CustomDatagrid = new System.Windows.Forms.DataGridView();
-            this.RecordID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DateCreated = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SectionID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ModelNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.LotNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.NGQty = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Details = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.RegNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CustomerName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CCtype = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Delete = new System.Windows.Forms.DataGridViewImageColumn();
             this.OpenCC = new System.Windows.Forms.Button();
             this.SelectedProcess = new System.Windows.Forms.ComboBox();
             this.Externalbtn = new System.Windows.Forms.Button();
@@ -65,7 +53,6 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.panel7 = new System.Windows.Forms.Panel();
-            this.panel8 = new System.Windows.Forms.Panel();
             this.panel9 = new System.Windows.Forms.Panel();
             this.Circuitval = new System.Windows.Forms.Label();
             this.windingval = new System.Windows.Forms.Label();
@@ -83,9 +70,21 @@
             this.label14 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.RecordID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DateCreated = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SectionID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ModelNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LotNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.NGQty = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Details = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.RegNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CustomerName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CCtype = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Delete = new System.Windows.Forms.DataGridViewImageColumn();
+            this.UploadImage = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.CustomDatagrid)).BeginInit();
             this.panel7.SuspendLayout();
-            this.panel8.SuspendLayout();
             this.panel9.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
@@ -121,7 +120,8 @@
             this.CustomerName,
             this.Status,
             this.CCtype,
-            this.Delete});
+            this.Delete,
+            this.UploadImage});
             dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle8.Font = new System.Drawing.Font("Segoe UI", 8.25F);
@@ -131,7 +131,7 @@
             dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.CustomDatagrid.DefaultCellStyle = dataGridViewCellStyle8;
-            this.CustomDatagrid.Location = new System.Drawing.Point(3, 412);
+            this.CustomDatagrid.Location = new System.Drawing.Point(6, 393);
             this.CustomDatagrid.Name = "CustomDatagrid";
             this.CustomDatagrid.ReadOnly = true;
             dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -145,125 +145,11 @@
             this.CustomDatagrid.RowHeadersVisible = false;
             this.CustomDatagrid.RowTemplate.Height = 30;
             this.CustomDatagrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.CustomDatagrid.Size = new System.Drawing.Size(1524, 374);
+            this.CustomDatagrid.Size = new System.Drawing.Size(1524, 410);
             this.CustomDatagrid.TabIndex = 4;
             this.CustomDatagrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.CustomDatagrid_CellClick);
             this.CustomDatagrid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.CustomDatagrid_CellDoubleClick);
             this.CustomDatagrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.CustomDatagrid_CellFormatting);
-            // 
-            // RecordID
-            // 
-            this.RecordID.DataPropertyName = "RecordID";
-            this.RecordID.HeaderText = "RecordID";
-            this.RecordID.Name = "RecordID";
-            this.RecordID.ReadOnly = true;
-            this.RecordID.Visible = false;
-            this.RecordID.Width = 72;
-            // 
-            // DateCreated
-            // 
-            this.DateCreated.DataPropertyName = "DateCreated";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.DateCreated.DefaultCellStyle = dataGridViewCellStyle2;
-            this.DateCreated.HeaderText = "Date";
-            this.DateCreated.Name = "DateCreated";
-            this.DateCreated.ReadOnly = true;
-            this.DateCreated.Width = 68;
-            // 
-            // SectionID
-            // 
-            this.SectionID.DataPropertyName = "SectionID";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.SectionID.DefaultCellStyle = dataGridViewCellStyle3;
-            this.SectionID.HeaderText = "Section in charge";
-            this.SectionID.Name = "SectionID";
-            this.SectionID.ReadOnly = true;
-            this.SectionID.Width = 123;
-            // 
-            // ModelNo
-            // 
-            this.ModelNo.DataPropertyName = "ModelNo";
-            this.ModelNo.HeaderText = "Model No/ Part no.";
-            this.ModelNo.Name = "ModelNo";
-            this.ModelNo.ReadOnly = true;
-            this.ModelNo.Width = 119;
-            // 
-            // LotNo
-            // 
-            this.LotNo.DataPropertyName = "LotNo";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.LotNo.DefaultCellStyle = dataGridViewCellStyle4;
-            this.LotNo.HeaderText = "Lot No.";
-            this.LotNo.Name = "LotNo";
-            this.LotNo.ReadOnly = true;
-            this.LotNo.Width = 78;
-            // 
-            // NGQty
-            // 
-            this.NGQty.DataPropertyName = "NGQty";
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.NGQty.DefaultCellStyle = dataGridViewCellStyle5;
-            this.NGQty.HeaderText = "NG Qty";
-            this.NGQty.Name = "NGQty";
-            this.NGQty.ReadOnly = true;
-            this.NGQty.Width = 77;
-            // 
-            // Details
-            // 
-            this.Details.DataPropertyName = "Details";
-            this.Details.HeaderText = "Details of Problem";
-            this.Details.Name = "Details";
-            this.Details.ReadOnly = true;
-            this.Details.Width = 129;
-            // 
-            // RegNo
-            // 
-            this.RegNo.DataPropertyName = "RegNo";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RegNo.DefaultCellStyle = dataGridViewCellStyle6;
-            this.RegNo.HeaderText = "Registration No.";
-            this.RegNo.Name = "RegNo";
-            this.RegNo.ReadOnly = true;
-            this.RegNo.Width = 119;
-            // 
-            // CustomerName
-            // 
-            this.CustomerName.DataPropertyName = "CustomerName";
-            this.CustomerName.HeaderText = "Customer Name";
-            this.CustomerName.Name = "CustomerName";
-            this.CustomerName.ReadOnly = true;
-            this.CustomerName.Width = 118;
-            // 
-            // Status
-            // 
-            this.Status.DataPropertyName = "Status";
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Status.DefaultCellStyle = dataGridViewCellStyle7;
-            this.Status.HeaderText = "Status";
-            this.Status.Name = "Status";
-            this.Status.ReadOnly = true;
-            this.Status.Width = 76;
-            // 
-            // CCtype
-            // 
-            this.CCtype.DataPropertyName = "CCtype";
-            this.CCtype.HeaderText = "CCtype";
-            this.CCtype.Name = "CCtype";
-            this.CCtype.ReadOnly = true;
-            this.CCtype.Visible = false;
-            this.CCtype.Width = 81;
-            // 
-            // Delete
-            // 
-            this.Delete.DataPropertyName = "Delete";
-            this.Delete.HeaderText = "Delete";
-            this.Delete.Image = ((System.Drawing.Image)(resources.GetObject("Delete.Image")));
-            this.Delete.Name = "Delete";
-            this.Delete.ReadOnly = true;
-            this.Delete.Width = 58;
             // 
             // OpenCC
             // 
@@ -275,7 +161,7 @@
             this.OpenCC.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.OpenCC.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.OpenCC.ForeColor = System.Drawing.Color.White;
-            this.OpenCC.Location = new System.Drawing.Point(1342, 331);
+            this.OpenCC.Location = new System.Drawing.Point(1294, 323);
             this.OpenCC.Name = "OpenCC";
             this.OpenCC.Size = new System.Drawing.Size(136, 41);
             this.OpenCC.TabIndex = 6;
@@ -293,7 +179,7 @@
             this.SelectedProcess.Items.AddRange(new object[] {
             "External",
             "SDC"});
-            this.SelectedProcess.Location = new System.Drawing.Point(1003, 316);
+            this.SelectedProcess.Location = new System.Drawing.Point(667, 333);
             this.SelectedProcess.Name = "SelectedProcess";
             this.SelectedProcess.Size = new System.Drawing.Size(159, 23);
             this.SelectedProcess.TabIndex = 7;
@@ -310,9 +196,9 @@
             this.Externalbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Externalbtn.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold);
             this.Externalbtn.ForeColor = System.Drawing.Color.White;
-            this.Externalbtn.Location = new System.Drawing.Point(1343, 279);
+            this.Externalbtn.Location = new System.Drawing.Point(1083, 318);
             this.Externalbtn.Name = "Externalbtn";
-            this.Externalbtn.Size = new System.Drawing.Size(138, 29);
+            this.Externalbtn.Size = new System.Drawing.Size(147, 46);
             this.Externalbtn.TabIndex = 8;
             this.Externalbtn.Text = "Add External";
             this.Externalbtn.UseVisualStyleBackColor = false;
@@ -326,7 +212,7 @@
             "-- Filter Status --",
             "Open",
             "Close"});
-            this.filteritems.Location = new System.Drawing.Point(1188, 316);
+            this.filteritems.Location = new System.Drawing.Point(852, 333);
             this.filteritems.Name = "filteritems";
             this.filteritems.Size = new System.Drawing.Size(121, 23);
             this.filteritems.TabIndex = 11;
@@ -346,7 +232,7 @@
             "Rotor",
             "Winding",
             "Circuit"});
-            this.sectionfilter.Location = new System.Drawing.Point(863, 316);
+            this.sectionfilter.Location = new System.Drawing.Point(527, 333);
             this.sectionfilter.MaxDropDownItems = 30;
             this.sectionfilter.Name = "sectionfilter";
             this.sectionfilter.Size = new System.Drawing.Size(121, 23);
@@ -355,7 +241,7 @@
             // 
             // searchText
             // 
-            this.searchText.Location = new System.Drawing.Point(682, 318);
+            this.searchText.Location = new System.Drawing.Point(346, 335);
             this.searchText.Name = "searchText";
             this.searchText.Size = new System.Drawing.Size(157, 20);
             this.searchText.TabIndex = 21;
@@ -365,7 +251,7 @@
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.SystemColors.Control;
-            this.label3.Location = new System.Drawing.Point(679, 293);
+            this.label3.Location = new System.Drawing.Point(343, 310);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(48, 15);
             this.label3.TabIndex = 22;
@@ -376,7 +262,7 @@
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.SystemColors.Control;
-            this.label5.Location = new System.Drawing.Point(865, 293);
+            this.label5.Location = new System.Drawing.Point(529, 310);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(97, 15);
             this.label5.TabIndex = 23;
@@ -387,7 +273,7 @@
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.ForeColor = System.Drawing.SystemColors.Control;
-            this.label7.Location = new System.Drawing.Point(1000, 293);
+            this.label7.Location = new System.Drawing.Point(664, 310);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(55, 15);
             this.label7.TabIndex = 24;
@@ -398,7 +284,7 @@
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label9.ForeColor = System.Drawing.SystemColors.Control;
-            this.label9.Location = new System.Drawing.Point(1185, 293);
+            this.label9.Location = new System.Drawing.Point(849, 310);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(119, 15);
             this.label9.TabIndex = 25;
@@ -407,7 +293,8 @@
             // panel7
             // 
             this.panel7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(30)))), ((int)(((byte)(54)))));
-            this.panel7.Controls.Add(this.panel8);
+            this.panel7.Controls.Add(this.panel9);
+            this.panel7.Controls.Add(this.chart1);
             this.panel7.Controls.Add(this.label9);
             this.panel7.Controls.Add(this.OpenCC);
             this.panel7.Controls.Add(this.Externalbtn);
@@ -423,15 +310,6 @@
             this.panel7.Name = "panel7";
             this.panel7.Size = new System.Drawing.Size(1530, 387);
             this.panel7.TabIndex = 34;
-            // 
-            // panel8
-            // 
-            this.panel8.Controls.Add(this.panel9);
-            this.panel8.Controls.Add(this.chart1);
-            this.panel8.Location = new System.Drawing.Point(42, 20);
-            this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(547, 330);
-            this.panel8.TabIndex = 34;
             // 
             // panel9
             // 
@@ -450,8 +328,7 @@
             this.panel9.Controls.Add(this.label13);
             this.panel9.Controls.Add(this.label14);
             this.panel9.Controls.Add(this.button3);
-            this.panel9.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel9.Location = new System.Drawing.Point(375, 0);
+            this.panel9.Location = new System.Drawing.Point(59, 20);
             this.panel9.Name = "panel9";
             this.panel9.Size = new System.Drawing.Size(172, 330);
             this.panel9.TabIndex = 34;
@@ -621,18 +498,140 @@
             this.chart1.BackColor = System.Drawing.Color.Transparent;
             chartArea1.Name = "ChartArea1";
             this.chart1.ChartAreas.Add(chartArea1);
-            this.chart1.Dock = System.Windows.Forms.DockStyle.Left;
             legend1.Name = "Legend1";
             this.chart1.Legends.Add(legend1);
-            this.chart1.Location = new System.Drawing.Point(0, 0);
+            this.chart1.Location = new System.Drawing.Point(256, 20);
             this.chart1.Name = "chart1";
             series1.ChartArea = "ChartArea1";
             series1.Legend = "Legend1";
             series1.Name = "Series1";
             this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(369, 330);
+            this.chart1.Size = new System.Drawing.Size(1241, 255);
             this.chart1.TabIndex = 33;
             this.chart1.Text = "chart1";
+            // 
+            // RecordID
+            // 
+            this.RecordID.DataPropertyName = "RecordID";
+            this.RecordID.HeaderText = "RecordID";
+            this.RecordID.Name = "RecordID";
+            this.RecordID.ReadOnly = true;
+            this.RecordID.Visible = false;
+            this.RecordID.Width = 72;
+            // 
+            // DateCreated
+            // 
+            this.DateCreated.DataPropertyName = "DateCreated";
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.DateCreated.DefaultCellStyle = dataGridViewCellStyle2;
+            this.DateCreated.HeaderText = "Date";
+            this.DateCreated.Name = "DateCreated";
+            this.DateCreated.ReadOnly = true;
+            this.DateCreated.Width = 68;
+            // 
+            // SectionID
+            // 
+            this.SectionID.DataPropertyName = "SectionID";
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.SectionID.DefaultCellStyle = dataGridViewCellStyle3;
+            this.SectionID.HeaderText = "Section in charge";
+            this.SectionID.Name = "SectionID";
+            this.SectionID.ReadOnly = true;
+            this.SectionID.Width = 123;
+            // 
+            // ModelNo
+            // 
+            this.ModelNo.DataPropertyName = "ModelNo";
+            this.ModelNo.HeaderText = "Model No/ Part no.";
+            this.ModelNo.Name = "ModelNo";
+            this.ModelNo.ReadOnly = true;
+            this.ModelNo.Width = 119;
+            // 
+            // LotNo
+            // 
+            this.LotNo.DataPropertyName = "LotNo";
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.LotNo.DefaultCellStyle = dataGridViewCellStyle4;
+            this.LotNo.HeaderText = "Lot No.";
+            this.LotNo.Name = "LotNo";
+            this.LotNo.ReadOnly = true;
+            this.LotNo.Width = 78;
+            // 
+            // NGQty
+            // 
+            this.NGQty.DataPropertyName = "NGQty";
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.NGQty.DefaultCellStyle = dataGridViewCellStyle5;
+            this.NGQty.HeaderText = "NG Qty";
+            this.NGQty.Name = "NGQty";
+            this.NGQty.ReadOnly = true;
+            this.NGQty.Width = 77;
+            // 
+            // Details
+            // 
+            this.Details.DataPropertyName = "Details";
+            this.Details.HeaderText = "Details of Problem";
+            this.Details.Name = "Details";
+            this.Details.ReadOnly = true;
+            this.Details.Width = 129;
+            // 
+            // RegNo
+            // 
+            this.RegNo.DataPropertyName = "RegNo";
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RegNo.DefaultCellStyle = dataGridViewCellStyle6;
+            this.RegNo.HeaderText = "Registration No.";
+            this.RegNo.Name = "RegNo";
+            this.RegNo.ReadOnly = true;
+            this.RegNo.Width = 119;
+            // 
+            // CustomerName
+            // 
+            this.CustomerName.DataPropertyName = "CustomerName";
+            this.CustomerName.HeaderText = "Customer Name";
+            this.CustomerName.Name = "CustomerName";
+            this.CustomerName.ReadOnly = true;
+            this.CustomerName.Width = 118;
+            // 
+            // Status
+            // 
+            this.Status.DataPropertyName = "Status";
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Status.DefaultCellStyle = dataGridViewCellStyle7;
+            this.Status.HeaderText = "Status";
+            this.Status.Name = "Status";
+            this.Status.ReadOnly = true;
+            this.Status.Width = 76;
+            // 
+            // CCtype
+            // 
+            this.CCtype.DataPropertyName = "CCtype";
+            this.CCtype.HeaderText = "CCtype";
+            this.CCtype.Name = "CCtype";
+            this.CCtype.ReadOnly = true;
+            this.CCtype.Visible = false;
+            this.CCtype.Width = 81;
+            // 
+            // Delete
+            // 
+            this.Delete.DataPropertyName = "Delete";
+            this.Delete.HeaderText = "Delete";
+            this.Delete.Image = ((System.Drawing.Image)(resources.GetObject("Delete.Image")));
+            this.Delete.Name = "Delete";
+            this.Delete.ReadOnly = true;
+            this.Delete.Width = 58;
+            // 
+            // UploadImage
+            // 
+            this.UploadImage.DataPropertyName = "UploadImage";
+            this.UploadImage.HeaderText = "UploadImage";
+            this.UploadImage.Name = "UploadImage";
+            this.UploadImage.ReadOnly = true;
+            this.UploadImage.Visible = false;
+            this.UploadImage.Width = 114;
             // 
             // Customer_Complaint_user
             // 
@@ -646,7 +645,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.CustomDatagrid)).EndInit();
             this.panel7.ResumeLayout(false);
             this.panel7.PerformLayout();
-            this.panel8.ResumeLayout(false);
             this.panel9.ResumeLayout(false);
             this.panel9.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
@@ -661,25 +659,12 @@
         private System.Windows.Forms.Button Externalbtn;
         private System.Windows.Forms.ComboBox filteritems;
         private System.Windows.Forms.ComboBox sectionfilter;
-        private System.Windows.Forms.DataGridViewTextBoxColumn RecordID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn DateCreated;
-        private System.Windows.Forms.DataGridViewTextBoxColumn SectionID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ModelNo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn LotNo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn NGQty;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Details;
-        private System.Windows.Forms.DataGridViewTextBoxColumn RegNo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CustomerName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Status;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CCtype;
-        private System.Windows.Forms.DataGridViewImageColumn Delete;
         private System.Windows.Forms.TextBox searchText;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Panel panel7;
-        private System.Windows.Forms.Panel panel8;
         private System.Windows.Forms.Panel panel9;
         private System.Windows.Forms.Label Circuitval;
         private System.Windows.Forms.Label windingval;
@@ -697,5 +682,18 @@
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn RecordID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DateCreated;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SectionID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ModelNo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn LotNo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn NGQty;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Details;
+        private System.Windows.Forms.DataGridViewTextBoxColumn RegNo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CustomerName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Status;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CCtype;
+        private System.Windows.Forms.DataGridViewImageColumn Delete;
+        private System.Windows.Forms.DataGridViewTextBoxColumn UploadImage;
     }
 }

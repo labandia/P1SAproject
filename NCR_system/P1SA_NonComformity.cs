@@ -41,13 +41,16 @@ namespace NCR_system
             Application.Exit(); 
         }
 
-        private void P1SA_NonComformity_Load(object sender, EventArgs e)
+        private async void P1SA_NonComformity_Load(object sender, EventArgs e)
         {
             this.FormBorderStyle = FormBorderStyle.None;
             this.WindowState = FormWindowState.Maximized;
             this.TopMost = true; // optional
 
+
             _cc.BringToFront(); 
+
+            await _cc.DisplayCustomer(0);
         }
 
         private async void Shipbtn_Click(object sender, EventArgs e)

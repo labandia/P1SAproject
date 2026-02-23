@@ -26,7 +26,6 @@ namespace NCR_system
 
             var services = new ServiceCollection();
             services.AddSingleton<ICustomerComplaint, CustomerRepository>();
-            services.AddSingleton<ISummary, CustomerRepository>();
             services.AddSingleton<IShipRejected, RejectShipRepository>();
             services.AddSingleton<IInprocess, InprocessRepository>();
             services.AddSingleton<INCR, NCR_Repository>();

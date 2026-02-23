@@ -28,7 +28,7 @@ namespace POS_System
         }
 
 
-        private async void LoadProductsAsync()
+        public async void LoadProductsAsync()
         {
             SetupGrid();
 
@@ -81,8 +81,8 @@ namespace POS_System
         {
             Panel card = new Panel
             {
-                Width = 100,
-                Height = 60,
+                Width = 200,
+                Height = 80,
                 BackColor = Color.White,
                 BorderStyle = BorderStyle.FixedSingle,
                 Margin = new Padding(10),
@@ -98,23 +98,23 @@ namespace POS_System
                 Size = new Size(200, 25)
             };
 
-            //Label lblDesc = new Label
-            //{
-            //    Text = product.Description,
-            //    Location = new Point(10, 40),
-            //    Size = new Size(200, 40)
-            //};
+            Label lblDesc = new Label
+            {
+                Text = $"Stocks : {product.StockQty}",
+                Location = new Point(120, 50),
+                Size = new Size(100, 50)
+            };
 
             Label lblPrice = new Label
             {
                 Text = $"₱ {product.Price:N2}",
                 ForeColor = Color.Green,
-                Location = new Point(10, 30),
+                Location = new Point(10, 50),
                 Size = new Size(200, 20)
             };
 
             card.Controls.Add(lblName);
-            //card.Controls.Add(lblDesc);
+            card.Controls.Add(lblDesc);
             card.Controls.Add(lblPrice);
 
             // Make entire card clickable
@@ -147,7 +147,8 @@ namespace POS_System
                     Id = selectedProduct.ItemNo,
                     Name = selectedProduct.ItemName,
                     Price = selectedProduct.Price,
-                    UnitCost = selectedProduct.UnitCost
+                    UnitCost = selectedProduct.UnitCost,
+                    StockQty = selectedProduct.StockQty
                 });
             }
         }
@@ -279,14 +280,15 @@ namespace POS_System
 
         private void Paymentbtn_Click(object sender, EventArgs e)
         {
-            using (var addSalesForm = new AddSalesForm(prods))
+
+            using (var addSalesForm = new AddSalesForm(prods, this))
             {
                 if (addSalesForm.ShowDialog() == DialogResult.OK)
                 {
                     // Payment completed successfully
                     // Cart is already cleared in modal
-                    dataGridView1.Refresh(); // optional
                     MessageBox.Show("Payment successful.");
+                    LoadProductsAsync(); // Refresh products to update stocks   
                 }
             }
         }
@@ -305,7 +307,7 @@ namespace POS_System
 
             try
             {
-                // Create MDB using ADOX COM (requires reference: Microsoft ADO Ext. 2.8 for DDL and Security)
+                // Create MDB
                 var cat = new ADOX.Catalog();
                 cat.Create($"Provider=Microsoft.Jet.OLEDB.4.0;Data Source={mdbFile};Jet OLEDB:Engine Type=5");
                 cat = null;
@@ -318,18 +320,22 @@ namespace POS_System
                     OleDbCommand cmd = new OleDbCommand();
                     cmd.Connection = conn;
 
-                    // Create Products table with ItemNo as AUTOINCREMENT
+                    // PRODUCTS TABLE (with stock + status)
                     cmd.CommandText = @"
                         CREATE TABLE Products (
                             ItemNo AUTOINCREMENT PRIMARY KEY,
                             Category TEXT(50),
                             ItemName TEXT(100),
                             UnitCost DOUBLE,
-                            Price DOUBLE
+                            Price DOUBLE,
+                            StockQty LONG DEFAULT 0,
+                            StockStatus TEXT(20),
+                            Remarks TEXT(255), 
+                            IsDeleted YESNO DEFAULT FALSE
                         )";
                     cmd.ExecuteNonQuery();
 
-                    // Create Sales table
+                    // SALES TABLE
                     cmd.CommandText = @"
                         CREATE TABLE Sales (
                             SaleID AUTOINCREMENT PRIMARY KEY,
@@ -341,39 +347,69 @@ namespace POS_System
                         )";
                     cmd.ExecuteNonQuery();
 
-                    // Create InventoryTracking table
+                    // INVENTORY TRACKING TABLE
                     cmd.CommandText = @"
-                        CREATE TABLE InventoryTracking (
-                            InventoryID AUTOINCREMENT PRIMARY KEY,
-                            [Date] DATETIME,
-                            InvoiceNo TEXT(20),
-                            ItemNo LONG,
-                            QtyIN LONG,
-                            QtyOut LONG,
-                            Remarks TEXT(255)
-                        )";
+                            CREATE TABLE InventoryTracking (
+                                InventoryID AUTOINCREMENT PRIMARY KEY,
+                                [Date] DATETIME,
+                                InvoiceNo TEXT(20),
+                                ItemNo LONG,
+                                QtyIN LONG,
+                                QtyOut LONG,
+                                Remarks TEXT(255)
+                            )";
                     cmd.ExecuteNonQuery();
 
-                    // Add relationships (foreign keys)
+                    // RELATIONSHIPS
                     cmd.CommandText = @"
-                        ALTER TABLE Sales
-                        ADD CONSTRAINT FK_Sales_Products
-                        FOREIGN KEY (ItemNo) REFERENCES Products(ItemNo)";
+        ALTER TABLE Sales
+        ADD CONSTRAINT FK_Sales_Products
+        FOREIGN KEY (ItemNo) REFERENCES Products(ItemNo)";
                     cmd.ExecuteNonQuery();
 
                     cmd.CommandText = @"
-                        ALTER TABLE InventoryTracking
-                        ADD CONSTRAINT FK_Inventory_Products
-                        FOREIGN KEY (ItemNo) REFERENCES Products(ItemNo)";
+        ALTER TABLE InventoryTracking
+        ADD CONSTRAINT FK_Inventory_Products
+        FOREIGN KEY (ItemNo) REFERENCES Products(ItemNo)";
                     cmd.ExecuteNonQuery();
 
-                    MessageBox.Show("MDB created successfully at:\n" + mdbFile);
+                    // VALID STOCK STATUS VALUES
+                    cmd.CommandText = @"
+        ALTER TABLE Products
+        ADD CONSTRAINT CK_StockStatus_Valid
+        CHECK (StockStatus IN ('GOOD','LOW STOCK','OUT OF STOCK'))";
+                    cmd.ExecuteNonQuery();
+
+                    // STOCK QTY ↔ STATUS LOGIC
+                    cmd.CommandText = @"
+        ALTER TABLE Products
+        ADD CONSTRAINT CK_StockQty_Status
+        CHECK (
+            (StockQty = 0 AND StockStatus = 'OUT OF STOCK')
+         OR (StockQty BETWEEN 1 AND 10 AND StockStatus = 'LOW STOCK')
+         OR (StockQty > 10 AND StockStatus = 'GOOD')
+        )";
+                    cmd.ExecuteNonQuery();
+
+                    MessageBox.Show("MDB created successfully with stock rules:\n" + mdbFile);
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Error: " + ex.Message);
             }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            ProductsPageForm productsPage = new ProductsPageForm();
+            productsPage.ShowDialog();  
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            SalesHistoryPage productsPage = new SalesHistoryPage();
+            productsPage.ShowDialog();
         }
     }
 }

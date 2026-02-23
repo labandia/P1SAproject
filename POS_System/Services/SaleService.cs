@@ -11,7 +11,8 @@ namespace POS_System.Services
 {
     public class SaleService
     {
-        private List<Sale> _salesCache;
+        private List<Sale> _salesCache = new List<Sale>(); // ✅ FIX
+
 
         public async Task<List<Sale>> LoadSalesAsync()
         {
@@ -53,13 +54,18 @@ namespace POS_System.Services
 
         public async Task AddSaleAsync(Sale s)
         {
-            string query = "INSERT INTO Sales (InvoiceNo, Date, ItemNo, Price, Quantity) VALUES (@InvoiceNo,@Date,@ItemNo,@Price,@Quantity)";
-            await DBhelper.ExecuteNonQueryAsync(query,
-                new OleDbParameter("@InvoiceNo", s.InvoiceNo),
-                new OleDbParameter("@Date", s.Date),
-                new OleDbParameter("@ItemNo", s.ItemNo),
-                new OleDbParameter("@Price", s.Price),
-                new OleDbParameter("@Quantity", s.Quantity));
+            string query =
+         "INSERT INTO Sales (InvoiceNo, [Date], ItemNo, Price, Quantity) " +
+         "VALUES (?, ?, ?, ?, ?)";
+
+            await DBhelper.ExecuteNonQueryAsync(
+                query,
+                new OleDbParameter { OleDbType = OleDbType.VarChar, Value = s.InvoiceNo },
+                new OleDbParameter { OleDbType = OleDbType.Date, Value = s.Date },
+                new OleDbParameter { OleDbType = OleDbType.Integer, Value = s.ItemNo },
+                new OleDbParameter { OleDbType = OleDbType.Currency, Value = s.Price },
+                new OleDbParameter { OleDbType = OleDbType.Integer, Value = s.Quantity }
+            );
 
             _salesCache.Add(s);
         }

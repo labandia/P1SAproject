@@ -322,7 +322,7 @@
     const PopulateComboxInspector = async (Employee_ID) => {
         let res = await GetMethod('@Url.Action("GetInspectorsByAdd", "Patrol")', {});
         if (res && res.Success) {
-            loadData = res.Data;
+            loadData = res.data;
         }
      }
     const ReportsDetails = async () => {
@@ -331,8 +331,8 @@
         console.log(res);
 
         if (res && res.Success) {
-                let RegisterData = res.Data.Register;
-                let FindingData = res.Data.Finding;
+                let RegisterData = res.data.Register;
+                let FindingData = res.data.Finding;
 
                 let strDate = changeformatDate(RegisterData[0].DateConduct);
                 $("#RegNo").val(RegisterData[0].RegNo);
@@ -459,7 +459,7 @@
     const RegistrationTable = async () => {
         let res = await GetMethod('@Url.Action("GetRegistrationNo", "Patrol")', {});
           if (res && res.Success) {
-              regisTable = res.Data;
+              regisTable = res.data;
           }
     }
 
@@ -471,7 +471,7 @@
             selectManager.empty();
             selectPIC.empty();
 
-            emailTable = res.Data;
+            emailTable = res.data;
             var SetData = $("#recipientTable");
 
             $.each(emailTable, function (index, res) {

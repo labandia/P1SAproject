@@ -465,7 +465,15 @@ namespace POS_System
 
         private void button2_Click(object sender, EventArgs e)
         {
+            dataGridView1.AutoGenerateColumns = false;
+            dataGridView1.Columns.Clear();
+            prods.Clear();
+            ClearAll();
+        }
 
+        private void button12_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

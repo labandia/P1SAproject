@@ -368,7 +368,7 @@
            //selectManager.empty();
            //selectPIC.empty();
 
-           emailTable = res.Data;
+           emailTable = res.data;
            var SetData = $("#recipientTable");
 
            $.each(emailTable, function (index, res) {
@@ -399,14 +399,14 @@
     const RegistrationTable = async() => {
         let res = await GetMethod('@Url.Action("GetRegistrationNo", "Patrol")', {});
         if (res && res.Success) {
-            regisTable = res.Data;
+            regisTable = res.data;
         }
     }
     const PopulateComboxInspector = async () => {
         Resetforms();
         let res = await GetMethod('@Url.Action("GetInspectorsByAdd", "Patrol")', {});
         if (res && res.Success) {
-            loadData = res.Data;
+            loadData = res.data;
         }
     }
     const Getuserinfo = async () => {

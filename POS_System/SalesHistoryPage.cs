@@ -23,7 +23,8 @@ namespace POS_System
         public async Task LoadSalesAsync()
         {
             allSales = await saleService.LoadSalesAsync();
-            productsTable.DataSource = allSales;
+            var sortTable = allSales.OrderByDescending(x => x.SaleID).ToList(); 
+            productsTable.DataSource = sortTable;
         }
 
         private async  void SalesHistoryPage_Load(object sender, EventArgs e)
@@ -52,6 +53,8 @@ namespace POS_System
 
         private void LoadToday()
         {
+            SalesText.Text = "Today's Sales";
+
             var summary = saleService.GetTodaySummary();
             UpdateSummaryUI(summary);
 
@@ -61,6 +64,8 @@ namespace POS_System
 
         private void LoadWeek()
         {
+            SalesText.Text = "Weekly Sales";
+
             var summary = saleService.GetWeekSummary();
             UpdateSummaryUI(summary);
 
@@ -69,6 +74,8 @@ namespace POS_System
         }
         private void LoadMonth(int month)
         {
+            SalesText.Text = "Monthly Sales";
+
             var summary = saleService.GetMonthSummary(month);
             UpdateSummaryUI(summary);
 

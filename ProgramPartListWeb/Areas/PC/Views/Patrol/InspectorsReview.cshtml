@@ -396,7 +396,7 @@
 
 
             let res = await postMethod('@Url.Action("InspectorAproveSubmit", "Patrol")', fomdata);
-            if (res.StatusCode === 201) {
+            if (res?.Success) {
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 savebtn.innerHTML = originalText;
 
@@ -475,29 +475,29 @@
 
             if (res && res.Success) {
                 $("#regtext").text(strRegno);
-                $("#SectionName").val("P1SA-" + res.Data.SectionName);
-                $("#PIC_Comments").val(res.Data.PIC_Comments);
+                $("#SectionName").val("P1SA-" + res.data.SectionName);
+                $("#PIC_Comments").val(res.data.PIC_Comments);
 
 
-                $("#PIC_approve").text(res.Data.PICName ?? 'N/A');
-                $("#Inspect_approve").text(res.Data.InspectName ?? 'N/A');
-                $("#Dep_approve").text(res.Data.DepartName ?? 'N/A');
-                $("#Div_approve").text(res.Data.DivName ?? 'N/A');
+                $("#PIC_approve").text(res.data.PICName ?? 'N/A');
+                $("#Inspect_approve").text(res.data.InspectName ?? 'N/A');
+                $("#Dep_approve").text(res.data.DepartName ?? 'N/A');
+                $("#Div_approve").text(res.data.DivName ?? 'N/A');
 
 
-                $("#PIC_Isapprove").text(res.Data.PIC_Comments != "" ? 'Approve' : 'Pending');
-                $("#Ins_Isapprove").text(res.Data.Inspect_IsAproved == true ? 'Approve' : 'Pending');
-                $("#Dep_Isapprove").text(res.Data.DepManager_IsAproved == true ? 'Approve' : 'Pending');
-                $("#Div_Isapprove").text(res.Data.DivManager_IsAproved == true ? 'Approve' : 'Pending');
+                $("#PIC_Isapprove").text(res.data.PIC_Comments != "" ? 'Approve' : 'Pending');
+                $("#Ins_Isapprove").text(res.data.Inspect_IsAproved == true ? 'Approve' : 'Pending');
+                $("#Dep_Isapprove").text(res.data.DepManager_IsAproved == true ? 'Approve' : 'Pending');
+                $("#Div_Isapprove").text(res.data.DivManager_IsAproved == true ? 'Approve' : 'Pending');
 
                 // Set colors
-                setStatusColor("#PIC_Isapprove", res.Data.PIC_Comments != "");
-                setStatusColor("#Ins_Isapprove", res.Data.Inspect_IsAproved);
-                setStatusColor("#Dep_Isapprove", res.Data.DepManager_IsAproved);
-                setStatusColor("#Div_Isapprove", res.Data.DivManager_IsAproved);
+                setStatusColor("#PIC_Isapprove", res.data.PIC_Comments != "");
+                setStatusColor("#Ins_Isapprove", res.data.Inspect_IsAproved);
+                setStatusColor("#Dep_Isapprove", res.data.DepManager_IsAproved);
+                setStatusColor("#Div_Isapprove", res.data.DivManager_IsAproved);
 
 
-                if (res.Data.Inspect_IsAproved) {
+                if (res.data.Inspect_IsAproved) {
                     $("#returnBtn").prop("disabled", true);
                     $("#approveBtn").prop("disabled", true);
                 }
@@ -519,7 +519,7 @@
             let res = await GetMethod('@Url.Action("GetRegistrationFindings", "Patrol")', { Regno: strRegno });
 
             if (res && res.Success) {
-                res.Data.forEach(item => {
+                res.data.forEach(item => {
                     $(`#Inpects${item.FindID}`).val(item.FindDescription);
                     $(`#counter${item.FindID}`).val(item.Countermeasure);
                 });
@@ -529,7 +529,7 @@
             let filesSelect = [];
             let res = await GetMethod('@Url.Action("GetRegistrationAllFiles", "Patrol")', { Regno: strRegno });
             if (res.Success && res) {
-                filesSelect = res.Data;
+                filesSelect = res.data;
 
                 let UploadCounterPath = filesSelect[0].CounterPath;
 

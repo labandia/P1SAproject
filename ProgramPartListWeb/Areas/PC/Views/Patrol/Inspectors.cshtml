@@ -225,7 +225,7 @@
         }
 
         let res = await postMethod('@Url.Action("AddInspectors", "Patrol")', formData);
-        if (res.StatusCode === 201) {
+        if (res?.Success) {
             Swal.fire({
                 title: "Success",
                 text: res.Message,
@@ -245,7 +245,7 @@
         let formData = new FormData(e.target);
         var data = Object.fromEntries(formData);
         let res = await postMethod('@Url.Action("EditInspectors", "Patrol")', formData);
-        if (res && res.Success) {
+        if (res?.Success) {
             Swal.fire({
                 title: "Success",
                 text: res.Message,
@@ -266,7 +266,7 @@
         Loadingsteps(async () => {
             let res = await GetMethod('@Url.Action("GetQualifiedInspector", "Patrol")', {});
             if (res && res.Success) {
-                masterlist = res.Data;
+                masterlist = res.data;
                 TableDisplay.empty(); // Removing the Loading Display
                 MasterlistPagination(masterlist, 'MasterlistData', 'MastertableContainer', 50, 5);
             } else {
@@ -285,7 +285,7 @@
     const GetEmployeeData = async() => {
         let res = await GetMethod('@Url.Action("GetEmployeelist", "Patrol")', {});
         if (res && res.Success) {
-            loadData = res.Data;
+            loadData = res.data;
         }
     }
     const ActionRestrict = () => {
@@ -449,7 +449,7 @@
                     formData.append('ID', rowIndex);
                     formData.append('stats', action === 'approve' ? 1 : 0);
                     let res = await postMethod('@Url.Action("ChangeApprovalInspect", "Patrol")', formData);
-                    if (res && res.Success) {
+                    if (res?.Success) {
                         InspectTable(); // Assumes re-rendering table
                     }
                     dropdown.fadeOut(100).removeClass('show');

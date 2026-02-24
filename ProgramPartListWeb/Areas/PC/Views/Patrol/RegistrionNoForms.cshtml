@@ -672,7 +672,7 @@
                   resetSteps();
 
                   let res = await postMethod('@Url.Action("AddRegistration", "Patrol")', finalformData);
-                  if (res && res.Success) {
+                  if (res?.Success) {
                       // Start the sequential loading process
                       startSequentialLoading();
                   } else {
@@ -783,7 +783,7 @@
         const RegistrationTable = async() => {
             let res = await GetMethod('@Url.Action("GetRegistrationNo", "Patrol")', {});
             if (res && res.Success) {
-                regisTable = res.Data;
+                regisTable = res.data;
                 disableUsedDates(regisTable);
             }
         }
@@ -795,7 +795,7 @@
                 let select = $("#Employee_ID");
                 select.empty();
 
-                emailTable = res.Data;
+                emailTable = res.data;
 
                 $.each(emailTable, function (index, rowData) {
                     if (rowData.Department_ID === 6) {

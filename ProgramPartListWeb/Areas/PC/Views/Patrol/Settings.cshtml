@@ -193,7 +193,7 @@
             formData.append("userID", UserID);
             formData.append("newpass", newpass);
             let res = await postMethod('/Auth/ChangePasswordUser', formData);
-            if (res.StatusCode === 201) {
+            if (res?.Success) {
                 Swal.fire({
                     title: "Success",
                     text: res.Message,
@@ -361,7 +361,7 @@
         formData.append('datapass', nowpass);
         formData.append('currentpass', current);
         let res = await postMethod('/Auth/MatchPassword', formData);
-        if (res.Data == false) {
+        if (res.data == false) {
             err.textContent = "Current password is incorrect.";
             return;
         }

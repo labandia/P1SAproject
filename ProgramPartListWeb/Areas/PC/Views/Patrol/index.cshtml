@@ -215,12 +215,12 @@
                 savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-solid fa-right-to-bracket'></i>  Login</span>"
                 localStorage.setItem('Logout', "/PC/Patrol/index");
                 // For Info of the user
-                localStorage.setItem('UserRole', res.Data.role);
-                localStorage.setItem('Fullname', res.Data.fullname);
+                localStorage.setItem('UserRole', res.data.role);
+                localStorage.setItem('Fullname', res.data.fullname);
 
                 // For Authorize User Access
-                localStorage.setItem('accessToken', res.Data.access_token);
-                localStorage.setItem('refreshToken', res.Data.refresh_token);
+                localStorage.setItem('accessToken', res.data.access_token);
+                localStorage.setItem('refreshToken', res.data.refresh_token);
 
                 // For Persitent Login
                 localStorage.setItem('PatrolTime', new Date().toISOString());

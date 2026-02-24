@@ -88,7 +88,7 @@
             let res = await GetMethod('@Url.Action("GetRegistrationNo", "Patrol")', {});
             console.log(res);
             if (res && res.Success) {
-                regisTable = res.Data;
+                regisTable = res.data;
                 TableDisplay.empty();
                 MasterlistPagination(regisTable, 'MasterlistData', 'MastertableContainer', 50, 5);
             } else {
@@ -368,7 +368,7 @@
 
             const response = await GetMethod('@Url.Action("HandleReportRoutingAsync", "Patrol")', { Regno: rowIndex });
 
-            window.location.href = response.Data;
+            window.location.href = response.data;
         });
 
 
@@ -407,7 +407,7 @@
                     formdata.append('Filepath', searchData[0].Filepath);
 
                     let res = await postMethod('@Url.Action("DeleteRegistration", "Patrol")', formdata);
-                    if (res.StatusCode == 422) {
+                    if (res?.Success) {
                          Swal.fire({
                              title: "Success",
                              text: res.Message,

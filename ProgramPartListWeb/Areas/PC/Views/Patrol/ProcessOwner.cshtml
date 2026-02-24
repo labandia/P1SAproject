@@ -553,9 +553,9 @@
             let res = await GetMethod('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
             if (res && res.Success) {
                 $("#regtext").text(strRegno);
-                $("#SectionName").val("P1SA-" + res.Data.SectionName);
-                $("#PIC_Comments").val(res.Data.PIC_Comments);
-                strPIC = res.Data.PIC_ID;
+                $("#SectionName").val("P1SA-" + res.data.SectionName);
+                $("#PIC_Comments").val(res.data.PIC_Comments);
+                strPIC = res.data.PIC_ID;
 
                 let Getitems = emailTable.find(res => res.Employee_ID === strPIC);
                 if (Getitems) {
@@ -579,7 +579,7 @@
             let res = await GetMethod('@Url.Action("GetRegistrationFindings", "Patrol")', { Regno: strRegno });
 
             if (res && res.Success) {
-                res.Data.forEach(item => {
+                res.data.forEach(item => {
                     $(`#Inpects${item.FindID}`).text("- " + item.FindDescription);
                     $(`#counter${item.FindID}`).val(item.Countermeasure);
                 });
@@ -598,7 +598,7 @@
 
             let res = await GetMethod('@Url.Action("GetRegistrationAllFiles", "Patrol")', { Regno: strRegno });
              if (res.Success && res) {
-                 filesSelect = res.Data;
+                 filesSelect = res.data;
 
                  let UploadCounterPath = filesSelect[0].CounterPath;
 
@@ -684,7 +684,7 @@
         const GetEmailList = async () => {
             let res = await GetMethod('@Url.Action("GetEmaiRegistration", "Patrol")', {});
             if (res && res.Success) {
-                emailTable = res.Data;
+                emailTable = res.data;
             }
         };
 

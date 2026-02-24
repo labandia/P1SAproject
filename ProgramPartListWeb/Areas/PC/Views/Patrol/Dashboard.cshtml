@@ -15,8 +15,6 @@
                
             </div>
         </div>
-
-       
     </div>
 </div>
 
@@ -27,9 +25,9 @@
 
     const CalendarData = async () => {
         var SetData = $("#Schedule_contain");
-        let res = await FetchAuthenticate('@Url.Action("GetScheduleDateList", "Patrol")', {});
+        let res = await GetMethod('@Url.Action("GetScheduleDateList", "Patrol")', {});
         if (res && res.Success) {
-            Sched = res.Data;
+            Sched = res.data;
 
             Sched.forEach((res, index) => {
                 const card = `
@@ -54,9 +52,9 @@
     }
     const NextCalendarData = async () => {
         var SetData = $("#Schedule_contain");
-        let res = await FetchAuthenticate('@Url.Action("GetScheduleDateList", "Patrol")', {});
+        let res = await GetMethod('@Url.Action("GetScheduleDateList", "Patrol")', {});
         if (res && res.Success) {
-            Sched = res.Data;
+            Sched = res.data;
 
             $.each(Sched, function (index, res) {
 
@@ -111,11 +109,11 @@
                 }
             },
             events: function (fetchInfo, successCallback, failureCallback) {
-                 FetchAuthenticate('@Url.Action("GetCalendarEventsMonth", "Patrol")', {})
+                GetMethod('@Url.Action("GetCalendarEventsMonth", "Patrol")', {})
                      .then(res => {
 
                          if (res && res.Success) {
-                             let data = res.Data;
+                             let data = res.data;
                              console.log(data);
                              const departmentColors = {
                                  1: '#D7D1F8', // Molding - Soft Purple

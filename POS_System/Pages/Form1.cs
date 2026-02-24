@@ -289,6 +289,14 @@ namespace POS_System
                 HeaderText = "Price"
             });
 
+            dataGridView1.Columns.Add(new DataGridViewButtonColumn
+            {
+                Name = "Minus",
+                Text = "-",
+                UseColumnTextForButtonValue = true,
+                Width = 30
+            });
+           
             dataGridView1.Columns.Add(new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Quantity",
@@ -298,19 +306,14 @@ namespace POS_System
 
             dataGridView1.Columns.Add(new DataGridViewButtonColumn
             {
-                Name = "Minus",
-                Text = "-",
-                UseColumnTextForButtonValue = true,
-                Width = 30
-            });
-
-            dataGridView1.Columns.Add(new DataGridViewButtonColumn
-            {
                 Name = "Plus",
                 Text = "+",
                 UseColumnTextForButtonValue = true,
                 Width = 30
             });
+
+
+
 
             dataGridView1.Columns.Add(new DataGridViewTextBoxColumn
             {

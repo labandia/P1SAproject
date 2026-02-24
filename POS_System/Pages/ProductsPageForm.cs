@@ -21,7 +21,7 @@ namespace POS_System
 
         private System.Windows.Forms.Timer searchTimer;
 
-        private const int PageSize = 100;
+        private const int PageSize = 50;
         private int currentPage = 1;
         private int totalPages = 1;
 
@@ -50,10 +50,12 @@ namespace POS_System
 
             
 
-            productBinding.DataSource = allProducts;
-
+      
             SetupCategories();
-            AddActionButton();
+            ApplyFilter();
+            //productBinding.DataSource = allProducts;
+            //TotalCount.Text = $"Total Items: {allProducts.Count}";
+            //AddActionButton();
         }
 
         private void DisplayFilteredProducts(List<Product> products)
@@ -112,6 +114,7 @@ namespace POS_System
 
             filteredProducts = query.ToList();
 
+            TotalCount.Text = $"Total Items: {filteredProducts.Count}";
             SetupPagination();
             LoadCurrentPage();
         }
@@ -183,7 +186,9 @@ namespace POS_System
 
         private void SearchText_TextChanged(object sender, EventArgs e)
         {
-            ApplyFilter();
+            //ApplyFilter();
+            searchTimer.Stop();
+            searchTimer.Start();
         }
 
         private async void FinalPaymentbtn_Click(object sender, EventArgs e)
@@ -217,6 +222,7 @@ namespace POS_System
                 .ToList();
 
             productBinding.DataSource = pageData;
+            AddActionButton();
 
             lblPageInfo.Text = $"Page {currentPage} / {totalPages}";
         }

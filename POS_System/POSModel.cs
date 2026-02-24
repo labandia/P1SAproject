@@ -105,4 +105,27 @@ namespace POS_System
         public string Label { get; set; }   // "8 AM", "Mon", "Week 1"
         public decimal Total { get; set; }
     }
+
+    public class InvoiceSummaryModel
+    {
+        public string InvoiceNo { get; set; }
+        public DateTime Date { get; set; }
+        public decimal InvoiceTotal { get; set; }
+        public decimal AmountPay { get; set; }   // if same as total for now
+    }
+
+    public class InvoiceItem
+    {
+        public string InvoiceNo { get; set; }
+        public DateTime Date { get; set; }
+
+        public int ItemNo { get; set; }
+        public string ItemName { get; set; }
+
+        public decimal Price { get; set; }
+
+        public int QtyIN { get; set; }
+        public int QtyOut { get; set; }
+
+    }
 }

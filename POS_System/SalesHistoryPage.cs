@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using POS_System.Services;
@@ -16,17 +17,19 @@ namespace POS_System
         public SalesHistoryPage()
         {
             InitializeComponent();
+
         }
 
-        public async void LoadSalesAsync()
+        public async Task LoadSalesAsync()
         {
             allSales = await saleService.LoadSalesAsync();
             productsTable.DataSource = allSales;
         }
 
-        private void SalesHistoryPage_Load(object sender, EventArgs e)
+        private async  void SalesHistoryPage_Load(object sender, EventArgs e)
         {
-            LoadSalesAsync();
+            await LoadSalesAsync(); // ✅ wait for data to finish loading
+
             cmbMonthFilter.DataSource = Enumerable.Range(1, 12)
             .Select(m => new
             {
@@ -41,7 +44,8 @@ namespace POS_System
 
 
             // ✅ LOAD MONTH VIEW FIRST
-            LoadMonth(DateTime.Now.Month);
+            int month = (int)cmbMonthFilter.SelectedValue;
+            LoadMonth(month);
             SetActive(monthbtn);
         }
 

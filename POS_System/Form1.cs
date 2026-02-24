@@ -21,62 +21,161 @@ namespace POS_System
         BindingList<POSModel> prods = new BindingList<POSModel>();
         private List<Product> allProducts = new List<Product>();
 
+        private SaleService saleService = new SaleService();
+
+        private Dictionary<int, Panel> productCardCache = new Dictionary<int, Panel>();
+
+        private const int PageSize = 50;
+        private int currentPage = 1;
+        private List<Product> filteredProducts = new List<Product>();
+
+        private Timer searchTimer;
+
         public Form1()
         {
             InitializeComponent();
+
+            DoubleBuffered = true;
+
+            typeof(FlowLayoutPanel)
+                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                .SetValue(flowLayoutPanel1, true, null);
+
+            SetupGrid();
             LoadProductsAsync();
+
+
+            searchTimer = new Timer();
+            searchTimer.Interval = 300; // 300ms debounce
+            searchTimer.Tick += SearchTimer_Tick;
         }
 
-
+        // =========================================================
+        // LOAD PRODUCTS
+        // =========================================================
         public async void LoadProductsAsync()
         {
-            SetupGrid();
+            flowLayoutPanel1.SuspendLayout();
 
-
-            flowLayoutPanel1.Controls.Clear();
             allProducts = await productService.LoadProductsAsync();
 
+            SetupCategories();
 
-            // Optional: filter Category to alphabetic only
+            currentPage = 1;
+            LoadCurrentPage();
+
+            //CreateAllProductCards();
+
+            flowLayoutPanel1.ResumeLayout();
+        }
+
+        private void LoadCurrentPage()
+        {
+            flowLayoutPanel1.SuspendLayout();
+            flowLayoutPanel1.Controls.Clear();
+
+            var pageData = filteredProducts
+                .Skip((currentPage - 1) * PageSize)
+                .Take(PageSize)
+                .ToList();
+
+            foreach (var product in pageData)
+            {
+                flowLayoutPanel1.Controls.Add(CreateProductCard(product));
+            }
+
+            lblPageInfo.Text = $"Page {currentPage} / {TotalPages()}";
+
+            flowLayoutPanel1.ResumeLayout();
+        }
+
+        private int TotalPages()
+        {
+            return (int)Math.Ceiling((double)filteredProducts.Count / PageSize);
+        }
+
+        private void SetupCategories()
+        {
             var categories = allProducts
                 .Select(p => p.Category)
-                .Where(c => !string.IsNullOrWhiteSpace(c) && c.All(ch => char.IsLetter(ch) || char.IsWhiteSpace(ch))) // only letters & spaces
+                .Where(c => !string.IsNullOrWhiteSpace(c))
                 .Distinct()
+                .OrderBy(c => c)
                 .ToList();
 
             categories.Insert(0, "All");
             comboBox1.DataSource = categories;
-
-            DisplayFilteredProducts(allProducts);
         }
+
+        private void LoadToday()
+        {
+            var summary = saleService.GetTodaySummary();
+            UpdateSummaryUI(summary);
+
+        }
+
+        private void UpdateSummaryUI(SalesSummaryModel s)
+        {
+            SalesToday.Text = s.TotalRevenue.ToString("₱#,##0.00");
+        }
+
+        private void CreateAllProductCards()
+        {
+            flowLayoutPanel1.SuspendLayout();
+            flowLayoutPanel1.Controls.Clear();
+            productCardCache.Clear();
+
+            foreach (var product in allProducts)
+            {
+                var card = CreateProductCard(product);
+                productCardCache[product.ItemNo] = card;
+                flowLayoutPanel1.Controls.Add(card);
+            }
+
+            flowLayoutPanel1.ResumeLayout();
+        }
+
 
         private async void Form1_Load(object sender, EventArgs e)
         {
-           
-            
-        }
+            await saleService.LoadSalesAsync();
 
+            LoadToday();
+        }
+        // =========================================================
+        // FILTER (NO REBUILDING)
+        // =========================================================
         private void DisplayFilteredProducts(List<Product> products)
         {
+            flowLayoutPanel1.SuspendLayout();   // 🔥 STOP repaint
             flowLayoutPanel1.Controls.Clear();
+
             foreach (var product in products)
             {
                 flowLayoutPanel1.Controls.Add(CreateProductCard(product));
             }
+
+            flowLayoutPanel1.ResumeLayout();    // 🔥 Resume repaint ONCE
         }
         private void ApplyFilter()
         {
             string searchText = txtFilter.Text.ToLower();
             string selectedCategory = comboBox1.SelectedItem?.ToString();
 
-            var filtered = allProducts.Where(p =>
-                (string.IsNullOrEmpty(searchText) || p.ItemName.ToLower().Contains(searchText))
-                && (selectedCategory == "All" || p.Category == selectedCategory)
-            );
+            filteredProducts = allProducts
+                .Where(p =>
+                    (string.IsNullOrEmpty(searchText) || p.ItemName.ToLower().Contains(searchText)) &&
+                    (selectedCategory == "All" || p.Category == selectedCategory))
+                .ToList();
 
-            DisplayFilteredProducts(filtered.ToList());
+            currentPage = 1;
+            LoadCurrentPage();
         }
 
+
+        // =========================================================
+        // PRODUCT CARD
+        // =========================================================
         private Panel CreateProductCard(Product product)
         {
             Panel card = new Panel
@@ -93,16 +192,17 @@ namespace POS_System
             Label lblName = new Label
             {
                 Text = product.ItemName,
-                Font = new Font("Segoe UI", 10, FontStyle.Bold),
-                Location = new Point(10, 10),
-                Size = new Size(200, 25)
+                Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                Location = new Point(10, 8),
+                AutoSize = true
             };
 
             Label lblDesc = new Label
             {
                 Text = $"Stocks : {product.StockQty}",
                 Location = new Point(120, 50),
-                Size = new Size(100, 50)
+                Size = new Size(100, 50),
+                AutoSize = true
             };
 
             Label lblPrice = new Label
@@ -110,7 +210,8 @@ namespace POS_System
                 Text = $"₱ {product.Price:N2}",
                 ForeColor = Color.Green,
                 Location = new Point(10, 50),
-                Size = new Size(200, 20)
+                Size = new Size(200, 20),
+                AutoSize = true
             };
 
             card.Controls.Add(lblName);
@@ -275,130 +376,36 @@ namespace POS_System
 
         private void txtFilter_TextChanged(object sender, EventArgs e)
         {
-            ApplyFilter();
+            //ApplyFilter();
+            searchTimer.Stop();
+            searchTimer.Start();
         }
 
-        private void Paymentbtn_Click(object sender, EventArgs e)
+        private void SearchTimer_Tick(object sender, EventArgs e)
+        {
+            searchTimer.Stop();
+            ApplyFilter();   // Run filter only once after user stops typing
+        }
+
+        private async void Paymentbtn_Click(object sender, EventArgs e)
         {
 
             using (var addSalesForm = new AddSalesForm(prods, this))
             {
                 if (addSalesForm.ShowDialog() == DialogResult.OK)
                 {
+                    await saleService.LoadSalesAsync();
                     // Payment completed successfully
                     // Cart is already cleared in modal
                     MessageBox.Show("Payment successful.");
                     LoadProductsAsync(); // Refresh products to update stocks   
+                    LoadToday();
+                    ClearAll();
                 }
             }
         }
 
-        private void button1_Click_1(object sender, EventArgs e)
-        {
-            string folderPath = @"C:\AccessDB";
-            if (!Directory.Exists(folderPath))
-                Directory.CreateDirectory(folderPath);
-
-            string mdbFile = Path.Combine(folderPath, "MyDatabase.mdb");
-
-            // Delete if already exists
-            if (File.Exists(mdbFile))
-                File.Delete(mdbFile);
-
-            try
-            {
-                // Create MDB
-                var cat = new ADOX.Catalog();
-                cat.Create($"Provider=Microsoft.Jet.OLEDB.4.0;Data Source={mdbFile};Jet OLEDB:Engine Type=5");
-                cat = null;
-
-                string connString = $"Provider=Microsoft.Jet.OLEDB.4.0;Data Source={mdbFile};";
-
-                using (OleDbConnection conn = new OleDbConnection(connString))
-                {
-                    conn.Open();
-                    OleDbCommand cmd = new OleDbCommand();
-                    cmd.Connection = conn;
-
-                    // PRODUCTS TABLE (with stock + status)
-                    cmd.CommandText = @"
-                        CREATE TABLE Products (
-                            ItemNo AUTOINCREMENT PRIMARY KEY,
-                            Category TEXT(50),
-                            ItemName TEXT(100),
-                            UnitCost DOUBLE,
-                            Price DOUBLE,
-                            StockQty LONG DEFAULT 0,
-                            StockStatus TEXT(20),
-                            Remarks TEXT(255), 
-                            IsDeleted YESNO DEFAULT FALSE
-                        )";
-                    cmd.ExecuteNonQuery();
-
-                    // SALES TABLE
-                    cmd.CommandText = @"
-                        CREATE TABLE Sales (
-                            SaleID AUTOINCREMENT PRIMARY KEY,
-                            InvoiceNo TEXT(20),
-                            [Date] DATETIME,
-                            ItemNo LONG,
-                            Price DOUBLE,
-                            Quantity LONG
-                        )";
-                    cmd.ExecuteNonQuery();
-
-                    // INVENTORY TRACKING TABLE
-                    cmd.CommandText = @"
-                            CREATE TABLE InventoryTracking (
-                                InventoryID AUTOINCREMENT PRIMARY KEY,
-                                [Date] DATETIME,
-                                InvoiceNo TEXT(20),
-                                ItemNo LONG,
-                                QtyIN LONG,
-                                QtyOut LONG,
-                                Remarks TEXT(255)
-                            )";
-                    cmd.ExecuteNonQuery();
-
-                    // RELATIONSHIPS
-                    cmd.CommandText = @"
-        ALTER TABLE Sales
-        ADD CONSTRAINT FK_Sales_Products
-        FOREIGN KEY (ItemNo) REFERENCES Products(ItemNo)";
-                    cmd.ExecuteNonQuery();
-
-                    cmd.CommandText = @"
-        ALTER TABLE InventoryTracking
-        ADD CONSTRAINT FK_Inventory_Products
-        FOREIGN KEY (ItemNo) REFERENCES Products(ItemNo)";
-                    cmd.ExecuteNonQuery();
-
-                    // VALID STOCK STATUS VALUES
-                    cmd.CommandText = @"
-        ALTER TABLE Products
-        ADD CONSTRAINT CK_StockStatus_Valid
-        CHECK (StockStatus IN ('GOOD','LOW STOCK','OUT OF STOCK'))";
-                    cmd.ExecuteNonQuery();
-
-                    // STOCK QTY ↔ STATUS LOGIC
-                    cmd.CommandText = @"
-        ALTER TABLE Products
-        ADD CONSTRAINT CK_StockQty_Status
-        CHECK (
-            (StockQty = 0 AND StockStatus = 'OUT OF STOCK')
-         OR (StockQty BETWEEN 1 AND 10 AND StockStatus = 'LOW STOCK')
-         OR (StockQty > 10 AND StockStatus = 'GOOD')
-        )";
-                    cmd.ExecuteNonQuery();
-
-                    MessageBox.Show("MDB created successfully with stock rules:\n" + mdbFile);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.Message);
-            }
-        }
+       
 
         private void button3_Click(object sender, EventArgs e)
         {
@@ -410,6 +417,55 @@ namespace POS_System
         {
             SalesHistoryPage productsPage = new SalesHistoryPage();
             productsPage.ShowDialog();
+        }
+
+
+        public void ClearAll()
+        {
+            TotalText.Text = "₱ 0.00";
+            lblTotalProfit.Text = "₱ 0.00";
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            InvoiceSummaryPage invoice = new InvoiceSummaryPage();
+            invoice.ShowDialog();
+        }
+
+        private void btnPrev_Click(object sender, EventArgs e)
+        {
+            if (currentPage > 1)
+            {
+                currentPage--;
+                LoadCurrentPage();
+            }
+        }
+
+        private void btnNext_Click(object sender, EventArgs e)
+        {
+            if (currentPage < TotalPages())
+            {
+                currentPage++;
+                LoadCurrentPage();
+            }
+        }
+
+        private void flowLayoutPanel1_Scroll(object sender, ScrollEventArgs e)
+        {
+            if (flowLayoutPanel1.VerticalScroll.Value
+                >= flowLayoutPanel1.VerticalScroll.Maximum - flowLayoutPanel1.Height)
+            {
+                if (currentPage < TotalPages())
+                {
+                    currentPage++;
+                    LoadCurrentPage();
+                }
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

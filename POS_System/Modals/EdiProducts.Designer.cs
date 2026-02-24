@@ -88,6 +88,7 @@
             this.ProdUnit.Name = "ProdUnit";
             this.ProdUnit.Size = new System.Drawing.Size(370, 37);
             this.ProdUnit.TabIndex = 38;
+            this.ProdUnit.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ProdUnit_KeyPress);
             // 
             // label3
             // 
@@ -186,6 +187,7 @@
             this.prodStocks.Name = "prodStocks";
             this.prodStocks.Size = new System.Drawing.Size(370, 37);
             this.prodStocks.TabIndex = 43;
+            this.prodStocks.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.prodStocks_KeyPress);
             // 
             // label4
             // 

@@ -56,5 +56,39 @@ namespace POS_System.Modals
             _prodform.LoadProductsAsync(); // Refresh the products list in the main form    
             this.Close(); // Close the edit form    
         }
+
+        private void ProdUnit_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Allow control keys (like backspace)
+            if (!char.IsControl(e.KeyChar))
+            {
+                // Allow only one dot and digits
+                if (char.IsDigit(e.KeyChar) || (e.KeyChar == '.' && !ProdUnit.Text.Contains(".")))
+                {
+                    e.Handled = false; // Allow the character
+                }
+                else
+                {
+                    e.Handled = true; // Cancel the keypress event
+                }
+            }
+        }
+
+        private void prodStocks_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Allow control keys (like backspace)
+            if (!char.IsControl(e.KeyChar))
+            {
+                // Allow only one dot and digits
+                if (char.IsDigit(e.KeyChar) || (e.KeyChar == '.' && !prodStocks.Text.Contains(".")))
+                {
+                    e.Handled = false; // Allow the character
+                }
+                else
+                {
+                    e.Handled = true; // Cancel the keypress event
+                }
+            }
+        }
     }
 }

@@ -196,5 +196,56 @@ namespace POS_System.Services
                 })
                 .ToList();
         }
+
+
+        public List<InvoiceSummaryModel> GetInvoiceSummaries()
+        {
+            return _salesCache
+                .GroupBy(s => s.InvoiceNo)
+                .Select(g => new InvoiceSummaryModel
+                {
+                    InvoiceNo = g.Key,
+                    Date = g.First().Date,
+                    InvoiceTotal = g.Sum(x => x.Price * x.Quantity),
+                    AmountPay = g.Sum(x => x.Price * x.Quantity) // same for now
+                })
+                .OrderByDescending(x => x.Date)
+                .ToList();
+        }
+
+        public List<InvoiceItem> GetInvoiceItems(
+    string invoiceNo,
+    List<Product> products,
+    List<InventoryTracking> inventory)
+        {
+            var salesItems = _salesCache
+                .Where(s => s.InvoiceNo == invoiceNo)
+                .ToList();
+
+            var result = new List<InvoiceItem>();
+
+            foreach (var sale in salesItems)
+            {
+                var product = products
+                    .FirstOrDefault(p => p.ItemNo == sale.ItemNo);
+
+                var inventoryRecord = inventory
+                    .Where(i => i.InvoiceNo == invoiceNo && i.ItemNo == sale.ItemNo)
+                    .FirstOrDefault();
+
+                result.Add(new InvoiceItem
+                {
+                    Date = sale.Date,
+                    InvoiceNo = sale.InvoiceNo,
+                    ItemNo = sale.ItemNo,
+                    ItemName = product?.ItemName ?? "Unknown",
+                    Price = sale.Price,
+                    QtyIN = inventoryRecord?.QtyIN ?? 0,
+                    QtyOut = inventoryRecord?.QtyOut ?? sale.Quantity
+                });
+            }
+
+            return result;
+        }
     }
 }

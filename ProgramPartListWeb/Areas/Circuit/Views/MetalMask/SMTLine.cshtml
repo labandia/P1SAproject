@@ -220,7 +220,8 @@
               $("#TotalPrintBoard").val("");
               $("#SMT_Operator").val("");
           }
-          updateOperationStatus(4);
+        updateOperationStatus(4);
+        $("#saveSMT").prop("disabled", true);
      });
 
     // START THE TIME OF THE DATA
@@ -551,6 +552,7 @@
                 $("#startbtn").prop("disabled", true);
                 $("#endbtn").prop("disabled", true);
                 $('#TotalPrintBoard').focus();
+                $("#saveSMT").prop("disabled", true);
                 updateOperationStatus(2);
                 return;
             }

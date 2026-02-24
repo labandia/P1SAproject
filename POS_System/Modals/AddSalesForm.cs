@@ -22,6 +22,8 @@ namespace POS_System
 
         private Form1 _parentForm;
 
+        private double getTotalAmount = 0;
+
         public AddSalesForm(BindingList<POSModel> prods, Form1 form)
         {
             InitializeComponent();
@@ -99,14 +101,13 @@ namespace POS_System
 
             }
 
-            MessageBox.Show("Sales and Inventory saved successfully!");
         }
 
         private void UpdateTotal()
         {
-            double total = _selectedItems.Sum(p => p.Total);
+            getTotalAmount = _selectedItems.Sum(p => p.Total);
             decimal totalProfit = _selectedItems.Sum(x => x.TotalProfit);
-            TotalText.Text = $"₱ {total:N2}";
+            TotalText.Text = $"₱ {getTotalAmount:N2}";
 
         }
 
@@ -126,6 +127,29 @@ namespace POS_System
             else
             {
                 return "Good";
+            }
+        }
+
+        private void AmountText_TextChanged(object sender, EventArgs e)
+        {
+             double remainpayed = getTotalAmount - double.Parse(AmountText.Text);
+             ChangeText.Text = $"₱ {remainpayed:N2}";
+        }
+
+        private void AmountText_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Allow control keys (like backspace)
+            if (!char.IsControl(e.KeyChar))
+            {
+                // Allow only one dot and digits
+                if (char.IsDigit(e.KeyChar) || (e.KeyChar == '.' && !AmountText.Text.Contains(".")))
+                {
+                    e.Handled = false; // Allow the character
+                }
+                else
+                {
+                    e.Handled = true; // Cancel the keypress event
+                }
             }
         }
     }

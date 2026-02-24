@@ -52,6 +52,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Flashscreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Flashscreen.Designer.cs">
+      <DependentUpon>Flashscreen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="InvoiceSummaryPage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InvoiceSummaryPage.Designer.cs">
+      <DependentUpon>InvoiceSummaryPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="Modals\AddProductsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -114,6 +126,12 @@
     <Compile Include="Services\ProductService.cs" />
     <Compile Include="Services\SaleService.cs" />
     <Compile Include="Utilities\DBhelper.cs" />
+    <EmbeddedResource Include="Flashscreen.resx">
+      <DependentUpon>Flashscreen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InvoiceSummaryPage.resx">
+      <DependentUpon>InvoiceSummaryPage.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Modals\AddProductsForm.resx">
       <DependentUpon>AddProductsForm.cs</DependentUpon>
     </EmbeddedResource>

@@ -1,12 +1,5 @@
 ﻿using POS_System.Services;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace POS_System.Modals
@@ -23,7 +16,6 @@ namespace POS_System.Modals
             _prod = prod;
             _prodform = prodform;
 
-            MessageBox.Show($"EditingV2: {_prod.ItemName}");
 
             _prodId = prod.ItemNo;  
             ProdName.Text = _prod.ItemName;

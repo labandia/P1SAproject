@@ -171,7 +171,7 @@
             this.Savebtn.ForeColor = System.Drawing.Color.White;
             this.Savebtn.Image = ((System.Drawing.Image)(resources.GetObject("Savebtn.Image")));
             this.Savebtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Savebtn.Location = new System.Drawing.Point(252, 520);
+            this.Savebtn.Location = new System.Drawing.Point(260, 520);
             this.Savebtn.Name = "Savebtn";
             this.Savebtn.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
             this.Savebtn.Size = new System.Drawing.Size(174, 41);
@@ -249,6 +249,7 @@
             this.Controls.Add(this.Cancebtn);
             this.Controls.Add(this.Savebtn);
             this.Name = "AddProductsForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "AddProductsForm";
             this.ResumeLayout(false);
             this.PerformLayout();

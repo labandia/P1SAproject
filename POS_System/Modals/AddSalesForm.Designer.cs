@@ -104,11 +104,13 @@
             // 
             // AmountText
             // 
+            this.AmountText.Font = new System.Drawing.Font("Century Gothic", 18F);
             this.AmountText.Location = new System.Drawing.Point(284, 124);
             this.AmountText.Multiline = true;
             this.AmountText.Name = "AmountText";
             this.AmountText.Size = new System.Drawing.Size(167, 31);
             this.AmountText.TabIndex = 14;
+            this.AmountText.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.AmountText.TextChanged += new System.EventHandler(this.AmountText_TextChanged);
             this.AmountText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.AmountText_KeyPress);
             // 

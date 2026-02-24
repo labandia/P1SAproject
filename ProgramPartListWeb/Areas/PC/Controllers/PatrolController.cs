@@ -612,7 +612,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 string previousPdfPath = existingReg.Filepath;
 
 
-                // ===================== STEP 3: Handle Attachments =====================
+                // // ===================== STEP 3: Handle Attachments =====================
                 var newAttachments = new List<string>();
 
                 if (Attachments != null && Attachments.Any())
@@ -623,7 +623,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                         {
                             string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
                             string fileName = $"CM_{finalPrefix}_{timestamp}{Path.GetExtension(file.FileName)}";
-
+                            Debug.WriteLine("Filename here: " + fileName);
                             ExportFiler.SaveFileasExcel(file, fileName);
                             newAttachments.Add(fileName);
                         }
@@ -675,7 +675,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 {
                     var picId = await _reg.GetEmployeeEmailDetails(updatedReg.PIC_ID, 5, getprefix);
 
-                    if(picId != null && !string.IsNullOrEmpty(picId.Signature))
+                    if (picId != null && !string.IsNullOrEmpty(picId.Signature))
                     {
                         emailSigns.Add(new EmailSignatures
                         {
@@ -698,7 +698,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                         });
                     }
                 }
-               
+
                 //foreach (var sign in emailSigns)
                 //{
                 //    Debug.WriteLine($"Position: {sign.Position}, Signature name: {sign.Signature}");
@@ -717,7 +717,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 string processLink =
                      $"http://p1saportalweb.sdp.com/PC/Patrol/ManagerView?Regno={finalPrefix}&mode=1";
                 string strSubject = $@"[PATROL INSPECTION] 'For Review/Verification' - {finalPrefix}";
-               
+
                 var getPatrolView = await GetRegistrationDetailList(finalPrefix);
                 var getFindings = await GetFindings(finalPrefix);
 
@@ -747,7 +747,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             }
             catch (Exception ex)
             {
-                return JsonValidationError("An unexpected error occurred while processing the request." + ex.Message);
+                return JsonValidationError("An unexpected error." + ex.Message);
             }
         }
         // =======================================================================

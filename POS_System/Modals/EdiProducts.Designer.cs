@@ -219,6 +219,7 @@
             this.Controls.Add(this.Cancebtn);
             this.Controls.Add(this.Savebtn);
             this.Name = "EdiProducts";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "EdiProducts";
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -30,6 +30,8 @@ namespace POS_System
         public decimal Price { get; set; }
         public int StockQty { get; set; }
         public decimal Profit { get { return Price - UnitCost; } }
+
+        public string SearchCache { get; set; }
     }
     public class ProductV2
     {

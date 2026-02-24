@@ -469,9 +469,8 @@
                 // Reset steps
                 resetSteps();
 
-                let res = await postData('@Url.Action("ProcessOwnerSubmission", "Patrol")', finalformData);
-
-                if (res && res.Success) {
+                let res = await postMethod('@Url.Action("ProcessOwnerSubmission", "Patrol")', finalformData);
+                if (res?.Success) {
                     // Start the sequential loading process
                     startSequentialLoading();
                 } else {

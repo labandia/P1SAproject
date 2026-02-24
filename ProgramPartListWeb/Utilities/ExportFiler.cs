@@ -173,7 +173,7 @@ namespace ProgramPartListWeb.Utilities
         {
             try
             {
-                string exportFolder = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\Patrol_Registration\";
+                string exportFolder = @"\\\172.29.1.5\sdpsyn01\Process Control\SystemImages\PatrolCountermeasure\RegistrationFiles\";
                 string finalPdf = Path.Combine(exportFolder, outputfilename);
 
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -544,7 +544,7 @@ namespace ProgramPartListWeb.Utilities
 
         public static void SaveFileasExcel(HttpPostedFileBase ExcelFile, string FilenameExtension)
         {
-            string exportFolder = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\Patrol_Countermeasure\";
+            string exportFolder = @"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\PatrolCountermeasure\";
             string saveFilePath = $@"{exportFolder}{FilenameExtension}";
 
             // Check if file already exists, then delete it

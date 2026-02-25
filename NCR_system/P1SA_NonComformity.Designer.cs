@@ -41,7 +41,7 @@
             // 
             // panel1
             // 
-            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(30)))), ((int)(((byte)(54)))));
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(42)))), ((int)(((byte)(71)))));
             this.panel1.Controls.Add(this.Shipbtn);
             this.panel1.Controls.Add(this.SDCbtn);
             this.panel1.Controls.Add(this.rejectBtn);
@@ -64,7 +64,7 @@
             this.Shipbtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
             this.Shipbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Shipbtn.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Shipbtn.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(111)))), ((int)(((byte)(126)))));
+            this.Shipbtn.ForeColor = System.Drawing.Color.White;
             this.Shipbtn.Image = ((System.Drawing.Image)(resources.GetObject("Shipbtn.Image")));
             this.Shipbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Shipbtn.Location = new System.Drawing.Point(613, 8);
@@ -88,7 +88,7 @@
             this.SDCbtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
             this.SDCbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.SDCbtn.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SDCbtn.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(111)))), ((int)(((byte)(126)))));
+            this.SDCbtn.ForeColor = System.Drawing.Color.White;
             this.SDCbtn.Image = ((System.Drawing.Image)(resources.GetObject("SDCbtn.Image")));
             this.SDCbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SDCbtn.Location = new System.Drawing.Point(19, 8);
@@ -112,7 +112,7 @@
             this.rejectBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
             this.rejectBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rejectBtn.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rejectBtn.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(111)))), ((int)(((byte)(126)))));
+            this.rejectBtn.ForeColor = System.Drawing.Color.White;
             this.rejectBtn.Image = ((System.Drawing.Image)(resources.GetObject("rejectBtn.Image")));
             this.rejectBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.rejectBtn.Location = new System.Drawing.Point(427, 8);
@@ -147,7 +147,7 @@
             this.processbtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
             this.processbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.processbtn.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.processbtn.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(111)))), ((int)(((byte)(126)))));
+            this.processbtn.ForeColor = System.Drawing.Color.White;
             this.processbtn.Image = ((System.Drawing.Image)(resources.GetObject("processbtn.Image")));
             this.processbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.processbtn.Location = new System.Drawing.Point(240, 8);

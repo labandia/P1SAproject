@@ -1,19 +1,18 @@
 ﻿using NCR_system.Interface;
 using NCR_system.View.AddForms;
 using NCR_system.View.EditForms;
+using NCR_system.Models;
 using System;
 using System.Collections.Generic;
-
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using NCR_system.Models;
 using System.Drawing;
-using System.Windows.Forms.DataVisualization.Charting;
-using Series = System.Windows.Forms.DataVisualization.Charting.Series;
-using Color = System.Drawing.Color;
-using System.Diagnostics;
-using System.Linq;
-using System.Windows.Markup;
+using LiveCharts;
+using LiveCharts.WinForms;
+using LiveCharts.Wpf;
+using System.Windows.Media;
+using Brushes = System.Windows.Media.Brushes;
 
 
 namespace NCR_system.View.Module
@@ -28,45 +27,30 @@ namespace NCR_system.View.Module
         public int depId { get; set; }
         public int stats { get; set; }
 
-        bool isSelectSection = false;
-        bool isSelectStatus = false;
-        bool isChart = false;
+        public DataGridView Customgrid => RejectedGrid;
 
-
-
-        public DataGridView Customgrid { get { return RejectedGrid; } }
-        List<int> outputData = new List<int>();
+        // Reuse collections to reduce allocations
+        private readonly ChartValues<int> _statusValues = new ChartValues<int>();
+        private readonly List<string> _statusLabels = new List<string> { "For Circulation", "Close / Completed", "Report OK", "Open" };
 
 
         public ShipRejected(IShipRejected ship)
         {
             InitializeComponent();
             _ship = ship;
-
             EnableDoubleBuffering();
-            InitializeCharts();
         }
 
         private void EnableDoubleBuffering()
         {
             typeof(DataGridView)
-                .GetProperty("DoubleBuffered",
-                    System.Reflection.BindingFlags.Instance |
-                    System.Reflection.BindingFlags.NonPublic)
+                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
                 ?.SetValue(RejectedGrid, true, null);
 
-            typeof(Chart)
-                .GetProperty("DoubleBuffered",
-                    System.Reflection.BindingFlags.Instance |
-                    System.Reflection.BindingFlags.NonPublic)
-                ?.SetValue(chart1, true, null);
-
-            typeof(Chart)
-                .GetProperty("DoubleBuffered",
-                    System.Reflection.BindingFlags.Instance |
-                    System.Reflection.BindingFlags.NonPublic)
-                ?.SetValue(chartStatus, true, null);
+            RejectedGrid.EnableHeadersVisualStyles = false;
+            RejectedGrid.RowHeadersVisible = false;
         }
+
 
 
         private void ConfigureGrid()
@@ -104,57 +88,34 @@ namespace NCR_system.View.Module
             _gridConfigured = true;
         }
 
-        private void InitializeCharts()
-        {
-            if (chart1.ChartAreas.Count == 0)
-            {
-                ChartArea area = new ChartArea();
-                area.BackColor = Color.Transparent;
-                chart1.ChartAreas.Add(area);
-            }
-
-            if (chartStatus.ChartAreas.Count == 0)
-            {
-                ChartArea area = new ChartArea();
-                area.AxisX.Interval = 1;
-                area.AxisX.LabelStyle.Angle = -90;
-                area.AxisX.MajorGrid.Enabled = false;
-                area.AxisY.MajorGrid.LineDashStyle = ChartDashStyle.Dash;
-                chartStatus.ChartAreas.Add(area);
-            }
-        }
-
-
-
+  
         public async Task DisplayRejected(int proc)
         {
             if (_isLoading) return;
             _isLoading = true;
-        
+
             try
             {
                 depId = sectionfilter.SelectedIndex > 0 ? sectionfilter.SelectedIndex : 0;
                 stats = filteritems.SelectedIndex > 0 ? filteritems.SelectedIndex : 0;
 
                 RejectedGrid.SuspendLayout();
-                chart1.SuspendLayout();
-                chartStatus.SuspendLayout();
 
-                // For Displaying Customer
-                var ShipList = await _ship.GetRejectedShipData(depId, stats, proc, 0, 0);
-                DisplayStatusChartFromList(ShipList);
+                var shipTask = _ship.GetRejectedShipData(depId, stats, proc, 0, 0);
+                var pieTask = _ship.GetCustomersOpenItem(proc, depId);
+
+                await Task.WhenAll(shipTask, pieTask);
+
+                var shipList = shipTask.Result;
+                var pieData = pieTask.Result;
 
                 if (!_gridConfigured)
                     ConfigureGrid();
 
-                DisplayStatusChart(ShipList);
+                RejectedGrid.DataSource = shipList;
 
-                var countItems = await _ship.GetCustomersOpenItem(proc, depId);
-                DisplayPieChart(countItems);
-
-
-                RejectedGrid.DataSource = ShipList;
-
+                UpdateStatusChart(shipList);
+                UpdatePieChart(pieData);
             }
             catch (Exception ex)
             {
@@ -163,49 +124,94 @@ namespace NCR_system.View.Module
             finally
             {
                 RejectedGrid.ResumeLayout();
-                chart1.ResumeLayout();
-                chartStatus.ResumeLayout();
                 _isLoading = false;
             }
         }
 
-        private void DisplayStatusChart(List<RejectShipmentModel> list)
+        private void UpdateStatusChart(List<RejectShipmentModel> list)
         {
-            Dictionary<int, int> counts = new Dictionary<int, int>();
+            if (list == null || list.Count == 0)
+            {
+                cartesianChart1.Series = new SeriesCollection();
+                return;
+            }
+
+            // Faster than LINQ GroupBy
+            int forCirculation = 0, close = 0, reportOk = 0, open = 0;
 
             foreach (var item in list)
             {
-                if (!counts.ContainsKey(item.Status))
-                    counts[item.Status] = 0;
-
-                counts[item.Status]++;
-            }
-
-            chartStatus.Series.Clear();
-            var series = new Series("Status")
-            {
-                ChartType = SeriesChartType.Column,
-                IsValueShownAsLabel = true
-            };
-
-            int[] allStatuses = { 3, 0, 2, 1 };
-
-            foreach (var status in allStatuses)
-            {
-                int count = counts.ContainsKey(status) ? counts[status] : 0;
-                int index = series.Points.AddXY(GetStatusLabel(status), count);
-
-                switch (status)
+                switch (item.Status)
                 {
-                    case 3: series.Points[index].Color = Color.SteelBlue; break;
-                    case 0: series.Points[index].Color = Color.DarkGray; break;
-                    case 2: series.Points[index].Color = Color.SeaGreen; break;
-                    case 1: series.Points[index].Color = Color.OrangeRed; break;
+                    case 3: forCirculation++; break;
+                    case 0: close++; break;
+                    case 2: reportOk++; break;
+                    case 1: open++; break;
                 }
             }
 
-            chartStatus.Series.Add(series);
+            _statusValues.Clear();
+            _statusValues.Add(forCirculation);
+            _statusValues.Add(close);
+            _statusValues.Add(reportOk);
+            _statusValues.Add(open);
+
+            cartesianChart1.Series = new SeriesCollection
+            {
+                new ColumnSeries
+                {
+                    Values = _statusValues,
+                    DataLabels = true,
+                    Fill = Brushes.SteelBlue
+                }
+            };
+
+            cartesianChart1.AxisX.Clear();
+            cartesianChart1.AxisX.Add(new Axis
+            {
+                Labels = _statusLabels,
+                LabelsRotation = 20
+            });
+
+            cartesianChart1.AxisY.Clear();
+            cartesianChart1.AxisY.Add(new Axis { Title = "Count" });
+
+            cartesianChart1.DisableAnimations = list.Count > 2000; // disable animation for big datasets
         }
+
+        private void UpdatePieChart(List<CustomerTotalModel> cc)
+        {
+            //resetDisplayText();
+
+            if (cc == null || cc.Count == 0)
+            {
+                pieChart1.Series = new SeriesCollection();
+                return;
+            }
+
+            var series = new SeriesCollection();
+
+            foreach (var d in cc)
+            {
+                if (d.totalOpen <= 0) continue;
+
+                series.Add(new PieSeries
+                {
+                    Title = d.DepartmentName,
+                    Values = new ChartValues<int> { d.totalOpen },
+                    DataLabels = true,
+                    LabelPoint = cp => $"{cp.Y} ({cp.Participation:P0})"
+                });
+
+                //DisplayLabelText(d.DepartmentName, d.totalOpen);
+            }
+
+            pieChart1.Series = series;
+            pieChart1.InnerRadius = 70;
+            pieChart1.DisableAnimations = cc.Sum(x => x.totalOpen) > 2000;
+        }
+
+      
 
         private string GetStatusLabel(int status)
         {
@@ -303,14 +309,10 @@ namespace NCR_system.View.Module
         }
 
         private async void sectionfilter_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            await DisplayRejected(1);
-        }
+         => await DisplayRejected(1);
 
         private async void filteritems_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            await DisplayRejected(1);
-        }
+            => await DisplayRejected(1);
 
         private void RejectedGrid_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -351,143 +353,78 @@ namespace NCR_system.View.Module
 
         public void DisplayPieChart(List<CustomerTotalModel> cc)
         {
-            resetDisplayText();
+            //resetDisplayText();
 
-            chart1.Series.Clear();
-
-            Series series = new Series("Open Items")
+            if (cc == null || cc.Count == 0)
             {
-                ChartType = SeriesChartType.Doughnut,
-                IsValueShownAsLabel = false
-            };
+                pieChart1.Series = new LiveCharts.SeriesCollection();
+                return;
+            }
 
-            series["DoughnutRadius"] = "65";
+            var seriesCollection = new LiveCharts.SeriesCollection();
 
-            Dictionary<string, Color> deptColors = new Dictionary<string, Color>
+            // Department color mapping
+            var deptColors = new Dictionary<string, System.Windows.Media.Brush>
             {
-                { "Molding", Color.DodgerBlue },
-                { "Press", Color.Orange },
-                { "Rotor", Color.Green },
-                { "Winding", Color.Gold },
-                { "Circuit", Color.Aqua }
+                { "Molding", Brushes.DodgerBlue },
+                { "Press", Brushes.Orange },
+                { "Rotor", Brushes.SeaGreen },
+                { "Winding", Brushes.Gold },
+                { "Circuit", Brushes.MediumPurple }
             };
 
             foreach (var d in cc)
             {
                 if (d.totalOpen <= 0) continue;
 
-                int index = series.Points.AddY(d.totalOpen);
-                series.Points[index].LegendText = d.DepartmentName;
-
-                if (deptColors.ContainsKey(d.DepartmentName))
-                    series.Points[index].Color = deptColors[d.DepartmentName];
-
-                DisplayLabelText(d.DepartmentName, d.totalOpen);
-            }
-
-            chart1.Series.Add(series);
-        }
-
-
-        private void DisplayLabelText(string dept, int count)
-        {
-            switch (dept)
-            {
-                case "Molding": moldval.Text = count.ToString(); break;
-                case "Press": Pressval.Text = count.ToString(); break;
-                case "Rotor": Rotorval.Text = count.ToString(); break;
-                case "Winding": windingval.Text = count.ToString(); break;
-                default: Circuitval.Text = count.ToString(); break;
-            }
-        }
-        public void resetDisplayText()
-        {
-            moldval.Text = "0";
-            Pressval.Text = "0";
-            Rotorval.Text = "0";
-            windingval.Text = "0";
-            Circuitval.Text = "0";
-        }
-
-
-        private void DisplayStatusChartFromList(List<RejectShipmentModel> shipList)
-        {
-            // Group data
-            Dictionary<int, int> statusCounts = shipList
-                .GroupBy(x => x.Status)
-                .ToDictionary(g => g.Key, g => g.Count());
-
-            chartStatus.Series.Clear();
-            chartStatus.ChartAreas.Clear();
-            chartStatus.Legends.Clear();
-
-            // Chart Area
-            ChartArea area = new ChartArea();
-
-            area.AxisX.Interval = 1;
-            area.AxisX.LabelStyle.Angle = -90;     // ← THIS is the vertical position
-            area.AxisX.LabelStyle.Font = new Font("Segoe UI", 9, System.Drawing.FontStyle.Bold);
-            area.AxisX.MajorGrid.Enabled = false;
-
-            area.AxisY.Title = "Count";
-            area.AxisY.MajorGrid.LineDashStyle = ChartDashStyle.Dash;
-
-            // Axis label colors
-            area.AxisX.LabelStyle.ForeColor = Color.White;
-            area.AxisY.LabelStyle.ForeColor = Color.White;
-
-            // Axis title color
-            area.AxisX.TitleForeColor = Color.White;
-            area.AxisY.TitleForeColor = Color.White;
-
-            // Grid color (optional – subtle white)
-            area.AxisX.MajorGrid.LineColor = Color.FromArgb(60, Color.White);
-            area.AxisY.MajorGrid.LineColor = Color.FromArgb(60, Color.White);
-
-            chartStatus.ChartAreas.Add(area);
-
-            // Series (Vertical Column Chart)
-            Series series = new Series("Status");
-            series.ChartType = SeriesChartType.Column;
-            series.IsValueShownAsLabel = true;
-
-            // Ensure ALL statuses appear
-            int[] allStatuses = new int[] { 3, 0, 2, 1 };
-
-            foreach (int status in allStatuses)
-            {
-                int count = statusCounts.ContainsKey(status)
-                    ? statusCounts[status]
-                    : 0;
-
-                int index = series.Points.AddXY(GetStatusLabel(status), count);
-
-                // ✔ OLD-SCHOOL switch (Framework safe)
-                switch (status)
+                var pie = new PieSeries
                 {
-                    case 3:
-                        series.Points[index].Color = Color.SteelBlue;   // For Circulation
-                        break;
+                    Title = d.DepartmentName,
+                    Values = new ChartValues<int> { d.totalOpen },
+                    DataLabels = true,
+                    LabelPoint = chartPoint =>
+                        $"{chartPoint.SeriesView.Title}\n{chartPoint.Y} ({chartPoint.Participation:P1})",
+                    FontSize = 12
+                };
 
-                    case 0:
-                        series.Points[index].Color = Color.DarkGray;    // Close
-                        break;
+                // Apply custom color if exists
+                if (deptColors.ContainsKey(d.DepartmentName))
+                    pie.Fill = deptColors[d.DepartmentName];
 
-                    case 2:
-                        series.Points[index].Color = Color.SeaGreen;    // Report OK
-                        break;
+                seriesCollection.Add(pie);
 
-                    case 1:
-                        series.Points[index].Color = Color.OrangeRed;   // Open
-                        break;
-
-                    default:
-                        series.Points[index].Color = Color.LightGray;
-                        break;
-                }
+                // Update text labels
+                //DisplayLabelText(d.DepartmentName, d.totalOpen);
             }
 
-            chartStatus.Series.Add(series);
+            pieChart1.Series = seriesCollection;
+
+            // Doughnut Style
+            pieChart1.InnerRadius = 70;
+
+            // Animation
+            pieChart1.DisableAnimations = false;
+            pieChart1.LegendLocation = LegendLocation.Right;
         }
+
+
+        //private void DisplayLabelText(string dept, int count)
+        //{
+        //    switch (dept)
+        //    {
+        //        case "Molding": moldval.Text = count.ToString(); break;
+        //        case "Press": Pressval.Text = count.ToString(); break;
+        //        case "Rotor": Rotorval.Text = count.ToString(); break;
+        //        case "Winding": windingval.Text = count.ToString(); break;
+        //        default: Circuitval.Text = count.ToString(); break;
+        //    }
+        //}
+
+        //private void resetDisplayText()
+        //{
+        //    moldval.Text = Pressval.Text = Rotorval.Text =
+        //    windingval.Text = Circuitval.Text = "0";
+        //}
+
     }
 }

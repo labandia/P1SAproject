@@ -10,14 +10,22 @@ namespace POS_System
 {
     public partial class Flashscreen : Form
     {
-        private readonly string dbPath =
-           Path.Combine(@"C:\AccessDB", "SariSariStore.mdb");
+        private readonly string dbFolder;
+        private readonly string dbPath;
 
         private int step = 0;
 
         public Flashscreen()
         {
             InitializeComponent();
+
+            dbFolder = Path.Combine(
+               Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+               "SariSariStore"
+           );
+
+            dbPath = Path.Combine(dbFolder, "SariSariStore.mdb");
+
 
             progressBar1.Style = ProgressBarStyle.Continuous;
             progressBar1.ForeColor = Color.SeaGreen;

@@ -1,8 +1,5 @@
 ﻿using ADOX;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Data.OleDb;
 using System.Drawing;
 using System.IO;
@@ -13,6 +10,9 @@ namespace POS_System
 {
     public partial class Flashscreen : Form
     {
+        private readonly string dbPath =
+           Path.Combine(@"C:\AccessDB", "SariSariStore.mdb");
+
         private int step = 0;
 
         public Flashscreen()
@@ -29,9 +29,9 @@ namespace POS_System
             progressBar1.Value = 0;
             lblStatus.Text = "Initializing...";
 
-            await CreateDatabaseWithProgress();
+            await SetupDatabaseAsync();
 
-            lblStatus.Text = "Opening Sari Sari Store...";
+            lblStatus.Text = "Opening POS System...";
             await Task.Delay(500);
 
             Form1 frm = new Form1();
@@ -39,133 +39,228 @@ namespace POS_System
             this.Hide();
         }
 
-        private void label7_Click(object sender, EventArgs e)
+        private async Task SetupDatabaseAsync()
         {
+            UpdateProgress(10, "Checking database...");
 
-        }
-
-        private async Task CreateDatabaseWithProgress()
-        {
-            string folderPath = @"C:\AccessDB";
-            string mdbFile = Path.Combine(folderPath, "SariSariStore.mdb");
-
-            UpdateProgress(10, "Checking database folder...");
-            await Task.Delay(300);
-
-            if (!Directory.Exists(folderPath))
-                Directory.CreateDirectory(folderPath);
-
-            // ✅ CHECK IF DATABASE EXISTS
-            if (File.Exists(mdbFile))
+            // ✅ If database already exists → skip everything
+            if (File.Exists(dbPath))
             {
-                UpdateProgress(100, "Database already exists. Skipping setup...");
-                await Task.Delay(800);
-                return; // 🚀 SKIP CREATION
+                UpdateProgress(100, "Database already exists.");
+                await Task.Delay(500);
+                return;
             }
 
             try
             {
-                UpdateProgress(20, "Creating new database...");
+                UpdateProgress(20, "Creating database file...");
                 await Task.Delay(300);
 
-                var cat = new ADOX.Catalog();
-                cat.Create($"Provider=Microsoft.Jet.OLEDB.4.0;Data Source={mdbFile};Jet OLEDB:Engine Type=5");
+                // CREATE MDB
+                var cat = new Catalog();
+                cat.Create(
+                    $"Provider=Microsoft.Jet.OLEDB.4.0;" +
+                    $"Data Source={dbPath};" +
+                    $"Jet OLEDB:Engine Type=5");
                 cat = null;
 
-                string connString = $"Provider=Microsoft.Jet.OLEDB.4.0;Data Source={mdbFile};";
+                string connStr =
+                    $"Provider=Microsoft.Jet.OLEDB.4.0;Data Source={dbPath};";
 
-                using (OleDbConnection conn = new OleDbConnection(connString))
+                using (OleDbConnection conn = new OleDbConnection(connStr))
                 {
                     conn.Open();
                     OleDbCommand cmd = new OleDbCommand();
                     cmd.Connection = conn;
 
-                    // PRODUCTS TABLE
+                    // ================= PRODUCTS TABLE =================
                     UpdateProgress(40, "Creating Products table...");
                     cmd.CommandText = @"
-                CREATE TABLE Products (
-                    ItemNo AUTOINCREMENT PRIMARY KEY,
-                    Category TEXT(50),
-                    ItemName TEXT(100),
-                    UnitCost DOUBLE,
-                    Price DOUBLE,
-                    StockQty LONG DEFAULT 0,
-                    StockStatus TEXT(20),
-                    Remarks TEXT(255), 
-                    IsDeleted YESNO DEFAULT FALSE
-                )";
+                        CREATE TABLE Products (
+                            ItemNo AUTOINCREMENT PRIMARY KEY,
+                            Category TEXT(50),
+                            ItemName TEXT(100),
+                            UnitCost DOUBLE,
+                            Price DOUBLE,
+                            StockQty LONG DEFAULT 0,
+                            StockStatus TEXT(20),
+                            Remarks TEXT(255),
+                            IsDeleted YESNO DEFAULT FALSE
+                        )";
                     cmd.ExecuteNonQuery();
-                    await Task.Delay(200);
 
-                    // SALES TABLE
+                    // ================= SALES TABLE =================
                     UpdateProgress(55, "Creating Sales table...");
                     cmd.CommandText = @"
-                CREATE TABLE Sales (
-                    SaleID AUTOINCREMENT PRIMARY KEY,
-                    InvoiceNo TEXT(20),
-                    [Date] DATETIME,
-                    ItemNo LONG,
-                    Price DOUBLE,
-                    Quantity LONG
-                )";
-                    cmd.ExecuteNonQuery();
-                    await Task.Delay(200);
-
-                    // INVENTORY TABLE
-                    UpdateProgress(70, "Creating Inventory table...");
-                    cmd.CommandText = @"
-                CREATE TABLE InventoryTracking (
-                    InventoryID AUTOINCREMENT PRIMARY KEY,
-                    [Date] DATETIME,
-                    InvoiceNo TEXT(20),
-                    ItemNo LONG,
-                    QtyIN LONG,
-                    QtyOut LONG,
-                    Remarks TEXT(255)
-                )";
-                    cmd.ExecuteNonQuery();
-                    await Task.Delay(200);
-
-                    // RELATIONSHIPS
-                    UpdateProgress(85, "Creating Relationships...");
-                    cmd.CommandText = @"
-                ALTER TABLE Sales
-                ADD CONSTRAINT FK_Sales_Products
-                FOREIGN KEY (ItemNo) REFERENCES Products(ItemNo)";
+                        CREATE TABLE Sales (
+                            SaleID AUTOINCREMENT PRIMARY KEY,
+                            InvoiceNo TEXT(20),
+                            [Date] DATETIME,
+                            ItemNo LONG,
+                            Price DOUBLE,
+                            Quantity LONG
+                        )";
                     cmd.ExecuteNonQuery();
 
+                    // ================= INVENTORY TABLE =================
+                    UpdateProgress(70, "Creating InventoryTracking...");
                     cmd.CommandText = @"
-                ALTER TABLE InventoryTracking
-                ADD CONSTRAINT FK_Inventory_Products
-                FOREIGN KEY (ItemNo) REFERENCES Products(ItemNo)";
+                        CREATE TABLE InventoryTracking (
+                            InventoryID AUTOINCREMENT PRIMARY KEY,
+                            [Date] DATETIME,
+                            InvoiceNo TEXT(20),
+                            ItemNo LONG,
+                            QtyIN LONG,
+                            QtyOut LONG,
+                            Remarks TEXT(255)
+                        )";
                     cmd.ExecuteNonQuery();
 
-                    // STOCK RULES
-                    UpdateProgress(95, "Applying Stock Rules...");
+                    // ================= RELATIONSHIPS =================
+                    UpdateProgress(85, "Creating relationships...");
                     cmd.CommandText = @"
-                ALTER TABLE Products
-                ADD CONSTRAINT CK_StockStatus_Valid
-                CHECK (StockStatus IN ('GOOD','LOW STOCK','OUT OF STOCK'))";
+                        ALTER TABLE Sales
+                        ADD CONSTRAINT FK_Sales_Products
+                        FOREIGN KEY (ItemNo)
+                        REFERENCES Products(ItemNo)";
                     cmd.ExecuteNonQuery();
 
                     cmd.CommandText = @"
-                ALTER TABLE Products
-                ADD CONSTRAINT CK_StockQty_Status
-                CHECK (
-                    (StockQty = 0 AND StockStatus = 'OUT OF STOCK')
-                 OR (StockQty BETWEEN 1 AND 10 AND StockStatus = 'LOW STOCK')
-                 OR (StockQty > 10 AND StockStatus = 'GOOD')
-                )";
+                        ALTER TABLE InventoryTracking
+                        ADD CONSTRAINT FK_Inventory_Products
+                        FOREIGN KEY (ItemNo)
+                        REFERENCES Products(ItemNo)";
+                    cmd.ExecuteNonQuery();
+
+                    // ================= STOCK RULES =================
+                    UpdateProgress(95, "Applying stock rules...");
+                    cmd.CommandText = @"
+                        ALTER TABLE Products
+                        ADD CONSTRAINT CK_StockStatus_Valid
+                        CHECK (StockStatus IN 
+                        ('GOOD','LOW STOCK','OUT OF STOCK'))";
                     cmd.ExecuteNonQuery();
                 }
 
-                UpdateProgress(100, "Database created successfully!");
+                // ================= IMPORT EXCEL =================
+                UpdateProgress(98, "Importing initial products...");
+
+                string excelPath =
+                    Path.Combine(Application.StartupPath, "StoreDatabase.xlsx");
+
+                if (File.Exists(excelPath))
+                {
+                    await ImportFromExcelBulkAsync(excelPath,
+                        new Progress<int>(count =>
+                        {
+                            lblStatus.Text =
+                                $"Importing products... {count}";
+                        }));
+                }
+
+                UpdateProgress(100, "Database setup complete!");
                 await Task.Delay(800);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message);
+                MessageBox.Show("Database Setup Error: " + ex.Message);
             }
+        }
+
+        // ==========================================================
+        // 🔥 BULK IMPORT METHOD
+        // ==========================================================
+
+        public async Task ImportFromExcelBulkAsync(
+            string excelFilePath,
+            IProgress<int> progress = null)
+        {
+            await Task.Run(() =>
+            {
+                string extension =
+                    Path.GetExtension(excelFilePath).ToLower();
+
+                string excelConnStr = extension == ".xls"
+                    ? @"Provider=Microsoft.Jet.OLEDB.4.0;" +
+                      $"Data Source={excelFilePath};" +
+                      "Extended Properties='Excel 8.0;HDR=YES;IMEX=1;'"
+                    : @"Provider=Microsoft.ACE.OLEDB.12.0;" +
+                      $"Data Source={excelFilePath};" +
+                      "Extended Properties='Excel 12.0 Xml;HDR=YES;IMEX=1;'";
+
+                string accessConnStr =
+                    $"Provider=Microsoft.Jet.OLEDB.4.0;Data Source={dbPath};";
+
+                using (var excelConn =
+                    new OleDbConnection(excelConnStr))
+                using (var accessConn =
+                    new OleDbConnection(accessConnStr))
+                {
+                    excelConn.Open();
+                    accessConn.Open();
+
+                    using (var transaction =
+                        accessConn.BeginTransaction())
+                    using (var cmd = new OleDbCommand(
+                        @"INSERT INTO Products 
+                          (Category, ItemName, UnitCost, Price, StockQty, StockStatus)
+                          VALUES (?, ?, ?, ?, 0, 'OUT OF STOCK')",
+                        accessConn, transaction))
+                    {
+                        cmd.Parameters.Add(
+                            new OleDbParameter { OleDbType = OleDbType.VarChar });
+                        cmd.Parameters.Add(
+                            new OleDbParameter { OleDbType = OleDbType.VarChar });
+                        cmd.Parameters.Add(
+                            new OleDbParameter { OleDbType = OleDbType.Double });
+                        cmd.Parameters.Add(
+                            new OleDbParameter { OleDbType = OleDbType.Double });
+
+                        using (var excelCmd =
+                            new OleDbCommand(
+                                "SELECT * FROM [Database$]",
+                                excelConn))
+                        using (var reader =
+                            excelCmd.ExecuteReader())
+                        {
+                            int rowCount = 0;
+
+                            while (reader.Read())
+                            {
+                                string itemName =
+                                    reader["Item name"]?.ToString().Trim();
+
+                                if (string.IsNullOrWhiteSpace(itemName))
+                                    continue;
+
+                                string category =
+                                    reader["Category"]?.ToString().Trim();
+
+                                decimal.TryParse(
+                                    reader["Selling Price/pc"]?.ToString(),
+                                    out decimal price);
+
+                                decimal.TryParse(
+                                    reader["Unit Cost"]?.ToString(),
+                                    out decimal unitCost);
+
+                                cmd.Parameters[0].Value = category;
+                                cmd.Parameters[1].Value = itemName;
+                                cmd.Parameters[2].Value = unitCost;
+                                cmd.Parameters[3].Value = price;
+
+                                cmd.ExecuteNonQuery();
+                                rowCount++;
+
+                                if (rowCount % 100 == 0)
+                                    progress?.Report(rowCount);
+                            }
+                        }
+
+                        transaction.Commit();
+                    }
+                }
+            });
         }
 
         private void UpdateProgress(int value, string status)

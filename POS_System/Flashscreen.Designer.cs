@@ -37,7 +37,7 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(57, 196);
+            this.progressBar1.Location = new System.Drawing.Point(63, 198);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(456, 36);
             this.progressBar1.TabIndex = 0;
@@ -47,12 +47,11 @@
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Segoe UI", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.ForeColor = System.Drawing.Color.White;
-            this.label7.Location = new System.Drawing.Point(144, 103);
+            this.label7.Location = new System.Drawing.Point(144, 137);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(303, 37);
             this.label7.TabIndex = 7;
             this.label7.Text = "Sari Sari Store  System";
-            this.label7.Click += new System.EventHandler(this.label7_Click);
             // 
             // button1
             // 
@@ -65,7 +64,7 @@
             this.button1.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button1.ForeColor = System.Drawing.Color.White;
             this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
-            this.button1.Location = new System.Drawing.Point(257, 40);
+            this.button1.Location = new System.Drawing.Point(259, 62);
             this.button1.Name = "button1";
             this.button1.Padding = new System.Windows.Forms.Padding(20, 0, 20, 0);
             this.button1.Size = new System.Drawing.Size(59, 60);
@@ -81,7 +80,7 @@
             this.lblStatus.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.lblStatus.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.lblStatus.ForeColor = System.Drawing.Color.White;
-            this.lblStatus.Location = new System.Drawing.Point(12, 153);
+            this.lblStatus.Location = new System.Drawing.Point(12, 264);
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(549, 37);
             this.lblStatus.TabIndex = 16;
@@ -94,13 +93,14 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(30)))), ((int)(((byte)(54)))));
             this.ClientSize = new System.Drawing.Size(573, 338);
+            this.ControlBox = false;
             this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.progressBar1);
             this.Name = "Flashscreen";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Flashscreen";
+            this.Text = "-";
             this.Load += new System.EventHandler(this.Flashscreen_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

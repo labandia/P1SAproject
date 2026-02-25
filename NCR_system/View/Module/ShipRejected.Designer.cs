@@ -28,37 +28,24 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle31 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle39 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle40 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea7 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend7 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series7 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea8 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend8 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series8 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle32 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle33 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle34 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle35 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle36 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle37 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle38 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ShipRejected));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.RejectedGrid = new System.Windows.Forms.DataGridView();
-            this.RecordID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.RegNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DateIssued = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.IssueGroup = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SectionID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ModelNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Quantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Contents = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DateCloseReg = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Process = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Edit = new System.Windows.Forms.DataGridViewImageColumn();
-            this.Delete = new System.Windows.Forms.DataGridViewImageColumn();
             this.OpenReject = new System.Windows.Forms.Button();
             this.panel6 = new System.Windows.Forms.Panel();
             this.chartStatus = new System.Windows.Forms.DataVisualization.Charting.Chart();
@@ -85,6 +72,20 @@
             this.label2 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.RecordID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.RegNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DateIssued = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.IssueGroup = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SectionID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ModelNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Quantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Contents = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DateCloseReg = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Process = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.UploadImage = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Edit = new System.Windows.Forms.DataGridViewImageColumn();
+            this.Delete = new System.Windows.Forms.DataGridViewImageColumn();
             ((System.ComponentModel.ISupportInitialize)(this.RejectedGrid)).BeginInit();
             this.panel6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chartStatus)).BeginInit();
@@ -104,14 +105,15 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.RejectedGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.LightSteelBlue;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.RejectedGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            this.RejectedGrid.BackgroundColor = System.Drawing.SystemColors.ControlLight;
+            dataGridViewCellStyle31.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle31.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle31.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
+            dataGridViewCellStyle31.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle31.SelectionBackColor = System.Drawing.Color.LightSteelBlue;
+            dataGridViewCellStyle31.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle31.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.RejectedGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle31;
             this.RejectedGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.RejectedGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.RecordID,
@@ -125,169 +127,49 @@
             this.DateCloseReg,
             this.Status,
             this.Process,
+            this.UploadImage,
             this.Edit,
             this.Delete});
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle9.Padding = new System.Windows.Forms.Padding(6, 5, 6, 5);
-            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.RejectedGrid.DefaultCellStyle = dataGridViewCellStyle9;
-            this.RejectedGrid.Location = new System.Drawing.Point(0, 393);
+            dataGridViewCellStyle39.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle39.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle39.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            dataGridViewCellStyle39.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle39.Padding = new System.Windows.Forms.Padding(6, 5, 6, 5);
+            dataGridViewCellStyle39.SelectionBackColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle39.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle39.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.RejectedGrid.DefaultCellStyle = dataGridViewCellStyle39;
+            this.RejectedGrid.Location = new System.Drawing.Point(21, 410);
             this.RejectedGrid.Name = "RejectedGrid";
             this.RejectedGrid.ReadOnly = true;
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle10.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.Desktop;
-            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.RejectedGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle40.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle40.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle40.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F, System.Drawing.FontStyle.Bold);
+            dataGridViewCellStyle40.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle40.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle40.SelectionForeColor = System.Drawing.SystemColors.Desktop;
+            dataGridViewCellStyle40.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.RejectedGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle40;
             this.RejectedGrid.RowHeadersVisible = false;
             this.RejectedGrid.RowTemplate.Height = 30;
             this.RejectedGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.RejectedGrid.Size = new System.Drawing.Size(1349, 534);
+            this.RejectedGrid.Size = new System.Drawing.Size(1304, 490);
             this.RejectedGrid.TabIndex = 8;
             this.RejectedGrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.RejectedGrid_CellClick);
             this.RejectedGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.RejectedGrid_CellFormatting);
-            // 
-            // RecordID
-            // 
-            this.RecordID.DataPropertyName = "RecordID";
-            this.RecordID.HeaderText = "RecordID";
-            this.RecordID.Name = "RecordID";
-            this.RecordID.ReadOnly = true;
-            this.RecordID.Visible = false;
-            this.RecordID.Width = 72;
-            // 
-            // RegNo
-            // 
-            this.RegNo.DataPropertyName = "RegNo";
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RegNo.DefaultCellStyle = dataGridViewCellStyle2;
-            this.RegNo.HeaderText = "Registration No.";
-            this.RegNo.Name = "RegNo";
-            this.RegNo.ReadOnly = true;
-            this.RegNo.Width = 119;
-            // 
-            // DateIssued
-            // 
-            this.DateIssued.DataPropertyName = "DateIssued";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.DateIssued.DefaultCellStyle = dataGridViewCellStyle3;
-            this.DateIssued.HeaderText = "Date Issued";
-            this.DateIssued.Name = "DateIssued";
-            this.DateIssued.ReadOnly = true;
-            this.DateIssued.Width = 97;
-            // 
-            // IssueGroup
-            // 
-            this.IssueGroup.DataPropertyName = "IssueGroup";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.IssueGroup.DefaultCellStyle = dataGridViewCellStyle4;
-            this.IssueGroup.HeaderText = "Issuing \nSection ";
-            this.IssueGroup.Name = "IssueGroup";
-            this.IssueGroup.ReadOnly = true;
-            this.IssueGroup.Width = 85;
-            // 
-            // SectionID
-            // 
-            this.SectionID.DataPropertyName = "SectionID";
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.SectionID.DefaultCellStyle = dataGridViewCellStyle5;
-            this.SectionID.HeaderText = "Main In-charge";
-            this.SectionID.Name = "SectionID";
-            this.SectionID.ReadOnly = true;
-            this.SectionID.Visible = false;
-            this.SectionID.Width = 114;
-            // 
-            // ModelNo
-            // 
-            this.ModelNo.DataPropertyName = "ModelNo";
-            this.ModelNo.HeaderText = "Model No. / Part No.";
-            this.ModelNo.Name = "ModelNo";
-            this.ModelNo.ReadOnly = true;
-            this.ModelNo.Width = 103;
-            // 
-            // Quantity
-            // 
-            this.Quantity.DataPropertyName = "Quantity";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Quantity.DefaultCellStyle = dataGridViewCellStyle6;
-            this.Quantity.HeaderText = "Quantity";
-            this.Quantity.Name = "Quantity";
-            this.Quantity.ReadOnly = true;
-            this.Quantity.Width = 89;
-            // 
-            // Contents
-            // 
-            this.Contents.DataPropertyName = "Contents";
-            this.Contents.HeaderText = "Contents";
-            this.Contents.Name = "Contents";
-            this.Contents.ReadOnly = true;
-            this.Contents.Width = 91;
-            // 
-            // DateCloseReg
-            // 
-            this.DateCloseReg.DataPropertyName = "DateCloseReg";
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.DateCloseReg.DefaultCellStyle = dataGridViewCellStyle7;
-            this.DateCloseReg.HeaderText = "Date Registered";
-            this.DateCloseReg.Name = "DateCloseReg";
-            this.DateCloseReg.ReadOnly = true;
-            this.DateCloseReg.Width = 117;
-            // 
-            // Status
-            // 
-            this.Status.DataPropertyName = "Status";
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Status.DefaultCellStyle = dataGridViewCellStyle8;
-            this.Status.HeaderText = "Status";
-            this.Status.Name = "Status";
-            this.Status.ReadOnly = true;
-            this.Status.Width = 76;
-            // 
-            // Process
-            // 
-            this.Process.DataPropertyName = "Process";
-            this.Process.HeaderText = "Process";
-            this.Process.Name = "Process";
-            this.Process.ReadOnly = true;
-            this.Process.Visible = false;
-            this.Process.Width = 83;
-            // 
-            // Edit
-            // 
-            this.Edit.HeaderText = "Edit";
-            this.Edit.Image = ((System.Drawing.Image)(resources.GetObject("Edit.Image")));
-            this.Edit.Name = "Edit";
-            this.Edit.ReadOnly = true;
-            this.Edit.Width = 45;
-            // 
-            // Delete
-            // 
-            this.Delete.HeaderText = "Delete";
-            this.Delete.Image = ((System.Drawing.Image)(resources.GetObject("Delete.Image")));
-            this.Delete.Name = "Delete";
-            this.Delete.ReadOnly = true;
-            this.Delete.Width = 58;
             // 
             // OpenReject
             // 
             this.OpenReject.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.OpenReject.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.OpenReject.Cursor = System.Windows.Forms.Cursors.Hand;
             this.OpenReject.FlatAppearance.BorderColor = System.Drawing.SystemColors.MenuHighlight;
             this.OpenReject.FlatAppearance.MouseDownBackColor = System.Drawing.SystemColors.MenuHighlight;
             this.OpenReject.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.MenuHighlight;
             this.OpenReject.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.OpenReject.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold);
             this.OpenReject.ForeColor = System.Drawing.Color.White;
-            this.OpenReject.Location = new System.Drawing.Point(1124, 303);
+            this.OpenReject.Location = new System.Drawing.Point(1148, 25);
             this.OpenReject.Name = "OpenReject";
             this.OpenReject.Size = new System.Drawing.Size(177, 41);
             this.OpenReject.TabIndex = 21;
@@ -302,27 +184,27 @@
             this.panel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(30)))), ((int)(((byte)(54)))));
             this.panel6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel6.Controls.Add(this.chartStatus);
-            this.panel6.Location = new System.Drawing.Point(693, 20);
+            this.panel6.Location = new System.Drawing.Point(639, 95);
             this.panel6.Name = "panel6";
             this.panel6.Padding = new System.Windows.Forms.Padding(30);
-            this.panel6.Size = new System.Drawing.Size(608, 255);
+            this.panel6.Size = new System.Drawing.Size(686, 255);
             this.panel6.TabIndex = 25;
             // 
             // chartStatus
             // 
             this.chartStatus.BackColor = System.Drawing.Color.Transparent;
-            chartArea1.Name = "ChartArea1";
-            this.chartStatus.ChartAreas.Add(chartArea1);
+            chartArea7.Name = "ChartArea1";
+            this.chartStatus.ChartAreas.Add(chartArea7);
             this.chartStatus.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend1.Name = "Legend1";
-            this.chartStatus.Legends.Add(legend1);
+            legend7.Name = "Legend1";
+            this.chartStatus.Legends.Add(legend7);
             this.chartStatus.Location = new System.Drawing.Point(30, 30);
             this.chartStatus.Name = "chartStatus";
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            this.chartStatus.Series.Add(series1);
-            this.chartStatus.Size = new System.Drawing.Size(546, 193);
+            series7.ChartArea = "ChartArea1";
+            series7.Legend = "Legend1";
+            series7.Name = "Series1";
+            this.chartStatus.Series.Add(series7);
+            this.chartStatus.Size = new System.Drawing.Size(624, 193);
             this.chartStatus.TabIndex = 35;
             this.chartStatus.Text = "chart2";
             // 
@@ -332,7 +214,7 @@
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label9.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label9.Location = new System.Drawing.Point(854, 294);
+            this.label9.Location = new System.Drawing.Point(797, 20);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(119, 15);
             this.label9.TabIndex = 31;
@@ -344,12 +226,11 @@
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label5.Location = new System.Drawing.Point(693, 294);
+            this.label5.Location = new System.Drawing.Point(636, 20);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(97, 15);
             this.label5.TabIndex = 29;
             this.label5.Text = "Filter by Section";
-            this.label5.Click += new System.EventHandler(this.label5_Click);
             // 
             // sectionfilter
             // 
@@ -366,7 +247,7 @@
             "Rotor",
             "Winding",
             "Circuit"});
-            this.sectionfilter.Location = new System.Drawing.Point(691, 317);
+            this.sectionfilter.Location = new System.Drawing.Point(634, 43);
             this.sectionfilter.MaxDropDownItems = 30;
             this.sectionfilter.Name = "sectionfilter";
             this.sectionfilter.Size = new System.Drawing.Size(121, 23);
@@ -382,7 +263,7 @@
             "-- Filter Status --",
             "Open",
             "Close"});
-            this.filteritems.Location = new System.Drawing.Point(857, 317);
+            this.filteritems.Location = new System.Drawing.Point(800, 43);
             this.filteritems.Name = "filteritems";
             this.filteritems.Size = new System.Drawing.Size(121, 23);
             this.filteritems.TabIndex = 27;
@@ -390,6 +271,7 @@
             // 
             // panel1
             // 
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(30)))), ((int)(((byte)(54)))));
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Controls.Add(this.panel6);
             this.panel1.Controls.Add(this.OpenReject);
@@ -402,7 +284,6 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1352, 387);
             this.panel1.TabIndex = 32;
-            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
             // panel2
             // 
@@ -435,7 +316,6 @@
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(172, 330);
             this.panel3.TabIndex = 34;
-            this.panel3.Paint += new System.Windows.Forms.PaintEventHandler(this.panel3_Paint);
             // 
             // Circuitval
             // 
@@ -600,27 +480,158 @@
             // chart1
             // 
             this.chart1.BackColor = System.Drawing.Color.Transparent;
-            chartArea2.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea2);
+            chartArea8.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea8);
             this.chart1.Dock = System.Windows.Forms.DockStyle.Left;
-            legend2.Name = "Legend1";
-            this.chart1.Legends.Add(legend2);
+            legend8.Name = "Legend1";
+            this.chart1.Legends.Add(legend8);
             this.chart1.Location = new System.Drawing.Point(0, 0);
             this.chart1.Name = "chart1";
-            series2.ChartArea = "ChartArea1";
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            this.chart1.Series.Add(series2);
+            series8.ChartArea = "ChartArea1";
+            series8.Legend = "Legend1";
+            series8.Name = "Series1";
+            this.chart1.Series.Add(series8);
             this.chart1.Size = new System.Drawing.Size(369, 330);
             this.chart1.TabIndex = 33;
             this.chart1.Text = "chart1";
+            // 
+            // RecordID
+            // 
+            this.RecordID.DataPropertyName = "RecordID";
+            this.RecordID.HeaderText = "RecordID";
+            this.RecordID.Name = "RecordID";
+            this.RecordID.ReadOnly = true;
+            this.RecordID.Visible = false;
+            this.RecordID.Width = 72;
+            // 
+            // RegNo
+            // 
+            this.RegNo.DataPropertyName = "RegNo";
+            dataGridViewCellStyle32.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RegNo.DefaultCellStyle = dataGridViewCellStyle32;
+            this.RegNo.HeaderText = "Registration No.";
+            this.RegNo.Name = "RegNo";
+            this.RegNo.ReadOnly = true;
+            this.RegNo.Width = 119;
+            // 
+            // DateIssued
+            // 
+            this.DateIssued.DataPropertyName = "DateIssued";
+            dataGridViewCellStyle33.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.DateIssued.DefaultCellStyle = dataGridViewCellStyle33;
+            this.DateIssued.HeaderText = "Date Issued";
+            this.DateIssued.Name = "DateIssued";
+            this.DateIssued.ReadOnly = true;
+            this.DateIssued.Width = 97;
+            // 
+            // IssueGroup
+            // 
+            this.IssueGroup.DataPropertyName = "IssueGroup";
+            dataGridViewCellStyle34.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle34.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.IssueGroup.DefaultCellStyle = dataGridViewCellStyle34;
+            this.IssueGroup.HeaderText = "Issuing \nSection ";
+            this.IssueGroup.Name = "IssueGroup";
+            this.IssueGroup.ReadOnly = true;
+            this.IssueGroup.Width = 85;
+            // 
+            // SectionID
+            // 
+            this.SectionID.DataPropertyName = "SectionID";
+            dataGridViewCellStyle35.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.SectionID.DefaultCellStyle = dataGridViewCellStyle35;
+            this.SectionID.HeaderText = "Main In-charge";
+            this.SectionID.Name = "SectionID";
+            this.SectionID.ReadOnly = true;
+            this.SectionID.Visible = false;
+            this.SectionID.Width = 114;
+            // 
+            // ModelNo
+            // 
+            this.ModelNo.DataPropertyName = "ModelNo";
+            this.ModelNo.HeaderText = "Model No. / Part No.";
+            this.ModelNo.Name = "ModelNo";
+            this.ModelNo.ReadOnly = true;
+            this.ModelNo.Width = 103;
+            // 
+            // Quantity
+            // 
+            this.Quantity.DataPropertyName = "Quantity";
+            dataGridViewCellStyle36.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Quantity.DefaultCellStyle = dataGridViewCellStyle36;
+            this.Quantity.HeaderText = "Quantity";
+            this.Quantity.Name = "Quantity";
+            this.Quantity.ReadOnly = true;
+            this.Quantity.Width = 89;
+            // 
+            // Contents
+            // 
+            this.Contents.DataPropertyName = "Contents";
+            this.Contents.HeaderText = "Contents";
+            this.Contents.Name = "Contents";
+            this.Contents.ReadOnly = true;
+            this.Contents.Width = 91;
+            // 
+            // DateCloseReg
+            // 
+            this.DateCloseReg.DataPropertyName = "DateCloseReg";
+            dataGridViewCellStyle37.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.DateCloseReg.DefaultCellStyle = dataGridViewCellStyle37;
+            this.DateCloseReg.HeaderText = "Date Registered";
+            this.DateCloseReg.Name = "DateCloseReg";
+            this.DateCloseReg.ReadOnly = true;
+            this.DateCloseReg.Width = 117;
+            // 
+            // Status
+            // 
+            this.Status.DataPropertyName = "Status";
+            dataGridViewCellStyle38.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Status.DefaultCellStyle = dataGridViewCellStyle38;
+            this.Status.HeaderText = "Status";
+            this.Status.Name = "Status";
+            this.Status.ReadOnly = true;
+            this.Status.Width = 76;
+            // 
+            // Process
+            // 
+            this.Process.DataPropertyName = "Process";
+            this.Process.HeaderText = "Process";
+            this.Process.Name = "Process";
+            this.Process.ReadOnly = true;
+            this.Process.Visible = false;
+            this.Process.Width = 83;
+            // 
+            // UploadImage
+            // 
+            this.UploadImage.DataPropertyName = "UploadImage";
+            this.UploadImage.HeaderText = "UploadImage";
+            this.UploadImage.Name = "UploadImage";
+            this.UploadImage.ReadOnly = true;
+            this.UploadImage.Visible = false;
+            this.UploadImage.Width = 114;
+            // 
+            // Edit
+            // 
+            this.Edit.HeaderText = "Edit";
+            this.Edit.Image = ((System.Drawing.Image)(resources.GetObject("Edit.Image")));
+            this.Edit.Name = "Edit";
+            this.Edit.ReadOnly = true;
+            this.Edit.Width = 45;
+            // 
+            // Delete
+            // 
+            this.Delete.HeaderText = "Delete";
+            this.Delete.Image = ((System.Drawing.Image)(resources.GetObject("Delete.Image")));
+            this.Delete.Name = "Delete";
+            this.Delete.ReadOnly = true;
+            this.Delete.Width = 58;
             // 
             // ShipRejected
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(30)))), ((int)(((byte)(54)))));
+            this.BackColor = System.Drawing.Color.White;
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.RejectedGrid);
             this.Name = "ShipRejected";
@@ -643,19 +654,6 @@
         private System.Windows.Forms.DataGridView RejectedGrid;
         private System.Windows.Forms.Button OpenReject;
         private System.Windows.Forms.Panel panel6;
-        private System.Windows.Forms.DataGridViewTextBoxColumn RecordID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn RegNo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn DateIssued;
-        private System.Windows.Forms.DataGridViewTextBoxColumn IssueGroup;
-        private System.Windows.Forms.DataGridViewTextBoxColumn SectionID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ModelNo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Quantity;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Contents;
-        private System.Windows.Forms.DataGridViewTextBoxColumn DateCloseReg;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Status;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Process;
-        private System.Windows.Forms.DataGridViewImageColumn Edit;
-        private System.Windows.Forms.DataGridViewImageColumn Delete;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ComboBox sectionfilter;
@@ -680,5 +678,19 @@
         private System.Windows.Forms.Label Rotorval;
         private System.Windows.Forms.Label Pressval;
         private System.Windows.Forms.DataVisualization.Charting.Chart chartStatus;
+        private System.Windows.Forms.DataGridViewTextBoxColumn RecordID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn RegNo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DateIssued;
+        private System.Windows.Forms.DataGridViewTextBoxColumn IssueGroup;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SectionID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ModelNo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Quantity;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Contents;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DateCloseReg;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Status;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Process;
+        private System.Windows.Forms.DataGridViewTextBoxColumn UploadImage;
+        private System.Windows.Forms.DataGridViewImageColumn Edit;
+        private System.Windows.Forms.DataGridViewImageColumn Delete;
     }
 }

@@ -36,6 +36,7 @@ namespace POS_System
 
             productsTable.AutoGenerateColumns = true; // set once
             productsTable.DataSource = productBinding;
+            progressBar1.Visible = false;   
         }
 
         public async Task LoadProductsAsync()
@@ -48,14 +49,15 @@ namespace POS_System
                 p.SearchCache = (p.ItemName + " " + p.Category)?.ToLower();
             }
 
-            
+            if (allProducts.Count > 0)
+            {
+                Excelbtn.Enabled = false;
+                Excelbtn.BackColor = System.Drawing.Color.Gray;
+            }
 
       
             SetupCategories();
             ApplyFilter();
-            //productBinding.DataSource = allProducts;
-            //TotalCount.Text = $"Total Items: {allProducts.Count}";
-            //AddActionButton();
         }
 
         private void DisplayFilteredProducts(List<Product> products)
@@ -250,6 +252,41 @@ namespace POS_System
             searchTimer.Stop();
             currentPage = 1;
             ApplyFilter();
+        }
+
+        private async void Excelbtn_Click(object sender, EventArgs e)
+        {
+                using (OpenFileDialog ofd = new OpenFileDialog()){
+                    ofd.Filter = "Excel Files (*.xls;*.xlsx)|*.xls;*.xlsx";
+
+                    if (ofd.ShowDialog() == DialogResult.OK)
+                    {
+                        progressBar1.Visible = true;   
+                        progressBar1.Value = 0;
+                        Excelbtn.Enabled = false;
+
+                        var progress = new Progress<int>(value =>
+                        {
+                            progressBar1.Value = Math.Min(value, progressBar1.Maximum);
+                        });
+
+                        await productService.ImportFromExcelBulkAsync(ofd.FileName, progress);
+
+                        // Reload product grid after import
+                        await LoadProductsAsync();
+
+                        Excelbtn.Enabled = true;
+
+                        MessageBox.Show("Bulk Import Completed!");
+                        progressBar1.Visible = false;   
+                    }
+                }
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.OK;
+            Close();    
         }
     }
 }

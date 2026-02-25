@@ -6,21 +6,14 @@ using System.Collections.Generic;
 
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LiveCharts;
-using LiveCharts.Wpf;   // Yes, WPF namespace is normal for LiveCharts WinForms
-using System.Windows.Media;
-using System.Windows;
 using NCR_system.Models;
-using LiveCharts.Wpf.Charts.Base;
 using System.Drawing;
 using System.Windows.Forms.DataVisualization.Charting;
-using System.Windows.Markup;
-using Axis = LiveCharts.Wpf.Axis;
 using Series = System.Windows.Forms.DataVisualization.Charting.Series;
 using Color = System.Drawing.Color;
 using System.Diagnostics;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 using System.Linq;
+using System.Windows.Markup;
 
 
 namespace NCR_system.View.Module
@@ -28,13 +21,18 @@ namespace NCR_system.View.Module
     public partial class ShipRejected : UserControl
     {
         private readonly IShipRejected _ship;
-        
-        public int depId { get; set; } = 0;
-        public int stats { get; set; } = 0;
+
+        private bool _gridConfigured = false;
+        private bool _isLoading = false;
+
+        public int depId { get; set; }
+        public int stats { get; set; }
 
         bool isSelectSection = false;
         bool isSelectStatus = false;
         bool isChart = false;
+
+
 
         public DataGridView Customgrid { get { return RejectedGrid; } }
         List<int> outputData = new List<int>();
@@ -44,106 +42,180 @@ namespace NCR_system.View.Module
         {
             InitializeComponent();
             _ship = ship;
+
+            EnableDoubleBuffering();
+            InitializeCharts();
         }
+
+        private void EnableDoubleBuffering()
+        {
+            typeof(DataGridView)
+                .GetProperty("DoubleBuffered",
+                    System.Reflection.BindingFlags.Instance |
+                    System.Reflection.BindingFlags.NonPublic)
+                ?.SetValue(RejectedGrid, true, null);
+
+            typeof(Chart)
+                .GetProperty("DoubleBuffered",
+                    System.Reflection.BindingFlags.Instance |
+                    System.Reflection.BindingFlags.NonPublic)
+                ?.SetValue(chart1, true, null);
+
+            typeof(Chart)
+                .GetProperty("DoubleBuffered",
+                    System.Reflection.BindingFlags.Instance |
+                    System.Reflection.BindingFlags.NonPublic)
+                ?.SetValue(chartStatus, true, null);
+        }
+
+
+        private void ConfigureGrid()
+        {
+            if (_gridConfigured) return;
+
+            RejectedGrid.AutoGenerateColumns = false;
+            RejectedGrid.SuspendLayout();
+
+            void Setup(string name, int width, int displayIndex,
+                DataGridViewAutoSizeColumnMode mode = DataGridViewAutoSizeColumnMode.None)
+            {
+                var col = RejectedGrid.Columns[name];
+                if (col == null) return;
+
+                col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                col.Width = width;
+                col.DisplayIndex = displayIndex;
+                col.AutoSizeMode = mode;
+            }
+
+            Setup("DateCloseReg", 150, 0);
+            Setup("RegNo", 200, 1);
+            Setup("DateIssued", 150, 2);
+            Setup("IssueGroup", 200, 3);
+            Setup("SectionID", 150, 4);
+            Setup("ModelNo", 150, 5, DataGridViewAutoSizeColumnMode.AllCells);
+            Setup("Quantity", 100, 6);
+            Setup("Contents", 150, 7, DataGridViewAutoSizeColumnMode.DisplayedCells);
+            Setup("Status", 200, 8);
+            Setup("Edit", 100, 9);
+            Setup("Delete", 100, 10);
+
+            RejectedGrid.ResumeLayout();
+            _gridConfigured = true;
+        }
+
+        private void InitializeCharts()
+        {
+            if (chart1.ChartAreas.Count == 0)
+            {
+                ChartArea area = new ChartArea();
+                area.BackColor = Color.Transparent;
+                chart1.ChartAreas.Add(area);
+            }
+
+            if (chartStatus.ChartAreas.Count == 0)
+            {
+                ChartArea area = new ChartArea();
+                area.AxisX.Interval = 1;
+                area.AxisX.LabelStyle.Angle = -90;
+                area.AxisX.MajorGrid.Enabled = false;
+                area.AxisY.MajorGrid.LineDashStyle = ChartDashStyle.Dash;
+                chartStatus.ChartAreas.Add(area);
+            }
+        }
+
+
 
         public async Task DisplayRejected(int proc)
         {
-            depId = sectionfilter.SelectedIndex > 0 ? sectionfilter.SelectedIndex : 0;
-            stats = filteritems.SelectedIndex > 0 ? filteritems.SelectedIndex : 0;
-
+            if (_isLoading) return;
+            _isLoading = true;
+        
             try
             {
-                List<int> outputData = new List<int> { };
-                List<int> outputData2 = new List<int> { };
+                depId = sectionfilter.SelectedIndex > 0 ? sectionfilter.SelectedIndex : 0;
+                stats = filteritems.SelectedIndex > 0 ? filteritems.SelectedIndex : 0;
+
+                RejectedGrid.SuspendLayout();
+                chart1.SuspendLayout();
+                chartStatus.SuspendLayout();
 
                 // For Displaying Customer
                 var ShipList = await _ship.GetRejectedShipData(depId, stats, proc, 0, 0);
-                RejectedGrid.DataSource = ShipList;
-
                 DisplayStatusChartFromList(ShipList);
 
-                RejectedGrid.Columns["DateCloseReg"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                RejectedGrid.Columns["DateCloseReg"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                RejectedGrid.Columns["DateCloseReg"].Width = 150;
-                RejectedGrid.Columns["DateCloseReg"].DisplayIndex = 0;
+                if (!_gridConfigured)
+                    ConfigureGrid();
 
+                DisplayStatusChart(ShipList);
 
-                RejectedGrid.Columns["RegNo"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                RejectedGrid.Columns["RegNo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                RejectedGrid.Columns["RegNo"].DisplayIndex = 1;
-                RejectedGrid.Columns["RegNo"].Width = 200;
-
-                RejectedGrid.Columns["DateIssued"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                RejectedGrid.Columns["DateIssued"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                RejectedGrid.Columns["DateIssued"].Width = 150;
-                RejectedGrid.Columns["DateIssued"].DisplayIndex = 2;
-
-                RejectedGrid.Columns["IssueGroup"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                RejectedGrid.Columns["IssueGroup"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                RejectedGrid.Columns["IssueGroup"].Width = 200;
-                RejectedGrid.Columns["IssueGroup"].DisplayIndex = 3;
-
-
-                RejectedGrid.Columns["SectionID"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                RejectedGrid.Columns["SectionID"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                RejectedGrid.Columns["SectionID"].Width = 150;
-                RejectedGrid.Columns["SectionID"].DisplayIndex = 4;
-
-                RejectedGrid.Columns["ModelNo"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                RejectedGrid.Columns["ModelNo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                RejectedGrid.Columns["ModelNo"].DisplayIndex = 5;
-
-                RejectedGrid.Columns["Quantity"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                RejectedGrid.Columns["Quantity"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                RejectedGrid.Columns["Quantity"].DisplayIndex = 6;
-
-
-                RejectedGrid.Columns["Contents"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                RejectedGrid.Columns["Contents"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                RejectedGrid.Columns["Contents"].DisplayIndex = 7;
-
-                
-
-                RejectedGrid.Columns["Status"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                RejectedGrid.Columns["Status"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                RejectedGrid.Columns["Status"].Width = 200;
-                RejectedGrid.Columns["Status"].DisplayIndex = 8;
-
-                RejectedGrid.Columns["Edit"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                RejectedGrid.Columns["Edit"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                RejectedGrid.Columns["Edit"].Width = 100;
-                RejectedGrid.Columns["Edit"].DisplayIndex = 9;
-
-                RejectedGrid.Columns["Delete"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                RejectedGrid.Columns["Delete"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                RejectedGrid.Columns["Delete"].Width = 100;
-                RejectedGrid.Columns["Delete"].DisplayIndex = 10;
-
-
-                //if(isChart == false)
-                //{
-
-                //}
                 var countItems = await _ship.GetCustomersOpenItem(proc, depId);
                 DisplayPieChart(countItems);
 
-                foreach (var items in countItems)
-                {
-                    outputData.Add(items.totalOpen);
-                    outputData2.Add(items.TotalClosed);
 
+                RejectedGrid.DataSource = ShipList;
 
-                }
-
-                //DisplayCharts(outputData, outputData2);
-
-                //if (isSelectSection != false || isSelectStatus != false)
-                //{
-                //}
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                RejectedGrid.ResumeLayout();
+                chart1.ResumeLayout();
+                chartStatus.ResumeLayout();
+                _isLoading = false;
+            }
+        }
+
+        private void DisplayStatusChart(List<RejectShipmentModel> list)
+        {
+            Dictionary<int, int> counts = new Dictionary<int, int>();
+
+            foreach (var item in list)
+            {
+                if (!counts.ContainsKey(item.Status))
+                    counts[item.Status] = 0;
+
+                counts[item.Status]++;
+            }
+
+            chartStatus.Series.Clear();
+            var series = new Series("Status")
+            {
+                ChartType = SeriesChartType.Column,
+                IsValueShownAsLabel = true
+            };
+
+            int[] allStatuses = { 3, 0, 2, 1 };
+
+            foreach (var status in allStatuses)
+            {
+                int count = counts.ContainsKey(status) ? counts[status] : 0;
+                int index = series.Points.AddXY(GetStatusLabel(status), count);
+
+                switch (status)
+                {
+                    case 3: series.Points[index].Color = Color.SteelBlue; break;
+                    case 0: series.Points[index].Color = Color.DarkGray; break;
+                    case 2: series.Points[index].Color = Color.SeaGreen; break;
+                    case 1: series.Points[index].Color = Color.OrangeRed; break;
+                }
+            }
+
+            chartStatus.Series.Add(series);
+        }
+
+        private string GetStatusLabel(int status)
+        {
+            switch (status)
+            {
+                case 1: return "Open";
+                case 0: return "Close / Completed";
+                case 2: return "Report OK";
+                case 3: return "For Circulation";
+                default: return "Unknown";
             }
         }
 
@@ -211,9 +283,33 @@ namespace NCR_system.View.Module
             }
         }
 
-        private void OpenShip_Click(object sender, EventArgs e)
+  
+        private void ShipRejected_Load(object sender, EventArgs e)
         {
-         
+            sectionfilter.SelectedIndex = 0;
+            filteritems.SelectedIndex = 0;
+        }
+
+
+        private void OpenReject_Click(object sender, EventArgs e)
+        {
+            var rej = new Rejected(_ship);
+
+            using (var add = new AddShipment(_ship, 1, this, rej))
+            {
+                add.StartPosition = FormStartPosition.CenterParent;
+                add.ShowDialog(this);   // <-- modal + always in front of parent
+            }
+        }
+
+        private async void sectionfilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            await DisplayRejected(1);
+        }
+
+        private async void filteritems_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            await DisplayRejected(1);
         }
 
         private void RejectedGrid_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -234,11 +330,11 @@ namespace NCR_system.View.Module
 
             if (column.Name == "Edit")
             {
-                int processtype = Convert.ToInt32(type);
-                // You can get the row data like this:
-                var openedit = new EditShipments(_ship, this, Convert.ToInt32(recordID), processtype);
-                openedit.ShowDialog();
-
+                using (var openedit = new EditShipments(_ship, this, Convert.ToInt32(recordID), Convert.ToInt32(type)))
+                {
+                    openedit.StartPosition = FormStartPosition.CenterParent;
+                    openedit.ShowDialog(this);   // <-- modal + always in front of parent
+                }
             }
             else if (column.Name == "Delete")
             {
@@ -247,142 +343,9 @@ namespace NCR_system.View.Module
                 if (result == DialogResult.Yes)
                 {
                     // Remove the row or perform deletion
-                    System.Windows.Forms.MessageBox.Show($"Delete clicked on row {e.RowIndex} - Record ID selected:  {recordID}");
+                   MessageBox.Show($"Delete clicked on row {e.RowIndex} - Record ID selected:  {recordID}");
                 }
             }
-        }
-
-        private void ShipRejected_Load(object sender, EventArgs e)
-        {
-            sectionfilter.SelectedIndex = 0;
-            filteritems.SelectedIndex = 0;
-
-            //cartesianChart1.Series = new SeriesCollection
-            //{
-            //    new ColumnSeries
-            //    {
-            //        Title = "Production",
-            //        Values =  new ChartValues<int>(outputData),
-            //         MaxColumnWidth = 150,   // 🔥 Bar size increased
-            //    }
-            //};
-
-            //cartesianChart1.AxisX.Add(new Axis
-            //{
-            //    Title = "",
-            //    Labels = new[] { "Press", "Molding", "Rotor", "Winding", "Circuit" }
-            //});
-
-            //cartesianChart1.AxisY.Add(new Axis
-            //{
-            //    Title = "Total Open Items",
-            //    LabelFormatter = value => value.ToString("N0")
-            //});
-        }
-
-        //public void DisplayCharts(List<int> outputData, List<int> outputData2)
-        //{
-        //    // RESET the chart fully
-        //    ShipmentChart.Series.Clear();
-        //    ShipmentChart.AxisX.Clear();
-        //    ShipmentChart.AxisY.Clear();
-
-        //    // ----------------- SERIES (DOUBLE BAR) -----------------
-        //    ShipmentChart.Series = new LiveCharts.SeriesCollection
-        //    {
-        //        new ColumnSeries
-        //        {
-        //            Title = "Open Items",
-        //            Values = new ChartValues<int>(outputData),
-        //            MaxColumnWidth = 150,
-        //            DataLabels = true,                            // <--- VALUE LABELS
-        //            LabelPoint = p => p.Y.ToString("N0"),
-
-        //            Fill = new SolidColorBrush(System.Windows.Media.Color.FromRgb(66, 133, 244)), // Blue
-        //            ColumnPadding = 20
-        //        }
-        //    };
-
-        //    //,
-        //    //    new ColumnSeries
-        //    //    {
-        //    //        Title = "Closed Items",
-        //    //        Values = new ChartValues<int>(outputData2),
-        //    //        MaxColumnWidth = 150,
-
-        //    //        DataLabels = true,                            // <--- VALUE LABELS
-        //    //        LabelPoint = p => p.Y.ToString("N0"),
-
-        //    //        Fill = new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 128, 0)),  // Orange
-        //    //        ColumnPadding = 20                               // <--- spacing inside the group
-        //    //    }
-
-        //    // ----------------- AXIS X (CATEGORIES) -----------------
-        //    ShipmentChart.AxisX.Add(new Axis
-        //    {
-        //        Title = "",
-        //        Labels = new[] { "Molding", "Press", "Rotor", "Winding", "Circuit" },
-
-        //        Foreground = System.Windows.Media.Brushes.Black,
-        //        FontFamily = new System.Windows.Media.FontFamily("Segoe UI"),
-        //        FontSize = 11,
-        //        FontWeight = FontWeights.Bold,
-
-        //        Separator = new Separator
-        //        {
-        //            Step = 1,
-        //            Stroke = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 180, 180, 180)),
-        //            StrokeThickness = 1
-        //        }
-        //    });
-
-        //    // ----------------- AXIS Y (VALUES) -----------------
-        //    ShipmentChart.AxisY.Add(new Axis
-        //    {
-        //        Title = "",
-        //        LabelFormatter = value => value.ToString("N0"),
-
-        //        Foreground = System.Windows.Media.Brushes.Black,
-        //        FontFamily = new System.Windows.Media.FontFamily("Segoe UI"),
-        //        FontSize = 9,
-        //        FontWeight = FontWeights.Bold,
-
-        //        Separator = new Separator
-        //        {
-        //            Stroke = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 180, 180, 180)),
-        //            StrokeThickness = 1,
-        //            StrokeDashArray = new DoubleCollection { 1 }
-        //        }
-        //    });
-
-        //}
-
-        private void OpenReject_Click(object sender, EventArgs e)
-        {
-            var rej = new Rejected(_ship);
-
-            using (var add = new AddShipment(_ship, 1, this, rej))
-            {
-                add.StartPosition = FormStartPosition.CenterParent;
-                add.ShowDialog(this);   // <-- modal + always in front of parent
-            }
-        }
-
-        private async void sectionfilter_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            isSelectSection = true;
-            await DisplayRejected(1);
-        }
-
-        private async void filteritems_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            isSelectStatus = true;
-            await DisplayRejected(1);
-        }
-
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
         }
 
 
@@ -391,97 +354,52 @@ namespace NCR_system.View.Module
             resetDisplayText();
 
             chart1.Series.Clear();
-            chart1.ChartAreas.Clear();
-            chart1.Legends.Clear();
 
-            // Chart Area
-            ChartArea area = new ChartArea
-            {
-                BackColor = System.Drawing.Color.Transparent
-            };
-            chart1.ChartAreas.Add(area);
-
-            // Doughnut Series
             Series series = new Series("Open Items")
             {
-                ChartType = SeriesChartType.Doughnut, // ✅ CHANGE HERE
-                IsValueShownAsLabel = false           // ✅ No labels on ring
+                ChartType = SeriesChartType.Doughnut,
+                IsValueShownAsLabel = false
             };
 
-            // Doughnut hole size (0–99)
-            series["DoughnutRadius"] = "65"; // ⭐ adjust thickness
+            series["DoughnutRadius"] = "65";
 
-            // Legend
-            //Legend legend = new Legend
-            //{
-            //    Docking = Docking.Right,
-            //     Alignment = StringAlignment.Center, // Top aligned
-            //    LegendStyle = LegendStyle.Column, // Vertical
-            //    BackColor = System.Drawing.Color.Transparent
-            //};
-            //chart1.Legends.Add(legend);
-            // Department color map
             Dictionary<string, Color> deptColors = new Dictionary<string, Color>
             {
                 { "Molding", Color.DodgerBlue },
                 { "Press", Color.Orange },
                 { "Rotor", Color.Green },
-                { "Winding", Color.Yellow },
+                { "Winding", Color.Gold },
                 { "Circuit", Color.Aqua }
             };
 
-            // Add data
             foreach (var d in cc)
             {
-                if (d.totalOpen > 0)
-                {
-                    int index = series.Points.AddY(d.totalOpen);
+                if (d.totalOpen <= 0) continue;
 
-                    series.Points[index].LegendText = d.DepartmentName;
+                int index = series.Points.AddY(d.totalOpen);
+                series.Points[index].LegendText = d.DepartmentName;
 
-                    // ✅ Apply color
-                    if (deptColors.ContainsKey(d.DepartmentName))
-                        series.Points[index].Color = deptColors[d.DepartmentName];
+                if (deptColors.ContainsKey(d.DepartmentName))
+                    series.Points[index].Color = deptColors[d.DepartmentName];
 
-                    DisplayLabelText(d.DepartmentName, d.totalOpen);
-                }
+                DisplayLabelText(d.DepartmentName, d.totalOpen);
             }
 
             chart1.Series.Add(series);
-
-            // Layout
-            chart1.Width = 420;
-            chart1.Height = 320;
-
-            area.Position.Auto = false;
-            area.Position = new ElementPosition(5, 5, 65, 90);
         }
 
 
-        public void DisplayLabelText(string depart, int count)
+        private void DisplayLabelText(string dept, int count)
         {
-            Debug.WriteLine($" - {depart}: {count}");
-            switch (depart)
+            switch (dept)
             {
-                case "Molding":
-                    moldval.Text = count.ToString();
-                    break;
-                case "Press":
-                    Pressval.Text = count.ToString();
-                    break;
-                case "Rotor":
-                    Rotorval.Text = count.ToString();
-                    break;
-                case "Winding":
-                    windingval.Text = count.ToString();
-                    break;
-                default:
-                    Circuitval.Text = count.ToString();
-                    break;
+                case "Molding": moldval.Text = count.ToString(); break;
+                case "Press": Pressval.Text = count.ToString(); break;
+                case "Rotor": Rotorval.Text = count.ToString(); break;
+                case "Winding": windingval.Text = count.ToString(); break;
+                default: Circuitval.Text = count.ToString(); break;
             }
         }
-
-
         public void resetDisplayText()
         {
             moldval.Text = "0";
@@ -491,29 +409,6 @@ namespace NCR_system.View.Module
             Circuitval.Text = "0";
         }
 
-        private void panel3_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private string GetStatusLabel(int status)
-        {
-            switch (status)
-            {
-                case 1:
-                    return "Open";
-                case 0:
-                    return "Close / Completed";
-                case 2:
-                    return "Report OK";
-                case 3:
-                    return "For Circulation";
-                default:
-                    return "Unknown";
-            }
-
-           
-        }
 
         private void DisplayStatusChartFromList(List<RejectShipmentModel> shipList)
         {
@@ -593,11 +488,6 @@ namespace NCR_system.View.Module
             }
 
             chartStatus.Series.Add(series);
-        }
-
-        private void label5_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

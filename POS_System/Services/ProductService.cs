@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -105,5 +106,75 @@ namespace POS_System.Services
 
             _productsCache.RemoveAll(x => x.ItemNo == itemNo);
         }
+
+
+        public async Task ImportFromExcelBulkAsync(
+                 string excelFilePath,
+                 IProgress<int> progress = null)
+        {
+            await Task.Run(() =>
+            {
+                string extension = Path.GetExtension(excelFilePath).ToLower();
+
+                string excelConnStr = extension == ".xls"
+                    ? @"Provider=Microsoft.Jet.OLEDB.4.0;" +
+                      $"Data Source={excelFilePath};" +
+                      "Extended Properties='Excel 8.0;HDR=YES;IMEX=1;'"
+                    : @"Provider=Microsoft.ACE.OLEDB.12.0;" +
+                      $"Data Source={excelFilePath};" +
+                      "Extended Properties='Excel 12.0 Xml;HDR=YES;IMEX=1;'";
+
+                using (var excelConn = new OleDbConnection(excelConnStr))
+                using (var accessConn = DBhelper.GetConnection())
+                {
+                    excelConn.Open();
+                    accessConn.Open();
+
+                    using (var transaction = accessConn.BeginTransaction())
+                    using (var cmd = new OleDbCommand(
+                        "INSERT INTO Products (Category, ItemName, Price, UnitCost) VALUES (?, ?, ?, ?)",
+                        accessConn, transaction))
+                    {
+                        // Prepare parameters once
+                        cmd.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.VarChar });
+                        cmd.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.VarChar });
+                        cmd.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.Currency });
+                        cmd.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.Currency });
+
+                        using (var excelCmd = new OleDbCommand("SELECT * FROM [Database$]", excelConn))
+                        using (var reader = excelCmd.ExecuteReader())
+                        {
+                            int rowCount = 0;
+
+                            while (reader.Read())
+                            {
+                                string itemName = reader["Item name"]?.ToString().Trim();
+                                if (string.IsNullOrWhiteSpace(itemName))
+                                    continue;
+
+                                string category = reader["Category"]?.ToString().Trim();
+
+                                decimal.TryParse(reader["Selling Price/pc"]?.ToString(), out decimal price);
+                                decimal.TryParse(reader["Unit Cost"]?.ToString(), out decimal unitCost);
+
+                                cmd.Parameters[0].Value = category;
+                                cmd.Parameters[1].Value = itemName;
+                                cmd.Parameters[2].Value = price;
+                                cmd.Parameters[3].Value = unitCost;
+                                cmd.ExecuteNonQuery();
+
+                                rowCount++;
+
+                                if (rowCount % 100 == 0)
+                                    progress?.Report(rowCount);
+                            }
+                        }
+
+                        transaction.Commit();
+                    }
+                }
+            });
+        }
+
     }
 }

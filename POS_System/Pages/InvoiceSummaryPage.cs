@@ -43,6 +43,8 @@ namespace POS_System
                 inventoryService.GetInventoryCache()
             );
 
+            TotalItemsText.Text = "Total Items Purchased : " + items.Count.ToString();
+
             itemsTable.DataSource = items;
         }
 
@@ -61,6 +63,8 @@ namespace POS_System
             string invoiceNo =
                   invoiceTable.Rows[e.RowIndex]
                   .Cells["InvoiceNo"].Value.ToString();
+
+            InvoiceText.Text = "Invoice No : " + invoiceNo;
 
             await GetInvoiceItems(invoiceNo);
         }

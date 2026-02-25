@@ -180,7 +180,7 @@ namespace POS_System
         {
             Panel card = new Panel
             {
-                Width = 200,
+                Width = 180,
                 Height = 80,
                 BackColor = Color.White,
                 BorderStyle = BorderStyle.FixedSingle,
@@ -193,7 +193,7 @@ namespace POS_System
             {
                 Text = product.ItemName,
                 Font = new Font("Segoe UI", 9, FontStyle.Bold),
-                Location = new Point(10, 8),
+                Location = new Point(10, 15),
                 AutoSize = true
             };
 
@@ -410,10 +410,20 @@ namespace POS_System
 
        
 
-        private void button3_Click(object sender, EventArgs e)
+        private async void button3_Click(object sender, EventArgs e)
         {
-            ProductsPageForm productsPage = new ProductsPageForm();
-            productsPage.ShowDialog();  
+            using (var addSalesForm = new ProductsPageForm())
+            {
+                if (addSalesForm.ShowDialog() == DialogResult.OK)
+                {
+                    await saleService.LoadSalesAsync();
+                    LoadProductsAsync(); 
+                    LoadToday();
+                    ClearAll();
+                }
+            }
+
+           
         }
 
         private void button4_Click(object sender, EventArgs e)

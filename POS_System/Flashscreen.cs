@@ -1,4 +1,5 @@
 ﻿using ADOX;
+using POS_System.Utilities;
 using System;
 using System.Data.OleDb;
 using System.Drawing;
@@ -42,7 +43,7 @@ namespace POS_System
             lblStatus.Text = "Opening POS System...";
             await Task.Delay(500);
 
-            Form1 frm = new Form1();
+            SariSariStoreLogin frm = new SariSariStoreLogin();
             frm.Show();
             this.Hide();
         }
@@ -81,72 +82,104 @@ namespace POS_System
                     OleDbCommand cmd = new OleDbCommand();
                     cmd.Connection = conn;
 
-                    // ================= PRODUCTS TABLE =================
-                    UpdateProgress(40, "Creating Products table...");
+                    // ================= USERS TABLE =================
+                    UpdateProgress(30, "Creating Users table...");
                     cmd.CommandText = @"
-                        CREATE TABLE Products (
-                            ItemNo AUTOINCREMENT PRIMARY KEY,
-                            Category TEXT(50),
-                            ItemName TEXT(100),
-                            UnitCost DOUBLE,
-                            Price DOUBLE,
-                            StockQty LONG DEFAULT 0,
-                            StockStatus TEXT(20),
-                            Remarks TEXT(255),
-                            IsDeleted YESNO DEFAULT FALSE
-                        )";
+                CREATE TABLE Users (
+                    UserID AUTOINCREMENT PRIMARY KEY,
+                    FullName TEXT(100) NOT NULL,
+                    Username TEXT(50) NOT NULL,
+                    [PasswordHash] TEXT(255) NOT NULL,
+                    Role TEXT(20) NOT NULL,
+                    IsActive YESNO DEFAULT TRUE,
+                    CreatedAt DATETIME DEFAULT NOW()
+                )";
+                    cmd.ExecuteNonQuery();
+
+                    // Insert Default Admin User
+                    UpdateProgress(35, "Creating default admin...");
+                    string defaultPassword = SecurityPassword.HashPassword("admin123"); // change if needed
+
+                    cmd.CommandText = @"
+                INSERT INTO Users 
+                (FullName, Username, [PasswordHash], Role, IsActive, CreatedAt)
+                VALUES (?, ?, ?, ?, TRUE, NOW())";
+
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.AddWithValue("@FullName", "System Administrator");
+                    cmd.Parameters.AddWithValue("@Username", "admin");
+                    cmd.Parameters.AddWithValue("@PasswordHash", defaultPassword);
+                    cmd.Parameters.AddWithValue("@Role", "Admin");
+
+                    cmd.ExecuteNonQuery();
+
+                    // ================= PRODUCTS TABLE =================
+                    UpdateProgress(45, "Creating Products table...");
+                    cmd.CommandText = @"
+                CREATE TABLE Products (
+                    ItemNo AUTOINCREMENT PRIMARY KEY,
+                    Category TEXT(50),
+                    ItemName TEXT(100),
+                    UnitCost DOUBLE,
+                    Price DOUBLE,
+                    StockQty LONG DEFAULT 0,
+                    StockStatus TEXT(20),
+                    Remarks TEXT(255),
+                    IsDeleted YESNO DEFAULT FALSE
+                )";
+                    cmd.Parameters.Clear();
                     cmd.ExecuteNonQuery();
 
                     // ================= SALES TABLE =================
-                    UpdateProgress(55, "Creating Sales table...");
+                    UpdateProgress(60, "Creating Sales table...");
                     cmd.CommandText = @"
-                        CREATE TABLE Sales (
-                            SaleID AUTOINCREMENT PRIMARY KEY,
-                            InvoiceNo TEXT(20),
-                            [Date] DATETIME,
-                            ItemNo LONG,
-                            Price DOUBLE,
-                            Quantity LONG
-                        )";
+                CREATE TABLE Sales (
+                    SaleID AUTOINCREMENT PRIMARY KEY,
+                    InvoiceNo TEXT(20),
+                    [Date] DATETIME,
+                    ItemNo LONG,
+                    Price DOUBLE,
+                    Quantity LONG
+                )";
                     cmd.ExecuteNonQuery();
 
                     // ================= INVENTORY TABLE =================
-                    UpdateProgress(70, "Creating InventoryTracking...");
+                    UpdateProgress(75, "Creating InventoryTracking...");
                     cmd.CommandText = @"
-                        CREATE TABLE InventoryTracking (
-                            InventoryID AUTOINCREMENT PRIMARY KEY,
-                            [Date] DATETIME,
-                            InvoiceNo TEXT(20),
-                            ItemNo LONG,
-                            QtyIN LONG,
-                            QtyOut LONG,
-                            Remarks TEXT(255)
-                        )";
+                CREATE TABLE InventoryTracking (
+                    InventoryID AUTOINCREMENT PRIMARY KEY,
+                    [Date] DATETIME,
+                    InvoiceNo TEXT(20),
+                    ItemNo LONG,
+                    QtyIN LONG,
+                    QtyOut LONG,
+                    Remarks TEXT(255)
+                )";
                     cmd.ExecuteNonQuery();
 
                     // ================= RELATIONSHIPS =================
                     UpdateProgress(85, "Creating relationships...");
                     cmd.CommandText = @"
-                        ALTER TABLE Sales
-                        ADD CONSTRAINT FK_Sales_Products
-                        FOREIGN KEY (ItemNo)
-                        REFERENCES Products(ItemNo)";
+                ALTER TABLE Sales
+                ADD CONSTRAINT FK_Sales_Products
+                FOREIGN KEY (ItemNo)
+                REFERENCES Products(ItemNo)";
                     cmd.ExecuteNonQuery();
 
                     cmd.CommandText = @"
-                        ALTER TABLE InventoryTracking
-                        ADD CONSTRAINT FK_Inventory_Products
-                        FOREIGN KEY (ItemNo)
-                        REFERENCES Products(ItemNo)";
+                ALTER TABLE InventoryTracking
+                ADD CONSTRAINT FK_Inventory_Products
+                FOREIGN KEY (ItemNo)
+                REFERENCES Products(ItemNo)";
                     cmd.ExecuteNonQuery();
 
-                    // ================= STOCK RULES =================
+                    // ================= STOCK RULE =================
                     UpdateProgress(95, "Applying stock rules...");
                     cmd.CommandText = @"
-                        ALTER TABLE Products
-                        ADD CONSTRAINT CK_StockStatus_Valid
-                        CHECK (StockStatus IN 
-                        ('GOOD','LOW STOCK','OUT OF STOCK'))";
+                ALTER TABLE Products
+                ADD CONSTRAINT CK_StockStatus_Valid
+                CHECK (StockStatus IN 
+                ('GOOD','LOW STOCK','OUT OF STOCK'))";
                     cmd.ExecuteNonQuery();
                 }
 

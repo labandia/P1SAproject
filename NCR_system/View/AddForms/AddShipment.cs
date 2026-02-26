@@ -23,6 +23,8 @@ namespace NCR_system.View.AddForms
         public AddShipment(IShipRejected ship, int proc,  ShipRejected shipcontrol = null, Rejected rej = null)
         {
             InitializeComponent();
+            DisplayPlaceholder();
+
             _ship = ship;
             _shipcontrol = shipcontrol;
             _rej = rej;
@@ -36,53 +38,54 @@ namespace NCR_system.View.AddForms
 
         private async void Save_btn_Click(object sender, EventArgs e)
         {
-
-            string imagepath = await UploadServices.SaveImageFolder(selectedImagepath);
-
-
-            var obj = new RejectShipmentModel
+            try
             {
-                RegNo = string.IsNullOrEmpty(RegNoText.Text) ? "" : RegNoText.Text,
-                DateIssued = DateissuedText.Text,
-                IssueGroup = Issuedbox.Text,
-                SectionID = sectionbox.SelectedIndex + 1,
-                ModelNo = string.IsNullOrEmpty(ModelText.Text) ? "" : ModelText.Text,
-                Quantity = Convert.ToInt32(QuanText.Text),
-                Contents = string.IsNullOrEmpty(ContentText.Text) ? "" : ContentText.Text,
-                DateCloseReg = DateRegText.Text,
-                Status = StatsText.SelectedIndex + 1, 
-                UploadImage = imagepath
-            };
-            bool result = false;
+                string imagepath = await UploadServices.SaveImageFolder(selectedImagepath);
 
-            if(_proc == 0)
-            {
-                Debug.WriteLine("Rejected " + _rej);
-                result = await _ship.InsertShipRejectData(obj, 0);
 
-                if (result)
+                var obj = new RejectShipmentModel
                 {
-                    MessageBox.Show("Data saved successfully.");
-                    await _rej.DisplayRejected(0);
-                    this.Close();
-                }
-            }
-            else
-            {
-                Debug.WriteLine("Shipment " + _shipcontrol);
-                result = await _ship.InsertShipRejectData(obj, 1);
-                if (result)
+                    RegNo = string.IsNullOrEmpty(RegNoText.Text) ? "" : RegNoText.Text,
+                    DateIssued = DateissuedText.Text,
+                    IssueGroup = Issuedbox.Text,
+                    SectionID = sectionbox.SelectedIndex + 1,
+                    ModelNo = string.IsNullOrEmpty(ModelText.Text) ? "" : ModelText.Text,
+                    Quantity = Convert.ToInt32(QuanText.Text),
+                    Contents = string.IsNullOrEmpty(ContentText.Text) ? "" : ContentText.Text,
+                    DateCloseReg = DateRegText.Text,
+                    Status = StatsText.SelectedIndex + 1,
+                    UploadImage = imagepath
+                };
+                bool result = false;
+
+                if (_proc == 0)
                 {
-                    MessageBox.Show("Data saved successfully.");
-                    await _shipcontrol.DisplayRejected(1);
-                    this.Close();
+                    Debug.WriteLine("Rejected " + _rej);
+                    result = await _ship.InsertShipRejectData(obj, 0);
+
+                    if (result)
+                    {
+                        MessageBox.Show("Data saved successfully.");
+                        await _rej.DisplayRejected(0);
+                        this.Close();
+                    }
                 }
+                else
+                {
+                    Debug.WriteLine("Shipment " + _shipcontrol);
+                    result = await _ship.InsertShipRejectData(obj, 1);
+                    if (result)
+                    {
+                        MessageBox.Show("Data saved successfully.");
+                        await _shipcontrol.DisplayRejected(1);
+                        this.Close();
+                    }
 
+                }
+            } catch(Exception ex)
+            {
+                MessageBox.Show("An error occurred: " + ex.Message);
             }
-
-
-
-
         }
 
         private void QuanText_KeyPress(object sender, KeyPressEventArgs e)
@@ -109,7 +112,8 @@ namespace NCR_system.View.AddForms
 
         private void AddShipment_Load(object sender, EventArgs e)
         {
-
+            Issuedbox.Size = new Size(347, 41);
+          
         }
 
         private void AddImagebtn_Click(object sender, EventArgs e)
@@ -125,7 +129,43 @@ namespace NCR_system.View.AddForms
             }
         }
 
+        private void RegNoText_Click(object sender, EventArgs e)
+        {
+            RegNoText.Text = "";
+            RegNoText.ForeColor = Color.Black;
+        }
+        private void ModelText_Click(object sender, EventArgs e)
+        {
+            ModelText.Text = "";
+            ModelText.ForeColor = Color.Black;
+        }
+        private void QuanText_Click(object sender, EventArgs e)
+        {
+            QuanText.Text = "";
+            QuanText.ForeColor = Color.Black;
+        }
+        private void ContentText_Click(object sender, EventArgs e)
+        {
+            ContentText.Text = "";
+            ContentText.ForeColor = Color.Black;
+        }
+       
 
-      
+        public void DisplayPlaceholder()
+        {
+            ModelText.Text = "Enter Model No.";
+            ModelText.ForeColor = Color.Gray;
+
+            RegNoText.Text = "Enter Registration Forms...";
+            RegNoText.ForeColor = Color.Gray;
+
+            QuanText.Text = "Enter Quantity...";
+            QuanText.ForeColor = Color.Gray;
+
+            ContentText.Text = "Enter Contents...";
+            ContentText.ForeColor = Color.Gray;
+        }
+
+        
     }
 }

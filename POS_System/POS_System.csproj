@@ -67,12 +67,43 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EPPlus, Version=7.2.0.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.7.2.0\lib\net462\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus.Interfaces, Version=6.1.1.0, Culture=neutral, PublicKeyToken=a694d7f3b0907a61, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.Interfaces.6.1.1\lib\net462\EPPlus.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus.System.Drawing, Version=6.1.1.0, Culture=neutral, PublicKeyToken=2308d35469c9bac0, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.System.Drawing.6.1.1\lib\net462\EPPlus.System.Drawing.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IO.RecyclableMemoryStream, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IO.RecyclableMemoryStream.3.0.0\lib\netstandard2.0\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ComponentModel.Annotations.5.0.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Configuration.ConfigurationManager, Version=10.0.0.3, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Configuration.ConfigurationManager.10.0.3\lib\net462\System.Configuration.ConfigurationManager.dll</HintPath>
     </Reference>
     <Reference Include="System.Core" />
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml.Linq" />
@@ -91,6 +122,12 @@
     </Compile>
     <Compile Include="Flashscreen.Designer.cs">
       <DependentUpon>Flashscreen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Modals\AddUsers.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Modals\AddUsers.Designer.cs">
+      <DependentUpon>AddUsers.cs</DependentUpon>
     </Compile>
     <Compile Include="Pages\InvoiceSummaryPage.cs">
       <SubType>Form</SubType>
@@ -140,6 +177,12 @@
     <Compile Include="Modules\SalesSummary.Designer.cs">
       <DependentUpon>SalesSummary.cs</DependentUpon>
     </Compile>
+    <Compile Include="Pages\UserManagement.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\UserManagement.Designer.cs">
+      <DependentUpon>UserManagement.cs</DependentUpon>
+    </Compile>
     <Compile Include="POSModel.cs" />
     <Compile Include="POS_Services.cs" />
     <Compile Include="Pages\ProductsPageForm.cs">
@@ -156,12 +199,30 @@
     <Compile Include="Pages\SalesHistoryPage.Designer.cs">
       <DependentUpon>SalesHistoryPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="SariSariStoreLogin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SariSariStoreLogin.Designer.cs">
+      <DependentUpon>SariSariStoreLogin.cs</DependentUpon>
+    </Compile>
     <Compile Include="Services\InventoryService.cs" />
     <Compile Include="Services\ProductService.cs" />
     <Compile Include="Services\SaleService.cs" />
+    <Compile Include="Services\UserServices.cs" />
+    <Compile Include="ShortCutKeys.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ShortCutKeys.Designer.cs">
+      <DependentUpon>ShortCutKeys.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UsersModel.cs" />
     <Compile Include="Utilities\DBhelper.cs" />
+    <Compile Include="Utilities\SecurityPassword.cs" />
     <EmbeddedResource Include="Flashscreen.resx">
       <DependentUpon>Flashscreen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Modals\AddUsers.resx">
+      <DependentUpon>AddUsers.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\InvoiceSummaryPage.resx">
       <DependentUpon>InvoiceSummaryPage.cs</DependentUpon>
@@ -190,6 +251,9 @@
     <EmbeddedResource Include="Pages\ProductsPageForm.resx">
       <DependentUpon>ProductsPageForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Pages\UserManagement.resx">
+      <DependentUpon>UserManagement.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -202,6 +266,12 @@
     </Compile>
     <EmbeddedResource Include="Pages\SalesHistoryPage.resx">
       <DependentUpon>SalesHistoryPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SariSariStoreLogin.resx">
+      <DependentUpon>SariSariStoreLogin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ShortCutKeys.resx">
+      <DependentUpon>ShortCutKeys.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

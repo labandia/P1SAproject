@@ -8,6 +8,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using POS_System.Pages;
 using POS_System.Services;
 
 namespace POS_System
@@ -27,13 +28,21 @@ namespace POS_System
 
         private const int PageSize = 50;
         private int currentPage = 1;
+        private UsersModel _user;
+
         private List<Product> filteredProducts = new List<Product>();
 
         private Timer searchTimer;
 
-        public Form1()
+        public Form1(UsersModel user)
         {
             InitializeComponent();
+            _user = user;
+
+            button3.Visible = (_user.Role == "Admin");
+            userbtn.Visible = (_user.Role == "Admin");
+
+            FullnameText.Text = user.FullName;
 
             DoubleBuffered = true;
 
@@ -241,16 +250,24 @@ namespace POS_System
 
             if (card?.Tag is Product selectedProduct)
             {
-                Debug.WriteLine($@"ID : {selectedProduct.ItemNo} - Name : {selectedProduct.ItemName} - Price : {selectedProduct.Price}");
-              
+                if(selectedProduct.StockQty <= 0)
+                {
+                    MessageBox.Show("Out of stock!");
+                    return;
+                }
+
                 SetProductToGrid(new POSModel
                 {
                     Id = selectedProduct.ItemNo,
                     Name = selectedProduct.ItemName,
                     Price = selectedProduct.Price,
                     UnitCost = selectedProduct.UnitCost,
-                    StockQty = selectedProduct.StockQty
+                    StockQty = selectedProduct.StockQty, 
+                    Quantity = 1
                 });
+
+                Paymentbtn.Enabled = true;
+                Paymentbtn.BackColor = Color.Teal;
             }
         }
         BindingList<Product> selectedProducts = new BindingList<Product>();
@@ -261,7 +278,8 @@ namespace POS_System
 
             if (existing != null)
             {
-                return;
+                if (existing.Quantity < existing.StockQty)
+                    existing.Quantity++;
             }
             else
             {
@@ -356,7 +374,14 @@ namespace POS_System
             }
             else if (dataGridView1.Columns[e.ColumnIndex].Name == "Plus")
             {
-                item.Quantity++;
+                if (item.Quantity < item.StockQty)
+                {
+                    item.Quantity++;
+                }
+                else
+                {
+                    MessageBox.Show("Not enough stock.");
+                }
                 dataGridView1.Refresh();
                 UpdateTotal();
             }
@@ -486,7 +511,104 @@ namespace POS_System
 
         private void button12_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            if (MessageBox.Show("Are you sure you want to Logout?", "Confirm",
+                   MessageBoxButtons.YesNo,
+                   MessageBoxIcon.Question) != DialogResult.Yes)
+                return;
+
+
+            SariSariStoreLogin frm = new SariSariStoreLogin();
+            frm.Show();
+            this.Hide();
+        }
+
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            switch (keyData)
+            {
+                // 🔎 Focus Search
+                case Keys.F1:
+                    button3.PerformClick();
+                    return true;
+
+                // 💳 Payment
+                case Keys.F2:
+                    button5.PerformClick();
+                    //if (prods.Any())
+                    //    Paymentbtn.PerformClick();
+                    //else
+                    //    MessageBox.Show("Cart is empty.");
+                    return true;
+
+                // 🗑 Clear Cart
+                case Keys.F3:
+                    button5.PerformClick();
+                    //prods.Clear();
+                    //ClearAll();
+                    return true;
+
+
+                // 🧹 Ctrl + D → Clear All
+                case Keys.Control | Keys.D:
+                    prods.Clear();
+                    ClearAll();
+                    return true;
+
+                // ❌ ESC → Exit
+                case Keys.Escape:
+                    Application.Exit();
+                    return true;
+
+                // ⏎ ENTER → Payment (Safe Logic)
+                case Keys.Enter:
+                    if (!(this.ActiveControl is TextBox)) // prevent interfering with typing
+                    {
+                        if (prods.Any())
+                            Paymentbtn.PerformClick();
+                    }
+                    return true;
+
+                case Keys.Left:
+                    if (currentPage > 1)
+                    {
+                        currentPage--;
+                        LoadCurrentPage();
+                    }
+                    return true;
+
+                case Keys.Right:
+                    if (currentPage < TotalPages())
+                    {
+                        currentPage++;
+                        LoadCurrentPage();
+                    }
+                    return true;
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        private void Form1_Load_1(object sender, EventArgs e)
+        {
+            Paymentbtn.Enabled = false;
+            Paymentbtn.BackColor = Color.Gray;
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            ShortCutKeys sc = new ShortCutKeys();
+            sc.ShowDialog();
+        }
+
+        private void userbtn_Click(object sender, EventArgs e)
+        {
+            UserManagement user = new UserManagement();
+            user.ShowDialog();  
         }
     }
 }

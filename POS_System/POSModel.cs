@@ -14,7 +14,7 @@ namespace POS_System
         public decimal UnitCost { get; set; }
         public decimal Profit { get { return (decimal)(Price - UnitCost); } }
         public int StockQty { get; set; }   
-        public int Quantity { get; set; } = 1;
+        public int Quantity { get; set; }
         public double TotalPrice { get { return (double)(Price * Quantity); } }
         public double Total => (double)(Price * Quantity);
 

@@ -1,4 +1,6 @@
-﻿using NCR_system.Interface;
+﻿using LiveCharts.Wpf;
+using LiveCharts;
+using NCR_system.Interface;
 using NCR_system.View.AddForms;
 using NCR_system.View.EditForms;
 using NCR_system.Models;
@@ -7,12 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Drawing;
-using LiveCharts;
-using LiveCharts.WinForms;
-using LiveCharts.Wpf;
-using System.Windows.Media;
 using Brushes = System.Windows.Media.Brushes;
+using Color = System.Drawing.Color;
 
 
 namespace NCR_system.View.Module
@@ -150,6 +148,41 @@ namespace NCR_system.View.Module
                 }
             }
 
+
+            cartesianChart1.Series = new SeriesCollection
+            {
+                new ColumnSeries
+                {
+                    Title = "For Circulation",
+                    Values = new ChartValues<int> { forCirculation },
+                    DataLabels = true,
+                    Fill = System.Windows.Media.Brushes.Orange
+                },
+                new ColumnSeries
+                {
+                    Title = "Close",
+                    Values = new ChartValues<int> { close },
+                    DataLabels = true,
+                    Fill = System.Windows.Media.Brushes.Green
+                },
+                new ColumnSeries
+                {
+                    Title = "Report OK",
+                    Values = new ChartValues<int> { reportOk },
+                    DataLabels = true,
+                    Fill = System.Windows.Media.Brushes.SteelBlue
+                },
+                new ColumnSeries
+                {
+                    Title = "Open",
+                    Values = new ChartValues<int> { open },
+                    DataLabels = true,
+                    Fill = System.Windows.Media.Brushes.Red
+                }
+            };
+
+
+
             _statusValues.Clear();
             _statusValues.Add(forCirculation);
             _statusValues.Add(close);
@@ -176,7 +209,10 @@ namespace NCR_system.View.Module
             cartesianChart1.AxisY.Clear();
             cartesianChart1.AxisY.Add(new Axis { Title = "Count" });
 
+            cartesianChart1.LegendLocation = LegendLocation.Bottom;
+            cartesianChart1.ForeColor = System.Drawing.Color.White;
             cartesianChart1.DisableAnimations = list.Count > 2000; // disable animation for big datasets
+
         }
 
         private void UpdatePieChart(List<CustomerTotalModel> cc)
@@ -207,6 +243,15 @@ namespace NCR_system.View.Module
             }
 
             pieChart1.Series = series;
+            // ✅ Legend position
+            pieChart1.LegendLocation = LegendLocation.Right;
+
+            // ✅ Make legend text white
+            pieChart1.ForeColor = Color.White;
+
+
+            // Enabl the legend
+
             pieChart1.InnerRadius = 70;
             pieChart1.DisableAnimations = cc.Sum(x => x.totalOpen) > 2000;
         }
@@ -408,23 +453,7 @@ namespace NCR_system.View.Module
         }
 
 
-        //private void DisplayLabelText(string dept, int count)
-        //{
-        //    switch (dept)
-        //    {
-        //        case "Molding": moldval.Text = count.ToString(); break;
-        //        case "Press": Pressval.Text = count.ToString(); break;
-        //        case "Rotor": Rotorval.Text = count.ToString(); break;
-        //        case "Winding": windingval.Text = count.ToString(); break;
-        //        default: Circuitval.Text = count.ToString(); break;
-        //    }
-        //}
-
-        //private void resetDisplayText()
-        //{
-        //    moldval.Text = Pressval.Text = Rotorval.Text =
-        //    windingval.Text = Circuitval.Text = "0";
-        //}
+       
 
     }
 }

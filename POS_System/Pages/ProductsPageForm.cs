@@ -277,7 +277,7 @@ namespace POS_System
 
                         Excelbtn.Enabled = true;
 
-                        MessageBox.Show("Bulk Import Completed!");
+                        MessageBox.Show("Import Data Completed!");
                         progressBar1.Visible = false;   
                     }
                 }

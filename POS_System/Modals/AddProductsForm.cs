@@ -55,12 +55,6 @@ namespace POS_System.Modals
                 MessageBox.Show(ex.Message, "Payment Error");
             }
 
-            var newProduct = 
-
-
-            DialogResult = DialogResult.OK;
-
-
         }
 
         private void PriceText_KeyPress(object sender, KeyPressEventArgs e)

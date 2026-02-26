@@ -51,6 +51,7 @@
             this.FinalPaymentbtn.Padding = new System.Windows.Forms.Padding(40, 0, 50, 0);
             this.FinalPaymentbtn.Size = new System.Drawing.Size(203, 64);
             this.FinalPaymentbtn.TabIndex = 9;
+            this.FinalPaymentbtn.TabStop = false;
             this.FinalPaymentbtn.Text = "Confirm";
             this.FinalPaymentbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.FinalPaymentbtn.UseVisualStyleBackColor = false;
@@ -87,6 +88,7 @@
             this.button1.Padding = new System.Windows.Forms.Padding(50, 0, 50, 0);
             this.button1.Size = new System.Drawing.Size(203, 64);
             this.button1.TabIndex = 12;
+            this.button1.TabStop = false;
             this.button1.Text = "Cancel";
             this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.button1.UseVisualStyleBackColor = false;
@@ -151,6 +153,8 @@
             this.Name = "AddSalesForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "-";
+            this.Load += new System.EventHandler(this.AddSalesForm_Load);
+            this.Shown += new System.EventHandler(this.AddSalesForm_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -1,13 +1,16 @@
 ﻿using POS_System.Services;
 using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace POS_System.Modals
 {
     public partial class EdiProducts : Form
     {
-        private Product _prod;
+        private readonly ProductService productService = new ProductService();
         private ProductsPageForm _prodform = new ProductsPageForm();
+
+        private Product _prod;
         public int _prodId;
 
         public EdiProducts(Product prod, ProductsPageForm prodform)
@@ -32,21 +35,27 @@ namespace POS_System.Modals
 
         private async void Savebtn_Click(object sender, EventArgs e)
         {
-            var productService = new ProductService();  
-
-            var updatedProduct = new Product
+            try
             {
-                ItemNo = _prodId,
-                ItemName = ProdName.Text,
-                Price = decimal.TryParse(ProdPrice.Text, out decimal price) ? price : 0,
-                UnitCost = decimal.TryParse(ProdUnit.Text, out decimal unitCost) ? unitCost : 0,
-                StockQty = int.TryParse(prodStocks.Text, out int stockQty) ? stockQty : 0
-            };
 
-            await productService.UpdateProductAsync(updatedProduct);
+                var updatedProduct = new Product
+                {
+                    ItemNo = _prodId,
+                    ItemName = ProdName.Text,
+                    Price = decimal.TryParse(ProdPrice.Text, out decimal price) ? price : 0,
+                    UnitCost = decimal.TryParse(ProdUnit.Text, out decimal unitCost) ? unitCost : 0,
+                    StockQty = int.TryParse(prodStocks.Text, out int stockQty) ? stockQty : 0
+                };
 
-            _prodform.LoadProductsAsync(); // Refresh the products list in the main form    
-            this.Close(); // Close the edit form    
+                await productService.UpdateProductAsync(updatedProduct);
+
+                await _prodform.LoadProductsAsync(); // Refresh the products list in the main form    
+                this.Close(); // Close the edit form 
+            }  catch(Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+                Debug.WriteLine("Error updating product: " + ex.ToString());    
+            }
         }
 
         private void ProdUnit_KeyPress(object sender, KeyPressEventArgs e)

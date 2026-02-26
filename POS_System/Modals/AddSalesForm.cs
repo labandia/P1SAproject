@@ -6,12 +6,9 @@ using System.Data.OleDb;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using POS_System.Services;
-using POS_System.Utilities;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace POS_System
 {
@@ -132,8 +129,15 @@ namespace POS_System
 
         private void AmountText_TextChanged(object sender, EventArgs e)
         {
-             double remainpayed = getTotalAmount - double.Parse(AmountText.Text);
-             ChangeText.Text = $"₱ {remainpayed:N2}";
+            if (double.TryParse(AmountText.Text, out double enteredAmount))
+            {
+                double remainpayed = Math.Abs(getTotalAmount - enteredAmount);
+                ChangeText.Text = $"₱ {remainpayed:N2}";
+            }
+            else
+            {
+                ChangeText.Text = "₱ 0.00";
+            }
         }
 
         private void AmountText_KeyPress(object sender, KeyPressEventArgs e)
@@ -152,5 +156,36 @@ namespace POS_System
                 }
             }
         }
+
+        private void AddSalesForm_Load(object sender, EventArgs e)
+        {
+            AmountText.Focus();
+
+        }
+
+        private void AddSalesForm_Shown(object sender, EventArgs e)
+        {
+            AmountText.Focus();
+            AmountText.Select();
+        }
+
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            switch (keyData)
+            {
+               
+                // ⏎ ENTER → Payment (Safe Logic)
+                case Keys.Enter:
+                    if (!string.IsNullOrEmpty(AmountText.Text))
+                        FinalPaymentbtn.PerformClick();
+                    return true;
+
+              
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
     }
 }

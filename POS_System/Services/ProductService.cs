@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OfficeOpenXml;
 using POS_System.Utilities;
 
 namespace POS_System.Services
@@ -80,13 +81,14 @@ namespace POS_System.Services
         public async Task UpdateProductAsync(Product p)
         {
             string query = @"UPDATE Products SET ItemName=@ItemName, 
-                            UnitCost=@UnitCost, Price=@Price 
+                            UnitCost=@UnitCost, Price=@Price,  StockQty=@StockQty
                             WHERE ItemNo=@ItemNo";
 
             await DBhelper.ExecuteNonQueryAsync(query,
                 new OleDbParameter("@ItemName", p.ItemName),
                 new OleDbParameter("@UnitCost", p.UnitCost),
                 new OleDbParameter("@Price", p.Price),
+                new OleDbParameter("@StockQty", p.StockQty),
                 new OleDbParameter("@ItemNo", p.ItemNo));
 
             var existing = _productsCache.Find(x => x.ItemNo == p.ItemNo);
@@ -96,6 +98,7 @@ namespace POS_System.Services
                 existing.ItemName = p.ItemName;
                 existing.UnitCost = p.UnitCost;
                 existing.Price = p.Price;
+                existing.StockQty = p.StockQty; 
             }
         }
 
@@ -108,69 +111,55 @@ namespace POS_System.Services
         }
 
 
-        public async Task ImportFromExcelBulkAsync(
-                 string excelFilePath,
-                 IProgress<int> progress = null)
+        public async Task ImportFromExcelBulkAsync(string filePath, IProgress<int> progress = null)
         {
             await Task.Run(() =>
             {
-                string extension = Path.GetExtension(excelFilePath).ToLower();
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
-                string excelConnStr = extension == ".xls"
-                    ? @"Provider=Microsoft.Jet.OLEDB.4.0;" +
-                      $"Data Source={excelFilePath};" +
-                      "Extended Properties='Excel 8.0;HDR=YES;IMEX=1;'"
-                    : @"Provider=Microsoft.ACE.OLEDB.12.0;" +
-                      $"Data Source={excelFilePath};" +
-                      "Extended Properties='Excel 12.0 Xml;HDR=YES;IMEX=1;'";
-
-                using (var excelConn = new OleDbConnection(excelConnStr))
-                using (var accessConn = DBhelper.GetConnection())
+                using (var package = new ExcelPackage(new FileInfo(filePath)))
                 {
-                    excelConn.Open();
-                    accessConn.Open();
+                    var worksheet = package.Workbook.Worksheets[0];
+                    int rowCount = worksheet.Dimension.Rows;
 
-                    using (var transaction = accessConn.BeginTransaction())
-                    using (var cmd = new OleDbCommand(
-                        "INSERT INTO Products (Category, ItemName, Price, UnitCost) VALUES (?, ?, ?, ?)",
-                        accessConn, transaction))
+                    using (var conn = DBhelper.GetConnection())
                     {
-                        // Prepare parameters once
-                        cmd.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.VarChar });
-                        cmd.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.VarChar });
-                        cmd.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.Currency });
-                        cmd.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.Currency });
-
-                        using (var excelCmd = new OleDbCommand("SELECT * FROM [Database$]", excelConn))
-                        using (var reader = excelCmd.ExecuteReader())
+                        conn.Open();
+                        using (var transaction = conn.BeginTransaction())
+                        using (var cmd = new OleDbCommand(
+                            "INSERT INTO Products (ItemName, Price, UnitCost, Category) VALUES (?, ?, ?, ?)",
+                            conn, transaction))
                         {
-                            int rowCount = 0;
+                            cmd.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.VarChar });
+                            cmd.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.Currency });
+                            cmd.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.Currency });
+                            cmd.Parameters.Add(new OleDbParameter { OleDbType = OleDbType.VarChar });
 
-                            while (reader.Read())
+                            for (int row = 2; row <= rowCount; row++)
                             {
-                                string itemName = reader["Item name"]?.ToString().Trim();
+                                string itemName = worksheet.Cells[row, 1].Text;
+                                decimal.TryParse(worksheet.Cells[row, 2].Text, out decimal price);
+                                decimal.TryParse(worksheet.Cells[row, 3].Text, out decimal unitCost);
+                                string category = worksheet.Cells[row, 4].Text;
+
+
                                 if (string.IsNullOrWhiteSpace(itemName))
                                     continue;
 
-                                string category = reader["Category"]?.ToString().Trim();
+                                cmd.Parameters[0].Value = itemName;
+                                cmd.Parameters[1].Value = price;
+                                cmd.Parameters[2].Value = unitCost;
+                                cmd.Parameters[3].Value = category;
 
-                                decimal.TryParse(reader["Selling Price/pc"]?.ToString(), out decimal price);
-                                decimal.TryParse(reader["Unit Cost"]?.ToString(), out decimal unitCost);
 
-                                cmd.Parameters[0].Value = category;
-                                cmd.Parameters[1].Value = itemName;
-                                cmd.Parameters[2].Value = price;
-                                cmd.Parameters[3].Value = unitCost;
                                 cmd.ExecuteNonQuery();
 
-                                rowCount++;
-
-                                if (rowCount % 100 == 0)
-                                    progress?.Report(rowCount);
+                                if (row % 100 == 0)
+                                    progress?.Report(row);
                             }
-                        }
 
-                        transaction.Commit();
+                            transaction.Commit();
+                        }
                     }
                 }
             });

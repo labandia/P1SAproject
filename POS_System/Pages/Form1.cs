@@ -156,18 +156,7 @@ namespace POS_System
         // =========================================================
         // FILTER (NO REBUILDING)
         // =========================================================
-        private void DisplayFilteredProducts(List<Product> products)
-        {
-            flowLayoutPanel1.SuspendLayout();   // 🔥 STOP repaint
-            flowLayoutPanel1.Controls.Clear();
-
-            foreach (var product in products)
-            {
-                flowLayoutPanel1.Controls.Add(CreateProductCard(product));
-            }
-
-            flowLayoutPanel1.ResumeLayout();    // 🔥 Resume repaint ONCE
-        }
+    
         private void ApplyFilter()
         {
             string searchText = txtFilter.Text.ToLower();
@@ -378,7 +367,7 @@ namespace POS_System
                     Debug.WriteLine($"Removing {item.Name}");
                     prods.Remove(item); // ✅ grid updates instantly
                 }
-                dataGridView1.Refresh(); // Refresh to update button states if needed   
+                //dataGridView1.Refresh(); // Refresh to update button states if needed   
                 UpdateTotal();
             }
             else if (dataGridView1.Columns[e.ColumnIndex].Name == "Plus")
@@ -391,7 +380,7 @@ namespace POS_System
                 {
                     MessageBox.Show("Not enough stock.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
-                dataGridView1.Refresh();
+                //dataGridView1.Refresh();
                 UpdateTotal();
             }
         }

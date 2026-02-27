@@ -1,25 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace POS_System
 {
-    public class POSModel
+    public class POSModel : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public int Id { get; set; }
         public string Name { get; set; }
         public decimal Price { get; set; }
         public decimal UnitCost { get; set; }
-        public decimal Profit { get { return (decimal)(Price - UnitCost); } }
-        public int StockQty { get; set; }   
-        public int Quantity { get; set; }
-        public double TotalPrice { get { return (double)(Price * Quantity); } }
+
+        public int StockQty { get; set; }
+
+        private int _quantity;
+        public int Quantity
+        {
+            get => _quantity;
+            set
+            {
+                if (_quantity != value)
+                {
+                    _quantity = value;
+                    OnPropertyChanged(nameof(Quantity));
+                    OnPropertyChanged(nameof(Total));
+                    OnPropertyChanged(nameof(TotalPrice));
+                    OnPropertyChanged(nameof(TotalProfit));
+                }
+            }
+        }
+
+        public decimal Profit => Price - UnitCost;
+
+        public double TotalPrice => (double)(Price * Quantity);
+
         public double Total => (double)(Price * Quantity);
 
         public decimal TotalProfit => (Price - UnitCost) * Quantity;
 
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
     }
     public class Product
     {

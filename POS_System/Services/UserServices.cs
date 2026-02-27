@@ -96,8 +96,8 @@ namespace POS_System.Services
                                     Role = reader["Role"]?.ToString() ?? "",
 
                                     IsActive = reader["IsActive"] != DBNull.Value
-                               ? Convert.ToBoolean(reader["IsActive"])
-                               : false,
+                                   ? Convert.ToBoolean(reader["IsActive"])
+                                   : false,
 
                                     CreatedAt = reader["CreatedAt"] != DBNull.Value
                                ? Convert.ToDateTime(reader["CreatedAt"])
@@ -194,6 +194,17 @@ namespace POS_System.Services
             );
 
             return Convert.ToInt32(dt.Rows[0]["Total"]) > 0;
+        }
+
+
+        public async Task<int> UpdateUserStatusAsync(int userId, bool isActive)
+        {
+            string query = "UPDATE Users SET IsActive = ? WHERE UserID = ?";
+
+            return await DBhelper.ExecuteNonQueryAsync(query,
+                new OleDbParameter("@IsActive", isActive),
+                new OleDbParameter("@UserID", userId)
+            );
         }
     }
 }

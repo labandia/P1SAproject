@@ -9,8 +9,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using NCR_system.Models;
-using System.Windows.Forms.DataVisualization.Charting;
-using Brushes = System.Windows.Media.Brushes;
 using SeriesCollection = LiveCharts.SeriesCollection;
 using System.Linq;
 using Axis = LiveCharts.Wpf.Axis;

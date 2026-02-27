@@ -41,7 +41,7 @@ namespace POS_System
 
         public async Task LoadProductsAsync()
         {
-            allProducts = await productService.LoadProductsAsync();
+            allProducts = await productService.LoadProductsAsync(1);
 
             // 🔥 Precompute lowercase cache ONCE
             foreach (var p in allProducts)

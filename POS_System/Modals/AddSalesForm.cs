@@ -20,13 +20,15 @@ namespace POS_System
         private Form1 _parentForm;
 
         private double getTotalAmount = 0;
+        private UsersModel _user;
 
-        public AddSalesForm(BindingList<POSModel> prods, Form1 form)
+        public AddSalesForm(BindingList<POSModel> prods, Form1 form, UsersModel user)
         {
             InitializeComponent();
 
             _selectedItems = prods;
             _parentForm = form;
+            _user= user;    
             UpdateTotal();
             // Bind to DataGridView
         }
@@ -93,7 +95,8 @@ namespace POS_System
                     ItemNo = item.Id,
                     QtyIN = item.StockQty,
                     QtyOut = item.Quantity,
-                    Remarks = GetRemarks(item.StockQty, item.Quantity)
+                    Remarks = GetRemarks(item.StockQty, item.Quantity), 
+                    UsersInput = _user.FullName
                 });
 
             }

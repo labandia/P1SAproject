@@ -91,6 +91,7 @@ namespace POS_System
         public int QtyIN { get; set; }
         public int QtyOut { get; set; }
         public string Remarks { get; set; }
+        public string UsersInput { get; set; }
     }
 
 
@@ -129,5 +130,6 @@ namespace POS_System
         public int QtyIN { get; set; }
         public int QtyOut { get; set; }
 
+        public string UsersInput { get; set; }
     }
 }

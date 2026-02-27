@@ -96,5 +96,9 @@ namespace POS_System.Modals
             return true;
         }
 
+        private void Cancebtn_Click(object sender, EventArgs e)
+        {
+            this.Close();   
+        }
     }
 }

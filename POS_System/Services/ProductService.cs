@@ -15,16 +15,18 @@ namespace POS_System.Services
     {
         private List<Product> _productsCache = new List<Product>();
 
-        public async Task<List<Product>> LoadProductsAsync()
+        public async Task<List<Product>> LoadProductsAsync(int checks)
         {
+            string isFilter = checks == 0 ? " AND StockQty <> 0" : "";
+
             return await Task.Run(() =>
             {
                 var list = new List<Product>();
                 using (var conn = DBhelper.GetConnection())
                 {
-                    using (var cmd = new OleDbCommand(@"SELECT 
+                    using (var cmd = new OleDbCommand($@"SELECT 
                             ItemNo, Category, ItemName, UnitCost, Price, StockQty
-                            FROM Products WHERE IsDeleted = FALSE", conn))
+                            FROM Products WHERE IsDeleted = FALSE {isFilter}", conn))
                     {
                         conn.Open();
                         using (var reader = cmd.ExecuteReader())

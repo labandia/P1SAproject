@@ -1,12 +1,5 @@
 ﻿using POS_System.Services;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace POS_System
@@ -44,18 +37,27 @@ namespace POS_System
         private void LoginBtn_Click(object sender, EventArgs e)
         {
             if(string.IsNullOrWhiteSpace(userText.Text) && string.IsNullOrWhiteSpace(passwordText.Text)){
-                MessageBox.Show("Please enter both username and password.");
+                MessageBox.Show("Please enter both username and password.", "" +
+                                "Warning",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Warning);
                 return;
             }
 
             if(string.IsNullOrWhiteSpace(userText.Text)) {
-                MessageBox.Show("Please enter username.");
+                MessageBox.Show("Please enter username.",
+                                "Error",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
                 return; 
             }
 
             if (string.IsNullOrWhiteSpace(passwordText.Text))
             {
-                MessageBox.Show("Please enter password.");
+                MessageBox.Show("Please enter password.",
+                                "Error",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
                 return;
             }
 
@@ -70,7 +72,7 @@ namespace POS_System
             }
             else
             {
-                MessageBox.Show("Invalid username or password.");
+                MessageBox.Show("Invalid username or password.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
         }
@@ -83,7 +85,9 @@ namespace POS_System
             }
         }
 
-
-
+        private void button12_Click(object sender, EventArgs e)
+        {
+            Application.Exit(); 
+        }
     }
 }

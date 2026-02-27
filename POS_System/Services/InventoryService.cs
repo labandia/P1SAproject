@@ -28,6 +28,7 @@ namespace POS_System.Services
                     {
                         while (reader.Read())
                         {
+                            
                             list.Add(new InventoryTracking
                             {
                                 InventoryID = Convert.ToInt32(reader["InventoryID"]),
@@ -36,7 +37,8 @@ namespace POS_System.Services
                                 ItemNo = Convert.ToInt32(reader["ItemNo"]),
                                 QtyIN = Convert.ToInt32(reader["QtyIN"]),
                                 QtyOut = Convert.ToInt32(reader["QtyOut"]),
-                                Remarks = reader["Remarks"].ToString()
+                                Remarks = reader["Remarks"].ToString(),
+                                UsersInput = reader["UsersInput"].ToString()
                             });
                         }
                     }
@@ -56,8 +58,8 @@ namespace POS_System.Services
         public async Task AddInventoryAsync(InventoryTracking invent)
         {
             string query =
-                "INSERT INTO InventoryTracking ([Date], InvoiceNo, ItemNo, QtyIN, QtyOut, Remarks) " +
-                "VALUES (?, ?, ?, ?, ?, ?)";
+                "INSERT INTO InventoryTracking ([Date], InvoiceNo, ItemNo, QtyIN, QtyOut, Remarks, UsersInput) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
             DateTime now = invent.Date == DateTime.MinValue ? DateTime.Now : invent.Date;
 
@@ -68,7 +70,8 @@ namespace POS_System.Services
                 new OleDbParameter { OleDbType = OleDbType.Integer, Value = invent.ItemNo },
                 new OleDbParameter { OleDbType = OleDbType.Integer, Value = invent.QtyIN },
                 new OleDbParameter { OleDbType = OleDbType.Integer, Value = invent.QtyOut },
-                new OleDbParameter { OleDbType = OleDbType.VarChar, Value = invent.Remarks }
+                new OleDbParameter { OleDbType = OleDbType.VarChar, Value = invent.Remarks },
+                new OleDbParameter { OleDbType = OleDbType.VarChar, Value = invent.UsersInput }
             );
 
             invent.Date = now;

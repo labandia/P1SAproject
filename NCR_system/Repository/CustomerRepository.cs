@@ -2,6 +2,7 @@
 using NCR_system.Interface;
 using NCR_system.Models;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace NCR_system.Repository
@@ -35,6 +36,13 @@ namespace NCR_system.Repository
                 parameters.Add("@SectionID", departmentID);
             }
 
+            // Filter By SMT Line
+            if (Stats != 0)
+            {
+                strquery += " AND Status = @Status";
+                parameters.Add("@Status", Stats);
+            }
+
 
             // Search Text
             if (!string.IsNullOrEmpty(search))
@@ -47,7 +55,7 @@ namespace NCR_system.Repository
             }
 
             strquery += $@" AND CCtype = @CCtype";
-            parameters.Add("@CCtype", Stats);
+            parameters.Add("@CCtype", type);
 
             strquery += $@" ORDER BY RecordID DESC";
 
@@ -59,6 +67,7 @@ namespace NCR_system.Repository
                 parameters.Add("@Offset", offset);
                 parameters.Add("@PageSize", pageSize);
             }
+
 
             return await SqlDataAccess.GetData<CustomerModel>(strquery, parameters);
         }

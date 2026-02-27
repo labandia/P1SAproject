@@ -36,6 +36,7 @@ namespace POS_System
         public async Task GetInvoiceItems(string InvoiceNo)
         {
             await _saleService.LoadSalesAsync();
+            await inventoryService.LoadInventoryAsync();
 
             var items = _saleService.GetInvoiceItems(
                 InvoiceNo,
@@ -43,6 +44,9 @@ namespace POS_System
                 inventoryService.GetInventoryCache()
             );
 
+            string userInput = items.FirstOrDefault()?.UsersInput ?? "";
+
+            UserText.Text = "User : " + userInput;
             TotalItemsText.Text = "Total Items Purchased : " + items.Count.ToString();
 
             itemsTable.DataSource = items;
@@ -50,7 +54,7 @@ namespace POS_System
 
         private async void InvoiceSummaryPage_Load(object sender, EventArgs e)
         {
-            await productService.LoadProductsAsync();
+            await productService.LoadProductsAsync(1);
 
 
             await GetInvoiceSummary();
@@ -67,6 +71,11 @@ namespace POS_System
             InvoiceText.Text = "Invoice No : " + invoiceNo;
 
             await GetInvoiceItems(invoiceNo);
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+             this.Close();  
         }
     }
 }

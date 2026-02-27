@@ -138,12 +138,13 @@
             // Cancebtn
             // 
             this.Cancebtn.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Cancebtn.Location = new System.Drawing.Point(39, 421);
+            this.Cancebtn.Location = new System.Drawing.Point(39, 467);
             this.Cancebtn.Name = "Cancebtn";
             this.Cancebtn.Size = new System.Drawing.Size(169, 41);
             this.Cancebtn.TabIndex = 125;
             this.Cancebtn.Text = "Cancel";
             this.Cancebtn.UseVisualStyleBackColor = true;
+            this.Cancebtn.Click += new System.EventHandler(this.Cancebtn_Click);
             // 
             // Savebtn
             // 
@@ -158,7 +159,7 @@
             this.Savebtn.ForeColor = System.Drawing.Color.White;
             this.Savebtn.Image = ((System.Drawing.Image)(resources.GetObject("Savebtn.Image")));
             this.Savebtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Savebtn.Location = new System.Drawing.Point(229, 421);
+            this.Savebtn.Location = new System.Drawing.Point(229, 467);
             this.Savebtn.Name = "Savebtn";
             this.Savebtn.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
             this.Savebtn.Size = new System.Drawing.Size(174, 41);
@@ -193,7 +194,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(444, 515);
+            this.ClientSize = new System.Drawing.Size(444, 553);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.Cancebtn);

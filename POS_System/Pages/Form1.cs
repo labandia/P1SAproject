@@ -37,12 +37,14 @@ namespace POS_System
         public Form1(UsersModel user)
         {
             InitializeComponent();
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             _user = user;
 
             button3.Visible = (_user.Role == "Admin");
             userbtn.Visible = (_user.Role == "Admin");
 
-            FullnameText.Text = user.FullName;
+            FullnameText.Text = "Active User: " + user.FullName;
 
             DoubleBuffered = true;
 
@@ -66,7 +68,7 @@ namespace POS_System
         {
             flowLayoutPanel1.SuspendLayout();
 
-            allProducts = await productService.LoadProductsAsync();
+            allProducts = await productService.LoadProductsAsync(0);
 
             SetupCategories();
 
@@ -202,14 +204,16 @@ namespace POS_System
             {
                 Text = product.ItemName,
                 Font = new Font("Segoe UI", 9, FontStyle.Bold),
-                Location = new Point(10, 15),
-                AutoSize = true
+                Location = new Point(10, 8),
+                AutoSize = true,
+                MaximumSize = new Size(card.Width - 20, 0)
             };
+
 
             Label lblDesc = new Label
             {
                 Text = $"Stocks : {product.StockQty}",
-                Location = new Point(120, 50),
+                Location = new Point(80, 50),
                 Size = new Size(100, 50),
                 AutoSize = true
             };
@@ -235,6 +239,7 @@ namespace POS_System
             {
                 ctrl.Click += Card_Click;
             }
+            card.Height = lblName.Bottom + 50;
 
             return card;
         }
@@ -252,7 +257,7 @@ namespace POS_System
             {
                 if(selectedProduct.StockQty <= 0)
                 {
-                    MessageBox.Show("Out of stock!");
+                    MessageBox.Show("Out of stock!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
@@ -384,7 +389,7 @@ namespace POS_System
                 }
                 else
                 {
-                    MessageBox.Show("Not enough stock.");
+                    MessageBox.Show("Not enough stock.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
                 dataGridView1.Refresh();
                 UpdateTotal();
@@ -422,14 +427,17 @@ namespace POS_System
         private async void Paymentbtn_Click(object sender, EventArgs e)
         {
 
-            using (var addSalesForm = new AddSalesForm(prods, this))
+            using (var addSalesForm = new AddSalesForm(prods, this, _user))
             {
                 if (addSalesForm.ShowDialog() == DialogResult.OK)
                 {
                     await saleService.LoadSalesAsync();
                     // Payment completed successfully
                     // Cart is already cleared in modal
-                    MessageBox.Show("Payment successful.");
+                    MessageBox.Show("Payment successful.",
+                            "Information",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
                     LoadProductsAsync(); // Refresh products to update stocks   
                     LoadToday();
                     ClearAll();
@@ -505,10 +513,7 @@ namespace POS_System
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-         
-        }
+       
 
         private void button12_Click(object sender, EventArgs e)
         {
@@ -527,22 +532,23 @@ namespace POS_System
             this.Hide();
         }
 
-        private void Form1_Shown(object sender, EventArgs e)
-        {
-
-        }
-
+       
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             switch (keyData)
             {
                 // 🔎 Focus Search
                 case Keys.F1:
+                    userbtn.PerformClick();
+                    return true;
+
+                // 🔎 Focus Search
+                case Keys.F2:
                     button3.PerformClick();
                     return true;
 
                 // 💳 Payment
-                case Keys.F2:
+                case Keys.F3:
                     button5.PerformClick();
                     //if (prods.Any())
                     //    Paymentbtn.PerformClick();
@@ -551,8 +557,8 @@ namespace POS_System
                     return true;
 
                 // 🗑 Clear Cart
-                case Keys.F3:
-                    button5.PerformClick();
+                case Keys.F4:
+                    button4.PerformClick();
                     //prods.Clear();
                     //ClearAll();
                     return true;
@@ -604,16 +610,17 @@ namespace POS_System
             Paymentbtn.BackColor = Color.Gray;
         }
 
-        private void button6_Click(object sender, EventArgs e)
-        {
-            ShortCutKeys sc = new ShortCutKeys();
-            sc.ShowDialog();
-        }
-
+      
         private void userbtn_Click(object sender, EventArgs e)
         {
             UserManagement user = new UserManagement();
             user.ShowDialog();  
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            ShortCutKeys sc = new ShortCutKeys();
+            sc.ShowDialog();
         }
     }
 }

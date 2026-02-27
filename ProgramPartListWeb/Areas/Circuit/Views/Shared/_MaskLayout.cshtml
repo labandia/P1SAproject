@@ -53,7 +53,7 @@
     @*=================================================================================*@
     @*=========================== ADD METAL MASK INFO ==================================*@
     @*=================================================================================*@
-    <div class="modal fade modal-l" id="AddProductModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal fade modal-xl" id="AddProductModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
 
@@ -66,79 +66,101 @@
                         </button>
                     </div>
 
+                    <div class="gridContain">
+                        <div class="col-6 col-sm-12 ">
+                            <div class="search_group col-12 col-sm-12 col-lg-12">
+                                <div class="flex_space">
+                                    <label>Select Model Type : </label>
+                                    <small class="erromessage errormodel">Select Model Type Required *</small>
+                                </div>
 
-                    <div class="search_group col-12 col-sm-12 col-lg-12">
-                        <div class="flex_space">
-                            <label>Select Model Type : </label>
-                            <small class="erromessage errormodel">Select Model Type Required *</small>
+                                <select id="AddModelType" name="ModelType" class="filter-select">
+                                    <option value="0">-- Select Model -- </option>
+                                    <option value="1">FAN </option>
+                                    <option value="2">UPS </option>
+                                    <option value="3">Servo </option>
+                                </select>
+
+                            </div>
+                            <div class="search_group col-12 col-sm-12 col-lg-12">
+                                <div class="flex_space">
+                                    <label>
+                                        Part number
+                                        <i class="fa-solid fa-circle-check" style="color: #33C9BB;" id="CheckID"></i>
+                                        <i class="fa-solid fa-circle-xmark" style="color: #FF2C2C;" id="WrongID"></i>
+                                    </label>
+
+                                    <small class="erromessage errorpartno">Partnumber is Required *</small>
+                                </div>
+                                <input type="text" placeholder="Ex. 009XXXXXX-01" name="Partnumber" id="PartSearch" required>
+                            </div>
+
+                            <form method="post" enctype="multipart/form-data" class="addformcontainer" id="addMaskform" autocomplete="off">
+
+                                <div class="row">
+                                    <div class="form_group col-6 col-sm-6 ">
+                                        <label>Area </label>
+                                        <input type="text" placeholder="-- N/A --" name="AREA" id="AreaText" readonly />
+                                    </div>
+
+                                    <div class="form_group col-6 col-sm-6">
+                                        <label>Block  </label>
+                                        <input type="text" placeholder="-- N/A --" name="Blocks" id="BlockText" readonly />
+                                    </div>
+                                </div>
+
+
+
+                                <div class="form_group col-12 col-sm-12">
+                                    <label>Select SMT Line </label>
+                                    <select id="SMTLine" name="SMTLine" class="filter-select">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                    </select>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center mt-4">
+                                    <div>
+                                        <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                                    </div>
+                                    <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                                </div>
+                            </form>
                         </div>
 
-                        <select id="AddModelType" name="ModelType" class="filter-select">
-                            <option value="0">-- Select Model -- </option>
-                            <option value="1">FAN </option>
-                            <option value="2">UPS </option>
-                            <option value="3">Servo </option>
-                        </select>
+                        <div class="col-6 col-sm-12">
+                            <div class="flex_space">
+                                <span>For More than one Area</span>
 
+                                <span>Select a one Area</span>
+                            </div>
+                            <div class="TrackTable" style="margin-top: 1em;">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th align="left">Area</th>
+                                            <th align="left">Side</th>
+                                            <th align="left">Thickness</th>
+                                            <th align="left">Blocks</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="DuplicatePartnum">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
-                    <div class="search_group col-12 col-sm-12 col-lg-12">
-                        <div class="flex_space">
-                            <label>
-                                Part number
-                                <i class="fa-solid fa-circle-check" style="color: #33C9BB;" id="CheckID"></i>
-                                <i class="fa-solid fa-circle-xmark" style="color: #FF2C2C;" id="WrongID"></i>
-                            </label>
-
-                            <small class="erromessage errorpartno">Partnumber is Required *</small>
-                        </div>
-                        <input type="text" placeholder="Ex. 009XXXXXX-01" name="Partnumber" id="PartSearch" required>
-                    </div>
-
-
-
-
-
-                    <form method="post" enctype="multipart/form-data" class="addformcontainer" id="addMaskform" autocomplete="off">
-
-                        <div class="row">
-                            <div class="form_group col-6 col-sm-6 ">
-                                <label>Area </label>
-                                <input type="text" placeholder="-- N/A --" name="AREA" id="AreaText" readonly />
-                            </div>
-
-                            <div class="form_group col-6 col-sm-6">
-                                <label>Block  </label>
-                                <input type="text" placeholder="-- N/A --" name="Blocks" id="BlockText" readonly />
-                            </div>
-                        </div>
-
-
-
-                        <div class="form_group col-12 col-sm-12">
-                            <label>Select SMT Line </label>
-                            <select id="SMTLine" name="SMTLine" class="filter-select">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                                <option value="6">6</option>
-                                <option value="7">7</option>
-                                <option value="8">8</option>
-                                <option value="9">9</option>
-                                <option value="10">10</option>
-                                <option value="11">11</option>
-                                <option value="12">12</option>
-                            </select>
-                        </div>
-
-                        <div class="d-flex justify-content-between align-items-center mt-4">
-                            <div>
-                                <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
-                            </div>
-                            <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
-                        </div>
-                    </form>
+                  
                 </div>
 
             </div>
@@ -147,40 +169,12 @@
 
 
 
-    <div class="modal fade modal-m" id="OpenDuplicatePartnum" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-body modalwrap">
-                    <div class="custom_modal_header">
-                        <h5>Partnumber  Code :  <span id="letterdisplay"></span> </h5>
-
-                        <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
-                            <span>&times;</span>
-                        </button>
-                    </div>
-
-                    <table>
-                        <tr>
-                            <th align="left">Area</th>
-                            <th align="left">Side</th>
-                            <th align="left">Thickness</th>
-                            <th align="left">Blocks</th>
-                        </tr>
-                        <tbody id="DuplicatePartnum">
-                        </tbody>
-                    </table>
-
-                </div>
-
-
-            </div>
-        </div>
-    </div>
 
 
 
 
     <script>
+        let maskData = [];
         const searchInput = document.getElementById('PartSearch');
 
         $("#CheckID").hide();
@@ -275,25 +269,26 @@
 
          // ================= SEARCH FUNCTION ================ //
         async function MetalMaskSearch(partnum, model) {
-            console.log(`Partnumber : ${partnum} - Model : ${model}`)
+
             try {
                 let url = '@Url.Action("SearchMetalMaskPartnum", "MetalMask")';
 
                 let res = await GetMethod(url, { Partnumber: partnum, model: model });
 
                 if (res?.Success) {
-                    let tableData = res.data;
+                    maskData = res.data;
+
                     $("#CheckID").show();
                     $("#WrongID").hide();
                     $("#PartSearch").css("border", "1px solid #33C9BB");
                     $("#PartSearch").css("outline", "none");
 
-                    if (tableData.length > 1) {
+                    if (maskData.length > 1) {
                         // Show a Dialog if the partnumber has same
                         $("#DuplicatePartnum").empty();
 
-                        tableData.forEach((row, index) => {
-                            var setdata = `<tr class="fade-in">
+                        maskData.forEach((row, index) => {
+                            var setdata = `<tr class="duplicateTable fade-in" data-id="${row.RecordID}">
                                  <td>${row.AREA}</td>
                                  <td>${row.Side}</td>
                                  <td>${row.Thickness}</td>
@@ -303,10 +298,9 @@
                             $("#DuplicatePartnum").append(setdata);
                         });
 
-                        $("#OpenDuplicatePartnum").modal("show");
                     } else {
-                        $("#AreaText").val(tableData[0].AREA);
-                        $("#BlockText").val(tableData[0].Blocks);
+                        $("#AreaText").val(maskData[0].AREA);
+                        $("#BlockText").val(maskData[0].Blocks);
                     }
                 } else {
                     $("#CheckID").hide();
@@ -322,7 +316,18 @@
 
         }
 
+        /* ============================
+            CLICK HANDLER
+        ============================ */
+        $(document).on("click", ".duplicateTable", function () {
+            let recordId = $(this).data("id");
+            let filtertable = maskData.find(res => res.RecordID === recordId);
 
+            if (filtertable) {
+                $("#AreaText").val(filtertable.AREA);
+                $("#BlockText").val(filtertable.Blocks);
+            }
+        });
 
         const GetTheTotalCount = async () => {
             try {

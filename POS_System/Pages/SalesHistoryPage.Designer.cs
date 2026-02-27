@@ -67,6 +67,7 @@
             this.panel4 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.SalesText = new System.Windows.Forms.Label();
+            this.button12 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.productsTable)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.panel1.SuspendLayout();
@@ -128,7 +129,7 @@
             this.productsTable.RowHeadersVisible = false;
             this.productsTable.RowTemplate.Height = 35;
             this.productsTable.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.productsTable.Size = new System.Drawing.Size(537, 375);
+            this.productsTable.Size = new System.Drawing.Size(657, 399);
             this.productsTable.TabIndex = 2;
             // 
             // SaleID
@@ -186,7 +187,7 @@
             series3.Legend = "Legend1";
             series3.Name = "Series1";
             this.chart1.Series.Add(series3);
-            this.chart1.Size = new System.Drawing.Size(595, 375);
+            this.chart1.Size = new System.Drawing.Size(595, 399);
             this.chart1.TabIndex = 3;
             this.chart1.Text = "chart1";
             // 
@@ -199,7 +200,7 @@
             this.panel1.Controls.Add(this.RevenueText);
             this.panel1.Location = new System.Drawing.Point(40, 104);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(334, 109);
+            this.panel1.Size = new System.Drawing.Size(377, 109);
             this.panel1.TabIndex = 4;
             // 
             // button1
@@ -258,9 +259,9 @@
             this.panel2.Controls.Add(this.lblAverage);
             this.panel2.Controls.Add(this.label5);
             this.panel2.Controls.Add(this.label2);
-            this.panel2.Location = new System.Drawing.Point(448, 104);
+            this.panel2.Location = new System.Drawing.Point(470, 104);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(359, 109);
+            this.panel2.Size = new System.Drawing.Size(454, 109);
             this.panel2.TabIndex = 5;
             // 
             // button2
@@ -319,7 +320,7 @@
             this.panel3.Controls.Add(this.lblUnits);
             this.panel3.Controls.Add(this.label4);
             this.panel3.Controls.Add(this.label3);
-            this.panel3.Location = new System.Drawing.Point(862, 104);
+            this.panel3.Location = new System.Drawing.Point(982, 104);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(334, 109);
             this.panel3.TabIndex = 6;
@@ -406,7 +407,7 @@
             // cmbMonthFilter
             // 
             this.cmbMonthFilter.FormattingEnabled = true;
-            this.cmbMonthFilter.Location = new System.Drawing.Point(1069, 45);
+            this.cmbMonthFilter.Location = new System.Drawing.Point(1121, 45);
             this.cmbMonthFilter.Name = "cmbMonthFilter";
             this.cmbMonthFilter.Size = new System.Drawing.Size(121, 21);
             this.cmbMonthFilter.TabIndex = 10;
@@ -427,7 +428,7 @@
             this.panel4.Controls.Add(this.WeekBtn);
             this.panel4.Controls.Add(this.monthbtn);
             this.panel4.Controls.Add(this.Todaybtn);
-            this.panel4.Location = new System.Drawing.Point(723, 41);
+            this.panel4.Location = new System.Drawing.Point(775, 41);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(334, 34);
             this.panel4.TabIndex = 17;
@@ -452,11 +453,27 @@
             this.SalesText.TabIndex = 18;
             this.SalesText.Text = "Sales";
             // 
+            // button12
+            // 
+            this.button12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button12.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button12.FlatAppearance.BorderSize = 0;
+            this.button12.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button12.Image = ((System.Drawing.Image)(resources.GetObject("button12.Image")));
+            this.button12.Location = new System.Drawing.Point(1261, 34);
+            this.button12.Name = "button12";
+            this.button12.Size = new System.Drawing.Size(55, 46);
+            this.button12.TabIndex = 127;
+            this.button12.UseVisualStyleBackColor = true;
+            this.button12.Click += new System.EventHandler(this.button12_Click);
+            // 
             // SalesHistoryPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1232, 749);
+            this.ClientSize = new System.Drawing.Size(1352, 725);
+            this.ControlBox = false;
+            this.Controls.Add(this.button12);
             this.Controls.Add(this.SalesText);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.panel4);
@@ -518,5 +535,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Price;
         private System.Windows.Forms.DataGridViewTextBoxColumn Quantity;
         private System.Windows.Forms.Label SalesText;
+        private System.Windows.Forms.Button button12;
     }
 }

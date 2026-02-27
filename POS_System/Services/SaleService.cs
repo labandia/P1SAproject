@@ -241,7 +241,8 @@ namespace POS_System.Services
                     ItemName = product?.ItemName ?? "Unknown",
                     Price = sale.Price,
                     QtyIN = inventoryRecord?.QtyIN ?? 0,
-                    QtyOut = inventoryRecord?.QtyOut ?? sale.Quantity
+                    QtyOut = inventoryRecord?.QtyOut ?? sale.Quantity, 
+                    UsersInput = inventoryRecord.UsersInput
                 });
             }
 

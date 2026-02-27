@@ -14,7 +14,6 @@ namespace POS_System
         private readonly string dbFolder;
         private readonly string dbPath;
 
-        private int step = 0;
 
         public Flashscreen()
         {
@@ -153,7 +152,8 @@ namespace POS_System
                     ItemNo LONG,
                     QtyIN LONG,
                     QtyOut LONG,
-                    Remarks TEXT(255)
+                    Remarks TEXT(255), 
+                    UsersInput TEXT(255)
                 )";
                     cmd.ExecuteNonQuery();
 

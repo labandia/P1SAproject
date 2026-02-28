@@ -19,6 +19,7 @@ namespace NCR_system.View.Module
     {
         private readonly IShipRejected _ship;
 
+        private bool _isInitializing = true;
         private bool _gridConfigured = false;
         private bool _isLoading = false;
 
@@ -36,7 +37,11 @@ namespace NCR_system.View.Module
         {
             InitializeComponent();
             _ship = ship;
+
+            _isInitializing = true;
+
             EnableDoubleBuffering();
+            _isInitializing = false;
         }
 
         private void EnableDoubleBuffering()
@@ -92,6 +97,7 @@ namespace NCR_system.View.Module
             if (_isLoading) return;
             _isLoading = true;
 
+            MessageBox.Show("SDasdsa");
             try
             {
                 depId = sectionfilter.SelectedIndex > 0 ? sectionfilter.SelectedIndex : 0;
@@ -354,10 +360,19 @@ namespace NCR_system.View.Module
         }
 
         private async void sectionfilter_SelectedIndexChanged(object sender, EventArgs e)
-         => await DisplayRejected(1);
+         => await HandleFilterChange(1);
 
         private async void filteritems_SelectedIndexChanged(object sender, EventArgs e)
-            => await DisplayRejected(1);
+        => await HandleFilterChange(1);
+
+        private async Task HandleFilterChange(int process)
+        {
+            if (_isInitializing) return;
+
+            await DisplayRejected(process);
+        }
+
+
 
         private void RejectedGrid_CellClick(object sender, DataGridViewCellEventArgs e)
         {

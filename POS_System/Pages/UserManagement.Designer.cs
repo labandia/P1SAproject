@@ -32,10 +32,12 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UserManagement));
             this.lblPageInfo = new System.Windows.Forms.Label();
             this.FinalPaymentbtn = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
             this.usersTable = new System.Windows.Forms.DataGridView();
+            this.button12 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.usersTable)).BeginInit();
             this.SuspendLayout();
             // 
@@ -43,11 +45,11 @@
             // 
             this.lblPageInfo.AutoSize = true;
             this.lblPageInfo.BackColor = System.Drawing.Color.Transparent;
-            this.lblPageInfo.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPageInfo.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPageInfo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.lblPageInfo.Location = new System.Drawing.Point(27, 699);
+            this.lblPageInfo.Location = new System.Drawing.Point(25, 675);
             this.lblPageInfo.Name = "lblPageInfo";
-            this.lblPageInfo.Size = new System.Drawing.Size(36, 17);
+            this.lblPageInfo.Size = new System.Drawing.Size(52, 25);
             this.lblPageInfo.TabIndex = 123;
             this.lblPageInfo.Text = "0 / 0";
             // 
@@ -58,7 +60,7 @@
             this.FinalPaymentbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.FinalPaymentbtn.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FinalPaymentbtn.ForeColor = System.Drawing.Color.White;
-            this.FinalPaymentbtn.Location = new System.Drawing.Point(996, 53);
+            this.FinalPaymentbtn.Location = new System.Drawing.Point(1032, 52);
             this.FinalPaymentbtn.Name = "FinalPaymentbtn";
             this.FinalPaymentbtn.Size = new System.Drawing.Size(201, 42);
             this.FinalPaymentbtn.TabIndex = 124;
@@ -118,14 +120,30 @@
             this.usersTable.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.usersTable.RowHeadersVisible = false;
             this.usersTable.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.usersTable.Size = new System.Drawing.Size(1167, 538);
+            this.usersTable.Size = new System.Drawing.Size(1287, 525);
             this.usersTable.TabIndex = 126;
+            // 
+            // button12
+            // 
+            this.button12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button12.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button12.FlatAppearance.BorderSize = 0;
+            this.button12.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button12.Image = ((System.Drawing.Image)(resources.GetObject("button12.Image")));
+            this.button12.Location = new System.Drawing.Point(1262, 48);
+            this.button12.Name = "button12";
+            this.button12.Size = new System.Drawing.Size(55, 46);
+            this.button12.TabIndex = 127;
+            this.button12.UseVisualStyleBackColor = true;
+            this.button12.Click += new System.EventHandler(this.button12_Click);
             // 
             // UserManagement
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1232, 738);
+            this.ClientSize = new System.Drawing.Size(1352, 725);
+            this.ControlBox = false;
+            this.Controls.Add(this.button12);
             this.Controls.Add(this.usersTable);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.FinalPaymentbtn);
@@ -145,5 +163,6 @@
         private System.Windows.Forms.Button FinalPaymentbtn;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.DataGridView usersTable;
+        private System.Windows.Forms.Button button12;
     }
 }

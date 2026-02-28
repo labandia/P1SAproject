@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Diagnostics;
 using NCR_system.Models;
 using SeriesCollection = LiveCharts.SeriesCollection;
 using System.Linq;
@@ -25,21 +24,29 @@ namespace NCR_system.View.Module
         public int depId { get; set; } = 0;
         public int stats { get; set; } = 0;
 
-        bool isSelectSection = false;
-        bool isSelectStatus = false;
-        bool isChart = false;
 
         public DataGridView Customgrid => RejectedGrid;
 
         List<int> outputData = new List<int>();
         // Reuse collections to reduce allocations
         private readonly ChartValues<int> _statusValues = new ChartValues<int>();
+        private readonly Dictionary<string, Label> _departmentLabels; 
 
 
         public Rejected(IShipRejected ship)
         {
             InitializeComponent();
             _ship = ship;
+
+            _departmentLabels = new Dictionary<string, Label>(StringComparer.OrdinalIgnoreCase)
+            {
+                { "Molding", moldval },
+                { "Press", Pressval },
+                { "Rotor", Rotorval },
+                { "Winding", windingval },
+                { "Circuit", Circuitval }
+            };
+
             EnableDoubleBuffering();
         }
 
@@ -115,6 +122,7 @@ namespace NCR_system.View.Module
                 RejectedGrid.DataSource = shipList;
 
                 UpdateBarChart(pieData);
+                DisplaySectionStats(pieData);
 
             }
             catch (Exception ex)
@@ -356,7 +364,13 @@ namespace NCR_system.View.Module
         }
 
 
-
+        public void DisplaySectionStats(List<CustomerTotalModel> cc)
+        {
+            foreach (var d in cc)
+            {
+                DisplayLabelText(d.DepartmentName, d.totalOpen);
+            }
+        }
 
 
 
@@ -369,26 +383,14 @@ namespace NCR_system.View.Module
             Circuitval.Text = "0";
         }
 
-        public void DisplayLabelText(string depart, int count)
+        public void DisplayLabelText(string department, int count)
         {
-            Debug.WriteLine($" - {depart}: {count}");
-            switch (depart)
+            if (string.IsNullOrWhiteSpace(department))
+                return;
+
+            if (_departmentLabels.TryGetValue(department, out var label))
             {
-                case "Molding":
-                    moldval.Text = count.ToString();
-                    break;
-                case "Press":
-                    Pressval.Text = count.ToString();
-                    break;
-                case "Rotor":
-                    Rotorval.Text = count.ToString();
-                    break;
-                case "Winding":
-                    windingval.Text = count.ToString();
-                    break;
-                default:
-                    Circuitval.Text = count.ToString();
-                    break;
+                label.Text = count.ToString();
             }
         }
 
@@ -396,21 +398,28 @@ namespace NCR_system.View.Module
 
         private string GetStatusLabel(int status)
         {
-            switch (status)
+            if (!Enum.IsDefined(typeof(ComplaintStatus), status))
+                return "Unknown";
+
+            var complaintStatus = (ComplaintStatus)status;
+
+            switch (complaintStatus)
             {
-                case 1:
+                case ComplaintStatus.Open:
                     return "Open";
-                case 0:
+
+                case ComplaintStatus.Close:
                     return "Close / Completed";
-                case 2:
+
+                case ComplaintStatus.ReportOk:
                     return "Report OK";
-                case 3:
+
+                case ComplaintStatus.ForCirculation:
                     return "For Circulation";
+
                 default:
                     return "Unknown";
             }
-
-
         }
 
         private async void sectionfilter_SelectedIndexChanged(object sender, EventArgs e) => await DisplayRejected(0);

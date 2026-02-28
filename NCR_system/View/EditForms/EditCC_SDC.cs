@@ -58,7 +58,7 @@ namespace NCR_system.View.EditForms
                 Status = status == "Open" ? 1 : 0   
             };
 
-            bool result = await _cus.UpdateCustomerData(obj, 1);
+            bool result = await _cus.UpdateCustomerData(obj, ComplaintUpdateType.WithoutCustomerInfo);
 
             if (result)
             {

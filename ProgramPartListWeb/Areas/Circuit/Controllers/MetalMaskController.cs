@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using ClosedXML.Excel;
+using System.Diagnostics;
 
 namespace ProgramPartListWeb.Areas.Circuit.Controllers
 {
@@ -34,6 +35,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
             int pageNumber,
             int pageSize)
         {
+
             var data = await _mas.GetMetalMaskMasterlist(search, 0, ModelType, pageNumber, pageSize);
             if (data == null || !data.Items.Any()) return JsonNotFound("No Masterlist Data.");
             return JsonSuccess(data);

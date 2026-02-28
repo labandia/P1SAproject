@@ -71,7 +71,7 @@ namespace NCR_system
             panel2.Controls.Add(_ship);
         }
 
-        private async void Mainpage_Load(object sender, EventArgs e)
+        private  void Mainpage_Load(object sender, EventArgs e)
         {
             //this.FormBorderStyle = FormBorderStyle.None;
             //this.WindowState = FormWindowState.Maximized;

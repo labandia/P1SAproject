@@ -1,13 +1,7 @@
-﻿using ADOX;
-using POS_System.Modals;
+﻿using POS_System.Modals;
 using POS_System.Services;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -21,8 +15,6 @@ namespace POS_System.Pages
         public UserManagement()
         {
             InitializeComponent();
-          
-
 
             SetupGrid();
 
@@ -207,6 +199,11 @@ namespace POS_System.Pages
         private void ComboBox_SelectionChangeCommitted(object sender, EventArgs e)
         {
             usersTable.CommitEdit(DataGridViewDataErrorContexts.Commit);
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

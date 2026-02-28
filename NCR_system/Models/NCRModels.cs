@@ -6,6 +6,23 @@ using System.Threading.Tasks;
 
 namespace NCR_system.Models
 {
+    
+
+    public enum ComplaintUpdateType
+    {
+        WithCustomerInfo = 0,
+        WithoutCustomerInfo = 1
+    }
+
+    public enum ComplaintStatus
+    {
+        Close = 0,
+        Open = 1,
+        ReportOk = 2,
+        ForCirculation = 3
+    }
+
+
     public class NCRModels
     {
         private int _RecordID;

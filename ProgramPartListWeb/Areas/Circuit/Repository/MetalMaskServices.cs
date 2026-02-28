@@ -3,6 +3,7 @@ using ProgramPartListWeb.Areas.Circuit.Models;
 using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Models;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace ProgramPartListWeb.Areas.Circuit.Repository
@@ -60,14 +61,8 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
             // Search Partnumber
             if (!string.IsNullOrEmpty(search))
             {
-                strquery += $@" AND (
-                                @Search IS NULL
-                                OR Partnumber LIKE '%' + @Search + '%'
-                              )";
-                countstring += $@" AND (
-                                @Search IS NULL
-                                OR Partnumber LIKE '%' + @Search + '%'
-                              )";
+                strquery += $@" AND (Partnumber LIKE '%' + @Search + '%')";
+                countstring += $@" AND  Partnumber LIKE '%' + @Search + '%')";
                 parameters.Add("@Search", search);
             }
 
@@ -81,6 +76,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                 parameters.Add("@PageSize", pageSize);
             }
 
+            //Debug.WriteLine(strquery);
            
             var items = await SqlDataAccess.GetData<MetalMaskModel>(strquery, parameters);
 

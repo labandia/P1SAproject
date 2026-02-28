@@ -1,9 +1,11 @@
 ﻿using MSDMonitoring.Data;
 using NCR_system.Interface;
 using NCR_system.Models;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Windows.Media.Media3D;
 
 namespace NCR_system.Repository
 {
@@ -47,10 +49,7 @@ namespace NCR_system.Repository
             // Search Text
             if (!string.IsNullOrEmpty(search))
             {
-                strquery += $@" AND (
-                                @Search IS NULL
-                                OR ModelNo LIKE '%' + @Search + '%'
-                              )";
+                strquery += $@" AND ModelNo LIKE '%' + @Search + '%'";
                 parameters.Add("@Search", search);
             }
 
@@ -122,95 +121,65 @@ namespace NCR_system.Repository
 
         public async Task<bool> InsertCustomerData(CustomerModel customer, int type)
         {
-            bool result = false;
+            string strsql = @"
+                INSERT INTO PC_CustomerConplaint
+                (ModelNo, LotNo, NGQty, Details, SectionID, RegNo, CustomerName, CCtype, UploadImage)
+                VALUES
+                (@ModelNo, @LotNo, @NGQty, @Details, @SectionID, @RegNo, @CustomerName, @CCtype, @UploadImage)";
 
-            if(type == 0)
+            var parameters = new Dictionary<string, object>
             {
-                string strsql = $@"INSERT INTO PC_CustomerConplaint(ModelNo,LotNo,NGQty,Details,SectionID,RegNo,CustomerName,CCtype, UploadImage)
-                               VALUES(@ModelNo, @LotNo, @NGQty, @Details, @SectionID, @RegNo, @CustomerName, @CCtype, @UploadImage)";
-                var parameter = new
-                {
-                    customer.ModelNo,
-                    customer.LotNo,
-                    customer.NGQty,
-                    customer.Details,
-                    customer.SectionID,
-                    customer.RegNo,
-                    customer.CustomerName,
-                    customer.CCtype, 
-                    customer.UploadImage
-                };
-                result = await SqlDataAccess.UpdateInsertQuery(strsql, parameter);
-            }
-            else
-            {
-                string strsql = $@"INSERT INTO PC_CustomerConplaint(ModelNo,LotNo,NGQty,Details,SectionID,CCtype, UploadImage)
-                               VALUES(@ModelNo, @LotNo, @NGQty, @Details, @SectionID, @CCtype, @UploadImage)";
-                var parameter = new
-                {
-                    customer.ModelNo,
-                    customer.LotNo,
-                    customer.NGQty,
-                    customer.Details,
-                    customer.SectionID,
-                    customer.CCtype, 
-                    customer.UploadImage
-                };
-                result = await SqlDataAccess.UpdateInsertQuery(strsql, parameter);
-            }
+                { "@ModelNo", customer.ModelNo },
+                { "@LotNo", customer.LotNo },
+                { "@NGQty", customer.NGQty },
+                { "@Details", customer.Details },
+                { "@SectionID", customer.SectionID },
+                { "@RegNo", (object)customer.RegNo ?? DBNull.Value },
+                { "@CustomerName", (object)customer.CustomerName ?? DBNull.Value },
+                { "@CCtype", customer.CCtype },
+                { "@UploadImage", customer.UploadImage }
+            };
 
-            return result;
+            return await SqlDataAccess.UpdateInsertQuery(strsql, parameters);
         }
 
-        public async Task<bool> UpdateCustomerData(CustomerModel customer, int type)
+        public async Task<bool> UpdateCustomerData(CustomerModel customer, ComplaintUpdateType type)
         {
-            bool result = false;
+            string strsql = @"
+                UPDATE PC_CustomerConplaint SET
+                    ModelNo = @ModelNo,
+                    LotNo = @LotNo,
+                    NGQty = @NGQty,
+                    Details = @Details,
+                    Status = @Status,
+                    SectionID = @SectionID";
 
-            if (type == 0)
+            if (type == ComplaintUpdateType.WithCustomerInfo)
             {
-                string strsql = $@"UPDATE PC_CustomerConplaint SET ModelNo =@ModelNo, LotNo =@LotNo ,NGQty =@NGQty,
-                             Details =@Details, Status =@Status, SectionID =@SectionID, RegNo =@RegNo,
-                             CustomerName =@CustomerName
-                             WHERE RecordID = @RecordID";
-
-                var parameter = new
-                {
-                    customer.RecordID,
-                    customer.ModelNo,
-                    customer.LotNo,
-                    customer.NGQty,
-                    customer.Details,
-                    customer.Status,
-                    customer.SectionID,
-                    customer.RegNo,
-                    customer.CustomerName,
-                    customer.CCtype
-                };
-
-                result = await SqlDataAccess.UpdateInsertQuery(strsql, parameter);
-            }
-            else
-            {
-                string strsql = $@"UPDATE PC_CustomerConplaint SET ModelNo =@ModelNo, 
-                             LotNo =@LotNo ,NGQty =@NGQty, Status =@Status,
-                             Details =@Details,SectionID =@SectionID
-                             WHERE RecordID = @RecordID";
-
-                var parameter = new
-                {
-                    customer.RecordID,
-                    customer.ModelNo,
-                    customer.LotNo,
-                    customer.NGQty,
-                    customer.Status,    
-                    customer.Details,
-                    customer.SectionID,
-                    customer.CCtype
-                };
-                result = await SqlDataAccess.UpdateInsertQuery(strsql, parameter);
+                strsql += @",
+                    RegNo = @RegNo,
+                    CustomerName = @CustomerName";
             }
 
-            return result;
+            strsql += @" WHERE RecordID = @RecordID";
+
+            var parameter = new
+            {
+                customer.RecordID,
+                customer.ModelNo,
+                customer.LotNo,
+                customer.NGQty,
+                customer.Details,
+                customer.Status,
+                customer.SectionID,
+                customer.RegNo,
+                customer.CustomerName
+            };
+
+            return await SqlDataAccess.UpdateInsertQuery(strsql, parameter);
         }
+
+
+        
     }
 }

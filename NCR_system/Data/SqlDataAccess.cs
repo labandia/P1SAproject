@@ -71,7 +71,7 @@ namespace MSDMonitoring.Data
             }
             catch (SqlException ex)
             {
-                Console.WriteLine("SQL Exception: " + ex.Message);
+                Debug.WriteLine("SQL Exception: " + ex.Message);
                 return null;
             }
 

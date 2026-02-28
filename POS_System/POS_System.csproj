@@ -283,7 +283,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="Services\StoreDatabase.xlsx" />
+    <None Include="Data\StoreDatabase.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

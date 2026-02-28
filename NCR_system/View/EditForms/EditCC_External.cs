@@ -46,21 +46,17 @@ namespace NCR_system.View.EditForms
 
         private async void Save_btn_Click(object sender, EventArgs e)
         {
-            string status = comboBox1.SelectedItem.ToString();
-
-            var obj = new CustomerModel
+            bool result = await _cus.UpdateCustomerData(new CustomerModel
             {
-                RecordID = storeID, 
+                RecordID = storeID,
                 RegNo = EditRegNo.Text,
                 CustomerName = EditCustomerText.Text,
                 ModelNo = EditModelText.Text,
                 LotNo = EditLotText.Text,
-                Status = status == "Open" ? 1 : 0,
+                Status = comboBox1.SelectedItem.ToString() == "Open" ? 1 : 0,
                 NGQty = Convert.ToInt32(EditNGText.Text),
-                Details = EditProblemText.Text  
-            };
-
-            bool result = await _cus.UpdateCustomerData(obj, 0);
+                Details = EditProblemText.Text
+            }, 0);
 
             if (result)
             {

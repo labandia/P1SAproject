@@ -5,12 +5,10 @@ using NCR_system.Models;
 using NCR_system.View.AddForms;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Forms.DataVisualization.Charting;
 using SeriesCollection = LiveCharts.SeriesCollection;
 using Axis = LiveCharts.Wpf.Axis;
 
@@ -20,6 +18,7 @@ namespace NCR_system.View.Module
     {
         private readonly ICustomerComplaint _cust;
 
+        private bool _isInitializing = true;
         private bool _gridConfigured = false;
         private bool _isLoading = false;
         private bool _isfilter = false;
@@ -36,13 +35,15 @@ namespace NCR_system.View.Module
         {
             InitializeComponent();
             _cust = cust;
+            _isInitializing = true;
+
             filteritems.SelectedIndex = 0;
             sectionfilter.SelectedIndex = 0;
-
             SelectedProcess.SelectedIndex = 0;
-            SelectedProcess.DropDownHeight = 41;
 
             EnableDoubleBuffering();
+
+            _isInitializing = false;
         }
 
         private void Customer_Complaint_user_Load(object sender, EventArgs e)
@@ -335,10 +336,7 @@ namespace NCR_system.View.Module
                 add.ShowDialog(this);   // <-- modal + always in front of parent
             }
         }
-        private async void SelectedProcess_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            await ApplyFilter(); 
-        }
+       
       
         private void CustomDatagrid_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -361,19 +359,26 @@ namespace NCR_system.View.Module
                 }
             }
         }
-
+        private async void SelectedProcess_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            await HandleFilterChange();
+        }
         private async void filteritems_SelectedIndexChanged(object sender, EventArgs e)
         {
-            await ApplyFilter();
+            await HandleFilterChange();
         }
         private async void sectionfilter_SelectedIndexChanged(object sender, EventArgs e)
         {
-            await ApplyFilter();
+            await HandleFilterChange();
         }
 
-        public async Task ApplyFilter()
+        private async Task HandleFilterChange()
         {
-            int selectproc = SelectedProcess.SelectedIndex == -1 ? 0 : SelectedProcess.SelectedIndex;
+            if (_isInitializing) return;
+
+            int selectproc = SelectedProcess.SelectedIndex == -1
+                                ? 0
+                                : SelectedProcess.SelectedIndex;
             await DisplayCustomer(selectproc);
         }
 

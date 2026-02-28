@@ -28,7 +28,7 @@
     <MinimumRequiredVersion>1.0.0.0</MinimumRequiredVersion>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>22</ApplicationRevision>
+    <ApplicationRevision>23</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -167,6 +167,8 @@
     <Compile Include="SampleUI.Designer.cs">
       <DependentUpon>SampleUI.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utilities\CommonMethods.cs" />
+    <Compile Include="Utilities\PlaceHolderhelper.cs" />
     <Compile Include="Utilities\UploadServices.cs" />
     <Compile Include="View\AddForms\AddCustomerComplaint.cs">
       <SubType>Form</SubType>

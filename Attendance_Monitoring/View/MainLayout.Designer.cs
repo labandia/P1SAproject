@@ -71,7 +71,7 @@
             this.EmployeeMenu.Image = ((System.Drawing.Image)(resources.GetObject("EmployeeMenu.Image")));
             this.EmployeeMenu.Location = new System.Drawing.Point(12, 259);
             this.EmployeeMenu.Name = "EmployeeMenu";
-            this.EmployeeMenu.Size = new System.Drawing.Size(58, 46);
+            this.EmployeeMenu.Size = new System.Drawing.Size(158, 46);
             this.EmployeeMenu.TabIndex = 5;
             this.EmployeeMenu.UseVisualStyleBackColor = false;
             this.EmployeeMenu.Click += new System.EventHandler(this.EmployeeMenu_Click);
@@ -90,7 +90,7 @@
             this.CRMonitor.Image = ((System.Drawing.Image)(resources.GetObject("CRMonitor.Image")));
             this.CRMonitor.Location = new System.Drawing.Point(12, 190);
             this.CRMonitor.Name = "CRMonitor";
-            this.CRMonitor.Size = new System.Drawing.Size(58, 46);
+            this.CRMonitor.Size = new System.Drawing.Size(158, 46);
             this.CRMonitor.TabIndex = 4;
             this.CRMonitor.UseVisualStyleBackColor = false;
             this.CRMonitor.Click += new System.EventHandler(this.CRMonitor_Click);
@@ -108,7 +108,7 @@
             this.Attendance.Image = ((System.Drawing.Image)(resources.GetObject("Attendance.Image")));
             this.Attendance.Location = new System.Drawing.Point(12, 125);
             this.Attendance.Name = "Attendance";
-            this.Attendance.Size = new System.Drawing.Size(58, 46);
+            this.Attendance.Size = new System.Drawing.Size(158, 46);
             this.Attendance.TabIndex = 3;
             this.Attendance.UseVisualStyleBackColor = false;
             this.Attendance.Click += new System.EventHandler(this.Attendance_Click_1);

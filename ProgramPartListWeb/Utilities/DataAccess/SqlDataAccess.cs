@@ -1,17 +1,18 @@
-﻿using Dapper;
-using System.Text.RegularExpressions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using NLog;
-using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web;
-using ProgramPartListWeb.Utilities;
 using System.Web.UI.WebControls;
+using Dapper;
+using Microsoft.Extensions.Caching.Memory;
+using NLog;
+using ProgramPartListWeb.Utilities;
 
 namespace ProgramPartListWeb.Helper
 {
@@ -19,36 +20,37 @@ namespace ProgramPartListWeb.Helper
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        // Auto Connection Based on the Domain URL
-        public static string _connectionString()
+        // -------------------- CONFIG & CACHE --------------------
+        private static readonly string _connectionString = BuildConnectionString();
+        private static readonly MemoryCache _cache = new MemoryCache(new MemoryCacheOptions { SizeLimit = 1024 });
+
+        public static string BuildConnectionString()
         {
-            string host = HttpContext.Current.Request.Url.Host.ToLower();
-            string Hostname = Environment.MachineName.ToLower();
-            string connectionKey = "";
-
-            if (host.Contains("p1saportalweb.sdp.com"))
+            try
             {
-                connectionKey = "LiveDevelopment";
-            }
+                string connectionKey = "LiveDevelopment";
 
-            if (host.Contains("localhost"))
-            {
-                connectionKey = Hostname == "desktop-fc0up1p"
-                                          ? "HomeDevelopment"
-                                          : "TestDevelopment";
-            }
+                if (System.Web.HttpContext.Current != null)
+                {
+                    string host = System.Web.HttpContext.Current.Request.Url.Host.ToLower();
+                    string hostname = Environment.MachineName.ToLower();
 
+                    if (host.Contains("p1saportalweb.sdp.com"))
+                        connectionKey = "LiveDevelopment";
+                    else if (host.Contains("localhost"))
+                        connectionKey = hostname == "desktop-fc0up1p" ? "HomeDevelopment" : "TestDevelopment";
+                }
 
-            // ⭐ FIX: Prevent NULL connection string
-            if (string.IsNullOrEmpty(connectionKey))
-            {
-                connectionKey = "LiveDevelopment";
-            }
-            //LogConnectionChoice(host, Hostname, connectionKey);
-
-            return AesEncryption.DecodeBase64ToString(
-                ConfigurationManager.ConnectionStrings[connectionKey].ConnectionString
+                // AES decode happens once at app start
+                return AesEncryption.DecodeBase64ToString(
+                    System.Configuration.ConfigurationManager.ConnectionStrings[connectionKey].ConnectionString
                 );
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "Error connection string. Defaulting to LiveDevelopment");
+                return System.Configuration.ConfigurationManager.ConnectionStrings["LiveDevelopment"].ConnectionString;
+            } 
         }
 
 
@@ -59,17 +61,16 @@ namespace ProgramPartListWeb.Helper
             string logEntry = $"{DateTime.Now:u} | Host: {host} | Machine: {machineName} | Connection: {connectionKey}";
             Debug.WriteLine(logEntry);
         }
-
-
-        public static SqlConnection CreateConnection()
-        {
-            return new SqlConnection(_connectionString());
-        }
+        private static SqlConnection CreateConnection() => new SqlConnection(_connectionString);
 
         public static SqlConnection GetSqlConnection(string connectionString) => new SqlConnection(connectionString);
       
         // ############ DYNAMIC FUNCTION LIST<T> GETDATA ########################
-        public static async Task<List<T>> GetData<T>(string query, object parameters = null, string cacheKey = null, int cacheMinutes = 10)
+        public static async Task<List<T>> GetData<T>(
+            string query, 
+            object parameters = null, 
+            string cacheKey = null, 
+            int cacheMinutes = 10)
         {
             try
             {
@@ -78,7 +79,7 @@ namespace ProgramPartListWeb.Helper
                 {
                     return await CacheHelper.GetOrSetAsync(cacheKey, async () =>
                     {
-                        using (IDbConnection con = GetSqlConnection(_connectionString()))
+                        using (IDbConnection con = CreateConnection())
                         {
                             bool IsStoreProd = Regex.IsMatch(query, @"^\w+$");
                             var commandType = IsStoreProd ? CommandType.StoredProcedure : CommandType.Text;
@@ -91,7 +92,7 @@ namespace ProgramPartListWeb.Helper
                 else
                 {
                     // No caching
-                    using (IDbConnection con = GetSqlConnection(_connectionString()))
+                    using (IDbConnection con = CreateConnection())
                     {
                         bool IsStoreProd = Regex.IsMatch(query, @"^\w+$");
                         var commandType = IsStoreProd ? CommandType.StoredProcedure : CommandType.Text;
@@ -118,7 +119,7 @@ namespace ProgramPartListWeb.Helper
                 {
                     return await CacheHelper.GetOrSetAsync(cacheKey, async () =>
                     {
-                        using (IDbConnection con = GetSqlConnection(_connectionString()))
+                        using (IDbConnection con = CreateConnection())
                         {
                             bool isStoredProc = Regex.IsMatch(query, @"^\w+$");
                             var commandType = isStoredProc ? CommandType.StoredProcedure : CommandType.Text;
@@ -130,7 +131,7 @@ namespace ProgramPartListWeb.Helper
                 }
                 else
                 {
-                    using (IDbConnection con = GetSqlConnection(_connectionString()))
+                    using (IDbConnection con = CreateConnection())
                     {
                         bool isStoredProc = Regex.IsMatch(query, @"^\w+$");
                         var commandType = isStoredProc ? CommandType.StoredProcedure : CommandType.Text;
@@ -153,7 +154,7 @@ namespace ProgramPartListWeb.Helper
         {
             try
             {
-                using (IDbConnection con = GetSqlConnection(_connectionString()))
+                using (IDbConnection con = CreateConnection())
                 {
                     return  await con.QuerySingleOrDefaultAsync<string>(query, parameters);
                 }
@@ -169,7 +170,7 @@ namespace ProgramPartListWeb.Helper
         {
             try
             {
-                using (IDbConnection con = GetSqlConnection(_connectionString()))
+                using (IDbConnection con = CreateConnection())
                 {
                     // Check if the query is a stored procedure name (only word characters, no spaces/symbols)
                     var isStoredProcedure = Regex.IsMatch(query, @"^\w+$");
@@ -195,7 +196,7 @@ namespace ProgramPartListWeb.Helper
         {
             try
             {
-                using (IDbConnection con = GetSqlConnection(_connectionString()))
+                using (IDbConnection con = CreateConnection())
                 {
                     bool IsStoreprod = Regex.IsMatch(query, @"^\w+$");
                     var commandType = IsStoreprod ? CommandType.StoredProcedure : CommandType.Text;
@@ -216,7 +217,7 @@ namespace ProgramPartListWeb.Helper
         {
             try
             {
-                using (IDbConnection con = new SqlConnection(_connectionString()))
+                using (IDbConnection con = CreateConnection())
                 {
 
                     bool isStoredProcedure = Regex.IsMatch(strQuery, @"^\w+$");
@@ -245,7 +246,7 @@ namespace ProgramPartListWeb.Helper
 
             try
             {
-                using (IDbConnection con = GetSqlConnection(_connectionString()))
+                using (IDbConnection con = CreateConnection())
                 {
                     IEnumerable<string> dataList;
 
@@ -267,7 +268,7 @@ namespace ProgramPartListWeb.Helper
         {
             try
             {
-                using (IDbConnection con = GetSqlConnection(_connectionString()))
+                using (IDbConnection con = CreateConnection())
                 {
                     int count;
                     bool IsStoreProd = Regex.IsMatch(query, @"^\w+$");

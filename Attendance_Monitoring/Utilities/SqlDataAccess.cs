@@ -16,7 +16,7 @@ namespace Attendance_Monitoring.Utilities
 {
     public sealed class SqlDataAccess
     {
-        private static readonly string _cons = ConfigurationManager.ConnectionStrings["live_connect"].ToString();
+        //private static readonly string _cons = ConfigurationManager.ConnectionStrings["live_connect"].ToString();
 
         public static string _connectionString()
         {
@@ -35,8 +35,8 @@ namespace Attendance_Monitoring.Utilities
 
                 LogConnectionChoice(machineName, connectionKey);
 
-                //return AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings["live_connect"].ConnectionString);
-                return _cons;
+                return AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings[connectionKey].ConnectionString);
+                //return _cons;
             }
             catch (Exception ex)
             {

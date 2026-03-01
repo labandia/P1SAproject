@@ -261,7 +261,8 @@ namespace Attendance_Monitoring.Repositories
                 };
             }
         }
-        public async Task<ApiResponse<P1SA_AttendanceModel>> GetAttendanceRecordsList(string dDate, int shifts, int selectime, int depid)
+        public async Task<ApiResponse<P1SA_AttendanceModel>> GetAttendanceRecordsList(
+            string dDate, int shifts, int selectime, int depid)
         {
             string strquery = (selectime == 0) ? $@"SELECT
                                                     pc.RecordID,

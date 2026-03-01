@@ -97,7 +97,6 @@ namespace NCR_system.View.Module
             if (_isLoading) return;
             _isLoading = true;
 
-            MessageBox.Show("SDasdsa");
             try
             {
                 depId = sectionfilter.SelectedIndex > 0 ? sectionfilter.SelectedIndex : 0;

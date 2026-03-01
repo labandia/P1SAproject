@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FootWristStrapsAnalysis", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POS_System", "POS_System\POS_System.csproj", "{D6822815-A3C3-48F2-96E4-AD856F8EAA2E}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SariSariStoreApp", "SariSariStoreApp\SariSariStoreApp.vdproj", "{7F946095-4A59-F1FA-932F-07404804EC0A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -231,6 +233,14 @@ Global
 		{D6822815-A3C3-48F2-96E4-AD856F8EAA2E}.Release|ARM64.Build.0 = Release|Any CPU
 		{D6822815-A3C3-48F2-96E4-AD856F8EAA2E}.Release|x86.ActiveCfg = Release|Any CPU
 		{D6822815-A3C3-48F2-96E4-AD856F8EAA2E}.Release|x86.Build.0 = Release|Any CPU
+		{7F946095-4A59-F1FA-932F-07404804EC0A}.Debug|Any CPU.ActiveCfg = Debug
+		{7F946095-4A59-F1FA-932F-07404804EC0A}.Debug|ARM.ActiveCfg = Debug
+		{7F946095-4A59-F1FA-932F-07404804EC0A}.Debug|ARM64.ActiveCfg = Debug
+		{7F946095-4A59-F1FA-932F-07404804EC0A}.Debug|x86.ActiveCfg = Debug
+		{7F946095-4A59-F1FA-932F-07404804EC0A}.Release|Any CPU.ActiveCfg = Release
+		{7F946095-4A59-F1FA-932F-07404804EC0A}.Release|ARM.ActiveCfg = Release
+		{7F946095-4A59-F1FA-932F-07404804EC0A}.Release|ARM64.ActiveCfg = Release
+		{7F946095-4A59-F1FA-932F-07404804EC0A}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

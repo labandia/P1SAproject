@@ -75,7 +75,9 @@ namespace POS_System
             currentPage = 1;
             LoadCurrentPage();
 
-            //CreateAllProductCards();
+            await saleService.LoadSalesAsync(); 
+            LoadToday();
+
 
             flowLayoutPanel1.ResumeLayout();
         }
@@ -130,29 +132,10 @@ namespace POS_System
             SalesToday.Text = s.TotalRevenue.ToString("₱#,##0.00");
         }
 
-        private void CreateAllProductCards()
-        {
-            flowLayoutPanel1.SuspendLayout();
-            flowLayoutPanel1.Controls.Clear();
-            productCardCache.Clear();
-
-            foreach (var product in allProducts)
-            {
-                var card = CreateProductCard(product);
-                productCardCache[product.ItemNo] = card;
-                flowLayoutPanel1.Controls.Add(card);
-            }
-
-            flowLayoutPanel1.ResumeLayout();
-        }
+      
 
 
-        private async void Form1_Load(object sender, EventArgs e)
-        {
-            await saleService.LoadSalesAsync();
-
-            LoadToday();
-        }
+       
         // =========================================================
         // FILTER (NO REBUILDING)
         // =========================================================
@@ -264,7 +247,6 @@ namespace POS_System
                 Paymentbtn.BackColor = Color.Teal;
             }
         }
-        BindingList<Product> selectedProducts = new BindingList<Product>();
 
         private void SetProductToGrid(POSModel product)
         {
@@ -342,15 +324,7 @@ namespace POS_System
             dataGridView1.DataSource = prods;
         }
 
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-        }
+       
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -402,7 +376,6 @@ namespace POS_System
 
         private void txtFilter_TextChanged(object sender, EventArgs e)
         {
-            //ApplyFilter();
             searchTimer.Stop();
             searchTimer.Start();
         }
@@ -454,6 +427,7 @@ namespace POS_System
 
         private void button4_Click(object sender, EventArgs e)
         {
+            ClearAll();
             SalesHistoryPage productsPage = new SalesHistoryPage();
             productsPage.ShowDialog();
         }
@@ -461,15 +435,12 @@ namespace POS_System
 
         public void ClearAll()
         {
+            prods.Clear();
             TotalText.Text = "₱ 0.00";
             lblTotalProfit.Text = "₱ 0.00";
         }
 
-        private void button5_Click(object sender, EventArgs e)
-        {
-            InvoiceSummaryPage invoice = new InvoiceSummaryPage();
-            invoice.ShowDialog();
-        }
+       
 
         private void btnPrev_Click(object sender, EventArgs e)
         {
@@ -599,9 +570,15 @@ namespace POS_System
             Paymentbtn.BackColor = Color.Gray;
         }
 
-      
+        private void button5_Click(object sender, EventArgs e)
+        {
+            ClearAll();
+            InvoiceSummaryPage invoice = new InvoiceSummaryPage();
+            invoice.ShowDialog();
+        }
         private void userbtn_Click(object sender, EventArgs e)
         {
+            ClearAll();
             UserManagement user = new UserManagement();
             user.ShowDialog();  
         }

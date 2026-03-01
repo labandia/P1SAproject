@@ -35,9 +35,9 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.TopNav = new System.Windows.Forms.Panel();
             this.button1 = new System.Windows.Forms.Button();
+            this.FullnameText = new System.Windows.Forms.Label();
             this.userbtn = new System.Windows.Forms.Button();
             this.button12 = new System.Windows.Forms.Button();
-            this.FullnameText = new System.Windows.Forms.Label();
             this.button5 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
@@ -100,7 +100,7 @@
             this.button1.ForeColor = System.Drawing.Color.White;
             this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
             this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.Location = new System.Drawing.Point(368, 2);
+            this.button1.Location = new System.Drawing.Point(1154, 1);
             this.button1.Name = "button1";
             this.button1.Padding = new System.Windows.Forms.Padding(10, 0, 10, 0);
             this.button1.Size = new System.Drawing.Size(117, 63);
@@ -110,6 +110,18 @@
             this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
+            // FullnameText
+            // 
+            this.FullnameText.AutoSize = true;
+            this.FullnameText.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.FullnameText.ForeColor = System.Drawing.SystemColors.Control;
+            this.FullnameText.Location = new System.Drawing.Point(25, 24);
+            this.FullnameText.Name = "FullnameText";
+            this.FullnameText.Size = new System.Drawing.Size(92, 17);
+            this.FullnameText.TabIndex = 16;
+            this.FullnameText.Text = "Administrator";
+            this.FullnameText.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // userbtn
             // 
@@ -124,7 +136,7 @@
             this.userbtn.ForeColor = System.Drawing.Color.White;
             this.userbtn.Image = ((System.Drawing.Image)(resources.GetObject("userbtn.Image")));
             this.userbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.userbtn.Location = new System.Drawing.Point(491, 3);
+            this.userbtn.Location = new System.Drawing.Point(391, 3);
             this.userbtn.Name = "userbtn";
             this.userbtn.Padding = new System.Windows.Forms.Padding(20, 0, 20, 0);
             this.userbtn.Size = new System.Drawing.Size(158, 60);
@@ -150,18 +162,6 @@
             this.button12.UseVisualStyleBackColor = true;
             this.button12.Click += new System.EventHandler(this.button12_Click);
             // 
-            // FullnameText
-            // 
-            this.FullnameText.AutoSize = true;
-            this.FullnameText.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FullnameText.ForeColor = System.Drawing.SystemColors.Control;
-            this.FullnameText.Location = new System.Drawing.Point(25, 24);
-            this.FullnameText.Name = "FullnameText";
-            this.FullnameText.Size = new System.Drawing.Size(92, 17);
-            this.FullnameText.TabIndex = 16;
-            this.FullnameText.Text = "Administrator";
-            this.FullnameText.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
             // button5
             // 
             this.button5.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -175,7 +175,7 @@
             this.button5.ForeColor = System.Drawing.Color.White;
             this.button5.Image = ((System.Drawing.Image)(resources.GetObject("button5.Image")));
             this.button5.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button5.Location = new System.Drawing.Point(844, 2);
+            this.button5.Location = new System.Drawing.Point(744, 2);
             this.button5.Name = "button5";
             this.button5.Padding = new System.Windows.Forms.Padding(10, 0, 10, 0);
             this.button5.Size = new System.Drawing.Size(200, 63);
@@ -199,7 +199,7 @@
             this.button4.ForeColor = System.Drawing.Color.White;
             this.button4.Image = ((System.Drawing.Image)(resources.GetObject("button4.Image")));
             this.button4.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button4.Location = new System.Drawing.Point(1059, 1);
+            this.button4.Location = new System.Drawing.Point(959, 1);
             this.button4.Name = "button4";
             this.button4.Padding = new System.Windows.Forms.Padding(10, 0, 10, 0);
             this.button4.Size = new System.Drawing.Size(189, 63);
@@ -223,7 +223,7 @@
             this.button3.ForeColor = System.Drawing.Color.White;
             this.button3.Image = ((System.Drawing.Image)(resources.GetObject("button3.Image")));
             this.button3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button3.Location = new System.Drawing.Point(655, 2);
+            this.button3.Location = new System.Drawing.Point(555, 2);
             this.button3.Name = "button3";
             this.button3.Padding = new System.Windows.Forms.Padding(20, 0, 20, 0);
             this.button3.Size = new System.Drawing.Size(183, 60);
@@ -522,7 +522,6 @@
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Sari Sari Store System";
-            this.Load += new System.EventHandler(this.Form1_Load_1);
             this.TopNav.ResumeLayout(false);
             this.TopNav.PerformLayout();
             this.panel1.ResumeLayout(false);

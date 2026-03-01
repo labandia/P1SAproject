@@ -36,9 +36,9 @@ namespace NCR_system
 
         private async void P1SA_NonComformity_Load(object sender, EventArgs e)
         {
-            this.FormBorderStyle = FormBorderStyle.None;
-            this.WindowState = FormWindowState.Maximized;
-            this.TopMost = true;
+            //this.FormBorderStyle = FormBorderStyle.None;
+            //this.WindowState = FormWindowState.Maximized;
+            //this.TopMost = true;
 
             await LoadCustomerComplaint();
         }

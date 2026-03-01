@@ -114,15 +114,18 @@ namespace NCR_system.View.Module
                 await Task.WhenAll(shipTask, pieTask);
 
                 var shipList = shipTask.Result;
-                var pieData = pieTask.Result;
+                var pieData = pieTask.Result ?? new List<CustomerTotalModel>();
 
                 if (!_gridConfigured)
                     ConfigureGrid();
 
                 RejectedGrid.DataSource = shipList;
 
-                UpdateBarChart(pieData);
-                DisplaySectionStats(pieData);
+                if (pieData != null)
+                {
+                    UpdateBarChart(pieData);
+                    DisplaySectionStats(pieData);
+                }
 
             }
             catch (Exception ex)
@@ -366,9 +369,23 @@ namespace NCR_system.View.Module
 
         public void DisplaySectionStats(List<CustomerTotalModel> cc)
         {
+            if(cc == null || cc.Count == 0)
+                return;
+            if(_departmentLabels == null)
+                return;
+
             foreach (var d in cc)
             {
-                DisplayLabelText(d.DepartmentName, d.totalOpen);
+                if (d == null)
+                    continue;
+
+                if (string.IsNullOrWhiteSpace(d.DepartmentName))
+                    continue;
+
+                if (_departmentLabels.TryGetValue(d.DepartmentName, out var label) && label != null)
+                {
+                    label.Text = d.totalOpen.ToString();
+                }
             }
         }
 
@@ -383,16 +400,7 @@ namespace NCR_system.View.Module
             Circuitval.Text = "0";
         }
 
-        public void DisplayLabelText(string department, int count)
-        {
-            if (string.IsNullOrWhiteSpace(department))
-                return;
-
-            if (_departmentLabels.TryGetValue(department, out var label))
-            {
-                label.Text = count.ToString();
-            }
-        }
+       
 
 
 

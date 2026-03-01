@@ -16,17 +16,20 @@ namespace POS_System
         [STAThread]
         static void Main()
         {
-            string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            string dbFolder = Path.Combine(documentsPath, "SariSariStore");
-
-            if (!Directory.Exists(dbFolder))
-                Directory.CreateDirectory(dbFolder);
-
-            // This makes |DataDirectory| point to Documents\SariSariStore
-            AppDomain.CurrentDomain.SetData("DataDirectory", dbFolder);
-
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            // ======= Ensure Data Folder Exists =======
+            string dataFolder = Path.Combine(Application.StartupPath, "Data");
+            if (!Directory.Exists(dataFolder))
+            {
+                Directory.CreateDirectory(dataFolder);
+            }
+
+            // ======= Set DataDirectory for connection strings =======
+            AppDomain.CurrentDomain.SetData("DataDirectory", dataFolder);
+
+           
             Application.Run(new Flashscreen());
         }
     }

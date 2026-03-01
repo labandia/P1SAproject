@@ -36,7 +36,9 @@ namespace POS_System
 
         private void LoginBtn_Click(object sender, EventArgs e)
         {
-            if(string.IsNullOrWhiteSpace(userText.Text) && string.IsNullOrWhiteSpace(passwordText.Text)){
+           
+            if (string.IsNullOrWhiteSpace(userText.Text) && string.IsNullOrWhiteSpace(passwordText.Text))
+            {
                 MessageBox.Show("Please enter both username and password.", "" +
                                 "Warning",
                                 MessageBoxButtons.OK,
@@ -44,12 +46,13 @@ namespace POS_System
                 return;
             }
 
-            if(string.IsNullOrWhiteSpace(userText.Text)) {
+            if (string.IsNullOrWhiteSpace(userText.Text))
+            {
                 MessageBox.Show("Please enter username.",
                                 "Error",
                                 MessageBoxButtons.OK,
                                 MessageBoxIcon.Error);
-                return; 
+                return;
             }
 
             if (string.IsNullOrWhiteSpace(passwordText.Text))

@@ -21,7 +21,6 @@ namespace NCR_system.View.Module
         private bool _isInitializing = true;
         private bool _gridConfigured = false;
         private bool _isLoading = false;
-        private bool _isfilter = false;
 
         public int depId { get; set; } = 0;
         public int stats { get; set; } = 0;

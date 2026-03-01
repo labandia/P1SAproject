@@ -43,7 +43,6 @@ namespace POS_System
         {
             allProducts = await productService.LoadProductsAsync(1);
 
-            // 🔥 Precompute lowercase cache ONCE
             foreach (var p in allProducts)
             {
                 p.SearchCache = (p.ItemName + " " + p.Category)?.ToLower();
@@ -60,11 +59,6 @@ namespace POS_System
             ApplyFilter();
         }
 
-        private void DisplayFilteredProducts(List<Product> products)
-        {
-            productsTable.AutoGenerateColumns = true;
-            productsTable.DataSource = products;
-        }
 
         private void SetupCategories()
         {

@@ -54,7 +54,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                                   INNER JOIN MetalMask_Masterlist m ON t.Partnumber = m.Partnumber
                                   WHERE t.IsDelete = 0 AND t.RecordID =@RecordID";
 
-            return SqlDataAccess.GetObjectOnly<MetalMaskTransaction>(strquery, new { RecordID = RecordID });
+            return SqlDataAccess.GetSingleAsync<MetalMaskTransaction>(strquery, new { RecordID = RecordID });
         }
 
         public Task<List<MetalMaskTransaction>> GetMetalMaskTransaction(
@@ -206,7 +206,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
 
         public Task<MetalMasKCountTransact> GetTheTotalCount()
         {
-            return SqlDataAccess.GetObjectOnly<MetalMasKCountTransact>($@"SELECT 
+            return SqlDataAccess.GetSingleAsync<MetalMasKCountTransact>($@"SELECT 
 	                TOP 1
 	                (SELECT COUNT(Status) FROM MetalMask_Transaction WHERE Status = 0 AND IsDelete = 0) as SMTCount, 
 	                (SELECT COUNT(Status) FROM MetalMask_Transaction WHERE Status = 1 AND IsDelete = 0) as TensionCount
@@ -280,7 +280,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
 
 
             // Now get the total count
-            int TotalRecords = await SqlDataAccess.GetCountDataSync(countQuery, parameters);
+            int TotalRecords = await SqlDataAccess.ExecuteScalarAsync(countQuery, parameters);
 
             return new PagedResult<MetalMaskTransaction>
             {

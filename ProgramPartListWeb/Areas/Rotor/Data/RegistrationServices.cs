@@ -169,7 +169,7 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
             var items = await SqlDataAccess.GetDataAsync<RotorRegistrationModel>(strquery, parameters);
 
             // Now get the total count
-            int TotalRecords = await SqlDataAccess.GetCountDataSync(countQuery, parameters);
+            int TotalRecords = await SqlDataAccess.ExecuteScalarAsync(countQuery, parameters);
 
             return new PagedResult<RotorRegistrationModel>
             {
@@ -182,7 +182,7 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
 
         public Task<List<string>> GetRegistrationYear()
         {
-            return SqlDataAccess.StringList($@"SELECT 
+            return SqlDataAccess.StringListAsync($@"SELECT 
                             YEAR(DateCreated) AS GetYear
                         FROM Registration
                         GROUP BY YEAR(DateCreated)

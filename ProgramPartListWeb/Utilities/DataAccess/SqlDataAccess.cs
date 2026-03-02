@@ -1,16 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Diagnostics;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.UI.WebControls;
 using Dapper;
-using Microsoft.AspNet.SignalR.Messaging;
 using Microsoft.Extensions.Caching.Memory;
 using NLog;
 using ProgramPartListWeb.Utilities;
@@ -101,55 +95,54 @@ namespace ProgramPartListWeb.Helper
             }
         }
 
-
-        public static async Task<T> GetObjectOnly<T>(string query, object parameters = null, string cacheKey = null, int cacheMinutes = 10)
+        // -------------------- GET OBJECT DATA --------------------
+        public static async Task<T> GetSingleAsync<T>(
+            string query,
+            object parameters = null,
+            CommandType commandType = CommandType.Text,
+            string cacheKey = null,
+            int cacheMinutes = 10)
         {
+            if (!string.IsNullOrEmpty(cacheKey))
+            {
+                if (_cache.TryGetValue(cacheKey, out T cached))
+                    return cached;
+            }
+
             try
             {
-                // Use cache only if key is provided
-                if (!string.IsNullOrEmpty(cacheKey))
+                using (var con = CreateConnection())
                 {
-                    return await CacheHelper.GetOrSetAsync(cacheKey, async () =>
+                    var result = await con.QueryFirstOrDefaultAsync<T>(query, parameters, commandType: commandType);
+
+                    if (!string.IsNullOrEmpty(cacheKey))
                     {
-                        using (IDbConnection con = CreateConnection())
+                        _cache.Set(cacheKey, result, new MemoryCacheEntryOptions
                         {
-                            bool isStoredProc = Regex.IsMatch(query, @"^\w+$");
-                            var commandType = isStoredProc ? CommandType.StoredProcedure : CommandType.Text;
-
-                            // Get the first record only
-                            return await con.QueryFirstOrDefaultAsync<T>(query, parameters, commandType: commandType);
-                        }
-                    }, cacheMinutes);
-                }
-                else
-                {
-                    using (IDbConnection con = CreateConnection())
-                    {
-                        bool isStoredProc = Regex.IsMatch(query, @"^\w+$");
-                        var commandType = isStoredProc ? CommandType.StoredProcedure : CommandType.Text;
-
-                        return await con.QueryFirstOrDefaultAsync<T>(query, parameters, commandType: commandType);
+                            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(cacheMinutes),
+                            Size = 1
+                        });
                     }
+
+                    return result;
                 }
             }
-            catch (SqlException ex)
+            catch (Exception ex)
             {
-                Logger.Error(ex, $"SQL Exception while executing single-object query. Query: {query}, CacheKey: {cacheKey}");
-                return default(T); // null for classes, zero/default for structs
+                Logger.Error(ex, $"GetSingleAsync failed. Query: {query}, CacheKey: {cacheKey}");
+                return default;
             }
         }
 
 
 
-        // ############ SELECTS ONLY ONE ROW DATA  ##############################
+        // -------------------- GETS STRING ONLY --------------------
         public static async Task<string> GetOneData(string query, object parameters)
         {
             try
             {
                 using (IDbConnection con = CreateConnection())
-                {
-                    return  await con.QuerySingleOrDefaultAsync<string>(query, parameters);
-                }
+                    return await con.QuerySingleOrDefaultAsync<string>(query, parameters);
             }
             catch (Exception ex)
             {
@@ -157,122 +150,160 @@ namespace ProgramPartListWeb.Helper
                 return "";
             }
         }
-        // ############ GET THE TOTAL COUNT OF THE QUERY ########################
-        public static async Task<int> GetCountData(string query, object parameters = null)
+        // -------------------- GET THE TOTAL COUNT --------------------
+        public static async Task<int> ExecuteScalarAsync(string query,
+            object parameters = null,
+            CommandType commandType = CommandType.Text)
         {
             try
             {
-                using (IDbConnection con = CreateConnection())
-                {
-                    // Check if the query is a stored procedure name (only word characters, no spaces/symbols)
-                    var isStoredProcedure = Regex.IsMatch(query, @"^\w+$");
-
-                    int count = await con.ExecuteScalarAsync<int>(
-                        query,
-                        parameters,
-                        commandType: isStoredProcedure ? CommandType.StoredProcedure : CommandType.Text
-                    );
-
-                    return count;
-                }
+                using (var con = CreateConnection())
+                    return await con.ExecuteScalarAsync<int>(query, parameters, commandType: commandType);
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, $"SQL Exception while executing query. Query: {query}");
+                Logger.Error(ex, $"ExecuteScalarAsync failed. Query: {query}");
                 return 0;
             }
         }
 
-        // ############ CHECKS IF THE ROW DATA IS EXIST ########################
-        public static async Task<bool> Checkdata(string query, object parameters = null)
+
+        // -------------------- CHECK IF THE DATA EXIST --------------------
+        public static async Task<bool> CheckDataAsync(
+                string query,
+                object parameters = null,
+                CommandType commandType = CommandType.Text)
         {
             try
             {
-                using (IDbConnection con = CreateConnection())
+                using (var con = CreateConnection())
                 {
-                    bool IsStoreprod = Regex.IsMatch(query, @"^\w+$");
-                    var commandType = IsStoreprod ? CommandType.StoredProcedure : CommandType.Text;
+                    int count = await con.ExecuteScalarAsync<int>(
+                        query,
+                        parameters,
+                        commandType: commandType
+                    );
 
-                    int count = await con.ExecuteScalarAsync<int>(query, parameters, commandType: commandType);
                     return count > 0;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                Logger.Error(ex, $"SQL Exception while executing query. Query: {query}");
+                Logger.Error(ex, $"CheckDataAsync failed. Query: {query}");
                 return false;
             }
-           
+
         }
-        // ############ INSERT AND UPDATE QUERY ########################
+        // -------------------- INSERT AND UPDATE QUERY --------------------
         public static async Task<bool> ExecuteAsync(
             string query,
             object parameters = null,
             CommandType commandType = CommandType.Text,
             string cacheKeyToInvalidate = null)
         {
-            try { 
-                using (var con = CreateConnection()) 
-                { 
-                    int rowsAffected = 
-                        await con.ExecuteAsync(query, parameters, commandType: commandType); 
+            try
+            {
+                using (var con = CreateConnection())
+                {
+                    int rowsAffected = await con.ExecuteAsync(query, parameters, commandType: commandType);
+
                     if (rowsAffected > 0 && !string.IsNullOrEmpty(cacheKeyToInvalidate))
-                        _cache.Remove(cacheKeyToInvalidate); return rowsAffected > 0; } } 
-            catch (Exception ex) 
-            { 
-                Logger.Error(ex, $"ExecuteAsync failed. Query: {query}"); 
-                return false; 
+                        _cache.Remove(cacheKeyToInvalidate);
+
+                    return rowsAffected > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, $"ExecuteAsync failed. Query: {query}");
+                return false;
             }
         }
 
-
-        public static async Task<List<string>> StringList(string query, object parameters = null)
+        // -------------------- GET THE LIST DATA BY STRING --------------------
+        public static async Task<List<string>> StringListAsync(
+                string query,
+                object parameters = null,
+                CommandType commandType = CommandType.Text)
         {
             var stringList = new List<string>();
 
             try
             {
-                using (IDbConnection con = CreateConnection())
+                using (var con = CreateConnection())
                 {
-                    IEnumerable<string> dataList;
+                    var result = await con.QueryAsync<string>(
+                        query,
+                        parameters,
+                        commandType: commandType
+                    );
 
-                    bool IsStoreProd = Regex.IsMatch(query, @"^\w+$");
-                    var commandType = IsStoreProd ? CommandType.StoredProcedure : CommandType.Text;
-                    dataList = await con.QueryAsync<string>(query, parameters, commandType: commandType);
-
-                    stringList = dataList.ToList();
-                }
-            }
-            catch (SqlException ex)
-            {
-                Logger.Error(ex, $"SQL Exception while executing query. Query: {query}");
-            }
-
-            return stringList;
-        }
-        public static async Task<int> GetCountDataSync(string query, object parameters)
-        {
-            try
-            {
-                using (IDbConnection con = CreateConnection())
-                {
-                    int count;
-                    bool IsStoreProd = Regex.IsMatch(query, @"^\w+$");
-                    var commandType = IsStoreProd ? CommandType.StoredProcedure : CommandType.Text;
-                    count = await con.ExecuteScalarAsync<int>(query, parameters, commandType: commandType);
-                    return count;
+                    return result.AsList();
                 }
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, $"SQL Exception while executing query. Query: {query}");
-                return 0;
+                Logger.Error(ex, $"StringListAsync failed. Query: {query}");
+                return new List<string>();
             }
         }
 
+        // -------------------- SOFT DELETE --------------------------
+        public static async Task<bool> SoftDeleteAsync(
+            string tableName,
+            string keyColumn,
+            object keyValue)
+        {
+            string sql = $"UPDATE {tableName} SET IsDelete = 1 WHERE {keyColumn} = @Id";
 
+            return await ExecuteAsync(sql, new { Id = keyValue });
+        }
 
+        public static async Task BulkInsertAsync<T>(
+            string tableName,
+            List<T> data)
+        {
+            if (data == null || !data.Any())
+                return;
 
-       
+            using (var con = new SqlConnection(_connectionString))
+            {
+                await con.OpenAsync();
+
+                using (var bulkCopy = new SqlBulkCopy(con))
+                {
+                    bulkCopy.DestinationTableName = tableName;
+
+                    var table = new DataTable();
+                    var properties = typeof(T).GetProperties();
+
+                    foreach (var prop in properties)
+                    {
+                        table.Columns.Add(prop.Name, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
+                    }
+
+                    foreach (var item in data)
+                    {
+                        var row = table.NewRow();
+                        foreach (var prop in properties)
+                        {
+                            row[prop.Name] = prop.GetValue(item) ?? DBNull.Value;
+                        }
+                        table.Rows.Add(row);
+                    }
+
+                    await bulkCopy.WriteToServerAsync(table);
+                }
+            }
+        }
+
+        // -------------------- CACHE UTILITIES --------------------
+        public static void ClearCache(string cacheKey = null)
+        {
+            if (!string.IsNullOrEmpty(cacheKey))
+                _cache.Remove(cacheKey);
+            else
+                _cache.Dispose();
+        }
     }
 }

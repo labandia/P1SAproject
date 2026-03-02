@@ -80,7 +80,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
            
             var items = await SqlDataAccess.GetDataAsync<MetalMaskModel>(strquery, parameters);
 
-            int TotalRecords = await SqlDataAccess.GetCountData(countstring, parameters);
+            int TotalRecords = await SqlDataAccess.ExecuteScalarAsync(countstring, parameters);
 
             return new PagedResult<MetalMaskModel>
             {
@@ -108,7 +108,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                               WHERE IsDelete = 0 ";
             var parameter = new { RecordID = ID };
 
-            return SqlDataAccess.GetObjectOnly<MetalMaskModel>(strquery, parameter);
+            return SqlDataAccess.GetSingleAsync<MetalMaskModel>(strquery, parameter);
         }
 
         public async Task<List<MetalMaskModel>> SearchMetalMaskData(string partnum, int model)

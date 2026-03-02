@@ -81,7 +81,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             string strsql = $@"SELECT FullName, Email, Position, Department_ID, Signature
                                FROM Patrol_UserEmail 
                                WHERE Employee_ID =@Employee_ID AND Position =@Position AND DepPrefix =@DepPrefix";
-            return SqlDataAccess.GetObjectOnly<EmailModelV2>(strsql, 
+            return SqlDataAccess.GetSingleAsync<EmailModelV2>(strsql, 
                 new { 
                     Employee_ID  = emp,
                     Position = pos,

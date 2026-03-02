@@ -235,7 +235,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
                     // Get current stock
                     string stockQuery = "SELECT CurrentQty FROM Hydro_Stocks WHERE PartNo = @PartNo";
-                    double currentQty = await SqlDataAccess.GetCountData(stockQuery, new { PartNo = cham.PartNo });
+                    double currentQty = await SqlDataAccess.ExecuteScalarAsync(stockQuery, new { PartNo = cham.PartNo });
 
                     // Determine how much can be used
                     double qtyToUse = Math.Min(currentQty, requiredQty);

@@ -51,7 +51,7 @@ namespace ProgramPartListWeb.Data
             {
                 // Step 1: Ensure user exists
                 string strUsers = "SELECT COUNT(*) FROM Users WHERE Employee_ID =@Employee_ID";
-                bool userExists = await SqlDataAccess.Checkdata(strUsers, new { Employee_ID = reg.Employee_ID });
+                bool userExists = await SqlDataAccess.CheckDataAsync(strUsers, new { Employee_ID = reg.Employee_ID });
                 // If the User doesnt exist in the Users Table
                 if (!userExists)
                 {
@@ -67,7 +67,7 @@ namespace ProgramPartListWeb.Data
 
                 // Step 2: Get User ID
                 string strUserId = "SELECT User_ID FROM Users WHERE Employee_ID = @Employee_ID";
-                int? userId = await SqlDataAccess.GetCountData(strUserId, new { reg.Employee_ID });
+                int? userId = await SqlDataAccess.ExecuteScalarAsync(strUserId, new { reg.Employee_ID });
                 if (userId == null) return false;
 
 
@@ -80,7 +80,7 @@ namespace ProgramPartListWeb.Data
                 string strAccounts = $@"SELECT COUNT(*) 
                                         FROM UserAccounts 
                                         WHERE (User_ID = @User_ID AND Project_ID = @Project_ID)";
-                bool checkAccount = await SqlDataAccess.Checkdata(strAccounts, new { User_ID = userId.Value, Project_ID = reg.Project_ID });
+                bool checkAccount = await SqlDataAccess.CheckDataAsync(strAccounts, new { User_ID = userId.Value, Project_ID = reg.Project_ID });
                 return checkAccount;
             }
             catch(Exception ex)
@@ -94,7 +94,7 @@ namespace ProgramPartListWeb.Data
             try
             {
                 string strUserId = "SELECT User_ID FROM Users WHERE Employee_ID = @Employee_ID";
-                int? userId = await SqlDataAccess.GetCountData(strUserId, new { reg.Employee_ID });
+                int? userId = await SqlDataAccess.ExecuteScalarAsync(strUserId, new { reg.Employee_ID });
                 if (userId == 0) return false;
 
                 // if user account doesnt Exist

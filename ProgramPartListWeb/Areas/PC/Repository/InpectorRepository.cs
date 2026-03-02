@@ -4,8 +4,6 @@ using ProgramPartListWeb.Areas.PC.Models;
 using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Models;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.PerformanceData;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -47,18 +45,18 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                        :"UPDATE Patrol_Inspectors SET Employee_ID =@Employee_ID,  DateQualified = @DateQualified, OJTRegistration =@OJTRegistration, Remarks =@Remarks " +
                          "WHERE InspectID =@InspectID";
            
-            return  SqlDataAccess.ExecuteAsync(strsql, paramaters, System.Data.CommandType.StoredProcedure, "Inspectors");
+            return  SqlDataAccess.ExecuteAsync(strsql, paramaters, System.Data.CommandType.Text,"Inspectors");
         }
         public Task<bool> ApproveAndDisapproveInpectors(int inspectID, int status)
         {
             string strsql = "UPDATE Patrol_Inspectors SET Approval =@Approval " +
                             "WHERE InspectID =@InspectID";
-            return  SqlDataAccess.ExecuteAsync(strsql, new { InspectID = inspectID, Approval = status }, System.Data.CommandType.StoredProcedure, "Inspectors");
+            return  SqlDataAccess.ExecuteAsync(strsql, new { InspectID = inspectID, Approval = status }, System.Data.CommandType.Text, "Inspectors");
         }
 
         // -------------  Registration Management ----------------------
         public  Task<List<PatrolRegistionModel>> GetRegistrationData() => SqlDataAccess.GetDataAsync<PatrolRegistionModel>("GetPatrolRegistration", null, System.Data.CommandType.StoredProcedure, "Registration");
-        public  Task<List<FindingModel>> GetPatrolFindings(string reg) => SqlDataAccess.GetDataAsync<FindingModel>("GetFindings", new { Regno = reg });
+        public  Task<List<FindingModel>> GetPatrolFindings(string reg) => SqlDataAccess.GetDataAsync<FindingModel>("GetFindings", new { Regno = reg }, System.Data.CommandType.StoredProcedure);
         public async Task<bool> AddRegistration(RegistrationModel reg, string json)
         {
             //INSERT MAIN REGISTRATION PROCESS
@@ -73,11 +71,11 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                               Manager = reg.Manager,
                               Manager_Comments = reg.Manager_Comments,
                               IsSigned = reg.IsSigned
-                          });
+                          }, System.Data.CommandType.StoredProcedure);
 
             // INSERT FILES TO THE OTHER TABLES
             await SqlDataAccess.ExecuteAsync("InserFiles", 
-                new { RegNo = reg.RegNo, FilePath = reg.FilePath, PatrolPath = reg.PatrolPath });
+                new { RegNo = reg.RegNo, FilePath = reg.FilePath, PatrolPath = reg.PatrolPath }, System.Data.CommandType.StoredProcedure);
 
             // INSERT FINDING AND COUNTERMEASURE PROCESS
             // Make a Json format 
@@ -109,14 +107,14 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                 PIC_Comments = reg.PIC_Comments,
                 Manager = reg.Manager,
                 Manager_Comments = reg.Manager_Comments
-            });
+            }, System.Data.CommandType.StoredProcedure);
 
             var regFiles =  SqlDataAccess.ExecuteAsync("EditPatrolFiles", new
             {
                 FilePath = reg.FilePath,
                 PatrolPath = reg.PatrolPath,
                 RegNo = reg.RegNo
-            });
+            }, System.Data.CommandType.Text);
 
        
             bool[] results = await Task.WhenAll(regMain, regFiles);
@@ -147,7 +145,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             string strsql2 = "DELETE FROM Patrol_Registration WHERE RegNo = @RegNo";
             var parameter = new { RegNo = RegNo };
 
-            var task1 = SqlDataAccess.ExecuteAsync(strsql, parameter, System.Data.CommandType.StoredProcedure, "Registration");
+            var task1 = SqlDataAccess.ExecuteAsync(strsql, parameter, System.Data.CommandType.Text, "Registration");
             var task2 = SqlDataAccess.ExecuteAsync(strsql2, parameter);
 
             await Task.WhenAll(task1, task2);

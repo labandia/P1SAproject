@@ -106,7 +106,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                 Department_ID = reg.Department_ID,
                 PIC_ID = reg.PIC_ID,
                 Employee_ID = reg.Employee_ID
-            });
+            }, CommandType.StoredProcedure);
 
             // If main insert failed → stop the whole process
             if (!result) return false;
@@ -116,7 +116,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             {
                 RegNo = reg.RegNo,
                 FilePath = reg.FilePath
-            });
+            }, CommandType.StoredProcedure);
 
             // ========== 3. INSERT APPROVAL LIST ==========
             await SqlDataAccess.ExecuteAsync(@"
@@ -184,7 +184,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                 FilePath = reg.Filepath,
                 CounterPath = reg.CounterPath,
                 RegNo = reg.RegNo
-            });
+            }, CommandType.StoredProcedure);
 
             bool[] results = await Task.WhenAll(regMain, regApp, regFiles);
 

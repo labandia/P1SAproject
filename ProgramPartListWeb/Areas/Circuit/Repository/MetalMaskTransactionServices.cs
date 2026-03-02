@@ -1,14 +1,9 @@
-﻿using Aspose.Cells.Drawing;
-using DocumentFormat.OpenXml.Drawing;
-using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.Wordprocessing;
-using ProgramPartListWeb.Areas.Circuit.Interface;
+﻿using ProgramPartListWeb.Areas.Circuit.Interface;
 using ProgramPartListWeb.Areas.Circuit.Models;
 using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Models;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace ProgramPartListWeb.Areas.Circuit.Repository

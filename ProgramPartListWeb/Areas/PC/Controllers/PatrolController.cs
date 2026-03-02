@@ -18,12 +18,10 @@ using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Models;
 using ProgramPartListWeb.Utilities;
 using ProgramPartListWeb.Utilities.Common;
-using ProgramPartListWeb.Utilities.Security;
 using Spire.Xls;
 
 namespace ProgramPartListWeb.Areas.PC.Controllers
 {
-    [RateLimiting(300, 1)] // Limits the No of Request
     public class PatrolController : ExtendController
     {
         private readonly IInspector _ins;

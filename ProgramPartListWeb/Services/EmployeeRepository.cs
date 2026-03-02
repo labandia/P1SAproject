@@ -8,7 +8,7 @@ namespace ProgramPartListWeb.Repository
 {
     public class EmployeeRepository : IEmployee
     {
-        public  async Task<List<EmployeeModel>> GetAllEmployee() => await SqlDataAccess.GetData<EmployeeModel>("EmployeeData");
+        public  async Task<List<EmployeeModel>> GetAllEmployee() => await SqlDataAccess.GetDataAsync<EmployeeModel>("EmployeeData");
 
         public Task ReceiveData(string Emp, string Fullname, string Affili, string process, int dep)
         {

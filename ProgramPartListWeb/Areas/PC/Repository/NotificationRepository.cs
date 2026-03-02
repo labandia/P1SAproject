@@ -10,18 +10,18 @@ namespace ProgramPartListWeb.Areas.PC.Repository
     {
         public Task<List<Notification>> GetUserNotifications()
         {
-            return SqlDataAccess.GetData<Notification>("SELECT NotificationID, Title, Message, IsRead FROM Patrol_Notification");
+            return SqlDataAccess.GetDataAsync<Notification>("SELECT NotificationID, Title, Message, IsRead FROM Patrol_Notification");
         }
        
         public Task<bool> MarkAsRead(int NotID)
         {
             string strsql = "UPDATE Patrol_Notification SET IsRead = @IsRead WHERE NotificationID =@NotificationID";
-            return SqlDataAccess.UpdateInsertQuery(strsql, new { IsRead = 1, NotificationID = NotID });
+            return SqlDataAccess.ExecuteAsync(strsql, new { IsRead = 1, NotificationID = NotID });
         }
         public Task<bool> AddNotification(Notification not)
         {
             string strsql = "INSERT INTO Patrol_Notification(Title, Message) VALUES (@Title, @Message)";
-            return SqlDataAccess.UpdateInsertQuery(strsql, new { Title = not.Title, Message = not.Message });
+            return SqlDataAccess.ExecuteAsync(strsql, new { Title = not.Title, Message = not.Message });
         }
     }
 }

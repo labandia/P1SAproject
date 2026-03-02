@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Web;
 using NLog;
 using ProgramPartListWeb.Utilities;
+using System.Runtime.Caching;
 
 namespace PMACS_V2.Helper
 {
@@ -18,29 +19,41 @@ namespace PMACS_V2.Helper
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
+        // -------------------- CONFIG & CACHE --------------------
+        private static readonly string _connectionString = BuildConnectionString();
+        //private static readonly MemoryCache _cache = new MemoryCache(new MemoryCacheOptions { SizeLimit = 1024 });
+
+
         // Auto Connection Based on the Domain URL
-        public static string _connectionString()
+        public static string BuildConnectionString()
         {
-            string host = HttpContext.Current.Request.Url.Host.ToLower();
-            string Hostname = Environment.MachineName.ToLower();
-            string connectionKey = "";
-
-            if (host.Contains("pmacsweb.sdp.com"))
+            try
             {
-                connectionKey = "LiveDevelopment";
+                string connectionKey = "LiveDevelopment";
+
+                if (System.Web.HttpContext.Current != null)
+                {
+                    string host = System.Web.HttpContext.Current.Request.Url.Host.ToLower();
+                    string hostname = Environment.MachineName.ToLower();
+
+                    if (host.Contains("pmacsweb.sdp.com"))
+                        connectionKey = "LiveDevelopment";
+                    else if (host.Contains("localhost"))
+                        connectionKey = hostname == "desktop-fc0up1p" ? "HomeDevelopment" : "TestDevelopment";
+                }
+
+                // AES decode happens once at app start
+                return AesEncryption.DecodeBase64ToString(
+                    System.Configuration.ConfigurationManager.ConnectionStrings[connectionKey].ConnectionString
+                );
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "Error connection string. Defaulting to LiveDevelopment");
+                return System.Configuration.ConfigurationManager.ConnectionStrings["LiveDevelopment"].ConnectionString;
             }
 
-            if (host.Contains("localhost"))
-            {
-                connectionKey = Hostname == "desktop-fc0up1p"
-                                          ? "HomeDevelopment"
-                                          : "TestDevelopment";
-            }
-
-
-            LogConnectionChoice(host, Hostname, connectionKey);
-
-            return AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings[connectionKey].ConnectionString);
+        
         }
 
         // CHECK CONNECTION 

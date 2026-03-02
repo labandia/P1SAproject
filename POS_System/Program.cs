@@ -1,9 +1,5 @@
-﻿using POS_System.Pages;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace POS_System
@@ -19,17 +15,18 @@ namespace POS_System
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            // ======= Ensure Data Folder Exists =======
-            string dataFolder = Path.Combine(Application.StartupPath, "Data");
-            if (!Directory.Exists(dataFolder))
+            // ======= Set Database Folder Inside Documents =======
+            string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            string appFolder = Path.Combine(documentsPath, "SariSariStore");
+
+            // Create folder if it doesn't exist
+            if (!Directory.Exists(appFolder))
             {
-                Directory.CreateDirectory(dataFolder);
+                Directory.CreateDirectory(appFolder);
             }
 
             // ======= Set DataDirectory for connection strings =======
-            AppDomain.CurrentDomain.SetData("DataDirectory", dataFolder);
-
-           
+            AppDomain.CurrentDomain.SetData("DataDirectory", appFolder);
             Application.Run(new Flashscreen());
         }
     }

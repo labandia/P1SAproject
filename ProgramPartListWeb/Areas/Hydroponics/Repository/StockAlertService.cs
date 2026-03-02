@@ -74,7 +74,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 								END,
 								s.CurrentQty ASC;";
 
-            return SqlDataAccess.GetData<StockPartsModel>(strsql, null);
+            return SqlDataAccess.GetDataAsync<StockPartsModel>(strsql, null);
         }
 
         public async Task<int> GenerateStockNotification(List<int> userIds, int hoursInterval = 6)
@@ -91,7 +91,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
 
 
-                var lastCreatedList = await SqlDataAccess.GetData<DateTime>(lastSql, null);
+                var lastCreatedList = await SqlDataAccess.GetDataAsync<DateTime>(lastSql, null);
                 DateTime? lastCreated = lastCreatedList.FirstOrDefault();
 
                 if (!lastCreated.HasValue)
@@ -137,7 +137,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                             Status = item.Status
                         };
 
-                        await SqlDataAccess.UpdateInsertQuery(insertDetails, parameter);
+                        await SqlDataAccess.ExecuteAsync(insertDetails, parameter);
                     }
 
 
@@ -147,7 +147,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
                     foreach (var userId in userIds)
                     {
-                        await SqlDataAccess.UpdateInsertQuery(insertUsers, new { NotificationId = notifiResult, User_ID = userId });
+                        await SqlDataAccess.ExecuteAsync(insertUsers, new { NotificationId = notifiResult, User_ID = userId });
                     }
 
 
@@ -201,7 +201,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                 Status = product.Status
             };
 
-            await SqlDataAccess.UpdateInsertQuery(sql, param);
+            await SqlDataAccess.ExecuteAsync(sql, param);
         }
 
 
@@ -217,7 +217,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                 Status = product.Status
             };
 
-            await SqlDataAccess.UpdateInsertQuery(sql, param);
+            await SqlDataAccess.ExecuteAsync(sql, param);
         }
 
 
@@ -235,13 +235,13 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                         INNER JOIN Hydro_InventoryParts i ON i.PartNo = s.PartNo
                         WHERE a.IsRead = 0";
 
-            return SqlDataAccess.GetData<StockAlert>(sql, null);
+            return SqlDataAccess.GetDataAsync<StockAlert>(sql, null);
         }
 
         public Task MarkAlertAsReadAsync(int alertId)
         {
             string sql = "UPDATE Hydro_StockAlerts SET IsRead = 1 WHERE AlertId = @AlertId;";
-            return SqlDataAccess.UpdateInsertQuery(sql, new { AlertId = alertId });
+            return SqlDataAccess.ExecuteAsync(sql, new { AlertId = alertId });
         }
 
         public Task SendNotificationsAsync(StockAlert alert)
@@ -339,7 +339,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                     // first log today
                     if (latestLog == null)
                     {
-                        await SqlDataAccess.UpdateInsertQuery(@"
+                        await SqlDataAccess.ExecuteAsync(@"
                             INSERT INTO Hydro_StockAlertLog(EmailSent, Sequence)
                             VALUES (@EmailSent, @Sequence)",
                             new
@@ -351,7 +351,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                     else
                     {
                         // update existing log with incremented sequence
-                        await SqlDataAccess.UpdateInsertQuery(@"
+                        await SqlDataAccess.ExecuteAsync(@"
                                 UPDATE Hydro_StockAlertLog
                                 SET SentAt = GETDATE(), Sequence = Sequence + 1
                                 WHERE StockLogId = @StockLogId",
@@ -379,7 +379,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
         public Task<List<StockSendLogs>> GetStockSendEmailLogs()
         {
             string strsql = $@"SELECT StockLogId, EmailSent, SentAt FROM Hydro_StockAlertLog";
-            return SqlDataAccess.GetData<StockSendLogs>(strsql, null);
+            return SqlDataAccess.GetDataAsync<StockSendLogs>(strsql, null);
 
         }
 
@@ -452,7 +452,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
         public async Task<IEnumerable<StockNotification>> GetLowStockNotificationList(int userId)
         {
-            return await SqlDataAccess.GetData<StockNotification>($@"
+            return await SqlDataAccess.GetDataAsync<StockNotification>($@"
                             SELECT 
 	                            n.NotificationId, 
 	                            n.Title, 
@@ -469,9 +469,9 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             string sql = $@"UPDATE Hyrdo_StockNotificationUsers 
                             SET IsRead = 1, ReadDate = GETDATE()
                             WHERE NotificationId = @NotificationId AND User_ID =@User_ID;";
-            await SqlDataAccess.UpdateInsertQuery(sql, new { NotificationId = Id, User_ID  = userID });
+            await SqlDataAccess.ExecuteAsync(sql, new { NotificationId = Id, User_ID  = userID });
 
-            return await SqlDataAccess.GetData<StockNotificationDetail>($@"SELECT 
+            return await SqlDataAccess.GetDataAsync<StockNotificationDetail>($@"SELECT 
 	                                                                        i.PartNo,
 	                                                                        i.PartName,
 	                                                                        d.CurrentQty, 
@@ -488,7 +488,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             string sql = $@"UPDATE Hyrdo_StockNotificationUsers 
                             SET IsRead = 1, ReadDate = GETDATE()
                             WHERE User_ID =@User_ID;";
-            return  SqlDataAccess.UpdateInsertQuery(sql, new { User_ID = alertId });
+            return  SqlDataAccess.ExecuteAsync(sql, new { User_ID = alertId });
         }
     }
 }

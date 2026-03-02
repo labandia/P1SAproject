@@ -553,7 +553,6 @@
         }
 
         const renderTable = () => {
-            console.log(filteredData);
             const tableBody = document.getElementById(tableBodyId);
             tableBody.innerHTML = "";
 
@@ -696,7 +695,7 @@
 
 
                 const previewContainer = document.getElementById('EditpreviewContainer');
-                console.log(filterdata.ImageParts);
+               
                 if (filterdata.ImageParts !== null) {
                     previewContainer.style.display = 'block';
                     // ✅ Update the preview image
@@ -1134,7 +1133,7 @@
             responseType: "json",
             throwOnError: true
         });
-        console.log(result);
+      
         if (result && result.Success) {
             Inventlist = result.data;
 

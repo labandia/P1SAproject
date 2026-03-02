@@ -16,25 +16,25 @@ namespace ProgramPartListWeb.Data
         public async Task<List<IssuanceModel>> GetIssuanceHistory()
         {
             string strquery = "GetIssuanceHistoryList";
-            return await SqlDataAccess.GetData<IssuanceModel>(strquery);
+            return await SqlDataAccess.GetDataAsync<IssuanceModel>(strquery);
         }
         public async Task<List<PressMasterlistModel>> GetPressMasterData()
         {
             string strquery = "AluminumMasterlist";
-            return await SqlDataAccess.GetData<PressMasterlistModel>(strquery);
+            return await SqlDataAccess.GetDataAsync<PressMasterlistModel>(strquery);
         }
 
         public async Task<List<PressIDNote>> GetIDnoteData()
         {
             string strquery = "SELECT NoteID, Color FROM PartslocatorPress_IDNote";
-            return await SqlDataAccess.GetData<PressIDNote>(strquery);
+            return await SqlDataAccess.GetDataAsync<PressIDNote>(strquery);
         }
 
         public async Task<List<PressTransactHistoryModel>> GetPressHistoryTransactionData(int Act)
         {
             string strquery = "AluminumHistorylist";
             var parameters = new { Action = Act };
-            return await SqlDataAccess.GetData<PressTransactHistoryModel>(strquery, parameters);
+            return await SqlDataAccess.GetDataAsync<PressTransactHistoryModel>(strquery, parameters);
         }
 
         public async Task<bool> AddNewProducts(AddPressMasterlistModel obj)
@@ -69,8 +69,8 @@ namespace ProgramPartListWeb.Data
                 };
 
 
-                Task master = SqlDataAccess.UpdateInsertQuery(straddMasterlist, masterparmas);
-                Task storage = SqlDataAccess.UpdateInsertQuery(straddStorage, storageparams);
+                Task master = SqlDataAccess.ExecuteAsync(straddMasterlist, masterparmas);
+                Task storage = SqlDataAccess.ExecuteAsync(straddStorage, storageparams);
 
                 await Task.WhenAll(master, storage);
                 result = true;
@@ -87,7 +87,7 @@ namespace ProgramPartListWeb.Data
                     _Boxnum = obj.Boxnum,
                     _Quantity = obj.Quantity
                 };
-                await SqlDataAccess.UpdateInsertQuery(straddStorage, storageparams);
+                await SqlDataAccess.ExecuteAsync(straddStorage, storageparams);
                 result = true;
             }
 
@@ -100,7 +100,7 @@ namespace ProgramPartListWeb.Data
             string strquery = "INSERT INTO PartslocatorPress_Received(FA_Shoporder, FA_Plan, Storage_ID, Received) " +
                               "VALUES(@FA_Shoporder, @FA_Plan, @Storage_ID, @Received)";         
 
-            bool result = await SqlDataAccess.UpdateInsertQuery(strquery, parameters);
+            bool result = await SqlDataAccess.ExecuteAsync(strquery, parameters);
 
             return result;
         }
@@ -111,7 +111,7 @@ namespace ProgramPartListWeb.Data
                               "WHERE Storage_ID = @Storage_ID";
             var parameters = new { Storage_ID = StorageID, Quantity  = quan};
 
-            bool result = await SqlDataAccess.UpdateInsertQuery(strquery, parameters);
+            bool result = await SqlDataAccess.ExecuteAsync(strquery, parameters);
 
             return result;
         }
@@ -121,14 +121,14 @@ namespace ProgramPartListWeb.Data
             string strquery = "UPDATE PartslocatorPress_Storage SET Racksnum =@Racksnum,  Quantity =@Quantity, Postnum =@Postnum " +
                               "WHERE Storage_ID = @Storage_ID";
      
-            bool result = await SqlDataAccess.UpdateInsertQuery(strquery, parameters);
+            bool result = await SqlDataAccess.ExecuteAsync(strquery, parameters);
 
             if (result)
             {
                 string strupdateID = "UPDATE PartslocatorPress_masterlist SET NoteID =@NoteID " +
                               "WHERE Master_ID = @Master_ID";
                 var Idparams = new { Master_ID = MastID, NoteID = noteID };
-                await SqlDataAccess.UpdateInsertQuery(strupdateID, Idparams);
+                await SqlDataAccess.ExecuteAsync(strupdateID, Idparams);
             }
 
             return result;
@@ -143,8 +143,8 @@ namespace ProgramPartListWeb.Data
                              "WHERE IssuanceID =@IssuanceID AND Stats = 0";
 
             // Run both queries in parallel using Task.WhenAll
-            var insertTask = SqlDataAccess.UpdateInsertQuery(strquery, parameters);
-            var updateTask = SqlDataAccess.UpdateInsertQuery(strupdate, new { parameters.IssuanceID });
+            var insertTask = SqlDataAccess.ExecuteAsync(strquery, parameters);
+            var updateTask = SqlDataAccess.ExecuteAsync(strupdate, new { parameters.IssuanceID });
 
             bool[] results = await Task.WhenAll(insertTask, updateTask);
 

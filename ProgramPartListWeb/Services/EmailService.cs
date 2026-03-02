@@ -84,7 +84,7 @@ namespace ProgramPartListWeb.Utilities
         {
             string strsql = $@"INSERT INTO P1SA_EmailSend(Subject, Sender, Recipient, Body, BCC)
                                VALUES(@Subject, @Sender, @Recipient, @Body, @BCC)";
-            return  SqlDataAccess.UpdateInsertQuery(strsql, em);
+            return  SqlDataAccess.ExecuteAsync(strsql, em);
         }
 
         public static string CreateAEmailBody(string Fullname, string messageContent)

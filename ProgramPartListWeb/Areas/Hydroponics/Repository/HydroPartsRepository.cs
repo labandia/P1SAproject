@@ -44,11 +44,11 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                 model.Unit
             };
 
-            bool parstResult = await SqlDataAccess.UpdateInsertQuery(insertPartQuery, partParaers);
+            bool parstResult = await SqlDataAccess.ExecuteAsync(insertPartQuery, partParaers);
 
             if (!parstResult) return false;
             
-            result = await SqlDataAccess.UpdateInsertQuery(insertStockQuery, stockPramers);
+            result = await SqlDataAccess.ExecuteAsync(insertStockQuery, stockPramers);
 
             return result;
         }
@@ -64,7 +64,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                               SET CurrentQty = CurrentQty + @CurrentQty 
                                WHERE  PartNo =@PartNo";
 
-                await SqlDataAccess.UpdateInsertQuery(strsql, new
+                await SqlDataAccess.ExecuteAsync(strsql, new
                 {
                     PartNo = item.PartNo,
                     CurrentQty = item.quantity
@@ -149,11 +149,11 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                 TempPart = partno
             };
 
-            bool parstResult = await SqlDataAccess.UpdateInsertQuery(updateQuery, parameters);
+            bool parstResult = await SqlDataAccess.ExecuteAsync(updateQuery, parameters);
 
             if (!parstResult) return false;
 
-            result = await SqlDataAccess.UpdateInsertQuery(updateStockQuery, stocksparams);
+            result = await SqlDataAccess.ExecuteAsync(updateStockQuery, stocksparams);
 
             return result;
         }
@@ -169,7 +169,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                             INNER JOIN Hydro_InventoryParts i ON i.PartNo = s.PartNo
                             WHERE s.RequestID = @RequestID";
 
-            return await SqlDataAccess.GetData<StockAddDetailsModel>(strquery, new { RequestID  = ID });
+            return await SqlDataAccess.GetDataAsync<StockAddDetailsModel>(strquery, new { RequestID  = ID });
         }
 
         public async Task<IEnumerable<StockAddModel>> GetAddStocksList()
@@ -184,7 +184,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                             FROM Hydro_StockRequests s
                             ORDER BY RequestID DESC";
 
-            return await SqlDataAccess.GetData<StockAddModel>(strquery, null);
+            return await SqlDataAccess.GetDataAsync<StockAddModel>(strquery, null);
         }
 
         public Task<List<StockPartsModel>> GetInventoryList()
@@ -209,12 +209,12 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                 LEFT JOIN Hydro_Stocks s ON s.PartNo = p.PartNo
                                 ORDER BY s.StockID ASC";
 
-            return SqlDataAccess.GetData<StockPartsModel>(strquery, null);
+            return SqlDataAccess.GetDataAsync<StockPartsModel>(strquery, null);
         }
 
         public Task<bool> IncrementAndDecreaseStocks(int StockID, double CurrentQty, int Required)
         {
-            return SqlDataAccess.UpdateInsertQuery("UPDATE Hydro_Stocks SET CurrentQty =@CurrentQty WHERE StockID =@StockID",
+            return SqlDataAccess.ExecuteAsync("UPDATE Hydro_Stocks SET CurrentQty =@CurrentQty WHERE StockID =@StockID",
                 new
                 {
                     CurrentQty = CurrentQty,
@@ -227,7 +227,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             string strsql = $@"UPDATE Hydro_Stocks SET CurrentQty =@CurrentQty 
                                WHERE  PartID =@PartID";
 
-            return SqlDataAccess.UpdateInsertQuery(strsql, new { 
+            return SqlDataAccess.ExecuteAsync(strsql, new { 
                                                     PartID = ID, 
                                                     CurrentQty = Quan 
                                                 });
@@ -240,7 +240,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                SET WarningLevel =@WarningLevel 
                                WHERE  StockID =@StockID";
 
-            return SqlDataAccess.UpdateInsertQuery(strsql,
+            return SqlDataAccess.ExecuteAsync(strsql,
                                                 new
                                                 {
                                                     StockID = StockID,

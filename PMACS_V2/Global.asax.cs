@@ -5,7 +5,6 @@ using PMACS_V2.Interface;
 using PMACS_V2.Repository;
 using System.Web;
 using System;
-using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
@@ -16,7 +15,6 @@ using System.Security.Principal;
 using System.Web.Security;
 using PMACS_V2.Areas.Planning.Interface;
 using PMACS_V2.Areas.Planning.Repository;
-using System.IO.Compression;
 using PMACS_V2.Areas.PartsLocal.Interface;
 using PMACS_V2.Areas.PartsLocal.Repository;
 using PMACS_V2.Areas.MoldDie.Interface;
@@ -29,12 +27,13 @@ namespace PMACS_V2
         protected void Application_Start()
         {
             string homeMachineName = "DESKTOP-FC0UP1P";
-            string currentMachine = Environment.MachineName.ToUpperInvariant();
-
             string homePath = @"C:\Users\Jaye Labandia\Desktop\Samplelogs";
             string officePath = @"\\sdp01034s\SYSTEM EXECUTABLE\P1SA-PC_System\WebLogs";
 
-            string selectedPath = currentMachine == homeMachineName ? homePath : officePath;
+            string selectedPath =
+                string.Equals(Environment.MachineName, homeMachineName, StringComparison.OrdinalIgnoreCase)
+                    ? homePath
+                    : officePath;
 
             LogManager.Configuration.Variables["logDirectory"] = selectedPath;
             LogManager.ReconfigExistingLoggers(); // Apply change
@@ -42,60 +41,25 @@ namespace PMACS_V2
             // DEPENDENCY INJECTION CONFIGURATION
             AreaRegistration.RegisterAllAreas();
             RegisterDependencyInjection();
-
-            GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
 
-        protected void Application_BeginRequest(object sender, EventArgs e)
-        {
-            HttpContext.Current.Response.AddHeader("Access-Control-Allow-Origin", "*");
-            HttpContext.Current.Response.AddHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-            HttpContext.Current.Response.AddHeader("Access-Control-Allow-Headers", "Content-Type, Accept, Authorization");
-
-            if (HttpContext.Current.Request.HttpMethod == "OPTIONS")
-            {
-                HttpContext.Current.Response.StatusCode = 200;
-                HttpContext.Current.Response.End();
-            }
-
-            HttpResponse response = HttpContext.Current.Response;
-
-            string acceptEncoding = HttpContext.Current.Request.Headers["Accept-Encoding"];
-
-            if (!string.IsNullOrEmpty(acceptEncoding))
-            {
-                acceptEncoding = acceptEncoding.ToLower();
-
-                if (acceptEncoding.Contains("gzip"))
-                {
-                    response.Filter = new GZipStream(response.Filter, CompressionMode.Compress);
-                    response.AppendHeader("Content-Encoding", "gzip");
-                }
-                else if (acceptEncoding.Contains("deflate"))
-                {
-                    response.Filter = new DeflateStream(response.Filter, CompressionMode.Compress);
-                    response.AppendHeader("Content-Encoding", "deflate");
-                }
-            }
-
-            // Add Vary header
-            response.AppendHeader("Vary", "Content-Encoding");
-        }
-
+  
         protected void Application_EndRequest()
         {
-            var context = new HttpContextWrapper(Context);
-            var routeData = RouteTable.Routes.GetRouteData(context);
+            if (Response.StatusCode != 404)
+                return;
 
-            if (Context.Response.StatusCode == 404 && routeData == null)
+            var routeData = RouteTable.Routes.GetRouteData(new HttpContextWrapper(Context));
+            if (routeData == null)
             {
                 Response.Clear();
                 Server.TransferRequest("~/Error/NotFound");
             }
         }
+        // ===== Clean Error Handling =====
         protected void Application_Error()
         {
             Exception exception = Server.GetLastError();
@@ -134,22 +98,24 @@ namespace PMACS_V2
                 errorController.Execute(new RequestContext(new HttpContextWrapper(httpContext), routeData));
             }
         }
+        // ===== Safe Authentication Handling =====
         protected void Application_PostAuthenticateRequest(object sender, EventArgs e)
         {
             var authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
-            if (authCookie != null)
-            {
-                var ticket = FormsAuthentication.Decrypt(authCookie.Value);
-                if (ticket != null && !ticket.Expired)
-                {
-                    var identity = new GenericIdentity(ticket.Name); // This is User_ID
-                    var roles = new[] { ticket.UserData };           // Role name, optional
-                    HttpContext.Current.User = new GenericPrincipal(identity, roles);
-                }
+            if (authCookie == null)
+                return;
 
-                string userId = ticket.UserData;
-                HttpContext.Current.Items["UserID"] = userId;
-            }
+            var ticket = FormsAuthentication.Decrypt(authCookie.Value);
+            if (ticket == null || ticket.Expired)
+                return;
+
+            var identity = new GenericIdentity(ticket.Name);
+            var roles = string.IsNullOrEmpty(ticket.UserData)
+                ? new string[] { }
+                : new[] { ticket.UserData };
+
+            HttpContext.Current.User = new GenericPrincipal(identity, roles);
+            HttpContext.Current.Items["UserID"] = ticket.UserData;
         }
         private void RegisterDependencyInjection()
         {

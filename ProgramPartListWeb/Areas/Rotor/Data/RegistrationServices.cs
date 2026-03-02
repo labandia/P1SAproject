@@ -57,13 +57,13 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
                     );
                 END";
 
-            return SqlDataAccess.UpdateInsertQuery(strquery, masterlist);
+            return SqlDataAccess.ExecuteAsync(strquery, masterlist);
 
         }
 
         public Task<bool> DeleteRegistration(int registID)
         {
-            return SqlDataAccess.UpdateInsertQuery($@"UPDATE Registration
+            return SqlDataAccess.ExecuteAsync($@"UPDATE Registration
                                     SET IsDeleted = 1
                                     WHERE RegistrationID = @RegistrationID;", 
                                     new { RegistrationID = registID });
@@ -71,7 +71,7 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
 
         public Task<bool> EditRegistration(RotorRegistrationModel masterlist)
         {
-            return SqlDataAccess.UpdateInsertQuery(@"
+            return SqlDataAccess.ExecuteAsync(@"
                         UPDATE Registration
                         SET
                             RegistrationNo = @RegistrationNo,
@@ -166,7 +166,7 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
             }
 
 
-            var items = await SqlDataAccess.GetData<RotorRegistrationModel>(strquery, parameters);
+            var items = await SqlDataAccess.GetDataAsync<RotorRegistrationModel>(strquery, parameters);
 
             // Now get the total count
             int TotalRecords = await SqlDataAccess.GetCountDataSync(countQuery, parameters);

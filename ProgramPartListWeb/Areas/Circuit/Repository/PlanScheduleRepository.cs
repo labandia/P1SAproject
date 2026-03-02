@@ -20,13 +20,13 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                                @Shift, @Remarks, @SetupNavi, 
                                @VisualManage, @Status, @MachineSerial, 
                                @Modelno, @SetGroup)";
-            return SqlDataAccess.UpdateInsertQuery(strquery, plan, "serieslist");
+            return SqlDataAccess.ExecuteAsync(strquery, plan, System.Data.CommandType.StoredProcedure, "serieslist");
         }
 
         public Task<bool> DeletePlanSched(string plan)
         {
             string strquery = @"DELETE FROM PartList_Series_tbl WHERE Series_no =@Series_no";
-            return SqlDataAccess.UpdateInsertQuery(strquery, new { Series_no  = plan}, "serieslist");
+            return SqlDataAccess.ExecuteAsync(strquery, new { Series_no  = plan}, System.Data.CommandType.StoredProcedure, "serieslist");
         }
 
         public Task<bool> EditPlanSchedules(PlanScheduleMode plan)
@@ -41,7 +41,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
 
             };
             
-            return SqlDataAccess.UpdateInsertQuery(strquery, parameters);
+            return SqlDataAccess.ExecuteAsync(strquery, parameters);
         }
 
         public Task<List<PlanScheduleMode>> GetPlanSchedules()
@@ -72,7 +72,10 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                                 GROUP BY Series_ID
                             ) cs ON cs.Series_ID = s.Series_ID
                               ORDER BY Series_ID DESC";
-            return SqlDataAccess.GetData<PlanScheduleMode>(strquery, null, "serieslist");
+            return SqlDataAccess.GetDataAsync<PlanScheduleMode>(strquery, 
+                null, 
+                System.Data.CommandType.StoredProcedure,
+                "serieslist");
         }
 
         public async Task<PlanScheduleMode> GetPlanSchedulesByID(string plan)

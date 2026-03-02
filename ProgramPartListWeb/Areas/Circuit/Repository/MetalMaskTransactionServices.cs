@@ -19,14 +19,14 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
         {
             string strsql = $@"INSERT INTO MetalMask_Transaction(Partnumber, Shift, AREA, SMTLine, Status)
                             VALUES(@Partnumber, @Shift, @AREA, @SMTLine, @Status)";
-            return SqlDataAccess.UpdateInsertQuery(strsql, metal);
+            return SqlDataAccess.ExecuteAsync(strsql, metal);
         }
 
         public Task<bool> DeleteMetalMastTransaction(int ID)
         {
             string strsql = $@"UPDATE MetalMask_Transaction SET IsDelete = 1
                                WHERE RecordID =@RecordID";
-            return SqlDataAccess.UpdateInsertQuery(strsql, new { RecordID  = ID });
+            return SqlDataAccess.ExecuteAsync(strsql, new { RecordID  = ID });
         }
 
         public Task<bool> EditMetalMastTransaction(MetalMaskTransaction metal)
@@ -133,7 +133,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                 parameters.Add("@PageSize", pageSize);
             }
 
-            return SqlDataAccess.GetData<MetalMaskTransaction>(strquery, parameters);
+            return SqlDataAccess.GetDataAsync<MetalMaskTransaction>(strquery, parameters);
         }
 
         public Task<bool> StartOperation(int ID)
@@ -143,7 +143,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
             string strsql = $@"UPDATE MetalMask_Transaction SET SMT_start =@SMT_start 
                                WHERE RecordID =@RecordID";
 
-            return SqlDataAccess.UpdateInsertQuery(strsql, new
+            return SqlDataAccess.ExecuteAsync(strsql, new
             {
                 SMT_start = startTime,
                 RecordID = ID
@@ -157,7 +157,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
             string strsql = $@"UPDATE MetalMask_Transaction SET SMT_end =@SMT_end 
                                WHERE RecordID =@RecordID";
 
-            return SqlDataAccess.UpdateInsertQuery(strsql, new
+            return SqlDataAccess.ExecuteAsync(strsql, new
             {
                 SMT_end = startTime,
                 RecordID = ID
@@ -172,7 +172,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                             SMT_Operator =@SMT_Operator
                                WHERE RecordID =@RecordID";
 
-            return SqlDataAccess.UpdateInsertQuery(strsql, new
+            return SqlDataAccess.ExecuteAsync(strsql, new
             {
                 TotalPrintBoard = metal.TotalPrintBoard,
                 SMT_Operator = metal.SMT_Operator,
@@ -188,7 +188,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                             Remarks =@Remarks, PIC =@PIC, Status = 2
                             WHERE RecordID =@RecordID";
 
-            return SqlDataAccess.UpdateInsertQuery(strsql, new
+            return SqlDataAccess.ExecuteAsync(strsql, new
             {
                 CleanDate = DateTime.Now,
                 Pattern = metal.Pattern,
@@ -276,7 +276,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                 parameters.Add("@PageSize", pageSize);
             }
 
-            var items = await SqlDataAccess.GetData<MetalMaskTransaction>(strquery, parameters);
+            var items = await SqlDataAccess.GetDataAsync<MetalMaskTransaction>(strquery, parameters);
 
 
             // Now get the total count
@@ -297,7 +297,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                             ReadThree =@ReadThree, ReadFour =@ReadFour
                             WHERE RecordID =@RecordID";
 
-            return SqlDataAccess.UpdateInsertQuery(strsql, new
+            return SqlDataAccess.ExecuteAsync(strsql, new
             {
                 ReadOne = metal.ReadOne,
                 ReadTwo = metal.ReadTwo,

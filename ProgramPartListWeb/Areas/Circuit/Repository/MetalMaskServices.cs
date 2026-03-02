@@ -78,7 +78,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
 
             //Debug.WriteLine(strquery);
            
-            var items = await SqlDataAccess.GetData<MetalMaskModel>(strquery, parameters);
+            var items = await SqlDataAccess.GetDataAsync<MetalMaskModel>(strquery, parameters);
 
             int TotalRecords = await SqlDataAccess.GetCountData(countstring, parameters);
 
@@ -141,7 +141,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                                 ) p WHERE Partnumber =@Partnumber AND ModelType = @model";
             var parameter = new { Partnumber = partnum, model = model };
 
-            return await SqlDataAccess.GetData<MetalMaskModel>(strquery, parameter);
+            return await SqlDataAccess.GetDataAsync<MetalMaskModel>(strquery, parameter);
         }
 
         public Task<bool> AddMasterlist(MetalMaskModel masterlist)
@@ -188,7 +188,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                                     )
                                 END";
 
-            return SqlDataAccess.UpdateInsertQuery(strquery, masterlist);
+            return SqlDataAccess.ExecuteAsync(strquery, masterlist);
         }
 
         public Task<bool> EditMasterlist(MetalMaskModel masterlist)
@@ -218,7 +218,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                             Remarks      = @Remarks
                         WHERE RecordID = @RecordID";
 
-            return SqlDataAccess.UpdateInsertQuery(strquery, masterlist);
+            return SqlDataAccess.ExecuteAsync(strquery, masterlist);
         }
 
       

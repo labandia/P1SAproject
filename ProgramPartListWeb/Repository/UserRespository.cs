@@ -62,7 +62,7 @@ namespace ProgramPartListWeb.Data
                         WHERE NOT EXISTS (
                             SELECT 1 FROM Users WHERE Employee_ID = @Employee_ID
                         )";
-                    await SqlDataAccess.UpdateInsertQuery(insUser, reg);
+                    await SqlDataAccess.ExecuteAsync(insUser, reg);
                 }
 
                 // Step 2: Get User ID
@@ -73,7 +73,7 @@ namespace ProgramPartListWeb.Data
 
                 // Optional Query if does have a Email 
                 string Updateinfor = @"UPDATE Users SET Email =@Email WHERE User_ID = @User_ID";
-                await SqlDataAccess.UpdateInsertQuery(Updateinfor, new { User_ID = userId, Email = reg.Email });
+                await SqlDataAccess.ExecuteAsync(Updateinfor, new { User_ID = userId, Email = reg.Email });
 
 
                 // Check if user Exist in the database
@@ -100,7 +100,7 @@ namespace ProgramPartListWeb.Data
                 // if user account doesnt Exist
                 string insAccout = $@"INSERT INTO UserAccounts(User_ID, Project_ID, Username, Password, Role_ID) 
                                     VALUES(@User_ID, @Project_ID, @Username, @Password, @Role_ID)";
-                return await SqlDataAccess.UpdateInsertQuery(insAccout, new
+                return await SqlDataAccess.ExecuteAsync(insAccout, new
                 {
                     User_ID = userId,
                     Project_ID = reg.Project_ID,
@@ -139,14 +139,14 @@ namespace ProgramPartListWeb.Data
             }
 
 
-            return await SqlDataAccess.UpdateInsertQuery(strsql, new { Signature  = fileName, User_ID = userID});
+            return await SqlDataAccess.ExecuteAsync(strsql, new { Signature  = fileName, User_ID = userID});
         }
         public Task<bool> Changepassword(ChangePassModel ch)
         {
             string strsql = $@"UPDATE UserAccounts SET Password =@Password
                                WHERE User_ID =@User_ID AND Project_ID = 9";
             var parameter = new { Password = ch.Password, User_ID = ch.User_ID };
-            return SqlDataAccess.UpdateInsertQuery(strsql, parameter);
+            return SqlDataAccess.ExecuteAsync(strsql, parameter);
         }
     }
 }

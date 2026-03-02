@@ -10,9 +10,11 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.UI.WebControls;
 using Dapper;
+using Microsoft.AspNet.SignalR.Messaging;
 using Microsoft.Extensions.Caching.Memory;
 using NLog;
 using ProgramPartListWeb.Utilities;
+using CommandType = System.Data.CommandType;
 
 namespace ProgramPartListWeb.Helper
 {
@@ -22,7 +24,8 @@ namespace ProgramPartListWeb.Helper
 
         // -------------------- CONFIG & CACHE --------------------
         private static readonly string _connectionString = BuildConnectionString();
-        private static readonly MemoryCache _cache = new MemoryCache(new MemoryCacheOptions { SizeLimit = 1024 });
+        private static readonly MemoryCache _cache =
+         new MemoryCache(new MemoryCacheOptions { SizeLimit = 1024 });
 
         public static string BuildConnectionString()
         {
@@ -53,58 +56,47 @@ namespace ProgramPartListWeb.Helper
             } 
         }
 
+        private static SqlConnection CreateConnection()
+       => new SqlConnection(_connectionString);
 
 
-        // CHECK CONNECTION 
-        private static void LogConnectionChoice(string host, string machineName, string connectionKey)
-        {
-            string logEntry = $"{DateTime.Now:u} | Host: {host} | Machine: {machineName} | Connection: {connectionKey}";
-            Debug.WriteLine(logEntry);
-        }
-        private static SqlConnection CreateConnection() => new SqlConnection(_connectionString);
-
-        public static SqlConnection GetSqlConnection(string connectionString) => new SqlConnection(connectionString);
-      
         // ############ DYNAMIC FUNCTION LIST<T> GETDATA ########################
-        public static async Task<List<T>> GetData<T>(
-            string query, 
-            object parameters = null, 
-            string cacheKey = null, 
-            int cacheMinutes = 10)
+        public static async Task<List<T>> GetDataAsync<T>(
+           string query,
+           object parameters = null,
+           CommandType commandType = CommandType.Text,
+           string cacheKey = null,
+           int cacheMinutes = 10)
         {
+            if (!string.IsNullOrEmpty(cacheKey) &&
+                _cache.TryGetValue(cacheKey, out List<T> cached))
+            {
+                return cached;
+            }
+
             try
             {
-                // Use provided cache key or default to no caching
-                if (!string.IsNullOrEmpty(cacheKey))
+                using (var con = CreateConnection())
                 {
-                    return await CacheHelper.GetOrSetAsync(cacheKey, async () =>
-                    {
-                        using (IDbConnection con = CreateConnection())
-                        {
-                            bool IsStoreProd = Regex.IsMatch(query, @"^\w+$");
-                            var commandType = IsStoreProd ? CommandType.StoredProcedure : CommandType.Text;
-                            var result = await con.QueryAsync<T>(query, parameters, commandType: commandType);
+                    var result = await con.QueryAsync<T>(query, parameters, commandType: commandType);
+                    var list = result.AsList();
 
-                            return result.ToList();
-                        }
-                    }, cacheMinutes);
-                }
-                else
-                {
-                    // No caching
-                    using (IDbConnection con = CreateConnection())
+                    if (!string.IsNullOrEmpty(cacheKey))
                     {
-                        bool IsStoreProd = Regex.IsMatch(query, @"^\w+$");
-                        var commandType = IsStoreProd ? CommandType.StoredProcedure : CommandType.Text;
-                        var result = await con.QueryAsync<T>(query, parameters, commandType: commandType);
-
-                        return result.ToList();
+                        _cache.Set(cacheKey, list,
+                            new MemoryCacheEntryOptions
+                            {
+                                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(cacheMinutes),
+                                Size = 1
+                            });
                     }
+
+                    return list;
                 }
             }
-            catch (SqlException ex)
+            catch (Exception ex)
             {
-                Logger.Error(ex, $"SQL Exception while executing query. Query: {query}, CacheKey: {cacheKey}");
+                Logger.Error(ex, "GetDataAsync failed.");
                 return new List<T>();
             }
         }
@@ -213,29 +205,23 @@ namespace ProgramPartListWeb.Helper
            
         }
         // ############ INSERT AND UPDATE QUERY ########################
-        public static async Task<bool> UpdateInsertQuery(string strQuery, object parameters, string cacheKeyToInvalidate = null)
+        public static async Task<bool> ExecuteAsync(
+            string query,
+            object parameters = null,
+            CommandType commandType = CommandType.Text,
+            string cacheKeyToInvalidate = null)
         {
-            try
-            {
-                using (IDbConnection con = CreateConnection())
-                {
-
-                    bool isStoredProcedure = Regex.IsMatch(strQuery, @"^\w+$");
-                    CommandType commandType = isStoredProcedure ? CommandType.StoredProcedure : CommandType.Text;
-
-                    int rowsAffected = await con.ExecuteAsync(strQuery, parameters, commandType: commandType);
-
-                    // If update was successful and a cache key is provided, remove it
-                    if (rowsAffected > 0 && !string.IsNullOrEmpty(cacheKeyToInvalidate)) CacheHelper.Remove(cacheKeyToInvalidate);
-
-                    return rowsAffected > 0;
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Error Message: " + ex.Message);
-                Logger.Error(ex, $"SQL Exception : {ex.Message}");
-                return false;
+            try { 
+                using (var con = CreateConnection()) 
+                { 
+                    int rowsAffected = 
+                        await con.ExecuteAsync(query, parameters, commandType: commandType); 
+                    if (rowsAffected > 0 && !string.IsNullOrEmpty(cacheKeyToInvalidate))
+                        _cache.Remove(cacheKeyToInvalidate); return rowsAffected > 0; } } 
+            catch (Exception ex) 
+            { 
+                Logger.Error(ex, $"ExecuteAsync failed. Query: {query}"); 
+                return false; 
             }
         }
 

@@ -1,8 +1,5 @@
-﻿using ADOX;
-using POS_System.Utilities;
-using System;
+﻿using System;
 using System.Data.OleDb;
-using System.Data.SQLite;
 using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
@@ -20,14 +17,6 @@ namespace POS_System
         {
             InitializeComponent();
 
-            dbFolder = Path.Combine(
-               Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-               "SariSariStore"
-           );
-
-            dbPath = Path.Combine(dbFolder, "SariSariStore.mdb");
-
-
             progressBar1.Style = ProgressBarStyle.Continuous;
             progressBar1.ForeColor = Color.SeaGreen;
             lblStatus.Font = new Font("Segoe UI", 10, FontStyle.Regular);
@@ -36,13 +25,7 @@ namespace POS_System
         private async void Flashscreen_Load(object sender, EventArgs e)
         {
             progressBar1.Value = 0;
-            lblStatus.Text = "Initializing...";
-
             await SetupDatabaseAsync();
-
-            lblStatus.Text = "Opening POS System...";
-            await Task.Delay(500);
-
             SariSariStoreLogin frm = new SariSariStoreLogin();
             frm.Show();
             this.Hide();
@@ -53,22 +36,51 @@ namespace POS_System
             try
             {
                 UpdateProgress(10, "Initializing...");
-
                 await Task.Delay(300);
-                UpdateProgress(25, "Checking system...");
 
+                UpdateProgress(25, "Checking database...");
                 await Task.Delay(300);
+
+                // ===== Get Documents Folder =====
+                string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                string appFolder = Path.Combine(documentsPath, "SariSariStore");
+
+                // ===== Create Folder If Not Exists =====
+                if (!Directory.Exists(appFolder))
+                {
+                    Directory.CreateDirectory(appFolder);
+                }
+
+                // ===== Source Database (from EXE folder) INCLUDES the database file =====
+                string sourceDbPath = Path.Combine(Application.StartupPath, "Data", "SariSariStore.db");
+
+                // ===== Destination Database (Documents folder) =====
+                string destDbPath = Path.Combine(appFolder, "SariSariStore.db");
+
+                // ===== Copy Only If NOT Exists =====
+                if (!File.Exists(destDbPath))
+                {
+                    if (File.Exists(sourceDbPath))
+                    {
+                        File.Copy(sourceDbPath, destDbPath, false);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Database file not found in application folder.");
+                        return;
+                    }
+                }
+
                 UpdateProgress(45, "Loading modules...");
-
                 await Task.Delay(300);
+
                 UpdateProgress(65, "Applying settings...");
-
                 await Task.Delay(300);
+
                 UpdateProgress(80, "Finalizing...");
-
                 await Task.Delay(300);
-                UpdateProgress(100, "Ready!");
 
+                UpdateProgress(100, "Ready!");
                 await Task.Delay(500);
             }
             catch (Exception ex)
@@ -250,7 +262,7 @@ namespace POS_System
 
         //    try
         //    {
-               
+
 
         //        // ================= CREATE USERS TABLE =================
         //        UpdateProgress(40, "Creating Users table...");

@@ -23,7 +23,7 @@ namespace NCR_system.Repository
 	                            ,Remarkstat,Process
 	                            ,TargetDate,Reviewer,DateRegist
                             FROM PC_NCR WHERE Process =@Type";
-            return await SqlDataAccess.GetData<NCRModels>(strsql, new { Type = type });
+            return await SqlDataAccess.GetDataAsync<NCRModels>(strsql, new { Type = type });
         }
 
         public Task<bool> InsertNCRData(NCRModels ncr)

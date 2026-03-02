@@ -68,7 +68,7 @@ namespace NCR_system.Repository
             }
 
 
-            return await SqlDataAccess.GetData<CustomerModel>(strquery, parameters);
+            return await SqlDataAccess.GetDataAsync<CustomerModel>(strquery, parameters);
         }
 
         public Task<CustomerModel> GetCustomerDataByID(int recordID)
@@ -81,10 +81,10 @@ namespace NCR_system.Repository
                             FROM PC_CustomerConplaint
                             WHERE RecordID = @RecordID
                             ORDER BY RecordID DESC";
-            return SqlDataAccess.GetDataByID<CustomerModel>(strsql, new { RecordID = recordID });
+            return SqlDataAccess.GetSingleAsync<CustomerModel>(strsql, new { RecordID = recordID });
         }
 
-        public Task<List<CustomerTotalModel>> GetCustomersOpenItem(int type = 0, int  sec = 0)
+        public async Task<List<CustomerTotalModel>> GetCustomersOpenItem(int type = 0, int  sec = 0)
         {
             string strquery = $@"SELECT 
                                 s.DepartmentName,
@@ -114,7 +114,7 @@ namespace NCR_system.Repository
 
             parameters.Add("@CCtype", type);
 
-            return SqlDataAccess.GetData<CustomerTotalModel>(strquery, parameters);
+            return await SqlDataAccess.GetDataAsync<CustomerTotalModel>(strquery, parameters);
         }
 
        
@@ -140,7 +140,7 @@ namespace NCR_system.Repository
                 { "@UploadImage", customer.UploadImage }
             };
 
-            return await SqlDataAccess.UpdateInsertQuery(strsql, parameters);
+            return await SqlDataAccess.ExecuteAsync(strsql, parameters);
         }
 
         public async Task<bool> UpdateCustomerData(CustomerModel customer, ComplaintUpdateType type)
@@ -176,7 +176,7 @@ namespace NCR_system.Repository
                 customer.CustomerName
             };
 
-            return await SqlDataAccess.UpdateInsertQuery(strsql, parameter);
+            return await SqlDataAccess.ExecuteAsync(strsql, parameter);
         }
 
 

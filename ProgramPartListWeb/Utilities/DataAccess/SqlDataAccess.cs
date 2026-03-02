@@ -54,7 +54,7 @@ namespace ProgramPartListWeb.Helper
        => new SqlConnection(_connectionString);
 
 
-        // ############ DYNAMIC FUNCTION LIST<T> GETDATA ########################
+        // --------------------- CORE METHODS ---------------------
         public static async Task<List<T>> GetDataAsync<T>(
            string query,
            object parameters = null,

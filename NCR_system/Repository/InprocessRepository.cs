@@ -28,7 +28,7 @@ namespace NCR_system.Repository
                                     s.DepartmentName
                                 ORDER BY 
                                 s.SectionID ASC;";
-            return SqlDataAccess.GetData<CustomerTotalModel>(strsql, null);
+            return SqlDataAccess.GetDataAsync<CustomerTotalModel>(strsql, null);
         }
 
 
@@ -45,7 +45,7 @@ namespace NCR_system.Repository
                                   ,Remarks,SectionDep, SectionID
                               FROM PC_Inprocess
                               WHERE SectionID =@SectionID";
-            return await SqlDataAccess.GetData<InprocessModel>(query, new { SectionID = section });
+            return await SqlDataAccess.GetDataAsync<InprocessModel>(query, new { SectionID = section });
         }
 
         public Task<bool> InsertInprocessData(InprocessModel inprocess)

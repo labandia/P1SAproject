@@ -42,7 +42,7 @@ namespace NCR_system.Repository
 
             parameters.Add("@Process", type);
 
-            return SqlDataAccess.GetData<CustomerTotalModel>(strquery, parameters);
+            return SqlDataAccess.GetDataAsync<CustomerTotalModel>(strquery, parameters);
         }
 
         public async Task<List<RejectShipmentModel>> GetRejectedShipData(
@@ -97,7 +97,7 @@ namespace NCR_system.Repository
                 parameters.Add("@PageSize", pageSize);
             }
 
-            return await SqlDataAccess.GetData<RejectShipmentModel>(strquery, parameters);
+            return await SqlDataAccess.GetDataAsync<RejectShipmentModel>(strquery, parameters);
         }
 
         public  Task<bool> InsertShipRejectData(RejectShipmentModel ncr, int Process)
@@ -119,7 +119,7 @@ namespace NCR_system.Repository
                 Process,
                 ncr.UploadImage
             };
-            return SqlDataAccess.UpdateInsertQuery(strsql, parameter);
+            return SqlDataAccess.ExecuteAsync(strsql, parameter);
         }
 
         public Task<bool> UpdateShipRejectData(RejectShipmentModel ncr)
@@ -141,7 +141,7 @@ namespace NCR_system.Repository
                 ncr.Contents,
                 DateCloseReg = Convert.ToDateTime(ncr.DateCloseReg),
             };
-            return SqlDataAccess.UpdateInsertQuery(strsql, parameter);
+            return SqlDataAccess.ExecuteAsync(strsql, parameter);
         }
     }
 }

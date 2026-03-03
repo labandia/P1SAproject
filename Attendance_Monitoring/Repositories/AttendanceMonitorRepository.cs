@@ -264,32 +264,25 @@ namespace Attendance_Monitoring.Repositories
         public async Task<ApiResponse<P1SA_AttendanceModel>> GetAttendanceRecordsList(
             string dDate, int shifts, int selectime, int depid)
         {
-            string strquery = (selectime == 0) ? $@"SELECT
-                                                    pc.RecordID,
-	                                                FORMAT(pc.TimeIn, 'MM/dd/yy hh:mm:ss') as TimeIn, 
-	                                                FORMAT(pc.TimeOut, 'hh:mm:ss') as TimeOut, 
-	                                                pc.Employee_ID, e.FullName, pc.LateTime,
-	                                                pc.Shifts
-                                                FROM P1SA_AttendanceMonitor pc 
-                                                INNER JOIN Employee_tbl e ON e.Employee_ID = pc.Employee_ID
-                                                WHERE (CAST(pc.TimeIn AS DATE) = @Datetoday AND pc.Shifts = @Shifts) AND 
-                                                e.Department_ID = @Department_ID
-                                                ORDER BY pc.RecordID DESC"
-                                             : $@"SELECT  
-                                                 pc.RecordID,
-                                                FORMAT(pc.TimeIn, 'MM/dd/yy hh:mm:ss') as TimeIn, 
-                                                FORMAT(pc.TimeOut, 'hh:mm:ss') as TimeOut, 
-                                                pc.Employee_ID, e.FullName, pc.LateTime,
-	                                            pc.Shifts
-                                                FROM P1SA_AttendanceMonitor pc 
-                                                INNER JOIN Employee_tbl e ON e.Employee_ID = pc.Employee_ID 
-                                                WHERE CAST(pc.TimeIn AS DATE) = @Datetoday
-                                                AND (pc.TimeOut is Not null AND pc.Shifts = @Shifts) AND e.Department_ID = @Department_ID
-                                                ORDER BY pc.TimeOut DESC ";
+            string strquery = $@"SELECT
+                                pc.RecordID,
+	                            FORMAT(pc.TimeIn, 'MM/dd/yy hh:mm:ss') as TimeIn, 
+	                            FORMAT(pc.TimeOut, 'hh:mm:ss') as TimeOut, 
+	                            pc.Employee_ID, e.FullName, pc.LateTime,
+	                            pc.Shifts
+                           FROM P1SA_AttendanceMonitor pc 
+                           INNER JOIN Employee_tbl e ON e.Employee_ID = pc.Employee_ID
+                           WHERE (CAST(pc.TimeIn AS DATE) = @Datetoday AND pc.Shifts = @Shifts) AND 
+                           e.Department_ID = @Department_ID";
 
+            strquery += (selectime == 0) ? " ORDER BY pc.RecordID DESC" : " AND pc.TimeOut is Not null ORDER BY pc.TimeOut DESC";
 
-            var parameters = new { Datetoday = dDate, Shifts = shifts, Department_ID = depid };
-            var IsRecord = await SqlDataAccess.GetData<P1SA_AttendanceModel>(strquery, parameters);
+            var IsRecord = await SqlDataAccess.GetData<P1SA_AttendanceModel>(strquery, 
+                new { 
+                    Datetoday = dDate, 
+                    Shifts = shifts, 
+                    Department_ID = depid 
+                });
 
             bool hasRecords = IsRecord.Any();
             return new ApiResponse<P1SA_AttendanceModel>

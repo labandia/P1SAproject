@@ -460,7 +460,16 @@
 
 
 
-<script type="text/javascript">
+
+<script type="module">
+    import { initInventoryPage }
+    from '@Url.Content("~/Scripts/systems/Inventory.js?v=1")';
+
+    initInventoryPage();
+</script>
+
+
+@*<script type="text/javascript">
     let IsRestrictRole;
     let Inventlist = [];
     let loadData = [];
@@ -481,7 +490,7 @@
     const InventoryTable = async () => {
         $("#Countlist").text("0");
         $("#lowStockItems").text("0");
-        $("#outOfStockItems").text("0"); 
+        $("#outOfStockItems").text("0");
 
         loadingDisplay();
 
@@ -568,7 +577,7 @@
 
 
                 if (ActionRestrict() === false) {
-                   
+
                 }
 
 
@@ -582,7 +591,7 @@
                     : `<button id="decrement" class="btn btn-decrement" onclick="decrementPart('${row.StockID}', ${row.CurrentQty}, ${row.ReorderLevel}, '${row.Unit}')"><i class="fa-solid fa-minus"></i></button>`;
 
 
-               
+
 
                    const rowHtml = `
                                      <tr data-id="${row.PartID}" data-category="${row.CategoryID}" class='rowClick' id='editButton_${row.PartID}'>
@@ -695,7 +704,7 @@
 
 
                 const previewContainer = document.getElementById('EditpreviewContainer');
-               
+
                 if (filterdata.ImageParts !== null) {
                     previewContainer.style.display = 'block';
                     // ✅ Update the preview image
@@ -1127,13 +1136,13 @@
         formData.append('Required', parseInt(Required));
 
         const data = Object.fromEntries(formData);
-     
+
 
         let result = await postMethod('@Url.Action("AddOneStocksQuantity", "Hydro")', data, {
             responseType: "json",
             throwOnError: true
         });
-      
+
         if (result && result.Success) {
             Inventlist = result.data;
 
@@ -1320,7 +1329,7 @@
                     backgroundColor: "rgb(230,230,230)",
                     color: "rgb(172,172,172)"
                 });
-               
+
             }
 
             const [invent, drop] = await Promise.all([
@@ -1346,4 +1355,4 @@
         $('#StockStatusID').on('change', applyFilters);
 
     });
-</script>
+</script>*@

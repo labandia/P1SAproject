@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using SeriesCollection = LiveCharts.SeriesCollection;
 using Axis = LiveCharts.Wpf.Axis;
+using NCR_system.View.Details;
 
 namespace NCR_system.View.Module    
 {
@@ -28,7 +29,7 @@ namespace NCR_system.View.Module
 
         public DataGridView Customgrid => CustomDatagrid;
         public List<CustomerModel> cuslist { get; private set; } = new List<CustomerModel>();
-
+        private readonly Dictionary<string, Label> _departmentLabels;
 
         public Customer_Complaint_user(ICustomerComplaint cust)
         {
@@ -40,15 +41,18 @@ namespace NCR_system.View.Module
             sectionfilter.SelectedIndex = 0;
             SelectedProcess.SelectedIndex = 0;
 
+            _departmentLabels = new Dictionary<string, Label>(StringComparer.OrdinalIgnoreCase)
+            {
+                { "Molding", moldval },
+                { "Press", Pressval },
+                { "Rotor", Rotorval },
+                { "Winding", windingval },
+                { "Circuit", Circuitval }
+            };
+
             EnableDoubleBuffering();
 
             _isInitializing = false;
-        }
-
-        private void Customer_Complaint_user_Load(object sender, EventArgs e)
-        {
-          
-
         }
 
         // =========================================================
@@ -85,9 +89,13 @@ namespace NCR_system.View.Module
             CustomDatagrid.Columns["RecordID"].Visible = false;
             CustomDatagrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
+            bool isCCTypeVisible = proc == 0;
 
-            if (proc == 0)
+            SwitchButton(proc); 
+
+            if (isCCTypeVisible)
             {
+                // EXTERNAL CUSTOMER COMPLAINTS 
                 CustomDatagrid.Columns["CustomerName"].Visible = true;
                 CustomDatagrid.Columns["CCtype"].Visible = false;
 
@@ -106,18 +114,11 @@ namespace NCR_system.View.Module
                 Setup("Delete", 100, 9);
 
 
-                OpenCC.Enabled = false;
-                OpenCC.BackColor = Color.FromArgb(230, 230, 230);
-                OpenCC.ForeColor = Color.FromArgb(194, 194, 194);
-                OpenCC.FlatAppearance.BorderColor = Color.FromArgb(172, 172, 172);
-
-                Externalbtn.Enabled = true;
-                Externalbtn.BackColor = Color.FromArgb(95, 34, 200);
-                Externalbtn.ForeColor = Color.FromArgb(255, 255, 255);
+                
             }
             else
             {
-
+                // SDC CUSTOMER COMPLAINTS 
                 CustomDatagrid.Columns["RegNo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
                 CustomDatagrid.Columns["RegNo"].Width = 150;
                 CustomDatagrid.Columns["RegNo"].Visible = false;
@@ -162,15 +163,9 @@ namespace NCR_system.View.Module
                 CustomDatagrid.Columns["Delete"].DisplayIndex = 8;
 
 
+              
 
-                Externalbtn.Enabled = false;
-                Externalbtn.BackColor = Color.FromArgb(230, 230, 230);
-                Externalbtn.ForeColor = Color.FromArgb(194, 194, 194);
-                Externalbtn.FlatAppearance.BorderColor = Color.FromArgb(172, 172, 172);
 
-                OpenCC.Enabled = true;
-                OpenCC.BackColor = Color.FromArgb(95, 34, 200);
-                OpenCC.ForeColor = Color.FromArgb(255, 255, 255);
 
             }
 
@@ -206,6 +201,7 @@ namespace NCR_system.View.Module
                 CustomDatagrid.DataSource = CusList;
 
                 UpdateBarChart(pieData);
+                DisplaySectionStats(pieData);
                 //DisplayPieChart(pieData);
 
             }
@@ -342,9 +338,11 @@ namespace NCR_system.View.Module
             if (e.RowIndex < 0)
                 return;
 
+            var item = (CustomerModel)CustomDatagrid.Rows[e.RowIndex].DataBoundItem;
+
             var column = CustomDatagrid.Columns[e.ColumnIndex];
 
-            var row = CustomDatagrid.Rows[e.RowIndex];
+            var row = CustomDatagrid.Rows[e.RowIndex];  
 
             var recordID = row.Cells["RecordID"].Value;
             var type = row.Cells["CCtype"].Value;   
@@ -379,18 +377,57 @@ namespace NCR_system.View.Module
                                 ? 0
                                 : SelectedProcess.SelectedIndex;
             await DisplayCustomer(selectproc);
+            SwitchButton(selectproc);
         }
 
-        public void resetDisplayText()
+        
+        public void SwitchButton(int proc)
+        {
+            bool isCCTypeVisible = proc == 0;
+
+            OpenCC.Enabled = isCCTypeVisible == true ? false : true;
+            OpenCC.BackColor = isCCTypeVisible ? Color.FromArgb(30, 36, 62) : Color.FromArgb(51, 153, 255);
+            OpenCC.ForeColor = isCCTypeVisible ? Color.FromArgb(222, 222, 222) : Color.FromArgb(255, 255, 255);
+            OpenCC.FlatAppearance.BorderColor = isCCTypeVisible ? Color.FromArgb(30, 36, 62) : Color.FromArgb(51, 153, 255);
+            OpenCC.Cursor = isCCTypeVisible == false ? Cursors.Hand : Cursors.Default;
+
+
+            Externalbtn.Enabled = isCCTypeVisible;
+            Externalbtn.BackColor = isCCTypeVisible  ? Color.FromArgb(51, 153, 255) : Color.FromArgb(30, 36, 62);
+            Externalbtn.ForeColor = isCCTypeVisible ? Color.FromArgb(255, 255, 255) : Color.FromArgb(222, 222, 222);
+            Externalbtn.FlatAppearance.BorderColor = isCCTypeVisible ? Color.FromArgb(51, 153, 255) : Color.FromArgb(30, 36, 62);
+            Externalbtn.Cursor = isCCTypeVisible  ? Cursors.Hand : Cursors.Default;
+
+        }
+
+        public void DisplaySectionStats(List<CustomerTotalModel> cc)
         {
             moldval.Text = "0";
             Pressval.Text = "0";
             Rotorval.Text = "0";
             windingval.Text = "0";
             Circuitval.Text = "0";
+            if (cc == null || cc.Count == 0)
+                return;
+            if (_departmentLabels == null)
+                return;
+
+            foreach (var d in cc)
+            {
+                if (d == null)
+                    continue;
+
+                if (string.IsNullOrWhiteSpace(d.DepartmentName))
+                    continue;
+
+                if (_departmentLabels.TryGetValue(d.DepartmentName, out var label) && label != null)
+                {
+                    label.Text = d.totalOpen.ToString();
+                }
+            }
         }
 
-   
+
 
         public void DisplayLabelText(string depart, int count)
         {
@@ -414,6 +451,27 @@ namespace NCR_system.View.Module
             }
         }
 
-      
+        private void CustomDatagrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // Ignore header double-click
+            if (e.RowIndex < 0)
+                return;
+
+            var row = CustomDatagrid.Rows[e.RowIndex];
+
+            // Optional: select full row
+            CustomDatagrid.ClearSelection();
+            row.Selected = true;
+
+            // If you're using DataBoundItem (recommended)
+            var item = row.DataBoundItem as CustomerModel;
+            if (item == null) return;
+
+
+            using (var details = new CustomerDetails(item))
+            {
+                details.ShowDialog(this);
+            }
+        }
     }
 }

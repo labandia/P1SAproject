@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using NCR_system.Interface;
 using NCR_system.Models;
@@ -21,6 +22,9 @@ namespace NCR_system.View.AddForms
             InitializeComponent();
             _cus = cus;
             _user = user;
+
+            selectDepart.SelectedIndex = 0;
+            DisplayPlaceholder();
         }
 
         private async void Save_btn_Click(object sender, EventArgs e)
@@ -33,7 +37,7 @@ namespace NCR_system.View.AddForms
             {
                 ModelNo = ModelText.Text,
                 LotNo = LotText.Text,
-                NGQty = (int)NGText.Value,
+                NGQty = Convert.ToInt32(NGText.Text),
                 Status = 1,
                 Details = ProblemText.Text,
                 SectionID = selectDepart.SelectedIndex + 1,
@@ -97,6 +101,83 @@ namespace NCR_system.View.AddForms
                 pictureBox1.Image = Image.FromFile(selectedImagepath);
                 pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             }
+        }
+
+        private void templatebtn_Click(object sender, EventArgs e)
+        {
+            UploadServices.DownloadFiles(1);    
+        }
+
+        private void Uploadbtn_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void NGText_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Allow control keys (like backspace)
+            if (!char.IsControl(e.KeyChar))
+            {
+                // Allow only one dot and digits
+                if (char.IsDigit(e.KeyChar) || (e.KeyChar == '.' && !NGText.Text.Contains(".")))
+                {
+                    e.Handled = false; // Allow the character
+                }
+                else
+                {
+                    e.Handled = true; // Cancel the keypress event
+                }
+            }
+        }
+
+        private void selectDepart_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            MessageBox.Show($"Selected Department: {selectDepart.SelectedIndex}");
+        }
+
+
+        public void DisplayPlaceholder()
+        {
+            ModelText.Text = "Enter Model No.";
+            ModelText.ForeColor = Color.Gray;
+
+            LotText.Text = "Enter Lot No...";
+            LotText.ForeColor = Color.Gray;
+
+            NGText.Text = "Enter Amount of NG Quantity...";
+            NGText.ForeColor = Color.Gray;
+
+            ProblemText.Text = "Enter Contents...";
+            ProblemText.ForeColor = Color.Gray;
+        }
+
+        private void ModelText_Click(object sender, EventArgs e)
+        {
+            ModelText.Text = "";
+            ModelText.ForeColor = Color.Black;
+        }
+
+        private void LotText_Click(object sender, EventArgs e)
+        {
+            LotText.Text = "";
+            LotText.ForeColor = Color.Black;
+        }
+
+        private void NGText_Click(object sender, EventArgs e)
+        {
+            NGText.Text = "";
+            NGText.ForeColor = Color.Black;
+        }
+
+        private void ProblemText_Click(object sender, EventArgs e)
+        {
+            ProblemText.Text = "";
+            ProblemText.ForeColor = Color.Black;
         }
     }
 }

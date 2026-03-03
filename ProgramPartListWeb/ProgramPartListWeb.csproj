@@ -866,6 +866,13 @@
     <Content Include="Scripts\modernizr-2.8.3.min.js">
       <DependentUpon>modernizr-2.8.3.js</DependentUpon>
     </Content>
+    <Content Include="Scripts\Modules\auth.js" />
+    <Content Include="Scripts\Modules\config.js" />
+    <Content Include="Scripts\Modules\http.js" />
+    <Content Include="Scripts\Modules\index.js" />
+    <Content Include="Scripts\Modules\lazyImage.js" />
+    <Content Include="Scripts\Modules\Main.js" />
+    <Content Include="Scripts\Modules\utils.js" />
     <Content Include="Scripts\Popper.min.js" />
     <Content Include="Content\font-awesome\js\fontawesome.js" />
     <Content Include="Scripts\fontawesome.min.js" />
@@ -1019,6 +1026,7 @@
     </Content>
     <Content Include="Scripts\signature_pad.umd.min.js" />
     <Content Include="Scripts\sweetalert2.min.js" />
+    <Content Include="Scripts\Systems\Inventory.js" />
     <Content Include="Scripts\xlsx.full.min.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

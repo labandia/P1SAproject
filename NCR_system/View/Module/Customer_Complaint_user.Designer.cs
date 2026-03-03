@@ -134,7 +134,7 @@
             dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.CustomDatagrid.DefaultCellStyle = dataGridViewCellStyle8;
-            this.CustomDatagrid.Location = new System.Drawing.Point(36, 361);
+            this.CustomDatagrid.Location = new System.Drawing.Point(36, 372);
             this.CustomDatagrid.Name = "CustomDatagrid";
             this.CustomDatagrid.ReadOnly = true;
             dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -148,9 +148,10 @@
             this.CustomDatagrid.RowHeadersVisible = false;
             this.CustomDatagrid.RowTemplate.Height = 30;
             this.CustomDatagrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.CustomDatagrid.Size = new System.Drawing.Size(1275, 395);
+            this.CustomDatagrid.Size = new System.Drawing.Size(1275, 384);
             this.CustomDatagrid.TabIndex = 4;
             this.CustomDatagrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.CustomDatagrid_CellClick);
+            this.CustomDatagrid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.CustomDatagrid_CellDoubleClick);
             this.CustomDatagrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.CustomDatagrid_CellFormatting);
             // 
             // RecordID
@@ -271,11 +272,11 @@
             this.OpenCC.FlatAppearance.MouseDownBackColor = System.Drawing.SystemColors.MenuHighlight;
             this.OpenCC.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.MenuHighlight;
             this.OpenCC.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.OpenCC.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.OpenCC.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.OpenCC.ForeColor = System.Drawing.Color.White;
-            this.OpenCC.Location = new System.Drawing.Point(1160, 296);
+            this.OpenCC.Location = new System.Drawing.Point(1147, 289);
             this.OpenCC.Name = "OpenCC";
-            this.OpenCC.Size = new System.Drawing.Size(136, 32);
+            this.OpenCC.Size = new System.Drawing.Size(149, 43);
             this.OpenCC.TabIndex = 6;
             this.OpenCC.Text = "Add SDC";
             this.OpenCC.UseVisualStyleBackColor = false;
@@ -301,16 +302,16 @@
             // Externalbtn
             // 
             this.Externalbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.Externalbtn.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.Externalbtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(153)))), ((int)(((byte)(255)))));
             this.Externalbtn.FlatAppearance.BorderColor = System.Drawing.SystemColors.MenuHighlight;
             this.Externalbtn.FlatAppearance.MouseDownBackColor = System.Drawing.SystemColors.MenuHighlight;
             this.Externalbtn.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.MenuHighlight;
             this.Externalbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Externalbtn.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold);
+            this.Externalbtn.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Externalbtn.ForeColor = System.Drawing.Color.White;
-            this.Externalbtn.Location = new System.Drawing.Point(1007, 296);
+            this.Externalbtn.Location = new System.Drawing.Point(974, 289);
             this.Externalbtn.Name = "Externalbtn";
-            this.Externalbtn.Size = new System.Drawing.Size(147, 32);
+            this.Externalbtn.Size = new System.Drawing.Size(157, 43);
             this.Externalbtn.TabIndex = 8;
             this.Externalbtn.Text = "Add External";
             this.Externalbtn.UseVisualStyleBackColor = false;
@@ -362,44 +363,44 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.SystemColors.Control;
             this.label3.Location = new System.Drawing.Point(37, 285);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(48, 15);
+            this.label3.Size = new System.Drawing.Size(51, 16);
             this.label3.TabIndex = 22;
             this.label3.Text = "Search ";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.SystemColors.Control;
             this.label5.Location = new System.Drawing.Point(208, 285);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(97, 15);
+            this.label5.Size = new System.Drawing.Size(98, 16);
             this.label5.TabIndex = 23;
             this.label5.Text = "Filter by Section";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.ForeColor = System.Drawing.SystemColors.Control;
             this.label7.Location = new System.Drawing.Point(349, 285);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(55, 15);
+            this.label7.Size = new System.Drawing.Size(55, 16);
             this.label7.TabIndex = 24;
             this.label7.Text = "Filter by ";
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label9.ForeColor = System.Drawing.SystemColors.Control;
             this.label9.Location = new System.Drawing.Point(535, 285);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(119, 15);
+            this.label9.Size = new System.Drawing.Size(127, 16);
             this.label9.TabIndex = 25;
             this.label9.Text = "Filter by Open/Close";
             // 
@@ -505,7 +506,7 @@
             this.Circuitval.AutoSize = true;
             this.Circuitval.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Circuitval.ForeColor = System.Drawing.SystemColors.ControlLight;
-            this.Circuitval.Location = new System.Drawing.Point(47, 196);
+            this.Circuitval.Location = new System.Drawing.Point(47, 190);
             this.Circuitval.Name = "Circuitval";
             this.Circuitval.Size = new System.Drawing.Size(19, 21);
             this.Circuitval.TabIndex = 49;
@@ -516,7 +517,7 @@
             this.windingval.AutoSize = true;
             this.windingval.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.windingval.ForeColor = System.Drawing.SystemColors.ControlLight;
-            this.windingval.Location = new System.Drawing.Point(122, 131);
+            this.windingval.Location = new System.Drawing.Point(122, 126);
             this.windingval.Name = "windingval";
             this.windingval.Size = new System.Drawing.Size(19, 21);
             this.windingval.TabIndex = 48;
@@ -527,7 +528,7 @@
             this.Rotorval.AutoSize = true;
             this.Rotorval.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Rotorval.ForeColor = System.Drawing.SystemColors.ControlLight;
-            this.Rotorval.Location = new System.Drawing.Point(47, 132);
+            this.Rotorval.Location = new System.Drawing.Point(47, 126);
             this.Rotorval.Name = "Rotorval";
             this.Rotorval.Size = new System.Drawing.Size(19, 21);
             this.Rotorval.TabIndex = 47;
@@ -538,7 +539,7 @@
             this.Pressval.AutoSize = true;
             this.Pressval.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Pressval.ForeColor = System.Drawing.SystemColors.ControlLight;
-            this.Pressval.Location = new System.Drawing.Point(122, 65);
+            this.Pressval.Location = new System.Drawing.Point(122, 61);
             this.Pressval.Name = "Pressval";
             this.Pressval.Size = new System.Drawing.Size(19, 21);
             this.Pressval.TabIndex = 46;
@@ -549,7 +550,7 @@
             this.moldval.AutoSize = true;
             this.moldval.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.moldval.ForeColor = System.Drawing.SystemColors.ControlLight;
-            this.moldval.Location = new System.Drawing.Point(47, 67);
+            this.moldval.Location = new System.Drawing.Point(47, 61);
             this.moldval.Name = "moldval";
             this.moldval.Size = new System.Drawing.Size(19, 21);
             this.moldval.TabIndex = 45;
@@ -558,22 +559,22 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label11.ForeColor = System.Drawing.SystemColors.ControlLight;
-            this.label11.Location = new System.Drawing.Point(20, 176);
+            this.label11.Location = new System.Drawing.Point(20, 167);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(43, 15);
+            this.label11.Size = new System.Drawing.Size(44, 16);
             this.label11.TabIndex = 44;
             this.label11.Text = "Circuit";
             // 
             // MoldLabel
             // 
             this.MoldLabel.AutoSize = true;
-            this.MoldLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MoldLabel.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.MoldLabel.ForeColor = System.Drawing.SystemColors.ControlLight;
-            this.MoldLabel.Location = new System.Drawing.Point(20, 41);
+            this.MoldLabel.Location = new System.Drawing.Point(20, 32);
             this.MoldLabel.Name = "MoldLabel";
-            this.MoldLabel.Size = new System.Drawing.Size(52, 15);
+            this.MoldLabel.Size = new System.Drawing.Size(55, 16);
             this.MoldLabel.TabIndex = 36;
             this.MoldLabel.Text = "Molding";
             // 
@@ -581,7 +582,7 @@
             // 
             this.button5.BackColor = System.Drawing.Color.Aqua;
             this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button5.Location = new System.Drawing.Point(23, 201);
+            this.button5.Location = new System.Drawing.Point(23, 195);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(15, 13);
             this.button5.TabIndex = 43;
@@ -591,7 +592,7 @@
             // 
             this.button1.BackColor = System.Drawing.Color.DodgerBlue;
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button1.Location = new System.Drawing.Point(23, 71);
+            this.button1.Location = new System.Drawing.Point(23, 65);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(15, 13);
             this.button1.TabIndex = 35;
@@ -600,11 +601,11 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label12.ForeColor = System.Drawing.SystemColors.ControlLight;
-            this.label12.Location = new System.Drawing.Point(95, 110);
+            this.label12.Location = new System.Drawing.Point(95, 101);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(53, 15);
+            this.label12.Size = new System.Drawing.Size(54, 16);
             this.label12.TabIndex = 42;
             this.label12.Text = "Winding";
             // 
@@ -612,7 +613,7 @@
             // 
             this.button2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button2.Location = new System.Drawing.Point(98, 73);
+            this.button2.Location = new System.Drawing.Point(98, 67);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(15, 13);
             this.button2.TabIndex = 37;
@@ -622,7 +623,7 @@
             // 
             this.button4.BackColor = System.Drawing.Color.Yellow;
             this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button4.Location = new System.Drawing.Point(98, 137);
+            this.button4.Location = new System.Drawing.Point(98, 131);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(15, 13);
             this.button4.TabIndex = 41;
@@ -631,22 +632,22 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label13.ForeColor = System.Drawing.SystemColors.ControlLight;
-            this.label13.Location = new System.Drawing.Point(95, 41);
+            this.label13.Location = new System.Drawing.Point(95, 32);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(36, 15);
+            this.label13.Size = new System.Drawing.Size(36, 16);
             this.label13.TabIndex = 38;
             this.label13.Text = "Press";
             // 
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label14.ForeColor = System.Drawing.SystemColors.ControlLight;
-            this.label14.Location = new System.Drawing.Point(20, 110);
+            this.label14.Location = new System.Drawing.Point(20, 101);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(39, 15);
+            this.label14.Size = new System.Drawing.Size(37, 16);
             this.label14.TabIndex = 40;
             this.label14.Text = "Rotor";
             // 
@@ -654,7 +655,7 @@
             // 
             this.button3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button3.Location = new System.Drawing.Point(23, 137);
+            this.button3.Location = new System.Drawing.Point(23, 131);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(15, 13);
             this.button3.TabIndex = 39;
@@ -668,7 +669,6 @@
             this.Controls.Add(this.CustomDatagrid);
             this.Name = "Customer_Complaint_user";
             this.Size = new System.Drawing.Size(1352, 786);
-            this.Load += new System.EventHandler(this.Customer_Complaint_user_Load);
             ((System.ComponentModel.ISupportInitialize)(this.CustomDatagrid)).EndInit();
             this.panel7.ResumeLayout(false);
             this.panel7.PerformLayout();

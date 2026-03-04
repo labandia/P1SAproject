@@ -44,11 +44,13 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                 model.Unit
             };
 
-            bool parstResult = await SqlDataAccess.ExecuteAsync(insertPartQuery, partParaers);
+            bool parstResult = await SqlDataAccess.ExecuteAsync(
+                insertPartQuery, partParaers, System.Data.CommandType.Text, "HydroCached");
 
             if (!parstResult) return false;
             
-            result = await SqlDataAccess.ExecuteAsync(insertStockQuery, stockPramers);
+            result = await SqlDataAccess.ExecuteAsync(
+                insertStockQuery, stockPramers, System.Data.CommandType.Text, "HydroCached");
 
             return result;
         }
@@ -68,7 +70,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                 {
                     PartNo = item.PartNo,
                     CurrentQty = item.quantity
-                });
+                }, System.Data.CommandType.Text, "HydroCached");
 
 
                 //// 2️⃣ Auto-allocate to incomplete order details
@@ -149,11 +151,12 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                 TempPart = partno
             };
 
-            bool parstResult = await SqlDataAccess.ExecuteAsync(updateQuery, parameters);
+            bool parstResult = await SqlDataAccess.ExecuteAsync(
+                updateQuery, parameters, System.Data.CommandType.Text, "HydroCached");
 
             if (!parstResult) return false;
 
-            result = await SqlDataAccess.ExecuteAsync(updateStockQuery, stocksparams);
+            result = await SqlDataAccess.ExecuteAsync(updateStockQuery, stocksparams, System.Data.CommandType.Text, "HydroCached");
 
             return result;
         }
@@ -189,27 +192,12 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
         public Task<List<StockPartsModel>> GetInventoryList()
         {
-            string strquery = $@"SELECT
-                                    s.StockID,
-	                                p.PartNo, 
-	                                p.PartName, 
-	                                c.CategoryID,
-	                                p.Unit_Price,
-	                                c.CategoryName,
-	                                p.Supplier,
-	                                p.Unit,
-	                                s.CurrentQty,
-	                                s.ReorderLevel,
-	                                s.WarningLevel,
-	                                s.Status,
-	                                s.LastUpdated,
-                                    p.ImageParts
-                                FROM Hydro_InventoryParts p
-                                LEFT JOIN Hydro_CategoryParts c ON c.CategoryID = p.CategoryID
-                                LEFT JOIN Hydro_Stocks s ON s.PartNo = p.PartNo
-                                ORDER BY s.StockID ASC";
-
-            return SqlDataAccess.GetDataAsync<StockPartsModel>(strquery, null);
+            return SqlDataAccess.GetDataAsync<StockPartsModel>(
+                "HydroInventory", 
+                null, 
+                System.Data.CommandType.StoredProcedure,
+                "HydroCached"
+             );
         }
 
         public Task<bool> IncrementAndDecreaseStocks(int StockID, double CurrentQty, int Required)
@@ -219,7 +207,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                 {
                     CurrentQty = CurrentQty,
                     StockID = StockID,
-                });
+                }, System.Data.CommandType.Text, "HydroCached");
         }
 
         public Task<bool> UpdateStocks(int ID, int Quan)
@@ -230,7 +218,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             return SqlDataAccess.ExecuteAsync(strsql, new { 
                                                     PartID = ID, 
                                                     CurrentQty = Quan 
-                                                });
+                                                }, System.Data.CommandType.Text, "HydroCached");
         }
 
 

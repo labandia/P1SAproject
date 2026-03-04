@@ -17,7 +17,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
             string updatestorage = $@"UPDATE PartsLocatorRotor_Location SET Quantity = Quantity + @Quantity
                                      WHERE Partnumber =@Partnumber AND Area =@Area";
 
-            bool storageResult = await SqlDataAccess.UpdateInsertQuery(updatestorage, new { 
+            bool storageResult = await SqlDataAccess.ExecuteAsync(updatestorage, new { 
                     Quantity = shop.Quantity, 
                     Partnumber = shop.Partnumber, 
                     Area = shop.Area 
@@ -29,7 +29,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                 string strsql = $@"INSERT INTO PartsLocatorRotor_Transaction(TransactionType, Partnumber, RotorOrder, Area, Quantity, PreviousQuantity,  Remarks) 
                               VALUES(0, @Partnumber, @RotorOrder, @Area, @Quantity, @PreviousQuantity,  @Remarks)";
 
-                await SqlDataAccess.UpdateInsertQuery(strsql, shop);
+                await SqlDataAccess.ExecuteAsync(strsql, shop);
             }
 
             return storageResult;
@@ -40,7 +40,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
         public Task<bool> DeleteTransaction(ShopOrderInModel shop)
         {
             string strsql = $@"UPDATE PartsLocatorRotor_Transaction SET IsDelete = 1 WHERE TransactionID =@TransactionID";
-            return SqlDataAccess.UpdateInsertQuery(strsql, new
+            return SqlDataAccess.ExecuteAsync(strsql, new
             {
                 TransactionID = shop.TransactionID
             }); 
@@ -51,10 +51,10 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
         {
             string strsql = $@"UPDATE PartsLocatorRotor_Transaction 
                               SET RotorOrder =@RotorOrder, Quantity =@Quantity, 
-                                Remarks =@Remarks, PreviousQuantity =@PreviousQuantity, 
+                                Remarks =@Remarks, PreviousQuantity =@PreviousQuantity
                               WHERE TransactionID =@TransactionID";
 
-            return SqlDataAccess.UpdateInsertQuery(strsql, new
+            return SqlDataAccess.ExecuteAsync(strsql, new
             {
                 RotorOrder = shop.RotorOrder,
                 Quantity = shop.Quantity,
@@ -101,7 +101,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                           FETCH NEXT @PageSize ROWS ONLY";
 
        
-            var items = await SqlDataAccess.GetData<ShopOrderInModel>(
+            var items = await SqlDataAccess.GetDataAsync<ShopOrderInModel>(
                    strsql,
                    new
                    {

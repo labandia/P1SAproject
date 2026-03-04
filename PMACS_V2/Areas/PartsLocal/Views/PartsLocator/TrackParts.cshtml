@@ -459,20 +459,11 @@
     ];
 
 
-
-
-   
-
     const partlocationStorageList = async () => {
-        let res = await FetchAuthenticate('@Url.Action("GetStorageData", "PartsLocator")', {});
+        let res = await GetMethod('@Url.Action("GetStorageData", "PartsLocator")', {});
+  
         if (res && res.Success) {
-            //let matchData = res.Data.filter(res => res.Partnumber === "01013699-01");
-            //console.log(matchData);
             storageList = res.Data;
-            //storageList = res.Data.map(item => ({
-            //    ...item,
-            //    Area: customAreaMapping(item.Area)
-            //}));
             createGrid();
         }
     };
@@ -841,7 +832,7 @@
     });
 
     async function SearchEmployeeInfo(searchEmp, action) {
-        let res = await FetchAuthenticate('@Url.Action("GetEmployeeInfo", "PartsLocator")', { emp: searchEmp });
+        let res = await GetMethod('@Url.Action("GetEmployeeInfo", "PartsLocator")', { emp: searchEmp });
         if (res && res.Success) {
             console.log(res.Data);
             if (res.Data.length == 0) {
@@ -932,7 +923,7 @@
          formData.append("PreviousQuantity", previousCount);
 
          const data = Object.fromEntries(formData);
-         let res = await postData('@Url.Action("AddShopOrderIn", "PartsLocator")', data);
+         let res = await postMethod('@Url.Action("AddShopOrderIn", "PartsLocator")', data);
 
          if (res?.Success) {
              Swal.fire({
@@ -990,7 +981,7 @@
           formData.append("Area", Arealocation);
           formData.append("PreviousQuantity", previousCount);
 
-          let res = await postData('@Url.Action("AddShopOrderOut", "PartsLocator")', Object.fromEntries(formData));
+          let res = await postMethod('@Url.Action("AddShopOrderOut", "PartsLocator")', Object.fromEntries(formData));
 
           if (res?.Success) {
               Swal.fire({
@@ -1054,7 +1045,7 @@
 
      async function getProductDetails(id) {
 
-         let res = await FetchAuthenticate('@Url.Action("GetProductDetails", "PartsLocator")', { RecordID: id });
+         let res = await GetMethod('@Url.Action("GetProductDetails", "PartsLocator")', { RecordID: id });
          if (res && res.Success) {
              referpartnum = res.Data.Partnumber;
              Arealocation = res.Data.Area;

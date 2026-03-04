@@ -107,7 +107,7 @@ namespace PMACS_V2.Areas.P1SA.Controllers
 
             return JsonSuccess(data);
         }
-        [JwtAuthorize]
+
         public async Task<ActionResult> GetForecastChartList()
         {
             var data = await _cap.GetTotalForecast() ?? new List<TotalForecastModel>();

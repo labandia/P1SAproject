@@ -232,18 +232,18 @@ namespace PMACS_V2.Areas.Planning.Repository
         //----------------- Display the Uploaded data ------------------------
         public Task<List<Planningmodel>> GetPCDataList()
         {
-            return SqlDataAccess.GetData<Planningmodel>("GetPCData");
+            return SqlDataAccess.GetDataAsync<Planningmodel>("GetPCData", null, CommandType.StoredProcedure);
         }
 
-        public Task<List<BranchModel>> GetBranchSummary() => SqlDataAccess.GetData<BranchModel>("BranchDisplay");
+        public Task<List<BranchModel>> GetBranchSummary() => SqlDataAccess.GetDataAsync<BranchModel>("BranchDisplay", null, CommandType.StoredProcedure);
      
         //----------------- Display the EndMonth data ------------------------
-        public Task<List<EndMonthModel>> GetEndMonthlist(string stryear) => SqlDataAccess.GetData<EndMonthModel>("EndMonthQuery", new { EndYear = stryear });
+        public Task<List<EndMonthModel>> GetEndMonthlist(string stryear) => SqlDataAccess.GetDataAsync<EndMonthModel>("EndMonthQuery", new { EndYear = stryear }, CommandType.StoredProcedure);
 
         //------------- GET DATA WHEN THE USERS CLICKS THE ROW DATA ----------------------------
         public  Task<List<ProductsModel>> GetSelectedDetailsSummary(string strdate, int importID)
         {
-            return SqlDataAccess.GetData<ProductsModel>("SelectedDetails", new { Dateslected = strdate, ImportsID = importID });
+            return SqlDataAccess.GetDataAsync<ProductsModel>("SelectedDetails", new { Dateslected = strdate, ImportsID = importID }, CommandType.StoredProcedure);
         }
 
         public Task<List<ProductsModel>> GetSelectedlackDetailsSummary(string strdate, int importID)
@@ -252,17 +252,17 @@ namespace PMACS_V2.Areas.Planning.Repository
                           "FROM M1_Lacking_table " +
                           "WHERE CAST(DateImport AS DATE) = @Dateslected " +
                           $"AND Imports IN ({importID})";
-            return SqlDataAccess.GetData<ProductsModel>(strquery, new { Dateslected = strdate });
+            return SqlDataAccess.GetDataAsync<ProductsModel>(strquery, new { Dateslected = strdate });
         }
 
         public Task<List<ShopOrderResultModel>> GetSelectedShopOrderDetailsSummary(string strdate, int importID)
         {
-            return SqlDataAccess.GetData<ShopOrderResultModel>("SelectedShopOrderDetails", new { Dateslected = strdate, ImportsID = importID });
+            return SqlDataAccess.GetDataAsync<ShopOrderResultModel>("SelectedShopOrderDetails", new { Dateslected = strdate, ImportsID = importID }, CommandType.StoredProcedure);
         }
 
         public Task<List<ShopOrderResultModel>> GetSelectedRequestsDetailsSummary(int colint, int rowint, int yearint)
         {
-            return SqlDataAccess.GetData<ShopOrderResultModel>("SelectedRequestDetails", new { DateUpload = rowint, DateSales = colint });
+            return SqlDataAccess.GetDataAsync<ShopOrderResultModel>("SelectedRequestDetails", new { DateUpload = rowint, DateSales = colint });
         }
 
         //----------------- Partnumber summary tabs when Selecting a row data ------------------------
@@ -283,7 +283,7 @@ namespace PMACS_V2.Areas.Planning.Repository
         {
             var strquery = "SELECT COUNT(DateUpload) FROM M1_Main_table WHERE CAST(DateUpload AS DATE) = @Datenow";
             var parameter = new { Datenow = DateNowString };
-            var count = await SqlDataAccess.GetCountData(strquery, parameter);
+            var count = await SqlDataAccess.ExecuteScalarAsync(strquery, parameter);
             return count;
         }
 
@@ -293,7 +293,7 @@ namespace PMACS_V2.Areas.Planning.Repository
             var strquery = "INSERT INTO M1_Monthly_Table(DateMonth, EndTotalOrders, EndRemainOrders, CurrentTotalOrders, CurrentRemains, EndYear) " +
                           "VALUES (@DateMonth, @EndTotalOrders, @EndRemainOrders, @CurrentTotalOrders, @CurrentRemains, @EndYear)";
 
-            var result = await SqlDataAccess.UpdateInsertQuery(strquery, parameters);
+            var result = await SqlDataAccess.ExecuteAsync(strquery, parameters);
             return result;
         }
 
@@ -304,7 +304,7 @@ namespace PMACS_V2.Areas.Planning.Repository
             var parameter = new { EndTotalOrders = end.EndTotalOrdersEdit, EndRemainOrders = end.EndRemainOrdersEdit, 
                                   CurrentTotalOrders = end.CurrentTotalOrdersEdit, 
                                   CurrentRemains = end.CurrentRemainsEdit, RecordID = end.RecordID };
-            var result = await SqlDataAccess.UpdateInsertQuery(strquery, parameter);
+            var result = await SqlDataAccess.ExecuteAsync(strquery, parameter);
             return result;
         }
 
@@ -317,7 +317,7 @@ namespace PMACS_V2.Areas.Planning.Repository
                                         ELSE 0  
                                     END 
                                 WHERE RecordID =@RecordID";
-            return SqlDataAccess.UpdateInsertQuery(strquery, new { RecordID = ID });    
+            return SqlDataAccess.ExecuteAsync(strquery, new { RecordID = ID });    
         }
 
         //------------- OTHER FUNCTION CONNECTED ----------------------------
@@ -362,13 +362,13 @@ namespace PMACS_V2.Areas.Planning.Repository
             }
 
             var strquery = $"SELECT COALESCE(MAX(Imports), 0) FROM M1_Lacking_table {Condition}";
-            var count = await SqlDataAccess.GetCountData(strquery, paramsObj);
+            var count = await SqlDataAccess.ExecuteScalarAsync(strquery, paramsObj);
             return count;
         }
 
         public async Task<bool> CheckEndMonthExist(string strdate)
         {
-            var checkram = await SqlDataAccess.Checkdata(
+            var checkram = await SqlDataAccess.CheckDataAsync(
                 "SELECT ISNULL(COUNT(DateMonth), 0) FROM M1_Monthly_Table WHERE DateMonth = @DateMonth",
                 new { DateMonth = strdate });
             return checkram;
@@ -378,13 +378,13 @@ namespace PMACS_V2.Areas.Planning.Repository
         {
             var strquery = "GetproductSummary";
             var parameter = new { SelectDate = strdate };
-            var result = await SqlDataAccess.GetData<ProductsModel>(strquery, parameter);
+            var result = await SqlDataAccess.GetDataAsync<ProductsModel>(strquery, parameter);
             return result;
         }
 
         public async Task Insertproduct(ProductsModel prod, int count)
         {
-            var checkram = await SqlDataAccess.Checkdata(
+            var checkram = await SqlDataAccess.CheckDataAsync(
                 "SELECT ISNULL(COUNT(Partnum), 0) FROM M1_Lacking_table WHERE Partnum = @Partnum",
                 new { Partnum = prod.Partnumber });
 
@@ -401,7 +401,7 @@ namespace PMACS_V2.Areas.Planning.Repository
                     Imports = count,
                     Addition = 1
                 };
-                await SqlDataAccess.UpdateInsertQuery(strquery, insertquery);
+                await SqlDataAccess.ExecuteAsync(strquery, insertquery);
             }
             else
             {
@@ -417,7 +417,7 @@ namespace PMACS_V2.Areas.Planning.Repository
                     Imports = count2,
                     Addition = 0
                 };
-                await SqlDataAccess.UpdateInsertQuery(strquery, insertquery);
+                await SqlDataAccess.ExecuteAsync(strquery, insertquery);
             }
         }
 
@@ -490,7 +490,7 @@ namespace PMACS_V2.Areas.Planning.Repository
                         Judgement = item.Judgement
                     };
 
-                    await SqlDataAccess.UpdateInsertQuery(strlacktable, lacktableparam);
+                    await SqlDataAccess.ExecuteAsync(strlacktable, lacktableparam);
                     await Task.Delay(500);
                 }
             }
@@ -553,7 +553,7 @@ namespace PMACS_V2.Areas.Planning.Repository
                         Imports = intimports
                     };
 
-                    await SqlDataAccess.UpdateInsertQuery(strlacksummary, lackparam);
+                    await SqlDataAccess.ExecuteAsync(strlacksummary, lackparam);
 
                     foreach (var item in groupedData)
                     {
@@ -568,7 +568,7 @@ namespace PMACS_V2.Areas.Planning.Repository
                             Imports = intimports
                         };
                         //Debug.WriteLine($"No.  Date Import : {formattedDate}, Partnumber : {item.Partnumber} - Part name : {item.Partsname}, Imports : {intimports}");
-                        await SqlDataAccess.UpdateInsertQuery(strlacktable, lacktableparam);
+                        await SqlDataAccess.ExecuteAsync(strlacktable, lacktableparam);
                     }
                     // ===========================================================
                     // ==================== SHOP ORDER DATA  =====================
@@ -602,7 +602,7 @@ namespace PMACS_V2.Areas.Planning.Repository
                         Imports = intimports
                     };
 
-                    await SqlDataAccess.UpdateInsertQuery(strordersum, orderparam);
+                    await SqlDataAccess.ExecuteAsync(strordersum, orderparam);
 
                     foreach (var item in groupedSalesData)
                     {
@@ -624,7 +624,7 @@ namespace PMACS_V2.Areas.Planning.Repository
                         Debug.WriteLine(orderTableparam);
 
                         //Debug.WriteLine($"Date Import : {item.Branches}, SDP_Sales_Numbers: {item.SDP_Sales_Number}, SDP_Sales_Numbers: {item.SDP_Sales_Partnum}");
-                        await SqlDataAccess.UpdateInsertQuery(strorderTable, orderTableparam);
+                        await SqlDataAccess.ExecuteAsync(strorderTable, orderTableparam);
                     }
 
 
@@ -676,7 +676,7 @@ namespace PMACS_V2.Areas.Planning.Repository
                     MonthUpload = Convert.ToInt32(UploadParts[0])
                 };
 
-                int CurrentCount = await SqlDataAccess.GetCountData(strquery, paramsObj);
+                int CurrentCount = await SqlDataAccess.ExecuteScalarAsync(strquery, paramsObj);
                 //Debug.WriteLine("COUNT : " + CurrentCount);
                 if (CurrentCount == 0)
                 {
@@ -693,7 +693,7 @@ namespace PMACS_V2.Areas.Planning.Repository
                         TodayYearupload = todayear
                     };
 
-                    await SqlDataAccess.UpdateInsertQuery(insertquery, insertObj);
+                    await SqlDataAccess.ExecuteAsync(insertquery, insertObj);
                 }
                 else
                 {
@@ -711,7 +711,7 @@ namespace PMACS_V2.Areas.Planning.Repository
                         MonthUpload = Convert.ToInt32(UploadParts[0])
                     };
 
-                    await SqlDataAccess.UpdateInsertQuery(insertquery, insertObj);
+                    await SqlDataAccess.ExecuteAsync(insertquery, insertObj);
                 }
 
 
@@ -733,7 +733,7 @@ namespace PMACS_V2.Areas.Planning.Repository
                     DateYear = Fullyear
                 };
 
-                await SqlDataAccess.UpdateInsertQuery(strorderTable, orderTableparam);
+                await SqlDataAccess.ExecuteAsync(strorderTable, orderTableparam);
             }
 
 
@@ -854,7 +854,7 @@ namespace PMACS_V2.Areas.Planning.Repository
                     var strquery = "SELECT RecordID FROM M1_Monthly_Table WHERE DateMonth = @DateMonth AND EndYear = @EndYear";
                     var parameter = new { DateMonth = GlobalUtilities.MonthString(item.MonthUpload), EndYear = item.DateYearupload };
 
-                    var check = await SqlDataAccess.Checkdata(strquery, parameter);
+                    var check = await SqlDataAccess.CheckDataAsync(strquery, parameter);
                     if (check)
                     {
                         var strupdate = "UPDATE M1_Monthly_Table SET CurrentRemains = @CurrentRemains " +
@@ -865,7 +865,7 @@ namespace PMACS_V2.Areas.Planning.Repository
                             EndYear = item.DateYearupload,
                             CurrentRemains = item.TotalOrderCount
                         };
-                        await SqlDataAccess.UpdateInsertQuery(strupdate, strupdateparams);
+                        await SqlDataAccess.ExecuteAsync(strupdate, strupdateparams);
                     }
                     else
                     {
@@ -877,7 +877,7 @@ namespace PMACS_V2.Areas.Planning.Repository
                             CurrentRemains = item.TotalOrderCount,
                             EndYear = item.DateYearupload
                         };
-                        await SqlDataAccess.UpdateInsertQuery(strupdate, strupdateparams);
+                        await SqlDataAccess.ExecuteAsync(strupdate, strupdateparams);
                     }
                 }
 
@@ -914,13 +914,13 @@ namespace PMACS_V2.Areas.Planning.Repository
             var strDeleteMainTable = "DELETE FROM M1_Main_table";
 
             await Task.WhenAll(
-                SqlDataAccess.UpdateInsertQuery(strDeleteLackTable, null),
-                SqlDataAccess.UpdateInsertQuery(strDeleteLackSummary, null),
-                SqlDataAccess.UpdateInsertQuery(strDeleteRequestTable, null),
-                SqlDataAccess.UpdateInsertQuery(strDeleteDailyTable, null),
-                SqlDataAccess.UpdateInsertQuery(strDeleteDailySummary, null),
-                SqlDataAccess.UpdateInsertQuery(strDeleteMainTable, null),
-                SqlDataAccess.UpdateInsertQuery(strDeleteRequestSummary, null)
+                SqlDataAccess.ExecuteAsync(strDeleteLackTable, null),
+                SqlDataAccess.ExecuteAsync(strDeleteLackSummary, null),
+                SqlDataAccess.ExecuteAsync(strDeleteRequestTable, null),
+                SqlDataAccess.ExecuteAsync(strDeleteDailyTable, null),
+                SqlDataAccess.ExecuteAsync(strDeleteDailySummary, null),
+                SqlDataAccess.ExecuteAsync(strDeleteMainTable, null),
+                SqlDataAccess.ExecuteAsync  (strDeleteRequestSummary, null)
             );
         }
 
@@ -930,7 +930,7 @@ namespace PMACS_V2.Areas.Planning.Repository
                        "FORMAT(MAX(DateUpload), 'yyyy-MM-dd') as LastDate " +
                        "FROM M1_Main_table";
 
-            return await SqlDataAccess.GetData<DateModel>(query);
+            return await SqlDataAccess.GetDataAsync<DateModel>(query);
         }
 
         private DateTime SafeDate(object value)
@@ -956,7 +956,7 @@ namespace PMACS_V2.Areas.Planning.Repository
                            "ORDER BY MonthUpload";
 
 
-            return await SqlDataAccess.GetData<MonthlySales>(strquery);
+            return await SqlDataAccess.GetDataAsync<MonthlySales>(strquery);
         }
 
 

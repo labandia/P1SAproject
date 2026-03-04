@@ -10,7 +10,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
     {
         public Task<List<ManpowerModel>> GetManpower()
         {
-            return SqlDataAccess.GetData<ManpowerModel>("Manpowerlist");
+            return SqlDataAccess.GetDataAsync<ManpowerModel>("Manpowerlist", null, System.Data.CommandType.StoredProcedure);
         }
         public Task<List<TotalManpowerSection>> GetTotalManpower(string month)
         {
@@ -30,30 +30,30 @@ namespace PMACS_V2.Areas.P1SA.Repository
                                                 "FROM ActualMan " +
                                                 "LEFT JOIN Manrequire ON Manrequire.DepartmentID = ActualMan.DepartmentID " +
                                                 "ORDER BY ActualMan.DepartmentID";
-            return SqlDataAccess.GetData<TotalManpowerSection>(strquery);
+            return SqlDataAccess.GetDataAsync<TotalManpowerSection>(strquery);
         }
         public Task<bool> EditManpowerList(object parameters)
         {
             string strquery = "UPDATE Totalmanpower SET  Required =@Required WHERE Section_ID = @Section_ID";
-            return SqlDataAccess.UpdateInsertQuery(strquery, parameters);
+            return SqlDataAccess.ExecuteAsync(strquery, parameters);
         }
         public Task<bool> EditRequireManpower(object parameters)
         {
             string strquery = $@"UPDATE PMACS_ProdManpower SET  SDP = @SDP, SubCon = @SubCon, 
                             Remarks = @Remarks  WHERE Manpower_ID = @Manpower_ID";
-            return SqlDataAccess.UpdateInsertQuery(strquery, parameters);
+            return SqlDataAccess.ExecuteAsync(strquery, parameters);
         }
 
         public Task<List<UserAccount>> GetUserFullname()
         {
             string strquery = "SELECT Fullname FROM Useraccount_tbl";
-            return  SqlDataAccess.GetData<UserAccount>(strquery, null, "username");
+            return  SqlDataAccess.GetDataAsync<UserAccount>(strquery, null, System.Data.CommandType.Text, "username");
         }
 
         public Task<List<UpdateStatusModel>> GetUpdatedData()
         {
             string strquery = "SELECT Module, LastUpdated, UpdatedBy FROM PMACS_UpdatedData";
-            return SqlDataAccess.GetData<UpdateStatusModel>(strquery);
+            return SqlDataAccess.GetDataAsync<UpdateStatusModel>(strquery);
         }
     }
 }

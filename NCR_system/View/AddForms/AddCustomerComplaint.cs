@@ -85,11 +85,6 @@ namespace NCR_system.View.AddForms
             return true;
         }
 
-        private void AddCustomerComplaint_Load(object sender, EventArgs e)
-        {
-
-        }
-
         private void AddImagebtn_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
@@ -120,24 +115,9 @@ namespace NCR_system.View.AddForms
 
         private void NGText_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // Allow control keys (like backspace)
-            if (!char.IsControl(e.KeyChar))
-            {
-                // Allow only one dot and digits
-                if (char.IsDigit(e.KeyChar) || (e.KeyChar == '.' && !NGText.Text.Contains(".")))
-                {
-                    e.Handled = false; // Allow the character
-                }
-                else
-                {
-                    e.Handled = true; // Cancel the keypress event
-                }
-            }
-        }
+            if (char.IsControl(e.KeyChar)) return;
 
-        private void selectDepart_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            MessageBox.Show($"Selected Department: {selectDepart.SelectedIndex}");
+            e.Handled = (char.IsDigit(e.KeyChar) || (e.KeyChar == '.' && !NGText.Text.Contains("."))) ? false : true; // Allow the character
         }
 
 

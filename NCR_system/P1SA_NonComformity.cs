@@ -13,9 +13,11 @@ namespace NCR_system
         private Customer_Complaint_user _cc;
         private ShipRejected _ship;
         private Rejected _reg;
+        private Inprocess_control _inp;
 
         private readonly ICustomerComplaint _cust;
         private readonly IShipRejected _shipV;
+        private readonly IInprocess _inps;
 
         // COLORS
         public readonly Color ActiveBg = Color.FromArgb(37, 99, 235);
@@ -24,12 +26,14 @@ namespace NCR_system
 
         public P1SA_NonComformity(
             ICustomerComplaint cust,
-            IShipRejected shipV)
+            IShipRejected shipV,
+            IInprocess inps)
         {
             InitializeComponent();
 
             _cust = cust;
             _shipV = shipV;
+            _inps = inps;
         }
 
 
@@ -58,6 +62,11 @@ namespace NCR_system
         private async void rejectBtn_Click(object sender, EventArgs e)
         {
             await LoadRejected();
+        }
+
+        private async void processbtn_Click(object sender, EventArgs e)
+        {
+            await LoadInprocess();
         }
 
         // ===================== LOAD METHODS =====================
@@ -107,6 +116,21 @@ namespace NCR_system
             await _reg.DisplayRejected(0);
         }
 
+        private async Task LoadInprocess()
+        {
+            SetActiveMenu(processbtn);
+
+            if (_inp == null)
+            {
+                _inp = new Inprocess_control(_inps);
+                _inp.Dock = DockStyle.Fill;
+                Sectionpanel.Controls.Add(_inp);
+            }
+
+            _inp.BringToFront();
+            await _inp.DisplayRejected();
+        }
+
         // ===================== MENU COLOR =====================
 
         private void SetActiveMenu(Button activeButton)
@@ -115,7 +139,8 @@ namespace NCR_system
             {
                 SDCbtn,
                 Shipbtn,
-                rejectBtn
+                rejectBtn,
+                processbtn
             };
 
             foreach (var btn in buttons)
@@ -130,5 +155,12 @@ namespace NCR_system
         {
             Application.Exit();
         }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        
     }
 }

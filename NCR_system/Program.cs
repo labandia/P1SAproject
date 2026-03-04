@@ -34,7 +34,7 @@ namespace NCR_system
             // Forms → Transient
             services.AddTransient<P1SA_NonComformity>();
             services.AddTransient<Mainpage>();
-            services.AddTransient<NonConformity>();
+            //services.AddTransient<NonConformity>();
             services.AddTransient<AddCustomerComplaint>();
             services.AddTransient<AddShipment>();
 

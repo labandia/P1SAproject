@@ -182,18 +182,18 @@
         let nov = 0.0;
         let dec = 0.0;
 
-        let res = await FetchAuthenticate('@Url.Action("GetForecastModelList", "Capacity")', { year: currentDate.getFullYear() });
+        let res = await GetMethod('@Url.Action("GetForecastModelList", "Capacity")', { year: currentDate.getFullYear() });
         if (res && res.Success) {
-            MasterlistPagination(res.Data, 'forecastdata', 'MastertableContainer', 50, 5);
+            MasterlistPagination(res.data, 'forecastdata', 'MastertableContainer', 50, 5);
         }
 
     }
     const GetForecastForChart = async () => {
-        let res = await FetchAuthenticate('@Url.Action("GetForecastChartList", "Capacity")', {});
+        let res = await GetMethod('@Url.Action("GetForecastChartList", "Capacity")', {});
 
-        if (res?.Success && res.Data?.length) {
+        if (res?.Success && res.data?.length) {
 
-            const row = res.Data[0];
+            const row = res.data[0];
 
             const forecastData = MONTH_ORDER.map(month =>
                 Math.round(row[month] ?? 0)

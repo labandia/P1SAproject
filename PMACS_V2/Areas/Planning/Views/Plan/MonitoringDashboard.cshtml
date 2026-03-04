@@ -806,7 +806,7 @@
 
 
     const LoadfirstAndLastDate = async() => {
-        let res = await fetchData('@Url.Action("GetFirstAndLastDateList", "Plan")', {});
+        let res = await GetMethod('@Url.Action("GetFirstAndLastDateList", "Plan")', {});
         if (res.StatusCode === 200) {
             $('#summarystartdate').val(res.Data[0].FirstDate);
             $('#summaryendDate').val(res.Data[0].LastDate);
@@ -824,7 +824,7 @@
         $(".M1loading").show();
         let SeriesData = [];
 
-        let res = await fetchData('@Url.Action("GetPlanningData", "Plan")', {});
+        let res = await GetMethod('@Url.Action("GetPlanningData", "Plan")', {});
 
         if (res.StatusCode == 200) {
             let data = res.Data;
@@ -841,7 +841,7 @@
     const LoadpartnumDetails = async (strDate, impId) =>{
         let SeriesData = [];
 
-        let res = await fetchData('@Url.Action("GetPlanningData", "Plan")', { strdate: strDate, impID: impId });
+        let res = await GetMethod('@Url.Action("GetPlanningData", "Plan")', { strdate: strDate, impID: impId });
         if (res.StatusCode === 200) {
             let data = res.Data;
             var SetData = $("#selectpartnumbody");
@@ -860,7 +860,7 @@
     }
     const LoadLackpartnumDetails = async (strDate, impId) =>{
      let SeriesData = [];
-     let res = await fetchData('@Url.Action("GetLackSelectedPartnumDetails", "Plan")', { strdate: strDate, impID: impId });
+        let res = await GetMethod('@Url.Action("GetLackSelectedPartnumDetails", "Plan")', { strdate: strDate, impID: impId });
      if (res.StatusCode === 200) {
             let data = res.Data;
             var SetData = $("#selectpartnumbody");
@@ -881,7 +881,7 @@
     }
     const LoadShopOrderDetails = async (strDate, impId) => {
      let SeriesData = [];
-     let res = await fetchData('@Url.Action("GetSelectedShopOrderDetails", "Plan")', { strdate: strDate, impID: impId });
+        let res = await GetMethod('@Url.Action("GetSelectedShopOrderDetails", "Plan")', { strdate: strDate, impID: impId });
      if (res.StatusCode === 200) {
             let data = res.Data;
             var SetData = $("#selectshopOrder");
@@ -909,7 +909,7 @@
         const [month, year] = parts.map(Number);
 
         if (columnint !== "Total") {
-             let res = await fetchData('@Url.Action("GetRequestedResultDetails", "Plan")', { monthcol: month, monthrow: rowInt, intyear: year });
+            let res = await GetMethod('@Url.Action("GetRequestedResultDetails", "Plan")', { monthcol: month, monthrow: rowInt, intyear: year });
             if (res.StatusCode === 200) {
                 let data = res.Data;
                 var SetData = $("#selectshopOrder");
@@ -938,7 +938,7 @@
     //M1_Lacking_Summary
     async function LoadLackingSummary(first, last) {
      $('.Lackloading').show();
-     let res = await fetchData('@Url.Action("GetlackingResults", "Plan")', { stardate: first, endDate: last });
+        let res = await GetMethod('@Url.Action("GetlackingResults", "Plan")', { stardate: first, endDate: last });
 
      if (res.StatusCode === 200) {
          $('.Lackloading').hide();
@@ -967,7 +967,7 @@
     //M1_Lacking_table
     async function LoadAdditionalSummary(first, last) {
         $(".Dashloading").show();
-        let res = await fetchData('@Url.Action("GetAdditionalResult", "Plan")', { stardate: first, endDate: last });
+        let res = await GetMethod('@Url.Action("GetAdditionalResult", "Plan")', { stardate: first, endDate: last });
         if (res.StatusCode === 200) {
             $(".Dashloading").hide();
             IsDatasuccess = 1;
@@ -997,7 +997,7 @@
     // M1_DailyOrder_Summary table
     async function LoadShopOrderSummary(first, last) {
          $(".OrderLoading").show();
-         let res = await fetchData('@Url.Action("GetShopOrderResult", "Plan")', { stardate: first, endDate: last });
+        let res = await GetMethod('@Url.Action("GetShopOrderResult", "Plan")', { stardate: first, endDate: last });
 
          if (res.StatusCode === 200) {
              $(".OrderLoading").hide();
@@ -1028,7 +1028,7 @@
     // TAB 2
     async function LoadSummarypartnum(first, last) {
         $(".Partloading").show();
-        let res = await fetchData('@Url.Action("GetSummaryPartnum", "Plan")', { stardate: first, endDate: last });
+        let res = await GetMethod('@Url.Action("GetSummaryPartnum", "Plan")', { stardate: first, endDate: last });
 
         if (res.StatusCode === 200) {
             $(".Partloading").hide();
@@ -1073,7 +1073,7 @@
     async function LoadrequestSummary(first, last) {
         $(".SalesLoading").show();
 
-        let res = await fetchData('@Url.Action("GetRequestResults", "Plan")', { stardate: first, endDate: last });
+        let res = await GetMethod('@Url.Action("GetRequestResults", "Plan")', { stardate: first, endDate: last });
 
         if (res.StatusCode === 200) {
             $(".SalesLoading").hide();
@@ -1113,7 +1113,7 @@
         $(".EndMonthLoading").show();
         let SeriesData = [];
 
-        let res = await fetchData('@Url.Action("GetEndCurrentdata", "Plan")', {});
+        let res = await GetMethod('@Url.Action("GetEndCurrentdata", "Plan")', {});
 
         if (res.StatusCode === 200) {
             $(".EndMonthSummary").show();
@@ -2446,5 +2446,14 @@
         const dd = String(date.getDate()).padStart(2, '0');
         const yyyy = date.getFullYear();
         return `${mm}/${dd}/${yyyy}`;
+    }
+
+    function getRowMonths(month) {
+        var intmonth = parseInt(month, 10);
+        var names = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+        return names[intmonth - 1] || "";
     }
 </script>

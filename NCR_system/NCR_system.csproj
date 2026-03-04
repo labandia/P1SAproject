@@ -28,7 +28,7 @@
     <MinimumRequiredVersion>1.0.0.0</MinimumRequiredVersion>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>24</ApplicationRevision>
+    <ApplicationRevision>26</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -173,12 +173,6 @@
       <DependentUpon>Mainpage.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\NCRModels.cs" />
-    <Compile Include="NonConformity.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="NonConformity.Designer.cs">
-      <DependentUpon>NonConformity.cs</DependentUpon>
-    </Compile>
     <Compile Include="P1SA_NonComformity.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -191,12 +185,6 @@
     <Compile Include="Repository\InprocessRepository.cs" />
     <Compile Include="Repository\NCR_Repository.cs" />
     <Compile Include="Repository\RejectShipRepository.cs" />
-    <Compile Include="SampleUI.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SampleUI.Designer.cs">
-      <DependentUpon>SampleUI.cs</DependentUpon>
-    </Compile>
     <Compile Include="Utilities\CommonMethods.cs" />
     <Compile Include="Utilities\PlaceHolderhelper.cs" />
     <Compile Include="Utilities\UploadServices.cs" />
@@ -323,9 +311,6 @@
     <EmbeddedResource Include="Mainpage.resx">
       <DependentUpon>Mainpage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="NonConformity.resx">
-      <DependentUpon>NonConformity.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="P1SA_NonComformity.resx">
       <DependentUpon>P1SA_NonComformity.cs</DependentUpon>
     </EmbeddedResource>
@@ -338,9 +323,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="SampleUI.resx">
-      <DependentUpon>SampleUI.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="View\AddForms\AddCustomerComplaint.resx">
       <DependentUpon>AddCustomerComplaint.cs</DependentUpon>
     </EmbeddedResource>

@@ -22,12 +22,12 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             // CASE 1: Part number already exists → compute new total
             // ===========================================================
 
-            bool partExists = await SqlDataAccess.Checkdata(
+            bool partExists = await SqlDataAccess.CheckDataAsync(
                        "SELECT 1 FROM DieMold_Daily WHERE PartNo = @PartNo",
                        new { PartNo = mold.PartNo });
 
             // Get last total shot
-            int lasttotal = partExists ? await SqlDataAccess.GetCountData($@"
+            int lasttotal = partExists ? await SqlDataAccess.ExecuteScalarAsync($@"
                     SELECT TOP 1 Total
                     FROM DieMold_Daily
                     WHERE PartNo = @PartNo 
@@ -116,7 +116,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                 FROM DieMold_MoldingMainParts
                 WHERE DieSerial = @searchValue";
 
-            var items = await SqlDataAccess.GetData<DieMoldMonitoringModel>(
+            var items = await SqlDataAccess.GetDataAsync<DieMoldMonitoringModel>(
                 sql, new { SearchValue = partno?.Trim() });
 
             return items.FirstOrDefault();
@@ -193,7 +193,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                     VALUES
                     (@PartNo, @DateInput, @CycleShot, @Total, @MachineNo, @Remarks, @Mincharge, @Status);";
 
-            await SqlDataAccess.UpdateInsertQuery(sql, new
+            await SqlDataAccess.ExecuteAsync(sql, new
             {
                 PartNo = partNo,
                 DateInput = date,
@@ -220,7 +220,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                     VALUES (@PartNo, @DateAction, @TotalDie);
                 END";
 
-            await SqlDataAccess.UpdateInsertQuery(sql, new
+            await SqlDataAccess.ExecuteAsync(sql, new
             {
                 PartNo = partNo,
                 DateAction = date,
@@ -233,7 +233,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
 
         public static async Task<List<string>> GetSamePartsNo(string dieSerial, string processId, string currentPart)
         {
-            return await SqlDataAccess.GetlistStrings(@"
+            return await SqlDataAccess.StringListAsync(@"
                 SELECT DISTINCT PartNo
                 FROM DieMold_MoldingMainParts
                 WHERE DieSerial = @DieSerial
@@ -270,7 +270,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                               AND d.DateInput < @DateInput
                             ORDER BY DateInput DESC, RecordID DESC";
 
-                int lastTotal = await SqlDataAccess.GetCountData(getLastTotal, new
+                int lastTotal = await SqlDataAccess.ExecuteScalarAsync(getLastTotal, new
                 {
                     DieSerial = mold.DieSerial,
                     DateInput = mold.DateInput
@@ -333,7 +333,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                 FROM DieMold_MoldingMainParts
                 WHERE DieSerial = @DieSerial";
 
-            return SqlDataAccess.GetData<string>(sql, new { DieSerial = dieSerial });
+            return SqlDataAccess.StringListAsync(sql, new { DieSerial = dieSerial });
         }
 
         public static async Task<List<DieMoldMonitoringModel>> GetByDieSerialAsync(string dieSerial)
@@ -344,7 +344,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                 FROM DieMold_MoldingMainParts
                 WHERE DieSerial = @DieSerial";
 
-            return (await SqlDataAccess.GetData<DieMoldMonitoringModel>(
+            return (await SqlDataAccess.GetDataAsync<DieMoldMonitoringModel>(
                 sql, new { DieSerial = dieSerial.Trim() })).ToList();
         }
 
@@ -376,7 +376,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                         INSERT INTO DieMoldDailyInputChecker ({column}, DateInput, Count)
                         VALUES (@Value, @DateInput, 1)
                     END";
-            await SqlDataAccess.UpdateInsertQuery(sql,
+            await SqlDataAccess.ExecuteAsync(sql,
                         new { Value = value, DateInput = dateinput });
         }
 
@@ -387,7 +387,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             /* --------------------------------------------------
                 * 1. Update FIRST (Selected) Record
                 * --------------------------------------------------*/
-            await SqlDataAccess.UpdateInsertQuery(@"
+            await SqlDataAccess.ExecuteAsync(@"
                     UPDATE DieMold_Daily
                     SET 
                         DateInput = @DateInput,
@@ -408,7 +408,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             /* --------------------------------------------------
               * 2. Get ALL records (LAST → FIRST)
               * --------------------------------------------------*/
-            var records = await SqlDataAccess.GetData<DieMoldMonitoringModel>(
+            var records = await SqlDataAccess.GetDataAsync<DieMoldMonitoringModel>(
                          @"
                         SELECT RecordID, DateInput, CycleShot, Total, Status
                         FROM DieMold_Daily
@@ -478,7 +478,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                 /* --------------------------------------------------
                 * 5. UPDATE the newTotalValue to the total of the MoldDie_Daily column
                 * --------------------------------------------------*/
-                await SqlDataAccess.UpdateInsertQuery(@"
+                await SqlDataAccess.ExecuteAsync(@"
                     UPDATE DieMold_Daily
                     SET Total = @Total
                     WHERE PartNo = @PartNo

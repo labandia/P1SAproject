@@ -141,7 +141,7 @@
 
 
     const LoadUsers = async () => {
-        let res = await fetchData('/PMACS/GetFullnameList', {});
+        let res = await GetMethod('/PMACS/GetFullnameList', {});
         if (res && res.Success) {
             loadData = res.Data;
             loadData = loadData.map(function (item) {
@@ -265,8 +265,8 @@
         if (validateform()) {
                 const savebtn = document.querySelector("#submitbtn");
                 savebtn.innerHTML = "<div class='buttonloading'></div>";
-                let res = await postData('/Auth/Authenticate', data);
-                if (res && res.StatusCode === 200) {
+                let res = await postMethod('/Auth/Authenticate', data);
+                if (res?.Success) {
                      setTimeout(() => {
                          Swal.fire({
                              title: "Success",

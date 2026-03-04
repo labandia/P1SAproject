@@ -323,7 +323,7 @@
         let formData = new FormData(this);
         const data = Object.fromEntries(formData);
 
-        let res = await postData('@Url.Action("EditShopOrderOut", "PartsLocator")', data);
+        let res = await postMethod('@Url.Action("EditShopOrderOut", "PartsLocator")', data);
         if (res && res.Success) {
             $("#EditShopOrderOutModal").modal('hide');
 
@@ -342,7 +342,7 @@
          let formData = new FormData(this);
          const data = Object.fromEntries(formData);
 
-         let res = await postData('@Url.Action("EditShopOrderIn", "PartsLocator")', data);
+        let res = await postMethod('@Url.Action("EditShopOrderIn", "PartsLocator")', data);
          if (res && res.Success) {
             $("#EditShopOrderINModal").modal('hide');
 
@@ -375,7 +375,7 @@
 
        const url = `@Url.Action("GetTransactionSummaryIn", "PartsLocator")?${params.toString()}`;
 
-        let res = await FetchAuthenticate(url, {});
+        let res = await GetMethod(url, {});
 
 
         if (res && res.Success) {
@@ -449,7 +449,7 @@
                      }).then(async (result) => {   // 👈 make this async
                            if (result.isConfirmed) {
 
-                               let res = await postData('@Url.Action("DeleteShopOrderIn", "PartsLocator")', {
+                               let res = await postMethod('@Url.Action("DeleteShopOrderIn", "PartsLocator")', {
                                    TransactionID: rowIndex
                                });
                                if (res && res.Success) {
@@ -504,7 +504,7 @@
 
         const url = `@Url.Action("GetTransactionSummaryOut", "PartsLocator")?${params.toString()}`;
 
-        let res = await FetchAuthenticate(url, {});
+        let res = await GetMethod(url, {});
         if (res && res.Success) {
             $("#ShopOrderSummaryOut").empty();
             let dataArray = res.Data.Items;
@@ -590,7 +590,7 @@
                          }).then(async (result) => {   // 👈 make this async
                        if (result.isConfirmed) {
 
-                           let res = await postData('@Url.Action("DeleteShopOrderIn", "PartsLocator")', {
+                           let res = await postMethod('@Url.Action("DeleteShopOrderIn", "PartsLocator")', {
                                TransactionID: rowIndex
                            });
                            if (res && res.Success) {

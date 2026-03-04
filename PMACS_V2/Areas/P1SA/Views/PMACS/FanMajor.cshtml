@@ -546,7 +546,7 @@
         formdata.append('limit', m_limit);
         formdata.append('sectionID', 2);
         formdata.append('mach', '');
-        let res = await FetchAuthenticate('/FanMajor/GetFanmajorMachine', formdata);
+        let res = await GetMethod('/FanMajor/GetFanmajorMachine', formdata);
         if (res && res.Success) {
             loadData = res.Data;
 
@@ -614,7 +614,7 @@
         var dropdata4 = $("#machcode__winding");
         var dropdata5 = $("#machcode__circuit");
 
-        let res = await fetchData('@Url.Action("GetEquipmenList", "FanMajor")', { sectionID: ID });
+        let res = await GetMethod('@Url.Action("GetEquipmenList", "FanMajor")', { sectionID: ID });
         if (res && res.Success) {
                     switch (ID) {
                         case 2:
@@ -669,7 +669,7 @@
 
     }
     const CountMachine = async (secId, mach, data) => {
-        let res = await fetchData('@Url.Action("GetMachineCount", "FanMajor")', { sectionID: secId, machcode: mach });
+        let res = await GetMethod('@Url.Action("GetMachineCount", "FanMajor")', { sectionID: secId, machcode: mach });
         if (res && res.Success) {
             let load = res.Data;
             switch (secId) {
@@ -751,7 +751,8 @@
     //##################################################################################################### //
     const MachineFilterData = async (formdata, sectionID, mach, mode) => {
         loadData = [];
-        let res = await FetchAuthenticate('@Url.Action("GetFanmajorMachine", "FanMajor")', formdata);
+        let res = await GetMethod('@Url.Action("GetFanmajorMachine", "FanMajor")', formdata);
+        console.log(res);
         if (res && res.Success) {
             loadData = res.Data;
 
@@ -795,7 +796,7 @@
         loadData = [];
 
 
-        let res = await FetchAuthenticate('@Url.Action("GetFanmajorMachine", "FanMajor")', data);
+        let res = await GetMethod('@Url.Action("GetFanmajorMachine", "FanMajor")', data);
         if (res && res.Success) {
             let load = res.Data;
             loadData = load;
@@ -847,7 +848,7 @@
     async function MachineLoadFilterData(data, sectionID, mach) {
         loadData = [];
 
-        let res = await FetchAuthenticate('@Url.Action("GetFanmajorMachine", "FanMajor")', data);
+        let res = await GetMethod('@Url.Action("GetFanmajorMachine", "FanMajor")', data);
         console.log(res);
         //if (res && res.StatusCode === 200) {
         //    let load = res.machine;
@@ -1114,11 +1115,11 @@
 
     // BUTTONS CONTROLS
     $(document).ready(function () {
-        if (ActionRestrict() === false) {
-            $("#addbtn").hide();
-            $(".Addmach__footer").hide();
-        }
-
+        //if (ActionRestrict() === false) {
+          
+        //}
+        $("#addbtn").hide();
+        $(".Addmach__footer").hide();
 
         // SWITCH DETAILS TO EDIT MODE
         $("#fanEnableEdit").click(function (e) {
@@ -1272,7 +1273,7 @@
         formData.append('SectionID', parseInt($("#selectedSection").val()));
 
         const data = Object.fromEntries(formData);
-        let res = await postData('@Url.Action("AddNewmachineList", "FanMajor")', formData);
+        let res = await postMethod('@Url.Action("AddNewmachineList", "FanMajor")', formData);
 
         if (res && res.Success) {
             Swal.fire({
@@ -1344,7 +1345,7 @@
     $("#selectedSection").change(async(e)=> {
 
         var combobox = $("#addmachcode");
-        let res = await fetchData('@Url.Action("GetEquipmenList", "FanMajor")', { sectionID: e.target.value });
+        let res = await GetMethod('@Url.Action("GetEquipmenList", "FanMajor")', { sectionID: e.target.value });
 
         if (res && res.Success) {
            combobox.empty();

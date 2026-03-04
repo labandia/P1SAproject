@@ -144,26 +144,26 @@
         loadingDisplay();
 
         Loadingsteps(async () => {
-            let res = await FetchAuthenticate('@Url.Action("GetPisaSummaryList", "Capacity")', {});
-            if (res && res.Success) {
+            let res = await GetMethod('@Url.Action("GetPisaSummaryList", "Capacity")', {});
+            if (res?.Success) {
                 loadData = res.Data;
                 TableDisplay.empty(); // Removing the Loading Display
 
                 loadData.forEach((row, index) => {
                     let buttons = '';
                     let percentage;
-
-                    if (ActionRestrict() !== false) {
-                        $("#headertable").show();
-                        buttons = `<td id='datatable' style='text-align: center;'>
-                                       <button style='color: var(--primary-color);' type='submit' class='btn actionicon  editButton' id='editButton_${row.ProcessCode}' >
-                                        <i class='fa-regular fa-pen-to-square action_btn'></i>
-                                       </button>
-                                   </td>`;
-                    } else {
-                        $("#headertable").hide();
-                        $("datatable").hide();
-                    }
+                    $("#headertable").show();
+                    buttons = `<td id='datatable' style='text-align: center;'>
+                 <button style='color: var(--primary-color);' type='submit' class='btn actionicon  editButton' id='editButton_${row.ProcessCode}' >
+                  <i class='fa-regular fa-pen-to-square action_btn'></i>
+                 </button>
+             </td>`;
+                    //if (ActionRestrict() !== false) {
+                      
+                    //} else {
+                    //    $("#headertable").hide();
+                    //    $("datatable").hide();
+                    //}
 
                     if (row.Machine_Utilization > 100) {
                         percentage = 100;
@@ -256,7 +256,7 @@
         let formData = new FormData(e.target);
         const data = Object.fromEntries(formData);
 
-        let res = await postData('@Url.Action("P1saSummaryUpdated", "PostCapacity")', data);
+        let res = await postMethod('@Url.Action("P1saSummaryUpdated", "PostCapacity")', data);
 
          if (res.StatusCode == 201) {
              Swal.fire({
@@ -309,8 +309,8 @@
          let totalMan = 0;
          let SummaryData = [];
 
-        let res = await fetchData('@Url.Action("GetCapacitySummaryList", "Capacity")', { month: Month, capid: capid });
-         if (res.StatusCode === 200) {
+        let res = await GetMethod('@Url.Action("GetCapacitySummaryList", "Capacity")', { month: Month, capid: capid });
+        if (res?.Success) {
             SummaryData = res.Data;
 
              $.each(SummaryData, function (index, rowData) {
@@ -328,15 +328,15 @@
              formData.append('Capmonth', totalcap);
              formData.append('TotalMan', totalMan);
 
-             let res = await postData('@Url.Action("UpdateGroupCapacity", "PostCapacity")', formData);
+             let res = await postMethod('@Url.Action("UpdateGroupCapacity", "PostCapacity")', formData);
              if (res.StatusCode === 200) {
                  console.log("Update Complete");
              }
         }
     }
     const getTotalForecastData = async () => {
-        let res = await fetchData('@Url.Action("GetForecastTotalData", "Capacity")', { Month: Month });
-        if (res.StatusCode === 200) {
+        let res = await GetMethod('@Url.Action("GetForecastTotalData", "Capacity")', { Month: Month });
+        if (res?.Success) {
             $("#totalfore").text(getFormatComma(res.Data));
         }
     }
@@ -344,9 +344,9 @@
 
     const getLogsUpdated = async () => {
         try {
-            let res = await fetchData('@Url.Action("GetUpdateLogs", "PMACS")', { Module: 9 });
+            let res = await GetMethod('@Url.Action("GetUpdateLogs", "PMACS")', { Module: 9 });
 
-            if (res && res.Success) {
+            if (res?.Success) {
                 $("#Updatelog").text("Last Updated : " + res.Data[0].LastUpdated);
             }
         } catch (e) {

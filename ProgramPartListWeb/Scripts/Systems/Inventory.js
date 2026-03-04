@@ -21,23 +21,37 @@ class InventoryController {
             return;
         }
 
-        // Bootstrap Modal instance
-        this.editModal = new bootstrap.Modal(
-            document.getElementById("editModal")
-        );
+        const modalElement = document.getElementById("EditModal");
 
-        //// Event Delegation (1 listener only)
-        //this.tableBody.addEventListener("click", (e) => {
+        if (!modalElement) {
+            console.warn("editModal not found.");
+            return;
+        }
 
-        //    const editBtn = e.target.closest(".Editbtnbutton");
-        //    if (!editBtn) return;
+        if (typeof bootstrap === "undefined") {
+            console.error("Bootstrap JS is not loaded.");
+            return;
+        }
 
-        //    const row = e.target.closest("tr");
-        //    const partId = row.dataset.id;
+        this.editModal = new bootstrap.Modal(modalElement);
 
-        //    const part = this.inventList.find(p => p.PartID == partId);
-        //    if (part) this.openEditModal(part);
-        //});
+        this.tableBody.addEventListener("click", (e) => {
+            const editBtn = e.target.closest(".Editbtnbutton");
+            if (!editBtn) return;
+
+            e.preventDefault();
+
+            // 🔥 Get ID from button
+            const stockId = editBtn.dataset.id;
+
+            console.log("Clicked StockID:", stockId);
+
+            const part = this.inventList.find(p => p.StockID == stockId);
+            console.log(part);
+            if (part) {
+                this.openEditModal(part);
+            }
+        });
 
         this.bindEvents();
         await this.loadPageData();
@@ -61,6 +75,7 @@ class InventoryController {
 
         if (!result?.Success) return;
         this.inventList = result.data;
+        console.log(this.inventList);
         this.renderTable(this.inventList);
     }
 
@@ -125,7 +140,7 @@ class InventoryController {
                     </td>
                     <td>
                         <div class="flex_center">
-                            <button class="Editbtnbutton text-primary bg-white">
+                            <button class="Editbtnbutton text-primary bg-white"  data-id="${row.StockID}">
                                 <i class="fa-solid fa-pen-to-square"></i>
                             </button>
                         </div>
@@ -149,10 +164,58 @@ class InventoryController {
     }
 
     openEditModal(part) {
+        if (!part) return;
 
-        document.getElementById("modalPartId").value = part.PartID;
-        document.getElementById("modalPartName").value = part.PartName || "";
-        document.getElementById("modalSupplier").value = part.Supplier || "";
+        const setValue = (id, value, fallback = "") => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.value = value ?? fallback;
+        };
+
+        // Text fields
+        setValue("TempPartno", part.PartNo);
+        setValue("EditPartNo", part.PartNo);
+        setValue("EditPartName", part.PartName);
+
+        // Select dropdown (important: convert to string)
+        setValue("EditCategoryID", part.CategoryID != null ? String(part.CategoryID) : "");
+
+        // Numbers
+        setValue("EditReorderLevel", part.ReorderLevel, 0);
+        setValue("EditWarningLevel", part.WarningLevel, 0);
+        setValue("EditUnit_Price", part.Unit_Price, 0);
+
+        // Optional text
+        setValue("EditUnit", part.Unit);
+        setValue("EditSupplier", part.Supplier);
+
+        // Hidden image field
+        setValue("ExistingImageParts", part.ImageParts);
+
+        // Image preview logic
+        const previewContainer = document.getElementById("EditpreviewContainer");
+        const previewImage = document.getElementById("EditpreviewImage");
+
+        if (previewContainer && previewImage) {
+
+            if (part.ImageParts) {
+
+                const imagePath =
+                    `/Hydro/DisplaytheImage?filename=${encodeURIComponent(part.ImageParts)}`;
+
+                previewImage.src = imagePath;
+                previewImage.onerror = () =>
+                    previewImage.src = "/Content/Images/no-image.png";
+
+                previewContainer.style.display = "block";
+
+            } else {
+
+                previewImage.src = "/Content/Images/no-image.png";
+                previewContainer.style.display = "none";
+            }
+        }
+
 
         this.editModal.show();
     }
@@ -176,14 +239,14 @@ class InventoryController {
     }
 
 
-
+    safeValue(value, fallback = "") {
+        return value === null || value === undefined ? fallback : value;
+    }
 
 
     formatQuantity(qty, unit) {
         if (qty == null) return "-";
-
         const formatted = Number(qty).toLocaleString();
-
         return unit ? `${formatted} ${unit}` : formatted;
     }
 
@@ -196,9 +259,10 @@ class InventoryController {
 
     getStatusClass(status) {
         switch (status) {
-            case "Approved": return "status-approved";
-            case "Pending": return "status-pending";
-            default: return "status-default";
+            case "Sufficient": return "StocksGood";
+            case "Out of stocks": return "Low";
+            case "Restock": return "Warning";
+            default: return "Incomplete";
         }
     }
 

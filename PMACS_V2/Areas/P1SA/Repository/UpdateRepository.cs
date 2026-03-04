@@ -11,7 +11,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
     {
         public static Task<List<UserLogs>> GetUserLogs(int module)
         {
-            return SqlDataAccess.GetData<UserLogs>("SELECT ModuleID, Action,LastUpdated FROM PMACS_UpdateLogs WHERE ModuleID =@ModuleID ", new { ModuleID = module });
+            return SqlDataAccess.GetDataAsync<UserLogs>("SELECT ModuleID, Action,LastUpdated FROM PMACS_UpdateLogs WHERE ModuleID =@ModuleID ", new { ModuleID = module });
         }
 
         public static async Task UpdateUserLogs(int module, int EmpID, string Action)
@@ -22,7 +22,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
                                WHERE ModuleID =@ModuleID";
             var parameter = new { LastUpdated = dtDate, Action = Action, ModuleID = module, User_ID = EmpID };
 
-            await SqlDataAccess.UpdateInsertQuery(strsql, parameter);
+            await SqlDataAccess.ExecuteAsync(strsql, parameter);
         }
     }
 }

@@ -82,7 +82,7 @@ namespace PMACS_V2.Services
         {
             string strsql = $@"INSERT INTO P1SA_EmailSend(Subject, Sender, Recipient, Body)
                                VALUES(@Subject, @Sender, @Recipient, @Body)";
-            return SqlDataAccess.UpdateInsertQuery(strsql, em);
+            return SqlDataAccess.ExecuteAsync(strsql, em);
         }
 
         public static string CreateAEmailBody(string Fullname, string messageContent)

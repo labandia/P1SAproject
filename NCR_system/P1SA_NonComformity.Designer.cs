@@ -30,10 +30,13 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(P1SA_NonComformity));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.button3 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button12 = new System.Windows.Forms.Button();
             this.Shipbtn = new System.Windows.Forms.Button();
             this.SDCbtn = new System.Windows.Forms.Button();
             this.rejectBtn = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             this.processbtn = new System.Windows.Forms.Button();
             this.Sectionpanel = new System.Windows.Forms.Panel();
             this.panel1.SuspendLayout();
@@ -42,16 +45,103 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(42)))), ((int)(((byte)(71)))));
+            this.panel1.Controls.Add(this.button3);
+            this.panel1.Controls.Add(this.button2);
+            this.panel1.Controls.Add(this.button1);
+            this.panel1.Controls.Add(this.button12);
             this.panel1.Controls.Add(this.Shipbtn);
             this.panel1.Controls.Add(this.SDCbtn);
             this.panel1.Controls.Add(this.rejectBtn);
-            this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.processbtn);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1366, 63);
             this.panel1.TabIndex = 2;
+            // 
+            // button3
+            // 
+            this.button3.AutoSize = true;
+            this.button3.BackColor = System.Drawing.Color.Transparent;
+            this.button3.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button3.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.button3.FlatAppearance.BorderSize = 0;
+            this.button3.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
+            this.button3.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
+            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button3.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button3.ForeColor = System.Drawing.Color.White;
+            this.button3.Image = ((System.Drawing.Image)(resources.GetObject("button3.Image")));
+            this.button3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button3.Location = new System.Drawing.Point(1123, 7);
+            this.button3.Name = "button3";
+            this.button3.Padding = new System.Windows.Forms.Padding(10, 0, 20, 0);
+            this.button3.Size = new System.Drawing.Size(149, 46);
+            this.button3.TabIndex = 24;
+            this.button3.Text = "Dashboard";
+            this.button3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.button3.UseVisualStyleBackColor = false;
+            // 
+            // button2
+            // 
+            this.button2.AutoSize = true;
+            this.button2.BackColor = System.Drawing.Color.Transparent;
+            this.button2.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button2.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.button2.FlatAppearance.BorderSize = 0;
+            this.button2.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
+            this.button2.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
+            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button2.ForeColor = System.Drawing.Color.White;
+            this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
+            this.button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button2.Location = new System.Drawing.Point(848, 8);
+            this.button2.Name = "button2";
+            this.button2.Padding = new System.Windows.Forms.Padding(10, 0, 20, 0);
+            this.button2.Size = new System.Drawing.Size(149, 46);
+            this.button2.TabIndex = 23;
+            this.button2.Text = "Recurrence";
+            this.button2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.button2.UseVisualStyleBackColor = false;
+            // 
+            // button1
+            // 
+            this.button1.AutoSize = true;
+            this.button1.BackColor = System.Drawing.Color.Transparent;
+            this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button1.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.button1.FlatAppearance.BorderSize = 0;
+            this.button1.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
+            this.button1.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.ForeColor = System.Drawing.Color.White;
+            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
+            this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button1.Location = new System.Drawing.Point(677, 7);
+            this.button1.Name = "button1";
+            this.button1.Padding = new System.Windows.Forms.Padding(10, 0, 3, 0);
+            this.button1.Size = new System.Drawing.Size(165, 46);
+            this.button1.TabIndex = 22;
+            this.button1.Text = "Main Registration";
+            this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.button1.UseVisualStyleBackColor = false;
+            // 
+            // button12
+            // 
+            this.button12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button12.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button12.FlatAppearance.BorderSize = 0;
+            this.button12.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button12.Image = ((System.Drawing.Image)(resources.GetObject("button12.Image")));
+            this.button12.Location = new System.Drawing.Point(1278, 8);
+            this.button12.Name = "button12";
+            this.button12.Size = new System.Drawing.Size(55, 46);
+            this.button12.TabIndex = 19;
+            this.button12.TabStop = false;
+            this.button12.UseVisualStyleBackColor = true;
+            this.button12.Click += new System.EventHandler(this.button12_Click);
             // 
             // Shipbtn
             // 
@@ -67,10 +157,10 @@
             this.Shipbtn.ForeColor = System.Drawing.Color.White;
             this.Shipbtn.Image = ((System.Drawing.Image)(resources.GetObject("Shipbtn.Image")));
             this.Shipbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Shipbtn.Location = new System.Drawing.Point(613, 8);
+            this.Shipbtn.Location = new System.Drawing.Point(521, 7);
             this.Shipbtn.Name = "Shipbtn";
-            this.Shipbtn.Padding = new System.Windows.Forms.Padding(10, 0, 20, 0);
-            this.Shipbtn.Size = new System.Drawing.Size(181, 46);
+            this.Shipbtn.Padding = new System.Windows.Forms.Padding(10, 0, 1, 0);
+            this.Shipbtn.Size = new System.Drawing.Size(150, 46);
             this.Shipbtn.TabIndex = 20;
             this.Shipbtn.Text = " Shipment Delay";
             this.Shipbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -91,10 +181,10 @@
             this.SDCbtn.ForeColor = System.Drawing.Color.White;
             this.SDCbtn.Image = ((System.Drawing.Image)(resources.GetObject("SDCbtn.Image")));
             this.SDCbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.SDCbtn.Location = new System.Drawing.Point(19, 8);
+            this.SDCbtn.Location = new System.Drawing.Point(9, 8);
             this.SDCbtn.Name = "SDCbtn";
-            this.SDCbtn.Padding = new System.Windows.Forms.Padding(10, 0, 45, 0);
-            this.SDCbtn.Size = new System.Drawing.Size(230, 46);
+            this.SDCbtn.Padding = new System.Windows.Forms.Padding(3, 0, 2, 0);
+            this.SDCbtn.Size = new System.Drawing.Size(170, 46);
             this.SDCbtn.TabIndex = 21;
             this.SDCbtn.Text = "Customer Complaint";
             this.SDCbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -115,26 +205,15 @@
             this.rejectBtn.ForeColor = System.Drawing.Color.White;
             this.rejectBtn.Image = ((System.Drawing.Image)(resources.GetObject("rejectBtn.Image")));
             this.rejectBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.rejectBtn.Location = new System.Drawing.Point(427, 8);
+            this.rejectBtn.Location = new System.Drawing.Point(366, 7);
             this.rejectBtn.Name = "rejectBtn";
-            this.rejectBtn.Padding = new System.Windows.Forms.Padding(10, 0, 45, 0);
-            this.rejectBtn.Size = new System.Drawing.Size(181, 46);
+            this.rejectBtn.Padding = new System.Windows.Forms.Padding(12, 0, 12, 0);
+            this.rejectBtn.Size = new System.Drawing.Size(149, 46);
             this.rejectBtn.TabIndex = 19;
             this.rejectBtn.Text = "Rejected Lot";
             this.rejectBtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.rejectBtn.UseVisualStyleBackColor = false;
             this.rejectBtn.Click += new System.EventHandler(this.rejectBtn_Click);
-            // 
-            // button1
-            // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(1258, 21);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 5;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // processbtn
             // 
@@ -150,14 +229,15 @@
             this.processbtn.ForeColor = System.Drawing.Color.White;
             this.processbtn.Image = ((System.Drawing.Image)(resources.GetObject("processbtn.Image")));
             this.processbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.processbtn.Location = new System.Drawing.Point(240, 8);
+            this.processbtn.Location = new System.Drawing.Point(185, 7);
             this.processbtn.Name = "processbtn";
-            this.processbtn.Padding = new System.Windows.Forms.Padding(10, 0, 20, 0);
-            this.processbtn.Size = new System.Drawing.Size(181, 46);
+            this.processbtn.Padding = new System.Windows.Forms.Padding(10, 0, 10, 0);
+            this.processbtn.Size = new System.Drawing.Size(165, 46);
             this.processbtn.TabIndex = 18;
             this.processbtn.Text = "Inprocess Defect";
             this.processbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.processbtn.UseVisualStyleBackColor = false;
+            this.processbtn.Click += new System.EventHandler(this.processbtn_Click);
             // 
             // Sectionpanel
             // 
@@ -189,11 +269,14 @@
 
         #endregion
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button Shipbtn;
         private System.Windows.Forms.Button SDCbtn;
         private System.Windows.Forms.Button rejectBtn;
         private System.Windows.Forms.Button processbtn;
         private System.Windows.Forms.Panel Sectionpanel;
+        private System.Windows.Forms.Button button12;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button3;
     }
 }

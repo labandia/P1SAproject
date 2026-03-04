@@ -328,7 +328,7 @@
             return;
         }
 
-        let res = await postData('@Url.Action("AddMasterlist", "PartsLocator")', data);
+        let res = await postMethod('@Url.Action("AddMasterlist", "PartsLocator")', data);
         if (res && res.Success) {
             GetMasterlist();
             $("#AddProductModal").modal("hide");
@@ -341,7 +341,7 @@
         let formData = new FormData(this);
         const data = Object.fromEntries(formData);
 
-        let res = await postData('@Url.Action("AddMasterlocation", "PartsLocator")', data);
+        let res = await postMethod('@Url.Action("AddMasterlocation", "PartsLocator")', data);
 
         if (res && res.Success) {
             GetPaleteLocation(data.partnum);
@@ -359,7 +359,7 @@
             return;
         }
 
-        let res = await postData('@Url.Action("EditMasterlocation", "PartsLocator")', data);
+        let res = await postMethod('@Url.Action("EditMasterlocation", "PartsLocator")', data);
         if (res && res.Success) {
             GetPaleteLocation(data.partnum);
             $("#EditLocationModal").modal("hide");
@@ -412,7 +412,7 @@
                     + `&pageSize=${pageSize}`;
 
  
-        let res = await FetchAuthenticate(url, {});
+        let res = await GetMethod(url, {});
           if (res && res.Success) {
               $("#MasterlistTable").empty();
               MasterlistData = res.Data.Items;
@@ -472,7 +472,7 @@
                   }).then(async (result) => {   // 👈 make this async
                         if (result.isConfirmed) {
 
-                            let res = await postData('@Url.Action("DeleteMasterListpartnum", "PartsLocator")', {
+                            let res = await postMethod('@Url.Action("DeleteMasterListpartnum", "PartsLocator")', {
                                 partnum: rowIndex
                             });
 
@@ -526,7 +526,7 @@
     const GetPaleteLocation = async (partnum) => {
         strPartnum = partnum;
 
-        let res = await FetchAuthenticate('@Url.Action("GetProductsLocationPallete", "PartsLocator")', {
+        let res = await GetMethod('@Url.Action("GetProductsLocationPallete", "PartsLocator")', {
             partnum: partnum
         });
         if (res && res.Success) {
@@ -589,7 +589,7 @@
                   confirmButtonText: "Yes, delete it!"
               }).then(async (result) => {
                   if (result.isConfirmed) {
-                      let res = await postData('@Url.Action("DeleteMasterlocation", "PartsLocator")', {
+                      let res = await postMethod('@Url.Action("DeleteMasterlocation", "PartsLocator")', {
                           recordID: parseInt(rowIndex)
                          });
 

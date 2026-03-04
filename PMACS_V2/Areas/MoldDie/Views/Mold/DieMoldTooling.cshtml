@@ -263,7 +263,7 @@
         let formData = new FormData(e.target);
        const data = Object.fromEntries(formData);
 
-       let res = await postData('@Url.Action("AddUpdateMoldDieTooling", "Mold")', data);
+       let res = await postMethod('@Url.Action("AddUpdateMoldDieTooling", "Mold")', data);
         if (res.StatusCode === 201) {
             Swal.fire({
                 title: "Success",
@@ -292,7 +292,7 @@
 
          const data = Object.fromEntries(formData);
 
-        let res = await postData('@Url.Action("UpdateMoldDieTooling", "Mold")', data);
+        let res = await postMethod('@Url.Action("UpdateMoldDieTooling", "Mold")', data);
          if (res.StatusCode === 201) {
              Swal.fire({
                  title: "Success",
@@ -349,7 +349,7 @@
     }
 
     const loadMasterlist = async (url) => {
-          let res = await FetchAuthenticate(url, {});
+        let res = await GetMethod(url, {});
 
           if (res && res.Success) {
               DieTooling = res.Data.Items;
@@ -441,7 +441,7 @@
                  confirmButtonText: "Yes, delete it!"
              }).then( async (result) => {
                  if (result.isConfirmed) {
-                     let res = await postData('@Url.Action("DeleteMoldDieTooling", "Mold")', { ID: rowIndex });
+                     let res = await postMethod('@Url.Action("DeleteMoldDieTooling", "Mold")', { ID: rowIndex });
                      if (res.Success && res) {
 
                          Swal.fire({

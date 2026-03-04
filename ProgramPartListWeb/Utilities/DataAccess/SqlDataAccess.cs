@@ -1,14 +1,18 @@
-﻿using System;
+﻿using System.Collections.Concurrent;
+using System.Threading;
+using System.Data.SqlClient;
+//using System.Web.Caching;
+using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
+using System.Runtime.Caching;
 using System.Threading.Tasks;
 using Dapper;
-using Microsoft.Extensions.Caching.Memory;
 using NLog;
 using ProgramPartListWeb.Utilities;
 using CommandType = System.Data.CommandType;
+using System.Configuration;
 
 namespace ProgramPartListWeb.Helper
 {
@@ -18,30 +22,47 @@ namespace ProgramPartListWeb.Helper
 
         // -------------------- CONFIG & CACHE --------------------
         private static readonly string _connectionString = BuildConnectionString();
-        private static readonly MemoryCache _cache =
-         new MemoryCache(new MemoryCacheOptions { SizeLimit = 1024 });
+        private static readonly ObjectCache _cache = MemoryCache.Default;
+
+        // High concurrency locks per cache key
+        private static readonly ConcurrentDictionary<string, SemaphoreSlim> _locks
+            = new ConcurrentDictionary<string, SemaphoreSlim>();
+
+        private static readonly CacheItemPolicy DefaultPolicy = new CacheItemPolicy
+        {
+            SlidingExpiration = TimeSpan.FromMinutes(10)
+        };
+
+
 
         public static string BuildConnectionString()
         {
             try
             {
-                string connectionKey = "LiveDevelopment";
+                string env = ConfigurationManager.AppSettings["AppEnvironment"];
+                string key;
 
-                if (System.Web.HttpContext.Current != null)
+                switch (env)
                 {
-                    string host = System.Web.HttpContext.Current.Request.Url.Host.ToLower();
-                    string hostname = Environment.MachineName.ToLower();
+                    case "Home":
+                        key = "HomeDevelopment";
+                        break;
 
-                    if (host.Contains("p1saportalweb.sdp.com"))
-                        connectionKey = "LiveDevelopment";
-                    else if (host.Contains("localhost"))
-                        connectionKey = hostname == "desktop-fc0up1p" ? "HomeDevelopment" : "TestDevelopment";
+                    case "Test":
+                        key = "TestDevelopment";
+                        break;
+
+                    default:
+                        key = "LiveDevelopment";
+                        break;
                 }
 
+                var encrypted = ConfigurationManager
+                    .ConnectionStrings[key]
+                    .ConnectionString;
+
                 // AES decode happens once at app start
-                return AesEncryption.DecodeBase64ToString(
-                    System.Configuration.ConfigurationManager.ConnectionStrings[connectionKey].ConnectionString
-                );
+                return AesEncryption.DecodeBase64ToString(encrypted);
             }
             catch (Exception ex)
             {
@@ -56,42 +77,95 @@ namespace ProgramPartListWeb.Helper
 
         // --------------------- CORE METHODS ---------------------
         public static async Task<List<T>> GetDataAsync<T>(
-           string query,
-           object parameters = null,
-           CommandType commandType = CommandType.Text,
-           string cacheKey = null,
-           int cacheMinutes = 10)
+          string query,
+          object parameters = null,
+          CommandType commandType = CommandType.Text,
+          string cacheKey = null,
+          int cacheMinutes = 10,
+          bool useSqlDependency = false)
         {
-            if (!string.IsNullOrEmpty(cacheKey) &&
-                _cache.TryGetValue(cacheKey, out List<T> cached))
-            {
-                return cached;
-            }
-
-            try
+            if (string.IsNullOrEmpty(cacheKey))
             {
                 using (var con = CreateConnection())
                 {
                     var result = await con.QueryAsync<T>(query, parameters, commandType: commandType);
-                    var list = result.AsList();
-
-                    if (!string.IsNullOrEmpty(cacheKey))
-                    {
-                        _cache.Set(cacheKey, list,
-                            new MemoryCacheEntryOptions
-                            {
-                                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(cacheMinutes),
-                                Size = 1
-                            });
-                    }
-
-                    return list;
+                    return result.AsList();
                 }
             }
-            catch (Exception ex)
+
+            // First check (no lock)
+            var cached = _cache.Get(cacheKey) as List<T>;
+            if (cached != null)
+                return cached;
+
+            var myLock = _locks.GetOrAdd(cacheKey, new SemaphoreSlim(1, 1));
+
+            await myLock.WaitAsync();
+            try
             {
-                Logger.Error(ex, "GetDataAsync failed.");
-                return new List<T>();
+                // Double check
+                cached = _cache.Get(cacheKey) as List<T>;
+                if (cached != null)
+                    return cached;
+
+                List<T> list;
+
+                using (var con = CreateConnection())
+                {
+                    var result = await con.QueryAsync<T>(query, parameters, commandType: commandType);
+                    list = result.AsList();
+                }
+
+                var policy = new CacheItemPolicy
+                {
+                    AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(cacheMinutes)
+                };
+
+                // 🔥 SQL AUTO INVALIDATE
+                if (useSqlDependency)
+                {
+                    using (var connection = new SqlConnection(_connectionString))
+                    using (var command = new SqlCommand(query, connection))
+                    {
+                        connection.Open();
+                        var dependency = new SqlDependency(command);
+
+                        policy.ChangeMonitors.Add(
+                            new SqlChangeMonitor(dependency)
+                        );
+                    }
+                }
+
+                // 🔥 BACKGROUND AUTO REFRESH
+                policy.RemovedCallback = async args =>
+                {
+                    if (args.RemovedReason == CacheEntryRemovedReason.Expired)
+                    {
+                        try
+                        {
+                            using (var con = CreateConnection())
+                            {
+                                var result = await con.QueryAsync<T>(query, parameters, commandType: commandType);
+                                var refreshed = result.AsList();
+
+                                _cache.Set(cacheKey, refreshed,
+                                    DateTimeOffset.Now.AddMinutes(cacheMinutes));
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Error(ex, "Background refresh failed.");
+                        }
+                    }
+                };
+
+                _cache.Set(cacheKey, list, policy);
+
+                return list;
+            }
+            finally
+            {
+                myLock.Release();
             }
         }
 
@@ -103,34 +177,42 @@ namespace ProgramPartListWeb.Helper
             string cacheKey = null,
             int cacheMinutes = 10)
         {
-            if (!string.IsNullOrEmpty(cacheKey))
-            {
-                if (_cache.TryGetValue(cacheKey, out T cached))
-                    return cached;
-            }
-
-            try
+            if (string.IsNullOrEmpty(cacheKey))
             {
                 using (var con = CreateConnection())
-                {
-                    var result = await con.QueryFirstOrDefaultAsync<T>(query, parameters, commandType: commandType);
-
-                    if (!string.IsNullOrEmpty(cacheKey))
-                    {
-                        _cache.Set(cacheKey, result, new MemoryCacheEntryOptions
-                        {
-                            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(cacheMinutes),
-                            Size = 1
-                        });
-                    }
-
-                    return result;
-                }
+                    return await con.QueryFirstOrDefaultAsync<T>(query, parameters, commandType: commandType);
             }
-            catch (Exception ex)
+
+            var cached = _cache.Get(cacheKey);
+            if (cached != null)
+                return (T)cached;
+
+            var myLock = _locks.GetOrAdd(cacheKey, new SemaphoreSlim(1, 1));
+
+            await myLock.WaitAsync();
+            try
             {
-                Logger.Error(ex, $"GetSingleAsync failed. Query: {query}, CacheKey: {cacheKey}");
-                return default;
+                cached = _cache.Get(cacheKey);
+                if (cached != null)
+                    return (T)cached;
+
+                T result;
+
+                using (var con = CreateConnection())
+                    result = await con.QueryFirstOrDefaultAsync<T>(query, parameters, commandType: commandType);
+
+                var policy = new CacheItemPolicy
+                {
+                    AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(cacheMinutes)
+                };
+
+                _cache.Set(cacheKey, result, policy);
+
+                return result;
+            }
+            finally
+            {
+                myLock.Release();
             }
         }
 
@@ -205,17 +287,17 @@ namespace ProgramPartListWeb.Helper
             {
                 using (var con = CreateConnection())
                 {
-                    int rowsAffected = await con.ExecuteAsync(query, parameters, commandType: commandType);
+                    int rows = await con.ExecuteAsync(query, parameters, commandType: commandType);
 
-                    if (rowsAffected > 0 && !string.IsNullOrEmpty(cacheKeyToInvalidate))
+                    if (rows > 0 && !string.IsNullOrEmpty(cacheKeyToInvalidate))
                         _cache.Remove(cacheKeyToInvalidate);
 
-                    return rowsAffected > 0;
+                    return rows > 0;
                 }
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, $"ExecuteAsync failed. Query: {query}");
+                Logger.Error(ex, "ExecuteAsync failed.");
                 return false;
             }
         }
@@ -301,9 +383,25 @@ namespace ProgramPartListWeb.Helper
         public static void ClearCache(string cacheKey = null)
         {
             if (!string.IsNullOrEmpty(cacheKey))
+            {
                 _cache.Remove(cacheKey);
+            }
             else
-                _cache.Dispose();
+            {
+                foreach (var item in _cache)
+                    _cache.Remove(item.Key);
+            }
+        }
+
+
+        public static void StartSqlDependency()
+        {
+            SqlDependency.Start(_connectionString);
+        }
+
+        public static void StopSqlDependency()
+        {
+            SqlDependency.Stop(_connectionString);
         }
     }
 }

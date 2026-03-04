@@ -1,7 +1,6 @@
 ﻿using ProgramPartListWeb.Areas.PC.Interface;
 using ProgramPartListWeb.Areas.PC.Repository;
 using ProgramPartListWeb.Areas.Press.Interfaces;
-using ProgramPartListWeb.Controllers;
 using ProgramPartListWeb.Data;
 using ProgramPartListWeb.Interfaces;
 using ProgramPartListWeb.Repository;
@@ -15,9 +14,6 @@ using Unity.AspNet.Mvc;
 using NLog;
 using System.Security.Principal;
 using System.Web.Security;
-using System.Web.Http;
-using System.Net.Http.Headers;
-using System.IO.Compression;
 using ProgramPartListWeb.Areas.Circuit.Interface;
 using ProgramPartListWeb.Areas.Circuit.Repository;
 using ProgramPartListWeb.Areas.Hydroponics.Interface;
@@ -25,6 +21,8 @@ using ProgramPartListWeb.Areas.Hydroponics.Repository;
 using ProgramPartListWeb.Areas.Rotor.Data;
 using ProgramPartListWeb.Areas.Rotor.Interface;
 using Unity.Lifetime;
+using System.Data.SqlClient;
+using ProgramPartListWeb.Helper;
 
 namespace ProgramPartListWeb
 {
@@ -34,6 +32,16 @@ namespace ProgramPartListWeb
         {
             ConfigureLogging();
 
+            try
+            {
+                SqlDataAccess.StartSqlDependency();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+            }
+
+
             // DEPENDENCY INJECTION CONFIGURATION
             AreaRegistration.RegisterAllAreas();
             RegisterDependencyInjection(); 
@@ -41,6 +49,11 @@ namespace ProgramPartListWeb
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+        }
+
+        protected void Application_End()
+        {
+            SqlDependency.Stop(SqlDataAccess.BuildConnectionString());
         }
 
         protected void Application_EndRequest()

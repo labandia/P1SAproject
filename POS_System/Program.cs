@@ -17,7 +17,7 @@ namespace POS_System
 
             // ======= Set Database Folder Inside Documents =======
             string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            string appFolder = Path.Combine(documentsPath, "SariSariStore");
+            string appFolder = Path.Combine(documentsPath, "SariSariStoreV2");
 
             // Create folder if it doesn't exist
             if (!Directory.Exists(appFolder))

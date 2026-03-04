@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using OfficeOpenXml.Packaging.Ionic.Zlib;
-using PMACS_V2.Areas.P1SA.Models;
 using PMACS_V2.Areas.PartsLocal.Interface;
 using PMACS_V2.Areas.PartsLocal.Model;
 using PMACS_V2.Helper;
@@ -20,7 +14,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
             string updatestorage = $@"UPDATE PartsLocatorRotor_Location SET Quantity = Quantity - @Quantity
                                      WHERE Partnumber =@Partnumber AND Area =@Area";
 
-            bool storageResult = await SqlDataAccess.UpdateInsertQuery(updatestorage, new
+            bool storageResult = await SqlDataAccess.ExecuteAsync(updatestorage, new
             {
                 Quantity = shop.Quantity,
                 Partnumber = shop.Partnumber,
@@ -33,7 +27,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                               VALUES(1, @Partnumber, @RotorOrder, @ShopOrder, @PlanQuantity, 
                               @PlanDate, @ModelBase, @Area, @Quantity, @Remarks, @Status, @BushType, @PreviousQuantity)";
 
-            return await SqlDataAccess.UpdateInsertQuery(strsql, shop);
+            return await SqlDataAccess.ExecuteAsync(strsql, shop);
         }
 
         public Task<bool> DeleteTransactionOut(ShopOrderOutModel shop)
@@ -50,7 +44,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                                   BushType =@BushType
                               WHERE TransactionID =@TransactionID";
 
-            return SqlDataAccess.UpdateInsertQuery(strsql, new
+            return SqlDataAccess.ExecuteAsync(strsql, new
             {
                 RotorOrder = shop.RotorOrder,
                 ShopOrder = shop.ShopOrder,
@@ -106,7 +100,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                         OFFSET @Offset ROWS
                         FETCH NEXT @PageSize ROWS ONLY";
 
-            var items =  await SqlDataAccess.GetData<ShopOrderOutModel>(
+            var items =  await SqlDataAccess.GetDataAsync<ShopOrderOutModel>(
                     strsql,
                     new
                     {

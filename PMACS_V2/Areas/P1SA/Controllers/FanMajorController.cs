@@ -17,7 +17,6 @@ using System.Web.Mvc;
 
 namespace PMACS_V2.Areas.P1SA.Controllers
 {
-    [CompressResponse]
     public class FanMajorController : ExtendController
     {
 
@@ -30,7 +29,6 @@ namespace PMACS_V2.Areas.P1SA.Controllers
         // ===========================================================
 
         // GET: P1SA/GetFanmajorMachine
-        [JwtAuthorize]
         public async Task<ActionResult> GetFanmajorMachine(int offset, int limit, int sectionID, string mach)
         {
             //Debug.WriteLine($@"OffSet : {offset} - Limit : {limit}");
@@ -62,13 +60,13 @@ namespace PMACS_V2.Areas.P1SA.Controllers
                 {
                     return JsonNotFound("No Fan Major Machine data found");
                 }
-            //return JsonSuccess(machineWithImages);
-                return new JsonResult
-                {
-                    Data = new { Success = true, Data = machineWithImages },
-                    JsonRequestBehavior = JsonRequestBehavior.AllowGet,
-                    MaxJsonLength = int.MaxValue
-                };
+                return JsonSuccess(machineWithImages);
+            //return new JsonResult
+            //    {
+            //        Data = new { Success = true, Data = machineWithImages },
+            //        JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+            //        MaxJsonLength = int.MaxValue
+            //    };
 
         }
 

@@ -1,172 +1,154 @@
-﻿
+﻿(function () {
 
-// =======================
-// GLOBAL GET FUNCTIONS WITH TOKEN AUTHENTICATION
-// =======================
-window.FetchAuthenticate = function (url, fdata) {
-    var token = localStorage.getItem('accessToken');
-    var queryString = new URLSearchParams(fdata).toString();
-    var fullUrl = url + "?" + queryString;  // Append parameters to URL
+    const DEFAULT_CONFIG = {
+        loginUrl: localStorage.getItem('Logout') || window.AppConfig?.loginUrl || '/login',
+        accessTokenKey: 'accessToken',
+        refreshTokenKey: 'refreshToken',
+        tokenExpiryKey: 'tokenExpiry',
+        tokenRefreshThreshold: 5 * 60 * 1000,
+        timeout: 30000,
+        errorMessages: {
+            network: 'Network error. Please check your connection.',
+            timeout: 'Request timeout. Please try again.',
+            unauthorized: 'Session expired. Please log in again.',
+            forbidden: 'You do not have permission to access this resource.',
+            server: 'Server error. Please try again later.',
+            notFound: 'Requested resource not found.',
+            badRequest: 'Invalid request.',
+            refreshFailed: 'Unable to refresh session.',
+            jsonParse: 'Failed to parse server response.',
+            general: 'An error occurred.'
+        }
+    };
 
-    function makeRequest(tokenToUse) {
-        return fetch(fullUrl, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + tokenToUse
+    function buildUrl(url, params) {
+        if (!params || Object.keys(params).length === 0) return url;
+        return url + (url.includes('?') ? '&' : '?') + new URLSearchParams(params);
+    }
+
+    function isTokenExpired(cfg) {
+        const expiry = localStorage.getItem(cfg.tokenExpiryKey);
+        return !expiry || Date.now() >= (+expiry - cfg.tokenRefreshThreshold);
+    }
+
+    async function refreshAccessToken(cfg) {
+        const refreshToken = localStorage.getItem(cfg.refreshTokenKey);
+        if (!refreshToken) return false;
+
+        try {
+            const res = await fetch('/User/RefreshToken', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ refreshToken })
+            });
+
+            if (!res.ok) return false;
+
+            const data = await res.json();
+            if (!data.accessToken) return false;
+
+            localStorage.setItem(cfg.accessTokenKey, data.accessToken);
+
+            if (data.expiresIn) {
+                localStorage.setItem(
+                    cfg.tokenExpiryKey,
+                    (Date.now() + data.expiresIn * 1000).toString()
+                );
             }
-        });
+
+            return true;
+        } catch {
+            return false;
+        }
     }
 
-    return makeRequest(token).then(function (res) {
-        var logout = localStorage.getItem('Logout') || window.AppConfig.loginUrl;
-        if (res.status === 401) {
-            return refreshAccessToken().then(function (refreshSuccess) {
-                if (refreshSuccess) {
-                    token = localStorage.getItem('accessToken');
-                    return makeRequest(token).then(function (retryRes) {
-                        if (retryRes.status === 401) {
-                            localStorage.clear();
-                            window.location.href = logout;
-                            return null;
-                        }
-                        return retryRes.json();
-                    });
-                } else {
+    async function fetchWithTimeout(url, options, timeout) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), timeout);
+
+        try {
+            return await fetch(url, { ...options, signal: controller.signal });
+        } finally {
+            clearTimeout(timer);
+        }
+    }
+
+    window.GetMethod = async function (url, fdata = {}, options = {}) {
+        const cfg = { ...DEFAULT_CONFIG, ...options };
+        let token = localStorage.getItem(cfg.accessTokenKey);
+
+        if (token && isTokenExpired(cfg)) {
+            await refreshAccessToken(cfg);
+            token = localStorage.getItem(cfg.accessTokenKey);
+        }
+
+        const headers = { ...(options.headers || {}) };
+        if (token) headers.Authorization = `Bearer ${token}`;
+
+        try {
+            const response = await fetchWithTimeout(
+                buildUrl(url, fdata),
+                {
+                    method: 'GET',
+                    headers,
+                    credentials: 'same-origin'
+                },
+                cfg.timeout
+            );
+
+            if (response.status === 401) {
+                const refreshed = await refreshAccessToken(cfg);
+                if (!refreshed) {
                     localStorage.clear();
-                    window.location.href = logout;
-                    return null;
+                    location.href = cfg.loginUrl;
+                    return;
                 }
-            });
+                return GetMethod(url, fdata, options);
+            }
+
+            if (!response.ok) {
+                return {
+                    success: false,
+                    status: response.status,
+                    message: cfg.errorMessages.general
+                };
+            }
+
+            const data = await response.json();
+
+            return data;
+
+        } catch (err) {
+            if (err.name === 'AbortError') {
+                return { success: false, message: cfg.errorMessages.timeout };
+            }
+            return { success: false, message: cfg.errorMessages.network };
         }
-        return res.json();
-    }).catch(function (error) {
-        console.error('Error fetching data:', error);
-    });
-};
+    };
 
-// =======================
-// GLOBAL GET FUNCTIONS WITHOUT TOKEN AUTHENTICATION
-// =======================
-window.fetchData = function (url, fdata) {
-    fdata = fdata || {};
-    try {
-        var queryString = new URLSearchParams(fdata).toString();
-        var fullUrl = queryString ? (url + "?" + queryString) : url;
+    /* ---------- Utilities ---------- */
 
-        return fetch(fullUrl, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-        }).then(function (res) {
-            return res.json();
-        }).catch(function (err) {
-            console.error('Fetch Error:', err);
-            return null;
-        });
-    } catch (error) {
-        console.error('Fetch Error:', error);
-        return Promise.resolve(null);
-    }
-};
+    window.GetMethod.isAuthenticated = function () {
+        const token = localStorage.getItem(DEFAULT_CONFIG.accessTokenKey);
+        const expiry = localStorage.getItem(DEFAULT_CONFIG.tokenExpiryKey);
+        return !!token && (!expiry || Date.now() < +expiry);
+    };
 
-// =======================
-// POST JSON DATA
-// =======================
-window.postData = function (url, data) {
-    return fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-    }).then(function (response) {
-        return response.json().then(function (json) {
-            return json;
-        }).catch(function (parseErr) {
-            console.error("Error parsing JSON:", parseErr);
-            return response.text().then(function (text) {
-                console.error("Raw response:", text);
-                return { Success: false, Message: "Invalid JSON response", Raw: text };
-            });
-        });
-    }).catch(function (error) {
-        console.error("Error posting data:", error);
-        return null;
-    });
-};
+    window.GetMethod.refreshToken = () => refreshAccessToken(DEFAULT_CONFIG);
 
+    window.GetMethod.clearTokens = function () {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('tokenExpiry');
+    };
 
-window.postDataV2 = async function (url, data){
-    console.clear();
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            body: data
-        });
-
-
-        const json = await response.json(); // Parse response regardless of HTTP status
-
-        if (!response.ok || json.Success === false) {
-            // Server returned JSON error
-            console.error("Server error:", json.Message || "Unknown error");
-            return json; // or return null or throw if needed
-        }
-
-        return json;
-    } catch (error) {
-        console.error("Error posting data:", error);
-        return null;
-    }
-};
-
-window.postDataV3 = async function (url, data) {
-    console.clear();
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            body: data
-        });
-
-
-        const json = await response.json(); // Parse response regardless of HTTP status
-
-        if (!response.ok || json.Success === false) {
-            // Server returned JSON error
-            console.error("Server error:", json.Message || "Unknown error");
-            return json; // or return null or throw if needed
-        }
-
-        return json;
-    } catch (error) {
-        console.error("Error posting data:", error);
-        return null;
-    }
-};
+})();
 
 
 
-// =======================
-// POST PARTIAL VIEW DATA (TEXT RESPONSE)
-// =======================
-window.postPartialData = function (url, data) {
-    return fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-    }).then(function (response) {
-        if (!response.ok) throw new Error("HTTP error! Status: " + response.status);
-        return response.text();
-    }).catch(function (error) {
-        console.error("Error posting data:", error);
-        return null;
-    });
-};
 
-// =======================
-// GET USER INFORMATION
-// =======================
 window.PullUserInformation = function () {
     var token = localStorage.getItem('accessToken');
-
     return fetch('/User/GetUserInformation', {
         method: 'POST',
         headers: {
@@ -176,183 +158,197 @@ window.PullUserInformation = function () {
     }).then(function (res) {
         if (res.status === 401) {
             console.warn("Unauthorized");
-            return null;
+            return;
         }
-        return res.json();
-    }).then(function (result) {
-        if (result && result.success) {
-            return result;
-        } else if (result) {
-            console.warn(result.message || "Unknown error");
-        }
-        return null;
+        return res.json().then(function (result) {
+            if (result.success) {
+                console.log("User ID:", result.userId);
+                console.log("Name:", result.name);
+                console.log("Role:", result.role);
+                return result;
+            } else {
+                console.warn(result.message || "Unknown error");
+            }
+        });
     });
 };
 
-// =======================
-// REFRESH TOKEN
-// =======================
-function refreshAccessToken() {
-    var logout = localStorage.getItem('Logout');
-    var refreshToken = localStorage.getItem('refreshToken');
-    if (!refreshToken) return Promise.resolve(false);
 
-    return fetch("/User/RefreshToken", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ refreshToken: refreshToken })
-    }).then(function (response) {
-        return response.json().then(function (result) {
-            if (response.ok && result.accessToken) {
-                localStorage.setItem("accessToken", result.accessToken);
-                return true;
-            } else {
-                console.warn("Refresh token failed. Logging out...");
-                localStorage.clear();
-                window.location.href = logout;
-                return false;
-            }
-        });
-    }).catch(function (error) {
-        console.error("Error refreshing token:", error);
-        return false;
-    });
-}
+window.logout = function () {
+    var logout = localStorage.getItem('Logout');
+    try {
+        localStorage.clear();
+        window.location.href = logout;
+    } catch (error) {
+        console.error("Logout failed:", error);
+    }
+};
+
+// Restriction of typing characters
+window.restrictChars = function (e) {
+    var x = e.which || e.keycode;
+    return (x >= 48 && x <= 57) || x === 46;
+};
+
 
 // =======================
 // ACTION RESTRICT
 // =======================
-window.ActionRestrict = function () {
+window.ActionButtons = function () {
     var userRole = localStorage.getItem("UserRole");
     if (userRole === "Leader" || userRole === "Users") {
         return false;
     }
 };
 
-// =======================
-// IS LOGIN USER
-// =======================
-window.IsLoginUser = function (options) {
-    options = options || {};
-    var storageKey = options.storageKey || 'isLoggedInPatrol';
-    var expectedValue = options.expectedValue || 'true';
-    var redirectUrl = options.redirectUrl || '/P1SA/PMACS/Mainpage';
-    var redirectIfLoggedInUrl = options.redirectIfLoggedInUrl || null;
-    var expirationKey = options.expirationKey || null;
-    var maxHours = options.maxHours || null;
 
-    var value = localStorage.getItem(storageKey);
 
-    if (value === expectedValue && redirectIfLoggedInUrl) {
-        if (expirationKey && maxHours) {
-            var loginTimeStr = localStorage.getItem(expirationKey);
-            if (loginTimeStr) {
-                var loginTime = new Date(loginTimeStr);
-                var now = new Date();
-                var diffHours = Math.abs(now - loginTime) / 36e5;
-                if (diffHours <= maxHours) {
-                    window.location.href = redirectIfLoggedInUrl;
-                    return;
+// =======================
+// LAZY LOADING IMAGE
+// =======================
+document.addEventListener("DOMContentLoaded", function () {
+    const lazyImages = document.querySelectorAll("img.lazy");
+
+    if ("IntersectionObserver" in window) {
+        let observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.src = img.dataset.src;
+
+                    img.onload = () => {
+                        img.classList.add("loaded"); // trigger CSS transition
+                    };
+
+                    img.removeAttribute("data-src");
+                    obs.unobserve(img);
                 }
-            }
-        } else {
-            window.location.href = redirectIfLoggedInUrl;
-            return;
-        }
-    }
-
-    if (value !== expectedValue) {
-        var currentPath = window.location.pathname;
-        if (currentPath !== redirectUrl) {
-            if (typeof ActionRestrict === 'function') {
-                var allowed = ActionRestrict();
-                if (allowed !== false) {
-                    window.location.href = redirectUrl;
-                    return;
-                }
-            } else {
-                window.location.href = redirectUrl;
-                return;
-            }
-        }
-        return;
-    }
-
-    if (expirationKey && maxHours) {
-        var loginTimeStr2 = localStorage.getItem(expirationKey);
-        var currentPath2 = window.location.pathname;
-        var targetPath = new URL(redirectUrl, window.location.origin).pathname;
-
-        if (loginTimeStr2) {
-            var loginTime2 = new Date(loginTimeStr2);
-            var now2 = new Date();
-            var diffHours2 = Math.abs(now2 - loginTime2) / 36e5;
-            if (diffHours2 > maxHours) {
-                localStorage.clear();
-                if (currentPath2 !== targetPath) {
-                    window.location.href = redirectUrl;
-                }
-            }
-        } else {
-            localStorage.clear();
-            if (currentPath2 !== targetPath) {
-                window.location.href = redirectUrl;
-            }
-        }
-    }
-};
-
-// =======================
-// LOGOUT
-// =======================
-window.logout = function () {
-    var logout = localStorage.getItem('Logout');
-    return fetch("/User/Logout", { method: "POST" })
-        .then(function () {
-            localStorage.clear();
-            window.location.href = logout;
-        }).catch(function (error) {
-            console.error("Logout failed:", error);
+            });
         });
+
+        lazyImages.forEach(img => observer.observe(img));
+    } else {
+        // fallback (older browsers)
+        lazyImages.forEach(img => {
+            img.src = img.dataset.src;
+            img.onload = () => {
+                img.classList.add("loaded");
+            };
+            img.removeAttribute("data-src");
+        });
+    }
+
+});
+
+
+window.formatJsonDate = function (value) {
+    if (!value) return "";
+
+    const ms = parseInt(value.replace("/Date(", "").replace(")/", ""));
+    if (isNaN(ms)) return "";
+
+    const date = new Date(ms);
+    return date.toLocaleDateString();
 };
 
-// =======================
-// RESTRICT CHARS
-// =======================
-window.restrictChars = function (e) {
-    var x = e.which || e.keyCode;
-    return (x >= 48 && x <= 57) || x === 46;
+
+
+
+
+
+window.postMethod = async function (url, data, options = {}) {
+
+    if (!url) {
+        console.error("postMethod: URL is required");
+        return { Success: false, Message: "URL missing" };
+    }
+
+    const {
+        headers = {},
+        contentType = "application/json",
+        throwOnError = false,
+        includeCredentials = false,
+        timeout = 30000,
+        responseType = "json"
+    } = options;
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+    const config = {
+        method: "POST",
+        headers: { ...headers },
+        credentials: includeCredentials ? "include" : "same-origin",
+        signal: controller.signal
+    };
+
+    // ---- Body handling (MVC friendly) ----
+    if (data instanceof FormData) {
+        config.body = data; // Let browser set multipart boundary
+    }
+    else if (typeof data === "object" && data !== null) {
+        config.body = JSON.stringify(data);
+        if (!config.headers["Content-Type"]) {
+            config.headers["Content-Type"] = contentType;
+        }
+    }
+    else if (typeof data === "string") {
+        config.body = data;
+        if (!config.headers["Content-Type"]) {
+            config.headers["Content-Type"] = contentType;
+        }
+    }
+
+    try {
+        const response = await fetch(url, config);
+        clearTimeout(timeoutId);
+
+        let rawText = "";
+        if (response.status !== 204) {
+            rawText = await response.text(); // READ ONCE
+        }
+
+        if (!response.ok) {
+            const err = new Error(`HTTP ${response.status}`);
+            err.status = response.status;
+            err.raw = rawText;
+            if (throwOnError) throw err;
+        }
+
+        let result = rawText;
+
+        if (responseType === "json") {
+            try {
+                result = rawText ? JSON.parse(rawText) : null;
+            } catch {
+                console.warn("Invalid JSON returned:", rawText);
+                result = { Success: false, rawText };
+            }
+        }
+
+        if (result && result.Success === false && throwOnError) {
+            throw new Error(result.Message || "Server error");
+        }
+
+        return result;
+
+    } catch (error) {
+
+        if (error.name === "AbortError") {
+            error.message = `Request timed out after ${timeout}ms`;
+        }
+
+        if (throwOnError) throw error;
+
+        return {
+            Success: false,
+            Error: true,
+            Message: error.message,
+            Status: error.status || 0
+        };
+    }
 };
 
-// =======================
-// UTILITIES
-// =======================
-function getMonthString(month) {
-    var map = {
-        "MonthUpload": "MonthUpload",
-        "Total": "Total",
-        "1": "Jan", "2": "Feb", "3": "Mar", "4": "Apr", "5": "May", "6": "Jun",
-        "7": "Jul", "8": "Aug", "9": "Sep", "10": "Oct", "11": "Nov", "12": "Dec"
-    };
-    return map[month] || "";
-}
-
-function getRowMonths(month) {
-    var intmonth = parseInt(month, 10);
-    var names = [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-    ];
-    return names[intmonth - 1] || "";
-}
-
-function getMonthInteger(strmonth) {
-    var map = {
-        "January": 1, "February": 2, "March": 3, "April": 4, "May": 5, "June": 6,
-        "July": 7, "August": 8, "September": 9, "October": 10, "November": 11, "December": 12
-    };
-    return map[strmonth] || 0;
-}
 
 
 

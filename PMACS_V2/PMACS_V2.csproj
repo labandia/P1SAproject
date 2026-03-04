@@ -600,7 +600,6 @@
     <Content Include="Areas\MoldDie\Views\Mold\Index.cshtml" />
     <Content Include="Areas\MoldDie\Views\Shared\_MoldieLayout.cshtml" />
     <Content Include="Areas\MoldDie\Views\Mold\AddMonitoringInput.cshtml" />
-    <Content Include="Areas\MoldDie\Views\Mold\DieMoldLife.cshtml" />
     <Content Include="Areas\MoldDie\Views\Mold\DiePressLife.cshtml" />
     <Content Include="Areas\MoldDie\Views\Mold\DiePressMonitorDetails.cshtml" />
     <Content Include="Areas\MoldDie\Views\Shared\_MoldDIeSummaryView.cshtml" />

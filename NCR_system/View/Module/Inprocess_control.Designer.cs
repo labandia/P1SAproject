@@ -31,82 +31,68 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Inprocess_control));
-            this.projectitle = new System.Windows.Forms.Label();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.InprocessGrid = new System.Windows.Forms.DataGridView();
-            this.RecordID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TitleEmail = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DateEncounter = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Shift = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Line = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Model = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ShopOrder = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Defect = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.NGQty = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ProcEncounter = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cause = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SectionDep = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Invest = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.P1saStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Remarks = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SectionID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SummaryInprocess = new System.Windows.Forms.DataGridView();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.panel5 = new System.Windows.Forms.Panel();
-            this.label10 = new System.Windows.Forms.Label();
-            this.CircuitText = new System.Windows.Forms.Label();
-            this.pictureBox5 = new System.Windows.Forms.PictureBox();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.WindText = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.pictureBox4 = new System.Windows.Forms.PictureBox();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.MoldText = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.panel4 = new System.Windows.Forms.Panel();
-            this.label6 = new System.Windows.Forms.Label();
-            this.RotorText = new System.Windows.Forms.Label();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.PressText = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.button1 = new System.Windows.Forms.Button();
+            this.panel7 = new System.Windows.Forms.Panel();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.panel8 = new System.Windows.Forms.Panel();
+            this.cartesianChart1 = new LiveCharts.WinForms.CartesianChart();
+            this.panel9 = new System.Windows.Forms.Panel();
+            this.label2 = new System.Windows.Forms.Label();
+            this.panel10 = new System.Windows.Forms.Panel();
+            this.Circuitval = new System.Windows.Forms.Label();
+            this.windingval = new System.Windows.Forms.Label();
+            this.Rotorval = new System.Windows.Forms.Label();
+            this.Pressval = new System.Windows.Forms.Label();
+            this.moldval = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.MoldLabel = new System.Windows.Forms.Label();
+            this.button5 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
+            this.label12 = new System.Windows.Forms.Label();
+            this.button3 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.button6 = new System.Windows.Forms.Button();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.searchText = new System.Windows.Forms.TextBox();
+            this.filteritems = new System.Windows.Forms.ComboBox();
+            this.sectionfilter = new System.Windows.Forms.ComboBox();
+            this.SectionID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Remarks = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.P1saStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Invest = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SectionDep = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cause = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ProcEncounter = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.NGQty = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Defect = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ShopOrder = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Model = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Line = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Shift = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DateEncounter = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TitleEmail = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.RecordID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.InprocessGrid)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.SummaryInprocess)).BeginInit();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.panel5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
-            this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
-            this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.panel4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
-            this.panel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            this.panel7.SuspendLayout();
+            this.panel6.SuspendLayout();
+            this.panel8.SuspendLayout();
+            this.panel9.SuspendLayout();
+            this.panel10.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // projectitle
-            // 
-            this.projectitle.AutoSize = true;
-            this.projectitle.Font = new System.Drawing.Font("Century Gothic", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.projectitle.ForeColor = System.Drawing.Color.Black;
-            this.projectitle.Location = new System.Drawing.Point(30, 37);
-            this.projectitle.Name = "projectitle";
-            this.projectitle.Size = new System.Drawing.Size(207, 28);
-            this.projectitle.TabIndex = 5;
-            this.projectitle.Text = "Inprocess Defect";
             // 
             // InprocessGrid
             // 
@@ -154,7 +140,7 @@
             dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.InprocessGrid.DefaultCellStyle = dataGridViewCellStyle10;
-            this.InprocessGrid.Location = new System.Drawing.Point(32, 253);
+            this.InprocessGrid.Location = new System.Drawing.Point(32, 395);
             this.InprocessGrid.Name = "InprocessGrid";
             this.InprocessGrid.ReadOnly = true;
             dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -168,122 +154,391 @@
             this.InprocessGrid.RowHeadersVisible = false;
             this.InprocessGrid.RowTemplate.Height = 30;
             this.InprocessGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.InprocessGrid.Size = new System.Drawing.Size(1282, 512);
+            this.InprocessGrid.Size = new System.Drawing.Size(1285, 350);
             this.InprocessGrid.TabIndex = 6;
             this.InprocessGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.InprocessGrid_CellFormatting);
             // 
-            // RecordID
+            // button1
             // 
-            this.RecordID.DataPropertyName = "RecordID";
-            this.RecordID.HeaderText = "RecordID";
-            this.RecordID.Name = "RecordID";
-            this.RecordID.ReadOnly = true;
-            this.RecordID.Visible = false;
-            this.RecordID.Width = 72;
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button1.FlatAppearance.BorderColor = System.Drawing.SystemColors.MenuHighlight;
+            this.button1.FlatAppearance.MouseDownBackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.button1.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold);
+            this.button1.ForeColor = System.Drawing.Color.White;
+            this.button1.Location = new System.Drawing.Point(1119, 288);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(177, 43);
+            this.button1.TabIndex = 20;
+            this.button1.Text = "Add Data";
+            this.button1.UseVisualStyleBackColor = false;
             // 
-            // Status
+            // panel7
             // 
-            this.Status.DataPropertyName = "Status";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Status.DefaultCellStyle = dataGridViewCellStyle2;
-            this.Status.HeaderText = "Status";
-            this.Status.Name = "Status";
-            this.Status.ReadOnly = true;
-            this.Status.Width = 76;
+            this.panel7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(42)))), ((int)(((byte)(71)))));
+            this.panel7.Controls.Add(this.panel6);
+            this.panel7.Controls.Add(this.button1);
+            this.panel7.Controls.Add(this.panel10);
+            this.panel7.Controls.Add(this.label9);
+            this.panel7.Controls.Add(this.label5);
+            this.panel7.Controls.Add(this.label3);
+            this.panel7.Controls.Add(this.searchText);
+            this.panel7.Controls.Add(this.filteritems);
+            this.panel7.Controls.Add(this.sectionfilter);
+            this.panel7.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel7.Location = new System.Drawing.Point(0, 0);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(1352, 355);
+            this.panel7.TabIndex = 35;
             // 
-            // TitleEmail
+            // panel6
             // 
-            this.TitleEmail.DataPropertyName = "TitleEmail";
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.TitleEmail.DefaultCellStyle = dataGridViewCellStyle3;
-            this.TitleEmail.HeaderText = "TitleEmail";
-            this.TitleEmail.Name = "TitleEmail";
-            this.TitleEmail.ReadOnly = true;
-            this.TitleEmail.Width = 94;
+            this.panel6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(36)))), ((int)(((byte)(62)))));
+            this.panel6.Controls.Add(this.panel8);
+            this.panel6.Controls.Add(this.panel9);
+            this.panel6.Location = new System.Drawing.Point(40, 25);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(1066, 246);
+            this.panel6.TabIndex = 38;
             // 
-            // DateEncounter
+            // panel8
             // 
-            this.DateEncounter.DataPropertyName = "DateEncounter";
-            this.DateEncounter.HeaderText = "Date Encounter";
-            this.DateEncounter.Name = "DateEncounter";
-            this.DateEncounter.ReadOnly = true;
-            this.DateEncounter.Width = 115;
+            this.panel8.Controls.Add(this.cartesianChart1);
+            this.panel8.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel8.Location = new System.Drawing.Point(0, 50);
+            this.panel8.Name = "panel8";
+            this.panel8.Padding = new System.Windows.Forms.Padding(30, 20, 30, 20);
+            this.panel8.Size = new System.Drawing.Size(1066, 196);
+            this.panel8.TabIndex = 1;
             // 
-            // Shift
+            // cartesianChart1
             // 
-            this.Shift.DataPropertyName = "Shift";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.Shift.DefaultCellStyle = dataGridViewCellStyle4;
-            this.Shift.HeaderText = "Shift";
-            this.Shift.Name = "Shift";
-            this.Shift.ReadOnly = true;
-            this.Shift.Width = 68;
+            this.cartesianChart1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cartesianChart1.Location = new System.Drawing.Point(30, 20);
+            this.cartesianChart1.Margin = new System.Windows.Forms.Padding(3, 30, 3, 3);
+            this.cartesianChart1.Name = "cartesianChart1";
+            this.cartesianChart1.Size = new System.Drawing.Size(1006, 156);
+            this.cartesianChart1.TabIndex = 2;
+            this.cartesianChart1.Text = "QuantityChart";
             // 
-            // Line
+            // panel9
             // 
-            this.Line.DataPropertyName = "Line";
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.Line.DefaultCellStyle = dataGridViewCellStyle5;
-            this.Line.HeaderText = "Line";
-            this.Line.Name = "Line";
-            this.Line.ReadOnly = true;
-            this.Line.Width = 66;
+            this.panel9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(47)))), ((int)(((byte)(76)))));
+            this.panel9.Controls.Add(this.label2);
+            this.panel9.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel9.Location = new System.Drawing.Point(0, 0);
+            this.panel9.Name = "panel9";
+            this.panel9.Size = new System.Drawing.Size(1066, 50);
+            this.panel9.TabIndex = 0;
             // 
-            // Model
+            // label2
             // 
-            this.Model.DataPropertyName = "Model";
-            this.Model.HeaderText = "Model";
-            this.Model.Name = "Model";
-            this.Model.ReadOnly = true;
-            this.Model.Width = 78;
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.Color.White;
+            this.label2.Location = new System.Drawing.Point(20, 15);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(200, 21);
+            this.label2.TabIndex = 14;
+            this.label2.Text = "Numbers Cases By Status";
             // 
-            // ShopOrder
+            // panel10
             // 
-            this.ShopOrder.DataPropertyName = "ShopOrder";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.ShopOrder.DefaultCellStyle = dataGridViewCellStyle6;
-            this.ShopOrder.HeaderText = "Shop Order";
-            this.ShopOrder.Name = "ShopOrder";
-            this.ShopOrder.ReadOnly = true;
-            this.ShopOrder.Width = 96;
+            this.panel10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel10.Controls.Add(this.Circuitval);
+            this.panel10.Controls.Add(this.windingval);
+            this.panel10.Controls.Add(this.Rotorval);
+            this.panel10.Controls.Add(this.Pressval);
+            this.panel10.Controls.Add(this.moldval);
+            this.panel10.Controls.Add(this.label11);
+            this.panel10.Controls.Add(this.MoldLabel);
+            this.panel10.Controls.Add(this.button5);
+            this.panel10.Controls.Add(this.button2);
+            this.panel10.Controls.Add(this.label12);
+            this.panel10.Controls.Add(this.button3);
+            this.panel10.Controls.Add(this.button4);
+            this.panel10.Controls.Add(this.label13);
+            this.panel10.Controls.Add(this.label14);
+            this.panel10.Controls.Add(this.button6);
+            this.panel10.Location = new System.Drawing.Point(1124, 25);
+            this.panel10.Name = "panel10";
+            this.panel10.Size = new System.Drawing.Size(172, 246);
+            this.panel10.TabIndex = 34;
             // 
-            // Defect
+            // Circuitval
             // 
-            this.Defect.DataPropertyName = "Defect";
-            this.Defect.HeaderText = "Defect";
-            this.Defect.Name = "Defect";
-            this.Defect.ReadOnly = true;
-            this.Defect.Width = 77;
+            this.Circuitval.AutoSize = true;
+            this.Circuitval.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Circuitval.ForeColor = System.Drawing.SystemColors.ControlLight;
+            this.Circuitval.Location = new System.Drawing.Point(47, 190);
+            this.Circuitval.Name = "Circuitval";
+            this.Circuitval.Size = new System.Drawing.Size(19, 21);
+            this.Circuitval.TabIndex = 49;
+            this.Circuitval.Text = "0";
             // 
-            // NGQty
+            // windingval
             // 
-            this.NGQty.DataPropertyName = "NGQty";
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.NGQty.DefaultCellStyle = dataGridViewCellStyle7;
-            this.NGQty.HeaderText = "NG Qty";
-            this.NGQty.Name = "NGQty";
-            this.NGQty.ReadOnly = true;
-            this.NGQty.Width = 77;
+            this.windingval.AutoSize = true;
+            this.windingval.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.windingval.ForeColor = System.Drawing.SystemColors.ControlLight;
+            this.windingval.Location = new System.Drawing.Point(122, 126);
+            this.windingval.Name = "windingval";
+            this.windingval.Size = new System.Drawing.Size(19, 21);
+            this.windingval.TabIndex = 48;
+            this.windingval.Text = "0";
             // 
-            // ProcEncounter
+            // Rotorval
             // 
-            this.ProcEncounter.DataPropertyName = "ProcEncounter";
-            this.ProcEncounter.HeaderText = "Process Encounter";
-            this.ProcEncounter.Name = "ProcEncounter";
-            this.ProcEncounter.ReadOnly = true;
-            this.ProcEncounter.Width = 128;
+            this.Rotorval.AutoSize = true;
+            this.Rotorval.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Rotorval.ForeColor = System.Drawing.SystemColors.ControlLight;
+            this.Rotorval.Location = new System.Drawing.Point(47, 126);
+            this.Rotorval.Name = "Rotorval";
+            this.Rotorval.Size = new System.Drawing.Size(19, 21);
+            this.Rotorval.TabIndex = 47;
+            this.Rotorval.Text = "0";
             // 
-            // cause
+            // Pressval
             // 
-            this.cause.DataPropertyName = "cause";
-            this.cause.HeaderText = "Cause";
-            this.cause.Name = "cause";
-            this.cause.ReadOnly = true;
-            this.cause.Width = 75;
+            this.Pressval.AutoSize = true;
+            this.Pressval.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Pressval.ForeColor = System.Drawing.SystemColors.ControlLight;
+            this.Pressval.Location = new System.Drawing.Point(122, 61);
+            this.Pressval.Name = "Pressval";
+            this.Pressval.Size = new System.Drawing.Size(19, 21);
+            this.Pressval.TabIndex = 46;
+            this.Pressval.Text = "0";
+            // 
+            // moldval
+            // 
+            this.moldval.AutoSize = true;
+            this.moldval.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.moldval.ForeColor = System.Drawing.SystemColors.ControlLight;
+            this.moldval.Location = new System.Drawing.Point(47, 61);
+            this.moldval.Name = "moldval";
+            this.moldval.Size = new System.Drawing.Size(19, 21);
+            this.moldval.TabIndex = 45;
+            this.moldval.Text = "0";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.ForeColor = System.Drawing.SystemColors.ControlLight;
+            this.label11.Location = new System.Drawing.Point(20, 167);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(44, 16);
+            this.label11.TabIndex = 44;
+            this.label11.Text = "Circuit";
+            // 
+            // MoldLabel
+            // 
+            this.MoldLabel.AutoSize = true;
+            this.MoldLabel.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MoldLabel.ForeColor = System.Drawing.SystemColors.ControlLight;
+            this.MoldLabel.Location = new System.Drawing.Point(20, 32);
+            this.MoldLabel.Name = "MoldLabel";
+            this.MoldLabel.Size = new System.Drawing.Size(55, 16);
+            this.MoldLabel.TabIndex = 36;
+            this.MoldLabel.Text = "Molding";
+            // 
+            // button5
+            // 
+            this.button5.BackColor = System.Drawing.Color.Aqua;
+            this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button5.Location = new System.Drawing.Point(23, 195);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(15, 13);
+            this.button5.TabIndex = 43;
+            this.button5.UseVisualStyleBackColor = false;
+            // 
+            // button2
+            // 
+            this.button2.BackColor = System.Drawing.Color.DodgerBlue;
+            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button2.Location = new System.Drawing.Point(23, 65);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(15, 13);
+            this.button2.TabIndex = 35;
+            this.button2.UseVisualStyleBackColor = false;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.ForeColor = System.Drawing.SystemColors.ControlLight;
+            this.label12.Location = new System.Drawing.Point(95, 101);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(54, 16);
+            this.label12.TabIndex = 42;
+            this.label12.Text = "Winding";
+            // 
+            // button3
+            // 
+            this.button3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button3.Location = new System.Drawing.Point(98, 67);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(15, 13);
+            this.button3.TabIndex = 37;
+            this.button3.UseVisualStyleBackColor = false;
+            // 
+            // button4
+            // 
+            this.button4.BackColor = System.Drawing.Color.Yellow;
+            this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button4.Location = new System.Drawing.Point(98, 131);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(15, 13);
+            this.button4.TabIndex = 41;
+            this.button4.UseVisualStyleBackColor = false;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.ForeColor = System.Drawing.SystemColors.ControlLight;
+            this.label13.Location = new System.Drawing.Point(95, 32);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(36, 16);
+            this.label13.TabIndex = 38;
+            this.label13.Text = "Press";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.ForeColor = System.Drawing.SystemColors.ControlLight;
+            this.label14.Location = new System.Drawing.Point(20, 101);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(37, 16);
+            this.label14.TabIndex = 40;
+            this.label14.Text = "Rotor";
+            // 
+            // button6
+            // 
+            this.button6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button6.Location = new System.Drawing.Point(23, 131);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(15, 13);
+            this.button6.TabIndex = 39;
+            this.button6.UseVisualStyleBackColor = false;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.ForeColor = System.Drawing.SystemColors.Control;
+            this.label9.Location = new System.Drawing.Point(354, 285);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(127, 16);
+            this.label9.TabIndex = 25;
+            this.label9.Text = "Filter by Open/Close";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.ForeColor = System.Drawing.SystemColors.Control;
+            this.label5.Location = new System.Drawing.Point(208, 285);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(98, 16);
+            this.label5.TabIndex = 23;
+            this.label5.Text = "Filter by Section";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = System.Drawing.SystemColors.Control;
+            this.label3.Location = new System.Drawing.Point(37, 285);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(51, 16);
+            this.label3.TabIndex = 22;
+            this.label3.Text = "Search ";
+            // 
+            // searchText
+            // 
+            this.searchText.Location = new System.Drawing.Point(40, 308);
+            this.searchText.Multiline = true;
+            this.searchText.Name = "searchText";
+            this.searchText.Size = new System.Drawing.Size(157, 23);
+            this.searchText.TabIndex = 21;
+            // 
+            // filteritems
+            // 
+            this.filteritems.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
+            this.filteritems.FormattingEnabled = true;
+            this.filteritems.Items.AddRange(new object[] {
+            "-- Filter Status --",
+            "Open",
+            "Close"});
+            this.filteritems.Location = new System.Drawing.Point(357, 308);
+            this.filteritems.Name = "filteritems";
+            this.filteritems.Size = new System.Drawing.Size(121, 23);
+            this.filteritems.TabIndex = 11;
+            // 
+            // sectionfilter
+            // 
+            this.sectionfilter.DropDownHeight = 200;
+            this.sectionfilter.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.sectionfilter.FormattingEnabled = true;
+            this.sectionfilter.IntegralHeight = false;
+            this.sectionfilter.ItemHeight = 15;
+            this.sectionfilter.Items.AddRange(new object[] {
+            "-- Filter Section --",
+            "Molding",
+            "Press",
+            "Rotor",
+            "Winding",
+            "Circuit"});
+            this.sectionfilter.Location = new System.Drawing.Point(211, 308);
+            this.sectionfilter.MaxDropDownItems = 30;
+            this.sectionfilter.Name = "sectionfilter";
+            this.sectionfilter.Size = new System.Drawing.Size(121, 23);
+            this.sectionfilter.TabIndex = 12;
+            this.sectionfilter.SelectedIndexChanged += new System.EventHandler(this.sectionfilter_SelectedIndexChanged);
+            // 
+            // SectionID
+            // 
+            this.SectionID.DataPropertyName = "SectionID";
+            this.SectionID.HeaderText = "SectionID";
+            this.SectionID.Name = "SectionID";
+            this.SectionID.ReadOnly = true;
+            this.SectionID.Visible = false;
+            this.SectionID.Width = 93;
+            // 
+            // Remarks
+            // 
+            this.Remarks.DataPropertyName = "Remarks";
+            this.Remarks.HeaderText = "Remarks";
+            this.Remarks.Name = "Remarks";
+            this.Remarks.ReadOnly = true;
+            this.Remarks.Width = 88;
+            // 
+            // P1saStatus
+            // 
+            this.P1saStatus.DataPropertyName = "P1saStatus";
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.P1saStatus.DefaultCellStyle = dataGridViewCellStyle9;
+            this.P1saStatus.HeaderText = "P1SA Status";
+            this.P1saStatus.Name = "P1saStatus";
+            this.P1saStatus.ReadOnly = true;
+            this.P1saStatus.Width = 99;
+            // 
+            // Invest
+            // 
+            this.Invest.DataPropertyName = "Invest";
+            this.Invest.HeaderText = "Investigation Report";
+            this.Invest.Name = "Invest";
+            this.Invest.ReadOnly = true;
+            this.Invest.Width = 138;
             // 
             // SectionDep
             // 
@@ -296,364 +551,172 @@
             this.SectionDep.ReadOnly = true;
             this.SectionDep.Width = 112;
             // 
-            // Invest
+            // cause
             // 
-            this.Invest.DataPropertyName = "Invest";
-            this.Invest.HeaderText = "Investigation Report";
-            this.Invest.Name = "Invest";
-            this.Invest.ReadOnly = true;
-            this.Invest.Width = 138;
+            this.cause.DataPropertyName = "cause";
+            this.cause.HeaderText = "Cause";
+            this.cause.Name = "cause";
+            this.cause.ReadOnly = true;
+            this.cause.Width = 75;
             // 
-            // P1saStatus
+            // ProcEncounter
             // 
-            this.P1saStatus.DataPropertyName = "P1saStatus";
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.P1saStatus.DefaultCellStyle = dataGridViewCellStyle9;
-            this.P1saStatus.HeaderText = "P1SA Status";
-            this.P1saStatus.Name = "P1saStatus";
-            this.P1saStatus.ReadOnly = true;
-            this.P1saStatus.Width = 99;
+            this.ProcEncounter.DataPropertyName = "ProcEncounter";
+            this.ProcEncounter.HeaderText = "Process Encounter";
+            this.ProcEncounter.Name = "ProcEncounter";
+            this.ProcEncounter.ReadOnly = true;
+            this.ProcEncounter.Width = 128;
             // 
-            // Remarks
+            // NGQty
             // 
-            this.Remarks.DataPropertyName = "Remarks";
-            this.Remarks.HeaderText = "Remarks";
-            this.Remarks.Name = "Remarks";
-            this.Remarks.ReadOnly = true;
-            this.Remarks.Width = 88;
+            this.NGQty.DataPropertyName = "NGQty";
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.NGQty.DefaultCellStyle = dataGridViewCellStyle7;
+            this.NGQty.HeaderText = "NG Qty";
+            this.NGQty.Name = "NGQty";
+            this.NGQty.ReadOnly = true;
+            this.NGQty.Width = 77;
             // 
-            // SectionID
+            // Defect
             // 
-            this.SectionID.DataPropertyName = "SectionID";
-            this.SectionID.HeaderText = "SectionID";
-            this.SectionID.Name = "SectionID";
-            this.SectionID.ReadOnly = true;
-            this.SectionID.Visible = false;
-            this.SectionID.Width = 93;
+            this.Defect.DataPropertyName = "Defect";
+            this.Defect.HeaderText = "Defect";
+            this.Defect.Name = "Defect";
+            this.Defect.ReadOnly = true;
+            this.Defect.Width = 77;
             // 
-            // SummaryInprocess
+            // ShopOrder
             // 
-            this.SummaryInprocess.AllowUserToAddRows = false;
-            this.SummaryInprocess.AllowUserToDeleteRows = false;
-            this.SummaryInprocess.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.SummaryInprocess.Location = new System.Drawing.Point(765, 12);
-            this.SummaryInprocess.Name = "SummaryInprocess";
-            this.SummaryInprocess.ReadOnly = true;
-            this.SummaryInprocess.Size = new System.Drawing.Size(175, 53);
-            this.SummaryInprocess.TabIndex = 7;
+            this.ShopOrder.DataPropertyName = "ShopOrder";
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.ShopOrder.DefaultCellStyle = dataGridViewCellStyle6;
+            this.ShopOrder.HeaderText = "Shop Order";
+            this.ShopOrder.Name = "ShopOrder";
+            this.ShopOrder.ReadOnly = true;
+            this.ShopOrder.Width = 96;
             // 
-            // tableLayoutPanel1
+            // Model
             // 
-            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel1.ColumnCount = 5;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel1.Controls.Add(this.panel5, 4, 0);
-            this.tableLayoutPanel1.Controls.Add(this.panel2, 3, 0);
-            this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.panel4, 2, 0);
-            this.tableLayoutPanel1.Controls.Add(this.panel3, 1, 0);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(32, 81);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1282, 100);
-            this.tableLayoutPanel1.TabIndex = 19;
+            this.Model.DataPropertyName = "Model";
+            this.Model.HeaderText = "Model";
+            this.Model.Name = "Model";
+            this.Model.ReadOnly = true;
+            this.Model.Width = 78;
             // 
-            // panel5
+            // Line
             // 
-            this.panel5.BackColor = System.Drawing.Color.White;
-            this.panel5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel5.Controls.Add(this.label10);
-            this.panel5.Controls.Add(this.CircuitText);
-            this.panel5.Controls.Add(this.pictureBox5);
-            this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel5.Location = new System.Drawing.Point(1027, 3);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(252, 94);
-            this.panel5.TabIndex = 19;
+            this.Line.DataPropertyName = "Line";
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.Line.DefaultCellStyle = dataGridViewCellStyle5;
+            this.Line.HeaderText = "Line";
+            this.Line.Name = "Line";
+            this.Line.ReadOnly = true;
+            this.Line.Width = 66;
             // 
-            // label10
+            // Shift
             // 
-            this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(90, 21);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(70, 25);
-            this.label10.TabIndex = 14;
-            this.label10.Text = "Circuit";
+            this.Shift.DataPropertyName = "Shift";
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.Shift.DefaultCellStyle = dataGridViewCellStyle4;
+            this.Shift.HeaderText = "Shift";
+            this.Shift.Name = "Shift";
+            this.Shift.ReadOnly = true;
+            this.Shift.Width = 68;
             // 
-            // CircuitText
+            // DateEncounter
             // 
-            this.CircuitText.AutoSize = true;
-            this.CircuitText.Font = new System.Drawing.Font("Segoe UI", 15.75F);
-            this.CircuitText.Location = new System.Drawing.Point(90, 44);
-            this.CircuitText.Name = "CircuitText";
-            this.CircuitText.Size = new System.Drawing.Size(24, 30);
-            this.CircuitText.TabIndex = 15;
-            this.CircuitText.Text = "0";
+            this.DateEncounter.DataPropertyName = "DateEncounter";
+            this.DateEncounter.HeaderText = "Date Encounter";
+            this.DateEncounter.Name = "DateEncounter";
+            this.DateEncounter.ReadOnly = true;
+            this.DateEncounter.Width = 115;
             // 
-            // pictureBox5
+            // TitleEmail
             // 
-            this.pictureBox5.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox5.Image")));
-            this.pictureBox5.Location = new System.Drawing.Point(34, 21);
-            this.pictureBox5.Name = "pictureBox5";
-            this.pictureBox5.Size = new System.Drawing.Size(50, 50);
-            this.pictureBox5.TabIndex = 13;
-            this.pictureBox5.TabStop = false;
+            this.TitleEmail.DataPropertyName = "TitleEmail";
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.TitleEmail.DefaultCellStyle = dataGridViewCellStyle3;
+            this.TitleEmail.HeaderText = "TitleEmail";
+            this.TitleEmail.Name = "TitleEmail";
+            this.TitleEmail.ReadOnly = true;
+            this.TitleEmail.Width = 94;
             // 
-            // panel2
+            // Status
             // 
-            this.panel2.BackColor = System.Drawing.Color.White;
-            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel2.Controls.Add(this.WindText);
-            this.panel2.Controls.Add(this.label8);
-            this.panel2.Controls.Add(this.pictureBox4);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(771, 3);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(250, 94);
-            this.panel2.TabIndex = 18;
+            this.Status.DataPropertyName = "Status";
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Status.DefaultCellStyle = dataGridViewCellStyle2;
+            this.Status.HeaderText = "Status";
+            this.Status.Name = "Status";
+            this.Status.ReadOnly = true;
+            this.Status.Width = 76;
             // 
-            // WindText
+            // RecordID
             // 
-            this.WindText.AutoSize = true;
-            this.WindText.Font = new System.Drawing.Font("Segoe UI", 15.75F);
-            this.WindText.Location = new System.Drawing.Point(90, 46);
-            this.WindText.Name = "WindText";
-            this.WindText.Size = new System.Drawing.Size(24, 30);
-            this.WindText.TabIndex = 15;
-            this.WindText.Text = "0";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(90, 20);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(89, 25);
-            this.label8.TabIndex = 14;
-            this.label8.Text = "Winding";
-            // 
-            // pictureBox4
-            // 
-            this.pictureBox4.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox4.Image")));
-            this.pictureBox4.Location = new System.Drawing.Point(34, 21);
-            this.pictureBox4.Name = "pictureBox4";
-            this.pictureBox4.Size = new System.Drawing.Size(50, 50);
-            this.pictureBox4.TabIndex = 13;
-            this.pictureBox4.TabStop = false;
-            // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.Color.White;
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.MoldText);
-            this.panel1.Controls.Add(this.pictureBox1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(3, 3);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(250, 94);
-            this.panel1.TabIndex = 14;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(84, 20);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(93, 25);
-            this.label1.TabIndex = 14;
-            this.label1.Text = "Molding ";
-            // 
-            // MoldText
-            // 
-            this.MoldText.AutoSize = true;
-            this.MoldText.BackColor = System.Drawing.Color.Transparent;
-            this.MoldText.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MoldText.Location = new System.Drawing.Point(85, 46);
-            this.MoldText.Name = "MoldText";
-            this.MoldText.Size = new System.Drawing.Size(24, 30);
-            this.MoldText.TabIndex = 15;
-            this.MoldText.Text = "0";
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(29, 23);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(50, 50);
-            this.pictureBox1.TabIndex = 13;
-            this.pictureBox1.TabStop = false;
-            // 
-            // panel4
-            // 
-            this.panel4.BackColor = System.Drawing.Color.White;
-            this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel4.Controls.Add(this.label6);
-            this.panel4.Controls.Add(this.RotorText);
-            this.panel4.Controls.Add(this.pictureBox3);
-            this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel4.Location = new System.Drawing.Point(515, 3);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(250, 94);
-            this.panel4.TabIndex = 17;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(90, 20);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(63, 25);
-            this.label6.TabIndex = 14;
-            this.label6.Text = "Rotor";
-            // 
-            // RotorText
-            // 
-            this.RotorText.AutoSize = true;
-            this.RotorText.Font = new System.Drawing.Font("Segoe UI", 15.75F);
-            this.RotorText.Location = new System.Drawing.Point(90, 44);
-            this.RotorText.Name = "RotorText";
-            this.RotorText.Size = new System.Drawing.Size(24, 30);
-            this.RotorText.TabIndex = 15;
-            this.RotorText.Text = "0";
-            // 
-            // pictureBox3
-            // 
-            this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
-            this.pictureBox3.Location = new System.Drawing.Point(34, 21);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(50, 50);
-            this.pictureBox3.TabIndex = 13;
-            this.pictureBox3.TabStop = false;
-            // 
-            // panel3
-            // 
-            this.panel3.BackColor = System.Drawing.Color.White;
-            this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel3.Controls.Add(this.PressText);
-            this.panel3.Controls.Add(this.label4);
-            this.panel3.Controls.Add(this.pictureBox2);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(259, 3);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(250, 94);
-            this.panel3.TabIndex = 16;
-            // 
-            // PressText
-            // 
-            this.PressText.AutoSize = true;
-            this.PressText.Font = new System.Drawing.Font("Segoe UI", 15.75F);
-            this.PressText.Location = new System.Drawing.Point(85, 44);
-            this.PressText.Name = "PressText";
-            this.PressText.Size = new System.Drawing.Size(24, 30);
-            this.PressText.TabIndex = 15;
-            this.PressText.Text = "0";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(85, 20);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(58, 25);
-            this.label4.TabIndex = 14;
-            this.label4.Text = "Press";
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(29, 23);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(50, 50);
-            this.pictureBox2.TabIndex = 13;
-            this.pictureBox2.TabStop = false;
-            // 
-            // button1
-            // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(34)))), ((int)(((byte)(200)))));
-            this.button1.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(34)))), ((int)(((byte)(200)))));
-            this.button1.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(34)))), ((int)(((byte)(200)))));
-            this.button1.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(15)))), ((int)(((byte)(168)))));
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold);
-            this.button1.ForeColor = System.Drawing.Color.White;
-            this.button1.Location = new System.Drawing.Point(1132, 196);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(182, 41);
-            this.button1.TabIndex = 20;
-            this.button1.Text = "Add Inprocess Defect";
-            this.button1.UseVisualStyleBackColor = false;
+            this.RecordID.DataPropertyName = "RecordID";
+            this.RecordID.HeaderText = "RecordID";
+            this.RecordID.Name = "RecordID";
+            this.RecordID.ReadOnly = true;
+            this.RecordID.Visible = false;
+            this.RecordID.Width = 72;
             // 
             // Inprocess_control
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.tableLayoutPanel1);
-            this.Controls.Add(this.SummaryInprocess);
+            this.Controls.Add(this.panel7);
             this.Controls.Add(this.InprocessGrid);
-            this.Controls.Add(this.projectitle);
             this.Name = "Inprocess_control";
-            this.Size = new System.Drawing.Size(1349, 806);
+            this.Size = new System.Drawing.Size(1352, 786);
             this.Load += new System.EventHandler(this.Inprocess_control_Load);
             ((System.ComponentModel.ISupportInitialize)(this.InprocessGrid)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.SummaryInprocess)).EndInit();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.panel5.ResumeLayout(false);
-            this.panel5.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.panel4.ResumeLayout(false);
-            this.panel4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
-            this.panel3.ResumeLayout(false);
-            this.panel3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            this.panel7.ResumeLayout(false);
+            this.panel7.PerformLayout();
+            this.panel6.ResumeLayout(false);
+            this.panel8.ResumeLayout(false);
+            this.panel9.ResumeLayout(false);
+            this.panel9.PerformLayout();
+            this.panel10.ResumeLayout(false);
+            this.panel10.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Label projectitle;
-        private System.Windows.Forms.DataGridView SummaryInprocess;
         public System.Windows.Forms.DataGridView InprocessGrid;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Panel panel5;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label CircuitText;
-        private System.Windows.Forms.PictureBox pictureBox5;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Label WindText;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.PictureBox pictureBox4;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label MoldText;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Panel panel4;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label RotorText;
-        private System.Windows.Forms.PictureBox pictureBox3;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Label PressText;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Panel panel7;
+        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.Panel panel8;
+        private LiveCharts.WinForms.CartesianChart cartesianChart1;
+        private System.Windows.Forms.Panel panel9;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Panel panel10;
+        private System.Windows.Forms.Label Circuitval;
+        private System.Windows.Forms.Label windingval;
+        private System.Windows.Forms.Label Rotorval;
+        private System.Windows.Forms.Label Pressval;
+        private System.Windows.Forms.Label moldval;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label MoldLabel;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox searchText;
+        private System.Windows.Forms.ComboBox filteritems;
+        private System.Windows.Forms.ComboBox sectionfilter;
         private System.Windows.Forms.DataGridViewTextBoxColumn RecordID;
         private System.Windows.Forms.DataGridViewTextBoxColumn Status;
         private System.Windows.Forms.DataGridViewTextBoxColumn TitleEmail;

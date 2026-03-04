@@ -128,42 +128,42 @@
 
         logbtn.addEventListener('click', function (e) {
             e.preventDefault();
-
-            if (ActionRestrict() !== false) {
-                Swal.fire({
-                    title: "Sign out ?",
-                    text: "Are you sure you want to sign out?",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#a3a3a3",
-                    confirmButtonText: "Log out"
-                }).then((result) => {
-                    /* Read more about isConfirmed, isDenied below */
-                    if (result.isConfirmed) {
-                        //logout();
-                        localStorage.removeItem('activeLinkIndex');
-                        localStorage.removeItem('UserRole');
-                        localStorage.removeItem('users');
-                        localStorage.removeItem('isLoggedInPMACS');
-                        window.location.href = "/P1SA/PMACS/Mainpage";
-                    }
-                });
-            } else {
-                localStorage.removeItem('UserRole');
-                localStorage.removeItem('Fullname');
-                localStorage.removeItem('accessToken');
-                localStorage.removeItem('refreshToken');
-                localStorage.removeItem('isLoggedInPMACS');
-                window.location.href = "/P1SA/PMACS/Mainpage";
-            }
+            Swal.fire({
+                title: "Sign out ?",
+                text: "Are you sure you want to sign out?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#a3a3a3",
+                confirmButtonText: "Log out"
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    //logout();
+                    localStorage.removeItem('activeLinkIndex');
+                    localStorage.removeItem('UserRole');
+                    localStorage.removeItem('users');
+                    localStorage.removeItem('isLoggedInPMACS');
+                    window.location.href = "/P1SA/PMACS/Mainpage";
+                }
+            });
+            //if (ActionRestrict() !== false) {
+                
+            //} else {
+            //    localStorage.removeItem('UserRole');
+            //    localStorage.removeItem('Fullname');
+            //    localStorage.removeItem('accessToken');
+            //    localStorage.removeItem('refreshToken');
+            //    localStorage.removeItem('isLoggedInPMACS');
+            //    window.location.href = "/P1SA/PMACS/Mainpage";
+            //}
 
         });
 
 
-        if (ActionRestrict() === false) {
-            $("#Exitname").text("Exit");
-        }
+        //if (ActionRestrict() === false) {
+        //    $("#Exitname").text("Exit");
+        //}
 
 
     </script>

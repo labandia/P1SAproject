@@ -175,7 +175,7 @@
      let userRole;
 
      const GetManpowerData = async() =>{
-         let res = await FetchAuthenticate('@Url.Action("GetManpowerData", "PMACS")', {});
+         let res = await GetMethod('@Url.Action("GetManpowerData", "PMACS")', {});
          if (res && res.Success) {
              let load = res.Data;
              loadData = load;
@@ -198,7 +198,7 @@
              "July", "August", "September", "October", "November", "December"
          ];
 
-         let res = await FetchAuthenticate('@Url.Action("GetTotalmanpower", "PMACS")', { months: monthNames[new Date().getMonth()] });
+         let res = await GetMethod('@Url.Action("GetTotalmanpower", "PMACS")', { months: monthNames[new Date().getMonth()] });
          if (res && res.Success) {
              totalarrayload = res.Data;
 
@@ -427,15 +427,16 @@
 
          SetData.empty();
          $.each(array, function (index, rowData) {
-             if (ActionRestrict() !== false) {
-                 $("#headertable").show();
-                 buttons = "<td><div class='table__action flex_center'> " +
-                     "<button type='button' class= 'row_" + index + " editButton' id='editButton_" + rowData.Manpower_ID + "'><i class='fa-regular fa-pen-to-square action_btn'></i> </button>" +
-                     "</div></td>";
-             } else {
-                 $("#headertable").hide();
+             $("#headertable").show();
+             buttons = "<td><div class='table__action flex_center'> " +
+                 "<button type='button' class= 'row_" + index + " editButton' id='editButton_" + rowData.Manpower_ID + "'><i class='fa-regular fa-pen-to-square action_btn'></i> </button>" +
+                 "</div></td>";
+             //if (ActionRestrict() !== false) {
+               
+             //} else {
+             //    $("#headertable").hide();
 
-             }
+             //}
 
 
              var getdata = "<tr class= 'row_" + index + "'>" +
@@ -454,7 +455,7 @@
          let formData = new FormData(e.target);
          const data = Object.fromEntries(formData);
 
-         let res = await postData('@Url.Action("EditManpower", "PMACS")', data);
+         let res = await postMethod('@Url.Action("EditManpower", "PMACS")', data);
 
          if (res && res.Success) {
              $("#exampleModal").modal("hide");
@@ -473,7 +474,7 @@
      editrequired.addEventListener('submit', async(e) => {
          e.preventDefault();
          var formData = new FormData(e.target);
-         let res = await postData('@Url.Action("EditRequiredManpower", "PMACS")', formData);
+         let res = await postMethod('@Url.Action("EditRequiredManpower", "PMACS")', formData);
          //const data = Object.fromEntries(formData);
 
          if (res.StatusCode === 200) {
@@ -561,10 +562,10 @@
       // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
      const LoadPageData = async() => {
          try {
-             if (ActionRestrict() === false) {
-                 $("#headertable").hide();
-             }
-
+             //if (ActionRestrict() === false) {
+                 
+             //}
+             $("#headertable").hide();
              $("#currentdatetime").text(Month + "  " + currentYear)
 
              const [logs, manpower, total] = await Promise.all([

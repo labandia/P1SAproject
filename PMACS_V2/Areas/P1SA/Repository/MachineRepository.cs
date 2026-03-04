@@ -1,6 +1,7 @@
 ﻿using PMACS_V2.Areas.P1SA.Interface;
 using PMACS_V2.Areas.P1SA.Models;
 using PMACS_V2.Helper;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -15,13 +16,13 @@ namespace PMACS_V2.Areas.P1SA.Repository
                                                    Location, Status, Asset, IsDelete, Section_ID, Filepath, Dateadd, Reasons, Tongs)
                                VALUES(@MACH_CODE, @Equipment, @Model, @Serial, @Manufact, @Date_acquired, @Shifts, 
                                                    @Location, @Status, @Asset, @IsDelete, @Section_ID, @Filepath, @Dateadd, @Reasons, @Tongs)";
-            return SqlDataAccess.UpdateInsertQuery(strsql, model);    
+            return SqlDataAccess.ExecuteAsync(strsql, model);    
         }
 
         public Task<bool> DeleteMachine(int machID)
         {
             string strsql = $@"UPDATE machine SET IsDelete = 0 WHERE ID =@ID";
-            return SqlDataAccess.UpdateInsertQuery(strsql, new { ID = machID});
+            return SqlDataAccess.ExecuteAsync(strsql, new { ID = machID});
         }
 
         public Task<bool> EditMachine(EditMachineModel model)
@@ -33,7 +34,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
 
 
 
-            return SqlDataAccess.UpdateInsertQuery(strsql, model);
+            return SqlDataAccess.ExecuteAsync(strsql, model);
         }
 
         public Task<List<CountMachineModel>> GetCountMachine(int sectionID, string MachineCode)
@@ -44,13 +45,13 @@ namespace PMACS_V2.Areas.P1SA.Repository
                             FROM machine WHERE 
                             Section_ID = @sectionID  {machfilter}";
 
-            return SqlDataAccess.GetData<CountMachineModel>(strsql, new { sectionID = sectionID });
+            return SqlDataAccess.GetDataAsync<CountMachineModel>(strsql, new { sectionID = sectionID });
         }
 
         public Task<List<EquipmentList>> GetEquipmentData(int sectionID)
         {
             string strsql = "SELECT Machine_code, Equipment, Section_ID FROM Major WHERE Section_ID = " + sectionID + "";
-            return SqlDataAccess.GetData<EquipmentList>(strsql, null);
+            return SqlDataAccess.GetDataAsync<EquipmentList>(strsql, null);
         }
 
         public Task<List<MachineModel>> GetMachineData(int offset, int limit, int sect, string mach)
@@ -64,7 +65,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
                     FROM Machine m INNER JOIN major ma on ma.Machine_code = m.MACH_CODE 
                     WHERE m.Section_ID = {sect} {machfilter} ORDER BY m.ID DESC 
                     OFFSET {offset} ROWS FETCH NEXT {limit} ROWS ONLY ";
-            return SqlDataAccess.GetData<MachineModel>(strsql, null);
+            return SqlDataAccess.GetDataAsync<MachineModel>(strsql, null);
         }
 
         public  Task<List<MachineModel>> GetMachineDataByID(int ID)
@@ -75,14 +76,15 @@ namespace PMACS_V2.Areas.P1SA.Repository
                     FORMAT(m.Dateadd, 'MM/dd/yyyy') as Dateadd 
                     FROM Machine m INNER JOIN major ma on ma.Machine_code = m.MACH_CODE
                     WHERE m.ID =@ID";
-            return  SqlDataAccess.GetData<MachineModel>(strsql, new { ID = ID });
+            return  SqlDataAccess.GetDataAsync<MachineModel>(strsql, new { ID = ID });
         }
 
 
         public async Task<byte[]> GetMachineImage(int machineID)
         {
-            string sql = "SELECT Filepath FROM machine WHERE ID = @ID";
-            return await SqlDataAccess.GetByteAsync(sql, new { ID = machineID });
+            //string sql = "SELECT Filepath FROM machine WHERE ID = @ID";
+            //return await SqlDataAccess.GetByteAsync(sql, new { ID = machineID });
+            throw new NotImplementedException();
         }
 
 

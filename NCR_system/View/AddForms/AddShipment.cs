@@ -33,7 +33,7 @@ namespace NCR_system.View.AddForms
 
         private void Cancel_btn_Click(object sender, EventArgs e)
         {
-            this.Close();   
+           
         }
 
         private async void Save_btn_Click(object sender, EventArgs e)
@@ -118,15 +118,7 @@ namespace NCR_system.View.AddForms
 
         private void AddImagebtn_Click(object sender, EventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp";
-
-            if(ofd.ShowDialog() == DialogResult.OK)
-            {
-                selectedImagepath = ofd.FileName;
-                pictureBox1.Image = Image.FromFile(selectedImagepath);
-                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
-            }
+            
         }
 
         private void RegNoText_Click(object sender, EventArgs e)
@@ -166,6 +158,22 @@ namespace NCR_system.View.AddForms
             ContentText.ForeColor = Color.Gray;
         }
 
-        
+        private void button12_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp";
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                selectedImagepath = ofd.FileName;
+                pictureBox2.Image = Image.FromFile(selectedImagepath);
+                pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
+            }
+        }
     }
 }

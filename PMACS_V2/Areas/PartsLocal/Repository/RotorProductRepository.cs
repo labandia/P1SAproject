@@ -21,7 +21,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                             OFFSET (@page - 1) * @pageSize ROWS
                             FETCH NEXT @pageSize ROWS ONLY";
 
-            var items = await SqlDataAccess.GetData<RotorProductModel>(strsql, new
+            var items = await SqlDataAccess.GetDataAsync<RotorProductModel>(strsql, new
             {
                 search = search,
                 page = pageNumber,
@@ -62,7 +62,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                             (@Partnumber, @ModelName)
                     END";
 
-            return await SqlDataAccess.UpdateInsertQuery(strsql, new
+            return await SqlDataAccess.ExecuteAsync(strsql, new
             {
                 Partnumber = rotor.Partnumber,
                 ModelName = rotor.ModelName
@@ -76,7 +76,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                                m.FrontImage, m.BackImage
                             FROM PartsLocatorRotor_Masterlist m
                             WHERE m.IsDeleted = 0";
-            return await SqlDataAccess.GetData<RotorProductModel>(strsql, null);
+            return await SqlDataAccess.GetDataAsync<RotorProductModel>(strsql, null);
         }
 
         
@@ -93,7 +93,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                             ON m.Partnumber = l.Partnumber
                             WHERE m.IsDeleted = 0 AND l.IsRemove =  0
                             ORDER BY l.Area ASC";
-            return await SqlDataAccess.GetData<RotorProductModel>(strsql, null);
+            return await SqlDataAccess.GetDataAsync<RotorProductModel>(strsql, null);
         }
 
         public Task<RotorProductModel> GetRotorStorageByID(int ID)
@@ -147,7 +147,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                         END
                     ";
 
-            return SqlDataAccess.UpdateInsertQuery(strsql, new
+            return SqlDataAccess.ExecuteAsync(strsql, new
             {
                 Partnumber = partnum,
                 Area = Area, 
@@ -162,7 +162,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
             string strsql = $@"UPDATE PartsLocatorRotor_Location
                             SET Area = @Area, Quantity =@Quantity
                             WHERE RecordID =@RecordID AND IsRemove = 0";
-            return SqlDataAccess.UpdateInsertQuery(strsql, new 
+            return SqlDataAccess.ExecuteAsync(strsql, new 
             {
                 Area = Area, 
                 Quantity = Quan,
@@ -175,7 +175,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
             string strsql = $@"UPDATE PartsLocatorRotor_Location SET IsRemove = 1
                             WHERE RecordID = @recorID";
 
-            return SqlDataAccess.UpdateInsertQuery(strsql, new { recorID = recorID });
+            return SqlDataAccess.ExecuteAsync(strsql, new { recorID = recorID });
         }
 
         public Task<bool> DeleteMasterlist(string partnum)
@@ -183,7 +183,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
             string strsql = $@"UPDATE PartsLocatorRotor_Masterlist SET IsDeleted = 1
                             WHERE Partnumber = @Partnumber AND IsDeleted = 0";
 
-            return SqlDataAccess.UpdateInsertQuery(strsql, new { Partnumber = partnum });
+            return SqlDataAccess.ExecuteAsync(strsql, new { Partnumber = partnum });
         }
     }
 }

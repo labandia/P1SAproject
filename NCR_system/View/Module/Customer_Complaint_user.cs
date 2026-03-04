@@ -37,7 +37,7 @@ namespace NCR_system.View.Module
             _cust = cust;
             _isInitializing = true;
 
-            filteritems.SelectedIndex = 0;
+            filteritems.SelectedIndex = 1;
             sectionfilter.SelectedIndex = 0;
             SelectedProcess.SelectedIndex = 0;
 
@@ -184,7 +184,7 @@ namespace NCR_system.View.Module
             {
                 string search = searchText.Text.Trim();
                 depId = sectionfilter.SelectedIndex > 0 ? sectionfilter.SelectedIndex : 0;
-                stats = filteritems.SelectedIndex > 0 ? filteritems.SelectedIndex - 1 : 0;
+                stats = filteritems.SelectedIndex;
                 CustomDatagrid.SuspendLayout();
 
                 var custTask = _cust.GetCustomerData(search, depId, proc, stats, 0, 0);

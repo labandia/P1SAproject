@@ -337,7 +337,7 @@
       let formData = new FormData(e.target);
       formData.append('proj', 11);
       const data = Object.fromEntries(formData);
-      let res = await postData('/Auth/Authenticate', data);
+      let res = await postMethod('/Auth/Authenticate', data);
 
       if (res?.Success) {
           setTimeout(() => {
@@ -383,12 +383,12 @@
   });
 
 
-    window.IsLoginUser({
-        storageKey: "isLoggedInPartslocator",
-        redirectUrl: '/PartsLocal/PartsLocator/index',
-        expectedValue: 'true',
-        redirectIfLoggedInUrl: '/PartsLocal/PartsLocator/TrackParts',
-        expirationKey: 'PartslocalTime',
-        maxHours: 24
-    });
+    //window.IsLoginUser({
+    //    storageKey: "isLoggedInPartslocator",
+    //    redirectUrl: '/PartsLocal/PartsLocator/index',
+    //    expectedValue: 'true',
+    //    redirectIfLoggedInUrl: '/PartsLocal/PartsLocator/TrackParts',
+    //    expirationKey: 'PartslocalTime',
+    //    maxHours: 24
+    //});
 </script>

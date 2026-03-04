@@ -452,7 +452,7 @@
          const data = Object.fromEntries(formData);
 
          // Check for duplicate entry for the same part number on the same date
-         let checkduplicate = await fetchData('@Url.Action("CheckDialyMoldExist", "Mold")',
+         let checkduplicate = await GetMethod('@Url.Action("CheckDialyMoldExist", "Mold")',
          {
              srcval: value,
              DateInput: data.DateInput
@@ -471,7 +471,7 @@
          }
 
 
-         let res = await postData('@Url.Action("SaveDailyMoldDieMonitor", "Mold")', data);
+         let res = await postMethod('@Url.Action("SaveDailyMoldDieMonitor", "Mold")', data);
           if (res && res.Success) {
               showSuccessMessage();
               if (isSeletedSearch === 0) {
@@ -539,8 +539,8 @@
 
 
         try {
-             
-              let res = await postData('@Url.Action("UpdateDailyMoldDieMonitor", "Mold")', data);
+
+            let res = await postMethod('@Url.Action("UpdateDailyMoldDieMonitor", "Mold")', data);
               console.log(res);
 
               if (res?.Success) {
@@ -615,7 +615,7 @@
          } catch (error) {
              console.error('Failed to start operation:', error);
          }
-        
+
       });
 
       // Back to Daily Summary
@@ -724,7 +724,7 @@
              TableDisplay.empty(); // Removing the Loading Display
              await new Promise(resolve => setTimeout(resolve, 1000));
 
-             let res = await FetchAuthenticate('@Url.Action("SearchMoldieDaily", "Mold")', {
+             let res = await GetMethod('@Url.Action("SearchMoldieDaily", "Mold")', {
                  ProcessID: selectionProcess,
                  SearchInput: strpartnum
              });
@@ -822,7 +822,7 @@
         try {
             await new Promise(resolve => setTimeout(resolve, 1000));
 
-            let res = await FetchAuthenticate('@Url.Action("SearchByDieSerialMoldie", "Mold")', {
+            let res = await GetMethod('@Url.Action("SearchByDieSerialMoldie", "Mold")', {
                 ProcessID: selectionProcess,
                 DieInput: searchval
             });
@@ -1092,7 +1092,7 @@
                    confirmButtonText: "Yes, delete it!"
                }).then( async (result) => {
                    if (result.isConfirmed) {
-                       @*let res = await postData('@Url.Action("DeleteDailyMoldDieMonitor", "Mold")', { ID: rowIndex });
+                       @*let res = await postMethod('@Url.Action("DeleteDailyMoldDieMonitor", "Mold")', { ID: rowIndex });
                        if (res.Success && res) {
 
                            Swal.fire({
@@ -1134,7 +1134,7 @@
               </div>`;
             }
 
-            
+
 
 
             // Continue Status (0)
@@ -1257,7 +1257,7 @@
 
     async function ChangeStatus(recordId, status) {
 
-         let res = await postData('@Url.Action("UpdateDailyStatus", "Mold")', {
+        let res = await postMethod('@Url.Action("UpdateDailyStatus", "Mold")', {
              RecordID: recordId,
              Status: status
          });
@@ -1287,7 +1287,7 @@
 
 
     async function ChangeDieSerialStatus(datestring, dieserial, status) {
-        let res = await postData('@Url.Action("UpdateDailySerialStatus", "Mold")', {
+        let res = await postMethod('@Url.Action("UpdateDailySerialStatus", "Mold")', {
             Datestring: datestring,
             DieSerial: dieserial,
             Status: status
@@ -1317,7 +1317,7 @@
     }
 
     const GetMoldieYears = async () => {
-        let res = await fetchData('@Url.Action("GetYearMoldDie", "Mold")', {});
+        let res = await GetMethod('@Url.Action("GetYearMoldDie", "Mold")', {});
 
             yearSelect.empty();
             $.each(res, function (index, year) {
@@ -1374,7 +1374,7 @@
     const loadMasterlist = async (url, data) => {
         $("#DieMoldDaily").empty();
 
-        let res = await FetchAuthenticate('@Url.Action("GetMoldDieDailyList", "Mold")', data);
+        let res = await GetMethod('@Url.Action("GetMoldDieDailyList", "Mold")', data);
          if (res && res.Success) {
               //DieTooling = res.Data;
               DailyData = res.Data;
@@ -1468,7 +1468,7 @@
     $("#validDateDieSerial").hide();
     GetMoldDieDaily();
 
-    
+
 
     // normalize MM/dd/YY → YYYY-MM-DD
     function normalizeMMDDYY(dateStr) {

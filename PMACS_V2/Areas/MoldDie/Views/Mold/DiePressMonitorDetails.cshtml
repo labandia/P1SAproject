@@ -171,8 +171,8 @@
         }).then(async (result) => {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
-                let res = await postData('@Url.Action("EndofLifeMonitor", "DieMold")', { ToolNo: $("#ToolText").text() });
-                if (res.StatusCode === 201) {
+                let res = await postMethod('@Url.Action("EndofLifeMonitor", "DieMold")', { ToolNo: $("#ToolText").text() });
+                if (res?.Success) {
                     Swal.fire({
                         title: "Success",
                         text: res.Message,
@@ -195,7 +195,7 @@
         let formdata = new FormData(e.target);
         const data = Object.fromEntries(formdata);
 
-        let res = await postData('@Url.Action("AddMoldiePressMonitor", "DieMold")', data);
+        let res = await postMethod('@Url.Action("AddMoldiePressMonitor", "DieMold")', data);
         console.log(res);
         if (res.StatusCode === 201) {
             GetPressMonitoring();

@@ -3,39 +3,58 @@ using NCR_system.Interface;
 using NCR_system.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace NCR_system.Repository
 {
     internal class InprocessRepository : IInprocess
     {
-        public Task<CustomerModel> GetCustomerDataByID(int recordID)
+    
+        public Task<List<CustomerTotalModel>> GetCustomersOpenItem(int Stats = 0, int sec = 0)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<CustomerTotalModel>> GetCustomersOpenItem(int type = 0)
-        {
-            string strsql = $@"SELECT 
+            string strquery = $@"SELECT 
                                     s.DepartmentName,
                                     COUNT(c.Status) AS totalOpen
                                 FROM PC_Section s
                                 LEFT JOIN PC_Inprocess c
                                     ON c.SectionID = s.SectionID 
-                                    AND c.Status = 1 
-                                GROUP BY 
-                                    s.SectionID, 
-                                    s.DepartmentName
-                                ORDER BY 
+                                    AND c.Status = @Status ";
+
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+            // Filter By Process 
+            if (sec != 0)
+            {
+                strquery += @" WHERE c.SectionID = @SectionID";
+                parameters.Add("@SectionID", sec);
+            }
+
+            strquery += @" GROUP BY 
+                                s.SectionID,
+                                s.DepartmentName
+                            ORDER BY
                                 s.SectionID ASC;";
-            return SqlDataAccess.GetDataAsync<CustomerTotalModel>(strsql, null);
+
+            parameters.Add("@Status", Stats);
+
+            return SqlDataAccess.GetDataAsync<CustomerTotalModel>(strquery, null);
         }
 
 
 
-        public async Task<IEnumerable<InprocessModel>> GetInprocessData(int section)
+        public async Task<List<InprocessModel>> GetInprocessData(
+            string search,
+            int departmentID,
+            int Stats,
+            int pageNumber,
+            int pageSize)
         {
-            string query = $@"SELECT RecordID,DateEncounter
+            int offset = (pageNumber - 1) * pageSize;
+
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+            string strquery = $@"SELECT RecordID,DateEncounter
                                   ,TitleEmail,Shift
                                   ,Line,Model
                                   ,ShopOrder,Defect
@@ -44,8 +63,42 @@ namespace NCR_system.Repository
                                   ,Status,P1saStatus
                                   ,Remarks,SectionDep, SectionID
                               FROM PC_Inprocess
-                              WHERE SectionID =@SectionID";
-            return await SqlDataAccess.GetDataAsync<InprocessModel>(query, new { SectionID = section });
+                              WHERE IsDelete = 0 ";
+
+            // Filter By SMT Line
+            if (departmentID != 0)
+            {
+                strquery += " AND SectionID = @SectionID";
+                parameters.Add("@SectionID", departmentID);
+            }
+
+            // Filter By SMT Line
+            if (Stats != 0)
+            {
+                strquery += " AND Status = @Status";
+                parameters.Add("@Status", Stats);
+            }
+
+            // Search Text
+            if (!string.IsNullOrEmpty(search))
+            {
+                strquery += $@" AND ShopOrder LIKE '%' + @Search + '%'";
+                parameters.Add("@Search", search);
+            }
+
+            strquery += $@" ORDER BY RecordID DESC";
+
+            // If the Get Data has a Pagination function
+            if (pageSize != 0)
+            {
+                strquery += $@" OFFSET @Offset ROWS
+                            FETCH NEXT @PageSize ROWS ONLY";
+                parameters.Add("@Offset", offset);
+                parameters.Add("@PageSize", pageSize);
+            }
+
+
+            return await SqlDataAccess.GetDataAsync<InprocessModel>(strquery, parameters);
         }
 
         public Task<bool> InsertInprocessData(InprocessModel inprocess)

@@ -19,15 +19,15 @@ namespace PMACS_V2.Areas.MoldDie.Repository
         // ===========================================================
         public Task<List<string>> GetMoldDieYear()
         {
-             return SqlDataAccess.GetData<string>(@"SELECT 
+             return SqlDataAccess.StringListAsync(@"SELECT 
                                 ISNULL(YEAR(DateAction), YEAR(GETDATE())) AS ActionYear
                             FROM DieMoldMonitor
-                            GROUP BY YEAR(DateAction) ORDER BY ActionYear DESC;");
+                            GROUP BY YEAR(DateAction) ORDER BY ActionYear DESC;", null);
         }
 
         public Task<List<string>> GetMoldDieDescription()
         {
-            return SqlDataAccess.GetData<string>(@"SELECT PartDescription
+            return SqlDataAccess.StringListAsync(@"SELECT PartDescription
                           FROM DieMold_MoldingMainParts
                           GROUP BY PartDescription;");
         }
@@ -38,7 +38,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
         {
             string filter = process != "" ? $@" WHERE ProcessID = '{process}' AND p.DieSerial != '' " : "";
 
-            return SqlDataAccess.GetData<DieMoldMonitoringModel>($@"WITH TotalDiePerPart AS (
+            return SqlDataAccess.GetDataAsync<DieMoldMonitoringModel>($@"WITH TotalDiePerPart AS (
                             SELECT PartNo, SUM(TotalDie) AS TotalQty
                             FROM DieMoldMonitor
                             GROUP BY PartNo
@@ -112,7 +112,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
         {
             string filterdays = (days != 0) ? $@"AND DAY(d.DateInput) = {days}" : "";
 
-            return SqlDataAccess.GetData<DieMoldMonitoringModel>($@"SELECT 
+            return SqlDataAccess.GetDataAsync<DieMoldMonitoringModel>($@"SELECT 
                             d.RecordID,
 	                        FORMAT(d.DateInput, 'MM/dd/yy') as DateInput, 
 	                        d.PartNo, p.Dimension_Quality, 
@@ -179,7 +179,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                 AND p.ProcessID = @ProcessID
             ORDER BY d.RecordID DESC;";
 
-            return SqlDataAccess.GetData<DieMoldMonitoringModel>(
+            return SqlDataAccess.GetDataAsync<DieMoldMonitoringModel>(
                 sql,
                 new
                 {
@@ -209,7 +209,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
 			    d.Total, d.MachineNo, d.Status, d.Remarks, d.Mincharge
                  ORDER BY d.DateInput DESC;";
 
-            return SqlDataAccess.GetData<DieMoldMonitoringModel>(
+            return SqlDataAccess.GetDataAsync<DieMoldMonitoringModel>(
               strsql,
               new
               {
@@ -235,7 +235,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
         public Task<bool> ChangeStatsDaily(int ID, int Stats)
         {
             string strsql = $@"UPDATE DieMold_Daily SET Status =@Status WHERE RecordID =@RecordID";
-            return SqlDataAccess.UpdateInsertQuery(strsql, new { Status = Stats, RecordID = ID });
+            return SqlDataAccess.ExecuteAsync(strsql, new { Status = Stats, RecordID = ID });
         }
         public async Task<bool> CheckMoldieExist(string searchValue, string Dateinput)
         {
@@ -249,7 +249,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                        WHERE {filter}
                       AND CAST(DateInput AS DATE) = @DateInput;";
 
-            int count = await SqlDataAccess.GetCountData(sql, new { Searchval = searchValue, DateInput = Dateinput });
+            int count = await SqlDataAccess.ExecuteScalarAsync(sql, new { Searchval = searchValue, DateInput = Dateinput });
 
             return count > 1;
 
@@ -291,7 +291,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                                 OFFSET @Offset ROWS
                                 FETCH NEXT @PageSize ROWS ONLY";
 
-            var items = await SqlDataAccess.GetData<DieMoldToolingModelDisplay>(strquery,
+            var items = await SqlDataAccess.GetDataAsync<DieMoldToolingModelDisplay>(strquery,
                          new
                          {
                              Search = string.IsNullOrWhiteSpace(search) ? null : search,
@@ -322,7 +322,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                                    VALUES(@RegNo, @PartNo, @Item, @DetailsModify, @ShotRelease, @DateArrived , @DateRepair, 
                                     @Incharge, @Remarks)";
                
-                return await SqlDataAccess.UpdateInsertQuery(insertquery, mold, "MoldTooling");
+                return await SqlDataAccess.ExecuteAsync(insertquery, mold, System.Data.CommandType.Text, "MoldTooling");
             }
             else
             {
@@ -330,12 +330,12 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                                     DateArrived =@DateArrived, DateRepair =@DateRepair, Incharge =@Incharge, Remarks =@Remarks
                                    WHERE RecordID =@RecordID";
             
-                return await SqlDataAccess.UpdateInsertQuery(insertquery, mold, "MoldTooling");
+                return await SqlDataAccess.ExecuteAsync(insertquery, mold,  System.Data.CommandType.Text, "MoldTooling");
             }
         }
         public Task<bool> DeleteMoldieTooling(int ID)
         {
-            return SqlDataAccess.UpdateInsertQuery("UPDATE DieMoldDieTooling SET IsDeleted = 1 WHERE RecordID =@RecordID", new { RecordID = ID });
+            return SqlDataAccess.ExecuteAsync("UPDATE DieMoldDieTooling SET IsDeleted = 1 WHERE RecordID =@RecordID", new { RecordID = ID });
         }
 
        
@@ -349,7 +349,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
         // ===========================================================
         public Task<bool> CheckMoldieMasterlist(string partno)
         {
-            return SqlDataAccess.Checkdata($@"SELECT COUNT(PartNo) FROM DieMold_MoldingMainParts 
+            return SqlDataAccess.CheckDataAsync($@"SELECT COUNT(PartNo) FROM DieMold_MoldingMainParts 
                                         WHERE PartNo =@PartNo",
                            new { PartNo = partno });
         }
@@ -374,7 +374,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                 FROM DieMold_MoldingMainParts
                 WHERE DieSerial = @searchValue";
 
-            var items = await  SqlDataAccess.GetData<DieMoldMonitoringModel>(
+            var items = await  SqlDataAccess.GetDataAsync<DieMoldMonitoringModel>(
                 sql,new { SearchValue = partno?.Trim() });
 
             return items.FirstOrDefault();  
@@ -396,7 +396,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                     ) AS Status
                 FROM DieMold_MoldingMainParts m
                 WHERE m.DieSerial = @DieSerial";
-            return SqlDataAccess.GetData<DieMoldMonitoringModel>(strsql, new { DieSerial = diepart });
+            return SqlDataAccess.GetDataAsync<DieMoldMonitoringModel>(strsql, new { DieSerial = diepart });
         }
 
 
@@ -410,7 +410,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             int offset = (pageNumber - 1) * pageSize;
             string filterCondition = filter != "" ? $@"AND PartDescription = '{filter}' " : "";
 
-            var items = await SqlDataAccess.GetData<DieMoldMonitoringModel>($@"
+            var items = await SqlDataAccess.GetDataAsync<DieMoldMonitoringModel>($@"
                                 SELECT PartNo,PartDescription
                                       ,Dimension_Quality,DieSerial
                                       ,DieNumber
@@ -447,14 +447,14 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             {
                 string insertquery = @"INSERT INTO DieMold_MoldingMainParts(PartNo, PartDescription, Dimension_Quality, DieSerial, DieNumber, ProcessID)
                                    VALUES(@PartNo, @PartDescription, @Dimension_Quality, @DieSerial, @DieNumber, @ProcessID)";
-                return SqlDataAccess.UpdateInsertQuery(insertquery, mold, "MoldieMasterlist");
+                return SqlDataAccess.ExecuteAsync(insertquery, mold, System.Data.CommandType.Text, "MoldieMasterlist");
             }
             else
             {
                 string insertquery = @"UPDATE DieMold_MoldingMainParts SET PartDescription =@PartDescription, Dimension_Quality =@Dimension_Quality,
                                     DieSerial =@DieSerial, DieNumber =@DieNumber
                                    WHERE PartNo =@PartNo";
-                return SqlDataAccess.UpdateInsertQuery(insertquery, mold, "MoldieMasterlist");
+                return SqlDataAccess.ExecuteAsync(insertquery, mold, System.Data.CommandType.Text, "MoldieMasterlist");
             }
         }
 
@@ -474,7 +474,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
 
         public Task<bool> DeleteMoldieMasterlist(string partno)
         {
-            return SqlDataAccess.UpdateInsertQuery("DELETE FROM DieMold_MoldingMainParts WHERE PartNo =@PartNo", new { PartNo = partno });
+            return SqlDataAccess.ExecuteAsync("DELETE FROM DieMold_MoldingMainParts WHERE PartNo =@PartNo", new { PartNo = partno });
         }
 
        
@@ -492,7 +492,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                             INNER JOIN DieMold_MoldingMainParts p
                                 ON d.PartNo = p.PartNo
                             WHERE p.DieSerial = @DieSerial AND CAST(d.DateInput AS DATE) = CAST(@DateInput  AS DATE);";
-            return SqlDataAccess.UpdateInsertQuery(strsql, new { Status = Stats, DieSerial = dieSerial, DateInput = datestring });
+            return SqlDataAccess.ExecuteAsync(strsql, new { Status = Stats, DieSerial = dieSerial, DateInput = datestring });
         }
 
         public async Task<bool> AddUpdateDailySerialMoldie(DieMoldDieSerialInput mold)
@@ -506,7 +506,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                                     AND DateInput < @DateInput
                                     ORDER BY DateInput DESC";
 
-            int lastCycle = await SqlDataAccess.GetCountData(getlastCycle,
+            int lastCycle = await SqlDataAccess.ExecuteScalarAsync(getlastCycle,
                            new
                            {
                                DieSerial = mold.DieSerial,
@@ -549,7 +549,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                 Mincharge = mold.Mincharge
             };
 
-            bool dailyUpdated = await SqlDataAccess.UpdateInsertQuery(dailyUpdate, parameters);
+            bool dailyUpdated = await SqlDataAccess.ExecuteAsync(dailyUpdate, parameters);
 
             //Debug.WriteLine("Check Daily Update : " + dailyUpdated);
             if (!dailyUpdated) return false;
@@ -566,7 +566,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                 WHERE p.DieSerial = @DieSerial
                   AND CAST(d.DateAction AS DATE) = @DateAction";
 
-            return await SqlDataAccess.UpdateInsertQuery(monitorUpdate, new
+            return await SqlDataAccess.ExecuteAsync(monitorUpdate, new
             {
                 TotalDie = mold.CycleShot,
                 DateAction = mold.DateInput,
@@ -611,7 +611,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                 string updatemold = $@"UPDATE DieMold_Daily SET CycleShot =@CycleShot, Total =@Total
                            WHERE RecordID =@RecordID";
 
-                await SqlDataAccess.UpdateInsertQuery(updatemold, new
+                await SqlDataAccess.ExecuteAsync(updatemold, new
                 {
                     CycleShot = data[i].CycleShot,
                     Total = TempValue,
@@ -647,7 +647,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                         WHERE o.rn < s.stop_rn
                         ORDER BY o.DateInput ASC, o.RecordID ASC;";
 
-            return SqlDataAccess.GetData<DieMoldMonitoringModel>(strsql, new { PartNo = partnum });
+            return SqlDataAccess.GetDataAsync<DieMoldMonitoringModel>(strsql, new { PartNo = partnum });
 
         }
 
@@ -675,7 +675,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                             ORDER BY o.DateInput DESC, o.RecordID DESC;"
             ;
 
-            return SqlDataAccess.GetData<DieMoldMonitoringModel>(strsql, new { DieSerial = DieSerial });
+            return SqlDataAccess.GetDataAsync<DieMoldMonitoringModel>(strsql, new { DieSerial = DieSerial });
         }
 
         public async Task<bool> UpdateDailyMoldiePartNo(DieMoldMonitoringModel mold)

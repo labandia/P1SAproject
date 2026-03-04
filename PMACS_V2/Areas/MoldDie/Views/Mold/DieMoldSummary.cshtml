@@ -169,7 +169,7 @@
     //================ FETCH DATA AND DISPLAY =======================
     //===============================================================
     const GetMoldieYears = async () => {
-        let res = await fetchData('@Url.Action("GetYearMoldDie", "Mold")', {});
+        let res = await GetMethod('@Url.Action("GetYearMoldDie", "Mold")', {});
         const newyear = new Date().getFullYear();
 
         yearSelect.empty();
@@ -208,7 +208,7 @@
                 TableDisplay.empty(); // Removing the Loading Display
 
 
-                 let res = await FetchAuthenticate('@Url.Action("GetMoldDieSummaryList", "Mold")', obj);
+                let res = await GetMethod('@Url.Action("GetMoldDieSummaryList", "Mold")', obj);
                      if (res && res.Success) {
                      
 
@@ -264,7 +264,7 @@
 
             if (typeof window.Loadingsteps === "function") {
                  window.Loadingsteps(id, async () => {
-                     let res = await FetchAuthenticate('@Url.Action("GetMoldDieMonthlyList", "Mold")', obj);
+                     let res = await GetMethod('@Url.Action("GetMoldDieMonthlyList", "Mold")', obj);
 
                          if (res && res.Success) {
                              MonthDisplay.empty(); // Removing the Loading Display

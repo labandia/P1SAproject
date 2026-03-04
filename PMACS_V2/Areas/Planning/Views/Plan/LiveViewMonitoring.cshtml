@@ -311,7 +311,7 @@
 
 
     const LoadfirstAndLastDate = async() => {
-        let res = await fetchData('@Url.Action("GetFirstAndLastDateList", "Plan")', {});
+        let res = await GetMethod('@Url.Action("GetFirstAndLastDateList", "Plan")', {});
         if (res.StatusCode === 200) {
             $('#summarystartdate').val(res.Data[0].FirstDate);
             $('#summaryendDate').val(res.Data[0].LastDate);
@@ -388,7 +388,7 @@
     async function LoadrequestSummary(first, last) {
         $(".Ordersloading").show();
 
-        let res = await fetchData('@Url.Action("GetRequestResults", "Plan")', { stardate: first, endDate: last });
+        let res = await GetMethod('@Url.Action("GetRequestResults", "Plan")', { stardate: first, endDate: last });
 
         if (res.Data !== null) {
             $(".Ordersloading").hide();

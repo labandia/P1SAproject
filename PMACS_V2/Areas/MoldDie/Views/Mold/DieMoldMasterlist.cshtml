@@ -221,7 +221,7 @@
         const data = Object.fromEntries(formData);
 
            // Check for duplicate entry for the same part number on the same date
-         let checkduplicate = await fetchData('@Url.Action("CheckMasterlistMoldExist", "Mold")',
+        let checkduplicate = await GetMethod('@Url.Action("CheckMasterlistMoldExist", "Mold")',
           {
              PartNo: data.PartNo
          });
@@ -240,7 +240,7 @@
 
 
 
-        let res = await postData('@Url.Action("AddMoldDieMasterlist", "Mold")', data);
+        let res = await postMethod('@Url.Action("AddMoldDieMasterlist", "Mold")', data);
         if (res && res.Success) {
             Swal.fire({
                 title: "Success",
@@ -318,7 +318,7 @@
      });
 
     const GetMoldieDescription = async () => {
-        let res = await fetchData('@Url.Action("GetPartDescription", "Mold")', {});
+        let res = await GetMethod('@Url.Action("GetPartDescription", "Mold")', {});
 
           //yearSelect.empty();
           $("#PartDescription").empty();
@@ -365,7 +365,7 @@
     }
 
     const loadMasterlist = async (url) => {
-        let res = await FetchAuthenticate(url, {});
+        let res = await GetMethod(url, {});
                 if (res && res.Success) {
                     DieMasterlist = res.Data.Items;
                     // Loads the First Data
@@ -449,7 +449,7 @@
                     confirmButtonText: "Yes, delete it!"
                 }).then( async (result) => {
                     if (result.isConfirmed) {
-                        let res = await postData('@Url.Action("DeleteMoldMasterlist", "Mold")', { partno: rowIndex });
+                        let res = await postMethod('@Url.Action("DeleteMoldMasterlist", "Mold")', { partno: rowIndex });
                         if (res.Success && res) {
 
                             Swal.fire({

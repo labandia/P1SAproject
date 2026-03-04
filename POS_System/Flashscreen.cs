@@ -43,7 +43,7 @@ namespace POS_System
 
                 // ===== Get Documents Folder =====
                 string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                string appFolder = Path.Combine(documentsPath, "SariSariStore");
+                string appFolder = Path.Combine(documentsPath, "SariSariStoreV2");
 
                 // ===== Create Folder If Not Exists =====
                 if (!Directory.Exists(appFolder))

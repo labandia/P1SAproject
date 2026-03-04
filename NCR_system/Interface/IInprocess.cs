@@ -6,9 +6,13 @@ namespace NCR_system.Interface
 {
     public interface IInprocess
     {
-        Task<IEnumerable<InprocessModel>> GetInprocessData(int section);
-        Task<List<CustomerTotalModel>> GetCustomersOpenItem(int type = 0);
-        Task<CustomerModel> GetCustomerDataByID(int recordID);
+        Task<List<InprocessModel>> GetInprocessData(
+            string search,
+            int departmentID,
+            int Stats,
+            int pageNumber,
+            int pageSize);
+        Task<List<CustomerTotalModel>> GetCustomersOpenItem(int type = 0, int sec = 0);
         Task<bool> InsertInprocessData(InprocessModel inprocess);
         Task<bool> UpdateInprocessData(InprocessModel inprocess);
     }

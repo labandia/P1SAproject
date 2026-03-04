@@ -1,17 +1,19 @@
-﻿using Dapper;
-using System.Text.RegularExpressions;
+﻿using System.Collections.Concurrent;
+using System.Threading;
+using System.Data.SqlClient;
+//using System.Web.Caching;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
+using System.Runtime.Caching;
 using System.Threading.Tasks;
-using System.Diagnostics;
-using System.Web;
+using Dapper;
 using NLog;
 using ProgramPartListWeb.Utilities;
-using System.Runtime.Caching;
+using CommandType = System.Data.CommandType;
+using System.Configuration;
+using System.Diagnostics;
 
 namespace PMACS_V2.Helper
 {
@@ -21,120 +23,207 @@ namespace PMACS_V2.Helper
 
         // -------------------- CONFIG & CACHE --------------------
         private static readonly string _connectionString = BuildConnectionString();
-        //private static readonly MemoryCache _cache = new MemoryCache(new MemoryCacheOptions { SizeLimit = 1024 });
+        private static readonly ObjectCache _cache = MemoryCache.Default;
+
+        // High concurrency locks per cache key
+        private static readonly ConcurrentDictionary<string, SemaphoreSlim> _locks
+            = new ConcurrentDictionary<string, SemaphoreSlim>();
+
+        private static readonly CacheItemPolicy DefaultPolicy = new CacheItemPolicy
+        {
+            SlidingExpiration = TimeSpan.FromMinutes(10)
+        };
 
 
-        // Auto Connection Based on the Domain URL
         public static string BuildConnectionString()
         {
             try
             {
-                string connectionKey = "LiveDevelopment";
+                string env = ConfigurationManager.AppSettings["AppEnvironment"];
+                string key;
 
-                if (System.Web.HttpContext.Current != null)
+                switch (env)
                 {
-                    string host = System.Web.HttpContext.Current.Request.Url.Host.ToLower();
-                    string hostname = Environment.MachineName.ToLower();
+                    case "Home":
+                        key = "HomeDevelopment";
+                        break;
 
-                    if (host.Contains("pmacsweb.sdp.com"))
-                        connectionKey = "LiveDevelopment";
-                    else if (host.Contains("localhost"))
-                        connectionKey = hostname == "desktop-fc0up1p" ? "HomeDevelopment" : "TestDevelopment";
+                    case "Test":
+                        key = "TestDevelopment";
+                        break;
+
+                    default:
+                        key = "LiveDevelopment";
+                        break;
                 }
 
+                var encrypted = ConfigurationManager
+                    .ConnectionStrings[key]
+                    .ConnectionString;
+
                 // AES decode happens once at app start
-                return AesEncryption.DecodeBase64ToString(
-                    System.Configuration.ConfigurationManager.ConnectionStrings[connectionKey].ConnectionString
-                );
+                return AesEncryption.DecodeBase64ToString(encrypted);
             }
             catch (Exception ex)
             {
                 Logger.Error(ex, "Error connection string. Defaulting to LiveDevelopment");
                 return System.Configuration.ConfigurationManager.ConnectionStrings["LiveDevelopment"].ConnectionString;
             }
-
-        
         }
 
-        // CHECK CONNECTION 
-        private static void LogConnectionChoice(string host, string machineName, string connectionKey)
+        private static SqlConnection CreateConnection()
+         => new SqlConnection(_connectionString);
+
+        // --------------------- CORE METHODS ---------------------
+        public static async Task<List<T>> GetDataAsync<T>(
+          string query,
+          object parameters = null,
+          CommandType commandType = CommandType.Text,
+          string cacheKey = null,
+          int cacheMinutes = 10,
+          bool useSqlDependency = false)
         {
-            string logEntry = $"{DateTime.Now:u} | Host: {host} | Machine: {machineName} | Connection: {connectionKey}";
-            Debug.WriteLine(logEntry);
-        }
-        public static SqlConnection GetSqlConnection(string connectionString) => new SqlConnection(connectionString);
-        // ############ DYNAMIC FUNCTION LIST<T> GETDATA ########################
-        public static async Task<List<T>> GetData<T>(string query, object parameters = null, string cacheKey = null, int cacheMinutes = 10)
-        {
+            if (string.IsNullOrEmpty(cacheKey))
+            {
+                using (var con = CreateConnection())
+                {
+                    var result = await con.QueryAsync<T>(query, parameters, commandType: commandType);
+                    return result.AsList();
+                }
+            }
+
+            // First check (no lock)
+            var cached = _cache.Get(cacheKey) as List<T>;
+            if (cached != null)
+                return cached;
+
+            var myLock = _locks.GetOrAdd(cacheKey, new SemaphoreSlim(1, 1));
+
+            await myLock.WaitAsync();
             try
             {
-                // Use provided cache key or default to no caching
-                if (!string.IsNullOrEmpty(cacheKey))
-                {
-                    return await CacheHelper.GetOrSetAsync(cacheKey, async () =>
-                    {
-                        using (IDbConnection con = GetSqlConnection(_connectionString()))
-                        {
-                            bool IsStoreProd = Regex.IsMatch(query, @"^\w+$");
-                            var commandType = IsStoreProd ? CommandType.StoredProcedure : CommandType.Text;
-                            var result = await con.QueryAsync<T>(query, parameters, commandType: commandType);
+                // Double check
+                cached = _cache.Get(cacheKey) as List<T>;
+                if (cached != null)
+                    return cached;
 
-                            return result.ToList();
-                        }
-                    }, cacheMinutes);
+                List<T> list;
+
+                using (var con = CreateConnection())
+                {
+                    var result = await con.QueryAsync<T>(query, parameters, commandType: commandType);
+                    list = result.AsList();
                 }
-                else
-                {
-                    // No caching
-                    using (IDbConnection con = GetSqlConnection(_connectionString()))
-                    {
-                        bool IsStoreProd = Regex.IsMatch(query, @"^\w+$");
-                        var commandType = IsStoreProd ? CommandType.StoredProcedure : CommandType.Text;
-                        var result = await con.QueryAsync<T>(query, parameters, commandType: commandType);
 
-                        return result.ToList();
+                var policy = new CacheItemPolicy
+                {
+                    AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(cacheMinutes)
+                };
+
+                // 🔥 SQL AUTO INVALIDATE
+                if (useSqlDependency)
+                {
+                    using (var connection = new SqlConnection(_connectionString))
+                    using (var command = new SqlCommand(query, connection))
+                    {
+                        connection.Open();
+                        var dependency = new SqlDependency(command);
+
+                        policy.ChangeMonitors.Add(
+                            new SqlChangeMonitor(dependency)
+                        );
                     }
                 }
+
+                // 🔥 BACKGROUND AUTO REFRESH
+                policy.RemovedCallback = async args =>
+                {
+                    if (args.RemovedReason == CacheEntryRemovedReason.Expired)
+                    {
+                        try
+                        {
+                            using (var con = CreateConnection())
+                            {
+                                var result = await con.QueryAsync<T>(query, parameters, commandType: commandType);
+                                var refreshed = result.AsList();
+
+                                _cache.Set(cacheKey, refreshed,
+                                    DateTimeOffset.Now.AddMinutes(cacheMinutes));
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Error(ex, "Background refresh failed.");
+                        }
+                    }
+                };
+
+                _cache.Set(cacheKey, list, policy);
+
+                return list;
             }
-            catch (SqlException ex)
+            finally
             {
-                Logger.Error(ex, $"SQL Exception while executing query. Query: {query}, CacheKey: {cacheKey}");
-                Debug.WriteLine(ex.Message);
-                return new List<T>();
+                myLock.Release();
             }
         }
-        public static async Task<byte[]> GetByteAsync(string query, object parameters = null)
+        // -------------------- GET OBJECT DATA --------------------
+        public static async Task<T> GetSingleAsync<T>(
+            string query,
+            object parameters = null,
+            CommandType commandType = CommandType.Text,
+            string cacheKey = null,
+            int cacheMinutes = 10)
         {
+            if (string.IsNullOrEmpty(cacheKey))
+            {
+                using (var con = CreateConnection())
+                    return await con.QueryFirstOrDefaultAsync<T>(query, parameters, commandType: commandType);
+            }
+
+            var cached = _cache.Get(cacheKey);
+            if (cached != null)
+                return (T)cached;
+
+            var myLock = _locks.GetOrAdd(cacheKey, new SemaphoreSlim(1, 1));
+
+            await myLock.WaitAsync();
             try
             {
-                using (IDbConnection con = GetSqlConnection(_connectionString()))
+                cached = _cache.Get(cacheKey);
+                if (cached != null)
+                    return (T)cached;
+
+                T result;
+
+                using (var con = CreateConnection())
+                    result = await con.QueryFirstOrDefaultAsync<T>(query, parameters, commandType: commandType);
+
+                var policy = new CacheItemPolicy
                 {
-                    // Always treat as plain SQL text
-                    var result = await con.QueryAsync<byte[]>(query, parameters, commandType: CommandType.Text);
-                    return result.FirstOrDefault(); // Return first row or null
-                }
+                    AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(cacheMinutes)
+                };
+
+                _cache.Set(cacheKey, result, policy);
+
+                return result;
             }
-            catch (SqlException ex)
+            finally
             {
-                Logger.Error(ex, $"SQL Exception while executing query: {query}");
-                return null;
+                myLock.Release();
             }
         }
-
-        // ############ SELECTS ONLY ONE ROW DATA  ##############################
+        // -------------------- GETS STRING ONLY --------------------
         public static async Task<string> GetOneData(string query, object parameters)
         {
             try
             {
-                using (IDbConnection con = GetSqlConnection(_connectionString()))
-                {
-                    return  await con.QuerySingleOrDefaultAsync<string>(query, parameters);
-                }
+                using (IDbConnection con = CreateConnection())
+                    return await con.QuerySingleOrDefaultAsync<string>(query, parameters);
             }
             catch (Exception ex)
             {
                 Logger.Error(ex, $"SQL Exception while executing query. Query: {query}");
-                Debug.WriteLine(ex.Message);
                 return "";
             }
         }
@@ -144,10 +233,8 @@ namespace PMACS_V2.Helper
         {
             try
             {
-                using (IDbConnection con = GetSqlConnection(_connectionString()))
-                {
+                using (IDbConnection con = CreateConnection())
                     return await con.QuerySingleOrDefaultAsync<T>(query, parameters);
-                }
             }
             catch (Exception ex)
             {
@@ -157,108 +244,99 @@ namespace PMACS_V2.Helper
             }
         }
 
-
-        // ############ GET THE TOTAL COUNT OF THE QUERY ########################
-        public static async Task<int> GetCountData(string query, object parameters = null)
+        // -------------------- GET THE TOTAL COUNT --------------------
+        public static async Task<int> ExecuteScalarAsync(string query,
+            object parameters = null,
+            CommandType commandType = CommandType.Text)
         {
             try
             {
-                using (IDbConnection con = GetSqlConnection(_connectionString()))
-                {
-                    // Check if the query is a stored procedure name (only word characters, no spaces/symbols)
-                    var isStoredProcedure = Regex.IsMatch(query, @"^\w+$");
-
-                    int? count = await con.ExecuteScalarAsync<int?>(
-                        query,
-                        parameters,
-                        commandType: isStoredProcedure ? CommandType.StoredProcedure : CommandType.Text
-                    );
-
-                    return count ?? 0;
-                }
+                using (var con = CreateConnection())
+                    return await con.ExecuteScalarAsync<int>(query, parameters, commandType: commandType);
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, $"SQL Exception while executing query. Query: {query}");
+                Logger.Error(ex, $"ExecuteScalarAsync failed. Query: {query}");
                 return 0;
             }
         }
-        // ############ CHECKS IF THE ROW DATA IS EXIST ########################
-        public static async Task<bool> Checkdata(string query, object parameters = null)
+        // -------------------- CHECK IF THE DATA EXIST --------------------
+        public static async Task<bool> CheckDataAsync(
+                string query,
+                object parameters = null,
+                CommandType commandType = CommandType.Text)
         {
             try
             {
-                using (IDbConnection con = GetSqlConnection(_connectionString()))
+                using (var con = CreateConnection())
                 {
-                    bool IsStoreprod = Regex.IsMatch(query, @"^\w+$");
-                    var commandType = IsStoreprod ? CommandType.StoredProcedure : CommandType.Text;
+                    int count = await con.ExecuteScalarAsync<int>(
+                        query,
+                        parameters,
+                        commandType: commandType
+                    );
 
-                    int count = await con.ExecuteScalarAsync<int>(query, parameters, commandType: commandType);
                     return count > 0;
-                }
-            }
-            catch(Exception ex)
-            {
-                Logger.Error(ex, $"SQL Exception while executing query. Query: {query}");
-                return false;
-            }     
-        }
-        // ############ INSERT AND UPDATE QUERY ########################
-        public static async Task<bool> UpdateInsertQuery(string strQuery, object parameters, string cacheKeyToInvalidate = null)
-        {
-            try
-            {
-                using (IDbConnection con = new SqlConnection(_connectionString()))
-                {
-                   
-                    bool isStoredProcedure = Regex.IsMatch(strQuery, @"^\w+$");
-                    CommandType commandType = isStoredProcedure ? CommandType.StoredProcedure : CommandType.Text;
-
-                    int rowsAffected = await con.ExecuteAsync(strQuery, parameters, commandType: commandType);
-
-                    // If update was successful and a cache key is provided, remove it
-                    if (rowsAffected > 0 && !string.IsNullOrEmpty(cacheKeyToInvalidate)) CacheHelper.Remove(cacheKeyToInvalidate);
-                   
-                    return rowsAffected > 0;
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Error Message: " + ex.Message);
-                Logger.Error(ex, $"SQL Exception : {ex.Message}");
+                Logger.Error(ex, $"CheckDataAsync failed. Query: {query}");
+                return false;
+            }
+
+        }
+        // -------------------- INSERT AND UPDATE QUERY --------------------
+        public static async Task<bool> ExecuteAsync(
+            string query,
+            object parameters = null,
+            CommandType commandType = CommandType.Text,
+            string cacheKeyToInvalidate = null)
+        {
+            try
+            {
+                using (var con = CreateConnection())
+                {
+                    int rows = await con.ExecuteAsync(query, parameters, commandType: commandType);
+
+                    if (rows > 0 && !string.IsNullOrEmpty(cacheKeyToInvalidate))
+                        _cache.Remove(cacheKeyToInvalidate);
+
+                    return rows > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "ExecuteAsync failed.");
                 return false;
             }
         }
-        // ############ LIST OF STRINGS ########################
-        public static async Task<List<string>> GetlistStrings(string query, object parameters = null)
+        // -------------------- GET THE LIST DATA BY STRING --------------------
+        public static async Task<List<string>> StringListAsync(
+                string query,
+                object parameters = null,
+                CommandType commandType = CommandType.Text)
         {
             var stringList = new List<string>();
+
             try
             {
-                using (IDbConnection con = GetSqlConnection(_connectionString()))
+                using (var con = CreateConnection())
                 {
-                    IEnumerable<string> dataList;
+                    var result = await con.QueryAsync<string>(
+                        query,
+                        parameters,
+                        commandType: commandType
+                    );
 
-                    // Check if the query is a stored procedure (only word characters, no spaces/symbols)
-                    if (Regex.IsMatch(query, @"^\w+$"))
-                    {
-                        dataList = await con.QueryAsync<string>(query, parameters, commandType: CommandType.StoredProcedure);
-                    }
-                    else
-                    {
-                        dataList = await con.QueryAsync<string>(query, parameters);
-                    }
-
-                    stringList = dataList.ToList();
+                    return result.AsList();
                 }
             }
-            catch (SqlException ex)
+            catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
-                Logger.Error(ex, $"SQL Exception while executing query. Query: {query}");
+                Logger.Error(ex, $"StringListAsync failed. Query: {query}");
+                return new List<string>();
             }
-
-            return stringList;
         }
 
 
@@ -268,7 +346,7 @@ namespace PMACS_V2.Helper
             var resultData = new DataTable();
             try
             {
-                using (IDbConnection con = GetSqlConnection(_connectionString()))
+                using (IDbConnection con = CreateConnection())
                 {
                     // Execute the query using Dapper
                     var result = await con.QueryAsync(query, parameters);
@@ -310,8 +388,79 @@ namespace PMACS_V2.Helper
 
 
 
+        // -------------------- SOFT DELETE --------------------------
+        public static async Task<bool> SoftDeleteAsync(
+            string tableName,
+            string keyColumn,
+            object keyValue)
+        {
+            string sql = $"UPDATE {tableName} SET IsDelete = 1 WHERE {keyColumn} = @Id";
+
+            return await ExecuteAsync(sql, new { Id = keyValue });
+        }
+
+        public static async Task BulkInsertAsync<T>(
+            string tableName,
+            List<T> data)
+        {
+            if (data == null || !data.Any())
+                return;
+
+            using (var con = new SqlConnection(_connectionString))
+            {
+                await con.OpenAsync();
+
+                using (var bulkCopy = new SqlBulkCopy(con))
+                {
+                    bulkCopy.DestinationTableName = tableName;
+
+                    var table = new DataTable();
+                    var properties = typeof(T).GetProperties();
+
+                    foreach (var prop in properties)
+                    {
+                        table.Columns.Add(prop.Name, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
+                    }
+
+                    foreach (var item in data)
+                    {
+                        var row = table.NewRow();
+                        foreach (var prop in properties)
+                        {
+                            row[prop.Name] = prop.GetValue(item) ?? DBNull.Value;
+                        }
+                        table.Rows.Add(row);
+                    }
+
+                    await bulkCopy.WriteToServerAsync(table);
+                }
+            }
+        }
+
+        // -------------------- CACHE UTILITIES --------------------
+        public static void ClearCache(string cacheKey = null)
+        {
+            if (!string.IsNullOrEmpty(cacheKey))
+            {
+                _cache.Remove(cacheKey);
+            }
+            else
+            {
+                foreach (var item in _cache)
+                    _cache.Remove(item.Key);
+            }
+        }
 
 
+        public static void StartSqlDependency()
+        {
+            SqlDependency.Start(_connectionString);
+        }
+
+        public static void StopSqlDependency()
+        {
+            SqlDependency.Stop(_connectionString);
+        }
 
 
 
@@ -329,7 +478,7 @@ namespace PMACS_V2.Helper
             object dynamicList = null;
             string strquery = "";
 
-            using (IDbConnection conn = GetSqlConnection(_connectionString()))
+            using (IDbConnection conn = CreateConnection())
             {
                 if (Op == 0)
                 {
@@ -412,7 +561,7 @@ namespace PMACS_V2.Helper
             return null; // Return null if parsing fails
         }
 
-        internal static Task<T> GetByteAsync<T>(string sql, object value)
+        public static Task<T> GetByteAsync<T>(string sql, object value)
         {
             throw new NotImplementedException();
         }

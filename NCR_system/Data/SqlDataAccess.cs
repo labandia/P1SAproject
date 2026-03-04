@@ -9,6 +9,7 @@ using Dapper;
 using NCR_system.Data;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
+using System.Configuration;
 
 namespace MSDMonitoring.Data
 {
@@ -24,22 +25,30 @@ namespace MSDMonitoring.Data
         {
             try
             {
-                string connectionKey = "LiveDevelopment";
+                string env = ConfigurationManager.AppSettings["AppEnvironment"];
+                string key;
 
-                string machineName = Environment.MachineName.ToLower();
+                switch (env)
+                {
+                    case "Home":
+                        key = "HomeDevelopment";
+                        break;
 
-                if (machineName == "desktop-fc0up1p") //  Home production
-                    connectionKey = "HomeDevelopment";
-                else if (machineName == "sdp24080207") //  Test production
-                    connectionKey = "TestDevelopment";
-                else
-                    connectionKey = "LiveDevelopment";
+                    case "Test":
+                        key = "TestDevelopment";
+                        break;
+
+                    default:
+                        key = "LiveDevelopment";
+                        break;
+                }
+
+                var encrypted = ConfigurationManager
+                    .ConnectionStrings[key]
+                    .ConnectionString;
 
 
-                // AES decode happens once at app start
-                return AesEncryption.DecodeBase64ToString(
-                    System.Configuration.ConfigurationManager.ConnectionStrings[connectionKey].ConnectionString
-                );
+                return AesEncryption.DecodeBase64ToString(encrypted);
             }
             catch (Exception ex)
             {

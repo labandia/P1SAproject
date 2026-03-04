@@ -19,7 +19,8 @@ namespace NCR_system.Repository
                                 FROM PC_Section s
                                 LEFT JOIN PC_Inprocess c
                                     ON c.SectionID = s.SectionID 
-                                    AND c.Status = @Status ";
+                                    AND c.Status = @Status
+                                IsDelete = 0 ";
 
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             parameters.Add("@Status", Stats);
@@ -54,7 +55,7 @@ namespace NCR_system.Repository
 
             Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-            string strquery = $@"SELECT RecordID,DateEncounter
+            string strquery = $@"SELECT RecordID, DateEncounter
                                   ,TitleEmail,Shift
                                   ,Line,Model
                                   ,ShopOrder,Defect

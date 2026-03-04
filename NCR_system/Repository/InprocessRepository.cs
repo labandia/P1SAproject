@@ -11,7 +11,7 @@ namespace NCR_system.Repository
     internal class InprocessRepository : IInprocess
     {
     
-        public Task<List<CustomerTotalModel>> GetCustomersOpenItem(int Stats = 0, int sec = 0)
+        public Task<List<CustomerTotalModel>> GetCustomersOpenItem(int Stats = 1, int sec = 0)
         {
             string strquery = $@"SELECT 
                                     s.DepartmentName,
@@ -22,6 +22,7 @@ namespace NCR_system.Repository
                                     AND c.Status = @Status ";
 
             Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("@Status", Stats);
 
             // Filter By Process 
             if (sec != 0)
@@ -35,10 +36,9 @@ namespace NCR_system.Repository
                                 s.DepartmentName
                             ORDER BY
                                 s.SectionID ASC;";
+            Debug.WriteLine(strquery);
 
-            parameters.Add("@Status", Stats);
-
-            return SqlDataAccess.GetDataAsync<CustomerTotalModel>(strquery, null);
+            return SqlDataAccess.GetDataAsync<CustomerTotalModel>(strquery, parameters);
         }
 
 

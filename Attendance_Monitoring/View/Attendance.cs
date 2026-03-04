@@ -195,7 +195,7 @@ namespace Attendance_Monitoring.View
                     // Check if the user is already timed In
                     string timecheckout = "SELECT COUNT(1)  FROM " + tb + " WHERE Employee_ID = '" + empid + "' AND CAST(Date_today AS DATE) = '" + dtDate + "' AND TimeOut IS NOT NULL";
 
-                    bool result = await SqlDataAccess.Checkdata(timecheckout);
+                    bool result = await SqlDataAccess.CheckDataAsync(timecheckout);
 
 
                     if (result == true)
@@ -274,7 +274,7 @@ namespace Attendance_Monitoring.View
                             Overtime = oTHours
                         };
 
-                        bool success = await SqlDataAccess.UpdateInsertQuery(updateQuery, parameters);
+                        bool success = await SqlDataAccess.ExecuteAsync(updateQuery, parameters);
 
                         if (success)
                         {
@@ -330,7 +330,7 @@ namespace Attendance_Monitoring.View
 
                     // Check if the user is already timed out
                     string timecheckout = "SELECT COUNT(1) FROM " + tb + " WHERE Employee_ID = '" + empid + "' AND CAST(Date_today AS DATE) = '" + dtDate + "' AND TimeOut IS NOT NULL";
-                    bool result = await SqlDataAccess.Checkdata(timecheckout);
+                    bool result = await SqlDataAccess.CheckDataAsync(timecheckout);
 
                     if (result == true)
                     {
@@ -402,7 +402,7 @@ namespace Attendance_Monitoring.View
                         };
 
 
-                        bool success = await SqlDataAccess.UpdateInsertQuery(updateQuery, parameters);
+                        bool success = await SqlDataAccess.ExecuteAsync(updateQuery, parameters);
 
                         if (success)
                         {

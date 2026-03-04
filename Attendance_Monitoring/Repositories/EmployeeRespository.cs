@@ -46,12 +46,12 @@ namespace Attendance_Monitoring.Models
 
             strquery += " ORDER BY FullName ASC";
 
-            return SqlDataAccess.GetData<Employee>(strquery, parameters);
+            return SqlDataAccess.GetDataAsync<Employee>(strquery, parameters);
         }
         public Task<List<Department>> GetDepartments()
         {
             string strquery = "SELECT Department_ID, Department_name FROM Department_tbl";
-            return  SqlDataAccess.GetData<Department>(strquery);
+            return  SqlDataAccess.GetDataAsync<Department>(strquery);
         }
         public Task<bool> AddEmployee(Employee emp)
         {
@@ -64,13 +64,13 @@ namespace Attendance_Monitoring.Models
                 Affiliation = emp.Affiliation,
                 Department_ID = emp.Department_ID
             };
-            return SqlDataAccess.UpdateInsertQuery(strquery, parameters);
+            return SqlDataAccess.ExecuteAsync(strquery, parameters);
         }
         public Task<bool> DeleteEmployee(string employee)
         {
             string strquery = "DeleteEmployee";
             var parameters = new { EmployeeID = employee };
-            return SqlDataAccess.UpdateInsertQuery(strquery, parameters);
+            return SqlDataAccess.ExecuteAsync(strquery, parameters);
         }
         public Task<bool> UpdateEmployee(Employee emp, string emptemp)
         {
@@ -84,7 +84,7 @@ namespace Attendance_Monitoring.Models
                 Affiliation = emp.Affiliation,
                 Department_ID = emp.Department_ID
             };
-            return SqlDataAccess.UpdateInsertQuery(strquery, parameters);
+            return SqlDataAccess.ExecuteAsync(strquery, parameters);
         }
 
         public async Task<bool> UploadEmployee(DataTable td, int depid, int method)
@@ -95,13 +95,13 @@ namespace Attendance_Monitoring.Models
 
             if(method  == 0)
             {
-                await SqlDataAccess.UpdateInsertQuery("DELETE FROM Employee_tbl WHERE Department_ID =@Department_ID", new { Department_ID = depid });
+                await SqlDataAccess.ExecuteAsync("DELETE FROM Employee_tbl WHERE Department_ID =@Department_ID", new { Department_ID = depid });
             }
 
             foreach (DataRow row in td.Rows)
             { 
                 string strsql = "SELECT Employee_ID FROM Employee_tbl WHERE Employee_ID = @Employee_ID";
-                bool checkresult = await SqlDataAccess.Checkdata(strsql, new { Employee_ID = row["Employee_ID"] });
+                bool checkresult = await SqlDataAccess.CheckDataAsync(strsql, new { Employee_ID = row["Employee_ID"] });
 
                 // Checks if the employee ID is Not exist
                 if (!checkresult)
@@ -117,7 +117,7 @@ namespace Attendance_Monitoring.Models
                         Affiliation = row["Affiliation"],
                         Department_ID = depid
                     };
-                    await SqlDataAccess.UpdateInsertQuery("AddEmployee", parameters);
+                    await SqlDataAccess.ExecuteAsync("AddEmployee", parameters);
                 }
             }
             return result;

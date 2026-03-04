@@ -27,7 +27,7 @@ namespace Attendance_Monitoring.Repositories
                                 WHERE Employee_ID = @Employee_ID
                                   AND TimeOut IS NULL
                                   AND CAST(TimeIn AS DATE) < CAST(GETDATE() AS DATE);";
-            await SqlDataAccess.UpdateInsertQuery(autoCloseOldQuery, new { Employee_ID = EmployeeID });
+            await SqlDataAccess.ExecuteAsync(autoCloseOldQuery, new { Employee_ID = EmployeeID });
 
             // 2️⃣ Determine current shift
             TimeSpan now = DateTime.Now.TimeOfDay;
@@ -55,7 +55,7 @@ namespace Attendance_Monitoring.Repositories
                         FROM P1SA_AttendanceMonitor
                         WHERE Employee_ID = @Employee_ID
                         ORDER BY TimeIn DESC";
-            var lastRecord = await SqlDataAccess.GetData<PreventTimeIn>(lastRecordQuery, new { Employee_ID = EmployeeID });
+            var lastRecord = await SqlDataAccess.GetDataAsync<PreventTimeIn>(lastRecordQuery, new { Employee_ID = EmployeeID });
             var last = lastRecord.FirstOrDefault();
 
             if (last != null)
@@ -101,7 +101,7 @@ namespace Attendance_Monitoring.Repositories
                                     WHERE Employee_ID = @Employee_ID
                                       AND ShiftDate = CAST(GETDATE() AS DATE)
                                       AND Shifts = @Shift";
-            int existingToday = await SqlDataAccess.GetCountData(
+            int existingToday = await SqlDataAccess.ExecuteScalarAsync(
                  checkTodayQuery,
                  new { Employee_ID = EmployeeID, Shift = currentShift }
             );
@@ -121,7 +121,7 @@ namespace Attendance_Monitoring.Repositories
                         INSERT INTO P1SA_AttendanceMonitor (Employee_ID, ShiftDate, LateTime)
                         VALUES (@Employee_ID, CAST(GETDATE() AS DATE), @LateTime)";
 
-            bool result = await SqlDataAccess.UpdateInsertQuery(
+            bool result = await SqlDataAccess.ExecuteAsync(
                 insertQuery,
                 new { Employee_ID = EmployeeID, LateTime  = late}
             );
@@ -162,7 +162,7 @@ namespace Attendance_Monitoring.Repositories
                         ORDER BY TimeIn DESC";
                 var param = new { Employee_ID = EmployeeID};
 
-                var IsTimeIn = await SqlDataAccess.GetData<CheckBlankRecordTimeOut>(timeincheck, param);
+                var IsTimeIn = await SqlDataAccess.GetDataAsync<CheckBlankRecordTimeOut>(timeincheck, param);
                 var IsTimeInRecord = IsTimeIn.FirstOrDefault();
 
                 if (IsTimeIn == null || IsTimeIn.Count == 0)
@@ -228,7 +228,7 @@ namespace Attendance_Monitoring.Repositories
                     Overtime = oTHours
                 };
 
-                bool success = await SqlDataAccess.UpdateInsertQuery(updateQuery, updateobj);
+                bool success = await SqlDataAccess.ExecuteAsync(updateQuery, updateobj);
 
                 if (success)
                 {
@@ -277,7 +277,7 @@ namespace Attendance_Monitoring.Repositories
 
             strquery += (selectime == 0) ? " ORDER BY pc.RecordID DESC" : " AND pc.TimeOut is Not null ORDER BY pc.TimeOut DESC";
 
-            var IsRecord = await SqlDataAccess.GetData<P1SA_AttendanceModel>(strquery, 
+            var IsRecord = await SqlDataAccess.GetDataAsync<P1SA_AttendanceModel>(strquery, 
                 new { 
                     Datetoday = dDate, 
                     Shifts = shifts, 
@@ -293,7 +293,11 @@ namespace Attendance_Monitoring.Repositories
             };
         }
 
-        public async Task<ApiResponse<P1SA_AttendanceModel>> GetAttendanceSummaryList(string startDate, string endDate, int depid, string search = "")
+        public async Task<ApiResponse<P1SA_AttendanceModel>> GetAttendanceSummaryList(
+            string startDate, 
+            string endDate, 
+            int depid, 
+            string search = "")
         {
             string strsql = $@"SELECT
                         pc.RecordID,
@@ -305,13 +309,32 @@ namespace Attendance_Monitoring.Repositories
 	                    pc.LateTime, pc.Shifts
                     FROM P1SA_AttendanceMonitor pc 
                     INNER JOIN Employee_tbl e ON e.Employee_ID = pc.Employee_ID
-                    WHERE  (pc.Employee_ID LIKE '%{search}%' OR e.FullName LIKE '%{search}%') 
-                    AND e.Department_ID = @Department_ID    
-                    AND CAST(pc.TimeIn AS DATE) between @startDate AND @endDate";
+                    WHERE e.IsDelete = 0 AND e.Department_ID = @Department_ID ";
 
-            var parameters = new { startDate = startDate, endDate = endDate, Department_ID = depid };
+            //string strcount = $@"SELECT COUNT(*) 
+            //        FROM P1SA_AttendanceMonitor pc 
+            //        INNER JOIN Employee_tbl e ON e.Employee_ID = pc.Employee_ID
+            //        WHERE e.IsDelete = 0 AND e.Department_ID = @Department_ID ";
 
-            var IsRecord = await SqlDataAccess.GetData<P1SA_AttendanceModel>(strsql, parameters);
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("@Department_ID", depid);
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                strsql += $@" AND (pc.Employee_ID LIKE '%{search}%' OR e.FullName LIKE '%{search}%') ";
+            }
+           
+            if (!string.IsNullOrEmpty(startDate) && !string.IsNullOrEmpty(endDate))
+            {
+                strsql += " AND CAST(pc.TimeIn AS DATE) between @startDate AND @endDate";
+                parameters.Add("@startDate", startDate);
+                parameters.Add("@endDate", endDate);
+            }
+
+
+            //int GetCount = await SqlDataAccess.ExecuteScalarAsync(strcount, parameters);
+
+            var IsRecord = await SqlDataAccess.GetDataAsync<P1SA_AttendanceModel>(strsql, parameters);
             bool hasRecords = IsRecord.Any();
 
             return new ApiResponse<P1SA_AttendanceModel>

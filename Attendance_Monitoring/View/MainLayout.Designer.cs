@@ -52,7 +52,7 @@
             this.Logoutbtn.Image = ((System.Drawing.Image)(resources.GetObject("Logoutbtn.Image")));
             this.Logoutbtn.Location = new System.Drawing.Point(11, 643);
             this.Logoutbtn.Name = "Logoutbtn";
-            this.Logoutbtn.Size = new System.Drawing.Size(58, 48);
+            this.Logoutbtn.Size = new System.Drawing.Size(159, 48);
             this.Logoutbtn.TabIndex = 8;
             this.Logoutbtn.UseVisualStyleBackColor = false;
             this.Logoutbtn.Click += new System.EventHandler(this.Logoutbtn_Click);

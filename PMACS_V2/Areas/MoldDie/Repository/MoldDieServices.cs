@@ -222,9 +222,11 @@ namespace PMACS_V2.Areas.MoldDie.Repository
 
         public async Task<bool> AddUpdateDailyMoldie(DieMoldMonitoringModel mold, int action)
         {
+            Debug.WriteLine("Action TAKEN : " + action);
             if (mold == null) return false;
 
             var dateOnly = mold.DateInput;
+
             return action == 0
                  ? await MoldieHelper.MoldiePartNoLogic(mold, dateOnly)
                  : await MoldieHelper.MoldieDieSerialLogic(mold, dateOnly);

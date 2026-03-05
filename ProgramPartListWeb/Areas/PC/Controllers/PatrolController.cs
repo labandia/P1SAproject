@@ -117,8 +117,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         // GET: GetRegistrationNoByID
         public async Task<ActionResult> GetRegistrationFindings(string Regno)
         {
-            //var data = await _ins.GetRegistrationData() ?? new List<PatrolRegistionModel>();
-            var data = await _reg.GetRegisterFindings(Regno) ?? new List<FindingModel>();
+            var data = await _reg.GetRegisterFindings(Regno);
             if (data == null || !data.Any()) return JsonNotFound("No Findings data found");
 
             return JsonSuccess(data, "Load Registration No#");

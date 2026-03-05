@@ -571,7 +571,7 @@
                  formData.append('DieSerial', strDieSerial);
                  const data = Object.fromEntries(formData);
 
-             let result = await postDataV2('@Url.Action("UpdateDieSerialMoldDieMonitor", "Mold")', formData);
+             let result = await postMethod('@Url.Action("UpdateDieSerialMoldDieMonitor", "Mold")', formData);
              if (result && result.Error) {
                  // Network or client-side error
                  console.error('Request failed:', result.Message);
@@ -839,7 +839,7 @@
 
                 let Details = res.Data.Details;
                 let GetList = res.Data.GetList;
-                getDieObj = GetList[0];
+                getDieObj = GetList;
                 // Display the Details
                 if (Details) {
                     $("#DieSerialMasterlist").empty();
@@ -1116,6 +1116,7 @@
 
      }
     function PopulateDieSerialist(data) {
+        console.log(data);
         $("#dieMoldMasterlist").empty();
         data.forEach((rowData, index) => {
             let ActionButton = "";
@@ -1123,12 +1124,12 @@
             if (rowData.Total !== 0) {
                 ActionButton = `<div style='display: grid; grid-template-columns: 50% 50%; gap: 5px;'>
                     <button type="button" class="text-primary actionicon EditSerialDaily"
-                        id="editButton_${rowData.DieSerial}">
+                        id="editButton_${rowData.RecordID}">
                         <i class="fa-regular fa-pen-to-square action_btn"></i>
                     </button>
 
                     <button type="button" class="text-danger actionicon  deleteSerialDailyBtn"
-                        id="deleteDailyButton_${rowData.DieSerial}">
+                        id="deleteDailyButton_${rowData.RecordID}">
                         <i class="fa-regular fa-trash-can"></i>
                     </button>
               </div>`;
@@ -1216,7 +1217,10 @@
 
             const buttonId = $(this).attr('id');
             const rowIndex = buttonId.split('_')[1];
-            console.log(getDieObj);
+            console.log("Row index" + rowIndex);
+            let filteredata = getDieObj.find(res => res.RecordID === rowIndex);
+
+            console.log(filteredata);
             $("#DailyEditDateInput").val(getDieObj.DateInput);
 
             $("#DailyeditCycleShot").val(getDieObj.CycleShot);

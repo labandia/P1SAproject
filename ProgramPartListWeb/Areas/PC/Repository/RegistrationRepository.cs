@@ -90,7 +90,10 @@ namespace ProgramPartListWeb.Areas.PC.Repository
         }
 
 
-        public Task<List<FindingModel>> GetRegisterFindings(string regNo) => SqlDataAccess.GetDataAsync<FindingModel>("GetFindings", new { Regno = regNo });
+        public Task<List<FindingModel>> GetRegisterFindings(string regNo)
+        {
+            return SqlDataAccess.GetDataAsync<FindingModel>("GetFindings", new { Regno = regNo }, CommandType.StoredProcedure);
+        }
 
         public Task<List<RegistrationFiles>> GetRegisterFiles(string regNo)
         {

@@ -260,6 +260,8 @@ namespace PMACS_V2.Areas.MoldDie.Repository
 
             foreach (var part in partList)
             {
+                Debug.WriteLine("Partnum  : " + part);
+
                 // Get last total BEFORE this date
                 string getLastTotal = @"  
                             SELECT TOP 1 ISNULL(Total, 0)
@@ -276,7 +278,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                     DateInput = mold.DateInput
                 });
 
-                Debug.WriteLine("Last Cycle Time Die Serial : " + lastTotal);
+                //Debug.WriteLine("Last Cycle Time Die Serial : " + lastTotal);
 
                 var history = await GetMasterlistParts(part);
 
@@ -288,7 +290,6 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                 if (history == null) return false;
 
                 //if (history == null) return false;
-                Debug.WriteLine("Done Getting the Last Record History  ... ");
                 Debug.WriteLine(history.Dimension_Quality);
 
                 // correct Dimension_Quality per PartNo
@@ -299,7 +300,8 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                   history.Dimension_Quality);
 
                 Debug.WriteLine("Done Calculating Total and Status ... ");
-
+                //Debug.WriteLine("New Total ... " + moldtotal);
+                //Debug.WriteLine("New Satus ... " + moldstatus);
                 // =====================================================
                 // DAILY MONITORING 
                 // =====================================================
@@ -381,7 +383,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
         }
 
 
-
+        //Working in partnumber
         public static async Task<bool> UpdateAllMoldieData(DieMoldMonitoringModel model)
         {
             /* --------------------------------------------------
@@ -495,5 +497,38 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             return await Task.FromResult(true);
         }
 
+        // Working in DieSerial 
+        public static async Task<bool> UpdateAllMoldieSerial(DieMoldMonitoringModel model)
+        {
+   
+
+            /* --------------------------------------------------
+                    * 1. Get ALL Die Serial Records
+                    * --------------------------------------------------*/
+            var partList = await GetPartNoByDieSerial(model.DieSerial);
+            if (!partList.Any()) return false;
+
+            /* --------------------------------------------------
+                    * 1. Update All the Total of all the Same DieSerial with the new Total 
+                    * --------------------------------------------------*/
+            foreach (var part in partList)
+            {
+                // Update all the total of the same DieSerial with the new Total
+                string saveLatesTotal = @"UPDATE DieMold_Daily 
+                                SET Total = @newTotal  
+                                WHERE PartNo = @PartNo AND Total = @Total AND DateInput = @DateInput";
+
+                await SqlDataAccess.ExecuteAsync(saveLatesTotal, new
+                {
+                    newTotal = model.Total,
+                    PartNo = part,
+                    Total = model.Total,
+                    DateInput = model.DateInput
+                });
+            }
+
+
+            return true;
+        }
     }
 }

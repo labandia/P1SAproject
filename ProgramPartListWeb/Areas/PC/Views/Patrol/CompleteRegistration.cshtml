@@ -369,7 +369,9 @@
        
          const GetRegistrationDetails = async () => {
              let res = await GetMethod('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
-                 if (res && res.Success) {
+             //console.log(res);
+
+             if (res && res.Success) {
                      $("#regtext").text(strRegno);
                      //$("#InspectorName").val(res.Data.InspectName);
                      //$("#PICName").val(res.Data.PICName);
@@ -413,7 +415,7 @@
 
              const GetRegistrationFindingsID = async () => {
                  let res = await GetMethod('@Url.Action("GetRegistrationFindings", "Patrol")', { Regno: strRegno });
-
+                 console.log(res);
                  if (res && res.Success) {
                      res.data.forEach(item => {
                          $(`#Inpects${item.FindID}`).val(item.FindDescription);

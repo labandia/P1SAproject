@@ -19,8 +19,7 @@ namespace NCR_system.Repository
                                 FROM PC_Section s
                                 LEFT JOIN PC_Inprocess c
                                     ON c.SectionID = s.SectionID 
-                                    AND c.Status = @Status
-                                IsDelete = 0 ";
+                                    AND c.Status = @Status AND IsDelete = 0 ";
 
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             parameters.Add("@Status", Stats);
@@ -37,12 +36,10 @@ namespace NCR_system.Repository
                                 s.DepartmentName
                             ORDER BY
                                 s.SectionID ASC;";
-            Debug.WriteLine(strquery);
+            //Debug.WriteLine(strquery);
 
             return SqlDataAccess.GetDataAsync<CustomerTotalModel>(strquery, parameters);
         }
-
-
 
         public async Task<List<InprocessModel>> GetInprocessData(
             string search,
@@ -64,7 +61,7 @@ namespace NCR_system.Repository
                                   ,Status,P1saStatus
                                   ,Remarks,SectionDep, SectionID
                               FROM PC_Inprocess
-                              WHERE IsDelete = 0 ";
+                              WHERE [IsDelete] = 0 ";
 
             // Filter By SMT Line
             if (departmentID != 0)

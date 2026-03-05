@@ -1,13 +1,11 @@
 ﻿using Attendance_Monitoring.Models;
 using Attendance_Monitoring.Repositories;
-using Attendance_Monitoring.View;
 using Attendance_Monitoring.View.V2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Attendance_Monitoring.Usercontrols
 {
@@ -15,63 +13,56 @@ namespace Attendance_Monitoring.Usercontrols
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly IEmployee _emp;
-        private static IEnumerable<Employee> emplist;
-
-        private readonly EmployeeManagement empform;
 
         public int DepartID { get; set; }
+
         public EmployeeManagement(IEmployee emp, IServiceProvider serviceProvider)
         {
             InitializeComponent();
             _emp = emp;
         }
 
-        // PURPOSE IS TO REFRESH THE TABLE WHEN DONE ADDING AND UPDATING
-        public async Task Displayemployee(int depid)
+        public async Task Displayemployee(string empcode, int depid)
         {
-            var items = await _emp.GetEmployees("", depid, "");
-            emplist = items.ToList();
-            Employeetable.AutoGenerateColumns = false;
-            //Employeetable.DataSource =  emplist;
-            if (depid != 0)
+            try
             {
-                var filteredList = emplist.Where(p => p.Department_ID == depid).ToList();
-                Employeetable.DataSource =  filteredList;
-            }
-            else
-            {
-                Employeetable.DataSource =  emplist;
-            }
+                string searchText = string.IsNullOrEmpty(searchbox.Text) ? "" : searchbox.Text?.Trim();
+                DepartID = depid;
 
-            DisplayTotal.Text = "Total Records: " + Employeetable.RowCount;
+                var items = await _emp.GetEmployees(empcode, depid, searchText);
+                Employeetable.AutoGenerateColumns = false;
+
+                Employeetable.DataSource = items.ToList() ?? new List<Employee>();
+                DisplayTotal.Text = "Total Records: " + Employeetable.RowCount;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading employees:\n{ex.Message}",
+                          "System Error",
+                          MessageBoxButtons.OK,
+                          MessageBoxIcon.Error);
+
+                Employeetable.DataSource = new List<Employee>();
+                DisplayTotal.Text = "Total Records: 0";
+            }
         }
 
 
-        public async Task InitializePage()
-        {
-            //var items = await _admin.GetAllEmployees();
-            //emplist = items.ToList();
-            //Employeetable.AutoGenerateColumns = false;
-
-            //var filteredList = emplist.Where(p => p.Department_ID == DepartID).ToList();
-            //Employeetable.DataSource =  filteredList;
-            //DisplayTotal.Text = "Total Records: " + Employeetable.RowCount;
-            //MessageBox.Show("Running after set: " + DepartID);
-        }
-
-        private void Addbtn_Click(object sender, EventArgs e)
-        {
-            AddProduction form2 = new AddProduction(this, _emp);
-            form2.Show();
+        private async void Addbtn_Click(object sender, EventArgs e)
+        { 
+            using(var addEmp = new AddProduction(this, _emp, DepartID))
+            {
+                if (addEmp.ShowDialog() == DialogResult.OK)
+                {
+                    MessageBox.Show("Add Employee successful.");
+                    await Displayemployee("", DepartID);
+                }
+            }
         }
 
         private async void searchbox_TextChanged(object sender, EventArgs e)
         {
-            string filterText = searchbox.Text.ToLower();
-            var filteredList = await _emp.GetEmployees("", DepartID, filterText);
-
-            Employeetable.DataSource =  filteredList;
-            DisplayTotal.Text = "Total Records: " + Employeetable.RowCount;
+            await Displayemployee("", DepartID);
         }
 
         private void EmployeeManagement_Load(object sender, EventArgs e)
@@ -111,7 +102,7 @@ namespace Attendance_Monitoring.Usercontrols
                         if (result)
                         {
                             MessageBox.Show($@"Employee ID: ${EmployeeID} is Already Deleted!!");
-                            await Displayemployee(DepartID);
+                            //await Displayemployee(DepartID);
                         }
                     }
 

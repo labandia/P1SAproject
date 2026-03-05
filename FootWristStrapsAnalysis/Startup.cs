@@ -18,6 +18,11 @@ namespace FootWristStrapsAnalysis
 {
     public partial class Startup : Form
     {
+        private readonly BindingSource _bindingSource = new BindingSource();
+        private bool _isImportRunning = false;
+        private List<IFootWristModel> _cachedData = new List<IFootWristModel>();
+
+
         private string templateFilepath = @"\\sdp01034s\SYSTEM EXECUTABLE\P1SA-PC_System\ExportTemplate\Record_STATIC.xlsx";
 
         private readonly IFootWrist _foot;
@@ -37,36 +42,45 @@ namespace FootWristStrapsAnalysis
             InitializeComponent();
             _foot = foot;
 
-            // 🔁 Run every 15 minutes (900,000 ms)
-            //_importTimer = new System.Timers.Timer(15 * 60 * 1000);
-            // 🔁 Run every 1s (900,000 ms)
-            _importTimer = new System.Timers.Timer(2000);
-            _importTimer.AutoReset = false; // IMPORTANT
-            _importTimer.Elapsed += async (s, e) =>
-            {
-                _importTimer.Stop();
-                try
-                {
-                    await AutomaticImportData();
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex);
-                }
-                finally
-                {
-                    _importTimer.Start();
-                }
-            };
 
-            _importTimer.Start();
+            AnalysisTable.AutoGenerateColumns = false;
+            AnalysisTable.DataSource = _bindingSource;
 
-            _debounceTimer.Interval = 2000;
-            _debounceTimer.Tick += async (s, e) =>
-            {
-                _debounceTimer.Stop();
-                await FootwristReloadFilterData();
-            };
+            //_importTimer = new System.Timers.Timer(2000);
+            //_importTimer.AutoReset = true;
+            //_importTimer.Elapsed += async (s, e) => await SafeImportWrapper();
+
+
+            //// 🔁 Run every 15 minutes (900,000 ms)
+            ////_importTimer = new System.Timers.Timer(15 * 60 * 1000);
+            //// 🔁 Run every 1s (900,000 ms)
+            //_importTimer = new System.Timers.Timer(2000);
+            //_importTimer.AutoReset = false; // IMPORTANT
+            //_importTimer.Elapsed += async (s, e) =>
+            //{
+            //    _importTimer.Stop();
+            //    try
+            //    {
+            //        await AutomaticImportData();
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        Debug.WriteLine(ex);
+            //    }
+            //    finally
+            //    {
+            //        _importTimer.Start();
+            //    }
+            //};
+
+            //_importTimer.Start();
+
+            //_debounceTimer.Interval = 2000;
+            //_debounceTimer.Tick += async (s, e) =>
+            //{
+            //    _debounceTimer.Stop();
+            //    await FootwristReloadFilterData();
+            //};
 
         }
 

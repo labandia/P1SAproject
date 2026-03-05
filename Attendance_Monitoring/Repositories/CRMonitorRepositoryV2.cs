@@ -1,5 +1,6 @@
 ﻿using Attendance_Monitoring.Interfaces;
 using Attendance_Monitoring.Models;
+using Attendance_Monitoring.Utilities;
 using Dapper;
 using System;
 using System.Collections.Generic;
@@ -9,29 +10,50 @@ namespace Attendance_Monitoring.Repositories
 {
     internal class CRMonitorRepositoryV2 : ICRmonitorV2
     {
-        public Task<bool> CRTimeBack(string EmployeeID, DateTime dTimeback, string duration, string datetoday)
+        public async Task<bool> CRTimeBack(string EmployeeID, DateTime dTimeback, string duration, string datetoday)
         {
-            throw new NotImplementedException();
+            string strquery = "UpdateCR";
+            var parameters = new { Employee_ID = EmployeeID, Timeout = dTimeback, Duration = duration, DateToday = datetoday };
+            return await SqlDataAccess.ExecuteAsync(strquery, parameters);
         }
 
-        public Task<bool> CRTimeGo(string EmployeeID, string shift)
+        public async Task<bool> CRTimeGo(string EmployeeID, string shift)
         {
-            throw new NotImplementedException();
+            string strquery = "InputCR";
+            var parameters = new { Employee_ID = EmployeeID, Shifts = shift };
+            return await SqlDataAccess.ExecuteAsync(strquery, parameters);
         }
 
-        public Task<List<CRmodel>> GetCRMonitoringData(string dDate, string shifts, int depid)
+        public async Task<List<CRmodel>> GetCRMonitoringData(string dDate, string shifts, int depid)
         {
-            throw new NotImplementedException();
+            string strquery = "CRMonitor";
+            var parameters = new { TimeIn = dDate, Shifts = shifts, Depid = depid };
+            return await SqlDataAccess.GetDataAsync<CRmodel>(strquery, parameters);
         }
 
-        public Task<List<CRmodel>> GetCRMonitoringSummary(int depid, string startDate, string endDate)
+        public async Task<List<CRmodel>> GetCRMonitoringSummary(int depid, string startDate, string endDate)
         {
-            throw new NotImplementedException();
+            string strquery = "CRMonitorSummary";
+            var parameters = new { Depid = depid, startDate = startDate, endDate = endDate };
+            return await SqlDataAccess.GetDataAsync<CRmodel>(strquery, parameters);
         }
 
-        public Task<List<CRmodel>> GetCRMonitoringSummaryDatalist(string strsql, string startDate, string endDate, string shifts, string search)
+        public async Task<List<CRmodel>> GetCRMonitoringSummaryDatalist(string strsql, string startDate, string endDate, string shifts, string search)
         {
-            throw new NotImplementedException();
+            //MessageBox.Show(formattedStartDate);
+            //MessageBox.Show(formattedEndDate);
+            //MessageBox.Show(shifts.Text);
+            //MessageBox.Show(searchbox.Text);
+
+
+            var parameters = new DynamicParameters();
+            parameters.Add("startDate", startDate);
+            parameters.Add("endDate", endDate);
+
+            if (!string.IsNullOrEmpty(shifts))
+                parameters.Add("Shift", shifts);
+
+            return await SqlDataAccess.GetDataAsync<CRmodel>(strsql, parameters);
         }
     }
 

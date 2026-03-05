@@ -1,4 +1,6 @@
-﻿using Attendance_Monitoring.Usercontrols;
+﻿using Attendance_Monitoring.Interfaces;
+using Attendance_Monitoring.Repositories;
+using Attendance_Monitoring.Usercontrols;
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
@@ -7,16 +9,17 @@ namespace Attendance_Monitoring.View.V2
 {
     public partial class AttendanceMain : Form
     {
-        private readonly AttendancePage _attend;
-        private readonly CRMonitoringPage _cr;
-        private readonly EmployeeManagement _emp;
+        private readonly IEmployee _emp;
+        private readonly IAttendanceMonitor _attend;
+        private readonly ICRmonitorV2 _cr;
 
-        public AttendanceMain(AttendancePage attend, CRMonitoringPage cr, EmployeeManagement emp)
+
+        public AttendanceMain(IEmployee emp, IAttendanceMonitor attend, ICRmonitorV2 cr)
         {
             InitializeComponent();
-            _attend = attend;
-            _cr = cr;
             _emp = emp;
+            _attend = attend;   
+            _cr = cr;
         }
 
         // ATTENDANCE BASED ON THE DEPARTMENTS

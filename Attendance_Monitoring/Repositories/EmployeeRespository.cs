@@ -20,7 +20,7 @@ namespace Attendance_Monitoring.Models
                 SELECT DISTINCT 
                     Employee_ID, FullName, Process, Affiliation, Department_ID
                 FROM Employee_tbl
-                WHERE IsDelete = 1";
+                WHERE IsDelete = 0";
 
             if (!string.IsNullOrEmpty(emp))
             {
@@ -46,32 +46,12 @@ namespace Attendance_Monitoring.Models
 
             strquery += " ORDER BY FullName ASC";
 
+
             return SqlDataAccess.GetDataAsync<Employee>(strquery, parameters);
         }
-        public Task<List<Department>> GetDepartments()
-        {
-            string strquery = "SELECT Department_ID, Department_name FROM Department_tbl";
-            return  SqlDataAccess.GetDataAsync<Department>(strquery);
-        }
-        public Task<bool> AddEmployee(Employee emp)
-        {
-            string strquery = "AddEmployee";
-            var parameters = new
-            {
-                Employee_ID = emp.Employee_ID,
-                FullName = emp.Fullname,
-                Process = emp.Process,
-                Affiliation = emp.Affiliation,
-                Department_ID = emp.Department_ID
-            };
-            return SqlDataAccess.ExecuteAsync(strquery, parameters);
-        }
-        public Task<bool> DeleteEmployee(string employee)
-        {
-            string strquery = "DeleteEmployee";
-            var parameters = new { EmployeeID = employee };
-            return SqlDataAccess.ExecuteAsync(strquery, parameters);
-        }
+        public Task<bool> AddEmployee(Employee emp) => SqlDataAccess.ExecuteAsync("AddEmployee", emp, CommandType.StoredProcedure);
+        public Task<bool> DeleteEmployee(string employee) => SqlDataAccess.ExecuteAsync("DeleteEmployee", new { EmployeeID = employee });
+      
         public Task<bool> UpdateEmployee(Employee emp, string emptemp)
         {
             string strquery = "UpdateEmployee";

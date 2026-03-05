@@ -503,6 +503,13 @@
     <Content Include="Content\Shared\Site.min.css">
       <DependentUpon>Site.css</DependentUpon>
     </Content>
+    <Content Include="Scripts\Modules\auth.js" />
+    <Content Include="Scripts\Modules\config.js" />
+    <Content Include="Scripts\Modules\http.js" />
+    <Content Include="Scripts\Modules\index.js" />
+    <Content Include="Scripts\Modules\lazyImage.js" />
+    <Content Include="Scripts\Modules\Main.js" />
+    <Content Include="Scripts\Modules\utils.js" />
     <Content Include="Scripts\Shared\all.min.js" />
     <Content Include="Content\lib\font-awesome\js\brands.js" />
     <Content Include="Content\lib\font-awesome\js\brands.min.js" />

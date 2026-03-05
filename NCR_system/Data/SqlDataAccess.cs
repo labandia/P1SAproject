@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Dapper;
 using NCR_system.Data;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Logging;
 using System.Configuration;
 
 namespace MSDMonitoring.Data

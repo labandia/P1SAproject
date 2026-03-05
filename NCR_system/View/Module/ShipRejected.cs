@@ -23,22 +23,22 @@ namespace NCR_system.View.Module
         private bool _gridConfigured = false;
         private bool _isLoading = false;
 
-        public int depId { get; set; }
-        public int stats { get; set; }
-
         public DataGridView Customgrid => RejectedGrid;
 
         // Reuse collections to reduce allocations
         private readonly ChartValues<int> _statusValues = new ChartValues<int>();
-        private readonly List<string> _statusLabels = new List<string> { "For Circulation", "Close / Completed", "Report OK", "Open" };
+        private readonly List<string> _statusLabels = new List<string> 
+        { "For Circulation", "Close / Completed", "Report OK", "Open" };
 
 
         public ShipRejected(IShipRejected ship)
         {
             InitializeComponent();
             _ship = ship;
-
             _isInitializing = true;
+
+            sectionfilter.SelectedIndex = 0;
+            filteritems.SelectedIndex = 0;
 
             EnableDoubleBuffering();
             _isInitializing = false;
@@ -99,13 +99,15 @@ namespace NCR_system.View.Module
 
             try
             {
-                depId = sectionfilter.SelectedIndex > 0 ? sectionfilter.SelectedIndex : 0;
-                stats = filteritems.SelectedIndex > 0 ? filteritems.SelectedIndex : 0;
-
+              
                 RejectedGrid.SuspendLayout();
 
-                var shipTask = _ship.GetRejectedShipData(depId, stats, proc, 0, 0);
-                var pieTask = _ship.GetCustomersOpenItem(proc, depId);
+                var shipTask = _ship.GetRejectedShipData(
+                    sectionfilter.SelectedIndex,
+                    filteritems.SelectedIndex, 
+                    proc, 0, 0);
+
+                var pieTask = _ship.GetCustomersOpenItem(proc, sectionfilter.SelectedIndex);
 
                 await Task.WhenAll(shipTask, pieTask);
 
@@ -413,6 +415,10 @@ namespace NCR_system.View.Module
         public void DisplayPieChart(List<CustomerTotalModel> cc)
         {
             //resetDisplayText();
+
+            pieChart1.Width = 650;   // 👈 Make wider
+            pieChart1.Height = 450;  // Optional height
+
 
             if (cc == null || cc.Count == 0)
             {

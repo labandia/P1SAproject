@@ -17,7 +17,8 @@ namespace Attendance_Monitoring.Models
         public string Employee_ID
         {
             get => employee_ID;
-            set => employee_ID = !string.IsNullOrWhiteSpace(value) ? value : throw new ArgumentException("Employee ID cannot be empty.");
+            set => employee_ID = !string.IsNullOrWhiteSpace(value) ? value : 
+                throw new ArgumentException("Employee ID cannot be empty.");
         }
 
         public string Fullname

@@ -283,7 +283,7 @@
             this.OpenReject.FlatAppearance.MouseDownBackColor = System.Drawing.SystemColors.MenuHighlight;
             this.OpenReject.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.MenuHighlight;
             this.OpenReject.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.OpenReject.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold);
+            this.OpenReject.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.OpenReject.ForeColor = System.Drawing.Color.White;
             this.OpenReject.Location = new System.Drawing.Point(1175, 299);
             this.OpenReject.Name = "OpenReject";
@@ -298,7 +298,7 @@
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label9.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label9.Location = new System.Drawing.Point(208, 285);
+            this.label9.Location = new System.Drawing.Point(723, 288);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(119, 15);
             this.label9.TabIndex = 31;
@@ -309,7 +309,7 @@
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label5.Location = new System.Drawing.Point(37, 285);
+            this.label5.Location = new System.Drawing.Point(552, 288);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(97, 15);
             this.label5.TabIndex = 29;
@@ -318,6 +318,7 @@
             // sectionfilter
             // 
             this.sectionfilter.DropDownHeight = 200;
+            this.sectionfilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.sectionfilter.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.sectionfilter.FormattingEnabled = true;
             this.sectionfilter.IntegralHeight = false;
@@ -329,7 +330,7 @@
             "Rotor",
             "Winding",
             "Circuit"});
-            this.sectionfilter.Location = new System.Drawing.Point(40, 308);
+            this.sectionfilter.Location = new System.Drawing.Point(555, 311);
             this.sectionfilter.MaxDropDownItems = 30;
             this.sectionfilter.Name = "sectionfilter";
             this.sectionfilter.Size = new System.Drawing.Size(153, 23);
@@ -338,13 +339,14 @@
             // 
             // filteritems
             // 
+            this.filteritems.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.filteritems.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
             this.filteritems.FormattingEnabled = true;
             this.filteritems.Items.AddRange(new object[] {
             "-- Filter Status --",
             "Open",
             "Close"});
-            this.filteritems.Location = new System.Drawing.Point(211, 308);
+            this.filteritems.Location = new System.Drawing.Point(726, 311);
             this.filteritems.Name = "filteritems";
             this.filteritems.Size = new System.Drawing.Size(182, 23);
             this.filteritems.TabIndex = 27;
@@ -426,7 +428,7 @@
             this.panel8.Controls.Add(this.panel10);
             this.panel8.Location = new System.Drawing.Point(40, 25);
             this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(466, 246);
+            this.panel8.Size = new System.Drawing.Size(466, 306);
             this.panel8.TabIndex = 35;
             // 
             // panel9
@@ -436,7 +438,7 @@
             this.panel9.Location = new System.Drawing.Point(0, 50);
             this.panel9.Name = "panel9";
             this.panel9.Padding = new System.Windows.Forms.Padding(30, 20, 30, 20);
-            this.panel9.Size = new System.Drawing.Size(466, 196);
+            this.panel9.Size = new System.Drawing.Size(466, 256);
             this.panel9.TabIndex = 1;
             // 
             // pieChart1
@@ -445,7 +447,7 @@
             this.pieChart1.ForeColor = System.Drawing.Color.White;
             this.pieChart1.Location = new System.Drawing.Point(30, 20);
             this.pieChart1.Name = "pieChart1";
-            this.pieChart1.Size = new System.Drawing.Size(406, 156);
+            this.pieChart1.Size = new System.Drawing.Size(406, 216);
             this.pieChart1.TabIndex = 1;
             this.pieChart1.Text = "pieChart1";
             // 
@@ -466,9 +468,9 @@
             this.label6.ForeColor = System.Drawing.Color.White;
             this.label6.Location = new System.Drawing.Point(20, 14);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(187, 21);
+            this.label6.Size = new System.Drawing.Size(188, 21);
             this.label6.TabIndex = 14;
-            this.label6.Text = "Open Items per Section";
+            this.label6.Text = "Active Cases by Section";
             // 
             // ShipRejected
             // 

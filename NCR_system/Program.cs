@@ -22,37 +22,38 @@ namespace NCR_system
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            var services = new ServiceCollection();
+            var services = new ServiceCollection()
+            .AddMemoryCache()
+            .AddScoped<ICustomerComplaint, CustomerRepository>()
+            .AddScoped<IShipRejected, RejectShipRepository>()
+            .AddScoped<IInprocess, InprocessRepository>()
+            .AddScoped<INCR, NCR_Repository>()
+            .AddTransient<P1SA_NonComformity>()
+            .AddTransient<Mainpage>()
+            .AddTransient<AddCustomerComplaint>()
+            .AddTransient<AddShipment>()
+            .AddTransient<EditCC_External>()
+            .AddTransient<EditShipments>()
+            .AddTransient<EditRejected>()
+            .AddTransient<Customer_Complaint_user>()
+            .AddTransient<Inprocess_control>()
+            .AddTransient<Dashboard>()
+            .AddTransient<NCR_control>()
+            .AddTransient<Rejected>()
+            .AddTransient<ShipRejected>();
 
-            services.AddMemoryCache();
+            ServiceProvider = services.BuildServiceProvider(new ServiceProviderOptions
+            {
+                ValidateOnBuild = false,
+                ValidateScopes = false
+            });
 
-            services.AddSingleton<ICustomerComplaint, CustomerRepository>();
-            services.AddSingleton<IShipRejected, RejectShipRepository>();
-            services.AddSingleton<IInprocess, InprocessRepository>();
-            services.AddSingleton<INCR, NCR_Repository>();
-
-            // Forms → Transient
-            services.AddTransient<P1SA_NonComformity>();
-            services.AddTransient<Mainpage>();
-            //services.AddTransient<NonConformity>();
-            services.AddTransient<AddCustomerComplaint>();
-            services.AddTransient<AddShipment>();
-
-            services.AddTransient<EditCC_External>();
-            services.AddTransient<EditShipments>();
-            services.AddTransient<EditRejected>();
-
-            // UserControls → Transient
-            services.AddTransient<Customer_Complaint_user>();
-            services.AddTransient<Inprocess_control>();
-            services.AddTransient<Dashboard>();
-            services.AddTransient<NCR_control>();
-            services.AddTransient<Rejected>();
-            services.AddTransient<ShipRejected>();
-
-            ServiceProvider = services.BuildServiceProvider();
-            var mainForm = ServiceProvider.GetRequiredService<P1SA_NonComformity>();
-            Application.Run(mainForm);
+            using (var scope = ServiceProvider.CreateScope())
+            {
+                var mainForm = scope.ServiceProvider.GetRequiredService<P1SA_NonComformity>();
+                Application.Run(mainForm);
+            }
+            
         }
     }
 }

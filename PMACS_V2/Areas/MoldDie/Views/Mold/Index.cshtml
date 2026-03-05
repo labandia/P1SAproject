@@ -25,10 +25,10 @@
     <div class="main__container">
         <!----------- login background design -------->
         <div class="main__contain">
-            
+
             <h1 style="line-height: 1.6;">
-                    Mold Die and Cavity Parts Management System
-                </h1>
+                Mold Die and Cavity Parts Management System
+            </h1>
         </div>
         <div class="main__contain">
             <img src="~/Content/Images/forgotpass.png" width="300" height="300" />
@@ -57,9 +57,10 @@
 
 
                         <div id="error-msg" style="color: red;"></div>
+                        <button style="width: 100%; margin-top: 1em; padding: 1em 0;" class="submitbtn" id="submitbtn" type="submit"><span class="flex_align"><i class="fa-solid fa-right-to-bracket"></i> Login</span></button>
                         <div class="formbox__action">
-                            <button type="button" id="viewbtn"><i class="fa-regular fa-eye"></i> View Only</button>
-                            <button class="submitbtn" id="submitbtn" type="submit"><span class="flex_align"><i class="fa-solid fa-right-to-bracket"></i> Login</span></button>
+                            @*<button type="button" id="viewbtn"><i class="fa-regular fa-eye"></i> View Only</button>*@
+
                         </div>
 
                         <div Class="footer">
@@ -125,6 +126,229 @@
     </div>
 </div>
 
+<script type="module" asp-append-version="true">
+    import {
+        getMethod,
+        postMethod
+    } from  '@Url.Content("~/Scripts/modules/index.js")';
+
+    class Logincontroller{
+        constructor() {
+            this.version = "@ViewData["Version"]";
+            this.loadData = [];
+
+            this.mainbody = document.querySelector(".main");
+            this.forbtn = document.querySelector(".backlogs");
+            this.resultBox = document.querySelector(".namesdisplay");
+            this.inputbox = document.getElementById("username");
+
+            // FORMS 
+            this.logbtn = document.querySelector(".signin");
+            this.loginforms = document.getElementById('loginsubmit');
+
+            this.inputfield = document.getElementById("password");
+
+            this.submitBtn = document.getElementById("submitbtn");
+
+            this.init();
+        }
+
+        async init() {
+            this.bindEvents();
+            await this.loadPageData();
+        }
+
+        bindEvents() {
+            // Slide animation
+            this.logBtn?.addEventListener("click", () => {
+                this.mainBody.classList.add("slide");
+            });
+
+            this.forBtn?.addEventListener("click", () => {
+                this.mainBody.classList.remove("slide");
+            });
+
+            // Autocomplete
+            this.inputbox?.addEventListener("keyup", (e) => {
+                this.handleSearch(e.target.value);
+            });
+
+            // Enter key login
+            this.passwordField?.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    this.handleLogin(new FormData(this.loginforms));
+                }
+            });
+
+            // Submit login
+            this.loginforms?.addEventListener("submit", (e) => {
+                e.preventDefault();
+                this.handleLogin(new FormData(this.loginforms));
+            });
+        }
+
+
+        /* ================= LOAD DATA ================= */
+
+        async loadUsers() {
+            const res = await getMethod('/PMACS/GetFullnameList', {});
+            if (res?.Success) {
+                this.loadData = res.Data.map(x => x.Fullname);
+            }
+        }
+
+        loadUpdates() {
+            const storedVersion = localStorage.getItem('systemVersion');
+
+            if (storedVersion !== this.version) {
+                const notification = document.getElementById('notification');
+                notification.style.display = 'flex';
+                localStorage.setItem('systemVersion', this.version);
+            }
+
+            document.getElementById('close-btn')?.addEventListener('click', () => {
+                document.getElementById('notification').style.display = 'none';
+            });
+        }
+
+        async loadPageData() {
+            try {
+                //this.inputBox.value = "";
+                //this.passwordField.value = "";
+
+                //await Promise.all([
+                   
+                //]);
+                await this.loadUsers();
+            } catch (err) {
+                console.error("Load error:", err);
+            }
+        }
+
+        /* ================= AUTOCOMPLETE ================= */
+
+        handleSearch(value) {
+            if (!value.length) {
+                this.resultBox.style.display = "none";
+                return;
+            }
+
+            const result = this.loadData.filter(name =>
+                name.toLowerCase().includes(value.toLowerCase())
+            );
+
+            if (!result.length) {
+                this.resultBox.style.display = "none";
+                return;
+            }
+
+            this.renderResults(result);
+        }
+
+        renderResults(list) {
+            this.resultBox.style.display = "block";
+            this.resultBox.innerHTML = `
+            <ul>
+                ${list.map(name => `<li data-name="${name}">${name}</li>`).join("")}
+            </ul>
+        `;
+
+            this.resultBox.querySelectorAll("li").forEach(li => {
+                li.addEventListener("click", () => {
+                    console.log("Click Display" + li.dataset.name)
+                    this.inputbox.value = li.dataset.name;
+                    this.resultBox.innerHTML = "";
+                    this.resultBox.style.display = "none";
+                });
+            });
+        }
+
+        /* ================= LOGIN ================= */
+
+        async handleLogin(formData) {
+            //if (!this.validateForm()) return;
+
+            const data = Object.fromEntries(formData);
+            this.submitBtn.innerHTML = `<div class='buttonloading'></div>`;
+
+            const res = await postMethod('/Auth/Authenticate', data);
+            if (res?.Success) {
+                this.loginSuccess(res);
+            } else {
+                this.loginError(res?.Message);
+            }
+        }
+
+        loginSuccess(res) {
+            Swal.fire({
+                title: "Success",
+                text: res.Message,
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1500
+            }).then(() => {
+
+                // Storage
+                localStorage.setItem('UserRole', res.Data.role);
+                localStorage.setItem('Fullname', res.Data.fullname);
+                localStorage.setItem('accessToken', res.Data.access_token);
+                localStorage.setItem('refreshToken', res.Data.refresh_token);
+                localStorage.setItem('loginTime', new Date().toISOString());
+                localStorage.setItem('isLoggedInPMACS', 'true');
+
+                window.location.href = "/MoldDie/Mold/DieMoldSummary";
+            });
+        }
+
+        loginError(message) {
+            Swal.fire({
+                icon: "error",
+                text: message || "Login failed",
+                timer: 1500,
+                showConfirmButton: false
+            });
+
+            this.submitBtn.innerHTML =
+                `<span class='textload'><i class='fa-solid fa-right-to-bracket'></i> Login</span>`;
+        }
+
+        validateForm() {
+            const user = this.inputBox.value.trim();
+            const pass = this.passwordField.value.trim();
+
+            const errorUser = document.getElementById("erroruser");
+            const errorPass = document.getElementById("errorpass");
+
+            errorUser.textContent = "";
+            errorPass.textContent = "";
+
+            if (!user) {
+                errorUser.textContent = "Please enter your Fullname";
+                return false;
+            }
+
+            if (!pass) {
+                errorPass.textContent = "Please enter your password";
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+    /* ================= INIT ================= */
+
+    document.addEventListener("DOMContentLoaded", () => {
+        new Logincontroller();
+    });
+   
+</script>
+
+
+
+
+@*<script src="~/Scripts/Shared/Utilities.min.js"></script>
 <script type="text/javascript">
     let loadData = [];
     const version = "@ViewData["Version"]";
@@ -356,5 +580,5 @@
 
 
 
-</script>
+</script>*@
 

@@ -1377,7 +1377,7 @@
         let res = await GetMethod('@Url.Action("GetMoldDieDailyList", "Mold")', data);
          if (res && res.Success) {
               //DieTooling = res.Data;
-              DailyData = res.Data;
+             DailyData = res.Data;
               DisplayRowData(DailyData);
 
          } else {
@@ -1419,7 +1419,7 @@
 
             const setdata = `
                 <tr >
-                    <td>${formatJsonDate(row.DateInput)}</td>
+                    <td>${row.DateInput}</td>
                     <td style='font-weight: 600;'>${row.PartNo} / ${row.Dimension_Quality}</td>
                     <td>${row.CycleShot}</td>
                     <td>${row.Total}</td>

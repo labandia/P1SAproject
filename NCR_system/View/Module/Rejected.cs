@@ -21,10 +21,6 @@ namespace NCR_system.View.Module
         private bool _gridConfigured = false;
         private bool _isLoading = false;
 
-        public int depId { get; set; } = 0;
-        public int stats { get; set; } = 0;
-
-
         public DataGridView Customgrid => RejectedGrid;
 
         List<int> outputData = new List<int>();
@@ -37,6 +33,9 @@ namespace NCR_system.View.Module
         {
             InitializeComponent();
             _ship = ship;
+
+            filteritems.SelectedIndex = 1;
+            sectionfilter.SelectedIndex = 0;
 
             _departmentLabels = new Dictionary<string, Label>(StringComparer.OrdinalIgnoreCase)
             {
@@ -103,13 +102,14 @@ namespace NCR_system.View.Module
 
             try
             {
-                depId = sectionfilter.SelectedIndex > 0 ? sectionfilter.SelectedIndex : 0;
-                stats = filteritems.SelectedIndex > 0 ? filteritems.SelectedIndex : 0;
 
                 RejectedGrid.SuspendLayout();
 
-                var shipTask = _ship.GetRejectedShipData(depId, stats, proc, 0, 0);
-                var pieTask = _ship.GetCustomersOpenItem(proc, depId);
+                var shipTask = _ship.GetRejectedShipData(
+                    sectionfilter.SelectedIndex, 
+                    filteritems.SelectedIndex, proc, 0, 0);
+
+                var pieTask = _ship.GetCustomersOpenItem(proc, sectionfilter.SelectedIndex);
 
                 await Task.WhenAll(shipTask, pieTask);
 

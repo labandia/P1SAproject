@@ -19,29 +19,37 @@ namespace Attendance_Monitoring.View.V2
         private readonly IEmployee _emp;
 
 
-        public AddProduction(EmployeeManagement employ, IEmployee emp)
+        public int DepID { get; set; }
+
+        public AddProduction(EmployeeManagement employ, IEmployee emp, int depID)
         {
             InitializeComponent();
             _employ = employ;
             _emp = emp;
+            DepID = depID;
         }
 
         private async void Savebtn_Click(object sender, EventArgs e)
         {
             if (!FormValidation()) return;
 
-            var obj = new Employee
+            try
             {
-                Employee_ID = EmpID.Text,
-                Affiliation = Affili.Text,
-                Fullname = Fullname.Text,
-                Process = process.Text,
-                Department_ID = selectsection.SelectedIndex
-            };
-
-            bool result = await _emp.AddEmployee(obj);
-            if (!result) return;
-            await _employ.Displayemployee(selectsection.SelectedIndex);
+                 await _emp.AddEmployee(new Employee
+                {
+                    Employee_ID = EmpID.Text.Trim(),
+                    Affiliation = Affili.Text,
+                    Fullname = Fullname.Text,
+                    Process = process.Text,
+                    Department_ID = DepID
+                 });
+                DialogResult = DialogResult.OK;
+                Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Add Error Encounter : " + ex.Message);
+            }
         }
 
 
@@ -51,13 +59,11 @@ namespace Attendance_Monitoring.View.V2
         {
             bool isEmpIDEmpty = string.IsNullOrWhiteSpace(EmpID.Text);
             bool isFullnameEmpty = string.IsNullOrWhiteSpace(Fullname.Text);
-            bool isSectionInvalid = (selectsection.SelectedIndex <= 0 || selectsection.SelectedIndex == 0);
 
             Emp_error.Visible = isEmpIDEmpty;
             Name_error.Visible = isFullnameEmpty;
-            label9.Visible = isSectionInvalid;
 
-            return !(isEmpIDEmpty || isFullnameEmpty || isSectionInvalid);
+            return !(isEmpIDEmpty || isFullnameEmpty);
         }
 
        

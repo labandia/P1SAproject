@@ -257,6 +257,7 @@
             this.ControlBox = false;
             this.Controls.Add(this.Sectionpanel);
             this.Controls.Add(this.panel1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "P1SA_NonComformity";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "P1SA_NonComformity";

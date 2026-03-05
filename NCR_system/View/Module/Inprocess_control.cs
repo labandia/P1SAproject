@@ -6,10 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Diagnostics;
 
 namespace NCR_system.View.Module
 {
@@ -36,7 +35,7 @@ namespace NCR_system.View.Module
             _isInitializing = true;
 
             sectionfilter.SelectedIndex = 0;
-            filteritems.SelectedIndex = 0;
+            filteritems.SelectedIndex = 1;
 
             _departmentLabels = new Dictionary<string, Label>(StringComparer.OrdinalIgnoreCase)
             {
@@ -125,13 +124,16 @@ namespace NCR_system.View.Module
             try
             {
                 string search = searchText.Text.Trim();
-                depId = sectionfilter.SelectedIndex > 0 ? sectionfilter.SelectedIndex : 0;
-                stats = filteritems.SelectedIndex > 0 ? filteritems.SelectedIndex - 1 : 0;
-
+            
                 InprocessGrid.SuspendLayout();
+                var inprocesslist = _inp.GetInprocessData(
+                    search, 
+                    sectionfilter.SelectedIndex, 
+                    filteritems.SelectedIndex, 0, 0);
 
-                var inprocesslist = _inp.GetInprocessData(search, 1, stats, 0, 0);
-                var pieTask = _inp.GetCustomersOpenItem(stats, depId);
+                var pieTask = _inp.GetCustomersOpenItem(
+                    filteritems.SelectedIndex, 
+                    sectionfilter.SelectedIndex);
 
                 await Task.WhenAll(inprocesslist, pieTask);
 

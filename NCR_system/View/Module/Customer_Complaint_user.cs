@@ -23,9 +23,6 @@ namespace NCR_system.View.Module
         private bool _gridConfigured = false;
         private bool _isLoading = false;
 
-        public int depId { get; set; } = 0;
-        public int stats { get; set; } = 0;
-
 
         public DataGridView Customgrid => CustomDatagrid;
         public List<CustomerModel> cuslist { get; private set; } = new List<CustomerModel>();
@@ -108,10 +105,10 @@ namespace NCR_system.View.Module
                 CustomDatagrid.Columns["LotNo"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 Setup("LotNo", 150, 5);
 
-                Setup("NGQQty", 100, 6);
-                Setup("Details", 150, 7);
+                Setup("NGQty", 100, 6);
+                Setup("Details", 200, 7, DataGridViewAutoSizeColumnMode.DisplayedCells);
                 Setup("Status", 200, 8);
-                Setup("Delete", 100, 9);
+                Setup("Delete", 50, 9);
 
 
                 
@@ -183,26 +180,27 @@ namespace NCR_system.View.Module
             try
             {
                 string search = searchText.Text.Trim();
-                depId = sectionfilter.SelectedIndex > 0 ? sectionfilter.SelectedIndex : 0;
-                stats = filteritems.SelectedIndex;
                 CustomDatagrid.SuspendLayout();
 
-                var custTask = _cust.GetCustomerData(search, depId, proc, stats, 0, 0);
-                var pieTask = _cust.GetCustomersOpenItem(proc, depId);
+                var custTask = _cust.GetCustomerData(
+                    search,
+                    sectionfilter.SelectedIndex, 
+                    proc, filteritems.SelectedIndex, 0, 0);
+
+                var pieTask = _cust.GetCustomersOpenItem(proc, sectionfilter.SelectedIndex);
 
                 await Task.WhenAll(custTask, pieTask);
 
                 var CusList = custTask.Result;
                 var pieData = pieTask.Result;
 
-                if (!_gridConfigured)
-                    ConfigureGrid(proc);
+                ConfigureGrid(proc);
+
 
                 CustomDatagrid.DataSource = CusList;
 
                 UpdateBarChart(pieData);
                 DisplaySectionStats(pieData);
-                //DisplayPieChart(pieData);
 
             }
             catch (Exception ex)

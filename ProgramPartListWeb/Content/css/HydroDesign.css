@@ -658,6 +658,7 @@
         border-radius: .2em;
         outline: none;
         margin-left: .4em;
+        background: transparent;
     }
 
     .Inputcontainer input:focus + .line {
@@ -1735,6 +1736,8 @@ header .count2 {
         box-shadow: 0 3px 5px rgba(0, 0, 0, 0.08);
     }
 
+
+
     #chamberOrdersTable {
         width: 100%;
         border-collapse: collapse;
@@ -1783,3 +1786,12 @@ th.sortable {
         content: " ▼";
     }
     /* Dragging visual effect */
+
+
+.userTables {
+    width: 100%;
+}
+
+.userTables tr td{
+    padding: 1em 0 !important;
+}

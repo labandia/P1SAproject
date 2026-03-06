@@ -528,14 +528,13 @@
 
     const GetCategoryDatalist = async () => {
         let res = await GetMethod('@Url.Action("GetCategorylist", "Hydro")', {});
-
           if (res && res.Success) {
 
-              $.each(res.Data, function (index, row) {
+              $.each(res.data, function (index, row) {
                   $("#Categoryselect").append("<option value='" + row.CategoryID + "'>" + row.CategoryName + "</option>");
               });
 
-              $.each(res.Data, function (index, row) {
+              $.each(res.data, function (index, row) {
                   $("#addCategory").append("<option value='" + row.CategoryID + "'>" + row.CategoryName + "</option>");
               });
           }

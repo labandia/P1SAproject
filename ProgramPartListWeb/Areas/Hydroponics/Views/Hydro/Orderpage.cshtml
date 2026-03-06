@@ -18,10 +18,10 @@
                 <strong>Chamber type: </strong>
                 <div class="select-container">
                     <select id="categoryFilter">
-                        <option value="all">All Types</option>
-                        <option value="SHIBAKAWA">SHIBAKAWA</option>
-                        <option value="NUPON">NUPON</option>
-                        <option value="SLIM TYPE">SLIM TYPE</option>
+                        <option value="0">All Types</option>
+                        <option value="1">SHIBAKAWA</option>
+                        <option value="2">NUPON</option>
+                        <option value="3">SLIM TYPE</option>
                     </select>
                 </div>
 
@@ -34,7 +34,7 @@
                     <select id="stockStatusFilter">
                         <option value="all">All Status</option>
                         <option value="ONGOING">Ongoing</option>
-                        <option value="COMPLETE">Completed</option>
+                        <option value="COMPLETED">Completed</option>
                         <option value="PLANNED">For Planned</option>
                         <option value="SHIPPED">For Shipping</option>
                     </select>
@@ -353,25 +353,34 @@
 
     // ========================== LOAD REQUEST DATA ==============================
     const RequesDataList = async () => {
-        const chamberType = $("#categoryFilter").val() || "all";
+        const startDate = document.querySelector("#startDate").value || "";
+        const chamberType = $("#categoryFilter").val() || 0;
         const status = $("#stockStatusFilter").val() || "all";
-        //const search = $("#inventorySearch").val() || "";
-        const startdate = $("#startDate").val() || "";
         const endDate = $("#endDate").val() || "";
 
+        let obj = {
+            chamberType: chamberType,
+            status: status,
+            startDate: startDate,
+            endDate: endDate,
+            page: currentPage,
+            pageSize: pageSize
+        };
+
         try {
-            let res = await GetMethod('@Url.Action("GetAllRequestList", "Hydro")', {
-                chamberType: chamberType,
-                status: status,
-                startDate: startDate,
-                endDate: endDate,
-                page: currentPage,
-                pageSize: pageSize
-            });
+            let res = await GetMethod('@Url.Action("GetAllRequestList", "Hydro")', obj);
+
 
             if (res && res.Success) {
                 requestData = res.data.Data || res.Data || [];
                 const total = res.data?.Total ?? requestData.length;
+
+                if (requestData.length === 0) {
+                    const TableData = $("#chamberOrdersTableBody");
+                    TableData.empty();
+                    $("#chamberOrdersTableBody").html(`<tr><td colspan="9" style="text-align:center; color:#888;">⚠️ No matching records</td></tr>`);
+                }
+
 
                 if (total > 0) {
                     console.clear();
@@ -532,7 +541,8 @@
 
 
     // ========================== FILTER EVENTS ================================
-    $("#categoryFilter, #stockStatusFilter, #startDate, #endDate").on("change", function () {
+    $("#categoryFilter, #stockStatusFilter, #startDate, #endDate").on("change", function (e) {
+        e.preventDefault();
         currentPage = 1;
         RequesDataList();
     });

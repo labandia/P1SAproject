@@ -20,7 +20,7 @@
 </section>
 <hr />
 
-<div class="InspecTable">
+<div class="userTables">
     <table>
         <thead>
             <tr>
@@ -275,10 +275,10 @@
 
             $.each(filteredData, function (index, row) {
                 // Image Display
-
+                if (row.User_ID === 1) return;
 
                   const rowHtml = `
-                         <tr class=''>
+                         <tr class='' style='padding: 1em 0 !important; '>
                              <td data-cell="Fullname" style='text-align: left; padding-left: 2em !important; font-weight: 600;'>${row.Fullname ? row.Fullname : "-"}</td>
                              <td style='font-weight: 600;' data-cell="Employee_ID">${row.Employee_ID ? row.Employee_ID : "-"}</td>
                              <td data-cell="Employee_ID">${row.Email ? row.Email : "-"}</td>

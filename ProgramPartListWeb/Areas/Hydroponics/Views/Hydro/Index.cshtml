@@ -26,23 +26,10 @@
 <div class="bg-animated"></div>
 
 <div class="center">
-    @*<div class="cardCustom">
-            <h2>San Hydro App System</h2>
-            <form id="logincredentials" method="post">
-                <label>Username</label>
-                <input type="text" name="username" id="username" placeholder="Enter Username" autocomplete="off" required />
-                <label>Password</label>
-                <input type="password" name="password" id="password" placeholder="Enter Password" autocomplete="new-password" required />
-                <button type="submit">Sign in</button>
-            </form>
-            <p class="forgetbtn" id="changebtn">Change Password</p>
-            <p class="selectreg" id="forgetbtn">Doesnt have an Account ?</p>
-        </div>*@
 
     <div class="Wrapcontainer">
         <div class="carousel-container">
             <div class="hydrocenter">
-                @*<img src="~/Content/Images/HydroPhonics.png" />*@
 
                 <div class="slider">
                     <div class="slide">
@@ -271,8 +258,6 @@
     logform.addEventListener('submit', async (e) => {
         e.preventDefault();
         console.clear();
-        //const savebtn = document.querySelector("#loginbtn");
-        //savebtn.innerHTML = " <div class='buttonloading'></div>";
         loader.classList.add('show');
 
         let formData = new FormData(e.target);
@@ -282,8 +267,6 @@
         let res = await postMethod('/Auth/Authenticate', data);
         if (res?.Success) {
             setTimeout(() => {
-                console.log(res);
-                //savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-solid fa-right-to-bracket'></i>  Login</span>"
                 localStorage.setItem("UserID", res.data.User_ID)
                 localStorage.setItem('Logout', "/Hydroponics/Hydro/index");
                 // For Info of the user

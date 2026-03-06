@@ -5,8 +5,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.UI.WebControls.WebParts;
+using Unity.Policy;
 
 namespace PMACS_V2.Areas.MoldDie.Repository
 {
@@ -260,7 +264,6 @@ namespace PMACS_V2.Areas.MoldDie.Repository
 
             foreach (var part in partList)
             {
-                Debug.WriteLine("Partnum  : " + part);
 
                 // Get last total BEFORE this date
                 string getLastTotal = @"  
@@ -344,7 +347,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                 SELECT PartNo, PartDescription,
                        Dimension_Quality, DieSerial, DieNumber
                 FROM DieMold_MoldingMainParts
-                WHERE DieSerial = @DieSerial";
+                WHERE DieSerial =@DieSerial";
 
             return (await SqlDataAccess.GetDataAsync<DieMoldMonitoringModel>(
                 sql, new { DieSerial = dieSerial.Trim() })).ToList();
@@ -500,35 +503,74 @@ namespace PMACS_V2.Areas.MoldDie.Repository
         // Working in DieSerial 
         public static async Task<bool> UpdateAllMoldieSerial(DieMoldMonitoringModel model)
         {
-   
 
-            /* --------------------------------------------------
-                    * 1. Get ALL Die Serial Records
-                    * --------------------------------------------------*/
             var partList = await GetPartNoByDieSerial(model.DieSerial);
             if (!partList.Any()) return false;
 
-            /* --------------------------------------------------
-                    * 1. Update All the Total of all the Same DieSerial with the new Total 
-                    * --------------------------------------------------*/
+            // Update edited CycleShot
             foreach (var part in partList)
             {
-                // Update all the total of the same DieSerial with the new Total
-                string saveLatesTotal = @"UPDATE DieMold_Daily 
-                                SET Total = @newTotal  
-                                WHERE PartNo = @PartNo AND Total = @Total AND DateInput = @DateInput";
+                string sql = @"UPDATE DieMold_Daily
+                   SET CycleShot = @CycleShot
+                   WHERE PartNo = @PartNo
+                   AND DateInput >= @DateInput
+                   AND DateInput < DATEADD(day,1,@DateInput)";
 
-                await SqlDataAccess.ExecuteAsync(saveLatesTotal, new
+                await SqlDataAccess.ExecuteAsync(sql, new
                 {
-                    newTotal = model.Total,
+                    model.CycleShot,
                     PartNo = part,
-                    Total = model.Total,
-                    DateInput = model.DateInput
+                    model.DateInput
                 });
             }
 
+            // Get records
+            var records = await SqlDataAccess.GetDataAsync<DieMoldMonitoringModel>(
+            @"SELECT
+    d.DateInput,
+    MAX(d.CycleShot) CycleShot,
+    MAX(d.Total) Total
+  FROM DieMold_Daily d
+  JOIN DieMold_MoldingMainParts p
+    ON d.PartNo = p.PartNo
+  WHERE p.DieSerial = @DieSerial
+  GROUP BY d.DateInput
+  ORDER BY d.DateInput DESC",
+            new { model.DieSerial });
+
+            // Stop at reset
+            var Lastrecords = records.TakeWhile(r => r.CycleShot != 0).ToList();
+            if (!Lastrecords.Any()) return true;
+
+            // OLDEST → NEWEST
+            Lastrecords.Reverse();
+
+            int runningTotal = Lastrecords[0].Total;
+
+            for (int i = 1; i < Lastrecords.Count; i++)
+            {
+                runningTotal += Lastrecords[i].CycleShot;
+
+                string sql = @"UPDATE d
+                   SET Total = @Total
+                   FROM DieMold_Daily d
+                   JOIN DieMold_MoldingMainParts p
+                        ON d.PartNo = p.PartNo
+                   WHERE p.DieSerial = @DieSerial
+                   AND d.DateInput >= @DateInput
+                   AND d.DateInput < DATEADD(day,1,@DateInput)";
+
+                await SqlDataAccess.ExecuteAsync(sql, new
+                {
+                    Total = runningTotal,
+                    model.DieSerial,
+                    DateInput = Lastrecords[i].DateInput
+                });
+            }
 
             return true;
+
+
         }
     }
 }

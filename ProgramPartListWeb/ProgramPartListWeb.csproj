@@ -818,7 +818,6 @@
     <Content Include="Areas\Hydroponics\Views\Hydro\AddStocks.cshtml" />
     <Content Include="Areas\Hydroponics\Views\Hydro\OrderpageDetails.cshtml" />
     <Content Include="Content\fonts\Inter.ttf" />
-    <Content Include="Areas\Hydroponics\Views\Hydro\SampleLayout.cshtml" />
     <Content Include="Content\fonts\Manrope-Regular.ttf" />
     <Content Include="Content\fonts\Manrope-SemiBold.ttf" />
     <Content Include="Areas\Hydroponics\Views\Hydro\UserManage.cshtml" />
@@ -1059,7 +1058,6 @@
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Views\Dashboard\" />
     <Folder Include="Areas\Admin\Views\Shared\" />
-    <Folder Include="Areas\Hydroponics\Views\Stock\" />
     <Folder Include="Areas\Press\Data\" />
   </ItemGroup>
   <ItemGroup>

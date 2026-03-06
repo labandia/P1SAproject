@@ -273,6 +273,7 @@ namespace PMACS_V2.Areas.P1SA.Models
           SEARCH CONTROL
           ======================= */
         public int SearchMode { get; set; }
+        public int CurrentCycle { get; set; }
         // 0 = PartNo
         // 1 = DieSerial
 

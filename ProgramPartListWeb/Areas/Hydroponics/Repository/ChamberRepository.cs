@@ -1,4 +1,5 @@
-﻿using ProgramPartListWeb.Areas.Hydroponics.Interface;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using ProgramPartListWeb.Areas.Hydroponics.Interface;
 using ProgramPartListWeb.Areas.Hydroponics.Models;
 using ProgramPartListWeb.Helper;
 using System;
@@ -12,8 +13,15 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 {
     public class ChamberRepository : IChambers
     {
-        public Task<List<RequestChambersModel>> GetRequestList()
+        public Task<List<RequestChambersModel>> GetRequestList(
+            int chamberType,
+            string startDate,
+            string endDate,
+            string requesStats)
         {
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+
             string strsql = $@"WITH OrdersCTE AS (
                                     SELECT 
                                         o.OrderID,
@@ -27,7 +35,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                         o.ChamberID, 
 										o.CustomerName, 
                                         o.Remarks, 
-                                        o.AssemblyStats
+                                        o.AssemblyStats, o.IsDelete
                                     FROM Hydro_Orders o
                                     INNER JOIN Hydro_ChamberMasterlist m 
                                         ON m.ChamberID = o.ChamberID
@@ -76,9 +84,46 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                 FROM OrdersCTE o
                                 LEFT JOIN DetailsCTE d ON o.OrderID = d.OrderID
                                 LEFT JOIN ComputeTotal ct ON o.ChamberID = ct.ChamberID
-                                ORDER BY o.OrderID DESC;
-                                ";
-            return SqlDataAccess.GetDataAsync<RequestChambersModel>(strsql);
+                                WHERE  o.IsDelete = 0 ";
+
+            // Filter By ChamberType
+            if (chamberType != 0)
+            {
+                strsql += " AND o.ChamberID = @ChamberID";
+                parameters.Add("@ChamberID", chamberType);
+            }
+
+
+            // Filter By Request Status
+            if (requesStats != "all")
+            {
+                strsql += " AND o.RequestStatus = @requesStats";
+                parameters.Add("@requesStats", requesStats);
+            }
+
+
+            // Filter Start Date
+            if (!string.IsNullOrEmpty(startDate))
+            {
+                strsql += " AND o.OrderDate >= @StartDate";
+                parameters.Add("@StartDate", startDate);
+            }
+
+            // Filter End Date
+            if (!string.IsNullOrEmpty(endDate))
+            {
+                strsql += " AND o.OrderDate <= @EndDate";
+                parameters.Add("@EndDate", endDate);
+            }
+
+
+
+            strsql += " ORDER BY o.OrderID DESC;";
+
+
+
+
+            return SqlDataAccess.GetDataAsync<RequestChambersModel>(strsql, parameters);
         }
 
         public Task<List<RequestChambersDetailsModel>> GetRequestDetailList(string order)
@@ -128,11 +173,11 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             string strsql = $@"SELECT 
                                 cp.ChamberID,
                                 c.ChamberName,
-                                MIN(FLOOR(ISNULL(s.CurrentQty,0) / cp.QuantityPerChamber)) AS MaxBuildableChambers
+                                 MIN(FLOOR(ISNULL(s.CurrentQty,0) / NULLIF(cp.QuantityPerChamber,0))) AS MaxBuildableChambers
                             FROM Hydro_ChamberParts cp
                             INNER JOIN Hydro_ChamberMasterlist c ON cp.ChamberID = c.ChamberID
                             LEFT JOIN Hydro_Stocks s ON cp.PartNo = s.PartNo
-                            WHERE cp.ChamberID = @ChamberID
+                            WHERE cp.ChamberID = 1
                             GROUP BY cp.ChamberID, c.ChamberName;";
             var result = await SqlDataAccess.GetDataAsync<ChambersProduce>(strsql, new { ChamberID = chamber });
 

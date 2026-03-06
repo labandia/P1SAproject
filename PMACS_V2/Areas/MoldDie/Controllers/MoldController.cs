@@ -192,9 +192,10 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
 
         //  UDPDATE DAILY INPUT BY DIE SERIAL
         [HttpPost]
-        public async Task<ActionResult> UpdateDieSerialMoldDieMonitor(DieMoldDieSerialInput add)
+        public async Task<ActionResult> UpdateDieSerialMoldDieMonitor(DieMoldMonitoringModel add)
         {
-            bool update = await _dieV2.AddUpdateDailySerialMoldie(add);
+           
+            bool update = await _dieV2.UpdateDieSerialMoldie(add);
             if (!update) return JsonValidationError();
             return JsonCreated(add, "Update Die Serial Successfully");
         }

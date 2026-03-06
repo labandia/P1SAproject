@@ -88,11 +88,7 @@
         initLazyImages
     } from '@Url.Content("~/Scripts/modules/index.js")';
 
-    document.addEventListener("DOMContentLoaded", () => {
-        initLazyImages();
-        loadProjectList();
-    });
-
+   
     const scheduleCheckboxes = document.querySelectorAll('input[name="schedule"]');
 
     const getSelectedCategories = () => {
@@ -149,7 +145,6 @@
 
                 card.innerHTML = `
                     <div class="Web__back"></div>
-                    <img src="${imageUrl}" alt="" />
                     <div class="Web__details">
                         <h1>${res.Project_Name}</h1>
                     </div>
@@ -171,6 +166,8 @@
     };
 
     document.addEventListener("DOMContentLoaded", () => {
+        initLazyImages();
+
 
         const allCheckbox = document.getElementById("allCheckbox");
         const childCheckboxes = document.querySelectorAll(".childCheckbox");

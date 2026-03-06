@@ -1,5 +1,4 @@
 ﻿
-using Aspose.Cells.Drawing;
 using ProgramPartListWeb.Areas.Hydroponics.Interface;
 using ProgramPartListWeb.Areas.Hydroponics.Models;
 using ProgramPartListWeb.Controllers;
@@ -516,50 +515,27 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         //-----------------------------------------------------------------------------------------
         [JwtAuthorize]
         public async Task<ActionResult> GetAllRequestList(
-                    string chamberType = "all",
+                    int chamberType = 0,
                     string status = "all",
                     string startDate = "",
                     string endDate = "",
                     int page = 1,
                     int pageSize = 10)
         {
-            var allData = await _chambers.GetRequestList() ?? new List<RequestChambersModel>();
-
-            var filtered = allData.AsQueryable();
-
-            // filter by ChamberType
-            if (!string.IsNullOrEmpty(chamberType) && chamberType != "all")
-                filtered = filtered.Where(x => x.ChamberName == chamberType);
-            // filter by Status
-            if (!string.IsNullOrEmpty(status) && status != "all")
-                filtered = filtered.Where(x => x.RequestStatus == status);
-            // filter by Search 
-            //if (!string.IsNullOrEmpty(search))
-            //    filtered = filtered.Where(x => x.ChamberName.Contains(search) ||
-            //                                   x.OrderID.ToString().Contains(search) ||
-            //                                   x.PIC.Contains(search));
-            // filter by StartDate 
-            if (DateTime.TryParse(startDate, out var sDate))
-                filtered = filtered.Where(x => DateTime.Parse(x.OrderDate) >= sDate);
-            // filter by EndDate 
-            if (DateTime.TryParse(endDate, out var eDate))
-                filtered = filtered.Where(x => DateTime.Parse(x.TargetDate) <= eDate);
 
 
+            var allData = await _chambers.GetRequestList(
+                chamberType,
+                startDate,
+                endDate,
+                status
+                ) ?? new List<RequestChambersModel>();
 
-            var total = filtered.Count();
-            var paged = filtered
-                        .Skip((page - 1) * pageSize)
-                        .Take(pageSize)
-                        .ToList();
-
-
-            if (paged == null || !paged.Any()) return JsonNotFound("No Request list Data.");
-
+        
             return JsonSuccess(new
             {
-                Data = paged,
-                Total = total
+                Data = allData,
+                Total = allData.Count,
             }, "Load Request List");
         }
 
@@ -568,7 +544,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         [JwtAuthorize]
         public async Task<ActionResult> GetMainRequestList(string orderID)
         {
-            var data = await _chambers.GetRequestList() ?? new List<RequestChambersModel>();
+            var data = await _chambers.GetRequestList(0, "", "", "") ?? new List<RequestChambersModel>();
 
             var filterdata = data.SingleOrDefault(res => res.OrderID == orderID);
             if (filterdata == null) return JsonNotFound("No Request list Data.");
@@ -617,7 +593,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
                     ID = item.OrderID;
                 }
 
-                var data = await _chambers.GetRequestList() ?? new List<RequestChambersModel>();
+                var data = await _chambers.GetRequestList(0, "", "", "") ?? new List<RequestChambersModel>();
                 double completionrate = data.SingleOrDefault(res => res.OrderID == ID).CompletionPercent;
 
                 if(completionrate == 100)

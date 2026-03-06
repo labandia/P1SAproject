@@ -188,13 +188,12 @@
 
         Loadingsteps(async () => {
             let res = await GetMethod('@Url.Action("GetAllChamberList", "Hydro")', { chamber: ID });
-            console.log(res);
             if (res && res.Success) {
-                let priceobj = res.data.TotalPrice;
+                let priceobj = res.Data.TotalPrice;
 
 
                 // Renders the TableData
-                chamberlist = res.data.GetList;
+                chamberlist = res.Data.GetList;
                 TableDisplay.empty(); // Removing the Loading Display
                 ChamberPagination(chamberlist, 'ChamberlistData');
 
@@ -225,6 +224,7 @@
     const PartlistTable = async () => {
         $("#addPartNo").empty();
         let res = await GetMethod('@Url.Action("GetPartlistData", "Hydro")', {});
+        console.log(res);
         if (res && res.Success) {
             const filteredParts = res.data.filter(part =>
                 !chamberlist.some(chamber => chamber.PartNo === part.PartNo)

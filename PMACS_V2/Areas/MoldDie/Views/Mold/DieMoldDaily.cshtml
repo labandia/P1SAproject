@@ -256,15 +256,23 @@
                 </div>
 
                 <form id="EditDailyforms" class="addformcontainer" autocomplete="off">
-                    <input type="hidden" name="DateInput" id="DailyEditDateInput">
+                    <input type="hidden" name="DieSerial" id="DieSerialID">
+                    <input type="hidden" name="CurrentCycle" id="DieSerialCurrentCycle">
+
+                    <div class="form_group col-12 col-lg-12 col-sm-12">
+                        <label for="">Date Input</label>
+                        <input type="date" name="DateInput" id="DieSerialDateInput">
+                    </div>
+
+
                     <div class="form_group col-12 col-lg-12 col-sm-12">
                         <label for="">Cycle shot</label>
-                        <input type="number" name="CycleShot" id="DailyeditCycleShot" placeholder="Enter Cycle Shot" onkeypress='return restrictChars(event)' required>
+                        <input type="number" name="CycleShot" id="DieSerialCycleShot" placeholder="Enter Cycle Shot" onkeypress='return restrictChars(event)' required>
                     </div>
 
                     <div class="form_group col-12 col-lg-12 col-sm-12">
                         <label for="">Machine No</label>
-                        <input type="number" name="MachineNo" id="DailyEditMachineNo" required>
+                        <input type="number" name="MachineNo" id="DieSerialMachineNo" required>
                     </div>
 
                     <div class="form_group col-12 col-lg-12 col-sm-12">
@@ -272,7 +280,7 @@
 
 
                         <div class="select-container" style="width: 100% !important;">
-                            <select name="Remarks" id="DailyEditRemarks">
+                            <select name="Remarks" id="DieSerialRemarks">
                                 <option value="N/A">N/A</option>
                                 <option value="Shot cycle cleaning">Shot cycle cleaning</option>
                                 <option value="Die Cleaning Due To 1 Month No operation">Die Cleaning Due To 1 Month No operation</option>
@@ -284,7 +292,7 @@
 
 
                         <div class="select-container" style="width: 100% !important;">
-                            <select name="Mincharge" id="DailyEditMincharge">
+                            <select name="Mincharge" id="DieSerialMincharge">
                                 <option value="N.AMLOG">N.AMLOG</option>
                                 <option value="J.ORO">J.ORO</option>
                                 <option value="R.AGACOSCOS">R.AGACOSCOS</option>
@@ -567,51 +575,24 @@
      $("#EditDailyforms").on('submit', async (e) => {
          e.preventDefault();
          try {
-              let formData = new FormData(e.target);
-                 formData.append('DieSerial', strDieSerial);
-                 const data = Object.fromEntries(formData);
-
-             let result = await postMethod('@Url.Action("UpdateDieSerialMoldDieMonitor", "Mold")', formData);
-             if (result && result.Error) {
-                 // Network or client-side error
-                 console.error('Request failed:', result.Message);
-             } else if (result && result.Success === false) {
-                 // Server returned error (Success: false)
-                 console.error('Server error:', result.Message);
-                 alert(result.Message || 'Operation failed');
-             } else {
-                 // Success!
-                 console.log('User created:', result);
-
-                 Swal.fire({
-                     title: "Success",
-                     text: result.Message,
-                     icon: "success",
-                     confirmButtonColor: "#0d97c9",
-                     timer: 1500
-                 }).then(() => {
-                                   SearchByDieNo(strDieSerial);
-                                   $("#EditDailyforms")[0].reset();
-                                   $("#EditDailyMold").modal("hide");
-                 });
+             let formData = new FormData(e.target);
+             formData.append('DieSerial', strDieSerial);
+             const data = Object.fromEntries(formData);
+             let res = await postMethod('@Url.Action("UpdateDieSerialMoldDieMonitor", "Mold")', formData);
+             if (res?.Success) {
+                     Swal.fire({
+                         title: "Success",
+                         text: res.Message,
+                         icon: "success",
+                         confirmButtonColor: "#0d97c9",
+                         timer: 1500
+                     }).then(() => {
+                                       SearchByDieNo(strDieSerial);
+                                       $("#EditDailyforms")[0].reset();
+                                       $("#EditDailyMold").modal("hide");
+                     });
              }
 
-
-
-             //console.log(res);
-             //        if (res?.Success) {
-             //          Swal.fire({
-             //              title: "Success",
-             //              text: res.Message,
-             //              icon: "success",
-             //              confirmButtonColor: "#0d97c9",
-             //              timer: 1500
-             //          }).then(() => {
-             //              SearchByDieNo(strDieSerial);
-             //              $("#EditDailyforms")[0].reset();
-             //              $("#EditDailyMold").modal("hide");
-             //          });
-             //    }
          } catch (error) {
              console.error('Failed to start operation:', error);
          }
@@ -1124,7 +1105,7 @@
             if (rowData.Total !== 0) {
                 ActionButton = `<div style='display: grid; grid-template-columns: 50% 50%; gap: 5px;'>
                     <button type="button" class="text-primary actionicon EditSerialDaily"
-                        id="editButton_${rowData.RecordID}">
+                        id="editButton_${rowData.DateInput}">
                         <i class="fa-regular fa-pen-to-square action_btn"></i>
                     </button>
 
@@ -1217,16 +1198,18 @@
 
             const buttonId = $(this).attr('id');
             const rowIndex = buttonId.split('_')[1];
-            console.log("Row index" + rowIndex);
-            let filteredata = getDieObj.find(res => res.RecordID === rowIndex);
+         
 
-            console.log(filteredata);
-            $("#DailyEditDateInput").val(getDieObj.DateInput);
+            let filterDate = getDieObj.find(res => res.DateInput === rowIndex);
+            $("#DieSerialID").val(filterDate.DieSerial);
+            $("#DieSerialCurrentCycle").val(filterDate.CycleShot);
 
-            $("#DailyeditCycleShot").val(getDieObj.CycleShot);
-            $("#DailyEditMachineNo").val(getDieObj.MachineNo);
-            $("#DailyEditRemarks").val(getDieObj.Remarks);
-            $("#DailyEditMincharge").val(getDieObj.Mincharge);
+            setDateInput("DieSerialDateInput", filterDate.DateInput);
+
+            $("#DieSerialCycleShot").val(filterDate.CycleShot);
+            $("#DieSerialMachineNo").val(filterDate.MachineNo);
+            $("#DieSerialRemarks").val(filterDate.Remarks);
+            $("#DieSerialMincharge").val(filterDate.Mincharge);
             $("#EditDailyMold").modal("show");
 
         });

@@ -222,7 +222,6 @@ namespace PMACS_V2.Areas.MoldDie.Repository
 
         public async Task<bool> AddUpdateDailyMoldie(DieMoldMonitoringModel mold, int action)
         {
-            Debug.WriteLine("Action TAKEN : " + action);
             if (mold == null) return false;
 
             var dateOnly = mold.DateInput;
@@ -683,6 +682,12 @@ namespace PMACS_V2.Areas.MoldDie.Repository
         public async Task<bool> UpdateDailyMoldiePartNo(DieMoldMonitoringModel mold)
         {
             bool result = await MoldieHelper.UpdateAllMoldieData(mold);
+            return result;
+        }
+
+        public async Task<bool> UpdateDieSerialMoldie(DieMoldMonitoringModel mold)
+        {
+            bool result = await MoldieHelper.UpdateAllMoldieSerial(mold);
             return result;
         }
     }

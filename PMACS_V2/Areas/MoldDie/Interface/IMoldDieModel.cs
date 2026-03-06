@@ -30,7 +30,7 @@ namespace PMACS_V2.Areas.MoldDie.Interface
 
 
         Task<bool> UpdateDailyMoldiePartNo(DieMoldMonitoringModel mold);
-
+        Task<bool> UpdateDieSerialMoldie(DieMoldMonitoringModel mold);
 
         Task<bool> AddUpdateDailySerialMoldie(DieMoldDieSerialInput mold);
 

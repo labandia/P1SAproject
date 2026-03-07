@@ -1,16 +1,9 @@
-﻿
-@{
-    ViewBag.Title = "San Hydro Application";
-    Layout = "";
-}
-
-
-<head>
+﻿<head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/x-icon" href="@Url.Content("~/Content/Images/patrol .ico")">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@ViewBag.Title</title>
-    <link rel="preload" href="~/Content/fonts/Manrope-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+    <title>San Hydro Application</title>
+    <link  href="~/Content/fonts/Manrope-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 
 
     <link href="~/Content/Shared/bootstrap.min.css" rel="stylesheet" />
@@ -18,8 +11,6 @@
 
     @Styles.Render("~/Content/shared-css")
 
-    @Scripts.Render("~/bundles/shared-js")
-    @Scripts.Render("~/bundles/modernizr")
 </head>
 
 
@@ -74,8 +65,8 @@
 
 
 
-                    <button type="submit" style="margin-top: 1em;" class="sign-in-btn"><i class="fa-solid fa-right-to-bracket"></i> Sign in</button>
-                    <p class="forgetbtn" id="changebtn" style="text-align: center; margin-top: .5em;">Change Password</p>
+                    <button type="submit" style="margin: 1em 0;" class="sign-in-btn"><i class="fa-solid fa-right-to-bracket"></i> Sign in</button>
+                    <a href="#" class="forgetbtn" id="changebtn" >Change Password</a>
 
                 </form>
             </div>
@@ -96,9 +87,6 @@
         </div>
     </div>
 </div>
-
-
-
 
 
 @*=================================================================================*@
@@ -232,44 +220,91 @@
 </div>
 
 
-
 <script src="~/Scripts/bootstrap.min.js"></script>
-<script src="~/Scripts/Popper.min.js"></script>
-<script type="text/javascript">
-    const loader = document.getElementById('loader');
-    const logform = document.getElementById('logincredentials');
-    const regform = document.getElementById('addnewform');
-    const changeform = document.getElementById('changenewform');
+<script type="module" asp-append-version="true">
+    import {
+        getMethod,
+        postMethod
+    } from '@Url.Content("~/Scripts/modules/index.js")';
 
 
-    $("#forgetbtn").on('click', (e) => {
-        e.preventDefault();
-        regform.reset();
-        $("#AddProductModal").modal('show');
-    });
+    class LoginController {
+        constructor() {
+            this.loader = document.getElementById('loader');
+            this.logform = document.getElementById('logincredentials');
+            this.regform = document.getElementById('addnewform');
+            this.changeform = document.getElementById('changenewform');
 
-    $("#changebtn").on('click', (e) => {
-        e.preventDefault();
-        changeform.reset();
-        $("#ChangepasswordModal").modal('show');
-    });
+            this.forgetbtn = document.getElementById('forgetbtn');
+            this.changebtn = document.getElementById('changebtn');
+        }
 
+        async init() {
+            this.bindEvents();
+        }
 
-    logform.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        console.clear();
-        loader.classList.add('show');
+        bindEvents() {
+            this.logform?.addEventListener('submit', (e) => this.handleLogin(e));
+            this.regform?.addEventListener('submit', (e) => this.handleRegister(e));
+            this.changeform?.addEventListener('submit', (e) => this.handleChangePassword(e));
 
-        let formData = new FormData(e.target);
-        formData.append("proj", 10);
+            this.forgetbtn?.addEventListener('click', (e) => this.openRegisterModal(e));
+            this.changebtn?.addEventListener('click', (e) => this.openChangePasswordModal(e));
+        }
 
-        const data = Object.fromEntries(formData);
-        let res = await postMethod('/Auth/Authenticate', data);
-        if (res?.Success) {
-            setTimeout(() => {
-                localStorage.setItem("UserID", res.data.User_ID)
-                localStorage.setItem('Logout', "/Hydroponics/Hydro/index");
+        showLoader() {
+            this.loader?.classList.add("show");
+        }
+
+        hideLoader() {
+            this.loader?.classList.remove("show");
+        }
+
+        openRegisterModal(e) {
+            e.preventDefault();
+
+            this.regform?.reset();
+
+            const modal = new bootstrap.Modal(
+                document.getElementById("AddProductModal")
+            );
+
+            modal.show();
+        }
+        openChangePasswordModal(e) {
+            e.preventDefault();
+
+            this.changeform?.reset();
+
+            const modal = new bootstrap.Modal(
+                document.getElementById("ChangepasswordModal")
+            );
+
+            modal.show();
+        }
+
+        async handleLogin(e) {
+            e.preventDefault();
+            console.clear();
+
+            this.loader.classList.add('show');
+
+            const formData = new FormData(this.logform);
+            formData.append('proj', 10);
+
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                let res = await postMethod('/Auth/Authenticate', data);
+
+                if (!res?.Success) {
+                    throw new Error(res?.Message || "Authentication failed");
+                }
+
+                const user = res.data;
+
                 // For Info of the user
+                localStorage.setItem("UserID", res.data.User_ID);
                 localStorage.setItem('UserRole', res.data.role);
                 localStorage.setItem('Fullname', res.data.fullname);
 
@@ -277,7 +312,8 @@
                 localStorage.setItem('accessToken', res.data.access_token);
                 localStorage.setItem('refreshToken', res.data.refresh_token);
 
-                // For Persitent Login
+                // Session info
+                localStorage.setItem('Logout', "/Hydroponics/Hydro/index");
                 localStorage.setItem('HydroTime', new Date().toISOString());
                 localStorage.setItem('isLoggedInHydro', 'true');
 
@@ -287,136 +323,173 @@
                     Date.now() + (3600 * 1000)
                 );
 
-                window.location.href = "/Hydroponics/Hydro/Inventorylist";
-            }, 2000);
-        } else {
-            loader.classList.remove('show');
-            Swal.fire({
-                icon: "error",
-                text: res.Message,
-                timer: 1500,
-                showConfirmButton: false
-            });
+                // Optional loader delay animation
+                setTimeout(() => {
+                    window.location.href = "/Hydroponics/Hydro/Inventorylist";
+                }, 1200);
 
-        };
-    });
-    regform.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        let formData = new FormData(e.target);
-        formData.append('ProjectID', 9);
+                if (res?.Success) {
+                    setTimeout(() => {
+                        localStorage.setItem("UserID", res.data.User_ID)
+                        localStorage.setItem('Logout', "/Hydroponics/Hydro/index");
+                        // For Info of the user
+                        localStorage.setItem('UserRole', res.data.role);
+                        localStorage.setItem('Fullname', res.data.fullname);
 
-        const data = Object.fromEntries(formData);
-        if (!RegisterValidationForm()) {
-            //const savebtn = document.querySelector("#Regisbtn");
-            //savebtn.innerHTML = " <div class='buttonloading'></div>";
-            let res = await postMethod('/User/CreateNewUser', formData);
-            if (res && res.Success) {
-                Swal.fire({
-                    title: "Success",
-                    text: res.Message,
-                    icon: "success",
-                    showConfirmButton: false,
-                    timer: 1500
-                }).then(() => {
-                    $("#AddProductModal").modal('hide');
-                    $('#logshow').show();
-                    regform.reset();
-                    //savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-regular fa-floppy-disk'></i>  Registered</span>"
-                    //document.querySelector('.Registrationcontainer').classList.remove('activeforms');
-                    //document.querySelector('.logincontainer').classList.add('activeforms');
-                });
+                        // For Authorize User Access
+                        localStorage.setItem('accessToken', res.data.access_token);
+                        localStorage.setItem('refreshToken', res.data.refresh_token);
 
-                //savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-regular fa-floppy-disk'></i>  Registered</span>"
-            } else {
-                Swal.fire({
-                    icon: "error",
-                    text: res.Message,
-                    timer: 1500,
-                    showConfirmButton: false
-                });
+                        // For Persitent Login
+                        localStorage.setItem('HydroTime', new Date().toISOString());
+                        localStorage.setItem('isLoggedInHydro', 'true');
+
+                        // expiresIn = seconds
+                        localStorage.setItem(
+                            'tokenExpiry',
+                            Date.now() + (3600 * 1000)
+                        );
+
+                        window.location.href = "/Hydroponics/Hydro/Inventorylist";
+                    }, 2000);
+                } else {
+                    this.loader.classList.remove('show');
+                    console.error("Login error:", error);
+
+                    Swal.fire({
+                        icon: "error",
+                        text: error.message || "Login failed",
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                };
+            } catch (error) {
+                console.error('Login error:', error);
+                alert('An error occurred during login. Please try again later.');
             }
         }
-    });
-    changeform.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        let formData = new FormData(e.target);
-        const data = Object.fromEntries(formData);
 
-        if (ChangeValidationForm()) {
-            let res = await postMethod('/User/ChangePassword', formData);
-            if (res && res.Success) {
-                Swal.fire({
-                    title: "Success",
-                    text: res.Message,
-                    icon: "success",
-                    showConfirmButton: false,
-                    timer: 1500
-                }).then(() => {
-                    $("#ChangepasswordModal").modal('hide');
-                    changeform.reset();
-                    //savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-regular fa-floppy-disk'></i>  Registered</span>"
-                    //document.querySelector('.Registrationcontainer').classList.remove('activeforms');
-                    //document.querySelector('.logincontainer').classList.add('activeforms');
-                });
+        async handleRegister(e) {
+            e.preventDefault();
 
-                //savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-regular fa-floppy-disk'></i>  Registered</span>"
-            } else {
-                Swal.fire({
-                    icon: "error",
-                    text: res.Message,
-                    timer: 1500,
-                    showConfirmButton: false
-                });
+            if (!this.RegisterValidationForm()) {
+                return;
+            }
+
+            const formData = new FormData(this.regform);
+            formData.append('ProjectID', 10);
+            const data = Object.fromEntries(formData);
+
+            try {
+                let res = await postMethod('/User/CreateNewUser', formData);
+                if (res?.Success) {
+                    alert('Registration successful! You can now log in.');
+
+                    const modal = new bootstrap.Modal(
+                        document.getElementById("AddProductModal")
+                    );
+
+                    modal.hide();
+                    this.regform?.reset();
+                } else {
+                    alert(response.message || 'Registration failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                alert('An error occurred during registration. Please try again later.');
+            } finally {
+                this.hideLoader();
             }
         }
-    });
+
+        async handleChangePassword(e) {
+            e.preventDefault();
+            this.showLoader();
+            const formData = new FormData(this.changeform);
+
+            if (!this.ChangeValidationForm()) {
+                return;
+            }
+
+            try {
+                let res = await postMethod('/User/ChangePassword', formData);
+                if (response.success) {
+                    alert('Password changed successfully! You can now log in with your new password.');
+                    $('#ChangepasswordModal').modal('hide');
+                } else {
+                    alert(response.message || 'Password change failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Change password error:', error);
+                alert('An error occurred while changing the password. Please try again later.');
+            } finally {
+                this.hideLoader();
+            }
+        }
+
+        async ChangeValidationForm() {
+            let newpass = document.getElementById("CNewPassword").value;
+            let confirmpass = document.getElementById("CConfirm").value;
+            let employeeID = document.getElementById("CEmployee_ID").value;
+
+            let res = await getMethod('/User/CheckEmployeeID', { empID: employeeID });
+
+            if (!res?.Success) {
+                document.getElementById("ChangeErrormessage").textContent = "Employee ID does not exist";
+                document.getElementById("ChangeErrormessage").style.color = "darkred";
+                return false;
+            }
+
+            if (newpass !== confirmpass) {
+                document.getElementById("ChangeErrormessage").textContent = "Password does not Match";
+                document.getElementById("ChangeErrormessage").style.color = "darkred";
+                return false;
+            }
+
+            const modal = new bootstrap.Modal(
+                document.getElementById("ChangeErrormessage")
+            );
+
+            modal.show();
+        }
 
 
-    const RegisterValidationForm = () => {
-        let pass = $("#RegPassword").val();
-        let confirmpass = $("#RegConfirmPassword").val();
+        RegisterValidationForm() {
+            let errormsg = document.getElementById("Errormessage");
+            const pass = document.getElementById("RegPassword")?.value;
+            const confirm = document.getElementById("RegConfirmPassword")?.value;
 
-        if (pass !== confirmpass) {
-            $("#Errormessage").text("Password does not Match");
-            $("#Errormessage").css("color", "darkred");
+            if (pass !== confirmpass) {
+                errormsg.innerHTML= "Password does not Match";
+                errormsg.style.color = "darkred";
+                return false;
+            }
+
+            errormsg.textContent = "";
             return true;
-        }
-        return false;
-    };
-    const ChangeValidationForm = async () => {
-        let newpass = $("#CNewPassword").val();
-        let confirmpass = $("#CConfirm").val();
-        let employeeID = $("#CEmployee_ID").val();
-        $("#ChangeErrormessage").show();
-
-        let res = await fetchData('/User/CheckEmployeeID', { empID: employeeID });
-
-        if (res == false) {
-            $("#ChangeErrormessage").text("Employee ID is Incorrect");
-            $("#ChangeErrormessage").css("color", "darkred");
-            return;
-        }
-
-        if (newpass !== confirmpass) {
-            $("#ChangeErrormessage").text("Password does not Match");
-            $("#ChangeErrormessage").css("color", "darkred");
-            return;
-        }
-
-        $("#ChangeErrormessage").hide();
+        };
     }
 
 
-    $("#logshow").show();
+    document.addEventListener("DOMContentLoaded", () => {
+        const login = new LoginController();
+        login.init();
+    });
 
 
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", () => {
+
+        // replace $("#logshow").show()
+        const logShow = document.querySelector("#logshow");
+        if (logShow) logShow.style.display = "block";
+
         const slides = document.querySelectorAll(".slide");
         const controls = document.querySelectorAll(".control-btn");
-        let current = 0;
-        let interval;
 
-        function goToSlide(index) {
+        let current = 0;
+        let interval = null;
+
+        const goToSlide = (index) => {
             slides[current].classList.remove("Slideactive");
             controls[current].classList.remove("Slideactive");
 
@@ -424,24 +497,26 @@
 
             slides[current].classList.add("Slideactive");
             controls[current].classList.add("Slideactive");
-        }
+        };
 
-        function nextSlide() {
-            let next = (current + 1) % slides.length;
+        const nextSlide = () => {
+            const next = (current + 1) % slides.length;
             goToSlide(next);
-        }
+        };
 
-        function startAutoPlay() {
+        const startAutoPlay = () => {
             interval = setInterval(nextSlide, 5000);
-        }
+        };
 
-        function stopAutoPlay() {
+        const stopAutoPlay = () => {
             clearInterval(interval);
-        }
+        };
 
-        // ✅ Correct initialization
-        slides[0].classList.add("Slideactive");
-        controls[0].classList.add("Slideactive");
+        // Initialize first slide
+        if (slides.length > 0) {
+            slides[0].classList.add("Slideactive");
+            controls[0].classList.add("Slideactive");
+        }
 
         controls.forEach((btn, i) => {
             btn.addEventListener("click", () => {
@@ -453,9 +528,7 @@
 
         startAutoPlay();
     });
-
-
-
-
 </script>
+
+
 

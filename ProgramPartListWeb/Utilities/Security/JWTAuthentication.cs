@@ -10,83 +10,115 @@ namespace ProgramPartListWeb.Utilities.Security
 {
     public sealed class JWTAuthentication
     {
-  
+        private static readonly JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+
         public static class JwtConfig
         {
-            public static string Issuer => ConfigurationManager.AppSettings["config:JwtIssuer"];
-            public static string Audience => ConfigurationManager.AppSettings["config:JwtAudience"];
-            public static string AccessSecretKey => ConfigurationManager.AppSettings["config:JwtKey"];
-            public static string RefreshSecretKey => ConfigurationManager.AppSettings["config:RefreshSecretKey"];
-            public static int ExpireMinutes => int.Parse(ConfigurationManager.AppSettings["config:JwtExpireMinutes"]);
-            public static int RefreshExpireDays => int.Parse(ConfigurationManager.AppSettings["config:JwtExpireDays"]);
+            public static string Issuer =>
+                ConfigurationManager.AppSettings["config:JwtIssuer"]?.Trim();
+
+            public static string Audience =>
+                ConfigurationManager.AppSettings["config:JwtAudience"]?.Trim();
+
+            public static string AccessSecretKey =>
+                ConfigurationManager.AppSettings["config:JwtKey"]?.Trim();
+
+            public static string RefreshSecretKey =>
+                ConfigurationManager.AppSettings["config:RefreshSecretKey"]?.Trim();
+
+            public static int ExpireMinutes =>
+                int.Parse(ConfigurationManager.AppSettings["config:JwtExpireMinutes"]);
+
+            public static int RefreshExpireDays =>
+                int.Parse(ConfigurationManager.AppSettings["config:JwtExpireDays"]);
         }
 
+        private static SymmetricSecurityKey GetKey(string secret)
+        {
+            return new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
+        }
 
+        /* =========================================================
+           ACCESS TOKEN GENERATION
+           ========================================================= */
         public static string GenerateAccessToken(string fullName, string role, int userId)
         {
-            // Store To Claims Like an Mail Envelope that is Seal in information
             var claims = new List<Claim>
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),       
-                new Claim(JwtRegisteredClaimNames.UniqueName, fullName),         
-                new Claim(ClaimTypes.Role, role),                            
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), 
-                new Claim(JwtRegisteredClaimNames.Iat,
-                    new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds().ToString(),
-                    ClaimValueTypes.Integer64)
-            };
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtConfig.AccessSecretKey));
-
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var expires = DateTime.UtcNow.AddMinutes(
-                    Convert.ToDouble(JwtConfig.ExpireMinutes));
-
-            var token = new JwtSecurityToken(
-                          issuer: JwtConfig.Issuer,
-                          audience: JwtConfig.Audience,
-                          claims: claims,
-                          expires: expires,
-                          signingCredentials: creds);
-            // Optional: Add kid header for key rotation
-            token.Header["kid"] = "current-key-id"; // Replace with your actual key ID
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-
-
-
-        public static string GenerateRefreshToken(string fullName, string role, int userId)
         {
-            var claims = new List<Claim>
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
-                new Claim("Fullname", fullName),
-                new Claim(ClaimTypes.Role, role),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Iat,
-                    new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds().ToString(),
-                    ClaimValueTypes.Integer64)
-            };
+            new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
+            new Claim(JwtRegisteredClaimNames.UniqueName, fullName),
+            new Claim(ClaimTypes.Role, role),
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtConfig.RefreshSecretKey));
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
 
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            new Claim(
+                JwtRegisteredClaimNames.Iat,
+                DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(),
+                ClaimValueTypes.Integer64)
+        };
 
-            var expires = DateTime.UtcNow.AddDays(Convert.ToDouble(JwtConfig.RefreshExpireDays));
+            var key = GetKey(JwtConfig.AccessSecretKey);
+         
+            var creds = new SigningCredentials(
+                key,
+                SecurityAlgorithms.HmacSha256);
+
+            var expires = DateTime.UtcNow.AddMinutes(JwtConfig.ExpireMinutes);
 
             var token = new JwtSecurityToken(
                 issuer: JwtConfig.Issuer,
                 audience: JwtConfig.Audience,
                 claims: claims,
+                notBefore: DateTime.UtcNow,
                 expires: expires,
-                signingCredentials: creds);
+                signingCredentials: creds
+            );
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return tokenHandler.WriteToken(token);
         }
 
-        public static ClaimsPrincipal ValidateToken(string token, bool isRefreshToken = false)
+        /* =========================================================
+           REFRESH TOKEN GENERATION
+           ========================================================= */
+        public static string GenerateRefreshToken(string fullName, string role, int userId)
+        {
+            var claims = new List<Claim>
+        {
+            new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
+            new Claim("fullname", fullName),
+            new Claim(ClaimTypes.Role, role),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+
+            new Claim(
+                JwtRegisteredClaimNames.Iat,
+                DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(),
+                ClaimValueTypes.Integer64)
+        };
+
+            var key = GetKey(JwtConfig.RefreshSecretKey);
+
+            var creds = new SigningCredentials(
+                key,
+                SecurityAlgorithms.HmacSha256);
+
+            var expires = DateTime.UtcNow.AddDays(JwtConfig.RefreshExpireDays);
+
+            var token = new JwtSecurityToken(
+                issuer: JwtConfig.Issuer,
+                audience: JwtConfig.Audience,
+                claims: claims,
+                notBefore: DateTime.UtcNow,
+                expires: expires,
+                signingCredentials: creds
+            );
+
+            return tokenHandler.WriteToken(token);
+        }
+
+        /* =========================================================
+           ACCESS TOKEN VALIDATION
+           ========================================================= */
+        public static ClaimsPrincipal ValidateToken(string token)
         {
             if (string.IsNullOrWhiteSpace(token))
                 throw new ArgumentException("Token is null or empty.");
@@ -94,14 +126,37 @@ namespace ProgramPartListWeb.Utilities.Security
             if (token.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
                 token = token.Substring("Bearer ".Length).Trim();
 
-            var segments = token.Split('.');
-            if (segments.Length != 3)
-                throw new SecurityTokenMalformedException($"Expected 3 segments, got {segments.Length}");
+            var validationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
 
-            var key = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(isRefreshToken ? JwtConfig.RefreshSecretKey : JwtConfig.AccessSecretKey));
+                ValidIssuer = JwtConfig.Issuer,
+                ValidAudience = JwtConfig.Audience,
 
-            var tokenHandler = new JwtSecurityTokenHandler();
+                IssuerSigningKey = GetKey(JwtConfig.AccessSecretKey),
+
+                RequireSignedTokens = true,
+                RequireExpirationTime = true,
+
+                ClockSkew = TimeSpan.Zero
+            };
+
+            return tokenHandler.ValidateToken(token, validationParameters, out _);
+        }
+
+        /* =========================================================
+           REFRESH TOKEN VALIDATION
+           ========================================================= */
+        public static ClaimsPrincipal ValidateRefreshToken(string refreshToken)
+        {
+            if (string.IsNullOrWhiteSpace(refreshToken))
+                return null;
+
+            if (refreshToken.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+                refreshToken = refreshToken.Substring("Bearer ".Length).Trim();
 
             var validationParameters = new TokenValidationParameters
             {
@@ -109,46 +164,21 @@ namespace ProgramPartListWeb.Utilities.Security
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
+
                 ValidIssuer = JwtConfig.Issuer,
                 ValidAudience = JwtConfig.Audience,
-                IssuerSigningKey = key,
-                ClockSkew = TimeSpan.Zero
-            };
 
-            return tokenHandler.ValidateToken(token, validationParameters, out _);
-        }
+                IssuerSigningKey = GetKey(JwtConfig.RefreshSecretKey),
 
+                RequireSignedTokens = true,
+                RequireExpirationTime = true,
 
-
-        public static ClaimsPrincipal ValidateRefreshToken(string refreshToken)
-        {
-            //Debug.WriteLine($@"Issure : {JwtConfig.Issuer}");
-            //Debug.WriteLine($@"Audience : {JwtConfig.Audience}");
-            //Debug.WriteLine($@"AccessSecretKey :  {JwtConfig.AccessSecretKey}");
-            //Debug.WriteLine($@"RefreshSecretKey :    {JwtConfig.RefreshSecretKey}");
-            //Debug.WriteLine($@"ExpireMinutes :  {JwtConfig.ExpireMinutes}");
-            //Debug.WriteLine($@"RefreshExpireDays :  {JwtConfig.RefreshExpireDays}");
-
-            refreshToken = refreshToken.Replace("Bearer ", "").Trim();
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(JwtConfig.RefreshSecretKey);
-
-            var parameters = new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidIssuer = JwtConfig.Issuer,
-                ValidateAudience = true,
-                ValidAudience = JwtConfig.Audience,
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
-                ValidateLifetime = true,
                 ClockSkew = TimeSpan.Zero
             };
 
             try
             {
-                return tokenHandler.ValidateToken(refreshToken, parameters, out _);
+                return tokenHandler.ValidateToken(refreshToken, validationParameters, out _);
             }
             catch
             {

@@ -26,6 +26,17 @@ namespace PracticeC_
 
         static void Main(string[] args)
         {
+            DateTime timeIn = DateTime.Parse("2026-03-07 06:27:14.780");
+            DateTime timeOut = DateTime.Parse("2026-03-07 05:30:14.780");
+
+            var result = TimeCalculator.CalculateHours(timeIn, timeOut, true);
+
+            Console.WriteLine($"Time In  : {timeIn}");
+            Console.WriteLine($"Time Out : {timeOut}");
+            Console.WriteLine($"Regular Hours  : {result.regular:F2}");
+            Console.WriteLine($"Overtime Hours : {result.overtime:F2}");
+
+
             //samplemethod(i: 1);
 
             string strReelID = "SDP00287327-01 505113353";

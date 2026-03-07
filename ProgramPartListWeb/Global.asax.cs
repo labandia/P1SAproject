@@ -49,11 +49,19 @@ namespace ProgramPartListWeb
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+
+            PreloadRoutes();    
         }
 
         protected void Application_End()
         {
             SqlDependency.Stop(SqlDataAccess.BuildConnectionString());
+
+            if (Response.StatusCode == 401)
+            {
+                Response.SuppressFormsAuthenticationRedirect = true;
+            }
         }
 
         protected void Application_EndRequest()
@@ -160,5 +168,29 @@ namespace ProgramPartListWeb
                 LogManager.ReconfigExistingLoggers();
             }
         }
+
+        private void PreloadRoutes()
+        {
+            var hosts = new[]
+            {
+                "https://pmacsweb.sdp.com",
+                "https://p1saportalweb.sdp.com",
+                "http://localhost"
+            };
+
+            foreach (var host in hosts)
+            {
+                var request = new HttpRequest("", host, "");
+                var response = new HttpResponse(null);
+                var context = new HttpContext(request, response);
+                var wrapper = new HttpContextWrapper(context);
+
+                foreach (RouteBase route in RouteTable.Routes)
+                {
+                    route.GetRouteData(wrapper);
+                }
+            }
+        }
+
     }
 }

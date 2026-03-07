@@ -21,6 +21,24 @@
         }
     };
 
+    /* =======================
+         GLOBAL AUTH CHECK
+      ======================= */
+
+    const token = localStorage.getItem(DEFAULT_CONFIG.accessTokenKey);
+    const refresh = localStorage.getItem(DEFAULT_CONFIG.refreshTokenKey);
+
+    if (!token && !refresh) {
+        console.warn("No tokens found. Redirecting to login.");
+        console.log(DEFAULT_CONFIG.loginUrl);
+        window.location.href = DEFAULT_CONFIG.loginUrl;
+        return;
+    }
+
+    /* =======================
+       UTILITIES
+    ======================= */
+
     function buildUrl(url, params) {
         if (!params || Object.keys(params).length === 0) return url;
         return url + (url.includes('?') ? '&' : '?') + new URLSearchParams(params);
@@ -31,6 +49,19 @@
         return !expiry || Date.now() >= (+expiry - cfg.tokenRefreshThreshold);
     }
 
+    async function fetchWithTimeout(url, options, timeout) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), timeout);
+
+        try {
+            return await fetch(url, { ...options, signal: controller.signal });
+        } finally {
+            clearTimeout(timer);
+        }
+    }
+    /* =======================
+     REFRESH TOKEN
+  ======================= */
     async function refreshAccessToken(cfg) {
         const refreshToken = localStorage.getItem(cfg.refreshTokenKey);
         if (!refreshToken) return false;
@@ -62,16 +93,9 @@
         }
     }
 
-    async function fetchWithTimeout(url, options, timeout) {
-        const controller = new AbortController();
-        const timer = setTimeout(() => controller.abort(), timeout);
-
-        try {
-            return await fetch(url, { ...options, signal: controller.signal });
-        } finally {
-            clearTimeout(timer);
-        }
-    }
+    /* =======================
+       GET METHOD
+    ======================= */
 
     window.GetMethod = async function (url, fdata = {}, options = {}) {
         const cfg = { ...DEFAULT_CONFIG, ...options };
@@ -126,12 +150,124 @@
         }
     };
 
+    /* =======================
+     POST METHOD
+  ======================= */
+    window.postMethod = async function (url, data, options = {}) {
+
+        if (!url) {
+            console.error("postMethod: URL is required");
+            return { Success: false, Message: "URL missing" };
+        }
+
+        const {
+            headers = {},
+            contentType = "application/json",
+            throwOnError = false,
+            includeCredentials = false,
+            timeout = 30000,
+            responseType = "json"
+        } = options;
+
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+        const config = {
+            method: "POST",
+            headers: { ...headers },
+            credentials: includeCredentials ? "include" : "same-origin",
+            signal: controller.signal
+        };
+
+        // ---- Body handling (MVC friendly) ----
+        if (data instanceof FormData) {
+            config.body = data; // Let browser set multipart boundary
+        }
+        else if (typeof data === "object" && data !== null) {
+            config.body = JSON.stringify(data);
+            if (!config.headers["Content-Type"]) {
+                config.headers["Content-Type"] = contentType;
+            }
+        }
+        else if (typeof data === "string") {
+            config.body = data;
+            if (!config.headers["Content-Type"]) {
+                config.headers["Content-Type"] = contentType;
+            }
+        }
+
+        try {
+            const response = await fetch(url, config);
+            clearTimeout(timeoutId);
+
+            let rawText = "";
+            if (response.status !== 204) {
+                rawText = await response.text(); // READ ONCE
+            }
+
+            if (!response.ok) {
+                const err = new Error(`HTTP ${response.status}`);
+                err.status = response.status;
+                err.raw = rawText;
+                if (throwOnError) throw err;
+            }
+
+            let result = rawText;
+
+            if (responseType === "json") {
+                try {
+                    result = rawText ? JSON.parse(rawText) : null;
+                } catch {
+                    console.warn("Invalid JSON returned:", rawText);
+                    result = { Success: false, rawText };
+                }
+            }
+
+            if (result && result.Success === false && throwOnError) {
+                throw new Error(result.Message || "Server error");
+            }
+
+            return result;
+
+        } catch (error) {
+
+            if (error.name === "AbortError") {
+                error.message = `Request timed out after ${timeout}ms`;
+            }
+
+            if (throwOnError) throw error;
+
+            return {
+                Success: false,
+                Error: true,
+                Message: error.message,
+                Status: error.status || 0
+            };
+        }
+    };
+
+
+
+
+
+
+
+
     /* ---------- Utilities ---------- */
 
     window.GetMethod.isAuthenticated = function () {
+
         const token = localStorage.getItem(DEFAULT_CONFIG.accessTokenKey);
+        const refresh = localStorage.getItem(DEFAULT_CONFIG.refreshTokenKey);
         const expiry = localStorage.getItem(DEFAULT_CONFIG.tokenExpiryKey);
-        return !!token && (!expiry || Date.now() < +expiry);
+
+        if (!token || !refresh)
+            return false;
+
+        if (expiry && Date.now() > +expiry)
+            return false;
+
+        return true;
     };
 
     window.GetMethod.refreshToken = () => refreshAccessToken(DEFAULT_CONFIG);
@@ -142,6 +278,21 @@
         localStorage.removeItem('tokenExpiry');
     };
 
+    window.logout = function () {
+        const logoutUrl = localStorage.getItem("Logout") || "/login";
+        localStorage.clear();
+        window.location.href = logoutUrl;
+    };
+
+
+    /* =======================
+     CROSS TAB LOGOUT SYNC
+  ======================= */
+    window.addEventListener("storage", function (e) {
+
+        if (e.key === "accessToken" && !e.newValue)
+            window.location.href = DEFAULT_CONFIG.loginUrl;
+    });
 })();
 
 
@@ -174,15 +325,7 @@ window.PullUserInformation = function () {
 };
 
 
-window.logout = function () {
-    var logout = localStorage.getItem('Logout');
-    try {
-        localStorage.clear();
-        window.location.href = logout;
-    } catch (error) {
-        console.error("Logout failed:", error);
-    }
-};
+
 
 // Restriction of typing characters
 window.restrictChars = function (e) {
@@ -202,42 +345,38 @@ window.ActionButtons = function () {
 };
 
 
+/* =======================
+   LAZY IMAGE LOADING
+======================= */
 
-// =======================
-// LAZY LOADING IMAGE
-// =======================
 document.addEventListener("DOMContentLoaded", function () {
-    const lazyImages = document.querySelectorAll("img.lazy");
+
+    const images = document.querySelectorAll("img.lazy");
 
     if ("IntersectionObserver" in window) {
-        let observer = new IntersectionObserver((entries, obs) => {
+
+        const observer = new IntersectionObserver((entries, obs) => {
+
             entries.forEach(entry => {
+
                 if (entry.isIntersecting) {
+
                     const img = entry.target;
+
                     img.src = img.dataset.src;
 
-                    img.onload = () => {
-                        img.classList.add("loaded"); // trigger CSS transition
-                    };
+                    img.onload = () => img.classList.add("loaded");
 
                     img.removeAttribute("data-src");
+
                     obs.unobserve(img);
                 }
             });
+
         });
 
-        lazyImages.forEach(img => observer.observe(img));
-    } else {
-        // fallback (older browsers)
-        lazyImages.forEach(img => {
-            img.src = img.dataset.src;
-            img.onload = () => {
-                img.classList.add("loaded");
-            };
-            img.removeAttribute("data-src");
-        });
+        images.forEach(img => observer.observe(img));
     }
-    
 });
 
 
@@ -251,103 +390,6 @@ window.formatJsonDate = function (value) {
     return date.toLocaleDateString();
 };
 
-
-
-
-
-
-window.postMethod = async function (url, data, options = {}) {
-
-    if (!url) {
-        console.error("postMethod: URL is required");
-        return { Success: false, Message: "URL missing" };
-    }
-
-    const {
-        headers = {},
-        contentType = "application/json",
-        throwOnError = false,
-        includeCredentials = false,
-        timeout = 30000,
-        responseType = "json"
-    } = options;
-
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), timeout);
-
-    const config = {
-        method: "POST",
-        headers: { ...headers },
-        credentials: includeCredentials ? "include" : "same-origin",
-        signal: controller.signal
-    };
-
-    // ---- Body handling (MVC friendly) ----
-    if (data instanceof FormData) {
-        config.body = data; // Let browser set multipart boundary
-    }
-    else if (typeof data === "object" && data !== null) {
-        config.body = JSON.stringify(data);
-        if (!config.headers["Content-Type"]) {
-            config.headers["Content-Type"] = contentType;
-        }
-    }
-    else if (typeof data === "string") {
-        config.body = data;
-        if (!config.headers["Content-Type"]) {
-            config.headers["Content-Type"] = contentType;
-        }
-    }
-
-    try {
-        const response = await fetch(url, config);
-        clearTimeout(timeoutId);
-
-        let rawText = "";
-        if (response.status !== 204) {
-            rawText = await response.text(); // READ ONCE
-        }
-
-        if (!response.ok) {
-            const err = new Error(`HTTP ${response.status}`);
-            err.status = response.status;
-            err.raw = rawText;
-            if (throwOnError) throw err;
-        }
-
-        let result = rawText;
-
-        if (responseType === "json") {
-            try {
-                result = rawText ? JSON.parse(rawText) : null;
-            } catch {
-                console.warn("Invalid JSON returned:", rawText);
-                result = { Success: false, rawText };
-            }
-        }
-
-        if (result && result.Success === false && throwOnError) {
-            throw new Error(result.Message || "Server error");
-        }
-
-        return result;
-
-    } catch (error) {
-
-        if (error.name === "AbortError") {
-            error.message = `Request timed out after ${timeout}ms`;
-        }
-
-        if (throwOnError) throw error;
-
-        return {
-            Success: false,
-            Error: true,
-            Message: error.message,
-            Status: error.status || 0
-        };
-    }
-};
 
 
 

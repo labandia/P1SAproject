@@ -18,28 +18,44 @@ namespace ProgramPartListWeb.Helper
 
         protected override bool AuthorizeCore(HttpContextBase httpContext)
         {
-            var authHeader = httpContext.Request.Headers["Authorization"];
-            if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
+            //var authHeader = httpContext.Request.Headers["Authorization"];
+            //if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
+            //    return false;
+
+            //var token = authHeader.Substring("Bearer ".Length);
+
+            //try
+            //{
+            //    // Validate JWT
+            //    var principal = JWTAuthentication.ValidateToken(token);
+            //    if (principal == null)
+            //        return false;
+
+            //    httpContext.User = principal; // Set the current principal
+            //    System.Threading.Thread.CurrentPrincipal = principal;
+
+            //    // No role required, token is enough
+            //    if (string.IsNullOrEmpty(_requiredRole))
+            //        return true;
+
+            //    // Validate role
+            //    return principal.IsInRole(_requiredRole);
+            //}
+            //catch
+            //{
+            //    return false;
+            //}
+            var auth = httpContext.Request.Headers["Authorization"];
+
+            if (string.IsNullOrEmpty(auth))
                 return false;
 
-            var token = authHeader.Substring("Bearer ".Length);
+            var token = auth.Replace("Bearer ", "");
 
             try
             {
-                // Validate JWT
-                var principal = JWTAuthentication.ValidateToken(token);
-                if (principal == null)
-                    return false;
-
-                httpContext.User = principal; // Set the current principal
-                System.Threading.Thread.CurrentPrincipal = principal;
-
-                // No role required, token is enough
-                if (string.IsNullOrEmpty(_requiredRole))
-                    return true;
-
-                // Validate role
-                return principal.IsInRole(_requiredRole);
+                JWTAuthentication.ValidateToken(token);
+                return true;
             }
             catch
             {

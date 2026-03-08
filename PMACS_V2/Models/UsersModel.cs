@@ -1,0 +1,80 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace PMACS_V2.Models
+{
+    public class UsersModel
+    {
+        [Key]
+        public int User_ID { get; set; }
+
+        private string _employee_ID;
+        public string Employee_ID
+        {
+            get => _employee_ID;
+            set => _employee_ID = value?.Trim();
+        }
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public string Fullname { get; set; }
+        public string Signature { get; set; }
+        public string Email { get; set; }
+        public int Role_ID { get; set; }
+        public int Project_ID { get; set; }
+        public int IsActive { get; set; }
+    }
+
+    public class UserInformation 
+    {
+        [Key]
+        public int User_ID { get; set; }
+
+        private string _employee_ID;
+        public string Employee_ID
+        {
+            get => _employee_ID;
+            set => _employee_ID = value?.Trim();
+        }
+        public string Fullname { get; set; }
+        public string Signature { get; set; }
+        public string Email { get; set; }
+        public int IsActive { get; set; }
+    }
+
+
+  
+
+
+    public class RefreshTokenModel
+    {
+        public string RefreshToken { get; set; }
+    }
+
+
+    // FOR INPUT DATA 
+    public class RegisterModel
+    {
+        public int Project_ID { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public string Employee_ID { get; set; }
+        public string FullName { get; set; }
+        public string ProfileImage { get; set; }
+        public int Role_ID { get; set; }
+        public string Email { get; set; }
+    }
+
+    public class ChangePassModel
+    {
+        public int User_ID { get; set; }
+        public int Project_ID { get; set; }
+        public string Password { get; set; }
+    }
+
+
+
+    public class UserViewModel
+    {
+        public AuthModel auth { get; set; } 
+        public RegisterModel reg { get; set; }
+    }
+}

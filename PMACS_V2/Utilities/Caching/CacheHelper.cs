@@ -2,7 +2,7 @@
 using System.Runtime.Caching;
 using System.Threading.Tasks;
 
-namespace ProgramPartListWeb.Utilities
+namespace PMACS_V2.Utilities
 {
     public static class CacheHelper
     {

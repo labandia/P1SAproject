@@ -25,19 +25,19 @@ namespace PMACS_V2
             // 2. SHARED JS (CORE LIBRARIES)
             // =======================     
             bundles.Add(new ScriptBundle("~/bundles/shared-js").Include(
-                 "~/Scripts/Shared/Utilities.js",
-                 "~/Scripts/Shared/jquery-3.7.1.js",
-                 "~/Scripts/Shared/jquery.validate.js",
-                 "~/Scripts/Shared/all.min.js",
-                 "~/Scripts/Shared/sweetalert2.min.js"
-            ));
+                   "~/Scripts/Shared/jquery-3.7.1.js",
+                   "~/Scripts/jquery.validate.js",
+                   "~/Scripts/all.min.js",
+                   "~/Scripts/sweetalert2.min.js",
+                   "~/Scripts/Cryptojs.min.js"
+              ));
 
-       
+
             // =======================
             // 3. Validation + Modernizr
             // =======================
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
-                "~/Scripts/Shared/jquery.validate*"
+                "~/Scripts/jquery.validate*"
             ));
 
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(

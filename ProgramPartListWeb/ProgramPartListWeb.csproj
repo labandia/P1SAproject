@@ -998,6 +998,7 @@
     <Content Include="Scripts\quagga.js" />
     <Content Include="Scripts\Quangga.min.js" />
     <Content Include="Scripts\Quanv2.js" />
+    <Content Include="Scripts\Sample.js" />
     <Content Include="Scripts\Shared\bootstrap.bundle.js.map" />
     <Content Include="Scripts\Shared\bootstrap.bundle.min.js.map" />
     <Content Include="Scripts\Shared\bootstrap.esm.js.map" />

@@ -17,7 +17,7 @@ namespace PMACS_V2.Areas.P1SA
             context.MapRoute(
                 "P1SA_default",
                 "P1SA/{controller}/{action}/{id}",
-                new { action = "Index", id = UrlParameter.Optional }
+               new { controller = "PMACS", action = "Mainpage", id = UrlParameter.Optional }
             );
         }
     }

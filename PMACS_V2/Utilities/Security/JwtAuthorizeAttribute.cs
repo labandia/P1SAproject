@@ -4,7 +4,7 @@ using System.Web;
 using System.Web.Mvc;
 
 
-namespace ProgramPartListWeb.Helper
+namespace PMACS_V2.Helper
 {
     public class JwtAuthorizeAttribute : AuthorizeAttribute
     {

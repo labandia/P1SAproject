@@ -52,20 +52,14 @@ namespace PMACS_V2
         protected void Application_End()
         {
             SqlDependency.Stop(SqlDataAccess.BuildConnectionString());
-        }
 
-        protected void Application_EndRequest()
-        {
-            if (Response.StatusCode != 404)
-                return;
-
-            var routeData = RouteTable.Routes.GetRouteData(new HttpContextWrapper(Context));
-            if (routeData == null)
+            if (Response.StatusCode == 401)
             {
-                Response.Clear();
-                Server.TransferRequest("~/Error/NotFound");
+                Response.SuppressFormsAuthenticationRedirect = true;
             }
         }
+
+     
         // ===== Clean Error Handling =====
         protected void Application_Error()
         {
@@ -109,6 +103,7 @@ namespace PMACS_V2
             // Register Repository Interface with Implementation
             container.RegisterType<IAuthRepository, AuthRepository>(new ContainerControlledLifetimeManager());
             container.RegisterType<IUserRepository, UserRespository>(new ContainerControlledLifetimeManager());
+            container.RegisterType<IEmployee, EmployeeRepository>(new ContainerControlledLifetimeManager());
             container.RegisterType<IProducts, RotorProductRepository>(new ContainerControlledLifetimeManager());
 
             container.RegisterType<IShopOrderIn, RotorSummaryRepository>(new ContainerControlledLifetimeManager());

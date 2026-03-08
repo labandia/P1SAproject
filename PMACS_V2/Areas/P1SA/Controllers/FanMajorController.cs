@@ -1,16 +1,14 @@
 ﻿using PMACS_V2.Areas.P1SA.Interface;
 using PMACS_V2.Areas.P1SA.Models;
 using PMACS_V2.Controllers;
+using PMACS_V2.Helper;
 using PMACS_V2.Utilities;
-using PMACS_V2.Utilities.Security;
-using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;

@@ -13,7 +13,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Web;
 
-namespace ProgramPartListWeb.Helper
+namespace PMACS_V2.Helper
 {
     public static class GlobalUtilities
     {

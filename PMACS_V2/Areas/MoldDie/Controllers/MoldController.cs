@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -9,8 +8,7 @@ using PMACS_V2.Areas.MoldDie.Interface;
 using PMACS_V2.Areas.P1SA.Interface;
 using PMACS_V2.Areas.P1SA.Models;
 using PMACS_V2.Controllers;
-using PMACS_V2.Models;
-using ProgramPartListWeb.Helper;
+using PMACS_V2.Helper;
 
 namespace PMACS_V2.Areas.MoldDie.Controllers
 {

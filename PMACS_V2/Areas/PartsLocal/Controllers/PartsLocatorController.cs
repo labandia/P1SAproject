@@ -8,7 +8,7 @@ using PMACS_V2.Areas.PartsLocal.Interface;
 using PMACS_V2.Areas.PartsLocal.Model;
 using PMACS_V2.Controllers;
 using PMACS_V2.Interface;
-using ProgramPartListWeb.Helper;
+using PMACS_V2.Helper;
 
 namespace PMACS_V2.Areas.PartsLocal.Controllers
 {

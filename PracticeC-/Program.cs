@@ -162,7 +162,7 @@ namespace PracticeC_
             // Print the encoded connection string
             //Console.WriteLine($"Base64 Encoded Connection String: {base64ConnectionString}");
             // Print the encoded connection string
-            string a = DecodeBase64ToString("c2VydmVyPVNEUDA3MDZFUztVc2VyIElEPXAxc2E7cGFzc3dvcmQ9cDFzYTEyMzRhKjtkYXRhYmFzZT1QTUFDU19URVNUO1Bvb2xpbmc9VHJ1ZTtNaW4gUG9vbCBTaXplPTUwO01heCBQb29sIFNpemU9MTAwOw==");
+            string a = DecodeBase64ToString("c2VydmVyPURFU0tUT1AtRkMwVVAxUFxTUUxFWFBSRVNTO2RhdGFiYXNlPVBNQUNTX0xJVkU7SW50ZWdyYXRlZCBTZWN1cml0eT1UcnVlOw==");
             Console.WriteLine($"Base64 Decrypted {a}");
             Console.ReadKey();
         }

@@ -26,10 +26,10 @@ namespace PracticeC_
 
         static void Main(string[] args)
         {
-            DateTime timeIn = DateTime.Parse("2026-03-07 06:27:14.780");
-            DateTime timeOut = DateTime.Parse("2026-03-07 05:30:14.780");
+            DateTime timeIn = DateTime.Parse("2026-03-07 06:29:58.733");
+            DateTime timeOut = DateTime.Parse("2026-03-07 18:13:19.832");
 
-            var result = TimeCalculator.CalculateHours(timeIn, timeOut, true);
+            var result = TimeCalculator.CalculateHours(timeIn, timeOut, false);
 
             Console.WriteLine($"Time In  : {timeIn}");
             Console.WriteLine($"Time Out : {timeOut}");

@@ -17,7 +17,7 @@ namespace NCR_system.Interface
             int pageNumber,
             int pageSize);
 
-        Task<List<CustomerTotalModel>> GetCustomersOpenItem(int type = 0, int sec = 0);
+        Task<List<CustomerTotalModel>> GetCustomersOpenItem(int type = 0, int sec = 0, int stats = 1);
         Task<CustomerModel> GetCustomerDataByID(int recordID);
         Task<bool> InsertCustomerData(CustomerModel customer, int type);
         Task<bool> UpdateCustomerData(CustomerModel customer, ComplaintUpdateType type);

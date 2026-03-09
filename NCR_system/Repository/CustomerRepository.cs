@@ -31,6 +31,9 @@ namespace NCR_system.Repository
                             FROM PC_CustomerConplaint
                             WHERE IsDelete = 0 ";
 
+            strquery += " AND Status = @Status";
+            parameters.Add("@Status", Stats);
+
             // Filter By SMT Line
             if (departmentID != 0)
             {
@@ -38,13 +41,7 @@ namespace NCR_system.Repository
                 parameters.Add("@SectionID", departmentID);
             }
 
-            // Filter By SMT Line
-            if (Stats != 0)
-            {
-                strquery += " AND Status = @Status";
-                parameters.Add("@Status", Stats);
-            }
-
+          
 
             // Search Text
             if (!string.IsNullOrEmpty(search))
@@ -84,7 +81,7 @@ namespace NCR_system.Repository
             return SqlDataAccess.GetSingleAsync<CustomerModel>(strsql, new { RecordID = recordID });
         }
 
-        public async Task<List<CustomerTotalModel>> GetCustomersOpenItem(int type = 0, int  sec = 0)
+        public async Task<List<CustomerTotalModel>> GetCustomersOpenItem(int type = 0, int  sec = 0, int stats = 1)
         {
             string strquery = $@"SELECT 
                                 s.DepartmentName,
@@ -93,11 +90,12 @@ namespace NCR_system.Repository
                             LEFT JOIN PC_CustomerConplaint c
                                 ON c.SectionID = s.SectionID 
                                 AND c.CCtype = @CCtype 
-                                AND c.Status = 1 
+                                AND c.Status = @Status 
                                 AND c.IsDelete = 0";
 
             Dictionary<string, object> parameters = new Dictionary<string, object>();
 
+            parameters.Add("@Status", stats);
 
             // Filter By Process 
             if (sec != 0)

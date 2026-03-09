@@ -182,12 +182,13 @@ namespace NCR_system.View.Module
                 string search = searchText.Text.Trim();
                 CustomDatagrid.SuspendLayout();
 
+
                 var custTask = _cust.GetCustomerData(
                     search,
                     sectionfilter.SelectedIndex, 
                     proc, filteritems.SelectedIndex, 0, 0);
 
-                var pieTask = _cust.GetCustomersOpenItem(proc, sectionfilter.SelectedIndex);
+                var pieTask = _cust.GetCustomersOpenItem(proc, sectionfilter.SelectedIndex, filteritems.SelectedIndex);
 
                 await Task.WhenAll(custTask, pieTask);
 
@@ -371,9 +372,7 @@ namespace NCR_system.View.Module
         {
             if (_isInitializing) return;
 
-            int selectproc = SelectedProcess.SelectedIndex == -1
-                                ? 0
-                                : SelectedProcess.SelectedIndex;
+            int selectproc = SelectedProcess.SelectedIndex;
             await DisplayCustomer(selectproc);
             SwitchButton(selectproc);
         }

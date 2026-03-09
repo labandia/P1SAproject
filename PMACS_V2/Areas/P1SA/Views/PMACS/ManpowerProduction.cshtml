@@ -528,7 +528,7 @@
      }
 
     const getLogsUpdated = async () => {
-        let res = await fetchData('@Url.Action("GetUpdateLogs", "PMACS")', { Module: 1 });
+        let res = await GetMethod('@Url.Action("GetUpdateLogs", "PMACS")', { Module: 1 });
         if (res && res.Success) {
             $("#Updatelog").text("Last Updated : " + res.Data[0].LastUpdated);
         }

@@ -25,6 +25,7 @@ namespace PMACS_V2
             // 2. SHARED JS (CORE LIBRARIES)
             // =======================     
             bundles.Add(new ScriptBundle("~/bundles/shared-js").Include(
+                   "~/Scripts/Shared/Utilities.js",
                    "~/Scripts/Shared/jquery-3.7.1.js",
                    "~/Scripts/jquery.validate.js",
                    "~/Scripts/all.min.js",

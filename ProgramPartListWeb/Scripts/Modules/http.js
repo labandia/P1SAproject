@@ -3,22 +3,30 @@ import { isTokenExpired, refreshAccessToken, clearTokens } from "./auth.js";
 
 function buildUrl(url, params) {
     if (!params || !Object.keys(params).length) return url;
-    return url + (url.includes('?') ? '&' : '?') + new URLSearchParams(params);
+    return url + (url.includes("?") ? "&" : "?") + new URLSearchParams(params);
 }
 
 async function fetchWithTimeout(url, options, timeout) {
+
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeout);
 
     try {
         return await fetch(url, { ...options, signal: controller.signal });
-    } finally {
+    }
+    finally {
         clearTimeout(timer);
     }
 }
 
+/* =========================
+   GET METHOD
+========================= */
+
 export async function getMethod(url, params = {}, options = {}) {
+
     const cfg = { ...DEFAULT_CONFIG, ...options };
+
     let token = localStorage.getItem(cfg.accessTokenKey);
 
     if (token && isTokenExpired(cfg)) {
@@ -27,26 +35,32 @@ export async function getMethod(url, params = {}, options = {}) {
     }
 
     const headers = { ...(options.headers || {}) };
-    if (token) headers.Authorization = `Bearer ${token}`;
+
+    if (token)
+        headers.Authorization = `Bearer ${token}`;
 
     try {
+
         const response = await fetchWithTimeout(
             buildUrl(url, params),
             {
-                method: 'GET',
+                method: "GET",
                 headers,
-                credentials: 'same-origin'
+                credentials: "same-origin"
             },
             cfg.timeout
         );
 
         if (response.status === 401) {
+
             const refreshed = await refreshAccessToken(cfg);
+
             if (!refreshed) {
-                clearTokens();
+                clearTokens(cfg);
                 location.href = cfg.loginUrl;
                 return;
             }
+
             return getMethod(url, params, options);
         }
 
@@ -56,17 +70,24 @@ export async function getMethod(url, params = {}, options = {}) {
 
         return await response.json();
 
-    } catch (err) {
+    }
+    catch (err) {
+
         return {
             success: false,
-            message: err.name === 'AbortError'
+            message: err.name === "AbortError"
                 ? "Request timeout"
                 : "Network error"
         };
     }
 }
 
+/* =========================
+   POST METHOD
+========================= */
+
 export async function postMethod(url, data, options = {}) {
+
     const {
         headers = {},
         contentType = "application/json",
@@ -86,18 +107,22 @@ export async function postMethod(url, data, options = {}) {
 
     if (data instanceof FormData) {
         config.body = data;
-    } else {
+    }
+    else {
         config.body = JSON.stringify(data);
         config.headers["Content-Type"] = contentType;
     }
 
     try {
+
         const response = await fetch(url, config);
+
         clearTimeout(timeoutId);
 
-        const rawText = response.status !== 204
-            ? await response.text()
-            : "";
+        const rawText =
+            response.status !== 204
+                ? await response.text()
+                : "";
 
         if (!response.ok) {
             return { Success: false, Status: response.status };
@@ -109,11 +134,15 @@ export async function postMethod(url, data, options = {}) {
 
         return rawText;
 
-    } catch (error) {
+    }
+    catch (error) {
+
         return {
             Success: false,
             Error: true,
-            Message: error.message
+            Message: error.name === "AbortError"
+                ? "Request timeout"
+                : error.message
         };
     }
 }

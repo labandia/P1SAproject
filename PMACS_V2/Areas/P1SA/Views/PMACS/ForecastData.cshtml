@@ -184,7 +184,7 @@
 
         let res = await GetMethod('@Url.Action("GetForecastModelList", "Capacity")', { year: currentDate.getFullYear() });
         if (res && res.Success) {
-            MasterlistPagination(res.data, 'forecastdata', 'MastertableContainer', 50, 5);
+            MasterlistPagination(res.Data, 'forecastdata', 'MastertableContainer', 50, 5);
         }
 
     }

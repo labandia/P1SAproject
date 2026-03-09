@@ -360,6 +360,7 @@
 
         let obj = {
             chamberType: chamberType,
+            prefix: "CR",
             status: status,
             startDate: startDate,
             endDate: endDate,
@@ -593,6 +594,8 @@
     addforms.addEventListener('submit', async function (e) {
         e.preventDefault();
         let formdata = new FormData(e.target);
+        formdata.append('Prefix', "CR");
+
         let res = await postMethod('@Url.Action("NewAddRequestData", "Hydro")', formdata);
         if (res && res.Success) {
             RequesDataList();

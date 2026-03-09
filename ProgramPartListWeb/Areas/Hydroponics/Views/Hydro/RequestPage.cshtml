@@ -1,0 +1,662 @@
+﻿
+@{
+    ViewBag.Title = "RequestPage";
+    Layout = "~/Areas/Hydroponics/Views/Shared/HydroPartsLayout.cshtml";
+}
+
+
+
+
+@*<button id="Showadd" class="floatBtn" type="button"><i class="fa-solid fa-file-circle-plus"></i></button>*@
+
+
+<section style="padding: .5em 0 3em;">
+    <div class="filters flex_space">
+        <div class="flex_align">
+            <div class="filter-group">
+                <strong>Chamber type: </strong>
+                <div class="select-container">
+                    <select id="categoryFilter">
+                        <option value="0">All Types</option>
+                        <option value="1">SHIBAKAWA</option>
+                        <option value="2">NUPON</option>
+                        <option value="3">SLIM TYPE</option>
+                    </select>
+                </div>
+
+
+
+            </div>
+            <div class="filter-group">
+                <strong>Status : </strong>
+                <div class="select-container">
+                    <select id="stockStatusFilter">
+                        <option value="all">All Status</option>
+                        <option value="ONGOING">Ongoing</option>
+                        <option value="COMPLETED">Completed</option>
+                        <option value="PLANNED">For Planned</option>
+                        <option value="SHIPPED">For Shipping</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <strong>Date Range: </strong>
+                <div class="flex_align">
+                    <input type="date" id="startDate">
+                    <input type="date" id="endDate">
+                </div>
+            </div>
+
+
+            @*<div class="filter-group">
+                    <div class="Inputcontainer">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" placeholder="Search Request..." id="inventorySearch" autocomplete="off" />
+                        <div class="line"></div>
+                    </div>
+
+                </div>*@
+        </div>
+
+        <div class="filter-group">
+            <button id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-file-circle-plus"></i> New Request</button>
+        </div>
+
+
+    </div>
+    <div class="table-containerV2">
+        <table id="chamberOrdersTable">
+            <thead>
+                <tr>
+                    <th>Requestor Name</th>
+                    <th>Chamber Type</th>
+                    <th class="sortable" data-column="3">Request Date</th>
+                    <th>Target Date</th>
+                    <th>PIC</th>
+                    <th>Parts Status</th>
+                    <th>Assembly Status</th>
+                    <th>Status</th>
+                    <th>Remarks</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="chamberOrdersTableBody">
+                <!-- Dynamic content -->
+            </tbody>
+        </table>
+    </div>
+
+</section>
+
+
+@*<div id="paginationV2" class="pagination-container">
+    </div>*@
+
+<div class="MasterlistWrap_footer ">
+    <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
+
+    <div id="MastertableContainer" class="paginationPartlocal flex_align"></div>
+</div>
+
+
+
+@*=================================================================================*@
+@*=========================== ADD PARTS CHAMBER ===================================*@
+@*=================================================================================*@
+<div class="modal fade modal-l" id="AddRequestModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Add Requestor</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+
+                <form method="post" enctype="multipart/form-data" class="addformcontainer" id="addnewform" autocomplete="off">
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Requestor Name </label>
+                        <input type="text" placeholder="Enter Customer name." name="CustomerName" id="CustomerName" required />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12 mb-3">
+                        <label class="mb-2">Select Chamber <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                        <div class="select-container">
+                            <select id="ChamberID" name="ChamberID" required>
+                                <option value="0">-- select Chambers --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>No. of Chambers <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                        <input type="number" value="1" placeholder="type Ojt registration No." name="Quantity" id="Quantity" min="1" required />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Order Date <small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <input type="date" name="OrderDate" id="OrderDate" required />
+                    </div>
+
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Target Completion Date <small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <input type="date" name="TargetDate" id="TargetDate" required />
+                    </div>
+
+
+
+
+
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>Person In Charge :  </label> <br />
+                        <input type="hidden" value="Aldrin, Rommel" placeholder="type Ojt registration No." name="PIC" id="PIC" />
+                        <input type="text" value="Aldrin, Rommel" placeholder="type Ojt registration No." disabled />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>Remarks :  </label> <br />
+                        <textarea placeholder="type Here ..." id="Remarks" name="Remarks" cols="40" rows="3"></textarea>
+                    </div>
+
+
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div>
+                            <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                        </div>
+                        <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="modal fade modal-l" id="StatusUpdateModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Update  Status</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+
+                <form method="post" class="addformcontainer" id="Statusnewform" autocomplete="off">
+                    <div class="form_group col-12 col-sm-12 mb-3">
+                        <input type="hidden" id="OrderID" name="OrderID">
+                        <label>Current Status</label>
+                        <input type="text" id="currentOrderStatus" readonly>
+                    </div>
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>New Status *</label>
+                        <div class="select-container">
+                            <select id="Status" name="Status">
+                                <option value="">Select Status</option>
+                                <option value="COMPLETED">Completed</option>
+                                <option value="ONGOING">Ongoing</option>
+                                <option value="For Shipped">For Shipped</option>
+                                <option value="PLANNED">For Planned</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Customer Name </label>
+                        <input type="text" placeholder="Enter Customer name." name="EditCustomerName" id="EditCustomerName" required />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Assembly Status : </label>
+                        <div>
+                            <input type="number" placeholder="Enter Percentage rate" name="EditAssemblyStats" id="EditAssemblyStats" min="0" max="100" />
+                        </div>
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>Remarks :  </label> <br />
+                        <textarea placeholder="type Here ..." id="EditRemarks" name="EditRemarks" cols="40" rows="3"></textarea>
+                    </div>
+
+                    <div class="flex_end mt-4">
+
+                        <button type="submit" id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<script type="module" asp-append-version="true">
+    import {
+        getMethod,
+        postMethod
+    } from '@Url.Content("~/Scripts/modules/index.js")';
+
+    class RequestController{
+        constructor() {
+            this.requestData = [];
+            this.currentPage = 1;
+            this.pageSize = 10;
+
+            this.tbody = document.getElementById("chamberOrdersTableBody");
+            this.paginationContainer = document.getElementById("MastertableContainer");
+
+            this.addForm = document.getElementById("addnewform");
+            this.statusForm = document.getElementById("Statusnewform");
+
+            this.container = document.querySelector(".table-containerV2");
+          
+        }
+
+        async init() {
+            if (!this.tbody) return;
+
+            this.bindEvents();
+
+            await Promise.all([
+                this.loadRequests(),
+                this.getChamberList()
+            ]);
+        }
+
+        bindEvents() {
+            const filters = [
+                "categoryFilter",
+                "stockStatusFilter",
+                "startDate",
+                "endDate"
+            ];
+
+            filters.forEach(id => {
+
+                const element = document.getElementById(id);
+
+                element?.addEventListener("change", (e) => {
+
+                    e.preventDefault();
+                    this.currentPage = 1;
+
+                    this.loadRequests();
+                });
+            });
+
+            const showAddBtn = document.getElementById("Showadd");
+
+            showAddBtn?.addEventListener("click", (e) => {
+                e.preventDefault();
+
+                const modal = new bootstrap.Modal(document.getElementById("AddRequestModal"));
+                modal.show();
+            });
+
+            this.tbody.addEventListener("click", (e) => {
+                const btn = e.target.closest("button[data-action]");
+
+                if (!btn) return;
+
+                const action = btn.dataset.action;
+                const id = btn.dataset.id;
+
+                if (action === "view") this.handleView(id);
+                if (action === "edit") this.handleEdit(id);
+            });
+
+            /* pagination click */
+            this.paginationContainer?.addEventListener("click", (e) => {
+
+                if (!e.target.classList.contains("page-btn")) return;
+
+                const page = parseInt(e.target.dataset.page);
+
+                if (!isNaN(page)) {
+                    this.currentPage = page;
+                    this.loadRequests();
+                }
+            });
+
+            /* form submit */
+            this.addForm?.addEventListener("submit", e => this.addRequest(e));
+            this.statusForm?.addEventListener("submit", e => this.updateStatus(e));
+
+            /* drag scroll table */
+
+            this.initDragScroll();
+        }
+
+        /* ================= LOAD DATA ================= */
+        async loadRequests() {
+             const obj = {
+                chamberType: document.getElementById("categoryFilter")?.value || 0,
+                prefix: "OR",
+                status: document.getElementById("stockStatusFilter")?.value || "all",
+                startDate: document.getElementById("startDate")?.value || "",
+                endDate: document.getElementById("endDate")?.value || "",
+                page: this.currentPage,
+                pageSize: this.pageSize
+            };
+
+            try {
+
+                const res = await getMethod('@Url.Action("GetAllRequestList","Hydro")', obj);
+
+                if (!res?.Success) {
+                    this.renderEmpty();
+                    return;
+                }
+
+                this.requestData = res.data?.Data ?? [];
+                const total = res.data?.Total ?? this.requestData.length;
+
+                this.renderTable(this.requestData);
+                this.renderPagination(total);
+
+            }
+            catch (err) {
+                console.error(err);
+                this.renderError();
+            }
+        }
+
+        handleView(orderId) {
+            window.location.href =
+                `/Hydroponics/Hydro/OrderpageDetails?orderID=${orderId}`;
+
+        }
+        handleEdit(orderId) {
+
+            const row = this.requestData.find(x => x.OrderID == orderId);
+
+            if (!row) return;
+
+            document.getElementById("currentOrderStatus").value = row.RequestStatus;
+            document.getElementById("EditCustomerName").value = row.CustomerName;
+            document.getElementById("EditAssemblyStats").value = row.AssemblyStats;
+            document.getElementById("EditRemarks").value = row.Remarks;
+            document.getElementById("OrderID").value = row.OrderID;
+
+            const modal = new bootstrap.Modal(
+                document.getElementById("StatusUpdateModal")
+            );
+
+            modal.show();
+        }
+
+        /* ================= ADD REQUEST ================= */
+
+        async addRequest(e) {
+
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            formData.append('Prefix', "OR");
+       
+            const res = await postMethod('@Url.Action("NewAddRequestData","Hydro")', formData);
+
+            if (res?.Success) {
+                await this.loadRequests();
+                e.target.reset();
+                bootstrap.Modal.getInstance(document.getElementById("AddRequestModal")).hide();
+            }
+
+        }
+
+
+
+         /* ================= UPDATE STATUS ================= */
+
+            async updateStatus(e){
+
+                e.preventDefault();
+
+                const formData = new FormData(e.target);
+                const data = Object.fromEntries(formData);
+                const res = await postMethod('@Url.Action("ChangeStatusRequest","Hydro")', formData);
+
+                if(res?.Success){
+                    await this.loadRequests();
+                    e.target.reset();
+                    bootstrap.Modal.getInstance(document.getElementById("StatusUpdateModal")).hide();
+                }
+
+            }
+
+
+         /* ================= CHAMBER LIST ================= */
+
+         async getChamberList(){
+
+                const res = await getMethod('@Url.Action("GetChamberList","Hydro")');
+
+                if(!res?.Success) return;
+
+                const select = document.getElementById("ChamberID");
+
+                select.innerHTML = `<option value="0">-- select Chamber --</option>`;
+
+                res.data.forEach(row => {
+
+                    const opt = document.createElement("option");
+
+                    opt.value = row.ChamberID;
+                    opt.textContent = row.ChamberName;
+
+                    select.appendChild(opt);
+
+                });
+
+         }
+
+
+
+        renderTable(data) {
+            this.tbody.innerHTML = "";
+
+            if (!data.length) {
+                this.renderEmpty();
+                return;
+            }
+
+            const fragment = document.createDocumentFragment();
+
+            data.forEach(row => {
+
+                const percent = Math.min(100, Math.max(0, Math.round(parseFloat(row.CompletionPercent) || 0)));
+
+                let barColor = "#e74c3c";
+                if (percent >= 70) barColor = "#27ae60";
+                else if (percent >= 40) barColor = "#f39c12";
+
+                const status = (row.RequestStatus || "").toUpperCase();
+
+                let statsCss = "";
+                let statsname = "";
+
+                if (status === "COMPLETED") {
+                    statsCss = "readiness-ready";
+                    statsname = "Completed";
+                }
+                else if (status === "SHIPPED") {
+                    statsCss = "readiness-warning";
+                    statsname = "For Shipped";
+                }
+                else if (status === "PLANNED") {
+                    statsCss = "readiness-Planned";
+                    statsname = "For Planned";
+                }
+                else {
+                    statsCss = "readiness-not-ready";
+                    statsname = "Ongoing";
+                }
+
+
+                const tr = document.createElement("tr");
+
+                tr.innerHTML = `
+                    <td><strong>${row.CustomerName ?? "-"}</strong></td>
+                    <td>${row.ChamberName ?? "-"}<br>${row.ChambersOrdered ?? 0} unit(s)</td>
+                    <td>${row.OrderDate ?? "-"}</td>
+                    <td>${row.TargetDate ?? "-"}</td>
+                    <td>${row.PIC ?? "-"}</td>
+                    <td>
+                         <div class="progress-bar-container">
+                            <div class="progress-bar" style="width:0; background:${barColor}"></div>
+                        </div>
+                        <span>${percent}%</span>
+                    </td>
+                    <td>${row.AssemblyStats ?? "0"} %</td>
+                    <td>
+                         <span class="readiness-badge ${statsCss}">
+                            ${statsname}
+                        </span>
+                    </td>
+                    <td>${row.Remarks ?? "-"}</td>
+                    <td>
+                       <div class="flex_align">
+                            <button class="view-btn text-secondary bg-white" data-action="view" data-id="${row.OrderID}">
+                                <i class="fas fa-eye"></i>
+                            </button>
+
+                            <button class="edit-btn text-primary bg-white" data-action="edit" data-id="${row.OrderID}">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                       </div>
+                  
+                    </td>
+                `;
+                
+                const bar = tr.querySelector(".progress-bar");
+
+                requestAnimationFrame(() => {
+                    bar.style.transition = "width .6s ease";
+                    bar.style.width = `${percent}%`;
+                });
+
+
+                fragment.appendChild(tr);
+
+            });
+
+            this.tbody.appendChild(fragment);
+
+        }
+
+        renderPagination(totalItems) {
+            const totalPages = Math.ceil(totalItems / this.pageSize);
+
+            this.paginationContainer.innerHTML = "";
+
+            if (!totalPages) return;
+
+            let html = "";
+
+            html += `<button class="page-btn" data-page="${this.currentPage - 1}" ${this.currentPage === 1 ? "disabled" : ""}>Prev</button>`;
+
+            for (let i = 1; i <= totalPages; i++) {
+
+                html += `<button class="page-btn ${i === this.currentPage ? "active" : ""}" data-page="${i}">
+                        ${i}
+                     </button>`;
+            }
+
+            html += `<button class="page-btn" data-page="${this.currentPage + 1}" ${this.currentPage === totalPages ? "disabled" : ""}>Next</button>`;
+
+            this.paginationContainer.innerHTML = html;
+        }
+
+
+
+
+        // Calculate the Remaining Days
+        calculateDaysRemaining(targetDate) {
+                const target = new Date(targetDate);
+                const today = new Date();
+                const diffTime = target - today;
+                return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        }
+
+        /* ================= DRAG TABLE ================= */
+
+        initDragScroll() {
+
+            if (!this.container) return;
+
+            let isDown = false;
+            let startX, startY, scrollLeft, scrollTop;
+
+            this.container.addEventListener("mousedown", (e) => {
+
+                isDown = true;
+
+                startX = e.pageX - this.container.offsetLeft;
+                startY = e.pageY - this.container.offsetTop;
+
+                scrollLeft = this.container.scrollLeft;
+                scrollTop = this.container.scrollTop;
+
+            });
+
+            document.addEventListener("mouseup", () => isDown = false);
+
+            this.container.addEventListener("mousemove", (e) => {
+
+                if (!isDown) return;
+
+                e.preventDefault();
+
+                const x = e.pageX - this.container.offsetLeft;
+                const y = e.pageY - this.container.offsetTop;
+
+                const walkX = (x - startX) * 1.2;
+                const walkY = (y - startY) * 1.2;
+
+                this.container.scrollLeft = scrollLeft - walkX;
+                this.container.scrollTop = scrollTop - walkY;
+
+            });
+
+        }
+
+        renderEmpty() {
+            this.tbody.innerHTML = `<tr>
+                <td colspan="10" style="text-align:center;color:#999">
+                    ⚠️ No matching records
+                </td>
+            </tr>`;
+        }
+
+        renderError() {
+            this.tbody.innerHTML = `<tr>
+                <td colspan="10" style="text-align:center;color:red">
+                    Failed to load data
+                </td>
+            </tr>`;
+        }
+    }
+
+
+
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const req = new RequestController();
+        req.init();
+    });
+</script>

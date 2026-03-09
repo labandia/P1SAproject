@@ -4,142 +4,198 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.Data;
 using System.Diagnostics;
-using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Web;
 using Dapper;
 using ProgramPartListWeb.Utilities;
+using System.Runtime.Caching;
+using System.Collections.Concurrent;
+using System.Threading;
 
 namespace PMACS_V2.Utilities
 {
     public sealed class UsersAccess
     {
+        // -------------------- CONFIG & CACHE --------------------
+        private static readonly string _connectionString = BuildConnectionString();
+        private static readonly ObjectCache _cache = MemoryCache.Default;
+
+        // High concurrency locks per cache key
+        private static readonly ConcurrentDictionary<string, SemaphoreSlim> _locks
+            = new ConcurrentDictionary<string, SemaphoreSlim>();
+
+
         // Auto Connection Based on the Domain URL
-        public static string _connectionString()
+        public static string BuildConnectionString()
         {
-            string host = HttpContext.Current.Request.Url.Host.ToLower();
-            string machineName = Environment.MachineName.ToLower();
-            string connectionKey = "";
-
-            if (host.Contains("pmacsweb.sdp.com"))
+            try
             {
-                connectionKey = "UsersLiveConnection";
-            }
+                string env = ConfigurationManager.AppSettings["AppEnvironment"];
+                string key;
 
-            if (host.Contains("localhost"))
+                switch (env)
+                {
+                    case "Home":
+                        key = "UsersHomeConnection";
+                        break;
+
+                    case "Test":
+                        key = "UsersTestConnection";
+                        break;
+
+                    default:
+                        key = "UsersLiveConnection";
+                        break;
+                }
+
+                var encrypted = ConfigurationManager
+                    .ConnectionStrings[key]
+                    .ConnectionString;
+
+                // AES decode happens once at app start
+                return AesEncryption.DecodeBase64ToString(encrypted);
+            }
+            catch (Exception ex)
             {
-                if (machineName == "desktop-fc0up1p") // Home PC name
-                    connectionKey = "UsersHomeConnection";
-                else
-                    connectionKey = "UsersTestConnection";
+                Debug.WriteLine(ex.Message);
+                return System.Configuration.ConfigurationManager.ConnectionStrings["LiveDevelopment"].ConnectionString;
             }
-
-
-            LogConnectionChoice(host, machineName, connectionKey);
-
-            return AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings[connectionKey].ConnectionString);
         }
 
-        public static SqlConnection GetSqlConnection(string connectionString)
-        {
-            return new SqlConnection(connectionString);
-        }
+        private static SqlConnection CreateConnection()
+     => new SqlConnection(_connectionString);
 
-        private static void LogConnectionChoice(string host, string machineName, string connectionKey)
-        {
-            string logEntry = $"{DateTime.Now:u} | Host: {host} | Machine: {machineName} | Connection: {connectionKey}";
-            Debug.WriteLine(logEntry);
-        }
+
 
         // #################################### USER MANAGEMENT ===================================
 
-        public static async Task<List<T>> UserGetData<T>(string query, object parameters = null, string cacheKey = null, int cacheMinutes = 10)
+        public static async Task<List<T>> UserGetData<T>(
+           string query,
+           object parameters = null,
+           CommandType commandType = CommandType.Text,
+           string cacheKey = null,
+           int cacheMinutes = 10,
+           bool useSqlDependency = false)
         {
-            try
+            if (string.IsNullOrEmpty(cacheKey))
             {
-                // Use provided cache key or default to no caching
-                if (!string.IsNullOrEmpty(cacheKey))
+                using (var con = CreateConnection())
                 {
-                    return await CacheHelper.GetOrSetAsync(cacheKey, async () =>
-                    {
-                        using (IDbConnection con = GetSqlConnection(_connectionString()))
-                        {
-                            if (Regex.IsMatch(query, @"^\w+$"))
-                            {
-                                return (await con.QueryAsync<T>(query, parameters, commandType: CommandType.StoredProcedure)).ToList();
-                            }
-                            else
-                            {
-                                return (await con.QueryAsync<T>(query, parameters)).ToList();
-                            }
-                        }
-                    }, cacheMinutes);
-                }
-                else
-                {
-                    // No caching
-                    using (IDbConnection con = GetSqlConnection(_connectionString()))
-                    {
-                        if (Regex.IsMatch(query, @"^\w+$"))
-                        {
-                            return (await con.QueryAsync<T>(query, parameters, commandType: CommandType.StoredProcedure)).ToList();
-                        }
-                        else
-                        {
-                            return (await con.QueryAsync<T>(query, parameters)).ToList();
-                        }
-                    }
+                    var result = await con.QueryAsync<T>(query, parameters, commandType: commandType);
+                    return result.AsList();
                 }
             }
-            catch (SqlException ex)
+
+            // First check (no lock)
+            var cached = _cache.Get(cacheKey) as List<T>;
+            if (cached != null)
+                return cached;
+
+            var myLock = _locks.GetOrAdd(cacheKey, new SemaphoreSlim(1, 1));
+
+            await myLock.WaitAsync();
+            try
             {
-                CustomLogger.LogError(ex);
-                return null;
+                // Double check
+                cached = _cache.Get(cacheKey) as List<T>;
+                if (cached != null)
+                    return cached;
+
+                List<T> list;
+
+                using (var con = CreateConnection())
+                {
+                    var result = await con.QueryAsync<T>(query, parameters, commandType: commandType);
+                    list = result.AsList();
+                }
+
+                var policy = new CacheItemPolicy
+                {
+                    AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(cacheMinutes)
+                };
+
+                // 🔥 SQL AUTO INVALIDATE
+                if (useSqlDependency)
+                {
+                    using (var connection = new SqlConnection(_connectionString))
+                    using (var command = new SqlCommand(query, connection))
+                    {
+                        connection.Open();
+                        var dependency = new SqlDependency(command);
+
+                        policy.ChangeMonitors.Add(
+                            new SqlChangeMonitor(dependency)
+                        );
+                    }
+                }
+
+                // 🔥 BACKGROUND AUTO REFRESH
+                policy.RemovedCallback = async args =>
+                {
+                    if (args.RemovedReason == CacheEntryRemovedReason.Expired)
+                    {
+                        try
+                        {
+                            using (var con = CreateConnection())
+                            {
+                                var result = await con.QueryAsync<T>(query, parameters, commandType: commandType);
+                                var refreshed = result.AsList();
+
+                                _cache.Set(cacheKey, refreshed,
+                                    DateTimeOffset.Now.AddMinutes(cacheMinutes));
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine(ex, "Background refresh failed.");
+                        }
+                    }
+                };
+
+                _cache.Set(cacheKey, list, policy);
+
+                return list;
+            }
+            finally
+            {
+                myLock.Release();
             }
         }
-        public static async Task<bool> UpdateUserData(string strQuery, object parameters, string cacheKeyToInvalidate = null)
+        public static async Task<bool> UpdateUserData(
+          string query,
+          object parameters = null,
+          CommandType commandType = CommandType.Text,
+          string cacheKeyToInvalidate = null)
         {
             try
             {
-                using (IDbConnection con = new SqlConnection(_connectionString()))
+                using (var con = CreateConnection())
                 {
-                    int rowsAffected;
+                    int rows = await con.ExecuteAsync(query, parameters, commandType: commandType);
 
-                    bool isStoredProcedure = Regex.IsMatch(strQuery, @"^\w+$");
-                    CommandType commandType = isStoredProcedure ? CommandType.StoredProcedure : CommandType.Text;
+                    if (rows > 0 && !string.IsNullOrEmpty(cacheKeyToInvalidate))
+                        _cache.Remove(cacheKeyToInvalidate);
 
-                    rowsAffected = await con.ExecuteAsync(strQuery, parameters, commandType: commandType);
-
-                    // If update was successful and a cache key is provided, remove it
-                    if (rowsAffected > 0 && !string.IsNullOrEmpty(cacheKeyToInvalidate))
-                    {
-                        CacheHelper.Remove(cacheKeyToInvalidate);
-                    }
-
-                    return rowsAffected > 0;
+                    return rows > 0;
                 }
             }
             catch (Exception ex)
             {
-                CustomLogger.LogError(ex);
-                Debug.WriteLine($"Exception in UpdateInsertQuery: {ex.Message}");
+                Debug.WriteLine(ex, "ExecuteAsync failed.");
                 return false;
             }
         }
-        public static async Task<int> GetUserCountData(string query, object parameters)
+        public static async Task<int> GetUserCountData(string query,
+            object parameters = null,
+            CommandType commandType = CommandType.Text)
         {
             try
             {
-                using (IDbConnection con = GetSqlConnection(_connectionString()))
-                {
-                    int count = await con.ExecuteScalarAsync<int>(query, parameters, commandType: CommandType.StoredProcedure);
-                    return count;
-                }
+                using (var con = CreateConnection())
+                    return await con.ExecuteScalarAsync<int>(query, parameters, commandType: commandType);
             }
             catch (Exception ex)
             {
-                CustomLogger.LogError(ex);
+                Debug.WriteLine(ex, $"ExecuteScalarAsync failed. Query: {query}");
                 return 0;
             }
         }

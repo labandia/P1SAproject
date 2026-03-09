@@ -12,6 +12,7 @@
     @Styles.Render("~/Content/shared-css")
     @Styles.Render("~/Content/pmacs-css")
 
+
     @Scripts.Render("~/bundles/shared-js")
     @Scripts.Render("~/bundles/modernizr")
 </head>
@@ -120,7 +121,7 @@
     </div>
 </div>
 
-@*<script type="module" asp-append-version="true">
+<script type="module" asp-append-version="true">
     import {
         getMethod,
         postMethod
@@ -275,34 +276,35 @@
         }
 
         loginSuccess(res) {
-            Swal.fire({
-                title: "Success",
-                text: res.Message,
-                icon: "success",
-                showConfirmButton: false,
-                timer: 1500
-            }).then(() => {
+            // Storage
+            localStorage.setItem('UserRole', res.Data.role);
+            localStorage.setItem('Fullname', res.Data.fullname);
+            localStorage.setItem('accessToken', res.Data.access_token);
+            localStorage.setItem('refreshToken', res.Data.refresh_token);
+            localStorage.setItem('loginTime', new Date().toISOString());
+            localStorage.setItem('isLoggedInPMACS', 'true');
 
-                // Storage
-                localStorage.setItem('UserRole', res.Data.role);
-                localStorage.setItem('Fullname', res.Data.fullname);
-                localStorage.setItem('accessToken', res.Data.access_token);
-                localStorage.setItem('refreshToken', res.Data.refresh_token);
-                localStorage.setItem('loginTime', new Date().toISOString());
-                localStorage.setItem('isLoggedInPMACS', 'true');
+            window.location.href = "/MoldDie/Mold/DieMoldSummary";
 
-                window.location.href = "/MoldDie/Mold/DieMoldSummary";
-            });
+            //Swal.fire({
+            //    title: "Success",
+            //    text: res.Message,
+            //    icon: "success",
+            //    showConfirmButton: false,
+            //    timer: 1500
+            //}).then(() => {
+
+                
+            //});
         }
 
         loginError(message) {
-            Swal.fire({
-                icon: "error",
-                text: message || "Login failed",
-                timer: 1500,
-                showConfirmButton: false
-            });
-
+            //Swal.fire({
+            //    icon: "error",
+            //    text: message || "Login failed",
+            //    timer: 1500,
+            //    showConfirmButton: false
+            //});
             this.submitBtn.innerHTML =
                 `<span class='textload'><i class='fa-solid fa-right-to-bracket'></i> Login</span>`;
         }
@@ -337,242 +339,7 @@
         new Logincontroller();
     });
    
-</script>*@
+</script>
 
 
-
-
-@*<script src="~/Scripts/Shared/Utilities.min.js"></script>
-<script type="text/javascript">
-    let loadData = [];
-    const version = "@ViewData["Version"]";
-
-    let logbtn = document.querySelector(".signin");
-    let mainbody = document.querySelector(".main");
-    const form = document.getElementById('loginsubmit');
-    let forbtn = document.querySelector(".backlogs");
-    const resultBox = document.querySelector(".namesdisplay");
-    const inputbox = document.getElementById("username");
-
-    const inputfield = document.getElementById("password");
-
-
-
-    const LoadUsers = async () => {
-        let res = await GetMethod('/PMACS/GetFullnameList', {});
-        if (res && res.Success) {
-            loadData = res.Data;
-            loadData = loadData.map(function (item) {
-                return item.Fullname;
-            });
-        } else {
-            $("#dataSearching").empty();
-            $('#empty-state').show();
-        }
-    }
-    const LoadUpdates  = () => {
-        window.onload = function () {
-            // New system version
-            const newVersion = version; // Change this value when there's a new system update
-
-            // Get the stored version from localStorage
-            const storedVersion = localStorage.getItem('systemVersion');
-
-            // Check if the version has changed
-            if (storedVersion !== newVersion) {
-                // Show notification if the version has changed
-                const notification = document.getElementById('notification');
-                notification.style.display = 'flex';
-
-                // Update the stored version to the new one
-                localStorage.setItem('systemVersion', newVersion);
-            }
-
-            // Close notification when the close button is clicked
-            const closeBtn = document.getElementById('close-btn');
-            closeBtn.addEventListener('click', function () {
-                const notification = document.getElementById('notification');
-                notification.style.display = 'none';
-            });
-        };
-
-    }
-
-    // INPUT SEARCH EMPLOYEE NAME WHEN TYPE
-    $("#username").keyup(function () {
-        let result = [];
-        let input = this.value;
-
-        if (input.length > 0) {
-            result = loadData.filter((keyword) => {
-                return keyword.toLowerCase().includes(input.toLowerCase());
-            });
-            if (result.length > 0) {
-                resultBox.style.display = 'block';
-                display(result);
-            } else {
-                resultBox.style.display = 'none';
-            }
-        } else {
-            resultBox.style.display = 'none';
-        }
-    });
-
-
-    function display(result) {
-        const content = result.map((list) => {
-            return "<li onclick=selectinput(this) >" + list + "</li>";
-        });
-
-        resultBox.innerHTML = "<ul>" + content.join('') + "</ul>";
-    }
-    function selectinput(list) {
-        $("#username").val(list.innerHTML);
-        resultBox.innerHTML = '';
-        resultBox.style.display = 'none';
-    }
-
-
-     logbtn.onclick = function () {
-         mainbody.classList.add('slide');
-     }
-
-     forbtn.onclick = function () {
-         mainbody.classList.remove('slide');
-    }
-
-
-    // Add an event listener for the 'keypress' event
-    inputfield.addEventListener('keydown', function (e) {
-        // Check if the Enter key was pressed
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            // Prevent the default action (form submission)
-            var formData = new FormData(form);
-            loginfunc(formData);
-        }
-    });
-
-    $("#viewbtn").click(function () {
-        localStorage.setItem('UserRole', 'Users');
-        localStorage.setItem('Fullname', 'GUEST');
-        window.location.href = "/MoldDie/Mold/DieMoldSummary";
-    });
-
-
-
-    $("#loginsubmit").submit(function (e) {
-        e.preventDefault();
-        var formData = new FormData(e.target);
-        loginfunc(formData);
-    });
-
-    $("#forgetform").submit(function (e) {
-        e.preventDefault();
-        let formData = new FormData(e.target);
-        const data = Object.fromEntries(formData);
-        const savebtn = document.querySelector("#newpassbtn");
-        savebtn.innerHTML = " <div class='Submitloading'></div>";
-    });
-
-    const loginfunc = async (formData) => {
-        var errorMsg = document.getElementById('error-msg');
-        let data = Object.fromEntries(formData);
-
-             // Check the inputs validation
-        if (validateform()) {
-                const savebtn = document.querySelector("#submitbtn");
-                savebtn.innerHTML = "<div class='buttonloading'></div>";
-                let res = await postMethod('/Auth/Authenticate', data);
-                if (res?.Success) {
-                     setTimeout(() => {
-                         Swal.fire({
-                             title: "Success",
-                             text: res.Message,
-                             icon: "success",
-                             showConfirmButton: false,
-                             timer: 1500
-                         }).then(() => {
-                             savebtn.innerHTML = "<span class='textload'><i class='fa-solid fa-right-to-bracket'></i> Login</span>"
-                             localStorage.removeItem('activeLinkIndex');
-                             localStorage.setItem('Logout', "/MoldDie/Mold/index");
-
-                             // For Info of the user
-                             localStorage.setItem('UserRole', res.Data.role);
-                             localStorage.setItem('Fullname', res.Data.fullname);
-
-                             // For Authorize User Access
-                             localStorage.setItem('accessToken', res.Data.access_token);
-                             localStorage.setItem('refreshToken', res.Data.refresh_token);
-
-                             // For Persitent Login
-                             localStorage.setItem('loginTime', new Date().toISOString());
-                             localStorage.setItem('isLoggedInPMACS', 'true');
-                             window.location.href = "/MoldDie/Mold/DieMoldSummary";
-                         });
-                     }, 1000);
-                 }
-                 else {
-                     setTimeout(() => {
-                         Swal.fire({
-                             icon: "error",
-                             text: res.Message,
-                             timer: 1500,
-                             showConfirmButton: false
-                         });
-
-                         savebtn.innerHTML = "<span class='textload'><i class='fa-solid fa-right-to-bracket'></i> Login</span>"
-                     }, 1000);
-                 }
-             }
-    };
-    function validateform() {
-        // for the input fields
-        const user = document.getElementById("username").value;
-        const pass = document.getElementById("password").value;
-
-        // for the error message
-        const erroruser = document.getElementById("erroruser");
-        const errorpass = document.getElementById("errorpass");
-
-        let isValid = true;
-
-        erroruser.textContent = "";
-        errorpass.textContent = "";
-
-        if (user === "") {
-            erroruser.textContent = "Please enter your Fullname";
-            isValid = false;
-        } else if (pass === "") {
-            errorpass.textContent = "Please enter your password";
-            isValid = false;
-        }
-
-        return isValid;
-    }
-
-
-    // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
-    const LoadPageData = async () => {
-        try {
-            if ($("#Employee_ID").val() !== "") {
-                resultBox.style.display = 'none';
-            }
-            $("#username").val("");
-            $("#password").val("");
-            const [updates, users] = await Promise.all([
-                LoadUpdates(),
-                LoadUsers()
-            ]);
-
-        } catch (error) {
-            console.error("Failed to load page data:", error);
-        }
-    }
-
-    $(document).ready(() => { LoadPageData(); });
-
-
-
-</script>*@
 

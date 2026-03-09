@@ -7,7 +7,8 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Interface
     public interface IChambers
     {
         Task<List<RequestChambersModel>> GetRequestList(
-            int chamberType, 
+            int chamberType,
+            string prefix,
             string startDate, 
             string endDate, 
             string requesStats);

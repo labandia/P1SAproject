@@ -24,19 +24,29 @@
     <div class="sidebar">
         <div class="logo">
             <div class="logo-text">San <span>Hydro</span> </div>
-            <p style="font-weight: 400; font-size: .8rem; margin: 0; margin-top: -.3em; opacity: .6;"><small>Appliance system</small></p>
+        <p style="font-weight: 400; font-size: .8rem; margin: 0; margin-top: -.3em; opacity: .6;"><small>Appliance system</small></p>
         </div>
 
         <div class="nav-menu">
 
             <a href="/Hydroponics/Hydro/Orderpage" class="nav-item">
                 <i class="fas fa-box"></i>
-                <span class="nav-text">Request Chambers</span>
+                <span class="nav-text">Manage Orders </span>
+            </a>
+
+            <a href="/Hydroponics/Hydro/RequestPage" class="nav-item">
+                <i class="fa-solid fa-file-invoice"></i>
+                <span class="nav-text">Manage Request </span>
             </a>
 
             <a href="/Hydroponics/Hydro/Chambers" class="nav-item">
                 <i class="fa-solid fa-x-ray"></i>
                 <span class="nav-text">Hydroponics Chambers</span>
+            </a>
+
+            <a href="/Hydroponics/Hydro/ChamberDesign" class="nav-item">
+                <i class="fa-solid fa-pen-ruler" ></i>
+                <span class="nav-text">Chambers Design</span>
             </a>
             <a href="/Hydroponics/Hydro/Inventorylist" class="nav-item">
                 <i class="fas fa-warehouse"></i>
@@ -45,9 +55,9 @@
 
 
             @*<a href="/Hydroponics/Hydro/TransactionHistory" class="nav-item">
-                    <i class="fa-solid fa-clock-rotate-left"></i>
-                    <span class="nav-text">Transaction History</span>
-                </a>*@
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <span class="nav-text">Transaction History</span>
+        </a>*@
             <a href="/Hydroponics/Hydro/UserManage" class="nav-item">
                 <i class="fas fa-users"></i>
                 <span class="nav-text">Manage Users</span>
@@ -197,6 +207,7 @@
 
         document.addEventListener("DOMContentLoaded", function () {
             var currentUrl = window.location.pathname.toLowerCase();
+            console.log(currentUrl);
             document.querySelectorAll(".nav-item").forEach(function (link) {
                 if (link.getAttribute("href").toLowerCase() === currentUrl) {
                     link.classList.add("active");
@@ -206,7 +217,13 @@
 
                     switch (actionpage) {
                         case "orderpage":
-                            $("#titlepage").html(`<i class="fas fa-clipboard-list"></i> Manage Chamber Request`);
+                            $("#titlepage").html(`<i class="fas fa-clipboard-list"></i> Manage Orders`);
+                            break;
+                        case "requestpage":
+                            $("#titlepage").html(`<i class="fa-solid fa-file-invoice" ></i> Manage Request`);
+                            break;
+                        case "chambers":
+                            $("#titlepage").html(`<i class="fa-solid fa-x-ray"></i>  Hydroponic Chamber`);
                             break;
                         case "chambers":
                             $("#titlepage").html(`<i class="fa-solid fa-x-ray"></i>  Hydroponic Chamber`);

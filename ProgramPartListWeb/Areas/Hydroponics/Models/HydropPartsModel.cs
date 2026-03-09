@@ -602,6 +602,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
         public string TargetDate { get; set; }
         public string OrderDate { get; set; }
         public string Remarks { get; set; }
+        public string Prefix { get; set; }  
     }
 
 

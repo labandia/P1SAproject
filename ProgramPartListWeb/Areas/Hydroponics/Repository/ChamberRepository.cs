@@ -15,6 +15,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
     {
         public Task<List<RequestChambersModel>> GetRequestList(
             int chamberType,
+            string prefix,
             string startDate,
             string endDate,
             string requesStats)
@@ -84,7 +85,9 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                 FROM OrdersCTE o
                                 LEFT JOIN DetailsCTE d ON o.OrderID = d.OrderID
                                 LEFT JOIN ComputeTotal ct ON o.ChamberID = ct.ChamberID
-                                WHERE  o.IsDelete = 0 ";
+                                WHERE (o.IsDelete = 0 AND LEFT(o.OrderID, CHARINDEX('-', o.OrderID) - 1) = @Prefix) ";
+
+            parameters.Add("@Prefix", prefix);
 
             // Filter By ChamberType
             if (chamberType != 0)
@@ -243,7 +246,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
         public async Task<bool> AddRequestChamber(RequestItem item)
         {
             // GENERATE A UNIQUE ID FOR THE ORDER
-            string OrderID = GlobalUtilities.GenerateID("CR");
+            string OrderID = GlobalUtilities.GenerateID(item.Prefix);
 
             string strsql = $@"INSERT INTO Hydro_Orders(OrderID, 
                                         ChamberID, OrderedBy, Quantity, PIC, TargetDate, OrderDate, CustomerName, Remarks)

@@ -1,0 +1,13 @@
+﻿
+@{
+    ViewBag.Title = "ChamberDesign";
+    Layout = "~/Areas/Hydroponics/Views/Shared/HydroPartsLayout.cshtml";
+}
+
+
+<div class="" style="position: absolute; top: 0; left: 0; width: 100%;">
+    <iframe src='@Url.Action("ViewPdf","Hydro", new { fileName = "sample.pdf" })'
+            width="100%"
+            height="700px">
+    </iframe>
+</div>

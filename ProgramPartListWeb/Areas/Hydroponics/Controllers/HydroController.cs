@@ -518,6 +518,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         [JwtAuthorize]
         public async Task<ActionResult> GetAllRequestList(
                     int chamberType = 0,
+                    string prefix = "CR",
                     string status = "all",
                     string startDate = "",
                     string endDate = "",
@@ -528,6 +529,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
 
             var allData = await _chambers.GetRequestList(
                 chamberType,
+                prefix,
                 startDate,
                 endDate,
                 status
@@ -546,7 +548,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         [JwtAuthorize]
         public async Task<ActionResult> GetMainRequestList(string orderID)
         {
-            var data = await _chambers.GetRequestList(0, "", "", "") ?? new List<RequestChambersModel>();
+            var data = await _chambers.GetRequestList(0, "CR", "", "", "") ?? new List<RequestChambersModel>();
 
             var filterdata = data.SingleOrDefault(res => res.OrderID == orderID);
             if (filterdata == null) return JsonNotFound("No Request list Data.");
@@ -595,7 +597,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
                     ID = item.OrderID;
                 }
 
-                var data = await _chambers.GetRequestList(0, "", "", "") ?? new List<RequestChambersModel>();
+                var data = await _chambers.GetRequestList(0, "CR", "", "", "") ?? new List<RequestChambersModel>();
                 double completionrate = data.SingleOrDefault(res => res.OrderID == ID).CompletionPercent;
 
                 if(completionrate == 100)
@@ -631,19 +633,34 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
             }
         }
 
+        public ActionResult ViewPdf(string fileName)
+        {
+            string networkFolder = @"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\HydroParts\Chamber";
+            string fullPath = Path.Combine(networkFolder, fileName);
+
+            if (!System.IO.File.Exists(fullPath))
+            {
+                return HttpNotFound();
+            }
+
+            return File(fullPath, "application/pdf");
+        }
 
 
-       
 
 
 
-       
+
 
 
         // GET: Hydroponics/Index
         public ActionResult Index() => View();
         // GET: Hydroponics/Inventorylist
         public ActionResult Inventorylist() => View();
+        // GET: Hydroponics/RequestPage
+        public ActionResult RequestPage() => View();
+        // GET: Hydroponics/RequestPage
+        public ActionResult ChamberDesign() => View();
         // GET: Hydroponics/Inventorylist
         public ActionResult AddStocks() => View();
         // GET: Hydroponics/Orderpage

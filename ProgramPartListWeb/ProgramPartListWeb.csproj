@@ -765,6 +765,7 @@
     <Content Include="Content\Images\HydroPhonics.png" />
     <Content Include="Content\Images\MetalMask.ico" />
     <Content Include="Content\Images\no-image.png" />
+    <Content Include="Content\Images\SanHydroApp.png" />
     <Content Include="Content\Images\SideImage.png" />
     <Content Include="Content\OpenExcelApp.exe" />
     <Content Include="Content\Shared\bootstrap-grid.css" />
@@ -844,6 +845,8 @@
     <Content Include="Areas\Rotor\Views\web.config" />
     <Content Include="Areas\Rotor\Views\Shared\_RegisterLayout.cshtml" />
     <Content Include="Areas\Rotor\Views\Register\Index.cshtml" />
+    <Content Include="Areas\Hydroponics\Views\Hydro\RequestPage.cshtml" />
+    <Content Include="Areas\Hydroponics\Views\Hydro\ChamberDesign.cshtml" />
     <None Include="Content\Images\.editorconfig" />
     <Content Include="Content\Uploads\PCFY-81013Form1L.xlsx" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />

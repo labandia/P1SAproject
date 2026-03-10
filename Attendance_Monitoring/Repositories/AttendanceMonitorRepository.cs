@@ -326,21 +326,19 @@ namespace Attendance_Monitoring.Repositories
             // Search Text
             if (!string.IsNullOrEmpty(search))
             {
-                strquery += $@" AND ModelNo LIKE '%' + @Search + '%'";
+                strquery += $@" AND pc.Employee_ID LIKE '%' + @Search + '%'";
                 parameters.Add("@Search", search);
             }
 
+            parameters.Add("@Datetoday", dDate);
+            parameters.Add("@Shifts", shifts);
+            parameters.Add("@Department_ID", depid);
 
             strquery += (selectime == 0) ? 
                 " ORDER BY pc.RecordID DESC" : 
                 " AND pc.TimeOut is Not null ORDER BY pc.TimeOut DESC";
 
-            var IsRecord = await SqlDataAccess.GetDataAsync<P1SA_AttendanceModel>(strquery, 
-                new { 
-                    Datetoday = dDate, 
-                    Shifts = shifts, 
-                    Department_ID = depid 
-                });
+            var IsRecord = await SqlDataAccess.GetDataAsync<P1SA_AttendanceModel>(strquery, parameters);
 
             bool hasRecords = IsRecord.Any();
             return new ApiResponse<P1SA_AttendanceModel>

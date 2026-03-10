@@ -74,7 +74,7 @@
 
         const data = Object.fromEntries(formData);
 
-        let res = await postMethod('@Url.Action("UpdateIncompleteData", "MetalMask")', formData);
+        let res = await postMethodPublic('@Url.Action("UpdateIncompleteData", "MetalMask")', formData);
         if (res?.Success) {
             GetTotalIncompleteMask();
             alert("UPdate Successfully");
@@ -87,7 +87,7 @@
 
            const url = '@Url.Action("GetMetalMaskINCOMPLETE", "MetalMask")';
 
-            let res = await GetMethod(url, {
+            let res = await GetMethodPublic(url, {
                 partnum: partnumText
             });
 

@@ -26,7 +26,7 @@ namespace PMACS_V2.Areas.PartsLocal.Controllers
             _shopout = shopout;
             _user = user;
         }
-        [HttpGet]
+        [JwtAuthorize]
         public async Task<ActionResult> GetEmployeeInfo(string emp)
         {
             var data = await _user.GetEmployees(emp) ?? new List<Models.Employee>();

@@ -231,7 +231,7 @@
             // Add spinner/loading indicator
             //$("#TransactionTable").html('<tr><td colspan="24" class="text-center"><div class="spinner-border" role="status"></div> Loading...</td></tr>');
 
-            let res = await GetMethod(url, {
+            let res = await GetMethodPublic(url, {
                 partnum: $("#searchID").val() || "",
                 pageNumber: currentPage || 1,
                 pageSize: pageSize || 10
@@ -353,7 +353,7 @@
             const url = '@Url.Action("GetMetalMaskINCOMPLETE", "MetalMask")';
 
 
-            let res = await GetMethod(url, { partnum: partnumText });
+            let res = await GetMethodPublic(url, { partnum: partnumText });
             let countpart = res?.Success ? res.data.Items.length : 0;
             searchCount = countpart;
 

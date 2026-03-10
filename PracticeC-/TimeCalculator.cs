@@ -49,45 +49,86 @@ namespace PracticeC_
             return (shift3Start, shift3End);
         }
 
-        public static (double regular, double overtime) CalculateHours(DateTime timeIn, DateTime timeOut, bool isNight)
+        public static (double regular, double overtime) CalculateHours(DateTime timeIn, DateTime timeOut)
         {
             TimeSpan timeInSpan = timeIn.TimeOfDay;
 
-            var shift = isNight
-                ? GetNightShift(timeInSpan, 18)
-                : GetDayShift(timeInSpan, 6);
+            TimeSpan earlyStart = TimeSpan.Parse("04:30:00");
+            TimeSpan lateStart = TimeSpan.Parse("07:30:00");
+            TimeSpan cutoffLate = TimeSpan.Parse("11:00:00");
 
-            DateTime shiftStart = timeIn.Date + shift.start;
-            DateTime shiftEnd = timeIn.Date + shift.end;
+            TimeSpan nightStart = TimeSpan.Parse("16:30:00");
+            TimeSpan nightLate = TimeSpan.Parse("19:30:00");
+            TimeSpan nightCutoff = TimeSpan.Parse("23:00:00");
 
-            // Fix for night shift crossing midnight
-            if (shiftEnd < shiftStart)
-                shiftEnd = shiftEnd.AddDays(1);
+            DateTime shiftEnd;
 
-            // If timeout is earlier than timein → next day
-            if (timeOut < timeIn)
-                timeOut = timeOut.AddDays(1);
-
-            double regular = 0;
+            double regular = 7.67;
             double overtime = 0;
 
-            if (timeOut <= shiftEnd)
+            // FIRST SHIFT (6:30 → 3:30)
+            if (timeInSpan >= earlyStart && timeInSpan < lateStart)
             {
-                regular = (timeOut - shiftStart).TotalHours;
+                shiftEnd = timeIn.Date.AddHours(15).AddMinutes(30);
             }
+
+            // SECOND SHIFT (7:30 → 4:30)
+            else if (timeInSpan >= lateStart && timeInSpan < TimeSpan.Parse("08:30:00"))
+            {
+                shiftEnd = timeIn.Date.AddHours(16).AddMinutes(30);
+            }
+
+            // THIRD SHIFT (8:30 → 5:30)
+            else if (timeInSpan >= TimeSpan.Parse("08:30:00") && timeInSpan < cutoffLate)
+            {
+                shiftEnd = timeIn.Date.AddHours(17).AddMinutes(30);
+            }
+
+            // NIGHT SHIFT 1 (6:30 PM → 3:30 AM)
+            else if (timeInSpan >= nightStart && timeInSpan < nightLate)
+            {
+                shiftEnd = timeIn.Date.AddDays(1).AddHours(3).AddMinutes(30);
+            }
+
+            // NIGHT SHIFT 2 (7:30 PM → 4:30 AM)
+            else if (timeInSpan >= nightLate && timeInSpan < TimeSpan.Parse("20:30:00"))
+            {
+                shiftEnd = timeIn.Date.AddDays(1).AddHours(4).AddMinutes(30);
+            }
+
+            // NIGHT SHIFT 3 (8:30 PM → 5:30 AM)
+            else if (timeInSpan >= TimeSpan.Parse("20:30:00") && timeInSpan < nightCutoff)
+            {
+                shiftEnd = timeIn.Date.AddDays(1).AddHours(5).AddMinutes(30);
+            }
+
             else
             {
-                regular = (shiftEnd - shiftStart).TotalHours;
-
-                overtime = (timeOut - shiftEnd).TotalHours;
-
-                if (overtime > 1)
-                    overtime -= 0.17;
+                return (7.67, 0);
             }
 
-            regular = Math.Min(regular, 7.67);
+            overtime = CalculateOTHours(shiftEnd, timeOut);
 
-            return (Math.Round(regular, 2), Math.Round(overtime, 2));
+            return (regular, overtime);
+        }
+
+        public static double CalculateOTHours(DateTime shiftEnd, DateTime timeOut)
+        {
+            if (timeOut < shiftEnd)
+                timeOut = timeOut.AddDays(1);
+
+            TimeSpan diff = timeOut - shiftEnd;
+
+            if (diff >= TimeSpan.FromHours(3))
+                return 2.83;
+
+            if (diff >= TimeSpan.FromHours(2))
+                return 1.83;
+
+            if (diff >= TimeSpan.FromHours(1))
+                return 1;
+
+            return 0;
         }
     }
 }

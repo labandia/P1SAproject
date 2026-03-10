@@ -325,7 +325,7 @@
         let Modelval = $("#ModelSelect").val();
         try {
             const url = '@Url.Action("GetMetalMaskInformation", "MetalMask")';
-             let res = await GetMethod(url,
+            let res = await GetMethodPublic(url,
                  {
                      search: partText,
                      SMTLine: SMTval,
@@ -644,7 +644,7 @@
 
         const data = Object.fromEntries(formData);
 
-        let res = await postMethod('@Url.Action("SubmitTensionAndCleaning", "MetalMask")', formData);
+        let res = await postMethodPublic('@Url.Action("SubmitTensionAndCleaning", "MetalMask")', formData);
         if (res?.Success) {
             GetMetalMaskTensionCleaning();
             GetTheTotalCount();

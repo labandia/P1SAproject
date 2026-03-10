@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
+using NCR_system.View.AddForms;
 
 namespace NCR_system.View.Module
 {
@@ -288,6 +289,13 @@ namespace NCR_system.View.Module
             }
         }
 
-        
+        private void button1_Click(object sender, EventArgs e)
+        {
+            using (var form = new AddInprocess())
+            {
+                form.StartPosition = FormStartPosition.CenterParent;
+                form.ShowDialog(this);
+            }
+        }
     }
 }

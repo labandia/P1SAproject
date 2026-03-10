@@ -646,7 +646,19 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
             return File(fullPath, "application/pdf");
         }
 
+        public ActionResult GetImage(string fileName)
+        {
+            string path = @"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\HydroParts\Chamber\" + fileName;
 
+            if (!System.IO.File.Exists(path))
+            {
+                return HttpNotFound();
+            }
+
+            byte[] img = System.IO.File.ReadAllBytes(path);
+
+            return File(img, "image/png");
+        }
 
 
 

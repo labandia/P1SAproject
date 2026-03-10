@@ -1,4 +1,5 @@
 ﻿using Attendance_Monitoring.Global;
+using Attendance_Monitoring.Interfaces;
 using Attendance_Monitoring.Models;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,8 @@ namespace Attendance_Monitoring.Usercontrols
 {
     public partial class CRMonitoringPage : UserControl
     {
+        private readonly ICRmonitorV2 _cr;
+
         private readonly IServiceProvider _serviceProvider;
         private static List<Employee> emplist;
         private readonly Timer timer;
@@ -19,11 +22,12 @@ namespace Attendance_Monitoring.Usercontrols
         public List<CRmodel> critemlist { get; private set; } = new List<CRmodel>();
 
 
-        public int DepartmentID { get; set; }
+        public int DepartID { get; set; }
 
-        public CRMonitoringPage(IServiceProvider serviceProvider)
+        public CRMonitoringPage(ICRmonitorV2 cr,   IServiceProvider serviceProvider)
         {
             InitializeComponent();
+            _cr = cr;
             timer = new Timer();
             timer.Interval = 1000;
             timer.Tick += Timer_Tick;
@@ -35,20 +39,16 @@ namespace Attendance_Monitoring.Usercontrols
             EmployID.Focus();
         }
 
-
-        public void InitializePage()
-        {
-            //MessageBox.Show("Running after set: " + DepartmentID);
-            // Now you can load employees, etc.
-        }
-
-        public async Task DisplayCRMonitor()
+        public async Task DisplayCRMonitor(string empcode, int depid)
         {
             var dateToday = DateTime.Now.ToString("yyyy-MM-dd");
             string shift = Timeprocess.TimeIncheck(DateTime.Now);
+            DepartID = depid;
 
+            var items = await _cr.GetCRMonitoringData(dateToday, shift, depid);
+                
 
-            CRtable.DataSource = critemlist;
+            CRtable.DataSource = items;
             DisplayTotal.Text = "Total Attendence: " + CRtable.RowCount;
         }
 
@@ -62,7 +62,7 @@ namespace Attendance_Monitoring.Usercontrols
 
             // Filter employee once
             var employee = emplist.FirstOrDefault(p => p.Employee_ID.Equals(empid, StringComparison.OrdinalIgnoreCase) &&
-                                                    p.Department_ID == DepartmentID);
+                                                    p.Department_ID == DepartID);
 
             if (employee == null)
             {

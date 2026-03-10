@@ -49,6 +49,20 @@ namespace Attendance_Monitoring.Models
 
             return SqlDataAccess.GetDataAsync<Employee>(strquery, parameters);
         }
+        
+        public Task<Employee> GetEmployeeByID(string empID, int dep)
+        {
+            Debug.WriteLine($@" Employee : {empID} - Department : {dep}");
+            string strquery = $@"
+                SELECT TOP 1 
+                    Employee_ID, FullName, Process, Affiliation, Department_ID
+                FROM Employee_tbl
+                WHERE IsDelete = 0 
+                AND Employee_ID = '{empID}' ";
+            Debug.WriteLine(strquery);
+            return SqlDataAccess.GetSingleAsync<Employee>(strquery);
+        }
+        
         public Task<bool> AddEmployee(Employee emp) => SqlDataAccess.ExecuteAsync("AddEmployee", emp, CommandType.StoredProcedure);
         public Task<bool> DeleteEmployee(string employee) => SqlDataAccess.ExecuteAsync("DeleteEmployee", new { EmployeeID = employee });
       

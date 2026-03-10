@@ -207,7 +207,7 @@
 
         let formData = new FormData(e.target);
         const data = Object.fromEntries(formData);
-        let res = await postMethod(url, formData);
+        let res = await postMethodPublic(url, formData);
         if (res?.Success) {
             GetMetalMaskMasterlist();
             $("#AddMasterlist").modal("hide");
@@ -239,7 +239,7 @@
      try {
          const url = '@Url.Action("GetMastetlistData", "MetalMask")';
 
-         let res = await GetMethod(url, {
+         let res = await GetMethodPublic(url, {
              search: $("#searchInput").val() || "",
              ModelType: $("#ModelSelect").val() || 0, 
              pageNumber: currentPage || 1,

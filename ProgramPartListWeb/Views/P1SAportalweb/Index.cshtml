@@ -85,8 +85,9 @@
     import {
         getMethod,
         postMethod,
+        getMethodPublic,
         initLazyImages
-    } from '@Url.Content("~/Scripts/modules/index.js")';
+    } from '@Url.Content("~/Scripts/modules/index.js?v=2")';
 
    
     const scheduleCheckboxes = document.querySelectorAll('input[name="schedule"]');
@@ -105,7 +106,7 @@
         container.innerHTML = "";
 
         try {
-            const res = await getMethod('@Url.Action("GetProjectList", "P1SAportalweb")');
+            const res = await getMethodPublic('@Url.Action("GetProjectList", "P1SAportalweb")');
 
             if (!res || !res.Success) {
                 container.innerHTML = "<p>Failed to load projects.</p>";

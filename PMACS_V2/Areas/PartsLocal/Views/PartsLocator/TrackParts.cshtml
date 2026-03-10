@@ -833,6 +833,7 @@
 
     async function SearchEmployeeInfo(searchEmp, action) {
         let res = await GetMethod('@Url.Action("GetEmployeeInfo", "PartsLocator")', { emp: searchEmp });
+        console.log(res);
         if (res && res.Success) {
             console.log(res.Data);
             if (res.Data.length == 0) {

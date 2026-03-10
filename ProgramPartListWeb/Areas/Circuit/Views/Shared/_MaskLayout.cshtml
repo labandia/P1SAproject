@@ -273,7 +273,7 @@
             try {
                 let url = '@Url.Action("SearchMetalMaskPartnum", "MetalMask")';
 
-                let res = await GetMethod(url, { Partnumber: partnum, model: model });
+                let res = await GetMethodPublic(url, { Partnumber: partnum, model: model });
 
                 if (res?.Success) {
                     maskData = res.data;
@@ -331,7 +331,7 @@
 
         const GetTheTotalCount = async () => {
             try {
-                 let res = await GetMethod('@Url.Action("GetMetalMaskCurrentCount", "MetalMask")');
+                let res = await GetMethodPublic('@Url.Action("GetMetalMaskCurrentCount", "MetalMask")');
                  if (res?.Success) {
                      $("#SMTcount").show();
                      $("#Tension").show();

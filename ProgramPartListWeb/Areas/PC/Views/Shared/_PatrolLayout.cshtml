@@ -1,12 +1,13 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+    @Html.Partial("_SystemConfig")
     <meta charset="utf-8" />
     <link rel="icon" type="image/x-icon" href="~/Content/Images/patrol .ico">
     <meta name="description" content="Learn how to improve your website with caching, accessibility, and SEO best practices.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Production Patrol Inspection Report System</title>
-    <link rel="preload"href="@Url.Content("~/Content/fonts/Poppins-Regular.ttf")" as="font" type="font/ttf" crossorigin="anonymous">
+    <link rel="preload" href="@Url.Content("~/Content/fonts/Poppins-Regular.ttf")" as="font" type="font/ttf" crossorigin="anonymous">
 
     <link href="~/Content/Shared/bootstrap.min.css" rel="stylesheet" />
 
@@ -226,6 +227,5 @@
 
     </script>
 
-    @Html.Partial("_SystemConfig")
 </body>
 </html>

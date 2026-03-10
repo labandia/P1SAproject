@@ -205,7 +205,7 @@
           formdata.append('SMT_Operator', $("#SMT_Operator").val());
           formdata.append('RecordID', selectedID);
 
-          let res = await postMethod('@Url.Action("FinalSubmitSMTLineinfo", "MetalMask")', formdata);
+         let res = await postMethodPublic('@Url.Action("FinalSubmitSMTLineinfo", "MetalMask")', formdata);
           if (res?.Success) {
               GetMetalMaskTransaction();
               GetTheTotalCount();
@@ -237,7 +237,7 @@
             let formdata = new FormData();
             formdata.append('ID', selectedID);
 
-            const res = await postMethod('@Url.Action("StartSMTOperation", "MetalMask")', formdata);
+            const res = await postMethodPublic('@Url.Action("StartSMTOperation", "MetalMask")', formdata);
 
             if (res?.Success) {
                 $("#startbtn").prop("disabled", true);
@@ -289,7 +289,7 @@
             $("#startbtn").prop("disabled", true);
             $("#endbtn").prop("disabled", true);
 
-            let res = await postMethod('@Url.Action("EndSMTOperation", "MetalMask")', formdata);
+            let res = await postMethodPublic('@Url.Action("EndSMTOperation", "MetalMask")', formdata);
 
             if (res?.Success) {
                 $("#EndText").text(timeNow());
@@ -334,7 +334,7 @@
 
             const url = '@Url.Action("GetMetalMaskInformation", "MetalMask")';
 
-            let res = await GetMethod(url, {
+            let res = await GetMethodPublic(url, {
                 search: partText,
                 SMTLine: parseInt(SMTval),
                 Stats: 0,
@@ -473,7 +473,7 @@
 
             const url = '@Url.Action("DeleteSTMTLine", "MetalMask")';
 
-            const res = await postMethod(url, { id: recordId });
+            const res = await postMethodPublic(url, { id: recordId });
 
             if (res?.Success) {
 

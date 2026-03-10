@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Attendance_Monitoring.Global;
@@ -31,11 +29,11 @@ namespace Attendance_Monitoring.Repositories
 
             // 2️⃣ Determine current shift
             TimeSpan now = DateTime.Now.TimeOfDay;
-            if (now >= new TimeSpan(3, 30, 0) && now <= new TimeSpan(10, 30, 0))
+            if (now >= new TimeSpan(2, 30, 0) && now <= new TimeSpan(10, 30, 0))
             {
                 currentShift = 0; // Day Shift
             }
-            else if (now >= new TimeSpan(15, 30, 0) && now <= new TimeSpan(20, 30, 0))
+            else if (now >= new TimeSpan(14, 30, 0) && now <= new TimeSpan(20, 30, 0))
             {
                 currentShift = 1; // Night Shift
             }
@@ -118,12 +116,16 @@ namespace Attendance_Monitoring.Repositories
 
             // 4️⃣ Insert valid Time In
             string insertQuery = @"
-                        INSERT INTO P1SA_AttendanceMonitor (Employee_ID, ShiftDate, LateTime)
-                        VALUES (@Employee_ID, CAST(GETDATE() AS DATE), @LateTime)";
+                        INSERT INTO P1SA_AttendanceMonitor (Employee_ID, ShiftDate, LateTime, Shifts)
+                        VALUES (@Employee_ID, CAST(GETDATE() AS DATE), @LateTime, @Shifts)";
 
             bool result = await SqlDataAccess.ExecuteAsync(
                 insertQuery,
-                new { Employee_ID = EmployeeID, LateTime  = late}
+                new { 
+                    Employee_ID = EmployeeID, 
+                    LateTime  = late,
+                    Shifts = currentShift
+                }
             );
 
             if (!result)
@@ -153,7 +155,34 @@ namespace Attendance_Monitoring.Repositories
                 DateTime now = DateTime.Now;
                 DateTime today = now.Date;
 
-                //  Check if employee has an open TimeIn for today
+                // ================================
+                // CHECK IF EMPLOYEE ALREADY TIMED OUT TODAY
+                // ================================
+                string timeoutCheckQuery = @"
+                        SELECT TOP 1 RecordID
+                        FROM P1SA_AttendanceMonitor
+                        WHERE Employee_ID = @Employee_ID
+                        AND CAST(TimeOut AS DATE) = CAST(GETDATE() AS DATE)";
+
+                var alreadyTimedOut =
+                    await SqlDataAccess.GetDataAsync<CheckBlankRecordTimeOut>(timeoutCheckQuery, 
+                    new { Employee_ID = EmployeeID });
+
+                if (alreadyTimedOut != null)
+                {
+                    MessageBox.Show("⚠ Employee already timed out today.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return new ApiResponse<P1SA_AttendanceModel>
+                    {
+                        Success = false,
+                        Payload = new List<P1SA_AttendanceModel> { },
+                        Message = "⚠ Employee already timed out today."
+                    };
+                }
+
+
+                // ================================
+                // CHECK OPEN TIME IN
+                // ================================
                 string timeincheck = @"
                         SELECT TOP 1 RecordID, TimeIn
                         FROM P1SA_AttendanceMonitor
@@ -175,21 +204,27 @@ namespace Attendance_Monitoring.Repositories
                     };
                 }
 
-
+                // ================================
+                // SHIFT WINDOWS
+                // ================================
                 DateTime timeIn = (DateTime)IsTimeInRecord.TimeIn;
                 TimeSpan timeInSpan = timeIn.TimeOfDay;
                 string currentTime = now.ToString("HH:mm:ss", culture);
 
 
                 // 🕓 Shift windows
-                TimeSpan dayEarlyStart = TimeSpan.Parse("03:30:00", culture);
+                TimeSpan dayEarlyStart = TimeSpan.Parse("04:30:00", culture);
                 TimeSpan dayLateStart = TimeSpan.Parse("10:30:00", culture);
-                TimeSpan dayEnd = TimeSpan.Parse("14:30:00", culture);
+                TimeSpan dayEnd = TimeSpan.Parse("15:30:00", culture);
 
                 TimeSpan nightStart = TimeSpan.Parse("15:30:00", culture);
                 TimeSpan nightEnd = TimeSpan.Parse("05:30:00", culture); // next day
                 TimeSpan defaultDayLength = TimeSpan.FromHours(7.67);
 
+
+                // ================================
+                // DAY SHIFT
+                // ================================
                 if (timeInSpan >= dayEarlyStart && timeInSpan <= dayLateStart)
                 {
                     // 🌞 DAY SHIFT
@@ -198,20 +233,30 @@ namespace Attendance_Monitoring.Repositories
                     reg = Timeprocess.CalculateWorkingHoursV2(timeIn, dayEndDateTime);
                     oTHours = Timeprocess.CalculateOTHoursV2(dayEndDateTime, now);
                 }
+                // ================================
+                // NIGHT SHIFT
+                // ================================
                 else if (timeInSpan >= nightStart || timeInSpan < nightEnd)
                 {
                     // 🌙 NIGHT SHIFT (spans two days)
-                    DateTime regularEnd = timeIn.Date.AddDays(1).Add(TimeSpan.Parse("02:30:00", culture));
+                    DateTime regularEnd = timeIn.Date.AddDays(1).Add(TimeSpan.Parse("03:30:00", culture));
 
                     reg = Timeprocess.CalculateWorkingHoursV2(timeIn, regularEnd);
                     oTHours = Timeprocess.CalculateOTHoursV2(regularEnd, now);
                 }
+                // ================================
+                // DEFAULT FALLBACK
+                // ================================
                 else
                 {
                     reg = defaultDayLength.TotalHours;
                     oTHours = 0;
                 }
 
+
+                // ================================
+                // UPDATE TIME OUT
+                // ================================
                 string updateQuery = @"
                     UPDATE P1SA_AttendanceMonitor
                     SET TimeOut = @TimeOut,
@@ -262,7 +307,8 @@ namespace Attendance_Monitoring.Repositories
             }
         }
         public async Task<ApiResponse<P1SA_AttendanceModel>> GetAttendanceRecordsList(
-            string dDate, int shifts, int selectime, int depid)
+           string search,
+           string dDate, int shifts, int selectime, int depid)
         {
             string strquery = $@"SELECT
                                 pc.RecordID,
@@ -275,7 +321,19 @@ namespace Attendance_Monitoring.Repositories
                            WHERE (CAST(pc.TimeIn AS DATE) = @Datetoday AND pc.Shifts = @Shifts) AND 
                            e.Department_ID = @Department_ID";
 
-            strquery += (selectime == 0) ? " ORDER BY pc.RecordID DESC" : " AND pc.TimeOut is Not null ORDER BY pc.TimeOut DESC";
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+            // Search Text
+            if (!string.IsNullOrEmpty(search))
+            {
+                strquery += $@" AND ModelNo LIKE '%' + @Search + '%'";
+                parameters.Add("@Search", search);
+            }
+
+
+            strquery += (selectime == 0) ? 
+                " ORDER BY pc.RecordID DESC" : 
+                " AND pc.TimeOut is Not null ORDER BY pc.TimeOut DESC";
 
             var IsRecord = await SqlDataAccess.GetDataAsync<P1SA_AttendanceModel>(strquery, 
                 new { 

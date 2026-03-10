@@ -2,6 +2,8 @@
 
 <html lang="en">
 <head>
+    @Html.Partial("_SystemConfig")
+
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>8 Weeks progress Monitoring </title>
@@ -18,8 +20,7 @@
     <div class="Planmainwrapper">
         @RenderBody()
     </div>
- 
-    <script src="~/Scripts/Shared/Global.js"></script>
 
+    <script src="~/Scripts/Shared/Global.js"></script>
 </body>
 </html>

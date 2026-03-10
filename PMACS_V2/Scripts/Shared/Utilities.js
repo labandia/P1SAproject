@@ -1,17 +1,13 @@
 ﻿(function () {
 
     const CONFIG = {
-        loginUrl: localStorage.getItem("Logout") || window.AppConfig?.loginUrl || "/Index",
+        loginUrl: window.AppConfig?.loginUrl || "/Index",
         accessTokenKey: "accessToken",
         refreshTokenKey: "refreshToken",
         tokenExpiryKey: "tokenExpiry",
         refreshThreshold: 5 * 60 * 1000,
         timeout: 30000
     };
-
-    const PUBLIC_PAGES = [
-        CONFIG.loginUrl.toLowerCase()
-    ];
 
     /* =========================
        AUTH STATE
@@ -31,23 +27,8 @@
         return Date.now() >= (+expiry - CONFIG.refreshThreshold);
     }
 
-    function isPublicPage() {
-        const current = window.location.pathname.toLowerCase();
-        return PUBLIC_PAGES.includes(current);
-    }
-
     function redirectLogin() {
         window.location.href = CONFIG.loginUrl;
-    }
-
-    /* =========================
-       INITIAL AUTH CHECK
-    ========================= */
-
-    if (!getToken() && !getRefresh() && !isPublicPage()) {
-        console.warn("No tokens → redirect login");
-        redirectLogin();
-        return;
     }
 
     /* =========================
@@ -108,15 +89,28 @@
     }
 
     /* =========================
-       GET METHOD
+       GET METHOD (PROTECTED)
     ========================= */
 
     window.GetMethod = async function (url, params = {}, options = {}) {
 
+        if (!getToken() && !getRefresh()) {
+            redirectLogin();
+            return { success: false, message: "Unauthorized" };
+        }
+
         let token = getToken();
 
         if (token && isExpired()) {
-            await refreshToken();
+
+            const refreshed = await refreshToken();
+
+            if (!refreshed) {
+                localStorage.clear();
+                redirectLogin();
+                return { success: false, message: "Session expired" };
+            }
+
             token = getToken();
         }
 
@@ -168,10 +162,55 @@
     };
 
     /* =========================
-       POST METHOD
+       GET METHOD (PUBLIC)
+    ========================= */
+
+    window.GetMethodPublic = async function (url, params = {}, options = {}) {
+
+        const query = new URLSearchParams(params).toString();
+        const requestUrl = query ? `${url}?${query}` : url;
+
+        const headers = {
+            ...(options.headers || {})
+        };
+
+        try {
+
+            const res = await fetchTimeout(requestUrl, {
+                method: "GET",
+                headers,
+                credentials: "same-origin"
+            });
+
+            if (!res.ok) {
+                return {
+                    success: false,
+                    status: res.status
+                };
+            }
+
+            return await res.json();
+
+        }
+        catch (e) {
+
+            if (e.name === "AbortError")
+                return { success: false, message: "Request timeout" };
+
+            return { success: false, message: "Network error" };
+        }
+    };
+
+    /* =========================
+       POST METHOD (PROTECTED)
     ========================= */
 
     window.postMethod = async function (url, data, options = {}) {
+
+        if (!getToken() && !getRefresh()) {
+            redirectLogin();
+            return { success: false, message: "Unauthorized" };
+        }
 
         const headers = options.headers || {};
 
@@ -212,16 +251,61 @@
     };
 
     /* =========================
+       POST METHOD (PUBLIC / NO TOKEN)
+    ========================= */
+    window.postMethodPublic = async function (url, data, options = {}) {
+
+        const headers = options.headers || {};
+
+        if (!(data instanceof FormData)) {
+            headers["Content-Type"] = "application/json";
+            data = JSON.stringify(data);
+        }
+
+        try {
+
+            const res = await fetchTimeout(url, {
+                method: "POST",
+                body: data,
+                headers,
+                credentials: "same-origin"
+            });
+
+            const text = await res.text();
+
+            if (!res.ok) {
+                return {
+                    success: false,
+                    status: res.status
+                };
+            }
+
+            try {
+                return JSON.parse(text);
+            }
+            catch {
+                return text;
+            }
+
+        }
+        catch (err) {
+
+            if (err.name === "AbortError")
+                return { success: false, message: "Timeout" };
+
+            return { success: false, message: "Network error" };
+        }
+    };
+
+    /* =========================
        LOGOUT
     ========================= */
 
     window.logout = function () {
 
-        const logoutUrl = CONFIG.loginUrl;
-
         localStorage.clear();
 
-        window.location.href = logoutUrl;
+        window.location.href = CONFIG.loginUrl;
     };
 
     /* =========================
@@ -239,16 +323,20 @@
 })();
 
 
-// Restriction of typing characters
+/* =======================
+   INPUT RESTRICTION
+======================= */
+
 window.restrictChars = function (e) {
-    var x = e.which || e.keycode;
+    var x = e.which || e.keyCode;
     return (x >= 48 && x <= 57) || x === 46;
 };
 
 
-// =======================
-// ACTION RESTRICT
-// =======================
+/* =======================
+   ACTION RESTRICT
+======================= */
+
 window.ActionButtons = function () {
     var userRole = localStorage.getItem("UserRole");
     if (userRole === "Leader" || userRole === "Users") {
@@ -283,6 +371,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     obs.unobserve(img);
                 }
+
             });
 
         });
@@ -292,18 +381,18 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
+/* =======================
+   JSON DATE FORMAT
+======================= */
+
 window.formatJsonDate = function (value) {
+
     if (!value) return "";
 
     const ms = parseInt(value.replace("/Date(", "").replace(")/", ""));
     if (isNaN(ms)) return "";
 
     const date = new Date(ms);
+
     return date.toLocaleDateString();
 };
-
-
-
-
-
-

@@ -5,16 +5,76 @@
 }
 
 
-<section style="padding: 1em 0;">
-    <div class="chambercontain" id="chambercontain">
+<div class="Mold_tabcontainer">
+    <div class="Mold_tabs">
+        <button class="Mold_tab" data-target="Design">Chamber Design</button>
+        <button class="Mold_tab active" data-target="Chambers">Chambers List</button>
+        <div class="Mold_slider"></div>
+    </div>
+
+    <div class="Mold_contentbox">
+        <div class="Mold_content show" id="Design">
+            <img src="@Url.Action("GetImage","Hydro", new { fileName = "ChamberDei.png" })"
+                 style="width:700px; margin: 1em auto 0;" />
+        </div>
+
+        <div class="Mold_content" id="Chambers">
+            <div class="chambercontain" id="chambercontain">
+
+            </div>
+        </div>
+
 
     </div>
-</section>
+</div>
+
+
+
+
+
+
 
 
 
 <script type="text/javascript">
     let chamberlist = [];
+
+    // Tabs Content
+    const tabs = document.querySelectorAll(".Mold_tab");
+    const slider = document.querySelector(".Mold_slider");
+    const contents = document.querySelectorAll(".Mold_content");
+
+
+    tabs.forEach((tab, index) => {
+        tab.addEventListener("click", () => {
+
+            // Active tab
+            document.querySelector(".Mold_tab.active").classList.remove("active");
+            tab.classList.add("active");
+
+            // Move slider
+            slider.style.transform = `translateX(${index * 100}%)`;
+
+            // Remove all content
+            contents.forEach((content) => {
+                content.classList.remove("show");
+            });
+
+            // Show selected content
+            const target = tab.getAttribute("data-target");
+            document.getElementById(target).classList.add("show");
+
+
+            if (index === 1) {
+                ChambercardDisplay();
+            }
+           
+        });
+    });
+
+
+
+
 
     const ChambercardDisplay = async () => {
         let res = await GetMethod('@Url.Action("GetAllChambers", "Hydro")', {});

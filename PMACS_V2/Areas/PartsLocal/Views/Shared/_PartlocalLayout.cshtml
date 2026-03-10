@@ -1,6 +1,8 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+    @Html.Partial("_SystemConfig")
+
     <meta charset="utf-8" />
     <link rel="icon" type="image/x-icon" href="@Url.Content("~/Content/Images/circle.ico")">
     <meta name="description" content="Learn how to improve your website with caching, accessibility, and SEO best practices.">
@@ -13,8 +15,8 @@
     @Styles.Render("~/Content/parts-css")
 
     <!-- Modernizr SHOULD stay in head -->
-    @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/shared-js")
+    @Scripts.Render("~/bundles/modernizr")
 
 
 </head>
@@ -109,7 +111,6 @@
     <!-- Load JS HERE (BOTTOM) -->
     <script src="~/Scripts/Shared/bootstrap.bundle.min.js"></script>
     <script src="~/Scripts/Shared/Global.js"></script>
-    @*<script src="~/Scripts/Shared/Utilities.js"></script>*@
 
     <script type="text/javascript">
         const logbtn = document.getElementById("logID");
@@ -185,6 +186,5 @@
 
     </script>
 
-    @Html.Partial("_SystemConfig")
 </body>
 </html>

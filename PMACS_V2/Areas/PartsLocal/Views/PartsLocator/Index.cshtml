@@ -337,7 +337,7 @@
       let formData = new FormData(e.target);
       formData.append('proj', 11);
       const data = Object.fromEntries(formData);
-      let res = await postMethod('/Auth/Authenticate', data);
+      let res = await postMethodPublic('/Auth/Authenticate', data);
 
       if (res?.Success) {
           setTimeout(() => {
@@ -353,7 +353,7 @@
 
 
                   localStorage.removeItem('activeLinkIndex');
-                  localStorage.setItem('Logout', "/P1SA/PMACS/Mainpage");
+                  localStorage.setItem('Logout', "/PartsLocal/PartsLocator/Index");
 
                   // For Info of the user
                   localStorage.setItem('UserRole', res.Data.role);

@@ -50,9 +50,9 @@
             this.Logoutbtn.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Logoutbtn.ForeColor = System.Drawing.Color.White;
             this.Logoutbtn.Image = ((System.Drawing.Image)(resources.GetObject("Logoutbtn.Image")));
-            this.Logoutbtn.Location = new System.Drawing.Point(11, 643);
+            this.Logoutbtn.Location = new System.Drawing.Point(12, 643);
             this.Logoutbtn.Name = "Logoutbtn";
-            this.Logoutbtn.Size = new System.Drawing.Size(159, 48);
+            this.Logoutbtn.Size = new System.Drawing.Size(51, 48);
             this.Logoutbtn.TabIndex = 8;
             this.Logoutbtn.UseVisualStyleBackColor = false;
             this.Logoutbtn.Click += new System.EventHandler(this.Logoutbtn_Click);
@@ -71,7 +71,7 @@
             this.EmployeeMenu.Image = ((System.Drawing.Image)(resources.GetObject("EmployeeMenu.Image")));
             this.EmployeeMenu.Location = new System.Drawing.Point(12, 259);
             this.EmployeeMenu.Name = "EmployeeMenu";
-            this.EmployeeMenu.Size = new System.Drawing.Size(158, 46);
+            this.EmployeeMenu.Size = new System.Drawing.Size(51, 46);
             this.EmployeeMenu.TabIndex = 5;
             this.EmployeeMenu.UseVisualStyleBackColor = false;
             this.EmployeeMenu.Click += new System.EventHandler(this.EmployeeMenu_Click);
@@ -90,7 +90,7 @@
             this.CRMonitor.Image = ((System.Drawing.Image)(resources.GetObject("CRMonitor.Image")));
             this.CRMonitor.Location = new System.Drawing.Point(12, 190);
             this.CRMonitor.Name = "CRMonitor";
-            this.CRMonitor.Size = new System.Drawing.Size(158, 46);
+            this.CRMonitor.Size = new System.Drawing.Size(51, 46);
             this.CRMonitor.TabIndex = 4;
             this.CRMonitor.UseVisualStyleBackColor = false;
             this.CRMonitor.Click += new System.EventHandler(this.CRMonitor_Click);
@@ -108,7 +108,7 @@
             this.Attendance.Image = ((System.Drawing.Image)(resources.GetObject("Attendance.Image")));
             this.Attendance.Location = new System.Drawing.Point(12, 125);
             this.Attendance.Name = "Attendance";
-            this.Attendance.Size = new System.Drawing.Size(158, 46);
+            this.Attendance.Size = new System.Drawing.Size(51, 46);
             this.Attendance.TabIndex = 3;
             this.Attendance.UseVisualStyleBackColor = false;
             this.Attendance.Click += new System.EventHandler(this.Attendance_Click_1);
@@ -123,16 +123,16 @@
             this.sidepanel.Dock = System.Windows.Forms.DockStyle.Left;
             this.sidepanel.Location = new System.Drawing.Point(0, 0);
             this.sidepanel.Name = "sidepanel";
-            this.sidepanel.Size = new System.Drawing.Size(185, 703);
+            this.sidepanel.Size = new System.Drawing.Size(83, 703);
             this.sidepanel.TabIndex = 2;
             this.sidepanel.Paint += new System.Windows.Forms.PaintEventHandler(this.sidepanel_Paint);
             // 
             // panel1
             // 
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(185, 0);
+            this.panel1.Location = new System.Drawing.Point(83, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1166, 703);
+            this.panel1.Size = new System.Drawing.Size(1268, 703);
             this.panel1.TabIndex = 3;
             // 
             // MainLayout

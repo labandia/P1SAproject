@@ -39,7 +39,7 @@ namespace Attendance_Monitoring.View
  
         }
 
-        private async void MainLayout_Load(object sender, EventArgs e)
+        private void MainLayout_Load(object sender, EventArgs e)
         {
             //this.WindowState = FormWindowState.Maximized;
 
@@ -51,9 +51,9 @@ namespace Attendance_Monitoring.View
             //CRMonitor.ForeColor = Color.FromArgb(170, 176, 192);
             //EmployeeMenu.BackColor = Color.Transparent;
             //EmployeeMenu.ForeColor = Color.FromArgb(170, 176, 192);
-            await LoadEmployeeList();   
+            SetAttendance();   
         }
-        private async void Attendance_Click_1(object sender, EventArgs e)
+        private  void Attendance_Click_1(object sender, EventArgs e)
         {
             // CHANGE THE COLOR BACKGROUND OF THE MENU BUTTON
             Attendance.BackColor = Color.FromArgb(54, 97, 235);
@@ -63,8 +63,7 @@ namespace Attendance_Monitoring.View
             CRMonitor.ForeColor = Color.FromArgb(170, 176, 192);
             EmployeeMenu.BackColor = Color.Transparent;
             EmployeeMenu.ForeColor = Color.FromArgb(170, 176, 192);
-            _attend.DepartmentID = _DepartmentID;
-
+            SetAttendance();
         }
         private async void CRMonitor_Click(object sender, EventArgs e)
         {
@@ -76,13 +75,8 @@ namespace Attendance_Monitoring.View
             Attendance.ForeColor = Color.FromArgb(170, 176, 192);
             EmployeeMenu.BackColor = Color.Transparent;
             EmployeeMenu.ForeColor = Color.FromArgb(170, 176, 192);
-            _cr.DepartmentID = _DepartmentID;
-            _cr.InitializePage();
+            await LoadCRList();
 
-            _cr.BringToFront();
-            await _cr.DisplayCRMonitor();
-            var crlist = _cr.critemlist;
-            _cr.Crgrid.DataSource = crlist;
         }
 
         private async void EmployeeMenu_Click(object sender, EventArgs e)
@@ -95,16 +89,15 @@ namespace Attendance_Monitoring.View
             Attendance.ForeColor = Color.FromArgb(170, 176, 192);
             CRMonitor.BackColor = Color.Transparent;
             CRMonitor.ForeColor = Color.FromArgb(170, 176, 192);
-            _emp.DepartID = _DepartmentID;
             await LoadEmployeeList();
 
         }
 
         private void Logoutbtn_Click(object sender, EventArgs e)
         {
-            //AttendanceMain n = new AttendanceMain();
-            //n.Show();
-            //this.Visible = false;
+            AttendanceMain n = new AttendanceMain(_iemp, attendanceMonitor, _Crmonitor);
+            n.Show();
+            this.Visible = false;
         }
 
         private void sidepanel_Paint(object sender, PaintEventArgs e)
@@ -120,55 +113,38 @@ namespace Attendance_Monitoring.View
                 _emp.Dock = DockStyle.Fill; 
                 panel1.Controls.Add(_emp);
             }
-
+            _emp.DepartID = _DepartmentID;
             _emp.BringToFront();
             await _emp.Displayemployee("", _DepartmentID);
         }
 
+        private async Task LoadCRList()
+        {
+            if (_cr == null)
+            {
+                _cr = new CRMonitoringPage(_Crmonitor, _serviceProvider);
+                _cr.Dock = DockStyle.Fill;
+                panel1.Controls.Add(_cr);
+            }
 
-        //public void CheckAccessMenu()
-        //{
-        //    try
-        //    {
-        //        string hostName = Dns.GetHostName();
-        //        string ipAddress = Dns.GetHostAddresses(hostName)
-        //                              .FirstOrDefault(ip => ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)?
-        //        .ToString();
+            _cr.BringToFront();
+            _cr.DepartID = _DepartmentID;
+            await _cr.DisplayCRMonitor("", _DepartmentID);
+        }
+
+        private void SetAttendance()
+        {
+            if (_attend == null)
+            {
+                _attend = new AttendancePage(attendanceMonitor, _iemp);
+                _attend.Dock = DockStyle.Fill;
+                panel1.Controls.Add(_attend);
+            }
+
+            _attend.DepartmentID = _DepartmentID;
+            _attend.BringToFront();
+        }
 
 
-        //        var emp = await _admin.GetCRaccess();
-
-        //        var employee = emp.FirstOrDefault(p => p.IPaddress.Equals(ipAddress, StringComparison.OrdinalIgnoreCase));
-
-        //        if (employee != null)
-        //        {
-        //            if (employee.Active == 1)
-        //            {
-        //                Attendance.Enabled = true;
-        //            }
-        //            else
-        //            {
-        //                Attendance.Enabled = false;
-        //            }
-
-        //            if (employee.CRactive == 1)
-        //            {
-        //                CRMonitor.Enabled = true;
-        //            }
-        //            else
-        //            {
-        //                CRMonitor.Enabled = false;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            CRMonitor.Enabled = false;
-        //        }
-        //    }
-        //    catch (FormatException)
-        //    {
-        //        MessageBox.Show("Can Detect local ip address", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //    }
-        //}
     }
 }

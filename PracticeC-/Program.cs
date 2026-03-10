@@ -26,10 +26,10 @@ namespace PracticeC_
 
         static void Main(string[] args)
         {
-            DateTime timeIn = DateTime.Parse("2026-03-07 06:29:58.733");
-            DateTime timeOut = DateTime.Parse("2026-03-07 18:13:19.832");
+            DateTime timeIn = DateTime.Parse("2026-03-07 18:30:19.832");
+            DateTime timeOut = DateTime.Parse("2026-03-08 06:30:19.832");
 
-            var result = TimeCalculator.CalculateHours(timeIn, timeOut, false);
+            var result = TimeCalculator.CalculateHours(timeIn, timeOut);
 
             Console.WriteLine($"Time In  : {timeIn}");
             Console.WriteLine($"Time Out : {timeOut}");
@@ -162,7 +162,7 @@ namespace PracticeC_
             // Print the encoded connection string
             //Console.WriteLine($"Base64 Encoded Connection String: {base64ConnectionString}");
             // Print the encoded connection string
-            string a = DecodeBase64ToString("c2VydmVyPURFU0tUT1AtRkMwVVAxUFxTUUxFWFBSRVNTO2RhdGFiYXNlPVBNQUNTX0xJVkU7SW50ZWdyYXRlZCBTZWN1cml0eT1UcnVlOw==");
+            string a = DecodeBase64ToString("c2VydmVyPTE3Mi4yOS4zLjEzOTtVc2VyIElEPXAxc2E7cGFzc3dvcmQ9cDFzYTEyMzRhKjtkYXRhYmFzZT1QUk9EQ09ORjtQb29saW5nPVRydWU7TWluIFBvb2wgU2l6ZT01MDtNYXggUG9vbCBTaXplPTEwMDs=");
             Console.WriteLine($"Base64 Decrypted {a}");
             Console.ReadKey();
         }

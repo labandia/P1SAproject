@@ -4,6 +4,7 @@ using Attendance_Monitoring.Utilities;
 using Dapper;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace Attendance_Monitoring.Repositories
@@ -27,8 +28,9 @@ namespace Attendance_Monitoring.Repositories
         public async Task<List<CRmodel>> GetCRMonitoringData(string dDate, string shifts, int depid)
         {
             string strquery = "CRMonitor";
+            Debug.WriteLine($@"HERE : {dDate} - Shift : {shifts} - Department : {depid}");
             var parameters = new { TimeIn = dDate, Shifts = shifts, Depid = depid };
-            return await SqlDataAccess.GetDataAsync<CRmodel>(strquery, parameters);
+            return await SqlDataAccess.GetDataAsync<CRmodel>(strquery, parameters, System.Data.CommandType.StoredProcedure);
         }
 
         public async Task<List<CRmodel>> GetCRMonitoringSummary(int depid, string startDate, string endDate)

@@ -377,7 +377,7 @@ namespace Attendance_Monitoring.Global
             if (shift == "DAYSHIFT")
             {
                 // Define the expected (on-time) arrival time
-                DateTime expectedTime = DateTime.Today.AddHours(5).AddMinutes(30); // 5:30 AM today
+                DateTime expectedTime = DateTime.Today.AddHours(6).AddMinutes(30); // 6:30 AM today
 
                 // Calculate the late duration, ensuring it's not negative
                 TimeSpan lateDuration = (now > expectedTime) ? (now - expectedTime) : TimeSpan.Zero;
@@ -386,7 +386,7 @@ namespace Attendance_Monitoring.Global
             }
             else
             {
-                DateTime expectedTime = DateTime.Today.AddHours(17).AddMinutes(30);
+                DateTime expectedTime = DateTime.Today.AddHours(18).AddMinutes(30);
 
                 // If the shift starts in the evening and can cross midnight
                 if (now.Hour < 6) // If it's past midnight, adjust expected time to yesterday

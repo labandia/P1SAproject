@@ -5,6 +5,7 @@ using Attendance_Monitoring.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,7 +28,7 @@ namespace Attendance_Monitoring.Usercontrols
 
         string[] SectionName = { "Molding", "Press", "Rotor", "Winding", "Circuit" };
 
-        public AttendancePage(IServiceProvider serviceProvider, IAttendanceMonitor monitor, IEmployee emp)
+        public AttendancePage(IAttendanceMonitor monitor, IEmployee emp)
         {
             InitializeComponent();
             timer = new Timer();
@@ -35,7 +36,6 @@ namespace Attendance_Monitoring.Usercontrols
             timer.Tick += Timer_Tick;
             _monitor = monitor;
             _emp = emp;
-            _serviceProvider = serviceProvider;
         }
 
         //  ####################  DISPLAY  THE TIME IN AND OUT  #################### //
@@ -55,9 +55,10 @@ namespace Attendance_Monitoring.Usercontrols
 
                 string timecheck = (isTimeIn || Shift == 0) ? tdate : yest;
 
-
+                string filterText = textBox2.Text.ToLower();
 
                 var getdata = await _monitor.GetAttendanceRecordsList(
+                    filterText,
                     timecheck, 
                     Shift, 
                     selectime, 
@@ -98,27 +99,25 @@ namespace Attendance_Monitoring.Usercontrols
                 string shift = Timeprocess.TimeIncheck(DateTime.Now);
 
                 // Filter employee once
-                var employee = emplist.FirstOrDefault(p => p.Employee_ID.Equals(empid, StringComparison.OrdinalIgnoreCase) &&
-                                                      p.Department_ID == DepartmentID);
+                var employee = await _emp.GetEmployeeByID(empid, DepartmentID);
+
 
                 if (employee == null)
                 {
                     Statustext.BackColor = Color.FromArgb(198, 17, 17);
                     Statustext.Text = "Wrong ID number ";
-
-                    // Reuse Timer instead of creating a new one every time
                     timer.Start();
 
                     EmployID.Focus();
                     return;
                 }
 
-                // Time In Process
+                //Time In Process
                 if (selecttime.SelectedIndex == 0)
                 {
                     var res = await _monitor.AttendanceTimeIn(empid, Timeprocess.CalculateLateTime());
 
-                    if(res.Success)
+                    if (res.Success)
                     {
                         TextName.Text = employee.Fullname;
                         Statustext.BackColor = Color.FromArgb(50, 181, 111);
@@ -130,7 +129,7 @@ namespace Attendance_Monitoring.Usercontrols
                     {
                         MessageBox.Show(res.Message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
-                    }  
+                    }
                 }
                 // Time Out Process
                 else if (selecttime.SelectedIndex == 1)
@@ -191,7 +190,7 @@ namespace Attendance_Monitoring.Usercontrols
 
                 selecttime.DropDownStyle = ComboBoxStyle.DropDownList;
                 Timeclock.Text = DateTime.Now.ToLongTimeString();
-                //emplist = await _emp.GetEmployees("", intdepID);
+                emplist = await _emp.GetEmployees("", DepartmentID, "");
             }
             catch (FormatException)
             {

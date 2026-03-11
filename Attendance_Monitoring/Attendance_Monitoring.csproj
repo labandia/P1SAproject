@@ -308,6 +308,12 @@
     <Compile Include="View\V2\AttendanceMain.Designer.cs">
       <DependentUpon>AttendanceMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\V2\EditAttandance.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\V2\EditAttandance.Designer.cs">
+      <DependentUpon>EditAttandance.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\V2\SummaryV2.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -383,6 +389,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\V2\AttendanceMain.resx">
       <DependentUpon>AttendanceMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\V2\EditAttandance.resx">
+      <DependentUpon>EditAttandance.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\V2\SummaryV2.resx">
       <DependentUpon>SummaryV2.cs</DependentUpon>

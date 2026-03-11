@@ -308,7 +308,11 @@ namespace Attendance_Monitoring.Repositories
         }
         public async Task<ApiResponse<P1SA_AttendanceModel>> GetAttendanceRecordsList(
            string search,
-           string dDate, int shifts, int selectime, int depid)
+           DateTime StartDate,
+           DateTime EndDate,
+           int shifts, 
+           int selectime, 
+           int depid)
         {
             string strquery = $@"SELECT
                                 pc.RecordID,
@@ -318,19 +322,25 @@ namespace Attendance_Monitoring.Repositories
 	                            pc.Shifts
                            FROM P1SA_AttendanceMonitor pc 
                            INNER JOIN Employee_tbl e ON e.Employee_ID = pc.Employee_ID
-                           WHERE (CAST(pc.TimeIn AS DATE) = @Datetoday AND pc.Shifts = @Shifts) AND 
-                           e.Department_ID = @Department_ID";
+                           WHERE 
+                           CAST(pc.TimeIn AS DATE) BETWEEN @StartDate AND @EndDate
+                           AND pc.Shifts = @Shifts
+                           AND e.Department_ID = @Department_ID";
 
             Dictionary<string, object> parameters = new Dictionary<string, object>();
 
             // Search Text
             if (!string.IsNullOrEmpty(search))
             {
-                strquery += $@" AND pc.Employee_ID LIKE '%' + @Search + '%'";
+                strquery += @" AND (
+                        pc.Employee_ID LIKE '%' + @Search + '%' 
+                        OR e.FullName LIKE '%' + @Search + '%'
+                    )";
                 parameters.Add("@Search", search);
             }
 
-            parameters.Add("@Datetoday", dDate);
+            parameters.Add("@StartDate", StartDate.Date);
+            parameters.Add("@EndDate", EndDate.Date);
             parameters.Add("@Shifts", shifts);
             parameters.Add("@Department_ID", depid);
 
@@ -349,54 +359,57 @@ namespace Attendance_Monitoring.Repositories
             };
         }
 
-        public async Task<ApiResponse<P1SA_AttendanceModel>> GetAttendanceSummaryList(
-            string startDate, 
-            string endDate, 
-            int depid, 
-            string search = "")
+        public async Task<ApiResponse<P1SA_SummaryDataModel>> GetAttendanceSummaryList(
+          string search,
+           DateTime StartDate,
+           DateTime EndDate,
+           int shifts,
+           int selectime,
+           int depid)
         {
-            string strsql = $@"SELECT
-                        pc.RecordID,
-	                    FORMAT(pc.TimeIn, 'MM/dd/yy hh:mm:ss') as TimeIn, 
-	                    FORMAT(pc.TimeOut, 'hh:mm:ss') as TimeOut, 
-	                    pc.Employee_ID, 
-	                    e.FullName, pc.Regular, 
-	                    pc.Overtime, pc.Gtotal, 
-	                    pc.LateTime, pc.Shifts
-                    FROM P1SA_AttendanceMonitor pc 
-                    INNER JOIN Employee_tbl e ON e.Employee_ID = pc.Employee_ID
-                    WHERE e.IsDelete = 0 AND e.Department_ID = @Department_ID ";
-
-            //string strcount = $@"SELECT COUNT(*) 
-            //        FROM P1SA_AttendanceMonitor pc 
-            //        INNER JOIN Employee_tbl e ON e.Employee_ID = pc.Employee_ID
-            //        WHERE e.IsDelete = 0 AND e.Department_ID = @Department_ID ";
+            string strquery = $@"SELECT
+	                                FORMAT(pc.TimeIn, 'MM/dd/yy') as Date_today, 
+	                                pc.Employee_ID, e.FullName, e.Process, e.Affiliation,
+	                                FORMAT(pc.TimeIn, 'hh:mm:ss') as TimeIn, 
+	                                FORMAT(pc.TimeOut, 'hh:mm:ss') as TimeOut, 
+	                                pc.LateTime,
+	                                pc.Regular, pc.Overtime, pc.Gtotal,
+	                                pc.Shifts
+                                FROM P1SA_AttendanceMonitor pc 
+                                INNER JOIN Employee_tbl e ON e.Employee_ID = pc.Employee_ID
+                           WHERE 
+                           CAST(pc.TimeIn AS DATE) BETWEEN @StartDate AND @EndDate
+                           AND pc.Shifts = @Shifts
+                           AND e.Department_ID = @Department_ID";
 
             Dictionary<string, object> parameters = new Dictionary<string, object>();
-            parameters.Add("@Department_ID", depid);
 
+            // Search Text
             if (!string.IsNullOrEmpty(search))
             {
-                strsql += $@" AND (pc.Employee_ID LIKE '%{search}%' OR e.FullName LIKE '%{search}%') ";
-            }
-           
-            if (!string.IsNullOrEmpty(startDate) && !string.IsNullOrEmpty(endDate))
-            {
-                strsql += " AND CAST(pc.TimeIn AS DATE) between @startDate AND @endDate";
-                parameters.Add("@startDate", startDate);
-                parameters.Add("@endDate", endDate);
+                strquery += @" AND (
+                        pc.Employee_ID LIKE '%' + @Search + '%' 
+                        OR e.FullName LIKE '%' + @Search + '%'
+                    )";
+                parameters.Add("@Search", search);
             }
 
+            parameters.Add("@StartDate", StartDate.Date);
+            parameters.Add("@EndDate", EndDate.Date);
+            parameters.Add("@Shifts", shifts);
+            parameters.Add("@Department_ID", depid);
 
-            //int GetCount = await SqlDataAccess.ExecuteScalarAsync(strcount, parameters);
+            strquery += (selectime == 0) ?
+                " ORDER BY pc.RecordID DESC" :
+                " AND pc.TimeOut is Not null ORDER BY pc.TimeOut DESC";
 
-            var IsRecord = await SqlDataAccess.GetDataAsync<P1SA_AttendanceModel>(strsql, parameters);
+            var IsRecord = await SqlDataAccess.GetDataAsync<P1SA_SummaryDataModel>(strquery, parameters);
+
             bool hasRecords = IsRecord.Any();
-
-            return new ApiResponse<P1SA_AttendanceModel>
+            return new ApiResponse<P1SA_SummaryDataModel>
             {
                 Success = hasRecords,
-                Payload = hasRecords ? IsRecord : new List<P1SA_AttendanceModel> { },
+                Payload = hasRecords ? IsRecord : new List<P1SA_SummaryDataModel>(),
                 Message = hasRecords ? "Retrieved Data Successfully" : "Failed to Load Data"
             };
         }

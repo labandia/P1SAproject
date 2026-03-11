@@ -36,7 +36,7 @@ namespace NCR_system.Repository
                                 s.DepartmentName
                             ORDER BY
                                 s.SectionID ASC;";
-            //Debug.WriteLine(strquery);
+            Debug.WriteLine(strquery);
 
             return SqlDataAccess.GetDataAsync<CustomerTotalModel>(strquery, parameters);
         }
@@ -101,7 +101,12 @@ namespace NCR_system.Repository
 
         public Task<bool> InsertInprocessData(InprocessModel inprocess)
         {
-            throw new NotImplementedException();
+            return SqlDataAccess.ExecuteAsync(
+                $@"INSERT INTO PC_Inprocess(DateEncounter, TitleEmail, Shift, Line, Model, ShopOrder, Defect, NGQty, ProcEncounter, 
+                cause, Invest, P1saStatus, Remarks, SectionDep, SectionID, UploadImage)
+                VALUES(@DateEncounter, @TitleEmail, @Shift, @Line, @Model, @ShopOrder, @Defect, @NGQty, @ProcEncounter, 
+                @cause, @Invest, @P1saStatus, @Remarks, @SectionDep, @SectionID, @UploadImage)", 
+                inprocess);
         }
 
         public Task<bool> UpdateInprocessData(InprocessModel inprocess)

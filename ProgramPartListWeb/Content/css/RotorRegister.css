@@ -230,29 +230,35 @@ tr {
     font-weight: 500;
 }
 
+
 .molding {
-    background-color: rgba(114, 9, 183, 0.1);
-    color: #7209b7;
+    background-color: rgba(169, 9, 183, 0.1);
+    color: #b7099a;
 }
 
 .press {
-    background-color: rgba(76, 201, 240, 0.1);
-    color: #4cc9f0;
+    background-color: rgba(240, 76, 76, 0.1);
+    color: #b41c1c;
 }
 
 .rotor {
-    background-color: rgba(247, 37, 133, 0.1);
-    color: #f72585;
+    background-color: rgba(199, 199, 199, 0.1);
+    color: #110d0f;
 }
 
 .winding {
-    background-color: rgba(67, 97, 238, 0.1);
-    color: #4361ee;
+    background-color: rgba(227, 238, 67, 0.1);
+    color: #836d0c;
 }
 
 .circuit {
-    background-color: rgba(86, 11, 173, 0.1);
-    color: #560bad;
+    background-color: rgba(11, 87, 173, 0.1);
+    color: #0b31ad;
+}
+
+.p1sa-sub {
+    background-color: rgba(11, 173, 165, 0.1);
+    color: #086a83;
 }
 
 /* Year-Month Highlights */

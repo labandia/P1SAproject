@@ -90,6 +90,19 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
             };
         }
 
+
+        public Task<PagedResult<MetalMaskModel>> GetMetalMaskMasterlistAlternate(
+            string search, 
+            int Area, 
+            int ModelType, 
+            int pageNumber, 
+            int pageSize)
+        {
+            throw new System.NotImplementedException();
+        }
+
+
+
         public Task<MetalMaskModel> GetMetalMaskByID(int ID)
         {
             string strquery = @"SELECT RecordID
@@ -221,8 +234,5 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
         }
 
       
-
-       
-       
     }
 }

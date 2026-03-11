@@ -1,0 +1,440 @@
+﻿
+@{
+    ViewBag.Title = "MasterAlternate";
+    Layout = "~/Areas/Circuit/Views/Shared/_MaskLayout.cshtml";
+}
+
+
+<!-- Controls Section -->
+<div class="controls-section">
+    <div class="control-group">
+        <label class="control-label">
+            <i class="fas fa-search"></i> Search Partnumber
+        </label>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Enter Partnumber ..." autocomplete="off">
+        </div>
+    </div>
+
+
+
+
+    <div class="control-group">
+        <label class="control-label">
+            <i class="fas fa-calendar"></i>Model Type
+        </label>
+        <select id="ModelSelect" class="filter-select">
+            <option value="1">FAN </option>
+            <option value="2">UPS </option>
+            <option value="3">Servo </option>
+        </select>
+    </div>
+
+    <div class="control-group">
+        <button id="addbtn">Add Data</button>
+    </div>
+</div>
+
+
+<div class="TrackTable" style="position: relative; margin-top: 1em; box-shadow: 0 3px 5px rgba(0, 0, 0, 0.08);">
+    <!-- Loading Overlay -->
+    <div class="loading" id="loading" style="padding: 2em 0; height: 300px;">
+        <div class="spinner"></div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Partnumber </th>
+                <th>Date Received</th>
+                <th>Area </th>
+                <th>Alternate</th>
+                <th>Side</th>
+                <th>Thickness</th>
+                <th>Blocks</th>
+                <th>Date Manufacture</th>
+                <th>Condition</th>
+                <th>Remarks</th>
+
+            </tr>
+        </thead>
+        <tbody id="TransactionTable">
+        </tbody>
+    </table>
+
+    <div class="pagination" id="pagination">
+
+        <div class="pagination-items">
+            <!-- Pagination buttons will be inserted here -->
+        </div>
+    </div>
+
+
+    <!-- Empty State -->
+    <div class="empty-state" id="emptyState">
+        <i class="fas fa-inbox" style="transform:scale(1.8)"></i>
+        <h3 id="Errormessage">No Data found</h3>
+        <p>Add data to get started</p>
+    </div>
+</div>
+
+
+@*=================================================================================*@
+@*=========================== ADD METAL MASK Masterlist ============================*@
+@*=================================================================================*@
+<div class="modal fade modal-lg" id="AddMasterlist" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5 id="changeAction">Add Materlist Data</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+
+                <form method="post" enctype="multipart/form-data" class="addformcontainer" id="addMasterlistform" autocomplete="off">
+                    <input type="hidden" name="RecordID" id="RecordID" />
+                    <div class="row">
+                        <div class="form_group col-6 col-sm-6 ">
+                            <label>Partnumber : </label>
+                            <input type="text" placeholder="-- N/A --" name="Partnumber" id="Partnumber" required />
+                        </div>
+
+                        <div class="form_group col-6 col-sm-6 ">
+                            <label>Area : </label>
+                            <input type="number" placeholder="-- N/A --" name="AREA" id="AREA" required />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form_group col-6 col-sm-6 ">
+                            <label>Alternate : </label>
+                            <input type="text" placeholder="-- N/A --" name="Alternate" id="Alternate" />
+                        </div>
+
+                        <div class="form_group col-6 col-sm-6">
+                            <label>Side : </label>
+                            <select id="Side" name="Side">
+                                <option value="Single">Single</option>
+                                <option value="Double">Double </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form_group col-6 col-sm-6 ">
+                            <label>Thickness : </label>
+                            <input type="text" placeholder="-- N/A --" name="Thickness" id="Thickness" />
+                        </div>
+
+                        <div class="form_group col-6 col-sm-6">
+                            <label>Blocks :  </label>
+                            <input type="number" placeholder="-- N/A --" name="Blocks" id="Blocks" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form_group col-6 col-sm-6 ">
+                            <label>Condition : </label>
+                            <input type="text" placeholder="-- N/A --" name="Condition" id="Condition" />
+                        </div>
+
+                        <div class="form_group col-6 col-sm-6">
+                            <label>Remarks : </label>
+                            <input type="text" placeholder="-- N/A --" name="Remarks" id="Remarks" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form_group col-6 col-sm-6 ">
+                            <label>Date Received: </label>
+                            <input type="date" placeholder="-- N/A --" name="DateReceived" id="DateReceived" />
+                        </div>
+
+                        <select id="ModelType" name="ModelType" class="filter-select">
+                            <option value="0">-- All Types --  </option>
+                            <option value="1">FAN </option>
+                            <option value="2">UPS </option>
+                            <option value="3">Servo </option>
+                        </select>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div>
+                            <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                        </div>
+                        <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+    let setData = [];
+    let debounceTimer;
+    let selectID = 0;
+    let isAction = 0;
+
+    let totalPages = 0;
+    let currentPage = 1;
+    const pageSize = 20;
+    let totalRecords = 0;
+
+    const loading = document.getElementById('loading');
+    const emptyState = document.getElementById('emptyState');
+
+
+    // ==== FILER by ModelType ===========
+    $("#ModelSelect").on("change", function () {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            GetMetalMaskMasterlist();
+        }, 400);
+    });
+
+    $("#addMasterlistform").on('submit', async function (e) {
+        e.preventDefault();
+
+        let url = isAction === 0 ? '@Url.Action("UpsertMasterlist", "MetalMask")' : '@Url.Action("EditMasterlist", "MetalMask")';
+
+        let formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+        let res = await postMethodPublic(url, formData);
+        if (res?.Success) {
+            GetMetalMaskMasterlist();
+            $("#AddMasterlist").modal("hide");
+        }
+    });
+
+
+    $("#addbtn").on('click', (e) => {
+        e.preventDefault();
+        $("#changeAction").text("Add Materlist Data");
+        $("#AddMasterlist").modal("show");
+    });
+
+    // ==== SEARCH FUNCTIONALITY =======
+    $("#searchInput").on('keyup', () => {
+        clearTimeout(debounceTimer);
+
+        debounceTimer = setTimeout(() => {
+            currentPage = 1;
+            GetMetalMaskMasterlist();
+        }, 400);
+    });
+
+
+   const GetMetalMaskMasterlist = async () => {
+     showLoading(true);
+     let tableBody = $("#TransactionTable");
+
+     try {
+         const url = '@Url.Action("GetMastetlistData", "MetalMask")';
+
+         let res = await GetMethodPublic(url, {
+             search: $("#searchInput").val() || "",
+             ModelType: $("#ModelSelect").val() || 0,
+             pageNumber: currentPage || 1,
+             pageSize: pageSize || 10
+         });
+
+
+          if (res?.Success) {
+                //console.clear();
+                tableBody.empty();
+                setData = res.data.Items;
+                totalRecords = res.data.TotalRecords || 0;
+                totalPages = Math.ceil(totalRecords / pageSize);
+                let html = "";
+
+              emptyState.style.display = 'none';
+
+              setTimeout(() => {
+                  $.each(setData, function (index, row) {
+                      // Image Display
+                      html += `
+                          <tr class='cleanTable' data-id="${row.RecordID}">
+                                <td style='font-weight: 600;'>${row.Partnumber ? row.Partnumber : "-"}</td>
+                                <td >${row.DateReceived ? formatJsonDate(row.DateReceived) : "-"} </td>
+                                <td >${row.AREA ? row.AREA : "-"}</td>
+                                <td style='text-align: center;'>${row.Alternate ? row.Alternate : "-"}</td>
+                                <td style='text-align: center;'>${row.Side ? row.Side : "-"}</td>
+                                <td style='text-align: center;'>${row.Thickness ? row.Thickness : "-"}</td>
+                                <td style='text-align: center;'>${row.Blocks ? row.Blocks : "-"}</td>
+                                <td >${row.DateManufacture ? formatJsonDate(row.DateManufacture) : "-"} </td>
+                                <td style='text-align: center;'>${row.Condition ? row.Condition : "-"}</td>
+                                <td >${row.Remarks ? row.Remarks : "-"}</td>
+
+                          </tr>
+                      `;
+                  });
+
+                  tableBody.append(html);
+
+
+                  updatePaginationUI();
+
+                  showLoading(false);
+              }, 500);
+
+          } else {
+              setTimeout(() => {
+                  tableBody.empty();
+                  // handle specific error types
+                  let TableBody = $("#TransactionTable");
+                  let errorMessage = res?.Message || 'No Data found';
+
+                  if (res?.errorType === 'NotFoundError') {
+                      errorMessage = 'Api endpoint not found. Please contact the Administrator';
+                  } else if (res?.errorType === 'UnauthorizedError') {
+                      errorMessage = 'Your Session Token is expired. please refresh the page';
+                  }
+
+                  emptyState.style.display = 'block';
+
+                  showLoading(false);
+                  // Optional show a Toast
+                  console.error("API Error : ", errorMessage, res);
+              }, 500);
+          }
+     } catch (error) {
+         setTimeout(() => {
+             tableBody.empty();
+             console.error('Unexpected error in GetMetalMaskTransaction:', error);
+             emptyState.style.display = 'block';
+
+             showLoading(false);
+         }, 500);
+     }
+    };
+
+
+    /* ============================
+        CLICK HANDLER
+    ============================ */
+    $(document).on("click", ".cleanTable", function () {
+        let recordId = $(this).data("id");
+        selectID = recordId;
+        isAction = 1;
+        let filtertable = setData.find(res => res.RecordID === selectID);
+
+        if (filtertable) {
+            $("#changeAction").text("Edit Masterlist Data");
+
+            $("#RecordID").val(selectID);
+            $("#Partnumber").val(filtertable.Partnumber);
+            $("#AREA").val(filtertable.AREA);
+            $("#Alternate").val(filtertable.Alternate);
+            $("#Side").val(filtertable.Side);
+            $("#Thickness").val(filtertable.Thickness);
+            $("#Blocks").val(filtertable.Blocks);
+            $("#Condition").val(filtertable.Condition);
+            $("#Remarks").val(filtertable.Remarks);
+            $("#ModelType").val(filtertable.ModelType);
+
+
+            $("#AddMasterlist").modal('show');
+        }
+    });
+
+
+
+    GetMetalMaskMasterlist();
+
+
+    function updatePaginationUI() {
+
+        const $pagination = $("#pagination");
+        const $paginationItems = $(".pagination-items");
+
+        // Clear existing buttons
+        $paginationItems.empty();
+
+        // Always show pagination for debugging
+        $pagination.css({
+            'display': 'flex',
+            'visibility': 'visible',
+            'opacity': '1',
+            'position': 'relative'
+        });
+
+        // Show/hide pagination based on total records
+        if (totalRecords > pageSize) {
+            $pagination.show();
+
+            // Create pagination buttons
+            const prevDisabled = currentPage === 1 ? 'disabled' : '';
+            const nextDisabled = currentPage === totalPages || totalPages === 0 ? 'disabled' : '';
+
+            $paginationItems.html(`
+                 <button class="page-btn prev-btn" ${prevDisabled} data-page="${currentPage - 1}">
+                     <i class="fas fa-chevron-left"></i> Previous
+                 </button>
+
+                 <div class="page-info">
+                     Page ${currentPage} of ${totalPages || 1}
+                     <span class="record-info"></span>
+                 </div>
+
+                 <button class="page-btn next-btn" ${nextDisabled} data-page="${currentPage + 1}">
+                     Next <i class="fas fa-chevron-right"></i>
+                 </button>
+             `);
+
+            // Add page number input for direct navigation (optional)
+            if (totalPages > 10) {
+                $paginationItems.append(`
+         <div class="page-jump">
+             <input type="number" id="pageJumpInput" min="1" max="${totalPages}" value="${currentPage}"
+                    style="width: 60px; padding: 5px; border: 1px solid #ddd; border-radius: 4px;">
+             <button class="page-btn jump-btn" id="pageJumpBtn">Go</button>
+         </div>
+     `);
+            }
+
+            // Add click handlers
+            $(".page-btn").off('click').on('click', function () {
+                if ($(this).is(':disabled')) return;
+
+                const pageNum = parseInt($(this).data('page'));
+
+                if (pageNum >= 1 && pageNum <= totalPages && pageNum !== currentPage) {
+                    currentPage = pageNum;
+                    GetMetalMaskMasterlist();
+                }
+            });
+
+            // Add handler for jump button if exists
+            $("#pageJumpBtn").off('click').on('click', function () {
+                const jumpPage = parseInt($("#pageJumpInput").val());
+                if (jumpPage >= 1 && jumpPage <= totalPages && jumpPage !== currentPage) {
+                    currentPage = jumpPage;
+                    GetMetalMaskMasterlist();
+                }
+            });
+
+            // Add enter key handler for jump input
+            $("#pageJumpInput").off('keypress').on('keypress', function (e) {
+                if (e.which === 13) { // Enter key
+                    $("#pageJumpBtn").click();
+                }
+            });
+
+        } else {
+            $pagination.hide();
+        }
+    }
+
+    // Show loading state
+    function showLoading(show = true) {
+        loading.classList.toggle('active', show);
+    }
+</script>

@@ -289,12 +289,17 @@ namespace NCR_system.View.Module
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private async void button1_Click(object sender, EventArgs e)
         {
-            using (var form = new AddInprocess())
+            using (var form = new AddInprocess(_inp))
             {
                 form.StartPosition = FormStartPosition.CenterParent;
-                form.ShowDialog(this);
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    MessageBox.Show("Update successful.");
+                    await DisplayRejected();
+                }
+
             }
         }
     }

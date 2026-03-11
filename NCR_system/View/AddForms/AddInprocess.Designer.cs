@@ -184,7 +184,7 @@
             // 
             // DateEncount
             // 
-            this.DateEncount.Location = new System.Drawing.Point(45, 254);
+            this.DateEncount.Location = new System.Drawing.Point(45, 252);
             this.DateEncount.Name = "DateEncount";
             this.DateEncount.Size = new System.Drawing.Size(235, 20);
             this.DateEncount.TabIndex = 138;
@@ -193,7 +193,7 @@
             // 
             this.QuanText.BackColor = System.Drawing.Color.WhiteSmoke;
             this.QuanText.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.QuanText.Location = new System.Drawing.Point(58, 442);
+            this.QuanText.Location = new System.Drawing.Point(45, 442);
             this.QuanText.Multiline = true;
             this.QuanText.Name = "QuanText";
             this.QuanText.Size = new System.Drawing.Size(157, 31);
@@ -203,7 +203,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            this.label6.Location = new System.Drawing.Point(55, 411);
+            this.label6.Location = new System.Drawing.Point(42, 411);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(89, 17);
             this.label6.TabIndex = 136;
@@ -219,7 +219,7 @@
             "Rotor",
             "Winding",
             "Circuit"});
-            this.sectionbox.Location = new System.Drawing.Point(58, 550);
+            this.sectionbox.Location = new System.Drawing.Point(45, 550);
             this.sectionbox.Name = "sectionbox";
             this.sectionbox.Size = new System.Drawing.Size(267, 21);
             this.sectionbox.TabIndex = 133;
@@ -228,7 +228,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            this.label3.Location = new System.Drawing.Point(55, 517);
+            this.label3.Location = new System.Drawing.Point(42, 517);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(121, 17);
             this.label3.TabIndex = 132;
@@ -269,7 +269,7 @@
             // 
             this.ModelText.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ModelText.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ModelText.Location = new System.Drawing.Point(53, 349);
+            this.ModelText.Location = new System.Drawing.Point(45, 348);
             this.ModelText.Multiline = true;
             this.ModelText.Name = "ModelText";
             this.ModelText.Size = new System.Drawing.Size(162, 31);
@@ -279,7 +279,7 @@
             // 
             this.label16.AutoSize = true;
             this.label16.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            this.label16.Location = new System.Drawing.Point(50, 318);
+            this.label16.Location = new System.Drawing.Point(42, 317);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(53, 17);
             this.label16.TabIndex = 158;
@@ -474,6 +474,7 @@
             this.button2.Text = "UPLOAD IMAGES";
             this.button2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // pictureBox1
             // 

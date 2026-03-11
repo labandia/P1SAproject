@@ -376,6 +376,8 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
         public ActionResult History() => View();
         // GET: Circuit/MetalMask/Masterlist
         public ActionResult Masterlist() => View();
+        // GET: Circuit/MetalMask/MasterAlternate
+        public ActionResult MasterAlternate() => View();
         // GET: Circuit/MetalMask/History
         public ActionResult IncompleteMaskInfo(string partnum)
         {

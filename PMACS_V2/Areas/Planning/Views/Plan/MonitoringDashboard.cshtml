@@ -904,9 +904,11 @@
         const cleaned = columnint.replace(/\s*\/\s*/, " ");
         const parts = cleaned.split(" ");
         const [month, year] = parts.map(Number);
-
+        console.log("Month" + month + " Year : ");
         if (columnint !== "Total") {
             let res = await GetMethodPublic('@Url.Action("GetRequestedResultDetails", "Plan")', { monthcol: month, monthrow: rowInt, intyear: year });
+
+            console.log(res);
             if (res.StatusCode === 200) {
                 let data = res.Data;
                 var SetData = $("#selectshopOrder");
@@ -2137,7 +2139,6 @@
                     //const year = date.getFullYear();
                     //dateselect = year + '-' + headerValue
                     //newselectdate = dateselect.replaceAll("/", "-");
-                    //console.log(column1Value);
 
                     if (parseInt(cellValue) !== 0) {
                         LoadRequestDetails(headerValue, getMonthInteger(column1Value));
@@ -2443,12 +2444,17 @@
         return `${mm}/${dd}/${yyyy}`;
     }
 
+    var MonthNames = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
+
     function getRowMonths(month) {
         var intmonth = parseInt(month, 10);
-        var names = [
-            "January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"
-        ];
-        return names[intmonth - 1] || "";
+        return MonthNames[intmonth - 1] || "";
+    }
+
+    function getMonthInteger(namemonth) {
+        return MonthNames.indexOf(namemonth);
     }
 </script>

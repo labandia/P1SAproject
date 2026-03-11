@@ -406,6 +406,53 @@
 </div>
 
 
+@*<script type="module" asp-append-version="true">
+         import {
+             getMethod,
+             postMethod
+        } from  '@Url.Content("~/Scripts/modules/index.js")';
+
+
+        class MoldieDailyController {
+            constructor() {
+                this.isFirstLoad = true;
+                this.isYearLoad = true;
+                this.isSeletedSearch = 0;
+
+                this.DailyData = [];
+
+                this.Tablebody = document.getElementById("DieMoldDaily");
+                this.Tablebody = document.getElementById("dieMoldMasterlist");
+
+                this.yearSelect = $("#yearselectDaily");
+            }
+
+            async init() {
+                this.BindEvents();
+            }
+
+            BindEvents() {
+
+            }
+
+            async GetMoldDieDaily() {
+
+            }
+        };
+
+
+        /* ================= INIT ================= */
+
+        document.addEventListener("DOMContentLoaded", () => {
+            new MoldieDailyController();
+        });
+    </script>*@
+
+
+
+
+
+
 <script type="text/javascript">
     let isFirstLoad = true;
     let isYearLoad = true;
@@ -1198,7 +1245,7 @@
 
             const buttonId = $(this).attr('id');
             const rowIndex = buttonId.split('_')[1];
-         
+
 
             let filterDate = getDieObj.find(res => res.DateInput === rowIndex);
             $("#DieSerialID").val(filterDate.DieSerial);

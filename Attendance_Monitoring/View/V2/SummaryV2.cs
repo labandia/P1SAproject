@@ -40,9 +40,9 @@ namespace Attendance_Monitoring.View.V2
             try
             {
                 string newDateString = dstart.Value.ToString("yyyy-MM-dd");
-                var getRecord = await _monitor.GetAttendanceSummaryList(newDateString, newDateString, sec, "");
+                //var getRecord = await _monitor.GetAttendanceSummaryList(newDateString, newDateString, sec, "");
 
-                sumlist = (getRecord.Success) ? getRecord.Payload.ToList() : new List<P1SA_AttendanceModel>();
+                //sumlist = (getRecord.Success) ? getRecord.Payload.ToList() : new List<P1SA_AttendanceModel>();
                 summarytable.DataSource = sumlist;
 
                 //summarytable.Columns["Date_today"].DisplayIndex = 0;

@@ -14,6 +14,10 @@ namespace NCR_system.Utilities
 
         public static async Task<string> SaveImageFolder(string strpath)
         {
+            // If no file selected, return empty string
+            if (string.IsNullOrWhiteSpace(strpath) || !File.Exists(strpath))
+                return string.Empty;
+
             if (!Directory.Exists(folderPath))
                 Directory.CreateDirectory(folderPath);
 

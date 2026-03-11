@@ -336,7 +336,7 @@
         e.preventDefault();
         let formData = new FormData(e.target);
         const dat = Object.fromEntries(formData);
-         let res = await postMethod('@Url.Action("EditRegistrationNo", "Register")', formData);
+        let res = await postMethodPublic('@Url.Action("EditRegistrationNo", "Register")', formData);
         if (res?.Success) {
             $("#errormessage").hide();
             showToast('Update Data successfully!');
@@ -369,7 +369,7 @@
           try {
               const url = '@Url.Action("GetRegistrationInformation", "Register")';
 
-              let res = await GetMethod(url, {
+              let res = await GetMethodPublic(url, {
                   search: searchText,
                   monthfilter: filtermonth,
                   yearint: stryear,
@@ -477,7 +477,7 @@
     const GetRegistrationYearData = async () => {
         const url = '@Url.Action("GetRegistrationList", "Register")';
         $("#yearFilter").empty();
-        let res = await GetMethod(url, {});
+        let res = await GetMethodPublic(url, {});
 
         if (res?.Success) {
             yearData = res.data;
@@ -502,7 +502,7 @@
 
           const url = '@Url.Action("GetCategory", "Register")';
 
-          let res = await GetMethod(url, {});
+        let res = await GetMethodPublic(url, {});
           console.log(res);
           if (res?.Success) {
               let data = res.data;
@@ -539,7 +539,7 @@
             return; // 🚫 STOP submission
         }
 
-        let res = await postMethod('@Url.Action("AddNewRegistration", "Register")', formData);
+        let res = await postMethodPublic('@Url.Action("AddNewRegistration", "Register")', formData);
         if (res?.Success) {
             GetRegistrationYearData();
             setYearMonthFromCode(data.RegistrationNo);  
@@ -557,7 +557,7 @@
     Categoryform.addEventListener('submit', async function (e) {
         e.preventDefault();
 
-        let res = await postMethod('@Url.Action("AddCategory", "Register")', { catname: $("#Addcatname").val()});
+        let res = await postMethodPublic('@Url.Action("AddCategory", "Register")', { catname: $("#Addcatname").val()});
         if (res?.Success) {
              GetCategoryList();
              $("#AddCategoryModal").modal('hide');
@@ -723,7 +723,7 @@
     async function deleteRegistration(id, $row) {
         console.log('Deleting registration with ID:', id);
 
-        let res = await postMethod('@Url.Action("DeleteRegistrationNo", "Register")', { ID: id });
+        let res = await postMethodPublic('@Url.Action("DeleteRegistrationNo", "Register")', { ID: id });
          if (res?.Success) {
              GetRegistrationData();
 

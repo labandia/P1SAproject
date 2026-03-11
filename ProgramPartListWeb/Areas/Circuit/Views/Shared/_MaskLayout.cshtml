@@ -36,6 +36,7 @@
                 <a href="/Circuit/MetalMask/Cleaning" class="nav-link" data-en="Cleaning"><span class="tab-badge" id="Tension">0</span> Tension & Cleaning</a>
                 <a href="/Circuit/MetalMask/History" class="nav-link" data-en="History">Daily Summary </a>
                 <a href="/Circuit/MetalMask/Masterlist" class="nav-link" data-en="MasterList">MasterList </a>
+                <a href="/Circuit/MetalMask/MasterAlternate" class="nav-link" data-en="MasterAlternate">PWB Alternate No</a>
                 <button type="button" id="OpenMetal"><i class="fa-solid fa-plus"></i>Add Metal Mask</button>
 
             </nav>
@@ -241,7 +242,7 @@
 
             let formdata = new FormData(e.target);
             formdata.append('Partnumber', partText);
-
+            const data = Object.fromEntries(formdata);
             let res = await postMethod('@Url.Action("SubmitMetalMaskInfo", "MetalMask")', formdata);
             if (res?.Success) {
                 if (refreshData == 1) {
@@ -252,6 +253,7 @@
                 $("#PartSearch").val("");
                 $("#AreaText").val("-- N/A --");
                 $("#BlockText").val("-- N/A --");
+                $("#PartSearch").prop("readonly", false);
                 $("#AddProductModal").modal("hide");
             }
 
@@ -282,6 +284,7 @@
                     $("#WrongID").hide();
                     $("#PartSearch").css("border", "1px solid #33C9BB");
                     $("#PartSearch").css("outline", "none");
+                    $("#PartSearch").prop("readonly", true);
 
                     if (maskData.length > 1) {
                         // Show a Dialog if the partnumber has same

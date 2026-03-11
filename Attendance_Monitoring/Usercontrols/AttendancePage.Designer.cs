@@ -62,6 +62,8 @@
             this.Overtime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Shifts = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.LateTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Edit = new System.Windows.Forms.DataGridViewImageColumn();
+            this.Delete = new System.Windows.Forms.DataGridViewImageColumn();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
@@ -72,7 +74,7 @@
             this.dend = new System.Windows.Forms.DateTimePicker();
             this.shiftselect = new System.Windows.Forms.ComboBox();
             this.exportbtn = new System.Windows.Forms.Button();
-            this.Filterbtn = new System.Windows.Forms.Button();
+            this.Resetbtn = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
             this.panel5.SuspendLayout();
             this.panel4.SuspendLayout();
@@ -163,6 +165,7 @@
             this.selecttime.AllowDrop = true;
             this.selecttime.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.selecttime.DropDownHeight = 200;
+            this.selecttime.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.selecttime.DropDownWidth = 174;
             this.selecttime.Font = new System.Drawing.Font("Century Gothic", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.selecttime.FormattingEnabled = true;
@@ -352,7 +355,9 @@
             this.Gtotal,
             this.Overtime,
             this.Shifts,
-            this.LateTime});
+            this.LateTime,
+            this.Edit,
+            this.Delete});
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -451,6 +456,20 @@
             this.LateTime.Name = "LateTime";
             this.LateTime.ReadOnly = true;
             // 
+            // Edit
+            // 
+            this.Edit.DataPropertyName = "Edit";
+            this.Edit.HeaderText = "Edit";
+            this.Edit.Name = "Edit";
+            this.Edit.ReadOnly = true;
+            // 
+            // Delete
+            // 
+            this.Delete.DataPropertyName = "Delete";
+            this.Delete.HeaderText = "Delete";
+            this.Delete.Name = "Delete";
+            this.Delete.ReadOnly = true;
+            // 
             // timer1
             // 
             this.timer1.Enabled = true;
@@ -495,13 +514,14 @@
             this.dstart.Size = new System.Drawing.Size(149, 27);
             this.dstart.TabIndex = 31;
             this.dstart.Value = new System.DateTime(2024, 8, 27, 0, 0, 0, 0);
+            this.dstart.ValueChanged += new System.EventHandler(this.dstart_ValueChanged);
             // 
             // label10
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label10.ForeColor = System.Drawing.Color.Black;
-            this.label10.Location = new System.Drawing.Point(469, 195);
+            this.label10.Location = new System.Drawing.Point(469, 196);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(57, 15);
             this.label10.TabIndex = 30;
@@ -512,7 +532,7 @@
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label11.ForeColor = System.Drawing.Color.Black;
-            this.label11.Location = new System.Drawing.Point(303, 195);
+            this.label11.Location = new System.Drawing.Point(303, 198);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(71, 15);
             this.label11.TabIndex = 29;
@@ -523,24 +543,26 @@
             this.dend.CustomFormat = "yyyy-MM-dd";
             this.dend.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dend.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dend.Location = new System.Drawing.Point(472, 220);
+            this.dend.Location = new System.Drawing.Point(472, 223);
             this.dend.Name = "dend";
             this.dend.Size = new System.Drawing.Size(149, 26);
             this.dend.TabIndex = 28;
             this.dend.Value = new System.DateTime(2024, 8, 27, 0, 0, 0, 0);
+            this.dend.ValueChanged += new System.EventHandler(this.dend_ValueChanged);
             // 
             // shiftselect
             // 
+            this.shiftselect.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.shiftselect.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.shiftselect.FormattingEnabled = true;
             this.shiftselect.Items.AddRange(new object[] {
-            "ALL",
             "DAYSHIFT",
             "NIGHTSHIFT"});
             this.shiftselect.Location = new System.Drawing.Point(644, 218);
             this.shiftselect.Name = "shiftselect";
             this.shiftselect.Size = new System.Drawing.Size(120, 28);
             this.shiftselect.TabIndex = 34;
+            this.shiftselect.SelectedIndexChanged += new System.EventHandler(this.shiftselect_SelectedIndexChanged);
             // 
             // exportbtn
             // 
@@ -556,21 +578,23 @@
             this.exportbtn.Text = "Export";
             this.exportbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.exportbtn.UseVisualStyleBackColor = true;
+            this.exportbtn.Click += new System.EventHandler(this.exportbtn_Click);
             // 
-            // Filterbtn
+            // Resetbtn
             // 
-            this.Filterbtn.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Filterbtn.ForeColor = System.Drawing.Color.Black;
-            this.Filterbtn.Image = ((System.Drawing.Image)(resources.GetObject("Filterbtn.Image")));
-            this.Filterbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Filterbtn.Location = new System.Drawing.Point(784, 205);
-            this.Filterbtn.Name = "Filterbtn";
-            this.Filterbtn.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            this.Filterbtn.Size = new System.Drawing.Size(114, 41);
-            this.Filterbtn.TabIndex = 32;
-            this.Filterbtn.Text = "Load";
-            this.Filterbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.Filterbtn.UseVisualStyleBackColor = true;
+            this.Resetbtn.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Resetbtn.ForeColor = System.Drawing.Color.Black;
+            this.Resetbtn.Image = ((System.Drawing.Image)(resources.GetObject("Resetbtn.Image")));
+            this.Resetbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Resetbtn.Location = new System.Drawing.Point(784, 218);
+            this.Resetbtn.Name = "Resetbtn";
+            this.Resetbtn.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.Resetbtn.Size = new System.Drawing.Size(97, 28);
+            this.Resetbtn.TabIndex = 32;
+            this.Resetbtn.Text = "Reset";
+            this.Resetbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Resetbtn.UseVisualStyleBackColor = true;
+            this.Resetbtn.Click += new System.EventHandler(this.Resetbtn_Click);
             // 
             // label12
             // 
@@ -590,7 +614,7 @@
             this.Controls.Add(this.label12);
             this.Controls.Add(this.shiftselect);
             this.Controls.Add(this.exportbtn);
-            this.Controls.Add(this.Filterbtn);
+            this.Controls.Add(this.Resetbtn);
             this.Controls.Add(this.dstart);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.label11);
@@ -645,6 +669,17 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.DataGridView attendancetable;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.DateTimePicker dstart;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.DateTimePicker dend;
+        private System.Windows.Forms.ComboBox shiftselect;
+        private System.Windows.Forms.Button exportbtn;
+        private System.Windows.Forms.Button Resetbtn;
+        private System.Windows.Forms.Label label12;
         private System.Windows.Forms.DataGridViewTextBoxColumn RecordID;
         private System.Windows.Forms.DataGridViewTextBoxColumn Date_today;
         private System.Windows.Forms.DataGridViewTextBoxColumn Employee_ID;
@@ -655,16 +690,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Overtime;
         private System.Windows.Forms.DataGridViewTextBoxColumn Shifts;
         private System.Windows.Forms.DataGridViewTextBoxColumn LateTime;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.DateTimePicker dstart;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.DateTimePicker dend;
-        private System.Windows.Forms.ComboBox shiftselect;
-        private System.Windows.Forms.Button exportbtn;
-        private System.Windows.Forms.Button Filterbtn;
-        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.DataGridViewImageColumn Edit;
+        private System.Windows.Forms.DataGridViewImageColumn Delete;
     }
 }

@@ -55,6 +55,7 @@ namespace ProgramPartListWeb.Utilities
             }
             catch (Exception ex)
             {
+                Debug.WriteLine("Connection failed : " + ex.Message + ". Falling back to default.");
                 return System.Configuration.ConfigurationManager.ConnectionStrings["LiveDevelopment"].ConnectionString;
             }
         }

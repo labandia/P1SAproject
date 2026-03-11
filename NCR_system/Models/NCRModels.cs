@@ -251,7 +251,7 @@ namespace NCR_system.Models
         private string _SectionDep;
         private string _Invest;
         private int _Status;
-        private string _P1saStatus;
+        private int _P1saStatus;
         private string _Remarks;
         private int _SectionID;
         private string _UploadImage;
@@ -323,7 +323,7 @@ namespace NCR_system.Models
             get => _Invest;
             set => _Invest = value;
         }
-        public string P1saStatus
+        public int  P1saStatus
         {
             get => _P1saStatus;
             set => _P1saStatus = value;

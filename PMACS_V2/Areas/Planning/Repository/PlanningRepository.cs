@@ -261,7 +261,7 @@ namespace PMACS_V2.Areas.Planning.Repository
 
         public Task<List<ShopOrderResultModel>> GetSelectedRequestsDetailsSummary(int colint, int rowint, int yearint)
         {
-            return SqlDataAccess.GetDataAsync<ShopOrderResultModel>("SelectedRequestDetails", new { DateUpload = rowint, DateSales = colint });
+            return SqlDataAccess.GetDataAsync<ShopOrderResultModel>("SelectedRequestDetails", new { DateUpload = rowint, DateSales = colint }, CommandType.StoredProcedure);
         }
 
         //----------------- Partnumber summary tabs when Selecting a row data ------------------------

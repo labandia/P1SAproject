@@ -4,75 +4,125 @@ using Attendance_Monitoring.Models;
 using Attendance_Monitoring.Repositories;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace Attendance_Monitoring.Usercontrols
 {
     public partial class AttendancePage : UserControl
     {
-        private readonly IServiceProvider _serviceProvider;
         private readonly IAttendanceMonitor _monitor;
         private readonly IEmployee _emp;
-        private static List<P1SA_AttendanceModel> itemattends;
-        private static List<Employee> emplist;
-        private readonly Timer timer;
 
-        // Share variable to all
-        public string tdate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+        private readonly IServiceProvider _serviceProvider;
+        
+        private List<P1SA_AttendanceModel> _attendanceList;
+        private List<P1SA_SummaryDataModel> _summaryList;
+
+        private readonly Timer _timer = new Timer();
+        private readonly Timer _clockTimer = new Timer();
         public int DepartmentID { get; set; }
 
-        string[] SectionName = { "Molding", "Press", "Rotor", "Winding", "Circuit" };
+        private readonly string[] SectionName =
+        {
+            "Molding", "Press", "Rotor", "Winding", "Circuit", "Process Control"
+        };
 
-        public AttendancePage(IAttendanceMonitor monitor, IEmployee emp)
+        public AttendancePage(IAttendanceMonitor monitor, IEmployee emp, int DepID)
         {
             InitializeComponent();
-            timer = new Timer();
-            timer.Interval = 1000;
-            timer.Tick += Timer_Tick;
+
             _monitor = monitor;
             _emp = emp;
+            DepartmentID = DepID;
+
+            InitializeTimers();
+            InitializeControls();
         }
 
-        //  ####################  DISPLAY  THE TIME IN AND OUT  #################### //
-        public async Task TimeAttendanceDisplay(int selectime)
+        private void InitializeTimers()
+        {
+            // Status reset timer
+            _timer.Interval = 1000;
+            _timer.Tick += ResetStatus;
+
+            // Real-time clock timer
+            _clockTimer.Interval = 1000;
+            _clockTimer.Tick += ClockTimer_Tick;
+        }
+
+        private void InitializeControls()
+        {
+            shiftselect.SelectedIndex = 0;
+
+            dstart.Value = DateTime.Today;
+            dend.Value = DateTime.Today;
+
+            Timeclock.Text = DateTime.Now.ToString("hh:mm:ss tt");
+        }
+
+
+        private void ClockTimer_Tick(object sender, EventArgs e)
+        {
+            Timeclock.Text = DateTime.Now.ToString("hh:mm:ss tt");
+        }
+
+        public void ConfigGrid()
+        {
+            attendancetable.Columns["RecordID"].DisplayIndex = 0;
+
+            attendancetable.Columns["Date_today"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            attendancetable.Columns["Date_today"].DisplayIndex = 1;
+
+            attendancetable.Columns["Employee_ID"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            attendancetable.Columns["Employee_ID"].DisplayIndex = 2;
+
+            attendancetable.Columns["Fullname"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            attendancetable.Columns["Fullname"].DisplayIndex = 3;
+
+            attendancetable.Columns["Shifts"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            attendancetable.Columns["Shifts"].DisplayIndex = 4;
+
+            attendancetable.Columns["LateTime"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            attendancetable.Columns["LateTime"].DisplayIndex = 5;
+
+            attendancetable.Columns["Edit"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            attendancetable.Columns["Edit"].DisplayIndex = 6;
+
+            attendancetable.Columns["Delete"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            attendancetable.Columns["Delete"].DisplayIndex = 7;
+        }
+
+        // ================= DISPLAY ATTENDANCE =================
+        public async Task LoadAttendanceAsync()
         {
             try
             {
-                string yest = DateTime.Today
-                             .AddDays(-1)
-                             .ToString("yyyy-MM-dd HH:mm:ss.fff");
+                var filter = GetFilter();
 
-                bool isTimeIn = selectime == 0;
-
-                int Shift = isTimeIn
-                    ? Timeprocess.TimeIncheckAsIntV2(DateTime.Now)
-                    : Timeprocess.TimeoutcheckV2(DateTime.Now);
-
-                string timecheck = (isTimeIn || Shift == 0) ? tdate : yest;
-
-                string filterText = textBox2.Text.ToLower();
-
-                var getdata = await _monitor.GetAttendanceRecordsList(
-                    filterText,
-                    timecheck, 
-                    Shift, 
-                    selectime, 
+                var response = await _monitor.GetAttendanceRecordsList(
+                    filter.Text,
+                    filter.StartDate,
+                    filter.EndDate,
+                    filter.Shift,
+                    selecttime.SelectedIndex, 
                     DepartmentID
                  );
 
-                itemattends = getdata.Success && getdata.Payload != null
-                    ? getdata.Payload.ToList() 
+                ConfigGrid();
+
+                _attendanceList = response.Success 
+                    ? response.Payload?.ToList() ?? new List<P1SA_AttendanceModel>()
                     : new List<P1SA_AttendanceModel>();
 
-                attendancetable.DataSource = itemattends;
-                DisplayTotal.Text = $"Total Attendance: {attendancetable.RowCount}";
-                EmployID.Focus();
+                attendancetable.SuspendLayout();
+                attendancetable.DataSource = _attendanceList;
+                attendancetable.ResumeLayout();
 
+                DisplayTotal.Text = $"Total Attendance: {attendancetable.RowCount}";
             }
             catch (FormatException)
             {
@@ -83,158 +133,286 @@ namespace Attendance_Monitoring.Usercontrols
                 );
             }
         }
-        private async void Selecttime_SelectedIndexChanged(object sender, EventArgs e)
+
+        // ================= FILTER =================
+
+        private (string Text, DateTime StartDate, DateTime EndDate, int Shift, int Type) GetFilter()
         {
-            await TimeAttendanceDisplay(selecttime.SelectedIndex);
+            bool isTimeIn = selecttime.SelectedIndex == 0;
+
+            int shift = isTimeIn
+                ? Timeprocess.TimeIncheckAsIntV2(DateTime.Now)
+                : Timeprocess.TimeoutcheckV2(DateTime.Now);
+
+            return (
+                textBox2.Text.Trim(),
+                dstart.Value,
+                dend.Value,
+                shift,
+                selecttime.SelectedIndex
+            );
         }
+
         //  ####################  PERFORMS THE TIME IN AND OUT  #################### //
         private async void EnterTime(object sender, KeyEventArgs e)
         {
+            if (e.KeyCode != Keys.Enter) return;
+
             try
             {
-                if (e.KeyCode != Keys.Enter) return;
-
-                // Process Employee ID
                 string empid = EmployID.Text.Replace("-", "").Trim();
                 string shift = Timeprocess.TimeIncheck(DateTime.Now);
 
                 // Filter employee once
                 var employee = await _emp.GetEmployeeByID(empid, DepartmentID);
 
-
                 if (employee == null)
                 {
-                    Statustext.BackColor = Color.FromArgb(198, 17, 17);
-                    Statustext.Text = "Wrong ID number ";
-                    timer.Start();
-
-                    EmployID.Focus();
+                    ShowStatus("Wrong ID number", Color.Red);
                     return;
                 }
 
-                //Time In Process
-                if (selecttime.SelectedIndex == 0)
-                {
-                    var res = await _monitor.AttendanceTimeIn(empid, Timeprocess.CalculateLateTime());
+                TextName.Text = employee.Fullname;
 
-                    if (res.Success)
-                    {
-                        TextName.Text = employee.Fullname;
-                        Statustext.BackColor = Color.FromArgb(50, 181, 111);
-                        Statustext.Text = res.Message;
-                        timer.Start();
-                        await TimeAttendanceDisplay(selecttime.SelectedIndex);
-                    }
-                    else
-                    {
-                        MessageBox.Show(res.Message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
-                    }
-                }
-                // Time Out Process
-                else if (selecttime.SelectedIndex == 1)
-                {
-                    var Outresult = await _monitor.AttendanceTimeOut(empid);
-                    if (Outresult.Success)
-                    {
-                        TextName.Text = employee.Fullname;
-                        // Code to execute after the delay
-                        Statustext.BackColor = Color.FromArgb(50, 181, 111);
-                        Statustext.Text = Outresult.Message;
-                        timer.Interval = 1000; // 2000 milliseconds = 2 seconds
-                        timer.Tick += TimerOut_Tick;
-                        timer.Start();
-                        await TimeAttendanceDisplay(selecttime.SelectedIndex);
-                    }
-                }
+                if (selecttime.SelectedIndex == 0)
+                    await ProcessTimeIn(empid);
                 else
-                {
-                    MessageBox.Show("SELECT TIME IN / OUT");
-                }
+                    await ProcessTimeOut(empid);
+
+
+             
+                ////Time In Process
+                //if (selecttime.SelectedIndex == 0)
+                //{
+                //    var res = await _monitor.AttendanceTimeIn(empid, Timeprocess.CalculateLateTime());
+
+                //    if (res.Success)
+                //    {
+                //        TextName.Text = employee.Fullname;
+                //        Statustext.BackColor = Color.FromArgb(50, 181, 111);
+                //        Statustext.Text = res.Message;
+                //        timer.Start();
+                //        await TimeAttendanceDisplay();
+                //    }
+                //    else
+                //    {
+                //        MessageBox.Show(res.Message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                //        return;
+                //    }
+                //}
+                //// Time Out Process
+                //else if (selecttime.SelectedIndex == 1)
+                //{
+                //    var Outresult = await _monitor.AttendanceTimeOut(empid);
+                //    if (Outresult.Success)
+                //    {
+                //        TextName.Text = employee.Fullname;
+                //        // Code to execute after the delay
+                //        Statustext.BackColor = Color.FromArgb(50, 181, 111);
+                //        Statustext.Text = Outresult.Message;
+                //        timer.Interval = 1000; // 2000 milliseconds = 2 seconds
+                //        timer.Tick += TimerOut_Tick;
+                //        timer.Start();
+                //        await TimeAttendanceDisplay();
+                //    }
+                //}
+                //else
+                //{
+                //    MessageBox.Show("SELECT TIME IN / OUT");
+                //}
             }
             catch (FormatException)
             {
                 MessageBox.Show("Error Encounter During Time IN / OUT.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-        private void Timer_Tick(object sender, EventArgs e)
+        private async Task ProcessTimeIn(string empId)
         {
-            // Stop the timer after it has ticked
-            timer.Stop();
+            var result = await _monitor.AttendanceTimeIn(empId, Timeprocess.CalculateLateTime());
 
-            // Code to execute after timeout
-            Statustext.BackColor = Color.FromArgb(26, 36, 59);
-            Statustext.Text = "Checking status ...";
-            EmployID.Text = "";
+            if (!result.Success)
+            {
+                MessageBox.Show(result.Message, "Warning",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            ShowStatus(result.Message, Color.FromArgb(50, 181, 111));
+            await LoadAttendanceAsync();
         }
-        private void TimerOut_Tick(object sender, EventArgs e)
+        private async Task ProcessTimeOut(string empId)
         {
-            // Stop the timer after it has ticked
-            timer.Stop();
+            var result = await _monitor.AttendanceTimeOut(empId);
 
-            // Code to execute after timeout
+            if (!result.Success)
+            {
+                MessageBox.Show(result.Message);
+                return;
+            }
+
+            ShowStatus(result.Message, Color.FromArgb(50, 181, 111));
+
+            await LoadAttendanceAsync();
+        }
+        // ================= STATUS =================
+        private void ShowStatus(string message, Color color)
+        {
+            Statustext.Text = message;
+            Statustext.BackColor = color;
+
+            _timer.Stop();
+            _timer.Start();
+        }
+        private void ResetStatus(object sender, EventArgs e)
+        {
+            _timer.Stop();
+
             Statustext.BackColor = Color.FromArgb(26, 36, 59);
             Statustext.Text = "Checking status ...";
-            EmployID.Text = "";
+
+            EmployID.Clear();
             TextName.Text = "";
+
             EmployID.Focus();
         }
-        private async void AttendancePage_Load(object sender, EventArgs e)
-        {
-            try
-            {
-                shiftselect.SelectedIndex = 0;
-                int intdepID = DepartmentID + 1;
-                label7.Text  = "Daily Attendance : " + SectionName[intdepID];
 
-                selecttime.DropDownStyle = ComboBoxStyle.DropDownList;
-                Timeclock.Text = DateTime.Now.ToLongTimeString();
-                emplist = await _emp.GetEmployees("", DepartmentID, "");
-            }
-            catch (FormatException)
+
+    
+        private void AttendancePage_Load(object sender, EventArgs e)
+        {
+            _clockTimer.Start();
+
+            if (DepartmentID >= 0)
             {
-                MessageBox.Show("Error from retrieve Employee Data", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                label7.Text = $"Daily Attendance : {SectionName[DepartmentID - 1]}";
             }
         }
+
+        // ================= UI EVENTS =================
+        private async void Searchinput(object sender, EventArgs e)
+        {
+            await LoadAttendanceAsync();
+        }
+
+        private async void shiftselect_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            await LoadAttendanceAsync();
+        }
+        private async void Selecttime_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            await LoadAttendanceAsync();
+        }
+        private void Resetbtn_Click(object sender, EventArgs e)
+        {
+            shiftselect.SelectedIndex = 0;
+            dstart.Value = DateTime.Now;
+            dend.Value = DateTime.Now;
+            textBox2.Text = "";
+        }
+
+        private async void dstart_ValueChanged(object sender, EventArgs e)
+        {
+            await LoadAttendanceAsync();
+        }
+
+        private async void dend_ValueChanged(object sender, EventArgs e)
+        {
+            await LoadAttendanceAsync();
+        }
+
+        // ================= DATAGRID =================
 
         private void Attendancetable_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            if (attendancetable.Columns[e.ColumnIndex].Name == "LateTime") // Change "Status" to your column name
-            {
-                if (e.Value != null)
-                {
-                    string cellValue = e.Value.ToString();
+            if (attendancetable.Columns[e.ColumnIndex].Name != "LateTime") return;
 
-                    if (cellValue == "00:00")
-                    {
-                        e.Value = '-';
-                    }  
-                    else 
-                    {
-                        e.CellStyle.ForeColor = Color.Red;
-                    }
+            if (e.Value == null) return;
+
+            string value = e.Value.ToString();
+
+            if (value == "00:00")
+                e.Value = "-";
+            else
+                e.CellStyle.ForeColor = Color.Red;
+        }
+
+
+
+        // ================= EXPORT =================
+        private async void exportbtn_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var filter = GetFilter();
+
+                var response = await _monitor.GetAttendanceSummaryList(
+                    filter.Text,
+                    filter.StartDate,
+                    filter.EndDate,
+                    filter.Shift,
+                    filter.Type,
+                    DepartmentID
+                );
+
+                _summaryList = response.Payload?.ToList() ?? new List<P1SA_SummaryDataModel>();
+
+                ExportToExcel(_summaryList);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
+
+        private void ExportToExcel(List<P1SA_SummaryDataModel> data)
+        {
+            var excel = new Excel.Application();
+            var workbook = excel.Workbooks.Add();
+            var sheet = (Excel.Worksheet)workbook.ActiveSheet;
+
+            var props = typeof(P1SA_SummaryDataModel).GetProperties();
+
+            for (int i = 0; i < props.Length; i++)
+                sheet.Cells[1, i + 1] = props[i].Name;
+
+            object[,] arr = new object[data.Count, props.Length];
+
+            for (int r = 0; r < data.Count; r++)
+            {
+                for (int c = 0; c < props.Length; c++)
+                {
+                    var val = props[c].GetValue(data[r]);
+                    arr[r, c] = DepartmentID != 2 ? "'" + val?.ToString() : val?.ToString();
                 }
             }
-        }
-        private async void Searchinput(object sender, EventArgs e)
-        {
-            string filterText = textBox2.Text.ToLower();
 
-            // If the input Text is String only returns to Default Data
-            if (String.IsNullOrEmpty(filterText))
+            Excel.Range range = sheet.Range[
+                sheet.Cells[2, 1],
+                sheet.Cells[data.Count + 1, props.Length]
+            ];
+
+            range.Value = arr;
+
+            SaveFileDialog save = new SaveFileDialog
             {
-                await TimeAttendanceDisplay(selecttime.SelectedIndex);
-                textBox2.Focus();
-                return;
-            }
-            // Search by Filter
-            var filteredList = itemattends.Where(p => p.Employee_ID.ToLower().Contains(filterText) ||
-                            p.Fullname.ToLower().Contains(filterText))
-                            .ToList();
+                Filter = "Excel files (*.xlsx)|*.xlsx"
+            };
 
-            attendancetable.DataSource =  filteredList;
-            DisplayTotal.Text = "Total Records: " + attendancetable.RowCount;
+            if (save.ShowDialog() != DialogResult.OK) return;
+
+            workbook.SaveAs(save.FileName);
+
+            workbook.Close();
+            excel.Quit();
+
+            MessageBox.Show("Export Successful");
+
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = save.FileName,
+                UseShellExecute = true
+            });
         }
+
     }
 }

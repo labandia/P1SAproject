@@ -136,13 +136,13 @@ namespace Attendance_Monitoring.View
         {
             if (_attend == null)
             {
-                _attend = new AttendancePage(attendanceMonitor, _iemp);
+                _attend = new AttendancePage(attendanceMonitor, _iemp, _DepartmentID);
                 _attend.Dock = DockStyle.Fill;
                 panel1.Controls.Add(_attend);
             }
 
-            _attend.DepartmentID = _DepartmentID;
             _attend.BringToFront();
+            _attend.DepartmentID = _DepartmentID;
         }
 
 

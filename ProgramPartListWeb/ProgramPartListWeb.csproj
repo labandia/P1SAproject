@@ -847,6 +847,7 @@
     <Content Include="Areas\Rotor\Views\Register\Index.cshtml" />
     <Content Include="Areas\Hydroponics\Views\Hydro\RequestPage.cshtml" />
     <Content Include="Areas\Hydroponics\Views\Hydro\ChamberDesign.cshtml" />
+    <Content Include="Areas\Circuit\Views\MetalMask\MasterAlternate.cshtml" />
     <None Include="Content\Images\.editorconfig" />
     <Content Include="Content\Uploads\PCFY-81013Form1L.xlsx" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />

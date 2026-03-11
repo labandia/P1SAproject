@@ -214,7 +214,85 @@ namespace Attendance_Monitoring.Models
     }
 
 
+    //  SUMMARY EXPORT
+    public class P1SA_SummaryDataModel
+    {
+        private string _Employee_ID;
+        private string _fullname;
+        private string _Process;
+        private string _Affiliation;
+        private string _Date_today;
+        private string _TimeIn;
+        private string _TimeOut;
+        private double _Regular;
+        private double _Gtotal;
+        private double _Overtime;
+        private string _LateTime;
+        private int _Shifts;
 
+
+        public string Employee_ID
+        {
+            get => _Employee_ID;
+            set => _Employee_ID = value;
+        }
+
+        public string Fullname
+        {
+            get => _fullname;
+            set => _fullname = value;
+        }
+
+        public string Process
+        {
+            get => _Process;
+            set => _Process = value;
+        }
+
+        public string Affiliation
+        {
+            get => _Affiliation;
+            set => _Affiliation = value;
+        }
+
+        public string TimeIn
+        {
+            get => _TimeIn;
+            set => _TimeIn = value;
+        }
+
+        public string TimeOut
+        {
+            get => _TimeOut;
+            set => _TimeOut = value;
+        }
+
+
+        public double Regular
+        {
+            get => _Regular;
+            set => _Regular = value;
+        }
+
+        public double Gtotal
+        {
+            get => _Gtotal;
+            set => _Gtotal = value;
+        }
+
+        public double Overtime
+        {
+            get => _Overtime;
+            set => _Overtime = value;
+        }
+        public string LateTime
+        {
+            get => _LateTime;
+            set => _LateTime = value;
+        }
+
+        public ShiftType Shifts { get; set; }  // enum instead of int
+    }
 
 
     public enum ShiftType

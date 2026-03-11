@@ -4,6 +4,7 @@ using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace ProgramPartListWeb.Areas.Circuit.Repository
@@ -82,6 +83,11 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                                   INNER JOIN MetalMask_Masterlist m ON t.Partnumber = m.Partnumber
                                   WHERE t.IsDelete = 0 ";
 
+            // Filter By Status 
+            strquery += $@" AND t.Status = @Status";
+            parameters.Add("@Status", Stats);
+
+
             // Filter By Partnumber
             if (!string.IsNullOrEmpty(partnum))
             {
@@ -103,9 +109,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                 parameters.Add("@ModelType", ModelType);
             }
 
-            // Filter By Status 
-            strquery += $@" AND t.Status = @Status";
-            parameters.Add("@Status", Stats);
+           
 
             // Search Partnumber
             if (!string.IsNullOrEmpty(search))
@@ -127,6 +131,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                 parameters.Add("@Offset", offset);
                 parameters.Add("@PageSize", pageSize);
             }
+
 
             return SqlDataAccess.GetDataAsync<MetalMaskTransaction>(strquery, parameters);
         }

@@ -14,6 +14,13 @@ namespace ProgramPartListWeb.Areas.Circuit.Interface
             int pageNumber,
             int pageSize);
 
+        Task<PagedResult<MetalMaskModel>> GetMetalMaskMasterlistAlternate(
+         string search,
+         int Area,
+         int ModelType,
+         int pageNumber,
+         int pageSize);
+
         Task<MetalMaskModel> GetMetalMaskByID(int ID);
         Task<List<MetalMaskModel>> SearchMetalMaskData(string partnum, int model);
 

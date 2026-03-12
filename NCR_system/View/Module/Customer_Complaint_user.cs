@@ -96,19 +96,18 @@ namespace NCR_system.View.Module
                 CustomDatagrid.Columns["CustomerName"].Visible = true;
                 CustomDatagrid.Columns["CCtype"].Visible = false;
 
-                Setup("DateCreated", 100, 0);
-                Setup("RegNo", 150, 1);
-                Setup("CustomerName", 150, 2);
-                Setup("SectionID", 150, 3);
-                Setup("ModelNo", 150, 4);
+                Setup("Status", 60, 0);
+                Setup("DateCreated", 100, 1);
+                Setup("RegNo", 150, 2);
+                Setup("CustomerName", 150, 3);
+                Setup("SectionID", 150, 4);
+                Setup("ModelNo", 150, 5);
 
                 CustomDatagrid.Columns["LotNo"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                Setup("LotNo", 150, 5);
+                Setup("LotNo", 150, 6);
 
-                Setup("NGQty", 100, 6);
-                Setup("Details", 200, 7, DataGridViewAutoSizeColumnMode.DisplayedCells);
-                Setup("Status", 200, 8);
-                Setup("Delete", 50, 9);
+                Setup("NGQty", 100, 7);
+                Setup("Details", 300, 8, DataGridViewAutoSizeColumnMode.DisplayedCells);
 
 
                 
@@ -151,19 +150,9 @@ namespace NCR_system.View.Module
                 CustomDatagrid.Columns["Status"].Width = 100;
                 CustomDatagrid.Columns["Status"].DisplayIndex = 7;
 
-                //CustomDatagrid.Columns["Edit"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                //CustomDatagrid.Columns["Edit"].Width = 100;
-                //CustomDatagrid.Columns["Edit"].DisplayIndex = 8;
+           
 
-                CustomDatagrid.Columns["Delete"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                CustomDatagrid.Columns["Delete"].Width = 100;
-                CustomDatagrid.Columns["Delete"].DisplayIndex = 8;
-
-
-              
-
-
-
+ 
             }
 
 
@@ -264,38 +253,66 @@ namespace NCR_system.View.Module
                 return;
             }
 
-            var values = new ChartValues<int>();
+            var seriesCollection = new SeriesCollection();
             var labels = new List<string>();
 
             foreach (var d in cc)
             {
                 if (d.totalOpen <= 0) continue;
 
-                values.Add(d.totalOpen);
                 labels.Add(d.DepartmentName);
+
+                // Set color per section
+                System.Windows.Media.Brush color = System.Windows.Media.Brushes.Gray;
+
+                switch (d.DepartmentName)
+                {
+                    case "Molding":
+                        color = System.Windows.Media.Brushes.Pink;
+                        break;
+
+                    case "Press":
+                        color = System.Windows.Media.Brushes.Blue;
+                        break;
+
+                    case "Rotor":
+                        color = System.Windows.Media.Brushes.Yellow;
+                        break;
+
+                    case "Winding":
+                        color = System.Windows.Media.Brushes.Green;
+                        break;
+
+                    case "Circuit":
+                        color = System.Windows.Media.Brushes.White;
+                        break;
+                }
+
+                seriesCollection.Add(new ColumnSeries
+                {
+                    Title = d.DepartmentName,
+                    Values = new ChartValues<int> { d.totalOpen },
+                    DataLabels = true,
+                    Fill = color,
+                    MaxColumnWidth = 200,     // control bar width
+                    ColumnPadding = 50,      // space between bars
+                    LabelPoint = point => point.Y.ToString()
+                });
             }
 
-            cartesianChart1.Series = new SeriesCollection
-            {
-                new ColumnSeries
-                {
-                    Title = "Open Total",
-                    Values = values,
-                    DataLabels = true,
-                    LabelPoint = point => point.Y.ToString()
-                }
-            };
+            cartesianChart1.Series = seriesCollection;
 
-            // X Axis (Department Names)
+            // X Axis
             cartesianChart1.AxisX.Clear();
             cartesianChart1.AxisX.Add(new Axis
             {
                 Title = "Department",
                 Labels = labels,
-                Foreground = System.Windows.Media.Brushes.White
+                Foreground = System.Windows.Media.Brushes.White,
+                Separator = new Separator { Step = 1, IsEnabled = false }
             });
 
-            // Y Axis (Values)
+            // Y Axis
             cartesianChart1.AxisY.Clear();
             cartesianChart1.AxisY.Add(new Axis
             {
@@ -303,8 +320,6 @@ namespace NCR_system.View.Module
                 LabelFormatter = value => value.ToString("N0"),
                 Foreground = System.Windows.Media.Brushes.White
             });
-
-            //cartesianChart1.LegendLocation = LegendLocation.Right;
 
             cartesianChart1.DisableAnimations = cc.Sum(x => x.totalOpen) > 2000;
         }
@@ -334,26 +349,7 @@ namespace NCR_system.View.Module
       
         private void CustomDatagrid_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0)
-                return;
-
-            var item = (CustomerModel)CustomDatagrid.Rows[e.RowIndex].DataBoundItem;
-
-            var column = CustomDatagrid.Columns[e.ColumnIndex];
-
-            var row = CustomDatagrid.Rows[e.RowIndex];  
-
-            var recordID = row.Cells["RecordID"].Value;
-            var type = row.Cells["CCtype"].Value;   
-
-            if (column.Name == "Delete")
-            {
-                DialogResult result = MessageBox.Show("Are you sure you want to delete?", "Confirm Delete", MessageBoxButtons.YesNo);
-                if (result == DialogResult.Yes)
-                {
-                    MessageBox.Show($"Delete clicked on row {e.RowIndex} - Record ID selected:  {recordID}");
-                }
-            }
+           
         }
         private async void SelectedProcess_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -469,6 +465,11 @@ namespace NCR_system.View.Module
             {
                 details.ShowDialog(this);
             }
+        }
+
+        private void panel7_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

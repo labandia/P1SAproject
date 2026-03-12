@@ -78,15 +78,15 @@ namespace NCR_system.View.Module
                 col.AutoSizeMode = mode;
             }
 
-            Setup("DateCloseReg", 150, 0);
-            Setup("RegNo", 200, 1);
-            Setup("DateIssued", 150, 2);
-            Setup("IssueGroup", 200, 3);
-            Setup("SectionID", 150, 4);
-            Setup("ModelNo", 150, 5, DataGridViewAutoSizeColumnMode.AllCells);
-            Setup("Quantity", 100, 6);
-            Setup("Contents", 150, 7, DataGridViewAutoSizeColumnMode.DisplayedCells);
-            Setup("Status", 200, 8);
+            Setup("Status", 60, 0);
+            Setup("DateCloseReg", 150, 1);
+            Setup("RegNo", 200, 2);
+            Setup("DateIssued", 150, 3);
+            Setup("IssueGroup", 200, 4);
+            Setup("SectionID", 150, 5);
+            Setup("ModelNo", 150, 6, DataGridViewAutoSizeColumnMode.AllCells);
+            Setup("Quantity", 100, 7);
+            Setup("Contents", 150, 8, DataGridViewAutoSizeColumnMode.DisplayedCells);
             Setup("Edit", 100, 9);
             Setup("Delete", 100, 10);
 

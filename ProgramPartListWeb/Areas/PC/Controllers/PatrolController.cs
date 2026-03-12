@@ -1693,6 +1693,10 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             ViewBag.ServerIP = clientIp;
             ViewBag.Segment = segment;
 
+            string machine = GetClientMachine();
+            ViewBag.ClientPC = machine;
+
+
             return View();
         }
         // GET: PC/PatrolReport
@@ -1830,6 +1834,23 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
             return prefix;
         }
+
+
+        public string GetClientMachine()
+        {
+            string ip = Request.UserHostAddress;
+
+            try
+            {
+                var host = System.Net.Dns.GetHostEntry(ip);
+                return host.HostName;
+            }
+            catch
+            {
+                return ip;
+            }
+        }
+
 
         [JwtAuthorize]
         public async Task<ActionResult> HandleReportRoutingAsync(string Regno)

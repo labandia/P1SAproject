@@ -1,15 +1,8 @@
-﻿
-@{
-    ViewBag.Title = "Production Patrol Inspection Report System";
-    Layout = "";
-}
-
-
-<head>
+﻿<head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/x-icon" href="@Url.Content("~/Content/Images/patrol .ico")">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@ViewBag.Title</title>
+    <title>Production Patrol Inspection Report System</title>
     <link rel="preload" href="~/Content/fonts/Poppins-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 
 
@@ -202,17 +195,31 @@
         formData.append("proj", 9);
 
         const data = Object.fromEntries(formData);
-        let res = await postMethod('/Auth/Authenticate', data);
 
-        if (res && res.StatusCode === 200) {
-            Swal.fire({
-                title: "Success",
-                text: res.Message,
-                icon: "success",
-                showConfirmButton: false,
-                timer: 1500
-            }).then(() => {
+        try {
+            let res = await postMethodPublic('/Auth/Authenticate', data);
+            if (!res?.Success) {
+                 Swal.fire({
+                        icon: "error",
+                        text: res.Message,
+                        timer: 1500,
+                        showConfirmButton: false
+                 });
+
                 savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-solid fa-right-to-bracket'></i>  Login</span>"
+
+                throw new Error(res?.Message || "Authentication failed");
+            }
+
+            Swal.fire({
+                    title: "Success",
+                    text: res.Message,
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1500
+            }).then(() => {
+                const user = res.data;
+
                 localStorage.setItem('Logout', "/PC/Patrol/index");
                 // For Info of the user
                 localStorage.setItem('UserRole', res.data.role);
@@ -226,18 +233,30 @@
                 localStorage.setItem('PatrolTime', new Date().toISOString());
                 localStorage.setItem('isLoggedInPatrol', 'true');
 
-                window.location.href = "/PC/Patrol/Dashboard";
+                // expiresIn = seconds
+                localStorage.setItem(
+                    'tokenExpiry',
+                    Date.now() + (3600 * 1000)
+                );
+
+                // Optional loader delay animation
+                setTimeout(() => {
+                    window.location.href = "/PC/Patrol/Dashboard";
+                }, 1200);
             });
-        } else {
+        } catch (error) {
+            console.error('Login error:', error);
             Swal.fire({
                 icon: "error",
-                text: res.Message,
+                text: error,
                 timer: 1500,
                 showConfirmButton: false
             });
 
             savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-solid fa-right-to-bracket'></i>  Login</span>"
-        };
+
+        }
+
     });
     regform.addEventListener('submit', async (e) => {
         e.preventDefault();

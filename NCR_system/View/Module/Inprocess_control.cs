@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using NCR_system.View.AddForms;
+using System.IO;
 
 namespace NCR_system.View.Module
 {
@@ -88,9 +89,9 @@ namespace NCR_system.View.Module
             //InprocessGrid.Columns["RecordID"].Visible = false;
             //InprocessGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             
-            Setup("Status", 150, 0);
+            Setup("Status", 60, 0);
             Setup("RecordID", 150, 1);
-            Setup("DateEncounter", 150, 2);
+            Setup("DateEncounter", 140, 2);
             Setup("ProcEncounter", 150, 3);
             Setup("TitleEmail", 150, 4, DataGridViewAutoSizeColumnMode.AllCells);
             Setup("Invest", 150, 5, DataGridViewAutoSizeColumnMode.AllCells);
@@ -98,9 +99,9 @@ namespace NCR_system.View.Module
             Setup("Model", 150, 7, DataGridViewAutoSizeColumnMode.AllCells);
             Setup("Defect", 150, 8, DataGridViewAutoSizeColumnMode.AllCells);
 
-            Setup("P1saStatus", 150, 9);
-            Setup("Shift", 150, 10);
-            Setup("Line", 150, 11);
+            Setup("P1saStatus", 120, 9);
+            Setup("Shift", 50, 10);
+            Setup("Line", 70, 11);
             Setup("NGQty", 150, 12);
             Setup("SectionDep", 150, 13);
             Setup("ShopOrder", 150, 14, DataGridViewAutoSizeColumnMode.AllCells);
@@ -215,38 +216,66 @@ namespace NCR_system.View.Module
                 return;
             }
 
-            var values = new ChartValues<int>();
+            var seriesCollection = new SeriesCollection();
             var labels = new List<string>();
 
             foreach (var d in cc)
             {
                 if (d.totalOpen <= 0) continue;
 
-                values.Add(d.totalOpen);
                 labels.Add(d.DepartmentName);
+
+                // Set color per section
+                System.Windows.Media.Brush color = System.Windows.Media.Brushes.Gray;
+
+                switch (d.DepartmentName)
+                {
+                    case "Molding":
+                        color = System.Windows.Media.Brushes.Pink;
+                        break;
+
+                    case "Press":
+                        color = System.Windows.Media.Brushes.Blue;
+                        break;
+
+                    case "Rotor":
+                        color = System.Windows.Media.Brushes.Yellow;
+                        break;
+
+                    case "Winding":
+                        color = System.Windows.Media.Brushes.Green;
+                        break;
+
+                    case "Circuit":
+                        color = System.Windows.Media.Brushes.White;
+                        break;
+                }
+
+                seriesCollection.Add(new ColumnSeries
+                {
+                    Title = d.DepartmentName,
+                    Values = new ChartValues<int> { d.totalOpen },
+                    DataLabels = true,
+                    Fill = color,
+                    MaxColumnWidth = 200,     // control bar width
+                    ColumnPadding = 50,      // space between bars
+                    LabelPoint = point => point.Y.ToString()
+                });
             }
 
-            cartesianChart1.Series = new SeriesCollection
-            {
-                new ColumnSeries
-                {
-                    Title = "Open Total",
-                    Values = values,
-                    DataLabels = true,
-                    LabelPoint = point => point.Y.ToString()
-                }
-            };
+            cartesianChart1.Series = seriesCollection;
 
-            // X Axis (Department Names)
+            // X Axis
             cartesianChart1.AxisX.Clear();
             cartesianChart1.AxisX.Add(new Axis
             {
                 Title = "Department",
                 Labels = labels,
-                Foreground = System.Windows.Media.Brushes.White
+                Foreground = System.Windows.Media.Brushes.White,
+                Separator = new Separator { Step = 1, IsEnabled = false }
             });
 
-            // Y Axis (Values)
+            // Y Axis
             cartesianChart1.AxisY.Clear();
             cartesianChart1.AxisY.Add(new Axis
             {
@@ -254,8 +283,6 @@ namespace NCR_system.View.Module
                 LabelFormatter = value => value.ToString("N0"),
                 Foreground = System.Windows.Media.Brushes.White
             });
-
-            //cartesianChart1.LegendLocation = LegendLocation.Right;
 
             cartesianChart1.DisableAnimations = cc.Sum(x => x.totalOpen) > 2000;
         }
@@ -300,6 +327,23 @@ namespace NCR_system.View.Module
                     await DisplayRejected();
                 }
 
+            }
+        }
+
+        private void InprocessGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (InprocessGrid.Columns[e.ColumnIndex].Name == "Invest" && e.RowIndex >= 0)
+            {
+                string path = InprocessGrid.Rows[e.RowIndex].Cells["Invest"].Value?.ToString();
+
+                if (!string.IsNullOrEmpty(path) && File.Exists(path))
+                {
+                    System.Diagnostics.Process.Start(path);
+                }
+                else
+                {
+                    MessageBox.Show("File not found.");
+                }
             }
         }
     }

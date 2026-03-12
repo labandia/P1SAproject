@@ -379,7 +379,6 @@
                   pageSize: pageSize
               });
 
-              console.log(res);
                if (res?.Success) {
                    //console.clear();
                     emptyState.style.display = 'none';
@@ -387,7 +386,6 @@
                    setData = res.data.Items;
                    totalRecords = res.data.TotalRecords || 0;
                    totalPages = Math.ceil(totalRecords / pageSize);
-                   console.log("Total Recorrs : " + totalRecords + " Page Size : " + pageSize + "totalPages : " + totalPages);
                    if (setData.length === 0 && totalRecords > 0 && currentPage > 1) {
                        currentPage = totalPages;
                        GetRegistrationData();
@@ -503,7 +501,6 @@
           const url = '@Url.Action("GetCategory", "Register")';
 
         let res = await GetMethodPublic(url, {});
-          console.log(res);
           if (res?.Success) {
               let data = res.data;
               if (data.length > 0) {
@@ -642,7 +639,6 @@
         }
         dropdownInitialized = true;
 
-        console.log('Initializing dropdown actions...');
 
         // Use event delegation on document instead of document
         $(document)
@@ -705,7 +701,6 @@
 
     // Edit function
     function editRegistration(id) {
-        console.log('Opening edit form for ID:', id);
         let filterData = setData.find(res => res.RegistrationID === id);
         if (filterData) {
             $("#EditRegistrationID").val(id);
@@ -721,7 +716,6 @@
 
     // Delete function
     async function deleteRegistration(id, $row) {
-        console.log('Deleting registration with ID:', id);
 
         let res = await postMethodPublic('@Url.Action("DeleteRegistrationNo", "Register")', { ID: id });
          if (res?.Success) {
@@ -743,8 +737,7 @@
 
 
     function updatePaginationUI() {
-        console.log('updatePaginationUI called');
-        console.log('Total records:', totalRecords, 'Total pages:', totalPages);
+        
 
         const $pagination = $("#pagination");
         const $paginationItems = $(".pagination-items");
@@ -823,7 +816,6 @@
                 }
             });
 
-            console.log('Pagination created with Next/Previous buttons');
         } else {
             $pagination.hide();
             console.log('Hiding pagination - not enough records');

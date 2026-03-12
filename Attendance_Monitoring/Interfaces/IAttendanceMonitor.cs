@@ -23,5 +23,8 @@ namespace Attendance_Monitoring.Interfaces
         Task<ApiResponse<P1SA_AttendanceModel>> AttendanceTimeIn(string EmployeeID, string late);
         // UPDATES INTO THE DATABASE
         Task<ApiResponse<P1SA_AttendanceModel>> AttendanceTimeOut(string EmployeeID);
+
+        Task<bool> EditAttandance(P1SA_AttendanceModel EmployeeID);
+        Task<bool> DeleteAttandance(int RecordID);
     }
 }

@@ -81,4 +81,14 @@ namespace ProgramPartListWeb.Areas.Circuit.Models
         public int TensionCount { get; set; }
     }
 
+
+    public class MetalMaskPWBModel
+    {
+        public string Partnumber { get; set; }
+        public string MetalMask { get; set; }
+        public string AREA { get; set; }
+        public string Alternate { get; set; }
+        public string Remarks { get; set; }
+    }
+
 }

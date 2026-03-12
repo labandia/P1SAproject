@@ -186,6 +186,8 @@
     <Compile Include="Repository\NCR_Repository.cs" />
     <Compile Include="Repository\RejectShipRepository.cs" />
     <Compile Include="Utilities\CommonMethods.cs" />
+    <Compile Include="Utilities\DisplayChartHelper.cs" />
+    <Compile Include="Utilities\InputHelper.cs" />
     <Compile Include="Utilities\PlaceHolderhelper.cs" />
     <Compile Include="Utilities\UploadServices.cs" />
     <Compile Include="View\AddForms\AddCustomerComplaint.cs">

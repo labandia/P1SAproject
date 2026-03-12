@@ -661,7 +661,15 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         }
 
 
+        public ActionResult ViewExcel(string fileName)
+        {
+            string path = @"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\HydroParts\Chamber\" + fileName;
 
+            if (!System.IO.File.Exists(path))
+                return HttpNotFound();
+
+            return File(path, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        }
 
 
 

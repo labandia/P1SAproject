@@ -26,5 +26,10 @@ namespace ProgramPartListWeb.Areas.Circuit.Interface
 
         Task<bool> AddMasterlist(MetalMaskModel masterlist);
         Task<bool> EditMasterlist(MetalMaskModel masterlist);
+
+
+
+        Task<PagedResult<MetalMaskPWBModel>> GetMetalMaskPWB(string search, int pageNumber,
+         int pageSize);
     }
 }

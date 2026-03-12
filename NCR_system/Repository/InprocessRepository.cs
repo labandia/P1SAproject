@@ -36,7 +36,6 @@ namespace NCR_system.Repository
                                 s.DepartmentName
                             ORDER BY
                                 s.SectionID ASC;";
-            Debug.WriteLine(strquery);
 
             return SqlDataAccess.GetDataAsync<CustomerTotalModel>(strquery, parameters);
         }
@@ -52,7 +51,8 @@ namespace NCR_system.Repository
 
             Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-            string strquery = $@"SELECT RecordID, DateEncounter
+            string strquery = $@"SELECT RecordID
+                                  ,FORMAT(DateEncounter, 'MM/dd/yy') as DateEncounter
                                   ,TitleEmail,Shift
                                   ,Line,Model
                                   ,ShopOrder,Defect
@@ -95,6 +95,7 @@ namespace NCR_system.Repository
                 parameters.Add("@PageSize", pageSize);
             }
 
+            Debug.WriteLine(strquery);  
 
             return await SqlDataAccess.GetDataAsync<InprocessModel>(strquery, parameters);
         }

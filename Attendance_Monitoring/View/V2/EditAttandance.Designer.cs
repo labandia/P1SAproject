@@ -29,40 +29,41 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditAttandance));
-            this.label6 = new System.Windows.Forms.Label();
+            this.IDText = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.Fullname = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.Savebtn = new System.Windows.Forms.Button();
-            this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
-            this.Affili = new System.Windows.Forms.TextBox();
+            this.TimeOutText = new System.Windows.Forms.DateTimePicker();
+            this.regText = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.dateTimePicker3 = new System.Windows.Forms.DateTimePicker();
+            this.TimeInText = new System.Windows.Forms.DateTimePicker();
             this.label1 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.overText = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.gTotalText = new System.Windows.Forms.TextBox();
+            this.Cancebtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // label6
+            // IDText
             // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Century Gothic", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(30, 44);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(180, 28);
-            this.label6.TabIndex = 27;
-            this.label6.Text = "Employee ID : ";
+            this.IDText.AutoSize = true;
+            this.IDText.Font = new System.Drawing.Font("Century Gothic", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IDText.Location = new System.Drawing.Point(30, 44);
+            this.IDText.Name = "IDText";
+            this.IDText.Size = new System.Drawing.Size(180, 28);
+            this.IDText.TabIndex = 27;
+            this.IDText.Text = "Employee ID : ";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
             this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label3.Location = new System.Drawing.Point(32, 194);
+            this.label3.Location = new System.Drawing.Point(32, 190);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(63, 16);
+            this.label3.Size = new System.Drawing.Size(62, 17);
             this.label3.TabIndex = 21;
             this.label3.Text = "Time IN :";
             // 
@@ -70,7 +71,7 @@
             // 
             this.Fullname.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.Fullname.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.Fullname.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Fullname.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Fullname.Location = new System.Drawing.Point(36, 135);
             this.Fullname.Multiline = true;
             this.Fullname.Name = "Fullname";
@@ -80,11 +81,11 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
             this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label2.Location = new System.Drawing.Point(33, 105);
+            this.label2.Location = new System.Drawing.Point(32, 106);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(80, 16);
+            this.label2.Size = new System.Drawing.Size(76, 17);
             this.label2.TabIndex = 19;
             this.label2.Text = "Full Name :";
             // 
@@ -97,156 +98,177 @@
             this.Savebtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.Savebtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(50)))), ((int)(((byte)(141)))));
             this.Savebtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Savebtn.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Savebtn.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Savebtn.ForeColor = System.Drawing.Color.White;
             this.Savebtn.Image = ((System.Drawing.Image)(resources.GetObject("Savebtn.Image")));
             this.Savebtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Savebtn.Location = new System.Drawing.Point(218, 395);
+            this.Savebtn.Location = new System.Drawing.Point(218, 390);
             this.Savebtn.Name = "Savebtn";
             this.Savebtn.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
-            this.Savebtn.Size = new System.Drawing.Size(192, 41);
+            this.Savebtn.Size = new System.Drawing.Size(192, 46);
             this.Savebtn.TabIndex = 16;
             this.Savebtn.Text = "Save";
             this.Savebtn.UseVisualStyleBackColor = false;
+            this.Savebtn.Click += new System.EventHandler(this.Savebtn_Click);
             // 
-            // dateTimePicker2
+            // TimeOutText
             // 
-            this.dateTimePicker2.CustomFormat = "hh:mm";
-            this.dateTimePicker2.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePicker2.Location = new System.Drawing.Point(183, 226);
-            this.dateTimePicker2.Name = "dateTimePicker2";
-            this.dateTimePicker2.ShowUpDown = true;
-            this.dateTimePicker2.Size = new System.Drawing.Size(99, 20);
-            this.dateTimePicker2.TabIndex = 32;
+            this.TimeOutText.CustomFormat = "hh:mm";
+            this.TimeOutText.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
+            this.TimeOutText.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.TimeOutText.Location = new System.Drawing.Point(183, 222);
+            this.TimeOutText.Name = "TimeOutText";
+            this.TimeOutText.ShowUpDown = true;
+            this.TimeOutText.Size = new System.Drawing.Size(99, 25);
+            this.TimeOutText.TabIndex = 32;
+            this.TimeOutText.Value = new System.DateTime(2026, 3, 12, 15, 30, 0, 0);
             // 
-            // Affili
+            // regText
             // 
-            this.Affili.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.Affili.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.Affili.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Affili.Location = new System.Drawing.Point(35, 308);
-            this.Affili.Multiline = true;
-            this.Affili.Name = "Affili";
-            this.Affili.Size = new System.Drawing.Size(102, 37);
-            this.Affili.TabIndex = 24;
+            this.regText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.regText.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.regText.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.regText.Location = new System.Drawing.Point(36, 308);
+            this.regText.Multiline = true;
+            this.regText.Name = "regText";
+            this.regText.ReadOnly = true;
+            this.regText.Size = new System.Drawing.Size(102, 37);
+            this.regText.TabIndex = 24;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
             this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label4.Location = new System.Drawing.Point(180, 194);
+            this.label4.Location = new System.Drawing.Point(180, 190);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(64, 16);
+            this.label4.Size = new System.Drawing.Size(64, 17);
             this.label4.TabIndex = 23;
             this.label4.Text = "Time Out";
             this.label4.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
-            // dateTimePicker3
+            // TimeInText
             // 
-            this.dateTimePicker3.CustomFormat = "hh:mm";
-            this.dateTimePicker3.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePicker3.Location = new System.Drawing.Point(35, 226);
-            this.dateTimePicker3.Name = "dateTimePicker3";
-            this.dateTimePicker3.ShowUpDown = true;
-            this.dateTimePicker3.Size = new System.Drawing.Size(99, 20);
-            this.dateTimePicker3.TabIndex = 33;
+            this.TimeInText.CustomFormat = "hh:mm";
+            this.TimeInText.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
+            this.TimeInText.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.TimeInText.Location = new System.Drawing.Point(35, 222);
+            this.TimeInText.Name = "TimeInText";
+            this.TimeInText.ShowUpDown = true;
+            this.TimeInText.Size = new System.Drawing.Size(99, 25);
+            this.TimeInText.TabIndex = 33;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label1.Location = new System.Drawing.Point(32, 278);
+            this.label1.Location = new System.Drawing.Point(33, 278);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(58, 16);
+            this.label1.Size = new System.Drawing.Size(54, 17);
             this.label1.TabIndex = 34;
             this.label1.Text = "Regular";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
             this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.label5.Location = new System.Drawing.Point(165, 278);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(80, 16);
+            this.label5.Size = new System.Drawing.Size(77, 17);
             this.label5.TabIndex = 36;
             this.label5.Text = "Over Time :";
             // 
-            // textBox1
+            // overText
             // 
-            this.textBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(168, 308);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(102, 37);
-            this.textBox1.TabIndex = 35;
+            this.overText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.overText.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.overText.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.overText.Location = new System.Drawing.Point(168, 308);
+            this.overText.Multiline = true;
+            this.overText.Name = "overText";
+            this.overText.ReadOnly = true;
+            this.overText.Size = new System.Drawing.Size(102, 37);
+            this.overText.TabIndex = 35;
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
             this.label7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.label7.Location = new System.Drawing.Point(305, 278);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(46, 16);
+            this.label7.Size = new System.Drawing.Size(44, 17);
             this.label7.TabIndex = 38;
             this.label7.Text = "Total :";
             // 
-            // textBox2
+            // gTotalText
             // 
-            this.textBox2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox2.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox2.Location = new System.Drawing.Point(308, 308);
-            this.textBox2.Multiline = true;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(102, 37);
-            this.textBox2.TabIndex = 37;
+            this.gTotalText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.gTotalText.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.gTotalText.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gTotalText.Location = new System.Drawing.Point(308, 308);
+            this.gTotalText.Multiline = true;
+            this.gTotalText.Name = "gTotalText";
+            this.gTotalText.ReadOnly = true;
+            this.gTotalText.Size = new System.Drawing.Size(102, 37);
+            this.gTotalText.TabIndex = 37;
+            // 
+            // Cancebtn
+            // 
+            this.Cancebtn.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Cancebtn.Location = new System.Drawing.Point(35, 390);
+            this.Cancebtn.Name = "Cancebtn";
+            this.Cancebtn.Size = new System.Drawing.Size(169, 46);
+            this.Cancebtn.TabIndex = 39;
+            this.Cancebtn.Text = "Cancel";
+            this.Cancebtn.UseVisualStyleBackColor = true;
             // 
             // EditAttandance
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(451, 489);
+            this.Controls.Add(this.Cancebtn);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.gTotalText);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.overText);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.dateTimePicker3);
-            this.Controls.Add(this.dateTimePicker2);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.Affili);
+            this.Controls.Add(this.TimeInText);
+            this.Controls.Add(this.TimeOutText);
+            this.Controls.Add(this.IDText);
+            this.Controls.Add(this.regText);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.Fullname);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.Savebtn);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "EditAttandance";
-            this.Text = "EditAttandance";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "-";
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label IDText;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox Fullname;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button Savebtn;
-        private System.Windows.Forms.DateTimePicker dateTimePicker2;
-        private System.Windows.Forms.TextBox Affili;
+        private System.Windows.Forms.DateTimePicker TimeOutText;
+        private System.Windows.Forms.TextBox regText;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.DateTimePicker dateTimePicker3;
+        private System.Windows.Forms.DateTimePicker TimeInText;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox overText;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox gTotalText;
+        private System.Windows.Forms.Button Cancebtn;
     }
 }

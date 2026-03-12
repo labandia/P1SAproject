@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace NCR_system.View.AddForms
 {
@@ -67,39 +68,39 @@ namespace NCR_system.View.AddForms
             try
             {
                 string imagepath = await UploadServices.SaveImageFolder(selectedImagepath);
-                DateTime date = dateTimePicker1.Value;
+                DateTime date = DateEncount.Value;
                 string formattedDate = date.ToString("yyyy-MM-dd HH:mm:ss.fff");
 
 
                 var obj = new InprocessModel
                 {
-                    TitleEmail = string.IsNullOrEmpty(EmailText.Text) ? "" : EmailText.Text,
+                    TitleEmail = InputHelper.GetText(EmailText),
                     DateEncounter = formattedDate,
                     Shift = Shiftselect.SelectedIndex,
-                    Line = LineText.Text,
-                    Defect = DefectText.Text,
-                    Model = ModelText.Text,
-                    ShopOrder = ShopText.Text,
+                    Line = InputHelper.GetText(LineText),
+                    Defect = InputHelper.GetText(DefectText),
+                    Model = InputHelper.GetText(ModelText),
+                    ShopOrder = InputHelper.GetText(ShopText),
                     NGQty = string.IsNullOrEmpty(QuanText.Text) ? 0 : int.Parse(QuanText.Text),
-                    ProcEncounter = ProcText.Text,
-                    cause = CauseText.Text,
-                    Invest = reportpath.Text,
+                    ProcEncounter = InputHelper.GetText(ProcText),
+                    cause = InputHelper.GetText(CauseText),  
+                    Invest = InputHelper.GetText(reportpath),
                     SectionDep = SectionName[sectionbox.SelectedIndex],
-                    SectionID = sectionbox.SelectedIndex + 1,
+                    SectionID =  sectionbox.SelectedIndex + 1,
                     UploadImage = imagepath,
-                    P1saStatus = p1saSelect.SelectedIndex
+                    P1saStatus = p1saSelect.SelectedIndex,
+                    Remarks = InputHelper.GetText(remarksText)
                 };
 
-                Debug.WriteLine("InprocessModel Object:" + obj.SectionID);
 
-                //bool result = await _pro.InsertInprocessData(obj);
+                bool result = await _pro.InsertInprocessData(obj);
 
-                //if (result)
-                //{
-                //    MessageBox.Show("Data saved successfully.");
-                //    DialogResult = DialogResult.OK;
-                //    Close();
-                //}
+                if (result)
+                {
+                    MessageBox.Show("Data saved successfully.");
+                    DialogResult = DialogResult.OK;
+                    Close();
+                }
 
             }
             catch(Exception ex)
@@ -116,9 +117,12 @@ namespace NCR_system.View.AddForms
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 selectedImagepath = ofd.FileName;
-                pictureBox1.Image = Image.FromFile(selectedImagepath);
+                pictureBox1.Image = System.Drawing.Image.FromFile(selectedImagepath);
                 pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             }
         }
+
+       
+
     }
 }

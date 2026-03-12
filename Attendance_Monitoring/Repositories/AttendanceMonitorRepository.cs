@@ -306,6 +306,32 @@ namespace Attendance_Monitoring.Repositories
                 };
             }
         }
+
+        public Task<bool> DeleteAttandance(int RecordID)
+        {
+            return SqlDataAccess.ExecuteAsync($@"
+                UPDATE  P1SA_AttendanceMonitor  SET IsDelete = 1
+                WHERE RecordID = @RecordID", new { RecordID });
+        }
+
+        public Task<bool> EditAttandance(P1SA_AttendanceModel emp)
+        {
+            return SqlDataAccess.ExecuteAsync($@"
+                UPDATE P1SA_AttendanceMonitor 
+                SET TimeIn = @TimeIn, TimeOut = @TimeOut, 
+                LateTime = @LateTime, Regular = @Regular, 
+                Overtime = @Overtime WHERE RecordID = @RecordID",
+                new
+                {
+                    TimeIn = emp.TimeIn,
+                    TimeOut = emp.TimeOut,
+                    LateTime = emp.LateTime,
+                    Regular = emp.Regular,
+                    Overtime = emp.Overtime,
+                    RecordID = emp.RecordID
+                });
+        }
+
         public async Task<ApiResponse<P1SA_AttendanceModel>> GetAttendanceRecordsList(
            string search,
            DateTime StartDate,
@@ -316,14 +342,15 @@ namespace Attendance_Monitoring.Repositories
         {
             string strquery = $@"SELECT
                                 pc.RecordID,
-	                            FORMAT(pc.TimeIn, 'MM/dd/yy hh:mm:ss') as TimeIn, 
-	                            FORMAT(pc.TimeOut, 'hh:mm:ss') as TimeOut, 
+	                            FORMAT(pc.TimeIn, 'MM/dd/yy HH:mm:ss') as TimeIn, 
+	                            FORMAT(pc.TimeOut, 'MM/dd/yy HH:mm:ss') as TimeOut, 
 	                            pc.Employee_ID, e.FullName, pc.LateTime,
-	                            pc.Shifts
+	                            pc.Shifts, pc.Regular, pc.Gtotal, pc.Overtime
                            FROM P1SA_AttendanceMonitor pc 
                            INNER JOIN Employee_tbl e ON e.Employee_ID = pc.Employee_ID
                            WHERE 
-                           CAST(pc.TimeIn AS DATE) BETWEEN @StartDate AND @EndDate
+                           pc.IsDelete = 0 
+                           AND CAST(pc.TimeIn AS DATE) BETWEEN @StartDate AND @EndDate
                            AND pc.Shifts = @Shifts
                            AND e.Department_ID = @Department_ID";
 

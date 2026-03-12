@@ -2,6 +2,7 @@
 using Attendance_Monitoring.Interfaces;
 using Attendance_Monitoring.Models;
 using Attendance_Monitoring.Repositories;
+using Attendance_Monitoring.View.V2;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -25,6 +26,7 @@ namespace Attendance_Monitoring.Usercontrols
         private readonly Timer _timer = new Timer();
         private readonly Timer _clockTimer = new Timer();
         public int DepartmentID { get; set; }
+        public bool IsFiltered = false;
 
         private readonly string[] SectionName =
         {
@@ -72,6 +74,8 @@ namespace Attendance_Monitoring.Usercontrols
 
         public void ConfigGrid()
         {
+            attendancetable.AutoGenerateColumns = false;
+
             attendancetable.Columns["RecordID"].DisplayIndex = 0;
 
             attendancetable.Columns["Date_today"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
@@ -289,19 +293,6 @@ namespace Attendance_Monitoring.Usercontrols
         }
 
         // ================= UI EVENTS =================
-        private async void Searchinput(object sender, EventArgs e)
-        {
-            await LoadAttendanceAsync();
-        }
-
-        private async void shiftselect_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            await LoadAttendanceAsync();
-        }
-        private async void Selecttime_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            await LoadAttendanceAsync();
-        }
         private void Resetbtn_Click(object sender, EventArgs e)
         {
             shiftselect.SelectedIndex = 0;
@@ -310,14 +301,41 @@ namespace Attendance_Monitoring.Usercontrols
             textBox2.Text = "";
         }
 
+        private async void Searchinput(object sender, EventArgs e)
+        {
+            if (IsFiltered == false) return;
+
+            await LoadAttendanceAsync();
+            IsFiltered = true;
+        }
+
+        private async void shiftselect_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (IsFiltered == false) return;
+
+            await LoadAttendanceAsync();
+            IsFiltered = true;
+        }
+        private async void Selecttime_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            IsFiltered = true;
+            await LoadAttendanceAsync();
+        }
+     
         private async void dstart_ValueChanged(object sender, EventArgs e)
         {
+            if (IsFiltered == false) return;
+
             await LoadAttendanceAsync();
+            IsFiltered = true;
         }
 
         private async void dend_ValueChanged(object sender, EventArgs e)
         {
+            if (IsFiltered == false) return;
+
             await LoadAttendanceAsync();
+            IsFiltered = true;
         }
 
         // ================= DATAGRID =================
@@ -414,5 +432,31 @@ namespace Attendance_Monitoring.Usercontrols
             });
         }
 
+        private async void attendancetable_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0)
+                return;
+
+            var product = (P1SA_AttendanceModel)attendancetable.Rows[e.RowIndex].DataBoundItem;
+
+            if (attendancetable.Columns[e.ColumnIndex].Name == "Edit")
+            {
+                using (var edit = new EditAttandance(product, _monitor))
+                {
+                    edit.ShowDialog();
+                }
+            }
+            if (attendancetable.Columns[e.ColumnIndex].Name == "Delete")
+            {
+                DialogResult exit = MessageBox.Show("Are you sure you want to delete this Attendance", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (exit == DialogResult.Yes)
+                {
+                    await _monitor.DeleteAttandance(product.RecordID);
+                    MessageBox.Show("Delete Attendance successful.");
+                    await LoadAttendanceAsync();
+                }
+            }
+        }
     }
 }

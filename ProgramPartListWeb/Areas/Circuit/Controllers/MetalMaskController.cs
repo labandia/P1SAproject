@@ -365,6 +365,29 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
 
         }
 
+        //-----------------------------------------------------------------------------------------
+        //---------------------------- PWEB MASTERLIST METHODS  ----------------------------------------
+        //-----------------------------------------------------------------------------------------
+        [HttpGet]
+        public async Task<ActionResult> GetMastetlistPWDData(
+            string search,
+            int pageNumber,
+            int pageSize)
+        {
+
+            var data = await _mas.GetMetalMaskPWB(search, pageNumber, pageSize);
+            if (data == null || !data.Items.Any()) return JsonNotFound("No Masterlist Data.");
+            return JsonSuccess(data);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> AddPWBMasterlist(MetalMaskModel model)
+        {
+            bool result = await _mas.AddMasterlist(model);
+            if (!result) return JsonPostError("failed to add a new Masterlist.", 500);
+            return JsonCreated(result, "Add Partnum Data Successfully");
+        }
+
 
         // GET: Circuit/MetalMask
         public ActionResult Index() => View();

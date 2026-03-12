@@ -19,16 +19,7 @@
 
 
 
-    <div class="control-group">
-        <label class="control-label">
-            <i class="fas fa-calendar"></i>Model Type
-        </label>
-        <select id="ModelSelect" class="filter-select">
-            <option value="1">FAN </option>
-            <option value="2">UPS </option>
-            <option value="3">Servo </option>
-        </select>
-    </div>
+   
 
     <div class="control-group">
         <button id="addbtn">Add Data</button>
@@ -46,16 +37,10 @@
         <thead>
             <tr>
                 <th>Partnumber </th>
-                <th>Date Received</th>
-                <th>Area </th>
-                <th>Alternate</th>
-                <th>Side</th>
-                <th>Thickness</th>
-                <th>Blocks</th>
-                <th>Date Manufacture</th>
-                <th>Condition</th>
+                <th style="text-align: left;">Metal Mask Part No. </th>
+                <th>ALTERNATE</th>
+                <th>AREA</th>
                 <th>Remarks</th>
-
             </tr>
         </thead>
         <tbody id="TransactionTable">
@@ -82,13 +67,13 @@
 @*=================================================================================*@
 @*=========================== ADD METAL MASK Masterlist ============================*@
 @*=================================================================================*@
-<div class="modal fade modal-lg" id="AddMasterlist" tabindex="-1" role="dialog" data-bs-backdrop="static">
+<div class="modal fade modal-l" id="AddMasterlist" tabindex="-1" role="dialog" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
 
             <div class="modal-body modalwrap">
                 <div class="custom_modal_header">
-                    <h5 id="changeAction">Add Materlist Data</h5>
+                    <h5 id="changeAction">Add PWB Alternate </h5>
 
                     <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
                         <span>&times;</span>
@@ -97,71 +82,31 @@
 
 
                 <form method="post" enctype="multipart/form-data" class="addformcontainer" id="addMasterlistform" autocomplete="off">
-                    <input type="hidden" name="RecordID" id="RecordID" />
-                    <div class="row">
-                        <div class="form_group col-6 col-sm-6 ">
-                            <label>Partnumber : </label>
-                            <input type="text" placeholder="-- N/A --" name="Partnumber" id="Partnumber" required />
-                        </div>
-
-                        <div class="form_group col-6 col-sm-6 ">
-                            <label>Area : </label>
-                            <input type="number" placeholder="-- N/A --" name="AREA" id="AREA" required />
-                        </div>
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>Partnumber : </label>
+                        <input type="text" placeholder="-- N/A --" name="Partnumber" id="Partnumber" required />
                     </div>
 
-                    <div class="row">
-                        <div class="form_group col-6 col-sm-6 ">
-                            <label>Alternate : </label>
-                            <input type="text" placeholder="-- N/A --" name="Alternate" id="Alternate" />
-                        </div>
-
-                        <div class="form_group col-6 col-sm-6">
-                            <label>Side : </label>
-                            <select id="Side" name="Side">
-                                <option value="Single">Single</option>
-                                <option value="Double">Double </option>
-                            </select>
-                        </div>
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>Metal Mask Partnumber : </label>
+                        <input type="text" placeholder="-- N/A --" name="MetalMask" id="MetalMask" required />
                     </div>
 
-                    <div class="row">
-                        <div class="form_group col-6 col-sm-6 ">
-                            <label>Thickness : </label>
-                            <input type="text" placeholder="-- N/A --" name="Thickness" id="Thickness" />
-                        </div>
-
-                        <div class="form_group col-6 col-sm-6">
-                            <label>Blocks :  </label>
-                            <input type="number" placeholder="-- N/A --" name="Blocks" id="Blocks" />
-                        </div>
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>Alternate : </label>
+                        <input type="text" placeholder="-- N/A --" name="Alternate" id="Alternate" />
+                    </div>
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>Area : </label>
+                        <input type="text" placeholder="-- N/A --" name="AREA" id="AREA" required />
                     </div>
 
-                    <div class="row">
-                        <div class="form_group col-6 col-sm-6 ">
-                            <label>Condition : </label>
-                            <input type="text" placeholder="-- N/A --" name="Condition" id="Condition" />
-                        </div>
-
-                        <div class="form_group col-6 col-sm-6">
-                            <label>Remarks : </label>
-                            <input type="text" placeholder="-- N/A --" name="Remarks" id="Remarks" />
-                        </div>
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Remarks : </label>
+                        <input type="text" placeholder="-- N/A --" name="Remarks" id="Remarks" />
                     </div>
+                   
 
-                    <div class="row">
-                        <div class="form_group col-6 col-sm-6 ">
-                            <label>Date Received: </label>
-                            <input type="date" placeholder="-- N/A --" name="DateReceived" id="DateReceived" />
-                        </div>
-
-                        <select id="ModelType" name="ModelType" class="filter-select">
-                            <option value="0">-- All Types --  </option>
-                            <option value="1">FAN </option>
-                            <option value="2">UPS </option>
-                            <option value="3">Servo </option>
-                        </select>
-                    </div>
 
                     <div class="d-flex justify-content-between align-items-center mt-4">
                         <div>
@@ -203,11 +148,9 @@
     $("#addMasterlistform").on('submit', async function (e) {
         e.preventDefault();
 
-        let url = isAction === 0 ? '@Url.Action("UpsertMasterlist", "MetalMask")' : '@Url.Action("EditMasterlist", "MetalMask")';
-
         let formData = new FormData(e.target);
         const data = Object.fromEntries(formData);
-        let res = await postMethodPublic(url, formData);
+        let res = await postMethodPublic('@Url.Action("AddPWBMasterlist", "MetalMask")', formData);
         if (res?.Success) {
             GetMetalMaskMasterlist();
             $("#AddMasterlist").modal("hide");
@@ -237,11 +180,10 @@
      let tableBody = $("#TransactionTable");
 
      try {
-         const url = '@Url.Action("GetMastetlistData", "MetalMask")';
+         const url = '@Url.Action("GetMastetlistPWDData", "MetalMask")';
 
          let res = await GetMethodPublic(url, {
              search: $("#searchInput").val() || "",
-             ModelType: $("#ModelSelect").val() || 0,
              pageNumber: currentPage || 1,
              pageSize: pageSize || 10
          });
@@ -262,20 +204,16 @@
                       // Image Display
                       html += `
                           <tr class='cleanTable' data-id="${row.RecordID}">
-                                <td style='font-weight: 600;'>${row.Partnumber ? row.Partnumber : "-"}</td>
-                                <td >${row.DateReceived ? formatJsonDate(row.DateReceived) : "-"} </td>
-                                <td >${row.AREA ? row.AREA : "-"}</td>
+                                <td style='font-weight: 600; text-align:center;'>${row.Partnumber ? row.Partnumber : "-"}</td>
+                                <td >${row.MetalMask ? row.MetalMask : "-"}</td>
                                 <td style='text-align: center;'>${row.Alternate ? row.Alternate : "-"}</td>
-                                <td style='text-align: center;'>${row.Side ? row.Side : "-"}</td>
-                                <td style='text-align: center;'>${row.Thickness ? row.Thickness : "-"}</td>
-                                <td style='text-align: center;'>${row.Blocks ? row.Blocks : "-"}</td>
-                                <td >${row.DateManufacture ? formatJsonDate(row.DateManufacture) : "-"} </td>
-                                <td style='text-align: center;'>${row.Condition ? row.Condition : "-"}</td>
-                                <td >${row.Remarks ? row.Remarks : "-"}</td>
-
+                                <td style='text-align: center;'>${row.AREA ? row.AREA : "-"}</td>
+                                <td style='text-align: center;'>${row.Remarks ? row.Remarks : "-"}</td>
                           </tr>
                       `;
                   });
+
+
 
                   tableBody.append(html);
 

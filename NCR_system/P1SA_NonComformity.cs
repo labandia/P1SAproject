@@ -40,34 +40,19 @@ namespace NCR_system
 
         private async void P1SA_NonComformity_Load(object sender, EventArgs e)
         {
-            this.FormBorderStyle = FormBorderStyle.None;
-            this.WindowState = FormWindowState.Maximized;
-            this.TopMost = true;
+            //this.FormBorderStyle = FormBorderStyle.None;
+            //this.WindowState = FormWindowState.Maximized;
+            //this.TopMost = true;
 
             await LoadCustomerComplaint();
         }
 
         // ===================== BUTTON EVENTS =====================
 
-        private async void SDCbtn_Click(object sender, EventArgs e)
-        {
-            await LoadCustomerComplaint();
-        }
-
-        private async void Shipbtn_Click(object sender, EventArgs e)
-        {
-            await LoadShipRejected();
-        }
-
-        private async void rejectBtn_Click(object sender, EventArgs e)
-        {
-            await LoadRejected();
-        }
-
-        private async void processbtn_Click(object sender, EventArgs e)
-        {
-            await LoadInprocess();
-        }
+        private async void SDCbtn_Click(object sender, EventArgs e) => await LoadCustomerComplaint();
+        private async void Shipbtn_Click(object sender, EventArgs e) => await LoadShipRejected(); 
+        private async void rejectBtn_Click(object sender, EventArgs e) => await LoadRejected();
+        private async void processbtn_Click(object sender, EventArgs e) => await LoadInprocess();
 
         // ===================== LOAD METHODS =====================
 
@@ -151,10 +136,6 @@ namespace NCR_system
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
 
         private void button12_Click(object sender, EventArgs e)
         {

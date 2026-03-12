@@ -228,27 +228,26 @@ tr {
     border-radius: 6px;
     font-size: 12px;
     font-weight: 500;
+    color: #fff;
 }
+
 
 
 .molding {
-    background-color: rgba(169, 9, 183, 0.1);
-    color: #b7099a;
+    background-color: rgb(239, 65, 255)
 }
 
 .press {
-    background-color: rgba(240, 76, 76, 0.1);
-    color: #b41c1c;
+    background-color: #0f57b4;
 }
 
 .rotor {
-    background-color: rgba(199, 199, 199, 0.1);
-    color: #110d0f;
+    background-color: #c5a309;
+ 
 }
 
 .winding {
-    background-color: rgba(227, 238, 67, 0.1);
-    color: #836d0c;
+    background-color: rgb(10, 126, 44);
 }
 
 .circuit {
@@ -256,11 +255,13 @@ tr {
     color: #0b31ad;
 }
 
-.p1sa-sub {
-    background-color: rgba(11, 173, 165, 0.1);
-    color: #086a83;
+.processcontrol {
+    background-color: rgba(108, 11, 173);
 }
 
+.p1sa-sub {
+    background-color: rgba(173, 62, 11);
+}
 /* Year-Month Highlights */
 .year-month-highlight {
     background-color: rgba(67, 97, 238, 0.1);

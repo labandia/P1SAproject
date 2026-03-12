@@ -1,4 +1,5 @@
-﻿using ProgramPartListWeb.Areas.Circuit.Interface;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using ProgramPartListWeb.Areas.Circuit.Interface;
 using ProgramPartListWeb.Areas.Circuit.Models;
 using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Models;
@@ -233,6 +234,52 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
             return SqlDataAccess.ExecuteAsync(strquery, masterlist);
         }
 
-      
+        public async Task<PagedResult<MetalMaskPWBModel>> GetMetalMaskPWB(
+            string search, int pageNumber, int pageSize)
+        {
+            int offset = (pageNumber - 1) * pageSize;
+
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+            string countstring = @"SELECT COUNT(*) FROM MetalMask_MasterlistPWB 
+                                   WHERE IsDelete = 0 ";
+
+            string strquery = @"SELECT Partnumber
+                                  ,MetalMask
+                                  ,Alternate
+                                  ,AREA
+                                  ,Remarks
+                                  ,IsDelete
+                              FROM MetalMask_MasterlistPWB
+                              WHERE IsDelete = 0 ";
+
+            // Search Partnumber
+            if (!string.IsNullOrEmpty(search))
+            {
+                strquery += $@" AND (Partnumber LIKE '%' + @Search + '%')";
+                countstring += $@" AND  Partnumber LIKE '%' + @Search + '%')";
+                parameters.Add("@Search", search);
+            }
+
+            // If the Get Data has a Pagination function
+            if (pageSize != 0)
+            {
+                strquery += $@" ORDER BY Partnumber ASC
+                            OFFSET @Offset ROWS
+                            FETCH NEXT @PageSize ROWS ONLY";
+                parameters.Add("@Offset", offset);
+                parameters.Add("@PageSize", pageSize);
+            }
+            var items = await SqlDataAccess.GetDataAsync<MetalMaskPWBModel>(strquery, parameters);
+            int TotalRecords = await SqlDataAccess.ExecuteScalarAsync(countstring, parameters);
+
+            return new PagedResult<MetalMaskPWBModel>
+            {
+                Items = items,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalRecords = TotalRecords
+            };
+        }
     }
 }

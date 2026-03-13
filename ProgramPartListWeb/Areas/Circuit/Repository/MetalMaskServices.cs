@@ -281,5 +281,11 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                 TotalRecords = TotalRecords
             };
         }
+
+        public Task<bool> AddPWBMetalMask(MetalMaskPWBModel masterlist)
+        {
+            return SqlDataAccess.ExecuteAsync($@"INSERT INTO MetalMask_MasterlistPWB(Partnumber, MetalMask, Alternate, AREA, Remarks)
+                                                 VALUES(@Partnumber, @MetalMask, @Alternate, @AREA, @Remarks)", masterlist);
+        }
     }
 }

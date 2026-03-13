@@ -122,6 +122,7 @@
             this.TimeOutText.Size = new System.Drawing.Size(99, 25);
             this.TimeOutText.TabIndex = 32;
             this.TimeOutText.Value = new System.DateTime(2026, 3, 12, 15, 30, 0, 0);
+            this.TimeOutText.ValueChanged += new System.EventHandler(this.TimeOutText_ValueChanged);
             // 
             // regText
             // 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -162,15 +163,15 @@ namespace Attendance_Monitoring.Repositories
                         SELECT TOP 1 RecordID
                         FROM P1SA_AttendanceMonitor
                         WHERE Employee_ID = @Employee_ID
-                        AND CAST(TimeOut AS DATE) = CAST(GETDATE() AS DATE)";
+                       AND TimeOut IS NOT NULL
+                       AND CONVERT(date, TimeOut) = CONVERT(date, GETDATE())";
 
                 var alreadyTimedOut =
                     await SqlDataAccess.GetDataAsync<CheckBlankRecordTimeOut>(timeoutCheckQuery, 
                     new { Employee_ID = EmployeeID });
 
-                if (alreadyTimedOut != null)
+                if (alreadyTimedOut != null && alreadyTimedOut.Any())
                 {
-                    MessageBox.Show("⚠ Employee already timed out today.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return new ApiResponse<P1SA_AttendanceModel>
                     {
                         Success = false,
@@ -318,8 +319,7 @@ namespace Attendance_Monitoring.Repositories
         {
             return SqlDataAccess.ExecuteAsync($@"
                 UPDATE P1SA_AttendanceMonitor 
-                SET TimeIn = @TimeIn, TimeOut = @TimeOut, 
-                LateTime = @LateTime, Regular = @Regular, 
+                SET TimeIn = @TimeIn, TimeOut = @TimeOut, Regular = @Regular, 
                 Overtime = @Overtime WHERE RecordID = @RecordID",
                 new
                 {
@@ -376,6 +376,8 @@ namespace Attendance_Monitoring.Repositories
                 " AND pc.TimeOut is Not null ORDER BY pc.TimeOut DESC";
 
             var IsRecord = await SqlDataAccess.GetDataAsync<P1SA_AttendanceModel>(strquery, parameters);
+            Debug.WriteLine(shifts);
+            Debug.WriteLine(strquery);
 
             bool hasRecords = IsRecord.Any();
             return new ApiResponse<P1SA_AttendanceModel>
@@ -429,6 +431,7 @@ namespace Attendance_Monitoring.Repositories
             strquery += (selectime == 0) ?
                 " ORDER BY pc.RecordID DESC" :
                 " AND pc.TimeOut is Not null ORDER BY pc.TimeOut DESC";
+
 
             var IsRecord = await SqlDataAccess.GetDataAsync<P1SA_SummaryDataModel>(strquery, parameters);
 

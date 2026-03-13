@@ -12,6 +12,7 @@ namespace Attendance_Monitoring.View.V2
         public readonly P1SA_AttendanceModel _p1sa;
         private readonly IAttendanceMonitor _attend;
 
+        private DateTime _timeIn;
 
         public EditAttandance(P1SA_AttendanceModel p1sa, IAttendanceMonitor attend)
         {
@@ -24,10 +25,8 @@ namespace Attendance_Monitoring.View.V2
             Fullname.Text = _p1sa.Fullname;
 
             // Hide timeout controls if no timeout
-            if (string.IsNullOrEmpty(_p1sa.TimeOut)){
-                label4.Visible = false; 
-                TimeOutText.Visible = false;
-            }
+            TimeOutText.Visible = !string.IsNullOrEmpty(_p1sa.TimeOut);
+            label4.Visible = TimeOutText.Visible;
 
             InitializeData();
 
@@ -45,8 +44,20 @@ namespace Attendance_Monitoring.View.V2
                 MessageBox.Show("Invalid TimeIn format.");
                 return;
             }
+            if (!DateTime.TryParseExact(
+                  _p1sa.TimeOut,
+                  "MM/dd/yy HH:mm:ss",
+                  CultureInfo.InvariantCulture,
+                  DateTimeStyles.None,
+                  out DateTime DateOut))
+            {
+                MessageBox.Show("Invalid TimeIn format.");
+                return;
+            }
 
+            _timeIn = DateIn;
             TimeInText.Value = DateIn;
+            TimeOutText.Value = DateOut;
 
             if (!string.IsNullOrEmpty(_p1sa.TimeOut))
             {
@@ -83,34 +94,14 @@ namespace Attendance_Monitoring.View.V2
         }
 
         public void displaytime(DateTime DateIn)
-        {
-            DateTime? DateOut = null;
-            if (!string.IsNullOrEmpty(_p1sa.TimeOut))
-            {
-                DateOut = DateTime.ParseExact(
-                    _p1sa.TimeOut,
-                    "MM/dd/yy HH:mm:ss",
-                    System.Globalization.CultureInfo.InvariantCulture
-                );
-            }
+        {       
+            DateTime DateOut = TimeOutText.Value;
 
-            double regHours = 0;
-            double overStr = 0;
-
-            if (DateOut.HasValue)
-            {
-                regHours = Timeprocess.CalculateWorkingHoursV2(DateIn, DateOut.Value);
-                MessageBox.Show($"Regular Hours: {regHours}");  
-                overStr = ComputetheOvertime(DateIn, DateOut.Value);
-                MessageBox.Show($"Overtime : {overStr}");
-            }
-
+            double regHours = Timeprocess.CalculateWorkingHoursV2(DateIn, DateOut);
+            double overStr = ComputetheOvertime(DateIn, DateOut);
+            
             double getotal = regHours + overStr;
 
-            
-
-            if (DateOut.HasValue)
-                TimeOutText.Value = DateOut.Value;
 
             regText.Text = regHours.ToString("0.00");
             overText.Text = overStr.ToString("0.00");
@@ -120,36 +111,32 @@ namespace Attendance_Monitoring.View.V2
 
         public double ComputetheOvertime(DateTime timein, DateTime timeout)
         {
-            DateTime overtimestart;
+            DateTime overtimeStart;
 
-            if (timein.TimeOfDay >= new TimeSpan(5, 0, 0) && timein.TimeOfDay < new TimeSpan(6, 30, 0))
+            TimeSpan tin = timein.TimeOfDay;
+
+            if (tin <= new TimeSpan(6, 30, 0))
             {
-                overtimestart = new DateTime(
-                    timein.Year,
-                    timein.Month,
-                    timein.Day,
-                    15, 30, 0);
+                // First shift (06:00)
+                overtimeStart = timein.Date.AddHours(15).AddMinutes(30);
             }
-            else if (timein.TimeOfDay >= new TimeSpan(6, 30, 0) && timein.TimeOfDay < new TimeSpan(7, 30, 0))
+            else if (tin <= new TimeSpan(7, 59, 59))
             {
-                overtimestart = new DateTime(
-                    timein.Year,
-                    timein.Month,
-                    timein.Day,
-                    16, 30, 0);
+                // Second shift (07:30)
+                overtimeStart = timein.Date.AddHours(16).AddMinutes(30);
             }
             else
             {
-                overtimestart = new DateTime(
-                    timein.Year,
-                    timein.Month,
-                    timein.Day,
-                    17, 30, 0);
+                // Third shift (08:30)
+                overtimeStart = timein.Date.AddHours(17).AddMinutes(30);
             }
 
-            double overtimestr = Timeprocess.CalculateOTHoursV2(overtimestart, timeout);
+            return Timeprocess.CalculateOTHoursV2(overtimeStart, timeout);
+        }
 
-            return overtimestr;
+        private void TimeOutText_ValueChanged(object sender, EventArgs e)
+        {
+            displaytime(_timeIn);
         }
     }
 }

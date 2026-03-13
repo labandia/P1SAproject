@@ -381,9 +381,9 @@ namespace ProgramPartListWeb.Areas.Circuit.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddPWBMasterlist(MetalMaskModel model)
+        public async Task<ActionResult> AddPWBMasterlist(MetalMaskPWBModel model)
         {
-            bool result = await _mas.AddMasterlist(model);
+            bool result = await _mas.AddPWBMetalMask(model);
             if (!result) return JsonPostError("failed to add a new Masterlist.", 500);
             return JsonCreated(result, "Add Partnum Data Successfully");
         }

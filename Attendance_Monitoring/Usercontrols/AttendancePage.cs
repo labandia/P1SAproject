@@ -250,7 +250,7 @@ namespace Attendance_Monitoring.Usercontrols
 
             if (!result.Success)
             {
-                MessageBox.Show(result.Message);
+                MessageBox.Show(result.Message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 

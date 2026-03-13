@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using ProgramPartListWeb.Areas.Circuit.Interface;
 using ProgramPartListWeb.Areas.Circuit.Models;
-using ProgramPartListWeb.Areas.Hydroponics.Interface;
-using ProgramPartListWeb.Areas.Hydroponics.Models;
 using ProgramPartListWeb.Controllers;
 using ProgramPartListWeb.Helper;
 

@@ -44,6 +44,8 @@
             this.label7 = new System.Windows.Forms.Label();
             this.gTotalText = new System.Windows.Forms.TextBox();
             this.Cancebtn = new System.Windows.Forms.Button();
+            this.label6 = new System.Windows.Forms.Label();
+            this.LateText = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // IDText
@@ -102,7 +104,7 @@
             this.Savebtn.ForeColor = System.Drawing.Color.White;
             this.Savebtn.Image = ((System.Drawing.Image)(resources.GetObject("Savebtn.Image")));
             this.Savebtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Savebtn.Location = new System.Drawing.Point(218, 390);
+            this.Savebtn.Location = new System.Drawing.Point(218, 395);
             this.Savebtn.Name = "Savebtn";
             this.Savebtn.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
             this.Savebtn.Size = new System.Drawing.Size(192, 46);
@@ -219,18 +221,43 @@
             // Cancebtn
             // 
             this.Cancebtn.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Cancebtn.Location = new System.Drawing.Point(35, 390);
+            this.Cancebtn.Location = new System.Drawing.Point(35, 395);
             this.Cancebtn.Name = "Cancebtn";
             this.Cancebtn.Size = new System.Drawing.Size(169, 46);
             this.Cancebtn.TabIndex = 39;
             this.Cancebtn.Text = "Cancel";
             this.Cancebtn.UseVisualStyleBackColor = true;
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
+            this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.label6.Location = new System.Drawing.Point(305, 190);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(66, 17);
+            this.label6.TabIndex = 41;
+            this.label6.Text = "Late Time";
+            // 
+            // LateText
+            // 
+            this.LateText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.LateText.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.LateText.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LateText.Location = new System.Drawing.Point(308, 220);
+            this.LateText.Multiline = true;
+            this.LateText.Name = "LateText";
+            this.LateText.ReadOnly = true;
+            this.LateText.Size = new System.Drawing.Size(102, 37);
+            this.LateText.TabIndex = 40;
+            // 
             // EditAttandance
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(451, 489);
+            this.ClientSize = new System.Drawing.Size(451, 501);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.LateText);
             this.Controls.Add(this.Cancebtn);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.gTotalText);
@@ -271,5 +298,7 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox gTotalText;
         private System.Windows.Forms.Button Cancebtn;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox LateText;
     }
 }

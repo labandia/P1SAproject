@@ -407,46 +407,14 @@
 
 
 @*<script type="module" asp-append-version="true">
-         import {
-             getMethod,
-             postMethod
-        } from  '@Url.Content("~/Scripts/modules/index.js")';
+        import { initMoldiePage }
+        from '@Url.Content("~/Scripts/Systems/MoldieModule.js?v=15")';
+
+        initMoldiePage();
+</script>*@
 
 
-        class MoldieDailyController {
-            constructor() {
-                this.isFirstLoad = true;
-                this.isYearLoad = true;
-                this.isSeletedSearch = 0;
 
-                this.DailyData = [];
-
-                this.Tablebody = document.getElementById("DieMoldDaily");
-                this.Tablebody = document.getElementById("dieMoldMasterlist");
-
-                this.yearSelect = $("#yearselectDaily");
-            }
-
-            async init() {
-                this.BindEvents();
-            }
-
-            BindEvents() {
-
-            }
-
-            async GetMoldDieDaily() {
-
-            }
-        };
-
-
-        /* ================= INIT ================= */
-
-        document.addEventListener("DOMContentLoaded", () => {
-            new MoldieDailyController();
-        });
-    </script>*@
 
 
 
@@ -1119,8 +1087,8 @@
                    cancelButtonColor: "#d33",
                    confirmButtonText: "Yes, delete it!"
                }).then( async (result) => {
-                   if (result.isConfirmed) {
-                       @*let res = await postMethod('@Url.Action("DeleteDailyMoldDieMonitor", "Mold")', { ID: rowIndex });
+                   if (result.isConfirmed) {-->-->
+                       <!--@*let res = await postMethod('@Url.Action("DeleteDailyMoldDieMonitor", "Mold")', { ID: rowIndex });
                        if (res.Success && res) {
 
                            Swal.fire({
@@ -1134,8 +1102,8 @@
                            });
 
 
-                       }*@
-                   }
+                       }*@-->
+                   <!--}
                });
 
            });

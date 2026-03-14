@@ -60,25 +60,22 @@ namespace NCR_system.View.AddForms
 
                 if (_proc == 0)
                 {
-                    Debug.WriteLine("Rejected " + _rej);
                     result = await _ship.InsertShipRejectData(obj, 0);
-
                     if (result)
                     {
                         MessageBox.Show("Data saved successfully.");
-                        await _rej.DisplayRejected(0);
-                        this.Close();
+                        DialogResult = DialogResult.OK;
+                        Close();
                     }
                 }
                 else
                 {
-                    Debug.WriteLine("Shipment " + _shipcontrol);
                     result = await _ship.InsertShipRejectData(obj, 1);
                     if (result)
                     {
                         MessageBox.Show("Data saved successfully.");
-                        await _shipcontrol.DisplayRejected(1);
-                        this.Close();
+                        DialogResult = DialogResult.OK;
+                        Close();
                     }
 
                 }
@@ -160,7 +157,7 @@ namespace NCR_system.View.AddForms
 
         private void button12_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void button1_Click(object sender, EventArgs e)

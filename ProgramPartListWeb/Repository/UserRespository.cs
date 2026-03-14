@@ -49,39 +49,76 @@ namespace ProgramPartListWeb.Data
         {
             try
             {
-                // Step 1: Ensure user exists
-                string strUsers = "SELECT COUNT(*) FROM Users WHERE Employee_ID =@Employee_ID";
-                bool userExists = await SqlDataAccess.CheckDataAsync(strUsers, new { Employee_ID = reg.Employee_ID });
-                // If the User doesnt exist in the Users Table
-                if (!userExists)
+                // Insert user if not exist 
+                string  insertUser = @"
+                        IF NOT EXISTS (SELECT 1 FROM Users WHERE Employee_ID = @Employee_ID)
+                        BEGIN
+                            INSERT INTO Users (Employee_ID, FullName, Email)
+                            VALUES (@Employee_ID, @FullName, @Email)
+                        END";
+
+                await SqlDataAccess.ExecuteAsync(insertUser, reg);
+
+                // Get User ID
+                string getUserId = @"SELECT User_ID FROM Users WHERE Employee_ID = @Employee_ID";
+                int? userId = await SqlDataAccess.ExecuteScalarAsync(getUserId, new { reg.Employee_ID });
+
+                if (userId == null)
+                    return false;
+
+                // Update email only if provided
+                if (!string.IsNullOrWhiteSpace(reg.Email))
                 {
-                    // INSERT a new Employee ID 
-                    string insUser = @"
-                        INSERT INTO Users (Employee_ID, FullName, Email)
-                        SELECT @Employee_ID, @FullName, @Email
-                        WHERE NOT EXISTS (
-                            SELECT 1 FROM Users WHERE Employee_ID = @Employee_ID
-                        )";
-                    await SqlDataAccess.ExecuteAsync(insUser, reg);
+                    string updateEmail = @"UPDATE Users SET Email = @Email WHERE User_ID = @User_ID";
+                    await SqlDataAccess.ExecuteAsync(updateEmail, new { User_ID = userId, reg.Email });
                 }
 
-                // Step 2: Get User ID
-                string strUserId = "SELECT User_ID FROM Users WHERE Employee_ID = @Employee_ID";
-                int? userId = await SqlDataAccess.ExecuteScalarAsync(strUserId, new { reg.Employee_ID });
-                if (userId == null) return false;
+                // Check if account exists
+                string checkAccountQuery = @"
+                        SELECT COUNT(*) 
+                        FROM UserAccounts 
+                        WHERE User_ID = @User_ID 
+                        AND Project_ID = @Project_ID";
+
+                bool accountExists = await SqlDataAccess.CheckDataAsync(
+                    checkAccountQuery,
+                    new { User_ID = userId.Value, reg.Project_ID });
+
+                return accountExists;
+
+                //// Step 1: Ensure user exists
+                //string strUsers = "SELECT COUNT(*) FROM Users WHERE Employee_ID =@Employee_ID";
+                //bool userExists = await SqlDataAccess.CheckDataAsync(strUsers, new { Employee_ID = reg.Employee_ID });
+                //// If the User doesnt exist in the Users Table
+                //if (!userExists)
+                //{
+                //    // INSERT a new Employee ID 
+                //    string insUser = @"
+                //        INSERT INTO Users (Employee_ID, FullName, Email)
+                //        SELECT @Employee_ID, @FullName, @Email
+                //        WHERE NOT EXISTS (
+                //            SELECT 1 FROM Users WHERE Employee_ID = @Employee_ID
+                //        )";
+                //    await SqlDataAccess.ExecuteAsync(insUser, reg);
+                //}
+
+                //// Step 2: Get User ID
+                //string strUserId = "SELECT User_ID FROM Users WHERE Employee_ID = @Employee_ID";
+                //int? userId = await SqlDataAccess.ExecuteScalarAsync(strUserId, new { reg.Employee_ID });
+                //if (userId == null) return false;
 
 
-                // Optional Query if does have a Email 
-                string Updateinfor = @"UPDATE Users SET Email =@Email WHERE User_ID = @User_ID";
-                await SqlDataAccess.ExecuteAsync(Updateinfor, new { User_ID = userId, Email = reg.Email });
+                //// Optional Query if does have a Email 
+                //string Updateinfor = @"UPDATE Users SET Email =@Email WHERE User_ID = @User_ID";
+                //await SqlDataAccess.ExecuteAsync(Updateinfor, new { User_ID = userId, Email = reg.Email });
 
 
-                // Check if user Exist in the database
-                string strAccounts = $@"SELECT COUNT(*) 
-                                        FROM UserAccounts 
-                                        WHERE (User_ID = @User_ID AND Project_ID = @Project_ID)";
-                bool checkAccount = await SqlDataAccess.CheckDataAsync(strAccounts, new { User_ID = userId.Value, Project_ID = reg.Project_ID });
-                return checkAccount;
+                //// Check if user Exist in the database
+                //string strAccounts = $@"SELECT COUNT(*) 
+                //                        FROM UserAccounts 
+                //                        WHERE (User_ID = @User_ID AND Project_ID = @Project_ID)";
+                //bool checkAccount = await SqlDataAccess.CheckDataAsync(strAccounts, new { User_ID = userId.Value, Project_ID = reg.Project_ID });
+                //return checkAccount;
             }
             catch(Exception ex)
             {
@@ -93,25 +130,43 @@ namespace ProgramPartListWeb.Data
         {
             try
             {
-                string strUserId = "SELECT User_ID FROM Users WHERE Employee_ID = @Employee_ID";
-                int? userId = await SqlDataAccess.ExecuteScalarAsync(strUserId, new { reg.Employee_ID });
-                if (userId == 0) return false;
+                // Get User ID
+                const string getUserIdQuery =
+                    "SELECT User_ID FROM Users WHERE Employee_ID = @Employee_ID";
 
-                // if user account doesnt Exist
-                string insAccout = $@"INSERT INTO UserAccounts(User_ID, Project_ID, Username, Password, Role_ID) 
-                                    VALUES(@User_ID, @Project_ID, @Username, @Password, @Role_ID)";
-                return await SqlDataAccess.ExecuteAsync(insAccout, new
+                int? userId = await SqlDataAccess.ExecuteScalarAsync(
+                    getUserIdQuery,
+                    new { reg.Employee_ID });
+
+                if (userId == null)
+                    return false;
+
+                // Insert account only if it does not exist
+                const string insertAccountQuery = @"
+                    IF NOT EXISTS (
+                        SELECT 1 
+                        FROM UserAccounts
+                        WHERE User_ID = @User_ID AND Project_ID = @Project_ID
+                    )
+                    BEGIN
+                        INSERT INTO UserAccounts
+                            (User_ID, Project_ID, Username, Password, Role_ID)
+                        VALUES
+                            (@User_ID, @Project_ID, @Username, @Password, @Role_ID)
+                    END";
+
+                return await SqlDataAccess.ExecuteAsync(insertAccountQuery, new
                 {
-                    User_ID = userId,
-                    Project_ID = reg.Project_ID,
-                    Username = reg.Username,
-                    Password = reg.Password,
-                    Role_ID = reg.Role_ID
+                    User_ID = userId.Value,
+                    reg.Project_ID,
+                    reg.Username,
+                    reg.Password,
+                    reg.Role_ID
                 });
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                Debug.WriteLine("Error" + ex.Message);
+                Debug.WriteLine($"Error: {ex.Message}");
                 return false;
             }
         }

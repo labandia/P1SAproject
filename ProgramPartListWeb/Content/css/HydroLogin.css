@@ -18,11 +18,11 @@ body {
     overflow: hidden;
 }
 
-
+.form-group input{
+    margin-top: .5em;
+}
 
 button {
-    margin-top: 18px;
-    width: 100%;
     padding: 10px;
     border-radius: 8px;
     border: none;
@@ -65,7 +65,6 @@ img.loaded {
 
 label {
     display: block;
-    margin-top: 12px;
     font-size: 14px;
     font-weight: 600;
 }
@@ -73,7 +72,6 @@ label {
 input {
     width: 100%;
     padding: 10px;
-    margin-top: 6px;
     border-radius: 8px;
     border: none;
     outline: none;
@@ -82,6 +80,7 @@ input {
 }
 
 .sign-in-btn {
+    width: 100%;
     background: hsl(178, 97%, 24%);
     padding: .7rem 1.25rem;
     transition: all 0.3s ease;
@@ -110,9 +109,7 @@ input {
     width: 80%;
 }
 
-.forgetbtn{
-    text-decoration: underline;
-}
+
 
 .logo span {
     color: #3498db;
@@ -320,7 +317,7 @@ input {
 }
 
 .primarybtn {
-    background: #3498db;
+    background: hsl(178, 97%, 24%);
 }
 
 
@@ -346,3 +343,107 @@ input {
         background: rgba(255, 255, 255, 0.8);
         transform: scale(1.1);
     }
+
+    
+
+
+.formcontainer {
+    width: min(100%, 1200px);
+    margin: 0 auto;
+    background: #FFFFFF;
+    padding: 2em;
+    border-radius: .5em;
+    margin-bottom: 3em;
+    margin-inline: auto;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+}
+
+
+
+.addformcontainer {
+    padding: .5em;
+}
+
+    .formcontainer h5, .addformcontainer h5, .formcontainer label, .addformcontainer label {
+        font-weight: 500;
+        color: #222;
+    }
+
+    .formcontainer label, .addformcontainer label {
+        font-size: .836rem;
+    }
+
+    .formcontainer input, .formcontainer textarea, .addformcontainer input, .addformcontainer textarea, .RequestedByText, .DateInputText, .PurposeText {
+        width: 100%;
+        margin: .5em 0 1em 0;
+        border: 1px solid #A5A1AA;
+        padding: .6em 1em;
+        font-size: .75rem;
+        border-radius: .3em;
+    }
+
+
+
+        .formcontainer input[type='checkbox'] {
+            width: auto;
+            margin: 0;
+            padding: 0;
+        }
+
+    .formcontainer textarea, .addformcontainer textarea {
+        width: 100%;
+        margin: .5em 0 1em 0;
+        border: 1px solid #A5A1AA;
+        padding: .6em;
+        font-size: .938rem;
+    }
+
+.form_group label {
+    font-weight: 600;
+}
+
+
+.formcontainer input:focus, .formcontainer textarea:focus, .addformcontainer input:focus, .addformcontainer textarea:focus {
+    outline: 1px solid hsl(175, 77%, 26%);
+}
+
+
+
+
+.custom_modal_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .5em;
+}
+
+.custom_modal__icon {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+}
+
+.custom_icon_container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    padding: 1em;
+    background: hsl(209, 84%, 88%);
+    color: hsl(209, 80%, 50%);
+}
+
+    .custom_icon_container i {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        font-size: 3rem !important;
+        transform: translate(-50%, -50%);
+    }
+
+.custom_modal_header h5 {
+    font-weight: 600;
+}

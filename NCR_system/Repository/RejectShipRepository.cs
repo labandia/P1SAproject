@@ -5,31 +5,56 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace NCR_system.Repository
 {
     internal class RejectShipRepository : IShipRejected
     {
-        public Task<List<CustomerTotalModel>> GetCustomersOpenItem(int type = 0, int sec = 0)
+        public Task<List<CustomerTotalModel>> GetRejectOpenItem(int section, int Stats)
+        {
+
+            string strsection = section != 0 ? $" AND c.SectionID = {section}" : string.Empty;
+
+            string strsql = $@"SELECT  
+                                s.DepartmentName,
+                                COALESCE(COUNT(c.Status),0) AS totalOpen
+                            FROM PC_Section s
+                            LEFT JOIN PC_RejectShip c  
+                                ON c.SectionID = s.SectionID
+                                AND c.IsDeleted = 0 
+                                AND c.Status = @Status 
+                                AND c.Process = 0
+                            {strsection}
+                            GROUP BY 
+                                s.SectionID,
+                                s.DepartmentName
+                            ORDER BY
+                                s.SectionID ASC;";
+
+            return SqlDataAccess.GetDataAsync<CustomerTotalModel>(strsql, new { Status = Stats });
+        }
+
+        public Task<List<CustomerTotalModel>> GetCustomersOpenItem(int Stats, int type = 0, int sec = 0)
         {
             string IsStatus = type == 0 ? "1" : "1, 2, 3";
 
 
             string strquery = $@"SELECT 
                                 s.DepartmentName,
-                                SUM(CASE WHEN c.Status IN ({IsStatus}) AND c.Process = @Process THEN 1 ELSE 0 END) AS TotalOpen,
-                                SUM(CASE WHEN c.Status = 0 AND c.Process = @Process THEN 1 ELSE 0 END) AS TotalClosed
+                                SUM(CASE WHEN c.Status IN ({IsStatus}) 
+                                AND c.Process = @Process THEN 1 ELSE 0 END) AS TotalOpen
                             FROM PC_Section s
                             LEFT JOIN PC_RejectShip c
-                                ON c.SectionID = s.SectionID ";
+                                ON c.SectionID = s.SectionID WHERE c.IsDeleted = 0 
+                            AND c.Status = @Status ";
                           
-
             Dictionary<string, object> parameters = new Dictionary<string, object>();
-
+            parameters.Add("@Status", Stats);
             // Filter By Process 
             if (sec != 0)
             {
-                strquery += @"WHERE c.IsDeleted = 0 AND s.SectionID = @SectionID";
+                strquery += @" AND s.SectionID = @SectionID";
                 parameters.Add("@SectionID", sec);
             }
 
@@ -41,6 +66,8 @@ namespace NCR_system.Repository
                                 s.SectionID ASC;";
 
             parameters.Add("@Process", type);
+
+
 
             return SqlDataAccess.GetDataAsync<CustomerTotalModel>(strquery, parameters);
         }
@@ -56,6 +83,13 @@ namespace NCR_system.Repository
 
             Dictionary<string, object> parameters = new Dictionary<string, object>();
 
+            string IsStatus = proc == 0 ? "1" : "1, 2, 3";
+
+            if(stats == 0)
+            {
+                IsStatus = "0";
+            }
+
             string strquery = $@"SELECT 
 	                          	RecordID,
 	                            FORMAT(DateIssued, 'MM/dd/yyyy') as DateIssued,
@@ -63,14 +97,10 @@ namespace NCR_system.Repository
 	                            RegNo,IssueGroup,SectionID,
 	                            ModelNo,Quantity,Contents,Status,Process
                             FROM PC_RejectShip
-                            WHERE IsDeleted = 0";
+                            WHERE IsDeleted = 0 AND Status IN ({IsStatus}) ";
 
-            // Filter By Process 
-            if (proc != 0)
-            {
-                strquery += " AND Process = @Process";
-                parameters.Add("@Process", proc);
-            }
+            strquery += " AND Process = @Process";
+            parameters.Add("@Process", proc);
 
 
             // Filter By Section 
@@ -80,12 +110,7 @@ namespace NCR_system.Repository
                 parameters.Add("@SectionID", sectionID);
             }
 
-            // Filter By Status Type 
-            if (stats != 0)
-            {
-                strquery += " AND Status = @Status";
-                parameters.Add("@Status", stats);
-            }
+           
 
             // If the Get Data has a Pagination function
             if (pageSize != 0)
@@ -97,7 +122,13 @@ namespace NCR_system.Repository
                 parameters.Add("@PageSize", pageSize);
             }
 
+
             return await SqlDataAccess.GetDataAsync<RejectShipmentModel>(strquery, parameters);
+        }
+
+        public Task<List<CustomerTotalModel>> GetShipmentOpenItem(int stats = 1, int type = 0, int sec = 0)
+        {
+            throw new NotImplementedException();
         }
 
         public  Task<bool> InsertShipRejectData(RejectShipmentModel ncr, int Process)

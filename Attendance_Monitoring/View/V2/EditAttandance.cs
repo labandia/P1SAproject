@@ -44,20 +44,27 @@ namespace Attendance_Monitoring.View.V2
                 MessageBox.Show("Invalid TimeIn format.");
                 return;
             }
-            if (!DateTime.TryParseExact(
-                  _p1sa.TimeOut,
-                  "MM/dd/yy HH:mm:ss",
-                  CultureInfo.InvariantCulture,
-                  DateTimeStyles.None,
-                  out DateTime DateOut))
+
+
+            if (!string.IsNullOrEmpty(_p1sa.TimeOut))
             {
-                MessageBox.Show("Invalid TimeIn format.");
-                return;
+                if (!DateTime.TryParseExact(
+                    _p1sa.TimeOut,
+                    "MM/dd/yy HH:mm:ss",
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.None,
+                    out DateTime DateOut))
+                {
+                    MessageBox.Show("Invalid TimeOut format.");
+                    return;
+                }
+                TimeOutText.Value = DateOut;
             }
+
 
             _timeIn = DateIn;
             TimeInText.Value = DateIn;
-            TimeOutText.Value = DateOut;
+            LateText.Text = ComputetheLateTime(DateIn);
 
             if (!string.IsNullOrEmpty(_p1sa.TimeOut))
             {
@@ -72,20 +79,44 @@ namespace Attendance_Monitoring.View.V2
         }
 
 
-        private void Savebtn_Click(object sender, EventArgs e)
+        private async void Savebtn_Click(object sender, EventArgs e)
         {
             try
             {
+                double overtime = string.IsNullOrWhiteSpace(overText.Text)
+                                    ? 0
+                                    : Convert.ToDouble(overText.Text);
+
+                double regular = string.IsNullOrWhiteSpace(regText.Text)
+                    ? 0
+                    : Convert.ToDouble(regText.Text);
+
+
                 var obj = new P1SA_AttendanceModel
                 {
-                    TimeIn = TimeInText.Value.ToString("MM/dd/yy HH:mm:ss"),
-                    TimeOut = TimeOutText.Value.ToString("MM/dd/yy HH:mm:ss"),
-                    Overtime = double.Parse(overText.Text),
-                    Regular = double.Parse(regText.Text),
+                    TimeIn = TimeInText.Value.ToString("yyyy-MM-dd HH:mm:ss"),
+                    TimeOut = TimeOutText.Visible
+                        ? TimeOutText.Value.ToString("yyyy-MM-dd HH:mm:ss")
+                        : null,
+                    Overtime = overtime,
+                    Regular = regular,
+                    LateTime = LateText.Text,
                     RecordID = _p1sa.RecordID
                 };
 
-                MessageBox.Show($@"Time : {obj.TimeIn} - Time Out : {obj.TimeOut} - RecordID : {obj.RecordID}");
+
+                bool result = await _attend.EditAttandance(obj);
+
+                if (result)
+                {
+                    MessageBox.Show("Attendance Update Successfully");
+                    DialogResult = DialogResult.OK;
+                    Close();
+                }
+                else
+                {
+                    MessageBox.Show("Failed to update attendance record.");
+                }
             }
             catch (Exception ex)
             {
@@ -108,6 +139,31 @@ namespace Attendance_Monitoring.View.V2
             gTotalText.Text = getotal.ToString("0.00");
         }
 
+        public string ComputetheLateTime(DateTime timeIn)
+        {
+            TimeSpan tin = timeIn.TimeOfDay;
+            TimeSpan shiftStart;
+
+            if (tin < new TimeSpan(7, 30, 0))
+            {
+                shiftStart = new TimeSpan(6, 30, 0);
+            }
+            else if (tin < new TimeSpan(8, 30, 0))
+            {
+                shiftStart = new TimeSpan(7, 30, 0);
+            }
+            else
+            {
+                shiftStart = new TimeSpan(8, 30, 0);
+            }
+
+            TimeSpan late = tin - shiftStart;
+
+            if (late.TotalMinutes <= 0)
+                return "00:00";
+
+            return late.ToString(@"hh\:mm");
+        }
 
         public double ComputetheOvertime(DateTime timein, DateTime timeout)
         {

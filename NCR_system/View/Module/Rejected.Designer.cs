@@ -594,9 +594,9 @@
             this.label7.ForeColor = System.Drawing.Color.White;
             this.label7.Location = new System.Drawing.Point(20, 17);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(188, 21);
+            this.label7.Size = new System.Drawing.Size(238, 21);
             this.label7.TabIndex = 14;
-            this.label7.Text = "Active Cases by Section";
+            this.label7.Text = "Active Opem Cases by Section";
             // 
             // Rejected
             // 

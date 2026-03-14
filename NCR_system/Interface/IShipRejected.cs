@@ -16,7 +16,11 @@ namespace NCR_system.Interface
             int pageNumber,
             int pageSize);
 
-        Task<List<CustomerTotalModel>> GetCustomersOpenItem(int type = 0, int sec = 0);
+
+        Task<List<CustomerTotalModel>> GetRejectOpenItem(int section, int Stats);
+
+        Task<List<CustomerTotalModel>> GetCustomersOpenItem(int stats = 1, int type = 0, int sec = 0);
+        Task<List<CustomerTotalModel>> GetShipmentOpenItem(int stats = 1, int type = 0, int sec = 0);
         Task<bool> InsertShipRejectData(RejectShipmentModel ncr, int proc);
         Task<bool> UpdateShipRejectData(RejectShipmentModel ncr);
     }

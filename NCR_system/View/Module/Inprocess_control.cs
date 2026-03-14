@@ -346,5 +346,10 @@ namespace NCR_system.View.Module
                 }
             }
         }
+
+        private void panel7_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

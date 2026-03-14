@@ -57,8 +57,7 @@
 
 
                 <form method="post" class="addformcontainer" id="addnewform" autocomplete="off">
-                    <input type="hidden" name="RegPassword" id="RegPassword" value="abc12345" />
-                    <input type="hidden" name="RegUsername" id="RegUsername" value="abc12345" />
+                    <input type="hidden" name="Password" id="Password" value="abc12345" />
                     <div class="row">
                         <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
                             <label>Employee ID <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
@@ -225,11 +224,13 @@
     regform.addEventListener('submit', async (e) => {
         e.preventDefault();
         let formData = new FormData(e.target);
-        formData.append('ProjectID', 10);
+        formData.append('Project_ID', 10);
+        formData.append('Username', formData.get('Employee_ID'));
 
         const data = Object.fromEntries(formData);
+
         let res = await postMethod('/User/CreateNewUser', formData);
-        if (res && res.Success) {
+        if (res?.Success) {
             Swal.fire({
                 title: "Success",
                 text: res.Message,

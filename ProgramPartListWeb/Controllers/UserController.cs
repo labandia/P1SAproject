@@ -26,37 +26,55 @@ namespace ProgramPartListWeb.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult> CreateNewUser()
+        public async Task<ActionResult> CreateNewUser(RegisterModel reg)
         {
-            var roleIdValue = Request.Form["Roles_ID"];
-            int roleId = string.IsNullOrEmpty(roleIdValue) ? 2 : Convert.ToInt32(roleIdValue);
+            int role = reg.Role_ID == 0 ? 2 : reg.Role_ID;
 
-            try
+            var obj = new RegisterModel
             {
-                var obj = new RegisterModel
-                {
-                    Project_ID = Convert.ToInt32(Request.Form["ProjectID"]),
-                    Username = Request.Form["RegUsername"],
-                    Password = PasswordHasher.Hashpassword(Request.Form["RegPassword"]),
-                    Email = Request.Form["Email"],
-                    Role_ID = roleId,
-                    FullName = Request.Form["FullName"],
-                    Employee_ID = Request.Form["Employee_ID"]
-                };
+                Project_ID = reg.Project_ID,
+                Username = reg.Username,
+                Password = PasswordHasher.Hashpassword(reg.Password),
+                Email = reg.Email,
+                Role_ID = role,
+                FullName = reg.FullName,
+                Employee_ID = reg.Employee_ID
+            };
+            bool IsExist = await _user.CheckAccountsTable(obj);
+            if (IsExist) return JsonError("Username is already created", 500);
 
-                // Checks if the user Exist 
-                bool IsExist = await _user.CheckAccountsTable(obj);
-                if (IsExist) return JsonError("Username is already created", 500);
-           
-                // Insert in the Database
-                await _user.CreateNewAccount(obj);
+            await _user.CreateNewAccount(obj);
 
-                return JsonCreated(obj, "New Account Created Successfully");
-            }
-            catch (Exception ex)
-            {
-                return JsonError(ex.Message, 500);
-            }
+            return JsonCreated(obj, "New Account Created Successfully");
+            //var roleIdValue = Request.Form["Roles_ID"];
+            //int roleId = string.IsNullOrEmpty(roleIdValue) ? 2 : Convert.ToInt32(roleIdValue);
+
+            //try
+            //{
+            //    var obj = new RegisterModel
+            //    {
+            //        Project_ID = Convert.ToInt32(Request.Form["ProjectID"]),
+            //        Username = Request.Form["RegUsername"],
+            //        Password = PasswordHasher.Hashpassword(Request.Form["RegPassword"]),
+            //        Email = Request.Form["Email"],
+            //        Role_ID = roleId,
+            //        FullName = Request.Form["FullName"],
+            //        Employee_ID = Request.Form["Employee_ID"]
+            //    };
+
+            //    // Checks if the user Exist 
+            //    bool IsExist = await _user.CheckAccountsTable(obj);
+            //    if (IsExist) return JsonError("Username is already created", 500);
+
+            //    // Insert in the Database
+            //    await _user.CreateNewAccount(obj);
+
+            //    return JsonCreated(obj, "New Account Created Successfully");
+            //}
+            //catch (Exception ex)
+            //{
+            //    return JsonError(ex.Message, 500);
+            //}
         }
         [HttpPost]
         public async Task<ActionResult> ChangePassword(string CEmployee_ID, string CNewPassword)

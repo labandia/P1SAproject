@@ -11,6 +11,7 @@ using NCR_system.Models;
 using SeriesCollection = LiveCharts.SeriesCollection;
 using System.Linq;
 using Axis = LiveCharts.Wpf.Axis;
+using System.Diagnostics;
 
 namespace NCR_system.View.Module
 {
@@ -19,6 +20,7 @@ namespace NCR_system.View.Module
         private readonly IShipRejected _ship;
 
         private bool _gridConfigured = false;
+        private bool _intialized = false;
         private bool _isLoading = false;
 
         public DataGridView Customgrid => RejectedGrid;
@@ -33,6 +35,7 @@ namespace NCR_system.View.Module
         {
             InitializeComponent();
             _ship = ship;
+            _intialized = true;
 
             filteritems.SelectedIndex = 1;
             sectionfilter.SelectedIndex = 0;
@@ -47,6 +50,7 @@ namespace NCR_system.View.Module
             };
 
             EnableDoubleBuffering();
+            _intialized = false;
         }
 
         private void EnableDoubleBuffering()
@@ -102,14 +106,15 @@ namespace NCR_system.View.Module
 
             try
             {
-
                 RejectedGrid.SuspendLayout();
 
                 var shipTask = _ship.GetRejectedShipData(
                     sectionfilter.SelectedIndex, 
                     filteritems.SelectedIndex, proc, 0, 0);
 
-                var pieTask = _ship.GetCustomersOpenItem(proc, sectionfilter.SelectedIndex);
+                var pieTask = _ship.GetRejectOpenItem(
+                    sectionfilter.SelectedIndex, 
+                    filteritems.SelectedIndex);
 
                 await Task.WhenAll(shipTask, pieTask);
 
@@ -123,6 +128,11 @@ namespace NCR_system.View.Module
 
                 if (pieData != null)
                 {
+                    foreach(var d in pieData)
+                    {
+                        Debug.WriteLine($"Department: {d.DepartmentName}, Total Open: {d.totalOpen}");
+                    }
+
                     UpdateBarChart(pieData);
                     DisplaySectionStats(pieData);
                 }
@@ -250,14 +260,16 @@ namespace NCR_system.View.Module
             }
         }
 
-        private void OpenReject_Click(object sender, EventArgs e)
+        private async void OpenReject_Click(object sender, EventArgs e)
         {
             var _shipcontrol = new ShipRejected(_ship);
 
             using (var add = new AddShipment(_ship, 0, _shipcontrol, this))
             {
-                add.StartPosition = FormStartPosition.CenterParent;
-                add.ShowDialog(this);   // <-- modal + always in front of parent
+                if(DialogResult.OK != add.ShowDialog(this))
+                {
+                    await DisplayRejected(0);
+                }
             }
         }
 
@@ -310,8 +322,6 @@ namespace NCR_system.View.Module
 
         private void Rejected_Load(object sender, EventArgs e)
         {
-            sectionfilter.SelectedIndex = 0;
-            filteritems.SelectedIndex = 0;
         }
 
         private void RejectedGrid_CellFormatting_1(object sender, DataGridViewCellFormattingEventArgs e)
@@ -430,7 +440,15 @@ namespace NCR_system.View.Module
             }
         }
 
-        private async void sectionfilter_SelectedIndexChanged(object sender, EventArgs e) => await DisplayRejected(0);
-        private async void filteritems_SelectedIndexChanged(object sender, EventArgs e) => await DisplayRejected(0);
+        private async void sectionfilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (_intialized) return;
+            await DisplayRejected(0);
+        }
+        private async void filteritems_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (_intialized) return;
+            await DisplayRejected(0);
+        }
     }
 }

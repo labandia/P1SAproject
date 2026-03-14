@@ -319,8 +319,9 @@ namespace Attendance_Monitoring.Repositories
         {
             return SqlDataAccess.ExecuteAsync($@"
                 UPDATE P1SA_AttendanceMonitor 
-                SET TimeIn = @TimeIn, TimeOut = @TimeOut, Regular = @Regular, 
-                Overtime = @Overtime WHERE RecordID = @RecordID",
+                    SET TimeIn = @TimeIn, TimeOut = @TimeOut, Regular = @Regular, 
+                        LateTime = @LateTime, Overtime = @Overtime 
+                WHERE RecordID = @RecordID",
                 new
                 {
                     TimeIn = emp.TimeIn,
@@ -376,8 +377,6 @@ namespace Attendance_Monitoring.Repositories
                 " AND pc.TimeOut is Not null ORDER BY pc.TimeOut DESC";
 
             var IsRecord = await SqlDataAccess.GetDataAsync<P1SA_AttendanceModel>(strquery, parameters);
-            Debug.WriteLine(shifts);
-            Debug.WriteLine(strquery);
 
             bool hasRecords = IsRecord.Any();
             return new ApiResponse<P1SA_AttendanceModel>

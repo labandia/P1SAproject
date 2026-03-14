@@ -443,7 +443,9 @@ namespace Attendance_Monitoring.Usercontrols
             {
                 using (var edit = new EditAttandance(product, _monitor))
                 {
-                    edit.ShowDialog();
+                    if(DialogResult.OK == edit.ShowDialog()) {
+                        await LoadAttendanceAsync();
+                    }
                 }
             }
             if (attendancetable.Columns[e.ColumnIndex].Name == "Delete")

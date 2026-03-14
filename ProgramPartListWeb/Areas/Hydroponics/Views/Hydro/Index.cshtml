@@ -20,7 +20,7 @@
 
     <div class="Wrapcontainer">
         <div class="carousel-container">
-            Ongoing	dasdasd
+
             <div class="hydrocenter">
 
                 <div class="slider">
@@ -52,7 +52,7 @@
                 </div>
 
                 <form id="logincredentials" method="post">
-                    <div class="form-group">
+                    <div class="form-group mb-2">
                         <label for="Username">Username :</label>
                         <input type="text" name="username" id="username" placeholder="Enter Username" autocomplete="off" required>
                     </div>
@@ -67,7 +67,8 @@
 
                     <div style="display: flex; margin-top: 1em; align-items: center;justify-content: center; flex-direction: column;">
                         <button type="submit" style="margin: 1em 0;" class="sign-in-btn"><i class="fa-solid fa-right-to-bracket"></i> Sign in</button>
-                        <a href="#" class="forgetbtn" id="changebtn">Change Password</a>
+                        <a href="#" class="forgetbtn" id="changebtn" style="margin-bottom: 1em; ">Change Password</a>
+                        <a href="#" class="addbtn" id="addbtn" style="color: hsl(178, 97%, 24%); font-weight: 600;">Create an Account</a>
                     </div>
 
                 </form>
@@ -100,39 +101,27 @@
 
             <div class="modal-body modalwrap">
                 <div class="custom_modal_header">
-                    <h5>Register  Account</h5>
+                    <h5>Create Account</h5>
 
-                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                    <button type="button" class="btn btn-light close" data-bs-dismiss="modal">
                         <span>&times;</span>
                     </button>
                 </div>
 
 
                 <form method="post" class="addformcontainer" id="addnewform" autocomplete="off">
+                    <input type="hidden" name="Password" id="Password" value="abc12345" />
                     <div class="row">
                         <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
-                            <label>Employee ID <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                            <label>Employee ID <small style="color: #a81818; font-weight: 600;">*</small></label>
                             <input type="text" name="Employee_ID" id="Employee_ID" placeholder="Enter Employee ID" autocomplete="off" required />
                         </div>
                         <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
-                            <label>Full Name <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                            <label>Full Name <small style="color: #a81818; font-weight: 600;">*</small></label> 
                             <input type="text" name="FullName" id="FullName" placeholder="Enter Full Name" autocomplete="off" required />
                         </div>
                     </div>
-                    <div class="form_group col-12 col-sm-12">
-                        <label>Username <small style="color: #a81818; font-weight: 600;">*</small></label>
-                        <input type="text" name="RegUsername" id="RegUsername" placeholder="Enter your Username" autocomplete="off" required />
-                    </div>
 
-                    <div class="form_group col-12 col-sm-12">
-                        <label>Password <small style="color: #a81818; font-weight: 600;">*</small></label>
-                        <input type="password" name="RegPassword" id="RegPassword" placeholder="Enter your Password" autocomplete="off" required />
-                    </div>
-
-                    <div class="form_group col-12 col-sm-12">
-                        <label>Confirm Password <small style="color: #a81818; font-weight: 600;">*</small></label>
-                        <input type="password" name="RegConfirmPassword" id="RegConfirmPassword" placeholder="Confirm password must be exact to the new password" autocomplete="off" required />
-                    </div>
 
                     <div class="form_group col-12 col-sm-12 ">
                         <div class="flex_space">
@@ -142,8 +131,9 @@
                         <input type="text" name="Email" id="Email" placeholder="Enter Email Address" autocomplete="off" />
                     </div>
 
+                    <input type="hidden" name="Roles_ID" id="Roles_ID" value="5" />
 
-
+                   
 
                     <div class="d-flex justify-content-between align-items-center mt-4">
                         <div>
@@ -237,7 +227,7 @@
             this.regform = document.getElementById('addnewform');
             this.changeform = document.getElementById('changenewform');
 
-            this.forgetbtn = document.getElementById('forgetbtn');
+            this.regbtn = document.getElementById('addbtn');
             this.changebtn = document.getElementById('changebtn');
         }
 
@@ -250,7 +240,7 @@
             this.regform?.addEventListener('submit', (e) => this.handleRegister(e));
             this.changeform?.addEventListener('submit', (e) => this.handleChangePassword(e));
 
-            this.forgetbtn?.addEventListener('click', (e) => this.openRegisterModal(e));
+            this.regbtn?.addEventListener('click', (e) => this.openRegisterModal(e));
             this.changebtn?.addEventListener('click', (e) => this.openChangePasswordModal(e));
         }
 
@@ -339,12 +329,13 @@
         async handleRegister(e) {
             e.preventDefault();
 
-            if (!this.RegisterValidationForm()) {
-                return;
-            }
+            //if (!this.RegisterValidationForm()) {
+            //    return;
+            //}
 
             const formData = new FormData(this.regform);
-            formData.append('ProjectID', 10);
+            formData.append('Project_ID', 10);
+            formData.append('Username', formData.get('Employee_ID'));
             const data = Object.fromEntries(formData);
 
             try {

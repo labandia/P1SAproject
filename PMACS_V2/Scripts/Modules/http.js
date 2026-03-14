@@ -1,10 +1,18 @@
 ﻿import { DEFAULT_CONFIG } from "./config.js";
 import { isTokenExpired, refreshAccessToken, clearTokens } from "./auth.js";
 
+/* =========================
+   URL BUILDER
+========================= */
+
 function buildUrl(url, params) {
     if (!params || !Object.keys(params).length) return url;
     return url + (url.includes("?") ? "&" : "?") + new URLSearchParams(params);
 }
+
+/* =========================
+   FETCH WITH TIMEOUT
+========================= */
 
 async function fetchWithTimeout(url, options, timeout) {
 
@@ -20,19 +28,42 @@ async function fetchWithTimeout(url, options, timeout) {
 }
 
 /* =========================
-   GET METHOD
+   TOKEN PREPARE
+========================= */
+
+async function prepareToken(cfg) {
+
+    let token = localStorage.getItem(cfg.accessTokenKey);
+    const refresh = localStorage.getItem(cfg.refreshTokenKey);
+
+    if (!token && !refresh)
+        return null;
+
+    if (token && isTokenExpired(cfg)) {
+
+        const refreshed = await refreshAccessToken(cfg);
+
+        if (!refreshed) {
+            clearTokens(cfg);
+            location.href = cfg.loginUrl;
+            return null;
+        }
+
+        token = localStorage.getItem(cfg.accessTokenKey);
+    }
+
+    return token;
+}
+
+/* =========================
+   GET METHOD (PROTECTED)
 ========================= */
 
 export async function getMethod(url, params = {}, options = {}) {
 
     const cfg = { ...DEFAULT_CONFIG, ...options };
 
-    let token = localStorage.getItem(cfg.accessTokenKey);
-
-    if (token && isTokenExpired(cfg)) {
-        await refreshAccessToken(cfg);
-        token = localStorage.getItem(cfg.accessTokenKey);
-    }
+    const token = await prepareToken(cfg);
 
     const headers = { ...(options.headers || {}) };
 
@@ -64,12 +95,10 @@ export async function getMethod(url, params = {}, options = {}) {
             return getMethod(url, params, options);
         }
 
-        if (!response.ok) {
+        if (!response.ok)
             return { success: false, status: response.status };
-        }
 
         return await response.json();
-
     }
     catch (err) {
 
@@ -83,66 +112,157 @@ export async function getMethod(url, params = {}, options = {}) {
 }
 
 /* =========================
-   POST METHOD
+   GET METHOD (PUBLIC)
+========================= */
+
+export async function getMethodPublic(url, params = {}, options = {}) {
+
+    const cfg = { ...DEFAULT_CONFIG, ...options };
+
+    try {
+
+        const response = await fetchWithTimeout(
+            buildUrl(url, params),
+            {
+                method: "GET",
+                headers: options.headers || {},
+                credentials: "same-origin"
+            },
+            cfg.timeout
+        );
+
+        if (!response.ok)
+            return { success: false, status: response.status };
+
+        return await response.json();
+    }
+    catch (err) {
+
+        return {
+            success: false,
+            message: err.name === "AbortError"
+                ? "Request timeout"
+                : "Network error"
+        };
+    }
+}
+
+/* =========================
+   POST METHOD (PROTECTED)
 ========================= */
 
 export async function postMethod(url, data, options = {}) {
 
-    const {
-        headers = {},
-        contentType = "application/json",
-        timeout = 30000,
-        responseType = "json"
-    } = options;
+    const cfg = { ...DEFAULT_CONFIG, ...options };
 
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), timeout);
+    const token = await prepareToken(cfg);
 
-    const config = {
-        method: "POST",
-        headers: { ...headers },
-        credentials: "same-origin",
-        signal: controller.signal
-    };
+    const headers = { ...(options.headers || {}) };
 
-    if (data instanceof FormData) {
-        config.body = data;
-    }
-    else {
-        config.body = JSON.stringify(data);
-        config.headers["Content-Type"] = contentType;
+    if (token)
+        headers.Authorization = `Bearer ${token}`;
+
+    if (!(data instanceof FormData)) {
+        headers["Content-Type"] = "application/json";
+        data = JSON.stringify(data);
     }
 
     try {
 
-        const response = await fetch(url, config);
+        const response = await fetchWithTimeout(
+            url,
+            {
+                method: "POST",
+                headers,
+                body: data,
+                credentials: "same-origin"
+            },
+            cfg.timeout
+        );
 
-        clearTimeout(timeoutId);
+        if (response.status === 401) {
 
-        const rawText =
-            response.status !== 204
-                ? await response.text()
-                : "";
+            const refreshed = await refreshAccessToken(cfg);
 
-        if (!response.ok) {
-            return { Success: false, Status: response.status };
+            if (!refreshed) {
+                clearTokens(cfg);
+                location.href = cfg.loginUrl;
+                return;
+            }
+
+            return postMethod(url, data, options);
         }
 
-        if (responseType === "json") {
-            return rawText ? JSON.parse(rawText) : null;
+        const text = await response.text();
+
+        if (!response.ok)
+            return { success: false, status: response.status };
+
+        try {
+            return JSON.parse(text);
         }
-
-        return rawText;
-
+        catch {
+            return text;
+        }
     }
-    catch (error) {
+    catch (err) {
 
         return {
-            Success: false,
-            Error: true,
-            Message: error.name === "AbortError"
+            success: false,
+            message: err.name === "AbortError"
                 ? "Request timeout"
-                : error.message
+                : "Network error"
+        };
+    }
+}
+
+/* =========================
+   POST METHOD (PUBLIC)
+========================= */
+
+export async function postMethodPublic(url, data, options = {}) {
+
+    const cfg = { ...DEFAULT_CONFIG, ...options };
+
+    const headers = { ...(options.headers || {}) };
+
+    if (!(data instanceof FormData)) {
+        headers["Content-Type"] = "application/json";
+        data = JSON.stringify(data);
+    }
+
+    try {
+
+        const response = await fetchWithTimeout(
+            url,
+            {
+                method: "POST",
+                headers,
+                body: data,
+                credentials: "same-origin"
+            },
+            cfg.timeout
+        );
+
+        const text = await response.text();
+
+        if (!response.ok)
+            return { success: false, status: response.status };
+
+        try {
+            return JSON.parse(text);
+        }
+        catch {
+            return text;
+        }
+    }
+    catch (err) {
+
+        return {
+            success: false,
+            message: err.name === "AbortError"
+                ? "Request timeout"
+                : "Network error"
         };
     }
 }

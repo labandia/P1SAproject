@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Brushes = System.Windows.Media.Brushes;
 using Color = System.Drawing.Color;
+using System.Windows.Media;
 
 
 namespace NCR_system.View.Module
@@ -38,7 +39,7 @@ namespace NCR_system.View.Module
             _isInitializing = true;
 
             sectionfilter.SelectedIndex = 0;
-            filteritems.SelectedIndex = 0;
+            filteritems.SelectedIndex = 1;
 
             EnableDoubleBuffering();
             _isInitializing = false;
@@ -107,7 +108,7 @@ namespace NCR_system.View.Module
                     filteritems.SelectedIndex, 
                     proc, 0, 0);
 
-                var pieTask = _ship.GetCustomersOpenItem(proc, sectionfilter.SelectedIndex);
+                var pieTask = _ship.GetCustomersOpenItem(filteritems.SelectedIndex, proc, sectionfilter.SelectedIndex);
 
                 await Task.WhenAll(shipTask, pieTask);
 
@@ -141,91 +142,62 @@ namespace NCR_system.View.Module
                 return;
             }
 
-            // Faster than LINQ GroupBy
-            int forCirculation = 0, close = 0, reportOk = 0, open = 0;
+            int circulation = 0, report = 0, open = 0;
 
             foreach (var item in list)
             {
                 switch (item.Status)
                 {
-                    case 3: forCirculation++; break;
-                    case 0: close++; break;
-                    case 2: reportOk++; break;
+                    case 3: circulation++; break;
+                    case 2: report++; break;
                     case 1: open++; break;
                 }
             }
-
 
             cartesianChart1.Series = new SeriesCollection
             {
                 new ColumnSeries
                 {
-                    Title = "For Circulation",
-                    Values = new ChartValues<int> { forCirculation },
+                    Title = "Circulation",
+                    Values = new ChartValues<int> { circulation },
                     DataLabels = true,
-                    Fill = System.Windows.Media.Brushes.Orange
+                    Fill = System.Windows.Media.Brushes.Orange,
+                    MaxColumnWidth = 200,
+                    ColumnPadding = 50
                 },
                 new ColumnSeries
                 {
-                    Title = "Close",
-                    Values = new ChartValues<int> { close },
+                    Title = "Report",
+                    Values = new ChartValues<int> { report },
                     DataLabels = true,
-                    Fill = System.Windows.Media.Brushes.Green
-                },
-                new ColumnSeries
-                {
-                    Title = "Report OK",
-                    Values = new ChartValues<int> { reportOk },
-                    DataLabels = true,
-                    Fill = System.Windows.Media.Brushes.SteelBlue
+                    Fill = System.Windows.Media.Brushes.Yellow,
+                    MaxColumnWidth = 200,
+                    ColumnPadding = 50
                 },
                 new ColumnSeries
                 {
                     Title = "Open",
                     Values = new ChartValues<int> { open },
                     DataLabels = true,
-                    Fill = System.Windows.Media.Brushes.Red
-                }
-            };
-
-
-
-            _statusValues.Clear();
-            _statusValues.Add(forCirculation);
-            _statusValues.Add(close);
-            _statusValues.Add(reportOk);
-            _statusValues.Add(open);
-
-            cartesianChart1.Series = new SeriesCollection
-            {
-                new ColumnSeries
-                {
-                    Values = _statusValues,
-                    DataLabels = true,
-                    Fill = Brushes.SteelBlue
+                    Fill = System.Windows.Media.Brushes.Green,
+                    MaxColumnWidth = 200,
+                    ColumnPadding = 50
                 }
             };
 
             cartesianChart1.AxisX.Clear();
-            cartesianChart1.AxisX.Add(new Axis
-            {
-                Labels = _statusLabels,
-                LabelsRotation = 20
-            });
+           
 
             cartesianChart1.AxisY.Clear();
-            cartesianChart1.AxisY.Add(new Axis { Title = "Count" });
 
             cartesianChart1.LegendLocation = LegendLocation.Bottom;
             cartesianChart1.ForeColor = System.Drawing.Color.White;
-            cartesianChart1.DisableAnimations = list.Count > 2000; // disable animation for big datasets
 
+            cartesianChart1.DisableAnimations = list.Count > 2000;
         }
 
         private void UpdatePieChart(List<CustomerTotalModel> cc)
         {
-            //resetDisplayText();
-
             if (cc == null || cc.Count == 0)
             {
                 pieChart1.Series = new SeriesCollection();
@@ -243,27 +215,42 @@ namespace NCR_system.View.Module
                     Title = d.DepartmentName,
                     Values = new ChartValues<int> { d.totalOpen },
                     DataLabels = true,
+                    Fill = GetDepartmentColor(d.DepartmentName),
                     LabelPoint = cp => $"{cp.Y} ({cp.Participation:P0})"
                 });
-
-                //DisplayLabelText(d.DepartmentName, d.totalOpen);
             }
 
             pieChart1.Series = series;
-            // ✅ Legend position
+
             pieChart1.LegendLocation = LegendLocation.Right;
-
-            // ✅ Make legend text white
             pieChart1.ForeColor = Color.White;
-
-
-            // Enabl the legend
-
             pieChart1.InnerRadius = 70;
             pieChart1.DisableAnimations = cc.Sum(x => x.totalOpen) > 2000;
         }
 
-      
+        private Brush GetDepartmentColor(string dept)
+        {
+            switch (dept.ToLower())
+            {
+                case "molding":
+                    return Brushes.Pink;
+
+                case "press":
+                    return Brushes.Blue;
+
+                case "rotor":
+                    return Brushes.Yellow;
+
+                case "winding":
+                    return Brushes.Green;
+
+                case "circuit":
+                    return Brushes.White;
+
+                default:
+                    return Brushes.Gray;
+            }
+        }
 
         private string GetStatusLabel(int status)
         {
@@ -344,8 +331,6 @@ namespace NCR_system.View.Module
   
         private void ShipRejected_Load(object sender, EventArgs e)
         {
-            sectionfilter.SelectedIndex = 0;
-            filteritems.SelectedIndex = 0;
         }
 
 
@@ -364,7 +349,9 @@ namespace NCR_system.View.Module
          => await HandleFilterChange(1);
 
         private async void filteritems_SelectedIndexChanged(object sender, EventArgs e)
-        => await HandleFilterChange(1);
+        {
+            await HandleFilterChange(1);
+        }
 
         private async Task HandleFilterChange(int process)
         {
@@ -472,8 +459,9 @@ namespace NCR_system.View.Module
             pieChart1.LegendLocation = LegendLocation.Right;
         }
 
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
 
-       
-
+        }
     }
 }

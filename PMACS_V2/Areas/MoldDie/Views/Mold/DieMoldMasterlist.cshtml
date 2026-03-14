@@ -266,9 +266,8 @@
         let formData = new FormData(e.target);
 
         const data = Object.fromEntries(formData);
-       // const res = await postDataV2('@Url.Action("UpdateMoldMasterlist", "Mold")', data);
 
-        let result = await postDataV2('@Url.Action("UpdateMoldMasterlist", "Mold")', formData);
+        let result = await postMethod('@Url.Action("UpdateMoldMasterlist", "Mold")', formData);
 
         if (result && result.Error) {
             // Network or client-side error

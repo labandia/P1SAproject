@@ -62,6 +62,7 @@ namespace Parts_locator
             services.AddSingleton<RawMaterialOpentraction>();
             services.AddSingleton<Bushlocation>();
             services.AddSingleton<Mainlayout>();
+            services.AddSingleton<Form2>();
             services.AddSingleton<BushMasterlist>();
             services.AddSingleton<BushSummary_in>();
             services.AddSingleton<BushSummary_out>();
@@ -71,7 +72,7 @@ namespace Parts_locator
 
 
             ServiceProvider = services.BuildServiceProvider();
-            var mainForm = ServiceProvider.GetRequiredService<Mainlayout>();
+            var mainForm = ServiceProvider.GetRequiredService<Form2>();
             Application.Run(mainForm);
             //// Dynamically choose which form to run
             //Form mainForm = null;

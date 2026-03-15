@@ -190,6 +190,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Form2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form2.Designer.cs">
+      <DependentUpon>Form2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utilities\DataAccess\SQLMainlayoutRespository.cs" />
     <Compile Include="Helpers\Globalfunction.cs" />
     <Compile Include="Interface\IRawMats.cs" />
@@ -364,6 +370,9 @@
     <Compile Include="View\Moldingbush\Modules\Bushlocation.Designer.cs">
       <DependentUpon>Bushlocation.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Form2.resx">
+      <DependentUpon>Form2.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\Moldingbush\BushOpentransaction.resx">
       <DependentUpon>BushOpentransaction.cs</DependentUpon>
     </EmbeddedResource>

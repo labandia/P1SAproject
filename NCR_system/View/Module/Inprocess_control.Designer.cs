@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -40,6 +40,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
             this.InprocessGrid = new System.Windows.Forms.DataGridView();
             this.RecordID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -102,19 +103,24 @@
             this.InprocessGrid.AllowUserToDeleteRows = false;
             this.InprocessGrid.AllowUserToResizeColumns = false;
             this.InprocessGrid.AllowUserToResizeRows = false;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.InprocessGrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.InprocessGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.InprocessGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.LightSteelBlue;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.InprocessGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            this.InprocessGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.InprocessGrid.BackgroundColor = System.Drawing.Color.White;
+            this.InprocessGrid.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.InprocessGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            this.InprocessGrid.ColumnHeadersHeight = 35;
+            this.InprocessGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.InprocessGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.RecordID,
             this.Status,
@@ -134,33 +140,33 @@
             this.Remarks,
             this.SectionID,
             this.IsDelete});
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle11.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle11.Padding = new System.Windows.Forms.Padding(6, 5, 6, 5);
-            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.InprocessGrid.DefaultCellStyle = dataGridViewCellStyle11;
-            this.InprocessGrid.EnableHeadersVisualStyles = false;
-            this.InprocessGrid.Location = new System.Drawing.Point(15, 361);
-            this.InprocessGrid.Name = "InprocessGrid";
-            this.InprocessGrid.ReadOnly = true;
             dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle12.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle12.Padding = new System.Windows.Forms.Padding(6, 5, 6, 5);
             dataGridViewCellStyle12.SelectionBackColor = System.Drawing.Color.Gainsboro;
             dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.InprocessGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.InprocessGrid.DefaultCellStyle = dataGridViewCellStyle12;
+            this.InprocessGrid.Location = new System.Drawing.Point(15, 372);
+            this.InprocessGrid.Name = "InprocessGrid";
+            this.InprocessGrid.ReadOnly = true;
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle13.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F, System.Drawing.FontStyle.Bold);
+            dataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.InprocessGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle13;
             this.InprocessGrid.RowHeadersVisible = false;
-            this.InprocessGrid.RowTemplate.Height = 30;
+            this.InprocessGrid.RowTemplate.Height = 35;
             this.InprocessGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.InprocessGrid.Size = new System.Drawing.Size(1321, 412);
+            this.InprocessGrid.Size = new System.Drawing.Size(1321, 401);
             this.InprocessGrid.TabIndex = 6;
             this.InprocessGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.InprocessGrid_CellContentClick);
+            this.InprocessGrid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.InprocessGrid_CellDoubleClick);
             this.InprocessGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.InprocessGrid_CellFormatting);
             // 
             // RecordID
@@ -170,59 +176,59 @@
             this.RecordID.Name = "RecordID";
             this.RecordID.ReadOnly = true;
             this.RecordID.Visible = false;
-            this.RecordID.Width = 72;
+            this.RecordID.Width = 85;
             // 
             // Status
             // 
             this.Status.DataPropertyName = "Status";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Status.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Status.DefaultCellStyle = dataGridViewCellStyle3;
             this.Status.HeaderText = "Status";
             this.Status.Name = "Status";
             this.Status.ReadOnly = true;
-            this.Status.Width = 76;
+            this.Status.Width = 79;
             // 
             // TitleEmail
             // 
             this.TitleEmail.DataPropertyName = "TitleEmail";
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.TitleEmail.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.TitleEmail.DefaultCellStyle = dataGridViewCellStyle4;
             this.TitleEmail.HeaderText = "TitleEmail";
             this.TitleEmail.Name = "TitleEmail";
             this.TitleEmail.ReadOnly = true;
-            this.TitleEmail.Width = 94;
+            this.TitleEmail.Width = 98;
             // 
             // DateEncounter
             // 
-            this.DateEncounter.DataPropertyName = "DateEncounter";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.DateEncounter.DefaultCellStyle = dataGridViewCellStyle4;
+            this.DateEncounter.DataPropertyName = "DateEncounterFormatted";
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.DateEncounter.DefaultCellStyle = dataGridViewCellStyle5;
             this.DateEncounter.HeaderText = "Date Encounter";
             this.DateEncounter.Name = "DateEncounter";
             this.DateEncounter.ReadOnly = true;
-            this.DateEncounter.Width = 115;
+            this.DateEncounter.Width = 131;
             // 
             // Shift
             // 
             this.Shift.DataPropertyName = "Shift";
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.Shift.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.Shift.DefaultCellStyle = dataGridViewCellStyle6;
             this.Shift.HeaderText = "Shift";
             this.Shift.Name = "Shift";
             this.Shift.ReadOnly = true;
-            this.Shift.Width = 68;
+            this.Shift.Width = 71;
             // 
             // Line
             // 
             this.Line.DataPropertyName = "Line";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.Line.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.Line.DefaultCellStyle = dataGridViewCellStyle7;
             this.Line.HeaderText = "Line";
             this.Line.Name = "Line";
             this.Line.ReadOnly = true;
-            this.Line.Width = 66;
+            this.Line.Width = 67;
             // 
             // Model
             // 
@@ -230,18 +236,18 @@
             this.Model.HeaderText = "Model";
             this.Model.Name = "Model";
             this.Model.ReadOnly = true;
-            this.Model.Width = 78;
+            this.Model.Width = 79;
             // 
             // ShopOrder
             // 
             this.ShopOrder.DataPropertyName = "ShopOrder";
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.ShopOrder.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.ShopOrder.DefaultCellStyle = dataGridViewCellStyle8;
             this.ShopOrder.HeaderText = "Shop Order";
             this.ShopOrder.Name = "ShopOrder";
             this.ShopOrder.ReadOnly = true;
-            this.ShopOrder.Width = 96;
+            this.ShopOrder.Width = 108;
             // 
             // Defect
             // 
@@ -249,18 +255,18 @@
             this.Defect.HeaderText = "Defect";
             this.Defect.Name = "Defect";
             this.Defect.ReadOnly = true;
-            this.Defect.Width = 77;
+            this.Defect.Width = 83;
             // 
             // NGQty
             // 
             this.NGQty.DataPropertyName = "NGQty";
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.NGQty.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.NGQty.DefaultCellStyle = dataGridViewCellStyle9;
             this.NGQty.HeaderText = "NG Qty";
             this.NGQty.Name = "NGQty";
             this.NGQty.ReadOnly = true;
-            this.NGQty.Width = 77;
+            this.NGQty.Width = 85;
             // 
             // ProcEncounter
             // 
@@ -268,7 +274,7 @@
             this.ProcEncounter.HeaderText = "Process Encounter";
             this.ProcEncounter.Name = "ProcEncounter";
             this.ProcEncounter.ReadOnly = true;
-            this.ProcEncounter.Width = 128;
+            this.ProcEncounter.Width = 146;
             // 
             // cause
             // 
@@ -276,18 +282,18 @@
             this.cause.HeaderText = "Cause";
             this.cause.Name = "cause";
             this.cause.ReadOnly = true;
-            this.cause.Width = 75;
+            this.cause.Width = 76;
             // 
             // SectionDep
             // 
             this.SectionDep.DataPropertyName = "SectionDep";
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.SectionDep.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.SectionDep.DefaultCellStyle = dataGridViewCellStyle10;
             this.SectionDep.HeaderText = "Dept/Section";
             this.SectionDep.Name = "SectionDep";
             this.SectionDep.ReadOnly = true;
-            this.SectionDep.Width = 112;
+            this.SectionDep.Width = 119;
             // 
             // Invest
             // 
@@ -297,17 +303,17 @@
             this.Invest.ReadOnly = true;
             this.Invest.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.Invest.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.Invest.Width = 138;
+            this.Invest.Width = 159;
             // 
             // P1saStatus
             // 
             this.P1saStatus.DataPropertyName = "P1saStatus";
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.P1saStatus.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.P1saStatus.DefaultCellStyle = dataGridViewCellStyle11;
             this.P1saStatus.HeaderText = "P1SA Status";
             this.P1saStatus.Name = "P1saStatus";
             this.P1saStatus.ReadOnly = true;
-            this.P1saStatus.Width = 99;
+            this.P1saStatus.Width = 111;
             // 
             // Remarks
             // 
@@ -315,7 +321,7 @@
             this.Remarks.HeaderText = "Remarks";
             this.Remarks.Name = "Remarks";
             this.Remarks.ReadOnly = true;
-            this.Remarks.Width = 88;
+            this.Remarks.Width = 93;
             // 
             // SectionID
             // 
@@ -324,7 +330,7 @@
             this.SectionID.Name = "SectionID";
             this.SectionID.ReadOnly = true;
             this.SectionID.Visible = false;
-            this.SectionID.Width = 93;
+            this.SectionID.Width = 87;
             // 
             // IsDelete
             // 
@@ -333,7 +339,7 @@
             this.IsDelete.Name = "IsDelete";
             this.IsDelete.ReadOnly = true;
             this.IsDelete.Visible = false;
-            this.IsDelete.Width = 85;
+            this.IsDelete.Width = 79;
             // 
             // button1
             // 
@@ -371,7 +377,6 @@
             this.panel7.Name = "panel7";
             this.panel7.Size = new System.Drawing.Size(1352, 355);
             this.panel7.TabIndex = 35;
-            this.panel7.Paint += new System.Windows.Forms.PaintEventHandler(this.panel7_Paint);
             // 
             // panel6
             // 
@@ -663,6 +668,7 @@
             this.filteritems.Name = "filteritems";
             this.filteritems.Size = new System.Drawing.Size(121, 23);
             this.filteritems.TabIndex = 11;
+            this.filteritems.SelectedIndexChanged += new System.EventHandler(this.filteritems_SelectedIndexChanged);
             // 
             // sectionfilter
             // 

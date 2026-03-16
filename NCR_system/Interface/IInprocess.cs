@@ -15,5 +15,6 @@ namespace NCR_system.Interface
         Task<List<CustomerTotalModel>> GetCustomersOpenItem(int type = 0, int sec = 0);
         Task<bool> InsertInprocessData(InprocessModel inprocess);
         Task<bool> UpdateInprocessData(InprocessModel inprocess);
+        Task<bool> DeleteInprocessData(int recordID);   
     }
 }

@@ -29,15 +29,14 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddCustomerComplaint));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle26 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle27 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle22 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle23 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle24 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle25 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.ModelText = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -46,7 +45,6 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.ProblemText = new System.Windows.Forms.RichTextBox();
-            this.Save_btn = new System.Windows.Forms.Button();
             this.selectDepart = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
@@ -61,19 +59,17 @@
             this.LotNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.NGQty = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Details = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.RegNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CustomerName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CCtype = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Delete = new System.Windows.Forms.DataGridViewImageColumn();
             this.UploadImage = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Uploadbtn = new System.Windows.Forms.Button();
-            this.templatebtn = new System.Windows.Forms.Button();
             this.panel9 = new System.Windows.Forms.Panel();
             this.button12 = new System.Windows.Forms.Button();
             this.label19 = new System.Windows.Forms.Label();
             this.NGText = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
+            this.Finalizebtn = new System.Windows.Forms.Button();
+            this.label18 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.Cancel_btn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CustomDatagrid)).BeginInit();
             this.panel9.SuspendLayout();
@@ -81,9 +77,9 @@
             // 
             // ModelText
             // 
-            this.ModelText.BackColor = System.Drawing.Color.Gainsboro;
+            this.ModelText.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ModelText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ModelText.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ModelText.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.ModelText.Location = new System.Drawing.Point(49, 163);
             this.ModelText.Multiline = true;
             this.ModelText.Name = "ModelText";
@@ -97,9 +93,9 @@
             this.label5.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
             this.label5.Location = new System.Drawing.Point(46, 133);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(151, 17);
+            this.label5.Size = new System.Drawing.Size(135, 17);
             this.label5.TabIndex = 69;
-            this.label5.Text = "MODEL NO / PART NO :";
+            this.label5.Text = "Model No / Part No :";
             // 
             // label3
             // 
@@ -107,15 +103,15 @@
             this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
             this.label3.Location = new System.Drawing.Point(362, 220);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(141, 17);
+            this.label3.Size = new System.Drawing.Size(121, 17);
             this.label3.TabIndex = 68;
-            this.label3.Text = "SECTION IN CHARGE :";
+            this.label3.Text = "Section in Charge :";
             // 
             // LotText
             // 
-            this.LotText.BackColor = System.Drawing.Color.Gainsboro;
+            this.LotText.BackColor = System.Drawing.Color.WhiteSmoke;
             this.LotText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.LotText.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LotText.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.LotText.Location = new System.Drawing.Point(365, 163);
             this.LotText.Multiline = true;
             this.LotText.Name = "LotText";
@@ -129,9 +125,9 @@
             this.label2.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
             this.label2.Location = new System.Drawing.Point(362, 133);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(61, 17);
+            this.label2.Size = new System.Drawing.Size(56, 17);
             this.label2.TabIndex = 72;
-            this.label2.Text = "LOT NO :";
+            this.label2.Text = "Lot No :";
             // 
             // label4
             // 
@@ -139,9 +135,9 @@
             this.label4.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
             this.label4.Location = new System.Drawing.Point(45, 220);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(102, 17);
+            this.label4.Size = new System.Drawing.Size(91, 17);
             this.label4.TabIndex = 74;
-            this.label4.Text = "NG QUANTITY :";
+            this.label4.Text = "NG Quantity :";
             // 
             // label6
             // 
@@ -149,13 +145,13 @@
             this.label6.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
             this.label6.Location = new System.Drawing.Point(46, 311);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(175, 17);
+            this.label6.Size = new System.Drawing.Size(143, 17);
             this.label6.TabIndex = 76;
-            this.label6.Text = "DETAILS OF THE PROBLEM :";
+            this.label6.Text = "Details of the problem";
             // 
             // ProblemText
             // 
-            this.ProblemText.BackColor = System.Drawing.Color.Gainsboro;
+            this.ProblemText.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ProblemText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.ProblemText.Font = new System.Drawing.Font("Century Gothic", 12F);
             this.ProblemText.Location = new System.Drawing.Point(48, 344);
@@ -165,30 +161,10 @@
             this.ProblemText.Text = "";
             this.ProblemText.Click += new System.EventHandler(this.ProblemText_Click);
             // 
-            // Save_btn
-            // 
-            this.Save_btn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(153)))), ((int)(((byte)(255)))));
-            this.Save_btn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.Save_btn.FlatAppearance.BorderSize = 0;
-            this.Save_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Save_btn.Font = new System.Drawing.Font("Segoe UI Emoji", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Save_btn.ForeColor = System.Drawing.Color.White;
-            this.Save_btn.Image = ((System.Drawing.Image)(resources.GetObject("Save_btn.Image")));
-            this.Save_btn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Save_btn.Location = new System.Drawing.Point(1033, 640);
-            this.Save_btn.Name = "Save_btn";
-            this.Save_btn.Padding = new System.Windows.Forms.Padding(120, 0, 100, 0);
-            this.Save_btn.Size = new System.Drawing.Size(301, 63);
-            this.Save_btn.TabIndex = 79;
-            this.Save_btn.Text = "SAVE";
-            this.Save_btn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.Save_btn.UseVisualStyleBackColor = false;
-            this.Save_btn.Click += new System.EventHandler(this.Save_btn_Click);
-            // 
             // selectDepart
             // 
             this.selectDepart.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.selectDepart.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.selectDepart.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.selectDepart.FormattingEnabled = true;
             this.selectDepart.Items.AddRange(new object[] {
             "-- Select Section -- ",
@@ -197,7 +173,7 @@
             "Rotor",
             "Winding",
             "Circuit"});
-            this.selectDepart.Location = new System.Drawing.Point(365, 246);
+            this.selectDepart.Location = new System.Drawing.Point(365, 247);
             this.selectDepart.Name = "selectDepart";
             this.selectDepart.Size = new System.Drawing.Size(267, 29);
             this.selectDepart.TabIndex = 80;
@@ -220,9 +196,9 @@
             this.label8.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
             this.label8.Location = new System.Drawing.Point(46, 528);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(111, 17);
+            this.label8.Size = new System.Drawing.Size(100, 17);
             this.label8.TabIndex = 144;
-            this.label8.Text = "UPLOAD IMAGE :";
+            this.label8.Text = "Upload Image :";
             // 
             // openFileDialog1
             // 
@@ -261,19 +237,24 @@
             this.CustomDatagrid.AllowUserToDeleteRows = false;
             this.CustomDatagrid.AllowUserToResizeColumns = false;
             this.CustomDatagrid.AllowUserToResizeRows = false;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.CustomDatagrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.CustomDatagrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.CustomDatagrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle19.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle19.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle19.SelectionBackColor = System.Drawing.Color.LightSteelBlue;
-            dataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.CustomDatagrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle19;
-            this.CustomDatagrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.CustomDatagrid.BackgroundColor = System.Drawing.Color.White;
+            this.CustomDatagrid.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.CustomDatagrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            this.CustomDatagrid.ColumnHeadersHeight = 35;
+            this.CustomDatagrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.CustomDatagrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.RecordID,
             this.DateCreated,
@@ -282,36 +263,32 @@
             this.LotNo,
             this.NGQty,
             this.Details,
-            this.RegNo,
-            this.CustomerName,
-            this.Status,
             this.CCtype,
-            this.Delete,
             this.UploadImage});
-            dataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle26.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle26.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-            dataGridViewCellStyle26.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle26.Padding = new System.Windows.Forms.Padding(6, 5, 6, 5);
-            dataGridViewCellStyle26.SelectionBackColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle26.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle26.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.CustomDatagrid.DefaultCellStyle = dataGridViewCellStyle26;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle7.Padding = new System.Windows.Forms.Padding(6, 5, 6, 5);
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.CustomDatagrid.DefaultCellStyle = dataGridViewCellStyle7;
             this.CustomDatagrid.Location = new System.Drawing.Point(683, 163);
             this.CustomDatagrid.Name = "CustomDatagrid";
             this.CustomDatagrid.ReadOnly = true;
-            dataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle27.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle27.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle27.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle27.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle27.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle27.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.CustomDatagrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle27;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F, System.Drawing.FontStyle.Bold);
+            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.CustomDatagrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle8;
             this.CustomDatagrid.RowHeadersVisible = false;
-            this.CustomDatagrid.RowTemplate.Height = 30;
+            this.CustomDatagrid.RowTemplate.Height = 35;
             this.CustomDatagrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.CustomDatagrid.Size = new System.Drawing.Size(651, 461);
+            this.CustomDatagrid.Size = new System.Drawing.Size(655, 485);
             this.CustomDatagrid.TabIndex = 148;
             // 
             // RecordID
@@ -325,8 +302,8 @@
             // DateCreated
             // 
             this.DateCreated.DataPropertyName = "DateCreated";
-            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.DateCreated.DefaultCellStyle = dataGridViewCellStyle20;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.DateCreated.DefaultCellStyle = dataGridViewCellStyle3;
             this.DateCreated.HeaderText = "Date";
             this.DateCreated.Name = "DateCreated";
             this.DateCreated.ReadOnly = true;
@@ -334,10 +311,10 @@
             // SectionID
             // 
             this.SectionID.DataPropertyName = "SectionID";
-            dataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle21.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle21.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.SectionID.DefaultCellStyle = dataGridViewCellStyle21;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.SectionID.DefaultCellStyle = dataGridViewCellStyle4;
             this.SectionID.HeaderText = "Section in charge";
             this.SectionID.Name = "SectionID";
             this.SectionID.ReadOnly = true;
@@ -352,8 +329,8 @@
             // LotNo
             // 
             this.LotNo.DataPropertyName = "LotNo";
-            dataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.LotNo.DefaultCellStyle = dataGridViewCellStyle22;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.LotNo.DefaultCellStyle = dataGridViewCellStyle5;
             this.LotNo.HeaderText = "Lot No.";
             this.LotNo.Name = "LotNo";
             this.LotNo.ReadOnly = true;
@@ -361,8 +338,8 @@
             // NGQty
             // 
             this.NGQty.DataPropertyName = "NGQty";
-            dataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.NGQty.DefaultCellStyle = dataGridViewCellStyle23;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.NGQty.DefaultCellStyle = dataGridViewCellStyle6;
             this.NGQty.HeaderText = "NG Qty";
             this.NGQty.Name = "NGQty";
             this.NGQty.ReadOnly = true;
@@ -374,32 +351,6 @@
             this.Details.Name = "Details";
             this.Details.ReadOnly = true;
             // 
-            // RegNo
-            // 
-            this.RegNo.DataPropertyName = "RegNo";
-            dataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle24.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RegNo.DefaultCellStyle = dataGridViewCellStyle24;
-            this.RegNo.HeaderText = "Registration No.";
-            this.RegNo.Name = "RegNo";
-            this.RegNo.ReadOnly = true;
-            // 
-            // CustomerName
-            // 
-            this.CustomerName.DataPropertyName = "CustomerName";
-            this.CustomerName.HeaderText = "Customer Name";
-            this.CustomerName.Name = "CustomerName";
-            this.CustomerName.ReadOnly = true;
-            // 
-            // Status
-            // 
-            this.Status.DataPropertyName = "Status";
-            dataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Status.DefaultCellStyle = dataGridViewCellStyle25;
-            this.Status.HeaderText = "Status";
-            this.Status.Name = "Status";
-            this.Status.ReadOnly = true;
-            // 
             // CCtype
             // 
             this.CCtype.DataPropertyName = "CCtype";
@@ -408,14 +359,6 @@
             this.CCtype.ReadOnly = true;
             this.CCtype.Visible = false;
             // 
-            // Delete
-            // 
-            this.Delete.DataPropertyName = "Delete";
-            this.Delete.HeaderText = "Delete";
-            this.Delete.Image = ((System.Drawing.Image)(resources.GetObject("Delete.Image")));
-            this.Delete.Name = "Delete";
-            this.Delete.ReadOnly = true;
-            // 
             // UploadImage
             // 
             this.UploadImage.DataPropertyName = "UploadImage";
@@ -423,46 +366,6 @@
             this.UploadImage.Name = "UploadImage";
             this.UploadImage.ReadOnly = true;
             this.UploadImage.Visible = false;
-            // 
-            // Uploadbtn
-            // 
-            this.Uploadbtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(34)))), ((int)(((byte)(200)))));
-            this.Uploadbtn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.Uploadbtn.FlatAppearance.BorderSize = 0;
-            this.Uploadbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Uploadbtn.Font = new System.Drawing.Font("Segoe UI Emoji", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Uploadbtn.ForeColor = System.Drawing.Color.White;
-            this.Uploadbtn.Image = ((System.Drawing.Image)(resources.GetObject("Uploadbtn.Image")));
-            this.Uploadbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Uploadbtn.Location = new System.Drawing.Point(1047, 111);
-            this.Uploadbtn.Name = "Uploadbtn";
-            this.Uploadbtn.Padding = new System.Windows.Forms.Padding(45, 0, 50, 0);
-            this.Uploadbtn.Size = new System.Drawing.Size(287, 39);
-            this.Uploadbtn.TabIndex = 152;
-            this.Uploadbtn.Text = "Import File";
-            this.Uploadbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.Uploadbtn.UseVisualStyleBackColor = false;
-            this.Uploadbtn.Click += new System.EventHandler(this.Uploadbtn_Click);
-            // 
-            // templatebtn
-            // 
-            this.templatebtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(34)))), ((int)(((byte)(200)))));
-            this.templatebtn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.templatebtn.FlatAppearance.BorderSize = 0;
-            this.templatebtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.templatebtn.Font = new System.Drawing.Font("Segoe UI Emoji", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.templatebtn.ForeColor = System.Drawing.Color.White;
-            this.templatebtn.Image = ((System.Drawing.Image)(resources.GetObject("templatebtn.Image")));
-            this.templatebtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.templatebtn.Location = new System.Drawing.Point(683, 111);
-            this.templatebtn.Name = "templatebtn";
-            this.templatebtn.Padding = new System.Windows.Forms.Padding(45, 0, 50, 0);
-            this.templatebtn.Size = new System.Drawing.Size(322, 39);
-            this.templatebtn.TabIndex = 153;
-            this.templatebtn.Text = "Download Template";
-            this.templatebtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.templatebtn.UseVisualStyleBackColor = false;
-            this.templatebtn.Click += new System.EventHandler(this.templatebtn_Click);
             // 
             // panel9
             // 
@@ -473,7 +376,7 @@
             this.panel9.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel9.Location = new System.Drawing.Point(0, 0);
             this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(1366, 86);
+            this.panel9.Size = new System.Drawing.Size(1370, 86);
             this.panel9.TabIndex = 154;
             // 
             // button12
@@ -483,7 +386,7 @@
             this.button12.FlatAppearance.BorderSize = 0;
             this.button12.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button12.Image = ((System.Drawing.Image)(resources.GetObject("button12.Image")));
-            this.button12.Location = new System.Drawing.Point(1255, 21);
+            this.button12.Location = new System.Drawing.Point(1259, 21);
             this.button12.Name = "button12";
             this.button12.Size = new System.Drawing.Size(55, 46);
             this.button12.TabIndex = 155;
@@ -503,9 +406,9 @@
             // 
             // NGText
             // 
-            this.NGText.BackColor = System.Drawing.Color.Gainsboro;
+            this.NGText.BackColor = System.Drawing.Color.WhiteSmoke;
             this.NGText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.NGText.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.NGText.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.NGText.Location = new System.Drawing.Point(48, 246);
             this.NGText.Multiline = true;
             this.NGText.Name = "NGText";
@@ -520,28 +423,91 @@
             this.label10.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
             this.label10.Location = new System.Drawing.Point(457, 528);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(115, 17);
+            this.label10.Size = new System.Drawing.Size(108, 17);
             this.label10.TabIndex = 158;
-            this.label10.Text = "PREVIEW IMAGE :";
+            this.label10.Text = "Preview Image : ";
+            // 
+            // Finalizebtn
+            // 
+            this.Finalizebtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(34)))), ((int)(((byte)(200)))));
+            this.Finalizebtn.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.Finalizebtn.FlatAppearance.BorderSize = 0;
+            this.Finalizebtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Finalizebtn.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Finalizebtn.ForeColor = System.Drawing.Color.White;
+            this.Finalizebtn.Image = ((System.Drawing.Image)(resources.GetObject("Finalizebtn.Image")));
+            this.Finalizebtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Finalizebtn.Location = new System.Drawing.Point(1392, 777);
+            this.Finalizebtn.Name = "Finalizebtn";
+            this.Finalizebtn.Padding = new System.Windows.Forms.Padding(45, 0, 50, 0);
+            this.Finalizebtn.Size = new System.Drawing.Size(235, 43);
+            this.Finalizebtn.TabIndex = 181;
+            this.Finalizebtn.Text = "Finalize data";
+            this.Finalizebtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Finalizebtn.UseVisualStyleBackColor = false;
+            this.Finalizebtn.Click += new System.EventHandler(this.Finalizebtn_Click);
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label18.Location = new System.Drawing.Point(678, 120);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(124, 30);
+            this.label18.TabIndex = 182;
+            this.label18.Text = "Data Input ";
+            // 
+            // button1
+            // 
+            this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(34)))), ((int)(((byte)(200)))));
+            this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button1.FlatAppearance.BorderSize = 0;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.ForeColor = System.Drawing.Color.White;
+            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
+            this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button1.Location = new System.Drawing.Point(458, 777);
+            this.button1.Name = "button1";
+            this.button1.Padding = new System.Windows.Forms.Padding(45, 0, 50, 0);
+            this.button1.Size = new System.Drawing.Size(180, 43);
+            this.button1.TabIndex = 183;
+            this.button1.Text = "Save";
+            this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.button1.UseVisualStyleBackColor = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // Cancel_btn
+            // 
+            this.Cancel_btn.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.Cancel_btn.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Cancel_btn.Location = new System.Drawing.Point(262, 777);
+            this.Cancel_btn.Name = "Cancel_btn";
+            this.Cancel_btn.Size = new System.Drawing.Size(178, 43);
+            this.Cancel_btn.TabIndex = 184;
+            this.Cancel_btn.Text = "Cancel";
+            this.Cancel_btn.UseVisualStyleBackColor = true;
+            this.Cancel_btn.Click += new System.EventHandler(this.Cancel_btn_Click_1);
             // 
             // AddCustomerComplaint
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1366, 729);
+            this.ClientSize = new System.Drawing.Size(1370, 749);
             this.ControlBox = false;
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.Cancel_btn);
+            this.Controls.Add(this.label18);
+            this.Controls.Add(this.Finalizebtn);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.NGText);
             this.Controls.Add(this.panel9);
-            this.Controls.Add(this.templatebtn);
-            this.Controls.Add(this.Uploadbtn);
             this.Controls.Add(this.CustomDatagrid);
             this.Controls.Add(this.AddImagebtn);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.selectDepart);
-            this.Controls.Add(this.Save_btn);
             this.Controls.Add(this.ProblemText);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label4);
@@ -572,7 +538,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.RichTextBox ProblemText;
-        private System.Windows.Forms.Button Save_btn;
         private System.Windows.Forms.ComboBox selectDepart;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
@@ -580,6 +545,15 @@
         private System.Windows.Forms.Button AddImagebtn;
         private System.Windows.Forms.PictureBox pictureBox1;
         public System.Windows.Forms.DataGridView CustomDatagrid;
+        private System.Windows.Forms.Panel panel9;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Button button12;
+        private System.Windows.Forms.TextBox NGText;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Button Finalizebtn;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button Cancel_btn;
         private System.Windows.Forms.DataGridViewTextBoxColumn RecordID;
         private System.Windows.Forms.DataGridViewTextBoxColumn DateCreated;
         private System.Windows.Forms.DataGridViewTextBoxColumn SectionID;
@@ -587,18 +561,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn LotNo;
         private System.Windows.Forms.DataGridViewTextBoxColumn NGQty;
         private System.Windows.Forms.DataGridViewTextBoxColumn Details;
-        private System.Windows.Forms.DataGridViewTextBoxColumn RegNo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CustomerName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Status;
         private System.Windows.Forms.DataGridViewTextBoxColumn CCtype;
-        private System.Windows.Forms.DataGridViewImageColumn Delete;
         private System.Windows.Forms.DataGridViewTextBoxColumn UploadImage;
-        private System.Windows.Forms.Button Uploadbtn;
-        private System.Windows.Forms.Button templatebtn;
-        private System.Windows.Forms.Panel panel9;
-        private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.Button button12;
-        private System.Windows.Forms.TextBox NGText;
-        private System.Windows.Forms.Label label10;
     }
 }

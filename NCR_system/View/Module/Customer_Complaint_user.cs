@@ -99,15 +99,15 @@ namespace NCR_system.View.Module
                 Setup("Status", 60, 0);
                 Setup("DateCreated", 100, 1);
                 Setup("RegNo", 150, 2);
-                Setup("CustomerName", 150, 3);
+                Setup("CustomerName", 180, 3);
                 Setup("SectionID", 150, 4);
-                Setup("ModelNo", 150, 5);
+                Setup("ModelNo", 180, 5);
 
                 CustomDatagrid.Columns["LotNo"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 Setup("LotNo", 150, 6);
 
                 Setup("NGQty", 100, 7);
-                Setup("Details", 300, 8, DataGridViewAutoSizeColumnMode.DisplayedCells);
+                Setup("Details", 300, 8, DataGridViewAutoSizeColumnMode.Fill);
 
 
                 
@@ -329,12 +329,16 @@ namespace NCR_system.View.Module
         // =========================================================
         // BUTTON ACTION 
         // =========================================================
-        private void OpenCC_Click(object sender, EventArgs e)
+        private async void OpenCC_Click(object sender, EventArgs e)
         {
             using (var add = new AddCustomerComplaint(_cust, this))
             {
                 add.StartPosition = FormStartPosition.CenterParent;
-                add.ShowDialog(this);   // <-- modal + always in front of parent
+                if (add.ShowDialog(this) == DialogResult.OK)
+                {
+                    await DisplayCustomer(1);
+                }
+
             }
         }
         private void Externalbtn_Click(object sender, EventArgs e)

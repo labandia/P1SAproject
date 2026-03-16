@@ -80,11 +80,11 @@ namespace NCR_system.View.Module
             Setup("DateCloseReg", 150, 1);
             Setup("RegNo", 200, 2);
             Setup("DateIssued", 150, 3);
-            Setup("IssueGroup", 200, 4);
+            Setup("IssueGroup", 220, 4);
             Setup("SectionID", 150, 5);
-            Setup("ModelNo", 150, 6, DataGridViewAutoSizeColumnMode.AllCells);
+            Setup("ModelNo", 180, 6);
             Setup("Quantity", 100, 7);
-            Setup("Contents", 150, 8, DataGridViewAutoSizeColumnMode.DisplayedCells);
+            Setup("Contents", 150, 8, DataGridViewAutoSizeColumnMode.Fill);
             Setup("Edit", 100, 9);
             Setup("Delete", 100, 10);
 
@@ -223,9 +223,10 @@ namespace NCR_system.View.Module
             pieChart1.Series = series;
 
             pieChart1.LegendLocation = LegendLocation.Right;
-            pieChart1.ForeColor = Color.White;
             pieChart1.InnerRadius = 70;
             pieChart1.DisableAnimations = cc.Sum(x => x.totalOpen) > 2000;
+
+            pieChart1.Update();
         }
 
         private Brush GetDepartmentColor(string dept)
@@ -364,38 +365,7 @@ namespace NCR_system.View.Module
 
         private void RejectedGrid_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            // Make sure user clicked on a valid row (not header)
-            if (e.RowIndex < 0)
-                return;
-
-
-            // Get the clicked column
-            var column = RejectedGrid.Columns[e.ColumnIndex];
-
-            // Get the clicked row
-            var row = RejectedGrid.Rows[e.RowIndex];
-
-            var recordID = row.Cells["RecordID"].Value;
-            var type = row.Cells["Process"].Value;
-
-            if (column.Name == "Edit")
-            {
-                using (var openedit = new EditShipments(_ship, this, Convert.ToInt32(recordID), Convert.ToInt32(type)))
-                {
-                    openedit.StartPosition = FormStartPosition.CenterParent;
-                    openedit.ShowDialog(this);   // <-- modal + always in front of parent
-                }
-            }
-            else if (column.Name == "Delete")
-            {
-                // Handle Delete image click
-                DialogResult result = System.Windows.Forms.MessageBox.Show("Are you sure you want to delete?", "Confirm Delete", MessageBoxButtons.YesNo);
-                if (result == DialogResult.Yes)
-                {
-                    // Remove the row or perform deletion
-                   MessageBox.Show($"Delete clicked on row {e.RowIndex} - Record ID selected:  {recordID}");
-                }
-            }
+           
         }
 
 
@@ -403,8 +373,8 @@ namespace NCR_system.View.Module
         {
             //resetDisplayText();
 
-            pieChart1.Width = 650;   // 👈 Make wider
-            pieChart1.Height = 450;  // Optional height
+            pieChart1.Width = 650;   
+            pieChart1.Height = 450;  
 
 
             if (cc == null || cc.Count == 0)
@@ -445,8 +415,6 @@ namespace NCR_system.View.Module
 
                 seriesCollection.Add(pie);
 
-                // Update text labels
-                //DisplayLabelText(d.DepartmentName, d.totalOpen);
             }
 
             pieChart1.Series = seriesCollection;
@@ -459,9 +427,6 @@ namespace NCR_system.View.Module
             pieChart1.LegendLocation = LegendLocation.Right;
         }
 
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
+        
     }
 }

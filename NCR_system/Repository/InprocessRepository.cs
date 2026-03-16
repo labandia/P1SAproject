@@ -10,7 +10,13 @@ namespace NCR_system.Repository
 {
     internal class InprocessRepository : IInprocess
     {
-    
+        public Task<bool> DeleteInprocessData(int recordID)
+        {
+           return SqlDataAccess.ExecuteAsync($@"UPDATE 
+                        PC_Inprocess SET IsDelete = 1 
+                        WHERE RecordID = @RecordID", new { RecordID = recordID });
+        }
+
         public Task<List<CustomerTotalModel>> GetCustomersOpenItem(int Stats = 1, int sec = 0)
         {
             string strquery = $@"SELECT 
@@ -52,16 +58,20 @@ namespace NCR_system.Repository
             Dictionary<string, object> parameters = new Dictionary<string, object>();
 
             string strquery = $@"SELECT RecordID
-                                  ,FORMAT(DateEncounter, 'MM/dd/yy') as DateEncounter
+                                  ,DateEncounter
                                   ,TitleEmail,Shift
                                   ,Line,Model
                                   ,ShopOrder,Defect
                                   ,NGQty,ProcEncounter
                                   ,cause,Invest
                                   ,Status,P1saStatus
-                                  ,Remarks,SectionDep, SectionID
+                                  ,Remarks,SectionDep, SectionID, UploadImage
                               FROM PC_Inprocess
                               WHERE [IsDelete] = 0 ";
+
+            strquery += " AND Status = @Status";
+            parameters.Add("@Status", Stats);
+
 
             // Filter By SMT Line
             if (departmentID != 0)
@@ -70,12 +80,7 @@ namespace NCR_system.Repository
                 parameters.Add("@SectionID", departmentID);
             }
 
-            // Filter By SMT Line
-            if (Stats != 0)
-            {
-                strquery += " AND Status = @Status";
-                parameters.Add("@Status", Stats);
-            }
+            
 
             // Search Text
             if (!string.IsNullOrEmpty(search))
@@ -112,7 +117,10 @@ namespace NCR_system.Repository
 
         public Task<bool> UpdateInprocessData(InprocessModel inprocess)
         {
-            throw new NotImplementedException();
+            return SqlDataAccess.ExecuteAsync($@"UPDATE PC_Inprocess SET  TitleEmail =@TitleEmail, Shift =@Shift, Line =@Line, 
+                Model =@Model, ShopOrder =@ShopOrder, Defect =@Defect, NGQty =@NGQty, ProcEncounter =@ProcEncounter, 
+                cause =@cause, Invest =@Invest, P1saStatus =@P1saStatus, Remarks =@Remarks, 
+                SectionDep =@SectionDep, SectionID =@SectionID, UploadImage =@UploadImage WHERE RecordID =@RecordID", inprocess);
         }
     }
 }

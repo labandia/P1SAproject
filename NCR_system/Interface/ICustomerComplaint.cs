@@ -21,5 +21,7 @@ namespace NCR_system.Interface
         Task<CustomerModel> GetCustomerDataByID(int recordID);
         Task<bool> InsertCustomerData(CustomerModel customer, int type);
         Task<bool> UpdateCustomerData(CustomerModel customer, ComplaintUpdateType type);
+
+        Task<bool> UpdateCustomers(CustomerModel cus, int type);
     }
 }

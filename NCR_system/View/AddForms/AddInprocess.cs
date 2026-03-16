@@ -21,6 +21,8 @@ namespace NCR_system.View.AddForms
         private readonly IInprocess _pro;
         public string selectedImagepath = "";
 
+        BindingList<InprocessModel> listdata = new BindingList<InprocessModel>();
+
 
         private readonly string[] SectionName =
         {
@@ -31,6 +33,14 @@ namespace NCR_system.View.AddForms
         {
             InitializeComponent();
             _pro = pro; 
+
+            if(listdata.Count == 0)
+            {
+                Finalizebtn.Enabled = false;    
+                Finalizebtn.BackColor = Color.Gray;
+                Finalizebtn.ForeColor = Color.White;
+            }
+
             Shiftselect.SelectedIndex = 0;  
             sectionbox.SelectedIndex = 0;
         }
@@ -69,13 +79,12 @@ namespace NCR_system.View.AddForms
             {
                 string imagepath = await UploadServices.SaveImageFolder(selectedImagepath);
                 DateTime date = DateEncount.Value;
-                string formattedDate = date.ToString("yyyy-MM-dd HH:mm:ss.fff");
-
+                //string formattedDate = date.ToString("yyyy-MM-dd HH:mm:ss.fff");
 
                 var obj = new InprocessModel
                 {
                     TitleEmail = InputHelper.GetText(EmailText),
-                    DateEncounter = formattedDate,
+                    DateEncounter = date,
                     Shift = Shiftselect.SelectedIndex,
                     Line = InputHelper.GetText(LineText),
                     Defect = InputHelper.GetText(DefectText),
@@ -83,30 +92,68 @@ namespace NCR_system.View.AddForms
                     ShopOrder = InputHelper.GetText(ShopText),
                     NGQty = string.IsNullOrEmpty(QuanText.Text) ? 0 : int.Parse(QuanText.Text),
                     ProcEncounter = InputHelper.GetText(ProcText),
-                    cause = InputHelper.GetText(CauseText),  
+                    cause = InputHelper.GetText(CauseText),
                     Invest = InputHelper.GetText(reportpath),
                     SectionDep = SectionName[sectionbox.SelectedIndex],
-                    SectionID =  sectionbox.SelectedIndex + 1,
+                    SectionID = sectionbox.SelectedIndex + 1,
                     UploadImage = imagepath,
                     P1saStatus = p1saSelect.SelectedIndex,
                     Remarks = InputHelper.GetText(remarksText)
                 };
 
+                listdata.Add(obj);
 
-                bool result = await _pro.InsertInprocessData(obj);
-
-                if (result)
-                {
-                    MessageBox.Show("Data saved successfully.");
-                    DialogResult = DialogResult.OK;
-                    Close();
-                }
-
-            }
-            catch(Exception ex)
+                InprocessGrid.Columns["RecordID"].Visible = false;
+                InprocessGrid.DataSource = listdata;
+                ResetDisplay();
+                EmailText.Focus();
+            } catch(Exception ex)
             {
                 MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
+            //try
+            //{
+            //    string imagepath = await UploadServices.SaveImageFolder(selectedImagepath);
+            //    DateTime date = DateEncount.Value;
+            //    string formattedDate = date.ToString("yyyy-MM-dd HH:mm:ss.fff");
+
+
+            //    var obj = new InprocessModel
+            //    {
+            //        TitleEmail = InputHelper.GetText(EmailText),
+            //        DateEncounter = formattedDate,
+            //        Shift = Shiftselect.SelectedIndex,
+            //        Line = InputHelper.GetText(LineText),
+            //        Defect = InputHelper.GetText(DefectText),
+            //        Model = InputHelper.GetText(ModelText),
+            //        ShopOrder = InputHelper.GetText(ShopText),
+            //        NGQty = string.IsNullOrEmpty(QuanText.Text) ? 0 : int.Parse(QuanText.Text),
+            //        ProcEncounter = InputHelper.GetText(ProcText),
+            //        cause = InputHelper.GetText(CauseText),  
+            //        Invest = InputHelper.GetText(reportpath),
+            //        SectionDep = SectionName[sectionbox.SelectedIndex],
+            //        SectionID =  sectionbox.SelectedIndex + 1,
+            //        UploadImage = imagepath,
+            //        P1saStatus = p1saSelect.SelectedIndex,
+            //        Remarks = InputHelper.GetText(remarksText)
+            //    };
+
+
+            //    bool result = await _pro.InsertInprocessData(obj);
+
+            //    if (result)
+            //    {
+            //        MessageBox.Show("Data saved successfully.");
+            //        DialogResult = DialogResult.OK;
+            //        Close();
+            //    }
+
+            //}
+            //catch(Exception ex)
+            //{
+            //    MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //}
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -122,7 +169,89 @@ namespace NCR_system.View.AddForms
             }
         }
 
-       
+        private void InprocessGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
 
+        }
+
+        private void InprocessGrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (InprocessGrid.Columns[e.ColumnIndex].Name == "Shift")
+            {
+                int checkshift = (int)e.Value;
+
+                e.Value = (checkshift == 0) ? "DS" : "NS";
+            }
+        }
+
+        private async void Finalizebtn_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                foreach (var item in listdata)
+                {
+                    await _pro.InsertInprocessData(item);
+                }
+
+                Finalizebtn.Enabled = false;
+                Finalizebtn.BackColor = Color.Gray;
+                Finalizebtn.ForeColor = Color.White;
+
+                DialogResult = DialogResult.OK;
+                Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        public void ResetDisplay()
+        {
+            EmailText.Text = "";
+            Shiftselect.SelectedIndex = 0;
+            LineText.Text = "";
+            DefectText.Text = "";
+            ModelText.Text = "";
+            ShopText.Text = "";
+            QuanText.Text = "";
+            ProcText.Text = "";
+            CauseText.Text = "";
+            reportpath.Text = "";
+            selectedImagepath = ""; 
+            p1saSelect.SelectedIndex = 0;
+            remarksText.Text = "";
+
+            // Scroll panel to top
+            panel1.VerticalScroll.Value = 0;
+            panel1.PerformLayout();
+        }
+
+        private void QuanText_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            TextBox tb = sender as TextBox;
+
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '.')
+            {
+                e.Handled = true;
+            }
+
+            // only one decimal point
+            if (e.KeyChar == '.' && (sender as TextBox).Text.Contains("."))
+            {
+                e.Handled = true;
+            }
+
+            // Only one minus at the beginning
+            if (e.KeyChar == '-' && (tb.Text.Contains("-") || tb.SelectionStart > 0))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
     }
 }

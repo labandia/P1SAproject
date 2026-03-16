@@ -138,6 +138,8 @@ namespace Attendance_Monitoring.Models
             set => shifts = value;
         }
 
+        
+
     }
 
     // ATTENDANCE MONITOR AND SUMMARY
@@ -209,7 +211,10 @@ namespace Attendance_Monitoring.Models
             get => _LateTime;
             set => _LateTime = value;
         }
-
+        public string Employee
+        {
+            get { return Fullname + Environment.NewLine + Employee_ID; }
+        }
         public ShiftType Shifts { get; set; }  // enum instead of int
     }
 

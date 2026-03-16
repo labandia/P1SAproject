@@ -28,7 +28,7 @@
     <MinimumRequiredVersion>1.0.0.0</MinimumRequiredVersion>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>28</ApplicationRevision>
+    <ApplicationRevision>29</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -232,6 +232,18 @@
     <Compile Include="View\Details\CustomerDetails.Designer.cs">
       <DependentUpon>CustomerDetails.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\Details\InprocessDetails.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Details\InprocessDetails.Designer.cs">
+      <DependentUpon>InprocessDetails.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Details\SDCDetails.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Details\SDCDetails.Designer.cs">
+      <DependentUpon>SDCDetails.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\EditForms\EditCC_External.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -345,6 +357,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\Details\CustomerDetails.resx">
       <DependentUpon>CustomerDetails.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Details\InprocessDetails.resx">
+      <DependentUpon>InprocessDetails.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Details\SDCDetails.resx">
+      <DependentUpon>SDCDetails.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\EditForms\EditCC_External.resx">
       <DependentUpon>EditCC_External.cs</DependentUpon>

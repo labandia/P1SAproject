@@ -238,7 +238,7 @@ namespace NCR_system.Models
     public class InprocessModel
     {
         private int _RecordID;
-        private string _DateEncounter;
+        private DateTime _DateEncounter;
         private string _TitleEmail;
         private int _Shift;
         private string _Line;
@@ -261,11 +261,18 @@ namespace NCR_system.Models
             get => _RecordID;
             set => _RecordID = value;
         }
-        public string DateEncounter
+        public DateTime DateEncounter
         {
             get => _DateEncounter;
             set => _DateEncounter = value;
         }
+
+        // Optional formatted property
+        public string DateEncounterFormatted
+        {
+            get => _DateEncounter.ToString("MM/dd/yy");
+        }
+
         public string TitleEmail
         {
             get => _TitleEmail;

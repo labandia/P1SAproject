@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -17,6 +18,8 @@ namespace NCR_system.View.AddForms
 
         public string selectedImagepath = "";
 
+        BindingList<CustomerModel> listdata = new BindingList<CustomerModel>();
+
         public AddCustomerComplaint(ICustomerComplaint cus, Customer_Complaint_user user)
         {
             InitializeComponent();
@@ -29,34 +32,7 @@ namespace NCR_system.View.AddForms
 
         private async void Save_btn_Click(object sender, EventArgs e)
         {
-            if (!FormValid()) return;
-
-            string ImageUpload = await UploadServices.SaveImageFolder(selectedImagepath);
-
-            var obj = new CustomerModel
-            {
-                ModelNo = ModelText.Text,
-                LotNo = LotText.Text,
-                NGQty = Convert.ToInt32(NGText.Text),
-                Status = 1,
-                Details = ProblemText.Text,
-                SectionID = selectDepart.SelectedIndex + 1,
-                CCtype = 1,
-                UploadImage = ImageUpload
-            };
-
-            bool result = await _cus.InsertCustomerData(obj, 1);
-
-            if (!result)
-            {
-                MessageBox.Show("Failed to save data.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); 
-                return;
-            }
-
-
-            MessageBox.Show("Data saved successfully.");
-            await _user.DisplayCustomer(1);
-            this.Close();
+            
         }
 
         private void Cancel_btn_Click(object sender, EventArgs e)
@@ -100,7 +76,7 @@ namespace NCR_system.View.AddForms
 
         private void templatebtn_Click(object sender, EventArgs e)
         {
-            UploadServices.DownloadFiles(1);    
+             
         }
 
         private void Uploadbtn_Click(object sender, EventArgs e)
@@ -158,6 +134,66 @@ namespace NCR_system.View.AddForms
         {
             ProblemText.Text = "";
             ProblemText.ForeColor = Color.Black;
+        }
+
+        private async void button1_Click(object sender, EventArgs e)
+        {
+            string ImageUpload = await UploadServices.SaveImageFolder(selectedImagepath);
+
+            var obj = new CustomerModel
+            {
+                ModelNo = ModelText.Text,
+                LotNo = LotText.Text,
+                NGQty = Convert.ToInt32(NGText.Text),
+                Status = 1,
+                Details = ProblemText.Text,
+                SectionID = selectDepart.SelectedIndex + 1,
+                CCtype = 1,
+                UploadImage = ImageUpload
+            };
+
+            listdata.Add(obj);
+
+            CustomDatagrid.DataSource = listdata;
+            ResetDisplay();
+            ModelText.Focus();
+        }
+
+        public void ResetDisplay()
+        {
+            ModelText.Text = "";
+            LotText.Text = "";
+            NGText.Text = "";
+            ProblemText.Text = "";
+            ModelText.Text = "";
+            selectDepart.SelectedIndex = 0;
+        }
+
+        private async void Finalizebtn_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                foreach (var item in listdata)
+                {
+                    await _cus.InsertCustomerData(item, 1);
+                }
+
+                Finalizebtn.Enabled = false;
+                Finalizebtn.BackColor = Color.Gray;
+                Finalizebtn.ForeColor = Color.White;
+
+                DialogResult = DialogResult.OK;
+                Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void Cancel_btn_Click_1(object sender, EventArgs e)
+        {
+
         }
     }
 }

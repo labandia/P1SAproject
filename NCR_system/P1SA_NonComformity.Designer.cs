@@ -61,6 +61,7 @@
             // 
             // button3
             // 
+            this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button3.AutoSize = true;
             this.button3.BackColor = System.Drawing.Color.Transparent;
             this.button3.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -69,16 +70,16 @@
             this.button3.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
             this.button3.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button3.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button3.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button3.ForeColor = System.Drawing.Color.White;
             this.button3.Image = ((System.Drawing.Image)(resources.GetObject("button3.Image")));
             this.button3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button3.Location = new System.Drawing.Point(1123, 7);
+            this.button3.Location = new System.Drawing.Point(1149, 7);
             this.button3.Name = "button3";
             this.button3.Padding = new System.Windows.Forms.Padding(10, 0, 20, 0);
-            this.button3.Size = new System.Drawing.Size(149, 46);
+            this.button3.Size = new System.Drawing.Size(123, 46);
             this.button3.TabIndex = 24;
-            this.button3.Text = "Dashboard";
+            this.button3.Text = "Overall";
             this.button3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.button3.UseVisualStyleBackColor = false;
             // 
@@ -92,11 +93,11 @@
             this.button2.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
             this.button2.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button2.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button2.ForeColor = System.Drawing.Color.White;
             this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
             this.button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button2.Location = new System.Drawing.Point(848, 8);
+            this.button2.Location = new System.Drawing.Point(860, 8);
             this.button2.Name = "button2";
             this.button2.Padding = new System.Windows.Forms.Padding(10, 0, 20, 0);
             this.button2.Size = new System.Drawing.Size(149, 46);
@@ -115,11 +116,11 @@
             this.button1.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
             this.button1.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button1.ForeColor = System.Drawing.Color.White;
             this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
             this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.Location = new System.Drawing.Point(677, 7);
+            this.button1.Location = new System.Drawing.Point(686, 7);
             this.button1.Name = "button1";
             this.button1.Padding = new System.Windows.Forms.Padding(10, 0, 3, 0);
             this.button1.Size = new System.Drawing.Size(165, 46);
@@ -153,11 +154,11 @@
             this.Shipbtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
             this.Shipbtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
             this.Shipbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Shipbtn.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Shipbtn.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Shipbtn.ForeColor = System.Drawing.Color.White;
             this.Shipbtn.Image = ((System.Drawing.Image)(resources.GetObject("Shipbtn.Image")));
             this.Shipbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Shipbtn.Location = new System.Drawing.Point(521, 7);
+            this.Shipbtn.Location = new System.Drawing.Point(521, 8);
             this.Shipbtn.Name = "Shipbtn";
             this.Shipbtn.Padding = new System.Windows.Forms.Padding(10, 0, 1, 0);
             this.Shipbtn.Size = new System.Drawing.Size(150, 46);
@@ -177,14 +178,14 @@
             this.SDCbtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
             this.SDCbtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
             this.SDCbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SDCbtn.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SDCbtn.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SDCbtn.ForeColor = System.Drawing.Color.White;
             this.SDCbtn.Image = ((System.Drawing.Image)(resources.GetObject("SDCbtn.Image")));
             this.SDCbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SDCbtn.Location = new System.Drawing.Point(9, 8);
             this.SDCbtn.Name = "SDCbtn";
             this.SDCbtn.Padding = new System.Windows.Forms.Padding(3, 0, 2, 0);
-            this.SDCbtn.Size = new System.Drawing.Size(170, 46);
+            this.SDCbtn.Size = new System.Drawing.Size(180, 46);
             this.SDCbtn.TabIndex = 21;
             this.SDCbtn.Text = "Customer Complaint";
             this.SDCbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -201,11 +202,11 @@
             this.rejectBtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
             this.rejectBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
             this.rejectBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rejectBtn.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rejectBtn.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rejectBtn.ForeColor = System.Drawing.Color.White;
             this.rejectBtn.Image = ((System.Drawing.Image)(resources.GetObject("rejectBtn.Image")));
             this.rejectBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.rejectBtn.Location = new System.Drawing.Point(366, 7);
+            this.rejectBtn.Location = new System.Drawing.Point(366, 8);
             this.rejectBtn.Name = "rejectBtn";
             this.rejectBtn.Padding = new System.Windows.Forms.Padding(12, 0, 12, 0);
             this.rejectBtn.Size = new System.Drawing.Size(149, 46);
@@ -225,11 +226,11 @@
             this.processbtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
             this.processbtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
             this.processbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.processbtn.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.processbtn.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.processbtn.ForeColor = System.Drawing.Color.White;
             this.processbtn.Image = ((System.Drawing.Image)(resources.GetObject("processbtn.Image")));
             this.processbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.processbtn.Location = new System.Drawing.Point(185, 7);
+            this.processbtn.Location = new System.Drawing.Point(195, 8);
             this.processbtn.Name = "processbtn";
             this.processbtn.Padding = new System.Windows.Forms.Padding(10, 0, 10, 0);
             this.processbtn.Size = new System.Drawing.Size(165, 46);
@@ -241,7 +242,7 @@
             // 
             // Sectionpanel
             // 
-            this.Sectionpanel.BackColor = System.Drawing.Color.LightGray;
+            this.Sectionpanel.BackColor = System.Drawing.Color.White;
             this.Sectionpanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Sectionpanel.Location = new System.Drawing.Point(0, 63);
             this.Sectionpanel.Name = "Sectionpanel";
@@ -261,6 +262,7 @@
             this.Name = "P1SA_NonComformity";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "-";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.P1SA_NonComformity_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

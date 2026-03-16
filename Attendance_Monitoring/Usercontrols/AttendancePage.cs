@@ -81,23 +81,26 @@ namespace Attendance_Monitoring.Usercontrols
             attendancetable.Columns["Date_today"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             attendancetable.Columns["Date_today"].DisplayIndex = 1;
 
-            attendancetable.Columns["Employee_ID"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            attendancetable.Columns["Employee_ID"].DisplayIndex = 2;
+            attendancetable.Columns["Employee"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            attendancetable.Columns["Employee"].DisplayIndex = 2;
 
-            attendancetable.Columns["Fullname"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            attendancetable.Columns["Fullname"].DisplayIndex = 3;
+            //attendancetable.Columns["Employee_ID"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            //attendancetable.Columns["Employee_ID"].DisplayIndex = 2;
+
+            //attendancetable.Columns["Fullname"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            //attendancetable.Columns["Fullname"].DisplayIndex = 3;
 
             attendancetable.Columns["Shifts"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            attendancetable.Columns["Shifts"].DisplayIndex = 4;
+            attendancetable.Columns["Shifts"].DisplayIndex = 3;
 
             attendancetable.Columns["LateTime"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            attendancetable.Columns["LateTime"].DisplayIndex = 5;
+            attendancetable.Columns["LateTime"].DisplayIndex = 4;
 
             attendancetable.Columns["Edit"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            attendancetable.Columns["Edit"].DisplayIndex = 6;
+            attendancetable.Columns["Edit"].DisplayIndex = 5;
 
             attendancetable.Columns["Delete"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            attendancetable.Columns["Delete"].DisplayIndex = 7;
+            attendancetable.Columns["Delete"].DisplayIndex = 6;
         }
 
         // ================= DISPLAY ATTENDANCE =================
@@ -126,7 +129,7 @@ namespace Attendance_Monitoring.Usercontrols
                 attendancetable.DataSource = _attendanceList;
                 attendancetable.ResumeLayout();
 
-                DisplayTotal.Text = $"Total Attendance: {attendancetable.RowCount}";
+                DisplayTotal.Text = $"Total Attendees: {attendancetable.RowCount}";
             }
             catch (FormatException)
             {
@@ -459,6 +462,12 @@ namespace Attendance_Monitoring.Usercontrols
                     await LoadAttendanceAsync();
                 }
             }
+        }
+
+        private void EmployID_Click(object sender, EventArgs e)
+        {
+            EmployID.Text = "";
+            EmployID.ForeColor = Color.Black;
         }
     }
 }

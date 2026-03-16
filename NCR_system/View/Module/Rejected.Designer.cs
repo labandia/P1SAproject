@@ -115,7 +115,7 @@
             this.RejectedGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.RejectedGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
+            this.RejectedGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.RejectedGrid.BackgroundColor = System.Drawing.SystemColors.ControlLight;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
@@ -175,7 +175,6 @@
             this.RecordID.Name = "RecordID";
             this.RecordID.ReadOnly = true;
             this.RecordID.Visible = false;
-            this.RecordID.Width = 72;
             // 
             // RegNo
             // 
@@ -185,7 +184,6 @@
             this.RegNo.HeaderText = "Registration No.";
             this.RegNo.Name = "RegNo";
             this.RegNo.ReadOnly = true;
-            this.RegNo.Width = 119;
             // 
             // DateIssued
             // 
@@ -195,7 +193,6 @@
             this.DateIssued.HeaderText = "Date Issued";
             this.DateIssued.Name = "DateIssued";
             this.DateIssued.ReadOnly = true;
-            this.DateIssued.Width = 97;
             // 
             // IssueGroup
             // 
@@ -205,7 +202,6 @@
             this.IssueGroup.HeaderText = "Issuing\nSection ";
             this.IssueGroup.Name = "IssueGroup";
             this.IssueGroup.ReadOnly = true;
-            this.IssueGroup.Width = 85;
             // 
             // SectionID
             // 
@@ -215,7 +211,6 @@
             this.SectionID.HeaderText = "Main In-charge";
             this.SectionID.Name = "SectionID";
             this.SectionID.ReadOnly = true;
-            this.SectionID.Width = 114;
             // 
             // ModelNo
             // 
@@ -223,7 +218,6 @@
             this.ModelNo.HeaderText = "Model No. / Part No.";
             this.ModelNo.Name = "ModelNo";
             this.ModelNo.ReadOnly = true;
-            this.ModelNo.Width = 103;
             // 
             // Quantity
             // 
@@ -233,7 +227,6 @@
             this.Quantity.HeaderText = "Quantity";
             this.Quantity.Name = "Quantity";
             this.Quantity.ReadOnly = true;
-            this.Quantity.Width = 89;
             // 
             // Contents
             // 
@@ -241,7 +234,6 @@
             this.Contents.HeaderText = "Contents";
             this.Contents.Name = "Contents";
             this.Contents.ReadOnly = true;
-            this.Contents.Width = 91;
             // 
             // DateCloseReg
             // 
@@ -251,7 +243,6 @@
             this.DateCloseReg.HeaderText = "Date Registered";
             this.DateCloseReg.Name = "DateCloseReg";
             this.DateCloseReg.ReadOnly = true;
-            this.DateCloseReg.Width = 117;
             // 
             // Status
             // 
@@ -261,7 +252,6 @@
             this.Status.HeaderText = "Status";
             this.Status.Name = "Status";
             this.Status.ReadOnly = true;
-            this.Status.Width = 76;
             // 
             // Process
             // 
@@ -270,7 +260,6 @@
             this.Process.Name = "Process";
             this.Process.ReadOnly = true;
             this.Process.Visible = false;
-            this.Process.Width = 83;
             // 
             // Edit
             // 
@@ -278,7 +267,6 @@
             this.Edit.Image = ((System.Drawing.Image)(resources.GetObject("Edit.Image")));
             this.Edit.Name = "Edit";
             this.Edit.ReadOnly = true;
-            this.Edit.Width = 45;
             // 
             // Delete
             // 
@@ -286,7 +274,6 @@
             this.Delete.Image = ((System.Drawing.Image)(resources.GetObject("Delete.Image")));
             this.Delete.Name = "Delete";
             this.Delete.ReadOnly = true;
-            this.Delete.Width = 58;
             // 
             // sectionfilter
             // 

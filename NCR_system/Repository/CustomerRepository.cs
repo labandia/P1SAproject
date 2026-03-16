@@ -119,26 +119,21 @@ namespace NCR_system.Repository
 
         public async Task<bool> InsertCustomerData(CustomerModel customer, int type)
         {
-            string strsql = @"
+            // 1 is form SDC 
+            string strsql = (type == 0) ? 
+                $@"INSERT INTO PC_CustomerConplaint
+                    (ModelNo, LotNo, NGQty, Details, SectionID, CCtype, UploadImage, RegNo, CustomerName)
+                    VALUES
+                    (@ModelNo, @LotNo, @NGQty, @Details, @SectionID,  @CCtype, @UploadImage, @RegNo, @CustomerName)"
+                : @"
                 INSERT INTO PC_CustomerConplaint
-                (ModelNo, LotNo, NGQty, Details, SectionID, RegNo, CustomerName, CCtype, UploadImage)
+                (ModelNo, LotNo, NGQty, Details, SectionID, CCtype, UploadImage)
                 VALUES
-                (@ModelNo, @LotNo, @NGQty, @Details, @SectionID, @RegNo, @CustomerName, @CCtype, @UploadImage)";
+                (@ModelNo, @LotNo, @NGQty, @Details, @SectionID,  @CCtype, @UploadImage)";
 
-            var parameters = new Dictionary<string, object>
-            {
-                { "@ModelNo", customer.ModelNo },
-                { "@LotNo", customer.LotNo },
-                { "@NGQty", customer.NGQty },
-                { "@Details", customer.Details },
-                { "@SectionID", customer.SectionID },
-                { "@RegNo", (object)customer.RegNo ?? DBNull.Value },
-                { "@CustomerName", (object)customer.CustomerName ?? DBNull.Value },
-                { "@CCtype", customer.CCtype },
-                { "@UploadImage", customer.UploadImage }
-            };
+           
 
-            return await SqlDataAccess.ExecuteAsync(strsql, parameters);
+            return await SqlDataAccess.ExecuteAsync(strsql, customer);
         }
 
         public async Task<bool> UpdateCustomerData(CustomerModel customer, ComplaintUpdateType type)
@@ -177,7 +172,15 @@ namespace NCR_system.Repository
             return await SqlDataAccess.ExecuteAsync(strsql, parameter);
         }
 
+        public Task<bool> UpdateCustomers(CustomerModel cus, int type)
+        {
+            string strsql = type != 1 
+                ? "" 
+                : $@"UPDATE PC_CustomerConplaint SET ModelNo =@ModelNo, LotNo=@LotNo, NGQty =@NGQty, 
+                    Details =@Details, Status =@Status, SectionID =@SectionID, UploadImage =@UploadImage
+                    WHERE RecordID =@RecordID";
 
-        
+            return SqlDataAccess.ExecuteAsync(strsql, cus);
+        }
     }
 }

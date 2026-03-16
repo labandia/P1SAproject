@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using NCR_system.View.AddForms;
 using System.IO;
+using NCR_system.View.Details;
 
 namespace NCR_system.View.Module
 {
@@ -323,7 +324,6 @@ namespace NCR_system.View.Module
                 form.StartPosition = FormStartPosition.CenterParent;
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
-                    MessageBox.Show("Update successful.");
                     await DisplayRejected();
                 }
 
@@ -350,6 +350,29 @@ namespace NCR_system.View.Module
         private void panel7_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private async void InprocessGrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0)
+                return;
+
+            var product = (InprocessModel)InprocessGrid.Rows[e.RowIndex].DataBoundItem;
+
+            using (var edit = new InprocessDetails(product, _inp))
+            {
+                if(edit.ShowDialog(this) == DialogResult.OK)
+                {
+                    await DisplayRejected();
+                }
+            }
+        }
+
+        private async void filteritems_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            label2.Text = (filteritems.SelectedIndex == 1) ? "Open Item Per Section" : "Close Item Per Section";
+
+            await HandleFilterChange();
         }
     }
 }

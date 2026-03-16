@@ -11,18 +11,21 @@ using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Windows.Media.Media3D;
 using NCR_system.Utilities;
+using NCR_system.Interface;
 
 namespace NCR_system.View.Details
 {
     public partial class SDCDetails : Form
     {
+        private readonly ICustomerComplaint _cus;
         public string selectedImagepath = "";
         public bool isEditImage = false;
         public readonly int currentRecordID;
 
-        public SDCDetails(CustomerModel cus)
+        public SDCDetails(CustomerModel cus, ICustomerComplaint cust)
         {
             InitializeComponent();
+            _cus = cust;
             currentRecordID = cus.RecordID;
             ModelText.Text = cus.ModelNo;
             LotText.Text = cus.LotNo;
@@ -55,18 +58,33 @@ namespace NCR_system.View.Details
 
         private async void Save_btn_Click(object sender, EventArgs e)
         {
-            string imagepath = await UploadServices.SaveImageFolder(selectedImagepath);
-
-            var obj = new CustomerModel
+            try
             {
-                RecordID = currentRecordID,
-                ModelNo = ModelText.Text,
-                LotNo = LotText.Text,
-                NGQty = Convert.ToInt32(NGText.Text),
-                Details = ProblemText.Text,
-                SectionID = selectDepart.SelectedIndex + 1,
-                UploadImage = isEditImage ? imagepath : selectedImagepath
-            };
+                string imagepath = await UploadServices.SaveImageFolder(selectedImagepath);
+
+                var obj = new CustomerModel
+                {
+                    RecordID = currentRecordID,
+                    ModelNo = ModelText.Text,
+                    LotNo = LotText.Text,
+                    NGQty = Convert.ToInt32(NGText.Text),
+                    Details = ProblemText.Text,
+                    SectionID = selectDepart.SelectedIndex + 1,
+                    UploadImage = isEditImage ? imagepath : selectedImagepath
+                };
+
+                bool result = await _cus.UpdateCustomers(obj, 0);
+
+                if (result)
+                {
+                    MessageBox.Show("Updated Data successfully"); 
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error : " + ex.Message);
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)

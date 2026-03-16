@@ -175,7 +175,8 @@ namespace NCR_system.Repository
         public Task<bool> UpdateCustomers(CustomerModel cus, int type)
         {
             string strsql = type != 1 
-                ? "" 
+                ? $@"UPDATE PC_CustomerConplaint SET RegNo =@Regno, CustomerName =@CustomerName, LotNo =@LotNo, ModelNo =@ModelNo, 
+                    NGQty =@NGQty, SectionID =@SectionID, Details =@Details, UploadImage =@UploadImage WHERE RecordID =@RecordID "
                 : $@"UPDATE PC_CustomerConplaint SET ModelNo =@ModelNo, LotNo=@LotNo, NGQty =@NGQty, 
                     Details =@Details, Status =@Status, SectionID =@SectionID, UploadImage =@UploadImage
                     WHERE RecordID =@RecordID";

@@ -47,6 +47,9 @@
             this.Save_btn = new System.Windows.Forms.Button();
             this.Cancel_btn = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.button12 = new System.Windows.Forms.Button();
+            this.statsbtn = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -55,7 +58,7 @@
             this.NGText.BackColor = System.Drawing.Color.WhiteSmoke;
             this.NGText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.NGText.Font = new System.Drawing.Font("Segoe UI", 12F);
-            this.NGText.Location = new System.Drawing.Point(56, 188);
+            this.NGText.Location = new System.Drawing.Point(56, 228);
             this.NGText.Multiline = true;
             this.NGText.Name = "NGText";
             this.NGText.Size = new System.Drawing.Size(267, 35);
@@ -74,7 +77,7 @@
             "Rotor",
             "Winding",
             "Circuit"});
-            this.selectDepart.Location = new System.Drawing.Point(373, 189);
+            this.selectDepart.Location = new System.Drawing.Point(373, 229);
             this.selectDepart.Name = "selectDepart";
             this.selectDepart.Size = new System.Drawing.Size(267, 29);
             this.selectDepart.TabIndex = 166;
@@ -84,7 +87,7 @@
             this.ProblemText.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ProblemText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.ProblemText.Font = new System.Drawing.Font("Century Gothic", 12F);
-            this.ProblemText.Location = new System.Drawing.Point(56, 286);
+            this.ProblemText.Location = new System.Drawing.Point(56, 326);
             this.ProblemText.Name = "ProblemText";
             this.ProblemText.Size = new System.Drawing.Size(582, 155);
             this.ProblemText.TabIndex = 165;
@@ -94,7 +97,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            this.label6.Location = new System.Drawing.Point(54, 253);
+            this.label6.Location = new System.Drawing.Point(54, 293);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(143, 17);
             this.label6.TabIndex = 164;
@@ -104,7 +107,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            this.label4.Location = new System.Drawing.Point(53, 162);
+            this.label4.Location = new System.Drawing.Point(53, 202);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(91, 17);
             this.label4.TabIndex = 163;
@@ -115,7 +118,7 @@
             this.LotText.BackColor = System.Drawing.Color.WhiteSmoke;
             this.LotText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.LotText.Font = new System.Drawing.Font("Segoe UI", 12F);
-            this.LotText.Location = new System.Drawing.Point(373, 105);
+            this.LotText.Location = new System.Drawing.Point(373, 145);
             this.LotText.Multiline = true;
             this.LotText.Name = "LotText";
             this.LotText.Size = new System.Drawing.Size(267, 35);
@@ -125,7 +128,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            this.label2.Location = new System.Drawing.Point(370, 75);
+            this.label2.Location = new System.Drawing.Point(370, 115);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(56, 17);
             this.label2.TabIndex = 161;
@@ -136,7 +139,7 @@
             this.ModelText.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ModelText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.ModelText.Font = new System.Drawing.Font("Segoe UI", 12F);
-            this.ModelText.Location = new System.Drawing.Point(57, 105);
+            this.ModelText.Location = new System.Drawing.Point(57, 145);
             this.ModelText.Multiline = true;
             this.ModelText.Name = "ModelText";
             this.ModelText.Size = new System.Drawing.Size(267, 35);
@@ -146,7 +149,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            this.label5.Location = new System.Drawing.Point(54, 75);
+            this.label5.Location = new System.Drawing.Point(54, 115);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(135, 17);
             this.label5.TabIndex = 159;
@@ -156,7 +159,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            this.label3.Location = new System.Drawing.Point(370, 162);
+            this.label3.Location = new System.Drawing.Point(370, 202);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(121, 17);
             this.label3.TabIndex = 158;
@@ -166,7 +169,7 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            this.label9.Location = new System.Drawing.Point(694, 75);
+            this.label9.Location = new System.Drawing.Point(694, 115);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(104, 17);
             this.label9.TabIndex = 213;
@@ -177,7 +180,7 @@
             this.button2.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
             this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
             this.button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button2.Location = new System.Drawing.Point(1163, 68);
+            this.button2.Location = new System.Drawing.Point(1163, 108);
             this.button2.Name = "button2";
             this.button2.Padding = new System.Windows.Forms.Padding(120, 0, 100, 0);
             this.button2.Size = new System.Drawing.Size(141, 31);
@@ -194,7 +197,7 @@
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox1.ErrorImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.ErrorImage")));
             this.pictureBox1.InitialImage = null;
-            this.pictureBox1.Location = new System.Drawing.Point(697, 106);
+            this.pictureBox1.Location = new System.Drawing.Point(697, 146);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(607, 232);
             this.pictureBox1.TabIndex = 211;
@@ -204,7 +207,7 @@
             // 
             this.Deletebtn.Cursor = System.Windows.Forms.Cursors.Hand;
             this.Deletebtn.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Deletebtn.Location = new System.Drawing.Point(56, 488);
+            this.Deletebtn.Location = new System.Drawing.Point(56, 528);
             this.Deletebtn.Name = "Deletebtn";
             this.Deletebtn.Size = new System.Drawing.Size(191, 43);
             this.Deletebtn.TabIndex = 219;
@@ -222,7 +225,7 @@
             this.Finalizebtn.ForeColor = System.Drawing.Color.White;
             this.Finalizebtn.Image = ((System.Drawing.Image)(resources.GetObject("Finalizebtn.Image")));
             this.Finalizebtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Finalizebtn.Location = new System.Drawing.Point(1020, 488);
+            this.Finalizebtn.Location = new System.Drawing.Point(1083, 528);
             this.Finalizebtn.Name = "Finalizebtn";
             this.Finalizebtn.Padding = new System.Windows.Forms.Padding(45, 0, 50, 0);
             this.Finalizebtn.Size = new System.Drawing.Size(221, 43);
@@ -242,7 +245,7 @@
             this.Save_btn.ForeColor = System.Drawing.Color.White;
             this.Save_btn.Image = ((System.Drawing.Image)(resources.GetObject("Save_btn.Image")));
             this.Save_btn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Save_btn.Location = new System.Drawing.Point(1124, 488);
+            this.Save_btn.Location = new System.Drawing.Point(1124, 528);
             this.Save_btn.Name = "Save_btn";
             this.Save_btn.Padding = new System.Windows.Forms.Padding(45, 0, 50, 0);
             this.Save_btn.Size = new System.Drawing.Size(180, 43);
@@ -257,7 +260,7 @@
             // 
             this.Cancel_btn.Cursor = System.Windows.Forms.Cursors.Hand;
             this.Cancel_btn.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Cancel_btn.Location = new System.Drawing.Point(928, 488);
+            this.Cancel_btn.Location = new System.Drawing.Point(928, 528);
             this.Cancel_btn.Name = "Cancel_btn";
             this.Cancel_btn.Size = new System.Drawing.Size(178, 43);
             this.Cancel_btn.TabIndex = 218;
@@ -270,11 +273,51 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // button12
+            // 
+            this.button12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button12.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button12.FlatAppearance.BorderSize = 0;
+            this.button12.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button12.Image = ((System.Drawing.Image)(resources.GetObject("button12.Image")));
+            this.button12.Location = new System.Drawing.Point(1249, 29);
+            this.button12.Name = "button12";
+            this.button12.Size = new System.Drawing.Size(55, 46);
+            this.button12.TabIndex = 220;
+            this.button12.UseVisualStyleBackColor = true;
+            this.button12.Click += new System.EventHandler(this.button12_Click);
+            // 
+            // statsbtn
+            // 
+            this.statsbtn.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.statsbtn.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.statsbtn.FormattingEnabled = true;
+            this.statsbtn.Items.AddRange(new object[] {
+            "Close",
+            "Open"});
+            this.statsbtn.Location = new System.Drawing.Point(1037, 442);
+            this.statsbtn.Name = "statsbtn";
+            this.statsbtn.Size = new System.Drawing.Size(267, 29);
+            this.statsbtn.TabIndex = 222;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
+            this.label1.Location = new System.Drawing.Point(1034, 413);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(78, 17);
+            this.label1.TabIndex = 221;
+            this.label1.Text = "Status Case";
+            // 
             // SDCDetails
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1357, 567);
+            this.ClientSize = new System.Drawing.Size(1357, 656);
+            this.Controls.Add(this.statsbtn);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.button12);
             this.Controls.Add(this.Deletebtn);
             this.Controls.Add(this.Finalizebtn);
             this.Controls.Add(this.Save_btn);
@@ -321,5 +364,8 @@
         private System.Windows.Forms.Button Save_btn;
         private System.Windows.Forms.Button Cancel_btn;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.Button button12;
+        private System.Windows.Forms.ComboBox statsbtn;
+        private System.Windows.Forms.Label label1;
     }
 }

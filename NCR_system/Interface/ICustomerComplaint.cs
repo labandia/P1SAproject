@@ -23,5 +23,6 @@ namespace NCR_system.Interface
         Task<bool> UpdateCustomerData(CustomerModel customer, ComplaintUpdateType type);
 
         Task<bool> UpdateCustomers(CustomerModel cus, int type);
+        Task<bool> DeleteCustomers(int record);
     }
 }

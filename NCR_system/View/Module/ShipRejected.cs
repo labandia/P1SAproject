@@ -335,14 +335,14 @@ namespace NCR_system.View.Module
         }
 
 
-        private void OpenReject_Click(object sender, EventArgs e)
+        private async void OpenReject_Click(object sender, EventArgs e)
         {
-            var rej = new Rejected(_ship);
-
-            using (var add = new AddShipment(_ship, 1, this, rej))
+            using (var add = new AddShipment(_ship, 1))
             {
-                add.StartPosition = FormStartPosition.CenterParent;
-                add.ShowDialog(this);   // <-- modal + always in front of parent
+                if (add.ShowDialog(this) == DialogResult.OK)
+                {
+                    await DisplayRejected(1);
+                }
             }
         }
 

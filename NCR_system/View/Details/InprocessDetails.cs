@@ -47,13 +47,15 @@ namespace NCR_system.View.Details
             p1saSelect.SelectedIndex = inp.Status;
             remarksText.Text = inp.Remarks;
             sectionbox.SelectedIndex = inp.SectionID - 1;
-        
-            if(inp.UploadImage != null && inp.UploadImage != "")
+            ReadOnlyText();
+
+            if (inp.UploadImage != null && inp.UploadImage != "")
             {
                 selectedImagepath = inp.UploadImage;
                 pictureBox1.Image = System.Drawing.Image.FromFile(inp.UploadImage);
                 pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             }
+
         }
 
         private void button12_Click(object sender, EventArgs e)
@@ -101,7 +103,7 @@ namespace NCR_system.View.Details
                     Defect = InputHelper.GetText(DefectText),
                     Model = InputHelper.GetText(ModelText),
                     ShopOrder = InputHelper.GetText(ShopText),
-                    NGQty = string.IsNullOrEmpty(QuanText.Text) ? 0 : int.Parse(QuanText.Text),
+                    NGQty = InputHelper.IsTextEmpty(QuanText) ? 0 : int.Parse(QuanText.Text),
                     ProcEncounter = InputHelper.GetText(ProcText),
                     cause = InputHelper.GetText(CauseText),
                     Invest = InputHelper.GetText(reportpath),
@@ -132,13 +134,46 @@ namespace NCR_system.View.Details
 
             if (exit == DialogResult.Yes)
             {
-                 bool result = await _pro.DeleteInprocessData(currentRecordID);
+                bool result = await _pro.DeleteInprocessData(currentRecordID);
                 if (result)
                 {
                      DialogResult = DialogResult.OK;
                     Close();
                 }
             }
+        }
+
+
+
+        public void ReadOnlyText()
+        {
+            EmailText.ReadOnly = true;   
+            LineText.ReadOnly = true;
+            DefectText.ReadOnly = true;
+            ModelText.ReadOnly = true;
+            ShopText.ReadOnly = true;
+            QuanText.ReadOnly = true;
+            ProcText.ReadOnly = true;
+            CauseText.ReadOnly = true;
+            reportpath.ReadOnly = true;
+            remarksText.ReadOnly = true;
+            
+
+            DateEncount.Enabled = false;    
+            Shiftselect.Enabled=false;
+            sectionbox.Enabled = false;
+            p1saSelect.Enabled = false;
+
+            foldbtrn.Enabled = false;
+        }
+
+        private void Cancel_btn_Click(object sender, EventArgs e)
+        {
+            ReadOnlyText();
+            Finalizebtn.Visible = true;
+            Cancel_btn.Visible = false;
+            Save_btn.Visible = false;
+            Deletebtn.Visible = false;
         }
     }
 }

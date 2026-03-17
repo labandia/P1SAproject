@@ -83,12 +83,14 @@ namespace NCR_system.Repository
 
             Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-            string IsStatus = proc == 0 ? "1" : "1, 2, 3";
+            Debug.WriteLine($@"Section ID : {sectionID} - Status : {stats} - Process : {proc}");
 
-            if(stats == 0)
-            {
-                IsStatus = "0";
-            }
+            //string IsStatus = proc == 0 ? "1" : "1, 2, 3";
+
+            //if(stats == 0)
+            //{
+            //    IsStatus = "0";
+            //}
 
             string strquery = $@"SELECT 
 	                          	RecordID,
@@ -97,11 +99,10 @@ namespace NCR_system.Repository
 	                            RegNo,IssueGroup,SectionID,
 	                            ModelNo,Quantity,Contents,Status,Process
                             FROM PC_RejectShip
-                            WHERE IsDeleted = 0 AND Status IN ({IsStatus}) ";
+                            WHERE IsDeleted = 0 AND Status =@Status AND Process = @Process ";
 
-            strquery += " AND Process = @Process";
             parameters.Add("@Process", proc);
-
+            parameters.Add("@Status", stats);
 
             // Filter By Section 
             if (sectionID != 0)
@@ -110,8 +111,7 @@ namespace NCR_system.Repository
                 parameters.Add("@SectionID", sectionID);
             }
 
-           
-
+    
             // If the Get Data has a Pagination function
             if (pageSize != 0)
             {
@@ -121,7 +121,7 @@ namespace NCR_system.Repository
                 parameters.Add("@Offset", offset);
                 parameters.Add("@PageSize", pageSize);
             }
-
+            Debug.WriteLine(strquery);
 
             return await SqlDataAccess.GetDataAsync<RejectShipmentModel>(strquery, parameters);
         }

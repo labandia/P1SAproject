@@ -3,9 +3,9 @@ using NCR_system.Models;
 using NCR_system.Utilities;
 using NCR_system.View.Module;
 using System;
-using System.Diagnostics;
+using System.ComponentModel;
 using System.Drawing;
-using System.IO;
+using System.Runtime.Remoting.Contexts;
 using System.Windows.Forms;
 
 namespace NCR_system.View.AddForms
@@ -13,22 +13,34 @@ namespace NCR_system.View.AddForms
     public partial class AddShipment : Form
     {
         private readonly IShipRejected _ship;
-        private readonly ShipRejected _shipcontrol;
-        private readonly Rejected _rej;
 
         public int _proc;
-
+        BindingList<RejectShipmentModel> listdata = new BindingList<RejectShipmentModel>();
         string selectedImagepath = "";
 
-        public AddShipment(IShipRejected ship, int proc,  ShipRejected shipcontrol = null, Rejected rej = null)
+        public AddShipment(IShipRejected ship, int proc)
         {
             InitializeComponent();
             DisplayPlaceholder();
 
+            bool process = (proc == 0);
+
+            sectionbox.SelectedIndex = 0;
+
+            StatsText.Visible = !process;
+            label10.Visible = !process;
+
+            label9.Text = (proc == 0) ? "Create Rejected lot" : "Create Shipment Delay";
+            label12.Text = (proc == 0) ? "Provide details about the Rejected Lot" : "Provide details about the Shipment Delay";
             _ship = ship;
-            _shipcontrol = shipcontrol;
-            _rej = rej;
             _proc = proc;
+
+            if (listdata.Count == 0)
+            {
+                button3.Enabled = false;
+                button3.BackColor = Color.Gray;
+                button3.ForeColor = Color.White;
+            }
         }
 
         private void Cancel_btn_Click(object sender, EventArgs e)
@@ -36,54 +48,7 @@ namespace NCR_system.View.AddForms
            
         }
 
-        private async void Save_btn_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                string imagepath = await UploadServices.SaveImageFolder(selectedImagepath);
-
-
-                var obj = new RejectShipmentModel
-                {
-                    RegNo = string.IsNullOrEmpty(RegNoText.Text) ? "" : RegNoText.Text,
-                    DateIssued = DateissuedText.Text,
-                    IssueGroup = Issuedbox.Text,
-                    SectionID = sectionbox.SelectedIndex + 1,
-                    ModelNo = string.IsNullOrEmpty(ModelText.Text) ? "" : ModelText.Text,
-                    Quantity = Convert.ToInt32(QuanText.Text),
-                    Contents = string.IsNullOrEmpty(ContentText.Text) ? "" : ContentText.Text,
-                    DateCloseReg = DateRegText.Text,
-                    Status = StatsText.SelectedIndex + 1,
-                    UploadImage = imagepath
-                };
-                bool result = false;
-
-                if (_proc == 0)
-                {
-                    result = await _ship.InsertShipRejectData(obj, 0);
-                    if (result)
-                    {
-                        MessageBox.Show("Data saved successfully.");
-                        DialogResult = DialogResult.OK;
-                        Close();
-                    }
-                }
-                else
-                {
-                    result = await _ship.InsertShipRejectData(obj, 1);
-                    if (result)
-                    {
-                        MessageBox.Show("Data saved successfully.");
-                        DialogResult = DialogResult.OK;
-                        Close();
-                    }
-
-                }
-            } catch(Exception ex)
-            {
-                MessageBox.Show("An error occurred: " + ex.Message);
-            }
-        }
+       
 
         private void QuanText_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -109,14 +74,10 @@ namespace NCR_system.View.AddForms
 
         private void AddShipment_Load(object sender, EventArgs e)
         {
-            Issuedbox.Size = new Size(347, 41);
           
         }
 
-        private void AddImagebtn_Click(object sender, EventArgs e)
-        {
-            
-        }
+        
 
         private void RegNoText_Click(object sender, EventArgs e)
         {
@@ -170,6 +131,73 @@ namespace NCR_system.View.AddForms
                 selectedImagepath = ofd.FileName;
                 pictureBox2.Image = Image.FromFile(selectedImagepath);
                 pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
+            }
+        }
+
+        private async void button2_Click(object sender, EventArgs e)
+        {
+            string ImageUpload = await UploadServices.SaveImageFolder(selectedImagepath);
+
+            var obj = new RejectShipmentModel
+            {
+                RegNo = InputHelper.IsTextEmpty(RegNoText) ? "" : RegNoText.Text,
+                DateIssued = DateissuedText.Text,
+                IssueGroup = Issuedbox.Text,
+                SectionID = sectionbox.SelectedIndex,
+                ModelNo = string.IsNullOrEmpty(ModelText.Text) ? "" : ModelText.Text,
+                Quantity = Convert.ToInt32(QuanText.Text),
+                Contents = string.IsNullOrEmpty(ContentText.Text) ? "" : ContentText.Text,
+                DateCloseReg = DateRegText.Text,
+                Status = (_proc == 0) ? 1 :  StatsText.SelectedIndex,
+                UploadImage = ImageUpload
+            };
+
+            listdata.Add(obj);
+
+            RejectedGrid.DataSource = listdata;
+            ResetDisplay();
+            ModelText.Focus();
+
+            button3.Enabled = true;
+            button3.BackColor = Color.FromArgb(95, 34, 200);
+        }
+
+
+        public void ResetDisplay()
+        {
+            RegNoText.Text = "";
+            DateissuedText.Text = "";
+            Issuedbox.Text = "";
+            ModelText.Text = "";
+            QuanText.Text = "";
+            DateRegText.Text = "";
+            ContentText.Text = "";
+            StatsText.Text = "";
+
+            sectionbox.SelectedIndex = 0;   
+        }
+
+        private async void button3_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                foreach (var item in listdata)
+                {
+                    await _ship.InsertShipRejectData(item, _proc);
+                }
+
+                MessageBox.Show("Data saved successfully.");
+
+                button3.Enabled = false;
+                button3.BackColor = Color.Gray;
+                button3.ForeColor = Color.White;
+
+                DialogResult = DialogResult.OK;
+                Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

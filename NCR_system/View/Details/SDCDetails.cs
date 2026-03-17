@@ -32,8 +32,10 @@ namespace NCR_system.View.Details
             NGText.Text = cus.NGQty.ToString();
             ProblemText.Text = cus.Details;
             selectDepart.SelectedIndex = cus.SectionID;
+            statsbtn.SelectedIndex = cus.Status;
 
-
+            ReadOnlyText();
+            
             if (cus.UploadImage != null && cus.UploadImage != "")
             {
                 selectedImagepath = cus.UploadImage;
@@ -69,11 +71,12 @@ namespace NCR_system.View.Details
                     LotNo = LotText.Text,
                     NGQty = Convert.ToInt32(NGText.Text),
                     Details = ProblemText.Text,
+                    Status = 1,
                     SectionID = selectDepart.SelectedIndex + 1,
                     UploadImage = isEditImage ? imagepath : selectedImagepath
                 };
 
-                bool result = await _cus.UpdateCustomers(obj, 0);
+                bool result = await _cus.UpdateCustomers(obj, 1);
 
                 if (result)
                 {
@@ -106,6 +109,23 @@ namespace NCR_system.View.Details
             if (char.IsControl(e.KeyChar)) return;
 
             e.Handled = (char.IsDigit(e.KeyChar) || (e.KeyChar == '.' && !NGText.Text.Contains("."))) ? false : true; // Allow the character
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.OK;
+            Close();
+        }
+
+
+        public void ReadOnlyText()
+        {
+            ModelText.ReadOnly = true;
+            LotText.ReadOnly = true;
+            NGText.ReadOnly = true;
+            ProblemText.ReadOnly = true;
+            selectDepart.Enabled = false;    
+            statsbtn.Enabled = false;   
         }
     }
 }

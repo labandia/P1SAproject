@@ -40,7 +40,8 @@ namespace NCR_system
             .AddTransient<Dashboard>()
             .AddTransient<NCR_control>()
             .AddTransient<Rejected>()
-            .AddTransient<ShipRejected>();
+            .AddTransient<ShipRejected>()
+            .AddTransient<AddExternalCC>();
 
             ServiceProvider = services.BuildServiceProvider(new ServiceProviderOptions
             {

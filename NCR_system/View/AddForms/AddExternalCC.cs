@@ -3,6 +3,8 @@ using NCR_system.Models;
 using NCR_system.Utilities;
 using NCR_system.View.Module;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -11,16 +13,24 @@ namespace NCR_system.View.AddForms
     public partial class AddExternalCC : Form
     {
         private readonly ICustomerComplaint _cus;
-        private readonly Customer_Complaint_user _user;
 
         string selectedImagepath = "";
 
-        public AddExternalCC(ICustomerComplaint cus, Customer_Complaint_user user)
+        BindingList<CustomerModel> listdata = new BindingList<CustomerModel>();
+
+        public AddExternalCC(ICustomerComplaint cus)
         {
             InitializeComponent();
             _cus = cus;
-            _user = user;
+
+            if (listdata.Count == 0)
+            {
+                button3.Enabled = false;
+                button3.BackColor = Color.Gray;
+                button3.ForeColor = Color.White;
+            }
         }
+
 
         private async void Save_btn_Click(object sender, EventArgs e)
         {
@@ -36,31 +46,39 @@ namespace NCR_system.View.AddForms
                 SectionID = selectDepart.SelectedIndex,
                 ModelNo = EditModelText.Text,
                 LotNo = EditLotText.Text,
-                NGQty = (int)EditNGText.Value,
+                NGQty = Convert.ToInt32(EditNGText.Text),
                 Details = EditProblemText.Text,
-                CCtype = 0, 
+                Status = 1,
+                CCtype = 0,
                 UploadImage = ImageUpload
             };
 
-            bool result = await _cus.InsertCustomerData(obj, 0);
+            listdata.Add(obj);
+            CustomDatagrid.DataSource = listdata;
+            ResetDisplay();
+            EditRegNo.Focus();
 
-            if (result)
-            {
-                MessageBox.Show("Data saved successfully.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                await _user.DisplayCustomer(0);
-                this.Close();
-            }
-            else
-            {
-                MessageBox.Show("Failed to save data.");
-            }
+            button3.Enabled = true;
+            button3.BackColor = Color.FromArgb(95, 34, 200);
+            button3.ForeColor = Color.White;
+          
+        }
 
+        public void ResetDisplay()
+        {
+            EditRegNo.Text = "";
+            EditCustomerText.Text = "";
+            EditLotText.Text = "";
+            EditNGText.Text = "";
+            EditProblemText.Text = "";
+            EditModelText.Text = "";
+            selectDepart.SelectedIndex = 0;
+
+            EditRegNo.Focus();
         }
 
         private void AddExternalCC_Load(object sender, EventArgs e)
         {
-            EditNGText.MinimumSize = new Size(0, 40);
-            EditNGText.MaximumSize = new Size(500, 40);
         }
 
         private void Cancel_btn_Click(object sender, EventArgs e)
@@ -76,7 +94,8 @@ namespace NCR_system.View.AddForms
                 string.IsNullOrWhiteSpace(EditLotText.Text) ||
                 string.IsNullOrWhiteSpace(EditNGText.Text) ||
                 string.IsNullOrWhiteSpace(EditProblemText.Text) ||
-                selectDepart.SelectedIndex == -1)
+                string.IsNullOrWhiteSpace(EditModelText.Text) ||
+                selectDepart.SelectedIndex == 0)
             {
                 MessageBox.Show("Please fill in all required fields.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
@@ -86,14 +105,78 @@ namespace NCR_system.View.AddForms
 
         private void AddImagebtn_Click(object sender, EventArgs e)
         {
+            
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void EditNGText_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (char.IsControl(e.KeyChar)) return;
+
+            e.Handled = (char.IsDigit(e.KeyChar) || (e.KeyChar == '.' && !EditNGText.Text.Contains("."))) ? false : true; // Allow the character
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp";
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 selectedImagepath = ofd.FileName;
-                pictureBox1.Image = Image.FromFile(selectedImagepath);
-                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+                pictureBox2.Image = Image.FromFile(selectedImagepath);
+                pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
+            }
+        }
+
+        private async void button3_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                foreach (var item in listdata)
+                {
+                    await _cus.InsertCustomerData(item, 0);
+                }
+
+                button3.Enabled = false;
+                button3.BackColor = Color.Gray;
+                button3.ForeColor = Color.White;
+
+                MessageBox.Show("Add Data Successfully");
+                DialogResult = DialogResult.OK;
+                Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void CustomDatagrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (CustomDatagrid.Columns[e.ColumnIndex].Name == "SectionID")
+            {
+                var sectionMap = new Dictionary<int, string>
+                {
+                    {1, "P1SA MOLDING"},
+                    {2, "P1SA PRESS"},
+                    {3, "P1SA ROTOR"},
+                    {4, "P1SA WINDING"},
+                    {5, "P1SA CIRCUIT"}
+                };
+
+                if (e.Value != null && int.TryParse(e.Value.ToString(), out int sectionID))
+                {
+                    if (sectionMap.TryGetValue(sectionID, out string sectionName))
+                    {
+                        e.Value = sectionName;
+                        e.FormattingApplied = true;
+                    }
+                }
             }
         }
     }

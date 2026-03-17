@@ -90,9 +90,8 @@ namespace NCR_system.View.Module
             Setup("SectionID", 150, 5);
             Setup("ModelNo", 150, 6, DataGridViewAutoSizeColumnMode.AllCells);
             Setup("Quantity", 100, 7);
-            Setup("Contents", 150, 8, DataGridViewAutoSizeColumnMode.DisplayedCells);
-            Setup("Edit", 100, 9);
-            Setup("Delete", 100, 10);
+            Setup("Contents", 150, 8, DataGridViewAutoSizeColumnMode.Fill);
+    
 
             RejectedGrid.ResumeLayout();
             _gridConfigured = true;
@@ -262,11 +261,9 @@ namespace NCR_system.View.Module
 
         private async void OpenReject_Click(object sender, EventArgs e)
         {
-            var _shipcontrol = new ShipRejected(_ship);
-
-            using (var add = new AddShipment(_ship, 0, _shipcontrol, this))
+            using (var add = new AddShipment(_ship, 0))
             {
-                if(DialogResult.OK != add.ShowDialog(this))
+                if (add.ShowDialog(this) == DialogResult.OK)
                 {
                     await DisplayRejected(0);
                 }
@@ -291,33 +288,33 @@ namespace NCR_system.View.Module
             var type = row.Cells["Process"].Value;
 
 
-            if (column.Name == "Edit")
-            {
+            //if (column.Name == "Edit")
+            //{
                
-                using (var openedit = new EditRejected(_ship, this, RejectData))
-                {
-                    openedit.StartPosition = FormStartPosition.CenterParent;
+            //    using (var openedit = new EditRejected(_ship, this, RejectData))
+            //    {
+            //        openedit.StartPosition = FormStartPosition.CenterParent;
                   
-                    if (openedit.ShowDialog(this) == DialogResult.OK)
-                    {
-                        MessageBox.Show("Update successful.");
-                        await DisplayRejected(0);
+            //        if (openedit.ShowDialog(this) == DialogResult.OK)
+            //        {
+            //            MessageBox.Show("Update successful.");
+            //            await DisplayRejected(0);
 
-                    }
+            //        }
 
-                }
+            //    }
 
-            }
-            else if (column.Name == "Delete")
-            {
-                // Handle Delete image click
-                DialogResult result = System.Windows.Forms.MessageBox.Show("Are you sure you want to delete?", "Confirm Delete", MessageBoxButtons.YesNo);
-                if (result == DialogResult.Yes)
-                {
-                    // Remove the row or perform deletion
-                    System.Windows.Forms.MessageBox.Show($"Delete clicked on row {e.RowIndex} - Record ID selected:  {recordID}");
-                }
-            }
+            //}
+            //else if (column.Name == "Delete")
+            //{
+            //    // Handle Delete image click
+            //    DialogResult result = System.Windows.Forms.MessageBox.Show("Are you sure you want to delete?", "Confirm Delete", MessageBoxButtons.YesNo);
+            //    if (result == DialogResult.Yes)
+            //    {
+            //        // Remove the row or perform deletion
+            //        System.Windows.Forms.MessageBox.Show($"Delete clicked on row {e.RowIndex} - Record ID selected:  {recordID}");
+            //    }
+            //}
         }
 
         private void Rejected_Load(object sender, EventArgs e)

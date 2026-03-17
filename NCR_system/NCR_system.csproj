@@ -244,6 +244,12 @@
     <Compile Include="View\Details\SDCDetails.Designer.cs">
       <DependentUpon>SDCDetails.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\Details\ShipRejectedDetails.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Details\ShipRejectedDetails.Designer.cs">
+      <DependentUpon>ShipRejectedDetails.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\EditForms\EditCC_External.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -363,6 +369,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\Details\SDCDetails.resx">
       <DependentUpon>SDCDetails.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Details\ShipRejectedDetails.resx">
+      <DependentUpon>ShipRejectedDetails.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\EditForms\EditCC_External.resx">
       <DependentUpon>EditCC_External.cs</DependentUpon>

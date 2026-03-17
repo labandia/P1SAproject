@@ -239,7 +239,7 @@
             this.QuanText.Location = new System.Drawing.Point(36, 301);
             this.QuanText.Multiline = true;
             this.QuanText.Name = "QuanText";
-            this.QuanText.Size = new System.Drawing.Size(157, 31);
+            this.QuanText.Size = new System.Drawing.Size(162, 31);
             this.QuanText.TabIndex = 133;
             this.QuanText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.QuanText_KeyPress);
             // 
@@ -357,7 +357,7 @@
             this.DefectText.BackColor = System.Drawing.Color.WhiteSmoke;
             this.DefectText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.DefectText.Font = new System.Drawing.Font("Segoe UI", 12F);
-            this.DefectText.Location = new System.Drawing.Point(460, 223);
+            this.DefectText.Location = new System.Drawing.Point(460, 222);
             this.DefectText.Multiline = true;
             this.DefectText.Name = "DefectText";
             this.DefectText.Size = new System.Drawing.Size(177, 31);

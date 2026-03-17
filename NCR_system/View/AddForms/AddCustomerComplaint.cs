@@ -14,25 +14,25 @@ namespace NCR_system.View.AddForms
     public partial class AddCustomerComplaint : Form
     {
         private readonly ICustomerComplaint _cus;
-        private readonly Customer_Complaint_user _user;
 
         public string selectedImagepath = "";
 
         BindingList<CustomerModel> listdata = new BindingList<CustomerModel>();
 
-        public AddCustomerComplaint(ICustomerComplaint cus, Customer_Complaint_user user)
+        public AddCustomerComplaint(ICustomerComplaint cus)
         {
             InitializeComponent();
             _cus = cus;
-            _user = user;
 
             selectDepart.SelectedIndex = 0;
             DisplayPlaceholder();
-        }
 
-        private async void Save_btn_Click(object sender, EventArgs e)
-        {
-            
+            if (listdata.Count == 0)
+            {
+                Finalizebtn.Enabled = false;
+                Finalizebtn.BackColor = Color.Gray;
+                Finalizebtn.ForeColor = Color.White;
+            }
         }
 
         private void Cancel_btn_Click(object sender, EventArgs e)
@@ -138,6 +138,8 @@ namespace NCR_system.View.AddForms
 
         private async void button1_Click(object sender, EventArgs e)
         {
+            if (!FormValid()) return;
+          
             string ImageUpload = await UploadServices.SaveImageFolder(selectedImagepath);
 
             var obj = new CustomerModel
@@ -171,6 +173,39 @@ namespace NCR_system.View.AddForms
 
         private async void Finalizebtn_Click(object sender, EventArgs e)
         {
+            
+        }
+
+        private void Cancel_btn_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private async void Save_btn_Click(object sender, EventArgs e)
+        {
+            string ImageUpload = await UploadServices.SaveImageFolder(selectedImagepath);
+
+            var obj = new CustomerModel
+            {
+                ModelNo = ModelText.Text,
+                LotNo = LotText.Text,
+                NGQty = Convert.ToInt32(NGText.Text),
+                Status = 1,
+                Details = ProblemText.Text,
+                SectionID = selectDepart.SelectedIndex,
+                CCtype = 1,
+                UploadImage = ImageUpload
+            };
+
+            listdata.Add(obj);
+
+            CustomDatagrid.DataSource = listdata;
+            ResetDisplay();
+            ModelText.Focus();
+        }
+
+        private async void button3_Click(object sender, EventArgs e)
+        {
             try
             {
                 foreach (var item in listdata)
@@ -189,11 +224,6 @@ namespace NCR_system.View.AddForms
             {
                 MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private void Cancel_btn_Click_1(object sender, EventArgs e)
-        {
-
         }
     }
 }

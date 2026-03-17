@@ -38,22 +38,8 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Rejected));
             this.OpenReject = new System.Windows.Forms.Button();
             this.RejectedGrid = new System.Windows.Forms.DataGridView();
-            this.RecordID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.RegNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DateIssued = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.IssueGroup = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SectionID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ModelNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Quantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Contents = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DateCloseReg = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Process = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Edit = new System.Windows.Forms.DataGridViewImageColumn();
-            this.Delete = new System.Windows.Forms.DataGridViewImageColumn();
             this.sectionfilter = new System.Windows.Forms.ComboBox();
             this.filteritems = new System.Windows.Forms.ComboBox();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -80,6 +66,17 @@
             this.cartesianChart1 = new LiveCharts.WinForms.CartesianChart();
             this.panel7 = new System.Windows.Forms.Panel();
             this.label7 = new System.Windows.Forms.Label();
+            this.RecordID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.RegNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DateIssued = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.IssueGroup = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SectionID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ModelNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Quantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Contents = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DateCloseReg = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Process = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.RejectedGrid)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel9.SuspendLayout();
@@ -137,9 +134,7 @@
             this.Contents,
             this.DateCloseReg,
             this.Status,
-            this.Process,
-            this.Edit,
-            this.Delete});
+            this.Process});
             dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle9.Font = new System.Drawing.Font("Segoe UI", 8.25F);
@@ -167,113 +162,6 @@
             this.RejectedGrid.TabIndex = 12;
             this.RejectedGrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.RejectedGrid_CellClick);
             this.RejectedGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.RejectedGrid_CellFormatting_1);
-            // 
-            // RecordID
-            // 
-            this.RecordID.DataPropertyName = "RecordID";
-            this.RecordID.HeaderText = "RecordID";
-            this.RecordID.Name = "RecordID";
-            this.RecordID.ReadOnly = true;
-            this.RecordID.Visible = false;
-            // 
-            // RegNo
-            // 
-            this.RegNo.DataPropertyName = "RegNo";
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RegNo.DefaultCellStyle = dataGridViewCellStyle2;
-            this.RegNo.HeaderText = "Registration No.";
-            this.RegNo.Name = "RegNo";
-            this.RegNo.ReadOnly = true;
-            // 
-            // DateIssued
-            // 
-            this.DateIssued.DataPropertyName = "DateIssued";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.DateIssued.DefaultCellStyle = dataGridViewCellStyle3;
-            this.DateIssued.HeaderText = "Date Issued";
-            this.DateIssued.Name = "DateIssued";
-            this.DateIssued.ReadOnly = true;
-            // 
-            // IssueGroup
-            // 
-            this.IssueGroup.DataPropertyName = "IssueGroup";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.IssueGroup.DefaultCellStyle = dataGridViewCellStyle4;
-            this.IssueGroup.HeaderText = "Issuing\nSection ";
-            this.IssueGroup.Name = "IssueGroup";
-            this.IssueGroup.ReadOnly = true;
-            // 
-            // SectionID
-            // 
-            this.SectionID.DataPropertyName = "SectionID";
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.SectionID.DefaultCellStyle = dataGridViewCellStyle5;
-            this.SectionID.HeaderText = "Main In-charge";
-            this.SectionID.Name = "SectionID";
-            this.SectionID.ReadOnly = true;
-            // 
-            // ModelNo
-            // 
-            this.ModelNo.DataPropertyName = "ModelNo";
-            this.ModelNo.HeaderText = "Model No. / Part No.";
-            this.ModelNo.Name = "ModelNo";
-            this.ModelNo.ReadOnly = true;
-            // 
-            // Quantity
-            // 
-            this.Quantity.DataPropertyName = "Quantity";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Quantity.DefaultCellStyle = dataGridViewCellStyle6;
-            this.Quantity.HeaderText = "Quantity";
-            this.Quantity.Name = "Quantity";
-            this.Quantity.ReadOnly = true;
-            // 
-            // Contents
-            // 
-            this.Contents.DataPropertyName = "Contents";
-            this.Contents.HeaderText = "Contents";
-            this.Contents.Name = "Contents";
-            this.Contents.ReadOnly = true;
-            // 
-            // DateCloseReg
-            // 
-            this.DateCloseReg.DataPropertyName = "DateCloseReg";
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.DateCloseReg.DefaultCellStyle = dataGridViewCellStyle7;
-            this.DateCloseReg.HeaderText = "Date Registered";
-            this.DateCloseReg.Name = "DateCloseReg";
-            this.DateCloseReg.ReadOnly = true;
-            // 
-            // Status
-            // 
-            this.Status.DataPropertyName = "Status";
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Status.DefaultCellStyle = dataGridViewCellStyle8;
-            this.Status.HeaderText = "Status";
-            this.Status.Name = "Status";
-            this.Status.ReadOnly = true;
-            // 
-            // Process
-            // 
-            this.Process.DataPropertyName = "Process";
-            this.Process.HeaderText = "Process";
-            this.Process.Name = "Process";
-            this.Process.ReadOnly = true;
-            this.Process.Visible = false;
-            // 
-            // Edit
-            // 
-            this.Edit.HeaderText = "Edit";
-            this.Edit.Image = ((System.Drawing.Image)(resources.GetObject("Edit.Image")));
-            this.Edit.Name = "Edit";
-            this.Edit.ReadOnly = true;
-            // 
-            // Delete
-            // 
-            this.Delete.HeaderText = "Delete";
-            this.Delete.Image = ((System.Drawing.Image)(resources.GetObject("Delete.Image")));
-            this.Delete.Name = "Delete";
-            this.Delete.ReadOnly = true;
             // 
             // sectionfilter
             // 
@@ -585,6 +473,99 @@
             this.label7.TabIndex = 14;
             this.label7.Text = "Active Opem Cases by Section";
             // 
+            // RecordID
+            // 
+            this.RecordID.DataPropertyName = "RecordID";
+            this.RecordID.HeaderText = "RecordID";
+            this.RecordID.Name = "RecordID";
+            this.RecordID.ReadOnly = true;
+            this.RecordID.Visible = false;
+            // 
+            // RegNo
+            // 
+            this.RegNo.DataPropertyName = "RegNo";
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RegNo.DefaultCellStyle = dataGridViewCellStyle2;
+            this.RegNo.HeaderText = "Registration No.";
+            this.RegNo.Name = "RegNo";
+            this.RegNo.ReadOnly = true;
+            // 
+            // DateIssued
+            // 
+            this.DateIssued.DataPropertyName = "DateIssued";
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.DateIssued.DefaultCellStyle = dataGridViewCellStyle3;
+            this.DateIssued.HeaderText = "Date Issued";
+            this.DateIssued.Name = "DateIssued";
+            this.DateIssued.ReadOnly = true;
+            // 
+            // IssueGroup
+            // 
+            this.IssueGroup.DataPropertyName = "IssueGroup";
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.IssueGroup.DefaultCellStyle = dataGridViewCellStyle4;
+            this.IssueGroup.HeaderText = "Issuing\nSection ";
+            this.IssueGroup.Name = "IssueGroup";
+            this.IssueGroup.ReadOnly = true;
+            // 
+            // SectionID
+            // 
+            this.SectionID.DataPropertyName = "SectionID";
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.SectionID.DefaultCellStyle = dataGridViewCellStyle5;
+            this.SectionID.HeaderText = "Main In-charge";
+            this.SectionID.Name = "SectionID";
+            this.SectionID.ReadOnly = true;
+            // 
+            // ModelNo
+            // 
+            this.ModelNo.DataPropertyName = "ModelNo";
+            this.ModelNo.HeaderText = "Model No. / Part No.";
+            this.ModelNo.Name = "ModelNo";
+            this.ModelNo.ReadOnly = true;
+            // 
+            // Quantity
+            // 
+            this.Quantity.DataPropertyName = "Quantity";
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Quantity.DefaultCellStyle = dataGridViewCellStyle6;
+            this.Quantity.HeaderText = "Quantity";
+            this.Quantity.Name = "Quantity";
+            this.Quantity.ReadOnly = true;
+            // 
+            // Contents
+            // 
+            this.Contents.DataPropertyName = "Contents";
+            this.Contents.HeaderText = "Contents";
+            this.Contents.Name = "Contents";
+            this.Contents.ReadOnly = true;
+            // 
+            // DateCloseReg
+            // 
+            this.DateCloseReg.DataPropertyName = "DateCloseReg";
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.DateCloseReg.DefaultCellStyle = dataGridViewCellStyle7;
+            this.DateCloseReg.HeaderText = "Date Registered";
+            this.DateCloseReg.Name = "DateCloseReg";
+            this.DateCloseReg.ReadOnly = true;
+            // 
+            // Status
+            // 
+            this.Status.DataPropertyName = "Status";
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Status.DefaultCellStyle = dataGridViewCellStyle8;
+            this.Status.HeaderText = "Status";
+            this.Status.Name = "Status";
+            this.Status.ReadOnly = true;
+            // 
+            // Process
+            // 
+            this.Process.DataPropertyName = "Process";
+            this.Process.HeaderText = "Process";
+            this.Process.Name = "Process";
+            this.Process.ReadOnly = true;
+            this.Process.Visible = false;
+            // 
             // Rejected
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -612,19 +593,6 @@
         private System.Windows.Forms.DataGridView RejectedGrid;
         private System.Windows.Forms.ComboBox sectionfilter;
         private System.Windows.Forms.ComboBox filteritems;
-        private System.Windows.Forms.DataGridViewTextBoxColumn RecordID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn RegNo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn DateIssued;
-        private System.Windows.Forms.DataGridViewTextBoxColumn IssueGroup;
-        private System.Windows.Forms.DataGridViewTextBoxColumn SectionID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ModelNo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Quantity;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Contents;
-        private System.Windows.Forms.DataGridViewTextBoxColumn DateCloseReg;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Status;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Process;
-        private System.Windows.Forms.DataGridViewImageColumn Edit;
-        private System.Windows.Forms.DataGridViewImageColumn Delete;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label6;
@@ -649,5 +617,16 @@
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn RecordID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn RegNo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DateIssued;
+        private System.Windows.Forms.DataGridViewTextBoxColumn IssueGroup;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SectionID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ModelNo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Quantity;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Contents;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DateCloseReg;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Status;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Process;
     }
 }

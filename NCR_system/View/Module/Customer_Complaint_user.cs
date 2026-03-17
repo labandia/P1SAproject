@@ -66,7 +66,6 @@ namespace NCR_system.View.Module
         }
         private void ConfigureGrid(int proc)
         {
-            if (_gridConfigured) return;
 
             CustomDatagrid.AutoGenerateColumns = false;
             CustomDatagrid.SuspendLayout();
@@ -114,6 +113,7 @@ namespace NCR_system.View.Module
             }
             else
             {
+
                 // SDC CUSTOMER COMPLAINTS 
                 CustomDatagrid.Columns["RegNo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
                 CustomDatagrid.Columns["RegNo"].Width = 150;
@@ -123,32 +123,33 @@ namespace NCR_system.View.Module
                 CustomDatagrid.Columns["CustomerName"].Visible = false;
                 CustomDatagrid.Columns["CCtype"].Visible = false;
 
+                CustomDatagrid.Columns["Status"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                CustomDatagrid.Columns["Status"].Width = 100;
+                CustomDatagrid.Columns["Status"].DisplayIndex = 1;
+
 
                 CustomDatagrid.Columns["DateCreated"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                CustomDatagrid.Columns["DateCreated"].DisplayIndex = 1;
+                CustomDatagrid.Columns["DateCreated"].DisplayIndex = 2;
                 CustomDatagrid.Columns["DateCreated"].Width = 100;
 
                 CustomDatagrid.Columns["SectionID"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
                 CustomDatagrid.Columns["SectionID"].Width = 150;
-                CustomDatagrid.Columns["SectionID"].DisplayIndex = 2;
+                CustomDatagrid.Columns["SectionID"].DisplayIndex = 3;
 
                 CustomDatagrid.Columns["ModelNo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
                 CustomDatagrid.Columns["ModelNo"].Width = 150;
-                CustomDatagrid.Columns["ModelNo"].DisplayIndex = 3;
+                CustomDatagrid.Columns["ModelNo"].DisplayIndex = 4;
 
                 CustomDatagrid.Columns["LotNo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
                 CustomDatagrid.Columns["LotNo"].Width = 150;
-                CustomDatagrid.Columns["LotNo"].DisplayIndex = 4;
+                CustomDatagrid.Columns["LotNo"].DisplayIndex = 5;
 
                 CustomDatagrid.Columns["NGQty"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
                 CustomDatagrid.Columns["NGQty"].Width = 100;
-                CustomDatagrid.Columns["NGQty"].DisplayIndex = 5;
+                CustomDatagrid.Columns["NGQty"].DisplayIndex = 6;
 
-                CustomDatagrid.Columns["Details"].DisplayIndex = 6;
+                CustomDatagrid.Columns["Details"].DisplayIndex = 7;
 
-                CustomDatagrid.Columns["Status"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                CustomDatagrid.Columns["Status"].Width = 100;
-                CustomDatagrid.Columns["Status"].DisplayIndex = 7;
 
            
 
@@ -158,7 +159,6 @@ namespace NCR_system.View.Module
 
 
             CustomDatagrid.ResumeLayout();
-            _gridConfigured = true;
         }
         public async Task DisplayCustomer(int proc)
         {
@@ -184,10 +184,10 @@ namespace NCR_system.View.Module
                 var CusList = custTask.Result;
                 var pieData = pieTask.Result;
 
-                ConfigureGrid(proc);
 
 
                 CustomDatagrid.DataSource = CusList;
+                ConfigureGrid(proc);
 
                 UpdateBarChart(pieData);
                 DisplaySectionStats(pieData);
@@ -331,7 +331,7 @@ namespace NCR_system.View.Module
         // =========================================================
         private async void OpenCC_Click(object sender, EventArgs e)
         {
-            using (var add = new AddCustomerComplaint(_cust, this))
+            using (var add = new AddCustomerComplaint(_cust))
             {
                 add.StartPosition = FormStartPosition.CenterParent;
                 if (add.ShowDialog(this) == DialogResult.OK)
@@ -341,12 +341,14 @@ namespace NCR_system.View.Module
 
             }
         }
-        private void Externalbtn_Click(object sender, EventArgs e)
+        private async void Externalbtn_Click(object sender, EventArgs e)
         {
-            using (var add = new AddExternalCC(_cust, this))
+            using (var add = new AddExternalCC(_cust))
             {
-                add.StartPosition = FormStartPosition.CenterParent;
-                add.ShowDialog(this);   // <-- modal + always in front of parent
+               if(add.ShowDialog(this) == DialogResult.OK)
+               {
+                    await DisplayCustomer(0);
+               }
             }
         }
        
@@ -448,7 +450,7 @@ namespace NCR_system.View.Module
             }
         }
 
-        private void CustomDatagrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        private async void CustomDatagrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             // Ignore header double-click
             if (e.RowIndex < 0)
@@ -464,11 +466,29 @@ namespace NCR_system.View.Module
             var item = row.DataBoundItem as CustomerModel;
             if (item == null) return;
 
-
-            using (var details = new CustomerDetails(item))
+            if(item.CCtype == 1)
             {
-                details.ShowDialog(this);
+                using (var details = new SDCDetails(item, _cust))
+                {
+                    if(details.ShowDialog(this) == DialogResult.OK)
+                    {
+                        await DisplayCustomer(1);
+                    }
+                }
             }
+            else
+            {
+                using (var details = new CustomerDetails(item, _cust))
+                {
+                    if (details.ShowDialog(this) == DialogResult.OK)
+                    {
+                        await DisplayCustomer(0);
+                    }
+                }
+            }
+
+
+            
         }
 
         private void panel7_Paint(object sender, PaintEventArgs e)

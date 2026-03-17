@@ -11,6 +11,12 @@ namespace NCR_system.Repository
 {
     internal class CustomerRepository : ICustomerComplaint
     {
+        public Task<bool> DeleteCustomers(int record)
+        {
+            return SqlDataAccess.ExecuteAsync($@"UPDATE PC_CustomerConplaint 
+                    SET IsDelete = 1 WHERE RecordID =@RecordID ", new { RecordID = record });
+        }
+
         public async Task<List<CustomerModel>> GetCustomerData(
             string search,
             int departmentID,
@@ -26,8 +32,8 @@ namespace NCR_system.Repository
             string strquery = $@"SELECT RecordID,
 		                        FORMAT(DateCreated, 'MM/dd/yy') as DateCreated,
 		                        ModelNo,LotNo,NGQty,
-		                        Details,Status,SectionID
-                                ,RegNo,CustomerName,CCtype
+		                        Details,Status,SectionID,RegNo,
+                                CustomerName,CCtype, UploadImage
                             FROM PC_CustomerConplaint
                             WHERE IsDelete = 0 ";
 

@@ -1,11 +1,10 @@
 ﻿using NCR_system.Interface;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
 using System.Windows.Forms;
-using System.Linq;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using System.Windows.Media.Media3D;
+using System.Collections.Generic;
+using System.Drawing;
+using NCR_system.View.AddForms;
 
 namespace NCR_system.View.Module
 {
@@ -13,226 +12,220 @@ namespace NCR_system.View.Module
     {
         private readonly INCR _ncr;
 
+        private bool _isInitializing = true;
+        private bool _gridConfigured = false;
+        private bool _isLoading = false;
+
+        public int depId { get; set; } = 0;
+        public int stats { get; set; } = 0;
+
+        private readonly Dictionary<string, Label> _departmentLabels;
+
         public NCR_control(INCR ncr)
         {
             InitializeComponent();
             _ncr = ncr;
+            _isInitializing = true;
+
+            sectionfilter.SelectedIndex = 0;
+            filteritems.SelectedIndex = 0;
+            //_departmentLabels = new Dictionary<string, Label>(StringComparer.OrdinalIgnoreCase)
+            //{
+            //    { "Molding", moldval },
+            //    { "Press", Pressval },
+            //    { "Rotor", Rotorval },
+            //    { "Winding", windingval },
+            //    { "Circuit", Circuitval }
+            //};
+
+            EnableDoubleBuffering();
+            _isInitializing = false;
+        }
+
+        // =========================================================
+        // LOADS DATA PAGE
+        // =========================================================
+        private void EnableDoubleBuffering()
+        {
+            typeof(DataGridView)
+                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                ?.SetValue(NCRTable, true, null);
+
+            NCRTable.EnableHeadersVisualStyles = false;
+            NCRTable.RowHeadersVisible = false;
+        }
+
+        private void ConfigureGrid()
+        {
+            if (_gridConfigured) return;
+
+            NCRGrid.AutoGenerateColumns = false;
+            NCRGrid.SuspendLayout();
+
+            void Setup(string name, int width, int displayIndex,
+               DataGridViewAutoSizeColumnMode mode = DataGridViewAutoSizeColumnMode.None)
+            {
+                var col = NCRGrid.Columns[name];
+                if (col == null) return;
+
+                col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                col.Width = width;
+                col.DisplayIndex = displayIndex;
+                col.AutoSizeMode = mode;
+            }
+
+            //Setup("RecordID", 150, 0);
+            NCRGrid.Columns["RecordID"].Visible = false;
+            NCRGrid.Columns["Category"].Visible = false;
+            //InprocessGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            Setup("Status", 60, 0);
+            Setup("RegNo", 150, 1, DataGridViewAutoSizeColumnMode.None);
+            Setup("DateIssued", 120, 2);
+            Setup("IssueGroup", 100, 3);
+            Setup("SectionID", 120, 4);
+            Setup("ModelNo", 100, 5);
+            Setup("Quantity", 150, 6);
+            Setup("DateRegist", 150, 7);
+
+            Setup("DateCloseReg", 100, 8);
+            Setup("Contents", 150, 9, DataGridViewAutoSizeColumnMode.Fill);
+            Setup("FilePath", 120, 10, DataGridViewAutoSizeColumnMode.Fill);
+
+
+            NCRGrid.Columns["DateRegist"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            NCRGrid.Columns["DateIssued"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //NCRGrid.Columns["cause"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //NCRGrid.Columns["Line"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //NCRGrid.Columns["NGQty"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //NCRGrid.Columns["SectionDep"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
+            NCRGrid.ResumeLayout();
+            _gridConfigured = true;
+        }
+        private async Task HandleFilterChange()
+        {
+            if (_isInitializing) return;
+            await DisplayNCR(0);
         }
 
         public async Task DisplayNCR(int procs)
         {
+            if (_isLoading) return;
+            _isLoading = true;
+
             try
             {
-                // For Displaying Customer
-                //NCRGrid.DataSource = null;
-                var inprocesslist = (await _ncr.GetNCRData(procs)).ToList();
-                NCRGrid.DataSource = inprocesslist;
+                string search = searchText.Text.Trim();
 
-                //RecordID
-                NCRGrid.Columns["Category"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                NCRGrid.Columns["Category"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                NCRGrid.Columns["Category"].DisplayIndex = 0;
-                //NCRGrid.Columns["Category"].Visible = false;
+                NCRTable.SuspendLayout();
 
+                var Summarydata = _ncr.GetSummaryNCR(procs);
+                var tabledata = _ncr.GetNCRData(
+                    search,
+                    catselection.SelectedText,
+                    sectionfilter.SelectedIndex,
+                    filteritems.SelectedIndex,
+                    procs);
 
+                await Task.WhenAll(Summarydata, tabledata);
 
-                NCRGrid.Columns["RegNo"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                NCRGrid.Columns["RegNo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                NCRGrid.Columns["RegNo"].Width = 150;
-                NCRGrid.Columns["RegNo"].DisplayIndex = 1;
-                //NCRGrid.Columns["RegNo"].Visible = false;
+                var Summarylist = Summarydata.Result;
+                var Tablelist = tabledata.Result;
 
-                NCRGrid.Columns["DateIssued"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                NCRGrid.Columns["DateIssued"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                NCRGrid.Columns["DateIssued"].Width = 150;
-                NCRGrid.Columns["DateIssued"].DisplayIndex = 2;
+                if (!_gridConfigured)
+                    ConfigureGrid();
 
-                NCRGrid.Columns["IssuedGroup"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                NCRGrid.Columns["IssuedGroup"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                NCRGrid.Columns["IssuedGroup"].Width = 180;
-                NCRGrid.Columns["IssuedGroup"].DisplayIndex = 3;
-
-                NCRGrid.Columns["SectionID"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                NCRGrid.Columns["SectionID"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                NCRGrid.Columns["SectionID"].Width = 180;
-                NCRGrid.Columns["SectionID"].DisplayIndex = 4;
-
-                NCRGrid.Columns["ModelNo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                NCRGrid.Columns["ModelNo"].DisplayIndex = 5;
-
-                NCRGrid.Columns["Quantity"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                NCRGrid.Columns["Quantity"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                NCRGrid.Columns["Quantity"].Width = 100;
-                NCRGrid.Columns["Quantity"].DisplayIndex = 6;
-
-                NCRGrid.Columns["Contents"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                NCRGrid.Columns["Contents"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                NCRGrid.Columns["Contents"].Width = 100;
-                NCRGrid.Columns["Contents"].DisplayIndex = 7;
-      
-                NCRGrid.Columns["DateRegist"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                NCRGrid.Columns["DateRegist"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                NCRGrid.Columns["DateRegist"].Width = 120;
-                NCRGrid.Columns["DateRegist"].DisplayIndex = 8;
-
-                NCRGrid.Columns["Status"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                NCRGrid.Columns["Status"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                NCRGrid.Columns["Status"].Width = 150;
-                NCRGrid.Columns["Status"].DisplayIndex = 9;
-
-                // Target Date
-                NCRGrid.Columns["TargetDate"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                NCRGrid.Columns["TargetDate"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                NCRGrid.Columns["TargetDate"].DisplayIndex = 10;
-
-
-                NCRGrid.Columns["FilePath"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                NCRGrid.Columns["FilePath"].DisplayIndex = 11;
-
-                // Date Close
-                NCRGrid.Columns["DateCloseReg"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                NCRGrid.Columns["DateCloseReg"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                NCRGrid.Columns["DateCloseReg"].Width = 150;
-                NCRGrid.Columns["DateCloseReg"].DisplayIndex = 12;
-
-                // Circulation 
-                NCRGrid.Columns["CircularStatus"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                NCRGrid.Columns["CircularStatus"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                NCRGrid.Columns["CircularStatus"].Width = 150;
-                NCRGrid.Columns["CircularStatus"].DisplayIndex = 13;
-
-
-                NCRGrid.Columns["Edit"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                NCRGrid.Columns["Edit"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                NCRGrid.Columns["Edit"].Width = 150;
-                NCRGrid.Columns["Edit"].DisplayIndex = 14;
-
-
-                NCRGrid.Columns["Delete"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                NCRGrid.Columns["Delete"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                NCRGrid.Columns["Delete"].Width = 150;
-                NCRGrid.Columns["Delete"].DisplayIndex = 15;
-
-                CountDisplay.Text = "Records number : " + inprocesslist.Count.ToString(); 
-
-
-                // 🔹 Define all known sections
-                var sections = new List<KeyValuePair<int, string>>()
-                {
-                    new KeyValuePair<int, string>(1, "Molding"),
-                    new KeyValuePair<int, string>(2, "Press"),
-                    new KeyValuePair<int, string>(3, "Rotor"),
-                    new KeyValuePair<int, string>(4, "Winding"),
-                    new KeyValuePair<int, string>(5, "Circuit")
-                };
-
-
-                // 🔹 Group existing open items
-                //var openCounts = inprocesslist
-                //     .Where(c => c.Status == 1)
-                //    .GroupBy(c => c.SectionID)
-                //    .ToDictionary(g => g.Key, g => g.Count());
-
-                //// 🔹 Merge all sections with counts (include 0 if missing)
-                //var summary = sections
-                //    .Select(s => new
-                //    {
-                //        Section = s.Value,
-                //        TotalOpen = openCounts.ContainsKey(s.Key) ? openCounts[s.Key] : 0
-                //    })
-                //    .ToList();
-
-                // 🔹 Display summary
-                //SummaryInprocess.DataSource = summary;
-
+                NCRTable.DataSource = Summarylist;
+                NCRGrid.DataSource = Tablelist;
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show($"Error loading customer data: {ex.Message}");
+            }
+            finally
+            {
+                NCRTable.ResumeLayout();
+                _isLoading = false;
             }
         }
 
         private void NCRGrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            if (e.Value == null)
-                return;
+            if (NCRGrid.Columns[e.ColumnIndex].Name == "Status")
+            {
+                int checkstatus = (int)e.Value;
+
+
+                e.Value = (checkstatus == 0) ? "Close" : "Open";
+                e.FormattingApplied = true;
+
+                if (checkstatus == 1)
+                {
+                    e.CellStyle.ForeColor = Color.White;
+                    e.CellStyle.BackColor = Color.FromArgb(78, 166, 101);
+                }
+                else
+                {
+                    e.CellStyle.ForeColor = Color.White;
+                    e.CellStyle.BackColor = Color.FromArgb(184, 94, 104);
+                }
+            }
 
             if (NCRGrid.Columns[e.ColumnIndex].Name == "SectionID")
             {
-                switch (e.Value.ToString())
+                var sectionMap = new Dictionary<int, string>
                 {
-                    case "1":
-                        e.Value = "P1SA MOLDING";
-                        e.FormattingApplied = true;
-                        break;
-                    case "2":
-                        e.Value = "P1SA PRESS";
-                        e.FormattingApplied = true;
-                        break;
-                    case "3":
-                        e.Value = "P1SA ROTOR";
-                        e.FormattingApplied = true;
-                        break;
-                    case "4":
-                        e.Value = "P1SA WINDING";
-                        e.FormattingApplied = true;
-                        break;
-                    default:
-                        e.Value = "P1SA CIRCUIT";
-                        e.FormattingApplied = true;
-                        break;
-                }
-            }
-            else if (NCRGrid.Columns[e.ColumnIndex].Name == "Status")
-            {
-                switch (e.Value.ToString())
-                {
-                    case "1":
-                        e.Value = "Open";
-                        break;
-                    case "0":
-                        e.Value = "Close / Completed";
-                        break;
-                    default:
-                        e.Value = "Unknown Status";
-                        break;
-                }
+                    {1, "P1SA MOLDING"},
+                    {2, "P1SA PRESS"},
+                    {3, "P1SA ROTOR"},
+                    {4, "P1SA WINDING"},
+                    {5, "P1SA CIRCUIT"}
+                };
 
-                e.FormattingApplied = true;
+                if (e.Value != null && int.TryParse(e.Value.ToString(), out int sectionID))
+                {
+                    if (sectionMap.TryGetValue(sectionID, out string sectionName))
+                    {
+                        e.Value = sectionName;
+                        e.FormattingApplied = true;
+                    }
+                }
             }
         }
 
         private void NCR_control_Load(object sender, EventArgs e)
         {
-            SelectedProcess.SelectedIndex = 0;
+           
         }
 
-        private async void SelectedProcess_SelectedIndexChanged(object sender, EventArgs e)
-        {
-             await DisplayNCR(SelectedProcess.SelectedIndex);
-        }
+       
 
         private void NCRGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
-            if (e.RowIndex >= 0 && NCRGrid.Columns[e.ColumnIndex].Name == "FilePath")
-            {
-                string filePath = NCRGrid.Rows[e.RowIndex].Cells["FilePath"].Value?.ToString();
-
-                if (!string.IsNullOrEmpty(filePath) && System.IO.File.Exists(filePath))
-                {
-                    System.Diagnostics.Process.Start(filePath);
-                }
-                else
-                {
-                    MessageBox.Show("File not found:\n" + filePath);
-                }
-            }
+      
         }
 
-        private void OpenReject_Click(object sender, EventArgs e)
-        {
+      
+        // ============================================================
+        // ==================== FILTER ACTION =========================
+        // ============================================================
+        private async void sectionfilter_SelectedIndexChanged(object sender, EventArgs e) => await HandleFilterChange();
+        private async void filteritems_SelectedIndexChanged(object sender, EventArgs e) => await HandleFilterChange();
+        private async void catselection_SelectedIndexChanged(object sender, EventArgs e) => await HandleFilterChange();
 
+        private async void button1_Click(object sender, EventArgs e)
+        {     
+            using (var form = new AddMainRegistration())
+            {
+                form.StartPosition = FormStartPosition.CenterParent;
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    await DisplayNCR(0);
+                }
+
+            }
         }
     }
 }

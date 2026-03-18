@@ -19,27 +19,32 @@ namespace NCR_system.View.AddForms
         {
             string SaveImageFolder = await UploadServices.SaveImageFolder(selectedImagepath);
             
-            var obj = new NCRModels
-            {
-                Category = CatSelection.SelectedText,
-                RegNo = RegNoText.Text,
-                DateIssued = DateissuedText.Text,
-                SectionID = sectionbox.SelectedIndex + 1,
-                ModelNo = ModelText.Text,
-                Quantity = string.IsNullOrEmpty(QuanText.Text) ? 0 : int.Parse(QuanText.Text),
-                Contents = ContentText.Text,
-                DateRegist = DateRegText.Text,
-                FilePath = Reporfile.Text,
-                DateCloseReg = Datecleared.Text,
-                CircularStatus = selectCircular.Text,
-                TargetDate = TargetText.Text,
-                Status = statscombo.SelectedIndex,
-                Process = 0, 
-                UploadImage = SaveImageFolder
-            };
+            //var obj = new NCRModels
+            //{
+            //    Category = CatSelection.SelectedText,
+            //    RegNo = RegNoText.Text,
+            //    DateIssued = DateissuedText.Text,
+            //    SectionID = sectionbox.SelectedIndex + 1,
+            //    ModelNo = ModelText.Text,
+            //    Quantity = string.IsNullOrEmpty(QuanText.Text) ? 0 : int.Parse(QuanText.Text),
+            //    Contents = ContentText.Text,
+            //    DateRegist = DateRegText.Text,
+            //    FilePath = Reporfile.Text,
+            //    DateCloseReg = Datecleared.Text,
+            //    CircularStatus = selectCircular.Text,
+            //    TargetDate = TargetText.Text,
+            //    Status = statscombo.SelectedIndex,
+            //    Process = 0, 
+            //    UploadImage = SaveImageFolder
+            //};
         }
 
         private void AddImagebtn_Click(object sender, EventArgs e)
+        {
+           
+        }
+
+        private void button2_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp";
@@ -47,8 +52,8 @@ namespace NCR_system.View.AddForms
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 selectedImagepath = ofd.FileName;
-                pictureBox1.Image = Image.FromFile(selectedImagepath);
-                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+                pictureBox2.Image = Image.FromFile(selectedImagepath);
+                pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
             }
         }
     }

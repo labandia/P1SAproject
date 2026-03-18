@@ -14,10 +14,12 @@ namespace NCR_system
         private ShipRejected _ship;
         private Rejected _reg;
         private Inprocess_control _inp;
+        private NCR_control _ncr;
 
         private readonly ICustomerComplaint _cust;
         private readonly IShipRejected _shipV;
         private readonly IInprocess _inps;
+        private readonly INCR _ncrinter;
 
         // COLORS
         public readonly Color ActiveBg = Color.FromArgb(37, 99, 235);
@@ -27,13 +29,15 @@ namespace NCR_system
         public P1SA_NonComformity(
             ICustomerComplaint cust,
             IShipRejected shipV,
-            IInprocess inps)
+            IInprocess inps, 
+            INCR ncrinter)
         {
             InitializeComponent();
 
             _cust = cust;
             _shipV = shipV;
             _inps = inps;
+            _ncrinter = ncrinter;   
         }
 
 
@@ -53,7 +57,7 @@ namespace NCR_system
         private async void Shipbtn_Click(object sender, EventArgs e) => await LoadShipRejected(); 
         private async void rejectBtn_Click(object sender, EventArgs e) => await LoadRejected();
         private async void processbtn_Click(object sender, EventArgs e) => await LoadInprocess();
-
+        private async void NCRmenu_Click(object sender, EventArgs e) => await LoadNCR();
         // ===================== LOAD METHODS =====================
 
         private async Task LoadCustomerComplaint()
@@ -116,6 +120,21 @@ namespace NCR_system
             await _inp.DisplayRejected();
         }
 
+        private async Task LoadNCR()
+        {
+            SetActiveMenu(NCRmenu);
+
+            if (_ncr == null)
+            {
+                _ncr = new NCR_control(_ncrinter);
+                _ncr.Dock = DockStyle.Fill;
+                Sectionpanel.Controls.Add(_ncr);
+            }
+
+            _ncr.BringToFront();
+            await _ncr.DisplayNCR(0);
+        }
+
         // ===================== MENU COLOR =====================
 
         private void SetActiveMenu(Button activeButton)
@@ -125,7 +144,8 @@ namespace NCR_system
                 SDCbtn,
                 Shipbtn,
                 rejectBtn,
-                processbtn
+                processbtn,
+                NCRmenu
             };
 
             foreach (var btn in buttons)
@@ -142,6 +162,6 @@ namespace NCR_system
             Application.Exit();
         }
 
-        
+       
     }
 }

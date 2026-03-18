@@ -6,7 +6,12 @@ namespace NCR_system.Interface
 {
     public interface INCR
     {
-        Task<IEnumerable<NCRModels>> GetNCRData(int type);
+        Task<List<NCRDatamodel>> GetSummaryNCR(int type);
+        Task<List<NCRModels>> GetNCRData(string search,
+            string Category,
+            int section,
+            int Stats,
+            int type);
         Task<bool> InsertNCRData(NCRModels ncr);
         Task<bool> UpdateNCRData(NCRModels ncr);
     }

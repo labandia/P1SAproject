@@ -26,7 +26,7 @@ namespace NCR_system.Models
     public class NCRModels
     {
         private int _RecordID;
-        private string _DateIssued;
+        private DateTime _DateIssued;
         private string _RegNo;
         private string _Category;
         private string _IssueGroup;
@@ -35,12 +35,12 @@ namespace NCR_system.Models
         private string _Contents;
         private string _CircularStatus;
         private string _DateCloseReg;
-        private int _Status;
+        private int _Status; // 0 - Close : 1 - Open : 2 - Report Ok : 3 - with report for review : 4 - Circulation
         private int _SectionID;
         private string _FilePath;
         private string _TargetDate;
         private int _Process;
-        private string _DateRegist;
+        private DateTime _DateRegist;
         private string _UploadImage;
 
         public int RecordID
@@ -54,7 +54,7 @@ namespace NCR_system.Models
             get => _SectionID;
             set => _SectionID = value;
         }
-        public string DateIssued
+        public DateTime DateIssued
         {
             get => _DateIssued;
             set => _DateIssued = value;
@@ -120,7 +120,7 @@ namespace NCR_system.Models
             get => _TargetDate;
             set => _TargetDate = value;
         }
-        public string DateRegist
+        public DateTime DateRegist
         {
             get => _DateRegist;
             set => _DateRegist = value;
@@ -133,6 +133,21 @@ namespace NCR_system.Models
         }
     }
     
+    public class NCRDatamodel
+    {
+        public string Section { get; set; }
+        public int Patrol { get; set; }
+        public int Inprocess { get; set; }
+        public int NextProcess { get; set; }
+        public int Calibration { get; set; }
+        public int Shipment_Delay { get; set; }
+        public int TotalOpen { get; set; }
+        public int Circular { get; set; }
+        public int Report { get; set; }
+        public int WithReport { get; set; }
+        public int WithReportReview { get; set; }
+    }
+
 
     public class CustomerTotalModel
     {

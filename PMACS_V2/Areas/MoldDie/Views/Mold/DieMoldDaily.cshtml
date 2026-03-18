@@ -447,7 +447,9 @@
     let isChangeDate = 0;
 
      let setMonth = parseInt(currentMonth) + 1;
-     let GetRow = 0;
+    let GetRow = 0;
+
+    let getLastZero;
 
      // Submit a Add Forms
      $("#addDailyForm").on('submit', async function (e) {
@@ -835,6 +837,7 @@
 
                 let Details = res.Data.Details;
                 let GetList = res.Data.GetList;
+                getLastZero = GetList[0].Total;
                 getDieObj = GetList;
                 // Display the Details
                 if (Details) {
@@ -1109,11 +1112,16 @@
      }
     function PopulateDieSerialist(data) {
         console.log(data);
+        let counter = 0;
+
         $("#dieMoldMasterlist").empty();
         data.forEach((rowData, index) => {
             let ActionButton = "";
+            if (rowData.Total === 0) {
+                counter = 1;
+            }
 
-            if (rowData.Total !== 0) {
+            if (counter === 0) {
                 ActionButton = `<div style='display: grid; grid-template-columns: 50% 50%; gap: 5px;'>
                     <button type="button" class="text-primary actionicon EditSerialDaily"
                         id="editButton_${rowData.DateInput}">

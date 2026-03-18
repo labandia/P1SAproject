@@ -265,7 +265,7 @@
             this.button12.FlatAppearance.BorderSize = 0;
             this.button12.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button12.Image = ((System.Drawing.Image)(resources.GetObject("button12.Image")));
-            this.button12.Location = new System.Drawing.Point(1236, 25);
+            this.button12.Location = new System.Drawing.Point(1251, 25);
             this.button12.Name = "button12";
             this.button12.Size = new System.Drawing.Size(55, 46);
             this.button12.TabIndex = 224;
@@ -286,7 +286,7 @@
             this.button2.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
             this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
             this.button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button2.Location = new System.Drawing.Point(1150, 77);
+            this.button2.Location = new System.Drawing.Point(1150, 70);
             this.button2.Name = "button2";
             this.button2.Padding = new System.Windows.Forms.Padding(120, 0, 100, 0);
             this.button2.Size = new System.Drawing.Size(141, 31);
@@ -376,6 +376,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1372, 707);
+            this.ControlBox = false;
             this.Controls.Add(this.Deletebtn);
             this.Controls.Add(this.Finalizebtn);
             this.Controls.Add(this.Save_btn);

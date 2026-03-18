@@ -26,8 +26,6 @@ namespace NCR_system.View.Module
         public int depId { get; set; } = 0;
         public int stats { get; set; } = 0;
 
-        public DataGridView InprocessgridV2 => InprocessGrid;
-        public List<CustomerModel> cuslist { get; private set; } = new List<CustomerModel>();
         private readonly Dictionary<string, Label> _departmentLabels;
 
         public Inprocess_control(IInprocess inp)

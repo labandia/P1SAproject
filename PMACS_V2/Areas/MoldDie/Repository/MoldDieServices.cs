@@ -484,7 +484,6 @@ namespace PMACS_V2.Areas.MoldDie.Repository
         public Task<bool> ChangeStatsSerialDaily(string datestring, string dieSerial, int Stats)
         {
 
-
             string strsql = $@"UPDATE d
                             SET d.Status =@Status 
                             FROM DieMold_Daily d

@@ -266,7 +266,7 @@
             this.OpenCC.FlatAppearance.MouseDownBackColor = System.Drawing.SystemColors.MenuHighlight;
             this.OpenCC.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.MenuHighlight;
             this.OpenCC.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.OpenCC.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.OpenCC.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.OpenCC.ForeColor = System.Drawing.Color.White;
             this.OpenCC.Location = new System.Drawing.Point(1147, 296);
             this.OpenCC.Name = "OpenCC";
@@ -301,7 +301,7 @@
             this.Externalbtn.FlatAppearance.MouseDownBackColor = System.Drawing.SystemColors.MenuHighlight;
             this.Externalbtn.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.MenuHighlight;
             this.Externalbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Externalbtn.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Externalbtn.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Externalbtn.ForeColor = System.Drawing.Color.White;
             this.Externalbtn.Location = new System.Drawing.Point(974, 296);
             this.Externalbtn.Name = "Externalbtn";
@@ -477,6 +477,7 @@
             // panel9
             // 
             this.panel9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(47)))), ((int)(((byte)(76)))));
             this.panel9.Controls.Add(this.Circuitval);
             this.panel9.Controls.Add(this.windingval);
             this.panel9.Controls.Add(this.Rotorval);

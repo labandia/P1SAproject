@@ -898,6 +898,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "AddInprocess";
             this.Text = "AddInprocess";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.panel9.ResumeLayout(false);
             this.panel9.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();

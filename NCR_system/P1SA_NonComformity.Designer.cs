@@ -32,7 +32,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.button3 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.NCRmenu = new System.Windows.Forms.Button();
             this.button12 = new System.Windows.Forms.Button();
             this.Shipbtn = new System.Windows.Forms.Button();
             this.SDCbtn = new System.Windows.Forms.Button();
@@ -47,7 +47,7 @@
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(42)))), ((int)(((byte)(71)))));
             this.panel1.Controls.Add(this.button3);
             this.panel1.Controls.Add(this.button2);
-            this.panel1.Controls.Add(this.button1);
+            this.panel1.Controls.Add(this.NCRmenu);
             this.panel1.Controls.Add(this.button12);
             this.panel1.Controls.Add(this.Shipbtn);
             this.panel1.Controls.Add(this.SDCbtn);
@@ -106,28 +106,29 @@
             this.button2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.button2.UseVisualStyleBackColor = false;
             // 
-            // button1
+            // NCRmenu
             // 
-            this.button1.AutoSize = true;
-            this.button1.BackColor = System.Drawing.Color.Transparent;
-            this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button1.FlatAppearance.BorderColor = System.Drawing.Color.White;
-            this.button1.FlatAppearance.BorderSize = 0;
-            this.button1.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
-            this.button1.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.ForeColor = System.Drawing.Color.White;
-            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
-            this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.Location = new System.Drawing.Point(686, 7);
-            this.button1.Name = "button1";
-            this.button1.Padding = new System.Windows.Forms.Padding(10, 0, 3, 0);
-            this.button1.Size = new System.Drawing.Size(165, 46);
-            this.button1.TabIndex = 22;
-            this.button1.Text = "Main Registration";
-            this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.button1.UseVisualStyleBackColor = false;
+            this.NCRmenu.AutoSize = true;
+            this.NCRmenu.BackColor = System.Drawing.Color.Transparent;
+            this.NCRmenu.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.NCRmenu.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.NCRmenu.FlatAppearance.BorderSize = 0;
+            this.NCRmenu.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
+            this.NCRmenu.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
+            this.NCRmenu.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.NCRmenu.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.NCRmenu.ForeColor = System.Drawing.Color.White;
+            this.NCRmenu.Image = ((System.Drawing.Image)(resources.GetObject("NCRmenu.Image")));
+            this.NCRmenu.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.NCRmenu.Location = new System.Drawing.Point(686, 7);
+            this.NCRmenu.Name = "NCRmenu";
+            this.NCRmenu.Padding = new System.Windows.Forms.Padding(10, 0, 3, 0);
+            this.NCRmenu.Size = new System.Drawing.Size(165, 46);
+            this.NCRmenu.TabIndex = 22;
+            this.NCRmenu.Text = "Main Registration";
+            this.NCRmenu.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.NCRmenu.UseVisualStyleBackColor = false;
+            this.NCRmenu.Click += new System.EventHandler(this.NCRmenu_Click);
             // 
             // button12
             // 
@@ -279,7 +280,7 @@
         private System.Windows.Forms.Panel Sectionpanel;
         private System.Windows.Forms.Button button12;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button NCRmenu;
         private System.Windows.Forms.Button button3;
     }
 }

@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.IO;
 using System.Windows.Forms;
 using NCR_system.Interface;
 using NCR_system.Models;
 using NCR_system.Utilities;
-using NCR_system.View.Module;
 
 namespace NCR_system.View.AddForms
 {

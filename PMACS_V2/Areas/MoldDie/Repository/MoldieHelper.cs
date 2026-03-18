@@ -527,30 +527,30 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             // Get records
             var records = await SqlDataAccess.GetDataAsync<DieMoldMonitoringModel>(
             @"SELECT
-    d.DateInput,
-    MAX(d.CycleShot) CycleShot,
-    MAX(d.Total) Total
-  FROM DieMold_Daily d
-  JOIN DieMold_MoldingMainParts p
-    ON d.PartNo = p.PartNo
-  WHERE p.DieSerial = @DieSerial
-  GROUP BY d.DateInput
-  ORDER BY d.DateInput DESC",
+                d.DateInput,
+                d.Total, 
+                d.CycleShot
+              FROM DieMold_Daily d
+              JOIN DieMold_MoldingMainParts p
+                ON d.PartNo = p.PartNo
+              WHERE p.DieSerial = @DieSerial
+              GROUP BY d.DateInput, d.Total, d.CycleShot
+              ORDER BY d.DateInput DESC",
             new { model.DieSerial });
 
             // Stop at reset
-            var Lastrecords = records.TakeWhile(r => r.CycleShot != 0).ToList();
+            var Lastrecords = records.TakeWhile(r => r.Total != 0).ToList();
             if (!Lastrecords.Any()) return true;
 
             // OLDEST → NEWEST
             Lastrecords.Reverse();
 
+           
             int runningTotal = Lastrecords[0].Total;
 
             for (int i = 1; i < Lastrecords.Count; i++)
             {
                 runningTotal += Lastrecords[i].CycleShot;
-
                 string sql = @"UPDATE d
                    SET Total = @Total
                    FROM DieMold_Daily d

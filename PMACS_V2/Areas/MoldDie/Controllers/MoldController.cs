@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -154,6 +155,8 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
         [HttpGet]
         public async Task<JsonResult> CheckDialyMoldExist(string srcval, string DateInput)
         {
+            Debug.WriteLine($@"Partnum : {srcval} - Date Input : {DateInput}");
+
             bool result = await _dieV2.CheckMoldieExist(srcval, DateInput);
             return Json(result, JsonRequestBehavior.AllowGet);
         }

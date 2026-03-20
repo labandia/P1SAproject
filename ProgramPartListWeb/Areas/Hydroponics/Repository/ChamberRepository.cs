@@ -121,7 +121,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
 
 
-            strsql += " ORDER BY o.OrderID DESC;";
+            strsql += " ORDER BY o.OrderDate DESC;";
 
 
 

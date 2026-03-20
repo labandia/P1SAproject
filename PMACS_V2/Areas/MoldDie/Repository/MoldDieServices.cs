@@ -238,19 +238,24 @@ namespace PMACS_V2.Areas.MoldDie.Repository
         }
         public async Task<bool> CheckMoldieExist(string searchValue, string Dateinput)
         {
+            Debug.WriteLine(Dateinput.ToString());
             bool isPartNo = !string.IsNullOrWhiteSpace(searchValue)
                            && searchValue.StartsWith("0");
 
             string filter = isPartNo ? "PartNo =@Searchval" : "DieSerial =@Searchval";
 
-            string sql = $@"SELECT Count
+            string sql = $@"SELECT COUNT(*)
                        FROM DieMoldDailyInputChecker
                        WHERE {filter}
                       AND CAST(DateInput AS DATE) = @DateInput;";
 
-            int count = await SqlDataAccess.ExecuteScalarAsync(sql, new { Searchval = searchValue, DateInput = Dateinput });
+            Debug.WriteLine(sql);
 
-            return count > 1;
+            int count = await SqlDataAccess.ExecuteScalarAsync(sql, new { 
+                Searchval = searchValue, 
+                DateInput = Dateinput });
+            Debug.WriteLine("Count : " + count);
+            return count > 0;
 
         }
         public Task<bool> DeleteDailyMoldie(int ID)

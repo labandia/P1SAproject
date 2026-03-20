@@ -57,7 +57,8 @@ namespace NCR_system
         private async void Shipbtn_Click(object sender, EventArgs e) => await LoadShipRejected(); 
         private async void rejectBtn_Click(object sender, EventArgs e) => await LoadRejected();
         private async void processbtn_Click(object sender, EventArgs e) => await LoadInprocess();
-        private async void NCRmenu_Click(object sender, EventArgs e) => await LoadNCR();
+        private async void NCRmenu_Click(object sender, EventArgs e) => await LoadNCR(0);
+        private async void button2_Click(object sender, EventArgs e) => await LoadNCR(1);
         // ===================== LOAD METHODS =====================
 
         private async Task LoadCustomerComplaint()
@@ -120,9 +121,10 @@ namespace NCR_system
             await _inp.DisplayRejected();
         }
 
-        private async Task LoadNCR()
+        private async Task LoadNCR(int data)
         {
-            SetActiveMenu(NCRmenu);
+            Button btn = data == 0 ? NCRmenu : button12;
+            SetActiveMenu(btn);
 
             if (_ncr == null)
             {
@@ -132,7 +134,7 @@ namespace NCR_system
             }
 
             _ncr.BringToFront();
-            await _ncr.DisplayNCR(0);
+            await _ncr.DisplayNCR(data);
         }
 
         // ===================== MENU COLOR =====================
@@ -145,7 +147,8 @@ namespace NCR_system
                 Shipbtn,
                 rejectBtn,
                 processbtn,
-                NCRmenu
+                NCRmenu,
+                button2
             };
 
             foreach (var btn in buttons)

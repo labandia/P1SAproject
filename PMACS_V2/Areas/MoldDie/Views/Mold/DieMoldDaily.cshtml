@@ -422,1065 +422,375 @@
 
 
 <script type="text/javascript">
-    let isFirstLoad = true;
-    let isYearLoad = true;
-    let isSeletedSearch = 0;
-    // Loads the year and month select options
-    initMonthSelect("monthSelectDaily", true);
-
-    let GetData = [], DailyData = [];
-    let TableDisplay = $("#dieMoldMasterlist");
-    let DailyDisplay = $("#DieMoldDaily");
-    let strpartnum = "";
-    let strDieSerial = "";
-    let searchSet;
-
-    let getDieObj;
-
-    let yearSelect = $("#yearselectDaily");
-    const currentMonth = new Date().getMonth();
-    const currentYear = new Date().getFullYear();
-
-    const yearSelectfilter = document.getElementById("yearselectDaily");
-    const monthSelect = document.getElementById("monthSelectDaily");
-    const dateInput = document.getElementById("DailyfilterDate");
-    let isChangeDate = 0;
-
-     let setMonth = parseInt(currentMonth) + 1;
-    let GetRow = 0;
-
-    let getLastZero;
-
-     // Submit a Add Forms
-     $("#addDailyForm").on('submit', async function (e) {
-         e.preventDefault();
-         const searchInput = $("#searchInput").val().trim();
-         const searchDie = $("#searchDie").val().trim();
-         const selectionProcess = $("#processSelect").val();
-
-         if (
-             (searchInput.trim() === "" && searchDie.trim() === "") ||
-             selectionProcess.trim() === ""
-         ) {
-             alert("Check all the required Input");
-             return;
-         }
-
-         let value = isSeletedSearch === 0 ? searchInput : searchDie;
-
-         let formData = new FormData(e.target);
-         formData.append('ProcessID', selectionProcess);
-         formData.append("PartNo", strpartnum);
-         formData.append("DieSerial", searchDie);
-         formData.append("SearchMode", isSeletedSearch); // 0 = PartNo, 1 = DieSerial
-
-         const data = Object.fromEntries(formData);
-
-         // Check for duplicate entry for the same part number on the same date
-         let checkduplicate = await GetMethod('@Url.Action("CheckDialyMoldExist", "Mold")',
-         {
-             srcval: value,
-             DateInput: data.DateInput
-         });
-
-         if (checkduplicate) {
-             let searchname = isSeletedSearch === 0 ? "Partnumber " : "Die Serial ";
-
-             Swal.fire({
-                 icon: "error",
-                 text: searchname + " is already Input ",
-                 timer: 1500,
-                 showConfirmButton: false
-             });
-             return;
-         }
-
-
-         let res = await postMethod('@Url.Action("SaveDailyMoldDieMonitor", "Mold")', data);
-          if (res && res.Success) {
-              showSuccessMessage();
-              if (isSeletedSearch === 0) {
-                  SearchMoldiePartno();
-              } else {
-                  SearchByDieNo(strDieSerial);
-              }
-              document.getElementById("addDailyForm").reset();
-           } else {
-               Swal.fire({
-                   icon: "error",
-                   text: "Error  Problem ecounter.",
-                   timer: 1500,
-                   showConfirmButton: false
-               });
-           }
-
-     });
-
-    $("#EditPartnumforms").on('submit', async (e) => {
-        e.preventDefault();
-        let formData = new FormData(e.target);
-        const data = Object.fromEntries(formData);
-        //tempDate
-        let strdate = data.DateInput
-
-        //const [month, day, year] = strdate.split("/");
-
-        //const fullYear = year.length === 2 ? `20${year}` : year;
-        //const formattedDate = `${fullYear}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-
-        //console.log(formattedDate);
-        console.log(data.DateInput);
-
-        console.log(GetData);
-        const findData = GetData.filter(res =>
-            normalizeMMDDYY(res.DateInput) === strdate
-        );
-
-        if (findData.length > 0 && isChangeDate === 1) {
-            alert("Already Input");
-            return;
-        }
-
-
-        function toDate(value) {
-            // Supports MM/DD/YY or MM/DD/YYYY
-            if (value.includes("/")) {
-                let [m, d, y] = value.split("/");
-                y = y.length === 2 ? `20${y}` : y;
-                return new Date(`${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`);
-            }
-            // Supports YYYY-MM-DD
-            return new Date(value);
-        }
-
-        const inputDate = toDate(data.DateInput);
-        const previousDate = toDate(tempDate);
-
-        // 🔴 validation: input date must NOT be after tempDate
-        if (inputDate < previousDate) {
-            alert("Date must not be later than the previous date");
-            return;
-        }
-
-
-        try {
-
-            let res = await postMethod('@Url.Action("UpdateDailyMoldDieMonitor", "Mold")', data);
-              console.log(res);
-
-              if (res?.Success) {
-                Swal.fire({
-                    title: "Success",
-                    text: res.Message,
-                    icon: "success",
-                    confirmButtonColor: "#0d97c9",
-                    timer: 1500
-                }).then(() => {
-                    SearchMoldiePartno();
-                    isChangeDate = 0;
-                    //$("#EditPartnumforms")[0].reset();
-                    $("#EditPartnumMold").modal("hide");
-                });
-            }
-        } catch (error) {
-            console.error('Failed to start operation:', error);
-        }
-    });
-
-
-    // EDIT DIE SERIAL DAILY
-     $("#EditDailyforms").on('submit', async (e) => {
-         e.preventDefault();
-         try {
-             let formData = new FormData(e.target);
-             formData.append('DieSerial', strDieSerial);
-             const data = Object.fromEntries(formData);
-             let res = await postMethod('@Url.Action("UpdateDieSerialMoldDieMonitor", "Mold")', formData);
-             if (res?.Success) {
-                     Swal.fire({
-                         title: "Success",
-                         text: res.Message,
-                         icon: "success",
-                         confirmButtonColor: "#0d97c9",
-                         timer: 1500
-                     }).then(() => {
-                                       SearchByDieNo(strDieSerial);
-                                       $("#EditDailyforms")[0].reset();
-                                       $("#EditDailyMold").modal("hide");
-                     });
-             }
-
-         } catch (error) {
-             console.error('Failed to start operation:', error);
-         }
-
-      });
-
-      // Back to Daily Summary
-    $("#Originalback").on('click', function (e) {
-        e.preventDefault();
-        GetMoldDieDaily();
-    });
-
-    //===============================================================
-    //==================== FILTER DATA ==============================
-    //===============================================================
-    $("#DailyPartnumDateInput").on('change', function (e) {
-        isChangeDate = 1;
-    });
-
-    dateInput.addEventListener('change', reloadDailyData);
-
-    $("#DailyProcess").on('change', reloadDailyData);
-
-    $("#monthSelectDaily").on('change', reloadDailyData);
-
-    $("#yearselectDaily").on('change', reloadDailyData);
-
-    function reloadDailyData() {
-        const month = $("#monthSelectDaily").val();
-        const day = getSelectedDay();
-        const process = $("#DailyProcess").val();
-
-        GetMoldDieDaily(month, day, process);
+    "use strict";
+    /* =========================================================
+       GLOBAL STATE
+    ========================================================= */
+    const state = {
+        isFirstLoad: true,
+        isYearLoad: true,
+        isSelectedSearch: 0,
+        isChangeDate: 0,
+        currentMonth: new Date().getMonth() + 1,
+        currentYear: new Date().getFullYear(),
+        partNo: "",
+        dieSerial: "",
+        tempDate: "",
+        getData: [],
+        dailyData: [],
+        dieObj: []
     };
-    function getSelectedDay() {
-        if (!dateInput.value) return 0;
-        const parts = dateInput.value.split("-");
-        return parts.length === 3 ? parseInt(parts[2], 10) : 0;
-    }
-    //===============================================================
+    /* =========================================================
+       DOM CACHE
+    ========================================================= */
+    const DOM = {
+        tableDisplay: $("#dieMoldMasterlist"),
+        dailyDisplay: $("#DieMoldDaily"),
+        yearSelect: $("#yearselectDaily"),
+        monthSelect: $("#monthSelectDaily"),
+        dateInput: $("#DailyfilterDate"),
+        processSelect: $("#processSelect"),
+        searchInput: $("#searchInput"),
+        searchDie: $("#searchDie"),
+        validProcess: $("#validprocess"),
+        validPart: $("#validDateinput"),
+        validDie: $("#validDateDieSerial"),
+        dailySummary: $("#DailySummary"),
+        detailSummary: $("#DieSerialMasterlist"),
+        dailyInputs: $("#DailyInputs"),
+        filterProcess: $("#DailyProcess")
+    };
+    /* =========================================================
+       HELPERS
+    ========================================================= */
+    const showLoader = (btn, text = "Searching...") => {
+        btn.dataset.original = btn.innerHTML;
+        btn.innerHTML = `<div class="loading"></div> ${text}`;
+        btn.disabled = true;
+    };
+    const hideLoader = btn => {
+        btn.innerHTML = btn.dataset.original;
+        btn.disabled = false;
+    };
 
-     // Search functionality
-     $("#searchButton").on('click', function (e) {
-         e.preventDefault();
-         isSeletedSearch = 0;
-         SearchMoldiePartno();
-     });
+    const validateRequired = (...fields) => fields.every(v => v && v.trim() !== "");
 
-    $("#searchDieButton").on('click', function (e) {
-        e.preventDefault();
-        isSeletedSearch = 1;
-        let partnum = $("#searchDie").val();
-        SearchByDieNo(partnum);
+    const showAlert = (msg, icon = "error") => Swal.fire({
+        icon, text: msg, timer: 1500, showConfirmButton: false
+    });
+    const buildStatusButton = (label, activeColor = null, onclick = "") => {
+        const activeStyle = activeColor
+            ? `style="color:${activeColor};border:2px solid ${activeColor};"`
+            : "";
+        const activeClass = activeColor ? "active" : "";
+        return `<button class="status-btn ${activeClass}" ${activeStyle} onclick="${onclick}">${label}</button>`;
+    };
+
+    /* =========================================================
+       INITIALIZATION
+    ========================================================= */
+    $(document).ready(() => {
+        DOM.dailyInputs.hide();
+        DOM.validDie.hide(); DOM.validProcess.hide(); DOM.validPart.hide();
+
+        initMonthSelect("monthSelectDaily", true);
+        bindEvents();
+        loadDaily();
     });
 
-     // Allow Enter key to trigger search
-     $("#searchInput").on('keypress', function (e) {
-         if (e.key === 'Enter') {
-             isSeletedSearch = 0;
-             SearchMoldiePartno();
-         }
-     });
+    /* =========================================================
+       EVENT BINDINGS
+    ========================================================= */
+    function bindEvents() {
+        const addfunc = state.isSelectedSearch === 0 ? handleAddDaily : handleAddDaily;
 
-    $("#searchDie").on('keypress', function (e) {
-        if (e.key === 'Enter') {
-            isSeletedSearch = 1;
-            console.log("VALUE : " + e.target.value);
-            SearchByDieNo(e.target.value);
-        }
-    });
+        $("#addDailyForm").on("submit", addfunc);
 
-     // Search Logic
-     async function SearchMoldiePartno() {
-         strpartnum = $("#searchInput").val().trim();
-         const selectionProcess = $("#processSelect").val();
+        $("#searchButton").on("click", () => runSearch(0));
+        $("#searchDieButton").on("click", () => runSearch(1));
 
-         if (selectionProcess === "" && !searchInput) {
-             // Handle empty input
-             $("#validDateinput").show();
-             $("#validprocess").show();
-             return;
-         }
-
-         if (selectionProcess === "") {
-             // Handle empty input
-             $("#validprocess").show();
-             $("#validDateinput").hide();
-             return;
-         }
-
-         if (!searchInput) {
-             // Handle empty input
-             $("#validprocess").hide();
-             $("#validDateinput").show();
-             return;
-         }
-         $("#validDateinput").hide();
-         $("#validprocess").hide();
-         const searchButton = document.getElementById('searchButton');
-         const originalText = searchButton.innerHTML;
-
-         // Show loading state
-         searchButton.innerHTML = '<div class="loading"></div> Searching...';
-         searchButton.disabled = true;
-
-         $("#DailySummary").hide();
-         $("#DailyInputs").show();
-
-         try {
-             TableDisplay.empty(); // Removing the Loading Display
-             await new Promise(resolve => setTimeout(resolve, 1000));
-
-             let res = await GetMethod('@Url.Action("SearchMoldieDaily", "Mold")', {
-                 ProcessID: selectionProcess,
-                 SearchInput: strpartnum
-             });
-
-             if (res && res.Success) {
-                 let PartObj = res.Data.Details;
-                 GetData = res.Data.GetList;
-
-
-                 $("#DieSerialMasterlist").empty();
-
-                 const rowHtml = `
-                     <tr>
-                         <td>${PartObj.PartNo}</td>
-                         <td>${PartObj.Dimension_Quality}</td>
-                         <td>${PartObj.DieSerial}</td>
-                         <td>${getStatusHtml(PartObj.Status)}</td>
-                     </tr>`;
-
-                 $("#DieSerialMasterlist").append(rowHtml);
-
-
-
-
-                 PopulateDatalist(GetData);
-
-             } else {
-                 // Handle no results or failure
-                 const loadData = `<tr>
-                      <td colspan='9'>
-                          🔍 No Data Found
-                      </td>
-                  </tr>`;
-
-                 TableDisplay.append(loadData);
-
-                 $("#partNumber").text("-");
-                 $("#modelName").text("-");
-                 $("#lastCycleShot").text("-");
-                 $("#partStatus").text("No Data");
-
-
-             }
-         } catch (err) {
-             console.error("Search error:", err);
-         } finally {
-             // Reset button
-             searchButton.innerHTML = originalText;
-             searchButton.disabled = false;
-         }
-     }
-
-
-     // Search By Die Serial No.
-    async function SearchByDieNo(searchval) {
-        const selectionProcess = $("#processSelect").val();
-
-        if (selectionProcess === "" && !searchInput) {
-            // Handle empty input
-            $("#validDateDieSerial").show();
-            $("#validprocess").show();
-            $("#validDateinput").hide();
-            return;
-        }
-
-        if (selectionProcess === "") {
-            // Handle empty input
-            $("#validprocess").show();
-            $("#validDateinput").hide();
-            $("#validDateDieSerial").hide();
-            return;
-        }
-
-        if (!searchInput) {
-            // Handle empty input
-            $("#validprocess").hide();
-            $("#validDateinput").hide();
-            $("#validDateDieSerial").show();
-            return;
-        }
-        $("#validDateDieSerial").hide();
-        $("#validprocess").hide();
-
-
-        const searchButton = document.getElementById('searchDieButton');
-        const originalText = searchButton.innerHTML;
-
-        // Show loading state
-        searchButton.innerHTML = '<div class="loading"></div> Searching...';
-        searchButton.disabled = true;
-
-
-
-
-        try {
-            await new Promise(resolve => setTimeout(resolve, 1000));
-
-            let res = await GetMethod('@Url.Action("SearchByDieSerialMoldie", "Mold")', {
-                ProcessID: selectionProcess,
-                DieInput: searchval
-            });
-            $("#DieSerialMasterlist").empty();
-            if (res && res.Success) {
-
-                strpartnum = res.Data.Details[0].PartNo;
-                strDieSerial = searchval;
-                $("#DailySummary").hide();
-                $("#DailyInputs").show();
-
-                $("#DetailSerialcard").show();
-
-
-                let Details = res.Data.Details;
-                let GetList = res.Data.GetList;
-                getLastZero = GetList[0].Total;
-                getDieObj = GetList;
-                // Display the Details
-                if (Details) {
-                    $("#DieSerialMasterlist").empty();
-                    let prevDieSerial = null;
-                    let prevStatus = null;
-                    let rowspanCount = 0;
-                    let lastRowDieStatusTd = null;
-
-
-                    Details.forEach((rowData, index) => {
-                        const isSameGroup =
-                            rowData.DieSerial === prevDieSerial &&
-                            rowData.Status === prevStatus;
-
-                        let dieTd = "";
-                        let statusTd = "";
-
-                        if (!isSameGroup) {
-                            rowspanCount = 1;
-
-                            dieTd = `<td class="die-serial">${rowData.DieSerial}</td>`;
-                            statusTd = `
-                                <td class="status" style='margin-left: auto;'>
-                                    ${getStatusHtml(rowData.Status)}
-                                </td>`;
-                        } else {
-                            rowspanCount++;
-
-                            lastDieTd.attr("rowspan", rowspanCount);
-                            lastStatusTd.attr("rowspan", rowspanCount);
-                        }
-
-
-                        const rowHtml = `
-                            <tr>
-                                <td>${rowData.PartNo}</td>
-                                <td>${rowData.Dimension_Quality}</td>
-                                ${dieTd}
-                                ${statusTd}
-                            </tr>
-                        `;
-
-                        const $row = $(rowHtml);
-                        $("#DieSerialMasterlist").append($row);
-
-
-                        if (!isSameGroup) {
-                            lastDieTd = $row.find(".die-serial");
-                            lastStatusTd = $row.find(".status");
-                        }
-
-                        prevDieSerial = rowData.DieSerial;
-                        prevStatus = rowData.Status;
-                    });
-
-                    PopulateDieSerialist(GetList);
-                }
-
-
-            } else {
-                // Handle no results or failure
-                const loadData = `<tr>
-                     <td colspan='9'>
-                         🔍 No Data Found
-                     </td>
-                 </tr>`;
-
-                TableDisplay.append(loadData);
-
+        DOM.searchInput.on("keypress", e => {
+            if (e.key === "Enter") {
+                e.preventDefault(); // prevent form submit refresh
+                DOM.searchDie.val("");
+                runSearch(0);
             }
-        } catch (err) {
-            console.error("Search error:", err);
-        } finally {
-            // Reset button
-            searchButton.innerHTML = originalText;
-            searchButton.disabled = false;
-        }
-    }
-
-    function getStatusHtml(status) {
-        if (status === 0) {
-            return `
-            <button class="status-btn active"
-                style="color:#054e92; border:2px solid #054e92;">
-                Continue
-            </button>`;
-        }
-        else if (status === 1) {
-            return `
-            <button class="status-btn pulse-2">
-                Needed
-            </button>`;
-        }
-        else if (status === 2) {
-            return `
-            <button class="status-btn active"
-                style="color:#188f18; border:2px solid #188f18;">
-                Completed
-            </button>`;
-        }
-        return "";
-    }
-
-    let tempDate;
-
-    function PopulateDatalist(data) {
-        $("#dieMoldMasterlist").empty();
-        let counter = 0;
-
-         data.forEach((rowData, index) => {
-             let ActionButton = "";
-
-             if (rowData.Total === 0) {
-                 counter = 1;
-             }
-
-             if (counter === 0) {
-                 ActionButton = ` <div style='display: grid; grid-template-columns: 50% 50%; gap: 5px;'>
-                           <button type="button" class="text-primary actionicon EditDailypartnum"
-                               id="editButton_${rowData.RecordID}">
-                               <i class="fa-regular fa-pen-to-square action_btn"></i>
-                           </button>
-
-                           <button type="button" class="text-danger actionicon  deleteDailypartnumButn"
-                               id="deleteDailyButton_${rowData.RecordID}">
-                               <i class="fa-regular fa-trash-can"></i>
-                           </button>
-                     </div>`;
-                 tempDate = rowData.DateInput;
-            }
-
-
-
-
-             // Continue Status (0)
-             let continueHtml = `
-         <button class="status-btn" onclick="ChangeStatus(${rowData.RecordID}, 0)">
-             Continue
-         </button>`;
-
-             // Needed + Complete (1, 2)
-             let neededCompleteHtml = `
-         <button class="status-btn"
-             onclick="ChangeStatus(${rowData.RecordID}, 1)">
-             Needed
-         </button>
-         <button class="status-btn"
-             onclick="ChangeStatus(${rowData.RecordID}, 2)">
-             Complete
-         </button>`;
-
-             // Highlight active based on rowData.Status
-             if (rowData.Status === 0) {
-                 continueHtml = `
-             <button class="status-btn active"
-                 style="color:#054e92;border:2px solid #054e92;"
-                 onclick="ChangeStatus(${rowData.RecordID}, 1)">
-                 Continue
-             </button>`;
-             }
-             else if (rowData.Status === 1) {
-                 neededCompleteHtml = `
-             <button class="status-btn active"
-                 style="color:#c97d0c;border:2px solid #c97d0c;"
-                 onclick="ChangeStatus(${rowData.RecordID}, 1)">
-                 Needed
-             </button>
-             <button class="status-btn"
-                 onclick="ChangeStatus(${rowData.RecordID}, 2)">
-                 Complete
-             </button>`;
-             }
-             else if (rowData.Status === 2) {
-                 neededCompleteHtml = `
-             <button class="status-btn"
-                 onclick="ChangeStatus(${rowData.RecordID}, 1)">
-                 Needed
-             </button>
-             <button class="status-btn active"
-                 style="color:#188f18;border:2px solid #188f18;"
-                 onclick="ChangeStatus(${rowData.RecordID}, 2)">
-                 Complete
-             </button>`;
-             }
-
-             const rowHtml = `
-                 <tr>
-                     <td>${rowData.DateInput}</td>
-                     <td>${rowData.CycleShot}</td>
-                     <td>${rowData.Total}</td>
-                     <td>${rowData.MachineNo}</td>
-                     <td>${rowData.Remarks}</td>
-                     <td>${rowData.Mincharge}</td>
-                      <td>
-                        <div class='flex_align'>
-                            ${continueHtml} ${neededCompleteHtml}
-                        </div>
-                      </td>
-                     <td >
-                           ${ActionButton}
-                     </td>
-                 </tr>`;
-
-             $("#dieMoldMasterlist").append(rowHtml);
-         });
-
-
-         // Handle click event for edit button
-         $(document).on('click', '.EditDailypartnum', function (e) {
-             e.stopPropagation();
-
-
-             const buttonId = $(this).attr('id');
-             const rowIndex = buttonId.split('_')[1];
-             let filterdata = GetData.filter(res => res.RecordID === parseInt(rowIndex));
-             console.log(filterdata);
-
-             if (filterdata) {
-                 $("#DailyPartnumRecordID").val(parseInt(rowIndex));
-                 $("#DailyEditPartNo").val(filterdata[0].PartNo);
-                 //$("#DailyPartnumDateInput").val(filterdata[0].DateInput);
-
-                 setDateInput("DailyPartnumDateInput", filterdata[0].DateInput);
-
-                 $("#DailyPartnumCycleShot").val(filterdata[0].CycleShot);
-                 $("#DailyPartnumMachineNo").val(filterdata[0].MachineNo);
-                 $("#DailyPartnumRemarks").val(filterdata[0].Remarks);
-                 $("#DailyPartnumMincharge").val(filterdata[0].Mincharge);
-                 $("#EditPartnumMold").modal("show");
-             }
-
-
-         });
-
-
-            // Handle click event for edit button
-        $(document).on('click', '.deleteDailyButton', async function (e) {
-            e.stopPropagation();
-            const buttonId = $(this).attr('id');
-            const rowIndex = buttonId.split('_')[1];
-
-
-            Swal.fire({
-                title: "Are you sure you want to delete this?",
-                text: "You won't be able to revert this!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, delete it!"
-            }).then(async (result) => {
-                if (result.isConfirmed) {
-                     let res = await postMethod('@Url.Action("DeleteDailyMoldDieMonitor", "Mold")', { ID: rowIndex });
-
-                    if (res?.Success) {
-                        Swal.fire({
-                            title: "Success",
-                            text: res.Message,
-                            icon: "success",
-                            confirmButtonColor: "#0d97c9",
-                            timer: 1500
-                        }).then(() => {
-                            SearchMoldiePartno();
-                        });
-
-                    }
-                }
-            });
-
         });
-     }
-    function PopulateDieSerialist(data) {
-        console.log(data);
-        let counter = 0;
+        DOM.searchDie.on("keypress", e => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                DOM.searchInput.val("");
+                runSearch(1);
+            }
+        });
 
-        $("#dieMoldMasterlist").empty();
-        data.forEach((rowData, index) => {
-            let ActionButton = "";
-            if (rowData.Total === 0) {
+
+        $("#Originalback").on("click", e => {
+            e.preventDefault();
+            DOM.dailySummary.show();
+            DOM.dailyInputs.hide();
+            loadDaily();
+        });
+    }
+
+
+    async function handleAddDaily(e) {
+        e.preventDefault();
+        let searchval = $("#searchInput").val().trim();
+
+        if (searchval === "" && DOM.processSelect.val()) {
+            alert("Check all the required Input");
+            return;
+        }
+
+        let formData = new FormData(e.target);
+        formData.append('ProcessID', DOM.processSelect.val());
+        formData.append("PartNo", state.partNo);
+        formData.append("DieSerial", DOM.searchDie.val());
+        formData.append("SearchMode", state.isSelectedSearch); // 0 = PartNo, 1 = DieSerial
+
+        const data = Object.fromEntries(formData);
+
+         let checkduplicate = await GetMethod('@Url.Action("CheckDialyMoldExist", "Mold")',
+             { srcval: searchval, DateInput: data.DateInput });
+
+         // convert to number
+         const cycleShot = Number(data.CycleShot);
+
+        if (checkduplicate && cycleShot !== 0) {
+             showAlert(state.partNo + " is Already Input");
+             return;
+         }
+
+         
+    }
+
+    
+    /* =========================================================
+       SEARCH
+    ========================================================= */
+    async function runSearch(mode) {
+        state.isSelectedSearch = mode;
+        mode === 0 ? await searchByPart() : await searchByDie();
+    }
+
+    async function searchByPart() {
+        DOM.dailyInputs.show();
+        DOM.dailySummary.hide();
+
+        //DOM.searchDie.val("");
+        const part = DOM.searchInput.val().trim();
+        const process = DOM.processSelect.val();
+
+        if(!validateRequired(part, process)){
+            DOM.validPart.toggle(!part);
+            DOM.validProcess.toggle(!process);
+            return;
+        }
+
+        state.partNo = part;
+        DOM.validPart.hide(); DOM.validProcess.hide();
+
+        const btn = document.getElementById("searchButton");
+        showLoader(btn);
+
+        try{
+            const res = await GetMethod('@Url.Action("SearchMoldieDaily","Mold")',{
+                ProcessID:process, SearchInput:part
+            });
+            console.log(res);
+            if(!res?.Success) return showNoData();
+
+            state.getData = res.Data.GetList;
+            renderPartDetails(res.Data.Details);
+            populatePartTable(state.getData);
+
+        }catch(err){ console.error(err); }
+        finally{ hideLoader(btn); }
+    }
+
+
+    async function searchByDie() {
+        //DOM.searchInput.val("");
+        const die = DOM.searchDie.val().trim();
+        const process = DOM.processSelect.val();
+
+        if(!validateRequired(die, process)){
+            DOM.validDie.toggle(!die);
+            DOM.validProcess.toggle(!process);
+            return;
+        }
+
+        state.dieSerial = die;
+        DOM.validDie.hide(); DOM.validProcess.hide();
+
+        const btn = document.getElementById("searchDieButton");
+        showLoader(btn);
+
+        try{
+            const res = await GetMethod('@Url.Action("SearchByDieSerialMoldie","Mold")',{
+                ProcessID:process, DieInput:die
+            });
+            if(!res?.Success) return showNoData();
+
+            state.partNo = res.Data.Details[0].PartNo;
+            state.dieObj = res.Data.GetList;
+
+            //populateDieTable(res.Data.GetList);
+
+        }catch(err){ console.error(err); }
+        finally{ hideLoader(btn); }
+    }
+    /* =========================================================
+       TABLE BUILDERS
+    ========================================================= */
+    function populatePartTable(list) {
+        let counter = 0;
+        DOM.tableDisplay.empty();
+        list.forEach(row => {
+            let actionButton = "";
+
+            if (row.Total === 0) {
                 counter = 1;
             }
 
             if (counter === 0) {
-                ActionButton = `<div style='display: grid; grid-template-columns: 50% 50%; gap: 5px;'>
-                    <button type="button" class="text-primary actionicon EditSerialDaily"
-                        id="editButton_${rowData.DateInput}">
-                        <i class="fa-regular fa-pen-to-square action_btn"></i>
-                    </button>
+                actionButton = ` <div style='display: grid; grid-template-columns: 50% 50%; gap: 5px;'>
+                                   <button type="button" class="text-primary actionicon EditDailypartnum"
+                                       id="editButton_${row.RecordID}">
+                                       <i class="fa-regular fa-pen-to-square action_btn"></i>
+                                   </button>
 
-                    <button type="button" class="text-danger actionicon  deleteSerialDailyBtn"
-                        id="deleteDailyButton_${rowData.RecordID}">
-                        <i class="fa-regular fa-trash-can"></i>
-                    </button>
-              </div>`;
+                                       <button type="button" class="text-danger actionicon  deleteDailypartnumButn"
+                                           id="deleteDailyButton_${row.RecordID}">
+                                           <i class="fa-regular fa-trash-can"></i>
+                                       </button>
+                                 </div>`;
             }
 
-
-
-
-            // Continue Status (0)
-            let continueHtml = `
-       <button class="status-btn" onclick="ChangeDieSerialStatus('${formatJsonDate(rowData.DateInput)}','${rowData.DieSerial}', 0)">
-           Continue
-       </button>`;
-
-            // Needed + Complete (1, 2)
-            let neededCompleteHtml = `
-       <button class="status-btn"
-           onclick="ChangeDieSerialStatus('${formatJsonDate(rowData.DateInput)}','${rowData.DieSerial}', 1)">
-           Needed
-       </button>
-       <button class="status-btn"
-           onclick="ChangeDieSerialStatus('${formatJsonDate(rowData.DateInput)}','${rowData.DieSerial}', 2)">
-           Complete
-       </button>`;
-
-            // Highlight active based on rowData.Status
-            if (rowData.Status === 0) {
-                continueHtml = `
-           <button class="status-btn active"
-               style="color:#054e92;border:2px solid #054e92;"
-               onclick="ChangeDieSerialStatus('${formatJsonDate(rowData.DateInput)}','${rowData.DieSerial}', 1)">
-               Continue
-           </button>`;
-            }
-            else if (rowData.Status === 1) {
-                neededCompleteHtml = `
-           <button class="status-btn active"
-               style="color:#c97d0c;border:2px solid #c97d0c;"
-               onclick="ChangeDieSerialStatus('${formatJsonDate(rowData.DateInput)}','${rowData.DieSerial}', 1)">
-               Needed
-           </button>
-           <button class="status-btn"
-               onclick="ChangeDieSerialStatus('${formatJsonDate(rowData.DateInput)}','${rowData.DieSerial}', 2)">
-               Complete
-           </button>`;
-            }
-            else if (rowData.Status === 2) {
-                neededCompleteHtml = `
-           <button class="status-btn"
-               onclick="ChangeDieSerialStatus('${formatJsonDate(rowData.DateInput)}','${rowData.DieSerial}', 1)">
-               Needed
-           </button>
-           <button class="status-btn active"
-               style="color:#188f18;border:2px solid #188f18;"
-               onclick="ChangeDieSerialStatus('${formatJsonDate(rowData.DateInput)}','${rowData.DieSerial}', 2)">
-               Complete
-           </button>`;
-            }
-
-            const rowHtml = `
-               <tr>
-                   <td>${rowData.DateInput}</td>
-                   <td>${rowData.CycleShot}</td>
-                   <td>${rowData.Total}</td>
-                   <td>${rowData.MachineNo}</td>
-                   <td>${rowData.Remarks}</td>
-                   <td>${rowData.Mincharge}</td>
-                    <td>
-                      <div class='flex_align'>
-                          ${continueHtml} ${neededCompleteHtml}
-                      </div>
-                    </td>
-                   <td>${ActionButton}</td>
-               </tr>`;
-
-            $("#dieMoldMasterlist").append(rowHtml);
+            const statusBtns = buildStatusButtonSet(row.RecordID, row.Status);
+            DOM.tableDisplay.append(`<tr>
+                <td>${row.DateInput}</td>
+                <td>${row.CycleShot}</td>
+                <td>${row.Total}</td>
+                <td>${row.MachineNo}</td>
+                <td>${row.Remarks}</td>
+                <td>${row.Mincharge}</td>
+                <td><div class="flex_align">${statusBtns}</div></td>
+                <td>${actionButton}</td>
+            </tr>`);
         });
-
-
-
-        // Handle click event for edit button
-        $(document).on('click', '.EditSerialDaily', function (e) {
-            e.stopPropagation();
-
-
-            const buttonId = $(this).attr('id');
-            const rowIndex = buttonId.split('_')[1];
-
-
-            let filterDate = getDieObj.find(res => res.DateInput === rowIndex);
-            $("#DieSerialID").val(filterDate.DieSerial);
-            $("#DieSerialCurrentCycle").val(filterDate.CycleShot);
-
-            setDateInput("DieSerialDateInput", filterDate.DateInput);
-
-            $("#DieSerialCycleShot").val(filterDate.CycleShot);
-            $("#DieSerialMachineNo").val(filterDate.MachineNo);
-            $("#DieSerialRemarks").val(filterDate.Remarks);
-            $("#DieSerialMincharge").val(filterDate.Mincharge);
-            $("#EditDailyMold").modal("show");
-
-        });
-
-        // Handle click event for edit button
-        $(document).on('click', '.deleteSerialDailyBtn', function (e) {
-            e.stopPropagation();
-
-
-            const buttonId = $(this).attr('id');
-            const rowIndex = buttonId.split('_')[1];
-            console.log("Delet e HERE");
-
-
-            //if (filterdata) {
-            //    let setDate = formatJsonDate(filterdata.DateInput);
-            //    console.log(setDate);
-            //    $("#DailyRecordiD").val(filterdata.RecordID);
-            //    setDateInput("DailyEditDateInput", setDate);
-            //    $("#Editdailypartno").val(filterdata.PartNo);
-            //    $("#DailyeditCycleShot").val(filterdata.CycleShot);
-            //    $("#DailyEditMachineNo").val(filterdata.MachineNo);
-            //    $("#DailyEditRemarks").val(filterdata.Remarks);
-            //    $("#DailyEditMincharge").val(filterdata.Mincharge);
-            //    $("#EditDailyMold").modal("show");
-
-            //}
-        });
-
-
     }
 
-    async function ChangeStatus(recordId, status) {
-
-        let res = await postMethod('@Url.Action("UpdateDailyStatus", "Mold")', {
-             RecordID: recordId,
-             Status: status
-         });
-
-         if (res && res.Success) {
-             // Refresh your table
-             SearchMoldiePartno()
-         }
+    function buildStatusButtonSet(id, status, isDie = false, row = null) {
+        if (!isDie) {
+            if (status === 0) return buildStatusButton("Continue", "#054e92", `ChangeStatus(${id},1)`);
+            if (status === 1) return buildStatusButton("Needed", "#c97d0c", `ChangeStatus(${id},1)`) +
+                buildStatusButton("Complete", null, `ChangeStatus(${id},2)`);
+            return buildStatusButton("Needed", null, `ChangeStatus(${id},1)`) +
+                buildStatusButton("Complete", "#188f18", `ChangeStatus(${id},2)`);
+        }
+        const key = `'${row.DateInput}','${row.DieSerial}'`;
+        if (status === 0) return buildStatusButton("Continue", "#054e92", `ChangeDieSerialStatus(${key},1)`);
+        if (status === 1) return buildStatusButton("Needed", "#c97d0c", `ChangeDieSerialStatus(${key},1)`) +
+            buildStatusButton("Complete", null, `ChangeDieSerialStatus(${key},2)`);
+        return buildStatusButton("Needed", null, `ChangeDieSerialStatus(${key},1)`) +
+            buildStatusButton("Complete", "#188f18", `ChangeDieSerialStatus(${key},2)`);
     }
-
-    const formatJsonDateV2 = function (value) {
-        if (!value) return "";
-
-        const ms = parseInt(value.replace("/Date(", "").replace(")/", ""));
-        if (isNaN(ms)) return "";
-
-        const date = new Date(ms);
-
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
-        let text = `${day}/${month}/${year}`;
-        alert(text);
-        return `${day}/${month}/${year}`;
-    };
-
-
-
-    async function ChangeDieSerialStatus(datestring, dieserial, status) {
-        let res = await postMethod('@Url.Action("UpdateDailySerialStatus", "Mold")', {
-            Datestring: datestring,
-            DieSerial: dieserial,
-            Status: status
-        });
+    async function ChangeStatus(recordId, status)
+    {
+        let res = await postMethod('@Url.Action("UpdateDailyStatus", "Mold")',
+         { RecordID: recordId, Status: status });
         if (res && res.Success) {
             // Refresh your table
-            SearchByDieNo(dieserial);
+            searchByPart()
         }
     }
 
-     function setDateInput(inputId, dateStr) {
-         if (!dateStr) return; // Exit if empty
+    /* =========================================================
+       DAILY SUMMARY
+    ========================================================= */
 
-         const parts = dateStr.split("/"); // ["MM", "DD", "YY"]
-         if (parts.length !== 3) return; // Invalid format
+    async function loadDaily(month = state.currentMonth, day = 0, process = DOM.filterProcess.val()){
+        if(state.isYearLoad) await loadYears();
 
-         const month = parts[0].padStart(2, '0');
-         const day = parts[1].padStart(2, '0');
-         const year = parts[2]; // assumes 2000+ year
+        const data = {
+            Months: month,
+            Days: day,
+            Year: DOM.yearSelect.val() || state.currentYear,
+            ProcessID: process
+        };
+        const res = await GetMethod('@Url.Action("GetMoldDieDailyList","Mold")', data);
 
-         const formattedDate = `${year}-${month}-${day}`;
+        if(!res?.Success) return showNoData();
 
-         const inputElement = document.getElementById(inputId);
-         if (inputElement) {
-             inputElement.value = formattedDate;
-         }
+        state.dailyData = res.Data;
+        renderDailyTable(state.dailyData);
     }
-
-    const GetMoldieYears = async () => {
-        let res = await GetMethod('@Url.Action("GetYearMoldDie", "Mold")', {});
-
-            yearSelect.empty();
-            $.each(res, function (index, year) {
-                yearSelect.append(`<option value='${year}'>${year}</option>`);
-            });
-
-        // select the first option automatically
-        yearSelect.prop('selectedIndex', 0);
-    }
-
-    const GetMoldDieDaily = async (month = setMonth, day = GetRow, process = $("#DailyProcess").val()) => {
-        $("#DailySummary").show();
-        $("#DailyInputs").hide();
-
-        if (isYearLoad) {
-            await GetMoldieYears();
-        }
-
-
-        const year = yearSelect.val() === null || yearSelect.val() === ""
-            ? currentYear
-            : yearSelect.val();
-
-        let formData = new FormData();
-        // Where value of month is around 1 - 12
-        formData.append('Months', month);
-        formData.append('Days', day);
-        formData.append('Year', year);
-        formData.append('ProcessID', process);
-        const data = Object.fromEntries(formData);
-
-        // Clear table only on first load
-        if (isFirstLoad) {
-            $("#DieMoldDaily").empty();
-        }
-
-        let loaderId = null;
-
-        if (isFirstLoad && typeof window.Loadingsteps === "function") {
-            const id = window.loadingDisplay("DieMoldDaily", 8);
-
-            window.Loadingsteps(id, async () => {
-                await loadMasterlist("", data);
-                isFirstLoad = false; // ✅ turn off loader forever
-                isYearLoad = false;
-            });
-        } else {
-            // No loader for filters / pagination
-            await loadMasterlist("", data);
-        }
-
-    }
-
-    const loadMasterlist = async (url, data) => {
-        $("#DieMoldDaily").empty();
-
-        let res = await GetMethod('@Url.Action("GetMoldDieDailyList", "Mold")', data);
-         if (res && res.Success) {
-              //DieTooling = res.Data;
-             DailyData = res.Data;
-              DisplayRowData(DailyData);
-
-         } else {
-             const message = res?.Message ?? "No data found";
-
-              const loadData = `<tr>
-                    <td colspan='8'>
-                        🔍 ${message}
-                    </td>
-                </tr>`;
-
-              DailyDisplay.empty();
-              DailyDisplay.append(loadData);
-
-         }
-    };
-
-
-    function DisplayRowData(dataArray) {
-        $("#DieMoldToolist").empty();
-
-        dataArray.forEach((row, index) => {
-            let continueHtml = `<span>Continue</span>`;
-            let neededCompleteHtml = `<span>Needed</span> <span>Complete</span>`;
-
-            // Highlight according to status
-            if (row.Status === 0) {
-                continueHtml = `<span class="status-label active" style="color: #054e92; border: 2px solid #054e92;">Continue</span>`;
-            } else if (row.Status === 1) {
-                neededCompleteHtml = `
-                   <span class="status-label active" style="color: #c97d0c; border: 2px solid #c97d0c;">Needed</span>
-                   <span class="status-label">Complete</span>`;
-            } else if (row.Status === 2) {
-                neededCompleteHtml = `
-                   <span class="status-label">Needed</span>
-                   <span class="status-label active" style="color: #188f18; border: 2px solid #188f18;">Complete</span>`;
-            }
-
-
-            const setdata = `
-                <tr >
-                    <td>${row.DateInput}</td>
-                    <td style='font-weight: 600;'>${row.PartNo} / ${row.Dimension_Quality}</td>
-                    <td>${row.CycleShot}</td>
-                    <td>${row.Total}</td>
-                    <td>${row.MachineNo}</td>
-                    <td>
-                        <div class='flex_align'>
-                          ${continueHtml} ${neededCompleteHtml}
-                      </div>
-                      </td>
-                    <td>${row.Remarks}</td>
-                     <td>${row.Mincharge}</td>
-
-               </tr>`;
-
-            $("#DieMoldDaily").append(setdata);
+    function renderDailyTable(rows) {
+        DOM.dailyDisplay.empty();
+        rows.forEach(r => {
+            DOM.dailyDisplay.append(`<tr>
+                <td>${r.DateInput}</td>
+                <td><b>${r.PartNo}</b> / ${r.Dimension_Quality}</td>
+                <td>${r.CycleShot}</td>
+                <td>${r.Total}</td>
+                <td>${r.MachineNo}</td>
+                <td>${r.Remarks}</td>
+                <td>${r.Mincharge}</td>
+            </tr>`);
         });
+    }
 
+    function renderPartDetails(part) {
+        if (!part) return;
 
+        DOM.detailSummary.empty();
+        const rowHtml = `
+                     <tr>
+                         <td>${part.PartNo}</td>
+                         <td>${part.Dimension_Quality}</td>
+                         <td>${part.DieSerial}</td>
+                         <td>${buildStatusBadge(part.Status) }</td>
+                     </tr>`;
+        DOM.detailSummary.append(rowHtml);
+    }
+
+    /* =========================================================
+       UTILITIES
+    ========================================================= */
+    function reloadDailyData() {
+        const m = DOM.monthSelect.val();
+        const d = DOM.dateInput.val()?.split("-")[2] || 0;
+        const p = $("#DailyProcess").val();
+        loadDaily(m, d, p);
     }
 
 
-    function setDateInput(inputId, dateStr) {
-        // Expecting MM/DD/YY
-        const [month, day, year] = dateStr.split("/");
-
-        const fullYear = year.length === 2 ? `20${year}` : year;
-        const formattedDate = `${fullYear}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-
-        document.getElementById(inputId).value = formattedDate;
+    function showNoData() {
+        DOM.tableDisplay.html(`<tr><td colspan="9">🔍 No Data Found</td></tr>`);
     }
 
-
-    // Function to show success message
-    function showSuccessMessage() {
-        const $message = $('#successMessage');
-        $message.fadeIn(300);
-
-        setTimeout(() => {
-            $message.fadeOut(300);
-        }, 3000);
+    function buildStatusBadge(status) {
+        switch (status) {
+            case 0:
+                return `<span class="badge bg-primary">Continue</span>`;
+            case 1:
+                return `<span class="badge bg-warning text-dark">Needed</span>`;
+            case 2:
+                return `<span class="badge bg-success">Completed</span>`;
+            default:
+                return `<span class="badge bg-secondary">Unknown</span>`;
+        }
     }
 
+    async function loadYears(){
+        const res = await GetMethod('@Url.Action("GetYearMoldDie","Mold")', {});
+        DOM.yearSelect.empty();
+        res.forEach(y => DOM.yearSelect.append(`<option value="${y}">${y}</option>`));
+        // Set selected value to current year
+        DOM.yearSelect.val(state.currentYear);
 
-    $("#validprocess").hide();
-    $("#validDateinput").hide();
-    $("#validDateDieSerial").hide();
-    GetMoldDieDaily();
-
-
-
-    // normalize MM/dd/YY → YYYY-MM-DD
-    function normalizeMMDDYY(dateStr) {
-        const [mm, dd, yy] = dateStr.split("/");
-        const fullYear = Number(yy) < 50 ? `20${yy}` : `19${yy}`;
-        return `${fullYear}-${mm.padStart(2, "0")}-${dd.padStart(2, "0")}`;
+        state.isYearLoad = false;
     }
-
 </script>

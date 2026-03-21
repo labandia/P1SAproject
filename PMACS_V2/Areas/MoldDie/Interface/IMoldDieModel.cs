@@ -40,6 +40,7 @@ namespace PMACS_V2.Areas.MoldDie.Interface
         Task<bool> UpdateDailyLastCycle(int recordID, int lastcycle);
 
 
+        Task<bool> DeletePartnumberDaily(int recordID, string partno, string dateinput);
 
       
 
@@ -72,5 +73,8 @@ namespace PMACS_V2.Areas.MoldDie.Interface
 
         Task<bool> AddUpdateMoldieMasterlist(DieMoldMonitoringModel mold, int action);
         Task<bool> DeleteMoldieMasterlist(string partno);
+
+        Task<bool> CheckZeroData(string partno, string strDate);
+
     }
 }

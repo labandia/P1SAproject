@@ -396,3 +396,27 @@ window.formatJsonDate = function (value) {
 
     return date.toLocaleDateString();
 };
+
+/* =======================
+   SET VALUE IN THE DATE INPUT TEXT
+======================= */
+
+//window.setDateInput = function (inputId, dateStr) {
+//    if (!dateStr) return; // Exit if empty
+
+//    const parts = dateStr.split("/"); // ["MM", "DD", "YY"]
+//    if (parts.length !== 3) return; // Invalid format
+
+//    const month = parts[0].padStart(2, '0');
+//    const day = parts[1].padStart(2, '0');
+//    const year = parts[2]; // assumes 2000+ year
+
+//    const formattedDate = `${year}-${month}-${day}`;
+
+//    console.log(formattedDate);
+
+//    const inputElement = document.getElementById(inputId);
+//    if (inputElement) {
+//        inputElement.value = formattedDate;
+//    }
+//}

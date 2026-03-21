@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.DynamicData;
 using PMACS_V2.Areas.MoldDie.Interface;
 using PMACS_V2.Areas.P1SA.Models;
 using PMACS_V2.Helper;
@@ -691,6 +692,16 @@ namespace PMACS_V2.Areas.MoldDie.Repository
         {
             bool result = await MoldieHelper.UpdateAllMoldieSerial(mold);
             return result;
+        }
+
+        public Task<bool> CheckZeroData(string partno, string strDate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> DeletePartnumberDaily(int recordID, string partno, string dateinput)
+        {
+            return await MoldieHelper.DeletePartnumDailyPartnum(recordID, partno, dateinput);
         }
     }
 }

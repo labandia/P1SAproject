@@ -202,11 +202,11 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> DeleteDailyMoldDieMonitor(int ID)
+        public async Task<ActionResult> DeletePartnumDailyMoldDieMonitor(int ID, string partno, string Dateinput)
         {
-            bool update = await _dieV2.DeleteDailyMoldie(ID);
+            bool update = await _dieV2.DeletePartnumberDaily(ID, partno, Dateinput);
             if (!update) return JsonValidationError();
-            return JsonCreated(ID, "Delete Data Successfully");
+            return JsonCreated(update, "Delete Data Successfully");
         }
         [HttpPost]
         public async Task<ActionResult> UpdateDailyStatus(int RecordID, int Status)

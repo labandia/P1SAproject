@@ -1,4 +1,5 @@
-﻿using PMACS_V2.Areas.P1SA.Models;
+﻿using Microsoft.Office.Interop.Excel;
+using PMACS_V2.Areas.P1SA.Models;
 using PMACS_V2.Helper;
 using System;
 using System.Collections.Generic;
@@ -460,29 +461,13 @@ namespace PMACS_V2.Areas.MoldDie.Repository
 
             //    Debug.WriteLine("CycleShot: " + Lastrecords[i].CycleShot + " | Total: " + Lastrecords[i].Total );
             //}
-            int counter = 0;
+            int runningTotal = 0;
+
 
             for (int i = Lastrecords.Count - 1; i >= 0; i--)
             {
+                runningTotal += Lastrecords[i].CycleShot;
 
-                //Debug.WriteLine("Index: " + i);
-                //Debug.WriteLine("Current CycleShot: " + Lastrecords[i].CycleShot);
-                //Debug.WriteLine(
-                //    "CycleShot: " + Lastrecords[i].CycleShot +
-                //    " | Total: " + Lastrecords[i].Total
-                //);
-                if (counter == 0)
-                {
-                    counter = 1;
-                    continue;
-                }
-
-                int newTotal  = Lastrecords[i + 1].Total + Lastrecords[i].CycleShot;
-
-                Debug.WriteLine("CycleShot: " + Lastrecords[i].CycleShot + " | Total: " + Lastrecords[i].Total + " | newTotal : " + newTotal);
-                /* --------------------------------------------------
-                * 5. UPDATE the newTotalValue to the total of the MoldDie_Daily column
-                * --------------------------------------------------*/
                 await SqlDataAccess.ExecuteAsync(@"
                     UPDATE DieMold_Daily
                     SET Total = @Total
@@ -490,11 +475,15 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                       AND DateInput = @DateInput",
                    new
                    {
-                       Total = newTotal,
+                       Total = runningTotal,
                        PartNo = model.PartNo,
                        DateInput = Lastrecords[i].DateInput
                    });
 
+                Debug.WriteLine(
+                    "CycleShot: " + Lastrecords[i].CycleShot +
+                    " | RunningTotal: " + runningTotal
+                );
             }
 
             return await Task.FromResult(true);
@@ -571,6 +560,113 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             return true;
 
 
+        }
+
+
+
+
+
+
+        // ===========================================================
+        // DELETE FUNCTION 
+        // ===========================================================
+        public static async Task<bool> DeletePartnumDailyPartnum(int recordID, string partnum, string dateinput)
+        {
+
+            // 1.  delete the checker first 
+            var deletecheckTask =  SqlDataAccess.ExecuteAsync(
+                        "DELETE FROM DieMoldDailyInputChecker WHERE PartNo=@PartNo AND CAST(DateInput AS DATE) = @DateInput; ", 
+                        new { PartNo = partnum, DateInput = dateinput });
+
+            var deleteDailyTask =  SqlDataAccess.ExecuteAsync(
+                        "DELETE FROM DieMold_Daily WHERE RecordID=@RecordID ", 
+                        new { RecordID = recordID });
+
+            var deleteMonitorTask =  SqlDataAccess.ExecuteAsync($@"
+                        DELETE FROM DieMoldMonitor WHERE PartNo=@PartNo AND CAST(DateAction AS DATE) = @DateAction;", 
+                        new { PartNo = partnum, DateAction = dateinput });
+
+            // Wait for all to finish
+            await Task.WhenAll(deletecheckTask, deleteDailyTask, deleteMonitorTask);
+
+            // 2. Get all the MoldDie_Daily records and stops if the last record is 0
+
+            /* --------------------------------------------------
+              * 2. Get ALL records (LAST → FIRST)
+              * --------------------------------------------------*/
+            var records = await SqlDataAccess.GetDataAsync<DieMoldMonitoringModel>(
+                         @"
+                        SELECT RecordID, DateInput, CycleShot, Total, Status
+                        FROM DieMold_Daily
+                        WHERE PartNo = @PartNo
+                        ORDER BY DateInput DESC"
+            , new { PartNo = partnum });
+
+            /* --------------------------------------------------
+            * 3. Get Only records of the Last CycleShot that is not 0 (LAST → FIRST)
+            * --------------------------------------------------*/
+            //var validRecords = records.TakeWhile(r => r.CycleShot != 0).ToList();
+
+            //List<DieMoldMonitoringModel> nonZero = records
+            //    .Where(r => r.CycleShot != 0)
+            //    .ToList();
+
+            List<DieMoldMonitoringModel> Lastrecords = new List<DieMoldMonitoringModel>();
+
+            foreach (var record in records)
+            {
+                if (record.CycleShot == 0)
+                {
+                    break;
+                }
+                Lastrecords.Add(record);
+            }
+
+            // SET ASCENDING ORDER
+
+
+            /* --------------------------------------------------
+            * 4. LOOP through the records and compute the new Total = current total + NEXT record CycleShot
+            * --------------------------------------------------*/
+            //for (int i = 0; i < Lastrecords.Count; i++)
+            //{
+            //    //if (i == 0) continue;
+
+            //    int newTotal;
+            //    // 4. Total = current total + NEXT record CycleShot
+            //    //newTotal = Lastrecords[i - 1].Total + Lastrecords[i].CycleShot;
+            //    Debug.WriteLine("Index: " + i);
+            //    //Lastrecords[i].Total = newTotal;
+            //    Debug.WriteLine("Current CycleShot: " + Lastrecords[i].CycleShot);
+
+            //    Debug.WriteLine("CycleShot: " + Lastrecords[i].CycleShot + " | Total: " + Lastrecords[i].Total );
+            //}
+            int runningTotal = 0;
+
+
+            for (int i = Lastrecords.Count - 1; i >= 0; i--)
+            {
+                runningTotal += Lastrecords[i].CycleShot;
+
+                await SqlDataAccess.ExecuteAsync(@"
+                    UPDATE DieMold_Daily
+                    SET Total = @Total
+                    WHERE PartNo = @PartNo
+                      AND DateInput = @DateInput",
+                   new
+                   {
+                       Total = runningTotal,
+                       PartNo = partnum,
+                       DateInput = Lastrecords[i].DateInput
+                   });
+
+                Debug.WriteLine(
+                    "CycleShot: " + Lastrecords[i].CycleShot +
+                    " | RunningTotal: " + runningTotal
+                );
+            }
+
+            return await Task.FromResult(true);
         }
     }
 }

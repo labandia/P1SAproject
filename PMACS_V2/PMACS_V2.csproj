@@ -643,10 +643,9 @@
     <Content Include="Areas\MoldDie\Views\web.config" />
     <Content Include="Areas\MoldDie\Views\Mold\Index.cshtml" />
     <Content Include="Areas\MoldDie\Views\Shared\_MoldieLayout.cshtml" />
-    <Content Include="Areas\MoldDie\Views\Mold\AddMonitoringInput.cshtml" />
     <Content Include="Areas\MoldDie\Views\Mold\DiePressLife.cshtml" />
     <Content Include="Areas\MoldDie\Views\Mold\DiePressMonitorDetails.cshtml" />
-    <Content Include="Areas\MoldDie\Views\Shared\_MoldDIeSummaryView.cshtml" />
+    <Content Include="Areas\MoldDie\Views\Mold\_MoldDIeSummaryView.cshtml" />
     <Content Include="Areas\MoldDie\Views\Shared\_ToolingTable.cshtml" />
     <Content Include="Areas\MoldDie\Views\Shared\_MainLayout.cshtml" />
     <Content Include="Areas\MoldDie\Views\Mold\DieMoldDaily.cshtml" />

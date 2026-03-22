@@ -1,0 +1,154 @@
+﻿<!--########################## Edit DIe Serial Daily Mold Die  DATA #############################-->
+<div class="modal fade modal-l" id="EditDailyMold" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Edit Die Serial Mold</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <form id="EditDailyforms" class="addformcontainer" autocomplete="off">
+                    <input type="hidden" name="DieSerial" id="DieSerialID">
+                    <input type="hidden" name="CurrentCycle" id="DieSerialCurrentCycle">
+
+                    <div class="form_group col-12 col-lg-12 col-sm-12">
+                        <label for="">Date Input</label>
+                        <input type="date" name="DateInput" id="DieSerialDateInput">
+                    </div>
+
+
+                    <div class="form_group col-12 col-lg-12 col-sm-12">
+                        <label for="">Cycle shot</label>
+                        <input type="number" name="CycleShot" id="DieSerialCycleShot" placeholder="Enter Cycle Shot" onkeypress='return restrictChars(event)' required>
+                    </div>
+
+                    <div class="form_group col-12 col-lg-12 col-sm-12">
+                        <label for="">Machine No</label>
+                        <input type="number" name="MachineNo" id="DieSerialMachineNo" required>
+                    </div>
+
+                    <div class="form_group col-12 col-lg-12 col-sm-12">
+                        <label for="">Remarks</label>
+
+
+                        <div class="select-container" style="width: 100% !important;">
+                            <select name="Remarks" id="DieSerialRemarks">
+                                <option value="N/A">N/A</option>
+                                <option value="Shot cycle cleaning">Shot cycle cleaning</option>
+                                <option value="Die Cleaning Due To 1 Month No operation">Die Cleaning Due To 1 Month No operation</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form_group col-12 col-lg-12 col-sm-12">
+                        <label for="">Maintenance incharge</label>
+
+
+                        <div class="select-container" style="width: 100% !important;">
+                            <select name="Mincharge" id="DieSerialMincharge">
+                                <option value="N.AMLOG">N.AMLOG</option>
+                                <option value="J.ORO">J.ORO</option>
+                                <option value="R.AGACOSCOS">R.AGACOSCOS</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <hr />
+
+
+                    <div class="flex_space " id="editsdisplay">
+                        <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                        <button type="submit" class="primary_button_color">
+                            <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
+                        </button>
+                    </div>
+                </form>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+<!--########################## Edit DIe Partnum Daily Mold Die  DATA #############################-->
+<div class="modal fade modal-l" id="EditPartnumMold" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Edit Die Partnumber</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <form id="EditPartnumforms" class="addformcontainer" autocomplete="off">
+                    <input type="hidden" name="RecordID" id="DailyPartnumRecordID" />
+                    <input type="hidden" name="PartNo" id="DailyEditPartNo">
+
+                    <div class="form_group col-12 col-lg-12 col-sm-12">
+                        <label for="">Date Input</label>
+                        <input type="date" name="DateInput" id="DailyPartnumDateInput">
+                    </div>
+
+
+                    <div class="form_group col-12 col-lg-12 col-sm-12">
+                        <label for="">Cycle shot</label>
+                        <input type="number" name="CycleShot" id="DailyPartnumCycleShot" placeholder="Enter Cycle Shot" onkeypress='return restrictChars(event)' required>
+                    </div>
+
+                    <div class="form_group col-12 col-lg-12 col-sm-12">
+                        <label for="">Machine No</label>
+                        <input type="number" name="MachineNo" id="DailyPartnumMachineNo" required>
+                    </div>
+
+                    <div class="form_group col-12 col-lg-12 col-sm-12">
+                        <label for="">Remarks</label>
+
+
+                        <div class="select-container" style="width: 100% !important;">
+                            <select name="Remarks" id="DailyPartnumRemarks">
+                                <option value="N/A">N/A</option>
+                                <option value="Shot cycle cleaning">Shot cycle cleaning</option>
+                                <option value="Die Cleaning Due To 1 Month No operation">Die Cleaning Due To 1 Month No operation</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form_group col-12 col-lg-12 col-sm-12">
+                        <label for="">Maintenance incharge</label>
+
+
+                        <div class="select-container" style="width: 100% !important;">
+                            <select name="Mincharge" id="DailyPartnumMincharge">
+                                <option value="N.AMLOG">N.AMLOG</option>
+                                <option value="J.ORO">J.ORO</option>
+                                <option value="R.AGACOSCOS">R.AGACOSCOS</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <hr />
+
+
+                    <div class="flex_space " id="editsdisplay">
+                        <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                        <button type="submit" class="primary_button_color">
+                            <span><i class="fa-regular fa-floppy-disk"></i>  Save</span>
+                        </button>
+                    </div>
+                </form>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
